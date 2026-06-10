@@ -3745,7 +3745,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
-        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++, species++)
+        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             if (!GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
             {
@@ -3754,6 +3754,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
                 SetBoxMonData(&boxMon, MON_DATA_SPECIES, &species);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
+                species = GetNextSpecies(species);
             }
         }
     }
