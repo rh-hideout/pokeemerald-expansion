@@ -231,6 +231,7 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             return CANCELER_RESULT_FAILURE;
         case DISOBEYS_RANDOM_MOVE:
             gCurrentMove = gCalledMove = gBattleMons[cv->battlerAtk].moves[gCurrMovePos];
+            gBattlescriptCurrInstr = GetMoveBattleScript(gCalledMove);
             BattleScriptCall(BattleScript_IgnoresAndUsesRandomMove);
             gBattlerTarget = GetBattleMoveTarget(gCalledMove, TARGET_NONE);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -722,13 +723,11 @@ static bool32 IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId ba
     if (battlerDef == battlerAtk)
         return skipFailure;
 
-    if (battlerDef != BATTLE_PARTNER(battlerAtk))
-    {
-        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
-        return skipFailure;
-    }
+    if (battlerDef == gBattlerTarget)
+        return checkFailure;
 
-    return checkFailure;
+    gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+    return skipFailure;
 }
 
 static bool32 IsTargetingFoesAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -4495,10 +4494,43 @@ static enum MoveResult StatChangeSubstitute(struct BattleCalcValues *cv)
     return MOVE_RESULT_CONTINUE;
 }
 
+static void TryAcupressureStatChange(struct BattleCalcValues *cv)
+{
+    u32 bits = 0;
+
+    if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, cv->battlerDef))
+        return;
+
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    {
+        if (CompareStat(cv->battlerDef, stat, MAX_STAT_STAGE, CMP_LESS_THAN, cv->abilities[cv->battlerDef]))
+            bits |= 1u << stat;
+    }
+
+    if (bits)
+    {
+        enum Stat statId;
+        do
+        {
+            statId = (Random() % (NUM_BATTLE_STATS - 1)) + 1;
+        } while (!(bits & (1u << statId)));
+
+        SetStatChange(cv->battlerDef, statId, 2);
+        gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
+    }
+    else
+    {
+        gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+    }
+}
+
 static enum MoveResult StatChangeCanAnyChange(struct BattleCalcValues *cv)
 {
     if (GetMoveEffect(cv->move) == EFFECT_ACUPRESSURE)
+    {
+        TryAcupressureStatChange(cv);
         return MOVE_RESULT_CONTINUE;
+    }
 
     struct StatChange st = {
         .onlyChecking = TRUE,
@@ -4586,34 +4618,6 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
             return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
         }
         break;
-    case EFFECT_ACUPRESSURE:
-    {
-        u32 bits = 0;
-        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
-        {
-            if (CompareStat(cv->battlerDef, stat, MAX_STAT_STAGE, CMP_LESS_THAN, cv->abilities[cv->battlerDef]))
-                bits |= 1u << stat;
-        }
-        if (bits)
-        {
-            enum Stat statId;
-            do
-            {
-                statId = (Random() % (NUM_BATTLE_STATS - 1)) + 1;
-            } while (!(bits & (1u << statId)));
-
-            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
-            SetStatChange(cv->battlerDef, statId, 2);
-            BattleScriptCall(BattleScript_PlayMoveAnim);
-            return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
-        }
-        else
-        {
-            gBattlescriptCurrInstr = BattleScript_StatChangeFailed;
-            return MOVE_RESULT_FAILURE;
-        }
-        break;
-    }
     case EFFECT_STUFF_CHEEKS:
         // Back up current queue for later use
         memcpy(

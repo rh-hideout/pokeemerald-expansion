@@ -693,12 +693,6 @@ static s8 GetDoorSoundType(const struct DoorGraphics *gfx, u32 x, u32 y)
         return gfx->sound;
 }
 
-// Debug? Same as FieldAnimateDoorOpen but doesnt return or check if metatile is actually a door
-static void UNUSED Debug_FieldAnimateDoorOpen(u32 x, u32 y)
-{
-    StartDoorOpenAnimation(sDoorAnimGraphicsTable, x, y);
-}
-
 void FieldSetDoorOpened(u32 x, u32 y)
 {
     if (MetatileBehavior_IsDoor(MapGridGetMetatileBehaviorAt(x, y)))

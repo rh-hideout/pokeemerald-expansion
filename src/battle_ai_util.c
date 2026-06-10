@@ -699,7 +699,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     return FALSE;
 }
 
-bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, u32 abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef)
+bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
         return TRUE;
@@ -4512,7 +4512,7 @@ bool32 IsAbilityOfRating(enum Ability ability, s32 rating)
     return FALSE;
 }
 
-static const u16 sRecycleEncouragedItems[] =
+static const enum Item sRecycleEncouragedItems[] =
 {
     ITEM_CHESTO_BERRY,
     ITEM_LUM_BERRY,
@@ -6369,7 +6369,7 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
     return (score > BEST_EFFECT) ? BEST_EFFECT : score;
 }
 
-s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
+s32 GetAllyStatChangeScore(enum BattlerId battlerAtk, enum BattlerId partner, enum Move move)
 {
     s32 tempScore = 0;
     enum BattlerId foe = LEFT_FOE(battlerAtk);
