@@ -7338,25 +7338,22 @@ static inline uq4_12_t GetGlaiveRushModifier(enum BattlerId battlerDef)
     return UQ_4_12(1.0);
 }
 
-static inline uq4_12_t GetUnseenFistModifier(struct DamageContext *ctx)
+static inline uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ctx)
 {
     if (MoveIgnoresProtect(ctx->move))
         return UQ_4_12(1.0);
-    
+
+    // Unseen Fist and Piercing Drill
     u32 protected = gProtectStructs[ctx->battlerDef].protected;
     if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD
          && (GetBattlerAbility(ctx->battlerAtk) == ABILITY_UNSEEN_FIST || GetBattlerAbility(ctx->battlerAtk) == ABILITY_PIERCING_DRILL)
          && GetConfig(B_UNSEEN_FIST_DAMAGE) >= GEN_CHAMPIONS)
         return UQ_4_12(0.25);
-    return UQ_4_12(1.0);
-}
 
-static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageContext *ctx)
-{
+    // Z-Moves and Max Moves
     if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
         return UQ_4_12(1.0);
 
-    u32 protected = gProtectStructs[ctx->battlerDef].protected;
     if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
@@ -7668,8 +7665,7 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
         DAMAGE_APPLY_MODIFIER(GetSameTypeAttackBonusModifier(ctx));
     DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
     DAMAGE_APPLY_MODIFIER(GetBurnOrFrostBiteModifier(ctx));
-    DAMAGE_APPLY_MODIFIER(GetZMaxMoveAgainstProtectionModifier(ctx));
-    DAMAGE_APPLY_MODIFIER(GetUnseenFistModifier(ctx));
+    DAMAGE_APPLY_MODIFIER(GetMoveAgainstProtectionModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetOtherModifiers(ctx));
 
     return dmg;

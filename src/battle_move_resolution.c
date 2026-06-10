@@ -1321,6 +1321,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         else
             gBattleStruct->presentBasePower = 0; // Healing
     }
+    case EFFECT_BELCH:
+        if (!GetBattlerPartyState(cv->battlerAtk)->ateBerry)
+            battleScript = BattleScript_BelchFails;
         break;
     default:
         break;
@@ -1453,17 +1456,6 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             if (cv->abilities[battlerDef] != ABILITY_PLUS && cv->abilities[battlerDef] != ABILITY_MINUS)
             {
                 battleScript = BattleScript_ButItFailed;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
-        case EFFECT_BELCH:
-            if (!GetBattlerPartyState(cv->battlerAtk)->ateBerry)
-            {
-                battleScript = BattleScript_BelchFails;
             }
             else
             {
