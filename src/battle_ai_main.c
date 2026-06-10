@@ -678,15 +678,32 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     u32 accuracy;
-    enum Ability abilityAtk = aiData->abilities[battlerAtk];
-    enum Ability abilityDef = aiData->abilities[battlerDef];
-    if (CanMoveSkipAccuracyCalc(battlerAtk, battlerDef, abilityAtk, abilityDef, move, AI_CHECK))
+
+    struct BattleCalcValues cv = {
+        .battlerAtk = battlerAtk,
+        .battlerDef = battlerDef,
+        .move = move,
+    };
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (battler == battlerAtk)
+            cv.abilities[battler] = aiData->abilities[battler];
+        else
+            cv.abilities[battler] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battler], aiData->holdEffects[battler], move);
+
+        cv.holdEffects[battler] = aiData->holdEffects[battler];
+    }
+
+    u32 weather = AI_GetWeather();
+    if (CanMoveSkipAccuracyCalc(&cv, weather, AI_CHECK))
     {
         accuracy = BYPASSES_ACCURACY_CALC;
     }
     else
     {
-        accuracy = GetTotalAccuracy(battlerAtk, battlerDef, move, abilityAtk, abilityDef, aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+        accuracy = GetTotalAccuracy(&cv, weather);
+
         // Cap normal accuracy at 100 for ai calcs.
         // Done for comparison with moves that bypass accuracy checks (will be seen as 101 for ai calcs))
         accuracy = (accuracy > 100) ? 100 : accuracy;

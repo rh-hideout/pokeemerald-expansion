@@ -10253,20 +10253,22 @@ static bool32 IsSkyDropInvolved(enum BattlerId battlerDef, enum BattleMoveEffect
         || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
 }
 
-bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option)
+bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option)
 {
     bool32 effect = FALSE;
+    enum BattlerId battlerAtk = cv->battlerAtk;
+    enum BattlerId battlerDef = cv->battlerDef;
     enum Ability ability = ABILITY_NONE;
     enum BattlerId abilityBattler = battlerAtk;
-    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    enum BattleMoveEffects moveEffect = GetMoveEffect(cv->move);
 
     if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
-     || CanMoveSkipAccuracyCheck(battlerAtk, move)
+     || CanMoveSkipAccuracyCheck(battlerAtk, cv->move)
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
         effect = TRUE;
     }
-    else if (abilityAtk == ABILITY_NO_GUARD
+    else if (cv->abilities[battlerAtk] == ABILITY_NO_GUARD
           && gBattleMons[battlerDef].volatiles.semiInvulnerable != STATE_COMMANDER
           && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
@@ -10274,7 +10276,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
         ability = ABILITY_NO_GUARD;
         abilityBattler = battlerAtk;
     }
-    else if (abilityDef == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
+    else if (cv->abilities[battlerDef] == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
@@ -10297,22 +10299,21 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     }
     else if (B_MINIMIZE_DMG_ACC >= GEN_6
      && gBattleMons[battlerDef].volatiles.minimize
-     && MoveIncreasesPowerToMinimizedTargets(move))
+     && MoveIncreasesPowerToMinimizedTargets(cv->move))
     {
         effect = TRUE;
     }
-    else if (GetMoveAccuracy(move) == 0)
+    else if (GetMoveAccuracy(cv->move) == 0)
     {
         effect = TRUE;
     }
-
-    if (!effect)
+    else
     {
-        u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(battlerAtk), abilityAtk, GetWeather());
+        u32 attackerWeather = GetAttackerWeather(cv->holdEffects[battlerAtk], cv->abilities[battlerAtk], weather);
 
-        if ((attackerWeather & B_WEATHER_RAIN) && MoveAlwaysHitsInRain(move))
+        if ((attackerWeather & B_WEATHER_RAIN) && MoveAlwaysHitsInRain(cv->move))
             effect = TRUE;
-        else if ((attackerWeather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
+        else if ((attackerWeather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(cv->move))
             effect = TRUE;
 
         if (effect)
@@ -10325,22 +10326,29 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     return effect;
 }
 
-u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect)
+u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
 {
-    u32 calc, moveAcc;
-    u32 attackerWeather;
-    s8 buff, accStage, evasionStage;
+    s32 buff, accStage, evasionStage;
+
+    enum BattlerId battlerAtk = cv->battlerAtk;
+    enum BattlerId battlerDef = cv->battlerDef;
+
     u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
     u32 defParam = GetBattlerHoldEffectParam(battlerDef);
+
     gPotentialItemEffectBattler = battlerDef;
+
     accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
     evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
-    if (atkAbility == ABILITY_UNAWARE || atkAbility == ABILITY_KEEN_EYE || atkAbility == ABILITY_MINDS_EYE
-            || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && atkAbility == ABILITY_ILLUMINATE))
+
+    if (cv->abilities[battlerAtk] == ABILITY_UNAWARE
+     || cv->abilities[battlerAtk] == ABILITY_KEEN_EYE
+     || cv->abilities[battlerAtk] == ABILITY_MINDS_EYE
+     || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && cv->abilities[battlerAtk] == ABILITY_ILLUMINATE))
         evasionStage = DEFAULT_STAT_STAGE;
-    if (MoveIgnoresDefenseEvasionStages(move))
+    if (MoveIgnoresDefenseEvasionStages(cv->move))
         evasionStage = DEFAULT_STAT_STAGE;
-    if (defAbility == ABILITY_UNAWARE)
+    if (cv->abilities[battlerAtk] == ABILITY_UNAWARE)
         accStage = DEFAULT_STAT_STAGE;
 
     if (gBattleMons[battlerDef].volatiles.foresight || gBattleMons[battlerDef].volatiles.miracleEye)
@@ -10353,21 +10361,21 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     if (buff > MAX_STAT_STAGE)
         buff = MAX_STAT_STAGE;
 
-    moveAcc = GetMoveAccuracy(move);
-    attackerWeather = GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather());
+    u32 moveAcc = GetMoveAccuracy(cv->move);
+    u32 attackerWeather = GetAttackerWeather(cv->holdEffects[battlerAtk], cv->abilities[battlerAtk], weather);
 
     // Check Thunder and Hurricane on sunny weather.
-    if ((attackerWeather & B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
+    if ((attackerWeather & B_WEATHER_SUN) && MoveHas50AccuracyInSun(cv->move))
         moveAcc = 50;
     // Check Wonder Skin.
-    if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
+    if (cv->abilities[battlerDef] == ABILITY_WONDER_SKIN && IsBattleMoveStatus(cv->move) && moveAcc > 50)
         moveAcc = 50;
 
-    calc = gAccuracyStageRatios[buff].dividend * moveAcc;
+    u32 calc = gAccuracyStageRatios[buff].dividend * moveAcc;
     calc /= gAccuracyStageRatios[buff].divisor;
 
     // Attacker's ability
-    switch (atkAbility)
+    switch (cv->abilities[battlerAtk])
     {
     case ABILITY_COMPOUND_EYES:
         calc = (calc * 130) / 100; // 1.3 compound eyes boost
@@ -10376,7 +10384,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
         calc = (calc * 110) / 100; // 1.1 victory star boost
         break;
     case ABILITY_HUSTLE:
-        if (IsBattleMovePhysical(move))
+        if (IsBattleMovePhysical(cv->move))
             calc = (calc * 80) / 100; // 1.2 hustle loss
         break;
     default:
@@ -10384,7 +10392,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     }
 
     // Target's ability
-    switch (defAbility)
+    switch (cv->abilities[battlerDef])
     {
     case ABILITY_SAND_VEIL:
         if (attackerWeather & B_WEATHER_SANDSTORM)
@@ -10404,7 +10412,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 
     // Attacker's ally's ability
     enum BattlerId atkAlly = BATTLE_PARTNER(battlerAtk);
-    switch (GetBattlerAbility(atkAlly))
+    switch (cv->abilities[atkAlly])
     {
     case ABILITY_VICTORY_STAR:
         if (IsBattlerAlive(atkAlly))
@@ -10413,12 +10421,12 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     default:
         break;
     }
-
-    if (MoveHasIncreasedAccByTenOnSameType(move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
+                                                                                        // Using the hardcoded move type is potentially a bug
+    if (MoveHasIncreasedAccByTenOnSameType(cv->move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(cv->move)))
         calc = (calc * 110) / 100;
 
     // Attacker's hold effect
-    switch (atkHoldEffect)
+    switch (cv->holdEffects[battlerAtk])
     {
     case HOLD_EFFECT_WIDE_LENS:
         calc = (calc * (100 + atkParam)) / 100;
@@ -10432,7 +10440,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     }
 
     // Target's hold effect
-    switch (defHoldEffect)
+    switch (cv->holdEffects[battlerDef])
     {
     case HOLD_EFFECT_EVASION_UP:
         calc = (calc * (100 - defParam)) / 100;
@@ -10442,13 +10450,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     }
 
     if (gBattleStruct->battlerState[battlerAtk].usedMicleBerry)
-    {
-        // TODO: Is this true?
-        if (atkAbility == ABILITY_RIPEN)
-            calc = (calc * 140) / 100;  // ripen gives 40% acc boost
-        else
-            calc = (calc * 120) / 100;  // 20% acc boost
-    }
+        calc = (calc * 120) / 100;  // 20% acc boost
 
     if (gFieldStatuses & STATUS_FIELD_GRAVITY)
         calc = (calc * 5) / 3; // 1.66 Gravity acc boost
@@ -10456,7 +10458,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     if (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerDef) == AFFECTION_FIVE_HEARTS)
         calc = (calc * 90) / 100;
 
-    if (HasWeatherEffect() && gBattleWeather & B_WEATHER_FOG)
+    if (weather & B_WEATHER_FOG)
         calc = (calc * 60) / 100; // modified by 3/5
 
     return calc;
@@ -10525,18 +10527,13 @@ bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
     if (GetMoveEffect(cv->move) == EFFECT_OHKO)
         return DoesOHKOMoveMissTarget(cv);
 
-    if (CanMoveSkipAccuracyCalc(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move, RUN_SCRIPT))
+    u32 weather = GetWeather();
+
+    if (CanMoveSkipAccuracyCalc(cv, weather, RUN_SCRIPT))
         return FALSE;
 
-    u32 accuracy = GetTotalAccuracy(
-                        cv->battlerAtk,
-                        cv->battlerDef,
-                        cv->move,
-                        cv->abilities[cv->battlerAtk],
-                        cv->abilities[cv->battlerDef],
-                        cv->holdEffects[cv->battlerAtk],
-                        cv->holdEffects[cv->battlerDef]
-                    );
+    u32 accuracy = GetTotalAccuracy(cv, weather);
+
     return !RandomPercentage(RNG_ACCURACY, accuracy);
 }
 
