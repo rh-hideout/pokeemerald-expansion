@@ -58,6 +58,7 @@
 #define TAG_BAG_SCROLL_ARROW     111
 #define TAG_ITEM_CURSOR          112
 #define TAG_HOVER_SLOT           113
+#define TAG_BAG_SCROLL_THUMB     114
 
 #define HOVER_SLOT_SPRITES_COUNT 5
 
@@ -141,6 +142,9 @@ static void LoadBagItemListBuffers(u8);
 static void PrintPocketName(const u8 *);
 static void DrawItemListBgRow(u8);
 static void SpriteCB_SlideCursorY(struct Sprite *);
+static void SpriteCB_BagScrollThumb(struct Sprite *);
+static void CreateCursorSprite(void);
+static void CreateHoverSlotSprites(void);
 static void CreatePocketScrollArrowPair(void);
 static void CreatePocketSwitchArrowPair(void);
 static void DestroyPocketSwitchArrowPair(void);
@@ -435,6 +439,7 @@ static const u32 sBagScreen_BG3TileMap[] = INCGFX_U32("graphics/bag/swsh/bg3.bin
 
 static const u32 sCursor_Gfx[]           = INCGFX_U32("graphics/bag/swsh/cursor.png", ".4bpp.smol");
 static const u32 sHoverSlot_Gfx[]        = INCGFX_U32("graphics/bag/swsh/hover_slot.png", ".4bpp.smol");
+static const u32 sScrollThumb_Gfx[]      = INCGFX_U32("graphics/bag/swsh/scroll_thumb.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]           = INCGFX_U16("graphics/bag/swsh/cursor.png", ".gbapal");
 
 static const struct OamData sOamData_Cursor =
@@ -539,6 +544,31 @@ static const struct SpriteTemplate sHoverSlotSpriteTemplate =
     .anims = sSpriteAnimTable_HoverSlot,
 };
 
+static const struct OamData sOamData_ScrollThumb =
+{
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(8x8),
+    .size = SPRITE_SIZE(8x8),
+    .priority = 2,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_ScrollThumb =
+{
+    .data = sScrollThumb_Gfx,
+    .size = (8 * 8) / 2,
+    .tag = TAG_BAG_SCROLL_THUMB
+};
+
+static const struct SpriteTemplate sSpriteTemplate_ScrollThumb =
+{
+    .tileTag = TAG_BAG_SCROLL_THUMB,
+    .paletteTag = TAG_ITEM_CURSOR,
+    .oam = &sOamData_ScrollThumb,
+    .callback = SpriteCB_BagScrollThumb,
+};
+
 static const union AffineAnimCmd sAffineAnim_BagItemIcon_Appear[] =
 {
     AFFINEANIMCMD_FRAME(192, 192, 0, 0),
@@ -553,8 +583,9 @@ static const union AffineAnimCmd *const sAffineAnims_BagItemIcon[] =
 
 static u8 sCursorSpriteId;
 static u8 sHoverSlotSpriteIds[HOVER_SLOT_SPRITES_COUNT];
+static u8 sScrollThumbSpriteId;
 static s32 sHoveredItemIndex;
-static struct ComfyAnim sCursorYAnim;
+static u32 sCursorAnimId;
 
 enum {
     COLORID_NORMAL,
@@ -830,6 +861,8 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         memset(gBagMenu->spriteIds, SPRITE_NONE, sizeof(gBagMenu->spriteIds));
         sCursorSpriteId = SPRITE_NONE;
         memset(sHoverSlotSpriteIds, SPRITE_NONE, sizeof(sHoverSlotSpriteIds));
+        sScrollThumbSpriteId = SPRITE_NONE;
+        sCursorAnimId = INVALID_COMFY_ANIM;
         sHoveredItemIndex = LIST_CANCEL;
         memset(gBagMenu->windowIds, WINDOW_NONE, sizeof(gBagMenu->windowIds));
         SetMainCallback2(CB2_Bag);
@@ -839,6 +872,7 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
 void CB2_BagMenuRun(void)
 {
     RunTasks();
+    AdvanceComfyAnimations();
     AnimateSprites();
     BuildOamBuffer();
     DoScheduledBgTilemapCopiesToVram();
@@ -948,48 +982,35 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 15:
-        {
-            u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + sItemListMenu.itemVerticalPadding;
-            u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
-            u8 initialY = windowTop + sItemListMenu.upText_Y + gBagPosition.cursorPosition[gBagPosition.pocket] * rowHeight + 8;
-            u8 i;
-            {
-                struct ComfyAnimEasingConfig animConfig;
-                InitComfyAnimConfig_Easing(&animConfig);
-                animConfig.from = Q_24_8(initialY);
-                animConfig.to = Q_24_8(initialY);
-                animConfig.durationFrames = 1;
-                animConfig.easingFunc = ComfyAnimEasing_EaseInOutCubic;
-                InitComfyAnim_Easing(&animConfig, &sCursorYAnim);
-            }
-            sCursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, 76, initialY, 0);
-            gSprites[sCursorSpriteId].callback = SpriteCB_SlideCursorY;
-            for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
-            {
-                sHoverSlotSpriteIds[i] = CreateSprite(&sHoverSlotSpriteTemplate, 86 + i * 32, initialY, 1);
-                StartSpriteAnim(&gSprites[sHoverSlotSpriteIds[i]], sHoverSlotAnims[i]);
-            }
-        }
+        CreateCursorSprite();
         gMain.state++;
         break;
     case 16:
-        CreateItemMenuSwapLine();
+        CreateHoverSlotSprites();
         gMain.state++;
         break;
     case 17:
+        sScrollThumbSpriteId = CreateSprite(&sSpriteTemplate_ScrollThumb, 236, 28, 1);
+        gMain.state++;
+        break;
+    case 18:
+        CreateItemMenuSwapLine();
+        gMain.state++;
+        break;
+    case 19:
         CreatePocketScrollArrowPair();
         CreatePocketSwitchArrowPair();
         gMain.state++;
         break;
-    case 18:
+    case 20:
         PrepareTMHMMoveWindow();
         gMain.state++;
         break;
-    case 19:
+    case 21:
         BlendPalettes(PALETTES_ALL, 16, 0);
         gMain.state++;
         break;
-    case 20:
+    case 22:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         gPaletteFade.bufferTransferDisabled = FALSE;
         gMain.state++;
@@ -1052,6 +1073,10 @@ static bool8 LoadBagMenu_Graphics(void)
         break;
     case 5:
         LoadCompressedSpriteSheet(&sSpriteSheet_HoverSlot);
+        gBagMenu->graphicsLoadState++;
+        break;
+    case 6:
+        LoadCompressedSpriteSheet(&sSpriteSheet_ScrollThumb);
         gBagMenu->graphicsLoadState++;
         break;
     default:
@@ -1147,18 +1172,65 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
     }
 }
 
+static void CreateCursorSprite(void)
+{
+    u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + sItemListMenu.itemVerticalPadding;
+    u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
+    u8 initialY = windowTop + sItemListMenu.upText_Y + gBagPosition.cursorPosition[gBagPosition.pocket] * rowHeight + 8;
+    struct ComfyAnimEasingConfig animConfig;
+
+    InitComfyAnimConfig_Easing(&animConfig);
+    animConfig.from = Q_24_8(initialY);
+    animConfig.to = Q_24_8(initialY);
+    animConfig.durationFrames = 1;
+    animConfig.easingFunc = ComfyAnimEasing_EaseInOutCubic;
+    sCursorAnimId = CreateComfyAnim_Easing(&animConfig);
+
+    sCursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, 76, initialY, 0);
+    gSprites[sCursorSpriteId].callback = SpriteCB_SlideCursorY;
+}
+
+static void CreateHoverSlotSprites(void)
+{
+    u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + sItemListMenu.itemVerticalPadding;
+    u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
+    u8 initialY = windowTop + sItemListMenu.upText_Y + gBagPosition.cursorPosition[gBagPosition.pocket] * rowHeight + 8;
+    u8 i;
+
+    for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
+    {
+        sHoverSlotSpriteIds[i] = CreateSprite(&sHoverSlotSpriteTemplate, 86 + i * 32, initialY, 1);
+        StartSpriteAnim(&gSprites[sHoverSlotSpriteIds[i]], sHoverSlotAnims[i]);
+    }
+}
+
 static void SpriteCB_SlideCursorY(struct Sprite *sprite)
 {
     s16 y;
     u8 i;
-    TryAdvanceComfyAnim(&sCursorYAnim);
-    y = ReadComfyAnimValueSmooth(&sCursorYAnim);
+    y = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
     sprite->y = y;
     for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
     {
         if (sHoverSlotSpriteIds[i] != SPRITE_NONE)
             gSprites[sHoverSlotSpriteIds[i]].y = y;
     }
+}
+
+static void SpriteCB_BagScrollThumb(struct Sprite *sprite)
+{
+    u8 pocket = gBagPosition.pocket;
+    u8 total = gBagMenu->numItemStacks[pocket];
+    u16 absIdx;
+
+    if (total <= MAX_ITEMS_SHOWN)
+    {
+        sprite->invisible = TRUE;
+        return;
+    }
+    sprite->invisible = FALSE;
+    absIdx = gBagPosition.scrollPosition[pocket] + gBagPosition.cursorPosition[pocket];
+    sprite->y2 = absIdx * 84 / (total - 1);
 }
 
 static void RefreshItemListColors(struct ListMenu *list)
@@ -1188,7 +1260,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     s16 spriteY = windowTop + list->template.upText_Y + list->selectedRow * rowHeight + 8;
     u32 durationFrames = 8;
 
-    if (!onInit && !sCursorYAnim.completed)
+    if (!onInit && !gComfyAnims[sCursorAnimId].completed)
     {
         if (gMain.heldKeys & (DPAD_UP | DPAD_DOWN))
             durationFrames = 2;
@@ -1199,11 +1271,11 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     {
         struct ComfyAnimEasingConfig animConfig;
         InitComfyAnimConfig_Easing(&animConfig);
-        animConfig.from = sCursorYAnim.position;
+        animConfig.from = gComfyAnims[sCursorAnimId].position;
         animConfig.to = Q_24_8(spriteY);
         animConfig.durationFrames = durationFrames;
         animConfig.easingFunc = ComfyAnimEasing_EaseInOutCubic;
-        InitComfyAnim_Easing(&animConfig, &sCursorYAnim);
+        InitComfyAnim_Easing(&animConfig, &gComfyAnims[sCursorAnimId]);
     }
 
     sHoveredItemIndex = itemIndex;
@@ -1382,6 +1454,7 @@ static void Task_CloseBagMenu(u8 taskId)
             SetMainCallback2(gBagPosition.exitCallback);
 
         BagDestroyPocketScrollArrowPair();
+        ReleaseComfyAnim(sCursorAnimId);
         ResetSpriteData();
         FreeAllSpritePalettes();
         FreeBagMenu();
