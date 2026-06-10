@@ -67,15 +67,6 @@ void write_text_file(string filepath, string text) {
     out_file.close();
 }
 
-bool json_to_bool(const Json &data, const string &field) {
-    const Json value = data[field];
-    if (value.type() == Json::Type::NUL)
-        return false;
-    if (value.type() == Json::Type::BOOL)
-        return value.bool_value();
-    FATAL_ERROR("Value for %s is unexpected type; expected bool.\n", field.c_str());
-}
-
 string json_to_string(const Json &data, const string &field = "", bool silent = false) {
     const Json value = !field.empty() ? data[field] : data;
     string output = "";
@@ -792,6 +783,20 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     write_text_file(output_c + sep + "map_groups.h", map_header_text);
 }
 
+bool get_layout_rules(const Json &data, string layout_name) {
+    const Json value = data["frlg_layout_rules"];
+    if (value.type() == Json::Type::BOOL)
+        return value.bool_value();
+    if (value.type() == Json::Type::NUL) {
+        if (version == "emerald") {
+            return false;
+        } else if (version == "firered" || version == "leafgreen") {
+            return true;
+        }
+    }
+    FATAL_ERROR("%s is missing `frlg_layout_rules` value in `data/layouts/layouts.json`\n", layout_name.c_str());
+}
+
 string generate_layout_headers_text(Json layouts_data) {
     ostringstream text;
 
@@ -805,22 +810,23 @@ string generate_layout_headers_text(Json layouts_data) {
         if (!is_build_version_compatible(layout["build_version"]))
             continue;
 
-        string layoutName = json_to_string(layout, "name");
-        string border_label = layoutName + "_Border";
-        string blockdata_label = layoutName + "_Blockdata";
+        string layout_name = json_to_string(layout, "name");
+        string border_label = layout_name + "_Border";
+        string blockdata_label = layout_name + "_Blockdata";
         text << border_label << "::\n"
              << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n"
              << blockdata_label << "::\n"
              << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n"
              << "\t.align 2\n"
-             << layoutName << "::\n"
+             << layout_name << "::\n"
              << "\t.4byte " << json_to_string(layout, "width") << "\n"
              << "\t.4byte " << json_to_string(layout, "height") << "\n"
              << "\t.4byte " << border_label << "\n"
              << "\t.4byte " << blockdata_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
-        if (json_to_bool(layout, "frlg_layout_rules"))
+        bool frlg_layout_rules = get_layout_rules(layout, layout_name);
+        if (frlg_layout_rules)
         {
             text << "\t.byte TRUE\n"
                  << "\t.byte " << json_to_string(layout, "border_width") << "\n"
@@ -894,6 +900,8 @@ string generate_layouts_constants_text(Json layouts_data) {
             continue;
         if (layout != Json::object())
         {
+            if (layout["frlg_layout_rules"].type() == Json::Type::NUL)
+                text << "#warning " << json_to_string(layout, "id") << " is using implicit layout rules, defaulting to " << version << " rules\n";
             text << "#define " << json_to_string(layout, "id") << " " << i << "\n";
             defined_layouts.push_back(json_to_string(layout, "id"));
         }
