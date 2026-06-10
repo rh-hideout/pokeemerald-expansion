@@ -603,7 +603,7 @@ Json parse_required_map_defines(void) {
     return json_data;
 }
 
-string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &valid_map_ids) {
+string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &invalid_maps, vector<string> &valid_map_ids) {
     string file_dir = file_parent(groups_filepath) + sep;
 
     string guard_name = "CONSTANTS_MAP_GROUPS";
@@ -611,8 +611,6 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     ostringstream mapCountText;
 
     text << get_include_guard_start(guard_name) << get_generated_warning("data/maps/map_groups.json", false);
-
-    text << "//\n// DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/map_groups.json\n//\n\n";
 
     text << "enum\n{\n";
 
@@ -622,6 +620,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
         vector<string> map_ids;
+        vector<bool> map_disabled;
         size_t max_length = 0;
 
         int map_count = 0; //DEBUG
@@ -637,13 +636,30 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
             valid_map_ids.push_back(id);
             if (id.length() > max_length)
                 max_length = id.length();
-            map_count++; //DEBUG
+            string map_name_str = json_to_string(map_name);
+            auto it = find(invalid_maps.begin(), invalid_maps.end(), map_name_str);
+            if (it != invalid_maps.end()) {
+                map_disabled.push_back(true);
+            } else {
+                map_count++; //DEBUG
+                map_disabled.push_back(false);
+            }
         }
 
         int map_id_num = 0;
+        int counter = 0;
         for (string map_id : map_ids) {
+            if (map_disabled[counter++] == true)
+                continue;
             text << "    " << map_id << string(max_length - map_id.length(), ' ')
                  << " = (" << map_id_num++ << " | (" << group_num << " << 8)),\n";
+        }
+        counter = 0;
+        for (string map_id : map_ids) {
+            if (map_disabled[counter++] == false)
+                continue;
+            text << "    " << map_id << string(max_length - map_id.length(), ' ')
+                 << " = (" << map_id_num++ << " | (" << group_num << " << 8)), // DISABLED\n";
         }
 
         text << "\n";
@@ -726,7 +742,6 @@ void clean_heal_locations(vector<string> &valid_map_ids)
 
 bool is_build_version_compatible(Json build_version)
 {
-
     if (build_version.type() == Json::Type::NUL)
         return true;
 
@@ -767,7 +782,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm);
-    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
+    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, invalid_maps, valid_map_ids);
 
     clean_heal_locations(valid_map_ids);
     write_text_file(output_asm + sep + "groups.inc", groups_text);
