@@ -4264,10 +4264,8 @@ static void CreateShroomishSprite(struct Sprite *ball)
         {116, 44},
         {116, 112}
     };
-    struct Roulette UNUSED *roulette;
 
     t = ball->data[7] - 2;
-    roulette = sRoulette;  // Unnecessary, needed to match
     sRoulette->spriteIds[SPR_CLEAR_MON] = CreateSprite(&sSpriteTemplate_Shroomish, 36, -12, 50);
     sRoulette->spriteIds[SPR_CLEAR_MON_SHADOW_1] = CreateSprite(&sSpriteTemplate_ShroomishShadow[0], coords[ball->sStuckOnWheelLeft][0], coords[ball->sStuckOnWheelLeft][1], 59);
     sRoulette->spriteIds[SPR_CLEAR_MON_SHADOW_2] = CreateSprite(&sSpriteTemplate_ShroomishShadow[1], 36, 140, 51);

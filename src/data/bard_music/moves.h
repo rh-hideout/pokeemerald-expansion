@@ -3,7 +3,7 @@
 
 #include "constants/moves.h"
 
-const u16 gNumBardWords_Moves = MOVES_COUNT;
+const enum Move gNumBardWords_Moves = MOVES_COUNT;
 
 static const struct BardSoundTemplate sBardSoundTemplates_Moves[MOVES_COUNT][MAX_BARD_SOUNDS_PER_WORD] = {
     [MOVE_NONE] = {

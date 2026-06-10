@@ -1218,10 +1218,12 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
         return;
     }
     
+#if FREE_MATCH_CALL == FALSE
     if (battleParams->params.isRematch)
     {
         battleParams->params.opponentA = GetRematchTrainerId(battleParams->params.opponentA);
     }
+#endif //FREE_MATCH_CALL
     
     PUSH_IF_SET(EventSnippet_PlayTrainerEncounterMusic, battleParams->params.playMusicA)
     PUSH       (EventSnippet_SetTrainerFacingDirection);

@@ -461,7 +461,7 @@
  *     MESSAGE("Wobbuffet used Dream Eater!");
  *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
- * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
+ * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis: | badPoison: | frostbite:)
  * Causes the test to fail if the battler's status is not changed to the
  * specified status.
  *     STATUS_ICON(player, badPoison: TRUE);
@@ -766,8 +766,6 @@ struct BattleTrialData
     u8 scoreTieCount;
     u8 targetTieCount;
 };
-
-extern struct BattleTrialData gBattleTrialData;
 
 struct BattleTestData
 {
@@ -1153,7 +1151,7 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 
 struct MoveContext
 {
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
     u16 moveSlot:2;
     u16 explicitMoveSlot:1;
@@ -1184,7 +1182,7 @@ struct ItemContext
     u16 explicitItemId:1;
     u16 partyIndex;
     u16 explicitPartyIndex:1;
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
     struct RiggedRNG rng;
     u16 explicitRNG:1;

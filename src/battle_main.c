@@ -168,7 +168,7 @@ EWRAM_DATA u16 gCurrentMove = 0;
 EWRAM_DATA u16 gChosenMove = 0;
 EWRAM_DATA u16 gCalledMove = 0;
 EWRAM_DATA s32 gBideDmg[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gLastUsedItem = 0;
+EWRAM_DATA enum Item gLastUsedItem = ITEM_NONE;
 EWRAM_DATA enum Ability gLastUsedAbility = ABILITY_NONE;
 EWRAM_DATA enum BattlerId gBattlerAttacker = 0;
 EWRAM_DATA enum BattlerId gBattlerTarget = 0;
@@ -1986,7 +1986,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 
             if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == -1)
             {
-                ball = gTrainerClasses[trainer->trainerClass].ball ?: ITEM_POKE_BALL;
+                ball = gTrainerClasses[trainer->trainerClass].ball ?: BALL_POKE;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
             }
         }
@@ -5564,8 +5564,7 @@ static void HandleEndTurn_FinishBattle(void)
     }
     else
     {
-        if (gBattleControllerExecFlags == 0)
-            gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
+        RunBattleScriptCommands();
     }
 }
 
@@ -5712,8 +5711,7 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
     }
     else
     {
-        if (gBattleControllerExecFlags == 0)
-            gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
+        RunBattleScriptCommands();
     }
 }
 
@@ -6007,7 +6005,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
           && gimmick != GIMMICK_DYNAMAX
           && gimmick != GIMMICK_Z_MOVE)
     {
-        u32 ateType = TrySetAteType(move, battler, ability);
+        enum Type ateType = TrySetAteType(move, battler, ability);
         if (ateType != TYPE_NONE && state == MON_IN_BATTLE)
             gBattleStruct->battlerState[battler].ateBoost = TRUE;
         return ateType;
@@ -6031,7 +6029,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
 void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
 {
     enum Type moveType;
-    u32 heldItem = gBattleMons[battler].item;
+    enum Item heldItem = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
     gBattleStruct->dynamicMoveType = 0;

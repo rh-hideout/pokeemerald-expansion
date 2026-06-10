@@ -62,8 +62,8 @@ static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 
     if (gTestRunnerEnabled)
     {
         enum BattleTrainer trainer = !IsPartnerMonFromSameTrainer(battler) ? battler : GetBattlerSide(battler);
-        u32 forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
-        if (forcedAbility != 0)
+        enum Ability forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
+        if (forcedAbility != ABILITY_NONE)
             ability = forcedAbility;
     }
 #endif
@@ -1586,11 +1586,7 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
                 itemHeal = 1;
         }
         break;
-    case HOLD_EFFECT_CONFUSE_SPICY:
-    case HOLD_EFFECT_CONFUSE_DRY:
-    case HOLD_EFFECT_CONFUSE_SWEET:
-    case HOLD_EFFECT_CONFUSE_BITTER:
-    case HOLD_EFFECT_CONFUSE_SOUR:
+    case HOLD_EFFECT_CONFUSE_FLAVOR:
         if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
         {
             itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
@@ -1885,7 +1881,9 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u32 recurringHealing = GetSwitchinRecurringHealing(battler);
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
-    u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
+    u16 maxHP = gBattleMons[battler].maxHP;
+    enum Item item = gAiLogicData->items[battler];
+    enum HoldEffect heldItemEffect = GetItemHoldEffect(item);
     u8 weatherDuration = gBattleStruct->weatherDuration;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
@@ -2720,7 +2718,7 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler)
 
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)
 {
-    u32 aiAbility = gAiLogicData->abilities[battler];
+    enum Ability aiAbility = gAiLogicData->abilities[battler];
     enum Item aiItem = gAiLogicData->items[battler];
     bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler, gAiLogicData->abilities[battler], GetItemHoldEffect(aiItem)));
     bool32 opponentStatDrop = FALSE;

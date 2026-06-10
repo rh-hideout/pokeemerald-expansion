@@ -256,11 +256,11 @@ extern const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate;
 extern const struct SpriteTemplate sDexListStartMenuCursorSpriteTemplate;
 
 extern const struct BgTemplate sSearchMenu_BgTemplate[NUM_SEARCH_MENU_BG_TEMPLATES];
-extern const struct WindowTemplate sSearchMenu_WindowTemplate[];
+extern const struct WindowTemplate sSearchMenu_WindowTemplate[2];
 extern const u8 sScrollMonIncrements[];
 extern const u8 sScrollTimers[];
 extern const struct BgTemplate sPokedex_BgTemplate[NUM_POKEDEX_BG_TEMPLATES];
-extern const struct WindowTemplate sPokemonList_WindowTemplate[];
+extern const struct WindowTemplate sPokemonList_WindowTemplate[2];
 extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLATES];
 extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 

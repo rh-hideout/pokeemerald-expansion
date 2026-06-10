@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("If Glaive Rush isn't successful moves targeted at the user d
 
 SINGLE_BATTLE_TEST("Glaive Rush doesn't affect the user if the effect is blocked", s16 damage)
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_FIDOUGH; }
     PARAMETRIZE { species = SPECIES_MAGNEMITE; } // Closest mon in both Defense and Sp. Defense
