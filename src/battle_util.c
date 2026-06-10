@@ -1491,11 +1491,64 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 
     // Unconfirmed: We're making an assumption that a Max Move variant of moves that otherwise result in
     // "This move can't be used!" can be used while Dynamaxed
-    if (DYNAMAX_BYPASS_CHECK &&
-        ((moveEffect == EFFECT_FIRST_TURN_ONLY && !IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
-         || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
-         || (moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
-         || (moveEffect == EFFECT_LAST_RESORT && !CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)))
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_FIRST_TURN_ONLY
+     && !IsBattlersFirstTurn(battler)
+     && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+    {
+        gCurrentMove = move;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+            limitations++;
+        }
+    }
+    
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_SPIT_UP
+     && gBattleMons[battler].volatiles.stockpileCounter == 0
+     && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+    {
+        gCurrentMove = move;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+            limitations++;
+        }
+    }
+    
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
+     && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move))
+     && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+    {
+        gCurrentMove = move;
+        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        {
+            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
+            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        }
+        else
+        {
+            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+            limitations++;
+        }
+    }
+    
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_LAST_RESORT
+     && !CanUseLastResort(battler)
+     && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1659,17 +1712,34 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
             unusableMoves |= 1u << i;
-        // Fake Out, First Impression
-        // Spit Up
-        // Burn Up, Double Shock
-        // Last Resort
-        else if (check & MOVE_LIMITATION_UNUSABLE
-             && ((moveEffect == EFFECT_FIRST_TURN_ONLY && !IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
-             || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
-             || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
-             || (moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
-             || (moveEffect == EFFECT_LAST_RESORT && !CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)))
-            unusableMoves |= 1u << i;
+        else if (check & MOVE_LIMITATION_UNUSABLE)
+        {
+            switch (moveEffect)
+            {
+                // Fake Out, First Impression
+                case EFFECT_FIRST_TURN_ONLY:
+                    if (!IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Spit Up
+                case EFFECT_SPIT_UP:
+                    if (gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Burn Up, Double Shock
+                case EFFECT_FAIL_IF_NOT_ARG_TYPE:
+                    if (!IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Last Resort
+                case EFFECT_LAST_RESORT:
+                    if (!CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     return unusableMoves;
 }
@@ -7346,7 +7416,7 @@ static inline uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ct
     // Unseen Fist and Piercing Drill
     u32 protected = gProtectStructs[ctx->battlerDef].protected;
     if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD
-         && (GetBattlerAbility(ctx->battlerAtk) == ABILITY_UNSEEN_FIST || GetBattlerAbility(ctx->battlerAtk) == ABILITY_PIERCING_DRILL)
+         && (ctx->abilities[ctx->battlerAtk] == ABILITY_UNSEEN_FIST || ctx->abilities[ctx->battlerAtk] == ABILITY_PIERCING_DRILL)
          && GetConfig(B_UNSEEN_FIST_DAMAGE) >= GEN_CHAMPIONS)
         return UQ_4_12(0.25);
 

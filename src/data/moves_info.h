@@ -15223,11 +15223,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
         #if B_UPDATED_MOVE_DATA < GEN_CHAMPIONS
             "Super effective on Water-\n"
-        #if B_USE_FROSTBITE == TRUE
-            "types. May cause frostbite."),
-        #else
-            "types. May cause freezing."),
-        #endif
+            #if B_USE_FROSTBITE == TRUE
+                "types. May cause frostbite."),
+            #else
+                "types. May cause freezing."),
+            #endif
         #else
             "Super effective on Water-\n"
             "types."),

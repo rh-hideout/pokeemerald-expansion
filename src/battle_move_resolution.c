@@ -107,7 +107,7 @@ static enum CancelerResult CancelerChillyReception(struct BattleCalcValues *cv)
 
 static void DefrostBattler(enum BattlerId battler, u32 status)
 {
-    gBattleMons[battler].volatiles.freezeTimer = 0;
+    GetBattlerPartyState(battler)->freezeTurns = 0;
     gBattleScripting.battler = battler;
     gBattleMons[battler].status1 &= ~status;
     RequestNonVolatileChange(battler);

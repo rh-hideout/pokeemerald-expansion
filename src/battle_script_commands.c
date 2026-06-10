@@ -2215,7 +2215,7 @@ static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effec
         gBattlescriptCurrInstr = BattleScript_MoveEffectBurn;
         break;
     case MOVE_EFFECT_FREEZE:
-        gBattleMons[effectBattler].volatiles.freezeTimer = 2;
+        GetBattlerPartyState(effectBattler)->freezeTurns = 2;
         gBattleMons[effectBattler].status1 |= STATUS1_FREEZE;
         gBattlescriptCurrInstr = BattleScript_MoveEffectFreeze;
         break;

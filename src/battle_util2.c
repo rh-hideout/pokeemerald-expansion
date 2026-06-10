@@ -221,16 +221,17 @@ u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
         case 1:
             if (gBattleMons[battler].status1 & STATUS1_FREEZE)
             {
-                if (Random() % (B_FREEZE_TURNS >= GEN_CHAMPIONS ? 4 : 5) != 0 && gBattleMons[battler].volatiles.freezeTimer != 0)
+                if (Random() % (B_FREEZE_TURNS >= GEN_CHAMPIONS ? 4 : 5) != 0 && GetBattlerPartyState(battler)->freezeTurns < 2)
                 {
                     // Still frozen
-                    gBattleMons[battler].volatiles.freezeTimer--;
+                    if (B_FREEZE_TURNS >= GEN_CHAMPIONS)
+                        GetBattlerPartyState(battler)->freezeTurns++;
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsFrozen;
                 }
                 else
                 {
                     // Unfreeze
-                    gBattleMons[battler].volatiles.freezeTimer = 0;
+                    GetBattlerPartyState(battler)->freezeTurns = 0;
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
                     gBattleScripting.battler = battler;
                     BattleScriptCall(BattleScript_BattlerDefrosted);
