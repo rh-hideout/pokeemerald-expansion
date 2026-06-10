@@ -356,7 +356,7 @@ void ScriptHatchMon(void)
     AddHatchedMonToParty(gSpecialVar_0x8004);
 }
 
-static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesLoc)
+static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, enum Species *speciesLoc)
 {
     u8 position = 0;
     u8 spriteId = 0;

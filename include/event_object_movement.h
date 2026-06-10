@@ -493,7 +493,6 @@ u8 MovementType_FollowPlayer_Moving(struct ObjectEvent *objectEvent, struct Spri
 void StartSpriteAnimInDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction direction, u8 animNum);
 
 bool8 FollowablePlayerMovement_Idle(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction, bool8 tileCallback(u8));
-bool8 FollowablePlayerMovement_FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction, bool8 tileCallback(u8));
 bool8 FollowablePlayerMovement_Step(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction, bool8 tileCallback(u8));
 bool8 FollowablePlayerMovement_GoSpeed1(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction, bool8 tileCallback(u8));
 bool8 FollowablePlayerMovement_GoSpeed2(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction, bool8 tileCallback(u8));

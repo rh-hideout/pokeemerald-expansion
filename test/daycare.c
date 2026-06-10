@@ -819,7 +819,7 @@ TEST("InheritIVs does not pass more stats when a power item is equipped")
     enum Item item1 = ITEM_NONE;
     for (j = 0; j < 720; j++)
     {
-        for (u32 k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
+        for (enum Item k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
         {
             PARAMETRIZE { rngIv = j; item0 = k; item1 = ITEM_NONE; }
             PARAMETRIZE { rngIv = j; item0 = k; item1 = ITEM_DESTINY_KNOT; }
@@ -867,7 +867,7 @@ TEST("InheritIVs will always pass the preferred stat from the parent holding the
     enum Stat powerStat = 0;
     for (j = 0; j < 720; j++)
     {
-        for (u32 k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
+        for (enum Item k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
         {
             PARAMETRIZE { rngIv = j; item0 = k; powerStat = GetItemSecondaryId(k); }
         }
@@ -912,9 +912,9 @@ TEST("InheritIVs pick one parent at random to pass its power stat if two power i
     enum Item item0 = ITEM_NONE;
     enum Item item1 = ITEM_NONE;
     u32 parent = 0;
-    for (u32 j = ITEM_POWER_WEIGHT; j <= ITEM_POWER_ANKLET; j++)
+    for (enum Item j = ITEM_POWER_WEIGHT; j <= ITEM_POWER_ANKLET; j++)
     {
-        for (u32 k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
+        for (enum Item k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
         {
             PARAMETRIZE { item0 = j; item1 = k; parent = 0; }
             PARAMETRIZE { item0 = j; item1 = k; parent = 1; }

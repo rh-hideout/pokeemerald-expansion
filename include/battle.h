@@ -274,12 +274,12 @@ struct BattleHistory
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
     u8 itemEffects[MAX_BATTLERS_COUNT];
-    u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
-    u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
+    enum Move usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
+    enum Move moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
     u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
-    u16 trainerItems[MAX_BATTLERS_COUNT];
+    enum Item trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
-    u16 heldItems[MAX_BATTLERS_COUNT];
+    enum Item heldItems[MAX_BATTLERS_COUNT];
 };
 
 struct BattleScriptsStack
@@ -473,7 +473,7 @@ struct BattleGimmickData
 
 struct LostItem
 {
-    u16 originalItem:15;
+    enum Item originalItem:15;
     u16 stolen:1;
 };
 
@@ -542,7 +542,7 @@ struct PartyState
     u32 sentOut:1;
     u32 isKnockedOff:1;
     u32 padding:8;
-    u16 usedHeldItem;
+    enum Item usedHeldItem;
 };
 
 struct EventStates
@@ -624,8 +624,8 @@ struct BattleStruct
     u8 triAttackBurn:1;
     enum SynchronizeState synchronizeState:3;
     void (*savedCallback)(void);
-    u16 chosenItem[MAX_BATTLERS_COUNT];
-    u16 choicedMove[MAX_BATTLERS_COUNT];
+    enum Item chosenItem[MAX_BATTLERS_COUNT];
+    enum Move choicedMove[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -678,7 +678,7 @@ struct BattleStruct
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     enum PledgeCombo pledgeState:2;
     u8 unused3:2;
-    u16 flingItem:14;
+    enum Item flingItem:14;
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
@@ -992,7 +992,7 @@ extern u16 gCurrentMove;
 extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
-extern u16 gLastUsedItem;
+extern enum Item gLastUsedItem;
 extern enum Ability gLastUsedAbility;
 extern enum BattlerId gBattlerAttacker;
 extern enum BattlerId gBattlerTarget;
