@@ -47,6 +47,7 @@
 #include "window.h"
 #include "apprentice.h"
 #include "battle_pike.h"
+#include "comfy_anim.h"
 #include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -139,6 +140,7 @@ static void AllocateBagItemListBuffers(void);
 static void LoadBagItemListBuffers(u8);
 static void PrintPocketName(const u8 *);
 static void DrawItemListBgRow(u8);
+static void SpriteCB_SlideCursorY(struct Sprite *);
 static void CreatePocketScrollArrowPair(void);
 static void CreatePocketSwitchArrowPair(void);
 static void DestroyPocketSwitchArrowPair(void);
@@ -492,10 +494,14 @@ static const union AnimCmd sSpriteAnim_HoverSlot_0[] = {
     ANIMCMD_END
 };
 static const union AnimCmd sSpriteAnim_HoverSlot_1[] = {
-    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
+    ANIMCMD_FRAME(7, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 static const union AnimCmd sSpriteAnim_HoverSlot_2[] = {
+    ANIMCMD_FRAME(8, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+static const union AnimCmd sSpriteAnim_HoverSlot_3[] = {
     ANIMCMD_FRAME(16, 0, FALSE, FALSE),
     ANIMCMD_END
 };
@@ -504,9 +510,10 @@ static const union AnimCmd *const sSpriteAnimTable_HoverSlot[] = {
     sSpriteAnim_HoverSlot_0,
     sSpriteAnim_HoverSlot_1,
     sSpriteAnim_HoverSlot_2,
+    sSpriteAnim_HoverSlot_3,
 };
 
-static const u8 sHoverSlotAnims[HOVER_SLOT_SPRITES_COUNT] = {0, 1, 1, 1, 2};
+static const u8 sHoverSlotAnims[HOVER_SLOT_SPRITES_COUNT] = {0, 1, 1, 2, 3};
 
 static const struct CompressedSpriteSheet sSpriteSheet_HoverSlot =
 {
@@ -523,9 +530,22 @@ static const struct SpriteTemplate sHoverSlotSpriteTemplate =
     .anims = sSpriteAnimTable_HoverSlot,
 };
 
+static const union AffineAnimCmd sAffineAnim_BagItemIcon_Appear[] =
+{
+    AFFINEANIMCMD_FRAME(192, 192, 0, 0),
+    AFFINEANIMCMD_FRAME(8, 8, 0, 8),
+    AFFINEANIMCMD_END
+};
+
+static const union AffineAnimCmd *const sAffineAnims_BagItemIcon[] =
+{
+    sAffineAnim_BagItemIcon_Appear,
+};
+
 static u8 sCursorSpriteId;
 static u8 sHoverSlotSpriteIds[HOVER_SLOT_SPRITES_COUNT];
 static s32 sHoveredItemIndex;
+static struct ComfyAnim sCursorYAnim;
 
 enum {
     COLORID_NORMAL,
@@ -923,7 +943,17 @@ static bool8 SetupBagMenu(void)
             u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
             u8 initialY = windowTop + sItemListMenu.upText_Y + gBagPosition.cursorPosition[gBagPosition.pocket] * rowHeight + 8;
             u8 i;
+            {
+                struct ComfyAnimEasingConfig animConfig;
+                InitComfyAnimConfig_Easing(&animConfig);
+                animConfig.from = Q_24_8(initialY);
+                animConfig.to = Q_24_8(initialY);
+                animConfig.durationFrames = 1;
+                animConfig.easingFunc = ComfyAnimEasing_EaseInOutCubic;
+                InitComfyAnim_Easing(&animConfig, &sCursorYAnim);
+            }
             sCursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, 76, initialY, 0);
+            gSprites[sCursorSpriteId].callback = SpriteCB_SlideCursorY;
             for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
             {
                 sHoverSlotSpriteIds[i] = CreateSprite(&sHoverSlotSpriteTemplate, 86 + i * 32, initialY, 1);
@@ -1107,6 +1137,20 @@ static void GetItemNameFromPocket(u8 *dest, enum Item itemId)
     }
 }
 
+static void SpriteCB_SlideCursorY(struct Sprite *sprite)
+{
+    s16 y;
+    u8 i;
+    TryAdvanceComfyAnim(&sCursorYAnim);
+    y = ReadComfyAnimValueSmooth(&sCursorYAnim);
+    sprite->y = y;
+    for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
+    {
+        if (sHoverSlotSpriteIds[i] != SPRITE_NONE)
+            gSprites[sHoverSlotSpriteIds[i]].y = y;
+    }
+}
+
 static void RefreshItemListColors(struct ListMenu *list)
 {
     u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + list->template.itemVerticalPadding;
@@ -1132,14 +1176,24 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + list->template.itemVerticalPadding;
     u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
     s16 spriteY = windowTop + list->template.upText_Y + list->selectedRow * rowHeight + 8;
-    u8 i;
+    u32 durationFrames = 8;
 
-    if (sCursorSpriteId != SPRITE_NONE)
-        gSprites[sCursorSpriteId].y = spriteY;
-    for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
+    if (!onInit && !sCursorYAnim.completed)
     {
-        if (sHoverSlotSpriteIds[i] != SPRITE_NONE)
-            gSprites[sHoverSlotSpriteIds[i]].y = spriteY;
+        if (gMain.heldKeys & (DPAD_UP | DPAD_DOWN))
+            durationFrames = 2;
+        else
+            durationFrames = 4;
+    }
+
+    {
+        struct ComfyAnimEasingConfig animConfig;
+        InitComfyAnimConfig_Easing(&animConfig);
+        animConfig.from = sCursorYAnim.position;
+        animConfig.to = Q_24_8(spriteY);
+        animConfig.durationFrames = durationFrames;
+        animConfig.easingFunc = ComfyAnimEasing_EaseInOutCubic;
+        InitComfyAnim_Easing(&animConfig, &sCursorYAnim);
     }
 
     sHoveredItemIndex = itemIndex;
@@ -1161,8 +1215,13 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + iconSlot];
         if (iconSpriteId != SPRITE_NONE)
         {
-            gSprites[iconSpriteId].x2 = 100;
-            gSprites[iconSpriteId].y2 = spriteY + 4;
+            struct Sprite *spr = &gSprites[iconSpriteId];
+            spr->x2 = 100;
+            spr->y2 = spriteY + 4;
+            spr->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+            spr->affineAnims = sAffineAnims_BagItemIcon;
+            InitSpriteAffineAnim(spr);
+            StartSpriteAffineAnim(spr, 0);
         }
         if (!gBagMenu->inhibitItemDescriptionPrint)
             PrintItemDescription(itemIndex);
