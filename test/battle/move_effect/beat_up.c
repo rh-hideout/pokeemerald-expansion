@@ -202,8 +202,8 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
 
 SINGLE_BATTLE_TEST("Beat Up's damage is typeless (up to Gen4)", s16 damage)
 {
-    u16 defender = SPECIES_WOBBUFFET;
-    u16 type1, type2;
+    enum Species defender = SPECIES_WOBBUFFET;
+    enum Type type1, type2;
 
     PARAMETRIZE { defender = SPECIES_BLISSEY; }   // Normal
     PARAMETRIZE { defender = SPECIES_MACHAMP; }     // Fighting

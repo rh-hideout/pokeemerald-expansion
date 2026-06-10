@@ -414,7 +414,7 @@ struct SpeciesInfo /*0xC4*/
     u8 eggCycles;
     u8 friendship;
     u8 growthRate;
-    u8 eggGroups[2];
+    enum EggGroup eggGroups[EGG_GROUPS_PER_MON];
     enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
 
@@ -512,11 +512,11 @@ struct SpeciesInfo /*0xC4*/
     struct ObjectEventGraphicsInfo overworldDataFemale;
 #endif //P_GENDER_DIFFERENCES
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const void* overworldPalette;
-    const void* overworldShinyPalette;
+    const void *overworldPalette;
+    const void *overworldShinyPalette;
 #if P_GENDER_DIFFERENCES
-    const void* overworldPaletteFemale;
-    const void* overworldShinyPaletteFemale;
+    const void *overworldPaletteFemale;
+    const void *overworldShinyPaletteFemale;
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
@@ -616,7 +616,7 @@ struct LevelUpMove
 
 struct FormChange
 {
-    u16 method;
+    enum FormChanges method:16;
     enum Species targetSpecies;
     u16 param1;
     u16 param2;
@@ -628,7 +628,7 @@ struct FormChangeContext
 {
     enum FormChanges method:16;
     enum Species currentSpecies;
-    u16 partyItemUsed;
+    enum Item partyItemUsed;
     u16 multichoiceSelection;
     enum Item heldItem;
     enum Ability ability;
@@ -656,7 +656,7 @@ struct Fusion
     enum Item itemId;
     enum Species targetSpecies1;
     enum Species targetSpecies2;
-    u16 fusingIntoMon;
+    enum Species fusingIntoMon;
     enum Move fusionMove;
     enum FusionExtraMoveHandling extraMoveHandling;
 };
@@ -848,12 +848,11 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyI
 bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, u8 usedByAI);
 bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId battler);
 u8 GetItemEffectParamOffset(enum BattlerId battler, enum Item itemId, u8 effectByte, u8 effectBit);
-u8 *UseStatIncreaseItem(enum Item itemId);
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
 enum Species GetGMaxTargetSpecies(enum Species species);
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState);
-enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
+enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, enum Item evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum);
@@ -877,7 +876,7 @@ s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffec
 void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
-u8 CanLearnTeachableMove(enum Species species, enum Move move);
+bool32 CanLearnTeachableMove(enum Species species, enum Move move);
 u16 SpeciesToPokedexNum(enum Species species);
 bool32 IsSpeciesInRegionalDex(enum Species species);
 bool32 IsSpeciesInKantoDex(enum Species species);
@@ -918,8 +917,8 @@ bool8 HasTwoFramesAnimation(enum Species species);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
-u16 GetFormSpeciesId(enum Species speciesId, u8 formId);
-u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
+enum Species GetFormSpeciesId(enum Species speciesId, u8 formId);
+u8 GetFormIdFromFormSpeciesId(enum Species formSpeciesId);
 enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx);
 bool32 DoesSpeciesHaveFormChangeMethod(enum Species species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);

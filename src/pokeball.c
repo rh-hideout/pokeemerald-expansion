@@ -1432,7 +1432,7 @@ static enum PokeBall GetBattlerPokeballItemId(enum BattlerId battler)
     return GetMonData(mon, MON_DATA_POKEBALL);
 }
 
-enum PokeBall ItemIdToBallId(u32 ballItem)
+enum PokeBall ItemIdToBallId(enum Item ballItem)
 {
     enum PokeBall secondaryId = GetItemSecondaryId(ballItem);
 

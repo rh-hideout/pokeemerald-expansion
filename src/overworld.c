@@ -1851,7 +1851,6 @@ static void OverworldBasic(void)
         u32 *bld1 = (u32*)&gTimeBlend;
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
-        TransitionMapMusic();
         FormChangeTimeUpdate();
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]

@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Primal Reversion happens for Groudon only when holding Red O
 
 SINGLE_BATTLE_TEST("Primal Reversion happens for Kyogre only when holding Blue Orb")
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_RED_ORB; }
     PARAMETRIZE { heldItem = ITEM_BLUE_ORB; }

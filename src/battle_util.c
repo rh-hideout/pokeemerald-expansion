@@ -2472,10 +2472,27 @@ static bool32 SetStartingHazardStatus(enum Hazards hazard, u32 targetSide, u8 la
     return effect;
 }
 
+static bool32 TryWeatherStartingStatus(enum BattleWeather weather, bool32 isPermanent)
+{
+    if (gBattleWeather & sBattleWeatherInfo[weather].flag)
+        return FALSE;
+
+    gBattleWeather = sBattleWeatherInfo[weather].flag;
+    gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[weather].moveStartMessage;
+    gBattleScripting.animArg1 = sBattleWeatherInfo[weather].animation;
+
+    if (isPermanent)
+        gBattleStruct->weatherDuration = 0;
+    else
+        gBattleStruct->weatherDuration = 5;
+
+    BattleScriptPushCursorAndCallback(BattleScript_OverworldSSWeatherStarts);
+    return TRUE;
+}
+
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
 {
     bool32 effect = FALSE;
-    bool32 isTerrain = FALSE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return FALSE;
@@ -2491,7 +2508,6 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer, gStartingStatuses.electricTerrain ? 0 : 5);
             gStartingStatuses.electricTerrainTemporary = gStartingStatuses.electricTerrain = FALSE;
-            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
@@ -2506,7 +2522,6 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer, gStartingStatuses.mistyTerrain ? 0 : 5);
             gStartingStatuses.mistyTerrainTemporary = gStartingStatuses.mistyTerrain = FALSE;
-            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
@@ -2521,7 +2536,6 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer, gStartingStatuses.grassyTerrain ? 0 : 5);
             gStartingStatuses.grassyTerrainTemporary = gStartingStatuses.grassyTerrain = FALSE;
-            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
@@ -2536,7 +2550,11 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer, gStartingStatuses.psychicTerrain ? 0 : 5);
             gStartingStatuses.psychicTerrainTemporary = gStartingStatuses.psychicTerrain = FALSE;
-            isTerrain = TRUE;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+                return TRUE;
+            }
         }
         else if (gStartingStatuses.trickRoom || gStartingStatuses.trickRoomTemporary)
         {
@@ -2762,14 +2780,48 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             if (effect)
                 return TRUE;
         }
-        if (effect)
+        else if (gStartingStatuses.weatherSun || gStartingStatuses.weatherSunTemporary)
         {
-            if (isTerrain)
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-            else
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+            bool32 isPermanent = gStartingStatuses.weatherSun ? TRUE : FALSE;
+            gStartingStatuses.weatherSun = gStartingStatuses.weatherSunTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_SUN, isPermanent))
+                return TRUE;
         }
-
+        else if (gStartingStatuses.weatherRain || gStartingStatuses.weatherRainTemporary)
+        {
+            bool32 isPermanent = gStartingStatuses.weatherRain ? TRUE : FALSE;
+            gStartingStatuses.weatherRain = gStartingStatuses.weatherRainTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_RAIN, isPermanent))
+                return TRUE;
+        }
+        else if (gStartingStatuses.weatherSandstorm || gStartingStatuses.weatherSandstormTemporary)
+        {
+            bool32 isPermanent = gStartingStatuses.weatherSandstorm ? TRUE : FALSE;
+            gStartingStatuses.weatherSandstorm = gStartingStatuses.weatherSandstormTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_SANDSTORM, isPermanent))
+                return TRUE;
+        }
+        else if (gStartingStatuses.weatherHail || gStartingStatuses.weatherHailTemporary)
+        {
+            bool32 isPermanent = gStartingStatuses.weatherHail ? TRUE : FALSE;
+            gStartingStatuses.weatherHail = gStartingStatuses.weatherHailTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_HAIL, isPermanent))
+                return TRUE;
+        }
+        else if (gStartingStatuses.weatherSnow || gStartingStatuses.weatherSnowTemporary)
+        {
+            bool32 isPermanent = gStartingStatuses.weatherSnow ? TRUE : FALSE;
+            gStartingStatuses.weatherSnow = gStartingStatuses.weatherSnowTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_SNOW, isPermanent))
+                return TRUE;
+        }
+        else if (gStartingStatuses.weatherFog || gStartingStatuses.weatherFogTemporary)
+        {
+            bool32 isPermanent = gStartingStatuses.weatherFog ? TRUE : FALSE;
+            gStartingStatuses.weatherFog = gStartingStatuses.weatherFogTemporary = FALSE;
+            if (TryWeatherStartingStatus(BATTLE_WEATHER_FOG, isPermanent))
+                return TRUE;
+        }
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
         if (B_THUNDERSTORM_TERRAIN == TRUE
@@ -5906,7 +5958,7 @@ bool32 IsBattlerGrounded(enum BattlerId battler, enum Ability ability, enum Hold
     return IsBattlerGroundedInverseCheck(battler, ability, holdEffect, NOT_INVERSE_BATTLE, FALSE);
 }
 
-u32 GetMoveSlot(u16 *moves, enum Move move)
+u32 GetMoveSlot(enum Move *moves, enum Move move)
 {
     u32 i;
 
@@ -7805,7 +7857,7 @@ static inline u32 GetCriticalHitOdds(u32 critChance)
     return sCriticalHitOdds[critChance];
 }
 
-static inline u32 IsBattlerLeekAffected(enum BattlerId battler, enum HoldEffect holdEffect)
+static inline bool32 IsBattlerLeekAffected(enum BattlerId battler, enum HoldEffect holdEffect)
 {
     if (holdEffect == HOLD_EFFECT_LEEK)
     {
@@ -8398,7 +8450,7 @@ bool32 IsPartnerMonFromSameTrainer(enum BattlerId battler)
         return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
 }
 
-bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, u16 heldItemId)
+bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, enum Item heldItemId)
 {
     u32 i;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
@@ -9164,7 +9216,7 @@ void TryRestoreHeldItems(void)
         // Check if held items should be restored after battle based on generation
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9 || gBattleStruct->itemLost[B_SIDE_PLAYER][i].stolen || returnNPCItems)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem;
+            enum Item lostItem = gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem;
 
             // Check if the lost item is a berry and the mon is not holding it
             if (GetItemPocket(lostItem) == POCKET_BERRIES && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
@@ -9539,9 +9591,9 @@ bool32 MoveHasAdditionalEffectSelf(enum Move move, enum MoveEffect moveEffect)
     return FALSE;
 }
 
-bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, u32 argument)
+bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, enum Type type)
 {
-    return (MoveHasAdditionalEffectSelf(move, moveEffect) && GetMoveArgType(move) == argument);
+    return (MoveHasAdditionalEffectSelf(move, moveEffect) && GetMoveArgType(move) == type);
 }
 
 bool32 MoveHasChargeTurnAdditionalEffect(enum Move move)

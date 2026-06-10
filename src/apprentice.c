@@ -202,7 +202,7 @@ static void SetPlayersApprenticeLvlMode(u8 mode)
 
 static void ShuffleApprenticeSpecies(void)
 {
-    u8 species[APPRENTICE_SPECIES_COUNT];
+    enum Species species[APPRENTICE_SPECIES_COUNT];
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(species); i++)

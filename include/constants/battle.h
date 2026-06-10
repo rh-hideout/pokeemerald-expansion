@@ -33,7 +33,7 @@
  * the player's side has a second trainer such as Mossdeep Space Center tag battle with
  * trainer Steven. gParties[B_TRAINER_OPPONENT_B] is only used in battles with two opponent trainers.
  * In a double battle where the battle side only has a single trainer, both battlers on that battle
- * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and 
+ * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and
  * gParties[B_TRAINER_OPPONENT_A] for opponent side).
  * Note in link multi battles, parties are set locally on each player's device, meaning
  * even if a player is in the right position, on their device they will still occupy
@@ -823,6 +823,18 @@ enum FaintedActions
     F(STARTING_STATUS_STEALTH_ROCK_OPPONENT,          stealthRockOpponent,        (u32, 1)) /* Stealth Rock Opponent */                    \
     F(STARTING_STATUS_SHARP_STEEL_PLAYER,             sharpSteelPlayer,           (u32, 1)) /* Sharp Steel Player */                       \
     F(STARTING_STATUS_SHARP_STEEL_OPPONENT,           sharpSteelOpponent,         (u32, 1)) /* Sharp Steel Opponent */                     \
+    F(STARTING_STATUS_WEATHER_SUN,                    weatherSun,                 (u32, 1)) /* Permanent Sun */                            \
+    F(STARTING_STATUS_WEATHER_SUN_TEMPORARY,          weatherSunTemporary,        (u32, 1)) /* Temporary Sun */                            \
+    F(STARTING_STATUS_WEATHER_RAIN,                   weatherRain,                (u32, 1)) /* Permanent Rain */                           \
+    F(STARTING_STATUS_WEATHER_RAIN_TEMPORARY,         weatherRainTemporary,       (u32, 1)) /* Temporary Rain */                           \
+    F(STARTING_STATUS_WEATHER_SANDSTORM,              weatherSandstorm,           (u32, 1)) /* Permanent Sandstorm */                      \
+    F(STARTING_STATUS_WEATHER_SANDSTORM_TEMPORARY,    weatherSandstormTemporary,  (u32, 1)) /* Temporary Sandstorm */                      \
+    F(STARTING_STATUS_WEATHER_HAIL,                   weatherHail,                (u32, 1)) /* Permanent Hail */                           \
+    F(STARTING_STATUS_WEATHER_HAIL_TEMPORARY,         weatherHailTemporary,       (u32, 1)) /* Temporary Hail */                           \
+    F(STARTING_STATUS_WEATHER_SNOW,                   weatherSnow,                (u32, 1)) /* Permanent Snow */                           \
+    F(STARTING_STATUS_WEATHER_SNOW_TEMPORARY,         weatherSnowTemporary,       (u32, 1)) /* Temporary Snow */                           \
+    F(STARTING_STATUS_WEATHER_FOG,                    weatherFog,                 (u32, 1)) /* Permanent Fog */                            \
+    F(STARTING_STATUS_WEATHER_FOG_TEMPORARY,          weatherFogTemporary,        (u32, 1)) /* Temporary Fog */                            \
 
 #define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
 

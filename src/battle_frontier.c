@@ -309,7 +309,8 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 {
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
-    u32 personality = 0, ability, friendship, j;
+    u32 personality = 0, friendship, j;
+    enum Ability ability;
 
     if (fmon->gender == TRAINER_MON_MALE)
     {
