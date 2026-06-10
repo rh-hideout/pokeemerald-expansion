@@ -1067,8 +1067,8 @@ const u16 gProtectLikeUsedStringIds[] =
 
 const u16 gBrokeProtectionStringIds[] =
 {
-    [B_MSG_FEINT]           = STRINGID_FELLFORFEINT,
-    [B_MSG_HYPERSPACE_FURY] = STRINGID_BROKETHROUGHPROTECTION,
+    [B_MSG_FEINT]                 = STRINGID_FELLFORFEINT,
+    [B_MSG_BROKE_THROUGH_PROTECT] = STRINGID_BROKETHROUGHPROTECTION,
 };
 
 const u16 gReflectLightScreenSafeguardStringIds[] =

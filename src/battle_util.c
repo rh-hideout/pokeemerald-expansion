@@ -1311,6 +1311,23 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
 #define DYNAMAX_BYPASS_CHECK    (!IsGimmickSelected(battler, GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
 
+static bool32 SetCantSelectScript(enum BattlerId battler, enum Move move, const u8 *palaceScript, const u8 *script)
+{
+    gCurrentMove = move;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    {
+        gPalaceSelectionBattleScripts[battler] = palaceScript;
+        gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        return FALSE;
+    }
+    else
+    {
+        gSelectionBattleScripts[battler] = script;
+        return TRUE;
+    }
+}
+
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 {
     u32 limitations = 0;
@@ -1324,34 +1341,14 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
-        gCurrentMove = gBattleMons[battler].volatiles.encoredMove;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_EncoredMove;
-            limitations++;
-        }
-        return limitations;
+        limitations = SetCantSelectScript(battler, gBattleMons[battler].volatiles.encoredMove, BattleScript_EncoredMoveInPalace, BattleScript_EncoredMove);
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingDisabledMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingDisabledMove;
+        if (SetCantSelectScript(battler, gBattleMons[battler].volatiles.disabledMove, BattleScript_SelectingDisabledMoveInPalace, BattleScript_SelectingDisabledMove))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
@@ -1378,122 +1375,58 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
             gCurrentMove = MOVE_MAX_GUARD;
         else
             gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveTauntInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveTaunt;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveTauntInPalace, BattleScript_SelectingNotAllowedMoveTaunt))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveThroatChopInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveThroatChop;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveThroatChopInPalace, BattleScript_SelectingNotAllowedMoveThroatChop))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && GetImprisonedMovesCount(battler, move))
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingImprisonedMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingImprisonedMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingImprisonedMoveInPalace, BattleScript_SelectingImprisonedMove))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsGravityPreventingMove(move))
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGravityInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGravity;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveGravityInPalace, BattleScript_SelectingNotAllowedMoveGravity))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsHealBlockPreventingMove(battler, move))
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveHealBlockInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveHealBlock;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveHealBlockInPalace, BattleScript_SelectingNotAllowedMoveHealBlock))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsBelchPreventingMove(battler, move))
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedBelchInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedBelch;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedBelchInPalace, BattleScript_SelectingNotAllowedBelch))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedStuffCheeksInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedStuffCheeks;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedStuffCheeksInPalace, BattleScript_SelectingNotAllowedStuffCheeks))
             limitations++;
-        }
     }
 
     if (MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
     {
         gCurrentMove = move;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, gCurrentMove);
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedCurrentMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedCurrentMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedCurrentMoveInPalace, BattleScript_SelectingNotAllowedCurrentMove))
             limitations++;
-        }
     }
 
     // Unconfirmed: We're making an assumption that a Max Move variant of moves that otherwise result in
@@ -1504,16 +1437,8 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
-        }
     }
     
     if (DYNAMAX_BYPASS_CHECK
@@ -1522,16 +1447,8 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
-        }
     }
     
     if (DYNAMAX_BYPASS_CHECK
@@ -1540,16 +1457,8 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
-        }
     }
     
     if (DYNAMAX_BYPASS_CHECK
@@ -1558,16 +1467,8 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)
     {
         gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingCantUseMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
-        }
     }
 
     gPotentialItemEffectBattler = battler;
@@ -1575,16 +1476,8 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveChoiceItemInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveChoiceItem;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveChoiceItemInPalace, BattleScript_SelectingNotAllowedMoveChoiceItem))
             limitations++;
-        }
     }
     else if (holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
     {
@@ -1593,32 +1486,16 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         else
             gCurrentMove = move;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveAssaultVestInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveAssaultVest;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveAssaultVestInPalace, BattleScript_SelectingNotAllowedMoveAssaultVest))
             limitations++;
-        }
     }
     if (DYNAMAX_BYPASS_CHECK && (GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS) && *choicedMove != MOVE_NONE
               && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGorillaTacticsInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGorillaTactics;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveGorillaTacticsInPalace, BattleScript_SelectingNotAllowedMoveGorillaTactics))
             limitations++;
-        }
     }
 
     if (gBattleMons[battler].pp[moveId] == 0)

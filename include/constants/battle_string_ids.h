@@ -833,7 +833,7 @@ enum ProtectLikeUsedStringID
 enum BrokeProtectionStringID
 {
     B_MSG_FEINT,
-    B_MSG_HYPERSPACE_FURY,
+    B_MSG_BROKE_THROUGH_PROTECT,
 };
 
 // gRestUsedStringIds
