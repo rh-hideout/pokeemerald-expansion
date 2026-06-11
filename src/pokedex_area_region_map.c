@@ -15,9 +15,8 @@ void LoadPokedexAreaMapGfx(enum RegionMapId regionMap, bool32 faded)
 {
     DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMap].dexMapGfx, 0, 0, 0);
     DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMap].dexMapTilemap, 0, 0, 1);
-    if (faded)
-        CpuCopy32(gRegionMapInfos[regionMap].dexMapPalette, &gPlttBufferUnfaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMap].dexMapPaletteSize);
-    else
+    CpuCopy32(gRegionMapInfos[regionMap].dexMapPalette, &gPlttBufferUnfaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMap].dexMapPaletteSize);
+    if (!faded)
         CpuCopy32(gRegionMapInfos[regionMap].dexMapPalette, &gPlttBufferFaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMap].dexMapPaletteSize);
 }
 
