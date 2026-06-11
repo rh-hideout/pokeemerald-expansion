@@ -5105,14 +5105,11 @@ static void SpriteCB_HeldMon(struct Sprite *sprite)
 
 static u32 MakeIconIdFromSpeciesAndIconType(enum Species species, enum SpeciesIconType iconType)
 {
-    u32 iconId;
     if (iconType == FEMALE_ICON)
-        iconId = species | (1 << 15);
-    else if (iconType == EGG_ICON)
-        iconId = species | (1 << 14);
-    else
-        iconId = species;
-    return iconId;
+        return (species | (1 << 15));
+    if (iconType == EGG_ICON)
+        return (species | (1 << 14));
+    return species;
 }
 
 static u16 TryLoadMonIconTiles(enum Species species, enum SpeciesIconType iconType)
