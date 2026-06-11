@@ -421,5 +421,6 @@ bool32 IsBattlersFirstTurn(enum BattlerId battler);
 struct PartyState *GetBattlerPartyState(enum BattlerId battler);
 bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
+bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -1822,6 +1822,10 @@
 	.byte \battler
 	.endm
 
+	.macro effectsafterformchange
+	callnative BS_EffectsAfterFormChange
+	.endm
+
 	.macro abilityonformchange battler:req
 	callnative BS_AbilityOnFormChange
 	.byte \battler
