@@ -1302,7 +1302,7 @@ bool8 ScrCmd_applymovement(struct ScriptContext *ctx)
         gSprites[objEvent->spriteId].animCmdIndex = 0; // Reset start frame of animation
     }
 
-    gObjectEvents[GetObjectEventIdByLocalId(localId)].directionOverwrite = DIR_NONE;
+    gObjectEvents[GetObjectEventIdByLocalIdAndMapInternal(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup)].directionOverwrite = DIR_NONE;
     ScriptMovement_StartObjectMovementScript(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, movementScript);
     sMovingNpcId = localId;
     if (localId != OBJ_EVENT_ID_FOLLOWER
@@ -1323,7 +1323,7 @@ bool8 ScrCmd_applymovementat(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    gObjectEvents[GetObjectEventIdByLocalId(localId)].directionOverwrite = DIR_NONE;
+    gObjectEvents[GetObjectEventIdByLocalIdAndMapInternal(localId, mapNum, mapGroup)].directionOverwrite = DIR_NONE;
     ScriptMovement_StartObjectMovementScript(localId, mapNum, mapGroup, movementScript);
     sMovingNpcId = localId;
     return FALSE;
