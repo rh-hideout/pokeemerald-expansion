@@ -10348,7 +10348,7 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
         evasionStage = DEFAULT_STAT_STAGE;
     if (MoveIgnoresDefenseEvasionStages(cv->move))
         evasionStage = DEFAULT_STAT_STAGE;
-    if (cv->abilities[battlerAtk] == ABILITY_UNAWARE)
+    if (cv->abilities[battlerDef] == ABILITY_UNAWARE)
         accStage = DEFAULT_STAT_STAGE;
 
     if (gBattleMons[battlerDef].volatiles.foresight || gBattleMons[battlerDef].volatiles.miracleEye)
