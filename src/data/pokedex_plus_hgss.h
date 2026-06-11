@@ -204,6 +204,30 @@ static const u8 *const sTextsHGSS_Forms_Submenu_Buttons[2] =
     COMPOUND_STRING("{DPAD_NONE}Forms {A_BUTTON}Check {START_BUTTON}Evos")
 };
 
+static const u8 *const sTextsHGSS_Evo_PreEvo_Mega[2] =
+{
+    COMPOUND_STRING("{STR_VAR_1} Mega Evolves with {STR_VAR_2}"),
+    COMPOUND_STRING("{STR_VAR_1} Mega Evolves with {STR_VAR_2}")
+};
+
+static const u8 *const sTextsHGSS_Evo_PreEvo[2] =
+{
+    COMPOUND_STRING("{STR_VAR_1} evolves from {STR_VAR_2}"),
+    COMPOUND_STRING("{STR_VAR_1} evolves from {STR_VAR_2}")
+};
+
+static const u8 *const sTextsHGSS_Evo_None[2] =
+{
+    COMPOUND_STRING("{STR_VAR_1} has no evolution."),
+    COMPOUND_STRING("{STR_VAR_1} has no evolution.")
+};
+
+static const u8 *const sTextsHGSS_Form_None[2] =
+{
+    COMPOUND_STRING("{STR_VAR_1} has no alternate forms."),
+    COMPOUND_STRING("{STR_VAR_1} has no alternate forms.")
+};
+
 static const u8 *const sTextsHGSS_Power[2] =
 {
     gText_Power,

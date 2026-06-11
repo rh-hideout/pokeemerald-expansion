@@ -3160,7 +3160,7 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, enum Species preSpecies, e
     StringCopy(gStringVar1, GetSpeciesName(species)); //evolution mon name
 
     if (sPokedexView->sEvoScreenData.isMega)
-        StringExpandPlaceholders(gStringVar3, COMPOUND_STRING("{STR_VAR_1} Mega Evolves with {STR_VAR_2}"));
+        StringExpandPlaceholders(gStringVar3, sTextHGSS(Evo_PreEvo_Mega));
     else
     {
 
@@ -3169,7 +3169,7 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, enum Species preSpecies, e
         else
             StringCopy(gStringVar2, gText_ThreeQuestionMarks); //show questionmarks instead of name
 
-        StringExpandPlaceholders(gStringVar3, COMPOUND_STRING("{STR_VAR_1} evolves from {STR_VAR_2}")); //evolution mon name
+        StringExpandPlaceholders(gStringVar3, sTextHGSS(Evo_PreEvo)); //evolution mon name
 
     }
 
@@ -3394,7 +3394,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
     {
         if (depth == 0)
         {
-            StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{STR_VAR_1} has no evolution."));
+            StringExpandPlaceholders(gStringVar4, sTextHGSS(Evo_None));
             PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, base_x-7-7, base_y + base_y_offset*(*depth_i) + numLines);
         }
         return;
@@ -4066,7 +4066,7 @@ static void PrintForms(u8 taskId, enum Species species)
     //If there are no forms print text
     if (times == 0)
     {
-        StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{DPAD_NONE}FORMs {A_BUTTON}CHECK {START_BUTTON}EVOs"));
+        StringExpandPlaceholders(gStringVar4, sTextHGSS(Form_None));
         PrintInfoScreenTextSmall(gStringVar4, FONT_SMALL, base_x, base_y + base_y_offset*times);
     }
 }
