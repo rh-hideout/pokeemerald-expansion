@@ -10246,14 +10246,6 @@ static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, enum Move move
     return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
 
-static bool32 IsSkyDropInvolved(enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (moveEffect != EFFECT_SKY_DROP)
-        return FALSE;
-    return gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
-        || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
-}
-
 bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option)
 {
     bool32 effect = FALSE;
