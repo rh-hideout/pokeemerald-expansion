@@ -343,6 +343,18 @@ const u8 *GetMonIconTilesIsEgg(enum Species species, u32 personality, bool32 isE
     return iconSprite;
 }
 
+const u8 *GetMonIconTilesByIconType(enum Species species, enum SpeciesIconType iconType)
+{
+    const u8 *iconSprite;
+    if (iconType == EGG_ICON)
+        iconSprite = gEggDatas[gSpeciesInfo[species].eggId].eggIcon;
+    else if (iconType == FEMALE_ICON)
+        iconSprite = gSpeciesInfo[species].iconSpriteFemale;
+    else
+        iconSprite = gSpeciesInfo[species].iconSprite;
+    return iconSprite;
+}
+
 void TryLoadAllMonIconPalettesAtOffset(u16 offset)
 {
     s32 i;
