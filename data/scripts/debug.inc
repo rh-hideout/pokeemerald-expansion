@@ -201,8 +201,17 @@ Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
-	release
-	end
+    dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2, EventScript_ExampleScript_Text_3
+    end
+
+EventScript_ExampleScript_Text_1::
+    .string "Choice 1$"
+
+EventScript_ExampleScript_Text_2::
+    .string "Choice 2$"
+
+EventScript_ExampleScript_Text_3::
+    .string "Choice 3$"
 
 Debug_EventScript_Script_2::
 	release
