@@ -787,13 +787,6 @@ bool get_layout_rules(const Json &data, string layout_name) {
     const Json value = data["frlg_layout_rules"];
     if (value.type() == Json::Type::BOOL)
         return value.bool_value();
-    if (value.type() == Json::Type::NUL) {
-        if (version == "emerald") {
-            return false;
-        } else if (version == "firered" || version == "leafgreen") {
-            return true;
-        }
-    }
     FATAL_ERROR("%s is missing `frlg_layout_rules` value in `data/layouts/layouts.json`\n", layout_name.c_str());
 }
 
@@ -900,8 +893,6 @@ string generate_layouts_constants_text(Json layouts_data) {
             continue;
         if (layout != Json::object())
         {
-            if (layout["frlg_layout_rules"].type() == Json::Type::NUL)
-                text << "#warning " << json_to_string(layout, "id") << " is using implicit layout rules, defaulting to " << version << " rules\n";
             text << "#define " << json_to_string(layout, "id") << " " << i << "\n";
             defined_layouts.push_back(json_to_string(layout, "id"));
         }
