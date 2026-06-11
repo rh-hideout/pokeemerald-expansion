@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Comatose makes Rest fail")
 SINGLE_BATTLE_TEST("Comatose isn't affected by Mold Breaker, Turboblaze or Teravolt")
 {
     enum Ability ability;
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; species = SPECIES_PINSIR; }
     PARAMETRIZE { ability = ABILITY_TURBOBLAZE; species = SPECIES_RESHIRAM; }
@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Comatose isn't affected by Poison Touch + Sunsteel Strike")
 WILD_BATTLE_TEST("Comatose boosts Dream Ball's multiplier")
 {
     enum Ability ability;
-    u16 species;
+    enum Species species;
     bool32 shouldCatch;
     const u16 rng = 50000;
 

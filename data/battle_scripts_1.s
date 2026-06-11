@@ -74,6 +74,7 @@ BattleScript_TeraFormChange::
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
 	abilityonformchange BS_ATTACKER
+	effectsafterformchange
 	end3
 
 BattleScript_EffectStatChange::
@@ -3208,6 +3209,13 @@ BattleScript_OverworldWeatherStarts::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
+BattleScript_OverworldSSWeatherStarts::
+	printfromtable gMoveWeatherChangeStringIds
+	waitmessage B_WAIT_TIME_LONG
+	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
+	call BattleScript_ActivateWeatherAbilities
+	end3
+
 BattleScript_OverworldTerrain::
 	printfromtable gTerrainStartsStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -3909,6 +3917,7 @@ BattleScript_MegaEvolutionAfterString:
 	printstring STRINGID_MEGAEVOEVOLVED
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_SCRIPTING
+	effectsafterformchange
 	end3
 
 BattleScript_WishMegaEvolution::
@@ -3953,6 +3962,7 @@ BattleScript_UltraBurst::
 	printstring STRINGID_ULTRABURSTCOMPLETED
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_SCRIPTING
+	effectsafterformchange
 	end3
 
 BattleScript_BattlerFormChange::

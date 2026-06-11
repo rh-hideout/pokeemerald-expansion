@@ -34,7 +34,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- conserves Z-move if target will faint 
 
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves to ensure a low-accuracy KO.")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
     PARAMETRIZE { species = SPECIES_TORKOAL; ability = ABILITY_DROUGHT; }
     PARAMETRIZE { species = SPECIES_PELIPPER; ability = ABILITY_DRIZZLE; }
     GIVEN {

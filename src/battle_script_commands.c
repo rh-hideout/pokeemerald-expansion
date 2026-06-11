@@ -2697,7 +2697,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         break;
     case MOVE_EFFECT_REMOVE_ARG_TYPE:
     {
-        u32 type = GetMoveArgType(gCurrentMove);
+        enum Type type = GetMoveArgType(gCurrentMove);
         // This seems unnecessary but is done to make it work properly with Parental Bond
         BattleScriptPush(battleScript);
         switch (type)
@@ -8659,6 +8659,7 @@ static void Cmd_recoverbasedonsunlight(void)
         s32 recoverAmount = 0;
         u32 weather = GetWeather();
         u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), weather);
+        u32 healingWeather = attackerWeather & ~B_WEATHER_STRONG_WINDS;
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (attackerWeather & B_WEATHER_SANDSTORM)
@@ -8670,7 +8671,7 @@ static void Cmd_recoverbasedonsunlight(void)
         {
             if (attackerWeather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
-            else if (!(GetWeather() & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+            else if (!(healingWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
@@ -8701,7 +8702,7 @@ static void Cmd_recoverbasedonsunlight(void)
             }
             if (attackerWeather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (!(attackerWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+            else if (!(healingWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else // not sunny weather
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
@@ -8950,7 +8951,7 @@ static void Cmd_tryswapitems(void)
         // took a while, but all checks passed and items can be safely swapped
         else
         {
-            u16 oldItemAtk, oldItemDef;
+            enum Item oldItemAtk, oldItemDef;
 
             oldItemAtk = gBattleMons[gBattlerAttacker].item;
             oldItemDef = gBattleMons[gBattlerTarget].item;
@@ -9607,7 +9608,7 @@ static void Cmd_tryrecycleitem(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    u16 *usedHeldItem;
+    enum Item *usedHeldItem;
 
     if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
         usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
@@ -9691,7 +9692,7 @@ u8 GetCatchingBattler(void)
 
 static void FinalizeCapture(void)
 {
-    u32 ballId = ItemIdToBallId(gLastThrownBall);
+    enum PokeBall ballId = ItemIdToBallId(gLastThrownBall);
     enum NationalDexOrder natDexNo = SpeciesToNationalPokedexNum(gBattleMons[gBattlerTarget].species);
     if ((GetConfig(B_CRITICAL_CAPTURE_IF_OWNED) >= GEN_9 && GetSetPokedexFlag(natDexNo, FLAG_GET_CAUGHT))
         || IsCriticalCapture())
@@ -9739,7 +9740,7 @@ struct BallData
 static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallData *ball)
 {
     u32 i;
-    u32 ballId = ItemIdToBallId(gLastUsedItem);
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     struct BattlePokemon *battleMon = &gBattleMons[wildMonBattler];
 
     ball->multiplier = 100;
@@ -9920,6 +9921,8 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
     case BALL_BEAST:
         ball->multiplier = 410;
         ball->divider = 4096;
+        break;
+    default:
         break;
     }
 
@@ -10249,7 +10252,7 @@ static void Cmd_givecaughtmon(void)
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
+            enum Item lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
             if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
                 SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
         }
@@ -12659,7 +12662,7 @@ void BS_HealOneSixth(void)
 void BS_TryRecycleBerry(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u16 *usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
+    enum Item *usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
     if (gBattleMons[gBattlerTarget].item == ITEM_NONE
         && GetItemPocket(*usedHeldItem) == POCKET_BERRIES)
     {
@@ -13248,6 +13251,47 @@ void BS_SwitchinAbilities(void)
      || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE))
+        return;
+}
+
+void BS_EffectsAfterFormChange(void)
+{
+    NATIVE_ARGS();
+
+    struct BattleCalcValues cv = {0};
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (!IsBattlerAlive(battler))
+            continue;
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = gBattlersByRawSpeed[i];
+        if (ItemBattleEffects(battler, 0, cv.holdEffects[battler], IsWhiteHerbActivation))
+            return;
+    }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = gBattlersByRawSpeed[i];
+        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv.abilities[battler], 0, TRUE))
+            return;
+    }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = gBattlersByRawSpeed[i];
+        if (ItemBattleEffects(battler, 0, cv.holdEffects[battler], IsMirrorHerbActivation))
+            return;
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (TrySwitchInEjectPack(START_OF_TURN))
         return;
 }
 
@@ -14008,7 +14052,7 @@ void BS_SetAuroraVeil(void)
 void BS_TryThirdType(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 type = GetMoveArgType(gCurrentMove);
+    enum Type type = GetMoveArgType(gCurrentMove);
     if (IS_BATTLER_OF_TYPE(gBattlerTarget, type) || GetActiveGimmick(gBattlerTarget) == GIMMICK_TERA)
     {
         gBattlescriptCurrInstr = cmd->failInstr;

@@ -1483,9 +1483,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Z Move")
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
-            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
-            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
+            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE);
+            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
+            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE);
+        }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
