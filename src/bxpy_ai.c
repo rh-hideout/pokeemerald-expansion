@@ -60,7 +60,6 @@ void BXPY_SetupBattlers(u32 battleFlags)
 
 void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, struct AiLogicData *bxpyAiLogicData)
 {
-    DebugPrintf("Computing battler index: %d", battler);
     // AI's party
     s32 lastId = GetAILastPartyIndex(battler);
     struct Pokemon *party = GetBattlerParty(battler);
@@ -72,10 +71,8 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
     // Check all party mons
     for (u32 monIndex = 0; monIndex < lastId; monIndex++)
     {
-        // bxpyAiData->partyScores[battler][monIndex] = 0;
         if (!IsValidForBattle(&party[monIndex]))
             continue;
-        DebugPrintf("Computing for party index: %d", monIndex);
         // Convert party data to battler data
         PokemonToBattleMon(&party[monIndex], &gBattleMons[battler]);
         BXPY_SetCandidateAiData(battler, bxpyAiLogicData);
@@ -90,7 +87,6 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
                 continue;
             if (GetBattlerSide(battler) == GetBattlerSide(opposingBattler)) // Don't care about matchup against allies
                 continue;
-            DebugPrintf("Computing for opponent index :%d", opposingBattler);
             opposingLastId = GetAILastPartyIndex(opposingBattler);
             opposingParty = GetBattlerParty(opposingBattler);
             // Check current mon against all player mons
@@ -98,7 +94,6 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
             {
                 if (!IsValidForBattle(&opposingParty[opposingMonIndex]))
                     continue;
-                DebugPrintf("Computing for opposing party index: %d", opposingMonIndex);
                 // Convert party data to battler data
                 PokemonToBattleMon(&opposingParty[opposingMonIndex], &gBattleMons[opposingBattler]);
                 BXPY_SetOpponentAiData(opposingBattler, bxpyAiLogicData);
@@ -120,11 +115,6 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
                 bxpyAiData->checkedMatchups += 1;
             }
         }
-    }
-    DebugPrintf("Total checked matchups: %d", bxpyAiData->checkedMatchups);
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
-    {
-        DebugPrintf("Party Mon Score: %d", bxpyAiData->partyScores[battler][monIndex]);
     }
 }
 
@@ -228,9 +218,6 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
         }
     }
 
-    DebugPrintf("Min hits to KO: %d", minHitsToKO);
-    DebugPrintf("Min hits to KO priority: %d", minHitsToKOPriority);
-
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         move = gBattleMons[battler].moves[moveIndex];
@@ -251,7 +238,6 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
         }
     }
 
-    DebugPrintf("Can mon win 1v1: %d", canBattlerWin1v1);
     return canBattlerWin1v1;
 }
 
