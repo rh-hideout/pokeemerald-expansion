@@ -57,6 +57,7 @@ extern const u8 BattleScript_FogEnded[];
 extern const u8 BattleScript_IceBodyHeal[];
 extern const u8 BattleScript_OverworldStatusStarts[];
 extern const u8 BattleScript_OverworldWeatherStarts[];
+extern const u8 BattleScript_OverworldSSWeatherStarts[];
 extern const u8 BattleScript_OverworldTerrain[];
 extern const u8 BattleScript_OverworldHazard[];
 extern const u8 BattleScript_SideStatusWoreOff[];
@@ -498,7 +499,9 @@ extern const u8 BattleScript_SkyDropFlyingType[];
 extern const u8 BattleScript_SkyDropNoTarget[];
 extern const u8 BattleScript_IncreaseStatChangeMessage[];
 extern const u8 BattleScript_DecreaseStatChangeMessage[];
+extern const u8 BattleScript_DecreaseStatChangeMessageMinStat[];
 extern const u8 BattleScript_StatDidntChangeMessagePause[];
+extern const u8 BattleScript_WildBattleVictory[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

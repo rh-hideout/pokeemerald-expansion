@@ -1,12 +1,12 @@
-.macro def_special, ptr:req, waitstate=0, requests_effects=0
+.macro def_special, ptr:req, requests_effects=0, waitstate=0
 .if ALLOCATE_SPECIAL_TABLE
-  .global SPECIAL_\ptr
-  .set SPECIAL_\ptr, __special__
-  .if \requests_effects == 0
-    .4byte \ptr
-  .else
-    .4byte \ptr + ROM_SIZE
-  .endif
+	.global SPECIAL_\ptr
+	.set SPECIAL_\ptr, __special__
+	.if \requests_effects == 0
+		.4byte \ptr
+	.else
+		.4byte \ptr + ROM_SIZE
+	.endif
 .endif
 .set SPECIAL_WAITSTATE_\ptr, \waitstate
 .set __special__, __special__ + 1
@@ -71,7 +71,6 @@ gSpecials::
 	def_special ObjectEventInteractionWaterBerryTree
 	def_special PlayerHasBerries
 	def_special IsEnigmaBerryValid
-	def_special GetTrainerBattleMode
 	def_special ShowTrainerIntroSpeech
 	def_special ShowTrainerCantBattleSpeech
 	def_special GetTrainerFlag
@@ -91,7 +90,6 @@ gSpecials::
 	def_special InterviewAfter
 	def_special IsLeadMonNicknamedOrNotEnglish
 	def_special SetContestCategoryStringVarForInterview
-	def_special GetNextActiveShowIfMassOutbreak
 	def_special IsTVShowAlreadyInQueue
 	def_special CheckForPlayersHouseNews
 	def_special GetMomOrDadStringForTVMessage
@@ -540,6 +538,7 @@ gSpecials::
 	def_special IsLastMonThatKnowsSurf
 	def_special CountPartyAliveNonEggMons
 	def_special TryPrepareSecondApproachingTrainer
+	def_special PrepareSecondApproachingTrainer
 	def_special RemoveRecordsWindow
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType

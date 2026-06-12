@@ -77,6 +77,7 @@ enum FaintBlockStates
 {
     FAINT_BLOCK_FINAL_GAMBIT,
     FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
+    FAINT_BLOCK_VICTORY_CATCH,
     FAINT_BLOCK_END_NEUTRALIZING_GAS,
     FAINT_BLOCK_DO_GRUDGE,
     // Destiny Bond is tested and called first, but Faint Target's script plays first
@@ -164,7 +165,7 @@ enum StatChangeResolution
     STAT_CHANGE_SUBSTITUTE,
     STAT_CHANGE_CAN_ANY_CHANGE,
     STAT_CHANGE_ACCURACY,
-    STAT_CHANGE_BY_MIRROR_ARMOR,
+    STAT_CHANGE_MIRROR_ARMOR,
     STAT_CHANGE_BEFORE_CHANGE,
     STAT_CHANGE_TRY_CHANGE,
     STAT_CHANGE_COUNT,
