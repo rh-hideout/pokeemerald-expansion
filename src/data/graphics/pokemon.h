@@ -25890,7 +25890,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
-    const u32 gMonFrontPic_Bellibolt[] = INCGFX_U32("graphics/pokemon/bellibolt/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Bellibolt[] = INCGFX_U32("graphics/pokemon/bellibolt/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Bellibolt[] = INCGFX_U16("graphics/pokemon/bellibolt/normal.pal", ".gbapal");
     const u32 gMonBackPic_Bellibolt[] = INCGFX_U32("graphics/pokemon/bellibolt/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Bellibolt[] = INCGFX_U16("graphics/pokemon/bellibolt/shiny.pal", ".gbapal");
