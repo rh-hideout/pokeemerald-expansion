@@ -12,8 +12,8 @@ MEMORY
     ROM               (rx) : ORIGIN = 0x8000000, LENGTH = 32M
 }
 
-SECTIONS {
-
+SECTIONS
+{
     .ewram ORIGIN(EWRAM) : AT (__ewram_lma)
     ALIGN(4)
     {
