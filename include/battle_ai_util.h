@@ -170,7 +170,7 @@ bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);
-bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef);
+bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef, enum Move move);
 struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses);
 bool32 AI_IsDamagedByRecoil(enum BattlerId battler);
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp);

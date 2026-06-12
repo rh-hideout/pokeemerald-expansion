@@ -33,7 +33,7 @@ enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum A
     if (MoveIgnoresTargetAbility(move))
         return ABILITY_NONE;
 
-    if (holdEffectDef != HOLD_EFFECT_ABILITY_SHIELD && IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+    if (holdEffectDef != HOLD_EFFECT_ABILITY_SHIELD && IsMoldBreakerTypeAbility(battlerAtk, abilityAtk, move))
         return ABILITY_NONE;
 
     return abilityDef;
@@ -512,7 +512,7 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
     if (atkPriority <= 0 || IsBattlerAlly(battlerAtk, battlerDef))
         return FALSE;
 
-    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk]) || MoveIgnoresTargetAbility(move))
+    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk], move) || MoveIgnoresTargetAbility(move))
         return FALSE;
 
     if (IsDazzlingAbility(aiData->abilities[battlerDef]))
@@ -611,26 +611,14 @@ static __attribute__((noinline)) ARM_FUNC s32 RandomRollDmg(s32 dmg)
 
 bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
 {
-    enum Ability battlerDefAbility;
-    enum Ability partnerDefAbility;
+    enum Ability battlerDefAbility = ctx->abilities[ctx->battlerDef];
+    enum Ability partnerDefAbility = ctx->abilities[BATTLE_PARTNER(ctx->battlerDef)];
     struct AiLogicData *aiData = gAiLogicData;
 
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return TRUE;
     if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
         return TRUE;
-
-    // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
-    if (IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk]) || MoveIgnoresTargetAbility(ctx->move))
-    {
-        battlerDefAbility = ABILITY_NONE;
-        partnerDefAbility = ABILITY_NONE;
-    }
-    else
-    {
-        battlerDefAbility = ctx->abilities[ctx->battlerDef];
-        partnerDefAbility = aiData->abilities[BATTLE_PARTNER(ctx->battlerDef)];
-    }
 
     if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
         return TRUE;
@@ -699,12 +687,12 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     return FALSE;
 }
 
-bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef)
+bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef, enum Move move)
 {
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
         return TRUE;
 
-    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk, move))
         return TRUE;
 
     return FALSE;
@@ -1106,7 +1094,7 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
         }
         else // consider move effects that hinder the target
         {
-            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, battlerDef, abilityDef))
+            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, battlerDef, abilityDef, move))
                 continue;
 
             switch (additionalEffect->moveEffect)
@@ -1837,7 +1825,7 @@ bool32 DoesBattlerIgnoreAbilityChecks(enum BattlerId battlerAtk, enum Ability at
     if (atkAbility == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(move))
         return TRUE;
 
-    if (IsMoldBreakerTypeAbility(battlerAtk, atkAbility) || MoveIgnoresTargetAbility(move))
+    if (IsMoldBreakerTypeAbility(battlerAtk, atkAbility, move) || MoveIgnoresTargetAbility(move))
         return TRUE;
 
     return FALSE;
@@ -3642,7 +3630,7 @@ bool32 AI_CanBeInfatuated(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
 {
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
-    if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk]) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
+    if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk], move) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
       || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))) // Opponent goes first
@@ -3703,7 +3691,7 @@ bool32 IsFlinchGuaranteed(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
         {
             if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
             || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
-            || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk])
+            || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk], move)
             && (gAiLogicData->abilities[battlerDef] == ABILITY_SHIELD_DUST || gAiLogicData->abilities[battlerDef] == ABILITY_INNER_FOCUS)))
                 return FALSE;
             else
@@ -4766,12 +4754,12 @@ bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDe
     if (bestMoveIsPhysical
      && gAiLogicData->abilities[battlerAtk] == ABILITY_ICE_FACE
      && gBattleMons[battlerAtk].species == SPECIES_EISCUE_ICE
-     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // ice face will absorb the hit, safe to use setup
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef], MOVE_NONE)) // ice face will absorb the hit, safe to use setup
         return TRUE;
 
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_DISGUISE
      && IsMimikyuDisguised(battlerAtk)
-     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // disguise will absorb the hit, safe to use setup
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef], MOVE_NONE)) // disguise will absorb the hit, safe to use setup
         return TRUE;
 
     return FALSE;

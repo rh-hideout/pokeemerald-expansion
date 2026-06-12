@@ -4196,9 +4196,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
      && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerAtk] != HOLD_EFFECT_MENTAL_HERB))
      {
         if (!AI_IsAbilityOnSide(battlerAtk, ABILITY_AROMA_VEIL)
-         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef])
+         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef], MOVE_NONE)
          || aiData->abilities[battlerDef] == ABILITY_MYCELIUM_MIGHT
-         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)])
+         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)], MOVE_NONE)
          || aiData->abilities[BATTLE_PARTNER(battlerDef)] == ABILITY_MYCELIUM_MIGHT)
             return score;
      }
@@ -5676,7 +5676,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
         }
         else // consider move effects that hinder the target
         {
-            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef]))
+            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef], move))
                 continue;
 
             switch (additionalEffect->moveEffect)
