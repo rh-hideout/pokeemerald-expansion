@@ -1221,7 +1221,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
     else
         sMonSummaryScreen->isBoxMon = FALSE;
 
-    u32 maxPageIndex = PSS_PAGE_COUNT - (P_HIDE_SUMMARY_CONTEST_DATA) ? 2 : 1;
+    u32 maxPageIndex = PSS_PAGE_COUNT - (C_HIDE_CONTEST_DATA) ? 2 : 1;
     switch (mode)
     {
     case SUMMARY_MODE_NORMAL:
