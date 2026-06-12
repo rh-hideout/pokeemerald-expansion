@@ -162,12 +162,11 @@ static void PrintPocketName(const u8 *);
 static void DrawItemListBgRow(u8);
 static void SpriteCB_SlideCursorY(struct Sprite *);
 static void SpriteCB_BagScrollThumb(struct Sprite *);
+static void SpriteCB_PocketScrollArrow(struct Sprite *);
 static void CreateCursorSprite(void);
 static void CreateHoverSlotSprites(void);
 static void CreateScrollThumbSprite(void);
 static void CreatePocketScrollArrowPair(void);
-static void CreatePocketSwitchArrowPair(void);
-static void DestroyPocketSwitchArrowPair(void);
 static void SpriteCB_MoveTypeIcon(struct Sprite *);
 static void SwitchMoveInfoMode(s32);
 #if SWSH_ITEM_MENU_BERRY_INFO
@@ -508,6 +507,7 @@ static const u32 sCursor_Gfx[]                  = INCGFX_U32("graphics/bag/swsh/
 static const u32 sHoverSlot_Gfx[]               = INCGFX_U32("graphics/bag/swsh/hover_slot.png", ".4bpp.smol");
 static const u32 sScrollThumb_Gfx[]             = INCGFX_U32("graphics/bag/swsh/scroll_thumb.png", ".4bpp.smol");
 static const u32 sCategoryIcons_Gfx[]           = INCGFX_U32("graphics/bag/swsh/category_icons.png", ".4bpp.smol");
+static const u32 sPocketScrollArrows_Gfx[]      = INCGFX_U32("graphics/bag/swsh/pocket_scroll_arrows.png", ".4bpp.smol");
 static const u16 sCursor_Pal[]                  = INCGFX_U16("graphics/bag/swsh/cursor.png", ".gbapal");
 static const u32 sMoveTypeIcons_Gfx[]           = INCGFX_U32("graphics/bag/swsh/move_types.png", ".4bpp.smol");
 static const u16 sMoveTypeIcons_Pal[]           = INCGFX_U16("graphics/bag/swsh/move_types.png", ".gbapal");
@@ -582,7 +582,6 @@ static const struct OamData sOamData_HoverSlot =
     .size = SPRITE_SIZE(32x16),
     .tileNum = 0,
     .priority = 2,
-    .paletteNum = 0,
     .affineParam = 0,
 };
 
@@ -650,6 +649,53 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollThumb =
     .paletteTag = TAG_ITEM_CURSOR,
     .oam = &sOamData_ScrollThumb,
     .callback = SpriteCB_BagScrollThumb,
+};
+
+static const struct OamData sOamData_PocketScrollArrows =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .size = SPRITE_SIZE(8x16),
+    .x = 0,
+    .matrixNum = 0,
+    .shape = SPRITE_SHAPE(8x16),
+    .tileNum = 0,
+    .priority = 2,
+    .affineParam = 0,
+};
+
+static const union AnimCmd sSpriteAnim_PocketScrollArrow_Left[] = {
+    ANIMCMD_FRAME(0, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sSpriteAnim_PocketScrollArrow_Right[] = {
+    ANIMCMD_FRAME(2, 0, FALSE, FALSE),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_PocketScrollArrows[] = {
+    sSpriteAnim_PocketScrollArrow_Left,
+    sSpriteAnim_PocketScrollArrow_Right,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_PocketScrollArrows =
+{
+    .data = sPocketScrollArrows_Gfx,
+    .size = (8 * 16 * 2) / 2,
+    .tag = TAG_POCKET_SCROLL_ARROW,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_PocketScrollArrows =
+{
+    .tileTag = TAG_POCKET_SCROLL_ARROW,
+    .paletteTag = TAG_ITEM_CURSOR,
+    .oam = &sOamData_PocketScrollArrows,
+    .anims = sSpriteAnimTable_PocketScrollArrows,
+    .callback = SpriteCB_PocketScrollArrow,
 };
 
 static const union AffineAnimCmd sAffineAnim_BagItemIcon_Appear[] =
@@ -764,9 +810,11 @@ static const struct SpriteTemplate sSpriteTemplate_BerryFlavorMark =
 static u8 sCursorSpriteId;
 static u8 sHoverSlotSpriteIds[HOVER_SLOT_SPRITES_COUNT];
 static u8 sScrollThumbSpriteId;
-static s32 sHoveredItemIndex;
+static u8 sPocketScrollArrowSpriteIds[2];
 static u32 sCursorAnimId;
+static s32 sHoveredItemIndex;
 static u32 sScrollThumbAnimId;
+static u32 sPocketScrollArrowAnimIds[2];
 static u8 sMoveInfoMode;
 static u8 sMoveTypeIconSpriteId;
 static u8 sCategoryIconSpriteId;
@@ -1109,6 +1157,9 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         sCursorSpriteId = SPRITE_NONE;
         memset(sHoverSlotSpriteIds, SPRITE_NONE, sizeof(sHoverSlotSpriteIds));
         sScrollThumbSpriteId = SPRITE_NONE;
+        memset(sPocketScrollArrowSpriteIds, SPRITE_NONE, sizeof(sPocketScrollArrowSpriteIds));
+        sPocketScrollArrowAnimIds[0] = INVALID_COMFY_ANIM;
+        sPocketScrollArrowAnimIds[1] = INVALID_COMFY_ANIM;
         sCursorAnimId = INVALID_COMFY_ANIM;
         sScrollThumbAnimId = INVALID_COMFY_ANIM;
         sHoveredItemIndex = LIST_CANCEL;
@@ -1247,7 +1298,6 @@ static bool8 SetupBagMenu(void)
         break;
     case 19:
         CreatePocketScrollArrowPair();
-        CreatePocketSwitchArrowPair();
         gMain.state++;
         break;
     case 20:
@@ -1344,6 +1394,10 @@ static bool8 LoadBagMenu_Graphics(void)
         gBagMenu->graphicsLoadState++;
         break;
     case 7:
+        LoadCompressedSpriteSheet(&sSpriteSheet_PocketScrollArrows);
+        gBagMenu->graphicsLoadState++;
+        break;
+    case 8:
         sMoveTypeIconsCache = Alloc(32 * 416 / 2);
         DecompressDataWithHeaderWram(sMoveTypeIcons_Gfx, sMoveTypeIconsCache);
         gBagMenu->graphicsLoadState++;
@@ -1710,18 +1764,75 @@ static void BagMenu_PrintCursorAtPos(u8 y, u8 colorIndex)
 
 static void CreatePocketScrollArrowPair(void)
 {
+    static const u8 sArrowX[2] = {104, 223};
+    struct ComfyAnimEasingConfig animConfig;
+    u8 i;
+
+    if (sPocketScrollArrowSpriteIds[0] != SPRITE_NONE)
+        return;
+
+    for (i = 0; i < 2; i++)
+    {
+        u8 spriteId;
+        u32 animId;
+
+        InitComfyAnimConfig_Easing(&animConfig);
+        animConfig.from = Q_24_8(0);
+        animConfig.to = Q_24_8(0);
+        animConfig.durationFrames = 1;
+        animId = CreateComfyAnim_Easing(&animConfig);
+        sPocketScrollArrowAnimIds[i] = animId;
+
+        spriteId = CreateSprite(&sSpriteTemplate_PocketScrollArrows, sArrowX[i], 16, 0);
+        if (spriteId != MAX_SPRITES)
+        {
+            StartSpriteAnim(&gSprites[spriteId], i);
+            gSprites[spriteId].data[0] = animId;
+            sPocketScrollArrowSpriteIds[i] = spriteId;
+        }
+    }
 }
 
 void BagDestroyPocketScrollArrowPair(void)
 {
+    u8 i;
+
+    for (i = 0; i < 2; i++)
+    {
+        if (sPocketScrollArrowSpriteIds[i] != SPRITE_NONE)
+        {
+            DestroySprite(&gSprites[sPocketScrollArrowSpriteIds[i]]);
+            sPocketScrollArrowSpriteIds[i] = SPRITE_NONE;
+        }
+        if (sPocketScrollArrowAnimIds[i] != INVALID_COMFY_ANIM)
+        {
+            ReleaseComfyAnim(sPocketScrollArrowAnimIds[i]);
+            sPocketScrollArrowAnimIds[i] = INVALID_COMFY_ANIM;
+        }
+    }
 }
 
-static void CreatePocketSwitchArrowPair(void)
+static void SpriteCB_PocketScrollArrow(struct Sprite *sprite)
 {
+    u8 animId = (u8)sprite->data[0];
+    if (animId != INVALID_COMFY_ANIM)
+        sprite->x2 = ReadComfyAnimValueSmooth(&gComfyAnims[animId]);
 }
 
-static void DestroyPocketSwitchArrowPair(void)
+static void AnimatePocketScrollArrow(s8 direction)
 {
+    u8 arrowIdx = (direction < 0) ? 0 : 1;
+    struct ComfyAnimEasingConfig config;
+
+    if (sPocketScrollArrowAnimIds[arrowIdx] == INVALID_COMFY_ANIM)
+        return;
+
+    InitComfyAnimConfig_Easing(&config);
+    config.from = Q_24_8(direction < 0 ? -4 : 4);
+    config.to = Q_24_8(0);
+    config.durationFrames = 12;
+    config.easingFunc = ComfyAnimEasing_EaseOutCubic;
+    InitComfyAnim_Easing(&config, &gComfyAnims[sPocketScrollArrowAnimIds[arrowIdx]]);
 }
 
 static void FreeBagMenu(void)
@@ -1998,7 +2109,6 @@ static void Task_BagMenu_HandleInput(u8 taskId)
 static void ReturnToItemList(u8 taskId)
 {
     CreatePocketScrollArrowPair();
-    CreatePocketSwitchArrowPair();
     if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 1)
     {
         PutWindowTilemap(WIN_PP_LABEL);
@@ -2059,6 +2169,7 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
     tPocketSwitchState = 0;
     tPocketSwitchTimer = 0;
     tPocketSwitchDir = deltaBagPocketId;
+    AnimatePocketScrollArrow(deltaBagPocketId);
     newPocket = gBagPosition.pocket;
     ChangeBagPocketId(&newPocket, deltaBagPocketId);
     if (!skipEraseList)
@@ -2123,7 +2234,6 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
         DestroyListMenuTask(tListTaskId, &gBagPosition.scrollPosition[gBagPosition.pocket], &gBagPosition.cursorPosition[gBagPosition.pocket]);
         ScheduleBgCopyTilemapToVram(1);
         gSprites[gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)]].invisible = TRUE;
-        BagDestroyPocketScrollArrowPair();
     }
     PrintPocketName(sPocketNamesStringsTable[newPocket]);
     FillBgTilemapBufferRect_Palette0(2, 4, 14, sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop, sDefaultBagWindows[WIN_ITEM_LIST].width, sDefaultBagWindows[WIN_ITEM_LIST].height);
@@ -2176,7 +2286,6 @@ static void Task_SwitchBagPocket(u8 taskId)
         }
 #endif
         CreatePocketScrollArrowPair();
-        CreatePocketSwitchArrowPair();
         SwitchTaskToFollowupFunc(taskId);
     }
 }
@@ -2213,7 +2322,6 @@ static void StartItemSwap(u8 taskId)
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
     UpdateItemMenuSwapLinePos(tListPosition);
-    DestroyPocketSwitchArrowPair();
     BagMenu_PrintCursor(tListTaskId, COLORID_NONE);
     gTasks[taskId].func = Task_HandleSwappingItemsInput;
 }
@@ -2278,7 +2386,6 @@ static void DoItemSwap(u8 taskId)
         LoadBagItemListBuffers(gBagPosition.pocket);
         tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
         SetItemMenuSwapLineInvisibility(TRUE);
-        CreatePocketSwitchArrowPair();
         gTasks[taskId].func = Task_BagMenu_HandleInput;
     }
 }
@@ -2296,7 +2403,6 @@ static void CancelItemSwap(u8 taskId)
     LoadBagItemListBuffers(gBagPosition.pocket);
     tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, *scrollPos, *cursorPos);
     SetItemMenuSwapLineInvisibility(TRUE);
-    CreatePocketSwitchArrowPair();
     gTasks[taskId].func = Task_BagMenu_HandleInput;
 }
 
