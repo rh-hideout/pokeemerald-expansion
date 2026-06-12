@@ -248,21 +248,25 @@ When `FALSE`, the enemy Pokémon's Moves appear as `MOVE_NONE`.
 # Bring AI
 Once the Player chooses Y Pokémon to battle with, Team Preview closes.
 
-// Pawkkie TODO: where / how do these get used?
+This logic is affected by the following configuration options:
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY`
+Determines whether the AI knows the opposing Pokémons' ability when deciding which Pokémon to choose.
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM`
-## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_LEVEL`
+Determines whether the AI knows the opposing Pokémons' items when deciding which Pokémon to choose.
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES`
+Determines whether the AI knows the opposing Pokémons' moves when deciding which Pokémon to choose. Note that this configuration option does nothing by itself, as the AI also needs to know the opposing Pokémons' stats in order to use this move information to make its 1v1 calculations.
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS`
+Determines whether the AI knows the opposing Pokémons' stats when deciding which Pokémon to choose.
 
 All of the AI battlers (possibily both Trainers and the Player's partner) will then look at the opposing side's Pokémon and choose Y Pokémon to bring to battle.
 
-The following is run for each of the battler's Pokémon against all of the Pokémon on the opposing side. With the maximum number of battlers and party sizes (3, 6), this will add about 74 frames, or 1.2333333 seconds. In singles, it adds closer to 12 frames. This scales with the number of battlers, Pokémon, and moves.
+The following is run for each of the battler's Pokémon against all of the Pokémon on the opposing side.
 
 1. If the AI's Pokémon A can defeat the enemy Pokémon Z, Pokémon A receieves `CAN_1V1_MATCHUP_POINTS` (`5`) points. This check does not run if `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES` or `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS` is `FALSE`.
-2. If the AI's Pokémon A has a strong defensive matchup against enemy Pokémon Z, Pokémon A recieves `DEFENSIVE_MATCHUP_POINTS` (`2`) points.
-3. If the AI's Pokémon A's moves have a strong offensive matchup against enemy Pokémon Z's types, Pokémon A recieves `OFFENSIVE_MATCHUP_POINTS` (`2`) points.
+2. If the AI's Pokémon A has a strong defensive type matchup against enemy Pokémon Z, Pokémon A recieves `DEFENSIVE_MATCHUP_POINTS` (`2`) points.
+3. If the AI's Pokémon A's moves have a strong offensive type matchup against enemy Pokémon Z's types, Pokémon A recieves `OFFENSIVE_MATCHUP_POINTS` (`2`) points.
 4. If the AI's Pokémon A's speed is higher than enemy Pokémon Z, Pokémon A recieves `OUTSPEED_MATCHUP_POINTS` (`1`) points. This check does not run if `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS` is `FALSE`.
+5. Each eligible Pokémon receives `1` point as a baseline.
 
 Once every Pokémon and battler is evaluated, the AI will bring the top Y scoring Pokémon into battle, with the highest ranking Pokémon being sent out first. If multiple Pokémon are tied, a Pokémon is randomly chosen between the tied Pokémon until there are no ties. 
 
@@ -325,7 +329,12 @@ Bring X Pick Y requires 1 flag, and optionally consumes 1 variable.
 
 # Support
 ## Frequently Asked Questions (FAQ)
-n/a
+
+Q: Are link battles supported?
+A: No.
+
+Q: Can `bringxpicky` be called from trainer scripts?
+A: No, it requires its own script.
 
 ## Other Questions
 If you have read all of the documentation here and still have questions, please [ask a good question](https://www.freecodecamp.org/news/how-to-ask-good-questions-as-a-developer-9f71ff809b63/) in the [`decomps` channel of the Rom Hacking Hideout Discord server](https://discord.gg/6CzjAG6GZk). You can tag `linathan` or `pkmnsnfrn` and we will try to help if we can.

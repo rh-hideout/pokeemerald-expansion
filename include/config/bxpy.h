@@ -37,13 +37,18 @@
 #define BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER             TRUE             // When FALSE, all of the enemy Pokemon will show ? for their gender.
 #define BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL              TRUE             // When FALSE, all of the enemy Pokemon levels will show as ???.
 
-// For all BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_* configs, when TRUE, the AI will be able to see this specific information when calculating which Pokemon to bring. If a trainer on the opposing side has the `AI_FLAG_OMNISCIENT` flag, these configs will be ignored and all AI will have access to full information. If a Trainer on the opposing side does NOT have `AI_FLAG_OMNISCIENT`, then the AI will not have this information for the battle itself.
+// BXPY AI
+// For all BXPY_OPEN_TEAM_SHEET_SHOWPLAYER* configs, when TRUE, the AI will be able to see this specific information when calculating which Pokemon to bring.
+#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY        TRUE // AI knows the opponent's ability when evaluating which mons to bring
+#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM           TRUE // AI knows the opponent's item when evaluating which mons to bring
+#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES          TRUE // AI knows the opponent's moves when evaluating which mons to bring; pragmatically, disabling this shuts off the 1v1 check
+#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS          TRUE // AI knows the opponent's level and stats when evaluating which mons to bring; pragmatically, disabling this shuts off the 1v1 check and the speed check
 
-#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY        TRUE
-#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM           TRUE
-#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_LEVEL          TRUE
-#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES          TRUE
-#define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS          TRUE
+// Bring X Pick Y party scoring points
+#define DEFENSIVE_MATCHUP_POINTS                        2 // Score increase for having a positive defensive type matchup against an opposing party member
+#define OFFENSIVE_MATCHUP_POINTS                        2 // Score increase for having a positive offensive type matchup against an opposing party member
+#define OUTSPEED_MATCHUP_POINTS                         1 // Score increase for outspeeding against an opposing party member
+#define CAN_1V1_MATCHUP_POINTS                          5 // Score increase for winning a projected 1v1 against an opposing party member
 
 #define BXPY_RETAIN_CHANGES                             TRUE             // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
 
