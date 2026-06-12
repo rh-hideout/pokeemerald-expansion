@@ -4008,7 +4008,7 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                     }
                     else
                     {
-                        StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal);
+                        StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal); // Don't change cv->battlerAtk's item
 
                         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, cv->battlerAtk, originalAttackerPartyId);
 

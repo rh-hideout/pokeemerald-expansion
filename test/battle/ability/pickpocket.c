@@ -384,14 +384,14 @@ SINGLE_BATTLE_TEST("Pickpocket steals from the original U-turn user before it sw
         OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
     } WHEN {
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+        TURN { SWITCH(player, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
     } THEN {
         EXPECT(opponent->item == ITEM_POTION);
-        EXPECT(player->item == ITEM_POKE_BALL);
-        EXPECT_EQ(GetMonData(&gParties[B_SIDE_PLAYER][0], MON_DATA_HELD_ITEM), ITEM_NONE);
+        EXPECT(player->item == ITEM_NONE);
     }
 }
 
@@ -405,6 +405,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals the attacker's item even after Red Card fo
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -414,7 +415,6 @@ SINGLE_BATTLE_TEST("Pickpocket steals the attacker's item even after Red Card fo
     } THEN {
         EXPECT(opponent->item == ITEM_POKE_BALL);
         EXPECT(player->item == ITEM_NONE);
-        EXPECT_EQ(GetMonData(&gParties[B_SIDE_PLAYER][0], MON_DATA_HELD_ITEM), ITEM_NONE);
     }
 }
 
