@@ -10425,7 +10425,7 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
         calc = (calc * (100 + atkParam)) / 100;
         break;
     case HOLD_EFFECT_ZOOM_LENS:
-        if (HasBattlerActedThisTurn(battlerDef) && gBattleStruct->battlerState[battlerDef].isFirstTurn != 2)
+        if (HasBattlerActedThisTurn(battlerDef) && !BattlerJustSwitchedIn(battlerDef))
             calc = (calc * (100 + atkParam)) / 100;
         break;
     default:
