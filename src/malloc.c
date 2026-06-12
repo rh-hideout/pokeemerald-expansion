@@ -1,5 +1,6 @@
 #include "global.h"
 #include "malloc.h"
+#include "trainer_hill.h"
 #if TESTING
 #include "test/test.h"
 #endif
@@ -175,6 +176,13 @@ static bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+    // The heap already exists, report any leaks.
+    if (REPORT_MEMORY_LEAKS && sHeapStart != NULL)
+    {
+        DebugPrintf("Memory leaks:");
+        PrintHeap();
+    }
+
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);
@@ -236,6 +244,23 @@ void *AllocZeroedUnchecked_(u32 size, const char *location)
 void Free(void *pointer)
 {
     FreeInternal(sHeapStart, pointer);
+}
+
+void ResetHeap(void)
+{
+    // save interrupt functions and turn them off
+    void *vblankCB = gMain.vblankCallback;
+    void *hblankCB = gMain.hblankCallback;
+    gMain.vblankCallback = NULL;
+    gMain.hblankCallback = NULL;
+    gTrainerHillVBlankCounter = NULL;
+
+    // reset heap
+    InitHeap(gHeap, HEAP_SIZE);
+
+    // restore interrupt functions
+    gMain.hblankCallback = hblankCB;
+    gMain.vblankCallback = vblankCB;
 }
 
 bool32 CheckMemBlock(void *pointer)

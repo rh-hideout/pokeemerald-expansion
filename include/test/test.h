@@ -228,6 +228,9 @@ static inline struct Benchmark BenchmarkStop(void)
 // us to be confident that it's faster than another.
 #define BENCHMARK_REL 95
 
+// An (under-)approximation of how many ticks are in a frame.
+#define FRAME_TICKS (280896 / 64)
+
 #define EXPECT_FASTER(a, b) \
     do \
     { \
