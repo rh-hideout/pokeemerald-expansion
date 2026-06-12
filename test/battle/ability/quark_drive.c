@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat")
 
 SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both")
 {
-    u16 species;
+    enum Species species;
     enum Move move;
     s16 damage[2];
 

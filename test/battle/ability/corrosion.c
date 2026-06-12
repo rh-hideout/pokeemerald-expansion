@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Pokemon regardless of its typing")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon 
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Baneful Bunker")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Psycho Shift while poisoned")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -258,7 +258,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Toxic Orb")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Poison Barb")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -303,7 +303,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }

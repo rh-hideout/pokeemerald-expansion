@@ -57,8 +57,8 @@ struct TestRunnerState
     const struct Test *test;
     u32 processCosts[MAX_PROCESSES];
 
-    u8 result;
-    u8 expectedResult;
+    enum TestResult result:8;
+    enum TestResult expectedResult:8;
     bool8 expectLeaks:1;
     bool8 inBenchmark:1;
     bool8 tearDown:1;

@@ -1366,6 +1366,10 @@
 	callnative BS_TryTrainerSlideDynamaxMsg
 	.endm
 
+	.macro trytrainerslideteramsg
+	callnative BS_TryTrainerSlideTeraMsg
+	.endm
+
 	.macro tryhealpulse failInstr:req
 	callnative BS_TryHealPulse
 	.4byte \failInstr
@@ -1816,6 +1820,10 @@
 	.macro switchinabilities battler:req
 	callnative BS_SwitchinAbilities
 	.byte \battler
+	.endm
+
+	.macro effectsafterformchange
+	callnative BS_EffectsAfterFormChange
 	.endm
 
 	.macro abilityonformchange battler:req

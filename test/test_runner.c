@@ -1,6 +1,6 @@
 #include <stdarg.h>
-#include "fake_rtc.h"
 #include "global.h"
+#include "fake_rtc.h"
 #include "gpu_regs.h"
 #include "load_save.h"
 #include "main.h"
@@ -135,6 +135,8 @@ void TestRunner_CheckMemory(void)
     if (gTestRunnerState.result == TEST_RESULT_PASS
      && !gTestRunnerState.expectLeaks)
     {
+        TestFreeConfigData();
+
         int i;
         const struct MemBlock *head = HeapHead();
         const struct MemBlock *block = head;
@@ -154,16 +156,11 @@ void TestRunner_CheckMemory(void)
                 const char *location = MemBlockLocation(block);
                 if (location)
                 {
-                    const char cmpString[] = "src/config_changes.c";
-                    if (strncmp(cmpString, location, sizeof(cmpString) - 1) != 0)
-                    {
-                        Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
-                        gTestRunnerState.result = TEST_RESULT_FAIL;
-    
-                        if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
-                            gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
-                        break;
-                    }
+                    Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
+                    gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                        gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 }
                 else
                 {
@@ -182,7 +179,7 @@ void TestRunner_CheckMemory(void)
         {
             if (gTasks[i].isActive)
             {
-                Test_MgbaPrintf(":L%s:%d - %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
+                Test_MgbaPrintf(":L%s:%d: %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
                 gTestRunnerState.result = TEST_RESULT_FAIL;
 
                 if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
@@ -254,7 +251,7 @@ top:
 
             if (gPersistentTestRunnerState.expectCrash)
                 gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
-            
+
             gTestRunnerState.expectedFailLine = 0;
             gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         }
@@ -277,11 +274,21 @@ top:
                 gTestRunnerState.state = STATE_EXIT;
                 return;
             }
-            if (gTestRunnerState.test->runner != &gAssumptionsRunner)
+            if (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT
+             && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename))
+            {
+                ++gTestRunnerState.test;
+                continue;
+            }
+            // Run all assumption blocks when filtering on test name
+            // because it's possible that a test in this file could
+            // match.
+            // TODO: Delay running the assumptions block until we find a
+            // test name that matches.
+            else if (gTestRunnerState.test->runner != &gAssumptionsRunner)
             {
                 if ((gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_PREFIX && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename)))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name)))
                 {
                     ++gTestRunnerState.test;
                     continue;
@@ -326,10 +333,8 @@ top:
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
-        {
             gTestRunnerState.test->runner->setUp(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = TRUE;
-        }
+        gTestRunnerState.tearDown = TRUE;
         // NOTE: Assumes that the compiler interns __FILE__.
         if (gTestRunnerState.skipFilename == gTestRunnerState.test->filename) // Assumption fails for tests in this file.
         {
@@ -349,10 +354,8 @@ top:
         gTestRunnerState.state = STATE_NEXT_TEST;
 
         if (gTestRunnerState.tearDown && gTestRunnerState.test->runner->tearDown)
-        {
             gTestRunnerState.test->runner->tearDown(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = FALSE;
-        }
+        gTestRunnerState.tearDown = FALSE;
 
         TestRunner_CheckMemory();
 
@@ -724,7 +727,7 @@ static void Intr_Timer2(void)
             if (gTestRunnerState.state == STATE_RUN_TEST)
                 gTestRunnerState.state = STATE_REPORT_RESULT;
             gTestRunnerState.result = TEST_RESULT_TIMEOUT;
-            Test_MgbaPrintf(":L%s:%d - TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
+            Test_MgbaPrintf(":L%s:%d: TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
             ReinitCallbacks();
             IRQ_LR = ((uintptr_t)JumpToAgbMainLoop & ~1) + 4;
         }
@@ -760,7 +763,7 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
          gTestRunnerState.test->filename, stopLine,
          gTestRunnerState.expectedFailLine, stopLine);
     }
-    
+
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
@@ -817,12 +820,17 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-extern const u8 gWireless_RSEtoASCIITable[];
-
-// Bare-bones, only supports plain %s, %S, and %d.
+// Bare-bones, supports:
+// - %s, %.*s: print an ASCII string.
+// - %S, %.*S: print a GF-encoded string.
+// - %d: print a signed integer.
+// - %q: print a Q20.12 fixed-point number.
+// - %p: print a pointer (which mgba-rom-test-hydra will convert into a
+//   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
     s32 i = 0;
+    s32 n;
     s32 c, d;
     u32 p;
     const char *s;
@@ -832,6 +840,16 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
         switch ((c = *fmt++))
         {
         case '%':
+            if (fmt[0] == '.' && fmt[1] == '*')
+            {
+                fmt += 2;
+                n = va_arg(va, int);
+            }
+            else
+            {
+                n = INT_MAX;
+            }
+
             switch (*fmt++)
             {
             case '%':
@@ -913,7 +931,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                         if (++n == 2)
                         {
                             u *= 10;
-                            i = MgbaPutchar_(i, '0' + ((u + UQ_4_12_ROUND) >> 12));
+                            // TODO: 'min' is a hack, we should have
+                            // rounded up the previous number.
+                            i = MgbaPutchar_(i, min('0' + ((u + UQ_4_12_ROUND) >> 12), '9'));
                             break;
                         }
                     }
@@ -921,7 +941,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 's':
                 s = va_arg(va, const char *);
-                while ((c = *s++) != '\0')
+                while ((c = *s++) != '\0' && n-- > 0)
                     i = MgbaPutchar_(i, c);
                 break;
             case 'S':
@@ -935,13 +955,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    while ((c = *pokeS++) != EOS)
-                    {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
-                    }
+                    extern char mini_pchar_decode(u8);
+                    while ((c = *pokeS++) != EOS && n-- > 0)
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
                 }
                 break;
             }
