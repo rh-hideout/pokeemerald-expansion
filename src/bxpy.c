@@ -1,11 +1,14 @@
 #include "global.h"
+#include "battle.h"
 #include "battle_main.h"
 #include "battle_partner.h"
 #include "battle_setup.h"
 #include "bxpy.h"
+#include "bxpy_ai.h"
 #include "event_data.h"
 #include "item.h"
 #include "load_save.h"
+#include "malloc.h"
 #include "pokemon.h"
 #include "pokemon_summary_screen.h"
 #include "random.h"
@@ -336,22 +339,31 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
         CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], isHalf, battleFlags);
 }
 
-void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
+void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSize)
 {
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         enteredMons[partyIndex] = BXPY_EMPTY_MON;
 
-    u32 mons[PARTY_SIZE] = {0, 1, 2, 3, 4, 5};
-
     for (u32 i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = PARTY_SIZE;
 
-    // Start BXPY TODO Replace with Pawkkie's logic and UI output
-    Shuffle(mons, ARRAY_COUNT(mons), sizeof(mons[0]));
+    struct BXPYAiData *bxpyAiData = Alloc(sizeof(struct BXPYAiData));
+    memset(bxpyAiData, 0, sizeof(struct BXPYAiData));
+    struct AiLogicData *bxpyAiLogicData = Alloc(sizeof(struct AiLogicData));
+    memset(bxpyAiLogicData, 0, sizeof(struct AiLogicData));
+
+    // Do scoring
+    BXPY_ScorePartyMons(battler, bxpyAiData, bxpyAiLogicData);
+
+    // Store results
+    u32 scoredMons[PARTY_SIZE];
+    BXPY_GetChosenPartyMons(battler, bxpyAiData, scoredMons, pickSize);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
-        enteredMons[i] = (i < pickSize) ? mons[i] : PARTY_SIZE;
-    // End BXPY TODO Replace with Pawkkie's logic and UI output
+        enteredMons[i] = (i < pickSize) ? scoredMons[i] : PARTY_SIZE;
+
+    Free(bxpyAiData);
+    Free(bxpyAiLogicData);
 }
 
 static void BXPY_PrepareParty(u32 pickSize)
