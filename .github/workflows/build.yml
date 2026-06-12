@@ -47,9 +47,9 @@ jobs:
             tools/wav2agb/wav2agb
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
-      - name: ROM (Emerald)
+      - name: ROM (FireRed)
         env:
-          GAME_VERSION: EMERALD
+          GAME_VERSION: FIRERED
         run: make -j$(nproc) -O all
 
   build-firered:
@@ -84,8 +84,8 @@ jobs:
             tools/wav2agb/wav2agb
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
-      - name: ROM (Firered)
-        run: make firered -j$(nproc) -O
+      - name: ROM (Emerald)
+        run: make emerald -j$(nproc) -O
 
   build-leafgreen:
     if: github.actor != 'allcontributors[bot]'
@@ -156,7 +156,7 @@ jobs:
 
       - name: Release
         env:
-          GAME_VERSION: EMERALD
+          GAME_VERSION: FIRERED
         run: make -j$(nproc) release
 
   test:
@@ -195,7 +195,7 @@ jobs:
 
       - name: Test
         env:
-          GAME_VERSION: EMERALD
+          GAME_VERSION: FIRERED
           TEST: 1
         run: make -j$(nproc) check
 

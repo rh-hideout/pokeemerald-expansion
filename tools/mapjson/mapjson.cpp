@@ -743,10 +743,11 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         string region = json_to_string(map_data, "region", true);
 
         if (region.empty()) {
-            if (version == "emerald")
+          /*  if (version == "emerald")
                 region = "REGION_HOENN";
             else if (version == "firered")
-                region = "REGION_KANTO";
+                region = "REGION_KANTO";*/
+            region = "REGION_KANTO";
         }
         string map_name = json_to_string(map_data, "name");
 
