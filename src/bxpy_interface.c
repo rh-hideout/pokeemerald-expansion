@@ -2144,7 +2144,7 @@ static void SpriteCB_BXPYType(struct Sprite *sprite)
     enum Type type[] = {GetSpeciesType(species,0), GetSpeciesType(species,1)};
 
     sprite->invisible = ((species == SPECIES_EGG) || (species == SPECIES_NONE));
-        
+
     if (typeIndex == 1)
         sprite->invisible = (type[0] == type[1]);
 

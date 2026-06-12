@@ -50,7 +50,7 @@
 #define OUTSPEED_MATCHUP_POINTS                         1 // Score increase for outspeeding against an opposing party member
 #define CAN_1V1_MATCHUP_POINTS                          5 // Score increase for winning a projected 1v1 against an opposing party member
 
-#define BXPY_RETAIN_CHANGES                             TRUE             // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
+#define BXPY_RETAIN_CHANGES                             FALSE            // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
 
 #define B_VAR_BXPY                                      B_VAR_SKY_BATTLE // This var is used to maintain BXPY_RETAIN_CHANGES.
 #define B_FLAG_BXPY                                     0                // This flag is used to manage BXPY mode's interaction with other features.
