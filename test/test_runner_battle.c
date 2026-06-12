@@ -1722,7 +1722,7 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
         else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
               && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_MESSAGE_EVENT)
         {
-            // Print "similar" messages as comptued by the Dice-Sorensen
+            // Print "similar" messages as computed by the Dice-Sorensen
             // coefficient, letter-wise. Bigrams would likely be more
             // accurate, but more complex to compute.
             // TODO: Compute (and cache) the pattern's counts when the test
