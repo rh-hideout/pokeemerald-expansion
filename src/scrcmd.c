@@ -1293,7 +1293,7 @@ bool8 ScrCmd_applymovement(struct ScriptContext *ctx)
     struct ObjectEvent *objEvent;
     u8 objectEventId;
 
-    if (!TryGetObjectEventIdByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId))
+    if (TryGetObjectEventIdByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId))
     {
         errorf("Trying to apply movement for local id %d on current map but no object found", localId);
         return FALSE;
@@ -1328,7 +1328,7 @@ bool8 ScrCmd_applymovementat(struct ScriptContext *ctx)
     u8 mapNum = ScriptReadByte(ctx);
     u8 objectEventId;
 
-    if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
+    if (TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
     {
         errorf("Trying to apply movement for local id %d on map %d but no object found", localId, (mapNum | mapGroup << 8));
         return FALSE;
