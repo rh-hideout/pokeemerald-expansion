@@ -562,11 +562,11 @@ libagbsyscall:
 
 # Enable LTO LDFLAGS if set
 ifneq ($(LTO),0)
-LDFLAGS := -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections -Xlinker --emit-relocs
+LDFLAGS := -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections
 LDFLAGS += -Xlinker -flto=auto
 $(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
-	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs>"
-	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
+	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../ld_script_lto.ld -T ../../$< -o ../../$@ <objs> <libs>"
+	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../ld_script_lto.ld -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
 else
 # Output .map file, memory usage readout and gc sections to clean-up unused data
 LDFLAGS := -Map ../../$(MAP) --print-memory-usage --gc-sections --emit-relocs
