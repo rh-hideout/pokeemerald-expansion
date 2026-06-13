@@ -368,6 +368,7 @@ SINGLE_BATTLE_TEST("Pickpocket can steal the attacker's Air Balloon")
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        MESSAGE("The opposing Sneasel stole Wobbuffet's Air Balloon!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_EQ(opponent->item, ITEM_AIR_BALLOON);
@@ -389,6 +390,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals from the original U-turn user before it sw
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        MESSAGE("The opposing Sneasel stole Wobbuffet's Potion!");
     } THEN {
         EXPECT(opponent->item == ITEM_POTION);
         EXPECT(player->item == ITEM_NONE);
@@ -412,6 +414,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals the attacker's item even after Red Card fo
         MESSAGE("The opposing Sneasel held up its Red Card against Wobbuffet!");
         MESSAGE("Wynaut was dragged out!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        MESSAGE("The opposing Sneasel stole Wobbuffet's Poké Ball!");
     } THEN {
         EXPECT(opponent->item == ITEM_POKE_BALL);
         EXPECT(player->item == ITEM_NONE);
