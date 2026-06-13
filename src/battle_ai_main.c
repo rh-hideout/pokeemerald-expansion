@@ -2086,7 +2086,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         else if (gBattleMons[battlerAtk].status1 & STATUS1_SLEEP && !AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
             ADJUST_SCORE(-10);
-        else
+        else if (!(gBattleMons[battlerAtk].status1 & STATUS1_ANY))
             ADJUST_SCORE(-10);    // attacker has no status to transmit
         break;
     case EFFECT_MUD_SPORT:
@@ -2850,10 +2850,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SYNCHRONOISE:
         //Check holding ring target or is of same type
-        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_RING_TARGET
-          || DoBattlersShareType(battlerAtk, battlerDef))
-            break;
-        else
+        if (aiData->holdEffects[battlerDef] != HOLD_EFFECT_RING_TARGET
+        && !DoBattlersShareType(battlerAtk, battlerDef))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_FLAIL:
