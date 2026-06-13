@@ -548,7 +548,7 @@ BattleScript_ShellTrapSetUp::
 
 BattleScript_EffectShellTrap::
 	attackcanceler
-	jumpifshelltrap BS_ATTACKER, BattleScript_HitFromAccCheck
+	jumpifshelltrap BS_ATTACKER, BattleScript_HitFromDamageCalc
 	printstring STRINGID_SHELLTRAPDIDNTWORK
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
@@ -1441,9 +1441,6 @@ BattleScript_EffectPlaceholder::
 
 BattleScript_EffectHit::
 	attackcanceler
-BattleScript_HitFromAccCheck::
-	copybyte gEffectBattler, gBattlerAttacker
-	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
 	damagecalc
 	call BattleScript_Hit_RetFromAtkAnimation
@@ -1451,10 +1448,6 @@ BattleScript_MoveEnd::
 	moveendall
 	end
 
-BattleScript_EffectHit_RetFromAccCheck::
-	copybyte gEffectBattler, gBattlerAttacker
-	setpreattackadditionaleffect
-	damagecalc
 BattleScript_Hit_RetFromAtkAnimation::
 	attackanimation
 	waitanimation
@@ -1614,8 +1607,8 @@ BattleScript_EffectDreamEater::
 	attackcanceler
 	jumpifgenconfiglowerthan CONFIG_B_DREAM_EATER_SUBSTITUTE, GEN_5, BattleScript_DreamEaterSubstituteCheck
 BattleScript_DreamEaterSleepCheck:
-	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_HitFromAccCheck
-	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_HitFromAccCheck
+	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_HitFromDamageCalc
+	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_HitFromDamageCalc
 	goto BattleScript_DoesntAffectTargetAtkString
 
 BattleScript_DreamEaterSubstituteCheck:

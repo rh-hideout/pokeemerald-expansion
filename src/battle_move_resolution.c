@@ -2392,6 +2392,63 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
+{
+    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected())
+        return CANCELER_RESULT_SUCCESS;
+
+    while (gBattleStruct->eventState.atkCancelerBattler < MAX_BATTLERS_COUNT)
+    {
+        gEffectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
+
+        gBattleStruct->eventState.atkCancelerBattler++;
+
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler , TRUE))
+            continue;
+
+        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            gBattleStruct->additionalEffectsCounter++;
+
+            if (!additionalEffect->preAttackEffect)
+                continue;
+
+            if ((gEffectBattler == gBattlerAttacker) != additionalEffect->self)
+                continue;
+
+            u32 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+
+            // Activate effect if it's primary (chance == 0) or if RNGesus says so
+            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
+
+                enum SetMoveEffectFlags flags = NO_FLAGS;
+                if (percentChance == 0) flags |= EFFECT_PRIMARY;
+                if (percentChance >= 100) flags |= EFFECT_CERTAIN;
+
+                SetMoveEffect(
+                    gBattlerAttacker,
+                    gEffectBattler,
+                    additionalEffect->moveEffect,
+                    gBattlescriptCurrInstr,
+                    flags
+                );
+            }
+            return CANCELER_RESULT_RUN_SCRIPT; // We don't know if a script should be run or not so try
+        }
+
+        gBattleStruct->additionalEffectsCounter = 0;
+    }
+
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleStruct->preAttackEffectHappened = TRUE; // we don't need this anymore
+    gBattleStruct->eventState.atkCancelerBattler = 0;
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCalcValues *cv) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
@@ -2443,6 +2500,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_NOT_FULLY_PROTECTED] = CancelerNotFullyProtected,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
+    [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
 };
 
 enum CancelerResult DoAttackCanceler(void)
