@@ -3153,6 +3153,11 @@ enum Ability GetMonAbility(struct Pokemon *mon)
     return GetAbilityBySpecies(species, abilityNum);
 }
 
+bool32 MonHasAbility(struct Pokemon *mon, enum Ability ability)
+{
+    return GetMonAbility(mon) == ability;
+}
+
 void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
 {
     s32 i, j;
@@ -3262,6 +3267,21 @@ enum Type GetSpeciesType(enum Species species, u8 slot)
 enum Ability GetSpeciesAbility(enum Species species, u8 slot)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
+}
+
+bool32 SpeciesHasAbility(enum Species species, enum Ability ability)
+{
+    u32 slot;
+
+    if (ability == ABILITY_NONE)
+        return FALSE;
+
+    for (slot = 0; slot < NUM_ABILITY_SLOTS; slot++)
+    {
+        if (GetSpeciesAbility(species, slot) == ability)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 u32 GetSpeciesBaseHP(enum Species species)
