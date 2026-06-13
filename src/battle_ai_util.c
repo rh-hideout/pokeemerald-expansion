@@ -26,6 +26,11 @@
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
+static s8 *GetAiLogicStatChangePointer(enum BattlerId battler, enum Stat stat);
+static void AI_SaveBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS]);
+static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx);
+static void AI_SetBattlerStatChanges(void);
+static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS]);
 
 // Functions
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
@@ -164,6 +169,841 @@ u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveI
     }
 }
 
+static void AI_SaveBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS])
+{
+    // Save current stat stages
+    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+            savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
+    }
+}
+
+static void AI_SetBattlerStatChanges(void)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            s8 stage = *GetAiLogicStatChangePointer(battler, stat);
+            if (stage != 0)
+            {
+                gBattleMons[battler].statStages[stat] += stage;
+                
+                if (gBattleMons[battler].statStages[stat] > MAX_STAT_STAGE)
+                    gBattleMons[battler].statStages[stat] = MAX_STAT_STAGE;
+                if (gBattleMons[battler].statStages[stat] < MIN_STAT_STAGE)
+                    gBattleMons[battler].statStages[stat] = MIN_STAT_STAGE;
+            }
+        }
+    }
+}
+
+static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS])
+{
+    // Restore original stat stages now that calcing is done
+    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+            gBattleMons[battler].statStages[stat] = savedStatStages[battler][stat];
+    }
+
+}
+
+u32 AI_GetDamageWithStatChanges(struct StatConsiderationContext *ctx, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
+{
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+
+    AI_SaveBattlerStatStages(savedStatStages);
+    AI_SetMoveStatChangeLogic(ctx);
+    AI_SetBattlerStatChanges();
+    
+    // Calc damage with stat changes
+    u32 damage = AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, calcContext, aiData);
+
+    AI_RestoreBattlerStatStages(savedStatStages);
+    
+    return damage;
+}
+
+static s8 *GetAiLogicStatChangePointer(enum BattlerId battler, enum Stat stat)
+{
+    switch (stat)
+    {
+    default:
+    case STAT_ATK:
+        return &gAiLogicData->aiStatChanges[battler].atk;
+    case STAT_DEF:
+        return &gAiLogicData->aiStatChanges[battler].def;
+    case STAT_SPATK:
+        return &gAiLogicData->aiStatChanges[battler].spAtk;
+    case STAT_SPDEF:
+        return &gAiLogicData->aiStatChanges[battler].spDef;
+    case STAT_SPEED:
+        return &gAiLogicData->aiStatChanges[battler].speed;
+    case STAT_ACC:
+        return &gAiLogicData->aiStatChanges[battler].accuracy;
+    case STAT_EVASION:
+        return &gAiLogicData->aiStatChanges[battler].evasion;
+    }
+}
+
+// Abilities on field
+static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx)
+{
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(ctx->statMove);
+
+    enum BattlerId battlerAtk = ctx->battlerMoveUser;
+    enum BattlerId battlerDef = ctx->battlerMoveTarget;
+    enum BattlerId battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
+    enum BattlerId battlerDefPartner = BATTLE_PARTNER(battlerDef);
+    enum BattlerId battlerOpposite = BATTLE_OPPOSITE(battlerAtk);
+    enum BattlerId battlerOppositePartner = BATTLE_PARTNER(battlerOpposite);
+
+    enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
+    enum Ability defAbility = gAiLogicData->abilities[battlerDef];
+    enum Ability partnerAbility = gAiLogicData->abilities[battlerAtkPartner];
+    enum Ability defPartnerAbility = gAiLogicData->abilities[battlerDefPartner];
+    enum Ability oppositeAbility = gAiLogicData->abilities[battlerOpposite];
+    enum Ability oppositePartnerAbility = gAiLogicData->abilities[battlerOppositePartner];
+
+    enum HoldEffect atkHoldEffect = gAiLogicData->holdEffects[battlerAtk];
+    enum HoldEffect defHoldEffect = gAiLogicData->holdEffects[battlerDef];
+    enum HoldEffect partnerHoldEffect = gAiLogicData->holdEffects[battlerAtkPartner];
+    enum HoldEffect defPartnerHoldEffect = gAiLogicData->holdEffects[battlerDefPartner];
+    enum HoldEffect oppositeHoldEffect = gAiLogicData->holdEffects[battlerOpposite];
+    enum HoldEffect oppositePartnerHoldEffect = gAiLogicData->holdEffects[battlerOppositePartner];
+
+    enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->atkMove);
+    bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
+
+    // check move additional effects that are likely to happen
+    for (u32 effectId = 0; effectId < additionalEffectCount; effectId++)
+    {
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(ctx->statMove, effectId);
+
+        // Only consider effects with a guaranteed chance to happen
+        if (!MoveEffectIsGuaranteed(battlerAtk, atkAbility, additionalEffect))
+            continue;
+
+        // Consider move effects that target self
+        if (additionalEffect->self)
+        {
+            bool32 considerSimple = (atkAbility == ABILITY_SIMPLE 
+             && moveEffect != EFFECT_ROLE_PLAY
+             && moveEffect != EFFECT_STUFF_CHEEKS
+             && moveEffect != EFFECT_HAZE
+             && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
+             && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
+            switch (additionalEffect->moveEffect)
+            {
+            case MOVE_EFFECT_STAT_PLUS:
+            case STAT_CHANGE_EFFECT_PLUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (atkAbility == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (considerSimple)
+                        stage *= 2;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(battlerAtk, stat);
+                    *statChangePtr += stage;
+
+                    if (stage > 0)
+                    {
+                        if (defHoldEffect == HOLD_EFFECT_MIRROR_HERB || defAbility == ABILITY_OPPORTUNIST)
+                        {
+                            statChangePtr = GetAiLogicStatChangePointer(battlerDef, stat);
+                            *statChangePtr += stage;
+                        }
+                        if (defPartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || defPartnerAbility == ABILITY_OPPORTUNIST)
+                        {
+                            statChangePtr = GetAiLogicStatChangePointer(battlerDefPartner, stat);
+                            *statChangePtr += stage;
+                        }
+                    }
+                }
+                break;
+            case MOVE_EFFECT_STAT_MINUS:
+            case STAT_CHANGE_EFFECT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (atkAbility == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (considerSimple)
+                        stage *= 2;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(battlerAtk, stat);
+                    *statChangePtr += stage;
+
+                    if (stage > 0)
+                    {
+                        if (defHoldEffect == HOLD_EFFECT_MIRROR_HERB || defAbility == ABILITY_OPPORTUNIST)
+                        {
+                            statChangePtr = GetAiLogicStatChangePointer(battlerDef, stat);
+                            *statChangePtr += stage;
+                        }
+                        if (defPartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || defPartnerAbility == ABILITY_OPPORTUNIST)
+                        {
+                            statChangePtr = GetAiLogicStatChangePointer(battlerDefPartner, stat);
+                            *statChangePtr += stage;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            bool32 considerSimple = (defAbility == ABILITY_SIMPLE 
+             && moveEffect != EFFECT_ROLE_PLAY
+             && moveEffect != EFFECT_STUFF_CHEEKS
+             && moveEffect != EFFECT_HAZE
+             && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
+             && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
+            switch (additionalEffect->moveEffect)
+            {
+            case MOVE_EFFECT_STAT_PLUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (defAbility == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (considerSimple)
+                        stage *= 2;
+
+                    if (stage < 0 && !CanLowerStat(battlerAtk, battlerDef, gAiLogicData, stat))
+                        continue;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(battlerDef, stat);
+                    statChangePtr += stage;
+
+                    if (stage > 0)
+                    {
+                        if (isTargetingPartner)
+                        {
+                            if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerOpposite, stat);
+                                *statChangePtr += stage;
+                            }
+                            if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerOppositePartner, stat);
+                                *statChangePtr += stage;
+                            }
+
+                        }
+                        else
+                        {
+                            if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerAtk, stat);
+                                *statChangePtr += stage;
+                            }
+                            if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerAtkPartner, stat);
+                                *statChangePtr += stage;
+                            }
+                        }
+                    }
+                }
+                break;
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (defAbility == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (considerSimple)
+                        stage *= 2;
+
+                    if (stage < 0 && !CanLowerStat(battlerAtk, battlerDef, gAiLogicData, stat))
+                        continue;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(battlerDef, stat);
+                    statChangePtr += stage;
+
+                    if (stage > 0)
+                    {
+                        if (isTargetingPartner)
+                        {
+                            if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerOpposite, stat);
+                                *statChangePtr += stage;
+                            }
+                            if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerOppositePartner, stat);
+                                *statChangePtr += stage;
+                            }
+
+                        }
+                        else
+                        {
+                            if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerAtk, stat);
+                                *statChangePtr += stage;
+                            }
+                            if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                            {
+                                statChangePtr = GetAiLogicStatChangePointer(battlerAtkPartner, stat);
+                                *statChangePtr += stage;
+                            }
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    // Consider target abilities
+    switch (defAbility)
+    {
+    case ABILITY_ANGER_POINT:
+        if (MoveAlwaysCrits(ctx->statMove) && BattlerStatCanRise(battlerDef, defAbility, STAT_ATK))
+        {
+            s8 stage = MAX_STAT_STAGE - gBattleMons[battlerDef].statStages[STAT_ATK];
+            gAiLogicData->aiStatChanges[battlerDef].atk = stage;
+
+            if (isTargetingPartner)
+            {
+                if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOpposite].atk = stage;
+                if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOppositePartner].atk = stage;
+            }
+            else
+            {
+                if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtk].atk = stage;
+                if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtkPartner].atk = stage;
+            }
+        }
+        break;
+    case ABILITY_ANGER_SHELL:
+        if (BattlerHPPercentage(battlerDef, GREATER_THAN, 2))
+        {
+            u32 damage = AI_GetDamage(battlerAtk, battlerDef, ctx->atkMoveIndex, AI_ATTACKING, gAiLogicData);
+            if ((gBattleMons[battlerDef].hp - damage) < (gBattleMons[battlerDef].hp / 2))
+            {
+                gAiLogicData->aiStatChanges[battlerDef].atk += 1;
+                gAiLogicData->aiStatChanges[battlerDef].def -= 1;
+                gAiLogicData->aiStatChanges[battlerDef].spAtk += 1;
+                gAiLogicData->aiStatChanges[battlerDef].spDef -= 1;
+                gAiLogicData->aiStatChanges[battlerDef].speed += 1;
+
+                if (isTargetingPartner)
+                {
+                    if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[battlerOpposite].atk += 1;
+                        gAiLogicData->aiStatChanges[battlerOpposite].spAtk += 1;
+                        gAiLogicData->aiStatChanges[battlerOpposite].speed += 1;
+                    }
+                    if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].atk += 1;
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].spAtk += 1;
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].speed += 1;
+                    }
+                }
+                else
+                {
+                    if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[battlerAtk].atk += 1;
+                        gAiLogicData->aiStatChanges[battlerAtk].spAtk += 1;
+                        gAiLogicData->aiStatChanges[battlerAtk].speed += 1;
+                    }
+                    if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].atk += 1;
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].spAtk += 1;
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].speed += 1;
+                    }
+                }
+            }
+        }
+        break;
+    case ABILITY_BERSERK:
+        if (BattlerHPPercentage(battlerDef, GREATER_THAN, 2))
+        {
+            u32 damage = AI_GetDamage(battlerAtk, battlerDef, ctx->atkMoveIndex, AI_ATTACKING, gAiLogicData);
+            if ((gBattleMons[battlerDef].hp - damage) < (gBattleMons[battlerDef].hp / 2))
+            {
+                gAiLogicData->aiStatChanges[battlerDef].spAtk += 1;
+
+                if (isTargetingPartner)
+                {
+                    if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOpposite].spAtk += 1;
+                    if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].spAtk += 1;
+                }
+                else
+                {
+                    if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtk].spAtk += 1;
+                    if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].spAtk += 1;
+                }
+            }
+        }
+        break;
+    case ABILITY_COMPETITIVE:
+    case ABILITY_DEFIANT:
+        if (isTargetingPartner)
+            break;
+
+        if (IsStatLoweringMove(ctx->statMove))
+        {
+            u32 numAdditionalEffects = GetMoveAdditionalEffectCount(ctx->statMove);
+
+            for (u32 effectId = 0; effectId < numAdditionalEffects; effectId++)
+            {
+                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(ctx->statMove, effectId);
+
+                // Only consider effects with a guaranteed stat drops on target
+                if (!MoveEffectIsGuaranteed(battlerAtk, atkAbility, additionalEffect)
+                 || additionalEffect->moveEffect != MOVE_EFFECT_STAT_MINUS
+                 || additionalEffect->self)
+                {
+                    continue;
+                }
+                
+                bool32 abilityTriggers = FALSE;
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, stat))
+                    {
+                        abilityTriggers = TRUE;
+                        break;
+                    }
+                }
+
+                if (abilityTriggers)
+                {
+                    switch (defAbility)
+                    {
+                    case ABILITY_COMPETITIVE:
+                        gAiLogicData->aiStatChanges[battlerDef].spAtk += 2;
+                        if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                            gAiLogicData->aiStatChanges[battlerAtk].spAtk += 2;
+                        if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                            gAiLogicData->aiStatChanges[battlerAtkPartner].spAtk += 2;
+                        break;
+                    case ABILITY_DEFIANT:
+                        gAiLogicData->aiStatChanges[battlerDef].atk += 2;
+                        if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                            gAiLogicData->aiStatChanges[battlerAtk].atk += 2;
+                        if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                            gAiLogicData->aiStatChanges[battlerAtkPartner].atk += 2;
+                        break;
+                    default:
+                        break;
+                    }
+                    break; // Ability will activate
+                }
+            }
+        }
+        break;
+    case ABILITY_COTTON_DOWN:
+        if (GetMoveCategory(ctx->statMove) != DAMAGE_CATEGORY_STATUS
+         && AI_GetDamage(ctx->battlerMoveUser, ctx->battlerMoveTarget, ctx->statMoveIndex, AI_ATTACKING, gAiLogicData) > 0)
+        {
+            for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+            {
+                if (battler == ctx->battlerMoveTarget)
+                    continue;
+                s8 stage = -1;
+                if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
+                    stage *= -1;
+                if (gAiLogicData->abilities[battler] == ABILITY_SIMPLE)
+                    stage *= 2;
+
+                if (stage < 0)
+                {
+                    if (!CanLowerStat(ctx->battlerMoveTarget, battler, gAiLogicData, STAT_SPEED))
+                        continue;
+                    gAiLogicData->aiStatChanges[battler].speed += stage;
+
+                    if (gAiLogicData->abilities[battler] == ABILITY_DEFIANT
+                     && !IsTargetingPartner(ctx->battlerMoveTarget, battler)
+                     && BattlerStatCanRise(battler, ABILITY_DEFIANT, STAT_ATK))
+                    {
+                        gAiLogicData->aiStatChanges[battler].atk += 2;
+                        if (gAiLogicData->holdEffects[BATTLE_OPPOSITE(battler)] == HOLD_EFFECT_MIRROR_HERB
+                         || gAiLogicData->abilities[BATTLE_OPPOSITE(battler)] == ABILITY_OPPORTUNIST)
+                        {
+                            gAiLogicData->aiStatChanges[BATTLE_OPPOSITE(battler)].atk += 2;
+                        }
+                        if (gAiLogicData->holdEffects[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == HOLD_EFFECT_MIRROR_HERB
+                         || gAiLogicData->abilities[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == ABILITY_OPPORTUNIST)
+                        {
+                            gAiLogicData->aiStatChanges[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].atk += 2;
+                        }
+                    }
+
+                    if (gAiLogicData->abilities[battler] == ABILITY_COMPETITIVE
+                     && !IsTargetingPartner(battlerDef, battler)
+                     && BattlerStatCanRise(battler, ABILITY_COMPETITIVE, STAT_SPATK))
+                    {
+                        gAiLogicData->aiStatChanges[battler].spAtk += 2;
+                        if (gAiLogicData->holdEffects[BATTLE_OPPOSITE(battler)] == HOLD_EFFECT_MIRROR_HERB
+                         || gAiLogicData->abilities[BATTLE_OPPOSITE(battler)] == ABILITY_OPPORTUNIST)
+                        {
+                            gAiLogicData->aiStatChanges[BATTLE_OPPOSITE(battler)].spAtk += 2;
+                        }
+                        if (gAiLogicData->holdEffects[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == HOLD_EFFECT_MIRROR_HERB
+                         || gAiLogicData->abilities[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == ABILITY_OPPORTUNIST)
+                        {
+                            gAiLogicData->aiStatChanges[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].spAtk += 2;
+                        }
+                    }
+                }
+
+                if (stage > 0)
+                {
+                    if (gAiLogicData->holdEffects[BATTLE_OPPOSITE(battler)] == HOLD_EFFECT_MIRROR_HERB
+                    || gAiLogicData->abilities[BATTLE_OPPOSITE(battler)] == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[BATTLE_OPPOSITE(battler)].speed += stage;
+                    }
+                    if (gAiLogicData->holdEffects[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == HOLD_EFFECT_MIRROR_HERB
+                    || gAiLogicData->abilities[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))] == ABILITY_OPPORTUNIST)
+                    {
+                        gAiLogicData->aiStatChanges[BATTLE_PARTNER(BATTLE_OPPOSITE(battler))].speed += stage;
+                    }
+                }
+            }
+        }
+        break;
+    case ABILITY_JUSTIFIED:
+    case ABILITY_RATTLED:
+    case ABILITY_THERMAL_EXCHANGE:
+        bool32 runCheck = FALSE;
+        enum Type moveType = GetMoveType(ctx->statMove);
+
+        switch (defAbility)
+        {
+        case ABILITY_RATTLED:
+            if (moveType == TYPE_BUG
+             || moveType == TYPE_GHOST)
+            {
+                runCheck = TRUE;
+            }
+        // Fallthrough
+        case ABILITY_JUSTIFIED:
+            if (moveType == TYPE_DARK)
+                runCheck = TRUE;
+            break;
+        case ABILITY_THERMAL_EXCHANGE:
+            if (moveType == TYPE_FIRE)
+                runCheck = TRUE;
+            break;
+        case ABILITY_WATER_COMPACTION:
+            if (moveType == TYPE_WATER)
+                runCheck = TRUE;
+            break;
+        default:
+            break;
+        }
+
+        if (runCheck)
+        {
+            u32 hits = 0;
+
+            if (moveEffect == EFFECT_BEAT_UP)
+            {
+                struct Pokemon* party = GetBattlerParty(battlerAtk);
+
+                for (u32 i = 0; i < PARTY_SIZE; i++)
+                {
+                    enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
+                    if (species != SPECIES_NONE
+                    && GetMonData(&party[i], MON_DATA_HP)
+                    && !GetMonData(&party[i], MON_DATA_IS_EGG)
+                    && !GetMonData(&party[i], MON_DATA_STATUS))
+                    {
+                        hits++;
+                    }
+                }
+            }
+            else if (IsMultiHitMove(ctx->statMove)) // May be a better way to do this
+            {
+                if (atkAbility == ABILITY_SKILL_LINK)
+                    hits = 5;
+                else if (atkHoldEffect == HOLD_EFFECT_LOADED_DICE)
+                    hits = 4;
+                else
+                    hits = 3;
+            }
+            else
+            {
+                hits = 1;
+            }
+
+            if (defAbility == ABILITY_WATER_COMPACTION)
+                hits *= 2;
+
+            switch (defAbility)
+            {
+            case ABILITY_RATTLED:
+                gAiLogicData->aiStatChanges[battlerDef].speed += hits;
+
+                if (isTargetingPartner)
+                {
+                    if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOpposite].speed += hits;
+                    if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].speed += hits;
+                }
+                else
+                {
+                    if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtk].speed += hits;
+                    if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].speed += hits;
+                }
+                break;
+            case ABILITY_JUSTIFIED:
+            case ABILITY_THERMAL_EXCHANGE:
+                gAiLogicData->aiStatChanges[battlerDef].atk += hits;
+                if (isTargetingPartner)
+                {
+                    if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOpposite].atk += hits;
+                    if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].atk += hits;
+                }
+                else
+                {
+                    if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtk].atk += hits;
+                    if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].atk += hits;
+                }
+                break;
+            case ABILITY_WATER_COMPACTION:
+                gAiLogicData->aiStatChanges[battlerDef].def += hits;
+                if (isTargetingPartner)
+                {
+                    if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOpposite].def += hits;
+                    if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerOppositePartner].def += hits;
+                }
+                else
+                {
+                    if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtk].def += hits;
+                    if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                        gAiLogicData->aiStatChanges[battlerAtkPartner].def += hits;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        break;
+    case ABILITY_OPPORTUNIST:
+        break; // Considered everywhere else
+    case ABILITY_STAMINA:
+    {
+        u32 hits = 0;
+
+        if (moveEffect == EFFECT_BEAT_UP)
+        {
+            struct Pokemon* party = GetBattlerParty(battlerAtk);
+
+            for (u32 i = 0; i < PARTY_SIZE; i++)
+            {
+                enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
+                if (species != SPECIES_NONE
+                && GetMonData(&party[i], MON_DATA_HP)
+                && !GetMonData(&party[i], MON_DATA_IS_EGG)
+                && !GetMonData(&party[i], MON_DATA_STATUS))
+                {
+                    hits++;
+                }
+            }
+        }
+        else if (IsMultiHitMove(ctx->statMove)) // May be a better way to do this
+        {
+            if (atkAbility == ABILITY_SKILL_LINK)
+                hits = 5;
+            else if (atkHoldEffect == HOLD_EFFECT_LOADED_DICE)
+                hits = 4;
+            else
+                hits = 3;
+        }
+        else
+        {
+            hits = 1;
+        }
+
+        gAiLogicData->aiStatChanges[battlerDef].def += hits;
+        if (isTargetingPartner)
+        {
+            if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerOpposite].def += hits;
+            if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerOppositePartner].def += hits;
+        }
+        else
+        {
+            if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerAtk].def += hits;
+            if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerAtkPartner].def += hits;
+        }
+        break;
+    }
+    case ABILITY_STEADFAST:
+        if (IsFlinchGuaranteed(battlerAtk, battlerDef, ctx->statMove))
+        {
+            gAiLogicData->aiStatChanges[battlerDef].speed += 1;
+
+            if (isTargetingPartner)
+            {
+                if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOpposite].speed += 1;
+                if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOppositePartner].speed += 1;
+            }
+            else
+            {
+                if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtk].speed += 1;
+                if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtkPartner].speed += 1;
+            }
+        }
+        break;
+    case ABILITY_STEAM_ENGINE:
+        if (GetMoveType(ctx->statMove) == TYPE_WATER || GetMoveType(ctx->statMove) == TYPE_FIRE)
+        {
+            s8 stage = MAX_STAT_STAGE - gBattleMons[battlerDef].statStages[STAT_SPEED];
+            if (stage > 6)
+                stage = 6;
+
+            gAiLogicData->aiStatChanges[battlerDef].speed += stage;
+            if (isTargetingPartner)
+            {
+                if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOpposite].speed += stage;
+                if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerOppositePartner].speed += stage;
+            }
+            else
+            {
+                if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtk].speed += stage;
+                if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                    gAiLogicData->aiStatChanges[battlerAtkPartner].speed += stage;
+            }
+        }
+        break;
+    case ABILITY_WEAK_ARMOR:
+        if (GetMoveCategory(ctx->statMove) != DAMAGE_CATEGORY_PHYSICAL)
+            break;
+
+        u32 hits = 0;
+
+        if (moveEffect == EFFECT_BEAT_UP)
+        {
+            struct Pokemon* party = GetBattlerParty(battlerAtk);
+
+            for (u32 i = 0; i < PARTY_SIZE; i++)
+            {
+                enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
+                if (species != SPECIES_NONE
+                && GetMonData(&party[i], MON_DATA_HP)
+                && !GetMonData(&party[i], MON_DATA_IS_EGG)
+                && !GetMonData(&party[i], MON_DATA_STATUS))
+                {
+                    hits++;
+                }
+            }
+        }
+        else if (IsMultiHitMove(ctx->statMove)) // May be a better way to do this
+        {
+            if (atkAbility == ABILITY_SKILL_LINK)
+                hits = 5;
+            else if (atkHoldEffect == HOLD_EFFECT_LOADED_DICE)
+                hits = 4;
+            else
+                hits = 3;
+        }
+        else
+        {
+            hits = 1;
+        }
+
+        gAiLogicData->aiStatChanges[battlerDef].def -= hits;
+        gAiLogicData->aiStatChanges[battlerDef].speed += (hits * 2);
+        if (isTargetingPartner)
+        {
+            if (oppositeHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositeAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerOpposite].speed += (hits * 2);
+            if (oppositePartnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || oppositePartnerAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerOppositePartner].speed += (hits * 2);
+        }
+        else
+        {
+            if (atkHoldEffect == HOLD_EFFECT_MIRROR_HERB || atkAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerAtk].speed += (hits * 2);
+            if (partnerHoldEffect == HOLD_EFFECT_MIRROR_HERB || partnerAbility == ABILITY_OPPORTUNIST)
+                gAiLogicData->aiStatChanges[battlerAtkPartner].speed += (hits * 2);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_FASTER);
@@ -172,6 +1012,277 @@ bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Mov
 bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_SLOWER);
+}
+
+bool32 AI_WouldBeFaster(struct StatConsiderationContext *ctx, enum Move defMove, enum ConsiderPriority considerPriority)
+{
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+    
+    AI_SaveBattlerStatStages(savedStatStages);
+    AI_SetMoveStatChangeLogic(ctx);
+    AI_SetBattlerStatChanges();
+
+    bool32 result = (AI_WhoStrikesFirst(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, defMove, considerPriority) == AI_IS_FASTER);
+
+    AI_RestoreBattlerStatStages(savedStatStages);
+
+    return result;
+}
+
+bool32 AI_WouldBeSlower(struct StatConsiderationContext *ctx, enum Move defMove, enum ConsiderPriority considerPriority)
+{
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+    
+    AI_SaveBattlerStatStages(savedStatStages);
+    AI_SetMoveStatChangeLogic(ctx);
+    AI_SetBattlerStatChanges();
+
+    bool32 result = (AI_WhoStrikesFirst(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, defMove, considerPriority) == AI_IS_SLOWER);
+
+    AI_RestoreBattlerStatStages(savedStatStages);
+
+    return result;
+}
+
+enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, enum BattlerId battlerStatDef, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context)
+{
+    struct StatConsiderationContext *ctx = NULL;
+
+    ctx->battlerMoveUser = battlerStatAtk;
+    ctx->battlerMoveTarget = battlerStatDef;
+    ctx->battlerAtk = battlerAtk;
+    ctx->battlerDef = battlerDef;
+    ctx->statMoveIndex = GetMoveIndex(battlerStatAtk, statMove);
+    ctx->statMove = statMove;
+    ctx->atkMoveIndex = dmgMoveIndex;
+    ctx->atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
+    ctx->context = context;
+
+    enum Move predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    enum Move atkBestMoves[MAX_MON_MOVES];
+    enum Move defBestMoves[MAX_MON_MOVES];
+
+    // Only care about chosen move if passed
+    if (dmgMoveIndex != MAX_MON_MOVES)
+    {
+        atkBestMoves[0] = gBattleMons[battlerAtk].moves[dmgMoveIndex];
+    }
+    else
+    {
+        GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, atkBestMoves);
+        GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
+    }
+
+    switch (context)
+    {
+    case CHANGE_STAT_DMG_DEALT:
+        if (ctx->atkMoveIndex != MAX_MON_MOVES) // Move index specified
+        {
+            if (AI_GetDamage(battlerAtk, battlerDef, ctx->atkMoveIndex, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                return STAT_CHANGE_BAD;
+            else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                return STAT_CHANGE_GOOD;
+        }
+        else // No move index specified; check all
+        {
+            // No point if can already KO
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                    return STAT_CHANGE_BAD;
+            }
+            // Good if makes a move KO where it previously would not
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                ctx->atkMoveIndex = i;
+                if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                 && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                {
+                    return STAT_CHANGE_GOOD;
+                }
+            }
+        }
+        return STAT_CHANGE_NEUTRAL;
+    case CHANGE_STAT_DMG_RECEIVED:
+        // Bad if KO's with stat changes
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            // Bad if KO's with stat changes
+            if (AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp)
+                return STAT_CHANGE_BAD;
+        }
+        // Good if saves from being KO'd
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            ctx->atkMoveIndex = i;
+            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp)
+             && (AI_GetDamage(battlerDef, battlerAtk, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp))
+            {
+                return STAT_CHANGE_GOOD;
+            }
+        }
+        // Neutral if not KO'd either way
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            ctx->atkMoveIndex = i;
+            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+             && !(AI_GetDamage(battlerDef, battlerAtk, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+            {
+                return STAT_CHANGE_NEUTRAL;
+            }
+        }
+        // Default to not doing it
+        return STAT_CHANGE_BAD;
+    case CHANGE_STAT_SPEEDS: // Changes that make user move first = good; changes that make user move second = bad; else neutral.
+        if (AI_IsSlower(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
+         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+        {
+            return STAT_CHANGE_GOOD;
+        }
+        else if (AI_IsFaster(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeSlower(ctx, predictedMove, CONSIDER_PRIORITY)
+         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+        {
+            return STAT_CHANGE_GOOD;
+        }
+        else if (AI_IsFaster(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeSlower(ctx, predictedMove, CONSIDER_PRIORITY)
+         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+        {
+            return STAT_CHANGE_BAD;
+        }
+        else if (AI_IsSlower(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
+         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+        {
+            return STAT_CHANGE_BAD;
+        }
+        return STAT_CHANGE_NEUTRAL;
+    case CHANGE_STAT_ACC_EVADE:
+        s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+        u32 hitsToKO, expectedTurnsToKOAtk, expectedTurnsToKOModifiedAtk, expectedTurnsToKODef, expectedTurnsToKOModifiedDef;
+        u32 bestTurnsToKOAtk = UINT32_MAX, bestTurnsToKOModifiedAtk = UINT32_MAX, bestTurnsToKODef = UINT32_MAX, bestTurnsToKOModifiedDef = UINT32_MAX;
+        u32 totalAccuracy = 100, totalAccuracyModified;
+        if (dmgMoveIndex != MAX_MON_MOVES)
+        {
+            hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, ctx->atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
+            totalAccuracy = GetTotalAccuracy(battlerAtk, battlerDef, ctx->atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+            
+            // Move already hits, no point
+            if (totalAccuracy >= 100)
+                return STAT_CHANGE_BAD;
+                
+            expectedTurnsToKOAtk = (hitsToKO * 100)/totalAccuracy;
+
+            AI_SaveBattlerStatStages(savedStatStages);
+            AI_SetMoveStatChangeLogic(ctx);
+            AI_SetBattlerStatChanges();
+
+            totalAccuracyModified = GetTotalAccuracy(battlerAtk, battlerDef, ctx->atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+
+            AI_RestoreBattlerStatStages(savedStatStages);
+
+            expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
+
+            // Stat changes mean more turns to KO
+            if (expectedTurnsToKOModifiedAtk > expectedTurnsToKOAtk)
+                return STAT_CHANGE_BAD;
+            // Stat changes mean same number of turns to KO (with grace of 1 for this move being used) but reduces likelihood of missing
+            if ((expectedTurnsToKOModifiedAtk == expectedTurnsToKOAtk
+             || (expectedTurnsToKOModifiedAtk == (expectedTurnsToKOAtk - 1))) && (totalAccuracy < 100))
+            {
+                return STAT_CHANGE_NEUTRAL;
+            }
+            // Stat changes reduce expected number of turns to KO
+            if (expectedTurnsToKOModifiedAtk <= (expectedTurnsToKOAtk - 2))
+                return STAT_CHANGE_GOOD;
+            // Default to not do it
+            return STAT_CHANGE_BAD;
+        }
+        else
+        {
+            // Get fewest expected moves for battlers to KO each other without stat changes
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                totalAccuracy = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                expectedTurnsToKOAtk = ((hitsToKO * 100) / totalAccuracy);
+                
+                if (bestTurnsToKOAtk > expectedTurnsToKOAtk)
+                    bestTurnsToKOAtk = expectedTurnsToKOAtk;
+            }
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                totalAccuracy = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
+                
+                if (bestTurnsToKODef > expectedTurnsToKODef)
+                    bestTurnsToKODef = expectedTurnsToKODef;
+            }
+
+            AI_SaveBattlerStatStages(savedStatStages);
+            AI_SetMoveStatChangeLogic(ctx);
+            AI_SetBattlerStatChanges();
+
+            // Get fewest expected moves for battlers to KO each other with stat changes
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                totalAccuracyModified = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
+                
+                if (bestTurnsToKOModifiedAtk > expectedTurnsToKOModifiedAtk)
+                    bestTurnsToKOModifiedAtk = expectedTurnsToKOModifiedAtk;
+            }
+            for (u32 i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                totalAccuracyModified = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                expectedTurnsToKOModifiedDef = ((hitsToKO * 100) / totalAccuracyModified);
+                
+                if (bestTurnsToKOModifiedDef > expectedTurnsToKOModifiedDef)
+                    bestTurnsToKOModifiedDef = expectedTurnsToKOModifiedDef;
+            }
+
+            AI_RestoreBattlerStatStages(savedStatStages);
+
+            // Good if makes battlerAtk statistically more likely to KO battlerDef first
+            if ((bestTurnsToKOAtk >= bestTurnsToKODef) && (bestTurnsToKOModifiedAtk < (bestTurnsToKOModifiedDef - 1)))
+            {
+                return STAT_CHANGE_GOOD;
+            }
+            // Good if increases expected number of moves battlerDef needs to KO by 2 or more
+            else if (bestTurnsToKOModifiedDef >= (bestTurnsToKODef + 2))
+            {
+                return STAT_CHANGE_GOOD;
+            }
+            // Neutral if there's a minor inprovement to odds
+            else if ((bestTurnsToKOAtk == bestTurnsToKODef)
+             && (bestTurnsToKOModifiedAtk == bestTurnsToKOModifiedDef || bestTurnsToKOModifiedAtk == (bestTurnsToKOModifiedDef - 1))
+             && (totalAccuracy < 100))
+            {
+                return STAT_CHANGE_NEUTRAL;
+            }
+            // Default to not do it
+            return STAT_CHANGE_BAD;
+        }
+    default:
+        return STAT_CHANGE_NEUTRAL;
+    }
 }
 
 enum Move GetAIChosenMove(enum BattlerId battlerId)

@@ -41,7 +41,6 @@
 #include "trainer_slide.h"
 #include "battle_message.h"
 
-static u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold);
 static u32 GetPartyMonCount(u32 lastId, struct Pokemon *party, bool32 onlyAlive);
 static bool32 DoesTrainerHaveSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId);
 static bool32 ShouldRunTrainerSlideLandsFirstCriticalHit(enum BattlerId battler, enum TrainerSlideType slideId);
@@ -79,7 +78,7 @@ static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_E
 #include "../test/battle/trainer_slides.h"
 };
 
-static u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold)
+u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold)
 {
     switch (operation)
     {

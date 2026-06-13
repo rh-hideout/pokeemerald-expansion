@@ -8,6 +8,22 @@ enum StatChangeResult
     STAT_CHANGE_BLOCKED_BY_TARGET,
 };
 
+enum ChangeStatContext
+{
+    CHANGE_STAT_DMG_DEALT,
+    CHANGE_STAT_DMG_RECEIVED,
+    CHANGE_STAT_SPEEDS,
+    CHANGE_STAT_ACC_EVADE,
+    CHANGE_STAT_CONTEXT_COUNT,
+};
+
+enum StatChangeDecision
+{
+    STAT_CHANGE_BAD,
+    STAT_CHANGE_NEUTRAL,
+    STAT_CHANGE_GOOD,
+};
+
 #define STAT_CHANGE_NO_FLAGS             0
 #define STAT_CHANGE_ONLY_CHECKING       (1 << 0)
 #define STAT_CHANGE_IGNORE_SELF         (1 << 1)
