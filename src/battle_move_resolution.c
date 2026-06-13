@@ -3965,21 +3965,22 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
         if (IsBattlerAlive(cv->battlerAtk) && !GetBattlerPartyState(cv->battlerAtk)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
         {
             itemToSteal = gBattleMons[cv->battlerAtk].item;
+            holdEffectAtk = cv->holdEffects[cv->battlerAtk];
             abilityAtk = cv->abilities[cv->battlerAtk];
         }
         else
         {
             itemToSteal = ITEM_NONE;
+            holdEffectAtk = HOLD_EFFECT_NONE;
             abilityAtk = ABILITY_NONE;
         }
     }
     else
     {
         itemToSteal = GetMonData(&gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM);
+        holdEffectAtk = HOLD_EFFECT_NONE;
         abilityAtk = ABILITY_NONE;
     }
-
-    holdEffectAtk = GetItemHoldEffect(itemToSteal);
 
     if (itemToSteal != ITEM_NONE) // valid item to steal
     {
