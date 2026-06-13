@@ -10754,6 +10754,8 @@ static void SetStatChangeFlags(struct StatChange *st, u32 flags)
     st->ignoreMirrorArmored = SET_FLAG(STAT_CHANGE_IGNORE_MIRROR_ARMOR);
     st->itemMessage = SET_FLAG(STAT_CHANGE_ITEM);
     st->stickyWeb = SET_FLAG(STAT_CHANGE_STICKY_WEB);
+    st->mirrorHerbActivation = SET_FLAG(STAT_CHANGE_MIRROR_HERB);
+    st->opportunistActivation = SET_FLAG(STAT_CHANGE_OPPORTUNIST);
 }
 #undef SET_FLAG
 

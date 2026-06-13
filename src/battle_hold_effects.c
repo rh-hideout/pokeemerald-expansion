@@ -177,7 +177,7 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
                 SetStatChange(battler, stat, gQueuedStatBoosts[battler].statChanges[queuedStat]);
 
         }
-        gProtectStructs[battler].eatMirrorHerb = 0;
+        gProtectStructs[battler].eatMirrorHerb = FALSE;
         BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
         effect = ITEM_STATS_CHANGE;
     }

@@ -27,7 +27,9 @@ struct StatChange
     u32 targetMissed:1;
     u32 stickyWeb:1;
     u32 ignoreCertainFailure:1; // for mirror armor and substitute
-    u32 padding:19;
+    u32 mirrorHerbActivation:1;
+    u32 opportunistActivation:1;
+    u32 padding:17;
 };
 
 extern u32 const sAccurateStatOrder[NUM_BATTLE_STATS];

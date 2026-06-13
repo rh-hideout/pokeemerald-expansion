@@ -78,14 +78,14 @@ struct ProtectStruct
     u32 quash:1;
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
-    u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
+    u32 activateOpportunist:1;
     u32 usedAllySwitch:1;
     u32 lashOutAffected:1;
     u32 assuranceDoubled:1;
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:2;
+    u32 padding1:3;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
