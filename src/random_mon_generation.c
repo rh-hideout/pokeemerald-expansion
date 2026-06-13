@@ -56,12 +56,9 @@ static enum Item GetRandomItemAtIndex(const struct RandomItemGeneratorOptions *o
 static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item SlowPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item FastPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
-static enum PokeBall GetRandomBall(void);
-static enum PokeBall ResolveRandomBall(enum PokeBall ball);
 static bool32 MoveOrder(enum Move moveA, enum Move moveB);
 static void SortMoves(enum Move *moves);
 static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count);
-static void ResolveRandomMoves(enum Species species, enum Move *moves);
 
 #if TESTING
 #include "../test/random_mon_generator.h"
@@ -416,20 +413,9 @@ enum Item GetRandomItem(u32 optionId, const struct FilterFuncArgs *filterFuncArg
     return FastPickRandomItem(options, poolSize, filterFuncArgs);
 }
 
-static enum PokeBall GetRandomBall(void)
+enum PokeBall GetRandomBall(void)
 {
-    return RandomUniform(RNG_RANDOM_BALL, BALL_STRANGE, POKEBALL_COUNT - 1);
-}
-
-static enum PokeBall ResolveRandomBall(enum PokeBall ball)
-{
-    if (ball < POKEBALL_COUNT)
-        return ball;
-    if (ball == BALL_RANDOM)
-        return GetRandomBall();
-
-    errorf("Unknown ball value %d", ball);
-    return BALL_STRANGE;
+    return RandomUniform(RNG_RANDOM_BALL, BALL_POKE, POKEBALL_COUNT - 1);
 }
 
 static bool32 MoveOrder(enum Move moveA, enum Move moveB)
@@ -476,15 +462,63 @@ static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count)
 
 #define IS_DUPLICATE_MOVE(move) IsMoveInMoveset(move, moves, i)
 
-static void ResolveRandomMoves(enum Species species, enum Move *moves)
+static void AssignDefaultMove(enum Species species, u32 level, enum Move *moves, u32 index)
+{
+    u32 i = MAX_MON_MOVES;
+    moves[index] = MOVE_NONE;
+    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
+    for (u32 j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
+    {
+        if (learnset[j].level > level)
+            break;
+        if (learnset[j].level == 0)
+            continue;
+
+        if (!IS_DUPLICATE_MOVE(learnset[j].move))
+            moves[index] = learnset[j].move;
+    }
+}
+
+static void AssignRandomTeachableMove(enum Species species, enum Move *moves, u32 i)
 {
     u32 teachableCount = 0;
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
 
-    SortMoves(moves);
-
     while (teachableLearnset[teachableCount] != MOVE_UNAVAILABLE)
         teachableCount++;
+
+    bool32 noCandidateFlag;
+    enum Move candidate;
+
+    if (teachableCount <= i)
+    {
+        noCandidateFlag = TRUE;
+        for (u32 j = 0; j < teachableCount; j++)
+        {
+            if (!IS_DUPLICATE_MOVE(teachableLearnset[j]))
+            {
+                noCandidateFlag = FALSE;
+                break;
+            }
+        }
+        if (noCandidateFlag)
+            return;
+    }
+
+    do {
+        candidate = teachableLearnset[RandomUniform(RNG_NONE, 0, teachableCount - 1)];
+    } while (IS_DUPLICATE_MOVE(candidate));
+
+    moves[i] = candidate;
+}
+
+void ResolveMoves(enum Species species, u32 level, const u16 *movesTemplate, enum Move *moves)
+{
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        moves[i] = movesTemplate[i];
+    }
+    SortMoves(moves);
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -497,51 +531,22 @@ static void ResolveRandomMoves(enum Species species, enum Move *moves)
             continue;
         }
 
-        if (moves[i] == MOVE_RANDOM_TEACHABLE)
-        {
-            bool32 noCandidateFlag;
-            enum Move candidate;
-
-            if (teachableCount <= i)
-            {
-                noCandidateFlag = TRUE;
-                for (u32 j = 0; j < teachableCount; j++)
-                {
-                    if (!IS_DUPLICATE_MOVE(teachableLearnset[j]))
-                    {
-                        noCandidateFlag = FALSE;
-                        break;
-                    }
-                }
-
-                if (noCandidateFlag)
-                {
-                    moves[i] = MOVE_NONE;
-                    continue;
-                }
-            }
-
-            do {
-                candidate = teachableLearnset[RandomUniform(RNG_NONE, 0, teachableCount - 1)];
-            } while (IS_DUPLICATE_MOVE(candidate));
-
-            moves[i] = candidate;
-            continue;
-        }
-
-        assertf(moves[i] == MOVE_DEFAULT, "invalid move: %d", moves[i])
-        {
-            moves[i] = MOVE_NONE;
-        }
+        enum Move specialMove = moves[i];
+        moves[i] = MOVE_NONE;
+        if (specialMove == MOVE_RANDOM_TEACHABLE)
+            AssignRandomTeachableMove(species, moves, i);
+        else if (specialMove == MOVE_DEFAULT)
+            moves[i] = MOVE_DEFAULT; // Can't be assigned here because default moves need to be assigned in reverse order
+        else
+            errorf("Trying to assign invalid move %d when creating pokemon", moves[i]);
     }
 
+    for (s32 i = MAX_MON_MOVES - 1; i >= 0; i--)
+    {
+        if (moves[i] == MOVE_DEFAULT)
+            AssignDefaultMove(species, level, moves, i);
+    }
     SortMoves(moves);
-}
-
-void ResolveRandomMonGeneration(enum Species species, enum PokeBall *ball, enum Move *moves)
-{
-    *ball = ResolveRandomBall(*ball);
-    ResolveRandomMoves(species, moves);
 }
 
 static u16 ReadFilterFuncArg(struct ScriptContext *ctx)
