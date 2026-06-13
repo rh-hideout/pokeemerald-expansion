@@ -7461,8 +7461,6 @@ static void Cmd_forcerandomswitch(void)
         }
         else
         {
-            if (gBattleStruct->battlerState[gBattlerTarget].originalBattlerPartyId == PARTY_SIZE)
-                gBattleStruct->battlerState[gBattlerTarget].originalBattlerPartyId = gBattlerPartyIndexes[gBattlerTarget]; // attacker and target are swapped
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
                 gBattleMons[battler].volatiles.tryEjectPack = FALSE; // Disable Eject Pack activations
             gBattleStruct->battlerPartyIndexes[gBattlerTarget] = gBattlerPartyIndexes[gBattlerTarget];
