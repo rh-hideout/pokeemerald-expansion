@@ -1369,52 +1369,38 @@
 	.endm
 
 	@ Adds value to the player's money. If adding 'value' money would exceed MAX_MONEY, the player's money is set to MAX_MONEY.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro addmoney value:req, disable=0
+	.macro addmoney value:req
 	.byte SCR_OP_ADDMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Subtracts value from the player's money. If the player has less than 'value' money, their money is set to 0.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro removemoney value:req, disable=0
+	.macro removemoney value:req
 	.byte SCR_OP_REMOVEMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Checks if the player has money >= value. VAR_RESULT is set to TRUE if the player has enough money, or FALSE if they do not.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro checkmoney value:req, disable=0
+	.macro checkmoney value:req
 	.byte SCR_OP_CHECKMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Creates a window showing how much money the player has.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro showmoneybox x:req, y:req, disable=0
+	.macro showmoneybox x:req, y:req
 	.byte SCR_OP_SHOWMONEYBOX
 	.byte \x
 	.byte \y
-	.byte \disable
 	.endm
 
-	@ Destroys the window created by showmoneybox. Consumption of the x and y arguments was dummied out.
+	@ Destroys the window created by showmoneybox.
 	.macro hidemoneybox
 	.byte SCR_OP_HIDEMONEYBOX
-	.byte 0  @ \x
-	.byte 0  @ \y
 	.endm
 
-	@ Updates the window created by showmoneybox. Consumption of the x and y arguments was dummied out.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro updatemoneybox disable=0
+	@ Updates the window created by showmoneybox.
+	.macro updatemoneybox
 	.byte SCR_OP_UPDATEMONEYBOX
-	.byte 0  @ \x
-	.byte 0  @ \y
-	.byte \disable
 	.endm
 
 	@ Gets whether the effects of the specified PokeNews program are active. newsKind is a POKENEWS_* constant.
@@ -1726,18 +1712,14 @@
 	.byte \y
 	.endm
 
-	@ Destroys the window created by showcoins. It consumes its arguments but doesn't use them.
-	.macro hidecoinsbox x:req, y:req
+	@ Destroys the window created by showcoins.
+	.macro hidecoinsbox
 	.byte SCR_OP_HIDECOINSBOX
-	.byte \x
-	.byte \y
 	.endm
 
-	@ Updates the window created by showcoins. It consumes its arguments but doesn't use them.
-	.macro updatecoinsbox x:req, y:req
+	@ Updates the window created by showcoins.
+	.macro updatecoinsbox
 	.byte SCR_OP_UPDATECOINSBOX
-	.byte \x
-	.byte \y
 	.endm
 
 	@ Increases the value of the specified game stat by 1. The maximum value of a stat is 0xFFFFFF. See include/constants/game_stat.h
