@@ -167,7 +167,7 @@ ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
 
-override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init -Wnonnull -Wenum-conversion
+override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -g -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init -Wnonnull -Wenum-conversion
 
 ifneq ($(LTO),0)
   ifneq ($(TEST),1)
@@ -193,14 +193,6 @@ endif
 
 LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
 LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
-# Enable debug info if set
-ifeq ($(DINFO),1)
-  override CFLAGS += -g
-else
-  ifeq ($(DEBUG),1)
-    override CFLAGS += -g
-  endif
-endif
 
 ifeq ($(NOOPT),1)
 override CFLAGS := $(filter-out -O1 -Og -O2,$(CFLAGS))
@@ -224,6 +216,7 @@ MAPJSON      := $(TOOLS_DIR)/mapjson/mapjson$(EXE)
 JSONPROC     := $(TOOLS_DIR)/jsonproc/jsonproc$(EXE)
 TRAINERPROC  := $(TOOLS_DIR)/trainerproc/trainerproc$(EXE)
 PATCHELF     := $(TOOLS_DIR)/patchelf/patchelf$(EXE)
+POSTLINK     := ASAN_OPTIONS="detect_leaks=0" $(TOOLS_DIR)/postlink/postlink$(EXE)
 ifeq ($(shell uname),Darwin)
     ROMTEST ?= $(shell command -v mgba-rom-test-mac 2>/dev/null || echo $(TOOLS_DIR)/mgba/mgba-rom-test-mac)
     ROMTESTHYDRA := $(shell command -v mgba-rom-test-hydra 2>/dev/null || echo $(TOOLS_DIR)/mgba-rom-test-hydra/mgba-rom-test-hydra)
@@ -572,15 +565,19 @@ ifneq ($(LTO),0)
 LDFLAGS := -march=armv4t -mabi=apcs-gnu -mcpu=arm7tdmi -Xlinker -Map=../../$(MAP) -Xlinker --print-memory-usage -Xassembler -meabi=5 -Xassembler -march=armv4t -Xassembler -mcpu=arm7tdmi -Xlinker --gc-sections
 LDFLAGS += -Xlinker -flto=auto
 $(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
-	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs>"
-	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
-	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
+	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../ld_script_lto.ld -T ../../$< -o ../../$@ <objs> <libs>"
+	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../ld_script_lto.ld -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
 else
 # Output .map file, memory usage readout and gc sections to clean-up unused data
-LDFLAGS = -Map ../../$(MAP) --print-memory-usage --gc-sections
-$(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
-	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$<  -o ../../$@ $(OBJS_REL) $(LIB) | cat
-	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs> | cat"
+LDFLAGS := -Map ../../$(MAP) --print-memory-usage --gc-sections --emit-relocs
+$(OBJ_DIR_NAME)/$(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
+	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs>"
+	+@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
+
+$(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall $(OBJ_DIR)/$(ELF)
+	$(POSTLINK) $(OBJ_DIR)/$(ELF) > $(OBJ_DIR)/postlink.s
+	$(AS) $(ASFLAGS) -o $(OBJ_DIR)/postlink.o $(OBJ_DIR)/postlink.s
+	+@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) postlink.o $(LIB) >/dev/null 2>/dev/null || cp $(OBJ_DIR)/$(ELF) $(ELF)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
 endif
 
