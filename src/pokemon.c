@@ -6930,7 +6930,7 @@ static enum PokeBall ResolveBall(u32 ballTemplate)
     return BALL_STRANGE;
 }
 
-static void ResolveIVs(enum Species species, const u8 *ivsTemplate, u8 *ivs)
+static void ResolveIVs(enum Species species, const u16 *ivsTemplate, u8 *ivs)
 {
     u32 i;
     u32 nonFixedIvCount = 0;
@@ -6972,7 +6972,7 @@ static void ResolveIVs(enum Species species, const u8 *ivsTemplate, u8 *ivs)
     }
 }
 
-static void ResolveEVs(const u8 *evsTemplate, u8 *evs)
+static void ResolveEVs(const u16 *evsTemplate, u8 *evs)
 {
     u32 evTotal = 0;
     for (u32 i = 0; i < NUM_STATS; i++)
@@ -7141,7 +7141,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
         SetMonData(mon, MON_DATA_MOVE1 + i, &moves[i]);
     }
 
-    u8 dmaxLevel = ResolveDynamaxLevel(monTemplate->dmaxLevel);
+    u32 dmaxLevel = ResolveDynamaxLevel(monTemplate->dmaxLevel);
     SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
 
     bool32 gmaxFactor = ResolveGmaxFactor(monTemplate->gmaxFactor);

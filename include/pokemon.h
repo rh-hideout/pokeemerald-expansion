@@ -523,23 +523,25 @@ struct SpeciesInfo /*0xC4*/
     enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
+// This struct represent values from user input (createmon/givemon) that have not been sanitized
+// The absence of enum and the use of large data types is there to reflect the full range of user input
 struct PokemonTemplate
 {
     u16 species;
     u16 heldItem;
-    u8 level;
-    u8 ball;
-    u8 gender;
-    u8 nature;
-    bool8 isShiny;
-    u8 abilityNum;
-    u8 evs[NUM_STATS];
-    u8 ivs[NUM_STATS];
+    u16 level;
+    u16 ball;
+    u16 gender;
+    u16 nature;
+    bool16 isShiny;
+    u16 abilityNum;
+    u16 evs[NUM_STATS];
+    u16 ivs[NUM_STATS];
     u16 moves[MAX_MON_MOVES];
-    bool8 gmaxFactor;
-    u8 teraType;
-    u8 dmaxLevel;
-    bool8 isEgg;
+    bool16 gmaxFactor;
+    u16 teraType;
+    u16 dmaxLevel;
+    bool16 isEgg;
     enum GeneratedMonOrigin origin;
     u8 doNotUseDefaultShinyness:1;
     u8 doNotUseDefaultBall:1;
