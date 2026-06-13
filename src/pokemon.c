@@ -7038,7 +7038,7 @@ static u32 ResolvePersonality(enum Species species, u32 genderTemplate, u32 natu
     return GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
 }
 
-static bool8 ResolveShinyness(u32 isShinyTemplate)
+static bool32 ResolveShinyness(u32 isShinyTemplate)
 {
     assertf(isShinyTemplate == TRUE || isShinyTemplate == FALSE, "using non boolean isShiny value %d when creating pokemon", isShinyTemplate)
     {
@@ -7047,7 +7047,7 @@ static bool8 ResolveShinyness(u32 isShinyTemplate)
     return isShinyTemplate;
 }
 
-static bool8 ResolveDynamaxLevel(u32 dynamaxLevelTemplate)
+static bool32 ResolveDynamaxLevel(u32 dynamaxLevelTemplate)
 {
     assertf(dynamaxLevelTemplate <= MAX_DYNAMAX_LEVEL, "invalid dynamax level value %d when creating pokemon", dynamaxLevelTemplate)
     {
@@ -7056,7 +7056,7 @@ static bool8 ResolveDynamaxLevel(u32 dynamaxLevelTemplate)
     return dynamaxLevelTemplate;
 }
 
-static bool8 ResolveGmaxFactor(u32 gmaxFactorTemplate)
+static bool32 ResolveGmaxFactor(u32 gmaxFactorTemplate)
 {
     assertf(gmaxFactorTemplate == TRUE || gmaxFactorTemplate == FALSE, "using non boolean gmaxFactor value %d when creating pokemon", gmaxFactorTemplate)
     {
@@ -7065,7 +7065,7 @@ static bool8 ResolveGmaxFactor(u32 gmaxFactorTemplate)
     return gmaxFactorTemplate;
 }
 
-static bool8 ResolveIsEgg(u32 isEggTemplate)
+static bool32 ResolveIsEgg(u32 isEggTemplate)
 {
     assertf(isEggTemplate == TRUE || isEggTemplate == FALSE, "using non boolean isEgg value %d when creating pokemon", isEggTemplate)
     {
@@ -7074,7 +7074,7 @@ static bool8 ResolveIsEgg(u32 isEggTemplate)
     return isEggTemplate;
 }
 
-static bool8 ResolveTeraType(u32 teraTypeTemplate)
+static bool32 ResolveTeraType(u32 teraTypeTemplate)
 {
     assertf(teraTypeTemplate != TYPE_NONE && teraTypeTemplate != TYPE_MYSTERY && teraTypeTemplate < NUMBER_OF_MON_TYPES, "using invalid tera type %d when creating pokemon", teraTypeTemplate)
     {
@@ -7085,7 +7085,7 @@ static bool8 ResolveTeraType(u32 teraTypeTemplate)
 
 static enum Item ResolveHeldItem(u32 heldItemTemplate)
 {
-    assertf(heldItemTemplate < ITEMS_COUNT,"using invalid tera type %d when creating pokemon", heldItemTemplate)
+    assertf(heldItemTemplate < ITEMS_COUNT,"using invalid item %d when creating pokemon", heldItemTemplate)
     {
         return ITEM_NONE;
     }
@@ -7114,7 +7114,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
 
     if (monTemplate->doNotUseDefaultShinyness && monTemplate->isShiny != SHINY_MODE_RANDOM)
     {
-        bool8 isShiny = ResolveShinyness(monTemplate->isShiny);
+        bool32 isShiny = ResolveShinyness(monTemplate->isShiny);
         SetMonData(mon, MON_DATA_IS_SHINY, &isShiny);
     }
 
@@ -7144,7 +7144,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
     u8 dmaxLevel = ResolveDynamaxLevel(monTemplate->dmaxLevel);
     SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
 
-    bool8 gmaxFactor = ResolveGmaxFactor(monTemplate->gmaxFactor);
+    bool32 gmaxFactor = ResolveGmaxFactor(monTemplate->gmaxFactor);
     SetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
 
     if (monTemplate->doNotUseDefaultTeraType)
@@ -7153,7 +7153,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
         SetMonData(mon, MON_DATA_TERA_TYPE, &teraType);
     }
 
-    bool8 isEgg = ResolveIsEgg(monTemplate->isEgg);
+    bool32 isEgg = ResolveIsEgg(monTemplate->isEgg);
     SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
 
     CalculateMonStats(mon);

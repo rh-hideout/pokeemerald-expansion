@@ -450,7 +450,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         monTemplate.doNotUseDefaultTeraType = TRUE;
     }
     monTemplate.dmaxLevel    = PARSE_FLAG(24, 0);
-    monTemplate.isEgg         = PARSE_FLAG(25, FALSE);
+    monTemplate.isEgg        = PARSE_FLAG(25, FALSE);
     if (side == B_SIDE_PLAYER)
     {
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
