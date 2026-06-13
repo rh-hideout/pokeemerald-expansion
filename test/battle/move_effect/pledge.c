@@ -136,12 +136,18 @@ DOUBLE_BATTLE_TEST("Sea Of Fire deals 1/8th damage per turn")
 
 DOUBLE_BATTLE_TEST("Sea Of Fire does not damage Fire-types or Magic Guard Pokemon")
 {
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_VICTINI;  ability = ABILITY_VICTORY_STAR; }
+    PARAMETRIZE { species = SPECIES_CLEFABLE; ability = ABILITY_MAGIC_GUARD; }
+
     GIVEN {
         ASSUME(IsSpeciesOfType(SPECIES_VICTINI, TYPE_FIRE));
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_VICTINI) { Speed(2); }
-        OPPONENT(SPECIES_CLEFABLE) { Speed(1); Ability(ABILITY_MAGIC_GUARD); }
+        OPPONENT(species) { Speed(2); Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight);
                MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
@@ -153,12 +159,9 @@ DOUBLE_BATTLE_TEST("Sea Of Fire does not damage Fire-types or Magic Guard Pokemo
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
             HP_BAR(opponentLeft);
-            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-            HP_BAR(opponentRight);
         }
     } THEN {
         EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
-        EXPECT_EQ(opponentRight->hp, opponentRight->maxHP);
     }
 }
 
