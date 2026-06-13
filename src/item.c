@@ -948,20 +948,6 @@ u32 GetItemStatus1Mask(enum Item itemId)
     return 0;
 }
 
-bool32 ItemHasVolatileFlag(enum Item itemId, enum Volatile _volatile)
-{
-    const u8 *effect = GetItemEffect(itemId);
-    switch (_volatile)
-    {
-    case VOLATILE_CONFUSION:
-        return (effect[3] & ITEM3_STATUS_ALL) || (effect[3] & ITEM3_CONFUSION);
-    case VOLATILE_INFATUATION:
-        return (effect[3] & ITEM3_STATUS_ALL) || (effect[0] & ITEM0_INFATUATION);
-    default:
-        return FALSE;
-    }
-}
-
 u32 GetItemSellPrice(enum Item itemId)
 {
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;

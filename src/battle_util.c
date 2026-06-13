@@ -4927,27 +4927,11 @@ u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability)
         return 0;
 }
 
-u32 IsAbilityOnOpposingSide(enum BattlerId battler, enum Ability ability)
-{
-    return IsAbilityOnSide(BATTLE_OPPOSITE(battler), ability);
-}
-
 u32 IsAbilityOnField(enum Ability ability)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
-            return i + 1;
-    }
-
-    return 0;
-}
-
-u32 IsAbilityOnFieldExcept(enum BattlerId battler, enum Ability ability)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (i != battler && IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
             return i + 1;
     }
 
@@ -5243,19 +5227,6 @@ bool32 CanBeFrozen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ab
             ABILITY_NONE, // attacker ability does not matter
             abilityDef,
             MOVE_EFFECT_FREEZE,
-            CHECK_TRIGGER))
-        return TRUE;
-    return FALSE;
-}
-// Unused, technically also redundant because it is just a copy of CanBeFrozen
-bool32 CanGetFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
-{
-    if (CanSetNonVolatileStatus(
-            battlerAtk,
-            battlerDef,
-            ABILITY_NONE, // attacker ability does not matter
-            abilityDef,
-            MOVE_EFFECT_FREEZE_OR_FROSTBITE, // also covers frostbite
             CHECK_TRIGGER))
         return TRUE;
     return FALSE;
@@ -9662,13 +9633,6 @@ void GetBattlerTypes(enum BattlerId battler, bool32 ignoreTera, enum Type types[
     }
 }
 
-enum Type GetBattlerType(enum BattlerId battler, u32 typeIndex, bool32 ignoreTera)
-{
-    enum Type types[3];
-    GetBattlerTypes(battler, ignoreTera, types);
-    return types[typeIndex];
-}
-
 void RemoveBattlerType(enum BattlerId battler, enum Type type)
 {
     u32 i;
@@ -10183,15 +10147,6 @@ bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType)
         }
     }
     return FALSE;
-}
-
-void RemoveAllHazardsFromField(enum BattleSide side)
-{
-    gSideTimers[side].spikesAmount = 0;
-    gSideTimers[side].toxicSpikesAmount = 0;
-    gBattleStruct->numHazards[side] = 0;
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
 }
 
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)

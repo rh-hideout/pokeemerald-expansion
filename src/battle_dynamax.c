@@ -208,26 +208,6 @@ void UndoDynamax(enum BattlerId battler)
         TryBattleFormChange(battler, FORM_CHANGE_END_BATTLE, GetBattlerAbility(battler));
 }
 
-// Certain moves are blocked by Max Guard that normally ignore protection.
-bool32 IsMoveBlockedByMaxGuard(enum Move move)
-{
-    switch (move)
-    {
-    case MOVE_BLOCK:
-    case MOVE_FLOWER_SHIELD:
-    case MOVE_GEAR_UP:
-    case MOVE_MAGNETIC_FLUX:
-    case MOVE_PHANTOM_FORCE:
-    case MOVE_PSYCH_UP:
-    case MOVE_SHADOW_FORCE:
-    case MOVE_TEATIME:
-    case MOVE_TRANSFORM:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
 static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
 {
     // Gigantamax check

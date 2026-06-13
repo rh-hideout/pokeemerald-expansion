@@ -794,14 +794,6 @@ u64 GetAiScriptsInBattleFactory(void)
     }
 }
 
-void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
-{
-    enum Move move = moveArg;
-    if (moveArg == MOVE_RETURN)
-        move = MOVE_FRUSTRATION;
-    SetMonMoveSlot(mon, move, moveSlot);
-}
-
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
 {
     u8 i;

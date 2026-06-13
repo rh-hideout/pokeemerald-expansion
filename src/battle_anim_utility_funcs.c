@@ -744,12 +744,6 @@ void AnimTask_GetAttackerSide(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void AnimTask_GetTargetSide(u8 taskId)
-{
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimTarget);
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 {
     gBattleAnimArgs[ARG_RET_ID] = BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget;
@@ -887,12 +881,6 @@ static void UpdateMonScrollingBgMask(u8 taskId)
         }
         break;
     }
-}
-
-void AnimTask_GetBattleEnvironment(u8 taskId)
-{
-    gBattleAnimArgs[0] = gBattleEnvironment;
-    DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_GetFieldTerrain(u8 taskId)
@@ -1061,15 +1049,6 @@ static void AnimTask_WaitAndRestoreVisibility(u8 taskId)
 void AnimTask_IsDoubleBattle(u8 taskId)
 {
     gBattleAnimArgs[7] = (IsDoubleBattle() && !IsContest());
-    DestroyAnimVisualTask(taskId);
-}
-
-void AnimTask_CanBattlerSwitch(u8 taskId)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        gBattleAnimArgs[ARG_RET_ID] = FALSE;
-    else
-        gBattleAnimArgs[ARG_RET_ID] = CanBattlerSwitch(GetAnimBattlerId(gBattleAnimArgs[0]));
     DestroyAnimVisualTask(taskId);
 }
 

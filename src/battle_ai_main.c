@@ -822,14 +822,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     gAiLogicData->aiCalcInProgress = FALSE;
 }
 
-enum Ability GetPartyMonAbility(struct Pokemon *mon)
-{
-    // Doesn't have any special handling yet
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-    enum Ability ability = GetSpeciesAbility(species, GetMonData(mon, MON_DATA_ABILITY_NUM));
-    return ability;
-}
-
 static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (move == MOVE_NONE)
@@ -3766,6 +3758,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     {
         // these checks mostly handled in AI_CheckBadMove and AI_CheckViability
 /*
+        IF WE FULLY RETIRE THIS CODEBLOCK LATER, ALSO REMOVE THE IsAbilityOfRating FUNCTION
+
         switch (effect)
         {
         case EFFECT_SKILL_SWAP:

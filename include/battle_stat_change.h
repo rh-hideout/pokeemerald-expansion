@@ -40,7 +40,6 @@ void SetStatChange2(enum BattlerId battler, enum Stat stat, s32 stage);
 void ClearStatChangeValues(void);
 void ClearOtherStatChangeValues(enum BattlerId battler);
 void ClearBothStatChangeQueues(void);
-enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 
 u32 GetStatStage(enum Stat stat, const struct AdditionalEffect *additionalEffect);
 

@@ -292,26 +292,6 @@ enum StatChangeResult TryStatChange(struct BattleCalcValues *cv, struct StatChan
     return result;
 }
 
-enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct StatChange *st)
-{
-    AdjustStatStage(cv, st);
-
-    if (st->stage < 0)
-    {
-        if (CanDecreaseStat(cv, st) == STAT_CHANGE_DIDNT_WORK)
-            return STAT_CHANGE_DIDNT_WORK;
-
-        if (DecreaseStat(cv, st) == STAT_CHANGE_WORKED)
-            return STAT_CHANGE_WORKED;
-    }
-    else if (IncreaseStat(cv, st) == STAT_CHANGE_WORKED)
-    {
-        return STAT_CHANGE_WORKED;
-    }
-
-    return STAT_CHANGE_DIDNT_WORK;
-}
-
 static enum StatChangeResult CanDecreaseStat(struct BattleCalcValues *cv, struct StatChange *st)
 {
     if (IsMistProtected(cv, st)

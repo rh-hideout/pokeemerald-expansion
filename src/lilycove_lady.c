@@ -93,25 +93,6 @@ void ResetLilycoveLadyForRecordMix(void)
     }
 }
 
-// Unused
-void InitLilycoveLadyRandomly(void)
-{
-    u8 lady = Random() % LILYCOVE_LADY_COUNT;
-
-    switch (lady)
-    {
-    case LILYCOVE_LADY_QUIZ:
-        InitLilycoveQuizLady();
-        break;
-    case LILYCOVE_LADY_FAVOR:
-        InitLilycoveFavorLady();
-        break;
-    case LILYCOVE_LADY_CONTEST:
-        InitLilycoveContestLady();
-        break;
-    }
-}
-
 void Script_GetLilycoveLadyId(void)
 {
     gSpecialVar_Result = GetLilycoveLadyId();

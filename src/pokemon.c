@@ -1735,33 +1735,6 @@ void DeleteFirstMoveAndGiveMoveToMon(struct Pokemon *mon, enum Move move)
     SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
-void DeleteFirstMoveAndGiveMoveToBoxMon(struct BoxPokemon *boxMon, enum Move move)
-{
-    s32 i;
-    enum Move moves[MAX_MON_MOVES];
-    u8 pp[MAX_MON_MOVES];
-    u8 ppBonuses;
-
-    for (i = 0; i < MAX_MON_MOVES - 1; i++)
-    {
-        moves[i] = GetBoxMonData(boxMon, MON_DATA_MOVE2 + i);
-        pp[i] = GetBoxMonData(boxMon, MON_DATA_PP2 + i);
-    }
-
-    ppBonuses = GetBoxMonData(boxMon, MON_DATA_PP_BONUSES);
-    ppBonuses >>= 2;
-    moves[MAX_MON_MOVES - 1] = move;
-    pp[MAX_MON_MOVES - 1] = GetMovePP(move);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        SetBoxMonData(boxMon, MON_DATA_MOVE1 + i, &moves[i]);
-        SetBoxMonData(boxMon, MON_DATA_PP1 + i, &pp[i]);
-    }
-
-    SetBoxMonData(boxMon, MON_DATA_PP_BONUSES, &ppBonuses);
-}
-
 u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 {
     enum BattlerId i;
@@ -3455,15 +3428,6 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
         dst->statStages[i] = DEFAULT_STAT_STAGE;
 
     memset(&dst->volatiles, 0, sizeof(struct Volatiles));
-}
-
-void CopyPartyMonToBattleData(enum BattlerId battler, u32 partyIndex)
-{
-    struct Pokemon *party = GetBattlerParty(battler);
-    PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
-    gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
-    UpdateSentPokesToOpponentValue(battler);
-    ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }
 
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex)

@@ -28,7 +28,6 @@ u16 SpeciesToMailSpecies(enum Species species, u32 personality);
 enum Species MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer);
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail);
 void TakeMailFromMon(struct Pokemon *mon);
-void ClearMailItemId(u8 mailId);
 u8 SaveMailToPC(struct Mail *mail);
 u8 TakeMailFromMonAndSave(struct Pokemon *mon);
 bool8 ItemIsMail(enum Item itemId);

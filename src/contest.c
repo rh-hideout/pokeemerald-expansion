@@ -5914,32 +5914,6 @@ static void SetConestLiveUpdateTVData(void)
     ContestLiveUpdates_SetLoserData(loserFlag, loser);
 }
 
-// Unused
-void ContestDebugToggleBitfields(bool8 loserFlags)
-{
-    if (eContestDebugMode == CONTEST_DEBUG_MODE_OFF)
-    {
-        if (!loserFlags)
-            eContestDebugMode = CONTEST_DEBUG_MODE_PRINT_WINNER_FLAGS;
-        else
-            eContestDebugMode = CONTEST_DEBUG_MODE_PRINT_LOSER_FLAGS;
-    }
-    else
-    {
-        eContestDebugMode = CONTEST_DEBUG_MODE_OFF;
-    }
-
-    if (eContestDebugMode == CONTEST_DEBUG_MODE_OFF)
-    {
-        DrawContestantWindowText();
-        SwapMoveDescAndContestTilemaps();
-    }
-    else
-    {
-        ContestDebugPrintBitStrings();
-    }
-}
-
 static void ContestDebugPrintBitStrings(void)
 {
     u8 i;
