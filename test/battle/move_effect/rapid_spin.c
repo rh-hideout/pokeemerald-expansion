@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
-        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+        MESSAGE("The toxic spikes disappeared from the ground around the opposing side!");
     }
 }
 
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
         MESSAGE("Wobbuffet's Speed rose!");
     #endif
         MESSAGE("Wobbuffet was freed from Wrap!");
-        MESSAGE("The pointed stones disappeared from around your team!");
+        MESSAGE("The pointed stones disappeared from your side!");
     }
 }
 
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
         MESSAGE("The opposing Wobbuffet was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
         MESSAGE("Wobbuffet was freed from Wrap!");
-        MESSAGE("The pointed stones disappeared from around your team!");
+        MESSAGE("The pointed stones disappeared from your side!");
     }
 }
 
@@ -75,10 +75,10 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
 
-        MESSAGE("The spikes disappeared from the ground around your team!");
-        MESSAGE("The sticky web has disappeared from the ground around you!");
-        MESSAGE("The poison spikes disappeared from the ground around your team!");
-        MESSAGE("The pointed stones disappeared from around your team!");
+        MESSAGE("The spikes disappeared from the ground around your side!");
+        MESSAGE("The sticky web has disappeared from the ground on your side!");
+        MESSAGE("The toxic spikes disappeared from the ground around your side!");
+        MESSAGE("The pointed stones disappeared from your side!");
     } THEN {
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed wh
             MESSAGE("Tauros's Speed rose!");
         #endif
             MESSAGE("Tauros was freed from Wrap!");
-            MESSAGE("The pointed stones disappeared from around your team!");
+            MESSAGE("The pointed stones disappeared from your side!");
         }
     }
 }

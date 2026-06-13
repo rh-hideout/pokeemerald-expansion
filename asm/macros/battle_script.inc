@@ -2134,3 +2134,16 @@
 	.macro catchornot
 	callnative BS_CatchOrNot
 	.endm
+	
+	.macro showitempopup battler:req
+	callnative BS_ShowItemPopup
+	.byte \battler
+	.endm
+
+	.macro destroyitempopup
+	callnative BS_DestroyItemPopup
+	.endm
+
+	.macro multihitplurality
+	callnative BS_MultiHitPlurality
+	.endm
