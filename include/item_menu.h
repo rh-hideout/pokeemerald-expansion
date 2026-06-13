@@ -101,6 +101,9 @@ struct BagMenu
     u8 unused2[14];
     u8 ALIGNED(4) pocketNameBuffer[32][32];
     u8 unused3[4];
+#if SWSH_ITEM_MENU
+    u8 partyMonIconSpriteIds[PARTY_SIZE];
+#endif
 };
 
 extern struct BagMenu *gBagMenu;
@@ -132,5 +135,9 @@ void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback);
 void CloseItemMessage(u8 taskId);
 void ItemMenu_RotomCatalog(u8 taskId);
 void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type);
+#if SWSH_ITEM_MENU_ACTION_IN_BAG
+void BagMenu_OpenPartyPanelSelect(u8 taskId);
+void BagMenu_OpenPartyPanelSelectBattle(u8 taskId);
+#endif
 
 #endif //GUARD_ITEM_MENU_H

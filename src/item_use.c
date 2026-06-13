@@ -140,8 +140,15 @@ static void SetUpItemUseCallback(u8 taskId)
     {
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
         {
-            gBagMenu->newScreenCallback = sItemUseCallbacks[type];
-            Task_FadeAndCloseBagMenu(taskId);
+#if SWSH_ITEM_MENU_ACTION_IN_BAG
+            if (type == (ITEM_USE_PARTY_MENU - 1) || type == (ITEM_USE_PARTY_MENU_MOVES - 1))
+                BagMenu_OpenPartyPanelSelect(taskId);
+            else
+#endif
+            {
+                gBagMenu->newScreenCallback = sItemUseCallbacks[type];
+                Task_FadeAndCloseBagMenu(taskId);
+            }
         }
         else
         {
@@ -1209,8 +1216,12 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
+#if SWSH_ITEM_MENU_ACTION_IN_BAG
+        BagMenu_OpenPartyPanelSelectBattle(taskId);
+#else
         gBagMenu->newScreenCallback = ChooseMonForInBattleItem;
         Task_FadeAndCloseBagMenu(taskId);
+#endif
     }
     else
     {

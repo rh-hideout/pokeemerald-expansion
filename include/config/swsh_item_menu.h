@@ -9,4 +9,6 @@
 
 #define SWSH_ITEM_MENU_SCROLLING_BG       TRUE  // Enable scrolling backgroun
 
+#define SWSH_ITEM_MENU_ACTION_IN_BAG      TRUE  // Inline party select for Use/Give (no bag→party round-trip)
+
 #endif // GUARD_CONFIG_SWSH_ITEM_MENU_H
