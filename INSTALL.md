@@ -21,10 +21,6 @@ On Windows, the project can be built using the following systems:
 
 [WSL Install instructions](docs/install/windows/WSL.md)
 
-[Msys2 Install instructions](docs/install/windows/MSYS2.md)
-
-[Cygwin Install instructions](docs/install/windows/CYGWIN.md)
-
 ## Linux
 The project can be built on any Linux distribution.
 Distributions with instructions:
