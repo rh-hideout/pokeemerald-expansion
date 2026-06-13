@@ -3,7 +3,6 @@
   "name": "Route19_Frlg",
   "layout": "LAYOUT_ROUTE19",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_19",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -207,5 +206,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route19_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

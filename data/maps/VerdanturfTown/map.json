@@ -3,7 +3,6 @@
   "name": "VerdanturfTown",
   "layout": "LAYOUT_VERDANTURF_TOWN",
   "music": "MUS_VERDANTURF",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_VERDANTURF_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -197,5 +196,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "VerdanturfTown_EventScript_RusturfTunnelSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattlePikeThreePathRoom",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_THREE_PATH_ROOM",
   "music": "MUS_B_PIKE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -127,5 +126,8 @@
       "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

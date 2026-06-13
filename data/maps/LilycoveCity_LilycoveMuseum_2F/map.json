@@ -3,7 +3,6 @@
   "name": "LilycoveCity_LilycoveMuseum_2F",
   "layout": "LAYOUT_LILYCOVE_CITY_LILYCOVE_MUSEUM_2F",
   "music": "MUS_LILYCOVE_MUSEUM",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -176,5 +175,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LilycoveCity_LilycoveMuseum_EventScript_BirdSculpture"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

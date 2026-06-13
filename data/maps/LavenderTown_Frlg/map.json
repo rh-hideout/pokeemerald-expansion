@@ -3,7 +3,6 @@
   "name": "LavenderTown_Frlg",
   "layout": "LAYOUT_LAVENDER_TOWN",
   "music": "MUS_RG_LAVENDER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_LAVENDER_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -119,9 +118,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -155,5 +152,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LavenderTown_EventScript_VolunteerHouseSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

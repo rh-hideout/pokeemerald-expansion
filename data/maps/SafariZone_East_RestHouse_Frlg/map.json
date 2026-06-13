@@ -3,7 +3,6 @@
   "name": "SafariZone_East_RestHouse_Frlg",
   "layout": "LAYOUT_SAFARI_ZONE_REST_HOUSE_FRLG",
   "music": "MUS_EVOLUTION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_KANTO_SAFARI_ZONE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -83,5 +82,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

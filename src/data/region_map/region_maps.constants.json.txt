@@ -1,0 +1,13 @@
+{{ doNotModifyHeader }}
+#ifndef GUARD_CONSTANTS_REGION_MAPS_H
+#define GUARD_CONSTANTS_REGION_MAPS_H
+
+enum RegionMapId {
+    REGION_MAP_UNKNOWN,
+## for region_map in region_maps
+    REGION_MAP_{{ upper(region_map.label) }},
+## endfor
+    REGION_MAP_COUNT,
+};
+
+#endif // GUARD_CONSTANTS_REGION_MAPS_H

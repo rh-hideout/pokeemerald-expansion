@@ -3,7 +3,6 @@
   "name": "Route11_Frlg",
   "layout": "LAYOUT_ROUTE11",
   "music": "MUS_RG_ROUTE11",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_11",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -253,5 +252,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

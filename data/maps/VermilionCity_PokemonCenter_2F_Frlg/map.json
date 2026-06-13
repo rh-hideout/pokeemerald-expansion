@@ -3,7 +3,6 @@
   "name": "VermilionCity_PokemonCenter_2F_Frlg",
   "layout": "LAYOUT_POKEMON_CENTER_2F_FRLG",
   "music": "MUS_RG_POKE_CENTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VERMILION_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -97,5 +96,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

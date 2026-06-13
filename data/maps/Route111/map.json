@@ -3,7 +3,6 @@
   "name": "Route111",
   "layout": "LAYOUT_ROUTE111",
   "music": "MUS_ROUTE110",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_111",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -1124,5 +1123,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route111_EventScript_TrainerHillSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

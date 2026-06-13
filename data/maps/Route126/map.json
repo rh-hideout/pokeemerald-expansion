@@ -3,7 +3,6 @@
   "name": "Route126",
   "layout": "LAYOUT_ROUTE126",
   "music": "MUS_ROUTE120",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_126",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -151,5 +150,8 @@
   ],
   "warp_events": [],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

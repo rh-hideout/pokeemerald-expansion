@@ -3,7 +3,6 @@
   "name": "RustboroCity_PokemonSchool",
   "layout": "LAYOUT_RUSTBORO_CITY_POKEMON_SCHOOL",
   "music": "MUS_SCHOOL",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -165,5 +164,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RustboroCity_PokemonSchool_EventScript_StudentNotebook"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

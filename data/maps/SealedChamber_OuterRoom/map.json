@@ -3,7 +3,6 @@
   "name": "SealedChamber_OuterRoom",
   "layout": "LAYOUT_SEALED_CHAMBER_OUTER_ROOM",
   "music": "MUS_SEALED_CHAMBER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SEALED_CHAMBER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -258,5 +257,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SealedChamber_OuterRoom_EventScript_BrailleDigHere"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

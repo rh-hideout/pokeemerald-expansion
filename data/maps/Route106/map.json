@@ -3,7 +3,6 @@
   "name": "Route106",
   "layout": "LAYOUT_ROUTE106",
   "music": "MUS_ROUTE104",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_106",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -135,5 +134,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route106_EventScript_TrainerTipsSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

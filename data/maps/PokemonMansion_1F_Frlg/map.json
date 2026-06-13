@@ -3,7 +3,6 @@
   "name": "PokemonMansion_1F_Frlg",
   "layout": "LAYOUT_POKEMON_MANSION_1F",
   "music": "MUS_RG_POKE_MANSION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_MANSION",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -159,9 +158,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -181,5 +178,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

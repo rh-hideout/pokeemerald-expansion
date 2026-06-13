@@ -3,7 +3,6 @@
   "name": "Route5_SouthEntrance_Frlg",
   "layout": "LAYOUT_SAFFRON_CITY_NORTH_SOUTH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_5",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -90,5 +89,9 @@
       "script": "Route5_SouthEntrance_EventScript_GuardTriggerRight"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

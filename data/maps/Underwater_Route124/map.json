@@ -3,7 +3,6 @@
   "name": "Underwater_Route124",
   "layout": "LAYOUT_UNDERWATER_ROUTE124",
   "music": "MUS_UNDERWATER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_UNDERWATER_124",
   "requires_flash": false,
   "weather": "WEATHER_UNDERWATER_BUBBLES",
@@ -85,5 +84,8 @@
       "item": "ITEM_HEART_SCALE",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_124_HEART_SCALE_2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "AbandonedShip_HiddenFloorRooms",
   "layout": "LAYOUT_ABANDONED_SHIP_HIDDEN_FLOOR_ROOMS",
   "music": "MUS_ABANDONED_SHIP",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -215,5 +214,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "AbandonedShip_HiddenFloorRooms_EventScript_Trash"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

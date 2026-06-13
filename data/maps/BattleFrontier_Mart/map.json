@@ -3,7 +3,6 @@
   "name": "BattleFrontier_Mart",
   "layout": "LAYOUT_MART",
   "music": "MUS_POKE_MART",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -87,5 +86,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

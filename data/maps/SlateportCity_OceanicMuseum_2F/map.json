@@ -3,7 +3,6 @@
   "name": "SlateportCity_OceanicMuseum_2F",
   "layout": "LAYOUT_SLATEPORT_CITY_OCEANIC_MUSEUM_2F",
   "music": "MUS_OCEANIC_MUSEUM",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SLATEPORT_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -290,5 +289,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SlateportCity_OceanicMuseum_2F_EventScript_SSTidalReplica"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

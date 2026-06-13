@@ -3,7 +3,6 @@
   "name": "SouthernIsland_Exterior",
   "layout": "LAYOUT_SOUTHERN_ISLAND_EXTERIOR",
   "music": "MUS_ABANDONED_SHIP",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SOUTHERN_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -70,5 +69,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SouthernIsland_Exterior_EventScript_Sign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

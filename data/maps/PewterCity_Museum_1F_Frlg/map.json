@@ -3,7 +3,6 @@
   "name": "PewterCity_Museum_1F_Frlg",
   "layout": "LAYOUT_PEWTER_CITY_MUSEUM_1F",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_PEWTER_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -209,5 +208,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "PewterCity_Museum_1F_EventScript_PokemonJournalBrock"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

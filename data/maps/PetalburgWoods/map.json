@@ -3,7 +3,6 @@
   "name": "PetalburgWoods",
   "layout": "LAYOUT_PETALBURG_WOODS",
   "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_PETALBURG_WOODS",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -300,5 +299,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

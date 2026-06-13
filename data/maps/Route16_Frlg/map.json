@@ -3,7 +3,6 @@
   "name": "Route16_Frlg",
   "layout": "LAYOUT_ROUTE16",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_16",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -206,9 +205,7 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -236,5 +233,9 @@
       "quantity": 1,
       "underfoot": true
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

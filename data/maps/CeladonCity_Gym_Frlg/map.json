@@ -3,7 +3,6 @@
   "name": "CeladonCity_Gym_Frlg",
   "layout": "LAYOUT_CELADON_CITY_GYM",
   "music": "MUS_RG_GYM",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -212,5 +211,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeladonCity_Gym_EventScript_GymStatue"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

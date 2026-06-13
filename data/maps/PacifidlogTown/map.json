@@ -3,7 +3,6 @@
   "name": "PacifidlogTown",
   "layout": "LAYOUT_PACIFIDLOG_TOWN",
   "music": "MUS_LILYCOVE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_PACIFIDLOG_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -136,5 +135,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Common_EventScript_ShowPokemonCenterSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

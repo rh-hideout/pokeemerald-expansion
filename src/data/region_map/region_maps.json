@@ -1,0 +1,79 @@
+{
+  "region_maps": [
+    {
+      "label": "hoenn",
+      "region_name": "HOENN",
+      "layout_file": "src/data/region_map/layout_hoenn.h",
+      "layout_width": 28,
+      "layout_height": 15,
+      "layout_offset_left": 1,
+      "layout_offset_top": 2,
+      "palette": ["graphics/pokenav/region_map/map_hoenn.pal", ".gbapal"],
+      "gfx": ["graphics/pokenav/region_map/map_hoenn.png", ".8bpp.smol"],
+      "tilemap": ["graphics/pokenav/region_map/map_hoenn.bin", ".smolTM"],
+      "pokedex_palette": ["graphics/pokedex/region_map_hoenn.pal", ".gbapal"],
+      "pokedex_gfx": ["graphics/pokedex/region_map_hoenn.png", ".8bpp.smol", "-num_tiles 232 -Wnum_tiles"],
+      "pokedex_tilemap": ["graphics/pokedex/region_map_hoenn.bin", ".smolTM"]
+    },
+    {
+      "label": "kanto",
+      "region_name": "KANTO",
+      "layout_file": "src/data/region_map/layout_kanto.h",
+      "layout_width": 28,
+      "layout_height": 15,
+      "layout_offset_left": 1,
+      "layout_offset_top": 2,
+      "palette": ["graphics/pokenav/region_map/map_kanto.pal", ".gbapal"],
+      "gfx": ["graphics/pokenav/region_map/map_kanto.png", ".8bpp.smol"],
+      "tilemap": ["graphics/pokenav/region_map/map_kanto.bin", ".smolTM"],
+      "pokedex_palette": ["graphics/pokedex/region_map_kanto.pal", ".gbapal"],
+      "pokedex_gfx": ["graphics/pokedex/region_map_kanto.png", ".8bpp.smol"],
+      "pokedex_tilemap": ["graphics/pokedex/region_map_kanto.bin", ".smolTM"]
+    },
+    {
+      "label": "sevii123",
+      "region_name": "SEVII A",
+      "layout_file": "src/data/region_map/layout_sevii123.h",
+      "layout_width": 28,
+      "layout_height": 15,
+      "layout_offset_left": 1,
+      "layout_offset_top": 2,
+      "palette": ["graphics/pokenav/region_map/map_sevii_123.pal", ".gbapal"],
+      "gfx": ["graphics/pokenav/region_map/map_sevii_123.png", ".8bpp.smol"],
+      "tilemap": ["graphics/pokenav/region_map/map_sevii_123.bin", ".smolTM"],
+      "pokedex_palette": ["graphics/pokedex/region_map_sevii123.pal", ".gbapal"],
+      "pokedex_gfx": ["graphics/pokedex/region_map_sevii123.png", ".8bpp.smol"],
+      "pokedex_tilemap": ["graphics/pokedex/region_map_sevii123.bin", ".smolTM"]
+    },
+    {
+      "label": "sevii45",
+      "region_name": "SEVII B",
+      "layout_file": "src/data/region_map/layout_sevii45.h",
+      "layout_width": 28,
+      "layout_height": 15,
+      "layout_offset_left": 1,
+      "layout_offset_top": 2,
+      "palette": ["graphics/pokenav/region_map/map_sevii_45.pal", ".gbapal"],
+      "gfx": ["graphics/pokenav/region_map/map_sevii_45.png", ".8bpp.smol"],
+      "tilemap": ["graphics/pokenav/region_map/map_sevii_45.bin", ".smolTM"],
+      "pokedex_palette": ["graphics/pokedex/region_map_sevii45.pal", ".gbapal"],
+      "pokedex_gfx": ["graphics/pokedex/region_map_sevii45.png", ".8bpp.smol"],
+      "pokedex_tilemap": ["graphics/pokedex/region_map_sevii45.bin", ".smolTM"]
+    },
+    {
+      "label": "sevii67",
+      "region_name": "SEVII C",
+      "layout_file": "src/data/region_map/layout_sevii67.h",
+      "layout_width": 28,
+      "layout_height": 15,
+      "layout_offset_left": 1,
+      "layout_offset_top": 2,
+      "palette": ["graphics/pokenav/region_map/map_sevii_67.pal", ".gbapal"],
+      "gfx": ["graphics/pokenav/region_map/map_sevii_67.png", ".8bpp.smol"],
+      "tilemap": ["graphics/pokenav/region_map/map_sevii_67.bin", ".smolTM"],
+      "pokedex_palette": ["graphics/pokedex/region_map_sevii67.pal", ".gbapal"],
+      "pokedex_gfx": ["graphics/pokedex/region_map_sevii67.png", ".8bpp.smol"],
+      "pokedex_tilemap": ["graphics/pokedex/region_map_sevii67.bin", ".smolTM"]
+    }
+  ]
+}

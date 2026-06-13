@@ -3,7 +3,6 @@
   "name": "SafariZone_Southwest",
   "layout": "LAYOUT_SAFARI_ZONE_SOUTHWEST",
   "music": "MUS_SAFARI_ZONE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SAFARI_ZONE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -72,5 +71,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SafariZone_Southwest_EventScript_RestHouseSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

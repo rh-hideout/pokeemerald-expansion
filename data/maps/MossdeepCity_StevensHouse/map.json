@@ -3,7 +3,6 @@
   "name": "MossdeepCity_StevensHouse",
   "layout": "LAYOUT_MOSSDEEP_CITY_STEVENS_HOUSE",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MOSSDEEP_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -107,5 +106,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MossdeepCity_StevensHouse_EventScript_RockDisplay"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

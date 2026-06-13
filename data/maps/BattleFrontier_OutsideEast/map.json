@@ -3,7 +3,6 @@
   "name": "BattleFrontier_OutsideEast",
   "layout": "LAYOUT_BATTLE_FRONTIER_OUTSIDE_EAST",
   "music": "MUS_B_FRONTIER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -527,5 +526,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Common_EventScript_ShowPokemonCenterSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

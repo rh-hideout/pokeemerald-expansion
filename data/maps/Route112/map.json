@@ -3,7 +3,6 @@
   "name": "Route112",
   "layout": "LAYOUT_ROUTE112",
   "music": "MUS_ROUTE110",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_112",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -286,5 +285,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route112_EventScript_RouteSignLavaridge"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

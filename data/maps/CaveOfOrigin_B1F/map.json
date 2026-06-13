@@ -3,7 +3,6 @@
   "name": "CaveOfOrigin_B1F",
   "layout": "LAYOUT_CAVE_OF_ORIGIN_B1F",
   "music": "MUS_NONE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_CAVE_OF_ORIGIN",
   "requires_flash": false,
   "weather": "WEATHER_FOG_HORIZONTAL",
@@ -40,5 +39,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

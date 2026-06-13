@@ -3,7 +3,6 @@
   "name": "Route101",
   "layout": "LAYOUT_ROUTE101",
   "music": "MUS_ROUTE101",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_101",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -200,5 +199,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route101_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

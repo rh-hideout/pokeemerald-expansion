@@ -3,7 +3,6 @@
   "name": "LavaridgeTown",
   "layout": "LAYOUT_LAVARIDGE_TOWN",
   "music": "MUS_OLDALE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LAVARIDGE_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -261,5 +260,8 @@
       "item": "ITEM_ICE_HEAL",
       "flag": "FLAG_HIDDEN_ITEM_LAVARIDGE_TOWN_ICE_HEAL"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

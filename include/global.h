@@ -20,6 +20,7 @@
 #include "constants/maps.h"
 #include "constants/mass_outbreak.h"
 #include "constants/pokemon.h"
+#include "constants/region_maps.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
 #include "constants/trainer_tower.h"

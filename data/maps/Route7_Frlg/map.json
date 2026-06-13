@@ -3,7 +3,6 @@
   "name": "Route7_Frlg",
   "layout": "LAYOUT_ROUTE7",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_7",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -72,5 +71,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

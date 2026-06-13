@@ -3,7 +3,6 @@
   "name": "Route109_SeashoreHouse",
   "layout": "LAYOUT_ROUTE109_SEASHORE_HOUSE",
   "music": "MUS_DEWFORD",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_109",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -85,5 +84,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

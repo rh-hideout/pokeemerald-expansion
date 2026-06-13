@@ -3,7 +3,6 @@
   "name": "FuchsiaCity_House2_Frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_HOUSE2",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FUCHSIA_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -62,5 +61,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

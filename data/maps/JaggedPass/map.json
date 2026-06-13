@@ -3,7 +3,6 @@
   "name": "JaggedPass",
   "layout": "LAYOUT_JAGGED_PASS",
   "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_JAGGED_PASS",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -244,5 +243,8 @@
       "item": "ITEM_GREAT_BALL",
       "flag": "FLAG_HIDDEN_ITEM_JAGGED_PASS_GREAT_BALL"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

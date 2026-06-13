@@ -55,6 +55,7 @@
 #include "constants/pokemon.h"
 #include "constants/pokemon_size_record.h"
 #include "constants/random_mon_generation.h"
+#include "constants/region_maps.h"
 #include "constants/rtc.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"
@@ -1248,11 +1249,23 @@ Common_EventScript_OutOfCenterPartyHeal::
 	fadescreenswapbuffers FADE_FROM_BLACK
 	return
 
-EventScript_RegionMap::
-	lockall
-	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
+Common_EventScript_OpenRegionMap::
 	fadescreen FADE_TO_BLACK
 	special FieldShowRegionMap
+	return
+
+EventScript_RegionMapItem::
+	lockall
+	call Common_EventScript_OpenRegionMap
+	releaseall
+	end
+
+EventScript_CurrentRegionMap::
+	lockall
+	bufferregionname STR_VAR_1
+	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
+	setvar VAR_0x800B, REGION_MAP_UNKNOWN
+	call Common_EventScript_OpenRegionMap
 	releaseall
 	end
 

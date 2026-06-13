@@ -3,7 +3,6 @@
   "name": "MtPyre_Exterior",
   "layout": "LAYOUT_MT_PYRE_EXTERIOR",
   "music": "MUS_MT_PYRE_EXTERIOR",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MT_PYRE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -129,5 +128,8 @@
       "item": "ITEM_MAX_ETHER",
       "flag": "FLAG_HIDDEN_ITEM_MT_PYRE_EXTERIOR_MAX_ETHER"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

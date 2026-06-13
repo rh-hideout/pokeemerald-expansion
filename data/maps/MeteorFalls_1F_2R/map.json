@@ -3,7 +3,6 @@
   "name": "MeteorFalls_1F_2R",
   "layout": "LAYOUT_METEOR_FALLS_1F_2R",
   "music": "MUS_CAVE_OF_ORIGIN",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_METEOR_FALLS",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -95,5 +94,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "0x0"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

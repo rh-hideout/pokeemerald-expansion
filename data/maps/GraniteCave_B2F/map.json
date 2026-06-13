@@ -3,7 +3,6 @@
   "name": "GraniteCave_B2F",
   "layout": "LAYOUT_GRANITE_CAVE_B2F",
   "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_GRANITE_CAVE",
   "requires_flash": true,
   "weather": "WEATHER_NONE",
@@ -188,5 +187,8 @@
       "item": "ITEM_EVERSTONE",
       "flag": "FLAG_HIDDEN_ITEM_GRANITE_CAVE_B2F_EVERSTONE_2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "MossdeepCity_GameCorner_1F",
   "layout": "LAYOUT_MOSSDEEP_CITY_GAME_CORNER_1F",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MOSSDEEP_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -91,5 +90,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MossdeepCity_GameCorner_1F_EventScript_PokemonJumpRecords"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

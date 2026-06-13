@@ -3,7 +3,6 @@
   "name": "SixIsland_DottedHole_1F_Frlg",
   "layout": "LAYOUT_SIX_ISLAND_DOTTED_HOLE_1F",
   "music": "MUS_RG_SEVII_DUNGEON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_DOTTED_HOLE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -15,9 +14,7 @@
   "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": 0,
-  "object_events": [
-
-  ],
+  "object_events": [],
   "warp_events": [
     {
       "x": 6,
@@ -48,10 +45,10 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

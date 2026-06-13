@@ -3,7 +3,6 @@
   "name": "EverGrandeCity",
   "layout": "LAYOUT_EVER_GRANDE_CITY",
   "music": "MUS_EVER_GRANDE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_EVER_GRANDE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -193,5 +192,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Common_EventScript_ShowPokemonCenterSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }
