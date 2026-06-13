@@ -1139,7 +1139,7 @@ static void Cmd_damagecalc(void)
     CMD_ARGS();
 
     // Test if unableToUseMove check is needed
-    if (gBattleStruct->calculatedDamageDone || gBattleStruct->unableToUseMove)
+    // if (gBattleStruct->calculatedDamageDone || gBattleStruct->unableToUseMove)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;

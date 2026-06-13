@@ -2394,7 +2394,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
-    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected())
+    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected()) // check any target affected above and skip everything
         return CANCELER_RESULT_SUCCESS;
 
     while (gBattleStruct->eventState.atkCancelerBattler < MAX_BATTLERS_COUNT)
@@ -2403,22 +2403,22 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
 
         gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler , TRUE))
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler, TRUE))
             continue;
 
-        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, gBattleStruct->additionalEffectsCounter);
             gBattleStruct->additionalEffectsCounter++;
 
             if (!additionalEffect->preAttackEffect)
                 continue;
 
-            if ((gEffectBattler == gBattlerAttacker) != additionalEffect->self)
+            if ((gEffectBattler == cv->battlerAtk) != additionalEffect->self)
                 continue;
 
-            u32 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+            u32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
 
             // Activate effect if it's primary (chance == 0) or if RNGesus says so
             if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
@@ -2446,6 +2446,50 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->preAttackEffectHappened = TRUE; // we don't need this anymore
     gBattleStruct->eventState.atkCancelerBattler = 0;
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
+{
+    if (GetMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
+        return CANCELER_RESULT_SUCCESS;
+
+    struct DamageContext ctx = {
+        .battlerAtk = cv->battlerAtk,
+        .move = cv->move,
+        .chosenMove = gChosenMove,
+        .moveType = GetBattleMoveType(cv->move),
+        .weather = GetWeather(),
+        .fieldStatuses = gFieldStatuses,
+        .randomFactor = TRUE,
+        .updateFlags = TRUE,
+    };
+
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        ctx.abilities[battler] = cv->abilities[battler];
+        ctx.holdEffects[battler] = cv->holdEffects[battler];
+    }
+
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
+            continue;
+
+        ctx.battlerDef = battlerDef;
+        SetDynamicMoveCategory(cv->battlerAtk, battlerDef, cv->move);
+        gBattleStruct->moveDamage[cv->battlerDef] = CalculateMoveDamage(&ctx);
+    }
+
+    if (gSpecialStatuses[cv->battlerAtk].gemBoost
+     && gBattleMons[cv->battlerAtk].item
+     && IsAnyTargetAffected())
+    {
+        BattleScriptCall(BattleScript_GemActivates);
+        gLastUsedItem = gBattleMons[cv->battlerAtk].item;
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+    }
+
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -2501,6 +2545,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
     [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
+    [CANCELER_DAMAGE_CALC] = CancelerDamageCalc,
 };
 
 enum CancelerResult DoAttackCanceler(void)
