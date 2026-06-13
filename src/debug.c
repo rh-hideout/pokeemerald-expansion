@@ -286,6 +286,7 @@ static void DebugAction_Util_CheatStart(u8 taskId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
+static void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId);
 
 static void DebugAction_CreateFollowerNPC(u8 taskId);
 static void DebugAction_DestroyFollowerNPC(u8 taskId);
@@ -534,7 +535,7 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+static u32 (*const generateListFunctions[])(const struct DebugMenuOption *) =
 {
     [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
     [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
@@ -582,6 +583,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
     { COMPOUND_STRING("Get time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
     { COMPOUND_STRING("Set time of day…"),  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_TimesOfDay },
     { COMPOUND_STRING("Set weekday…"),      DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
+    { COMPOUND_STRING("Redo daily events"), DebugAction_TimeMenu_RedoDailyEvents },
     { COMPOUND_STRING("Check wall clock…"), DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
     { COMPOUND_STRING("Set wall clock…"),   DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
     { NULL }
@@ -980,8 +982,8 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     inputTaskId = CreateTask(HandleInput, 3);
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0xFF;
-    gTasks[inputTaskId].tSpriteId = 0xFF;
+    gTasks[inputTaskId].tSubWindowId = WINDOW_NONE;
+    gTasks[inputTaskId].tSpriteId = SPRITE_NONE;
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -1003,7 +1005,7 @@ static void Debug_CreateInputDisplayWindow(u8 taskId)
 
 static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
 {
-    if (gTasks[taskId].tSpriteId != 0xFF)
+    if (gTasks[taskId].tSpriteId != SPRITE_NONE)
     {
         FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
         FreeMonIconPalettes();
@@ -1015,7 +1017,7 @@ static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
 
 static void Debug_DestroyMenu(u8 taskId)
 {
-    if (gTasks[taskId].tSubWindowId != 0xFF)
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
     {
         ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
         RemoveWindow(gTasks[taskId].tSubWindowId);
@@ -1028,7 +1030,7 @@ static void Debug_DestroyMenu(u8 taskId)
 
 static void Debug_DestroyMenu_Full(u8 taskId)
 {
-    if (gTasks[taskId].tSubWindowId != 0)
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
     {
         ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, FALSE);
         DebugAction_DestroyExtraWindow(taskId);
@@ -3367,7 +3369,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3409,7 +3411,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3451,7 +3453,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(gTasks[taskId].tInput))
         species = SPECIES_NONE;
     else
@@ -4274,6 +4276,13 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     DebugAction_DestroyExtraWindow(taskId);
     daysToAdd = ((input - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_LoadMap);
+}
+
+void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId)
+{
+    DoDailyEvents(1);
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_LoadMap);
 }

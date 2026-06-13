@@ -139,7 +139,8 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 {
     enum Move move = MOVE_NONE;
     enum Item item = ITEM_NONE;
-    u16 status = STATUS1_NONE, species = SPECIES_NONE;
+    u16 status = STATUS1_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     u8 turnToTrick = 0;
 
@@ -177,7 +178,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 
 AI_DOUBLE_BATTLE_TEST("AI gifts Utility Umbrella only when it removes the foe's weather benefit")
 {
-    u16 weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
+    enum Species weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
@@ -208,7 +209,7 @@ AI_DOUBLE_BATTLE_TEST("AI gifts Utility Umbrella only when it removes the foe's 
 
 AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but keeps its own weather perks")
 {
-    u16 weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
+    enum Species weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
@@ -374,7 +375,7 @@ AI_DOUBLE_BATTLE_TEST("Heal Bell and Jungle Healing skip curing a partner that b
 
 AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner without a positive effect")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_CHARIZARD; }
     PARAMETRIZE { species = SPECIES_CHARMANDER; }
@@ -411,7 +412,7 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy")
 
 AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability but will not KO the ally needlessly")
 {
-    u32 species, currentHP;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGAMBIT; ability = ABILITY_DEFIANT;  currentHP = 400; }
@@ -491,7 +492,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Rage Fist if it wi
 
 AI_DOUBLE_BATTLE_TEST("AI will only Beat Up for Rage Fist if it can hit at least one opponent")
 {
-    u32 species;
+    enum Species species;
     bool32 shouldBeatUp;
 
     PARAMETRIZE { species = SPECIES_MEOWTH;    shouldBeatUp = FALSE; }
@@ -585,7 +586,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kills both opposing mons"
 
 AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_INCINEROAR; }
     PARAMETRIZE { species = SPECIES_CLEFFA; }
 
@@ -709,7 +710,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 {
     enum Ability ability;
     enum Move move;
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_PSYDUCK;    ability = ABILITY_CLOUD_NINE;         move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_PIKACHU;    ability = ABILITY_LIGHTNING_ROD;      move = MOVE_DISCHARGE; }
@@ -766,7 +767,7 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 {
     enum Ability ability;
     enum Move move;
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
@@ -790,7 +791,8 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 5+)")
 {
     enum Move move, expectedMove;
-    u32 species, config;
+    enum Species species;
+    u32 config;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SEAKING; ability = ABILITY_LIGHTNING_ROD; move = MOVE_DISCHARGE; config = GEN_4; expectedMove = MOVE_HEADBUTT; }
@@ -1068,7 +1070,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind based on speed matchups")
 AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Doubles)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies, partnerSpecies;
+    enum Species tailwindSpecies, partnerSpecies;
     enum Ability tailwindAbility, partnerAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
@@ -1094,7 +1096,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Doubles)")
 AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Doubles)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies, partnerSpecies;
+    enum Species tailwindSpecies, partnerSpecies;
     enum Ability tailwindAbility, partnerAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
