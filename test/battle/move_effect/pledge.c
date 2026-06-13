@@ -134,6 +134,34 @@ DOUBLE_BATTLE_TEST("Sea Of Fire deals 1/8th damage per turn")
     }
 }
 
+DOUBLE_BATTLE_TEST("Sea Of Fire does not damage Fire-types or Magic Guard Pokemon")
+{
+    GIVEN {
+        ASSUME(IsSpeciesOfType(SPECIES_VICTINI, TYPE_FIRE));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_VICTINI) { Speed(2); }
+        OPPONENT(SPECIES_CLEFABLE) { Speed(1); Ability(ABILITY_MAGIC_GUARD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight);
+               MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
+        HP_BAR(opponentRight);
+        MESSAGE("A sea of fire enveloped the opposing team!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
+            HP_BAR(opponentLeft);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
+            HP_BAR(opponentRight);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
+        EXPECT_EQ(opponentRight->hp, opponentRight->maxHP);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Grass and Water Pledge create a swamp on the user's side of the field for four turns")
 {
     GIVEN {
