@@ -664,7 +664,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_BELCH:
-        if (IsBelchPreventingMove(ctx->battlerAtk, ctx->move))
+        if (!GetBattlerPartyState(ctx->battlerAtk)->ateBerry)
             return TRUE;
         break;
     case EFFECT_LAST_RESORT:

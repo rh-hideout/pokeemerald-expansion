@@ -163,6 +163,7 @@ extern const u8 BattleScript_MoveEffectRecoil[];
 extern const u8 BattleScript_FaintAttackerForExplosion[];
 extern const u8 BattleScript_MaxHp50Recoil[];
 extern const u8 BattleScript_ItemSteal[];
+extern const u8 BattleScript_ItemStealNoAnim[];
 extern const u8 BattleScript_WeatherAbilityActivates[];
 extern const u8 BattleScript_TraceActivates[];
 extern const u8 BattleScript_AbilityHpHeal[];
@@ -267,6 +268,8 @@ extern const u8 BattleScript_SelectingNotAllowedMoveAssaultVest[];
 extern const u8 BattleScript_SelectingNotAllowedMoveAssaultVestInPalace[];
 extern const u8 BattleScript_SelectingNotAllowedPlaceholder[];
 extern const u8 BattleScript_SelectingNotAllowedPlaceholderInPalace[];
+extern const u8 BattleScript_SelectingCantUseMove[];
+extern const u8 BattleScript_SelectingCantUseMoveInPalace[];
 extern const u8 BattleScript_SelectingNotAllowedMoveGravity[];
 extern const u8 BattleScript_MoveUsedGravityPrevents[];
 extern const u8 BattleScript_SelectingNotAllowedMoveGravityInPalace[];
@@ -502,6 +505,7 @@ extern const u8 BattleScript_DecreaseStatChangeMessage[];
 extern const u8 BattleScript_DecreaseStatChangeMessageMinStat[];
 extern const u8 BattleScript_StatDidntChangeMessagePause[];
 extern const u8 BattleScript_WildBattleVictory[];
+extern const u8 BattleScript_BelchFails[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
