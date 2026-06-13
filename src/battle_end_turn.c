@@ -1065,7 +1065,6 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
-        gBattlerAttacker = GetBattlerSideForMessage(side);
         if (gSideTimers[side].rainbowTimer > 0 && --gSideTimers[side].rainbowTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
