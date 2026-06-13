@@ -781,7 +781,7 @@ static void OakOldManHandleChooseAction(enum BattlerId battler)
     ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
-        PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
+        PrepareMonNickBuffer(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
         BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
     }
     else

@@ -2934,9 +2934,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 if (gBattleMons[effectBattler].pp[i] < ppToDeduct)
                     ppToDeduct = gBattleMons[effectBattler].pp[i];
 
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[effectBattler])
+                PrepareMoveBuffer(gBattleTextBuff1, gLastMoves[effectBattler]);
                 ConvertIntToDecimalStringN(gBattleTextBuff2, ppToDeduct, STR_CONV_MODE_LEFT_ALIGN, 1);
-                PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 1, ppToDeduct)
+                PrepareByteNumberBuffer(gBattleTextBuff2, 1, ppToDeduct);
                 gBattleMons[effectBattler].pp[i] -= ppToDeduct;
                 if (!(gBattleMons[effectBattler].volatiles.mimickedMoves & (1u << i))
                     && !(gBattleMons[effectBattler].volatiles.transformed))
@@ -3399,7 +3399,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         else
         {
-            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battlerAtk, gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot])
+            PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, battlerAtk, gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot]);
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_BeatUpAttackMessage;
         }
@@ -4080,10 +4080,10 @@ static void Cmd_getexp(void)
                         gBattleStruct->expGetterBattlerId = 0;
                     }
 
-                    PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattleStruct->expGetterBattlerId, *expMonId);
+                    PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, gBattleStruct->expGetterBattlerId, *expMonId);
                     // buffer 'gained' or 'gained a boosted'
-                    PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
-                    PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
+                    PrepareStringBuffer(gBattleTextBuff2, i);
+                    PrepareWordNumberBuffer(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
                     if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
                     {
@@ -4134,8 +4134,8 @@ static void Cmd_getexp(void)
                 if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattlerPartyIndexes[expBattler] == *expMonId)
                     HandleLowHpMusicChange(GetBattlerMon(expBattler), expBattler);
 
-                PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, expBattler, *expMonId);
-                PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 3, GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_LEVEL));
+                PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, expBattler, *expMonId);
+                PrepareByteNumberBuffer(gBattleTextBuff2, 3, GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_LEVEL));
 
                 gLeveledUpInBattle |= 1 << *expMonId;
                 BattleScriptCall(BattleScript_LevelUp);
@@ -5105,7 +5105,7 @@ static void Cmd_switchindataupdate(void)
 
     gBattleScripting.battler = battler;
 
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
+    PrepareMonNickBuffer(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -5464,8 +5464,8 @@ static void Cmd_switchhandleorder(void)
             SwitchPartyOrder(battler);
         }
 
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].species)
-        PREPARE_MON_NICK_BUFFER(gBattleTextBuff2, battler, gBattleResources->bufferB[battler][1])
+        PrepareSpeciesBuffer(gBattleTextBuff1, gBattleMons[gBattlerAttacker].species);
+        PrepareMonNickBuffer(gBattleTextBuff2, battler, gBattleResources->bufferB[battler][1]);
         break;
     }
 
@@ -5732,7 +5732,7 @@ static void Cmd_yesnoboxlearnmove(void)
                 {
                     gBattlescriptCurrInstr = cmd->forgotMovePtr;
 
-                    PREPARE_MOVE_BUFFER(gBattleTextBuff2, move)
+                    PrepareMoveBuffer(gBattleTextBuff2, move);
 
                     RemoveMonPPBonus(&gParties[B_TRAINER_PLAYER][gBattleStruct->expGetterMonId], movePosition);
                     SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][gBattleStruct->expGetterMonId], gMoveToLearn, movePosition);
@@ -5927,7 +5927,7 @@ static void Cmd_getmoneyreward(void)
         RemoveMoney(&gSaveBlock1Ptr->money, money);
     }
 
-    PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 5, money);
+    PrepareWordNumberBuffer(gBattleTextBuff1, 5, money);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -6270,7 +6270,7 @@ static void Cmd_atknameinbuff1(void)
 {
     CMD_ARGS();
 
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
+    PrepareMonNickBuffer(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -6598,7 +6598,7 @@ static void Cmd_recordability(void)
 
 void BufferMoveToLearnIntoBattleTextBuff2(void)
 {
-    PREPARE_MOVE_BUFFER(gBattleTextBuff2, gMoveToLearn);
+    PrepareMoveBuffer(gBattleTextBuff2, gMoveToLearn);
 }
 
 static void Cmd_buffermovetolearn(void)
@@ -6753,7 +6753,7 @@ static void RemoveAllTerrains(void)
         if (clear)                                          \
         {                                                   \
             if (move)                                       \
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);\
+                PrepareMoveBuffer(gBattleTextBuff1, move);  \
             *sideStatuses &= ~status;                       \
             sideTimer->structField = 0;                     \
             BattleScriptCall(battlescript);                 \
@@ -7296,7 +7296,7 @@ static void Cmd_initmultihitstring(void)
 {
     CMD_ARGS();
 
-    PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+    PrepareByteNumberBuffer(gBattleScripting.multihitString, 1, 0);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -7515,7 +7515,7 @@ static void Cmd_tryconversiontypechange(void)
         else
         {
             SET_BATTLER_TYPE(gBattlerAttacker, moveType);
-            PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
+            PrepareTypeBuffer(gBattleTextBuff1, moveType);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
@@ -7572,7 +7572,7 @@ static void Cmd_tryconversiontypechange(void)
             while (moveType == gBattleMons[gBattlerAttacker].types[0] || moveType == gBattleMons[gBattlerAttacker].types[1] || moveType == gBattleMons[gBattlerAttacker].types[2]);
 
             SET_BATTLER_TYPE(gBattlerAttacker, moveType);
-            PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
+            PrepareTypeBuffer(gBattleTextBuff1, moveType);
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
@@ -7588,7 +7588,7 @@ static void Cmd_givepaydaymoney(void)
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);
 
-        PREPARE_HWORD_NUMBER_BUFFER(gBattleTextBuff1, 5, bonusMoney)
+        PrepareHwordNumberBuffer(gBattleTextBuff1, 5, bonusMoney);
 
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_PrintPayDayMoneyString;
@@ -7813,7 +7813,7 @@ static void Cmd_transformdataexecution(void)
         timesGotHit = GetBattlerPartyState(gBattlerTarget)->timesGotHit;
         GetBattlerPartyState(gBattlerAttacker)->timesGotHit = timesGotHit;
 
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
+        PrepareSpeciesBuffer(gBattleTextBuff1, gBattleMons[gBattlerTarget].species);
 
         battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAttacker]);
         battleMonTarget = (u8 *)(&gBattleMons[gBattlerTarget]);
@@ -7908,7 +7908,7 @@ static void Cmd_mimicattackcopy(void)
             else
                 gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = 5;
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[gBattlerTarget])
+            PrepareMoveBuffer(gBattleTextBuff1, gLastMoves[gBattlerTarget]);
 
             gBattleMons[gBattlerAttacker].volatiles.mimickedMoves |= 1u << gCurrMovePos;
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -7941,7 +7941,7 @@ static void Cmd_disablelastusedattack(void)
     if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
         && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
     {
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i])
+        PrepareMoveBuffer(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i]);
 
         gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
         if (B_DISABLE_TURNS >= GEN_5)
@@ -8106,7 +8106,7 @@ static void Cmd_settypetorandomresistance(void)
                 else
                 {
                     SET_BATTLER_TYPE(gBattlerAttacker, i);
-                    PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
+                    PrepareTypeBuffer(gBattleTextBuff1, i);
                     gBattlescriptCurrInstr = cmd->nextInstr;
                     return;
                 }
@@ -8176,7 +8176,7 @@ static void Cmd_copymovepermanently(void)
             BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_MOVES_PP_BATTLE, 0, sizeof(movePpData), &movePpData);
             MarkBattlerForControllerExec(gBattlerAttacker);
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastPrintedMoves[gBattlerTarget])
+            PrepareMoveBuffer(gBattleTextBuff1, gLastPrintedMoves[gBattlerTarget]);
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
@@ -8256,11 +8256,11 @@ static void Cmd_tryspiteppreduce(void)
             if (gBattleMons[gBattlerTarget].pp[i] < ppToDeduct)
                 ppToDeduct = gBattleMons[gBattlerTarget].pp[i];
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[gBattlerTarget])
+            PrepareMoveBuffer(gBattleTextBuff1, gLastMoves[gBattlerTarget]);
 
             ConvertIntToDecimalStringN(gBattleTextBuff2, ppToDeduct, STR_CONV_MODE_LEFT_ALIGN, 1);
 
-            PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 1, ppToDeduct)
+            PrepareByteNumberBuffer(gBattleTextBuff2, 1, ppToDeduct);
 
             gBattleMons[gBattlerTarget].pp[i] -= ppToDeduct;
 
@@ -8621,7 +8621,7 @@ static void Cmd_rapidspinfree(void)
         gBattleScripting.battler = gBattlerTarget;
         gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
         gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.wrappedBy;
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].volatiles.wrappedMove);
+        PrepareMoveBuffer(gBattleTextBuff1, gBattleMons[gBattlerAttacker].volatiles.wrappedMove);
         BattleScriptCall(BattleScript_WrapFree);
     }
     else if (gBattleMons[gBattlerAttacker].volatiles.leechSeed)
@@ -8980,8 +8980,8 @@ static void Cmd_tryswapitems(void)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
-            PREPARE_ITEM_BUFFER(gBattleTextBuff1, oldItemDef)
-            PREPARE_ITEM_BUFFER(gBattleTextBuff2, oldItemAtk)
+            PrepareItemBuffer(gBattleTextBuff1, oldItemDef);
+            PrepareItemBuffer(gBattleTextBuff2, oldItemAtk);
 
             if (!(IsBattlerAlly(gBattlerAttacker, gBattlerTarget) && IsPartnerMonFromSameTrainer(gBattlerAttacker)))
             {
@@ -9666,7 +9666,7 @@ static void Cmd_settypetoenvironment(void)
     if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, environmentType) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_TERA)
     {
         SET_BATTLER_TYPE(gBattlerAttacker, environmentType);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, environmentType);
+        PrepareTypeBuffer(gBattleTextBuff1, environmentType);
 
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -10728,7 +10728,7 @@ static void Cmd_trysynchronize(void)
         gEffectBattler = gBattleScripting.savedBattler;
         gBattleScripting.moveEffect = synchStatus;
         gBattleStruct->synchronizeState = SYNCH_STATE_SET_STATUS;
-        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
+        PrepareAbilityBuffer(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
         BattleScriptCall(BattleScript_SynchronizeActivates);
         break;
     case SYNCH_STATE_SHOW_ABILITY_POPUP: // Synchronize ability pop up still shows up even if status fails
@@ -11284,7 +11284,7 @@ void BS_ItemRestoreHP(void)
             healAmount = maxHP - hp;
 
         gBattleScripting.battler = battler;
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
+        PrepareSpeciesBuffer(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
 
         // Heal is applied as move damage if battler is active.
         if (battler != MAX_BATTLERS_COUNT && hp != 0)
@@ -11345,7 +11345,7 @@ void BS_ItemCureStatus(void)
         return;
     }
 
-    PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
+    PrepareSpeciesBuffer(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
     if (targetBattler == MAX_BATTLERS_COUNT)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -11432,8 +11432,8 @@ void BS_ItemRestorePP(void)
         }
     }
     gBattleScripting.battler = battler;
-    PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(mon, MON_DATA_SPECIES));
-    PREPARE_MOVE_BUFFER(gBattleTextBuff2, moveId);
+    PrepareSpeciesBuffer(gBattleTextBuff1, GetMonData(mon, MON_DATA_SPECIES));
+    PrepareMoveBuffer(gBattleTextBuff2, moveId);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12331,7 +12331,7 @@ void BS_TryRevivalBlessing(void)
         u16 hp = GetMonData(&party[gSelectedMonPartyId], MON_DATA_MAX_HP) / 2;
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 1u << gSelectedMonPartyId, sizeof(hp), &hp);
         MarkBattlerForControllerExec(gBattlerAttacker);
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gSelectedMonPartyId], MON_DATA_SPECIES));
+        PrepareSpeciesBuffer(gBattleTextBuff1, GetMonData(&party[gSelectedMonPartyId], MON_DATA_SPECIES));
 
         // If an on-field battler is revived, it needs to be sent out again.
         if (IsDoubleBattle() &&
@@ -12507,7 +12507,7 @@ void BS_SwapStats(void)
     default:
         break;
     }
-    PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
+    PrepareStatBuffer(gBattleTextBuff1, stat);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -13232,7 +13232,7 @@ void BS_PlayTrainerDefeatedMusic(void)
 void BS_StatTextBuffer(void)
 {
     NATIVE_ARGS();
-    PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleCommunication[0]);
+    PrepareStatBuffer(gBattleTextBuff1, gBattleCommunication[0]);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -13510,7 +13510,7 @@ void BS_TrySoak(void)
     else
     {
         SET_BATTLER_TYPE(gBattlerTarget, typeToSet);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, typeToSet);
+        PrepareTypeBuffer(gBattleTextBuff1, typeToSet);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -13523,7 +13523,7 @@ void BS_HandleFormChange(void)
     if (cmd->caseId == 0) // Buffer name and emit species.
     {
         if (cmd->bufferSpeciesName)
-            PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
+            PrepareSpeciesBuffer(gBattleTextBuff1, gBattleMons[battler].species);
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_SPECIES_BATTLE, 1u << gBattlerPartyIndexes[battler], sizeof(gBattleMons[battler].species), &gBattleMons[battler].species);
         MarkBattlerForControllerExec(battler);
     }
@@ -13591,7 +13591,7 @@ void BS_TryInstruct(void)
         {
             gCurrMovePos = moveIndex;
             gEffectBattler = gBattleStruct->battlerState[gBattlerTarget].lastMoveTarget;
-            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerTarget, gBattlerPartyIndexes[gBattlerTarget]);
+            PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, gBattlerTarget, gBattlerPartyIndexes[gBattlerTarget]);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
@@ -14060,7 +14060,7 @@ void BS_TryThirdType(void)
     else
     {
         gBattleMons[gBattlerTarget].types[2] = type;
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, type);
+        PrepareTypeBuffer(gBattleTextBuff1, type);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

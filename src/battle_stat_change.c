@@ -100,7 +100,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         {
             if (!st->onlyChecking)
             {
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
+                PrepareStatBuffer(gBattleTextBuff1, STAT_ATK);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
                 st->script = BattleScript_DecreaseStatChangeMessage;
                 gBattleScripting.battler = cv->battlerDef;
@@ -328,7 +328,7 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
 {
     u32 currStage = gBattleMons[cv->battlerDef].statStages[st->stat];
 
-    PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
+    PrepareStatBuffer(gBattleTextBuff1, st->stat);
 
     if (currStage == (MIN_STAT_STAGE + 1))
         st->stage = -1;
@@ -337,15 +337,15 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
 
     if (st->stage == -2)
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATHARSHLY);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_STATHARSHLY);
     }
     else if (st->stage <= -3)
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_SEVERELY);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_SEVERELY);
     }
     else
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
     }
 
     if (currStage == MIN_STAT_STAGE)
@@ -389,7 +389,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
     u32 currStage = gBattleMons[cv->battlerDef].statStages[st->stat];
     bool32 isMaxStage = st->stage >= 12;
 
-    PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
+    PrepareStatBuffer(gBattleTextBuff1, st->stat);
 
     if (currStage == MAX_STAT_STAGE - 1)
         st->stage = 1;
@@ -398,15 +398,15 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
 
     if (st->stage == 2)
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATSHARPLY);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_STATSHARPLY);
     }
     else if (st->stage >= 3)
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_DRASTICALLY);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_DRASTICALLY);
     }
     else
     {
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
     }
 
     if (gBattleMons[cv->battlerDef].statStages[st->stat] == MAX_STAT_STAGE)
@@ -671,7 +671,7 @@ static bool32 IsIntimidateBlocked(struct BattleCalcValues *cv, struct StatChange
     case ABILITY_OBLIVIOUS:
         if (GetConfig(B_UPDATED_INTIMIDATE) < GEN_8)
             return FALSE;
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
+        PrepareStatBuffer(gBattleTextBuff1, st->stat);
         st->script = BattleScript_AbilityNoSpecificStatLoss;
         break;
     case ABILITY_GUARD_DOG:
@@ -720,7 +720,7 @@ static bool32 IsAbilityBlocked(struct BattleCalcValues *cv, struct StatChange *s
         if (!st->onlyChecking)
         {
             MarkStatsAsDone(st, st->stat);
-            PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
+            PrepareStatBuffer(gBattleTextBuff1, st->stat);
             st->script = BattleScript_AbilityNoSpecificStatLoss;
         }
     }
