@@ -87,4 +87,23 @@ SINGLE_BATTLE_TEST("Psycho Shift burn is blocked by Safeguard unless the user ha
     }
 }
 
+SINGLE_BATTLE_TEST("Psycho Shift triggers Synchronize before curing the user (Gen5+)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PSYCHO_SHIFT) == EFFECT_PSYCHO_SHIFT);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHO_SHIFT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_SHIFT, player);
+        STATUS_ICON(opponent, burn: TRUE);
+        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        STATUS_ICON(player, none: TRUE);
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->status1, STATUS1_BURN);
+    }
+}
+
 TO_DO_BATTLE_TEST("TODO: Write Psycho Shift (Move Effect) test titles")

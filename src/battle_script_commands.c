@@ -13208,39 +13208,32 @@ void BS_TryPsychoShift(void)
     NATIVE_ARGS(const u8 *failInstr, const u8 *sleepClauseFailInstr);
     enum Ability attackerAbility = GetBattlerAbility(gBattlerAttacker);
     enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
-
-    if (IsSubstituteProtected(gBattlerAttacker, gBattlerTarget, attackerAbility, MOVE_PSYCHO_SHIFT))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-        return;
-    }
-
-    if (IsSafeguardProtected(gBattlerAttacker, gBattlerTarget, attackerAbility))
-    {
-        gBattlescriptCurrInstr = BattleScript_SafeguardProtected;
-        return;
-    }
+    enum MoveEffect synchronizeEffect = MOVE_EFFECT_NONE;
 
     // Psycho shift works
     if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_POISON)
      && CanSetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, attackerAbility, targetAbility, MOVE_EFFECT_TOXIC, CHECK_TRIGGER))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        synchronizeEffect = MOVE_EFFECT_POISON;
     }
     else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_TOXIC_POISON)
           && CanSetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, attackerAbility, targetAbility, MOVE_EFFECT_TOXIC, CHECK_TRIGGER))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = 1;
+        synchronizeEffect = MOVE_EFFECT_TOXIC;
     }
     else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_BURN)
           && CanSetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, attackerAbility, targetAbility, MOVE_EFFECT_BURN, CHECK_TRIGGER))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = 2;
+        synchronizeEffect = MOVE_EFFECT_BURN;
     }
     else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_PARALYSIS)
           && CanSetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, attackerAbility, targetAbility, MOVE_EFFECT_PARALYSIS, CHECK_TRIGGER))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = 3;
+        synchronizeEffect = MOVE_EFFECT_PARALYSIS;
     }
     else if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP)
           && !IsSleepClauseActiveForSide(GetBattlerSide(gBattlerTarget))
@@ -13273,6 +13266,7 @@ void BS_TryPsychoShift(void)
         &gBattleMons[gBattlerTarget].status1);
     MarkBattlerForControllerExec(gBattlerTarget);
     TryActivateSleepClause(gBattlerTarget, gBattlerPartyIndexes[gBattlerTarget]);
+    TrySynchronizeActivation(gBattlerAttacker, gBattlerTarget, synchronizeEffect);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
