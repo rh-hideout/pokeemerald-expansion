@@ -1115,7 +1115,6 @@ static enum CancelerResult CancelerBideShellTrap(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_BIDE:
-        break;
         if (gBattleMons[cv->battlerAtk].volatiles.bideTurns)
         {
             if (--gBattleMons[cv->battlerAtk].volatiles.bideTurns)
