@@ -146,7 +146,7 @@ static const u32 sAreaGlow_Gfx[] = INCGFX_U32("graphics/pokedex/area_glow.png", 
 static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
 static void LoadHGSSScreenSelectBarSubmenu(void);
 
-static const u16 sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
+static const enum Species sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
 
 static const mapsec_u16_t sMovingRegionMapSections[3] =
 {

@@ -535,7 +535,7 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+static u32 (*const generateListFunctions[])(const struct DebugMenuOption *) =
 {
     [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
     [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,

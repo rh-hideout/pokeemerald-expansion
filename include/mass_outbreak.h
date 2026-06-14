@@ -20,7 +20,6 @@ bool32 IsMassOutbreakActive(void);
 void GenerateMassOutbreakMon(u32 minLevel);
 bool8 CheckForMassOutbreakEncounter(void);
 void StartStaticMassOutbreak(enum MassOutbreakIndex outbreakIdx);
-u32 GetStaticMassOutbreakCount(void);
 enum Species GetStaticOutbreakSpecies(enum MassOutbreakIndex outbreakIdx);
 u8 *GetStaticOutbreakMapName(u8 *dest, enum MassOutbreakIndex outbreakIdx);
 void ZeroMassOutbreak(void);

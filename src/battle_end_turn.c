@@ -1065,9 +1065,9 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
-        gBattlerAttacker = GetBattlerSideForMessage(side);
         if (gSideTimers[side].rainbowTimer > 0 && --gSideTimers[side].rainbowTimer == 0)
         {
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
             BattleScriptCall(BattleScript_TheRainbowDisappeared);
             effect = TRUE;
@@ -1077,6 +1077,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
         if (gSideTimers[side].seaOfFireTimer > 0 && --gSideTimers[side].seaOfFireTimer == 0)
         {
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
             BattleScriptCall(BattleScript_TheSeaOfFireDisappeared);
             effect = TRUE;
@@ -1087,6 +1088,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
         gBattlerAttacker = GetBattlerSideForMessage(side);
         if (gSideTimers[side].swampTimer > 0 && --gSideTimers[side].swampTimer == 0)
         {
+            gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
             BattleScriptCall(BattleScript_TheSwampDisappeared);
             effect = TRUE;

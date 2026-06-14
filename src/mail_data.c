@@ -120,11 +120,6 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     return mailId;
 }
 
-static bool32 UNUSED DummyMailFunc(void)
-{
-    return FALSE;
-}
-
 void TakeMailFromMon(struct Pokemon *mon)
 {
     u8 heldItem[2];
@@ -163,7 +158,7 @@ u8 SaveMailToPC(struct Mail *mail)
 
 u8 TakeMailFromMonAndSave(struct Pokemon *mon)
 {
-    u32 heldItem;
+    enum Item heldItem;
     u32 mailId, newMailId;
 
     mailId = GetMonData(mon, MON_DATA_MAIL);
