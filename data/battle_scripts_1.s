@@ -1442,7 +1442,6 @@ BattleScript_EffectPlaceholder::
 BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromDamageCalc::
-	damagecalc
 	call BattleScript_Hit_RetFromAtkAnimation
 BattleScript_MoveEnd::
 	moveendall
@@ -3612,9 +3611,6 @@ BattleScript_MonTookFutureAttack::
 	printstring STRINGID_PKMNTOOKATTACK
 	waitmessage B_WAIT_TIME_LONG
 	futuresighttargetfailure BattleScript_DoFutureAttackResult
-	jumpifmovehadnoeffect BattleScript_FutureAttackEnd
-	damagecalc
-	jumpifmovehadnoeffect BattleScript_DoFutureAttackResult
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_FUTURE_SIGHT, BattleScript_FutureHitAnimDoomDesire
 	playanimation BS_ATTACKER, B_ANIM_FUTURE_SIGHT_HIT
 	goto BattleScript_DoFutureAttackHit

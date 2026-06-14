@@ -2397,7 +2397,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
     if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected()) // check any target affected above and skip everything
         return CANCELER_RESULT_SUCCESS;
 
-    while (gBattleStruct->eventState.atkCancelerBattler < MAX_BATTLERS_COUNT)
+    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
         gEffectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
 
@@ -2444,7 +2444,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
     }
 
     gBattleStruct->additionalEffectsCounter = 0;
-    gBattleStruct->preAttackEffectHappened = TRUE; // we don't need this anymore
+    // gBattleStruct->preAttackEffectHappened = TRUE; // we don't need this anymore
     gBattleStruct->eventState.atkCancelerBattler = 0;
     return CANCELER_RESULT_SUCCESS;
 }
@@ -2478,7 +2478,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 
         ctx.battlerDef = battlerDef;
         SetDynamicMoveCategory(cv->battlerAtk, battlerDef, cv->move);
-        gBattleStruct->moveDamage[cv->battlerDef] = CalculateMoveDamage(&ctx);
+        gBattleStruct->moveDamage[battlerDef] = CalculateMoveDamage(&ctx);
     }
 
     if (gSpecialStatuses[cv->battlerAtk].gemBoost
