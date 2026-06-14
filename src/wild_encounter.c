@@ -320,8 +320,8 @@ u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, en
 
     if (LURE_STEP_COUNT == 0)
     {
-        min = wildPokemon[wildMonIndex].maxLevel;
-        max = wildPokemon[wildMonIndex].minLevel;
+        min = wildPokemon[wildMonIndex].minLevel;
+        max = wildPokemon[wildMonIndex].maxLevel;
 
         if (DoesLeadingMonHaveAbilityEffect(gForceMaxLevelAbilities))
         {
@@ -478,7 +478,7 @@ void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncount
         wildMonIndex = ChooseWildMonIndex(encounterType);
 
     level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, encounterType);
-    if (level < minLevel)
+    if (level >= minLevel)
         CreateWildMonInSlot(wildMonInfo->wildPokemon[wildMonIndex].species, level, slot);
 }
 

@@ -1649,12 +1649,12 @@ u32 GenerateBattlePyramidWildMon(u32 minLevel)
     if (levelMode == FRONTIER_LVL_OPEN)
     {
         wildMons = sOpenLevelWildMonPointers[round];
-        level = wildMons[wildMonIndex].level;
+        level = GetFrontierEnemyMonLevel(levelMode) + wildMons[wildMonIndex].levelDelta;
     }
     else if (levelMode == FRONTIER_LVL_50)
     {
         wildMons = sLevel50WildMonPointers[round];
-        level = GetFrontierEnemyMonLevel(levelMode) + wildMons[wildMonIndex].levelDelta;
+        level = wildMons[wildMonIndex].level;
     }
     else
     {
