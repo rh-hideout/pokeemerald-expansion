@@ -1103,53 +1103,43 @@ static enum CancelerResult CancelerFocusPreGen5(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static enum CancelerResult CancelerBideShellTrap(struct BattleCalcValues *cv)
+static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
 {
-    switch (cv->moveEffect)
+    if (cv->moveEffect != EFFECT_BIDE)
+        return CANCELER_RESULT_SUCCESS;
+
+    if (gBattleMons[cv->battlerAtk].volatiles.bideTurns)
     {
-    case EFFECT_SHELL_TRAP:
-        if (!gProtectStructs[cv->battlerAtk].shellTrap)
+        if (--gBattleMons[cv->battlerAtk].volatiles.bideTurns)
         {
-            gBattlescriptCurrInstr = BattleScript_ShellTrapFailed;
-            return CANCELER_RESULT_FAILURE;
+            gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
+            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
         }
-        break;
-    case EFFECT_BIDE:
-        if (gBattleMons[cv->battlerAtk].volatiles.bideTurns)
+        else if (gBideDmg[cv->battlerAtk])
         {
-            if (--gBattleMons[cv->battlerAtk].volatiles.bideTurns)
-            {
-                gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
-                return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
-            }
-            else if (gBideDmg[cv->battlerAtk])
-            {
-                gBattlerTarget = gBideTarget[cv->battlerAtk];
-                gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
-                if (!IsBattlerAlive(gBattlerTarget))
-                    gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
-                gBattleStruct->battlerState[cv->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
-                BattleScriptCall(BattleScript_BideAttack);
-                return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
-            }
-            else
-            {
-                gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
-                gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
-                return CANCELER_RESULT_FAILURE;
-            }
+            gBattlerTarget = gBideTarget[cv->battlerAtk];
+            gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+            if (!IsBattlerAlive(gBattlerTarget))
+                gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
+            gBattleStruct->battlerState[cv->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
+            BattleScriptCall(BattleScript_BideAttack);
+            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
         }
         else
         {
-            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-            gLockedMoves[gBattlerAttacker] = gCurrentMove;
-            gBideDmg[gBattlerAttacker] = 0;
-            gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
-            gBattlescriptCurrInstr = BattleScript_SetUpBide;
-            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
+            gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+            gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
+            return CANCELER_RESULT_FAILURE;
         }
-    default:
-        break;
+    }
+    else
+    {
+        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
+        gLockedMoves[gBattlerAttacker] = gCurrentMove;
+        gBideDmg[gBattlerAttacker] = 0;
+        gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
+        gBattlescriptCurrInstr = BattleScript_SetUpBide;
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
     }
 
     return CANCELER_RESULT_SUCCESS;
@@ -1642,6 +1632,13 @@ static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *c
             gBattleStruct->eventState.atkCanceler = CANCELER_END;
             gBattlescriptCurrInstr = BattleScript_PledgeWaitingForPartner;
             return CANCELER_RESULT_RUN_SCRIPT;
+        }
+        break;
+    case EFFECT_SHELL_TRAP:
+        if (!gProtectStructs[cv->battlerAtk].shellTrap)
+        {
+            gBattlescriptCurrInstr = BattleScript_ShellTrapFailed;
+            return CANCELER_RESULT_FAILURE;
         }
         break;
     default:
@@ -2551,7 +2548,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_SKY_BATTLE] = CancelerSkyBattle,
     [CANCELER_WEATHER_PRIMAL] = CancelerWeatherPrimal,
     [CANCELER_FOCUS_PRE_GEN5] = CancelerFocusPreGen5,
-    [CANCELER_BIDE_SHELL_TRAP] = CancelerBideShellTrap,
+    [CANCELER_BIDE] = CancelerBide,
     [CANCELER_MOVE_FAILURE] = CancelerMoveFailure,
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
