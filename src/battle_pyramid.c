@@ -1617,8 +1617,28 @@ static void CreateWildPyramidMon(const struct PyramidWildMon *pyramidMon, u32 le
     CalculateMonStats(mon);
 }
 
-void GenerateBattlePyramidWildMonFromId(u32 wildMonIndex)
+void GenerateBattlePyramidWildMonFromId(u32 wildMonIndex, u32 level)
 {
+    gBattleTypeFlags = BATTLE_TYPE_PYRAMID;
+    const struct PyramidWildMon *wildMons;
+    enum FrontierLevelMode levelMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u16 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[levelMode] / PYRAMID_FLOOR_COUNT) % TOTAL_PYRAMID_ROUNDS;
+    if (round >= TOTAL_PYRAMID_ROUNDS)
+        round = TOTAL_PYRAMID_ROUNDS - 1;
+
+    if (levelMode == FRONTIER_LVL_OPEN)
+        wildMons = sOpenLevelWildMonPointers[round];
+    else if (levelMode == FRONTIER_LVL_50)
+        wildMons = sLevel50WildMonPointers[round];
+    else
+        return;
+
+    CreateWildPyramidMon(&wildMons[wildMonIndex], level);
+}
+
+u32 GenerateBattlePyramidWildMon(u32 minLevel)
+{
+    u8 wildMonIndex = RandomWeightedIndex(sPyramidTableWeights[gSaveBlock2Ptr->frontier.curChallengeBattleNum], BATTLE_PYRAMID_ENCOUNTER_TABLE_SIZE);
     const struct PyramidWildMon *wildMons;
     u32 level = 0;
     enum FrontierLevelMode levelMode = gSaveBlock2Ptr->frontier.lvlMode;
@@ -1639,17 +1659,12 @@ void GenerateBattlePyramidWildMonFromId(u32 wildMonIndex)
     else
     {
         errorf("levelMode %d in pyramid not matching known modes", levelMode);
-        return;
+        return 0;
     }
     level += (RandomSignedUniform(RNG_NONE, -5, 5));
 
-     CreateWildPyramidMon(&wildMons[wildMonIndex], level);
-}
-
-u32 GenerateBattlePyramidWildMon(u32 minLevel)
-{
-    u8 wildMonIndex = RandomWeightedIndex(sPyramidTableWeights[gSaveBlock2Ptr->frontier.curChallengeBattleNum], BATTLE_PYRAMID_ENCOUNTER_TABLE_SIZE);
-    GenerateBattlePyramidWildMonFromId(wildMonIndex);
+    if (level >= minLevel)
+        CreateWildPyramidMon(&wildMons[wildMonIndex], level);
     return wildMonIndex;
 }
 #endif

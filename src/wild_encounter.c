@@ -49,6 +49,8 @@ extern const u8 EventScript_SprayWoreOff[];
 static u16 FeebasRandom(void);
 static void FeebasSeedRng(u16 seed);
 static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, enum Species species, enum WildEncounterType area);
+static u32 GetMinLevelAllowedByAbility(void);
+static u32 GetMinLevelAllowedByRepel(void);
 
 EWRAM_DATA static u32 sFeebasRngValue = 0;
 EWRAM_DATA bool8 gIsFishingEncounter = 0;
@@ -562,31 +564,7 @@ bool8 AreLegendariesInSootopolisPreventingEncounters(void)
     return FlagGet(FLAG_LEGENDARIES_IN_SOOTOPOLIS);
 }
 
-static bool32 TrySetupPikeWildBattle(u32 minLevel)
-{
-    if (!WildEncounterCheck(GetBattlePikeEncounterRate(), FALSE))
-        return FALSE;
-    minLevel = max(MIN_LEVEL, GetMinLevelAllowedByAbility());
-    GenerateBattlePikeWildMon(minLevel);
-    if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
-        return FALSE;
-    BattleSetup_StartBattlePikeWildBattle();
-    return TRUE;
-}
-
-static bool32 TrySetupPyramidWildBattle(u32 minLevel)
-{
-    if (!WildEncounterCheck(GetBattlePyramidEncounterRate(), FALSE))
-        return FALSE;
-    GenerateBattlePyramidWildMon(minLevel);
-    if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
-        return FALSE;
-    BattleSetup_StartWildBattle();
-    return TRUE;
-}
-
-
-static enum WildEncounterType GetStandardWildEncounterType(u32 metatileBehavior)
+enum WildEncounterType GetStandardWildEncounterType(u32 metatileBehavior)
 {
     if (MetatileBehavior_IsLandWildEncounter(metatileBehavior))
         return WILD_LAND_MONS;
@@ -615,42 +593,56 @@ static void GenerateStandardWildmons(const struct WildPokemonInfo *wildPokemonIn
 {
     GenerateWildMon(wildPokemonInfo, encounterType, minLevel, 0);
     if (CheckForDoubleWildBattle())
+    {
+        gBattleTypeFlags = BATTLE_TYPE_DOUBLE;
         GenerateWildMon(wildPokemonInfo, encounterType, minLevel, 1);
+    }
 }
 
-void WildEncounter_SetupBattle(void)
+u32 GetMinLevelEncounter(void)
 {
-    if (gEncounteredRoamerIndex < ROAMER_COUNT)
-        BattleSetup_StartRoamerBattle();
-    if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_HP))
-        BattleSetup_StartDoubleWildBattle();
-    BattleSetup_StartWildBattle();
+    u32 minLevel = GetMinLevelAllowedByAbility();
+    if (InBattlePike() || InBattlePyramid())
+        return minLevel;
+    return max(minLevel, GetMinLevelAllowedByRepel());
+}
+
+static bool32 StandardWildEncounterCheck(const struct WildPokemonInfo *wildPokemonInfo, bool32 isForced)
+{
+    u32 encounterRate;
+    if (InBattlePike())
+        encounterRate = GetBattlePikeEncounterRate();
+    else if (InBattlePyramid())
+        encounterRate = GetBattlePyramidEncounterRate();
+    else if (wildPokemonInfo == NULL)
+        return FALSE;
+    else
+        encounterRate = wildPokemonInfo->encounterRate;
+    if (isForced)
+        return TRUE;
+    return WildEncounterCheck(encounterRate, FALSE);
 }
 
 bool8 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
 {
     u32 minLevel;
     ZeroEnemyPartyMons();
+    gBattleTypeFlags = 0;
     if (isForced)
         minLevel = MIN_LEVEL;
     else
-        minLevel = GetMinLevelAllowedByAbility();
-    if (InBattlePike())
-        return TrySetupPikeWildBattle(minLevel);
-    else if (InBattlePyramid())
-        return TrySetupPyramidWildBattle(minLevel);
+        minLevel = GetMinLevelEncounter();
 
     enum WildEncounterType encounterType = GetStandardWildEncounterType(metatileBehavior);
     const struct WildPokemonInfo *wildPokemonInfo = GetWildPokemonInfo(encounterType);
-    if (wildPokemonInfo == NULL)
-        return FALSE;
-    if (!isForced && !WildEncounterCheck(wildPokemonInfo->encounterRate, FALSE))
+    if (!StandardWildEncounterCheck(wildPokemonInfo, isForced))
         return FALSE;
 
-    if (!isForced)
-        minLevel = max(minLevel, GetMinLevelAllowedByRepel());
-
-    if (CheckForRoamerEncounter())
+    if (InBattlePike())
+        GenerateBattlePikeWildMon(minLevel);
+    else if (InBattlePyramid())
+         GenerateBattlePyramidWildMon(minLevel);
+    else if (CheckForRoamerEncounter())
         GenerateRoamerMon(gEncounteredRoamerIndex, minLevel);
     else if (encounterType == WILD_LAND_MONS && CheckForMassOutbreakEncounter())
         GenerateMassOutbreakMon(minLevel);
@@ -659,7 +651,7 @@ bool8 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
 
     if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
         return FALSE;
-    WildEncounter_SetupBattle();
+    BattleSetup_StartWildBattle();
     return TRUE;
 }
 
@@ -805,7 +797,7 @@ bool8 UpdateRepelCounter(void)
     return FALSE;
 }
 
-u32 GetMinLevelAllowedByRepel()
+static u32 GetMinLevelAllowedByRepel(void)
 {
     u8 i;
 
@@ -824,7 +816,7 @@ u32 GetMinLevelAllowedByRepel()
     return MIN_LEVEL;
 }
 
-u32 GetMinLevelAllowedByAbility()
+static u32 GetMinLevelAllowedByAbility(void)
 {
     if (DoesLeadingMonHaveAbilityEffect(gBlockLowLevelEncounterAbilities))
     {

@@ -4,7 +4,7 @@
 void CallBattlePikeFunction(void);
 u8 GetBattlePikeWildMonHeaderId(void);
 u32 GetBattlePikeEncounterRate(void);
-void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 minLevel);
+void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 level);
 u32 GenerateBattlePikeWildMon(u32 minLevel);
 bool8 InBattlePike(void);
 

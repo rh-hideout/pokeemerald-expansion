@@ -8,7 +8,7 @@ u16 LocalIdToPyramidTrainerId(u8 localId);
 bool8 GetBattlePyramidTrainerFlag(u8 eventId);
 u32 GetBattlePyramidEncounterRate(void);
 void MarkApproachingPyramidTrainersAsBattled(void);
-void GenerateBattlePyramidWildMonFromId(u32 wildMonIndex);
+void GenerateBattlePyramidWildMonFromId(u32 wildMonIndex, u32 level);
 u32 GenerateBattlePyramidWildMon(u32 minLevel);
 u8 GetPyramidRunMultiplier(void);
 u8 CurrentBattlePyramidLocation(void);

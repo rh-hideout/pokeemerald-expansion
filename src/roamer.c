@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_setup.h"
 #include "event_data.h"
 #include "ow_abilities.h"
 #include "pokemon.h"
@@ -246,6 +247,7 @@ bool8 IsRoamerAt(u32 roamerIndex, u8 mapGroup, u8 mapNum)
 
 void GenerateRoamerMon(u32 roamerIndex, u32 minLevel)
 {
+    gBattleTypeFlags = BATTLE_TYPE_ROAMER;
     u32 status = ROAMER(roamerIndex)->statusA + (ROAMER(roamerIndex)->statusB << 8);
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
     ZeroEnemyPartyMons();

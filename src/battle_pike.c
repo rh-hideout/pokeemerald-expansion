@@ -1123,19 +1123,13 @@ static u32 GetBattlePikeWildMonGroup(void)
         return 3;
 }
 
-void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 minLevel)
+void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 level)
 {
+    gBattleTypeFlags = BATTLE_TYPE_PIKE;
     enum FrontierLevelMode levelMode = gSaveBlock2Ptr->frontier.lvlMode;
     const struct PikeWildMon *wildMons = sWildMons[levelMode][GetBattlePikeWildMonGroup()];
 
-    u32 monLevel = GetFrontierEnemyMonLevel(levelMode) + wildMons[pikeMonId].levelDelta;
-    if (levelMode == FRONTIER_LVL_OPEN)
-        monLevel = max(monLevel, FRONTIER_MIN_LEVEL_OPEN);
-
-    if (monLevel < minLevel)
-        return;
-
-    CreateWildMon(wildMons[pikeMonId].species, monLevel);
+    CreateWildMon(wildMons[pikeMonId].species, level);
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], wildMons[pikeMonId].moves[i], i);
 
@@ -1144,8 +1138,20 @@ void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 minLevel)
 
 u32 GenerateBattlePikeWildMon(u32 minLevel)
 {
+    enum FrontierLevelMode levelMode = gSaveBlock2Ptr->frontier.lvlMode;
+    assertf(levelMode == FRONTIER_LVL_50 || levelMode == FRONTIER_LVL_OPEN, "levelMode %d in pyramid not matching known modes", levelMode)
+    {
+        return 0;
+    }
+    const struct PikeWildMon *wildMons = sWildMons[levelMode][GetBattlePikeWildMonGroup()];
     u32 pikeMonId = RandomWeightedIndex(sPikeWildMonWeights, BATTLE_PIKE_ENCOUNTER_TABLE_SIZE);
-    GenerateBattlePikeWildMonFromId(pikeMonId, minLevel);
+
+    u32 monLevel = GetFrontierEnemyMonLevel(levelMode) + wildMons[pikeMonId].levelDelta;
+    if (levelMode == FRONTIER_LVL_OPEN)
+        monLevel = max(monLevel, FRONTIER_MIN_LEVEL_OPEN);
+
+    if (monLevel >= minLevel)
+        GenerateBattlePikeWildMonFromId(pikeMonId, monLevel);
     return pikeMonId;
 }
 
