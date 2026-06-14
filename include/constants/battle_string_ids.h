@@ -830,7 +830,7 @@ enum ProtectLikeUsedStringID
 };
 
 // gBrokeProtectionStringIds
-enum BrokeProtectionStringID
+enum __attribute__((packed)) BrokeProtectionStringID
 {
     B_MSG_FEINT,
     B_MSG_BROKE_THROUGH_PROTECT,

@@ -2624,11 +2624,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         {
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectFeint;
-
-            if (gCurrentMove == MOVE_FEINT)
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FEINT;
-            else
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_BROKE_THROUGH_PROTECT;
         }
         break;
     case MOVE_EFFECT_CORE_ENFORCER:
