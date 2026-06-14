@@ -2394,20 +2394,15 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
-    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected()) // check any target affected above and skip everything
+    if (!IsAnyTargetAffected()) // check any target affected above and skip everything
         return CANCELER_RESULT_SUCCESS;
 
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
         gEffectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
 
-        gBattleStruct->eventState.atkCancelerBattler++;
-
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler, TRUE))
-            continue;
-
-        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
-        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+        while (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, gBattleStruct->additionalEffectsCounter);
             gBattleStruct->additionalEffectsCounter++;
@@ -2415,7 +2410,11 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
             if (!additionalEffect->preAttackEffect)
                 continue;
 
-            if ((gEffectBattler == cv->battlerAtk) != additionalEffect->self)
+            bool32 isSelf = gEffectBattler == cv->battlerAtk;
+            if (isSelf != additionalEffect->self)
+                continue;
+
+            if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler, TRUE))
                 continue;
 
             u32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
@@ -2440,11 +2439,11 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
             return CANCELER_RESULT_RUN_SCRIPT; // We don't know if a script should be run or not so try
         }
 
+        gBattleStruct->eventState.atkCancelerBattler++;
         gBattleStruct->additionalEffectsCounter = 0;
     }
 
     gBattleStruct->additionalEffectsCounter = 0;
-    // gBattleStruct->preAttackEffectHappened = TRUE; // we don't need this anymore
     gBattleStruct->eventState.atkCancelerBattler = 0;
     return CANCELER_RESULT_SUCCESS;
 }
@@ -3343,7 +3342,6 @@ static enum MoveEndResult MoveEndMultihitMove(struct BattleCalcValues *cv)
      && gMultiHitCounter)
     {
         enum MoveTarget target = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-        gBattleStruct->preAttackEffectHappened = FALSE;
         gMultiHitCounter--;
         if (!IsBattlerAlive(cv->battlerDef) && target != TARGET_SMART)
             gMultiHitCounter = 0;
