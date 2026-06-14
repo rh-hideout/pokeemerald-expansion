@@ -1249,12 +1249,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro jumpifshelltrap battler:req, jumpInstr:req
-	callnative BS_JumpIfShellTrap
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
 	.macro setterrain failInstr:req
 	callnative BS_SetTerrain
 	.4byte \failInstr

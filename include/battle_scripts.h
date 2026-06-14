@@ -703,7 +703,7 @@ extern const u8 BattleScript_EffectOctolock[];
 extern const u8 BattleScript_EffectCourtChange[];
 extern const u8 BattleScript_EffectExtremeEvoboost[];
 extern const u8 BattleScript_EffectTeatime[];
-extern const u8 BattleScript_EffectShellTrap[];
+extern const u8 BattleScript_ShellTrapFailed[];
 extern const u8 BattleScript_EffectRevivalBlessing[];
 extern const u8 BattleScript_EffectCorrosiveGas[];
 extern const u8 BattleScript_MoveEffectSaltCure[];

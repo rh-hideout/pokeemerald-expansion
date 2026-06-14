@@ -546,9 +546,7 @@ BattleScript_ShellTrapSetUp::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
-BattleScript_EffectShellTrap::
-	attackcanceler
-	jumpifshelltrap BS_ATTACKER, BattleScript_HitFromDamageCalc
+BattleScript_ShellTrapFailed::
 	printstring STRINGID_SHELLTRAPDIDNTWORK
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd

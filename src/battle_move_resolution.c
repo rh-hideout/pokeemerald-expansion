@@ -1171,6 +1171,10 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!IS_BATTLER_OF_TYPE(cv->battlerAtk, GetMoveArgType(cv->move)))
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_SHELL_TRAP:
+        if (!gProtectStructs[cv->battlerAtk].shellTrap)
+            battleScript = BattleScript_ShellTrapFailed;
+        break;
     case EFFECT_DARK_VOID:
         if (gBattleStruct->bouncedMoveIsUsed)
             break;

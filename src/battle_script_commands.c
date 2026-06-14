@@ -11310,17 +11310,6 @@ void BS_TryRevertWeatherForm(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfShellTrap(void)
-{
-    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (gProtectStructs[battler].shellTrap)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_SetTerrain(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
