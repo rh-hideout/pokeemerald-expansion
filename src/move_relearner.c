@@ -425,10 +425,18 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     SetMainCallback2(CB2_InitLearnMove_Basic);
 }
 
+static bool32 GameHasDifferentRelearners(void)
+{
+    if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER)
+        return TRUE;
+    if (P_FLAG_EGG_MOVES || P_FLAG_TUTOR_MOVES)
+        return TRUE;
+    return FALSE;
+}
+
 static void StoreMoveText(void)
 {
-    if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER
-    || FlagGet(P_FLAG_EGG_MOVES) || FlagGet(P_FLAG_TUTOR_MOVES))
+    if (GameHasDifferentRelearners() || gRelearnMode == RELEARN_MODE_SCRIPT)
         StringCopy(gStringVar3, sRelearnTypes[gMoveRelearnerState].moveText);
     else
         StringCopy(gStringVar3, MoveRelearner_Text_MoveLWR);
@@ -610,28 +618,50 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
     switch (itemId)
     {
     case LIST_NOTHING_CHOSEN:
-        if (!(JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) && !GetLRKeysPressed())
-            break;
-
-        PlaySE(SE_SELECT);
-
-        if (gTasks[taskId].tCategory == BATTLE_INFO)
+        if (JOY_NEW(SELECT_BUTTON) && gRelearnMode != RELEARN_MODE_SCRIPT)
         {
-            PutWindowTilemap(RELEARNERWIN_DESC_CONTEST);
-            gTasks[taskId].tCategory = CONTEST_INFO;
+            u32 state;
+            u32 i;
+            struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+            for (i = 1; i < MOVE_RELEARNER_COUNT; i++)
+            {
+                state = (gMoveRelearnerState + i) % MOVE_RELEARNER_COUNT;
+                if (CanBoxMonRelearnMoves(boxmon, state))
+                {
+                    PlaySE(SE_SUCCESS);
+                    gMoveRelearnerState = state;
+                    StoreMoveText();
+                    ShowTeachMoveText();
+                    CreateLearnableMovesList();
+                    RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
+                    break;
+                }
+            }
+            if (GameHasDifferentRelearners() && i == MOVE_RELEARNER_COUNT)
+                PlaySE(SE_FAILURE);
         }
-        else
+        else if ((JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) || GetLRKeysPressed())
         {
-            PutWindowTilemap(RELEARNERWIN_DESC_BATTLE);
-            gTasks[taskId].tCategory = BATTLE_INFO;
+            PlaySE(SE_SELECT);
+
+            if (gTasks[taskId].tCategory == BATTLE_INFO)
+            {
+                PutWindowTilemap(RELEARNERWIN_DESC_CONTEST);
+                gTasks[taskId].tCategory = CONTEST_INFO;
+            }
+            else
+            {
+                PutWindowTilemap(RELEARNERWIN_DESC_BATTLE);
+                gTasks[taskId].tCategory = BATTLE_INFO;
+            }
+
+            MoveRelearnerShowHideHearts(GetCurrentSelectedMove());
+
+            ScheduleBgCopyTilemapToVram(1);
+            if (B_SHOW_CATEGORY_ICON == TRUE)
+                MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
+            AddScrollArrows();
         }
-
-        MoveRelearnerShowHideHearts(GetCurrentSelectedMove());
-
-        ScheduleBgCopyTilemapToVram(1);
-        if (B_SHOW_CATEGORY_ICON == TRUE)
-            MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
-        AddScrollArrows();
         break;
     case LIST_CANCEL:
         PlaySE(SE_SELECT);
