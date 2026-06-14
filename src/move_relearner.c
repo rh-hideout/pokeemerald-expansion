@@ -516,6 +516,15 @@ static void UIShowMoveList(u8 taskId)
     FreeMoveRelearnerResources();
 }
 
+static void RedrawMoveList(void)
+{
+    CreateLearnableMovesList();
+    DestroyListMenuTask(sMoveRelearnerStruct->moveListMenuTask, NULL, NULL);
+    sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerScrollState.listOffset, sMoveRelearnerScrollState.listRow);
+    RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
+    ShowTeachMoveText();
+}
+
 static void UIEndTask(u8 taskId)
 {
     if (gSpecialVar_Result == TRUE && ShouldConsumeTmItem(gTasks[taskId].tMove))
@@ -531,11 +540,7 @@ static void UIEndTask(u8 taskId)
         return;
     }
     if (gSpecialVar_Result == TRUE)
-    {
-        CreateLearnableMovesList();
-        RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
-    }
-    ShowTeachMoveText();
+        RedrawMoveList();
     AddScrollArrows();
     gTasks[taskId].func = Task_MoveRelearner_HandleInput;
 }
@@ -610,6 +615,23 @@ static void Task_MoveRelearner_LearnMove(u8 taskId)
     gTasks[taskId].tState = LearnMove(&sMoveLearnUI, taskId);
 }
 
+static bool32 UpdateMoveRelearnerState(void)
+{
+    u32 state;
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    for (u32 i = 1; i < MOVE_RELEARNER_COUNT; i++)
+    {
+        state = (gMoveRelearnerState + i) % MOVE_RELEARNER_COUNT;
+        if (CanBoxMonRelearnMoves(boxmon, state))
+        {
+            gMoveRelearnerState = state;
+            StoreMoveText();
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 static void Task_MoveRelearner_HandleInput(u8 taskId)
 {
     s32 itemId = ListMenu_ProcessInput(sMoveRelearnerStruct->moveListMenuTask);
@@ -620,25 +642,17 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
     case LIST_NOTHING_CHOSEN:
         if (JOY_NEW(SELECT_BUTTON) && gRelearnMode != RELEARN_MODE_SCRIPT)
         {
-            u32 state;
-            u32 i;
-            struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
-            for (i = 1; i < MOVE_RELEARNER_COUNT; i++)
+            if (UpdateMoveRelearnerState())
             {
-                state = (gMoveRelearnerState + i) % MOVE_RELEARNER_COUNT;
-                if (CanBoxMonRelearnMoves(boxmon, state))
-                {
-                    PlaySE(SE_SUCCESS);
-                    gMoveRelearnerState = state;
-                    StoreMoveText();
-                    ShowTeachMoveText();
-                    CreateLearnableMovesList();
-                    RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
-                    break;
-                }
+                PlaySE(SE_SUCCESS);
+                sMoveRelearnerScrollState.listOffset = 0;
+                sMoveRelearnerScrollState.listRow = 0;
+                RedrawMoveList();
             }
-            if (GameHasDifferentRelearners() && i == MOVE_RELEARNER_COUNT)
+            else if (GameHasDifferentRelearners())
+            {
                 PlaySE(SE_FAILURE);
+            }
         }
         else if ((JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) || GetLRKeysPressed())
         {
