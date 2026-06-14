@@ -1103,43 +1103,54 @@ static enum CancelerResult CancelerFocusPreGen5(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
+static enum CancelerResult CancelerBideShellTrap(struct BattleCalcValues *cv)
 {
-    if (cv->moveEffect != EFFECT_BIDE)
-        return CANCELER_RESULT_SUCCESS;
-
-    if (gBattleMons[cv->battlerAtk].volatiles.bideTurns)
+    switch (cv->moveEffect)
     {
-        if (--gBattleMons[cv->battlerAtk].volatiles.bideTurns)
+    case EFFECT_SHELL_TRAP:
+        if (!gProtectStructs[cv->battlerAtk].shellTrap)
         {
-            gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
-            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
+            gBattlescriptCurrInstr = BattleScript_ShellTrapFailed;
+            return CANCELER_RESULT_FAILURE;
         }
-        else if (gBideDmg[cv->battlerAtk])
+        break;
+    case EFFECT_BIDE:
+        break;
+        if (gBattleMons[cv->battlerAtk].volatiles.bideTurns)
         {
-            gBattlerTarget = gBideTarget[cv->battlerAtk];
-            gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
-            if (!IsBattlerAlive(gBattlerTarget))
-                gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
-            gBattleStruct->battlerState[cv->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
-            BattleScriptCall(BattleScript_BideAttack);
-            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+            if (--gBattleMons[cv->battlerAtk].volatiles.bideTurns)
+            {
+                gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
+                return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
+            }
+            else if (gBideDmg[cv->battlerAtk])
+            {
+                gBattlerTarget = gBideTarget[cv->battlerAtk];
+                gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+                if (!IsBattlerAlive(gBattlerTarget))
+                    gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
+                gBattleStruct->battlerState[cv->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
+                BattleScriptCall(BattleScript_BideAttack);
+                return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+            }
+            else
+            {
+                gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+                gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
+                return CANCELER_RESULT_FAILURE;
+            }
         }
         else
         {
-            gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
-            gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
-            return CANCELER_RESULT_FAILURE;
+            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
+            gLockedMoves[gBattlerAttacker] = gCurrentMove;
+            gBideDmg[gBattlerAttacker] = 0;
+            gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
+            gBattlescriptCurrInstr = BattleScript_SetUpBide;
+            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
         }
-    }
-    else
-    {
-        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-        gLockedMoves[gBattlerAttacker] = gCurrentMove;
-        gBideDmg[gBattlerAttacker] = 0;
-        gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
-        gBattlescriptCurrInstr = BattleScript_SetUpBide;
-        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Jump to moveend
+    default:
+        break;
     }
 
     return CANCELER_RESULT_SUCCESS;
@@ -1170,10 +1181,6 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(cv->battlerAtk, GetMoveArgType(cv->move)))
             battleScript = BattleScript_ButItFailed;
-        break;
-    case EFFECT_SHELL_TRAP:
-        if (!gProtectStructs[cv->battlerAtk].shellTrap)
-            battleScript = BattleScript_ShellTrapFailed;
         break;
     case EFFECT_DARK_VOID:
         if (gBattleStruct->bouncedMoveIsUsed)
@@ -1270,8 +1277,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_REST:
-        if (gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP
-         || cv->abilities[cv->battlerAtk] == ABILITY_COMATOSE)
+        if (IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]))
             battleScript = BattleScript_RestIsAlreadyAsleep;
         else if (gBattleMons[cv->battlerAtk].hp == gBattleMons[cv->battlerAtk].maxHP)
             battleScript = BattleScript_AlreadyAtFullHp;
@@ -1955,6 +1961,17 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->holdEffects[ctx->battlerDef] = cv->holdEffects[cv->battlerDef];
 }
 
+static bool32 IsTargetUnaffectedByDreamEater(struct BattleCalcValues *cv)
+{
+    if (cv->moveEffect != EFFECT_DREAM_EATER)
+        return FALSE;
+
+    if (GetConfig(B_DREAM_EATER_SUBSTITUTE) < GEN_5 && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
+        return TRUE;
+
+    return !IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]);
+}
+
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 targetAvoidedAttack = FALSE;
@@ -2061,7 +2078,9 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 BattleScriptCall(BattleScript_DoesntAffectScripting);
                 targetAvoidedAttack = TRUE;
             }
-            else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0)) // Technically goes before air balloon and levitate but after wonder guard, but does not cause any regression and only a minor issue. Can be fixed later.
+            else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0) // Technically goes before air balloon and levitate but after wonder guard, but does not cause any regression and only a minor issue. Can be fixed later.
+                  || IsTargetUnaffectedByDreamEater(cv))
+
             {
                 TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
@@ -2274,6 +2293,13 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
     cv->battlerDef = gBattlerTarget;
     gBattleStruct->eventState.atkCancelerBattler = 0;
+
+    if (!IsAnyTargetAffected())
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -2398,9 +2424,6 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
-    if (!IsAnyTargetAffected()) // check any target affected above and skip everything
-        return CANCELER_RESULT_SUCCESS;
-
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
@@ -2529,7 +2552,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_SKY_BATTLE] = CancelerSkyBattle,
     [CANCELER_WEATHER_PRIMAL] = CancelerWeatherPrimal,
     [CANCELER_FOCUS_PRE_GEN5] = CancelerFocusPreGen5,
-    [CANCELER_BIDE] = CancelerBide,
+    [CANCELER_BIDE_SHELL_TRAP] = CancelerBideShellTrap,
     [CANCELER_MOVE_FAILURE] = CancelerMoveFailure,
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
@@ -2580,6 +2603,7 @@ enum CancelerResult DoAttackCanceler(void)
     {
         gBattleStruct->unableToUseMove = TRUE;
         gBattleStruct->pledgeState = PLEDGE_COMBO_NONE;
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
     }
 
     return result;

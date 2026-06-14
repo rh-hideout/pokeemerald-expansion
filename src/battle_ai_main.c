@@ -1854,7 +1854,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SNORE:
     case EFFECT_SLEEP_TALK:
-        if (IsWakeupTurn(battlerAtk) || !AI_IsBattlerAsleepOrComatose(battlerAtk))
+        if (IsWakeupTurn(battlerAtk) || !IsAsleepOrComatose(battlerAtk, aiData->abilities[battlerAtk]))
             ADJUST_SCORE(-10);    // if mon will wake up, is not asleep, or is not comatose
         break;
     case EFFECT_MEAN_LOOK:
@@ -1866,7 +1866,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_NIGHTMARE:
         if (gBattleMons[battlerDef].volatiles.nightmare)
             ADJUST_SCORE(-10);
-        else if (!AI_IsBattlerAsleepOrComatose(battlerDef))
+        else if (!IsAsleepOrComatose(battlerDef, aiData->abilities[battlerDef]))
             ADJUST_SCORE(-8);
         else if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
@@ -4613,7 +4613,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     }
     case EFFECT_SNORE:
     case EFFECT_SLEEP_TALK:
-        if (!IsWakeupTurn(battlerAtk) && AI_IsBattlerAsleepOrComatose(battlerAtk))
+        if (!IsWakeupTurn(battlerAtk) && IsAsleepOrComatose(battlerAtk, aiData->abilities[battlerAtk]))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:

@@ -545,7 +545,6 @@ extern const u8 BattleScript_MoveBlockedByDynamax[];
 // Battle move scripts
 extern const u8 BattleScript_EffectAbsorb[];
 extern const u8 BattleScript_EffectAbsorbLiquidOoze[];
-extern const u8 BattleScript_EffectDreamEater[];
 extern const u8 BattleScript_EffectAccuracyDown[];
 extern const u8 BattleScript_EffectHaze[];
 extern const u8 BattleScript_SetUpBide[];

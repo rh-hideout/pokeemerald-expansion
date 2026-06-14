@@ -17,6 +17,7 @@ enum CancelerResult
     CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT, // Runs script. Increments state
     CANCELER_RESULT_RUN_SCRIPT, // Runs script. Does not increment state
     CANCELER_RESULT_FAILURE, // Move failed, jump to script that handles the failure
+    CANCELER_RESULT_END, // prevents going into canceler again
 };
 
 enum CancelerState
@@ -53,7 +54,7 @@ enum CancelerState
     CANCELER_SKY_BATTLE,
     CANCELER_WEATHER_PRIMAL,
     CANCELER_FOCUS_PRE_GEN5,
-    CANCELER_BIDE,
+    CANCELER_BIDE_SHELL_TRAP,
     CANCELER_MOVE_FAILURE,
     CANCELER_MOVE_EFFECT_FAILURE_TARGET,
     CANCELER_POWDER_STATUS,

@@ -1439,13 +1439,6 @@ BattleScript_EffectPlaceholder::
 
 BattleScript_EffectHit::
 	attackcanceler
-BattleScript_HitFromDamageCalc::
-	call BattleScript_Hit_RetFromAtkAnimation
-BattleScript_MoveEnd::
-	moveendall
-	end
-
-BattleScript_Hit_RetFromAtkAnimation::
 	attackanimation
 	waitanimation
 	effectivenesssound
@@ -1458,7 +1451,9 @@ BattleScript_Hit_RetFromAtkAnimation::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	setadditionaleffects
-	return
+BattleScript_MoveEnd::
+	moveendall
+	end
 
 BattleScript_MakeMoveMissed::
 	setmoveresultflags MOVE_RESULT_MISSED
@@ -1599,18 +1594,6 @@ BattleScript_MaxHp50Recoil::
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	tryfaintmon BS_ATTACKER
 	return
-
-BattleScript_EffectDreamEater::
-	attackcanceler
-	jumpifgenconfiglowerthan CONFIG_B_DREAM_EATER_SUBSTITUTE, GEN_5, BattleScript_DreamEaterSubstituteCheck
-BattleScript_DreamEaterSleepCheck:
-	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_HitFromDamageCalc
-	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_HitFromDamageCalc
-	goto BattleScript_DoesntAffectTargetAtkString
-
-BattleScript_DreamEaterSubstituteCheck:
-	jumpifsubstituteblocks BattleScript_DoesntAffectTargetAtkString
-	goto BattleScript_DreamEaterSleepCheck
 
 BattleScript_StatUp::
 	printfromtable gStatUpStringIds
@@ -2220,9 +2203,22 @@ BattleScript_EffectAttract::
 
 BattleScript_EffectPresent::
 	attackcanceler
-	accuracycheck
 	typecalc
 	presentdamagecalculation
+	attackanimation
+	waitanimation
+	effectivenesssound
+	hitanimation BS_TARGET
+	waitstate
+	healthbarupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
+	datahpupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
+	critmessage
+	waitmessage B_WAIT_TIME_LONG
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	setadditionaleffects
+	moveendall
+	end
 
 BattleScript_EffectSafeguard::
 	attackcanceler

@@ -11068,3 +11068,8 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
         || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
 }
 
+bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
+{
+    return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
+}
+

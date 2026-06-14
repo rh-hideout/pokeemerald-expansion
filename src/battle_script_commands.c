@@ -8348,7 +8348,7 @@ static void Cmd_presentdamagecalculation(void)
 
     if (gBattleStruct->presentBasePower)
     {
-        gBattlescriptCurrInstr = BattleScript_HitFromDamageCalc;
+        gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else if (gBattleMons[gBattlerTarget].maxHP == gBattleMons[gBattlerTarget].hp)
     {
