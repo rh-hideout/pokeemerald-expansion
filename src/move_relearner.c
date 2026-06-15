@@ -519,6 +519,8 @@ static void UIShowMoveList(u8 taskId)
 static void RedrawMoveList(void)
 {
     CreateLearnableMovesList();
+    if (sMoveRelearnerScrollState.listOffset > sMoveRelearnerStruct->numMenuChoices - sMoveRelearnerStruct->numToShowAtOnce)
+        sMoveRelearnerScrollState.listOffset = sMoveRelearnerStruct->numMenuChoices - sMoveRelearnerStruct->numToShowAtOnce;
     DestroyListMenuTask(sMoveRelearnerStruct->moveListMenuTask, NULL, NULL);
     sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerScrollState.listOffset, sMoveRelearnerScrollState.listRow);
     ShowTeachMoveText();
@@ -539,15 +541,9 @@ static void UIEndTask(u8 taskId)
         return;
     }
     if (gSpecialVar_Result == TRUE)
-    {
-        if (sMoveRelearnerScrollState.listRow > 0)
-        {
-            sMoveRelearnerScrollState.listOffset -= 1;
-            sMoveRelearnerScrollState.listRow -= 1;
-        }
         RedrawMoveList();
-    }
-    ShowTeachMoveText();
+    else
+        ShowTeachMoveText();
     AddScrollArrows();
     gTasks[taskId].func = Task_MoveRelearner_HandleInput;
 }
