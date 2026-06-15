@@ -3008,6 +3008,7 @@ static void BattleStartClearSetData(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattleStruct->battlerState[i].isFirstTurn = 2;
+        gBattleStruct->battlerState[i].originalBattlerPartyId = PARTY_SIZE;
         gLastMoves[i] = MOVE_NONE;
         gLastLandedMoves[i] = MOVE_NONE;
         gLastHitByType[i] = 0;
@@ -4034,6 +4035,11 @@ void SwitchPartyOrder(enum BattlerId battler)
     partyId2 = GetPartyIdFromBattlePartyId(gBattleStruct->monToSwitchIntoId[battler]);
     SwitchPartyMonSlots(partyId1, partyId2);
 
+    if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId1)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId2;
+    else if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId2)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId1;
+
     if (IsDoubleBattle())
     {
         for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
@@ -4722,8 +4728,6 @@ s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability)
     gProtectStructs[battler].pranksterElevated = FALSE;
     if (gProtectStructs[battler].noValidMoves)
         move = MOVE_STRUGGLE;
-    // Gen 9- config allows the target to use the Encored move using the priority of the selected move
-    // As of Champions, this is no longer the case
     else if (gBattleMons[battler].volatiles.encoredMove != MOVE_NONE && GetConfig(B_ENCORE_PRIORITY) >= GEN_CHAMPIONS)
         move = gBattleMons[battler].volatiles.encoredMove;
     else

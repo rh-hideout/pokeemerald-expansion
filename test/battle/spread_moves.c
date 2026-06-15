@@ -288,13 +288,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
+        MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
         MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
         MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It doesn't affect Misdreavus…");
     }
 }
 
@@ -429,19 +429,21 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons
     }
 }
 
-DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect message on both opposing mons")
+DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect any target")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_PIDGEY);
         OPPONENT(SPECIES_PIDGEY);
         OPPONENT(SPECIES_HOOTHOOT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_PRECIPICE_BLADES); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
-        MESSAGE("It doesn't affect the opposing Pidgey and Hoothoot…");
+        MESSAGE("It doesn't affect Pidgey…");
+        MESSAGE("It doesn't affect the opposing Pidgey…");
+        MESSAGE("It doesn't affect the opposing Hoothoot…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
     }
 }
 

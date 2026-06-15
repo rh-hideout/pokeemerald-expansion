@@ -339,6 +339,7 @@ SINGLE_BATTLE_TEST("Encore into Fake Out results in Struggle (Champions)")
 {
     GIVEN {
         WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_CHAMPIONS);
+        ASSUME(gMovesInfo[MOVE_FAKE_OUT].effect == EFFECT_FIRST_TURN_ONLY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
     } WHEN {
