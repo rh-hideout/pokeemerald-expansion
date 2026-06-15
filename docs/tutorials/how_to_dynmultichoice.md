@@ -441,7 +441,7 @@ EventScript_ExampleScript_Text_17:
 </details>
 
 <details>
-<summary> Having `VAR_RESULT` from a multichoice menu be a particular value.</summary>
+<summary> Having needing the IDs of each item be a particular value.</summary>
 
 ```
 EventScript_ExampleScript::
@@ -457,12 +457,7 @@ EventScript_ExampleScript::
 	random ITEMS_COUNT
 	bufferitemname STR_VAR_3, VAR_RESULT
 	dynmultipush EventScript_ExampleScript_Text_2, VAR_RESULT
-	dynmultistack 0, 0, TRUE, 6, FALSE, VAR_0x800A, DYN_MULTICHOICE_CB_SHOW_ITEM
-	dynmultichoice 0, 0, TRUE, 6, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_3, EventScript_ExampleScript_Text_4, EventScript_ExampleScript_Text_5
-	dynmultichoice 0, 0, TRUE, 3, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_3, EventScript_ExampleScript_Text_4, EventScript_ExampleScript_Text_5, EventScript_ExampleScript_Text_6
-	buffernumberstring STR_VAR_1, VAR_RESULT
-	msgbox EventScript_ExampleScript_Text_0, MSGBOX_DEFAULT
-	closemessage
+	dynmultistack 0, 0, TRUE, 6, FALSE, 0, DYN_MULTICHOICE_CB_SHOW_ITEM
 	release
 	end
 
@@ -476,16 +471,43 @@ EventScript_ExampleScript_Text_1:
 EventScript_ExampleScript_Text_2:
 	.string "{STR_VAR_3}$"
 
-EventScript_ExampleScript_Text_3:
-	.string "Option 1$"
-
-EventScript_ExampleScript_Text_4:
-	.string "Option 2$"
-
-EventScript_ExampleScript_Text_5:
-	.string "Option 3$"
-
-EventScript_ExampleScript_Text_6:
-	.string "Option 4$"
-
 ```
+</details>
+The above menu creates a short menu that makes a list of three items. It takes the result from `VAR_RESULT` to be the `id` of the menu option. The `VAR_RESULT` must be set before each `dynmultipush` in order to have a different value.
+
+## Callbacks
+Put simply, a callback can be explained as follows:<br>
+`Function A is given as a callback to function B so B can call A whenever it needs to.`
+
+For the purposes of the dynamic multichoice menu, the callbacks are a set of functions that are called while the menu is open. For this, we'll be breaking down `DYN_MULTICHOICE_CB_SHOW_ITEM`.
+
+In [`src/script_menu.c`](../../src/script_menu.c), you'll find the following array:
+```c
+static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollections[] =
+{
+    [DYN_MULTICHOICE_CB_DEBUG] =
+    {
+        .OnInit = MultichoiceDynamicEventDebug_OnInit,
+        .OnSelectionChanged = MultichoiceDynamicEventDebug_OnSelectionChanged,
+        .OnDestroy = MultichoiceDynamicEventDebug_OnDestroy
+    },
+    [DYN_MULTICHOICE_CB_SHOW_ITEM] =
+    {
+        .OnInit = MultichoiceDynamicEventShowItem_OnInit,
+        .OnSelectionChanged = MultichoiceDynamicEventShowItem_OnSelectionChanged,
+        .OnDestroy = MultichoiceDynamicEventShowItem_OnDestroy
+    }
+};
+```
+
+This is where each callback's set of functions are collated. Each one has three functions that are called:
+- `.OnInit`: When the menu is first initialized/opened,
+- `.OnSelectionChanged`: whenever a player chooses an option (is also called right after `.OnInit`),
+- `.OnDestroy`: whenever the menu is exited.
+
+For `DYN_MULTICHOICE_CB_SHOW_ITEM`, the breakdown is as follows:
+- `.OnInit`: Prepares for a sprite to be drawn on screen.
+- `.OnSelectionChanged`: Destroys the previous sprite, then draws the new sprite on screen.
+- `.OnDestroy`: Destroys the current sprite on screen.
+
+`DYN_MULTICHOICE_CB_SHOW_ITEM` shows the item whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/items.h`](../../include/constants/items.h). An item with the ID 0 will show nothing, an item with the ID 1 will show a PokéBall, an item with the ID 2 will show a Great Ball, and so on.
