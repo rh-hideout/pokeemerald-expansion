@@ -1229,7 +1229,7 @@ static const u16 sDefaultBattleLostWords[EASY_CHAT_BATTLE_WORDS_COUNT] = {
     EC_WORD_ELLIPSIS,
 };
 
-static const u16 sRestrictedWordSpecies[] = {
+static const enum Species sRestrictedWordSpecies[] = {
     SPECIES_DEOXYS,
 };
 
@@ -5487,7 +5487,7 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
 {
     u16 i;
     u16 numWords;
-    const u16 *species;
+    const enum Species *species;
     u16 index = EasyChat_GetNumWordsInGroup(EC_GROUP_POKEMON);
     if (index == 0)
         return EC_EMPTY_WORD;

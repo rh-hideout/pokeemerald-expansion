@@ -427,7 +427,7 @@ static void Task_LinkupCheckStatusAfterConfirm(u8 taskId)
     }
 }
 
-bool32 AreBattleTowerLinkSpeciesSame(u16 *speciesList1, u16 *speciesList2)
+bool32 AreBattleTowerLinkSpeciesSame(enum Species *speciesList1, enum Species *speciesList2)
 {
     int i;
     int j;

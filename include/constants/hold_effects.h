@@ -1,7 +1,7 @@
 #ifndef GUARD_HOLD_EFFECTS_H
 #define GUARD_HOLD_EFFECTS_H
 
-enum __attribute__((packed)) HoldEffect
+enum HoldEffect
 {
     HOLD_EFFECT_NONE,
     HOLD_EFFECT_RESTORE_HP,

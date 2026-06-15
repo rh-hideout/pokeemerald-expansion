@@ -361,7 +361,7 @@ static u8 GetMapPreviewScreenIdx(mapsec_u8_t mapsec)
     return MPS_COUNT;
 }
 
-bool32 CurrentMapHasPreviewScreen(u8 type)
+bool32 CurrentMapHasPreviewScreen(enum MapPreviewScreenType type)
 {
     u8 idx;
 

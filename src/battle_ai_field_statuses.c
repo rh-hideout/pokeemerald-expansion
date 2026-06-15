@@ -601,6 +601,8 @@ s32 CalcWeatherScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
                 score += WEAK_EFFECT;
         }
         break;
+    default:
+        break;
     }
 
     return score;

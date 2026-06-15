@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Rivalry increases power by x1.25 towards Pokémon of the sam
 
 SINGLE_BATTLE_TEST("Rivalry decreases power by x0.75 towards Pokémon of different gender", s16 damage)
 {
-    u16 species1, species2;
+    enum Species species1, species2;
     enum Ability ability;
     PARAMETRIZE { species1 = SPECIES_NIDOKING; species2 = SPECIES_NIDOQUEEN; ability = ABILITY_POISON_POINT; }
     PARAMETRIZE { species1 = SPECIES_NIDOKING; species2 = SPECIES_NIDOQUEEN; ability = ABILITY_RIVALRY; }
