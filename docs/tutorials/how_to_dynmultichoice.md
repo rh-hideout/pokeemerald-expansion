@@ -36,7 +36,7 @@ Here is a look at the macro and it's arguments:
 
 *How to position arguments left and top*:
 
-Below is a breakdown of the Emerald Screen into a 30x20 grid. These are all the possible starting positions that you can have your multichoice menu begin. Do note, while the macro can create a menu that clips below the bottom of the screen, it cannot create one that clips through the right border. It will always adjust so that the full width of the menu is visible, but it's possible to have it clip beyond the bottom.
+Below is a breakdown of the Emerald Screen into a 27x20 grid. These are all the possible starting positions that you can have your multichoice menu begin. Do note, while the macro can create a menu that clips below the bottom of the screen, it cannot create one that clips through the right border. It will always adjust so that the full width of the menu is visible, but it's possible to have it clip beyond the bottom.
 
 Grid Guide:<br>
 ![guide_to_coordinates](./img/dynmultichoice/coordinates_guide.png)
@@ -44,19 +44,93 @@ Grid Guide:<br>
 Example of clipping:<br>
 ![clipping_example](./img/dynmultichoice/clipping_example.png)
 
-<!--- Need to insert recommended of how to plan your dynamic multichoice, if one wishes.--->
+<!--- TODO: Insert recommendation of how to plan your dynamic multichoice menu, if one wishes.--->
 
 Let's take a look at the `dynmultichoice` from earlier:
 
-`dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2`
+`dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_0, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2`
 
-| Argument        | Value                                                                                                    | Explanation                                                                                         |
-| :----------------| :---------------------------------------------------------------------------------------------------------| -----------------------------------------------------------------------------------------------------|
-| left            | 0                                                                                                        | X Coordinate will be on the first tile (8x8 pixels) of the x-axis                                   |
-| top             | 0                                                                                                        | X Coordinate will be on the first tile (8x8 pixels) of the y-axis                                   |
-| ignoreBPress    | FALSE                                                                                                    | Pressing B will exit the multichoice.                                                               |
-| maxBeforeScroll | 2                                                                                                        | Shows 2 options before player has to scroll. This means the 3rd option is hidden until scrolled to. |
-| initialSelected | 0                                                                                                        | The first option is selected when the menu is opened through the script.                            |
-| callbacks       | DYN_MULTICHOICE_CB_NONE                                                                                  | No callback will be used.                                                                           |
-| argv            | EventScript_ExampleScript_Text_1<br>EventScript_ExampleScript_Text_2<br>EventScript_ExampleScript_Text_2 | The choices that the player can choose from the menu.                                               |
+| Argument        | Value                                                                                                    | Explanation                                                                                                    |
+| :----------------| :---------------------------------------------------------------------------------------------------------| ----------------------------------------------------------------------------------------------------------------|
+| left            | 0                                                                                                        | X Coordinate will be on the first tile (8x8 pixels) of the x-axis                                              |
+| top             | 0                                                                                                        | Y Coordinate will be on the first tile (8x8 pixels) of the y-axis                                              |
+| ignoreBPress    | FALSE                                                                                                    | Pressing B will exit the multichoice.                                                                          |
+| maxBeforeScroll | 2                                                                                                        | Shows 2 options before player has to scroll. This means the 3rd option is hidden until scrolled to.            |
+| initialSelected | 0                                                                                                        | The first option is selected when the menu is opened through the script.                                       |
+| callbacks       | DYN_MULTICHOICE_CB_NONE                                                                                  | No callback will be used.                                                                                      |
+| argv            | EventScript_ExampleScript_Text_1<br>EventScript_ExampleScript_Text_2<br>EventScript_ExampleScript_Text_2 | The choices that the player can choose from the menu. These text scripts are for what name is being displayed. |
+
+Dynamic multilist stores the chosen result's index to `VAR_RESULT`. It starts at index 0. If a player chooses the first option, `VAR_RESULT` equals 0. If they chose the second option, `VAR_RESULT` equals 1, and so on. In order to use these in a script, you'll have to use the `switch` macro or the `compare` macro. Below are some examples using either. The below example creates a menu that gives the player a menu to select Choice 1, Choice 2, or Choice 3 to create new items.
+
+**`switch`** macro:
+```
+EventScript_ExampleScript::
+	dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_0, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2
+	switch VAR_RESULT
+	case 0, EventScript_ExampleScript_3
+	case 1, EventScript_ExampleScript_4
+	case 2, EventScript_ExampleScript_5
+EventScript_ExampleScript_1:
+	end
+
+EventScript_ExampleScript_3:
+	giveitem ITEM_POTION, 1
+	goto EventScript_ExampleScript_1
+
+EventScript_ExampleScript_4:
+	giveitem ITEM_POKE_BALL, 1
+	goto EventScript_ExampleScript_1
+
+EventScript_ExampleScript_5:
+	giveitem ITEM_ACRO_BIKE, 1
+	goto EventScript_ExampleScript_1
+
+
+EventScript_ExampleScript_Text_0:
+	.string "Choice 1$"
+
+EventScript_ExampleScript_Text_1:
+	.string "Choice 2$"
+
+EventScript_ExampleScript_Text_2:
+	.string "Choice 3$"
+```
+
+**`compare`** macro:
+```
+EventScript_ExampleScript::
+	dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_0, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2
+	compare VAR_RESULT, 0
+	goto_if_eq EventScript_ExampleScript_2
+EventScript_ExampleScript_1:
+	compare VAR_RESULT, 1
+	goto_if_eq EventScript_ExampleScript_5
+EventScript_ExampleScript_4:
+	compare VAR_RESULT, 2
+	goto_if_eq EventScript_ExampleScript_8
+EventScript_ExampleScript_7:
+	end
+
+EventScript_ExampleScript_2:
+	giveitem ITEM_POTION, 1
+	goto EventScript_ExampleScript_1
+
+EventScript_ExampleScript_5:
+	giveitem ITEM_POKE_BALL, 1
+	goto EventScript_ExampleScript_4
+
+EventScript_ExampleScript_8:
+	giveitem ITEM_ACRO_BIKE, 1
+	goto EventScript_ExampleScript_7
+
+
+EventScript_ExampleScript_Text_0:
+	.string "Choice 1$"
+
+EventScript_ExampleScript_Text_1:
+	.string "Choice 2$"
+
+EventScript_ExampleScript_Text_2:
+	.string "Choice 3$"
+```
 
