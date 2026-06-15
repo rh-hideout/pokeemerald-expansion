@@ -1040,6 +1040,7 @@ enum NationalDexOrder
     NATIONAL_DEX_IRON_CROWN,
     NATIONAL_DEX_TERAPAGOS,
     NATIONAL_DEX_PECHARUNT,
+    NATIONAL_DEX_ILLUSION_MAGICIAN,
 };
 
 #define JOHTO_DEX_COUNT     NATIONAL_DEX_CELEBI
@@ -1513,6 +1514,7 @@ enum HoennDexOrder
     F(DRAGONAIR) \
     F(DRAGONITE) \
     F(MEWTWO) \
+    F(ILLUSION_MAGICIAN) \
     F(MEW)
 
 // Kanto Pokedex order

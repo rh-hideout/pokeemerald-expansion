@@ -3,7 +3,6 @@
   "name": "Route1_Frlg",
   "layout": "LAYOUT_ROUTE1",
   "music": "MUS_RG_ROUTE1",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_1",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -56,12 +55,8 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -71,5 +66,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route1_EventScript_RouteSign"
     }
-  ]
+  ],
+  "region": "REGION_KANTO"
 }

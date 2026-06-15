@@ -6359,3 +6359,14 @@ static const u16 sFrigibaxEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_FRIGIBAX
+
+static const u16 sIllusionMagicianEggMoveLearnset[] = {
+    MOVE_ANCIENT_POWER,
+   // MOVE_CASTLE_WALLS,
+   // MOVE_CARD_DESTRUCTION,
+   // MOVE_DKMAGICATK,
+  //  MOVE_MAKIU_THE_MAGICAL_MIST,
+  //  MOVE_MIRACLE_RESTORING,
+  //  MOVE_THOUSAND_KNIVES,
+    MOVE_UNAVAILABLE,
+};
