@@ -213,6 +213,7 @@ Some of the use cases for using `dynmultipush` and `dynmultistack` are the follo
 
 <details>
 <summary> A menu with conditional options.</summary>
+
 ```
 EventScript_ExampleScript::
 	dynmultipush EventScript_ExampleScript_Text_0, 0
@@ -261,6 +262,7 @@ This first example shows the third option only unlock once the flag `FLAG_SYS_PO
 
 <details>
 <summary> A particularly large menu.</summary>
+
 ```
 EventScript_ExampleScript::
 	dynmultipush EventScript_ExampleScript_Text_0, 1
@@ -435,6 +437,7 @@ EventScript_ExampleScript_Text_17:
 
 <details>
 <summary> Having `VAR_RESULT` from a multichoice menu be a particular value.</summary>
+
 ```
 EventScript_ExampleScript::
 	lock
