@@ -41,10 +41,10 @@ void FillPartnerParty(u16 trainerId)
         struct TrainerGenerator partnerGen;
         MakePartnerGenerator(&partnerGen, partner);
         if (trainerId == TRAINER_PARTNER(PARTNER_STEVEN))
-            partnerGen->otID = OTID_STRUCT_PRESET(STEVEN_OTID);
+            partnerGen.otID = OTID_STRUCT_PRESET(STEVEN_OTID);
         for (i = 0; i < lastIndex && i < partner->partySize; i++)
         {
-            GenerateMonFromTrainerMon(&gParties[B_TRAINER_PARTNER][i], &partner->party[i], partnerGen);
+            GenerateMonFromTrainerMon(&gParties[B_TRAINER_PARTNER][i], &partner->party[i], &partnerGen);
         }
     }
     else if (trainerId == TRAINER_EREADER)
