@@ -23311,7 +23311,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_GROOKEY
 
 #if P_FAMILY_SCORBUNNY
-    const u32 gMonFrontPic_Scorbunny[] = INCGFX_U32("graphics/pokemon/scorbunny/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Scorbunny[] = INCGFX_U32("graphics/pokemon/scorbunny/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Scorbunny[] = INCGFX_U16("graphics/pokemon/scorbunny/normal.pal", ".gbapal");
     const u32 gMonBackPic_Scorbunny[] = INCGFX_U32("graphics/pokemon/scorbunny/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Scorbunny[] = INCGFX_U16("graphics/pokemon/scorbunny/shiny.pal", ".gbapal");
