@@ -79,8 +79,9 @@ Let's take a look at the `dynmultichoice` from earlier:
 | argv            | EventScript_ExampleScript_Text_1<br>EventScript_ExampleScript_Text_2<br>EventScript_ExampleScript_Text_2 | The choices that the player can choose from the menu. These text scripts are for what name is being displayed. |
 
 Dynamic multilist stores the chosen result's index to `VAR_RESULT`. It starts at index 0. If a player chooses the first option, `VAR_RESULT` equals 0. If they chose the second option, `VAR_RESULT` equals 1, and so on. In order to use these in a script, you'll have to use the `switch` macro or the `compare` macro. Below are some examples using either. The below example creates a menu that gives the player a menu to select Choice 1, Choice 2, or Choice 3 to create new items.
+<details>
+<summary> switch macro:</summary>
 
-**`switch`** macro:
 ```
 EventScript_ExampleScript::
 	dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_0, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2
@@ -114,7 +115,9 @@ EventScript_ExampleScript_Text_2:
 	.string "Choice 3$"
 ```
 
-**`compare`** macro:
+<details>
+<summary> compare macro:</summary>
+
 ```
 EventScript_ExampleScript::
 	dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_0, EventScript_ExampleScript_Text_1, EventScript_ExampleScript_Text_2
@@ -151,6 +154,7 @@ EventScript_ExampleScript_Text_1:
 EventScript_ExampleScript_Text_2:
 	.string "Choice 3$"
 ```
+</details>
 
 **`dynmultipush`** and **`dynmultistack`**<br>
 The way these two work is simple. You can think of them as the options being their own lines in the script with `dynmultipush`, which are then collected by `dynmultistack`.
