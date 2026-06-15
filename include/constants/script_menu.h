@@ -226,8 +226,15 @@ enum
 
 // Dynamic Multichoice Callbacks
 
-#define DYN_MULTICHOICE_CB_DEBUG      0
-#define DYN_MULTICHOICE_CB_SHOW_ITEM  1
-#define DYN_MULTICHOICE_CB_NONE       255
+enum 
+{
+    DYN_MULTICHOICE_CB_DEBUG      = 0,
+    DYN_MULTICHOICE_CB_SHOW_ITEM  = 1,
+    //add new callback choices after this comment!
+    
+    DYN_MULTICHOICE_CB_NONE       = 255,
+    //dont add anymore callback choices unless you know what you're doing!
+};
+
 
 #endif //GUARD_SCRIPT_MENU_CONSTANTS_H
