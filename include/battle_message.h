@@ -236,9 +236,9 @@
 
 struct BattleMsgData
 {
-    u16 currentMove;
-    u16 originallyUsedMove;
-    u16 lastItem;
+    enum Move currentMove;
+    enum Move originallyUsedMove;
+    enum Item lastItem;
     enum Ability lastAbility;
     u8 scrActive;
     u8 bakScriptPartyIdx;

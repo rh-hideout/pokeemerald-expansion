@@ -5,7 +5,7 @@ TO_DO_BATTLE_TEST("TODO: Write Tough Claws (Ability) test titles")
 
 SINGLE_BATTLE_TEST("Tough Claws boosts contact moves when user has Protective Pads, but not with Punching Glove", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
     PARAMETRIZE { item = ITEM_PUNCHING_GLOVE; }

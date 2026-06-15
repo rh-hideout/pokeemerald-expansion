@@ -62,8 +62,8 @@ static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 
     if (gTestRunnerEnabled)
     {
         enum BattleTrainer trainer = !IsPartnerMonFromSameTrainer(battler) ? battler : GetBattlerSide(battler);
-        u32 forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
-        if (forcedAbility != 0)
+        enum Ability forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
+        if (forcedAbility != ABILITY_NONE)
             ability = forcedAbility;
     }
 #endif
@@ -1586,11 +1586,7 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
                 itemHeal = 1;
         }
         break;
-    case HOLD_EFFECT_CONFUSE_SPICY:
-    case HOLD_EFFECT_CONFUSE_DRY:
-    case HOLD_EFFECT_CONFUSE_SWEET:
-    case HOLD_EFFECT_CONFUSE_BITTER:
-    case HOLD_EFFECT_CONFUSE_SOUR:
+    case HOLD_EFFECT_CONFUSE_FLAVOR:
         if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
         {
             itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
@@ -1885,7 +1881,9 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u32 recurringHealing = GetSwitchinRecurringHealing(battler);
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
-    u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
+    u16 maxHP = gBattleMons[battler].maxHP;
+    enum Item item = gAiLogicData->items[battler];
+    enum HoldEffect heldItemEffect = GetItemHoldEffect(item);
     u8 weatherDuration = gBattleStruct->weatherDuration;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
@@ -2720,9 +2718,13 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler)
 
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)
 {
-    u32 aiAbility = gAiLogicData->abilities[battler];
+    enum Ability aiAbility = gAiLogicData->abilities[battler];
+    enum HoldEffect aiHoldEffect = gAiLogicData->holdEffects[battler];
     enum Item aiItem = gAiLogicData->items[battler];
-    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler, gAiLogicData->abilities[battler], GetItemHoldEffect(aiItem)));
+    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB)
+                                && IsBattlerAffectedByHazards(battler, aiHoldEffect, FALSE)
+                                && IsBattlerGrounded(battler, aiAbility, aiHoldEffect));
+
     bool32 opponentStatDrop = FALSE;
 
     // Ability stat changes
@@ -2733,8 +2735,6 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
         break;
     case ABILITY_DAUNTLESS_SHIELD:
         gBattleMons[battler].statStages[STAT_DEF] += 1;
-        break;
-    case ABILITY_SUPREME_OVERLORD:
         break;
     case ABILITY_DOWNLOAD:
         gBattleMons[battler].statStages[GetDownloadStat(battler)] += 1;
@@ -2795,7 +2795,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     }
 
     // Item stat changes
-    switch(GetItemHoldEffect(aiItem))
+    switch(aiHoldEffect)
     {
     case HOLD_EFFECT_TERRAIN_SEED:
     {
@@ -2841,7 +2841,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     }
 
     // Hazard stat changes
-    if (isStickyWebsAffected && GetItemHoldEffect(aiItem) != HOLD_EFFECT_WHITE_HERB)
+    if (isStickyWebsAffected && aiHoldEffect != HOLD_EFFECT_WHITE_HERB)
         gBattleMons[battler].statStages[STAT_SPEED] -= 1;
 }
 
@@ -2864,7 +2864,6 @@ static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId o
 // Set potential field effect from ability for switch in
 static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus)
 {
-    enum Item aiItem = gAiLogicData->items[battler];
     switch (gAiLogicData->abilities[battler])
     {
     case ABILITY_VESSEL_OF_RUIN:
@@ -2880,16 +2879,19 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
         gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     case ABILITY_QUARK_DRIVE:
-        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
+        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:
-        if ((weather & B_WEATHER_SUN) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
+        if ((weather & B_WEATHER_SUN) || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_WIND_POWER:
         if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
             gBattleMons[battler].volatiles.chargeTimer = 2;
+        break;
+    case ABILITY_SUPREME_OVERLORD:
+        gBattleMons[battler].volatiles.supremeOverlordCounter = min(5, gBattleStruct->faintCounter[GetBattlerTrainer(battler)]);
         break;
     default:
         break;

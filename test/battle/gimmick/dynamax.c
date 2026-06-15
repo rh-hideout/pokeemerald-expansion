@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns and correctly con
 // Visual test to make sure Zoroark appears as Wobbuffet/Zigzagoon until illusion breaks
 SINGLE_BATTLE_TEST("Dynamax: Illusion doesn't break upon Dynamaxing when illusioned")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_ZIGZAGOON; }
     GIVEN {
@@ -444,7 +444,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain 
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain HP unless the new form gains Max HP")
 {
     u32 hp = 1, maxHP = 200;
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { species = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
     GIVEN {
@@ -1584,7 +1584,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
 SINGLE_BATTLE_TEST("Dynamax: Max Moves don't bypass absorbing abilities")
 {
     enum Move move;
-    u32 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { move = MOVE_SPARK;     ability = ABILITY_VOLT_ABSORB;     species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_WATER_ABSORB;    species = SPECIES_LANTURN; }
@@ -1655,7 +1655,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 4; j++)
     {
         PARAMETRIZE { move = MOVE_SCRATCH; stat = STAT_SPEED; ability = abilityList[j]; }
@@ -1695,7 +1695,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 2; j++)
     {
         PARAMETRIZE { move = MOVE_PECK; stat = STAT_SPEED; ability = abilityList[j]; }

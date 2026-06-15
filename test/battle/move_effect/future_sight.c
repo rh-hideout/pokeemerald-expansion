@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Red Card")
 SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost from Psychic Terrain", s16 damage)
 {
     bool32 terrain;
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = TRUE; }
@@ -302,5 +302,52 @@ SINGLE_BATTLE_TEST("Future Sight is affected by Beads of Ruin on the original sl
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
         EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Chain can inflict bad poison from Future Sight if the user is still on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        MESSAGE("The opposing Wobbuffet took the Future Sight attack!");
+        HP_BAR(opponent);
+        ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, badPoison: TRUE);
+    } THEN {
+        EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user is not on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        MESSAGE("The opposing Wobbuffet took the Future Sight attack!");
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, badPoison: TRUE);
+        }
+    } THEN {
+        EXPECT(opponent->status1 == 0);
     }
 }
