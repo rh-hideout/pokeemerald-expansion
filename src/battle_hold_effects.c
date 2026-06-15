@@ -532,6 +532,8 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
      && !IsBattlerAtMaxHp(battlerAtk)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
     {
+        if (EmergencyExitCanBeTriggered(battlerAtk, GetBattlerAbility(battlerAtk)))
+            gSpecialStatuses[battlerAtk].shellBellEmergencyExit = TRUE;
         SetHealAmount(battlerAtk, gBattleScripting.savedDmg / GetBattlerHoldEffectParam(battlerAtk));
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;

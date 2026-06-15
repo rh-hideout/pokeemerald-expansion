@@ -9946,7 +9946,7 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability)
         return FALSE;
 
     if (IsBattlerAlive(battler)
-     && HadMoreThanHalfHpNowDoesnt(battler)
+     && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
      && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)

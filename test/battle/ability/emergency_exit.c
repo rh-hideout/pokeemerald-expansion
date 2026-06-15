@@ -376,3 +376,22 @@ SINGLE_BATTLE_TEST("Emergency Exit activates and attacker's Throat Spray activat
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
     }
 }
+
+SINGLE_BATTLE_TEST("Emergency Exit / Wimp Out trigger even if Shell Bell heals user back above half HP")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MIND_BLOWN) == EFFECT_MAX_HP_50_RECOIL);
+        ASSUME(gItemsInfo[ITEM_SHELL_BELL].holdEffect == HOLD_EFFECT_SHELL_BELL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); Item(ITEM_SHELL_BELL); MaxHP(263); HP(262); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MIND_BLOWN); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, opponent);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
