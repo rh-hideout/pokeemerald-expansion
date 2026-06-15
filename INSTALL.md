@@ -14,8 +14,6 @@ After completing the install instructions for your OS, proceed to [Building poke
 On Windows, the project can be built using the following systems:
 - WSL2, fastest
 - WSL1, 7 times slower than WSL2
-- Msys2, 20 times slower than WSL2
-- Cygwin, 30 timer slower than WSL2
 
 **NOTE**: Only WSL systems are recommended.
 
