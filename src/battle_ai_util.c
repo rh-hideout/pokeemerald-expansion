@@ -1479,7 +1479,7 @@ s32 AI_WhoStrikesFirst(enum BattlerId battlerAI, enum BattlerId battler, enum Mo
 
 static bool32 DragonDartsHitsBothTargets(u32 battlerAtk, u32 battlerDef, u32 move)
 {
-    if (GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
+    if (AI_GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
         return FALSE;
     if (gAiLogicData->dragonDartsHitsBothTarget & 1u << battlerAtk)
         return TRUE;
