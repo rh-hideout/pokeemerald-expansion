@@ -38,15 +38,14 @@ void FillPartnerParty(u16 trainerId)
         s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
 
         const struct Trainer *partner = GetTrainerStructFromId(trainerId);
-        struct TrainerGenerator *partnerGen = AllocZeroed(sizeof(struct TrainerGenerator));
-        MakePartnerGenerator(partnerGen, partner);
+        struct TrainerGenerator partnerGen;
+        MakePartnerGenerator(&partnerGen, partner);
         if (trainerId == TRAINER_PARTNER(PARTNER_STEVEN))
             partnerGen->otID = OTID_STRUCT_PRESET(STEVEN_OTID);
         for (i = 0; i < lastIndex && i < partner->partySize; i++)
         {
             GenerateMonFromTrainerMon(&gParties[B_TRAINER_PARTNER][i], &partner->party[i], partnerGen);
         }
-        Free(partnerGen);
     }
     else if (trainerId == TRAINER_EREADER)
     {

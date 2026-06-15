@@ -133,7 +133,7 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     CreateMon(mon, trainerMon->species, trainerMon->lvl, personality, trainer->otID);
     if (trainerMon->nickname != NULL)
         SetMonData(mon, MON_DATA_NICKNAME, trainerMon->nickname);
-    if (trainerMon->ev) //ev in struct TrainerMon are stored in Showdown order not GF order
+    if (trainerMon->ev) //ev in struct TrainerMon are stored in Showdown order not vanilla Emerald order
     {
         SetMonData(mon, MON_DATA_HP_EV, &trainerMon->ev[0]);
         SetMonData(mon, MON_DATA_ATK_EV, &trainerMon->ev[1]);
@@ -141,11 +141,6 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
         SetMonData(mon, MON_DATA_SPATK_EV, &trainerMon->ev[3]);
         SetMonData(mon, MON_DATA_SPDEF_EV, &trainerMon->ev[4]);
         SetMonData(mon, MON_DATA_SPEED_EV, &trainerMon->ev[5]);
-
-        /*
-        for (u32 i = 0; i < NUM_STATS; i++)
-            SetMonData(mon, MON_DATA_HP_EV + i, &trainerMon->ev[i]);
-        */
     }
 
     SetMonData(mon, MON_DATA_IVS, &trainerMon->iv);
