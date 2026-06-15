@@ -63,6 +63,7 @@
 #endif
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 #include "caps.h"
+#include "easy_chat.h"
 #include "evolution_scene.h"
 #include "menu_specialized.h"
 #endif
@@ -180,6 +181,10 @@ struct BagRareCandyState {
     bool8 canStopEvolution;
     MainCallback savedExitCallback;
 };
+struct BagMailGiveState {
+    u8 slot;
+    u16 mailItem;
+};
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG
 
 static void CB2_Bag(void);
@@ -295,30 +300,30 @@ static void BagMenu_DrawPartySlots(void);
 static void BagMenu_CreatePartyIcons(void);
 static void BagMenu_FreePartyIcons(void);
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-static void Task_BagMenu_PartyPanelInput(u8);
-static void BagMenu_ClosePartyPanelSelect(u8);
-static void Task_BagMenu_PartyPanelStayAfterMessage(u8);
-static void Task_BagMenu_PartyPanelAfterItemUse(u8);
-static void BagMenu_ApplySacredAsh(u8);
+static void BagMenu_UseSacredAsh(u8);
+static void BagMenu_UsePPOnMove(u8, u8);
+static void BagMenu_UseItem(u8);
+static void BagMenu_UseMedicine(u8);
+static void BagMenu_UseResetEVs(u8);
+static void BagMenu_UseDynamaxCandy(u8);
+static void BagMenu_UseReduceEV(u8);
+static void BagMenu_UseAbilityCapsule(u8);
+static void BagMenu_UseAbilityPatch(u8);
+static void BagMenu_UseMint(u8);
+static void BagMenu_UseRareCandy(u8);
+static void Task_BagMenu_PartyInput(u8);
+static void BagMenu_ClosePartySelect(u8);
+static void Task_BagMenu_PartyStayAfterMessage(u8);
+static void Task_BagMenu_PartyAfterItemUse(u8);
 static void Task_BagMenu_SacredAshMessages(u8);
 static void BagMenu_ShowPPMoveSelectWindow(u8);
 static void Task_BagMenu_PPMoveSelectInput(u8);
-static void BagMenu_ApplyPPToMove(u8, u8);
-static void BagMenu_DispatchApplyItem(u8);
-static void BagMenu_ApplyMedicine(u8);
-static void BagMenu_ApplyResetEVs(u8);
-static void BagMenu_ApplyDynamaxCandy(u8);
-static void BagMenu_ApplyReduceEV(u8);
-static void BagMenu_ApplyAbilityCapsule(u8);
-static void BagMenu_ApplyAbilityPatch(u8);
-static void BagMenu_ApplyMint(u8);
 static void Task_BagMenu_AbilityChangeYesNo(u8);
 static void BagMenu_AbilityChangeYes(u8);
 static void BagMenu_AbilityChangeNo(u8);
 static void Task_BagMenu_MintYesNo(u8);
 static void BagMenu_MintYes(u8);
 static void BagMenu_MintNo(u8);
-static void BagMenu_ApplyRareCandy(u8);
 static void Task_BagMenu_RareCandyWaitLvUpMsg(u8);
 static void Task_BagMenu_RareCandyStatsPg1(u8);
 static void Task_BagMenu_RareCandyStatsPg2(u8);
@@ -339,6 +344,13 @@ static void BagMenu_RareCandyTryEvolution(u8);
 static void BagMenu_CB2_DoBeginEvolution(void);
 static void BagMenu_CB2_AfterRareCandyEvolution(void);
 static void BagMenu_RareCandyCleanupAndReturn(u8);
+static void BagMenu_DoGiveMail(u8, struct Pokemon *, u16);
+static void BagMenu_GiveItem(u8);
+static void Task_BagMenu_GiveSwapYesNo(u8);
+static void BagMenu_GiveSwapYes(u8);
+static void BagMenu_GiveSwapNo(u8);
+static void BagMenu_CB2_GiveMail(void);
+static void BagMenu_CB2_AfterMailWrite(void);
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG
 
 static const u8 *const sPocketNamesStringsTable[] =
@@ -375,16 +387,17 @@ static const u8 sText_MoveInfoJam[]      = _("Jam");
 #endif
 
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-static const u8 sText_PartyPanelBasePointsReset[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PartyPanelDynamaxLevelUp[]  = _("{STR_VAR_1}'s Dynamax Level\nincreased by 1!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PartyPanelAbilityAsk[]      = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PartyPanelAbilityDone[]     = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PartyPanelMintAsk[]         = _("It might affect {STR_VAR_1}'s stats.\nAre you sure you want to use it?{PAUSE_UNTIL_PRESS}");
-static const u8 sText_PartyPanelMintDone[]        = _("{STR_VAR_1}'s stats may have changed due\nto the effects of the {STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyBasePointsReset[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyDynamaxLevelUp[]  = _("{STR_VAR_1}'s Dynamax Level\nincreased by 1!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyAbilityAsk[]      = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyAbilityDone[]     = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyMintAsk[]         = _("It might affect {STR_VAR_1}'s stats.\nAre you sure you want to use it?{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PartyMintDone[]        = _("{STR_VAR_1}'s stats may have changed due\nto the effects of the {STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
 
-static const struct YesNoFuncTable sPartyPanelAbilityChangeYesNo    = {BagMenu_AbilityChangeYes, BagMenu_AbilityChangeNo};
-static const struct YesNoFuncTable sPartyPanelMintYesNo             = {BagMenu_MintYes, BagMenu_MintNo};
-static const struct YesNoFuncTable sPartyPanelRareCandyReplaceYesNo = {BagMenu_RareCandyReplaceYes, BagMenu_RareCandyReplaceNo};
+static const struct YesNoFuncTable sPartyAbilityChangeYesNo    = {BagMenu_AbilityChangeYes, BagMenu_AbilityChangeNo};
+static const struct YesNoFuncTable sPartyMintYesNo             = {BagMenu_MintYes, BagMenu_MintNo};
+static const struct YesNoFuncTable sPartyRareCandyReplaceYesNo = {BagMenu_RareCandyReplaceYes, BagMenu_RareCandyReplaceNo};
+static const struct YesNoFuncTable sPartyGiveSwapYesNo         = {BagMenu_GiveSwapYes, BagMenu_GiveSwapNo};
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG
 
 static const u8 sText_Var1CantBeHeldHere[]      = _("The {STR_VAR_1} can't be held\nhere.");
@@ -1035,7 +1048,9 @@ static u32 sCursorAnimId;
 static s32 sHoveredItemIndex;
 static u32 sScrollThumbAnimId;
 static u32 sPocketScrollArrowAnimIds[2];
-static u32 sPartyPanelItemIconAnimId;
+static u32 sPartyItemIconAnimId;
+static bool8 sPartyGiveMode;
+static u16 sPartyGiveSwapItem;
 static u8 sMoveInfoMode;
 static u8 sMoveTypeIconSpriteId;
 static u8 sCategoryIconSpriteId;
@@ -1316,6 +1331,7 @@ static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
 static EWRAM_DATA u8 *sMoveTypeIconsCache = NULL;
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 static EWRAM_DATA struct BagRareCandyState *sBagRareCandyState = NULL;
+static EWRAM_DATA struct BagMailGiveState *sBagMailGiveState = NULL;
 #endif 
 
 void ResetBagScrollPositions(void)
@@ -1421,7 +1437,7 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         sPocketScrollArrowAnimIds[1] = INVALID_COMFY_ANIM;
         sCursorAnimId = INVALID_COMFY_ANIM;
         sScrollThumbAnimId = INVALID_COMFY_ANIM;
-        sPartyPanelItemIconAnimId = INVALID_COMFY_ANIM;
+        sPartyItemIconAnimId = INVALID_COMFY_ANIM;
         sHoveredItemIndex = LIST_CANCEL;
         memset(gBagMenu->windowIds, WINDOW_NONE, sizeof(gBagMenu->windowIds));
         SetMainCallback2(CB2_Bag);
@@ -1453,9 +1469,9 @@ void VBlankCB_BagMenuRun(void)
 #define tListPosition           data[1]
 #define tQuantity               data[2]
 #define tNeverRead              data[3]
-#define tPartyPanelSlot         data[4]
-#define tPartyPanelSavedIconY   data[5]
-#define tPartyPanelTemp         data[6]
+#define tPartySlot              data[4]
+#define tPartySavedIconY        data[5]
+#define tPartyTemp              data[6]
 #define tItemCount              data[8]
 #define tMsgWindowId            data[10]
 #define tPocketSwitchDir        data[11]
@@ -2231,10 +2247,10 @@ static void Task_CloseBagMenu(u8 taskId)
         BagDestroyPocketScrollArrowPair();
         ReleaseComfyAnim(sCursorAnimId);
         ReleaseComfyAnim(sScrollThumbAnimId);
-        if (sPartyPanelItemIconAnimId != INVALID_COMFY_ANIM)
+        if (sPartyItemIconAnimId != INVALID_COMFY_ANIM)
         {
-            ReleaseComfyAnim(sPartyPanelItemIconAnimId);
-            sPartyPanelItemIconAnimId = INVALID_COMFY_ANIM;
+            ReleaseComfyAnim(sPartyItemIconAnimId);
+            sPartyItemIconAnimId = INVALID_COMFY_ANIM;
         }
         ResetSpriteData();
         FreeAllSpritePalettes();
@@ -3124,7 +3140,8 @@ static void ItemMenu_Give(u8 taskId)
         else
         {
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-            BagMenu_OpenPartyPanelSelect(taskId);
+            sPartyGiveMode = TRUE;
+            BagMenu_OpenPartySelect(taskId);
 #else
             gBagMenu->newScreenCallback = CB2_ChooseMonToGiveItem;
             Task_FadeAndCloseBagMenu(taskId);
@@ -4811,7 +4828,7 @@ static void BagMenu_FreePartyIcons(void)
 
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 
-static void BagMenu_PartyPanelStartItemIconYAnim(struct Sprite *spr, s16 toY)
+static void BagMenu_PartyStartItemIconYAnim(struct Sprite *spr, s16 toY)
 {
     struct ComfyAnimEasingConfig config;
     InitComfyAnimConfig_Easing(&config);
@@ -4819,25 +4836,25 @@ static void BagMenu_PartyPanelStartItemIconYAnim(struct Sprite *spr, s16 toY)
     config.to = Q_24_8(toY);
     config.durationFrames = 8;
     config.easingFunc = ComfyAnimEasing_EaseOutCubic;
-    if (sPartyPanelItemIconAnimId == INVALID_COMFY_ANIM)
-        sPartyPanelItemIconAnimId = CreateComfyAnim_Easing(&config);
+    if (sPartyItemIconAnimId == INVALID_COMFY_ANIM)
+        sPartyItemIconAnimId = CreateComfyAnim_Easing(&config);
     else
-        InitComfyAnim_Easing(&config, &gComfyAnims[sPartyPanelItemIconAnimId]);
+        InitComfyAnim_Easing(&config, &gComfyAnims[sPartyItemIconAnimId]);
 }
 
-void BagMenu_OpenPartyPanelSelect(u8 taskId)
+void BagMenu_OpenPartySelect(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
 
     if (gItemUseCB == ItemUseCB_SacredAsh)
     {
-        BagMenu_ApplySacredAsh(taskId);
+        BagMenu_UseSacredAsh(taskId);
         return;
     }
 
-    tPartyPanelSlot = 0;
-    tPartyPanelSavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
+    tPartySlot = 0;
+    tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
 
     gSprites[sCursorSpriteId].invisible = TRUE;
 
@@ -4845,64 +4862,68 @@ void BagMenu_OpenPartyPanelSelect(u8 taskId)
     {
         struct Sprite *spr = &gSprites[iconSpriteId];
         spr->x2 = PARTY_PANEL_ITEM_ICON_X;
-        BagMenu_PartyPanelStartItemIconYAnim(spr, PARTY_PANEL_ITEM_ICON_Y(0));
+        BagMenu_PartyStartItemIconYAnim(spr, PARTY_PANEL_ITEM_ICON_Y(0));
     }
 
-    gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
-void BagMenu_OpenPartyPanelSelectBattle(u8 taskId)
+void BagMenu_OpenPartySelectBattle(u8 taskId)
 {
     // TODO: Phase 4 — battle-specific slot filtering
-    BagMenu_OpenPartyPanelSelect(taskId);
+    BagMenu_OpenPartySelect(taskId);
 }
 
-static void Task_BagMenu_PartyPanelInput(u8 taskId)
+static void Task_BagMenu_PartyInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u8 partyCount = CalculatePlayerPartyCount();
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
 
-    if (iconSpriteId != SPRITE_NONE && sPartyPanelItemIconAnimId != INVALID_COMFY_ANIM)
-        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sPartyPanelItemIconAnimId]);
+    if (iconSpriteId != SPRITE_NONE && sPartyItemIconAnimId != INVALID_COMFY_ANIM)
+        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sPartyItemIconAnimId]);
 
-    if (sPartyPanelItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyPanelItemIconAnimId].completed)
+    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
         return;
 
     if (JOY_NEW(DPAD_DOWN))
     {
-        tPartyPanelSlot = (tPartyPanelSlot == partyCount - 1) ? 0 : tPartyPanelSlot + 1;
+        tPartySlot = (tPartySlot == partyCount - 1) ? 0 : tPartySlot + 1;
         PlaySE(SE_SELECT);
         if (iconSpriteId != SPRITE_NONE)
-            BagMenu_PartyPanelStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_PANEL_ITEM_ICON_Y(tPartyPanelSlot));
+            BagMenu_PartyStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_PANEL_ITEM_ICON_Y(tPartySlot));
     }
     else if (JOY_NEW(DPAD_UP))
     {
-        tPartyPanelSlot = (tPartyPanelSlot == 0) ? partyCount - 1 : tPartyPanelSlot - 1;
+        tPartySlot = (tPartySlot == 0) ? partyCount - 1 : tPartySlot - 1;
         PlaySE(SE_SELECT);
         if (iconSpriteId != SPRITE_NONE)
-            BagMenu_PartyPanelStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_PANEL_ITEM_ICON_Y(tPartyPanelSlot));
+            BagMenu_PartyStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_PANEL_ITEM_ICON_Y(tPartySlot));
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        BagMenu_ClosePartyPanelSelect(taskId);
+        BagMenu_ClosePartySelect(taskId);
     }
     else if (JOY_NEW(A_BUTTON))
     {
-        BagMenu_DispatchApplyItem(taskId);
+        if (sPartyGiveMode)
+            BagMenu_GiveItem(taskId);
+        else
+            BagMenu_UseItem(taskId);
     }
 }
 
-static void BagMenu_ClosePartyPanelSelect(u8 taskId)
+static void BagMenu_ClosePartySelect(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
+    sPartyGiveMode = FALSE;
 
-    if (sPartyPanelItemIconAnimId != INVALID_COMFY_ANIM)
+    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM)
     {
-        ReleaseComfyAnim(sPartyPanelItemIconAnimId);
-        sPartyPanelItemIconAnimId = INVALID_COMFY_ANIM;
+        ReleaseComfyAnim(sPartyItemIconAnimId);
+        sPartyItemIconAnimId = INVALID_COMFY_ANIM;
     }
 
     gSprites[sCursorSpriteId].invisible = FALSE;
@@ -4911,7 +4932,7 @@ static void BagMenu_ClosePartyPanelSelect(u8 taskId)
     {
         struct Sprite *spr = &gSprites[iconSpriteId];
         spr->x2 = 102;
-        spr->y2 = tPartyPanelSavedIconY + 4;
+        spr->y2 = tPartySavedIconY + 4;
     }
 
     ReturnToItemList(taskId);
@@ -4931,13 +4952,13 @@ static void BagMenu_RefreshItemList(u8 taskId)
     ScheduleBgCopyTilemapToVram(1);
 }
 
-static void Task_BagMenu_PartyPanelStayAfterMessage(u8 taskId)
+static void Task_BagMenu_PartyStayAfterMessage(u8 taskId)
 {
     RemoveItemMessageWindow(ITEMWIN_MESSAGE);
-    gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
-static void Task_BagMenu_PartyPanelAfterItemUse(u8 taskId)
+static void Task_BagMenu_PartyAfterItemUse(u8 taskId)
 {
     u8 keepSlot = gBagMenu->itemIconSlot ^ 1;
     u8 keepSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + keepSlot];
@@ -4954,7 +4975,7 @@ static void Task_BagMenu_PartyPanelAfterItemUse(u8 taskId)
     {
         if (keepSpriteId != SPRITE_NONE)
             DestroySpriteAndFreeResources(&gSprites[keepSpriteId]);
-        BagMenu_ClosePartyPanelSelect(taskId);
+        BagMenu_ClosePartySelect(taskId);
         return;
     }
 
@@ -4965,7 +4986,7 @@ static void Task_BagMenu_PartyPanelAfterItemUse(u8 taskId)
     }
     gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + newSlot] = keepSpriteId;
 
-    gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
 static void BagMenu_GetMedicineEffectMessage(enum Item item, u32 statusCured)
@@ -5036,7 +5057,7 @@ static void BagMenu_GetMedicineEffectMessage(enum Item item, u32 statusCured)
     }
 }
 
-static void BagMenu_ApplySacredAsh(u8 taskId)
+static void BagMenu_UseSacredAsh(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     enum Item item = gSpecialVar_ItemId;
@@ -5063,7 +5084,7 @@ static void BagMenu_ApplySacredAsh(u8 taskId)
 
     PlaySE(SE_USE_ITEM);
     RemoveBagItem(item, 1);
-    tPartyPanelTemp = 0;
+    tPartyTemp = 0;
     data[7] = revivedMask;
     Task_BagMenu_SacredAshMessages(taskId);
 }
@@ -5071,7 +5092,7 @@ static void BagMenu_ApplySacredAsh(u8 taskId)
 static void Task_BagMenu_SacredAshMessages(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u8 slot = (u8)tPartyPanelTemp;
+    u8 slot = (u8)tPartyTemp;
     u8 revivedMask = (u8)data[7];
 
     while (slot < PARTY_SIZE && !(revivedMask & (1 << slot)))
@@ -5083,7 +5104,7 @@ static void Task_BagMenu_SacredAshMessages(u8 taskId)
         return;
     }
 
-    tPartyPanelTemp = slot + 1;
+    tPartyTemp = slot + 1;
 
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
     GetMonNickname(mon, gStringVar1);
@@ -5092,10 +5113,10 @@ static void Task_BagMenu_SacredAshMessages(u8 taskId)
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_SacredAshMessages);
 }
 
-static void BagMenu_ApplyMedicine(u8 taskId)
+static void BagMenu_UseMedicine(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u16 hp = 0;
     u32 oldStatus = GetMonData(mon, MON_DATA_STATUS);
@@ -5116,13 +5137,13 @@ static void BagMenu_ApplyMedicine(u8 taskId)
             if (hp == GetMonData(mon, MON_DATA_MAX_HP))
                 canHeal = FALSE;
         }
-        cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartyPanelSlot, 0);
+        cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartySlot, 0);
     }
 
     if (cannotUse)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
@@ -5141,41 +5162,41 @@ static void BagMenu_ApplyMedicine(u8 taskId)
         BagMenu_GetMedicineEffectMessage(item, oldStatus);
     }
 
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
-static void BagMenu_ApplyResetEVs(u8 taskId)
+static void BagMenu_UseResetEVs(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
-    bool8 cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartyPanelSlot, 0);
+    bool8 cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartySlot, 0);
 
     if (cannotUse)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
     PlaySE(SE_USE_ITEM);
     RemoveBagItem(item, 1);
     GetMonNickname(mon, gStringVar1);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelBasePointsReset);
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    StringExpandPlaceholders(gStringVar4, sText_PartyBasePointsReset);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
-static void BagMenu_ApplyDynamaxCandy(u8 taskId)
+static void BagMenu_UseDynamaxCandy(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u8 dynamaxLevel = GetMonData(mon, MON_DATA_DYNAMAX_LEVEL);
 
     if (dynamaxLevel >= MAX_DYNAMAX_LEVEL)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
@@ -5184,8 +5205,8 @@ static void BagMenu_ApplyDynamaxCandy(u8 taskId)
     SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
     RemoveBagItem(item, 1);
     GetMonNickname(mon, gStringVar1);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelDynamaxLevelUp);
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    StringExpandPlaceholders(gStringVar4, sText_PartyDynamaxLevelUp);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
 static u16 BagMenu_GetMonEV(struct Pokemon *mon, enum ItemEffectType effectType)
@@ -5239,22 +5260,22 @@ static void BagMenu_GetEVStatName(enum ItemEffectType effectType, u8 *dest)
     }
 }
 
-static void BagMenu_ApplyReduceEV(u8 taskId)
+static void BagMenu_UseReduceEV(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     enum ItemEffectType effectType = GetItemEffectType(item);
     u16 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);
     u16 ev = BagMenu_GetMonEV(mon, effectType);
-    bool8 cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartyPanelSlot, 0);
+    bool8 cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartySlot, 0);
     u16 newFriendship = GetMonData(mon, MON_DATA_FRIENDSHIP);
     u16 newEv = BagMenu_GetMonEV(mon, effectType);
 
     if (cannotUse || (friendship == newFriendship && ev == newEv))
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
@@ -5273,18 +5294,18 @@ static void BagMenu_ApplyReduceEV(u8 taskId)
     {
         StringExpandPlaceholders(gStringVar4, gText_PkmnAdoresBaseVar2Fell);
     }
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
 static void Task_BagMenu_AbilityChangeYesNo(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    switch (tPartyPanelTemp)
+    switch (tPartyTemp)
     {
     case 0:
-        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyPanelAbilityChangeYesNo);
-        tPartyPanelTemp++;
+        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyAbilityChangeYesNo);
+        tPartyTemp++;
         break;
     case 1:
         break;
@@ -5294,7 +5315,7 @@ static void Task_BagMenu_AbilityChangeYesNo(u8 taskId)
 static void BagMenu_AbilityChangeYes(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u8 currentAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
     u8 abilityNum;
@@ -5310,20 +5331,20 @@ static void BagMenu_AbilityChangeYes(u8 taskId)
     GetMonNickname(mon, gStringVar1);
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, abilityNum)].name);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelAbilityDone);
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    StringExpandPlaceholders(gStringVar4, sText_PartyAbilityDone);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
 static void BagMenu_AbilityChangeNo(u8 taskId)
 {
     RemoveItemMessageWindow(ITEMWIN_MESSAGE);
-    gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
-static void BagMenu_ApplyAbilityCapsule(u8 taskId)
+static void BagMenu_UseAbilityCapsule(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     u8 abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM) ^ 1;
 
@@ -5333,21 +5354,21 @@ static void BagMenu_ApplyAbilityCapsule(u8 taskId)
         || GetMonData(mon, MON_DATA_ABILITY_NUM) > 1)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, abilityNum)].name);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelAbilityAsk);
-    tPartyPanelTemp = 0;
+    StringExpandPlaceholders(gStringVar4, sText_PartyAbilityAsk);
+    tPartyTemp = 0;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_AbilityChangeYesNo);
 }
 
-static void BagMenu_ApplyAbilityPatch(u8 taskId)
+static void BagMenu_UseAbilityPatch(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     u8 currentAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
     u8 abilityNum = (currentAbilityNum == 2) ? 0 : 2;
@@ -5355,14 +5376,14 @@ static void BagMenu_ApplyAbilityPatch(u8 taskId)
     if (!species || GetSpeciesAbility(species, abilityNum) == 0)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, abilityNum)].name);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelAbilityAsk);
-    tPartyPanelTemp = 0;
+    StringExpandPlaceholders(gStringVar4, sText_PartyAbilityAsk);
+    tPartyTemp = 0;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_AbilityChangeYesNo);
 }
 
@@ -5370,11 +5391,11 @@ static void Task_BagMenu_MintYesNo(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    switch (tPartyPanelTemp)
+    switch (tPartyTemp)
     {
     case 0:
-        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyPanelMintYesNo);
-        tPartyPanelTemp++;
+        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyMintYesNo);
+        tPartyTemp++;
         break;
     case 1:
         break;
@@ -5384,7 +5405,7 @@ static void Task_BagMenu_MintYesNo(u8 taskId)
 static void BagMenu_MintYes(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u8 newNature = GetItemSecondaryId(item);
 
@@ -5394,20 +5415,20 @@ static void BagMenu_MintYes(u8 taskId)
     RemoveBagItem(item, 1);
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelMintDone);
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    StringExpandPlaceholders(gStringVar4, sText_PartyMintDone);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
 static void BagMenu_MintNo(u8 taskId)
 {
     RemoveItemMessageWindow(ITEMWIN_MESSAGE);
-    gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
-static void BagMenu_ApplyMint(u8 taskId)
+static void BagMenu_UseMint(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u8 currentNature = GetMonData(mon, MON_DATA_HIDDEN_NATURE);
     u8 newNature = GetItemSecondaryId(item);
@@ -5415,27 +5436,27 @@ static void BagMenu_ApplyMint(u8 taskId)
     if (currentNature == newNature)
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
     GetMonNickname(mon, gStringVar1);
     CopyItemName(item, gStringVar2);
-    StringExpandPlaceholders(gStringVar4, sText_PartyPanelMintAsk);
-    tPartyPanelTemp = 0;
+    StringExpandPlaceholders(gStringVar4, sText_PartyMintAsk);
+    tPartyTemp = 0;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_MintYesNo);
 }
 
-static void BagMenu_ApplyPPToMove(u8 taskId, u8 moveSlot)
+static void BagMenu_UsePPOnMove(u8 taskId, u8 moveSlot)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
 
-    if (ExecuteTableBasedItemEffect(mon, item, tPartyPanelSlot, moveSlot))
+    if (ExecuteTableBasedItemEffect(mon, item, tPartySlot, moveSlot))
     {
         PlaySE(SE_SELECT);
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
@@ -5443,13 +5464,13 @@ static void BagMenu_ApplyPPToMove(u8 taskId, u8 moveSlot)
     RemoveBagItem(item, 1);
     StringCopy(gStringVar1, GetMoveName(GetMonData(mon, MON_DATA_MOVE1 + moveSlot)));
     BagMenu_GetMedicineEffectMessage(item, 0);
-    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
 static void BagMenu_ShowPPMoveSelectWindow(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     u8 windowId = BagMenu_AddWindow(ITEMWIN_PP_MOVE_SELECT);
     u8 moveCount = 0;
     u8 i;
@@ -5477,9 +5498,9 @@ static void Task_BagMenu_PPMoveSelectInput(u8 taskId)
     BagMenu_RemoveWindow(ITEMWIN_PP_MOVE_SELECT);
 
     if (input == MENU_B_PRESSED)
-        gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+        gTasks[taskId].func = Task_BagMenu_PartyInput;
     else
-        BagMenu_ApplyPPToMove(taskId, (u8)input);
+        BagMenu_UsePPOnMove(taskId, (u8)input);
 }
 
 static void BagMenu_RareCandyBufferStats(struct Pokemon *mon, s16 *data)
@@ -5492,10 +5513,10 @@ static void BagMenu_RareCandyBufferStats(struct Pokemon *mon, s16 *data)
     data[5] = GetMonData(mon, MON_DATA_SPDEF);
 }
 
-static void BagMenu_ApplyRareCandy(u8 taskId)
+static void BagMenu_UseRareCandy(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartyPanelSlot];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
     enum Item item = gSpecialVar_ItemId;
     u8 holdEffectParam = GetItemHoldEffectParam(item);
     bool8 cannotUse;
@@ -5504,7 +5525,7 @@ static void BagMenu_ApplyRareCandy(u8 taskId)
     if (sBagRareCandyState == NULL)
         sBagRareCandyState = AllocZeroed(sizeof(*sBagRareCandyState));
 
-    sBagRareCandyState->slot = tPartyPanelSlot;
+    sBagRareCandyState->slot = tPartySlot;
     sBagRareCandyState->savedExitCallback = gBagPosition.exitCallback;
 
     if (B_RARE_CANDY_CAP && initialLevel >= GetCurrentLevelCap())
@@ -5514,7 +5535,7 @@ static void BagMenu_ApplyRareCandy(u8 taskId)
     else
     {
         BagMenu_RareCandyBufferStats(mon, sBagRareCandyState->statsBefore);
-        cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartyPanelSlot, 0);
+        cannotUse = ExecuteTableBasedItemEffect(mon, item, tPartySlot, 0);
         BagMenu_RareCandyBufferStats(mon, sBagRareCandyState->statsAfter);
     }
 
@@ -5540,7 +5561,7 @@ static void BagMenu_ApplyRareCandy(u8 taskId)
         }
         Free(sBagRareCandyState);
         sBagRareCandyState = NULL;
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyPanelStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
@@ -5570,7 +5591,7 @@ static void BagMenu_ApplyRareCandy(u8 taskId)
         PlaySE(SE_USE_ITEM);
         ConvertIntToDecimalStringN(gStringVar2, sExpCandyExperienceTable[holdEffectParam - 1], STR_CONV_MODE_LEFT_ALIGN, 6);
         StringExpandPlaceholders(gStringVar4, gText_PkmnGainedExp);
-        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyPanelAfterItemUse);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
         Free(sBagRareCandyState);
         sBagRareCandyState = NULL;
     }
@@ -5647,7 +5668,7 @@ static void BagMenu_RareCandyDoLearnMoveStep(u8 taskId)
             GetMonNickname(mon, gStringVar1);
             StringCopy(gStringVar2, GetMoveName(gMoveToLearn));
             StringExpandPlaceholders(gStringVar4, gText_PkmnNeedsToReplaceMove);
-            gTasks[taskId].tPartyPanelTemp = 0;
+            gTasks[taskId].tPartyTemp = 0;
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_RareCandyReplaceYesNo);
             return;
         default:
@@ -5682,11 +5703,11 @@ static void Task_BagMenu_RareCandyReplaceYesNo(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    switch (tPartyPanelTemp)
+    switch (tPartyTemp)
     {
     case 0:
-        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyPanelRareCandyReplaceYesNo);
-        tPartyPanelTemp++;
+        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyRareCandyReplaceYesNo);
+        tPartyTemp++;
         break;
     case 1:
         break;
@@ -5747,8 +5768,8 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     {
     case RARE_CANDY_REENTRY_MOVE_FORGET:
     {
-        tPartyPanelSlot = sBagRareCandyState->slot;
-        tPartyPanelSavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
+        tPartySlot = sBagRareCandyState->slot;
+        tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
         gSprites[sCursorSpriteId].invisible = TRUE;
         sBagRareCandyState->reentryPhase = RARE_CANDY_REENTRY_NONE;
         gTasks[taskId].func = Task_BagMenu_RareCandyAfterMoveForget;
@@ -5757,12 +5778,12 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     case RARE_CANDY_REENTRY_CANDY_USE:
     {
         u8 slot = sBagRareCandyState->slot;
-        tPartyPanelSlot = slot;
-        tPartyPanelSavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
+        tPartySlot = slot;
+        tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
         gSprites[sCursorSpriteId].invisible = TRUE;
         Free(sBagRareCandyState);
         sBagRareCandyState = NULL;
-        gTasks[taskId].func = Task_BagMenu_PartyPanelInput;
+        gTasks[taskId].func = Task_BagMenu_PartyInput;
         break;
     }
     }
@@ -5772,7 +5793,7 @@ static void Task_BagMenu_RareCandyAfterMoveForget(u8 taskId)
 {
     u8 moveSlot;
 
-    if (sPartyPanelItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyPanelItemIconAnimId].completed)
+    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
         return;
 
     moveSlot = GetMoveSlotToReplace();
@@ -5861,23 +5882,157 @@ static void BagMenu_RareCandyCleanupAndReturn(u8 taskId)
 {
     Free(sBagRareCandyState);
     sBagRareCandyState = NULL;
-    Task_BagMenu_PartyPanelAfterItemUse(taskId);
+    Task_BagMenu_PartyAfterItemUse(taskId);
 }
 
-static void BagMenu_DispatchApplyItem(u8 taskId)
+static void BagMenu_DoGiveMail(u8 taskId, struct Pokemon *mon, u16 item)
+{
+    s16 *data = gTasks[taskId].data;
+
+    if (GiveMailToMonByItemId(mon, item) == MAIL_NONE)
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, Task_BagMenu_PartyStayAfterMessage);
+        return;
+    }
+    u8 itemBytes[2];
+    itemBytes[0] = item;
+    itemBytes[1] = item >> 8;
+    SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
+    RemoveBagItem(item, 1);
+    sBagMailGiveState = AllocZeroed(sizeof(*sBagMailGiveState));
+    sBagMailGiveState->slot = tPartySlot;
+    sBagMailGiveState->mailItem = item;
+    gBagMenu->newScreenCallback = BagMenu_CB2_GiveMail;
+    Task_FadeAndCloseBagMenu(taskId);
+}
+
+static void BagMenu_GiveItem(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
+    u16 item = gSpecialVar_ItemId;
+    u16 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u8 itemBytes[2];
+
+    PlaySE(SE_SELECT);
+    GetMonNickname(mon, gStringVar1);
+
+    if (ItemIsMail(item))
+    {
+        if (heldItem != ITEM_NONE)
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_PkmnHoldingItemCantHoldMail, Task_BagMenu_PartyStayAfterMessage);
+        else
+            BagMenu_DoGiveMail(taskId, mon, item);
+    }
+    else if (heldItem == ITEM_NONE)
+    {
+        CopyItemName(item, gStringVar2);
+        itemBytes[0] = item;
+        itemBytes[1] = item >> 8;
+        SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
+        TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+        RemoveBagItem(item, 1);
+        StringExpandPlaceholders(gStringVar4, gText_PkmnWasGivenItem);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
+    }
+    else
+    {
+        sPartyGiveSwapItem = heldItem;
+        CopyItemName(heldItem, gStringVar2);
+        StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyHoldingItemSwitch);
+        tPartyTemp = 0;
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_GiveSwapYesNo);
+    }
+}
+
+static void Task_BagMenu_GiveSwapYesNo(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (tPartyTemp)
+    {
+    case 0:
+        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, &sPartyGiveSwapYesNo);
+        tPartyTemp++;
+        break;
+    case 1:
+        break;
+    }
+}
+
+static void BagMenu_GiveSwapYes(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
+    u16 item = gSpecialVar_ItemId;
+    u8 itemBytes[2];
+
+    RemoveBagItem(item, 1);
+    if (!AddBagItem(sPartyGiveSwapItem, 1))
+    {
+        AddBagItem(item, 1);
+        StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyStayAfterMessage);
+        return;
+    }
+    itemBytes[0] = item;
+    itemBytes[1] = item >> 8;
+    SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
+    TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+    CopyItemName(item, gStringVar1);
+    CopyItemName(sPartyGiveSwapItem, gStringVar2);
+    StringExpandPlaceholders(gStringVar4, gText_SwitchedPkmnItem);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
+}
+
+static void BagMenu_GiveSwapNo(u8 taskId)
+{
+    RemoveItemMessageWindow(ITEMWIN_MESSAGE);
+    gTasks[taskId].func = Task_BagMenu_PartyInput;
+}
+
+static void BagMenu_CB2_GiveMail(void)
+{
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][sBagMailGiveState->slot];
+    u8 mail = GetMonData(mon, MON_DATA_MAIL);
+
+    DoEasyChatScreen(
+        EASY_CHAT_TYPE_MAIL,
+        gSaveBlock1Ptr->mail[mail].words,
+        BagMenu_CB2_AfterMailWrite,
+        EASY_CHAT_PERSON_DISPLAY_NONE);
+}
+
+static void BagMenu_CB2_AfterMailWrite(void)
+{
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][sBagMailGiveState->slot];
+    MainCallback exitCb = gBagPosition.exitCallback;
+
+    if (!gSpecialVar_Result)
+    {
+        TakeMailFromMon(mon);
+        AddBagItem(sBagMailGiveState->mailItem, 1);
+    }
+
+    Free(sBagMailGiveState);
+    sBagMailGiveState = NULL;
+    GoToBagMenu(ITEMMENULOCATION_LAST, POCKETS_COUNT, exitCb);
+}
+
+static void BagMenu_UseItem(u8 taskId)
 {
     if (gItemUseCB == ItemUseCB_Medicine)
-        BagMenu_ApplyMedicine(taskId);
+        BagMenu_UseMedicine(taskId);
     else if (gItemUseCB == ItemUseCB_AbilityCapsule)
-        BagMenu_ApplyAbilityCapsule(taskId);
+        BagMenu_UseAbilityCapsule(taskId);
     else if (gItemUseCB == ItemUseCB_AbilityPatch)
-        BagMenu_ApplyAbilityPatch(taskId);
+        BagMenu_UseAbilityPatch(taskId);
     else if (gItemUseCB == ItemUseCB_Mint)
-        BagMenu_ApplyMint(taskId);
+        BagMenu_UseMint(taskId);
     else if (gItemUseCB == ItemUseCB_ResetEVs)
-        BagMenu_ApplyResetEVs(taskId);
+        BagMenu_UseResetEVs(taskId);
     else if (gItemUseCB == ItemUseCB_ReduceEV)
-        BagMenu_ApplyReduceEV(taskId);
+        BagMenu_UseReduceEV(taskId);
     else if (gItemUseCB == ItemUseCB_PPUp)
         BagMenu_ShowPPMoveSelectWindow(taskId);
     else if (gItemUseCB == ItemUseCB_PPRecovery)
@@ -5886,14 +6041,14 @@ static void BagMenu_DispatchApplyItem(u8 taskId)
         if (effect != NULL && (effect[4] & ITEM4_HEAL_PP_ONE))
             BagMenu_ShowPPMoveSelectWindow(taskId);
         else
-            BagMenu_ApplyPPToMove(taskId, 0);
+            BagMenu_UsePPOnMove(taskId, 0);
     }
     else if (gItemUseCB == ItemUseCB_RareCandy)
-        BagMenu_ApplyRareCandy(taskId);
+        BagMenu_UseRareCandy(taskId);
     else if (gItemUseCB == ItemUseCB_DynamaxCandy)
-        BagMenu_ApplyDynamaxCandy(taskId);
+        BagMenu_UseDynamaxCandy(taskId);
     else
-        BagMenu_ClosePartyPanelSelect(taskId);
+        BagMenu_ClosePartySelect(taskId);
 }
 
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG

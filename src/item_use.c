@@ -142,7 +142,7 @@ static void SetUpItemUseCallback(u8 taskId)
         {
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
             if (type == (ITEM_USE_PARTY_MENU - 1) || type == (ITEM_USE_PARTY_MENU_MOVES - 1))
-                BagMenu_OpenPartyPanelSelect(taskId);
+                BagMenu_OpenPartySelect(taskId);
             else
 #endif
             {
@@ -1217,7 +1217,7 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-        BagMenu_OpenPartyPanelSelectBattle(taskId);
+        BagMenu_OpenPartySelectBattle(taskId);
 #else
         gBagMenu->newScreenCallback = ChooseMonForInBattleItem;
         Task_FadeAndCloseBagMenu(taskId);
