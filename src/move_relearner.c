@@ -406,7 +406,7 @@ void CB2_InitLearnMove(void)
     gTasks[sMoveRelearnerStruct->mainTask].tState = 0;
     gTasks[sMoveRelearnerStruct->mainTask].tPartyIndex = gSpecialVar_0x8004;
     gTasks[sMoveRelearnerStruct->mainTask].tMove = MOVE_NONE;
-    if (gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES)
+    if (!C_HIDE_CONTEST_DATA && gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES)
         gTasks[sMoveRelearnerStruct->mainTask].tCategory = CONTEST_INFO;
     else
         gTasks[sMoveRelearnerStruct->mainTask].tCategory = BATTLE_INFO;
@@ -657,8 +657,11 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
                 PlaySE(SE_FAILURE);
             }
         }
-        else if ((JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) || GetLRKeysPressed())
+        else if (!C_HIDE_CONTEST_DATA)
         {
+            if (!(JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) && !GetLRKeysPressed())
+                break;
+
             PlaySE(SE_SELECT);
 
             if (gTasks[taskId].tCategory == BATTLE_INFO)
@@ -675,6 +678,7 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
             MoveRelearnerShowHideHearts(GetCurrentSelectedMove());
 
             ScheduleBgCopyTilemapToVram(1);
+
             if (B_SHOW_CATEGORY_ICON == TRUE)
                 MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
             AddScrollArrows();
@@ -751,7 +755,7 @@ static void CreateUISprites(void)
 
 static void AddScrollArrows(void)
 {
-    if (sMoveRelearnerStruct->moveDisplayArrowTask == TASK_NONE)
+    if (!C_HIDE_CONTEST_DATA && sMoveRelearnerStruct->moveDisplayArrowTask == TASK_NONE)
         sMoveRelearnerStruct->moveDisplayArrowTask = AddScrollIndicatorArrowPair(&sDisplayModeArrowsTemplate, &sMoveRelearnerStruct->scrollOffset);
 
     if (sMoveRelearnerStruct->moveListScrollArrowTask == TASK_NONE)
@@ -764,7 +768,7 @@ static void AddScrollArrows(void)
 
 static void RemoveScrollArrows(void)
 {
-    if (sMoveRelearnerStruct->moveDisplayArrowTask != TASK_NONE)
+    if (!C_HIDE_CONTEST_DATA && sMoveRelearnerStruct->moveDisplayArrowTask != TASK_NONE)
     {
         RemoveScrollIndicatorArrowPair(sMoveRelearnerStruct->moveDisplayArrowTask);
         sMoveRelearnerStruct->moveDisplayArrowTask = TASK_NONE;

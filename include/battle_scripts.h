@@ -358,6 +358,7 @@ extern const u8 BattleScript_NotAffectedAbilityPopUp[];
 extern const u8 BattleScript_BattlerShookOffTaunt[];
 extern const u8 BattleScript_BattlerGotOverItsInfatuation[];
 extern const u8 BattleScript_Pickpocket[];
+extern const u8 BattleScript_PickpocketPrevented[];
 extern const u8 BattleScript_StickyBarbTransfer[];
 extern const u8 BattleScript_RedCardActivationNoSwitch[];
 extern const u8 BattleScript_RedCardActivates[];
