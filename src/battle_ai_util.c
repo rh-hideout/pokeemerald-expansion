@@ -767,7 +767,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
     else if (strikeCount > 1)
     {
         bool32 multiplyDamage = FALSE;
-        if (GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART)
+        if (IsDoubleBattle() && AI_GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART)
         {
             u32 originalTarget = ctx->battlerDef;
             ctx->battlerDef = BATTLE_PARTNER(ctx->battlerAtk);
