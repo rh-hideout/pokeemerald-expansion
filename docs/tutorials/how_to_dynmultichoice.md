@@ -114,6 +114,7 @@ EventScript_ExampleScript_Text_1:
 EventScript_ExampleScript_Text_2:
 	.string "Choice 3$"
 ```
+</details>
 
 <details>
 <summary> compare macro:</summary>
