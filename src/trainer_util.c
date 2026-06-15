@@ -75,7 +75,7 @@ static void ModifyPersonalityForNature(u32 *personality, s32 newNature)
     *personality += (sModuloLUT[diff] * 0x100 * sign);
 }
 
-static bool32 SetCorrectAbilityNum(struct Pokemon *mon, u32 species, u32 ability)
+static bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, u32 ability)
 {
     const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
     u32 abilityNum;
