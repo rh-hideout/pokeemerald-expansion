@@ -59,7 +59,6 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 
-
 enum TransitionType
 {
     TRANSITION_TYPE_NORMAL,
@@ -2320,7 +2319,8 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
 
 static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
-    if (!GetTrainerStructFromId(trainerNum)->overrideTrainer) {
+    if (!GetTrainerStructFromId(trainerNum)->overrideTrainer)
+    {
         CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum));
         return;
     }
