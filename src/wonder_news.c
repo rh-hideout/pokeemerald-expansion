@@ -13,7 +13,7 @@
 // must take 500 steps before any more rewards can be received.
 #define MAX_REWARD 5
 
-static u32 GetRewardItem(struct WonderNewsMetadata *);
+static enum Item GetRewardItem(struct WonderNewsMetadata *);
 static u32 GetRewardType(struct WonderNewsMetadata *);
 static void IncrementRewardCounter(struct WonderNewsMetadata *);
 static void IncrementSentRewardCounter(struct WonderNewsMetadata *);
@@ -103,7 +103,7 @@ u16 WonderNews_GetRewardInfo(void)
     return rewardType;
 }
 
-static u32 GetRewardItem(struct WonderNewsMetadata *data)
+static enum Item GetRewardItem(struct WonderNewsMetadata *data)
 {
     enum Item itemId;
     data->newsType = WONDER_NEWS_NONE;

@@ -268,7 +268,9 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
 
 AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
-    u32 status1_0, status1_1, partnerAbility, move;
+    u32 status1_0, status1_1;
+    enum Ability partnerAbility;
+    enum Move move;
 
     PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
@@ -467,7 +469,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
@@ -489,7 +491,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }

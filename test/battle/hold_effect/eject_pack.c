@@ -382,3 +382,20 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     }
 }
+
+SINGLE_BATTLE_TEST("Eject Pack will trigger after a Mega Evolution")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+

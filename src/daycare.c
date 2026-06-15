@@ -293,7 +293,7 @@ static void ApplyDaycareExperience(struct Pokemon *mon)
 {
     s32 i;
     bool8 firstMove;
-    u16 learnedMove;
+    enum Move learnedMove;
 
     for (i = 0; i < MAX_LEVEL; i++)
     {

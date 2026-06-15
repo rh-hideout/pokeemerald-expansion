@@ -258,7 +258,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protectio
 
 AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/Toxic Orb")
 {
-    u32 heldItem = ITEM_NONE;
+    enum Item heldItem = ITEM_NONE;
     bool32 shouldYawn = FALSE;
 
     PARAMETRIZE { heldItem = ITEM_NONE;      shouldYawn = TRUE; }

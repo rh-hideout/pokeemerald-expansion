@@ -34,8 +34,8 @@ static bool32 CheckPyramidBagHasSpace(enum Item itemId, u16 count);
 static const u8 *GetItemPluralName(enum Item);
 static bool32 DoesItemHavePluralName(enum Item);
 static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket);
-static u16 SanitizeItemId(enum Item itemId);
-static u16 SanitizeBagItemId(enum Item itemId);
+static enum Item SanitizeItemId(enum Item itemId);
+static enum Item SanitizeBagItemId(enum Item itemId);
 
 EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 
@@ -585,7 +585,7 @@ u16 CountTotalItemQuantityInBag(enum Item itemId)
 static bool32 CheckPyramidBagHasItem(enum Item itemId, u16 count)
 {
     u8 i;
-    u16 *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -611,7 +611,7 @@ static bool32 CheckPyramidBagHasItem(enum Item itemId, u16 count)
 static bool32 CheckPyramidBagHasSpace(enum Item itemId, u16 count)
 {
     u8 i;
-    u16 *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -638,7 +638,7 @@ bool32 AddPyramidBagItem(enum Item itemId, u16 count)
 {
     u16 i;
 
-    u16 *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
     u16 *newItems = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
 
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
@@ -716,7 +716,7 @@ bool32 RemovePyramidBagItem(enum Item itemId, u16 count)
 {
     u16 i;
 
-    u16 *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -783,7 +783,7 @@ bool32 RemovePyramidBagItem(enum Item itemId, u16 count)
     }
 }
 
-static u16 SanitizeItemId(enum Item itemId)
+static enum Item SanitizeItemId(enum Item itemId)
 {
     assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
     {
@@ -793,7 +793,7 @@ static u16 SanitizeItemId(enum Item itemId)
     return itemId;
 }
 
-static u16 SanitizeBagItemId(enum Item itemId)
+static enum Item SanitizeBagItemId(enum Item itemId)
 {
     itemId = SanitizeItemId(itemId);
 
@@ -974,12 +974,12 @@ bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
         || holdEffect == HOLD_EFFECT_CHOICE_SPECS;
 }
 
-ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId)
+ShopCriteriaFunc GetItemShopCriteriaFunc(enum Item itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].shopCriteriaFunc;
 }
 
-bool32 IsItemShopCriteriaFulfilled(u32 itemId)
+bool32 IsItemShopCriteriaFulfilled(enum Item itemId)
 {
     ShopCriteriaFunc func = GetItemShopCriteriaFunc(itemId);
 

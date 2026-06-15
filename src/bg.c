@@ -292,7 +292,7 @@ bool32 IsInvalidBg(u32 bg)
 int BgTileAllocOp(int bg, int offset, int count, int mode)
 {
     int result = BgTileAllocOpUnchecked(bg, offset, count, mode);
-    assertf(result > 0);
+    fatal_assertf(result > 0);
     return result;
 }
 

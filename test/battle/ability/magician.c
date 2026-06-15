@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targe
     u32 playerRightSpeed = 0;
     u32 opponentLeftSpeed = 0;
     u32 opponentRightSpeed = 0;
-    u32 expectedItem = ITEM_NONE;
+    enum Item expectedItem = ITEM_NONE;
 
     PARAMETRIZE { playerRightSpeed = 4; opponentLeftSpeed = 2; opponentRightSpeed = 3; expectedItem = ITEM_ULTRA_BALL; }
     PARAMETRIZE { playerRightSpeed = 3; opponentLeftSpeed = 4; opponentRightSpeed = 2; expectedItem = ITEM_GREAT_BALL; }

@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye ignore target's evasi
 SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye are ignored by Mold Breaker abilities")
 {
     enum Ability abilityPlayer = ABILITY_NONE, abilityOpponent = ABILITY_NONE;
-    u16 speciesPlayer = SPECIES_NONE, speciesOpponent = SPECIES_NONE;
+    enum Species speciesPlayer = SPECIES_NONE, speciesOpponent = SPECIES_NONE;
 
     u32 j;
     static const u16 moldBreakerAbilities[][2] = {
