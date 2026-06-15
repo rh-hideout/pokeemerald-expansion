@@ -154,10 +154,10 @@ SINGLE_BATTLE_TEST("SetStartingStatus messages work as intended")
             MESSAGE("The toxic spikes disappeared from the ground around the opposing side!");
             break;
         case STARTING_STATUS_STICKY_WEB_OPPONENT:
-            MESSAGE("The sticky web has disappeared from the ground around the opposing side!");
+            MESSAGE("The sticky web has disappeared from the ground on the opposing side!");
             break;
         case STARTING_STATUS_STEALTH_ROCK_OPPONENT:
-            MESSAGE("The pointed stones disappeared from around the opposing side!");
+            MESSAGE("The pointed stones disappeared from the opposing side!");
             break;
         case STARTING_STATUS_SHARP_STEEL_OPPONENT:
             MESSAGE("The pieces of steel surrounding the opposing Pokémon disappeared!");
