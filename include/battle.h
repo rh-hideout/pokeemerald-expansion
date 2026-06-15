@@ -112,21 +112,21 @@ struct StatStages
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
     u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
     u8 mindBlownRecoil:1;
     u8 updateStallMons:1;
     u8 poisonPuppeteer:1;
-    // End of byte
-    u8 statLowered:1;
+    u8 attackerInParty:1; // Fututre Sight / Doom Desire
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
+    // End of byte
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
+    u8 padding:3;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -523,9 +523,9 @@ struct BattlerState
     u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 notOnField:1;
-    u16 redCardSwitched:1;
+    u16 originalBattlerPartyId:4;
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
-    u16 padding:11;
+    u16 padding:8;
     // End of Word
 };
 
@@ -574,6 +574,7 @@ struct BattleStruct
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
+    u8 faintCounter[MAX_BATTLE_TRAINERS]; // Supreme Overload / Last Respects
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
@@ -685,7 +686,6 @@ struct BattleStruct
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
-    u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves

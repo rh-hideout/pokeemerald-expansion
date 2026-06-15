@@ -3008,6 +3008,7 @@ static void BattleStartClearSetData(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattleStruct->battlerState[i].isFirstTurn = 2;
+        gBattleStruct->battlerState[i].originalBattlerPartyId = PARTY_SIZE;
         gLastMoves[i] = MOVE_NONE;
         gLastLandedMoves[i] = MOVE_NONE;
         gLastHitByType[i] = 0;
@@ -4033,6 +4034,11 @@ void SwitchPartyOrder(enum BattlerId battler)
     partyId1 = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler]);
     partyId2 = GetPartyIdFromBattlePartyId(gBattleStruct->monToSwitchIntoId[battler]);
     SwitchPartyMonSlots(partyId1, partyId2);
+
+    if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId1)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId2;
+    else if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId2)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId1;
 
     if (IsDoubleBattle())
     {
