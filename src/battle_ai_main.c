@@ -49,7 +49,6 @@ static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Ability ability, u32 weather);
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData);
-static enum Type AI_GetMoveTypeForThaw(enum BattlerId battlerAtk, enum Move move);
 
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
@@ -1282,7 +1281,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battlerAtk].moves[moveIndex];
-            if (!CanFireMoveThawTarget(aiMove, AI_GetMoveTypeForThaw(battlerAtk, aiMove)) && !CanBurnHitThaw(aiMove) && !CanMoveThawTarget(abilityAtk, aiMove))
+            if (!CanFireMoveThawTarget(aiMove, CheckDynamicMoveType(GetBattlerMon(battlerAtk), aiMove, battlerAtk, MON_IN_BATTLE))
+             && !CanBurnHitThaw(aiMove)
+             && !CanMoveThawTarget(abilityAtk, aiMove))
             {
                 ADJUST_SCORE(-1);
                 break;
@@ -3830,19 +3831,6 @@ static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battler
     }
 
     return score;
-}
-
-static enum Type AI_GetMoveTypeForThaw(enum BattlerId battlerAtk, enum Move move)
-{
-    bool32 ateBoost = gBattleStruct->battlerState[battlerAtk].ateBoost;
-    enum Type moveType = GetDynamicMoveType(GetBattlerMon(battlerAtk), move, battlerAtk, MON_IN_BATTLE);
-
-    gBattleStruct->battlerState[battlerAtk].ateBoost = ateBoost;
-
-    if (moveType == TYPE_NONE)
-        moveType = GetMoveType(move);
-
-    return moveType;
 }
 
 static enum MoveComparisonResult CompareMoveAccuracies(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveSlot1, u32 moveSlot2)
