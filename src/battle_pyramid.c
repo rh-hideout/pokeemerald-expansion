@@ -119,6 +119,7 @@ static const u8 sPyramidTableWeights[PYRAMID_FLOOR_COUNT][BATTLE_PYRAMID_ENCOUNT
     { 0, 60, 20, 15,  5,  0,  0,  0},
     { 0,  0, 60, 20, 15,  5,  0,  0},
     { 0,  0,  0, 60, 20, 15,  5,  0},
+    { 0,  0,  0,  0, 60, 20, 15,  5},
     { 0,  0,  0,  0, 10, 50, 20, 20},
     { 0,  0,  0,  0, 10, 20, 30, 40},
 };
