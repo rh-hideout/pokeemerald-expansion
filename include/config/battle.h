@@ -176,6 +176,7 @@
 #define B_SHEER_FORCE_AGAINST_ABILITIES GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk and Pickpocket
                                                    // Currently does nothing, as there is not enough info to confirm event orders for cases like Eject Pack and Eject Button
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
+                                                   // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
