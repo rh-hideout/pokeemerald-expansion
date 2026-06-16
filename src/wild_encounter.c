@@ -6,6 +6,7 @@
 #include "fieldmap.h"
 #include "fishing.h"
 #include "follower_npc.h"
+#include "item.h"
 #include "random.h"
 #include "field_player_avatar.h"
 #include "link.h"
