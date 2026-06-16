@@ -9,6 +9,8 @@ SOUND_BIN_DIR := sound
 # Needs to recompile for B_NUM_LOW_HEALTH_BEEPS in battle.h
 EXPANSION_BATTLE_CONFIG := include/config/battle.h
 
+AUTO_GEN_TARGETS += $(patsubst %.pory,%.inc,$(shell find data/ -type f -name '*.pory'))
+
 SPECIAL_OUTDIRS := $(MID_ASM_DIR) $(CRY_BIN_DIR)
 SPECIAL_OUTDIRS += $(SOUND_BIN_DIR) $(SOUND_BIN_DIR)/direct_sound_samples/phonemes $(SOUND_BIN_DIR)/direct_sound_samples/cries
 $(shell mkdir -p $(SPECIAL_OUTDIRS) )
@@ -51,3 +53,6 @@ $(foreach line,$(shell cat $(MID_CFG_PATH) | sed "s/ /__SPACE__/g"),$(call MID_E
 # Warn users building without a .cfg - build will fail at link time
 $(MID_ASM_DIR)/%.s: $(MID_SUBDIR)/%.mid
 	$(warning $< does not have an associated entry in midi.cfg! It cannot be built)
+
+
+%.pory: ;

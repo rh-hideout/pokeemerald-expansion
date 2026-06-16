@@ -3,7 +3,6 @@
   "name": "PalletTown_Frlg",
   "layout": "LAYOUT_PALLET_TOWN",
   "music": "MUS_RG_PALLET",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_PALLET_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -165,6 +164,15 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PalletTown_EventScript_TrainerTips"
+    },
+    {
+      "type": "sign",
+      "x": 21,
+      "y": 2,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Pallet_Town_EventScript_Sign1"
     }
-  ]
+  ],
+  "region": "REGION_KANTO"
 }
