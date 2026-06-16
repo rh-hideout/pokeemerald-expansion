@@ -1165,7 +1165,8 @@ static void ApplyFluteEncounterRateMod(u32 *encRate)
 
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 {
-    if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
+    enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM);
+    if (gItemsInfo[heldItem].holdEffect == HOLD_EFFECT_REPEL)
         *encRate = *encRate * 2 / 3;
 }
 
