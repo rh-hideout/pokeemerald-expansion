@@ -1,6 +1,13 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS {
+    ASSUME(GetMoveType(MOVE_POUND) == TYPE_NORMAL);
+    ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
+    ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
+    ASSUME(GetMoveType(MOVE_KARATE_CHOP) == TYPE_FIGHTING);
+}
+
 SINGLE_BATTLE_TEST("Effectiveness strings are correct in Single Battles")
 {
     enum Move move;
