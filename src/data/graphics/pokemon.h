@@ -23343,7 +23343,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
-    const u32 gMonFrontPic_Cinderace[] = INCGFX_U32("graphics/pokemon/cinderace/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Cinderace[] = INCGFX_U32("graphics/pokemon/cinderace/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Cinderace[] = INCGFX_U16("graphics/pokemon/cinderace/normal.pal", ".gbapal");
     const u32 gMonBackPic_Cinderace[] = INCGFX_U32("graphics/pokemon/cinderace/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Cinderace[] = INCGFX_U16("graphics/pokemon/cinderace/shiny.pal", ".gbapal");

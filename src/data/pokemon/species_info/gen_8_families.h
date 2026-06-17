@@ -429,8 +429,11 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .frontPic = gMonFrontPic_Cinderace,
         .frontPicSize = MON_COORDS_SIZE(40, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 42),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_CONCAVE_ARC_SMALL,
         .backPic = gMonBackPic_Cinderace,
         .backPicSize = MON_COORDS_SIZE(48, 56),
         .backPicYOffset = 4,
