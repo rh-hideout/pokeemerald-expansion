@@ -2311,7 +2311,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     gBattleScripting.battler = battlerAtk;
     gEffectBattler = effectBattler;
 
-    if (!primary && !affectsUser && IsMoveEffectBlockedByTarget(abilities[effectBattler]))
+    if (!primary && !affectsUser && moveEffect != MOVE_EFFECT_FLING && IsMoveEffectBlockedByTarget(abilities[effectBattler]))
         moveEffect = MOVE_EFFECT_NONE;
     else if (!primary
           && IsSheerForceAffected(gCurrentMove, abilities[battlerAtk])
