@@ -550,7 +550,7 @@ static enum ItemEffect TryLifeOrb(enum BattlerId battlerAtk)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 10);
-        BattleScriptCall(BattleScript_ItemHurtRet);
+        BattleScriptCall(BattleScript_LifeOrbActivates);
         effect = ITEM_HP_CHANGE;
     }
 

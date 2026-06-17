@@ -321,6 +321,7 @@ extern const u8 BattleScript_ItemHurtWithAnim[];
 extern const u8 BattleScript_AirBalloonMsgInRet[];
 extern const u8 BattleScript_AirBalloonMsgPop[];
 extern const u8 BattleScript_ItemHurtRet[];
+extern const u8 BattleScript_LifeOrbActivates[];
 extern const u8 BattleScript_MoveEffectIncinerate[];
 extern const u8 BattleScript_MoveEffectBugBite[];
 extern const u8 BattleScript_IllusionOff[];

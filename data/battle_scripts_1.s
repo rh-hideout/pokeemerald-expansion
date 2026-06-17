@@ -5396,6 +5396,15 @@ BattleScript_ItemHurtWithAnim::
 	call BattleScript_ItemHurtRet
 	return
 
+BattleScript_LifeOrbActivates::
+	call BattleScript_ItemPopUp_AttackerNoFlush
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	printstring STRINGID_LOSTSOMEOFITSHP
+	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
+	return
+
 BattleScript_ItemHealHP_Ret::
 	call BattleScript_ItemPopUp_Attacker
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT

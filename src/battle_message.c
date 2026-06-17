@@ -898,6 +898,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_MOSTLYINEFFECTIVETWOFOES]             = COMPOUND_STRING("It's mostly ineffective on {B_DEF_NAME_WITH_PREFIX2} and {B_DEF_PARTNER_NAME}."),
     [STRINGID_CRITICALHITONDEF]                     = COMPOUND_STRING("A critical hit on {B_DEF_NAME_WITH_PREFIX2}!"),
     [STRINGID_S]                                    = COMPOUND_STRING("s"),
+    [STRINGID_LOSTSOMEOFITSHP]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} lost some of its HP!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
