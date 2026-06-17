@@ -3454,7 +3454,6 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
          && IsBattlerAlive(cv->battlerAtk)
          && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
-         && !DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move)
          && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item)
          && !NoAliveMonsForEitherParty())
         {
