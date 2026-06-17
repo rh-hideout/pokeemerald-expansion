@@ -589,7 +589,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_SLOWSTARTENTERS]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is slow to get going!"),
     [STRINGID_SLOWSTARTEND]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} finally got its act together!"),
     [STRINGID_SOLARPOWERHPDROP]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} takes its toll!"), // Not in Gen 5+
-    [STRING_PKMNWASHURT]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt!"),
+    [STRINGID_PKMNWASHURT]                          = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt!"),
     [STRINGID_ANTICIPATIONACTIVATES]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} shuddered!"),
     [STRINGID_FOREWARNACTIVATES]                    = COMPOUND_STRING("{B_SCR_ABILITY} alerted {B_SCR_NAME_WITH_PREFIX2} to {B_EFF_NAME_WITH_PREFIX2}'s {B_BUFF1}!"),
     [STRINGID_ICEBODYHPGAIN]                        = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} healed it a little bit!"), // Not in Gen 5+
@@ -1447,7 +1447,7 @@ const u16 gPartyCureStatusStringIds[] =
 
 const u16 gHurtByStringIds[] =
 {
-    [B_MSG_HURT] = STRING_PKMNWASHURT,
+    [B_MSG_HURT] = STRINGID_PKMNWASHURT,
     [B_MSG_HURT_BY_ITEM] = STRINGID_PKMNHURTSWITH,
 };
 

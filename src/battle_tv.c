@@ -157,9 +157,9 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u16 *statStringId, *finishedMoveId;
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK)
-         && stringId != STRINGID_ITDOESNTAFFECT
-         && stringId != STRINGID_NOTVERYEFFECTIVE
-         && stringId != STRINGID_MOSTLYINEFFECTIVE)
+     && stringId != STRINGID_ITDOESNTAFFECT
+     && stringId != STRINGID_NOTVERYEFFECTIVE
+     && stringId != STRINGID_MOSTLYINEFFECTIVE)
         return;
 
     tvPtr = &gBattleStruct->tv;

@@ -5110,7 +5110,7 @@ BattleScript_SpikyShieldEffect::
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printstring STRING_PKMNWASHURT
+	printstring STRINGID_PKMNWASHURT
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	setmoveresultflags MOVE_RESULT_MISSED

@@ -2102,22 +2102,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 GetProtectBypassMethod(enum BattlerId battlerDef, enum Ability abilityAtk)
-{
-    if (MoveIgnoresProtect(gCurrentMove))
-        return PROTECT_BYPASS_MOVE_IGNORES;
-    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD
-        && (abilityAtk == ABILITY_UNSEEN_FIST || abilityAtk == ABILITY_PIERCING_DRILL))
-        return PROTECT_BYPASS_ABILITY_IGNORES;
-    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
-        return PROTECT_BYPASS_NONE;
-    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD)
-        return PROTECT_BYPASS_OTHER;
-    return PROTECT_BYPASS_MOVE_IGNORES;
-}
-
 static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 moveEffect)
 {
     if (gSpecialStatuses[battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
@@ -2476,10 +2460,26 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static bool32 GetProtectBypassMethod(enum BattlerId battlerDef, enum Ability abilityAtk)
+{
+    if (MoveIgnoresProtect(gCurrentMove))
+        return PROTECT_BYPASS_MOVE_IGNORES;
+    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD
+        && (abilityAtk == ABILITY_UNSEEN_FIST || abilityAtk == ABILITY_PIERCING_DRILL))
+        return PROTECT_BYPASS_ABILITY_IGNORES;
+    if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
+        return PROTECT_BYPASS_NONE;
+    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD)
+        return PROTECT_BYPASS_OTHER;
+    return PROTECT_BYPASS_MOVE_IGNORES;
+}
+
 static enum MoveEndResult MoveEndProtectBypassEffects(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    enum Ability abilityAtk = GetBattlerAbility(cv->battlerAtk);
+    enum Ability abilityAtk = cv->abilities[cv->battlerAtk];
     enum ProtectBypass protectBypassMethod = GetProtectBypassMethod(cv->battlerDef, abilityAtk);
 
     switch (protectBypassMethod)
