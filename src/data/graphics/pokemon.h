@@ -23327,7 +23327,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
-    const u32 gMonFrontPic_Raboot[] = INCGFX_U32("graphics/pokemon/raboot/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Raboot[] = INCGFX_U32("graphics/pokemon/raboot/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Raboot[] = INCGFX_U16("graphics/pokemon/raboot/normal.pal", ".gbapal");
     const u32 gMonBackPic_Raboot[] = INCGFX_U32("graphics/pokemon/raboot/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Raboot[] = INCGFX_U16("graphics/pokemon/raboot/shiny.pal", ".gbapal");
