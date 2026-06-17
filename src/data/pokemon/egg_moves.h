@@ -6370,3 +6370,14 @@ static const u16 sIllusionMagicianEggMoveLearnset[] = {
   //  MOVE_THOUSAND_KNIVES,
     MOVE_UNAVAILABLE,
 };
+
+static const u16 sDarkMagicianEggMoveLearnset[] = {
+    MOVE_ANCIENT_POWER,
+   // MOVE_CASTLE_WALLS,
+   // MOVE_CARD_DESTRUCTION,
+   // MOVE_DKMAGICATK,
+  //  MOVE_MAKIU_THE_MAGICAL_MIST,
+  //  MOVE_MIRACLE_RESTORING,
+  //  MOVE_THOUSAND_KNIVES,
+    MOVE_UNAVAILABLE,
+};

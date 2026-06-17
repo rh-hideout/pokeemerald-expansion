@@ -27511,3 +27511,45 @@ const u16 gMonPalette_IllusionMagician[] = INCGFX_U16("graphics/pokemon/illusion
 const u32 gMonBackPic_IllusionMagician[] = INCGFX_U32("graphics/pokemon/illusionmagician/back.png", ".4bpp.smol");
 const u16 gMonShinyPalette_IllusionMagician[] = INCGFX_U16("graphics/pokemon/illusionmagician/shiny.pal", ".gbapal");
 const u8 gMonIcon_IllusionMagician[] = INCGFX_U8("graphics/pokemon/illusionmagician/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_DarkMagician[] = INCGFX_U32("graphics/pokemon/darkmagician/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_DarkMagician[] = INCGFX_U16("graphics/pokemon/darkmagician/normal.pal", ".gbapal");
+const u32 gMonBackPic_DarkMagician[] = INCGFX_U32("graphics/pokemon/darkmagician/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_DarkMagician[] = INCGFX_U16("graphics/pokemon/darkmagician/shiny.pal", ".gbapal");
+const u8 gMonIcon_DarkMagician[] = INCGFX_U8("graphics/pokemon/darkmagician/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_DarkSage[] = INCGFX_U32("graphics/pokemon/darksage/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_DarkSage[] = INCGFX_U16("graphics/pokemon/darksage/normal.pal", ".gbapal");
+const u32 gMonBackPic_DarkSage[] = INCGFX_U32("graphics/pokemon/darksage/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_DarkSage[] = INCGFX_U16("graphics/pokemon/darksage/shiny.pal", ".gbapal");
+const u8 gMonIcon_DarkSage[] = INCGFX_U8("graphics/pokemon/darksage/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_BlackDragonsChick[] = INCGFX_U32("graphics/pokemon/BlackDragonsChick/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_BlackDragonsChick[] = INCGFX_U16("graphics/pokemon/BlackDragonsChick/normal.pal", ".gbapal");
+const u32 gMonBackPic_BlackDragonsChick[] = INCGFX_U32("graphics/pokemon/BlackDragonsChick/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_BlackDragonsChick[] = INCGFX_U16("graphics/pokemon/BlackDragonsChick/shiny.pal", ".gbapal");
+const u8 gMonIcon_BlackDragonsChick[] = INCGFX_U8("graphics/pokemon/BlackDragonsChick/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_RedEyesBlackDragon[] = INCGFX_U32("graphics/pokemon/RedEyesBlackDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_RedEyesBlackDragon[] = INCGFX_U16("graphics/pokemon/RedEyesBlackDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_RedEyesBlackDragon[] = INCGFX_U32("graphics/pokemon/RedEyesBlackDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_RedEyesBlackDragon[] = INCGFX_U16("graphics/pokemon/RedEyesBlackDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_RedEyesBlackDragon[] = INCGFX_U8("graphics/pokemon/RedEyesBlackDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_RedEyesBlackMetalDragon[] = INCGFX_U32("graphics/pokemon/RedEyesBlackMetalDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_RedEyesBlackMetalDragon[] = INCGFX_U16("graphics/pokemon/RedEyesBlackMetalDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_RedEyesBlackMetalDragon[] = INCGFX_U32("graphics/pokemon/RedEyesBlackMetalDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_RedEyesBlackMetalDragon[] = INCGFX_U16("graphics/pokemon/RedEyesBlackMetalDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_RedEyesBlackMetalDragon[] = INCGFX_U8("graphics/pokemon/RedEyesBlackMetalDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_PaladinOfWhiteDragon[] = INCGFX_U32("graphics/pokemon/PaladinOfWhiteDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_PaladinOfWhiteDragon[] = INCGFX_U16("graphics/pokemon/PaladinOfWhiteDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_PaladinOfWhiteDragon[] = INCGFX_U32("graphics/pokemon/PaladinOfWhiteDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_PaladinOfWhiteDragon[] = INCGFX_U16("graphics/pokemon/PaladinOfWhiteDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_PaladinOfWhiteDragon[] = INCGFX_U8("graphics/pokemon/PaladinOfWhiteDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_BlueEyesWhiteDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_BlueEyesWhiteDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_BlueEyesWhiteDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_BlueEyesWhiteDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_BlueEyesWhiteDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesWhiteDragon/icon.png", ".4bpp");

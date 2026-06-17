@@ -1,6 +1,33 @@
 {
   "ILLUSION_MAGICIAN": [
-    "MOVE_ANCIENT_POWER",
+		"MOVE_ENDURE"
+  ],
+
+  "DARK_MAGICIAN": [
+		"MOVE_ENDURE"
+  ],
+
+  "DARK_SAGE": [
+		"MOVE_ENDURE"
+  ],
+
+  "BLACK_DRAGONS_CHICK": [
+		"MOVE_ENDURE"
+  ],
+
+  "RED_EYES_BLACK_DRAGON": [
+		"MOVE_ENDURE"
+  ],
+
+  "RED_EYES_BLACK_METAL_DRAGON": [
+		"MOVE_ENDURE"
+  ],
+
+  "PALADIN_OF_WHITE_DRAGON": [
+		"MOVE_ENDURE"
+  ],
+
+  "BLUE_EYES_WHITE_DRAGON": [
 		"MOVE_ENDURE"
   ],
 
