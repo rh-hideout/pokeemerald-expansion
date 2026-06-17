@@ -2541,10 +2541,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Acts like under sun."),
     },
 
-    [ABILITY_316] =
+    [ABILITY_FIRE_MANE] =
     {
-        .name = _("-------"),
-        .description = COMPOUND_STRING("No special ability."),
+        .name = _("Fire Mane"),
+        .description = COMPOUND_STRING("Ups Fire-type moves."),
     },
 
     [ABILITY_317] =

@@ -337,7 +337,7 @@ enum __attribute__((packed)) Ability
     ABILITY_313 = 313,
     ABILITY_314 = 314,
     ABILITY_MEGA_SOL = 315,
-    ABILITY_316 = 316,
+    ABILITY_FIRE_MANE = 316,
     ABILITY_317 = 317,
     ABILITY_SPICY_SPRAY = 318,
     ABILITIES_COUNT_GEN9,
