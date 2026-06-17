@@ -335,7 +335,6 @@ static enum ItemEffect TryJabocaBerry(enum BattlerId battlerDef, enum BattlerId 
 
     if (IsBattlerAlive(battlerAtk)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-     && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattleMovePhysical(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
@@ -358,7 +357,6 @@ static enum ItemEffect TryRowapBerry(enum BattlerId battlerDef, enum BattlerId b
 
     if (IsBattlerAlive(battlerAtk)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-     && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattleMoveSpecial(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
@@ -379,8 +377,7 @@ static enum ItemEffect TrySetEnigmaBerry(enum BattlerId battlerDef, enum Battler
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (!DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
-     && ((IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES) && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE) || gBattleScripting.overrideBerryRequirements)
+    if (((IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES) && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE) || gBattleScripting.overrideBerryRequirements)
      && !(gBattleScripting.overrideBerryRequirements && gBattleMons[battlerDef].hp == gBattleMons[battlerDef].maxHP)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerDef].volatiles.healBlock))
     {
@@ -500,9 +497,7 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
         return effect;
 
     if (gBattleScripting.overrideBerryRequirements
-     || (!DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
-         && GetBattleMoveCategory(gCurrentMove) == category
-         && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)))
+     || (GetBattleMoveCategory(gCurrentMove) == category && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)))
     {
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
         {
