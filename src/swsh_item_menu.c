@@ -244,7 +244,6 @@ static u8 AddItemMessageWindow(u8);
 static void RemoveItemMessageWindow(u8);
 static void ReturnToItemList(u8);
 static u8 BagMenu_AddWindow(u8);
-static void PrintItemQuantity(u8, s16);
 static u8 GetSwitchBagPocketDirection(void);
 static void SwitchBagPocket(u8, s16, bool16);
 static bool8 CanSwapItems(void);
@@ -266,7 +265,7 @@ static void ItemMenu_Cancel(u8);
 static void HandleErrorMessage(u8);
 static void PrintItemCantBeHeld(u8);
 static u8 BagMenu_AddWindowNoFrame(u8 windowType);
-static void CreateQuantityFrameSprites(void);
+static void CreateQuantityFrameSprites(u8 y);
 static void DestroyQuantityFrameSprites(void);
 static void SetupSellWindows(void);
 static void PrintSellPrice(u16 itemId, int qty);
@@ -456,8 +455,9 @@ static const u8 sText_Var1CantBeHeldHere[]      = _("The {STR_VAR_1} can't be he
 static const u8 sText_DepositHowManyVar1[]      = _("Deposit how many\n{STR_VAR_1}?");
 static const u8 sText_DepositedVar2Var1s[]      = _("Deposited {STR_VAR_2}\n{STR_VAR_1}.");
 static const u8 sText_NoRoomForItems[]          = _("There's no room to\nstore items.");
-static const u8 sText_CantStoreImportantItems[] = _("Important items\ncan't be stored in\nthe PC!");
+static const u8 sText_CantStoreImportantItems[] = _("Important items can't be\nstored in the PC!");
 static const u8 sText_Price[]                   = _("Price");
+static const u8 sText_ConfirmTossItems[]        = _("Throw away {STR_VAR_2}\n{STR_VAR_1}?");
 
 static void Task_LoadBagSortOptions(u8 taskId);
 static void ItemMenu_SortByName(u8 taskId);
@@ -1367,9 +1367,9 @@ static const struct WindowTemplate sContextMenuWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 24,
         .tilemapTop = 17,
-        .width = 5,
+        .width = 4,
         .height = 2,
-        .paletteNum = 15,
+        .paletteNum = 1,
         .baseBlock = 475,
     },
     [ITEMWIN_SELL_PRICE] = {
@@ -2520,16 +2520,10 @@ void CloseItemMessage(u8 taskId)
     ReturnToItemList(taskId);
 }
 
-static void AddItemQuantityWindow(u8 windowType)
+static void AddItemQuantityWindow(void)
 {
-    PrintItemQuantity(BagMenu_AddWindow(windowType), 1);
-}
-
-static void PrintItemQuantity(u8 windowId, s16 quantity)
-{
-    ConvertIntToDecimalStringN(gStringVar1, quantity, STR_CONV_MODE_LEADING_ZEROS, MAX_ITEM_DIGITS);
-    StringExpandPlaceholders(gStringVar4, gText_xVar1);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 2, 0, 0);
+    CreateQuantityFrameSprites(144);
+    PrintQuantity(BagMenu_AddWindowNoFrame(ITEMWIN_QUANTITY), 1);
 }
 
 static bool8 BagMenu_TryWraparoundScroll(u8 listTaskId, u16 *scrollPos, u16 *cursorPos)
@@ -3216,11 +3210,11 @@ static void ItemMenu_Toss(u8 taskId)
     else
     {
         u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, 2);
-        WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
+        WrapFontIdToFit(gStringVar1, end, FONT_SHORT_NARROW, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         StringExpandPlaceholders(gStringVar4, gText_TossHowManyVar1s);
         FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
-        BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
-        AddItemQuantityWindow(ITEMWIN_QUANTITY);
+        BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, gStringVar4, 3, 1, 0, 1, 0, COLORID_NORMAL);
+        AddItemQuantityWindow();
         gTasks[taskId].func = Task_ChooseHowManyToToss;
     }
 }
@@ -3230,11 +3224,11 @@ static void AskTossItems(u8 taskId)
     s16 *data = gTasks[taskId].data;
 
     u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, tItemCount);
-    WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
+    WrapFontIdToFit(gStringVar1, end, FONT_SHORT_NARROW, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
-    StringExpandPlaceholders(gStringVar4, gText_ConfirmTossItems);
+    StringExpandPlaceholders(gStringVar4, sText_ConfirmTossItems);
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
-    BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
+    BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, gStringVar4, 3, 1, 0, 1, 0, COLORID_NORMAL);
     BagMenu_YesNo(taskId, ITEMWIN_YESNO_LOW, &sYesNoTossFunctions);
 }
 
@@ -3253,17 +3247,19 @@ static void Task_ChooseHowManyToToss(u8 taskId)
 
     if (AdjustQuantityAccordingToDPadInput(&tItemCount, tQuantity) == TRUE)
     {
-        PrintItemQuantity(gBagMenu->windowIds[ITEMWIN_QUANTITY], tItemCount);
+        PrintQuantity(gBagMenu->windowIds[ITEMWIN_QUANTITY], tItemCount);
     }
     else if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
+        DestroyQuantityFrameSprites();
         BagMenu_RemoveWindow(ITEMWIN_QUANTITY);
         AskTossItems(taskId);
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
+        DestroyQuantityFrameSprites();
         BagMenu_RemoveWindow(ITEMWIN_QUANTITY);
         CancelToss(taskId);
     }
@@ -3274,11 +3270,11 @@ static void ConfirmToss(u8 taskId)
     s16 *data = gTasks[taskId].data;
 
     u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, tItemCount);
-    WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
+    WrapFontIdToFit(gStringVar1, end, FONT_SHORT_NARROW, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
     ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
     StringExpandPlaceholders(gStringVar4, gText_ThrewAwayVar2Var1s);
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
-    BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
+    BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, gStringVar4, 3, 1, 0, 1, 0, COLORID_NORMAL);
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || FlagGet(FLAG_STORING_ITEMS_IN_PYRAMID_BAG) == TRUE)
         gTasks[taskId].func = Task_RemoveItemFromBag;
     else
@@ -3564,7 +3560,7 @@ static void InitSellHowManyInput(u8 taskId)
 {
     u8 windowId;
 
-    CreateQuantityFrameSprites();
+    CreateQuantityFrameSprites(96);
     windowId = BagMenu_AddWindowNoFrame(ITEMWIN_SELL_QUANTITY);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
     PrintQuantity(windowId, 1);
@@ -3648,11 +3644,11 @@ static void Task_ItemContext_Deposit(u8 taskId)
     else
     {
         u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, 2);
-        WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
+        WrapFontIdToFit(gStringVar1, end, FONT_SHORT_NARROW, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         StringExpandPlaceholders(gStringVar4, sText_DepositHowManyVar1);
         FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
-        BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
-        AddItemQuantityWindow(ITEMWIN_QUANTITY);
+        BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, gStringVar4, 3, 1, 0, 1, 0, COLORID_NORMAL);
+        AddItemQuantityWindow();
         gTasks[taskId].func = Task_ChooseHowManyToDeposit;
     }
 }
@@ -3663,11 +3659,12 @@ static void Task_ChooseHowManyToDeposit(u8 taskId)
 
     if (AdjustQuantityAccordingToDPadInput(&tItemCount, tQuantity) == TRUE)
     {
-        PrintItemQuantity(gBagMenu->windowIds[ITEMWIN_QUANTITY], tItemCount);
+        PrintQuantity(gBagMenu->windowIds[ITEMWIN_QUANTITY], tItemCount);
     }
     else if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
+        DestroyQuantityFrameSprites();
         BagMenu_RemoveWindow(ITEMWIN_QUANTITY);
         TryDepositItem(taskId);
     }
@@ -3690,23 +3687,23 @@ static void TryDepositItem(u8 taskId)
     if (GetItemImportance(gSpecialVar_ItemId))
     {
         // Can't deposit important items
-        BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, sText_CantStoreImportantItems, 3, 1, 0, 0, 0, COLORID_NORMAL);
+        BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, sText_CantStoreImportantItems, 3, 1, 0, 1, 0, COLORID_NORMAL);
         gTasks[taskId].func = WaitDepositErrorMessage;
     }
     else if (AddPCItem(gSpecialVar_ItemId, tItemCount) == TRUE)
     {
         // Successfully deposited
         u8 *end = CopyItemNameHandlePlural(gSpecialVar_ItemId, gStringVar1, tItemCount);
-        WrapFontIdToFit(gStringVar1, end, FONT_NORMAL, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
+        WrapFontIdToFit(gStringVar1, end, FONT_SHORT_NARROW, WindowWidthPx(WIN_DESCRIPTION) - 10 - 6);
         ConvertIntToDecimalStringN(gStringVar2, tItemCount, STR_CONV_MODE_LEFT_ALIGN, MAX_ITEM_DIGITS);
         StringExpandPlaceholders(gStringVar4, sText_DepositedVar2Var1s);
-        BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, gStringVar4, 3, 1, 0, 0, 0, COLORID_NORMAL);
+        BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, gStringVar4, 3, 1, 0, 1, 0, COLORID_NORMAL);
         gTasks[taskId].func = Task_RemoveItemFromBag;
     }
     else
     {
         // No room to deposit
-        BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, sText_NoRoomForItems, 3, 1, 0, 0, 0, COLORID_NORMAL);
+        BagMenu_Print(WIN_DESCRIPTION, FONT_SHORT_NARROW, sText_NoRoomForItems, 3, 1, 0, 1, 0, COLORID_NORMAL);
         gTasks[taskId].func = WaitDepositErrorMessage;
     }
 }
@@ -3974,12 +3971,12 @@ static void CreatePriceFrameSprites(void)
     }
 }
 
-static void CreateQuantityFrameSprites(void)
+static void CreateQuantityFrameSprites(u8 y)
 {
     u8 i;
     for (i = 0; i < FRAME_QUANTITY_SPRITES_COUNT; i++)
     {
-        sFrameQuantityIds[i] = CreateSprite(&sSpriteTemplate_FramePriceQuantity, 192 + i * 32, 96, 3);
+        sFrameQuantityIds[i] = CreateSprite(&sSpriteTemplate_FramePriceQuantity, 192 + i * 32, y, 3);
         StartSpriteAnim(&gSprites[sFrameQuantityIds[i]], sFrameQuantityAnims[i]);
     }
 }
@@ -4901,7 +4898,7 @@ static void PrintBerryDescriptionInfo(s32 itemIndex)
     {
         const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(GetBagItemId(gBagPosition.pocket, itemIndex)));
         AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3,  2, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description1);
-        AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3, 12, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description2);
+        AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3, 15, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description2);
     }
 }
 
@@ -7584,7 +7581,7 @@ static void BagMenu_TryMultiUse(u8 taskId)
     }
 
     tMultiUseMax = max;
-    CreateQuantityFrameSprites();
+    CreateQuantityFrameSprites(96);
     PrintQuantity(BagMenu_AddWindowNoFrame(ITEMWIN_SELL_QUANTITY), 1);
     gTasks[taskId].func = Task_BagMenu_MultiUseInput;
 }
