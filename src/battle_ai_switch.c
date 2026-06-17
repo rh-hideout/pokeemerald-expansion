@@ -575,7 +575,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchCont
         return FALSE;
     if (AreStatsRaised(switchContext->battler))
         return FALSE;
-    if (IsMoldBreakerTypeAbility(switchContext->opposingBattler, gAiLogicData->abilities[switchContext->opposingBattler], MOVE_NONE)) // incomingMove?
+    if (IsMoldBreakerTypeAbility(switchContext->opposingBattler, gAiLogicData->abilities[switchContext->opposingBattler], switchContext->incomingMove))
         return FALSE;
     if (switchContext->canBattlerWin1v1)
         return FALSE;
