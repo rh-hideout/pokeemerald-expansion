@@ -192,7 +192,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
 {
     PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
+        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_LEAVE_1_HP);
         PLAYER (SPECIES_WOBBUFFET) { HP(1); }
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET);
