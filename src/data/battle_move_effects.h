@@ -342,7 +342,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_LOCK_ON] =
+    [EFFECT_ENSURE_NEXT_HIT] =
     {
         .battleScript = BattleScript_EffectLockOn,
         .battleTvScore = 3,
