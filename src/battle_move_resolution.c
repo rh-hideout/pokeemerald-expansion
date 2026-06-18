@@ -931,7 +931,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
                 }
             }
         }
-        else if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_AND_ALLY)
+        else if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_AND_ALLY || moveTarget == TARGET_FIELD)
         {
             cv->battlerDef = cv->battlerAtk;
         }

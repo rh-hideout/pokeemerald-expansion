@@ -73,4 +73,22 @@ SINGLE_BATTLE_TEST("Trick Room does not affect move priority")
     }
 }
 
+DOUBLE_BATTLE_TEST("Trick Room does not fail if the chosen engine target has fainted")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_MEMENTO, target:opponentRight);
+            MOVE(playerRight, MOVE_TRICK_ROOM, target:playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, playerRight);
+    }
+}
+
 TO_DO_BATTLE_TEST("TODO: Write Trick Room (Move Effect) test titles")
