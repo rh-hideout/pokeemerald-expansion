@@ -5730,9 +5730,9 @@ u32 GetBattlerHoldEffectParam(enum BattlerId battler)
 
 bool32 CanBattlerAvoidContactEffects(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, enum Move move)
 {
-    if (holdEffectAtk == HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS)
+    if (holdEffectAtk == HOLD_EFFECT_PROTECTIVE_PADS)
     {
-        RecordItemEffectBattle(battlerAtk, HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS);
+        RecordItemEffectBattle(battlerAtk, HOLD_EFFECT_PROTECTIVE_PADS);
         return TRUE;
     }
 

@@ -489,7 +489,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     {
     },
 
-    [HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS] =
+    [HOLD_EFFECT_PROTECTIVE_PADS] =
     {
     },
 
