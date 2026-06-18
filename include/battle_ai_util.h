@@ -131,7 +131,6 @@ u32 GetBattlerSecondaryDamage(enum BattlerId battlerId);
 bool32 BattlerWillFaintFromWeather(enum BattlerId battler, enum Ability ability);
 bool32 BattlerWillFaintFromSecondaryDamage(enum BattlerId battler, enum Ability ability);
 bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move);
-bool32 ShouldUseRecoilMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 recoilDmg, u32 moveIndex);
 bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 bool32 ShouldRecover(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 healPercent);
 bool32 ShouldSetScreen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect);
@@ -233,6 +232,7 @@ bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(enum Move move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 bool32 IsSelfSacrificeEffect(enum Move move);
+bool32 IsRecoilDamageEffect(enum Move move);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks
