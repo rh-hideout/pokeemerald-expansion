@@ -5885,7 +5885,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Chimes soothingly to heal\n"
             "the party's status problems."),
-        .effect = EFFECT_HEAL_BELL,
+        .effect = EFFECT_HEAL_PARTY_STATUS,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -8555,7 +8555,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Heals all status problems\n"
             "with a soothing scent."),
-        .effect = EFFECT_HEAL_BELL,
+        .effect = EFFECT_HEAL_PARTY_STATUS,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,

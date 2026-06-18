@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
-    ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+    ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_PARTY_STATUS);
+    ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_PARTY_STATUS);
     ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
     PARAMETRIZE { move = MOVE_AROMATHERAPY; status = STATUS1_FROSTBITE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_PARTY_STATUS);
         PLAYER(SPECIES_WOBBUFFET) {
             if (status != STATUS1_SLEEP && status != STATUS1_FREEZE)
                 Status1(status);

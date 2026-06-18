@@ -243,7 +243,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         case EFFECT_RECYCLE:
 
         // tests exist elsewhere
-        case EFFECT_HEAL_BELL:
+        case EFFECT_HEAL_PARTY_STATUS:
         case EFFECT_SLEEP_TALK:
         case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
@@ -323,7 +323,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
 
         // tests exist elsewhere
         case EFFECT_GRAVITY:
-        case EFFECT_HEAL_BELL:
+        case EFFECT_HEAL_PARTY_STATUS:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:

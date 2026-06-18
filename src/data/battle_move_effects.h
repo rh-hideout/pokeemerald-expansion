@@ -390,7 +390,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_HEAL_BELL] =
+    [EFFECT_HEAL_PARTY_STATUS] =
     {
         .battleScript = BattleScript_EffectHealBell,
         .battleTvScore = 5,

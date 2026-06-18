@@ -4346,7 +4346,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
             if (needHealing)
                 return TRUE;
             break;
-        case EFFECT_HEAL_BELL:
+        case EFFECT_HEAL_PARTY_STATUS:
             if (hasStatus)
                 return TRUE;
             break;
@@ -4360,7 +4360,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
         {
         case EFFECT_WISH:
             return ShouldRecover(battlerAtk, battlerDef, move, 50); // Switch recovery isn't good idea in doubles
-        case EFFECT_HEAL_BELL:
+        case EFFECT_HEAL_PARTY_STATUS:
             if (hasStatus)
                 return TRUE;
             break;
