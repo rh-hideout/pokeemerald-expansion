@@ -2076,7 +2076,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
             else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0) // Technically goes before air balloon and levitate but after wonder guard, but does not cause any regression and only a minor issue. Can be fixed later.
                   || IsTargetUnaffectedByDreamEater(cv))
-
             {
                 TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
@@ -2425,7 +2424,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
     {
         gEffectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
 
-        while (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+        while (gBattleStruct->additionalEffectsCounter < numAdditionalEffects)
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, gBattleStruct->additionalEffectsCounter);
             gBattleStruct->additionalEffectsCounter++;
