@@ -370,7 +370,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
     },
 
-    [EFFECT_FLAIL] =
+    [EFFECT_MORE_POWER_WITH_LESS_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
