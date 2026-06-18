@@ -287,7 +287,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_FIRST_TURN_ONLY:
         case EFFECT_BECOME_TARGET:
         case EFFECT_INSTRUCT:
-        case EFFECT_JUNGLE_HEALING:
+        case EFFECT_HEAL_PARTY:
         case EFFECT_SHED_TAIL:
             return RandomPercentage(RNG_AI_ASSUME_STATUS_HIGH_ODDS, ASSUME_STATUS_HIGH_ODDS);
         // Medium odds
