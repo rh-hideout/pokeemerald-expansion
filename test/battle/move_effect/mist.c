@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Mist prevents stat reductions from opposing moves")
         TURN { MOVE(player, MOVE_MIST); MOVE(opponent, MOVE_GROWL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
-        MESSAGE("Your team became shrouded in mist!");
+        MESSAGE("Wobbuffet surrounds itself with a protective mist!");
         MESSAGE("The opposing Wobbuffet used Growl!");
         MESSAGE("Wobbuffet is protected by the mist!");
     } THEN {
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Mist's protection considers Contrary") // Eg. If a move woul
         TURN { MOVE(player, MOVE_MIST); MOVE(opponent, MOVE_SWAGGER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
-        MESSAGE("Your team became shrouded in mist!");
+        MESSAGE("Snivy surrounds itself with a protective mist!");
         MESSAGE("The opposing Wobbuffet used Swagger!");
         MESSAGE("Snivy is protected by the mist!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);

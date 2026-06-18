@@ -997,7 +997,8 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Defender Takes First Critical Hit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LASER_FOCUS, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
-        MESSAGE("A critical hit!");
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
         MESSAGE("Trainer A: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}");
         // Note: Planned PR for additional slides will change slides from using "Player/Opponent" side to "Attacker/Target" side

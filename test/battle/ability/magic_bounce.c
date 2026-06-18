@@ -220,7 +220,7 @@ SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-inv
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
-        MESSAGE("Pointed stones float in the air around the opposing team!");
+        MESSAGE("Pointed stones float in the air on the opposing side!");
     }
 }
 

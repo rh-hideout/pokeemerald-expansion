@@ -258,7 +258,7 @@ static enum ItemEffect TryWeaknessPolicy(enum BattlerId battlerDef)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-     && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE)
+     && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
     {
         SetStatChange(battlerDef, STAT_ATK, 2);
         SetStatChange(battlerDef, STAT_SPATK, 2);
@@ -377,7 +377,7 @@ static enum ItemEffect TrySetEnigmaBerry(enum BattlerId battlerDef, enum Battler
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (((IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES) && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE) || gBattleScripting.overrideBerryRequirements)
+    if (((IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES) && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS) || gBattleScripting.overrideBerryRequirements)
      && !(gBattleScripting.overrideBerryRequirements && gBattleMons[battlerDef].hp == gBattleMons[battlerDef].maxHP)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerDef].volatiles.healBlock))
     {
@@ -545,7 +545,7 @@ static enum ItemEffect TryLifeOrb(enum BattlerId battlerAtk)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 10);
-        BattleScriptCall(BattleScript_ItemHurtRet);
+        BattleScriptCall(BattleScript_LifeOrbActivates);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -598,7 +598,7 @@ static enum ItemEffect TryToxicOrb(enum BattlerId battler)
         gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
         gEffectBattler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-        BattleScriptCall(BattleScript_MoveEffectToxic);
+        BattleScriptCall(BattleScript_ToxicOrbActivates);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -615,7 +615,7 @@ static enum ItemEffect TryFlameOrb(enum BattlerId battler)
         gBattleMons[battler].status1 = STATUS1_BURN;
         gEffectBattler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-        BattleScriptCall(BattleScript_MoveEffectBurn);
+        BattleScriptCall(BattleScript_FlameOrbActivates);
         effect = ITEM_STATUS_CHANGE;
     }
 
