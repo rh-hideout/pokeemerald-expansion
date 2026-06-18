@@ -10571,7 +10571,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Attacks first if the foe\n"
             "is readying an attack."),
-        .effect = EFFECT_SUCKER_PUNCH,
+        .effect = EFFECT_PRIORITY_IF_TARGET_DAMAGES,
         .power = B_UPDATED_MOVE_DATA >= GEN_7 ? 70 : 80,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -21830,7 +21830,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Attacks first if the foe\n"
             "is readying an attack."),
-        .effect = EFFECT_SUCKER_PUNCH,
+        .effect = EFFECT_PRIORITY_IF_TARGET_DAMAGES,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,

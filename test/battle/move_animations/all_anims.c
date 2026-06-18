@@ -134,7 +134,7 @@ static bool32 TargetHasToMove(enum Move move) // Opponent needs to hit the playe
      || effect == EFFECT_MIRROR_MOVE
      || effect == EFFECT_CONVERSION_2
      || effect == EFFECT_COPYCAT
-     || effect == EFFECT_SUCKER_PUNCH
+     || effect == EFFECT_PRIORITY_IF_TARGET_DAMAGES
      || effect == EFFECT_INSTRUCT
      || effect == EFFECT_DISABLE
      || effect == EFFECT_MIMIC
