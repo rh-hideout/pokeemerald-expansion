@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Ice Scales halves the damage from special moves", s16 damage
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_PSYCHIC) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_PSYSHOCK) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMoveEffect(MOVE_PSYSHOCK) == EFFECT_PSYSHOCK);
+        ASSUME(GetMoveEffect(MOVE_PSYSHOCK) == EFFECT_PHYSICAL_DAMAGE);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_FROSMOTH) { Ability(ability); }
