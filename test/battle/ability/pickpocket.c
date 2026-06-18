@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after the final hit of a multi-strike m
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, player);
-        MESSAGE("The Pokémon was hit 3 time(s)!");
+        MESSAGE("The Pokémon was hit 3 times!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
         MESSAGE("The opposing Sneasel stole Wobbuffet's Magost Berry!");
     } THEN {
@@ -264,7 +264,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals Life Orb after it activates")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
+        MESSAGE("Wobbuffet lost some of its HP!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
         MESSAGE("The opposing Sneasel stole Wobbuffet's Life Orb!");
     } THEN {

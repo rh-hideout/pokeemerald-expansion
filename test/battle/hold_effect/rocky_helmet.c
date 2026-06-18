@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Rocky Helmet does not trigger contact damage again after a l
         ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
         HP_BAR(player, damage: maxHP / 6);
         MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");
-        MESSAGE("The Pokémon was hit 1 time(s)!");
+        MESSAGE("The Pokémon was hit 1 time!");
         NONE_OF {
             HP_BAR(player);
             MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");

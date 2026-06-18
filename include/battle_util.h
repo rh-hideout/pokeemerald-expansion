@@ -212,7 +212,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId);
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
 bool32 TryPrimalReversion(enum BattlerId battler);
 bool32 IsNeutralizingGasOnField(void);
-bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability);
+bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability, enum Move move);
 enum Ability GetBattlerAbilityIgnoreMoldBreaker(enum BattlerId battler);
 enum Ability GetBattlerAbilityNoAbilityShield(enum BattlerId battler);
 enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield);
@@ -419,9 +419,10 @@ enum Stat GetDownloadStat(enum BattlerId battler);
 bool32 BattlerJustSwitchedIn(enum BattlerId battler);
 bool32 IsBattlersFirstTurn(enum BattlerId battler);
 struct PartyState *GetBattlerPartyState(enum BattlerId battler);
+void SetValuesOnFaint(enum BattlerId battler);
 bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
-void SetValuesOnFaint(enum BattlerId battler);
+bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
 
 #endif // GUARD_BATTLE_UTIL_H

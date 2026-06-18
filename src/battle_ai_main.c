@@ -107,12 +107,12 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
     [28] = NULL,                     // AI_FLAG_ASSUME_STAB
     [29] = NULL,                     // AI_FLAG_ASSUME_STATUS_MOVES
     [30] = AI_AttacksPartner,        // AI_FLAG_ATTACKS_PARTNER
-    [31] = NULL,                     // Unused
-    [32] = NULL,                     // Unused
-    [33] = NULL,                     // Unused
-    [34] = NULL,                     // Unused
-    [35] = NULL,                     // Unused
-    [36] = NULL,                     // Unused
+    [31] = NULL,                     // AI_FLAG_KNOW_OPPONENT_PARTY
+    [32] = NULL,                     // AI_FLAG_RANDOMIZE_SWITCHIN
+    [33] = NULL,                     // AI_FLAG_RANDOMIZE_PARTY_INDICES
+    [34] = NULL,                     // AI_FLAG_ABILITY_OMNISCIENCE
+    [35] = NULL,                     // AI_FLAG_ITEM_OMNISCIENCE
+    [36] = NULL,                     // AI_FLAG_MOVE_OMNISCIENCE
     [37] = NULL,                     // Unused
     [38] = NULL,                     // Unused
     [39] = NULL,                     // Unused
@@ -548,6 +548,9 @@ static void CopyBattlerDataToAIParty(u32 bPosition, enum BattleTrainer trainer)
 void Ai_InitPartyStruct(void)
 {
     bool32 isOmniscient = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_OMNISCIENT) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_OMNISCIENT);
+    bool32 isAbilityOmniscient = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ABILITY_OMNISCIENCE) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ABILITY_OMNISCIENCE);
+    bool32 isItemOmniscient = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ITEM_OMNISCIENCE) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ITEM_OMNISCIENCE);
+    bool32 isMoveOmniscient = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_MOVE_OMNISCIENCE) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_MOVE_OMNISCIENCE);
     bool32 hasPartyKnowledge = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_KNOW_OPPONENT_PARTY) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_KNOW_OPPONENT_PARTY);
     struct Pokemon *mon;
 
@@ -583,11 +586,17 @@ void Ai_InitPartyStruct(void)
                 if (isOmniscient || hasPartyKnowledge)
                     gAiPartyData->mons[trainer][monIndex].species = GetMonData(mon, MON_DATA_SPECIES);
 
-                if (isOmniscient)
+                if (isOmniscient || isAbilityOmniscient)
+                    gAiPartyData->mons[trainer][monIndex].ability = GetMonAbility(mon);
+
+                if (isOmniscient || isItemOmniscient)
                 {
                     gAiPartyData->mons[trainer][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
                     gAiPartyData->mons[trainer][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[trainer][monIndex].item);
-                    gAiPartyData->mons[trainer][monIndex].ability = GetMonAbility(mon);
+                }
+
+                if (isOmniscient || isMoveOmniscient)
+                {
                     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
                         gAiPartyData->mons[trainer][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
                 }
@@ -1854,7 +1863,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SNORE:
     case EFFECT_SLEEP_TALK:
-        if (IsWakeupTurn(battlerAtk) || !AI_IsBattlerAsleepOrComatose(battlerAtk))
+        if (IsWakeupTurn(battlerAtk) || !IsAsleepOrComatose(battlerAtk, aiData->abilities[battlerAtk]))
             ADJUST_SCORE(-10);    // if mon will wake up, is not asleep, or is not comatose
         break;
     case EFFECT_MEAN_LOOK:
@@ -1866,7 +1875,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_NIGHTMARE:
         if (gBattleMons[battlerDef].volatiles.nightmare)
             ADJUST_SCORE(-10);
-        else if (!AI_IsBattlerAsleepOrComatose(battlerDef))
+        else if (!IsAsleepOrComatose(battlerDef, aiData->abilities[battlerDef]))
             ADJUST_SCORE(-8);
         else if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
@@ -3277,6 +3286,10 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 {
                     ADJUST_SCORE(GOOD_EFFECT);
                 }
+                if (ShouldTriggerSpicySprayForBurn(battlerAtk, move, noOfHitsToKOPartner, aiData))
+                {
+                    ADJUST_SCORE(WEAK_EFFECT);
+                }
             }
             // It can kill one opponent when killing its ally, and its ally is not in extreme danger.
             // This is easy for the player to cheese.
@@ -3316,6 +3329,11 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             default:
                 break;
             }
+
+            if (!partnerProtecting
+             && isFriendlyFireOK
+             && ShouldTriggerSpicySprayForBurn(battlerAtk, move, noOfHitsToKOPartner, aiData))
+                ADJUST_SCORE(DECENT_EFFECT);
         }
     }
 
@@ -3385,6 +3403,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 break;
             case ABILITY_EARTH_EATER:
             case ABILITY_LEVITATE:
+            case ABILITY_EELEVATE:
                 if (moveType == TYPE_GROUND)
                 {
                     if (moveTarget == TARGET_FOES_AND_ALLY)
@@ -3650,7 +3669,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             case EFFECT_BEAT_UP:
             {
                 if (ShouldBeatUpForJustified(battlerAtk, battlerAtkPartner, move, moveType, wouldPartnerFaint, aiData)
-                 || ShouldBeatUpForRageFist(battlerAtkPartner, move, wouldPartnerFaint, aiData))
+                 || ShouldBeatUpForRageFist(battlerAtk, battlerAtkPartner, move, wouldPartnerFaint, aiData))
                 {
                     if (isFriendlyFireOK)
                     {
@@ -4196,9 +4215,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
      && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerAtk] != HOLD_EFFECT_MENTAL_HERB))
      {
         if (!AI_IsAbilityOnSide(battlerAtk, ABILITY_AROMA_VEIL)
-         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef])
+         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef], MOVE_NONE)
          || aiData->abilities[battlerDef] == ABILITY_MYCELIUM_MIGHT
-         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)])
+         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)], MOVE_NONE)
          || aiData->abilities[BATTLE_PARTNER(battlerDef)] == ABILITY_MYCELIUM_MIGHT)
             return score;
      }
@@ -4613,7 +4632,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     }
     case EFFECT_SNORE:
     case EFFECT_SLEEP_TALK:
-        if (!IsWakeupTurn(battlerAtk) && AI_IsBattlerAsleepOrComatose(battlerAtk))
+        if (!IsWakeupTurn(battlerAtk) && IsAsleepOrComatose(battlerAtk, aiData->abilities[battlerAtk]))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_LOCK_ON:
@@ -5676,7 +5695,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
         }
         else // consider move effects that hinder the target
         {
-            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef]))
+            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef], move))
                 continue;
 
             switch (additionalEffect->moveEffect)

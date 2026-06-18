@@ -67,31 +67,31 @@ SINGLE_BATTLE_TEST("SetStartingStatus messages work as intended")
             MESSAGE("A bizarre area was created in which Defense and Sp. Def stats are swapped!");
             break;
         case STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY:
-            MESSAGE("The Tailwind blew from behind the opposing team!");
+            MESSAGE("A tailwind started blowing on the opposing side!");
             break;
         case STARTING_STATUS_RAINBOW_OPPONENT_TEMPORARY:
-            MESSAGE("A rainbow appeared in the sky on the opposing team's side!");
+            MESSAGE("A rainbow appeared in the sky on the opposing side!");
             break;
         case STARTING_STATUS_SEA_OF_FIRE_OPPONENT_TEMPORARY:
-            MESSAGE("A sea of fire enveloped the opposing team!");
+            MESSAGE("A sea of fire enveloped the opposing side!");
             break;
         case STARTING_STATUS_SWAMP_OPPONENT_TEMPORARY:
-            MESSAGE("A swamp enveloped the opposing team!");
+            MESSAGE("A swamp enveloped the opposing side!");
             break;
         case STARTING_STATUS_SPIKES_OPPONENT_L3:
-            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+            MESSAGE("Spikes were scattered on the ground all around the opposing side!");
             MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
             break;
         case STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L2:
-            MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
+            MESSAGE("Toxic spikes were scattered on the ground all around the opposing side!");
             MESSAGE("The opposing Wobbuffet was badly poisoned!");
             break;
         case STARTING_STATUS_STICKY_WEB_OPPONENT:
-            MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
+            MESSAGE("A sticky web has been laid out on the ground on the opposing side!");
             MESSAGE("The opposing Wobbuffet was caught in a sticky web!");
             break;
         case STARTING_STATUS_STEALTH_ROCK_OPPONENT:
-            MESSAGE("Pointed stones float in the air around the opposing team!");
+            MESSAGE("Pointed stones float in the air on the opposing side!");
             MESSAGE("Pointed stones dug into the opposing Wobbuffet!");
             break;
         case STARTING_STATUS_SHARP_STEEL_OPPONENT:
@@ -148,16 +148,16 @@ SINGLE_BATTLE_TEST("SetStartingStatus messages work as intended")
         switch (status)
         {
         case STARTING_STATUS_SPIKES_OPPONENT_L3:
-            MESSAGE("The spikes disappeared from the ground around the opposing team!");
+            MESSAGE("The spikes disappeared from the ground around the opposing side!");
             break;
         case STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L2:
-            MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+            MESSAGE("The toxic spikes disappeared from the ground around the opposing side!");
             break;
         case STARTING_STATUS_STICKY_WEB_OPPONENT:
-            MESSAGE("The sticky web has disappeared from the ground around the opposing team!");
+            MESSAGE("The sticky web has disappeared from the ground on the opposing side!");
             break;
         case STARTING_STATUS_STEALTH_ROCK_OPPONENT:
-            MESSAGE("The pointed stones disappeared from around the opposing team!");
+            MESSAGE("The pointed stones disappeared from the opposing side!");
             break;
         case STARTING_STATUS_SHARP_STEEL_OPPONENT:
             MESSAGE("The pieces of steel surrounding the opposing Pokémon disappeared!");
@@ -168,16 +168,16 @@ SINGLE_BATTLE_TEST("SetStartingStatus messages work as intended")
         switch (status)
         {
         case STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY:
-            MESSAGE("The opposing team's Tailwind petered out!");
+            MESSAGE("The opposing side's tailwind petered out!");
             break;
         case STARTING_STATUS_RAINBOW_OPPONENT_TEMPORARY:
-            MESSAGE("The rainbow on the opposing team's side disappeared!");
+            MESSAGE("The rainbow on the opposing side disappeared!");
             break;
         case STARTING_STATUS_SEA_OF_FIRE_OPPONENT_TEMPORARY:
-            MESSAGE("The sea of fire around the opposing team disappeared!");
+            MESSAGE("The sea of fire around the opposing side disappeared!");
             break;
         case STARTING_STATUS_SWAMP_OPPONENT_TEMPORARY:
-            MESSAGE("The swamp around the opposing team disappeared!");
+            MESSAGE("The swamp around the opposing side disappeared!");
             break;
         }
 

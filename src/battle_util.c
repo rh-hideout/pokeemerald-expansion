@@ -4411,8 +4411,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                      && battlerDef != battler
                      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
                      && CanStealItem(battler, battlerDef, gBattleMons[battlerDef].item)
-                     && !GetBattlerPartyState(battlerDef)->isKnockedOff
-                     && !DoesSubstituteBlockMove(battler, battlerDef, move))
+                     && !GetBattlerPartyState(battlerDef)->isKnockedOff)
                     {
                         if (IsBattlerAlly(battler, battlerDef))
                         {
@@ -4469,6 +4468,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_GRIM_NEIGH:
         case ABILITY_AS_ONE_SHADOW_RIDER:
         case ABILITY_BEAST_BOOST:
+        case ABILITY_EELEVATE:
             {
                 if (NoAliveMonsForEitherParty())
                     break;
@@ -4476,7 +4476,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 enum Stat stat = STAT_ATK;
                 u32 numMonsFainted = NumFaintedBattlersByAttacker(battler);
 
-                if (ability == ABILITY_BEAST_BOOST)
+                if (ability == ABILITY_BEAST_BOOST || ability == ABILITY_EELEVATE)
                     stat = GetHighestStatId(battler);
                 else if (ability == ABILITY_GRIM_NEIGH || ability == ABILITY_AS_ONE_SHADOW_RIDER)
                     stat = STAT_SPATK;
@@ -4798,7 +4798,7 @@ bool32 IsNeutralizingGasOnField(void)
     return FALSE;
 }
 
-bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability)
+bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability, enum Move move)
 {
     if (gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
@@ -4806,7 +4806,7 @@ bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability)
     if (ability == ABILITY_MOLD_BREAKER
      || ability == ABILITY_TERAVOLT
      || ability == ABILITY_TURBOBLAZE
-     || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(gCurrentMove)))
+     || (ability == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(move)))
     {
         RecordAbilityBattle(battler, ability);
         return TRUE;
@@ -5867,7 +5867,7 @@ static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, e
         return TRUE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return TRUE;
-    if (ability == ABILITY_LEVITATE)
+    if (ability == ABILITY_LEVITATE || ability == ABILITY_EELEVATE)
         return TRUE;
     return FALSE;
 }
@@ -6943,6 +6943,10 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && IsBattleMoveSpecial(move))
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
         break;
+    case ABILITY_FIRE_MANE:
+        if (moveType == TYPE_FIRE)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
     default:
         break;
     }
@@ -7730,7 +7734,7 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
     if (dmg == INT32_MAX)
         return dmg;
 
-    gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
+    gBattleStruct->moveResultFlags[ctx->battlerDef] &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE);
     gSpecialStatuses[ctx->battlerDef].criticalHit = FALSE;
 
     if (dmg == 0)
@@ -8136,22 +8140,32 @@ void UpdateMoveResultFlags(uq4_12_t modifier, u32 *resultFlags)
     if (modifier == UQ_4_12(0.0))
     {
         *resultFlags |= MOVE_RESULT_DOESNT_AFFECT_FOE;
-        *resultFlags &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE);
+        *resultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE);
         gBattleStruct->blunderPolicy = FALSE; // Don't activate if missed
     }
     else if (modifier == UQ_4_12(1.0))
     {
-        *resultFlags &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
+        *resultFlags &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
+    }
+    else if (modifier > UQ_4_12(2.0))
+    {
+        *resultFlags |= MOVE_RESULT_EXTREMELY_EFFECTIVE;
+        *resultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
     }
     else if (modifier > UQ_4_12(1.0))
     {
         *resultFlags |= MOVE_RESULT_SUPER_EFFECTIVE;
-        *resultFlags &= ~(MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
+        *resultFlags &= ~(MOVE_RESULT_EXTREMELY_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
     }
-    else //if (modifier < UQ_4_12(1.0))
+    else if (modifier < UQ_4_12(0.5))
+    {
+        *resultFlags |= MOVE_RESULT_MOSTLY_INEFFECTIVE;
+        *resultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
+    }
+    else
     {
         *resultFlags |= MOVE_RESULT_NOT_VERY_EFFECTIVE;
-        *resultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
+        *resultFlags &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_DOESNT_AFFECT_FOE);
     }
 }
 
@@ -8186,12 +8200,12 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         && !(ctx->holdEffects[ctx->battlerDef] == HOLD_EFFECT_RING_TARGET && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && !IsBattlerUngroundedByAbilityItemOrEffect(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef])))
     {
         modifier = UQ_4_12(0.0);
-        if (ctx->updateFlags && ctx->abilities[ctx->battlerDef] == ABILITY_LEVITATE)
+        if (ctx->updateFlags && (ctx->abilities[ctx->battlerDef] == ABILITY_LEVITATE || ctx->abilities[ctx->battlerDef] == ABILITY_EELEVATE))
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= (MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE);
-            gLastUsedAbility = ABILITY_LEVITATE;
+            gLastUsedAbility = ctx->abilities[ctx->battlerDef];
             ctx->abilityBlocked = TRUE;
-            RecordAbilityBattle(ctx->battlerDef, ABILITY_LEVITATE);
+            RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
         }
         else if (ctx->holdEffects[ctx->battlerDef] == HOLD_EFFECT_AIR_BALLOON)
         {
@@ -8278,7 +8292,9 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, enum Species sp
         if (GetSpeciesType(speciesDef, 1) != GetSpeciesType(speciesDef, 0))
             MulByTypeEffectiveness(&ctx, &modifier, GetSpeciesType(speciesDef, 1));
 
-        if (ctx.moveType == TYPE_GROUND && abilityDef == ABILITY_LEVITATE && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
+        if (ctx.moveType == TYPE_GROUND
+         && (abilityDef == ABILITY_LEVITATE || abilityDef == ABILITY_EELEVATE)
+         && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
             modifier = UQ_4_12(0.0);
         if (abilityDef == ABILITY_WONDER_GUARD && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
             modifier = UQ_4_12(0.0);
@@ -9582,8 +9598,9 @@ bool32 CanMonParticipateInSkyBattle(struct Pokemon *mon)
 {
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 monAbilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
+    enum Ability ability = GetSpeciesAbility(species, monAbilityNum);
 
-    bool32 hasLevitateAbility = GetSpeciesAbility(species, monAbilityNum) == ABILITY_LEVITATE;
+    bool32 hasLevitateAbility = (ability == ABILITY_LEVITATE || ability == ABILITY_EELEVATE);
     bool32 isFlyingType = GetSpeciesType(species, 0) == TYPE_FLYING || GetSpeciesType(species, 1) == TYPE_FLYING;
     bool32 monIsValidAndNotEgg = GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES) && !GetMonData(mon, MON_DATA_IS_EGG);
 
@@ -9820,16 +9837,14 @@ void ClearDamageCalcResults(void)
     }
 
     gBattleStruct->doneDoublesSpreadHit = FALSE;
-    gBattleStruct->calculatedDamageDone = FALSE;
     gBattleStruct->calculatedSpreadMoveAccuracy = FALSE;
     gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;
-    gBattleStruct->preAttackEffectHappened = FALSE;
     gBattleScripting.savedDmg = 0;
     if (gCurrentMove != MOVE_NONE)
-        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);
+        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove) || MoveIgnoresTargetAbility(gCurrentMove);
     else
         gBattleStruct->moldBreakerActive = FALSE;
 }
@@ -11052,3 +11067,7 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
         || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
 }
 
+bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
+{
+    return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
+}
