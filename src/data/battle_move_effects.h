@@ -1282,7 +1282,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_SOAK] =
+    [EFFECT_CHANGE_TARGET_TYPE] =
     {
         .battleScript = BattleScript_EffectSoak,
         .battleTvScore = 0, // TODO: Assign points

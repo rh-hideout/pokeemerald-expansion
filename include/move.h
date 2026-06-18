@@ -741,7 +741,7 @@ static inline enum Type GetMoveArgType(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SOAK
+    assertf(effect == EFFECT_CHANGE_TARGET_TYPE
          || effect == EFFECT_TWO_TYPED_MOVE
          || effect == EFFECT_THIRD_TYPE
          || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG

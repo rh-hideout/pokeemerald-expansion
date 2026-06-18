@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-    ASSUME(GetMoveEffect(MOVE_MAGIC_POWDER) == EFFECT_SOAK);
+    ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_CHANGE_TARGET_TYPE);
+    ASSUME(GetMoveEffect(MOVE_MAGIC_POWDER) == EFFECT_CHANGE_TARGET_TYPE);
 }
 
 TO_DO_BATTLE_TEST("Soak/Magic Powder changes the target's type to pure Water/Psychic");
