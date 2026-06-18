@@ -12868,7 +12868,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Throws a rock to knock the\n"
             "foe down to the ground."),
-        .effect = EFFECT_SMACK_DOWN,
+        .effect = EFFECT_GROUND_TARGET,
         .power = 50,
         .type = TYPE_ROCK,
         .accuracy = 100,
@@ -16379,7 +16379,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Can hit a Flying foe, then\n"
             "knocks it to the ground."),
-        .effect = EFFECT_SMACK_DOWN,
+        .effect = EFFECT_GROUND_TARGET,
         .power = 90,
         .type = TYPE_GROUND,
         .accuracy = 100,

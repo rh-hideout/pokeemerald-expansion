@@ -54,8 +54,8 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
     PARAMETRIZE { move = MOVE_PAY_DAY; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_SMACK_DOWN);
-        ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
+        ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_GROUND_TARGET);
+        ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_GROUND_TARGET);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_INFESTATION, MOVE_EFFECT_WRAP, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_JAW_LOCK, MOVE_EFFECT_TRAP_BOTH, 0) == TRUE);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY, 0) == TRUE);
