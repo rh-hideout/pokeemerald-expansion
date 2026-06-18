@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
-        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_SWAP_ITEMS);
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Speed(7); }
     } WHEN {

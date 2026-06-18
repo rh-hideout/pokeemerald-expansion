@@ -303,7 +303,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_SLEEP_TALK:
         case EFFECT_TAUNT:
         case EFFECT_TAILWIND:
-        case EFFECT_TRICK:
+        case EFFECT_SWAP_ITEMS:
         case EFFECT_TRICK_ROOM:
         // defoggables / screens and hazards
         case EFFECT_LIGHT_SCREEN:
