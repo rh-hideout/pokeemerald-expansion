@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP of damage dealt")
 SINGLE_BATTLE_TEST("Shell Bell doesn't restore HP for damage dealt by a foreseen move")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
     } WHEN {

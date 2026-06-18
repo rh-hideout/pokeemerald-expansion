@@ -395,7 +395,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
     {
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    else if (gMovesInfo[move].effect == EFFECT_FUTURE_DAMAGE)
     {
         TURN {};
         TURN {};

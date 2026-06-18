@@ -6781,7 +6781,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     #else
         .power = 80,
     #endif
-        .effect = EFFECT_FUTURE_SIGHT,
+        .effect = EFFECT_FUTURE_DAMAGE,
         .type = TYPE_PSYCHIC,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 100 : 90,
         .pp = B_UPDATED_MOVE_DATA >= GEN_5 ? 10 : 15,
@@ -9679,7 +9679,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Summons strong light to\n"
             "attack 2 turns later."),
-        .effect = EFFECT_FUTURE_SIGHT,
+        .effect = EFFECT_FUTURE_DAMAGE,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 140 : 120,
         .type = TYPE_STEEL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 100 : 85,

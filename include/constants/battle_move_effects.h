@@ -87,10 +87,10 @@ enum  BattleMoveEffects
     EFFECT_WEATHER,
     EFFECT_FELL_STINGER,
     EFFECT_STAT_CHANGE_HALF_HP, // HP is reduced after stat change.
-    EFFECT_BELLY_DRUM, // HP is reduced before change and can still fail with contrary
+    EFFECT_BELLY_DRUM, // HP is reduced before change and can still fail with Contrary
     EFFECT_PSYCH_UP,
     EFFECT_EARTHQUAKE,
-    EFFECT_FUTURE_SIGHT,
+    EFFECT_FUTURE_DAMAGE,
     EFFECT_SOLAR_BEAM,
     EFFECT_TELEPORT,
     EFFECT_BEAT_UP,

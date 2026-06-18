@@ -633,7 +633,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_FUTURE_SIGHT] =
+    [EFFECT_FUTURE_DAMAGE] =
     {
         .battleScript = BattleScript_EffectFutureSight,
         .battleTvScore = 1,

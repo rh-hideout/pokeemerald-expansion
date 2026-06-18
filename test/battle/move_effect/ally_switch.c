@@ -384,7 +384,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed position")
 DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ABRA);
@@ -405,7 +405,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
 DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position when attacker side switches")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ABRA);

@@ -2004,7 +2004,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_HIT_ESCAPE:
         break;
-    case EFFECT_FUTURE_SIGHT:
+    case EFFECT_FUTURE_DAMAGE:
         if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
          || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
             ADJUST_SCORE(-12);
@@ -6481,7 +6481,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
     case EFFECT_TOXIC_SPIKES:
         ADJUST_SCORE(BEST_EFFECT);
         break;
-    case EFFECT_FUTURE_SIGHT:
+    case EFFECT_FUTURE_DAMAGE:
     case EFFECT_TELEKINESIS:
     case EFFECT_GRAVITY:
     case EFFECT_WEATHER:

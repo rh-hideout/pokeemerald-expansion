@@ -4438,7 +4438,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_MAGICIAN:
             if (GetMoveEffect(move) != EFFECT_FLING
              && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
-             && GetMoveEffect(move) != EFFECT_FUTURE_SIGHT
+             && GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE
              && gBattleMons[battler].item == ITEM_NONE
              && !gSpecialStatuses[battler].gemBoost) // In base game, gems are consumed after magician would activate.
             {
@@ -6524,7 +6524,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (moveEffect == EFFECT_FUTURE_SIGHT)
+        if (moveEffect == EFFECT_FUTURE_DAMAGE)
             break;
 
         if (ctx->aiCalc)
@@ -9783,7 +9783,7 @@ enum Type GetBattleMoveType(enum Move move)
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (B_UPDATED_MOVE_TYPES < GEN_5
-         && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT))
+         && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_DAMAGE))
           return TYPE_MYSTERY;
     }
     return GetMoveType(move);

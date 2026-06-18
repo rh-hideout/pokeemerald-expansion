@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Magician does not activate with Natural Gift")
 SINGLE_BATTLE_TEST("Magician does not activate with Future Sight or Doom Desire")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
     } WHEN {
