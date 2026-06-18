@@ -2300,7 +2300,7 @@ gBattleAnimGeneral_TrickRoom::
 	end
 InitRoomAnimation:
 	setalpha 8, 8
-	createvisualtask AnimTask_ScaleMonAndRestore, 5, -6, -6, 15, ANIM_TARGET, 1
+	createvisualtask AnimTask_ScaleMonAndRestore, 5, -6, -6, 15, ANIM_ATTACKER, 1
 	return
 
 gBattleAnimMove_DracoMeteor::
