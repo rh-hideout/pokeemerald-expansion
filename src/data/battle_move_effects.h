@@ -404,7 +404,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_MEAN_LOOK] =
+    [EFFECT_PREVENT_ESCAPE] =
     {
         .battleScript = BattleScript_EffectMeanLook,
         .battleTvScore = 5,

@@ -2923,7 +2923,7 @@ bool32 IsTrappingMove(enum Move move)
 {
     switch (GetMoveEffect(move))
     {
-    case EFFECT_MEAN_LOOK:
+    case EFFECT_PREVENT_ESCAPE:
     case EFFECT_FAIRY_LOCK:
     //case EFFECT_NO_RETREAT:   // TODO
         return TRUE;

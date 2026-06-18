@@ -4630,7 +4630,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Ensnares the foe to stop it\n"
             "from fleeing or switching."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -5803,7 +5803,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Fixes the foe with a mean\n"
             "look that prevents escape."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -9172,7 +9172,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Blocks the foe's way to\n"
             "prevent escape."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,

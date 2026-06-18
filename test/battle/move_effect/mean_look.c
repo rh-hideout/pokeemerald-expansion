@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_MEAN_LOOK) == EFFECT_MEAN_LOOK);
+    ASSUME(GetMoveEffect(MOVE_MEAN_LOOK) == EFFECT_PREVENT_ESCAPE);
 }
 
 SINGLE_BATTLE_TEST("Mean Look: trapped target Baton Pass keeps trapping")
