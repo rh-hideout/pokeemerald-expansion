@@ -2235,7 +2235,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
     if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
 
-    if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
+    if (moveEffect == EFFECT_THREE_INCREASING_HITS || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
     return TRUE; // multiHitOn is set so skip Acc check for everything else

@@ -6179,7 +6179,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_PRESENT:
         basePower = gBattleStruct->presentBasePower;
         break;
-    case EFFECT_TRIPLE_KICK:
+    case EFFECT_THREE_INCREASING_HITS:
         basePower *= 1 + GetMoveStrikeCount(move) - gMultiHitCounter;
         break;
     case EFFECT_SPIT_UP:

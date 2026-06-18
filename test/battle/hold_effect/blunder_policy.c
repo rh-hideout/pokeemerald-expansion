@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Blunder Policy activates if the first strike of Triple Kick 
     PASSES_RANDOMLY(1, 10, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_TRIPLE_KICK) == 90);
-        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_TRIPLE_KICK);
+        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_THREE_INCREASING_HITS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -160,7 +160,7 @@ SINGLE_BATTLE_TEST("Blunder Policy does not activate if Triple Kick misses after
 {
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_TRIPLE_KICK) == 90);
-        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_TRIPLE_KICK);
+        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_THREE_INCREASING_HITS);
         ASSUME(MoveMakesContact(MOVE_TRIPLE_KICK));
         PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LINGERING_AROMA); }

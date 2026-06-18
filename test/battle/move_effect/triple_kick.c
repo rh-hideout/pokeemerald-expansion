@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_TRIPLE_KICK);
+    ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_THREE_INCREASING_HITS);
 }
 
 SINGLE_BATTLE_TEST("Triple Kick damage is increased by its base damage for each hit")

@@ -4578,7 +4578,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Kicks the foe 3 times in a\n"
             "row with rising intensity."),
-        .effect = EFFECT_TRIPLE_KICK,
+        .effect = EFFECT_THREE_INCREASING_HITS,
         .power = 10,
         .type = TYPE_FIGHTING,
         .accuracy = 90,
@@ -19598,7 +19598,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A 3-kick attack that gets\n"
             "more powerful with each hit."),
-        .effect = EFFECT_TRIPLE_KICK,
+        .effect = EFFECT_THREE_INCREASING_HITS,
         .power = 20,
         .type = TYPE_ICE,
         .accuracy = 90,

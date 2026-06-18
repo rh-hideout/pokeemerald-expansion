@@ -712,7 +712,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
         maximum = minimum = median = random;
         gBattleStruct->beatUpSlot = 0;
     }
-    else if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
+    else if (strikeCount > 1 && effect != EFFECT_THREE_INCREASING_HITS)
     {
         median *= strikeCount;
         minimum *= strikeCount;
@@ -912,7 +912,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         {
             simDamage.minimum = simDamage.median = simDamage.maximum = simDamage.random = fixedDamage;
         }
-        else if (moveEffect == EFFECT_TRIPLE_KICK)
+        else if (moveEffect == EFFECT_THREE_INCREASING_HITS)
         {
             for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
