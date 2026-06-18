@@ -593,7 +593,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
         case EFFECT_STEEL_ROLLER:
-        case EFFECT_JUNGLE_HEALING:
+        case EFFECT_HEAL_PARTY:
         case EFFECT_POWER_TRICK:
         case EFFECT_TAKE_HEART:
 

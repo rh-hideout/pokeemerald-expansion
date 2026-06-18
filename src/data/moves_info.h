@@ -19670,7 +19670,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Heals HP and status of\n"
             "itself and allies in battle."),
-        .effect = EFFECT_JUNGLE_HEALING,
+        .effect = EFFECT_HEAL_PARTY,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -20463,7 +20463,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The user heals and cures\n"
             "itself and its ally."),
-        .effect = EFFECT_JUNGLE_HEALING,
+        .effect = EFFECT_HEAL_PARTY,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
