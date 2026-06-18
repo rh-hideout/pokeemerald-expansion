@@ -6253,7 +6253,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Spins the body at high\n"
             "speed to remove traps."),
     #endif
-        .effect = EFFECT_RAPID_SPIN,
+        .effect = EFFECT_REMOVE_TRAPS,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 50 : 20,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -20836,7 +20836,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Erases trap moves and Leech\n"
             "Seed. Poisons all foes."),
-        .effect = EFFECT_RAPID_SPIN,
+        .effect = EFFECT_REMOVE_TRAPS,
         .power = 30,
         .type = TYPE_POISON,
         .accuracy = 100,

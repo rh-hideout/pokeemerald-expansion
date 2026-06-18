@@ -4232,7 +4232,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
-    case EFFECT_RAPID_SPIN:
+    case EFFECT_REMOVE_TRAPS:
         if (IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
             if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
