@@ -5208,11 +5208,6 @@ void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use)
         gAiBattleData->aiUsingGimmick &= ~(1<<battler);
 }
 
-bool32 IsAIUsingGimmick(enum BattlerId battler)
-{
-    return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
-}
-
 struct AltTeraCalcs
 {
     struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
