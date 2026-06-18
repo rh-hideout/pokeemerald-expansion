@@ -6229,7 +6229,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             || (gSpecialStatuses[battlerAtk].gemBoost && ctx->holdEffects[battlerAtk] == HOLD_EFFECT_GEMS))
             basePower *= 2;
         break;
-    case EFFECT_LOW_KICK:
+    case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
         weight = GetBattlerWeight(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
         for (i = 0; sWeightToDamageTable[i] != 0xFFFF; i += 2)
         {

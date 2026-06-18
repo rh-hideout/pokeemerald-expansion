@@ -1813,7 +1813,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .chance = 30,
         }),
     #endif
-        .effect = B_UPDATED_MOVE_DATA >= GEN_3 ? EFFECT_LOW_KICK : EFFECT_HIT,
+        .effect = B_UPDATED_MOVE_DATA >= GEN_3 ? EFFECT_POWER_BASED_ON_TARGET_WEIGHT : EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 50,
         .type = TYPE_FIGHTING,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 100 : 90,
@@ -12048,7 +12048,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A snare attack that does\n"
             "more damage to a heavier foe."),
-        .effect = EFFECT_LOW_KICK,
+        .effect = EFFECT_POWER_BASED_ON_TARGET_WEIGHT,
         .power = 1,
         .type = TYPE_GRASS,
         .accuracy = 100,

@@ -623,7 +623,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         if (!CanUseLastResort(ctx->battlerAtk) && !IsConsideringZMove(ctx->battlerAtk, ctx->battlerDef, ctx->move))
             return TRUE;
         break;
-    case EFFECT_LOW_KICK:
+    case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
     case EFFECT_HEAT_CRASH:
         if (GetActiveGimmick(ctx->battlerDef) == GIMMICK_DYNAMAX)
             return TRUE;
