@@ -3696,7 +3696,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
-    case EFFECT_SMACK_DOWN:
+    case EFFECT_GROUND_TARGET:
         if (IsBattlerAlive(cv->battlerDef)
          && IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
          && gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER
