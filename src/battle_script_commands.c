@@ -4850,7 +4850,7 @@ static void Cmd_trainerslidein(void)
 
 static inline bool32 IsProtectivePadsProtected(enum BattlerId battler, enum HoldEffect holdEffect)
 {
-    if (holdEffect != HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS)
+    if (holdEffect != HOLD_EFFECT_PROTECTIVE_PADS)
         return FALSE;
 
     RecordItemEffectBattle(battler, holdEffect);

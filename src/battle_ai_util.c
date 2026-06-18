@@ -1266,7 +1266,7 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
     enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
 
     // Check if physical moves hurt.
-    if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS && atkAbility != ABILITY_LONG_REACH
+    if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_PROTECTIVE_PADS && atkAbility != ABILITY_LONG_REACH
         && (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET
         || defAbility == ABILITY_IRON_BARBS || defAbility == ABILITY_ROUGH_SKIN))
     {
@@ -5022,7 +5022,7 @@ bool32 AI_MoveMakesContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     if (ability == ABILITY_LONG_REACH)
         return FALSE;
-    if (holdEffect == HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS)
+    if (holdEffect == HOLD_EFFECT_PROTECTIVE_PADS)
         return FALSE;
     if (holdEffect == HOLD_EFFECT_PUNCHING_GLOVE && IsPunchingMove(move))
         return FALSE;
