@@ -13502,6 +13502,14 @@ void BS_UpdateAbilityPopup(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_WaitAbilityPopup(void)
+{
+    NATIVE_ARGS();
+    if (IsAnyAbilityPopUpActive())
+        return;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_JumpIfTargetAlly(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
@@ -14589,6 +14597,10 @@ void BS_ShowItemPopupScripting(void)
 void BS_DestroyItemPopup(void)
 {
     NATIVE_ARGS();
+
+    if (IsAnyAbilityPopUpActive())
+        return;
+        
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         DestroyAbilityPopUp(battler);
 

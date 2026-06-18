@@ -202,6 +202,7 @@ BattleScript_ConsumableBerryStatRaise::
 
 BattleScript_ConsumableBerryStatRaiseRipen::
 	call BattleScript_AbilityPopUp
+	waitabilitypopup
 	call BattleScript_ItemPopUp_Scripting
  	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
 	call BattleScript_ConsumableItemStatRaise
@@ -5079,8 +5080,11 @@ BattleScript_HurtAttackerNoMsg:
 	return
 
 BattleScript_RoughSkinActivates::
+	flushtextbox
 	call BattleScript_AbilityPopUp
+	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_HurtAttackerNoMsg
+	waitabilitypopup
 	return
 
 BattleScript_RockyHelmetActivates::
@@ -5218,6 +5222,7 @@ BattleScript_BerryCureStatusRet::
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_SCRIPTING
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_BerryCureStatusAndConfusionRet::
@@ -5229,6 +5234,7 @@ BattleScript_BerryCureStatusAndConfusionRet::
 	printstring STRINGID_PKMNSITEMSNAPPEDOUT
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_GemActivates::
@@ -5247,6 +5253,7 @@ BattleScript_BerryReduceDmg::
 	printstring STRINGID_BERRYDMGREDUCES
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_BerryCureConfusionRet::
@@ -5254,6 +5261,7 @@ BattleScript_BerryCureConfusionRet::
 	printstring STRINGID_PKMNSITEMSNAPPEDOUT
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_MentalHerbCureRet::
@@ -5338,6 +5346,7 @@ BattleScript_ItemHealHP_RemoveItemRet_AnimContinue:
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_BerryPPHeal::
@@ -5351,6 +5360,7 @@ BattleScript_BerryPPHeal_Anim:
 	printstring STRINGID_PKMNSITEMRESTOREDPP
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_AirBalloonMsgInRet::
@@ -5451,13 +5461,16 @@ BattleScript_BerryConfuseHealRet_Anim:
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_BerryFocusEnergy::
+	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
 	printstring STRINGID_PKMNUSEDXTOGETPUMPED
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_ActionSelectionItemsCantBeUsed::
@@ -5684,29 +5697,36 @@ BattleScript_QuickDrawActivation::
 
 BattleScript_CustapBerryActivation::
 	flushtextbox
+	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_BERRY
 	waitanimation
 	printstring STRINGID_CANACTFASTERTHANKSTO
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_ATTACKER
+	waitabilitypopup
 	end2
 
 BattleScript_MicleBerryActivate::
+	call BattleScript_ItemPopUp_Scripting
 	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_MicleBerryActivateRet_Ripen
 	goto BattleScript_MicleBerryActivateRet_Anim
 BattleScript_MicleBerryActivateRet_Ripen:
+	waitabilitypopup
 	call BattleScript_AbilityPopUpScripting
 BattleScript_MicleBerryActivateRet_Anim:
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
 	printstring STRINGID_MICLEBERRYACTIVATES
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
+	waitabilitypopup
 	return
 
 BattleScript_JabocaRowapBerryActivates::
+	call BattleScript_ItemPopUp_Scripting
 	jumpifability BS_TARGET, ABILITY_RIPEN, BattleScript_JabocaRowapBerryActivate_Ripen
 	goto BattleScript_JabocaRowapBerryActivate_Anim
 BattleScript_JabocaRowapBerryActivate_Ripen:
+	waitabilitypopup
 	call BattleScript_AbilityPopUp
 BattleScript_JabocaRowapBerryActivate_Anim:
 	jumpifabsent BS_TARGET, BattleScript_JabocaRowapBerryActivate_Dmg   @ dont play the animation for a fainted target

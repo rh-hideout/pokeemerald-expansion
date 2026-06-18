@@ -654,7 +654,7 @@ static void DoublesScene(enum Move move, struct BattlePokemon *attacker)
 SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to opponent)")
 {
     u32 j = ANIM_TEST_START_MOVE;
-    enum move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     enum Species species = SPECIES_NONE;
     u32 k = 0, variation = 0, variationsNumber;
     u32 friendship = 0, tempFriendship;
