@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Electrify changes the type of foreseen moves when hitting it
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SANDSLASH, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSLASH, 1) == TYPE_GROUND);
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
         ASSUME(GetMoveType(MOVE_FUTURE_SIGHT) != TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SANDSLASH);

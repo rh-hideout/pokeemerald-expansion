@@ -1366,7 +1366,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
                 continue;
             }
             break;
-        case EFFECT_FUTURE_SIGHT:
+        case EFFECT_FUTURE_DAMAGE:
             if (gBattleStruct->futureSight[battlerDef].counter > 0)
             {
                 battleScript = BattleScript_ButItFailed;
@@ -1620,7 +1620,7 @@ static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *c
 {
     switch (cv->moveEffect)
     {
-    case EFFECT_FUTURE_SIGHT:
+    case EFFECT_FUTURE_DAMAGE:
         gBattleStruct->futureSight[cv->battlerDef].move = cv->move;
         gBattleStruct->futureSight[cv->battlerDef].battlerIndex = cv->battlerAtk;
         gBattleStruct->futureSight[cv->battlerDef].partyIndex = gBattlerPartyIndexes[cv->battlerAtk];
@@ -3088,7 +3088,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
              && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef)
              && !IsZMove(cv->move)
              && cv->move != MOVE_STRUGGLE
-             && cv->moveEffect != EFFECT_FUTURE_SIGHT)
+             && cv->moveEffect != EFFECT_FUTURE_DAMAGE)
             {
                 u32 moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
 
