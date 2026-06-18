@@ -13390,7 +13390,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user's stats are raised."),
-        .effect = EFFECT_STORED_POWER,
+        .effect = EFFECT_POWER_BASED_ON_USER_STATS,
         .power = 20,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -17152,7 +17152,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user's stats are raised."),
-        .effect = EFFECT_STORED_POWER,
+        .effect = EFFECT_POWER_BASED_ON_USER_STATS,
         .power = 20,
         .type = TYPE_DARK,
         .accuracy = 100,

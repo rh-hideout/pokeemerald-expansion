@@ -373,7 +373,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move)
     case EFFECT_RETURN:
     case EFFECT_FRUSTRATION:
     case EFFECT_POWER_BASED_ON_USER_WEIGHT:
-    case EFFECT_STORED_POWER:
+    case EFFECT_POWER_BASED_ON_USER_STATS:
     case EFFECT_GYRO_BALL:
         return MAX_POWER_TIER_5;
     case EFFECT_MAGNITUDE:

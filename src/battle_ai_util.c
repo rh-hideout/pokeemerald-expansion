@@ -4705,7 +4705,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
     }
 
     // if already inclined to boost, be slightly more likely to if boost levels matter
-    if (tempScore > 0 && HasMoveWithEffect(battlerAtk, EFFECT_STORED_POWER))
+    if (tempScore > 0 && HasMoveWithEffect(battlerAtk, EFFECT_POWER_BASED_ON_USER_STATS))
         tempScore += WEAK_EFFECT;
 
     return tempScore;

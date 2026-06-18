@@ -6253,7 +6253,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         if (basePower > 200)
             basePower = 200;
         break;
-    case EFFECT_STORED_POWER:
+    case EFFECT_POWER_BASED_ON_USER_STATS:
         basePower += (CountBattlerStatIncreases(battlerAtk, TRUE) * 20);
         break;
     case EFFECT_ELECTRO_BALL:
