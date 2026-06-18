@@ -219,7 +219,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         {
         //TODO: AI HANDLING
         case EFFECT_SAFEGUARD:
-        case EFFECT_FOLLOW_ME:
+        case EFFECT_BECOME_TARGET:
         case EFFECT_SNATCH:
         case EFFECT_GRUDGE:
         case EFFECT_CAMOUFLAGE:
@@ -379,7 +379,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         case EFFECT_HEALING_WISH:
         case EFFECT_LUNAR_DANCE:
         case EFFECT_WONDER_ROOM:
-        case EFFECT_FOLLOW_ME:
+        case EFFECT_BECOME_TARGET:
         case EFFECT_MAGIC_ROOM:
         case EFFECT_AFTER_YOU:
 

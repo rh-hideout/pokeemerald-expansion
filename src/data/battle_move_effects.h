@@ -746,7 +746,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_FOLLOW_ME] =
+    [EFFECT_BECOME_TARGET] =
     {
         .battleScript = BattleScript_EffectFollowMe,
         .battleTvScore = 5,

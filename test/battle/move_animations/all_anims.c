@@ -167,7 +167,7 @@ static bool32 UserHasToGoFirst(enum Move move) // Player needs to go first
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_PREVENT_DAMAGE
      || effect == EFFECT_ENDURE
-     || effect == EFFECT_FOLLOW_ME
+     || effect == EFFECT_BECOME_TARGET
      || effect == EFFECT_MAGIC_COAT
      || effect == EFFECT_ME_FIRST
      || effect == EFFECT_QUASH
