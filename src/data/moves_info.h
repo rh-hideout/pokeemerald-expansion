@@ -12721,7 +12721,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An odd psychic wave that\n"
             "deals physical damage."),
-        .effect = EFFECT_PSYSHOCK,
+        .effect = EFFECT_PHYSICAL_DAMAGE,
         .power = 80,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -14418,7 +14418,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An odd psychic wave that\n"
             "deals physical damage."),
-        .effect = EFFECT_PSYSHOCK,
+        .effect = EFFECT_PHYSICAL_DAMAGE,
         .power = 100,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -14616,7 +14616,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Cuts with a long horn that\n"
             "does physical damage."),
-        .effect = EFFECT_PSYSHOCK,
+        .effect = EFFECT_PHYSICAL_DAMAGE,
         .power = 85,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
