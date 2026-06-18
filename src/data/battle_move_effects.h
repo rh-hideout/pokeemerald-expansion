@@ -1219,7 +1219,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HEAL_PULSE] =
+    [EFFECT_HEAL_TARGET] =
     {
         .battleScript = BattleScript_EffectHealPulse,
         .battleTvScore = 0, // TODO: Assign points
