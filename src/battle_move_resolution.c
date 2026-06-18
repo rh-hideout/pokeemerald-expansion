@@ -4241,17 +4241,15 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
         if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
+            if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+                break;
+
             // We're making the assumption that Red Card still prevents Ice Spinner from removing hazards in Champions for now
-            if (GetConfig(B_FAINT_MOVE_EFFECT_TIMING) >= GEN_CHAMPIONS && gLastPrintedMoves[cv->battlerAtk] != cv->move)
-            {
-                BattleScriptCall(BattleScript_RemoveTerrain);
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-            }
-            if (GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS && (IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move))
-            {
-                BattleScriptCall(BattleScript_RemoveTerrain);
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-            }
+            if (gLastUsedItem == ITEM_RED_CARD)
+                break;
+            
+            BattleScriptCall(BattleScript_RemoveTerrain);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_NATURAL_GIFT:
