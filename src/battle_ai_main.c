@@ -663,15 +663,6 @@ void RecordStatusMoves(enum BattlerId battler)
     }
 }
 
-void RecordMoveOmniscience(enum BattlerId battler)
-{
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        enum Move playerMove = gBattleMons[battler].moves[moveIndex];
-        RecordKnownMove(battler, playerMove);
-    }
-}
-
 void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 {
     enum Ability ability;
@@ -690,9 +681,6 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 
     if (IsAiBattlerAssumingStatusMoves(battler))
         RecordStatusMoves(battler);
-
-    if (IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE))
-        RecordMoveOmniscience(battler);
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit

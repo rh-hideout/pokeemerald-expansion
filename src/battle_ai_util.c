@@ -2498,7 +2498,7 @@ bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battler
 
 enum Move *GetMovesArray(enum BattlerId battler)
 {
-    if (IsAiBattlerAware(battler) || IsAiBattlerAware(BATTLE_PARTNER(battler)))
+    if (IsAiBattlerAware(battler) || IsAiBattlerAware(BATTLE_PARTNER(battler)) || IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE))
         return gBattleMons[battler].moves;
     else
         return gBattleHistory->usedMoves[battler];
