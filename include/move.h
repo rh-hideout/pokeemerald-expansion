@@ -725,7 +725,7 @@ static inline u32 GetMoveEffectArg_MoveProperty(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_FIRST_TURN_ONLY || effect == EFFECT_HEAL_PULSE, "not a move with moveProperty: %S", gMovesInfo[moveId].name);
+    assertf(effect == EFFECT_FIRST_TURN_ONLY || effect == EFFECT_HEAL_TARGET, "not a move with moveProperty: %S", gMovesInfo[moveId].name);
     return gMovesInfo[SanitizeMoveId(moveId)].argument.moveProperty;
 }
 

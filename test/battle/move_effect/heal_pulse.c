@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_HEAL_PULSE) == EFFECT_HEAL_PULSE);
+    ASSUME(GetMoveEffect(MOVE_HEAL_PULSE) == EFFECT_HEAL_TARGET);
 }
 
 SINGLE_BATTLE_TEST("Heal Pulse heals the target by 1/2 of it's maxHP")
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Heal Pulse is blocked by Substitute")
 SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Grassy Terrain is on the field")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLORAL_HEALING) == EFFECT_HEAL_PULSE);
+        ASSUME(GetMoveEffect(MOVE_FLORAL_HEALING) == EFFECT_HEAL_TARGET);
         ASSUME(GetMoveEffectArg_MoveProperty(MOVE_FLORAL_HEALING) == MOVE_EFFECT_FLORAL_HEALING);
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
         ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);

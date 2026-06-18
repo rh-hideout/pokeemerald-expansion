@@ -456,7 +456,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
-        case EFFECT_HEAL_PULSE:
+        case EFFECT_HEAL_TARGET:
         case EFFECT_BELCH:
         case EFFECT_TOPSY_TURVY:
         case EFFECT_FAIRY_LOCK:
@@ -523,7 +523,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
         case EFFECT_SHORE_UP:
-        case EFFECT_HEAL_PULSE:
+        case EFFECT_HEAL_TARGET:
         case EFFECT_LASER_FOCUS:
         case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:

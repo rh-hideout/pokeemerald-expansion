@@ -657,7 +657,7 @@ SINGLE_BATTLE_TEST("Dynamax: Heal Pulse heals based on a Pokemon's non-Dynamax H
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HEAL_PULSE) == EFFECT_HEAL_PULSE);
+        ASSUME(GetMoveEffect(MOVE_HEAL_PULSE) == EFFECT_HEAL_TARGET);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); Speed(100); }
     } WHEN {

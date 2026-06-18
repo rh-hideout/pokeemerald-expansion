@@ -2733,7 +2733,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (IS_BATTLER_OF_TYPE(battlerDef, GetMoveArgType(move)) || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove) || GetActiveGimmick(battlerDef) == GIMMICK_TERA)
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_HEAL_PULSE: // and floral healing
+    case EFFECT_HEAL_TARGET: // and floral healing
         if (!IsTargetingPartner(battlerAtk, battlerDef)) // Don't heal enemies
         {
             ADJUST_SCORE(-10);
@@ -3696,7 +3696,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                     ADJUST_SCORE(WEAK_EFFECT);
                 }
                 break;
-            case EFFECT_HEAL_PULSE:
+            case EFFECT_HEAL_TARGET:
             case EFFECT_HIT_ENEMY_HEAL_ALLY:
                 if (AI_IsFaster(battlerAtk, LEFT_FOE(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
                  && AI_IsFaster(battlerAtk, RIGHT_FOE(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
@@ -6171,7 +6171,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 
     if (IsTargetingPartner(battlerAtk, battlerDef))
     {
-        if ((effect == EFFECT_HEAL_PULSE || effect == EFFECT_HIT_ENEMY_HEAL_ALLY)
+        if ((effect == EFFECT_HEAL_TARGET || effect == EFFECT_HIT_ENEMY_HEAL_ALLY)
          || (moveType == TYPE_ELECTRIC && gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_VOLT_ABSORB)
          || (moveType == TYPE_GROUND && gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_EARTH_EATER)
          || (moveType == TYPE_WATER && (gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_DRY_SKIN || gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WATER_ABSORB)))

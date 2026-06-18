@@ -13524,7 +13524,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Restores the target by up\n"
             "to half their max HP."),
-        .effect = EFFECT_HEAL_PULSE,
+        .effect = EFFECT_HEAL_TARGET,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
@@ -16765,7 +16765,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Restores the target's HP.\n"
             "More HP on Grassy Terrain."),
-        .effect = EFFECT_HEAL_PULSE,
+        .effect = EFFECT_HEAL_TARGET,
         .power = 0,
         .type = TYPE_FAIRY,
         .accuracy = 0,
