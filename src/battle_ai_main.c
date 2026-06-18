@@ -2239,7 +2239,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_CONVERSION_2:
         //TODO
         break;
-    case EFFECT_LOCK_ON:
+    case EFFECT_ENSURE_NEXT_HIT:
         if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
           || aiData->abilities[battlerAtk] == ABILITY_NO_GUARD
           || aiData->abilities[battlerDef] == ABILITY_NO_GUARD
@@ -4649,7 +4649,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         if (!IsWakeupTurn(battlerAtk) && IsAsleepOrComatose(battlerAtk, aiData->abilities[battlerAtk]))
             ADJUST_SCORE(BEST_EFFECT);
         break;
-    case EFFECT_LOCK_ON:
+    case EFFECT_ENSURE_NEXT_HIT:
         if (HasMoveWithEffect(battlerAtk, EFFECT_OHKO))
             ADJUST_SCORE(GOOD_EFFECT);
         else if (HasMoveWithLowAccuracy(battlerAtk, battlerDef, 85, TRUE))
@@ -6260,7 +6260,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_MIST:
             case EFFECT_FOCUS_ENERGY:
             case EFFECT_CONVERSION_2:
-            case EFFECT_LOCK_ON:
+            case EFFECT_ENSURE_NEXT_HIT:
             case EFFECT_SAFEGUARD:
             case EFFECT_STAT_CHANGE_HALF_HP:
             case EFFECT_BELLY_DRUM:

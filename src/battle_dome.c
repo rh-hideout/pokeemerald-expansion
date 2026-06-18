@@ -4073,7 +4073,7 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_SNORE:
     // Others
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_LOCK_ON:
+    case EFFECT_ENSURE_NEXT_HIT:
     case EFFECT_FLAIL:
     case EFFECT_BATON_PASS:
     case EFFECT_INGRAIN:

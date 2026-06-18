@@ -4655,7 +4655,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Senses the foe's action to\n"
             "ensure the next move's hit."),
-        .effect = EFFECT_LOCK_ON,
+        .effect = EFFECT_ENSURE_NEXT_HIT,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
@@ -5447,7 +5447,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Locks on to the foe to\n"
             "ensure the next move hits."),
-        .effect = EFFECT_LOCK_ON,
+        .effect = EFFECT_ENSURE_NEXT_HIT,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_LOCK_ON) == EFFECT_LOCK_ON);
+    ASSUME(GetMoveEffect(MOVE_LOCK_ON) == EFFECT_ENSURE_NEXT_HIT);
 }
 
 SINGLE_BATTLE_TEST("Lock-On volatile allows to hit through semi-invulnerability")
