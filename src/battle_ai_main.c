@@ -436,7 +436,7 @@ void ReconsiderGimmick(enum BattlerId battlerAtk, enum BattlerId battlerDef, enu
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PROTECT)
+    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_TERA && GetMoveEffect(move) == EFFECT_PREVENT_DAMAGE)
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
@@ -2272,7 +2272,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (gBattleMons[battlerAtk].hp == 1 || GetBattlerSecondaryDamage(battlerAtk)) //Don't use Endure if you'll die after using it
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_PROTECT:
+    case EFFECT_PREVENT_DAMAGE:
         {
             bool32 decreased = FALSE;
             enum ProtectMethod protectMethod = GetMoveProtectMethod(move);
@@ -4216,7 +4216,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX && GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
     {
         move = MOVE_MAX_GUARD;
-        moveEffect = EFFECT_PROTECT;
+        moveEffect = EFFECT_PREVENT_DAMAGE;
     }
 
     // check status move preference
@@ -4678,7 +4678,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 RETURN_SCORE_PLUS(WEAK_EFFECT);
         }
         break;
-    case EFFECT_PROTECT:
+    case EFFECT_PREVENT_DAMAGE:
         if (incomingMove == MOVE_UNAVAILABLE)
             incomingMove = MOVE_NONE;
         enum ProtectMethod protectMethod = GetMoveProtectMethod(move);
@@ -4791,7 +4791,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
 
             enum BattleMoveEffects predictedEffect = GetMoveEffect(incomingMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
-             && (IsExplosionMove(incomingMove) || predictedEffect == EFFECT_PROTECT))
+             && (IsExplosionMove(incomingMove) || predictedEffect == EFFECT_PREVENT_DAMAGE))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if (predictedEffect == EFFECT_SEMI_INVULNERABLE && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
                 ADJUST_SCORE(GOOD_EFFECT);
@@ -5763,7 +5763,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 }
                 break;
             case MOVE_EFFECT_FEINT:
-                if (GetMoveEffect(incomingMove) == EFFECT_PROTECT)
+                if (GetMoveEffect(incomingMove) == EFFECT_PREVENT_DAMAGE)
                     ADJUST_SCORE(GOOD_EFFECT);
                 break;
             case MOVE_EFFECT_THROAT_CHOP:
@@ -6141,7 +6141,7 @@ static s32 AI_PreferBatonPass(enum BattlerId battlerAtk, enum BattlerId battlerD
         if (!gBattleMons[battlerAtk].volatiles.aquaRing)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
-    case EFFECT_PROTECT:
+    case EFFECT_PREVENT_DAMAGE:
         if (GetProtectType(GetMoveProtectMethod(gAiLogicData->lastUsedMove[battlerAtk])) == PROTECT_TYPE_SINGLE)
             ADJUST_SCORE(-2);
         else
@@ -6518,7 +6518,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
         break;
 
     // Fails if opponent switches
-    case EFFECT_PROTECT:
+    case EFFECT_PREVENT_DAMAGE:
     case EFFECT_REFLECT_DAMAGE:
     case EFFECT_SHELL_TRAP:
     case EFFECT_SUCKER_PUNCH:

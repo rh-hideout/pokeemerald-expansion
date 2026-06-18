@@ -296,7 +296,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_ENCORE:
         case EFFECT_HAZE:
         case EFFECT_PARTING_SHOT:
-        case EFFECT_PROTECT:
+        case EFFECT_PREVENT_DAMAGE:
         case EFFECT_REST:
         case EFFECT_ROAR:
         case EFFECT_ROOST:
@@ -497,7 +497,7 @@ bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBa
     {
         enum Move move = gBattleHistory->usedMoves[opposingBattler][moveIndex];
         enum BattleMoveEffects effect = GetMoveEffect(move);
-        if (effect == EFFECT_PROTECT && move != MOVE_ENDURE)
+        if (effect == EFFECT_PREVENT_DAMAGE && move != MOVE_ENDURE)
             return TRUE;
         if (effect == EFFECT_SEMI_INVULNERABLE && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI), predictedMove, CONSIDER_PRIORITY))
             return TRUE;
@@ -1229,7 +1229,7 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
     enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
 
     // Check if physical moves hurt.
-    if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_PROTECTIVE_PADS && atkAbility != ABILITY_LONG_REACH
+    if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS && atkAbility != ABILITY_LONG_REACH
         && (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET
         || defAbility == ABILITY_IRON_BARBS || defAbility == ABILITY_ROUGH_SKIN))
     {
@@ -2007,7 +2007,7 @@ bool32 IsAllyProtectingFromMove(enum BattlerId battlerAtk, enum Move attackerMov
 {
     enum BattleMoveEffects effect = GetMoveEffect(allyMove);
 
-    if (effect != EFFECT_PROTECT)
+    if (effect != EFFECT_PREVENT_DAMAGE)
     {
         return FALSE;
     }
@@ -4753,7 +4753,7 @@ void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
         if (!HasDamagingMove(battlerDef))
             ADJUST_SCORE_PTR(DECENT_EFFECT);
 
-        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveWithEffect(battlerAtk, EFFECT_PROTECT))
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveWithEffect(battlerAtk, EFFECT_PREVENT_DAMAGE))
             ADJUST_SCORE_PTR(WEAK_EFFECT);    // stall tactic
 
         if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PSN_ANY)
@@ -4933,7 +4933,7 @@ bool32 AI_MoveMakesContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     if (ability == ABILITY_LONG_REACH)
         return FALSE;
-    if (holdEffect == HOLD_EFFECT_PROTECTIVE_PADS)
+    if (holdEffect == HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS)
         return FALSE;
     if (holdEffect == HOLD_EFFECT_PUNCHING_GLOVE && IsPunchingMove(move))
         return FALSE;
@@ -4997,7 +4997,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
                 return TRUE;
             isEager = TRUE;
             break;
-        case EFFECT_PROTECT:
+        case EFFECT_PREVENT_DAMAGE:
             if (HasDamagingMoveOfType(battlerAtk, GetMoveType(chosenMove)))
                 return FALSE;
             else

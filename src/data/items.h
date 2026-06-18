@@ -10912,7 +10912,7 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("Protective Pads"),
         .pluralName = ITEM_PLURAL_NAME("Protective Pads"),
         .price = (I_PRICE >= GEN_9) ? 15000 : 4000,
-        .holdEffect = HOLD_EFFECT_PROTECTIVE_PADS,
+        .holdEffect = HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS,
         .description = COMPOUND_STRING(
             "Protects from\n"
             "effects triggered\n"

@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves deal 1/4 damage through protect", s16 damag
     PARAMETRIZE { protected = FALSE; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

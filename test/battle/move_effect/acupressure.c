@@ -65,8 +65,8 @@ DOUBLE_BATTLE_TEST("Acupressure will not try to raise partners stat if it alread
 DOUBLE_BATTLE_TEST("Acupressure works on the user if its side is protected by Crafty Shield")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
-        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -86,8 +86,8 @@ DOUBLE_BATTLE_TEST("Acupressure works on the user if its side is protected by Cr
 DOUBLE_BATTLE_TEST("Acupressure works on the ally if its side is protected by Crafty Shield")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
-        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

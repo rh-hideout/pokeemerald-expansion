@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Bide doesn't deal back damage taken by user's Substitute")
 SINGLE_BATTLE_TEST("Bide doesn't deal damage through protect")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

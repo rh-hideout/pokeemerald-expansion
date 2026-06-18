@@ -25,7 +25,7 @@ DOUBLE_BATTLE_TEST("Coaching raises Attack and Defense of ally by 1 stage each")
 DOUBLE_BATTLE_TEST("Coaching bypasses Protect")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -42,7 +42,7 @@ DOUBLE_BATTLE_TEST("Coaching bypasses Protect")
 DOUBLE_BATTLE_TEST("Coaching bypasses Crafty Shield")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

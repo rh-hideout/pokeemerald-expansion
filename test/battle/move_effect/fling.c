@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
 SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

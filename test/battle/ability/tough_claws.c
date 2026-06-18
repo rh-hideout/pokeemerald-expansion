@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Tough Claws boosts contact moves when user has Protective Pa
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_MACH_PUNCH));
         ASSUME(IsPunchingMove(MOVE_MACH_PUNCH));
-        ASSUME(GetItemHoldEffect(ITEM_PROTECTIVE_PADS) == HOLD_EFFECT_PROTECTIVE_PADS);
+        ASSUME(GetItemHoldEffect(ITEM_PROTECTIVE_PADS) == HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS);
         ASSUME(GetItemHoldEffect(ITEM_PUNCHING_GLOVE) == HOLD_EFFECT_PUNCHING_GLOVE);
         PLAYER(SPECIES_BARBARACLE) { Ability(ABILITY_TOUGH_CLAWS); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);

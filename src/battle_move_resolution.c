@@ -1248,7 +1248,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (gBattleMons[cv->battlerAtk].volatiles.noRetreat)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_PROTECT:
+    case EFFECT_PREVENT_DAMAGE:
     case EFFECT_ENDURE:
         TryResetConsecutiveUseCounter(cv->battlerAtk);
         if (IsLastMonToMove(cv->battlerAtk))

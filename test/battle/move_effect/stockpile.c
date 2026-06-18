@@ -297,7 +297,7 @@ SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if move is absorbed")
 SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if hit into Protect")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

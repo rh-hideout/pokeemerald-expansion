@@ -698,7 +698,7 @@ static inline enum ProtectMethod GetMoveProtectMethod(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_PROTECT || effect == EFFECT_ENDURE || effect == EFFECT_MAT_BLOCK, "not a protect move: %S", GetMoveName(moveId));
+    assertf(effect == EFFECT_PREVENT_DAMAGE || effect == EFFECT_ENDURE || effect == EFFECT_MAT_BLOCK, "not a protect move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.protectMethod;
 }
 

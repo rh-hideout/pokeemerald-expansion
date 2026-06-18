@@ -165,7 +165,7 @@ static bool32 AttackerHasToSwitch(enum Move move) // User needs to send out a di
 static bool32 UserHasToGoFirst(enum Move move) // Player needs to go first
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_PROTECT
+    if (effect == EFFECT_PREVENT_DAMAGE
      || effect == EFFECT_ENDURE
      || effect == EFFECT_FOLLOW_ME
      || effect == EFFECT_MAGIC_COAT
