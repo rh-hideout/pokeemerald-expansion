@@ -200,7 +200,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be flinched")
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be hit by weight-based moves")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HEAVY_SLAM) == EFFECT_HEAT_CRASH);
+        ASSUME(GetMoveEffect(MOVE_HEAVY_SLAM) == EFFECT_POWER_BASED_ON_USER_WEIGHT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

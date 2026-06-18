@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Autotomize applies before Light Metal and Heavy Metal when d
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_AUTOTOMIZE) == EFFECT_AUTOTOMIZE);
-        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_HEAT_CRASH);
+        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_POWER_BASED_ON_USER_WEIGHT);
         ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
         ASSUME(GetSpeciesWeight(SPECIES_GASTLY) == 1);
         PLAYER(SPECIES_GASTLY);
