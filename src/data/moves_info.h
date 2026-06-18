@@ -18546,7 +18546,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power is doubled if the\n"
             "user moves before the foe."),
-        .effect = EFFECT_BOLT_BEAK,
+        .effect = EFFECT_DOUBLE_POWER_IF_FASTER,
         .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 80 : 85,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -18568,7 +18568,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power is doubled if the\n"
             "user moves before the foe."),
-        .effect = EFFECT_BOLT_BEAK,
+        .effect = EFFECT_DOUBLE_POWER_IF_FASTER,
         .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 80 : 85,
         .type = TYPE_WATER,
         .accuracy = 100,

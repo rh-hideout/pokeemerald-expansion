@@ -6471,7 +6471,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_WEATHER_AND_SWITCH:
-    case EFFECT_BOLT_BEAK:
+    case EFFECT_DOUBLE_POWER_IF_FASTER:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_MAGNET_RISE:

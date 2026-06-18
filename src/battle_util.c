@@ -6298,7 +6298,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         }
         break;
-    case EFFECT_BOLT_BEAK:
+    case EFFECT_DOUBLE_POWER_IF_FASTER:
         if (ctx->aiCalc)
         {
             if (!Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
