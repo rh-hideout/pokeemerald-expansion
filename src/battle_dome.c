@@ -3950,7 +3950,7 @@ static bool32 IsDomeLuckyMove(enum Move move)
     case EFFECT_PRESENT:
     case EFFECT_ASSIST:
     case EFFECT_MAGIC_COAT:
-    case EFFECT_REVENGE:
+    case EFFECT_DOUBLE_POWER_IF_DAMAGED:
     case EFFECT_IMPRISON:
     case EFFECT_SNATCH:
         return TRUE;

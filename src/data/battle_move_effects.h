@@ -833,7 +833,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_REVENGE] =
+    [EFFECT_DOUBLE_POWER_IF_DAMAGED] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 4,
