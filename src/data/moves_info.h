@@ -7446,7 +7446,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Tricks the foe into trading\n"
             "held items."),
-        .effect = EFFECT_TRICK,
+        .effect = EFFECT_SWAP_ITEMS,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -11218,7 +11218,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Swaps items with the foe\n"
             "faster than the eye can see."),
-        .effect = EFFECT_TRICK,
+        .effect = EFFECT_SWAP_ITEMS,
         .power = 0,
         .type = TYPE_DARK,
         .accuracy = 100,

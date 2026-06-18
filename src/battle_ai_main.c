@@ -2066,7 +2066,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
             ADJUST_SCORE(-20);
         break;
-    case EFFECT_TRICK:
+    case EFFECT_SWAP_ITEMS:
         if ((gBattleMons[battlerAtk].item == ITEM_NONE && aiData->items[battlerDef] == ITEM_NONE)
           || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, gBattleMons[battlerAtk].item)
           || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, aiData->items[battlerDef])
@@ -4938,7 +4938,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         else if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_STATUS))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
-    case EFFECT_TRICK:
+    case EFFECT_SWAP_ITEMS:
     case EFFECT_BESTOW:
         switch (aiData->holdEffects[battlerAtk])
         {

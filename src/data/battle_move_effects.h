@@ -780,7 +780,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 4,
     },
 
-    [EFFECT_TRICK] =
+    [EFFECT_SWAP_ITEMS] =
     {
         .battleScript = BattleScript_EffectTrick,
         .battleTvScore = 4,
