@@ -1193,3 +1193,29 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux")
         TURN { EXPECT_MOVE(opponentLeft, MOVE_MAGNETIC_FLUX); }
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two (doubles)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_HORN_ATTACK) == DAMAGE_CATEGORY_PHYSICAL);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
+        OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { 
+            EXPECT_MOVES(opponentLeft, MOVE_STRENGTH, MOVE_SWORDS_DANCE);
+            EXPECT_MOVES(opponentRight, MOVE_STRENGTH, MOVE_SWORDS_DANCE);
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_STRENGTH);
+            EXPECT_MOVE(opponentRight, MOVE_STRENGTH);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(playerRight, 3);
+        }
+    }
+}

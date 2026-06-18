@@ -2910,6 +2910,69 @@
 	.2byte \localId
 	.endm
 
+@ Mass Outbreaks
+
+	.macro setstaticoutbreak outbreakIndex:req, noReplacement=TRUE
+	callnative ScrCmd_setstaticoutbreak
+	.2byte \outbreakIndex
+	.byte \noReplacement
+	.endm
+
+	.macro setdynamicoutbreak species:req, level:req, move1:req, move2:req, move3:req, move4:req, probability:req, daysLeft:req, map:req, noReplacement=TRUE
+	callnative ScrCmd_setdynamicoutbreak
+	.2byte \species
+	.2byte \level
+	.2byte \move1
+	.2byte \move2
+	.2byte \move3
+	.2byte \move4
+	.2byte \probability
+	.2byte \daysLeft
+	.2byte \map
+	.byte \noReplacement
+	.endm
+
+	.macro editoutbreak species=SPECIES_NONE, level=0, move1=MOVES_COUNT, move2=MOVES_COUNT, move3=MOVES_COUNT, move4=MOVES_COUNT, probability=0xFF, daysLeft=0x3FFF, map=MAP_UNDEFINED
+	callnative ScrCmd_editoutbreak
+	.2byte \species
+	.2byte \level
+	.2byte \move1
+	.2byte \move2
+	.2byte \move3
+	.2byte \move4
+	.2byte \probability
+	.2byte \daysLeft
+	.2byte \map
+	.endm
+
+	@ Ends the current active outbreak
+	.macro clearactiveoutbreak
+	editoutbreak daysLeft=0
+	.endm
+
+	@ Starts a new outbreak. Unless `noReplacement` is False, it will fail if an outbreak is already active
+	@ If `outbreakIndex` is set, it will use the static outbreak data as a base them modify it with the other set values
+	.macro startoutbreak outbreakIndex=OUTBREAK_COUNT, noReplacement=TRUE, species=SPECIES_NONE, level=0, move1=MOVES_COUNT, move2=MOVES_COUNT, move3=MOVES_COUNT, move4=MOVES_COUNT, probability=0xFF, daysLeft=0x3FFF, map=MAP_UNDEFINED
+	.if \outbreakIndex == OUTBREAK_COUNT
+		setdynamicoutbreak \species, \level, \move1, \move2, \move3, \move4, \probability, \daysLeft, \map, \noReplacement
+	.else
+		setstaticoutbreak \outbreakIndex, \noReplacement
+		editoutbreak \species, \level, \move1, \move2, \move3, \move4, \probability, \daysLeft, \map
+	.endif
+	.endm
+
+	@ Stores TRUE or FALSE in VAR_RESULT to indicate if a mass outbreak is active
+	.macro checkhasactiveoutbreak
+	callnative ScrCmd_checkhasactiveoutbreak
+	.endm
+
+	@ Sets outbreak data from the save file (`dataField` should be a `enum MassOutbreakData` value) into the variable `var`
+	.macro getmassoutbreakdata var:req, dataField:req
+	callnative ScrCmd_getmassoutbreakdata
+	.2byte \var
+	.byte \dataField
+	.endm
+
 @ FRLG
 
 

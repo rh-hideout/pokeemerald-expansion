@@ -51,6 +51,7 @@
   - [Quickstart Documentation](tutorials/quickstart.md)
   - [How to use Generic Spots](tutorials/how_to_spots.md)
   - [How to use Dynamic Shop](tutorials/how_to_dynamic_shop.md)
+  - [How to use Mass Outbreak](tutorials/how_to_mass_outbreak.md)
   - [How to use Overworld Wild Encounters](tutorials/how_to_overworld_wild_encounters.md)
   - [How to use Dynamic Weather](tutorials/how_to_dynamic_weather.md)
   - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)

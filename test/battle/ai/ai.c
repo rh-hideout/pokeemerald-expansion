@@ -236,7 +236,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two")
+AI_SINGLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two (singles)")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
