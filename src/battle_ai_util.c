@@ -624,7 +624,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
-    case EFFECT_HEAT_CRASH:
+    case EFFECT_POWER_BASED_ON_USER_WEIGHT:
         if (GetActiveGimmick(ctx->battlerDef) == GIMMICK_DYNAMAX)
             return TRUE;
         break;

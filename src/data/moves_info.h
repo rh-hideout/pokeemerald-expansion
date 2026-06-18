@@ -12995,7 +12995,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user outweighs the foe."),
-        .effect = EFFECT_HEAT_CRASH,
+        .effect = EFFECT_POWER_BASED_ON_USER_WEIGHT,
         .power = 1,
         .type = TYPE_STEEL,
         .accuracy = 100,
@@ -14287,7 +14287,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user outweighs the foe."),
-        .effect = EFFECT_HEAT_CRASH,
+        .effect = EFFECT_POWER_BASED_ON_USER_WEIGHT,
         .power = 1,
         .type = TYPE_FIRE,
         .accuracy = 100,

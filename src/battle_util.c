@@ -6241,7 +6241,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         else
             basePower = 120;
         break;
-    case EFFECT_HEAT_CRASH:
+    case EFFECT_POWER_BASED_ON_USER_WEIGHT:
         weight = GetBattlerWeight(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) / GetBattlerWeight(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
         if (weight >= ARRAY_COUNT(sHeatCrashPowerTable))
             basePower = sHeatCrashPowerTable[ARRAY_COUNT(sHeatCrashPowerTable) - 1];

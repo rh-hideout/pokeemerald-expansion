@@ -1415,7 +1415,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             break;
         }
         case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
-        case EFFECT_HEAT_CRASH:
+        case EFFECT_POWER_BASED_ON_USER_WEIGHT:
             if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             {
                 battleScript = BattleScript_MoveBlockedByDynamax;
