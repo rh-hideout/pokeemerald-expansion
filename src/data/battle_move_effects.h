@@ -909,7 +909,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
     },
 
-    [EFFECT_LOW_KICK] =
+    [EFFECT_POWER_BASED_ON_TARGET_WEIGHT] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
