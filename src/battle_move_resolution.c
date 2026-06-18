@@ -1381,7 +1381,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
                 continue;
             }
             break;
-        case EFFECT_SUCKER_PUNCH:
+        case EFFECT_PRIORITY_IF_TARGET_DAMAGES:
         {
             u32 defMove = GetBattlerChosenMove(battlerDef);
             if (HasBattlerActedThisTurn(battlerDef)

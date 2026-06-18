@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_SUCKER_PUNCH);
+    ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_PRIORITY_IF_TARGET_DAMAGES);
 }
 
 SINGLE_BATTLE_TEST("Sucker Punch hits targets that are about to attack")
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Sucker Punch hits targets using Me First")
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, opponent);
             HP_BAR(player);
-        }        
+        }
     }
 }
 

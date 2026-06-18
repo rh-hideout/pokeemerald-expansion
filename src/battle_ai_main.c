@@ -2829,7 +2829,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_SUCKER_PUNCH:
+    case EFFECT_PRIORITY_IF_TARGET_DAMAGES:
         if ((HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_STATUS) && RandomPercentage(RNG_AI_SUCKER_PUNCH, SUCKER_PUNCH_CHANCE)) // Player has a status move
         || (IsBattleMoveStatus(incomingMove) && RandomPercentage(RNG_AI_SUCKER_PUNCH, SUCKER_PUNCH_PREDICTION_CHANCE) && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE)) // AI actively predicting incoming status move
         || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Opponent going first
@@ -6521,7 +6521,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
     case EFFECT_PREVENT_DAMAGE:
     case EFFECT_REFLECT_DAMAGE:
     case EFFECT_SHELL_TRAP:
-    case EFFECT_SUCKER_PUNCH:
+    case EFFECT_PRIORITY_IF_TARGET_DAMAGES:
     case EFFECT_UPPER_HAND:
     case EFFECT_ENCORE:
     case EFFECT_BECOME_TARGET:
