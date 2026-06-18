@@ -691,7 +691,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on 
     PARAMETRIZE { move = MOVE_ACUPRESSURE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_PARTY_STATUS);
         ASSUME(GetMoveEffect(MOVE_ACUPRESSURE) == EFFECT_ACUPRESSURE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
