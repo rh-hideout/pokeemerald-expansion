@@ -2021,7 +2021,7 @@ bool32 IsHazardClearingMove(enum Move move)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     switch (moveEffect)
     {
-    case EFFECT_RAPID_SPIN:
+    case EFFECT_REMOVE_TRAPS:
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
@@ -4174,7 +4174,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_DEFOG:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS | AI_EFFECT_BREAK_SCREENS;
         break;
-    case EFFECT_RAPID_SPIN:
+    case EFFECT_REMOVE_TRAPS:
     case EFFECT_TIDY_UP:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS;
         break;
