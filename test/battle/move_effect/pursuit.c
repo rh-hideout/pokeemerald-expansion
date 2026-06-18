@@ -342,7 +342,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage")
 DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but isn't affected by Follow Me")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_BECOME_TARGET);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CLEFABLE);
         PLAYER(SPECIES_ZIGZAGOON);

@@ -7279,7 +7279,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Draws attention to make\n"
             "foes attack only the user."),
-        .effect = EFFECT_FOLLOW_ME,
+        .effect = EFFECT_BECOME_TARGET,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -12793,7 +12793,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Scatters powder to make\n"
             "foes attack only the user."),
-        .effect = EFFECT_FOLLOW_ME,
+        .effect = EFFECT_BECOME_TARGET,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -16888,7 +16888,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Makes the foe attack the\n"
             "spotlighted Pokémon."),
-        .effect = EFFECT_FOLLOW_ME,
+        .effect = EFFECT_BECOME_TARGET,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,

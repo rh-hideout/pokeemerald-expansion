@@ -285,7 +285,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_AURORA_VEIL:
         case EFFECT_WEATHER_AND_SWITCH:
         case EFFECT_FIRST_TURN_ONLY:
-        case EFFECT_FOLLOW_ME:
+        case EFFECT_BECOME_TARGET:
         case EFFECT_INSTRUCT:
         case EFFECT_JUNGLE_HEALING:
         case EFFECT_SHED_TAIL:

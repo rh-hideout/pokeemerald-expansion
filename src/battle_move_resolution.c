@@ -1236,7 +1236,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!IsBattlersFirstTurn(cv->battlerAtk) || gSpecialStatuses[cv->battlerAtk].backUpTarget)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_FOLLOW_ME:
+    case EFFECT_BECOME_TARGET:
         if (B_UPDATED_MOVE_DATA >= GEN_8 && !(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
             battleScript = BattleScript_ButItFailed;
         break;

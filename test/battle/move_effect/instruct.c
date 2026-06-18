@@ -340,7 +340,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Follow Me after instru
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_BECOME_TARGET);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
@@ -371,7 +371,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
         WITH_CONFIG(B_POWDER_GRASS, GEN_6);
-        ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
+        ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_BECOME_TARGET);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_CHANGE_TARGET_TYPE);
         PLAYER(SPECIES_TREECKO);
