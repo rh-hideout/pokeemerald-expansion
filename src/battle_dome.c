@@ -4074,7 +4074,7 @@ static bool32 IsDomeComboMove(enum Move move)
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_ENSURE_NEXT_HIT:
-    case EFFECT_FLAIL:
+    case EFFECT_MORE_POWER_WITH_LESS_HP:
     case EFFECT_BATON_PASS:
     case EFFECT_INGRAIN:
     case EFFECT_AQUA_RING:

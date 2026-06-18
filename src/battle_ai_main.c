@@ -2867,7 +2867,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         else
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_FLAIL:
+    case EFFECT_MORE_POWER_WITH_LESS_HP:
         if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) // Opponent should go first
             || aiData->hpPercents[battlerAtk] > 50)
             ADJUST_SCORE(-4);
@@ -4735,7 +4735,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
              && IsPinchBerryItemEffect(aiData->holdEffects[battlerAtk]))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if ((gBattleMons[battlerAtk].hp > 1) // Only spam endure for Flail/Reversal if you're not at Min Health
-             && (HasMoveWithEffect(battlerAtk, EFFECT_FLAIL) || HasMoveWithEffect(battlerAtk, EFFECT_ENDEAVOR)))
+             && (HasMoveWithEffect(battlerAtk, EFFECT_MORE_POWER_WITH_LESS_HP) || HasMoveWithEffect(battlerAtk, EFFECT_ENDEAVOR)))
                 ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
@@ -6202,7 +6202,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_RESTORE_HP:
             case EFFECT_REST:
             case EFFECT_DESTINY_BOND:
-            case EFFECT_FLAIL:
+            case EFFECT_MORE_POWER_WITH_LESS_HP:
             case EFFECT_ENDURE:
             case EFFECT_MORNING_SUN:
             case EFFECT_SYNTHESIS:

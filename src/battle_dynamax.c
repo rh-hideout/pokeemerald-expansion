@@ -379,7 +379,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move)
     case EFFECT_MAGNITUDE:
     case EFFECT_POWER_BASED_ON_TARGET_HP:
         return MAX_POWER_TIER_6;
-    case EFFECT_FLAIL:
+    case EFFECT_MORE_POWER_WITH_LESS_HP:
     case EFFECT_LOW_KICK:
         return MAX_POWER_TIER_7;
     default:

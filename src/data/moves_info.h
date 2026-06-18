@@ -4793,7 +4793,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts more damage when\n"
             "the user's HP is down."),
-        .effect = EFFECT_FLAIL,
+        .effect = EFFECT_MORE_POWER_WITH_LESS_HP,
         .power = 1,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -4899,7 +4899,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts more damage when\n"
             "the user's HP is down."),
-        .effect = EFFECT_FLAIL,
+        .effect = EFFECT_MORE_POWER_WITH_LESS_HP,
         .power = 1,
         .type = TYPE_FIGHTING,
         .accuracy = 100,

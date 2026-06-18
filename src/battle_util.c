@@ -6152,7 +6152,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_POWER_BASED_ON_USER_HP:
         basePower = gBattleMons[battlerAtk].hp * basePower / gBattleMons[battlerAtk].maxHP;
         break;
-    case EFFECT_FLAIL:
+    case EFFECT_MORE_POWER_WITH_LESS_HP:
         hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
         for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
         {
