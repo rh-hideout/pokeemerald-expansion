@@ -4850,7 +4850,7 @@ static void Cmd_trainerslidein(void)
 
 static inline bool32 IsProtectivePadsProtected(enum BattlerId battler, enum HoldEffect holdEffect)
 {
-    if (holdEffect != HOLD_EFFECT_PROTECTIVE_PADS)
+    if (holdEffect != HOLD_EFFECT_PREVENT_DAMAGEIVE_PADS)
         return FALSE;
 
     RecordItemEffectBattle(battler, holdEffect);
@@ -14603,7 +14603,7 @@ void BS_DestroyItemPopup(void)
         DestroyAbilityPopUp(battler);
 
     FreeAbilityPopUpGfx();
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14619,6 +14619,6 @@ void BS_MultiHitPlurality(void)
     {
         PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_S);
     }
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

@@ -4979,7 +4979,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -5389,7 +5389,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_FIGHTING,
         .accuracy = 0,
@@ -12624,7 +12624,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades wide-ranging attacks\n"
             "for one turn."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_ROCK,
         .accuracy = 0,
@@ -13410,7 +13410,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades priority attacks\n"
             "for one turn."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_FIGHTING,
         .accuracy = 0,
@@ -15414,7 +15414,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades status moves for\n"
             "one turn."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_FAIRY,
         .accuracy = 0,
@@ -15667,7 +15667,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Evades damage and harshly\n"
         #endif
             "lowers Attack on contact."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_STEEL,
         .accuracy = 0,
@@ -15891,7 +15891,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, and damages\n"
             "the foe if struck."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -16629,7 +16629,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects user and poisons\n"
             "foes on contact."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_POISON,
         .accuracy = 0,
@@ -19070,7 +19070,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects itself, harshly\n"
             "lowering Defense on contact."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -20525,7 +20525,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects itself, lowering\n"
             "Speed on contact."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -21807,7 +21807,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, and burns\n"
             "the foe if struck."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_FIRE,
         .accuracy = 0,
@@ -22656,7 +22656,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PROTECT,
+        .effect = EFFECT_PREVENT_DAMAGE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,

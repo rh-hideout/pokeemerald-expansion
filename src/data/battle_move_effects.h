@@ -439,7 +439,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_PROTECT] =
+    [EFFECT_PREVENT_DAMAGE] =
     {
         .battleScript = BattleScript_EffectProtect,
         .battleTvScore = 5,

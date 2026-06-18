@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Protean")
 SINGLE_BATTLE_TEST("Future Sight set up is not blocked by Protect")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
