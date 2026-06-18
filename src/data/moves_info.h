@@ -13061,7 +13061,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Sprays water at the foe,\n"
             "changing it to a Water-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_CHANGE_TARGET_TYPE,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -18449,7 +18449,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Magic powder changes the\n"
             "target into a Psychic-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_CHANGE_TARGET_TYPE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
