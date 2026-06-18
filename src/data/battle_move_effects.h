@@ -398,7 +398,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_TRIPLE_KICK] =
+    [EFFECT_THREE_INCREASING_HITS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
