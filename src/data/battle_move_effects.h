@@ -384,7 +384,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
-    [EFFECT_FALSE_SWIPE] =
+    [EFFECT_LEAVE_1_HP] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,

@@ -5637,7 +5637,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that leaves the\n"
             "foe with at least 1 HP."),
-        .effect = EFFECT_FALSE_SWIPE,
+        .effect = EFFECT_LEAVE_1_HP,
         .power = 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -16275,7 +16275,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that leaves the\n"
             "foe with at least 1 HP."),
-        .effect = EFFECT_FALSE_SWIPE,
+        .effect = EFFECT_LEAVE_1_HP,
         .power = 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,

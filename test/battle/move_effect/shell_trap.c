@@ -202,7 +202,7 @@ DOUBLE_BATTLE_TEST("Shell Trap targets correctly if one of the opponents has fai
 SINGLE_BATTLE_TEST("Shell Trap activates if user is hit with a physical move but does no damage")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
+        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_LEAVE_1_HP);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
