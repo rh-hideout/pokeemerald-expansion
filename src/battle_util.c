@@ -6185,7 +6185,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_SPIT_UP:
         basePower = 100 * gBattleMons[battlerAtk].volatiles.stockpileCounter;
         break;
-    case EFFECT_REVENGE:
+    case EFFECT_DOUBLE_POWER_IF_DAMAGED:
         if (gProtectStructs[battlerAtk].revengeDoubled & 1u << battlerDef)
             basePower *= 2;
         break;

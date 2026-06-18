@@ -6023,7 +6023,7 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         if (aiData->hpPercents[battlerAtk] < 50 && AI_RandLessThan(128))
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
-    case EFFECT_REVENGE:
+    case EFFECT_DOUBLE_POWER_IF_DAMAGED:
         if (GetSpeciesBaseSpeed(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpeed(gBattleMons[battlerAtk].species) + 10)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;

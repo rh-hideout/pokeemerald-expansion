@@ -7663,7 +7663,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that gains power\n"
             "if injured by the foe."),
-        .effect = EFFECT_REVENGE,
+        .effect = EFFECT_DOUBLE_POWER_IF_DAMAGED,
         .power = 60,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -11326,7 +11326,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that gains power\n"
             "if injured by the foe."),
-        .effect = EFFECT_REVENGE,
+        .effect = EFFECT_DOUBLE_POWER_IF_DAMAGED,
         .power = 60,
         .type = TYPE_ICE,
         .accuracy = 100,
