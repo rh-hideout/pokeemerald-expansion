@@ -156,7 +156,6 @@
 #define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user of a move no longer checks for its own failure, e.g. Soundproof will not block its own Perish Song.
 #define B_ABSORB_MESSAGE            GEN_LATEST // In Gen5+, no absorb message is shown if user is already at full HP.
 #define B_UPROAR                    GEN_LATEST // In Gen5+, Uproar awakens all battlers on the first turn if successful. In Gen3-4, Uproar allows every battler to awaken before their action or at the end of a turn.
-#define B_RAGE_FIST                 GEN_LATEST // In Champions, Rage Fist stacks reset on switch out.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
