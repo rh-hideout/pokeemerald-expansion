@@ -2451,7 +2451,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
                 if (percentChance >= 100) flags |= EFFECT_CERTAIN;
 
                 SetMoveEffect(
-                    gBattlerAttacker,
+                    cv->battlerAtk,
                     gEffectBattler,
                     additionalEffect->moveEffect,
                     gBattlescriptCurrInstr,

@@ -3294,27 +3294,26 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_STEAL_STATS:
-        if (!IsBattlerUnaffectedByMove(effectBattler))
+    {
+        bool32 atLeastOneStatStolen = FALSE;
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            bool32 atLeastOneStatStolen = FALSE;
-            for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
-            {
-                s32 stageToSteal = gBattleMons[effectBattler].statStages[stat];
+            s32 stageToSteal = gBattleMons[effectBattler].statStages[stat];
 
-                if (stageToSteal > DEFAULT_STAT_STAGE && gBattleMons[battlerAtk].statStages[stat] != MAX_STAT_STAGE)
-                {
-                    atLeastOneStatStolen = TRUE;
-                    gBattleMons[effectBattler].statStages[stat] = DEFAULT_STAT_STAGE;
-                    SetStatChange(battlerAtk, stat, stageToSteal - DEFAULT_STAT_STAGE);
-                }
-            }
-
-            if (atLeastOneStatStolen)
+            if (stageToSteal > DEFAULT_STAT_STAGE && gBattleMons[battlerAtk].statStages[stat] != MAX_STAT_STAGE)
             {
-                BattleScriptPush(battleScript);
-                gBattlescriptCurrInstr = BattleScript_StealStats;
+                atLeastOneStatStolen = TRUE;
+                gBattleMons[effectBattler].statStages[stat] = DEFAULT_STAT_STAGE;
+                SetStatChange(battlerAtk, stat, stageToSteal - DEFAULT_STAT_STAGE);
             }
         }
+
+        if (atLeastOneStatStolen)
+        {
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_StealStats;
+        }
+    }
         break;
     case MOVE_EFFECT_BEAT_UP_MESSAGE:
         if (GetConfig(B_BEAT_UP) >= GEN_5) // Gen5+ don't print any custom message on attack
