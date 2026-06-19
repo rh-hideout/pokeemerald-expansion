@@ -2574,7 +2574,7 @@ static void PrintItemOnItemPopUp(enum Item item, u8 spriteId1, u8 spriteId2)
                         FALSE, gSprites[spriteId1].sBattlerId);
 }
 
-static inline bool32 IsAnyAbilityPopUpActive(void)
+bool32 IsAnyAbilityPopUpActive(void)
 {
     u32 activeAbilityPopUps = 0;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
