@@ -122,6 +122,7 @@ SINGLE_BATTLE_TEST("Belch fails if the user has not eaten a berry (Champions)")
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         WITH_CONFIG(B_BELCH_SELECTABLE, GEN_CHAMPIONS);
         PLAYER(SPECIES_SKWOVET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);

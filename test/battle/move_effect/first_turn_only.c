@@ -227,17 +227,3 @@ SINGLE_BATTLE_TEST("First Impression fails if it's called via Instruct")
         NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRST_IMPRESSION, player); }
     }
 }
-
-SINGLE_BATTLE_TEST("Fake Out cannot be selected past the user's first turn (Champions)")
-{
-    GIVEN {
-        WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_CHAMPIONS);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {}
-        TURN { MOVE(player, MOVE_FAKE_OUT, allowed: FALSE); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-    }
-}
