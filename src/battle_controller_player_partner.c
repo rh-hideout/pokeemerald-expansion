@@ -274,7 +274,8 @@ static void PlayerPartnerHandleChooseAction(enum BattlerId battler)
 
 static void PlayerPartnerHandleChooseMove(enum BattlerId battler)
 {
-    SetFinalChosenTarget(battler);
+    SetFinalChosenTarget(battler, TRUE);
+    BtlController_Complete(battler);
 }
 
 static void PlayerPartnerHandleChoosePokemon(enum BattlerId battler)

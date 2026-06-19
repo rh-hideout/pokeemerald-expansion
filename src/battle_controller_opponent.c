@@ -451,7 +451,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         }
         else
         {
-            SetFinalChosenTarget(battler);
+            SetFinalChosenTarget(battler, FALSE);
         }
         BtlController_Complete(battler);
     }

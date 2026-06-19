@@ -3348,38 +3348,48 @@ bool32 TrainerHasParty(enum BattleTrainer trainer)
 }
 
 // Used for partner and opponent
-void SetFinalChosenTarget(enum BattlerId battler)
+void SetFinalChosenTarget(enum BattlerId battler, bool32 partner)
 {
-    enum BattlerId chosenTarget = gAiBattleData->chosenTarget[battler];
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
+    enum BattlerId chosenTarget = gAiBattleData->chosenTarget[battler];
     u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
     u32 chosenMove = moveInfo->moves[chosenMoveIndex];
     enum MoveTarget targetType = GetBattlerMoveTargetType(battler, chosenMove);
 
     switch (targetType)
     {
+    case TARGET_ALLY:
+        chosenTarget = BATTLE_PARTNER(battler);
+        break;
     case TARGET_USER_OR_ALLY:
+        if (!IsBattlerAlly(battler, chosenTarget))
+            chosenTarget = battler;
+        break;
     case TARGET_USER:
     case TARGET_ALL_BATTLERS:
     case TARGET_FIELD:
         chosenTarget = battler;
         break;
     case TARGET_BOTH:
-        chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        if (!IsBattlerAlive(chosenTarget))
-            chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        break;
-    case TARGET_FOES_AND_ALLY:
-        chosenTarget = BATTLE_PARTNER(battler);
-        if (!IsBattlerAlive(chosenTarget))
+        if (partner)
+        {
             chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        if (!IsBattlerAlive(chosenTarget))
-            chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+            if (!IsBattlerAlive(chosenTarget))
+                chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        }
+        else
+        {
+            chosenTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+            if (!IsBattlerAlive(chosenTarget))
+                chosenTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+        }
         break;
     default:
         break;
     }
+
+    gBattlerTarget = chosenTarget;
 
     // If partner can and should use a gimmick (considering trainer data), do it
     enum Gimmick usableGimmick = gBattleStruct->gimmick.usableGimmick[battler];
@@ -3394,8 +3404,4 @@ void SetFinalChosenTarget(enum BattlerId battler)
         SetAIUsingGimmick(battler, NO_GIMMICK);
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (chosenTarget << 8));
     }
-
-    BtlController_Complete(battler);
-
-    gBattlerTarget = chosenTarget;
 }
