@@ -3362,7 +3362,7 @@ void SetFinalChosenTarget(enum BattlerId battler, bool32 partner)
     case TARGET_ALLY:
         chosenTarget = BATTLE_PARTNER(battler);
         break;
-    case TARGET_USER_OR_ALLY:
+    case TARGET_USER_OR_ALLY: // AI could have chosen opponent as the target because of the way the score system works
         if (!IsBattlerAlly(battler, chosenTarget))
             chosenTarget = battler;
         break;
@@ -3391,7 +3391,6 @@ void SetFinalChosenTarget(enum BattlerId battler, bool32 partner)
 
     gBattlerTarget = chosenTarget;
 
-    // If partner can and should use a gimmick (considering trainer data), do it
     enum Gimmick usableGimmick = gBattleStruct->gimmick.usableGimmick[battler];
     bool32 isAIUsingGimmick = gAiBattleData->aiUsingGimmick & (1u << battler);
     if (usableGimmick != GIMMICK_NONE && isAIUsingGimmick && !HasTrainerUsedGimmick(battler, usableGimmick))
