@@ -1,17 +1,10 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-    ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
-    ASSUME(gItemsInfo[ITEM_REVIVAL_HERB].battleUsage == EFFECT_ITEM_REVIVE);
-    ASSUME(gItemsInfo[ITEM_MAX_HONEY].battleUsage == EFFECT_ITEM_REVIVE);
-}
-
 SINGLE_BATTLE_TEST("Revive restores a fainted battler's HP to half")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -29,6 +22,7 @@ SINGLE_BATTLE_TEST("Revive restores a fainted battler's HP to half")
 SINGLE_BATTLE_TEST("Max Revive restores a fainted battler's HP fully")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -46,6 +40,7 @@ SINGLE_BATTLE_TEST("Max Revive restores a fainted battler's HP fully")
 SINGLE_BATTLE_TEST("Revival Herb restores a fainted battler's HP fully")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVAL_HERB].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -63,6 +58,7 @@ SINGLE_BATTLE_TEST("Revival Herb restores a fainted battler's HP fully")
 SINGLE_BATTLE_TEST("Max Honey restores a fainted battler's HP fully")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_HONEY].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -81,6 +77,8 @@ SINGLE_BATTLE_TEST("Max Honey restores a fainted battler's HP fully")
 DOUBLE_BATTLE_TEST("Revive works for a partner in a double battle")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(4); }
         OPPONENT(SPECIES_ABRA) { Speed(3); }
@@ -105,6 +103,7 @@ DOUBLE_BATTLE_TEST("Revive works for a partner in a double battle")
 DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -128,6 +127,10 @@ DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities")
 DOUBLE_BATTLE_TEST("Revive does reset abilities")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -151,6 +154,7 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death status condition")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_SLEEP); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -166,6 +170,8 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death status condition")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death stat change")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -181,6 +187,8 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death stat change")
 DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death types")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME(GetMoveEffect(MOVE_REFLECT_TYPE) == EFFECT_REFLECT_TYPE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -205,6 +213,7 @@ DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immed
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0); }
@@ -236,6 +245,7 @@ SINGLE_BATTLE_TEST("Revive keeps Mimikyu Busted forms and Eiscue Noice in their 
     PARAMETRIZE { species = SPECIES_EISCUE_NOICE;         ability = ABILITY_ICE_FACE; }
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         ASSUME(GetMoveCategory(MOVE_CRUNCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(species) { HP(1); Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
