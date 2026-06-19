@@ -232,7 +232,7 @@ bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(enum Move move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 bool32 IsSelfSacrificeEffect(enum Move move);
-bool32 IsRecoilDamageEffect(enum Move move);
+bool32 IsRecoilDamageEffect(enum BattleMoveEffects effect);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks

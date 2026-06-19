@@ -3923,7 +3923,7 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
     enum BattleMoveEffects effect = GetMoveEffect(move);
     
     // Is recoil applicable
-    if (!IsRecoilDamageEffect(move) || !AI_IsDamagedByRecoil(battlerAtk))
+    if (!IsRecoilDamageEffect(effect) || !AI_IsDamagedByRecoil(battlerAtk))
         return FALSE;
 
     // Get recoil damage

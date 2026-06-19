@@ -3064,10 +3064,10 @@ bool32 IsSelfSacrificeEffect(enum Move move)
     }
 }
 
-bool32 IsRecoilDamageEffect(enum Move move)
+bool32 IsRecoilDamageEffect(enum BattleMoveEffects effect)
 {
     // All recoil effects that guarantee dealing self damage like Double Edge, Mind Blown, Chloroblast, etc.
-    switch (GetMoveEffect(move))
+    switch (effect)
     {
     case EFFECT_RECOIL:
     case EFFECT_MAX_HP_50_RECOIL:
