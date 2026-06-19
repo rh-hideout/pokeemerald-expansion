@@ -3271,6 +3271,10 @@ void FaintClearSetData(enum BattlerId battler)
     for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
+    // Clear Rage Fist stacks
+    if (GetConfig(B_RAGE_FIST) >= GEN_CHAMPIONS)
+        GetBattlerPartyState(battler)->timesGotHit = 0;
+
     bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
     gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
