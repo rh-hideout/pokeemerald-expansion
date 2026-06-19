@@ -253,7 +253,6 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof);
 bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move);
 bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 bool32 IsWakeupTurn(enum BattlerId battler);
-bool32 AI_IsBattlerAsleepOrComatose(enum BattlerId battlerId);
 
 // ability logic
 bool32 IsMoxieTypeAbility(enum Ability ability);

@@ -7006,7 +7006,7 @@ gBattleAnimMove_Belch::
 	monbg ANIM_TARGET
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
-	playsewithpan SE_SUCCESS, SOUND_PAN_ATTACKER
+	playsewithpan SE_FALL, SOUND_PAN_ATTACKER
 	createsprite gBelchBerryTemplate, ANIM_ATTACKER, 2, 20, -8, -8, -8, 20, -32
 	delay 19
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 10, 0, 20, 1

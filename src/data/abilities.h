@@ -2523,10 +2523,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Normal moves turn Dragon."),
     },
 
-    [ABILITY_313] =
+    [ABILITY_EELEVATE] =
     {
-        .name = _("-------"),
-        .description = COMPOUND_STRING("No special ability."),
+        .name = _("Eelevate"),
+        .description = COMPOUND_STRING("Levitate and Beast Boost."),
     },
 
     [ABILITY_314] =

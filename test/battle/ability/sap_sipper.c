@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Sap Sipper blocks multi-hit grass type moves")
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
             HP_BAR(player);
-            MESSAGE("The Pokémon was hit 5 time(s)!");
+            MESSAGE("The Pokémon was hit 5 times!");
         }
     }
 }
