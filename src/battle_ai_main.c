@@ -3943,7 +3943,13 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
         recoilDmg = monHP * GetMoveRecoil(move) / 100; // Recoil damage
 
     // Does recoil KO attacker
-    if (recoilDmg >= gBattleMons[battlerAtk].hp && CountUsablePartyMons(battlerDef) != 0)
+    s32 opposingMons = 0;
+    if ((GetConfig(B_MULTI_BATTLE_WHITEOUT) == GEN_3) && BattlerIsPlayer(battlerDef))
+        opposingMons = CountUsablePartyMons(battlerDef);
+    else
+        opposingMons = CountUsableSideMons(battlerDef);
+    
+    if (recoilDmg >= gBattleMons[battlerAtk].hp && opposingMons != 0)
         return TRUE;
 
     return FALSE;

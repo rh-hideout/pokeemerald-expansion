@@ -293,6 +293,7 @@ void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons);
 struct AiLogicData *AllocSaveAiLogicData(void);
 void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData);
 s32 CountUsablePartyMons(enum BattlerId battlerId);
+s32 CountUsableSideMons(enum BattlerId battlerId);
 bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battler);
 bool32 PartyHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category);
 bool32 SideHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category);

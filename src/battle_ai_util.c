@@ -4484,6 +4484,14 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
     return ret;
 }
 
+s32 CountUsableSideMons(enum BattlerId battlerId)
+{
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battlerId)))
+        return (CountUsablePartyMons(battlerId) + CountUsablePartyMons(GetPartnerBattler(battlerId)));
+    else
+        return CountUsablePartyMons(battlerId);
+}
+
 bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
