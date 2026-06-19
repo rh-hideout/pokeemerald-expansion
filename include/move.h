@@ -42,6 +42,7 @@ struct AdditionalEffect
 
     union PACKED {
         enum WrappedStringID wrapped;
+        enum BrokeProtectionStringID brokeProtect;
     } multistring;
 
     u8 chance; // 0% = effect certain, primary effect

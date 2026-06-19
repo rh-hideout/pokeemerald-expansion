@@ -22,7 +22,7 @@ struct ConfigChanges
 
 #define GetConfig(name) GetConfigInternal(CONFIG_##name)
 
-u32 GetConfigInternal(enum ConfigTag configTag);
+ARM_FUNC u32 GetConfigInternal(enum ConfigTag configTag);
 void SetConfig(enum ConfigTag configTag, u32 value);
 
 #if TESTING
