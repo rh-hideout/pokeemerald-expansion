@@ -84,7 +84,7 @@ DOUBLE_BATTLE_TEST("Trick Room does not fail if the chosen engine target has fai
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_MEMENTO, target:opponentRight);
-            MOVE(playerRight, MOVE_TRICK_ROOM, target:playerLeft);
+            MOVE(playerRight, MOVE_TRICK_ROOM);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, playerLeft);
