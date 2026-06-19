@@ -347,23 +347,20 @@ void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSiz
     for (u32 i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = PARTY_SIZE;
 
-    struct BXPYAiData *bxpyAiData = Alloc(sizeof(struct BXPYAiData));
-    memset(bxpyAiData, 0, sizeof(struct BXPYAiData));
-    struct AiLogicData *bxpyAiLogicData = Alloc(sizeof(struct AiLogicData));
-    memset(bxpyAiLogicData, 0, sizeof(struct AiLogicData));
+    struct BXPYAiPartyData *bxpyAiPartyData = Alloc(sizeof(struct BXPYAiPartyData));
+    memset(bxpyAiPartyData, 0, sizeof(struct BXPYAiPartyData));
 
     // Do scoring
-    BXPY_ScorePartyMons(battler, bxpyAiData, bxpyAiLogicData);
+    BXPY_ScorePartyMons(battler, bxpyAiPartyData);
 
     // Store results
     u32 scoredMons[PARTY_SIZE];
-    BXPY_GetChosenPartyMons(battler, bxpyAiData, scoredMons, pickSize);
+    BXPY_GetChosenPartyMons(bxpyAiPartyData, scoredMons, pickSize);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = (i < pickSize) ? scoredMons[i] : PARTY_SIZE;
 
-    Free(bxpyAiData);
-    Free(bxpyAiLogicData);
+    Free(bxpyAiPartyData);
 }
 
 static void BXPY_PrepareParty(u32 pickSize)

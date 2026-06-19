@@ -4,14 +4,15 @@
 #include "battle.h"
 #include "battle_ai_main.h"
 
-struct BXPYAiData
+struct BXPYAiPartyData
 {
-    u32 partyScores[MAX_BATTLERS_COUNT][PARTY_SIZE];
+    u32 scores[PARTY_SIZE];
     u32 checkedMatchups; // Convenient debugging tool
 };
 
-void BXPY_GetChosenPartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, u32 monArray[], u32 monCount);
-void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, struct AiLogicData *bxpyAiLogicData);
-void BXPY_SetupBattlers(u32 battleFlags);
+void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArray[], u32 monCount);
+void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiPartyData);
+void BXPY_ClearAIData(void);
+void BXPY_SetupAIData(void);
 
 #endif // GUARD_BXPY_AI_H

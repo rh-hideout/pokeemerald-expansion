@@ -5,35 +5,42 @@
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
 #include "battle_ai_switch.h"
+#include "battle_setup.h"
 #include "battle_controllers.h"
 #include "bxpy_ai.h"
 #include "random.h"
+#include "constants/battle_ai.h"
 
-static void BXPY_CalcAiBattlerDamage(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
-static u32 BXPY_GetNoOfHitsToKOCandidate(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *bxpyAiLogicData);
-static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *bxpyAiLogicData);
-static void BXPY_SetCandidateAiData(enum BattlerId battler, struct AiLogicData *aiData);
-static void BXPY_SetOpponentAiData(enum BattlerId battler, struct AiLogicData *aiData);
-static enum Ability BXPY_DecideOpposingAbility(enum BattlerId battler);
-static enum Item BXPY_DecideOpposingItem(enum BattlerId battler);
+static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef);
+static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler);
+static void BXPY_SetupBattlers(void);
+static void BXPY_SetupAIFlags(void);
+static void BXPY_InitializeAIStructs(void);
 
-void BXPY_SetupBattlers(u32 battleFlags)
+void BXPY_SetupAIData()
 {
-    bool32 isLink = (battleFlags & BATTLE_TYPE_LINK);
-    bool32 isDouble = !!(battleFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS); // IsDoubleBattle
-    bool32 isMaster = (battleFlags & BATTLE_TYPE_IS_MASTER);
-    bool32 isRecorded = (battleFlags & BATTLE_TYPE_RECORDED);
-    bool32 isRecordedMaster = (battleFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
-    bool32 isRecordedLink = (battleFlags & BATTLE_TYPE_RECORDED_LINK);
-    bool32 isMulti = (battleFlags & BATTLE_TYPE_MULTI);
-    bool32 isInGamePartner = (battleFlags & BATTLE_TYPE_INGAME_PARTNER);
+    BXPY_InitializeAIStructs();
+    BXPY_SetupBattlers();
+    BXPY_SetupAIFlags();
+}
+
+void BXPY_SetupBattlers()
+{
+    bool32 isLink = (gBattleTypeFlags & BATTLE_TYPE_LINK);
+    bool32 isDouble = IsDoubleBattle();
+    bool32 isMaster =  (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
+    bool32 isRecorded = (gBattleTypeFlags & BATTLE_TYPE_RECORDED);
+    bool32 isRecordedMaster = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
+    bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
+    bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
+    bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
 
     if (!isDouble)
         gBattlersCount = 2;
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((battleFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
@@ -58,7 +65,46 @@ void BXPY_SetupBattlers(u32 battleFlags)
     }
 }
 
-void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, struct AiLogicData *bxpyAiLogicData)
+void BXPY_SetupAIFlags(void)
+{
+    gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
+    memset(gAiThinkingStruct, 0, sizeof(struct AiThinkingStruct));
+    gAiThinkingStruct->aiFlags[B_BATTLER_1] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_BATTLER_1);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+        gAiThinkingStruct->aiFlags[B_BATTLER_3] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_BATTLER_3);
+    else
+        gAiThinkingStruct->aiFlags[B_BATTLER_3] = gAiThinkingStruct->aiFlags[B_BATTLER_1];
+
+    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    {
+        gAiThinkingStruct->aiFlags[B_BATTLER_2] = GetAiFlags(gPartnerTrainerId, B_BATTLER_2);
+    }
+    else // Assign ai flags for player for prediction
+    {
+        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_BATTLER_1)
+                    | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_BATTLER_3);
+        gAiThinkingStruct->aiFlags[B_BATTLER_2] = aiFlags;
+        gAiThinkingStruct->aiFlags[B_BATTLER_0] = aiFlags;
+    }
+}
+
+void BXPY_InitializeAIStructs(void)
+{
+    gAiThinkingStruct = AllocZeroed(sizeof(*gAiThinkingStruct));
+    gAiLogicData = AllocZeroed(sizeof(*gAiLogicData));
+}
+
+void BXPY_ClearAIData(void)
+{
+    // Zero all AI globals used as a safety net
+    gBattlersCount = 0;
+    gBattleTypeFlags = 0;
+    memset(gBattlerPositions, 0, sizeof(gBattlerPositions));
+    FREE_AND_SET_NULL(gAiThinkingStruct);
+    FREE_AND_SET_NULL(gAiLogicData);
+}
+
+void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiPartyData)
 {
     // AI's party
     s32 lastId = GetAILastPartyIndex(battler);
@@ -75,10 +121,10 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
             continue;
         // Convert party data to battler data
         PokemonToBattleMon(&party[monIndex], &gBattleMons[battler]);
-        BXPY_SetCandidateAiData(battler, bxpyAiLogicData);
+        SetBattlerAiData(battler, gAiLogicData);
 
         // Legal targets get a point, so we can throw out all positions containing 0 later
-        bxpyAiData->partyScores[battler][monIndex] += 1;
+        bxpyAiPartyData->scores[monIndex] += 1;
 
         // Check each party mon against every opposing mon in every opposing party
         for (enum BattlerId opposingBattler = 0; opposingBattler < gBattlersCount; opposingBattler++)
@@ -96,33 +142,34 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, 
                     continue;
                 // Convert party data to battler data
                 PokemonToBattleMon(&opposingParty[opposingMonIndex], &gBattleMons[opposingBattler]);
-                BXPY_SetOpponentAiData(opposingBattler, bxpyAiLogicData);
-                // Run move calcs for the two battlers
-                if (BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES && BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS)
-                {
-                    BXPY_CalcAiBattlerDamage(bxpyAiLogicData, battler, opposingBattler);
-                    BXPY_CalcAiBattlerDamage(bxpyAiLogicData, opposingBattler, battler);
-                }
+                SetBattlerAiData(opposingBattler, gAiLogicData);
+                // Run move calcs for the two battlers if needed
+                BXPY_CalcAiBattlerDamage(battler, opposingBattler);
+                BXPY_CalcAiBattlerDamage(opposingBattler, battler);
                 // Do scoring
-                if (BXPY_CanCandidateWin1v1(battler, opposingBattler, bxpyAiLogicData) && BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES && BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS)
-                    bxpyAiData->partyScores[battler][monIndex] += CAN_1V1_MATCHUP_POINTS;                    
+                if (BXPY_CanCandidateWin1v1(battler, opposingBattler))
+                    bxpyAiPartyData->scores[monIndex] += CAN_1V1_MATCHUP_POINTS;
                 if (GetBattlerTypeMatchup(opposingBattler, battler) < UQ_4_12(2.0))
-                    bxpyAiData->partyScores[battler][monIndex] += DEFENSIVE_MATCHUP_POINTS;
+                    bxpyAiPartyData->scores[monIndex] += DEFENSIVE_MATCHUP_POINTS;
                 if (GetBattlerTypeMatchup(battler, opposingBattler) > UQ_4_12(2.0))
-                    bxpyAiData->partyScores[battler][monIndex] += OFFENSIVE_MATCHUP_POINTS;
-                if (gSpeciesInfo[gBattleMons[battler].species].baseSpeed > gSpeciesInfo[gBattleMons[opposingBattler].species].baseSpeed && BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS)
-                    bxpyAiData->partyScores[battler][monIndex] += OUTSPEED_MATCHUP_POINTS;
-                bxpyAiData->checkedMatchups += 1;
+                    bxpyAiPartyData->scores[monIndex] += OFFENSIVE_MATCHUP_POINTS;
+                if (gAiLogicData->speedStats[battler] >= gAiLogicData->speedStats[opposingBattler])
+                    bxpyAiPartyData->scores[monIndex] += OUTSPEED_MATCHUP_POINTS;
+                bxpyAiPartyData->checkedMatchups += 1;
             }
+            if (BXPY_AI_DEBUG)
+                DebugPrintf("%S, Index: %d, Score: %d", gSpeciesInfo[gBattleMons[battler].species].speciesName, monIndex, bxpyAiPartyData->scores[monIndex]);
         }
     }
+    if (BXPY_AI_DEBUG)
+        DebugPrintf("Battler %d checked %d matchups", battler, bxpyAiPartyData->checkedMatchups);
 }
 
-void BXPY_GetChosenPartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiData, u32 monArray[], u32 monCount)
+void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArray[], u32 monCount)
 {
-    // Make a new array that's a copy of bxpyAiData->partyScores[battler]
+    // Make a new array that's a copy of bxpyAiPartyData->scores
     u32 scores[PARTY_SIZE];
-    memcpy(scores, bxpyAiData->partyScores[battler], sizeof(bxpyAiData->partyScores[battler]));
+    memcpy(scores, bxpyAiPartyData->scores, sizeof(bxpyAiPartyData->scores));
 
     // Create an array of indexes
     u32 monIndexes[PARTY_SIZE];
@@ -165,10 +212,10 @@ void BXPY_GetChosenPartyMons(enum BattlerId battler, struct BXPYAiData *bxpyAiDa
     memcpy(monArray, monIndexes, sizeof(monIndexes));
 }
 
-static void BXPY_CalcAiBattlerDamage(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Move move;
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
+    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -178,21 +225,11 @@ static void BXPY_CalcAiBattlerDamage(struct AiLogicData *aiData, enum BattlerId 
         struct SimulatedDamage dmg = {0};
         uq4_12_t effectiveness = Q_4_12(0.0);
         dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, B_WEATHER_NONE, 0);
-        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+        gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
     }
 }
 
-static u32 BXPY_GetNoOfHitsToKOCandidate(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *bxpyAiLogicData)
-{
-    u32 hitsToKO = GetNoOfHitsToKOBattlerDmg(AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, bxpyAiLogicData), battlerDef);
-
-    if (CanEndureHit(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[moveIndex]) && hitsToKO == 1)
-        hitsToKO += 1;
-
-    return hitsToKO;
-}
-
-static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *bxpyAiLogicData)
+static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move, opposingMove, bestOpposingMove = MOVE_NONE, bestOpposingPriorityMove = MOVE_NONE;
     u32 hitsToKO = 0, hitsToKOOpponent = 0, minHitsToKO = gBattleMons[battler].hp, minHitsToKOPriority = gBattleMons[battler].hp;
@@ -204,7 +241,7 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
         opposingMove = gBattleMons[opposingBattler].moves[moveIndex];
         if (opposingMove != MOVE_NONE && !IsBattleMoveStatus(opposingMove) && GetMoveEffect(opposingMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
-            hitsToKO = BXPY_GetNoOfHitsToKOCandidate(opposingBattler, battler, moveIndex, AI_DEFENDING, bxpyAiLogicData);
+            hitsToKO = GetNoOfHitsToKOBattler(opposingBattler, battler, moveIndex, AI_DEFENDING, CONSIDER_ENDURE);
             if (hitsToKO < minHitsToKO)
             {
                 bestOpposingMove = opposingMove;
@@ -227,7 +264,7 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
             if (!IsBattleMoveStatus(move))
             {
                 // Check if can win 1v1
-                hitsToKOOpponent = BXPY_GetNoOfHitsToKOCandidate(battler, opposingBattler, moveIndex, AI_ATTACKING, bxpyAiLogicData);
+                hitsToKOOpponent = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE);
                 if (!canBattlerWin1v1) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
                 {
                     isBattlerFirst = AI_IsFaster(battler, opposingBattler, move, bestOpposingMove, CONSIDER_PRIORITY);
@@ -239,62 +276,4 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
     }
 
     return canBattlerWin1v1;
-}
-
-// AI has full knowledge of its own mons; we have no AI flags or battle controllers to check against, so this is its own function
-static void BXPY_SetCandidateAiData(enum BattlerId battler, struct AiLogicData *aiData)
-{
-    enum Ability ability;
-    enum HoldEffect holdEffect;
-
-    ability = aiData->abilities[battler] = gBattleMons[battler].ability;
-    aiData->items[battler] = gBattleMons[battler].item;
-    holdEffect = aiData->holdEffects[battler] = GetItemHoldEffect(gBattleMons[battler].item);
-    aiData->hpPercents[battler] = GetHealthPercentage(battler);
-    aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
-    aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
-}
-
-// AI does not necessarily have full knowledge of opposing mons
-static void BXPY_SetOpponentAiData(enum BattlerId battler, struct AiLogicData *aiData)
-{
-    enum Ability ability;
-    enum HoldEffect holdEffect;
-
-    ability = aiData->abilities[battler] = BXPY_DecideOpposingAbility(battler);
-    aiData->items[battler] = BXPY_DecideOpposingItem(battler);
-    holdEffect = aiData->holdEffects[battler] = GetItemHoldEffect(gBattleMons[battler].item);
-    aiData->hpPercents[battler] = GetHealthPercentage(battler);
-    aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
-    aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
-}
-
-static enum Ability BXPY_DecideOpposingAbility(enum BattlerId battler)
-{
-    enum Ability validAbilities[NUM_ABILITY_SLOTS];
-    u8 numValidAbilities = 0;
-    enum Ability indexAbility;
-
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY)
-        return gBattleMons[battler].ability;
-
-    for (u32 abilityIndex = 0; abilityIndex < NUM_ABILITY_SLOTS; abilityIndex++)
-    {
-        indexAbility = GetSpeciesAbility(gBattleMons[battler].species, abilityIndex);
-        if (indexAbility != ABILITY_NONE)
-            validAbilities[numValidAbilities++] = indexAbility;
-    }
-
-    if (numValidAbilities > 0)
-        return validAbilities[RandomUniform(RNG_AI_ABILITY, 0, numValidAbilities - 1)];
-
-    return ABILITY_NONE;
-}
-
-static enum Item BXPY_DecideOpposingItem(enum BattlerId battler)
-{
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM)
-        return gBattleMons[battler].item;
-    
-    return ITEM_NONE;
 }

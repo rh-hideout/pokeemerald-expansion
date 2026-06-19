@@ -788,8 +788,8 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     u8 enemyEnteredMons[MAX_BATTLE_TRAINERS][PARTY_SIZE];
 
-    u32 battleFlags = BXPY_GetBattleFlags();
-    BXPY_SetupBattlers(battleFlags);
+    u32 battleFlags = gBattleTypeFlags = BXPY_GetBattleFlags();
+    BXPY_SetupAIData();
 
     // AI calcs using full parties
     BXPY_GetEnemyEnterMons(B_BATTLER_1, enemyEnteredMons[B_TRAINER_OPPONENT_A], BXPY_GetPickSize());
@@ -813,7 +813,7 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     {
         BXPY_SelectPartyMembers(gParties[B_TRAINER_PARTNER],enemyEnteredMons[B_TRAINER_PARTNER],B_TRAINER_PARTNER);
     }
-
+    BXPY_ClearAIData();
     BXPY_FreeResources();
     DestroyTask(taskId);
     BattleSetup_StartBXPYBattle(battleFlags);

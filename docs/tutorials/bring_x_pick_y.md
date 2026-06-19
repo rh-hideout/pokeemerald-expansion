@@ -248,24 +248,12 @@ When `FALSE`, the enemy Pokémon's Moves appear as `MOVE_NONE`.
 # Bring AI
 Once the Player chooses Y Pokémon to battle with, Team Preview closes.
 
-This logic is affected by the following configuration options:
-## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY`
-Determines whether the AI knows the opposing Pokémons' ability when deciding which Pokémon to choose.
-## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM`
-Determines whether the AI knows the opposing Pokémons' items when deciding which Pokémon to choose.
-## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES`
-Determines whether the AI knows the opposing Pokémons' moves when deciding which Pokémon to choose. Note that this configuration option does nothing by itself, as the AI also needs to know the opposing Pokémons' stats in order to use this move information to make its 1v1 calculations.
-## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS`
-Determines whether the AI knows the opposing Pokémons' stats when deciding which Pokémon to choose.
+Bring X Pick Y's selection AI uses the same AI trainer flags as the battle AI. This means that the AI's knowledge of the player's moves, items, and abilities are all controlled by those flags, and that knowledge will affect the AI's decision making (ie. it will not evaluate 1v1 potential if it has no flags that provide information about the player's moves, items will not be considered when evaluating speed unless `AI_FLAG_OMNISCIENT` or `AI_FLAG_ITEM_OMNISCIENCE` is set, etc.). The following is run for each of the battler's Pokémon against all of the Pokémon on the opposing side.
 
-All of the AI battlers (possibily both Trainers and the Player's partner) will then look at the opposing side's Pokémon and choose Y Pokémon to bring to battle.
-
-The following is run for each of the battler's Pokémon against all of the Pokémon on the opposing side.
-
-1. If the AI's Pokémon A can defeat the enemy Pokémon Z, Pokémon A receieves `CAN_1V1_MATCHUP_POINTS` (`5`) points. This check does not run if `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES` or `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS` is `FALSE`.
+1. If the AI's Pokémon A can defeat the enemy Pokémon Z, Pokémon A receieves `CAN_1V1_MATCHUP_POINTS` (`5`) points.
 2. If the AI's Pokémon A has a strong defensive type matchup against enemy Pokémon Z, Pokémon A recieves `DEFENSIVE_MATCHUP_POINTS` (`2`) points.
 3. If the AI's Pokémon A's moves have a strong offensive type matchup against enemy Pokémon Z's types, Pokémon A recieves `OFFENSIVE_MATCHUP_POINTS` (`2`) points.
-4. If the AI's Pokémon A's speed is higher than enemy Pokémon Z, Pokémon A recieves `OUTSPEED_MATCHUP_POINTS` (`1`) points. This check does not run if `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS` is `FALSE`.
+4. If the AI's Pokémon A's speed is higher than enemy Pokémon Z, Pokémon A recieves `OUTSPEED_MATCHUP_POINTS` (`1`) points.
 5. Each eligible Pokémon receives `1` point as a baseline.
 
 Once every Pokémon and battler is evaluated, the AI will bring the top Y scoring Pokémon into battle, with the highest ranking Pokémon being sent out first. If multiple Pokémon are tied, a Pokémon is randomly chosen between the tied Pokémon until there are no ties. 
