@@ -2649,7 +2649,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
      && method != PROTECT_NONE
      && (cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
      && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move)
-     && GetConfig(B_UNSEEN_FIST_BYPASS_EFFECTS) <= GEN_9)
+     && GetConfig(B_UNSEEN_FIST_PIERCING_DRILL) <= GEN_9)
     {
         gBattleScripting.moveendState++;
         return result;

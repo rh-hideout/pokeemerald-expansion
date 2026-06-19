@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
     PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
 
     GIVEN {
-        WITH_CONFIG(B_UNSEEN_FIST_BYPASS_EFFECTS, GEN_9);
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_9);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Unseen Fist no longer bypasses the contact effects of protec
     PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
 
     GIVEN {
-        WITH_CONFIG(B_UNSEEN_FIST_BYPASS_EFFECTS, GEN_CHAMPIONS);
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_CHAMPIONS);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Unseen Fist deals 25% of the damage dealt to protected targe
     PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
 
     GIVEN {
-        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, genConfig);
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, genConfig);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Unseen Fist still deals 100% of the damage dealt with Phanto
     PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
 
     GIVEN {
-        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, genConfig);
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, genConfig);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -172,7 +172,7 @@ SINGLE_BATTLE_TEST("Unseen Fist still deals 100% of the damage dealt with Phanto
 SINGLE_BATTLE_TEST("Unseen Fist KOs protected targets with OHKO moves (Champions)")
 {
     GIVEN {
-        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, GEN_CHAMPIONS);
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_CHAMPIONS);
         PLAYER(SPECIES_EXCADRILL) { Item(ITEM_EXCADRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

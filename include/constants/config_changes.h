@@ -187,8 +187,7 @@
     F(B_DEFIANT_STICKY_WEB,        defiantStickyWeb,        (u32, GEN_COUNT - 1)) \
     F(B_INFILTRATOR_SUBSTITUTE,    infiltratorSubstitute,   (u32, GEN_COUNT - 1)) \
     F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
-    F(B_UNSEEN_FIST_DAMAGE,        unseenFistDamage,        (u32, GEN_COUNT - 1)) \
-    F(B_UNSEEN_FIST_BYPASS_EFFECTS, unseenFistBypassEffects, (u32, GEN_COUNT - 1)) \
+    F(B_UNSEEN_FIST_PIERCING_DRILL,unseenFistPiercingDrill, (u32, GEN_COUNT - 1)) \
     F(B_SHEER_FORCE_AGAINST_ABILITIES, sheerForceAgainstAbilities, (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
