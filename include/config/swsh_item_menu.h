@@ -9,6 +9,7 @@
 #define SWSH_ITEM_MENU_SCROLLING_BG       TRUE  // Enable scrolling background
 
 #define SWSH_ITEM_MENU_ACTION_IN_BAG      (SWSH_ITEM_MENU && TRUE)  // Perform item actions (Use/Give) in bag (avoid opening party menu)
-#define SWSH_ITEM_MENU_PARTY_HP_BAR       (SWSH_ITEM_MENU_ACTION_IN_BAG && TRUE)   // Show HP bar in party slot during item use
+#define SWSH_ITEM_MENU_PARTY_HP_BAR       (SWSH_ITEM_MENU_ACTION_IN_BAG && TRUE)    // Show HP bar in party slot during item use
+#define SWSH_ITEM_MENU_ACTION_IN_BATTLE   (SWSH_ITEM_MENU_ACTION_IN_BAG && TRUE)    // Use items directly in bag during battle (without opening party menu)
 
 #endif // GUARD_CONFIG_SWSH_ITEM_MENU_H

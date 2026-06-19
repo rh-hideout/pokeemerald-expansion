@@ -1216,7 +1216,7 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
     {
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
         BagMenu_OpenPartySelectBattle(taskId);
 #else
         gBagMenu->newScreenCallback = ChooseMonForInBattleItem;

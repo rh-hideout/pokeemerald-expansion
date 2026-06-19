@@ -424,6 +424,25 @@ static void BagMenu_DrawPartyHPBar(s8 slot);
 static void BagMenu_DrawPartyHPBarPixels(u8 slot, u8 filledWidth);
 static void Task_BagMenu_HPBarAnim(u8 taskId);
 static bool8 BagMenu_ShouldShowHPBar(void);
+static bool8 BagMenu_ShouldLoadPartyPanel(void);
+static bool8 BagMenu_InBattleSelect(void);
+static u8 BagMenu_PartyIdFromSlot(u8);
+static struct Pokemon *BagMenu_GetPanelMon(u8);
+static bool8 BagMenu_SlotIsPartner(u8);
+static u8 BagMenu_PanelSlotLimit(void);
+static bool8 BagMenu_PanelSlotOccupied(u8);
+static u8 BagMenu_StepSlot(u8, s8, u8);
+static void BagMenu_CreatePanelMonIcon(u8, s16);
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static void ShowMultiBattleSwapPrompt(bool8);
+static void BagMenu_UseBattleItem(u8);
+static void BagMenu_BattleApplyItem(u8, u8, bool8);
+static void BagMenu_BattleUsePPOnMove(u8, u8);
+static bool8 BagMenu_IsMultiFull(void);
+static u8 BagMenu_FullMultiPartyId(u8);
+static void BagMenu_StartMultiFullSwap(u8);
+static void Task_BagMenu_MultiFullSwap(u8);
+#endif
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG
 
 static const u8 *const sPocketNamesStringsTable[] =
@@ -714,6 +733,9 @@ static const u32 sBerryFlavorMark_Gfx[]         = INCGFX_U32("graphics/bag/swsh/
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 static const u8 sPartySlots_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/party_slots.bin");
 static const u32 sStatusIcons_Gfx[]             = INCGFX_U32("graphics/bag/swsh/status_icons.png", ".4bpp.smol");
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static const u8 sMultiBattleSwapPrompt_Tilemap[] = INCBIN_U8("graphics/bag/swsh/multi_battle_swap_prompt.bin");
+#endif
 #endif
 
 static const struct OamData sOamData_Cursor =
@@ -1231,6 +1253,7 @@ static s8  sHeldItemCurSlot;
 static u8  sStatusIconSpriteIds[PARTY_SIZE];
 static s8  sPrevHPBarSlot;
 static bool8 sHPBarWindowMapped;
+static u8  sMultiFullPage; // 0 = player team, 1 = partner team (12v12 multi battle)
 #endif
 
 enum {
@@ -1646,6 +1669,7 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         memset(sStatusIconSpriteIds, SPRITE_NONE, sizeof(sStatusIconSpriteIds));
         sPrevHPBarSlot = -1;
         sHPBarWindowMapped = FALSE;
+        sMultiFullPage = 0;
 #endif
         SetMainCallback2(CB2_Bag);
     }
@@ -1952,26 +1976,26 @@ static bool8 LoadBagMenu_Graphics(void)
         break;
     case 2:
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-        if (gBagPosition.location == ITEMMENULOCATION_FIELD
-            || gBagPosition.location == ITEMMENULOCATION_BATTLE
-            || gBagPosition.location == ITEMMENULOCATION_PARTY
-            || gBagPosition.location == ITEMMENULOCATION_WALLY)
+        if (BagMenu_ShouldLoadPartyPanel())
+        {
             BagMenu_DrawPartySlots();
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+            if (BagMenu_IsMultiFull())
+                ShowMultiBattleSwapPrompt(TRUE);
+#endif
+        }
 #endif
         gBagMenu->graphicsLoadState++;
         break;
     case 3:
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-        if (gBagPosition.location == ITEMMENULOCATION_FIELD
-            || gBagPosition.location == ITEMMENULOCATION_BATTLE
-            || gBagPosition.location == ITEMMENULOCATION_PARTY
-            || gBagPosition.location == ITEMMENULOCATION_WALLY)
+        if (BagMenu_ShouldLoadPartyPanel())
             BagMenu_CreatePartyIcons();
 #endif
         gBagMenu->graphicsLoadState++;
         break;
     case 4:
-        LoadPalette(sBagScreen_Pal, BG_PLTT_ID(0), 3 * PLTT_SIZE_4BPP);
+        LoadPalette(sBagScreen_Pal, BG_PLTT_ID(0), 5 * PLTT_SIZE_4BPP);
         gBagMenu->graphicsLoadState++;
         break;
     case 5:
@@ -2668,6 +2692,13 @@ static void Task_BagMenu_HandleInput(u8 taskId)
 
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
     {
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+        if (BagMenu_IsMultiFull() && GetLRKeysPressed())
+        {
+            BagMenu_StartMultiFullSwap(taskId);
+            return;
+        }
+#endif
         switch (GetSwitchBagPocketDirection())
         {
         case SWITCH_POCKET_LEFT:
@@ -5105,16 +5136,43 @@ static void SwitchBerryInfoMode(s32 itemIndex)
 #define PARTY_PANEL_SLOT_HEIGHT 3
 #define PARTY_HP_BAR_Y_OFFSET   4   // pixel offset of the HP bar
 
+static bool8 BagMenu_ShouldLoadPartyPanel(void)
+{
+    switch (gBagPosition.location)
+    {
+    case ITEMMENULOCATION_FIELD:
+    case ITEMMENULOCATION_PARTY:
+        return TRUE;
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+    case ITEMMENULOCATION_BATTLE:
+    case ITEMMENULOCATION_WALLY:
+        return TRUE;
+#endif
+    default:
+        return FALSE;
+    }
+}
+
 static void BagMenu_DrawPartySlots(void)
 {
-    u8 partyCount = IsWallysBag() ? 1 : CalculatePlayerPartyCount();
     u16 *buf = (u16 *)gBagMenu->mainTilemapBuffer;
-    u8 row, col;
+    u8 limit = IsWallysBag() ? 1 : BagMenu_PanelSlotLimit();
+    u8 slot, row, col;
 
-    for (row = 0; row < partyCount * PARTY_PANEL_SLOT_HEIGHT; row++)
-        for (col = 0; col < PARTY_PANEL_SLOT_WIDTH; col++)
-            buf[(PARTY_PANEL_START_ROW + row) * 32 + (PARTY_PANEL_START_COL + col)]
-                = sPartySlots_Tilemap[row * PARTY_PANEL_SLOT_WIDTH + col];
+    for (slot = 0; slot < limit; slot++)
+    {
+        if (!BagMenu_PanelSlotOccupied(slot))
+            continue;
+        u16 palBits = BagMenu_SlotIsPartner(slot) ? (3 << 12) : 0;
+        for (row = 0; row < PARTY_PANEL_SLOT_HEIGHT; row++)
+        {
+            u8 panelRow = PARTY_PANEL_START_ROW + slot * PARTY_PANEL_SLOT_HEIGHT + row;
+            u8 binRow = slot * PARTY_PANEL_SLOT_HEIGHT + row;
+            for (col = 0; col < PARTY_PANEL_SLOT_WIDTH; col++)
+                buf[panelRow * 32 + (PARTY_PANEL_START_COL + col)]
+                    = (sPartySlots_Tilemap[binRow * PARTY_PANEL_SLOT_WIDTH + col] & 0x0FFF) | palBits;
+        }
+    }
 }
 
 static void BagMenu_SetPartySlotPalette(u8 slot, u8 pal)
@@ -5123,6 +5181,9 @@ static void BagMenu_SetPartySlotPalette(u8 slot, u8 pal)
     u8 baseRow = PARTY_PANEL_START_ROW + slot * PARTY_PANEL_SLOT_HEIGHT;
     u8 row, col;
 
+    if (BagMenu_SlotIsPartner(slot))
+        pal = (pal == 0) ? 3 : 4;
+
     for (row = 0; row < PARTY_PANEL_SLOT_HEIGHT; row++)
         for (col = 0; col < PARTY_PANEL_SLOT_WIDTH; col++)
         {
@@ -5130,6 +5191,43 @@ static void BagMenu_SetPartySlotPalette(u8 slot, u8 pal)
             *entry = (*entry & 0x0FFF) | ((u16)pal << 12);
         }
     ScheduleBgCopyTilemapToVram(2);
+}
+
+static void BagMenu_CreatePanelMonIcon(u8 slot, s16 x2)
+{
+    struct Pokemon *mon = BagMenu_GetPanelMon(slot);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+    bool32 isEgg;
+    u8 spriteId;
+    u8 animNum;
+
+    gBagMenu->partyMonIconSpriteIds[slot] = SPRITE_NONE;
+    if (species == SPECIES_NONE)
+        return;
+
+    isEgg = GetMonData(mon, MON_DATA_IS_EGG);
+    spriteId = CreateMonIconIsEgg(species, SpriteCB_MonIcon, 30, 24 * slot + 16, 6, GetMonData(mon, MON_DATA_PERSONALITY), isEgg);
+
+    if (spriteId == MAX_SPRITES)
+        return;
+
+    gBagMenu->partyMonIconSpriteIds[slot] = spriteId;
+    gSprites[spriteId].oam.priority = 2;
+    gSprites[spriteId].invisible = FALSE;
+    gSprites[spriteId].x2 = x2;
+
+    if (!isEgg)
+    {
+        switch (GetHPBarLevel(GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP)))
+        {
+        case HP_BAR_FULL:   animNum = 0; break;
+        case HP_BAR_GREEN:  animNum = 1; break;
+        case HP_BAR_YELLOW: animNum = 2; break;
+        case HP_BAR_RED:    animNum = 3; break;
+        default:            animNum = 4; break;
+        }
+        SetPartyHPBarSprite(&gSprites[spriteId], animNum);
+    }
 }
 
 static void BagMenu_CreatePartyIcons(void)
@@ -5156,39 +5254,7 @@ static void BagMenu_CreatePartyIcons(void)
     }
 
     for (i = 0; i < count; i++)
-    {
-        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
-        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-        bool32 isEgg;
-        u8 spriteId;
-        u8 animNum;
-
-        if (species == SPECIES_NONE)
-            continue;
-
-        isEgg = GetMonData(mon, MON_DATA_IS_EGG);
-        spriteId = CreateMonIconIsEgg(species, SpriteCB_MonIcon, 30, 24 * i + 16, 6, GetMonData(mon, MON_DATA_PERSONALITY), isEgg);
-
-        if (spriteId == MAX_SPRITES)
-            continue;
-
-        gBagMenu->partyMonIconSpriteIds[i] = spriteId;
-        gSprites[spriteId].oam.priority = 2;
-        gSprites[spriteId].invisible = FALSE;
-
-        if (!isEgg)
-        {
-            switch (GetHPBarLevel(GetMonData(mon, MON_DATA_HP), GetMonData(mon, MON_DATA_MAX_HP)))
-            {
-            case HP_BAR_FULL:   animNum = 0; break;
-            case HP_BAR_GREEN:  animNum = 1; break;
-            case HP_BAR_YELLOW: animNum = 2; break;
-            case HP_BAR_RED:    animNum = 3; break;
-            default:            animNum = 4; break;
-            }
-            SetPartyHPBarSprite(&gSprites[spriteId], animNum);
-        }
-    }
+        BagMenu_CreatePanelMonIcon(i, 0);
 
     for (i = 0; i < count; i++)
     {
@@ -5233,7 +5299,7 @@ static void BagMenu_FreePartyIcons(void)
 
 static u8 BagMenu_GetMonAilment(u8 slot)
 {
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
+    struct Pokemon *mon = BagMenu_GetPanelMon(slot);
     if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
         return AILMENT_NONE;
     if (GetMonData(mon, MON_DATA_IS_EGG))
@@ -5361,7 +5427,7 @@ static void BagMenu_DrawPartyHPBar(s8 slot)
     }
 
     {
-        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
+        struct Pokemon *mon = BagMenu_GetPanelMon(slot);
         u16 y = slot * 3 * 8 + PARTY_HP_BAR_Y_OFFSET;
 
         if (GetMonData(mon, MON_DATA_IS_EGG))
@@ -5748,16 +5814,17 @@ void BagMenu_OpenPartySelect(u8 taskId)
     gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
 void BagMenu_OpenPartySelectBattle(u8 taskId)
 {
-    // TODO: Phase 4 — battle-specific slot filtering
     BagMenu_OpenPartySelect(taskId);
 }
+#endif
 
 static void Task_BagMenu_PartyInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    u8 partyCount = CalculatePlayerPartyCount();
+    u8 slotLimit = BagMenu_PanelSlotLimit();
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
 
     if (iconSpriteId != SPRITE_NONE && sPartyItemIconAnimId != INVALID_COMFY_ANIM)
@@ -5766,10 +5833,19 @@ static void Task_BagMenu_PartyInput(u8 taskId)
     if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
         return;
 
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+    if (BagMenu_IsMultiFull() && GetLRKeysPressed())
+    {
+        BagMenu_ClosePartySelect(taskId);
+        BagMenu_StartMultiFullSwap(taskId);
+        return;
+    }
+#endif
+
     if (JOY_NEW(DPAD_DOWN))
     {
         BagMenu_SetPartySlotPalette(tPartySlot, 0);
-        tPartySlot = (tPartySlot == partyCount - 1) ? 0 : tPartySlot + 1;
+        tPartySlot = BagMenu_StepSlot(tPartySlot, +1, slotLimit);
         BagMenu_SetPartySlotPalette(tPartySlot, 2);
         BagMenu_UpdateStatusIconPos(tPartySlot);
         PlaySE(SE_SELECT);
@@ -5783,7 +5859,7 @@ static void Task_BagMenu_PartyInput(u8 taskId)
     else if (JOY_NEW(DPAD_UP))
     {
         BagMenu_SetPartySlotPalette(tPartySlot, 0);
-        tPartySlot = (tPartySlot == 0) ? partyCount - 1 : tPartySlot - 1;
+        tPartySlot = BagMenu_StepSlot(tPartySlot, -1, slotLimit);
         BagMenu_SetPartySlotPalette(tPartySlot, 2);
         BagMenu_UpdateStatusIconPos(tPartySlot);
         PlaySE(SE_SELECT);
@@ -5801,8 +5877,17 @@ static void Task_BagMenu_PartyInput(u8 taskId)
     }
     else if (JOY_NEW(A_BUTTON))
     {
+        if (GetMonData(BagMenu_GetPanelMon(tPartySlot), MON_DATA_IS_EGG))
+        {
+            PlaySE(SE_FAILURE);
+            return;
+        }
         if (sPartyGiveMode)
             BagMenu_GiveItem(taskId);
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+        else if (BagMenu_InBattleSelect())
+            BagMenu_UseBattleItem(taskId);
+#endif
         else
             BagMenu_TryMultiUse(taskId);
     }
@@ -6420,7 +6505,7 @@ static void BagMenu_UsePPOnMove(u8 taskId, u8 moveSlot)
 static void BagMenu_ShowPPMoveSelectWindow(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][tPartySlot];
+    struct Pokemon *mon = BagMenu_GetPanelMon(tPartySlot);
     u8 windowId = BagMenu_AddWindow(ITEMWIN_PP_MOVE_SELECT);
     u8 moveCount = 0;
     u8 i;
@@ -6449,6 +6534,10 @@ static void Task_BagMenu_PPMoveSelectInput(u8 taskId)
 
     if (input == MENU_B_PRESSED)
         gTasks[taskId].func = Task_BagMenu_PartyInput;
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+    else if (BagMenu_InBattleSelect())
+        BagMenu_BattleUsePPOnMove(taskId, (u8)input);
+#endif
     else
         BagMenu_UsePPOnMove(taskId, (u8)input);
 }
@@ -7572,6 +7661,8 @@ static void Task_BagMenu_FusionAnim(u8 taskId)
             BagMenu_FreePartyIcons();
             DecompressDataWithHeaderWram(sBagScreen_BG2TileMap, gBagMenu->mainTilemapBuffer);
             BagMenu_DrawPartySlots();
+            if (BagMenu_IsMultiFull())
+                ShowMultiBattleSwapPrompt(TRUE);
             BagMenu_CreatePartyIcons();
             ScheduleBgCopyTilemapToVram(2);
             data[6]++;
@@ -7768,6 +7859,11 @@ static void Task_BagMenu_FusionAwaitSecond(u8 taskId)
     }
     else if (JOY_NEW(A_BUTTON))
     {
+        if (GetMonData(BagMenu_GetPanelMon(tPartySlot), MON_DATA_IS_EGG))
+        {
+            PlaySE(SE_FAILURE);
+            return;
+        }
         BagMenu_UseFusionSecond(taskId);
     }
 }
@@ -8008,6 +8104,312 @@ static void Task_BagMenu_MultiUseInput(u8 taskId)
         gTasks[taskId].func = Task_BagMenu_PartyInput;
     }
 }
+
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static bool8 BagMenu_IsItemFlute(enum Item item)
+{
+    return item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE;
+}
+#endif
+
+static bool8 BagMenu_InBattleSelect(void)
+{
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+    return gBagPosition.location == ITEMMENULOCATION_BATTLE
+        || gBagPosition.location == ITEMMENULOCATION_WALLY;
+#else
+    return FALSE;
+#endif
+}
+
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static bool8 BagMenu_IsMultiFull(void)
+{
+    return BagMenu_InBattleSelect() && IsMultiBattle() && AreMultiPartiesFullTeams();
+}
+
+static u8 BagMenu_FullMultiPartyId(u8 slot)
+{
+    enum BattlerId battler = (sMultiFullPage != 0) ? B_BATTLER_2 : gBattlerInMenuId;
+    const u8 *order = gBattleStruct->battlerPartyOrders[battler];
+    u8 packed = order[slot / 2];
+    return (slot & 1) ? (packed & 0xF) : (packed >> 4);
+}
+#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
+
+static bool8 BagMenu_SlotIsPartner(u8 slot)
+{
+    if (!BagMenu_InBattleSelect() || !IsMultiBattle())
+        return FALSE;
+    if (AreMultiPartiesFullTeams())
+        return sMultiFullPage != 0;
+    return slot >= MULTI_PARTY_SIZE;
+}
+
+static u8 BagMenu_MultiGroupIndex(bool8 partner, u8 pos)
+{
+    const u8 *order = gBattleStruct->battlerPartyOrders[gBattlerInMenuId];
+    u8 lo = partner ? MULTI_PARTY_SIZE : 0;
+    u8 found = 0, i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u8 id = (i & 1) ? (order[i / 2] & 0xF) : (order[i / 2] >> 4);
+        if (id >= lo && id < lo + MULTI_PARTY_SIZE)
+        {
+            if (found == pos)
+                return id - lo;
+            found++;
+        }
+    }
+    return pos;
+}
+
+static u8 BagMenu_PartyIdFromSlot(u8 slot)
+{
+    u8 packed;
+
+    if (!BagMenu_InBattleSelect())
+        return slot;
+
+    if (IsMultiBattle())
+    {
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+        if (AreMultiPartiesFullTeams())
+            return BagMenu_FullMultiPartyId(slot);
+#endif
+        if (slot >= MULTI_PARTY_SIZE)
+            return BagMenu_MultiGroupIndex(TRUE, slot - MULTI_PARTY_SIZE);
+        return BagMenu_MultiGroupIndex(FALSE, slot);
+    }
+
+    packed = gBattlePartyCurrentOrder[slot / 2];
+    return (slot & 1) ? (packed & 0xF) : (packed >> 4);
+}
+
+static struct Pokemon *BagMenu_GetPanelMon(u8 slot)
+{
+    if (BagMenu_SlotIsPartner(slot))
+        return &gParties[B_TRAINER_PARTNER][BagMenu_PartyIdFromSlot(slot)];
+    return &gParties[B_TRAINER_PLAYER][BagMenu_PartyIdFromSlot(slot)];
+}
+
+static u8 BagMenu_PanelSlotLimit(void)
+{
+    if (BagMenu_InBattleSelect() && IsMultiBattle())
+    {
+        if (AreMultiPartiesFullTeams())
+            return (sMultiFullPage != 0) ? CalculatePartnerPartyCount() : CalculatePartyCount(B_TRAINER_PLAYER);
+        return PARTY_SIZE;
+    }
+    return CalculatePlayerPartyCount();
+}
+
+static bool8 BagMenu_PanelSlotOccupied(u8 slot)
+{
+    return GetMonData(BagMenu_GetPanelMon(slot), MON_DATA_SPECIES) != SPECIES_NONE;
+}
+
+static u8 BagMenu_StepSlot(u8 cur, s8 dir, u8 limit)
+{
+    s32 next = cur;
+    u8 i;
+
+    if (limit == 0)
+        return cur;
+    for (i = 0; i < limit; i++)
+    {
+        next = (next + dir + limit) % limit;
+        if (BagMenu_PanelSlotOccupied((u8)next))
+            return (u8)next;
+    }
+    return cur;
+}
+
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#define MULTI_FULL_SWAP_TILES 12
+#define tSwapPhase  tPartyTemp  // data[6]: 0 = sliding out, 1 = sliding in
+#define tSwapFrame  data[7]
+
+static void ShowMultiBattleSwapPrompt(bool8 show)
+{
+    u16 *buf = (u16 *)gBagMenu->mainTilemapBuffer;
+    u8 row, col;
+
+    for (row = 0; row < 2; row++)
+    {
+        for (col = 0; col < 5; col++)
+        {
+            u32 idx = row * 32 + (7 + col);
+            buf[idx] = show ? sMultiBattleSwapPrompt_Tilemap[row * 5 + col] : 4;
+        }
+    }
+    ScheduleBgCopyTilemapToVram(2);
+}
+
+static void BagMenu_MoveMultiFullSlotSprites(u8 slot, s16 x2)
+{
+    u8 iconId = gBagMenu->partyMonIconSpriteIds[slot];
+    u8 statusId = sStatusIconSpriteIds[slot];
+
+    if (iconId != SPRITE_NONE)
+        gSprites[iconId].x2 = x2;
+    if (statusId != SPRITE_NONE)
+        gSprites[statusId].x2 = x2;
+}
+
+static s16 BagMenu_MultiFullSlideOffset(u8 slot, s16 frame)
+{
+    s16 elapsed = frame - slot;
+
+    if (elapsed < 0)
+        elapsed = 0;
+    if (elapsed > MULTI_FULL_SWAP_TILES)
+        elapsed = MULTI_FULL_SWAP_TILES;
+    return elapsed;
+}
+
+static void BagMenu_MultiFullFlipPage(void)
+{
+    u8 i;
+
+    sMultiFullPage ^= 1;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (gBagMenu->partyMonIconSpriteIds[i] != SPRITE_NONE)
+        {
+            FreeAndDestroyMonIconSprite(&gSprites[gBagMenu->partyMonIconSpriteIds[i]]);
+            gBagMenu->partyMonIconSpriteIds[i] = SPRITE_NONE;
+        }
+    }
+
+    DecompressDataWithHeaderWram(sBagScreen_BG2TileMap, gBagMenu->mainTilemapBuffer);
+    BagMenu_DrawPartySlots();
+    ShowMultiBattleSwapPrompt(TRUE);
+
+    for (i = 0; i < PARTY_SIZE; i++)
+        BagMenu_CreatePanelMonIcon(i, -8 * MULTI_FULL_SWAP_TILES);
+
+    BagMenu_UpdateStatusIcons();
+    BagMenu_UpdateStatusIconPos(PARTY_SIZE);
+    for (i = 0; i < PARTY_SIZE; i++)
+        BagMenu_MoveMultiFullSlotSprites(i, -8 * MULTI_FULL_SWAP_TILES);
+}
+
+static void BagMenu_StartMultiFullSwap(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    PlaySE(SE_M_HARDEN);
+    tSwapPhase = 0;
+    tSwapFrame = 0;
+    gTasks[taskId].func = Task_BagMenu_MultiFullSwap;
+}
+
+static void Task_BagMenu_MultiFullSwap(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    s16 frame = tSwapFrame;
+    bool8 done = frame >= (PARTY_SIZE - 1) + MULTI_FULL_SWAP_TILES;
+    u8 i;
+
+    if (tSwapPhase == 0) // slide out
+    {
+        for (i = 0; i < PARTY_SIZE; i++)
+            BagMenu_MoveMultiFullSlotSprites(i, -8 * BagMenu_MultiFullSlideOffset(i, frame));
+
+        if (done)
+        {
+            BagMenu_MultiFullFlipPage();
+            tSwapPhase = 1;
+            tSwapFrame = 0;
+            return;
+        }
+    }
+    else // slide in
+    {
+        for (i = 0; i < PARTY_SIZE; i++)
+            BagMenu_MoveMultiFullSlotSprites(i, -8 * (MULTI_FULL_SWAP_TILES - BagMenu_MultiFullSlideOffset(i, frame)));
+
+        if (done)
+        {
+            for (i = 0; i < PARTY_SIZE; i++)
+                BagMenu_MoveMultiFullSlotSprites(i, 0);
+            tPartySlot = 0;
+            gTasks[taskId].func = Task_BagMenu_HandleInput;
+            return;
+        }
+    }
+    tSwapFrame++;
+}
+
+#undef tSwapPhase
+#undef tSwapFrame
+#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
+
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static u8 BagMenu_BattleTargetSlotId(bool8 partner, u8 partyIndex)
+{
+    if (partner)
+    {
+        if (gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] == partyIndex)
+            return 1;
+        return PARTY_SIZE;
+    }
+    if (gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] == partyIndex)
+        return 0;
+    if (IsDoubleBattle() && !IsMultiBattle()
+     && gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] == partyIndex)
+        return 1;
+    return PARTY_SIZE;
+}
+
+static void BagMenu_UseBattleItem(u8 taskId)
+{
+    if (gItemUseCB == ItemUseCB_BattleChooseMove)
+        BagMenu_ShowPPMoveSelectWindow(taskId);
+    else
+        BagMenu_BattleApplyItem(taskId, MAX_MON_MOVES, FALSE);
+}
+
+static void BagMenu_BattleUsePPOnMove(u8 taskId, u8 moveSlot)
+{
+    BagMenu_BattleApplyItem(taskId, moveSlot, TRUE);
+}
+
+static void BagMenu_BattleApplyItem(u8 taskId, u8 moveSlot, bool8 chooseMove)
+{
+    s16 *data = gTasks[taskId].data;
+    bool8 partner = BagMenu_SlotIsPartner(tPartySlot);
+    u8 partyId = BagMenu_PartyIdFromSlot(tPartySlot);
+    struct Pokemon *mon = BagMenu_GetPanelMon(tPartySlot);
+    enum Item item = gSpecialVar_ItemId;
+
+    gPartyMenu.slotId = BagMenu_BattleTargetSlotId(partner, partyId);
+    gPartyMenu.menuType = PARTY_MENU_TYPE_IN_BATTLE;
+    if (chooseMove)
+        gPartyMenu.data1 = moveSlot;
+
+    if (CannotUseItemsInBattle(item, mon))
+    {
+        PlaySE(SE_SELECT);
+        DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyStayAfterMessage);
+        return;
+    }
+
+    gBattleStruct->itemPartyIndex[gBattlerInMenuId] = partyId;
+    gBattleStruct->itemTargetPartner[gBattlerInMenuId] = partner;
+    if (chooseMove)
+        gBattleStruct->itemMoveIndex[gBattlerInMenuId] = moveSlot;
+    gPartyMenuUseExitCallback = TRUE;
+    PlaySE(SE_SELECT);
+    if (!BagMenu_IsItemFlute(item))
+        RemoveBagItem(item, 1);
+
+    Task_FadeAndCloseBagMenu(taskId);
+}
+#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
 
 static void BagMenu_UseItem(u8 taskId)
 {
