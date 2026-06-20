@@ -6,7 +6,9 @@
 #include "data.h"
 #include "frontier_util.h"
 #include "difficulty.h"
+#include "malloc.h"
 #include "string_util.h"
+#include "trainer_util.h"
 #include "text.h"
 
 #include "constants/abilities.h"
@@ -23,13 +25,11 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 
 void FillPartnerParty(u16 trainerId)
 {
-    s32 i, j, k;
-    u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;
-    u32 ivs, level, personality;
+    s32 i, j;
+    u32 ivs, level;
     u16 monId;
-    u32 otID;
+
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
     ZeroPartyMons(gParties[B_TRAINER_PARTNER]);
 
@@ -37,85 +37,14 @@ void FillPartnerParty(u16 trainerId)
     {
         s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
 
-        for (i = 0; i < lastIndex && i < gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].partySize; i++)
+        const struct Trainer *partner = GetTrainerStructFromId(trainerId);
+        struct TrainerGenerator partnerGen;
+        MakePartnerGenerator(&partnerGen, partner);
+        if (trainerId == TRAINER_PARTNER(PARTNER_STEVEN))
+            partnerGen.otID = OTID_STRUCT_PRESET(STEVEN_OTID);
+        for (i = 0; i < lastIndex && i < partner->partySize; i++)
         {
-            const struct TrainerMon *partyData = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].party;
-            const u8 *partnerName = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
-
-            for (k = 0; partnerName[k] != EOS && k < 3; k++)
-            {
-                if (k == 0)
-                {
-                    firstIdPart = partnerName[k];
-                    secondIdPart = partnerName[k];
-                    thirdIdPart = partnerName[k];
-                }
-                else if (k == 1)
-                {
-                    secondIdPart = partnerName[k];
-                    thirdIdPart = partnerName[k];
-                }
-                else if (k == 2)
-                {
-                    thirdIdPart = partnerName[k];
-                }
-            }
-            if (trainerId == TRAINER_PARTNER(PARTNER_STEVEN))
-                otID = STEVEN_OTID;
-            else
-                otID = ((firstIdPart % 72) * 1000) + ((secondIdPart % 23) * 10) + (thirdIdPart % 37) % 65536;
-
-            personality = Random32();
-            if (partyData[i].gender == TRAINER_MON_MALE)
-                personality = (personality & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[i].species);
-            else if (partyData[i].gender == TRAINER_MON_FEMALE)
-                personality = (personality & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[i].species);
-            ModifyPersonalityForNature(&personality, partyData[i].nature);
-            CreateMon(&gParties[B_TRAINER_PARTNER][i], partyData[i].species, partyData[i].lvl, personality, OTID_STRUCT_PRESET(otID));
-            j = partyData[i].isShiny;
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_IS_SHINY, &j);
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
-            CustomTrainerPartyAssignMoves(&gParties[B_TRAINER_PARTNER][i], &partyData[i]);
-
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_IVS, &(partyData[i].iv));
-            if (partyData[i].ev != NULL)
-            {
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_HP_EV, &(partyData[i].ev[0]));
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_ATK_EV, &(partyData[i].ev[1]));
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_DEF_EV, &(partyData[i].ev[2]));
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPATK_EV, &(partyData[i].ev[3]));
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPDEF_EV, &(partyData[i].ev[4]));
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPEED_EV, &(partyData[i].ev[5]));
-            }
-            if (partyData[i].ability != ABILITY_NONE)
-            {
-                const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[i].species];
-                u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-                for (j = 0; j < maxAbilities; j++)
-                {
-                    if (speciesInfo->abilities[j] == partyData[i].ability)
-                        break;
-                }
-                if (j < maxAbilities)
-                    SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_ABILITY_NUM, &j);
-            }
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
-            if (partyData[i].ball < POKEBALL_COUNT)
-            {
-                enum PokeBall ball = partyData[i].ball;
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_POKEBALL, &ball);
-            }
-            if (partyData[i].nickname != NULL)
-            {
-                SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_NICKNAME, partyData[i].nickname);
-            }
-            CalculateMonStats(&gParties[B_TRAINER_PARTNER][i]);
-
-            u16 partnerId = GetPartnerIdFromTrainerId(trainerId);
-            StringCopy(trainerName, gBattlePartners[difficulty][partnerId].trainerName);
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
-            j = gBattlePartners[difficulty][partnerId].gender;
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &j);
+            GenerateMonFromTrainerMon(&gParties[B_TRAINER_PARTNER][i], &partner->party[i], &partnerGen);
         }
     }
     else if (trainerId == TRAINER_EREADER)
@@ -127,7 +56,7 @@ void FillPartnerParty(u16 trainerId)
     {
         level = SetFacilityPtrsGetLevel();
         ivs = GetFrontierTrainerFixedIvs(trainerId);
-        otID = Random32();
+        u32 otID = Random32();
         for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
         {
             monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
