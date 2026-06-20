@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_DARK_VOID) == EFFECT_DARK_VOID);
 }
 
-SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep")
+SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep (Gen9-)")
 {
     u32 turns, count;
     ASSUME(B_SLEEP_TURNS >= GEN_5);
@@ -15,6 +15,7 @@ SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep")
     PARAMETRIZE { turns = 3; }
     PASSES_RANDOMLY(1, 3, RNG_SLEEP_TURNS);
     GIVEN {
+        WITH_CONFIG(B_SLEEP_TURNS, GEN_9);
         PLAYER(SPECIES_DARKRAI);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
