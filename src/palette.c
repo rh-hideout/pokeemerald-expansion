@@ -1007,6 +1007,23 @@ void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 color)
     BlendPalettes(selectedPalettes, coeff, color);
 }
 
+void TintPalette_GrayScale(u16 *palette, u32 count)
+{
+    s32 r, g, b;
+    u32 i, gray;
+
+    for (i = 0; i < count; i++)
+    {
+        r = GET_R(*palette);
+        g = GET_G(*palette);
+        b = GET_B(*palette);
+
+        gray = (r * Q_8_8(0.3) + g * Q_8_8(0.59) + b * Q_8_8(0.1133)) >> 8;
+
+        *palette++ = RGB2(gray, gray, gray);
+    }
+}
+
 void TintPalette_GrayScale2(u16 *palette, u32 count)
 {
     s32 r, g, b;
