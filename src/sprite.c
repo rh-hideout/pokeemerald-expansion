@@ -433,8 +433,7 @@ static void SortSprites(u32 *spritePriorities, s32 n)
 u32 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
     u32 spriteId = CreateSpriteUnchecked(template, x, y, subpriority);
-
-    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    fatal_assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
     return spriteId;
 }
 
@@ -450,8 +449,7 @@ u32 CreateSpriteUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u
 u32 CreateSpriteAtEnd(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
     u32 spriteId = CreateSpriteAtEndUnchecked(template, x, y, subpriority);
-
-    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    fatal_assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
     return spriteId;
 }
 
@@ -1512,9 +1510,9 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
 
     if (tileStart < 0)
     {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
         gLoadFail = TRUE;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
         return 0;
     }
     else

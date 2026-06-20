@@ -112,21 +112,21 @@ struct StatStages
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
     u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
     u8 mindBlownRecoil:1;
     u8 updateStallMons:1;
     u8 poisonPuppeteer:1;
-    // End of byte
-    u8 statLowered:1;
+    u8 attackerInParty:1; // Fututre Sight / Doom Desire
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
+    // End of byte
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
+    u8 padding:3;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -274,12 +274,12 @@ struct BattleHistory
 {
     enum Ability abilities[MAX_BATTLERS_COUNT];
     u8 itemEffects[MAX_BATTLERS_COUNT];
-    u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
-    u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
+    enum Move usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
+    enum Move moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
     u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
-    u16 trainerItems[MAX_BATTLERS_COUNT];
+    enum Item trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
-    u16 heldItems[MAX_BATTLERS_COUNT];
+    enum Item heldItems[MAX_BATTLERS_COUNT];
 };
 
 struct BattleScriptsStack
@@ -473,7 +473,7 @@ struct BattleGimmickData
 
 struct LostItem
 {
-    u16 originalItem:15;
+    enum Item originalItem:15;
     u16 stolen:1;
 };
 
@@ -523,9 +523,9 @@ struct BattlerState
     u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 notOnField:1;
-    u16 redCardSwitched:1;
+    u16 originalBattlerPartyId:4;
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
-    u16 padding:11;
+    u16 padding:8;
     // End of Word
 };
 
@@ -541,8 +541,9 @@ struct PartyState
     enum Species changedSpecies:11; // For forms when multiple mons can change into the same Pokémon.
     u32 sentOut:1;
     u32 isKnockedOff:1;
-    u32 padding:8;
-    u16 usedHeldItem;
+    u32 freezeTurns:2;
+    u32 padding:6;
+    enum Item usedHeldItem;
 };
 
 struct EventStates
@@ -574,6 +575,7 @@ struct BattleStruct
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
+    u8 faintCounter[MAX_BATTLE_TRAINERS]; // Supreme Overload / Last Respects
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
@@ -624,8 +626,8 @@ struct BattleStruct
     u8 triAttackBurn:1;
     enum SynchronizeState synchronizeState:3;
     void (*savedCallback)(void);
-    u16 chosenItem[MAX_BATTLERS_COUNT];
-    u16 choicedMove[MAX_BATTLERS_COUNT];
+    enum Item chosenItem[MAX_BATTLERS_COUNT];
+    enum Move choicedMove[MAX_BATTLERS_COUNT];
     u8 switchInBattlerCounter;
     u16 lastTakenMoveFrom[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT]; // a 2-D array [target][attacker]
     union {
@@ -678,14 +680,13 @@ struct BattleStruct
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     enum PledgeCombo pledgeState:2;
     u8 unused3:2;
-    u16 flingItem:14;
+    enum Item flingItem:14;
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
-    u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
@@ -702,7 +703,7 @@ struct BattleStruct
     u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
-    u8 calculatedDamageDone:1;
+    u8 unused4:1;
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:3;
@@ -717,14 +718,13 @@ struct BattleStruct
     u32 incrementEchoedVoice:1;
     u32 echoedVoiceCounter:3;
     u32 attackAnimPlayed:1;
-    u32 preAttackEffectHappened:1;
     u32 magicCoatPending:6;
     u32 magicBouncePending:6;
     u32 bouncedMoveIsUsed:1;
     u32 dancerSavedAttacker:3;
     u32 dancerSavedTarget:3;
     u32 statChangeBattler:3;
-    u32 padding5:4;
+    u32 padding5:5;
     u8 statChangeMoveAnim:1;
     u8 tidyUpActivates:1;
     u8 positiveAnimPlayed:1;
@@ -992,7 +992,7 @@ extern u16 gCurrentMove;
 extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
-extern u16 gLastUsedItem;
+extern enum Item gLastUsedItem;
 extern enum Ability gLastUsedAbility;
 extern enum BattlerId gBattlerAttacker;
 extern enum BattlerId gBattlerTarget;

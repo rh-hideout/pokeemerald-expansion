@@ -738,7 +738,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Last Half Hp")
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN {
-            MOVE(playerRight, MOVE_MEMENTO, target: playerLeft); 
+            MOVE(playerRight, MOVE_MEMENTO, target: playerLeft);
             EXPECT_MOVE(opponentLeft, MOVE_SUPER_FANG);}
     } SCENE {
         MESSAGE("Trainer A: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}");
@@ -997,7 +997,8 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Defender Takes First Critical Hit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LASER_FOCUS, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
-        MESSAGE("A critical hit!");
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
         MESSAGE("Trainer A: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}");
         // Note: Planned PR for additional slides will change slides from using "Player/Opponent" side to "Attacker/Target" side
@@ -1010,16 +1011,17 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Lands First Critical Hit")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_CRITICAL_HIT);
-        TIE_BREAK_TARGET(TARGET_TIE_LO, 0); 
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ENDURE); 
-            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES); 
-            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES); 
-            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft); 
+        TURN {
+            MOVE(playerLeft, MOVE_ENDURE);
+            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES);
+            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES);
+            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, playerLeft);
@@ -1170,10 +1172,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Defender Takes First Down")
         OPPONENT_B(SPECIES_WYNAUT) { Speed(3); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
-        TURN { 
-            EXPECT_MOVE(playerRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(playerRight,1); 
-            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1); 
-            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,1); 
+        TURN {
+            EXPECT_MOVE(playerRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(playerRight,1);
+            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1);
+            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,1);
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
@@ -1199,11 +1201,11 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Lands First Down")
         OPPONENT_B(SPECIES_WYNAUT) { Speed(1); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
-        TURN { 
-            MOVE(playerLeft, MOVE_HEALING_WISH); SEND_OUT(playerLeft,1); 
-            MOVE(playerRight, MOVE_HEALING_WISH); SEND_OUT(playerRight,1); 
-            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1); 
-            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,1); 
+        TURN {
+            MOVE(playerLeft, MOVE_HEALING_WISH); SEND_OUT(playerLeft,1);
+            MOVE(playerRight, MOVE_HEALING_WISH); SEND_OUT(playerRight,1);
+            EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,1);
+            EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,1);
         }
     } SCENE {
         MESSAGE("Wobbuffet fainted!");
@@ -1230,11 +1232,14 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Self Mon Unaffected")
             EXPECT_MOVE(opponentLeft, MOVE_BOOMBURST);
         }
     } SCENE {
+        MESSAGE("It doesn't affect Gastly…");
+        MESSAGE("It doesn't affect the opposing Gengar…");
+        MESSAGE("It doesn't affect the opposing Haunter…");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, playerLeft);
-        MESSAGE("It doesn't affect the opposing Gengar and Haunter…");
+        MESSAGE("It doesn't affect the opposing Haunter…");
+        MESSAGE("It doesn't affect Gastly…");
         MESSAGE("It doesn't affect Gastly…");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, opponentLeft);
-        MESSAGE("It doesn't affect Gastly and Gastly…");
         MESSAGE("Trainer A: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer Partner: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}");
@@ -1257,17 +1262,20 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mon Unaffected")
             EXPECT_MOVE(opponentRight, MOVE_BOOMBURST);
         }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, opponentLeft);
-        MESSAGE("It doesn't affect Gastly and Gastly…");
         MESSAGE("It doesn't affect the opposing Haunter…");
-
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, playerRight);
         MESSAGE("It doesn't affect Gastly…");
-        MESSAGE("It doesn't affect the opposing Haunter and Gengar…");
+        MESSAGE("It doesn't affect Gastly…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, opponentLeft);
 
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, opponentRight);
+        MESSAGE("It doesn't affect Gastly…");
         MESSAGE("It doesn't affect the opposing Gengar…");
-        MESSAGE("It doesn't affect Gastly and Gastly…");
+        MESSAGE("It doesn't affect the opposing Haunter…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, playerRight);
+
+        MESSAGE("It doesn't affect the opposing Gengar…");
+        MESSAGE("It doesn't affect Gastly…");
+        MESSAGE("It doesn't affect Gastly…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, opponentRight);
 
         MESSAGE("Trainer A: Attacker attacked opponent with ineffective move.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: Attacker attacked opponent with ineffective move.{PAUSE_UNTIL_PRESS}");
@@ -1289,10 +1297,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Self Last Switchin")
         OPPONENT_B(SPECIES_WYNAUT) { Speed(2); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
-        TURN { 
-            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentLeft,1); 
-            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1); 
-            EXPECT_MOVE(opponentRight, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentRight,1); 
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentLeft,1);
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1);
+            EXPECT_MOVE(opponentRight, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentRight,1);
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
@@ -1320,9 +1328,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Last Switchin")
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN {
-            MOVE(playerLeft, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerLeft,1); 
-            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentLeft,1); 
-            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1); 
+            MOVE(playerLeft, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerLeft,1);
+            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentLeft,1);
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1);
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
         }
     } SCENE {
@@ -1453,7 +1461,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Mega Evolution")
         OPPONENT_A(SPECIES_LOPUNNY) { Speed(3); Item(ITEM_LOPUNNITE); }
         OPPONENT_B(SPECIES_MEDICHAM) { Speed(1); Item(ITEM_MEDICHAMITE); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); 
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -1520,16 +1528,16 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Dynamax")
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); DynamaxLevel(dynamaxLevelA); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); DynamaxLevel(dynamaxLevelB); }
     } WHEN {
-            TURN { 
+            TURN {
                 if (dynamaxLevelA == 10)
-                    EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                    EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
                 else
                     EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_NONE);
 
-                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
 
                 if (dynamaxLevelB == 10)
-                    EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+                    EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
                 else
                     EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_NONE);
             }
@@ -1591,7 +1599,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
-            EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); 
+            EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -1646,9 +1654,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Z Move")
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN {
-            MOVE(playerLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
-            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
-            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
+            MOVE(playerLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
+            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE);
+            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
             EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE);
         }
     } SCENE {
@@ -1701,9 +1709,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Dynamax")
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); DynamaxLevel(10); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
     } WHEN {
-            TURN { 
-                EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
-                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); 
+            TURN {
+                EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
+                MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX);
             }
     } SCENE {
         MESSAGE("Trainer Partner: This message plays before the opponent activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");

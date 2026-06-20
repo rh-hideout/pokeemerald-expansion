@@ -1445,3 +1445,75 @@ AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (
         NOT HP_BAR(opponentRight);
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ABILITY_OMNISCIENCE: AI knows the player's ability")
+{
+    u64 aiFlags;
+    u32 passChance;
+    PARAMETRIZE { passChance = 1; aiFlags = 0; }
+    PARAMETRIZE { passChance = 3; aiFlags = AI_FLAG_ABILITY_OMNISCIENCE; }
+    PASSES_RANDOMLY(passChance, 3, RNG_AI_ABILITY);
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_BRONZONG) { Ability(ABILITY_LEVITATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponent, MOVE_TACKLE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ITEM_OMNISCIENCE: AI knows the player's item")
+{
+    u64 aiFlags;
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_ITEM_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(IsPowderMove(MOVE_SPORE) == TRUE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_GULPIN) { Item(ITEM_SAFETY_GOGGLES); }
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlags == AI_FLAG_ITEM_OMNISCIENCE)
+            TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SPORE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_MOVE_OMNISCIENCE: AI knows the player's moves")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_MOVE_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_FLAMETHROWER) == TYPE_FIRE);
+        ASSUME(IsSpeciesOfType(SPECIES_TYPHLOSION, TYPE_FIRE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | aiFlag);
+        PLAYER(SPECIES_TYPHLOSION) { Speed(5); Moves(MOVE_TACKLE, MOVE_FLAMETHROWER); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_TACKLE); Level(1); }
+        OPPONENT(SPECIES_SCIZOR) { Speed(4); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_BLISSEY) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_MOVE_OMNISCIENCE)
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
+        else
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prefer not using recoil moves that will KO its own mon")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_EDGE) == EFFECT_RECOIL);
+        ASSUME(GetMoveAccuracy(MOVE_STONE_EDGE) < 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(50); Speed(1); Moves(MOVE_TACKLE, MOVE_PROTECT); }
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); } 
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_STONE_EDGE, MOVE_DOUBLE_EDGE); HP(1); MaxHP(100); Speed(2); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_STONE_EDGE); MOVE(player, MOVE_PROTECT); }
+    }
+}
