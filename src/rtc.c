@@ -418,6 +418,42 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
     *txtPtr = EOS;
 }
 
+u16 GetFullYear(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.year;
+}
+
+enum Month GetMonth(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.month;
+}
+
+u8 GetDay(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.day;
+}
+
+enum Weekday GetDayOfWeek(void)
+{
+    struct DateTime dateTime;
+    RtcCalcLocalTime();
+    ConvertTimeToDateTime(&dateTime, &gLocalTime);
+
+    return dateTime.dayOfWeek;
+}
+
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
 {
     if (timeOfDay >= TIME_LAST)
