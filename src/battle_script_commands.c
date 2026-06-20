@@ -5931,7 +5931,7 @@ static void ResetValuesForCalledMove(void)
         gBattleStruct->eventState.atkCanceler = CANCELER_VOLATILE_BLOCKED;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
-    SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
+    SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker));
     ClearDamageCalcResults();
 }
 
@@ -14598,12 +14598,12 @@ void BS_DestroyItemPopup(void)
 
     if (IsAnyAbilityPopUpActive())
         return;
-        
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         DestroyAbilityPopUp(battler);
 
     FreeAbilityPopUpGfx();
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14619,6 +14619,6 @@ void BS_MultiHitPlurality(void)
     {
         PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_S);
     }
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

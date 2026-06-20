@@ -1049,7 +1049,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
             gBattleScripting.animTargetsHit = 0;
 
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
-            SetTypeBeforeUsingMove(cv->move, cv->battlerAtk);
+            SetTypeBeforeUsingMove(cv->move, cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk]);
             ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(cv->move);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -4243,7 +4243,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
         {
             if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                 break;
-            
+
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
