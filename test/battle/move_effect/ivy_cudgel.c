@@ -8,12 +8,12 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Ivy Cudgel changes the move type depending on the form of Ogerpon")
 {
-    u16 species;
+    enum Species species;
     u16 ogerpon;
     enum Item item;
 
     PARAMETRIZE { species = SPECIES_BLASTOISE; ogerpon = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
-    PARAMETRIZE { species = SPECIES_CHARIZARD; ogerpon = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
+    PARAMETRIZE { species = SPECIES_CHARMANDER; ogerpon = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
     PARAMETRIZE { species = SPECIES_CHARIZARD; ogerpon = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
     PARAMETRIZE { species = SPECIES_VENUSAUR;  ogerpon = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
 

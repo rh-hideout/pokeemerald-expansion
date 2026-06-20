@@ -187,3 +187,56 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Champions)")
+{
+    PASSES_RANDOMLY(25, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        STATUS_ICON(player, none: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze has a guaranteed chance of thawing on the third turn (Champions)")
+{
+    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Wobbuffet is frozen solid!");
+        MESSAGE("Wobbuffet is frozen solid!");
+        STATUS_ICON(player, none: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze timer persists even if the user switches out (Champions)")
+{
+    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        PLAYER(SPECIES_WOBBUFFET) {};
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Wobbuffet is frozen solid!");
+        MESSAGE("Wobbuffet is frozen solid!");
+        STATUS_ICON(player, none: TRUE);
+    }
+}

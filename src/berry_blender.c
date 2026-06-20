@@ -159,7 +159,7 @@ struct BerryBlender
     u16 canceledPlayerId;
     u16 playAgainState;
     u8 slowdownTimer;
-    u16 chosenItemId[BLENDER_MAX_PLAYERS];
+    enum Item chosenItemId[BLENDER_MAX_PLAYERS];
     u8 numPlayers;
     u8 unused2[16];
     u16 arrowIdToPlayerId[BLENDER_MAX_PLAYERS];
@@ -245,11 +245,11 @@ static s16 sDebug_GameTimeStage;
 
 COMMON_DATA u8 gInGameOpponentsNo = 0;
 
-static const u16 sBlenderCenter_Pal[] = INCBIN_U16("graphics/berry_blender/center.gbapal");
+static const u16 sBlenderCenter_Pal[] = INCGFX_U16("graphics/berry_blender/center.png", ".gbapal");
 static const u8 sBlenderCenter_Tilemap[] = INCBIN_U8("graphics/berry_blender/center_map.bin");
-static const u16 sBlenderOuter_Pal[] = INCBIN_U16("graphics/berry_blender/outer.gbapal");
+static const u16 sBlenderOuter_Pal[] = INCGFX_U16("graphics/berry_blender/outer.png", ".gbapal");
 
-static const u16 sUnused_Pal[] = INCBIN_U16("graphics/berry_blender/unused.gbapal");
+static const u16 sUnused_Pal[] = INCGFX_U16("graphics/berry_blender/unused.pal", ".gbapal");
 static const u16 sEmpty_Pal[16 * 14] = {0};
 
 static const u8 sText_BerryBlenderStart[] = _("Starting up the BERRY BLENDER.\pPlease select a BERRY from your BAG\nto put in the BERRY BLENDER.\p");
@@ -864,7 +864,7 @@ static const u8 sOpponentBerrySets[][3] =
 
 // Berry master's berries follow the same rules as above, but instead of explicitly listing
 // the alternate sets if the player chooses one of these berries, it implicitly uses these berries - 5, i.e. Tamato - Nomel
-static const u8 sBerryMasterBerries[] = {
+static const enum BerryId sBerryMasterBerries[] = {
     BERRY_ID_SPELON,
     BERRY_ID_PAMTRE,
     BERRY_ID_WATMEL,
@@ -1528,10 +1528,10 @@ static u8 GetArrowProximity(u16 arrowPos, u8 playerId)
     return PROXIMITY_MISS;
 }
 
-static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct BlenderBerry *playerBerry)
+static void SetOpponentsBerryData(enum Item playerBerryItemId, u8 playersNum, struct BlenderBerry *playerBerry)
 {
     u16 opponentSetId = 0;
-    u16 opponentBerryId;
+    enum BerryId opponentBerryId;
     u16 berryMasterDiff;
     u16 i;
 
@@ -2473,11 +2473,6 @@ static void CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *p
 
     for (i = 0; i < FLAVOR_COUNT + 1; i++)
         flavors[i] = sPokeblockFlavors[i];
-}
-
-static void UNUSED Debug_CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *pokeblock, u8 numPlayers, u8 *flavors, u16 maxRPM)
-{
-    CalculatePokeblock(berries, pokeblock, numPlayers, flavors, maxRPM);
 }
 
 static void Debug_SetStageVars(void)
@@ -3444,7 +3439,6 @@ static bool8 PrintBlendingResults(void)
     struct Pokeblock pokeblock;
     enum Flavor flavors[FLAVOR_COUNT + 1];
     u8 text[40];
-    u16 UNUSED berryIds[4];
 
     switch (sBerryBlender->mainState)
     {
@@ -3538,8 +3532,6 @@ static bool8 PrintBlendingResults(void)
 
         for (i = 0; i < BLENDER_MAX_PLAYERS; i++)
         {
-            if (sBerryBlender->chosenItemId[i] != 0)
-                berryIds[i] = ItemIdToBerryType(sBerryBlender->chosenItemId[i]);
             if (sBerryBlender->arrowIdToPlayerId[i] != NO_PLAYER)
             {
                 PutWindowTilemap(i);

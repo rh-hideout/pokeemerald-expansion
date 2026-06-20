@@ -24,12 +24,15 @@ enum InGameTradeID
 };
 
 // Return values for CanTradeSelectedMon and CanSpinTradeMon
-#define CAN_TRADE_MON              0
-#define CANT_TRADE_LAST_MON        1
-#define CANT_TRADE_NATIONAL        2
-#define CANT_TRADE_EGG_YET         3
-#define CANT_TRADE_INVALID_MON     4
-#define CANT_TRADE_PARTNER_EGG_YET 5
+enum CanTradeMon
+{
+    CAN_TRADE_MON,
+    CANT_TRADE_LAST_MON,
+    CANT_TRADE_NATIONAL,
+    CANT_TRADE_EGG_YET,
+    CANT_TRADE_INVALID_MON,
+    CANT_TRADE_PARTNER_EGG_YET
+};
 
 // Return values for CheckValidityOfTradeMons
 #define PLAYER_MON_INVALID   0

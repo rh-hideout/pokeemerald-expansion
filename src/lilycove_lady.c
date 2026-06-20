@@ -34,7 +34,7 @@ static EWRAM_DATA struct LilycoveLadyFavor *sFavorLadyPtr = NULL;
 static EWRAM_DATA struct LilycoveLadyQuiz *sQuizLadyPtr = NULL;
 static EWRAM_DATA struct LilycoveLadyContest *sContestLadyPtr = NULL;
 
-extern EWRAM_DATA u16 gSpecialVar_ItemId;
+extern EWRAM_DATA enum Item gSpecialVar_ItemId;
 
 u8 GetLilycoveLadyId(void)
 {
@@ -117,7 +117,7 @@ void Script_GetLilycoveLadyId(void)
     gSpecialVar_Result = GetLilycoveLadyId();
 }
 
-static u8 GetNumAcceptedItems(const u16 *itemsArray)
+static u8 GetNumAcceptedItems(const enum Item *itemsArray)
 {
     u8 numItems;
 

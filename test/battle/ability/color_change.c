@@ -174,9 +174,10 @@ SINGLE_BATTLE_TEST("Color Change does not change the type to Normal when a Pokem
     }
 }
 
-SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer Force")
+SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer Force (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
@@ -184,5 +185,20 @@ SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer F
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         NOT ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Color Change does activate if move is boosted by Sheer Force (Champions)")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
+        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
     }
 }

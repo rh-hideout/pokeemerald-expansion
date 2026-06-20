@@ -94,6 +94,12 @@ enum TrainerBattleType
     TRAINER_BATTLE_TYPE_DOUBLES,
 };
 
+enum MultiTeamSize
+{
+    MULTI_TEAM_SIZE_FULL,
+    MULTI_TEAM_SIZE_HALF,
+};
+
 #define UNPACK_STARTING_STATUSES_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_STARTING_STATUSES_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
 #define UNPACK_STARTING_STATUSES_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
@@ -125,13 +131,15 @@ struct Trainer
     enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
-    u8 encounterMusic:7;
-    u8 gender:1;
+    u16 encounterMusic:4;
+    u16 multiTeamSize:1;
+    u16 gender:1;
+    u16 battleType:2;
+    u16 mugshotColor:3;
+    u16 partySize:3;
+    u16 padding:2;
     enum TrainerPicID trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
-    u8 battleType:2;
-    u8 mugshotColor:6;
-    u8 partySize;
     u8 poolSize;
     u8 poolRuleIndex;
     u8 poolPickIndex;
@@ -160,13 +168,13 @@ struct TypeInfo
     u16 isHiddenPowerType:1; // Changing this for any type will change the distribution of all Hidden Power types from vanilla.
     u16 padding:11;
     const u16 *const paletteTMHM;
-    //u16 enhanceItem;
-    //u16 berry;
-    //u16 gem;
-    //u16 plate;
-    //u16 memory;
-    //u16 zCrystal;
-    //u16 teraShard;
+    //enum Item enhanceItem;
+    //enum Item berry;
+    //enum Item gem;
+    //enum Item plate;
+    //enum Item memory;
+    //enum Item zCrystal;
+    //enum Item teraShard;
     //u16 arceusForm;
 };
 
@@ -332,7 +340,7 @@ static inline const u8 GetTrainerMugshotColorFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->mugshotColor;
 }
 
-static inline const u16 *GetTrainerItemsFromId(u16 trainerId)
+static inline const enum Item *GetTrainerItemsFromId(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->items;
 }

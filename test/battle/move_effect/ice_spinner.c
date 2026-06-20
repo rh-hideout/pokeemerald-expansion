@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
 {
     u32 j;
-    static const u16 terrainMoves[] =
+    static const enum Move terrainMoves[] =
     {
         MOVE_ELECTRIC_TERRAIN,
         MOVE_PSYCHIC_TERRAIN,
@@ -59,9 +59,10 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
     }
 }
 
-SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution")
+SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
@@ -70,6 +71,21 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
         NOT MESSAGE("The electricity disappeared from the battlefield.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Ice Spinner removes terrain if user faints during attack execution (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
+        MESSAGE("The electricity disappeared from the battlefield.");
     }
 }
 

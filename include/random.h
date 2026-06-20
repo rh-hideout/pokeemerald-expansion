@@ -202,6 +202,8 @@ enum RandomTag
     RNG_AI_CONSERVE_TERA,
     RNG_AI_SWITCH_ALL_SCORES_BAD,
     RNG_AI_SWITCH_ABSORBING_HIDDEN_POWER,
+    RNG_AI_SWITCH_WISH_PASSING,
+    RNG_AI_SWITCH_LOSES_1V1,
     RNG_AI_PP_STALL_DISREGARD_MOVE,
     RNG_AI_SUCKER_PUNCH,
     RNG_AI_CONSIDER_EXPLOSION,
@@ -235,6 +237,7 @@ enum RandomTag
     RNG_AI_ASSUME_ALL_STATUS,
     RNG_AI_REFRESH_TRICK_ROOM_ON_LAST_TURN,
     RNG_AI_APPLY_TAILWIND_ON_LAST_TURN_OF_TRICK_ROOM,
+    RNG_AI_REVERSE_BATTLER_LOGIC_ORDER,
     RNG_WRAP,
     RNG_BALLTHROW_CRITICAL,
     RNG_BALLTHROW_SHAKE,
@@ -247,6 +250,15 @@ enum RandomTag
     RNG_AI_FAKE_OUT_SAVE_ALLY,
     RNG_AI_DMG_ROLL_RANDOM,
     RNG_RANDOM_BERRY,
+    RNG_DAYCARE_MAKE_EGG,
+    RNG_DAYCARE_PICK_NATURE_PARENT,
+    RNG_DAYCARE_NATURE_INHERITANCE,
+    RNG_DAYCARE_INHERITED_STATS,
+    RNG_DAYCARE_PICK_IVS_PARENT,
+    RNG_DAYCARE_PICK_BALL_PARENT,
+    RNG_DAYCARE_ABILITY_INHERITANCE,
+    RNG_DEXNAV_RANDOM_EGG_MOVE,
+    RNG_RANDOM_BALL,
 };
 
 #define RandomWeighted(tag, ...) \
@@ -263,7 +275,11 @@ enum RandomTag
 #define RandomPercentage(tag, t) \
     ({ \
         u32 r; \
-        if (t <= 0) \
+        if_comptime (t == 50) \
+        { \
+            r = RandomUniform(tag, FALSE, TRUE); \
+        } \
+        else if (t <= 0) \
         { \
             r = FALSE; \
         } \
@@ -307,5 +323,7 @@ u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weight
 const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif
+
+u32 Crc32B (const u8 *data, u32 size);
 
 #endif // GUARD_RANDOM_H
