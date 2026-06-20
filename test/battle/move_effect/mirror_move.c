@@ -61,6 +61,7 @@ SINGLE_BATTLE_TEST("Mirror Move's called powder move fails against Grass Types")
 {
     GIVEN {
         WITH_CONFIG(B_POWDER_GRASS, GEN_6);
+        PASSES_RANDOMLY(7, 8, RNG_PARALYSIS);
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
         ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_NON_VOLATILE_STATUS);

@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Charge's effect does not stack with Electromorphosis or Wind
     GIVEN {
         ASSUME(IsWindMove(MOVE_AIR_CUTTER));
         PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LOPUNNY) { Ability(ABILITY_LIMBER); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); MOVE(opponent, MOVE_AIR_CUTTER); }

@@ -20,6 +20,8 @@ SINGLE_BATTLE_TEST("Magic Guard ignores immobilization that can be caused by par
 {
     if (B_MAGIC_GUARD == GEN_4)
         PASSES_RANDOMLY(1, 1, RNG_PARALYSIS);
+    else if (B_PARALYSIS_CHANCE >= GEN_CHAMPIONS)
+        PASSES_RANDOMLY(7, 8, RNG_PARALYSIS);
     else
         PASSES_RANDOMLY(75, 100, RNG_PARALYSIS);
     GIVEN {
@@ -35,6 +37,7 @@ SINGLE_BATTLE_TEST("Magic Guard ignores immobilization that can be caused by par
 SINGLE_BATTLE_TEST("Magic Guard does not ignore speed stat changes caused by paralysis")
 {
     GIVEN {
+        PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
         PLAYER(SPECIES_CLEFABLE) { Speed(100); Ability(ABILITY_MAGIC_GUARD); Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(99); }
     } WHEN {

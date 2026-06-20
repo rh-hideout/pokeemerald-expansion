@@ -22,6 +22,10 @@ SINGLE_BATTLE_TEST("Hydration cures non-volatile Status conditions if it is rain
             {
                 MOVE(player, MOVE_RAIN_DANCE); MOVE(opponent, move);
             }
+            else if (status == STATUS1_PARALYSIS)
+            {
+                MOVE(player, MOVE_RAIN_DANCE); MOVE(opponent, MOVE_RAIN_DANCE);
+            }
             else
             {
                 MOVE(player, MOVE_RAIN_DANCE);

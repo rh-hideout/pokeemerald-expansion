@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sl
 
 SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Paralysis")
 {
-    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
+    PASSES_RANDOMLY(1, GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 8 : 4, RNG_PARALYSIS);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(gMovesInfo[SanitizeMoveId(MOVE_STUN_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_PARALYSIS);

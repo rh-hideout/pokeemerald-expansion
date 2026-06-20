@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
         if (status1 == STATUS1_SLEEP) {
             MESSAGE("Wobbuffet is fast asleep.");
         } else if (status1 == STATUS1_FREEZE) {
-            PASSES_RANDOMLY(20, 100, RNG_FROZEN);
+            PASSES_RANDOMLY(GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 25 : 20, 100, RNG_FROZEN);
             STATUS_ICON(player, none: TRUE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         } else {
@@ -51,6 +51,7 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
                     MESSAGE("Wobbuffet's burn was cured!");
                     break;
                 case STATUS1_PARALYSIS:
+                    PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
                     MESSAGE("Wobbuffet was cured of paralysis!");
                     break;
                 case STATUS1_TOXIC_POISON:

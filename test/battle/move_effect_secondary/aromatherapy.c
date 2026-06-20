@@ -37,12 +37,31 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party of the user from primar
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, playerLeft);
         switch(status)
         {
-        case STATUS1_SLEEP:        STATUS_ICON(playerLeft, sleep: FALSE);     STATUS_ICON(playerRight, sleep: FALSE);     break;
-        case STATUS1_POISON:       STATUS_ICON(playerLeft, poison: FALSE);    STATUS_ICON(playerRight, poison: FALSE);    break;
-        case STATUS1_BURN:         STATUS_ICON(playerLeft, burn: FALSE);      STATUS_ICON(playerRight, burn: FALSE);      break;
-        case STATUS1_PARALYSIS:    STATUS_ICON(playerLeft, paralysis: FALSE); STATUS_ICON(playerRight, paralysis: FALSE); break;
-        case STATUS1_TOXIC_POISON: STATUS_ICON(playerLeft, badPoison: FALSE); STATUS_ICON(playerRight, badPoison: FALSE); break;
-        case STATUS1_FROSTBITE:    STATUS_ICON(playerLeft, frostbite: FALSE); STATUS_ICON(playerRight, frostbite: FALSE); break;
+        case STATUS1_SLEEP:
+            STATUS_ICON(playerLeft, sleep: FALSE);
+            STATUS_ICON(playerRight, sleep: FALSE);
+            break;
+        case STATUS1_POISON:
+            STATUS_ICON(playerLeft, poison: FALSE);
+            STATUS_ICON(playerRight, poison: FALSE);
+            break;
+        case STATUS1_BURN:
+            STATUS_ICON(playerLeft, burn: FALSE);
+            STATUS_ICON(playerRight, burn: FALSE);
+            break;
+        case STATUS1_PARALYSIS:
+            PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
+            STATUS_ICON(playerLeft, paralysis: FALSE);
+            STATUS_ICON(playerRight, paralysis: FALSE);
+            break;
+        case STATUS1_TOXIC_POISON:
+            STATUS_ICON(playerLeft, badPoison: FALSE);
+            STATUS_ICON(playerRight, badPoison: FALSE);
+            break;
+        case STATUS1_FROSTBITE:
+            STATUS_ICON(playerLeft, frostbite: FALSE);
+            STATUS_ICON(playerRight, frostbite: FALSE);
+            break;
         }
     } THEN {
         for (j = 0; j < PARTY_SIZE; j++)
