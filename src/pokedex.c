@@ -16,6 +16,7 @@
 #include "palette.h"
 #include "pokedex.h"
 #include "pokedex_area_screen.h"
+#include "pokedex_common.h"
 #include "pokedex_cry_screen.h"
 #include "pokedex_plus_hgss.h"
 #include "rtc.h"
@@ -38,8 +39,6 @@ static EWRAM_DATA u16 sLastSelectedPokemon = 0;
 static EWRAM_DATA u8 sPokeBallRotation = 0;
 EWRAM_DATA struct PokedexListItem *sPokedexListItem = NULL;
 
-// This is written to, but never read.
-COMMON_DATA u8 gUnusedPokedexU8 = 0;
 COMMON_DATA void (*gPokedexVBlankCB)(void) = NULL;
 
 struct SearchOptionText
@@ -1338,7 +1337,6 @@ void ResetPokedex(void)
 
     sLastSelectedPokemon = 0;
     sPokeBallRotation = POKEBALL_ROTATION_TOP;
-    gUnusedPokedexU8 = 0;
     gSaveBlock2Ptr->pokedex.mode = DEX_MODE_HOENN;
     gSaveBlock2Ptr->pokedex.order = 0;
     gSaveBlock2Ptr->pokedex.nationalMagic = 0;

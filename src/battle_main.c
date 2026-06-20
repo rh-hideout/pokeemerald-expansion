@@ -481,9 +481,9 @@ void CB2_InitBattle(void)
     AllocateMonSpritesGfx();
     RecordedBattle_ClearFrontierPassFlag();
 
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
     gLoadFail = FALSE;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
 
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
