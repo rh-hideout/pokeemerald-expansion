@@ -35,6 +35,7 @@
 #include "constants/battle_frontier_mons.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_pike.h"
+#include "constants/battle_tent.h"
 #include "constants/frontier_util.h"
 #include "constants/trainers.h"
 #include "constants/game_stat.h"
@@ -3267,24 +3268,16 @@ u8 SetFacilityPtrsGetLevel(void)
     }
 }
 
-u8 GetFrontierEnemyMonLevel(enum FrontierLevelMode lvlMode)
+u32 GetFrontierEnemyMonLevel(enum FrontierLevelMode lvlMode)
 {
-    u8 level;
-
-    switch (lvlMode)
-    {
-    default:
-    case FRONTIER_LVL_50:
-        level = FRONTIER_MAX_LEVEL_50;
-        break;
-    case FRONTIER_LVL_OPEN:
-        level = GetHighestLevelInPlayerParty();
-        if (level < FRONTIER_MIN_LEVEL_OPEN)
-            level = FRONTIER_MIN_LEVEL_OPEN;
-        break;
-    }
-
-    return level;
+    if (lvlMode == FRONTIER_LVL_50)
+        return FRONTIER_MAX_LEVEL_50;
+    else if (lvlMode == FRONTIER_LVL_TENT)
+        return TENT_MIN_LEVEL;
+    else if (lvlMode == FRONTIER_LVL_OPEN)
+        return max(GetHighestLevelInPlayerParty(), FRONTIER_MIN_LEVEL_OPEN);
+    errorf("Unkown FrontierLevelMode %d", lvlMode);
+    return MIN_LEVEL;
 }
 
 s32 GetHighestLevelInPlayerParty(void)
