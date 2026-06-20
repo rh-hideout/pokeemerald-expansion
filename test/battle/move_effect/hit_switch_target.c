@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
-    ASSUME(GetMoveEffect(MOVE_LOCK_ON) == EFFECT_ENSURE_NEXT_HIT);
+    ASSUME(GetMoveEffect(MOVE_LOCK_ON) == EFFECT_LOCK_ON);
 }
 
 SINGLE_BATTLE_TEST("Dragon Tail switches the target with a random non-fainted replacement")

@@ -688,7 +688,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -700,7 +700,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -776,7 +776,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -788,7 +788,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -864,7 +864,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -876,7 +876,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -952,7 +952,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -964,7 +964,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -1040,7 +1040,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -1052,7 +1052,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -1128,7 +1128,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -1140,7 +1140,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -1216,7 +1216,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -1228,7 +1228,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -1304,7 +1304,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -1316,7 +1316,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);
@@ -1393,7 +1393,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
                 TURN {}
                 break;
-            case EFFECT_FUTURE_DAMAGE:
+            case EFFECT_FUTURE_SIGHT:
                 TURN {}
                 TURN {}
                 break;
@@ -1405,7 +1405,7 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
                 break;
         }
     } SCENE {
-        if (GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE)
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
         {
             HP_BAR(opponentRight, captureDamage: &damage1);
             HP_BAR(playerRight, captureDamage: &damage2);

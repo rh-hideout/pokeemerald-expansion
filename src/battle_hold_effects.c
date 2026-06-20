@@ -502,7 +502,7 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
 
     if (gBattleScripting.savedDmg > 0
      && !gBattleStruct->unableToUseMove
-     && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_DAMAGE
+     && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
      && gBattleStruct->battlerState[battlerAtk].originalBattlerPartyId == PARTY_SIZE
      && !IsBattlerAtMaxHp(battlerAtk)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))

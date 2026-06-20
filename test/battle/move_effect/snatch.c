@@ -224,7 +224,7 @@ SINGLE_BATTLE_TEST("Snatch: If a sound move is snatched while under Throat Chop,
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_THROAT_CHOP, MOVE_EFFECT_THROAT_CHOP) == TRUE);
-        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_PARTY_STATUS);
+        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
         ASSUME(MoveCanBeSnatched(MOVE_HEAL_BELL));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WYNAUT) { Status1(STATUS1_BURN); }

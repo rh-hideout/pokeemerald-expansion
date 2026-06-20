@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick's recoil happens after Spiky Shiel
     PARAMETRIZE { hp = maxHp / 8; faintOnSpiky = TRUE; } // Faints after Spiky Shield's recoil
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPIKY_SHIELD) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_SPIKY_SHIELD) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET) { HP(hp); MaxHP(maxHp); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

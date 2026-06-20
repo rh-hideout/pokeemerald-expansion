@@ -227,7 +227,7 @@ DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault V
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
-        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_SWAP_ITEMS);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_TRICK); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ASSAULT_VEST); }
@@ -340,7 +340,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Follow Me after instru
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_BECOME_TARGET);
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
         PLAYER(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); }
@@ -371,7 +371,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
         WITH_CONFIG(B_POWDER_GRASS, GEN_6);
-        ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_BECOME_TARGET);
+        ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_CHANGE_TARGET_TYPE);
         PLAYER(SPECIES_TREECKO);

@@ -91,7 +91,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
         // tests exist elsewhere
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -168,7 +168,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         case EFFECT_SNORE:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -219,7 +219,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         {
         //TODO: AI HANDLING
         case EFFECT_SAFEGUARD:
-        case EFFECT_BECOME_TARGET:
+        case EFFECT_FOLLOW_ME:
         case EFFECT_SNATCH:
         case EFFECT_GRUDGE:
         case EFFECT_CAMOUFLAGE:
@@ -243,14 +243,14 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         case EFFECT_RECYCLE:
 
         // tests exist elsewhere
-        case EFFECT_HEAL_PARTY_STATUS:
+        case EFFECT_HEAL_BELL:
         case EFFECT_SLEEP_TALK:
         case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -323,10 +323,10 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
 
         // tests exist elsewhere
         case EFFECT_GRAVITY:
-        case EFFECT_HEAL_PARTY_STATUS:
+        case EFFECT_HEAL_BELL:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -379,7 +379,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         case EFFECT_HEALING_WISH:
         case EFFECT_LUNAR_DANCE:
         case EFFECT_WONDER_ROOM:
-        case EFFECT_BECOME_TARGET:
+        case EFFECT_FOLLOW_ME:
         case EFFECT_MAGIC_ROOM:
         case EFFECT_AFTER_YOU:
 
@@ -394,7 +394,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         case EFFECT_POWER_SPLIT:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -456,7 +456,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
-        case EFFECT_HEAL_TARGET:
+        case EFFECT_HEAL_PULSE:
         case EFFECT_BELCH:
         case EFFECT_TOPSY_TURVY:
         case EFFECT_FAIRY_LOCK:
@@ -465,7 +465,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         case EFFECT_TERRAIN:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -523,7 +523,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
         case EFFECT_SHORE_UP:
-        case EFFECT_HEAL_TARGET:
+        case EFFECT_HEAL_PULSE:
         case EFFECT_LASER_FOCUS:
         case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:
@@ -536,7 +536,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_TERRAIN:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -593,7 +593,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
         case EFFECT_STEEL_ROLLER:
-        case EFFECT_HEAL_PARTY:
+        case EFFECT_JUNGLE_HEALING:
         case EFFECT_POWER_TRICK:
         case EFFECT_TAKE_HEART:
 
@@ -603,7 +603,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         case EFFECT_LIFE_DEW:
 
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -670,7 +670,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
                 PARAMETRIZE { move = j; }
             break;
         // Skipped on purpose.
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:

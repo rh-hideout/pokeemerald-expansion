@@ -4438,7 +4438,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_MAGICIAN:
             if (GetMoveEffect(move) != EFFECT_FLING
              && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
-             && GetMoveEffect(move) != EFFECT_FUTURE_DAMAGE
+             && GetMoveEffect(move) != EFFECT_FUTURE_SIGHT
              && gBattleMons[battler].item == ITEM_NONE
              && !gSpecialStatuses[battler].gemBoost) // In base game, gems are consumed after magician would activate.
             {
@@ -6179,7 +6179,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_PRESENT:
         basePower = gBattleStruct->presentBasePower;
         break;
-    case EFFECT_THREE_INCREASING_HITS:
+    case EFFECT_TRIPLE_KICK:
         basePower *= 1 + GetMoveStrikeCount(move) - gMultiHitCounter;
         break;
     case EFFECT_SPIT_UP:
@@ -6524,7 +6524,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (moveEffect == EFFECT_FUTURE_DAMAGE)
+        if (moveEffect == EFFECT_FUTURE_SIGHT)
             break;
 
         if (ctx->aiCalc)
@@ -8018,7 +8018,7 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
         enduredHit = TRUE;
         gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED;
     }
-    else if (GetMoveEffect(ctx->move) == EFFECT_LEAVE_1_HP)
+    else if (GetMoveEffect(ctx->move) == EFFECT_FALSE_SWIPE)
     {
         enduredHit = TRUE;
     }
@@ -9783,7 +9783,7 @@ enum Type GetBattleMoveType(enum Move move)
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (B_UPDATED_MOVE_TYPES < GEN_5
-         && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_DAMAGE))
+         && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT))
           return TYPE_MYSTERY;
     }
     return GetMoveType(move);

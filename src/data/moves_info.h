@@ -4578,7 +4578,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Kicks the foe 3 times in a\n"
             "row with rising intensity."),
-        .effect = EFFECT_THREE_INCREASING_HITS,
+        .effect = EFFECT_TRIPLE_KICK,
         .power = 10,
         .type = TYPE_FIGHTING,
         .accuracy = 90,
@@ -4655,7 +4655,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Senses the foe's action to\n"
             "ensure the next move's hit."),
-        .effect = EFFECT_ENSURE_NEXT_HIT,
+        .effect = EFFECT_LOCK_ON,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
@@ -4980,7 +4980,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -5390,7 +5390,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_FIGHTING,
         .accuracy = 0,
@@ -5447,7 +5447,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Locks on to the foe to\n"
             "ensure the next move hits."),
-        .effect = EFFECT_ENSURE_NEXT_HIT,
+        .effect = EFFECT_LOCK_ON,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
@@ -5638,7 +5638,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that leaves the\n"
             "foe with at least 1 HP."),
-        .effect = EFFECT_LEAVE_1_HP,
+        .effect = EFFECT_FALSE_SWIPE,
         .power = 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -5885,7 +5885,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Chimes soothingly to heal\n"
             "the party's status problems."),
-        .effect = EFFECT_HEAL_PARTY_STATUS,
+        .effect = EFFECT_HEAL_BELL,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -6781,7 +6781,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     #else
         .power = 80,
     #endif
-        .effect = EFFECT_FUTURE_DAMAGE,
+        .effect = EFFECT_FUTURE_SIGHT,
         .type = TYPE_PSYCHIC,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 100 : 90,
         .pp = B_UPDATED_MOVE_DATA >= GEN_5 ? 10 : 15,
@@ -7279,7 +7279,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Draws attention to make\n"
             "foes attack only the user."),
-        .effect = EFFECT_BECOME_TARGET,
+        .effect = EFFECT_FOLLOW_ME,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -7446,7 +7446,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Tricks the foe into trading\n"
             "held items."),
-        .effect = EFFECT_SWAP_ITEMS,
+        .effect = EFFECT_TRICK,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -8555,7 +8555,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Heals all status problems\n"
             "with a soothing scent."),
-        .effect = EFFECT_HEAL_PARTY_STATUS,
+        .effect = EFFECT_HEAL_BELL,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -9679,7 +9679,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Summons strong light to\n"
             "attack 2 turns later."),
-        .effect = EFFECT_FUTURE_DAMAGE,
+        .effect = EFFECT_FUTURE_SIGHT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 140 : 120,
         .type = TYPE_STEEL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_5 ? 100 : 85,
@@ -10572,7 +10572,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Attacks first if the foe\n"
             "is readying an attack."),
-        .effect = EFFECT_PRIORITY_IF_TARGET_DAMAGES,
+        .effect = EFFECT_SUCKER_PUNCH,
         .power = B_UPDATED_MOVE_DATA >= GEN_7 ? 70 : 80,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -11218,7 +11218,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Swaps items with the foe\n"
             "faster than the eye can see."),
-        .effect = EFFECT_SWAP_ITEMS,
+        .effect = EFFECT_TRICK,
         .power = 0,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -12625,7 +12625,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades wide-ranging attacks\n"
             "for one turn."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_ROCK,
         .accuracy = 0,
@@ -12793,7 +12793,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Scatters powder to make\n"
             "foes attack only the user."),
-        .effect = EFFECT_BECOME_TARGET,
+        .effect = EFFECT_FOLLOW_ME,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -13411,7 +13411,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades priority attacks\n"
             "for one turn."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_FIGHTING,
         .accuracy = 0,
@@ -13524,7 +13524,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Restores the target by up\n"
             "to half their max HP."),
-        .effect = EFFECT_HEAL_TARGET,
+        .effect = EFFECT_HEAL_PULSE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
@@ -15415,7 +15415,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades status moves for\n"
             "one turn."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_FAIRY,
         .accuracy = 0,
@@ -15670,7 +15670,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Evades damage and harshly\n"
         #endif
             "lowers Attack on contact."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_STEEL,
         .accuracy = 0,
@@ -15894,7 +15894,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, and damages\n"
             "the foe if struck."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -16279,7 +16279,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that leaves the\n"
             "foe with at least 1 HP."),
-        .effect = EFFECT_LEAVE_1_HP,
+        .effect = EFFECT_FALSE_SWIPE,
         .power = 40,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -16633,7 +16633,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects user and poisons\n"
             "foes on contact."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_POISON,
         .accuracy = 0,
@@ -16765,7 +16765,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Restores the target's HP.\n"
             "More HP on Grassy Terrain."),
-        .effect = EFFECT_HEAL_TARGET,
+        .effect = EFFECT_HEAL_PULSE,
         .power = 0,
         .type = TYPE_FAIRY,
         .accuracy = 0,
@@ -16888,7 +16888,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Makes the foe attack the\n"
             "spotlighted Pokémon."),
-        .effect = EFFECT_BECOME_TARGET,
+        .effect = EFFECT_FOLLOW_ME,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -19075,7 +19075,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects itself, harshly\n"
             "lowering Defense on contact."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -19598,7 +19598,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A 3-kick attack that gets\n"
             "more powerful with each hit."),
-        .effect = EFFECT_THREE_INCREASING_HITS,
+        .effect = EFFECT_TRIPLE_KICK,
         .power = 20,
         .type = TYPE_ICE,
         .accuracy = 90,
@@ -19670,7 +19670,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Heals HP and status of\n"
             "itself and allies in battle."),
-        .effect = EFFECT_HEAL_PARTY,
+        .effect = EFFECT_JUNGLE_HEALING,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -20463,7 +20463,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The user heals and cures\n"
             "itself and its ally."),
-        .effect = EFFECT_HEAL_PARTY,
+        .effect = EFFECT_JUNGLE_HEALING,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
@@ -20531,7 +20531,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Protects itself, lowering\n"
             "Speed on contact."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -21813,7 +21813,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, and burns\n"
             "the foe if struck."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_FIRE,
         .accuracy = 0,
@@ -21836,7 +21836,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Attacks first if the foe\n"
             "is readying an attack."),
-        .effect = EFFECT_PRIORITY_IF_TARGET_DAMAGES,
+        .effect = EFFECT_SUCKER_PUNCH,
         .power = 70,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -22662,7 +22662,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Evades attack, but may fail\n"
             "if used in succession."),
-        .effect = EFFECT_PREVENT_DAMAGE,
+        .effect = EFFECT_PROTECT,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,

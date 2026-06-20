@@ -3898,7 +3898,7 @@ static bool32 IsDomeDefensiveMove(enum Move move)
     case EFFECT_REFLECT:
     case EFFECT_AURORA_VEIL:
     case EFFECT_CONVERSION:
-    case EFFECT_PREVENT_DAMAGE:
+    case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
     case EFFECT_ENDURE:
     case EFFECT_SAFEGUARD:
@@ -3975,7 +3975,7 @@ static bool32 IsDomePopularMove(enum Move move)
 
     switch (GetMoveEffect(move))
     {
-    case EFFECT_PREVENT_DAMAGE:
+    case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
         return TRUE;
     default:
@@ -4073,7 +4073,7 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_SNORE:
     // Others
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_ENSURE_NEXT_HIT:
+    case EFFECT_LOCK_ON:
     case EFFECT_MORE_POWER_WITH_LESS_HP:
     case EFFECT_BATON_PASS:
     case EFFECT_INGRAIN:

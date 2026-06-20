@@ -285,9 +285,9 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_AURORA_VEIL:
         case EFFECT_WEATHER_AND_SWITCH:
         case EFFECT_FIRST_TURN_ONLY:
-        case EFFECT_BECOME_TARGET:
+        case EFFECT_FOLLOW_ME:
         case EFFECT_INSTRUCT:
-        case EFFECT_HEAL_PARTY:
+        case EFFECT_JUNGLE_HEALING:
         case EFFECT_SHED_TAIL:
             return RandomPercentage(RNG_AI_ASSUME_STATUS_HIGH_ODDS, ASSUME_STATUS_HIGH_ODDS);
         // Medium odds
@@ -296,14 +296,14 @@ bool32 ShouldRecordStatusMove(enum Move move)
         case EFFECT_ENCORE:
         case EFFECT_HAZE:
         case EFFECT_PARTING_SHOT:
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
         case EFFECT_REST:
         case EFFECT_ROAR:
         case EFFECT_ROOST:
         case EFFECT_SLEEP_TALK:
         case EFFECT_TAUNT:
         case EFFECT_TAILWIND:
-        case EFFECT_SWAP_ITEMS:
+        case EFFECT_TRICK:
         case EFFECT_TRICK_ROOM:
         // defoggables / screens and hazards
         case EFFECT_LIGHT_SCREEN:
@@ -497,7 +497,7 @@ bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBa
     {
         enum Move move = gBattleHistory->usedMoves[opposingBattler][moveIndex];
         enum BattleMoveEffects effect = GetMoveEffect(move);
-        if (effect == EFFECT_PREVENT_DAMAGE && move != MOVE_ENDURE)
+        if (effect == EFFECT_PROTECT && move != MOVE_ENDURE)
             return TRUE;
         if (effect == EFFECT_SEMI_INVULNERABLE && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI), predictedMove, CONSIDER_PRIORITY))
             return TRUE;
@@ -712,7 +712,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
         maximum = minimum = median = random;
         gBattleStruct->beatUpSlot = 0;
     }
-    else if (strikeCount > 1 && effect != EFFECT_THREE_INCREASING_HITS)
+    else if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
     {
         median *= strikeCount;
         minimum *= strikeCount;
@@ -912,7 +912,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         {
             simDamage.minimum = simDamage.median = simDamage.maximum = simDamage.random = fixedDamage;
         }
-        else if (moveEffect == EFFECT_THREE_INCREASING_HITS)
+        else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
             for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
@@ -2007,7 +2007,7 @@ bool32 IsAllyProtectingFromMove(enum BattlerId battlerAtk, enum Move attackerMov
 {
     enum BattleMoveEffects effect = GetMoveEffect(allyMove);
 
-    if (effect != EFFECT_PREVENT_DAMAGE)
+    if (effect != EFFECT_PROTECT)
     {
         return FALSE;
     }
@@ -4346,7 +4346,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
             if (needHealing)
                 return TRUE;
             break;
-        case EFFECT_HEAL_PARTY_STATUS:
+        case EFFECT_HEAL_BELL:
             if (hasStatus)
                 return TRUE;
             break;
@@ -4360,7 +4360,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
         {
         case EFFECT_WISH:
             return ShouldRecover(battlerAtk, battlerDef, move, 50); // Switch recovery isn't good idea in doubles
-        case EFFECT_HEAL_PARTY_STATUS:
+        case EFFECT_HEAL_BELL:
             if (hasStatus)
                 return TRUE;
             break;
@@ -4753,7 +4753,7 @@ void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
         if (!HasDamagingMove(battlerDef))
             ADJUST_SCORE_PTR(DECENT_EFFECT);
 
-        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveWithEffect(battlerAtk, EFFECT_PREVENT_DAMAGE))
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL && HasMoveWithEffect(battlerAtk, EFFECT_PROTECT))
             ADJUST_SCORE_PTR(WEAK_EFFECT);    // stall tactic
 
         if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PSN_ANY)
@@ -4997,7 +4997,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
                 return TRUE;
             isEager = TRUE;
             break;
-        case EFFECT_PREVENT_DAMAGE:
+        case EFFECT_PROTECT:
             if (HasDamagingMoveOfType(battlerAtk, GetMoveType(chosenMove)))
                 return FALSE;
             else

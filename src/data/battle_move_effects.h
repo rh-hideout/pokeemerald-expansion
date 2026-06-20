@@ -342,7 +342,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_ENSURE_NEXT_HIT] =
+    [EFFECT_LOCK_ON] =
     {
         .battleScript = BattleScript_EffectLockOn,
         .battleTvScore = 3,
@@ -384,13 +384,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
-    [EFFECT_LEAVE_1_HP] =
+    [EFFECT_FALSE_SWIPE] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 
-    [EFFECT_HEAL_PARTY_STATUS] =
+    [EFFECT_HEAL_BELL] =
     {
         .battleScript = BattleScript_EffectHealBell,
         .battleTvScore = 5,
@@ -398,7 +398,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_THREE_INCREASING_HITS] =
+    [EFFECT_TRIPLE_KICK] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
@@ -439,7 +439,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_PREVENT_DAMAGE] =
+    [EFFECT_PROTECT] =
     {
         .battleScript = BattleScript_EffectProtect,
         .battleTvScore = 5,
@@ -633,7 +633,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_FUTURE_DAMAGE] =
+    [EFFECT_FUTURE_SIGHT] =
     {
         .battleScript = BattleScript_EffectFutureSight,
         .battleTvScore = 1,
@@ -746,7 +746,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_BECOME_TARGET] =
+    [EFFECT_FOLLOW_ME] =
     {
         .battleScript = BattleScript_EffectFollowMe,
         .battleTvScore = 5,
@@ -780,7 +780,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 4,
     },
 
-    [EFFECT_SWAP_ITEMS] =
+    [EFFECT_TRICK] =
     {
         .battleScript = BattleScript_EffectTrick,
         .battleTvScore = 4,
@@ -1207,7 +1207,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_PRIORITY_IF_TARGET_DAMAGES] =
+    [EFFECT_SUCKER_PUNCH] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
@@ -1219,7 +1219,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HEAL_TARGET] =
+    [EFFECT_HEAL_PULSE] =
     {
         .battleScript = BattleScript_EffectHealPulse,
         .battleTvScore = 0, // TODO: Assign points
@@ -1522,7 +1522,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HEAL_PARTY] =
+    [EFFECT_JUNGLE_HEALING] =
     {
         .battleScript = BattleScript_EffectJungleHealing,
         .battleTvScore = 0, // TODO: Assign points

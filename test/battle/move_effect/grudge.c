@@ -192,7 +192,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
 {
     PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_LEAVE_1_HP);
+        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER (SPECIES_WOBBUFFET) { HP(1); }
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET);
@@ -279,7 +279,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech S
 SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER (SPECIES_WOBBUFFET) { HP(1); }
         PLAYER (SPECIES_WOBBUFFET);
         OPPONENT (SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_FUTURE_SIGHT, MOVE_SURF); }

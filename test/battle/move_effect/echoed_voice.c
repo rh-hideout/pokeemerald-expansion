@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is increased even if it's blocked by Pr
     s16 damage[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

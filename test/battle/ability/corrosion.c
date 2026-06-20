@@ -220,7 +220,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
     PARAMETRIZE { species = SPECIES_BELDUM; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); }
         OPPONENT(species);

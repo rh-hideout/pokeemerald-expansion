@@ -162,7 +162,7 @@ DOUBLE_BATTLE_TEST("Life Orb activates if damage was inflicted by a dancer move 
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_FIERY_DANCE));
-        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_PARTY_STATUS);
+        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
         PLAYER(SPECIES_ORICORIO) { Speed(200); Ability(ABILITY_DANCER); Item(ITEM_LIFE_ORB); Status1(STATUS1_SLEEP); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); }

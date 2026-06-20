@@ -113,7 +113,7 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Single
 
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
-        ASSUME(GetMoveEffect(protectMove) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(protectMove) == EFFECT_PROTECT);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
         PLAYER(species) { Ability(ability); Moves(MOVE_TACKLE); }
@@ -162,7 +162,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Double
 
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
-        ASSUME(GetMoveEffect(protectMove) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(protectMove) == EFFECT_PROTECT);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
         PLAYER(species) { Ability(ability); Moves(MOVE_TACKLE); }

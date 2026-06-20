@@ -134,7 +134,7 @@ static bool32 TargetHasToMove(enum Move move) // Opponent needs to hit the playe
      || effect == EFFECT_MIRROR_MOVE
      || effect == EFFECT_CONVERSION_2
      || effect == EFFECT_COPYCAT
-     || effect == EFFECT_PRIORITY_IF_TARGET_DAMAGES
+     || effect == EFFECT_SUCKER_PUNCH
      || effect == EFFECT_INSTRUCT
      || effect == EFFECT_DISABLE
      || effect == EFFECT_MIMIC
@@ -165,9 +165,9 @@ static bool32 AttackerHasToSwitch(enum Move move) // User needs to send out a di
 static bool32 UserHasToGoFirst(enum Move move) // Player needs to go first
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_PREVENT_DAMAGE
+    if (effect == EFFECT_PROTECT
      || effect == EFFECT_ENDURE
-     || effect == EFFECT_BECOME_TARGET
+     || effect == EFFECT_FOLLOW_ME
      || effect == EFFECT_MAGIC_COAT
      || effect == EFFECT_ME_FIRST
      || effect == EFFECT_QUASH
@@ -395,7 +395,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
     {
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_FUTURE_DAMAGE)
+    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
     {
         TURN {};
         TURN {};

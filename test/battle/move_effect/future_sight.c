@@ -13,7 +13,7 @@ ASSUMPTIONS
 {
     ASSUME(GetMovePower(FUTURE_SIGHT_EQUIVALENT) == GetMovePower(MOVE_FUTURE_SIGHT));
     ASSUME(GetMoveCategory(FUTURE_SIGHT_EQUIVALENT) == GetMoveCategory(MOVE_FUTURE_SIGHT));
-    ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
+    ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
     ASSUME(GetMovePower(MOVE_FUTURE_SIGHT) > 0);
 }
 
@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Protean")
 SINGLE_BATTLE_TEST("Future Sight set up is not blocked by Protect")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -309,7 +309,7 @@ SINGLE_BATTLE_TEST("Future Sight is affected by Beads of Ruin on the original sl
 SINGLE_BATTLE_TEST("Toxic Chain can inflict bad poison from Future Sight if the user is still on the field")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -331,7 +331,7 @@ SINGLE_BATTLE_TEST("Toxic Chain can inflict bad poison from Future Sight if the 
 SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user is not on the field")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
