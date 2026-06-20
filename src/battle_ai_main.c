@@ -3172,7 +3172,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         case EFFECT_HIT:
             if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
             {
-                if (isTargetingPartner && effect == EFFECT_STAT_CHANGE)
+                if (isTargetingPartner)
                 {
                     if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
                     {

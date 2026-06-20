@@ -207,7 +207,6 @@ static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS])
         for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
             gBattleMons[battler].statStages[stat] = savedStatStages[battler][stat];
     }
-
 }
 
 u32 AI_GetDamageWithStatChanges(struct StatConsiderationContext *ctx, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
@@ -248,7 +247,6 @@ static s8 *GetAiLogicStatChangePointer(enum BattlerId battler, enum Stat stat)
     }
 }
 
-// Abilities on field
 static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx)
 {
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(ctx->statMove);
@@ -308,7 +306,7 @@ static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx)
                         continue;
 
                     if (atkAbility == ABILITY_CONTRARY)
-                        stage = -1 * stage;
+                        stage *= -1;
 
                     if (considerSimple)
                         stage *= 2;
@@ -342,7 +340,7 @@ static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx)
                         continue;
 
                     if (atkAbility == ABILITY_CONTRARY)
-                        stage = -1 * stage;
+                        stage *= -1;
 
                     if (considerSimple)
                         stage *= 2;
@@ -723,6 +721,7 @@ static void AI_SetMoveStatChangeLogic(struct StatConsiderationContext *ctx)
     case ABILITY_JUSTIFIED:
     case ABILITY_RATTLED:
     case ABILITY_THERMAL_EXCHANGE:
+    case ABILITY_WATER_COMPACTION:
         bool32 runCheck = FALSE;
         enum Type moveType = GetMoveType(ctx->statMove);
 
@@ -1164,10 +1163,17 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
         u32 hitsToKO, expectedTurnsToKOAtk, expectedTurnsToKOModifiedAtk, expectedTurnsToKODef, expectedTurnsToKOModifiedDef;
         u32 bestTurnsToKOAtk = UINT32_MAX, bestTurnsToKOModifiedAtk = UINT32_MAX, bestTurnsToKODef = UINT32_MAX, bestTurnsToKOModifiedDef = UINT32_MAX;
         u32 totalAccuracy = 100, totalAccuracyModified;
+        u32 weather = GetWeather();
+        struct BattleCalcValues cv = {
+            .battlerAtk = battlerAtk,
+            .battlerDef = battlerDef,
+        };
+
         if (dmgMoveIndex != MAX_MON_MOVES)
         {
+            cv.move = ctx->atkMove;
             hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, ctx->atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
-            totalAccuracy = GetTotalAccuracy(battlerAtk, battlerDef, ctx->atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+            totalAccuracy = GetTotalAccuracy(&cv, weather);
             
             // Move already hits, no point
             if (totalAccuracy >= 100)
@@ -1179,7 +1185,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             AI_SetMoveStatChangeLogic(ctx);
             AI_SetBattlerStatChanges();
 
-            totalAccuracyModified = GetTotalAccuracy(battlerAtk, battlerDef, ctx->atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+            totalAccuracyModified = GetTotalAccuracy(&cv, weather);
 
             AI_RestoreBattlerStatStages(savedStatStages);
 
@@ -1205,23 +1211,31 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             // Get fewest expected moves for battlers to KO each other without stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                cv.move = gBattleMons[battlerAtk].moves[i];
+
+                if (cv.move == MOVE_NONE)
                     break;
 
                 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
-                totalAccuracy = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOAtk = ((hitsToKO * 100) / totalAccuracy);
                 
                 if (bestTurnsToKOAtk > expectedTurnsToKOAtk)
                     bestTurnsToKOAtk = expectedTurnsToKOAtk;
             }
+
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                cv.move = gBattleMons[battlerDef].moves[i];
+
+                if (cv.move == MOVE_NONE)
                     break;
 
+                cv.battlerAtk = battlerDef;
+                cv.battlerDef = battlerAtk;                
+
                 hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
-                totalAccuracy = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
                 
                 if (bestTurnsToKODef > expectedTurnsToKODef)
@@ -1235,11 +1249,16 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             // Get fewest expected moves for battlers to KO each other with stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                cv.move = gBattleMons[battlerAtk].moves[i];
+
+                if (cv.move == MOVE_NONE)
                     break;
 
+                cv.battlerAtk = battlerAtk;
+                cv.battlerDef = battlerDef;                
+
                 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
-                totalAccuracyModified = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
                 
                 if (bestTurnsToKOModifiedAtk > expectedTurnsToKOModifiedAtk)
@@ -1247,11 +1266,16 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             }
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                cv.move = gBattleMons[battlerDef].moves[i];
+
+                if (cv.move == MOVE_NONE)
                     break;
 
+                cv.battlerAtk = battlerDef;
+                cv.battlerDef = battlerAtk;                
+
                 hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
-                totalAccuracyModified = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedDef = ((hitsToKO * 100) / totalAccuracyModified);
                 
                 if (bestTurnsToKOModifiedDef > expectedTurnsToKOModifiedDef)
