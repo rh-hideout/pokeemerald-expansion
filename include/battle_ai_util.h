@@ -90,7 +90,8 @@ struct StatConsiderationContext
     u8 statMoveIndex;
     u8 atkMoveIndex;
     enum ChangeStatContext context;
-    u8 padding;
+    bool8 isTargetingPartner:1;
+    u8 padding:7;
     enum Move atkMove;
 };
 
