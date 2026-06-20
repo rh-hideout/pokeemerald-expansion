@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_BECOME_TARGET);
-    ASSUME(GetMoveEffect(MOVE_SPOTLIGHT) == EFFECT_BECOME_TARGET);
+    ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
+    ASSUME(GetMoveEffect(MOVE_SPOTLIGHT) == EFFECT_FOLLOW_ME);
 }
 
 DOUBLE_BATTLE_TEST("Follow Me redirects single target moves used by opponents to user")

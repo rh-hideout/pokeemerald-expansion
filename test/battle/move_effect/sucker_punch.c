@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_PRIORITY_IF_TARGET_DAMAGES);
+    ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_SUCKER_PUNCH);
 }
 
 SINGLE_BATTLE_TEST("Sucker Punch hits targets that are about to attack")

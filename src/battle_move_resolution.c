@@ -1230,7 +1230,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!IsBattlersFirstTurn(cv->battlerAtk) || gSpecialStatuses[cv->battlerAtk].backUpTarget)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_BECOME_TARGET:
+    case EFFECT_FOLLOW_ME:
         if (B_UPDATED_MOVE_DATA >= GEN_8 && !(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
             battleScript = BattleScript_ButItFailed;
         break;
@@ -1242,7 +1242,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (gBattleMons[cv->battlerAtk].volatiles.noRetreat)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_PREVENT_DAMAGE:
+    case EFFECT_PROTECT:
     case EFFECT_ENDURE:
         TryResetConsecutiveUseCounter(cv->battlerAtk);
         if (IsLastMonToMove(cv->battlerAtk))
@@ -1366,7 +1366,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
                 continue;
             }
             break;
-        case EFFECT_FUTURE_DAMAGE:
+        case EFFECT_FUTURE_SIGHT:
             if (gBattleStruct->futureSight[battlerDef].counter > 0)
             {
                 battleScript = BattleScript_ButItFailed;
@@ -1388,7 +1388,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
                 continue;
             }
             break;
-        case EFFECT_PRIORITY_IF_TARGET_DAMAGES:
+        case EFFECT_SUCKER_PUNCH:
         {
             u32 defMove = GetBattlerChosenMove(battlerDef);
             if (HasBattlerActedThisTurn(battlerDef)
@@ -1620,7 +1620,7 @@ static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *c
 {
     switch (cv->moveEffect)
     {
-    case EFFECT_FUTURE_DAMAGE:
+    case EFFECT_FUTURE_SIGHT:
         gBattleStruct->futureSight[cv->battlerDef].move = cv->move;
         gBattleStruct->futureSight[cv->battlerDef].battlerIndex = cv->battlerAtk;
         gBattleStruct->futureSight[cv->battlerDef].partyIndex = gBattlerPartyIndexes[cv->battlerAtk];
@@ -2138,7 +2138,7 @@ static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum
     if (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         return TRUE;
 
-    if (moveEffect == EFFECT_THREE_INCREASING_HITS || moveEffect == EFFECT_POPULATION_BOMB)
+    if (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)
         return FALSE;
 
     return TRUE; // multiHitOn is set so skip Acc check for everything else
@@ -3088,7 +3088,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
              && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef)
              && !IsZMove(cv->move)
              && cv->move != MOVE_STRUGGLE
-             && cv->moveEffect != EFFECT_FUTURE_DAMAGE)
+             && cv->moveEffect != EFFECT_FUTURE_SIGHT)
             {
                 u32 moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
 

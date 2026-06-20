@@ -200,7 +200,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Mat Bl
 DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick Guard")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PREVENT_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PROTECT);
         ASSUME(GetMoveProtectMethod(MOVE_QUICK_GUARD) == PROTECT_QUICK_GUARD);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > 0);
         ASSUME(MoveMakesContact(MOVE_QUICK_ATTACK));

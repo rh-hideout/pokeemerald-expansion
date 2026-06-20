@@ -363,7 +363,7 @@ void BattleArena_AddMindPoints(enum BattlerId battler)
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     if (effect == EFFECT_FIRST_TURN_ONLY
-     || effect == EFFECT_PREVENT_DAMAGE
+     || effect == EFFECT_PROTECT
      || effect == EFFECT_ENDURE)
     {
         gBattleStruct->arenaMindPoints[battler]--;

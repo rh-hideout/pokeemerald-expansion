@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)
 SINGLE_BATTLE_TEST("Ability Shield activates a previously suppressed ability when obtained")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_SWAP_ITEMS);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_POTION); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(ITEM_ABILITY_SHIELD); }
     } WHEN {
@@ -182,7 +182,7 @@ SINGLE_BATTLE_TEST("Ability Shield doesn't reactivate an ability when receiving 
 {
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_SWAP_ITEMS);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ABILITY_SHIELD); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(ITEM_ABILITY_SHIELD); }
     } WHEN {
@@ -229,7 +229,7 @@ SINGLE_BATTLE_TEST("Ability Shield doesn't protect the user's ability from being
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
-        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_SWAP_ITEMS);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_BLAZIKEN) { Ability(ABILITY_SPEED_BOOST); Item(ITEM_POTION); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ABILITY_SHIELD); }
     } WHEN {

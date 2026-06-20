@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the defender behind a
 SINGLE_BATTLE_TEST("Spicy Spray does not activate if Future Sight attacker is not on the field")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SCOVILLAIN) { Item(ITEM_SCOVILLAINITE); }
