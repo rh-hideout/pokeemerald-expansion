@@ -167,6 +167,8 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
             data = 0;
             SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
         }
+        // else B_TRAINER_MON_RANDOM_ABILITY == 1
+        // this is the default from CreateMon (random non-hidden ability based on personality)
     }
 
     if (trainerMon->ball < POKEBALL_COUNT)
