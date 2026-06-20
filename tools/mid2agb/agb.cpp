@@ -556,7 +556,6 @@ void PrintAgbTrackLoop(std::vector<Event>& events, int trackLoops)
     ResetTrackVars();
 
     bool foundVolBeforeNote = false;
-    bool foundCondJump = false;
 
     for (const Event& event : events)
     {
@@ -647,16 +646,12 @@ void PrintAgbTrackLoop(std::vector<Event>& events, int trackLoops)
                 break;
             case EventType::Controller:
                 if (k == 0)
-                    foundCondJump = PrintControllerOp(event);
+                    PrintControllerOp(event);
                 break;
             default:
                 PrintWait(event.time);
                 break;
             }
-
-            // Review/remove if mid2agb ever implements conditional loop break/jumps
-            if (event.type == EventType::LoopEnd && !foundCondJump)
-                break;
         }
     }
 
