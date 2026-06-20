@@ -162,10 +162,10 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte NULL\n";
 
-    text << "\t.2byte " << json_to_string(map_data, "music") << "\n"
-         << "\t.2byte " << json_to_string(layout, "id") << "\n"
+    text << "\t.2byte " << json_to_string(map_data, "music") << "\n";
+
+    text << "\t.2byte " << json_to_string(layout, "id") << "\n"
          << "\t.byte "  << json_to_string(map_data, "region_map_section") << "\n"
-         << "\t.byte "  << json_to_string(map_data, "requires_flash") << "\n"
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
@@ -175,16 +175,26 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.byte " << floor_number << "\n";
 
-    text << "\t.byte 0\n";
+    if (!map_data["night_music"].is_null())
+        text << "\t.2byte " << json_to_string(map_data, "night_music") << "\n";
+    else
+        text << "\t.2byte MUS_NONE\n";
 
     if (version == "ruby")
         text << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
     else if (version == "emerald" || version == "firered")
+    {
         text << "\tmap_header_flags "
              << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
              << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
              << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
-             << "show_map_name=" << json_to_string(map_data, "show_map_name") << "\n";
+             << "show_map_name=" << json_to_string(map_data, "show_map_name") << ", ";
+        if (map_data.object_items().find("write_specialvar_iseffect") != map_data.object_items().end())
+            text << "write_specialvar_iseffect=" << json_to_string(map_data, "write_specialvar_iseffect") << ", ";
+        else
+            text  << "write_specialvar_iseffect=FALSE" << ", ";
+        text << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
+    }
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";
 
@@ -733,7 +743,10 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         string region = json_to_string(map_data, "region", true);
 
         if (region.empty()) {
-            region = "REGION_HOENN";
+            if (version == "emerald")
+                region = "REGION_HOENN";
+            else if (version == "firered")
+                region = "REGION_KANTO";
         }
         string map_name = json_to_string(map_data, "name");
 
@@ -772,7 +785,10 @@ string generate_layout_headers_text(Json layouts_data) {
         string layout_version = json_to_string(layout, "layout_version", true);
 
         if (layout_version.empty()) {
-            layout_version = "emerald";
+            if (version == "emerald")
+                layout_version = "emerald";
+            else if (version == "firered")
+                layout_version = "frlg";
         }
         if ((version == "emerald" && layout_version != "emerald")
          || (version == "firered" && layout_version != "frlg"))
@@ -827,7 +843,10 @@ string generate_layouts_table_text(Json layouts_data) {
             continue;
         string layout_version = json_to_string(layout, "layout_version", true);
         if (layout_version.empty()) {
-            layout_version = "emerald";
+            if (version == "emerald")
+                layout_version = "emerald";
+            else if (version == "firered")
+                layout_version = "frlg";
         }
         if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
             text << "\t.4byte NULL\n";

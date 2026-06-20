@@ -12,7 +12,6 @@ SilphCo_Elevator_EventScript_FloorSelect::
 	setvar VAR_0x8004, SCROLL_MULTI_SILPHCO_FLOORS
 	specialvar VAR_RESULT, InitElevatorFloorSelectMenuPos
 	special ShowScrollableMultichoice
-	waitstate
 	switch VAR_RESULT
 	case 0, SilphCo_Elevator_EventScript_To11F
 	case 1, SilphCo_Elevator_EventScript_To10F

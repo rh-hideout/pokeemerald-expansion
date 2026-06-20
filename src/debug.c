@@ -29,6 +29,7 @@
 #include "match_call.h"
 #include "malloc.h"
 #include "map_name_popup.h"
+#include "mass_outbreak.h"
 #include "menu.h"
 #include "money.h"
 #include "naming_screen.h"
@@ -41,6 +42,7 @@
 #include "pokemon_icon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "random_mon_generation.h"
 #include "region_map.h"
 #include "rtc.h"
 #include "script.h"
@@ -62,6 +64,7 @@
 #include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
+#include "constants/random_mon_generation.h"
 #include "constants/rgb.h"
 #include "constants/script_commands.h"
 #include "constants/songs.h"
@@ -166,6 +169,7 @@ enum DebugMenuTypes
     DEBUG_BASIC_MENU,
     DEBUG_FLAGS_MENU,
     DEBUG_TRAINERS_MENU,
+    DEBUG_OUTBREAK_MENU,
 };
 
 // *******************************
@@ -194,6 +198,8 @@ enum DebugMenuTypes
 #define DEBUG_NUMBER_DIGITS_ITEM_QUANTITY 3
 #define DEBUG_NUMBER_DIGITS_LOCALID 2
 #define DEBUG_NUMBER_DIGITS_TRAINERS MAX_DIGITS(TRAINERS_COUNT)
+#define DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS 2
+#define DEBUG_NUMBER_DIGITS_OUTBREAKS 2
 
 #define DEBUG_NUMBER_ICON_X 210
 #define DEBUG_NUMBER_ICON_Y 50
@@ -253,6 +259,7 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
 static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items);
 static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items);
 static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListOutbreakMenu(const struct DebugMenuOption *items);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
@@ -262,6 +269,7 @@ static void DebugNativeStep_CloseDebugWindow(u8 taskId);
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
+static void DebugAction_OpenOutbreakMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_ExecuteScript(u8 taskId, void *script);
@@ -278,9 +286,14 @@ static void DebugAction_Util_Weather(u8 taskId);
 static void DebugAction_Util_Weather_SelectId(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
+static void DebugAction_Util_Species_Randomizer(u8 taskId);
+static void DebugAction_Util_Item_Randomizer(u8 taskId);
+static void DebugAction_Util_Randomizer_SelectId(u8 taskId);
+static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
+static void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId);
 
 static void DebugAction_CreateFollowerNPC(u8 taskId);
 static void DebugAction_DestroyFollowerNPC(u8 taskId);
@@ -309,6 +322,16 @@ static void DebugAction_Trainers_SetRematch(u8 taskId);
 static void DebugAction_Trainers_SetRematchReadiness(u8 taskId);
 static void DebugAction_Trainers_TryBattle(u8 taskId);
 static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId);
+
+static void DebugAction_Outbreak_SetStatic(u8 taskId);
+static void DebugAction_Outbreak_ClearActive(u8 taskId);
+static void DebugAction_Outbreak_SetSpecies(u8 taskId);
+static void DebugAction_Outbreak_SetMap(u8 taskId);
+static void DebugAction_Outbreak_SetLevel(u8 taskId);
+static void DebugAction_Outbreak_SetMoves(u8 taskId);
+static void DebugAction_Outbreak_SetProbability(u8 taskId);
+static void DebugAction_Outbreak_SetDaysLeft(u8 taskId);
+static void DebugAction_Outbreak_SetDynamic(u8 taskId);
 
 static void DebugAction_FlagsVars_Flags(u8 taskId);
 static void DebugAction_FlagsVars_FlagsSelect(u8 taskId);
@@ -371,6 +394,17 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId);
 static void DebugAction_Player_Name(u8 taskId);
 static void DebugAction_Player_Gender(u8 taskId);
 static void DebugAction_Player_Id(u8 taskId);
+
+static void Debug_Display_SpeciesInfo(enum Species species, u32 number, u32 digit, u8 windowId);
+static void Debug_Display_Level(u32 level, u32 digit, u8 windowId);
+static void Debug_Display_MoveInfo(enum Move moveId, u32 iteration, u32 digit, u8 windowId);
+static void Debug_Display_Probability(u32 probability, u32 digit, u8 windowId);
+static void Debug_Display_OutbreakDaysLeft(u32 daysLeft, u32 digit, u8 windowId);
+static void DebugAction_Outbreak_ApplyLocation(u8 taskId);
+static void DebugAction_ChooseOutbreakLevel_Select(u8 taskId);
+static void DebugAction_OutbreakMove_Select(u8 taskId);
+static void DebugAction_ChooseOutbreakProbability_Select(u8 taskId);
+static void DebugAction_ChooseOutbreakDaysLeft_Select(u8 taskId);
 
 extern const u8 Debug_FlagsNotSetOverworldConfigMessage[];
 extern const u8 Debug_FlagsNotSetBattleConfigMessage[];
@@ -508,11 +542,12 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+static u32 (*const generateListFunctions[])(const struct DebugMenuOption *) =
 {
     [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
     [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
-    [DEBUG_TRAINERS_MENU] = Debug_GenerateListTrainerMenu
+    [DEBUG_TRAINERS_MENU] = Debug_GenerateListTrainerMenu,
+    [DEBUG_OUTBREAK_MENU] = Debug_GenerateListOutbreakMenu
 };
 
 // *******************************
@@ -555,6 +590,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
     { COMPOUND_STRING("Get time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
     { COMPOUND_STRING("Set time of day…"),  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_TimesOfDay },
     { COMPOUND_STRING("Set weekday…"),      DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
+    { COMPOUND_STRING("Redo daily events"), DebugAction_TimeMenu_RedoDailyEvents },
     { COMPOUND_STRING("Check wall clock…"), DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
     { COMPOUND_STRING("Set wall clock…"),   DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
     { NULL }
@@ -579,18 +615,20 @@ static const struct DebugMenuOption sDebugMenu_Actions_FollowerNPCMenu[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
 {
-    { COMPOUND_STRING("Fly to map…"),       DebugAction_Util_Fly },
-    { COMPOUND_STRING("Warp to map warp…"), DebugAction_Util_Warp_Warp },
-    { COMPOUND_STRING("Set weather…"),      DebugAction_Util_Weather },
-    { COMPOUND_STRING("Font Test…"),        DebugAction_ExecuteScript, Debug_EventScript_FontTest },
-    { COMPOUND_STRING("Time Functions…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
-    { COMPOUND_STRING("Watch credits…"),    DebugAction_Util_WatchCredits },
-    { COMPOUND_STRING("Cheat start"),       DebugAction_Util_CheatStart },
-    { COMPOUND_STRING("Berry Functions…"),  DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
-    { COMPOUND_STRING("EWRAM Counters…"),   DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
-    { COMPOUND_STRING("Follower NPC…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
-    { COMPOUND_STRING("Wally Tutorial"),    DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
-    { COMPOUND_STRING("Steven Multi"),      DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
+    { COMPOUND_STRING("Fly to map…"),               DebugAction_Util_Fly },
+    { COMPOUND_STRING("Warp to map warp…"),         DebugAction_Util_Warp_Warp },
+    { COMPOUND_STRING("Set weather…"),              DebugAction_Util_Weather },
+    { COMPOUND_STRING("Font Test…"),                DebugAction_ExecuteScript, Debug_EventScript_FontTest },
+    { COMPOUND_STRING("Time Functions…"),           DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
+    { COMPOUND_STRING("Watch credits…"),            DebugAction_Util_WatchCredits },
+    { COMPOUND_STRING("Cheat start"),               DebugAction_Util_CheatStart },
+    { COMPOUND_STRING("Berry Functions…"),          DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
+    { COMPOUND_STRING("EWRAM Counters…"),           DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
+    { COMPOUND_STRING("Follower NPC…"),             DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
+    { COMPOUND_STRING("Test Species Randomizer"),   DebugAction_Util_Species_Randomizer },
+    { COMPOUND_STRING("Test Item Randomizer"),      DebugAction_Util_Item_Randomizer },
+    { COMPOUND_STRING("Wally Tutorial"),            DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
+    { COMPOUND_STRING("Steven Multi"),              DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
 };
 
@@ -691,6 +729,26 @@ static const struct DebugMenuOption sDebugMenu_Actions_Trainers[] =
     { NULL }
 };
 
+static const struct DebugMenuOption sDebugMenu_Actions_MassOutbreak[] =
+{
+    { COMPOUND_STRING("Set Static Outbreak"), DebugAction_Outbreak_SetStatic },
+    { COMPOUND_STRING("Clear Active Outbreak"), DebugAction_Outbreak_ClearActive },
+    { COMPOUND_STRING("Species: {STR_VAR_1}"), DebugAction_Outbreak_SetSpecies },
+    { COMPOUND_STRING("Map: {STR_VAR_1}"), DebugAction_Outbreak_SetMap },
+    { COMPOUND_STRING("Level: {STR_VAR_1}"), DebugAction_Outbreak_SetLevel },
+    { COMPOUND_STRING("Moves"), DebugAction_Outbreak_SetMoves },
+    { COMPOUND_STRING("Probability: {STR_VAR_1}"), DebugAction_Outbreak_SetProbability },
+    { COMPOUND_STRING("Days Left: {STR_VAR_1}"), DebugAction_Outbreak_SetDaysLeft },
+    { COMPOUND_STRING("Set Dynamic Outbreak"), DebugAction_Outbreak_SetDynamic },
+    { NULL }
+};
+
+static const struct DebugMenuOption sDebugMenu_Actions_Encounters[] =
+{
+    { COMPOUND_STRING("Mass outbreak…"), DebugAction_OpenOutbreakMenu, sDebugMenu_Actions_MassOutbreak },
+    { NULL }
+};
+
 static const struct DebugMenuOption sDebugMenu_Actions_Sound[] =
 {
     { COMPOUND_STRING("SFX…"),   DebugAction_Sound_SE },
@@ -746,6 +804,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
     { COMPOUND_STRING("Player…"),       DebugAction_OpenSubMenu, sDebugMenu_Actions_Player, },
     { COMPOUND_STRING("Scripts…"),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
     { COMPOUND_STRING("Trainers…"),     DebugAction_OpenSubMenuTrainers, sDebugMenu_Actions_Trainers, },
+    { COMPOUND_STRING("Encounters…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_Encounters, },
     { COMPOUND_STRING("Flags & Vars…"), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
     { COMPOUND_STRING("Sound…"),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
     { COMPOUND_STRING("ROM Info…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
@@ -799,6 +858,17 @@ static const struct WindowTemplate sDebugMenuWindowTemplateSound =
     .baseBlock = 1,
 };
 
+static const struct WindowTemplate sDebugMenuWindowTemplateFullScreen =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 28,
+    .height = 18,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
 static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems);
 
 // *******************************
@@ -815,6 +885,7 @@ void Debug_ShowMainMenu(void)
 #define tSubWindowId         data[2]
 #define tInput               data[3]
 #define tDigit               data[4]
+#define tSpriteId            data[5]
 
 static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems)
 {
@@ -866,7 +937,8 @@ static bool32 IsSubMenuAction(const void *action)
         || action == DebugAction_OpenSubMenuFlagsVars
         || action == DebugAction_OpenSubMenuFakeRTC
         || action == DebugAction_OpenSubMenuCreateFollowerNPC
-        || action == DebugAction_OpenSubMenuTrainers;
+        || action == DebugAction_OpenSubMenuTrainers
+        || action == DebugAction_OpenOutbreakMenu;
 }
 
 static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
@@ -930,22 +1002,55 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     inputTaskId = CreateTask(HandleInput, 3);
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0;
+    gTasks[inputTaskId].tSubWindowId = WINDOW_NONE;
+    gTasks[inputTaskId].tSpriteId = SPRITE_NONE;
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
+static void Debug_CreateInputDisplayWindow(u8 taskId)
+{
+    u8 windowId;
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+    DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    gTasks[taskId].tSubWindowId = windowId;
+}
+
+static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
+{
+    if (gTasks[taskId].tSpriteId != SPRITE_NONE)
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeMonIconPalettes();
+    }
+    LoadMonIconPalettePersonality(species, 0);
+    gTasks[taskId].tSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
+    gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+}
+
 static void Debug_DestroyMenu(u8 taskId)
 {
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
+    {
+        ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tSubWindowId);
+    }
     DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
     RemoveWindow(gTasks[taskId].tWindowId);
     DestroyTask(taskId);
 }
 
 static void Debug_DestroyMenu_Full(u8 taskId)
 {
-    if (gTasks[taskId].tSubWindowId != 0)
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
     {
         ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, FALSE);
         DebugAction_DestroyExtraWindow(taskId);
@@ -1139,6 +1244,57 @@ static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items)
         }
 
         StringExpandPlaceholders(gStringVar4, sDebugMenu_Actions_Trainers[i].text);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+
+        if (noDraw)
+        {
+            offset++;
+        }
+        else
+        {
+            sDebugMenuListData->listItems[i - offset].name = &sDebugMenuListData->itemNames[i][0];
+            sDebugMenuListData->listItems[i - offset].id = i;
+            totalItems++;
+        }
+    }
+    return totalItems;
+}
+
+static u32 Debug_GenerateListOutbreakMenu(const struct DebugMenuOption *items)
+{
+    u32 offset = 0;
+    u32 totalItems = 0;
+    bool32 noDraw;
+
+    for (u32 i = 0; i < (ARRAY_COUNT(sDebugMenu_Actions_MassOutbreak) - 1); i++)
+    {
+        noDraw = FALSE;
+        if (gSaveBlock1Ptr->outbreakDaysLeft == 0 && i >= 1 && i <= 7)
+            noDraw = TRUE;
+        switch (i)
+        {
+        case 0:
+            if (gSaveBlock1Ptr->outbreakDaysLeft > 0)
+                noDraw = TRUE;
+            break;
+        case 2:
+            StringCopy(gStringVar1, GetSpeciesName(gSaveBlock1Ptr->outbreakPokemonSpecies));
+            break;
+        case 3:
+            GetMapName(gStringVar1, Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->outbreakLocationMapGroup, gSaveBlock1Ptr->outbreakLocationMapNum)->regionMapSectionId, 0);
+            break;
+        case 4:
+            ConvertIntToDecimalStringN(gStringVar1, gSaveBlock1Ptr->outbreakPokemonLevel, STR_CONV_MODE_RIGHT_ALIGN, 3);
+            break;
+        case 6:
+            ConvertIntToDecimalStringN(gStringVar1, gSaveBlock1Ptr->outbreakPokemonProbability, STR_CONV_MODE_RIGHT_ALIGN, 3);
+            break;
+        case 7:
+            ConvertIntToDecimalStringN(gStringVar1, gSaveBlock1Ptr->outbreakDaysLeft, STR_CONV_MODE_RIGHT_ALIGN, 3);
+            break;
+        }
+
+        StringExpandPlaceholders(gStringVar4, sDebugMenu_Actions_MassOutbreak[i].text);
         StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
 
         if (noDraw)
@@ -1371,6 +1527,11 @@ static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOp
     DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_FLAGS_MENU);
 }
 
+static void DebugAction_OpenOutbreakMenu(u8 taskId, const struct DebugMenuOption *items)
+{
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_OUTBREAK_MENU);
+}
+
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
 {
     DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
@@ -1413,11 +1574,33 @@ static void DebugAction_Util_Fly(u8 taskId)
     SetMainCallback2(CB2_OpenFlyMap);
 }
 
-#define tMapGroup  data[5]
-#define tMapNum    data[6]
-#define tWarp      data[7]
+#define tMapGroup  data[6]
+#define tMapNum    data[7]
+#define tWarp      data[8]
+#define tOrigin    data[9]
 
 #define LAST_MAP_GROUP (MAP_GROUPS_COUNT - 1)
+
+static void DebugAction_Util_DisplayMapGroup(u8 taskId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
+    ConvertIntToDecimalStringN(gStringVar2, LAST_MAP_GROUP, STR_CONV_MODE_LEADING_ZEROS, 3);
+    StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
+    StringCopy(gStringVar3, gText_DigitIndicator[0]);
+    StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMapGroup);
+    AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Util_DisplayMapNum(u8 taskId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, (MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1 >= 100) ? 3 : 2);
+    ConvertIntToDecimalStringN(gStringVar2, MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1, STR_CONV_MODE_LEADING_ZEROS, (MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1 >= 100) ? 3 : 2);
+    StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
+    GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(gTasks[taskId].tMapGroup, gTasks[taskId].tInput)->regionMapSectionId, 0);
+    StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
+    StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMap);
+    AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
 
 static void DebugAction_Util_Warp_Warp(u8 taskId)
 {
@@ -1433,13 +1616,6 @@ static void DebugAction_Util_Warp_Warp(u8 taskId)
 
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
-    ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
-    ConvertIntToDecimalStringN(gStringVar2, LAST_MAP_GROUP, STR_CONV_MODE_LEADING_ZEROS, 3);
-    StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
-    StringCopy(gStringVar3, gText_DigitIndicator[0]);
-    StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMapGroup);
-    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-
     gTasks[taskId].func = DebugAction_Util_Warp_SelectMapGroup;
     gTasks[taskId].tSubWindowId = windowId;
     gTasks[taskId].tInput = 0;
@@ -1447,6 +1623,9 @@ static void DebugAction_Util_Warp_Warp(u8 taskId)
     gTasks[taskId].tMapGroup = 0;
     gTasks[taskId].tMapNum = 0;
     gTasks[taskId].tWarp = 0;
+    gTasks[taskId].tOrigin = 0;
+
+    DebugAction_Util_DisplayMapGroup(taskId);
 }
 
 static void DebugAction_Util_Warp_SelectMapGroup(u8 taskId)
@@ -1455,13 +1634,7 @@ static void DebugAction_Util_Warp_SelectMapGroup(u8 taskId)
     {
         PlaySE(SE_SELECT);
         Debug_HandleInput_Numeric(taskId, 0, LAST_MAP_GROUP, 3);
-
-        ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
-        ConvertIntToDecimalStringN(gStringVar2, LAST_MAP_GROUP, STR_CONV_MODE_LEADING_ZEROS, 3);
-        StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
-        StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMapGroup);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        DebugAction_Util_DisplayMapGroup(taskId);
     }
 
     if (JOY_NEW(A_BUTTON))
@@ -1470,20 +1643,22 @@ static void DebugAction_Util_Warp_SelectMapGroup(u8 taskId)
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
-        ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, (MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1 >= 100) ? 3 : 2);
-        ConvertIntToDecimalStringN(gStringVar2, MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1, STR_CONV_MODE_LEADING_ZEROS, (MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1 >= 100) ? 3 : 2);
-        StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
-        GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(gTasks[taskId].tMapGroup, gTasks[taskId].tInput)->regionMapSectionId, 0);
-        StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMap);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        DebugAction_Util_DisplayMapNum(taskId);
 
         gTasks[taskId].func = DebugAction_Util_Warp_SelectMap;
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DebugAction_DestroyExtraWindow(taskId);
+        if (gTasks[taskId].tOrigin == 0)
+        {
+            DebugAction_DestroyExtraWindow(taskId);
+        }
+        else if (gTasks[taskId].tOrigin == 1)
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
     }
 }
 
@@ -1495,14 +1670,7 @@ static void DebugAction_Util_Warp_SelectMap(u8 taskId)
     {
         PlaySE(SE_SELECT);
         Debug_HandleInput_Numeric(taskId, 0, max_value - 1, 3);
-
-        ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, (max_value >= 100) ? 3 : 2);
-        ConvertIntToDecimalStringN(gStringVar2, MAP_GROUP_COUNT[gTasks[taskId].tMapGroup] - 1, STR_CONV_MODE_LEADING_ZEROS, (max_value >= 100) ? 3 : 2);
-        StringExpandPlaceholders(gStringVar1, sDebugText_Util_WarpToMap_SelMax);
-        GetMapName(gStringVar2, Overworld_GetMapHeaderByGroupAndId(gTasks[taskId].tMapGroup, gTasks[taskId].tInput)->regionMapSectionId, 0);
-        StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectMap);
-        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        DebugAction_Util_DisplayMapNum(taskId);
     }
 
     if (JOY_NEW(A_BUTTON))
@@ -1515,12 +1683,16 @@ static void DebugAction_Util_Warp_SelectMap(u8 taskId)
         ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
         StringExpandPlaceholders(gStringVar4, sDebugText_Util_WarpToMap_SelectWarp);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-        gTasks[taskId].func = DebugAction_Util_Warp_SelectWarp;
+
+        if (gTasks[taskId].tOrigin == 0)
+            gTasks[taskId].func = DebugAction_Util_Warp_SelectWarp;
+        else if (gTasks[taskId].tOrigin == 1)
+            gTasks[taskId].func = DebugAction_Outbreak_ApplyLocation;
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DebugAction_DestroyExtraWindow(taskId);
+        DebugAction_Util_DisplayMapGroup(taskId);
     }
 }
 
@@ -1561,13 +1733,14 @@ static void DebugAction_Util_Warp_SelectWarp(u8 taskId)
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        DebugAction_DestroyExtraWindow(taskId);
+        DebugAction_Util_DisplayMapNum(taskId);
     }
 }
 
 #undef tMapGroup
 #undef tMapNum
 #undef tWarp
+#undef tOrigin
 
 void CheckSaveBlock1Size(struct ScriptContext *ctx)
 {
@@ -1701,8 +1874,7 @@ static void DebugAction_Util_Weather_SelectId(u8 taskId)
     {
         if (gTasks[taskId].tInput <= 14 || gTasks[taskId].tInput >= 20)
         {
-            gTasks[taskId].data[5] = gTasks[taskId].tInput;
-            SetWeather(gTasks[taskId].data[5]);
+            SetWeather(gTasks[taskId].tInput);
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1805,6 +1977,217 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
     }
 }
 
+#define tRandomizerOption data[6]
+#define tArgCounter data[7]
+#define tArg1 data[8]
+#define tArg2 data[9]
+#define tType data[10]
+
+#define SPECIES_RANDOMIZER 0
+#define ITEM_RANDOMIZER 1
+
+static void DebugAction_Util_Randomizer_RefreshValues(u8 taskId)
+{
+    const u8 *str;
+    u32 x;
+    u32 font;
+    const struct FilterFuncArgs args = {
+        .arg1 = gTasks[taskId].tArg1,
+        .arg2 = gTasks[taskId].tArg2
+    };
+
+    for (u32 i = 0; i < 27; i++)
+    {
+        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
+        {
+            u32 species = GetRandomSpecies(gTasks[taskId].tRandomizerOption, &args);
+            str = GetSpeciesName(species);
+            x = (i % 3) * 72 + 16;
+            font = FONT_NORMAL;
+        }
+        else
+        {
+            u32 item = GetRandomItem(gTasks[taskId].tRandomizerOption, &args);
+            str = GetItemName(item);
+            x = (i % 3) * 80;
+            font = FONT_NARROW;
+        }
+        u32 y = (i / 3) * 16;
+        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, font, str, x, y, 0, NULL);
+    }
+}
+
+static void DebugAction_Util_Randomizer_Wait(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        FillWindowPixelBuffer(gTasks[taskId].tSubWindowId, PIXEL_FILL(1));
+        DebugAction_Util_Randomizer_RefreshValues(taskId);
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_Utilities);
+    }
+}
+
+static void DebugAction_Util_Randomizer_ShowValues(u8 taskId)
+{
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+
+    ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tSubWindowId);
+
+    gTasks[taskId].tSubWindowId = AddWindow(&sDebugMenuWindowTemplateFullScreen);
+    DrawStdWindowFrame(gTasks[taskId].tSubWindowId, FALSE);
+    CopyWindowToVram(gTasks[taskId].tSubWindowId, COPYWIN_FULL);
+
+    DebugAction_Util_Randomizer_RefreshValues(taskId);
+    gTasks[taskId].func = DebugAction_Util_Randomizer_Wait;
+}
+
+static void Debug_Display_RandomizerArg(u32 value, u32 index, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, index + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+    ConvertIntToDecimalStringN(gStringVar2, value, STR_CONV_MODE_LEADING_ZEROS, 5);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Arg {STR_VAR_1}: {STR_VAR_2}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Util_Randomizer_SelectArg(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, 0xFFFF, 5);
+        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tArgCounter += 1;
+        if (gTasks[taskId].tArgCounter == 2)
+        {
+            gTasks[taskId].func = DebugAction_Util_Randomizer_ShowValues;
+        }
+        else
+        {
+            if (gTasks[taskId].tArgCounter == 1)
+                gTasks[taskId].tArg1 = gTasks[taskId].tInput;
+            else if (gTasks[taskId].tArgCounter == 2)
+                gTasks[taskId].tArg2 = gTasks[taskId].tInput;
+            gTasks[taskId].tInput = 0;
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
+            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        if (gTasks[taskId].tArgCounter == 0)
+        {
+            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+            Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+        else
+        {
+            gTasks[taskId].tArgCounter -= 1;
+            gTasks[taskId].tInput = 0;
+            gTasks[taskId].tDigit = 0;
+            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+    }
+}
+
+static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, optionsID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Options ID: {STR_VAR_1}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Util_Randomizer_SelectId(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        u32 max;
+        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
+            max = RANDOM_SPECIES_OPTIONS_COUNT - 1;
+        else
+            max = RANDOM_ITEM_OPTIONS_COUNT - 1;
+        Debug_HandleInput_Numeric(taskId, 0, max, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
+        Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tRandomizerOption = gTasks[taskId].tInput;
+        gTasks[taskId].tArgCounter = 0;
+        gTasks[taskId].tInput = 0;
+        gTasks[taskId].tDigit = 0;
+        gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
+        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_Utilities);
+    }
+}
+
+static void DebugAction_Util_Species_Randomizer(u8 taskId)
+{
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+
+    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tRandomizerOption = 0;
+    gTasks[taskId].tArgCounter = 0;
+    gTasks[taskId].tArg1 = 0;
+    gTasks[taskId].tArg2 = 0;
+    gTasks[taskId].tType = SPECIES_RANDOMIZER;
+
+    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_Util_Item_Randomizer(u8 taskId)
+{
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+
+    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tRandomizerOption = 0;
+    gTasks[taskId].tArgCounter = 0;
+    gTasks[taskId].tArg1 = 0;
+    gTasks[taskId].tArg2 = 0;
+    gTasks[taskId].tType = ITEM_RANDOMIZER;
+
+    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+#undef tRandomizerOption
+#undef tArgCounter
+#undef tArg1
+#undef tArg2
+#undef tType
 
 // *******************************
 // Actions Trainers
@@ -1874,7 +2257,6 @@ static void GetTrainerIdFromLocalId(u32 localId)
 }
 
 #define TRAINER_TAG 0xFDF3
-#define tSpriteId   data[5]
 #define LOCAL_ID_MIN 1
 #define LOCAL_ID_MAX (gMapHeader.events->objectEventCount)
 
@@ -1965,12 +2347,11 @@ static void DebugAction_Trainers_ChooseFromMap(u8 taskId)
 }
 
 #undef TRAINER_TAG
-#undef tSpriteId
 #undef LOCAL_ID_MIN
 #undef LOCAL_ID_MAX
 
-#define tSelection  data[5]
-#define tInitial    data[6]
+#define tSelection  data[6]
+#define tInitial    data[7]
 
 static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 windowId)
 {
@@ -2182,6 +2563,419 @@ static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId)
 }
 
 // *******************************
+// Actions Encounters - Mass Outbreak
+
+static void Debug_Display_MassOutbreakId(u32 outbreakID, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, outbreakID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_OUTBREAKS);
+    GetStaticOutbreakMapName(gStringVar2, outbreakID);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("ID: {STR_VAR_1}\n{STR_VAR_2}{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_ChooseMassOutbreakId_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, OUTBREAK_COUNT - 1, DEBUG_NUMBER_DIGITS_OUTBREAKS);
+        Debug_Display_MassOutbreakId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        Debug_ResetInputDisplayMonIcon(taskId, GetStaticOutbreakSpecies(gTasks[taskId].tInput));
+    }
+
+    if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
+    {
+        if (JOY_NEW(A_BUTTON))
+            StartStaticMassOutbreak(gTasks[taskId].tInput);
+        PlaySE(SE_SELECT);
+
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeMonIconPalettes();
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+
+    }
+}
+
+static void DebugAction_Outbreak_SetStatic(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].func = DebugAction_ChooseMassOutbreakId_Select;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tInput = 0;
+
+    Debug_ResetInputDisplayMonIcon(taskId, GetStaticOutbreakSpecies(gTasks[taskId].tInput));
+    Debug_Display_MassOutbreakId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_Outbreak_ClearActive(u8 taskId)
+{
+    gSaveBlock1Ptr->outbreakDaysLeft = 0;
+    Debug_RemoveCallbackMenu();
+    DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+}
+
+#define tMapGroup data[6]
+#define tMapNum data[7]
+#define tIsDynamic data[8]
+#define tOrigin data[9]
+
+static void DebugAction_ChooseOutbreakSpecies_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 1, NUM_SPECIES - 1, DEBUG_NUMBER_DIGITS_ITEMS);
+        enum Species species = gTasks[taskId].tInput;
+        if (!IsSpeciesEnabled(species))
+            species = SPECIES_NONE;
+        Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        Debug_ResetInputDisplayMonIcon(taskId, species);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        gSaveBlock1Ptr->outbreakPokemonSpecies = gTasks[taskId].tInput;
+        PlaySE(SE_SELECT);
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeMonIconPalettes();
+        if (gTasks[taskId].tIsDynamic)
+        {
+            gTasks[taskId].tInput = 0;
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].tMapGroup = gSaveBlock1Ptr->outbreakLocationMapGroup;
+            gTasks[taskId].tMapNum = gSaveBlock1Ptr->outbreakLocationMapNum;
+            gTasks[taskId].tOrigin = 1;
+
+            DebugAction_Util_DisplayMapGroup(taskId);
+            gTasks[taskId].func = DebugAction_Util_Warp_SelectMapGroup;
+        }
+        else
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
+
+    }
+    if (JOY_NEW(B_BUTTON))
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeMonIconPalettes();
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+    }
+}
+
+static void DebugAction_Outbreak_SetSpecies(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tDigit = 0;
+    if (gSaveBlock1Ptr->outbreakDaysLeft > 0)
+        gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonSpecies;
+    else
+        gTasks[taskId].tInput = SPECIES_BULBASAUR;
+
+    enum Species species = gTasks[taskId].tInput;
+    if (!IsSpeciesEnabled(species))
+        species = SPECIES_NONE;
+
+    gTasks[taskId].func = DebugAction_ChooseOutbreakSpecies_Select;
+    Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    Debug_ResetInputDisplayMonIcon(taskId, species);
+}
+
+static void DebugAction_Outbreak_ApplyLocation(u8 taskId)
+{
+    gSaveBlock1Ptr->outbreakLocationMapGroup = gTasks[taskId].tMapGroup;
+    gSaveBlock1Ptr->outbreakLocationMapNum = gTasks[taskId].tMapNum;
+    if (gTasks[taskId].tIsDynamic)
+    {
+        gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonLevel;
+        gTasks[taskId].tDigit = 0;
+        gTasks[taskId].func = DebugAction_ChooseOutbreakLevel_Select;
+        Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+    else
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+    }
+}
+
+static void DebugAction_Outbreak_SetMap(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tMapGroup = gSaveBlock1Ptr->outbreakLocationMapGroup;
+    gTasks[taskId].tMapNum = gSaveBlock1Ptr->outbreakLocationMapNum;
+    gTasks[taskId].tOrigin = 1;
+
+    DebugAction_Util_DisplayMapGroup(taskId);
+    gTasks[taskId].func = DebugAction_Util_Warp_SelectMapGroup;
+}
+
+#undef tMapGroup
+#undef tMapNum
+#undef tOrigin
+
+#define tIterator data[6]
+
+static void DebugAction_ChooseOutbreakLevel_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 1, MAX_LEVEL, 3);
+        Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        gSaveBlock1Ptr->outbreakPokemonLevel = gTasks[taskId].tInput;
+        PlaySE(SE_SELECT);
+        if (gTasks[taskId].tIsDynamic)
+        {
+            gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonMoves[0];
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].tIterator = 0;
+            gTasks[taskId].func = DebugAction_OutbreakMove_Select;
+            Debug_Display_MoveInfo(gTasks[taskId].tInput, gTasks[taskId].tIterator, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+        else
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
+    }
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+    }
+}
+
+static void DebugAction_Outbreak_SetLevel(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonLevel;
+    gTasks[taskId].tDigit = 0;
+
+    gTasks[taskId].func = DebugAction_ChooseOutbreakLevel_Select;
+    Debug_Display_Level(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_OutbreakMove_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, MOVES_COUNT, 4);
+        Debug_Display_MoveInfo(gTasks[taskId].tInput, gTasks[taskId].tIterator, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        // Set current value
+        gSaveBlock1Ptr->outbreakPokemonMoves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        gTasks[taskId].tIterator++;
+
+        // If MOVE_NONE selected, stop asking for additional moves
+        if (gTasks[taskId].tInput == MOVE_NONE)
+        {
+            for (; gTasks[taskId].tIterator < MAX_MON_MOVES; gTasks[taskId].tIterator++)
+            {
+                gSaveBlock1Ptr->outbreakPokemonMoves[gTasks[taskId].tIterator] = MOVE_NONE;
+            }
+        }
+
+        //If NOT last move ask for next move
+        if (gTasks[taskId].tIterator < MAX_MON_MOVES)
+        {
+            gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonMoves[gTasks[taskId].tIterator];
+            gTasks[taskId].tDigit = 0;
+
+            Debug_Display_MoveInfo(gTasks[taskId].tInput, gTasks[taskId].tIterator, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+        else
+        {
+            if (gTasks[taskId].tIsDynamic)
+            {
+                gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonProbability;
+                gTasks[taskId].tDigit = 0;
+                gTasks[taskId].func = DebugAction_ChooseOutbreakProbability_Select;
+                Debug_Display_Probability(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+            }
+            else
+            {
+                Debug_RemoveCallbackMenu();
+                DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+            }
+        }
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        if (gTasks[taskId].tIterator == 0)
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
+        else
+        {
+            gTasks[taskId].tIterator--;
+            gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonMoves[gTasks[taskId].tIterator];
+        }
+        DebugAction_DestroyExtraWindow(taskId);
+    }
+}
+
+static void DebugAction_Outbreak_SetMoves(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonMoves[0];
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tIterator = 0;
+
+    gTasks[taskId].func = DebugAction_OutbreakMove_Select;
+    Debug_Display_MoveInfo(gTasks[taskId].tInput, gTasks[taskId].tIterator, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+#undef tIterator
+
+static void Debug_Display_Probability(u32 probability, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    ConvertIntToDecimalStringN(gStringVar1, probability, STR_CONV_MODE_LEADING_ZEROS, 3);
+    StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Probability:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_ChooseOutbreakProbability_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, 100, 3);
+        Debug_Display_Probability(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        gSaveBlock1Ptr->outbreakPokemonProbability = gTasks[taskId].tInput;
+        PlaySE(SE_SELECT);
+
+        if (gTasks[taskId].tIsDynamic)
+        {
+            gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakDaysLeft;
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].func = DebugAction_ChooseOutbreakDaysLeft_Select;
+            Debug_Display_OutbreakDaysLeft(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+        else
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
+    }
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+    }
+}
+
+static void DebugAction_Outbreak_SetProbability(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonProbability;
+    gTasks[taskId].tDigit = 0;
+
+    gTasks[taskId].func = DebugAction_ChooseOutbreakProbability_Select;
+    Debug_Display_Probability(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void Debug_Display_OutbreakDaysLeft(u32 daysLeft, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    ConvertIntToDecimalStringN(gStringVar1, daysLeft, STR_CONV_MODE_LEADING_ZEROS, 3);
+    StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Days Left:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_2}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_ChooseOutbreakDaysLeft_Select(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, 100, 3);
+        Debug_Display_OutbreakDaysLeft(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        gSaveBlock1Ptr->outbreakDaysLeft = gTasks[taskId].tInput;
+        PlaySE(SE_SELECT);
+
+        if (gTasks[taskId].tIsDynamic)
+        {
+            Debug_DestroyMenu_Full(taskId);
+        }
+        else
+        {
+            Debug_RemoveCallbackMenu();
+            DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+        }
+    }
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+    }
+}
+
+static void DebugAction_Outbreak_SetDaysLeft(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakDaysLeft;
+    gTasks[taskId].tDigit = 0;
+
+    gTasks[taskId].func = DebugAction_ChooseOutbreakDaysLeft_Select;
+    Debug_Display_OutbreakDaysLeft(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_Outbreak_SetDynamic(u8 taskId)
+{
+    Debug_CreateInputDisplayWindow(taskId);
+
+    gTasks[taskId].func = DebugAction_ChooseOutbreakSpecies_Select;
+    gTasks[taskId].tIsDynamic = TRUE;
+    gTasks[taskId].tDigit = 0;
+    if (gSaveBlock1Ptr->outbreakDaysLeft > 0)
+        gTasks[taskId].tInput = gSaveBlock1Ptr->outbreakPokemonSpecies;
+    else
+        gTasks[taskId].tInput = SPECIES_BULBASAUR;
+
+    enum Species species = gTasks[taskId].tInput;
+    if (!IsSpeciesEnabled(species))
+        species = SPECIES_NONE;
+    Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    Debug_ResetInputDisplayMonIcon(taskId, species);
+}
+
+#undef tIsDynamic
+
+// *******************************
 // Actions Flags and Vars
 static void Debug_Display_FlagInfo(u32 flag, u32 digit, u8 windowId)
 {
@@ -2242,7 +3036,8 @@ static void DebugAction_FlagsVars_FlagsSelect(u8 taskId)
     }
 }
 
-#define tVarValue  data[5]
+#define tVarValue  data[6]
+#define tTmpValue  data[7]
 
 static void DebugAction_FlagsVars_Vars(u8 taskId)
 {
@@ -2317,7 +3112,7 @@ static void DebugAction_FlagsVars_Select(u8 taskId)
         StringExpandPlaceholders(gStringVar4, sDebugText_FlagsVars_VariableValueSet);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 
-        gTasks[taskId].data[6] = gTasks[taskId].data[5]; //New value selector
+        gTasks[taskId].tTmpValue = gTasks[taskId].tVarValue; //New value selector
         gTasks[taskId].func = DebugAction_FlagsVars_SetValue;
     }
     else if (JOY_NEW(B_BUTTON))
@@ -2332,19 +3127,19 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
 {
     if (JOY_NEW(DPAD_UP))
     {
-        if (gTasks[taskId].data[6] + sPowersOfTen[gTasks[taskId].tDigit] <= 32000)
-            gTasks[taskId].data[6] += sPowersOfTen[gTasks[taskId].tDigit];
+        if (gTasks[taskId].tTmpValue + sPowersOfTen[gTasks[taskId].tDigit] <= 32000)
+            gTasks[taskId].tTmpValue += sPowersOfTen[gTasks[taskId].tDigit];
         else
-            gTasks[taskId].data[6] = 32000 - 1;
+            gTasks[taskId].tTmpValue = 32000 - 1;
 
-        if (gTasks[taskId].data[6] >= 32000)
-            gTasks[taskId].data[6] = 32000 - 1;
+        if (gTasks[taskId].tTmpValue >= 32000)
+            gTasks[taskId].tTmpValue = 32000 - 1;
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        gTasks[taskId].data[6] -= sPowersOfTen[gTasks[taskId].tDigit];
-        if (gTasks[taskId].data[6] < 0)
-            gTasks[taskId].data[6] = 0;
+        gTasks[taskId].tTmpValue -= sPowersOfTen[gTasks[taskId].tDigit];
+        if (gTasks[taskId].tTmpValue < 0)
+            gTasks[taskId].tTmpValue = 0;
     }
     if (JOY_NEW(DPAD_LEFT))
     {
@@ -2362,7 +3157,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        VarSet(gTasks[taskId].tInput, gTasks[taskId].data[6]);
+        VarSet(gTasks[taskId].tInput, gTasks[taskId].tTmpValue);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -2379,7 +3174,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
         ConvertIntToHexStringN(gStringVar2, gTasks[taskId].tInput, STR_CONV_MODE_LEFT_ALIGN, 4);
         StringExpandPlaceholders(gStringVar1, sDebugText_FlagsVars_VariableHex);
         StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].data[6], STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_VARIABLES);
+        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tTmpValue, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_VARIABLES);
         StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
         StringExpandPlaceholders(gStringVar4, sDebugText_FlagsVars_VariableValueSet);
@@ -2388,6 +3183,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
 }
 
 #undef tVarValue
+#undef tTmpValue
 
 static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
 {
@@ -2413,9 +3209,9 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
     // Add party Pokemon to Pokedex
     for (partyId = 0; partyId < PARTY_SIZE; partyId++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SANITY_HAS_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SANITY_HAS_SPECIES))
         {
-            species = GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SPECIES);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
         }
@@ -2613,8 +3409,7 @@ static void DebugAction_FlagsVars_CatchingOnOff(u8 taskId)
 // *******************************
 // Actions Give
 #define ITEM_TAG 0xFDF3
-#define tItemId    data[5]
-#define tSpriteId  data[6]
+#define tItemId    data[6]
 
 static void Debug_Display_ItemInfo(enum Item itemId, u32 digit, u8 windowId)
 {
@@ -2742,7 +3537,6 @@ static void DebugAction_Give_Item_SelectQuantity(u8 taskId)
 }
 
 #undef tItemId
-#undef tSpriteId
 
 //Pokemon
 static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
@@ -2762,8 +3556,7 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
     }
 }
 
-#define tIsComplex  data[5]
-#define tSpriteId   data[6]
+#define tIsComplex  data[6]
 #define tIterator   data[7]
 #define tIsEgg      data[8]
 
@@ -2807,7 +3600,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -2849,7 +3642,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -2891,7 +3684,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(gTasks[taskId].tInput))
         species = SPECIES_NONE;
     else
@@ -3358,7 +4151,7 @@ static void Debug_Display_MoveInfo(enum Move moveId, u32 iteration, u32 digit, u
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
     StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
     StringCopy(gStringVar4, COMPOUND_STRING("Move "));
-    ConvertIntToDecimalStringN(gStringVar3, iteration, STR_CONV_MODE_LEADING_ZEROS, 1);
+    ConvertIntToDecimalStringN(gStringVar3, iteration + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
     StringAppend(gStringVar4, gStringVar3);
     StringAppend(gStringVar4, COMPOUND_STRING(": "));
     ConvertIntToDecimalStringN(gStringVar3, moveId, STR_CONV_MODE_LEADING_ZEROS, 3);
@@ -3571,12 +4364,10 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 }
 
 #undef tIsComplex
-#undef tSpriteId
 #undef tIterator
 #undef tIsEgg
 
 //Decoration
-#define tSpriteId  data[6]
 
 static void Debug_Display_DecorationInfo(enum Item itemId, u32 digit, u8 windowId)
 {
@@ -3649,8 +4440,6 @@ static void DebugAction_Give_Decoration_SelectId(u8 taskId)
     }
 }
 
-#undef tSpriteId
-
 static void DebugAction_Give_MaxMoney(u8 taskId)
 {
     SetMoney(&gSaveBlock1Ptr->money, MAX_MONEY);
@@ -3722,14 +4511,29 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     SetMainCallback2(CB2_LoadMap);
 }
 
+void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId)
+{
+    DoDailyEvents(1);
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_LoadMap);
+}
+
 // *******************************
 // Actions PCBag
+
+static enum Species GetNextSpecies(enum Species species)
+{
+    do {
+        species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
+    } while (!IsSpeciesEnabled(species));
+    return species;
+}
 
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffinity
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    enum Species species = SPECIES_BULBASAUR;
+    enum Species species = GetNextSpecies(SPECIES_NONE);
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
     CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
@@ -3737,7 +4541,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
-        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++, species++)
+        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             if (!GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
             {
@@ -3746,6 +4550,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
                 SetBoxMonData(&boxMon, MON_DATA_SPECIES, &species);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
+                species = GetNextSpecies(species);
             }
         }
     }
@@ -3760,7 +4565,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    enum Species species = SPECIES_BULBASAUR;
+    enum Species species = GetNextSpecies(SPECIES_NONE);
     bool8 spaceAvailable = FALSE;
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
@@ -3775,7 +4580,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
                 SetBoxMonIVs(&boxMon, USE_RANDOM_IVS);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
-                species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
+                species = GetNextSpecies(species);
                 spaceAvailable = TRUE;
             }
         }
@@ -3872,7 +4677,7 @@ static void DebugAction_PCBag_ClearBoxes(u8 taskId)
 // Actions Sound
 static const u8 *const sSongNames[];
 
-#define tCurrentSong  data[5]
+#define tCurrentSong  data[6]
 
 static void DebugAction_Sound_SE(u8 taskId)
 {
@@ -4720,14 +5525,14 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    enum Species species = GetMonData(&gParties[B_TRAINER_0][gSpecialVar_0x8004], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
 }
 
-#define tPartyId               data[5]
-#define tFriendship            data[6]
+#define tPartyId               data[6]
+#define tFriendship            data[7]
 
 static void Debug_Display_FriendshipInfo(s32 oldFriendship, s32 newFriendship, u32 digit, u8 windowId)
 {
@@ -4744,7 +5549,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tFriendship = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -4762,7 +5567,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
 static void DebugNativeStep_Party_SetFriendshipMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 friendship = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
+    u32 friendship = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
 
     // Display initial flag
     Debug_Display_FriendshipInfo(friendship, friendship, 0, windowId);
@@ -4786,7 +5591,7 @@ void DebugNative_Party_SetFriendship(void)
 
 #undef tFriendship
 
-#define tStrain            data[6]
+#define tStrain            data[7]
 
 static void Debug_Display_PokerusDaysLeftInfo(s32 daysLeft, s32 strain, u32 digit, u8 windowId)
 {
@@ -4808,7 +5613,7 @@ static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
         DebugNativeStep_CloseDebugWindow(taskId);
         return;
     }
@@ -4839,8 +5644,8 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tStrain = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
-        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
         Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;
         return;
@@ -4861,7 +5666,7 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
 static void DebugNativeStep_Party_SetPokerusMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 strain = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
+    u32 strain = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
 
     // Display initial flag
     Debug_Display_PokerusStrainInfo(strain, 0, windowId);
@@ -4896,10 +5701,10 @@ static void DebugAction_Party_ClearPokerus(u8 taskId)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;
         u32 data = 0;
-        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS, &data);
+        SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS, &data);
     }
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
@@ -4932,7 +5737,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4941,8 +5746,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_1], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_A], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)

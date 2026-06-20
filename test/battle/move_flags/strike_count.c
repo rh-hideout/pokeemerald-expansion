@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Two strike count turns a move into a 2-hit move")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 

@@ -387,7 +387,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     if (monInfo->boxId == TOTAL_BOXES_COUNT)
     {
         // Get info for party mon
-        struct Pokemon *mon = &gParties[B_TRAINER_0][monInfo->monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monInfo->monId];
         GetMonData(mon, MON_DATA_NICKNAME, nick);
         *level = GetLevelFromMonExp(mon);
         *gender = GetMonGender(mon);
@@ -412,7 +412,7 @@ static void GetMonSpeciesPersonalityShiny(enum Species *species, u32 *personalit
     if (monInfo->boxId == TOTAL_BOXES_COUNT)
     {
         // Get info for party mon
-        struct Pokemon *mon = &gParties[B_TRAINER_0][monInfo->monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monInfo->monId];
         *species = GetMonData(mon, MON_DATA_SPECIES);
         *personality = GetMonData(mon, MON_DATA_PERSONALITY);
         *isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
@@ -434,7 +434,7 @@ static u32 GetCurrMonRibbonCount(void)
     struct PokenavMonListItem *monInfo = &mons->monData[mons->currIndex];
 
     if (monInfo->boxId == TOTAL_BOXES_COUNT)
-        return GetMonData(&gParties[B_TRAINER_0][monInfo->monId], MON_DATA_RIBBON_COUNT);
+        return GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_RIBBON_COUNT);
     else
         return GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_RIBBON_COUNT);
 }
@@ -447,7 +447,7 @@ static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *list)
     struct PokenavMonListItem *monInfo = &mons->monData[mons->currIndex];
 
     if (monInfo->boxId == TOTAL_BOXES_COUNT)
-        ribbonFlags = GetMonData(&gParties[B_TRAINER_0][monInfo->monId], MON_DATA_RIBBONS);
+        ribbonFlags = GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_RIBBONS);
     else
         ribbonFlags = GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_RIBBONS);
 
@@ -871,9 +871,9 @@ static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *men
     PrintRibbbonsSummaryMonInfo(menu);
 }
 
-static const u8 sMaleIconString[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sFemaleIconString[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
-static const u8 sGenderlessIconString[] = _("{UNK_SPACER}");
+static const u8 sText_MaleSymbol[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
+static const u8 sText_FemaleSymbol[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
+static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
 
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
 {
@@ -887,13 +887,13 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
     switch (gender)
     {
     case MON_MALE:
-        genderTxt = sMaleIconString;
+        genderTxt = sText_MaleSymbol;
         break;
     case MON_FEMALE:
-        genderTxt = sFemaleIconString;
+        genderTxt = sText_FemaleSymbol;
         break;
     default:
-        genderTxt = sGenderlessIconString;
+        genderTxt = sText_NoGenderSymbol;
         break;
     }
     AddTextPrinterParameterized(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 60), gStringVar3, 0, 1, TEXT_SKIP_DRAW, NULL);

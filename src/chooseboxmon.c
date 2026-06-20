@@ -175,9 +175,9 @@ void ChooseBoxMon(struct ScriptContext *ctx)
 void PickPartyMon(struct ScriptContext *ctx)
 {
     sSelectionType = ScriptReadByte(ctx);
-    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
-        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gPlayerParty[i].box))
+        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gParties[B_TRAINER_PLAYER][i].box))
         {
             gSpecialVar_0x8004 = i;
             return;
@@ -225,7 +225,7 @@ static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
     if (partyIndex == PC_MON_CHOSEN)
         boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     else
-        boxmon = &(gParties[B_TRAINER_0][partyIndex].box);
+        boxmon = &(gParties[B_TRAINER_PLAYER][partyIndex].box);
     return boxmon;
 }
 
@@ -250,6 +250,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
             return LEARN_MOVE;
         case 1: // No
         case MENU_B_PRESSED:
+            gSpecialVar_Result = FALSE;
             return LEARN_MOVE_END;
         }
         return state;

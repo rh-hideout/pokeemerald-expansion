@@ -16,10 +16,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro damagecalc
-	.byte B_SCR_OP_DAMAGECALC
-	.endm
-
 	.macro typecalc
 	.byte B_SCR_OP_TYPECALC
 	.endm
@@ -82,10 +78,6 @@
 	.macro printfromtable ptr:req
 	.byte B_SCR_OP_PRINTFROMTABLE
 	.4byte \ptr
-	.endm
-
-	.macro setpreattackadditionaleffect
-	.byte B_SCR_OP_SETPREATTACKADDITIONALEFFECT
 	.endm
 
 	.macro setadditionaleffects
@@ -712,14 +704,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro statbuffchange battler:req, flags:req, failInstr:req, stats=0
-	.byte B_SCR_OP_STATBUFFCHANGE
-	.byte \battler
-	.2byte \flags
-	.4byte \failInstr
-	.byte \stats
-	.endm
-
 	.macro normalisebuffs
 	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
@@ -1265,12 +1249,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro jumpifshelltrap battler:req, jumpInstr:req
-	callnative BS_JumpIfShellTrap
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
 	.macro setterrain failInstr:req
 	callnative BS_SetTerrain
 	.4byte \failInstr
@@ -1372,6 +1350,10 @@
 
 	.macro trytrainerslidedynamaxmsg
 	callnative BS_TryTrainerSlideDynamaxMsg
+	.endm
+
+	.macro trytrainerslideteramsg
+	callnative BS_TryTrainerSlideTeraMsg
 	.endm
 
 	.macro tryhealpulse failInstr:req
@@ -1826,6 +1808,15 @@
 	.byte \battler
 	.endm
 
+	.macro effectsafterformchange
+	callnative BS_EffectsAfterFormChange
+	.endm
+
+	.macro abilityonformchange battler:req
+	callnative BS_AbilityOnFormChange
+	.byte \battler
+	.endm
+
 	.macro instanthpdrop
 	callnative BS_InstantHpDrop
 	.endm
@@ -1900,6 +1891,10 @@
 
 	.macro updateabilitypopup
 	callnative BS_UpdateAbilityPopup
+	.endm
+
+	.macro waitabilitypopup
+	callnative BS_WaitAbilityPopup
 	.endm
 
 	.macro jumpiftargetally jumpInstr:req
@@ -2070,7 +2065,9 @@
 	.endm
 
 	.macro jumpifsafeguard jumpInstr:req
+	jumpiftargetally 2f
 	jumpifability BS_ATTACKER, ABILITY_INFILTRATOR, 1f
+	2:
 	jumpifsideaffecting BS_TARGET, SIDE_STATUS_SAFEGUARD, \jumpInstr
 	1:
 	.endm
@@ -2109,4 +2106,34 @@
 
 	.macro trywakebattlersuproar
 	callnative BS_TryWakeBattlersUproar
+	.endm
+
+	.macro catchaftervictory
+	callnative BS_CatchAfterVictory
+	.endm
+
+	.macro jumpifnoballs jumpInstr:req
+	callnative BS_JumpIfNoBalls
+	.4byte \jumpInstr
+	.endm
+
+	.macro handlefailedvictorycatch
+	callnative BS_HandleFailedVictoryCatch
+	.endm
+
+	.macro catchornot
+	callnative BS_CatchOrNot
+	.endm
+	
+	.macro showitempopup battler:req
+	callnative BS_ShowItemPopup
+	.byte \battler
+	.endm
+
+	.macro destroyitempopup
+	callnative BS_DestroyItemPopup
+	.endm
+
+	.macro multihitplurality
+	callnative BS_MultiHitPlurality
 	.endm

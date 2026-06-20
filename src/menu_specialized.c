@@ -716,7 +716,7 @@ void InitMoveRelearnerWindows(bool32 useContestWindow)
     for (i = 0; i < ARRAY_COUNT(sMoveRelearnerWindowTemplates) - 1; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(1));
 
-    if (!useContestWindow)
+    if (C_HIDE_CONTEST_DATA || !useContestWindow)
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_BATTLE, FALSE, 0x1, 0xE);
     else
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_CONTEST, FALSE, 1, 0xE);
@@ -877,9 +877,9 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
     if (boxId == TOTAL_BOXES_COUNT) // Party mon.
     {
         if (request == MON_DATA_NICKNAME || request == MON_DATA_OT_NAME)
-            ret = GetMonData(&gParties[B_TRAINER_0][monId], request, dst);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request, dst);
         else
-            ret = GetMonData(&gParties[B_TRAINER_0][monId], request);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request);
     }
     else
     {
@@ -895,7 +895,8 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
 // Gets the name/gender/level string for the condition menu
 static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
 {
-    u16 box, mon, species, level, gender;
+    u16 box, mon, level, gender;
+    enum Species species;
     struct BoxPokemon *boxMon;
     u8 *str;
 
@@ -916,8 +917,8 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     species = GetBoxOrPartyMonData(box, mon, MON_DATA_SPECIES, NULL);
     if (box == TOTAL_BOXES_COUNT) // Party mon.
     {
-        level = GetMonData(&gParties[B_TRAINER_0][mon], MON_DATA_LEVEL);
-        gender = GetMonGender(&gParties[B_TRAINER_0][mon]);
+        level = GetMonData(&gParties[B_TRAINER_PLAYER][mon], MON_DATA_LEVEL);
+        gender = GetMonGender(&gParties[B_TRAINER_PLAYER][mon]);
     }
     else
     {

@@ -55,8 +55,8 @@ enum
 
 static const u32 sBgTiles_PoweredBy[] = INCGFX_U32("graphics/expansion_intro/powered_by.png", ".4bpp.smol");
 static const u32 sBgTiles_RhhCredits[] = INCGFX_U32("graphics/expansion_intro/rhh_credits.png", ".8bpp.smol");
-static const u32 sBgMap_PoweredBy[] = INCBIN_U32("graphics/expansion_intro/powered_by.bin.smolTM");
-static const u32 sBgMap_RhhCredits[] = INCBIN_U32("graphics/expansion_intro/rhh_credits.bin.smolTM");
+static const u32 sBgMap_PoweredBy[] = INCGFX_U32("graphics/expansion_intro/powered_by.bin", ".smolTM");
+static const u32 sBgMap_RhhCredits[] = INCGFX_U32("graphics/expansion_intro/rhh_credits.bin", ".smolTM");
 static const u16 sBgPal_Credits[] = INCGFX_U16("graphics/expansion_intro/credits.pal", ".gbapal");
 static const u32 sSpriteTiles_DizzyEgg[] = INCGFX_U32("graphics/expansion_intro/sprites/dizzy_egg.png", ".4bpp.smol");
 static const u32 sSpriteTiles_Porygon[] = INCGFX_U32("graphics/expansion_intro/sprites/porygon.png", ".4bpp.smol");

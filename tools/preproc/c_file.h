@@ -44,8 +44,11 @@ private:
     char* m_buffer;
     long m_pos;
     long m_size;
-    long m_lineNum;
-    std::string m_filename;
+    struct LogicalLocation {
+        std::string filename;
+        long lineNum;
+        bool acceptLineMarker;
+    } m_location;
     bool m_isStdin;
     std::string m_graphicsRoot;
     std::map<std::vector<unsigned char>, std::uint64_t> m_compoundStrings;
@@ -53,6 +56,7 @@ private:
 
     bool ConsumeHorizontalWhitespace();
     bool ConsumeNewline();
+    void Newline();
     void SkipWhitespace();
     std::vector<unsigned char> ConvertString();
     void TryConvertString();

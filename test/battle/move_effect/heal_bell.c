@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
         STATUS_ICON(playerRight, none: TRUE);
         NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
         for (i = 0; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
         case STATUS1_FROSTBITE:    STATUS_ICON(playerLeft, frostbite: FALSE); STATUS_ICON(playerRight, frostbite: FALSE); break;
         }
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][j], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -197,7 +197,8 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 
 SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of config")
 {
-    u32 config, ability;
+    u32 config;
+    enum Ability ability;
 
     PARAMETRIZE { config = GEN_4, ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { config = GEN_5, ability = ABILITY_SOUNDPROOF; }
