@@ -39,7 +39,6 @@ enum MonData {
     MON_DATA_HIDDEN_NATURE,
     MON_DATA_HP_LOST,
     MON_DATA_DAYS_SINCE_FORM_CHANGE,
-    MON_DATA_ENCRYPT_SEPARATOR,
     MON_DATA_NICKNAME,
     MON_DATA_NICKNAME10,
     MON_DATA_SPECIES,
@@ -274,10 +273,18 @@ struct BoxPokemon
     u16 shinyModifier:1;
     u16 unused_1E:1;
 
-    union
+    union BoxPokemonSecure
     {
         u32 raw[(NUM_SUBSTRUCT_BYTES * 4) / 4]; // *4 because there are 4 substructs, /4 because it's u32, not u8
-        union PokemonSubstruct substructs[4];
+
+        union PokemonSubstruct substructs[4] __attribute__((deprecated("Use substruct0 instead of substructs[i].type0, etc")));
+
+        struct {
+            struct PokemonSubstruct0 substruct0;
+            struct PokemonSubstruct1 substruct1;
+            struct PokemonSubstruct2 substruct2;
+            struct PokemonSubstruct3 substruct3;
+        };
     } secure;
 };
 
@@ -956,6 +963,10 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
+void EncryptMon(struct Pokemon *mon);
+void DecryptMon(struct Pokemon *mon);
+void EncryptBoxMon(struct BoxPokemon *boxMon);
+void DecryptBoxMon(struct BoxPokemon *boxMon);
 
 static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
 {

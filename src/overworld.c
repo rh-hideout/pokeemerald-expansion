@@ -131,7 +131,7 @@ static void InitObjectEventsLocal(void);
 static void InitOverworldGraphicsRegisters(void);
 static u8 GetSpriteForLinkedPlayer(u8);
 static u16 KeyInterCB_SendNothing(u32);
-static void ResetMirageTowerAndSaveBlockPtrs(void);
+static void ResetMirageTowerAndHeap(void);
 static void ResetScreenForMapLoad(void);
 static void OffsetCameraFocusByLinkPlayerId(void);
 static void SpawnLinkPlayers(void);
@@ -2218,7 +2218,7 @@ static bool32 LoadMapInStepsLink(u8 *state)
         InitOverworldBgs();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        ResetMirageTowerAndSaveBlockPtrs();
+        ResetMirageTowerAndHeap();
         ResetScreenForMapLoad();
         (*state)++;
         break;
@@ -2300,7 +2300,7 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
         (*state)++;
         break;
     case 1:
-        ResetMirageTowerAndSaveBlockPtrs();
+        ResetMirageTowerAndHeap();
         ResetScreenForMapLoad();
         (*state)++;
         break;
@@ -2372,7 +2372,7 @@ static bool32 ReturnToFieldLocal(u8 *state)
     switch (*state)
     {
     case 0:
-        ResetMirageTowerAndSaveBlockPtrs();
+        ResetMirageTowerAndHeap();
         ResetScreenForMapLoad();
         ResumeMap(FALSE);
         InitObjectEventsReturnToField();
@@ -2407,7 +2407,7 @@ static bool32 ReturnToFieldLink(u8 *state)
     {
     case 0:
         FieldClearVBlankHBlankCallbacks();
-        ResetMirageTowerAndSaveBlockPtrs();
+        ResetMirageTowerAndHeap();
         ResetScreenForMapLoad();
         (*state)++;
         break;
@@ -2483,10 +2483,10 @@ static void DoMapLoadLoop(u8 *state)
     while (!LoadMapInStepsLocal(state, FALSE));
 }
 
-static void ResetMirageTowerAndSaveBlockPtrs(void)
+static void ResetMirageTowerAndHeap(void)
 {
     ClearMirageTowerPulseBlend();
-    MoveSaveBlocks_ResetHeap();
+    ResetHeap();
 }
 
 static void ResetScreenForMapLoad(void)

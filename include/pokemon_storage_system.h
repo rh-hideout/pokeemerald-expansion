@@ -26,8 +26,6 @@ struct PokemonStorage
     /*0x8432*/ struct Pokemon fusions[MAX_FUSION_STORAGE];
 };
 
-extern struct PokemonStorage *gPokemonStoragePtr;
-
 void DrawTextWindowAndBufferTiles(const u8 *string, void *dst, u8 zero1, u8 zero2, s32 bytesToBuffer);
 u8 CountMonsInBox(u8 boxId);
 s16 GetFirstFreeBoxSpot(u8 boxId);

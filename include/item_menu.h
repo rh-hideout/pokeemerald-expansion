@@ -122,6 +122,6 @@ void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, TaskFunc callback);
 void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback);
 void CloseItemMessage(u8 taskId);
 void CB2_ChooseBall(void);
-void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type);
+void SortItemsInBag(const struct BagPocket *pocket, enum BagSortOptions type);
 
 #endif //GUARD_ITEM_MENU_H

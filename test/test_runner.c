@@ -212,7 +212,8 @@ top:
 
         gTestRunnerState.filterMode = DetectFilterMode(gTestRunnerArgv);
 
-        MoveSaveBlocks_ResetHeap();
+        ResetHeap();
+        SetSaveBlocksPointers();
 
         gIntrTable[7] = Intr_Timer2;
 

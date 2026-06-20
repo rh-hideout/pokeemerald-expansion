@@ -104,7 +104,7 @@ struct TmHmIndexKey
 
 extern const u8 gQuestionMarksItemName[];
 extern const struct ItemInfo gItemsInfo[];
-extern struct BagPocket gBagPockets[];
+extern const struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
 #define UNPACK_ITEM_TO_TM_INDEX(_tm) case CAT(ITEM_TM_, _tm): return CAT(ENUM_TM_HM_, _tm) + 1;
@@ -212,10 +212,10 @@ static inline enum Item BerryTypeToItemId(enum BerryId berryId)
 #undef GET_BERRY_ID
 #undef GET_BERRY_ITEM_ID
 
-void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
-struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
+void BagPocket_SetSlotData(const struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
+struct ItemSlot BagPocket_GetSlotData(const struct BagPocket *pocket, u32 pocketPos);
 
-static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, enum Item itemId, u16 quantity)
+static inline void BagPocket_SetSlotItemIdAndCount(const struct BagPocket *pocket, u32 pocketPos, enum Item itemId, u16 quantity)
 {
     BagPocket_SetSlotData(pocket, pocketPos, (struct ItemSlot) {itemId, quantity});
 }
@@ -236,7 +236,6 @@ static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 
 }
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
-void SetBagItemsPointers(void);
 u8 *CopyItemName(enum Item itemId, u8 *dst);
 u8 *CopyItemNameHandlePlural(enum Item itemId, u8 *dst, u32 quantity);
 bool32 IsBagPocketNonEmpty(enum Pocket pocketId);
@@ -247,7 +246,7 @@ bool32 CheckBagHasSpace(enum Item itemId, u16 count);
 u32 GetFreeSpaceForItemInBag(enum Item itemId);
 bool32 AddBagItem(enum Item itemId, u16 count);
 bool32 RemoveBagItem(enum Item itemId, u16 count);
-void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count);
+void RemoveBagItemFromSlot(const struct BagPocket *pocket, u16 slotId, u16 count);
 u8 CountUsedPCItemSlots(void);
 bool32 CheckPCHasItem(enum Item itemId, u16 count);
 bool32 AddPCItem(enum Item itemId, u16 count);
