@@ -42,15 +42,34 @@ EventScript_ExampleScript_Text_Choice3:
 Here is a look at the macro and it's arguments:
 `dynmultichoice left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, initialSelected:req, callbacks:req argv:vararg`
 
-| Argument        | Expected Value | Explanation                                                                                                  |
-| :---------------:| :--------------:| --------------------------------------------------------------------------------------------------------------|
-| left            | Integer (0-26) | Determines the **x-coordinate** of where your menu starts from its top-left corner<br>(explanation below)    |
-| top             | Integer (0-19) | Determines the **y-coordinate** of where your menu starts from its top-left corner<br>(explanation below)    |
-| ignoreBPress    | True/False     | Controls whether the player **can exit using the B button**. If set to **true**, the player **cannot exit**. |
-| maxBeforeScroll | Integer        | Controls **how many options are shown** before the player has to scroll.                                     |
-| initialSelected | Integer        | **Chooses which option** (from a 0-index) **is already selected** upon opening the menu.                     |
-| callbacks       | Constant       | Designates **which callback** is. Elaborated more later.                                                     |
-| argv            | String         | **The choices** that the player can choose from the menu.                                                    |
+#### left
+- **Expected Value:** Integer (0-26)
+- Determines the **x-coordinate** of where your menu starts from its top-left corner (explanation below)
+
+#### top
+- **Expected Value:** Integer (0-19)
+- Determines the **y-coordinate** of where your menu starts from its top-left corner (explanation below)
+
+#### ignoreBPress
+- **Expected Value:**True/False
+- Controls whether the player **can exit using the B button**. If set to **true**, the player **cannot exit**. |
+
+#### maxBeforeScroll
+- **Expected Value:**Integer
+- Controls **how many options are shown** before the player has to scroll.                                     |
+
+#### initialSelected
+- **Expected Value:**Integer
+- **Chooses which option** (from a 0-index) **is already selected** upon opening the menu.                     |
+
+#### callbacks
+- **Expected Value:**Constant
+- Designates **which callback** is used. Elaborated more later.                                                     |
+
+#### argv
+- **Expected Value:**String
+- **The choices** that the player can choose from the menu.                                                    |
+
 
 *How to position arguments `left` and `top`*:
 
@@ -68,15 +87,30 @@ Let's take a look at the `dynmultichoice` from earlier:
 
 `dynmultichoice 0, 0, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_ExampleScript_Text_Choice1, EventScript_ExampleScript_Text_Choice2, EventScript_ExampleScript_Text_Choice3`
 
-| Argument        | Value                                                                                                                      | Explanation                                                                                                    |
-| :----------------| :---------------------------------------------------------------------------------------------------------------------------| ----------------------------------------------------------------------------------------------------------------|
-| left            | 0                                                                                                                          | X Coordinate will be on the first tile (8x8 pixels) of the x-axis                                              |
-| top             | 0                                                                                                                          | Y Coordinate will be on the first tile (8x8 pixels) of the y-axis                                              |
-| ignoreBPress    | FALSE                                                                                                                      | Pressing B will exit the multichoice.                                                                          |
-| maxBeforeScroll | 2                                                                                                                          | Shows 2 options before player has to scroll. This means the 3rd option is hidden until scrolled to.            |
-| initialSelected | 0                                                                                                                          | The first option is selected when the menu is opened through the script.                                       |
-| callbacks       | DYN_MULTICHOICE_CB_NONE                                                                                                    | No callback will be used.                                                                                      |
-| argv            | EventScript_ExampleScript_Text_Choice1<br>EventScript_ExampleScript_Text_Choice2<br>EventScript_ExampleScript_Text_Choice3 | The choices that the player can choose from the menu. These text scripts are for what name is being displayed. |
+#### left
+- **Value:** 0
+- **Explanation:** X Coordinate will be on the first tile (8x8 pixels) of the x-axis
+#### top
+- **Value:** 0
+- **Explanation:** Y Coordinate will be on the first tile (8x8 pixels) of the y-axis
+#### ignoreBPress
+- **Value:** FALSE
+- **Explanation:** Pressing B will exit the multichoice.
+#### maxBeforeScroll
+- **Value:** 2
+- **Explanation:** Shows 2 options before player has to scroll. This means the 3rd option is hidden until scrolled to.
+#### initialSelected
+- **Value:** 0
+- **Explanation:** The first option is selected when the menu is opened through the script.                                      
+#### callbacks
+- **Value:** DYN_MULTICHOICE_CB_NONE
+- **Explanation:** No callback will be used.
+#### argv
+- **Values:**<br>
+  - EventScript_ExampleScript_Text_Choice1<br>
+  - EventScript_ExampleScript_Text_Choice2<br>
+  - EventScript_ExampleScript_Text_Choice3<br>
+- **Explanation:** The choices that the player can choose from the menu. These text scripts are for what name is being displayed.
 
 In a **Dynamic multichoice** each option has an **ID**, which is their value. A chosen option's ID is stored in `VAR_RESULT`. *__The IDs start at index 0__* for regular **`dynmultichoice`**. If a player chooses the **first option**, `VAR_RESULT` equals **0**. If they chose the **second option**, `VAR_RESULT` equals **1**, and so on. The best way to use these is by following with a **`switch`** or **`compare`**, like the following examples:
 
@@ -206,17 +240,41 @@ As you can see, they are somewhat different, but share much of the same argument
 `dynmultipush name:req, id:req`<br>
 `dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req`
 
-| Argument        | Expected Value       | Explanation                                                                                           |
-| :---------------:| :--------------------:| -------------------------------------------------------------------------------------------------------|
-| name            | String               | One of the choices that the player can choose from the menu.                                          |
-| id              | Integer/Constants    | What value `VAR_RESULT` is set to when this option is chosen.                                         |
-| left            | Integer (0-26)       | Determines the x-coordinate of where your menu starts from its top-left corner<br>(explanation below) |
-| top             | Integer (0-19)       | Determines the y-coordinate of where your menu starts from its top-left corner<br>(explanation below) |
-| ignoreBPress    | True/False           | Controls whether the player can exit using the B button. If set to true, the player cannot exit.      |
-| maxBeforeScroll | Integer (Default: 6) | Shows how many options are shown before the player has to scroll.                                     |
-| initialSelected | Integer              | Chooses which option (from a 0-index) is already selected upon opening the menu.                      |
-| shouldSort      | True/False           | Determines whether the options are sorted in ascending order according to their ID.                   |
-| callbacks       | Constant             | Designates which callback constants are used. Elaborated more later                                   |
+#### name
+- **Expected Value:** String  
+- **Description:** One of the choices that the player can choose from the menu.     
+
+#### id  
+- **Expected Value:** Integer/Constants   
+- **Description:** What value `VAR_RESULT` is set to when this option is chosen.    
+
+#### left
+- **Expected Value:** Integer (0-26)      
+- **Description:** Determines the x-coordinate of where your menu starts from its top-left corner<br>(explanation below)
+
+#### top 
+- **Expected Value:** Integer (0-19)      
+- **Description:** Determines the y-coordinate of where your menu starts from its top-left corner<br>(explanation below)
+
+#### ignoreBPress    
+- **Expected Value:** True/False          
+- **Description:** Controls whether the player can exit using the B button. If set to true, the player cannot exit.     
+
+#### maxBeforeScroll 
+- **Expected Value:** Integer (Default: 6)
+- **Description:** Shows how many options are shown before the player has to scroll.
+
+#### initialSelected 
+- **Expected Value:** Integer 
+- **Description:** Chooses which option (from a 0-index) is already selected upon opening the menu.         
+
+#### shouldSort      
+- **Expected Value:** True/False          
+- **Description:** Determines whether the options are sorted in ascending order according to their ID.      
+
+#### callbacks       
+- **Expected Value:** Constant
+- **Description:** Designates which callback constants are used. Elaborated more later          
 
 Some of the use cases for using `dynmultipush` and `dynmultistack` are the following:
 

@@ -228,12 +228,11 @@ enum
 
 enum 
 {
-    DYN_MULTICHOICE_CB_DEBUG      = 0,
-    DYN_MULTICHOICE_CB_SHOW_ITEM  = 1,
+    DYN_MULTICHOICE_CB_DEBUG,
+    DYN_MULTICHOICE_CB_SHOW_ITEM,
     //add new callback choices after this comment!
     
-    DYN_MULTICHOICE_CB_NONE       = 255,
-    //dont add anymore callback choices unless you know what you're doing!
+    DYN_MULTICHOICE_CB_NONE,
 };
 
 
