@@ -211,6 +211,7 @@ static u32 GetVariationsNumber(enum Move move, bool8 isDouble)
 
 static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2, u32 variation)
 {
+    DebugPrintf("Move used: %d", move);
     enum BattleMoveEffects effect = GetMoveEffect(move);
     // Setup turn
     if (effect == EFFECT_SNORE
@@ -407,6 +408,10 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         TURN { MOVE(attacker, move, target: target); }
         TURN { MOVE(attacker, move, target: target); }
         TURN { MOVE(attacker, MOVE_LAST_RESORT, target: attacker); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_REFRESH || gMovesInfo[move].effect == EFFECT_PSYCHO_SHIFT)
+    {
+        TURN { MOVE(attacker, move, target: target, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     }
 }
 

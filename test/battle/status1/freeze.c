@@ -1,9 +1,9 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed (Gen9-)")
+SINGLE_BATTLE_TEST("Freeze has a chance of being thawed")
 {
-    PASSES_RANDOMLY(20, 100, RNG_FROZEN);
+    PASSES_RANDOMLY(GetConfig(B_FREEZE_TURNS) >= GEN_CHAMPIONS ? 75 : 80, 100, RNG_FROZEN);
     GIVEN {
         WITH_CONFIG(B_FREEZE_TURNS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }

@@ -12,12 +12,7 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed targets behind substi
         PLAYER(SPECIES_CROBAT) { Ability(ability); }
         OPPONENT(SPECIES_SEISMITOAD) { Status1(STATUS1_PARALYSIS); }
     } WHEN {
-        if (B_PARALYSIS_CHANCE >= GEN_CHAMPIONS)
-        {
-            TURN { MOVE(opponent, MOVE_SUBSTITUTE, WITH_RNG(RNG_PARALYSIS, FALSE)); MOVE(player, MOVE_CELEBRATE); }
-        } else {
-            TURN { MOVE(opponent, MOVE_SUBSTITUTE, WITH_RNG(RNG_PARALYSIS, TRUE)); MOVE(player, MOVE_CELEBRATE); }
-        }
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE, WITH_RNG(RNG_PARALYSIS, FALSE)); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SMELLING_SALTS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SMELLING_SALTS, player);
