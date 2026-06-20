@@ -532,7 +532,7 @@ void PrintAgbTrack(std::vector<Event>& events)
             PrintOp(event.time, "BEND  ", "c_v%+d", event.param2 - 64);
             break;
         case EventType::Controller:
-            foundCondJump = PrintControllerOp(event);
+            foundCondJump |= PrintControllerOp(event);
             break;
         default:
             PrintWait(event.time);
