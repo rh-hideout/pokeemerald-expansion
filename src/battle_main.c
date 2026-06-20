@@ -481,7 +481,7 @@ void CB2_InitBattle(void)
     AllocateMonSpritesGfx();
     RecordedBattle_ClearFrontierPassFlag();
 
-#if TESTIN
+#if TESTING
     gLoadFail = FALSE;
 #endif // TESTING
 
