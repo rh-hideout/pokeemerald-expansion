@@ -23,9 +23,9 @@ static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite);
 static void ClearDowsingColor(struct Sprite *sprite);
 static void PlayDowseSound(u32 dowseState);
 
-const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_brendan.4bpp");
-const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_may.4bpp");
-const u16 gFieldEffectPal_ORASDowsing[] = INCBIN_U16("graphics/field_effects/palettes/oras_dowsing.gbapal");
+const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_brendan.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_may.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gFieldEffectPal_ORASDowsing[] = INCGFX_U16("graphics/field_effects/palettes/oras_dowsing.pal", ".gbapal");
 
 static const struct SpriteFrameImage sPicTable_ORASDowsingBrendan[] = {
     overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingBrendan, 2, 4),

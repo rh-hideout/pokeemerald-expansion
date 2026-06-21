@@ -19,6 +19,7 @@
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
+#include "evolution_scene.h"
 #include "fake_rtc.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
@@ -64,6 +65,7 @@
 #include "battle.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/party_menu.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -85,10 +87,6 @@ extern const u8 *gStdScripts_End[];
 
 static void CloseBrailleWindow(void);
 static void DynamicMultichoiceSortList(struct ListMenuItem *items, u32 count);
-
-// This is defined in here so the optimizer can't see its value when compiling
-// script.c.
-void *const gNullScriptPtr = NULL;
 
 static const u8 sScriptConditionTable[6][3] =
 {
@@ -803,13 +801,6 @@ static bool8 IsPaletteNotActive(void)
         return TRUE;
     else
         return FALSE;
-}
-
-// pauses script until palette fade inactive
-bool8 ScrFunc_WaitPaletteNotActive(struct ScriptContext *ctx)
-{
-    SetupNativeScript(ctx, IsPaletteNotActive);
-    return TRUE;
 }
 
 bool8 ScrCmd_fadescreen(struct ScriptContext *ctx)
@@ -2132,7 +2123,7 @@ bool8 ScrCmd_bufferleadmonspeciesname(struct ScriptContext *ctx)
 
     u8 *dest = sScriptStringVars[stringVarIndex];
     u8 partyIndex = GetLeadMonIndex();
-    enum Species species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_SPECIES);
     StringCopy(dest, GetSpeciesName(species));
     return FALSE;
 }
@@ -2154,7 +2145,7 @@ bool8 ScrCmd_bufferpartymonnick(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, sScriptStringVars[stringVarIndex]);
+    GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_NICKNAME, sScriptStringVars[stringVarIndex]);
     StringGet_Nickname(sScriptStringVars[stringVarIndex]);
     return FALSE;
 }
@@ -2320,10 +2311,10 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
     move = FieldMove_GetMoveId(fieldMove);
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], move) == TRUE)
+        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG) && MonKnowsMove(&gParties[B_TRAINER_PLAYER][i], move) == TRUE)
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;
@@ -2453,9 +2444,8 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_TRAINERBATTLE);
-
-    TrainerBattleLoadArgs(ctx->scriptPtr);
-    ctx->scriptPtr = BattleSetup_ConfigureTrainerBattle(ctx->scriptPtr);
+    
+    ConfigureTrainerBattle(ctx);
     return FALSE;
 }
 
@@ -2758,6 +2748,42 @@ bool8 ScrCmd_setmetatile(struct ScriptContext *ctx)
     return FALSE;
 }
 
+void NativeFunc_SetMetatileInRange(struct ScriptContext *ctx)
+{
+    u8 xmin = ScriptReadByte(ctx);
+    u8 ymin = ScriptReadByte(ctx);
+    u8 xmax = ScriptReadByte(ctx);
+    u8 ymax = ScriptReadByte(ctx);
+    u16 metatileId = VarGet(ScriptReadHalfword(ctx));
+    bool8 hasCollision = ScriptReadByte(ctx);
+    u8 elevation = ScriptReadByte(ctx);
+    u32 temp;
+    
+    if (xmin > xmax)
+        SWAP(xmin, xmax, temp);
+
+    if (ymin > ymax)
+        SWAP(ymin, ymax, temp);
+    xmin += MAP_OFFSET;
+    ymin += MAP_OFFSET;
+    xmax += MAP_OFFSET;
+    ymax += MAP_OFFSET;
+
+    // try set impassable
+    if (hasCollision)
+        metatileId |= MAPGRID_COLLISION_MASK;
+
+    // set elevation
+    if (elevation < 15)
+        metatileId |= (elevation << MAPGRID_ELEVATION_SHIFT);
+
+    for (u32 i = xmin; i <= xmax; i++)
+    {
+        for (u32 j = ymin; j <= ymax; j++)
+            MapGridSetMetatileEntryAt(i, j, metatileId);
+    }
+}
+
 bool8 ScrCmd_opendoor(struct ScriptContext *ctx)
 {
     u16 x = VarGet(ScriptReadHalfword(ctx));
@@ -2956,7 +2982,7 @@ bool8 ScrCmd_setmodernfatefulencounter(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
-    SetMonData(&gPlayerParty[partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
+    SetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
     return FALSE;
 }
 
@@ -2966,7 +2992,7 @@ bool8 ScrCmd_checkmodernfatefulencounter(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER);
+    gSpecialVar_Result = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MODERN_FATEFUL_ENCOUNTER);
     return FALSE;
 }
 
@@ -3011,7 +3037,7 @@ bool8 ScrCmd_setmonmetlocation(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 
     if (partyIndex < PARTY_SIZE)
-        SetMonData(&gPlayerParty[partyIndex], MON_DATA_MET_LOCATION, &location);
+        SetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MET_LOCATION, &location);
     return FALSE;
 }
 
@@ -3153,7 +3179,7 @@ bool8 Scrcmd_checkspecies_choose(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES) == givenSpecies);
+    gSpecialVar_Result = (GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPECIES) == givenSpecies);
 
     return FALSE;
 }
@@ -3271,6 +3297,66 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
+static bool32 EventEvolution(u32 partyIndex)
+{
+    bool32 canStopEvo = gSpecialVar_0x8000;
+    enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
+    if (targetSpecies == SPECIES_NONE)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return FALSE;
+    }
+    gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
+    GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gParties[B_TRAINER_PLAYER][partyIndex], targetSpecies, canStopEvo, partyIndex);
+    ScriptContext_Stop();
+    return TRUE;
+}
+
+static void TriggerMultipleEvolutions_Repeatable(void)
+{
+    if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
+        gSpecialVar_0x8006++;
+
+    gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
+    {
+        if (!(gTriedEvolving & (1u << i)))
+        {
+            gTriedEvolving |= 1u << i;
+            if (EventEvolution(i))
+                return;
+        }
+    }
+
+    gTriedEvolving = 0;
+    gSpecialVar_Result = gSpecialVar_0x8006;
+    SetMainCallback2(CB2_ReturnToFieldContinueScript);
+}
+
+void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
+{
+    ctx->waitAfterCallNative = TRUE;
+    TriggerMultipleEvolutions_Repeatable();
+}
+
+void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
+{
+    ctx->waitAfterCallNative = TRUE;
+    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return;
+    }
+    assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return;
+    }
+    gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
+    EventEvolution(gSpecialVar_0x8004);
+}
+
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
 {
     u8 condition = ScriptReadByte(ctx);
@@ -3285,31 +3371,6 @@ bool8 ScrCmd_setmoverelearnerstate(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1);
 
     gMoveRelearnerState = state;
-    return FALSE;
-}
-
-bool8 ScrCmd_getmoverelearnerstate(struct ScriptContext *ctx)
-{
-    u32 varId = ScriptReadHalfword(ctx);
-
-    Script_RequestEffects(SCREFF_V1);
-    Script_RequestWriteVar(varId);
-
-    u16 *varPointer = GetVarPointer(varId);
-    *varPointer = gMoveRelearnerState;
-    return FALSE;
-}
-
-bool8 ScrCmd_istmrelearneractive(struct ScriptContext *ctx)
-{
-    const u8 *ptr = (const u8 *)ScriptReadWord(ctx);
-
-    Script_RequestEffects(SCREFF_V1);
-
-    if ((P_TM_MOVES_RELEARNER || P_ENABLE_MOVE_RELEARNERS)
-     && (P_ENABLE_ALL_TM_MOVES || IsBagPocketNonEmpty(POCKET_TM_HM)))
-        ScriptCall(ctx, ptr);
-
     return FALSE;
 }
 

@@ -3,13 +3,13 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_AURA_WHEEL, MOVE_EFFECT_SPD_PLUS_1) == TRUE);
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_AURA_WHEEL, self: TRUE, speed: 1);
     ASSUME(GetMoveEffect(MOVE_AURA_WHEEL) == EFFECT_AURA_WHEEL);
 }
 
 SINGLE_BATTLE_TEST("Aura Wheel raises Speed; fails if the user is not Morpeko")
 {
-    u16 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_MORPEKO; }
     GIVEN {

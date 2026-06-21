@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Pokemon regardless of its typing")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon 
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Baneful Bunker")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Psycho Shift while poisoned")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -258,7 +258,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Toxic Orb")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Poison Barb")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -303,7 +303,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
 
 SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
 {
-    u16 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_ODDISH; }
     PARAMETRIZE { species = SPECIES_BELDUM; }
@@ -316,6 +316,24 @@ SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Corrosion does not make Toxic Spikes poison a Corrosion user Terastallized into Steel")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); TeraType(TYPE_STEEL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(opponent, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
     } THEN {

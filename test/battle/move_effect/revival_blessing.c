@@ -57,18 +57,18 @@ AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival B
     PARAMETRIZE { user = playerRight, move1 = MOVE_CELEBRATE, move2 = MOVE_REVIVAL_BLESSING, move3 = MOVE_CELEBRATE; }
     PARAMETRIZE { user = opponentRight, move1 = MOVE_CELEBRATE, move2 = MOVE_CELEBRATE, move3 = MOVE_REVIVAL_BLESSING; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PLAYER(SPECIES_CLEFABLE) { HP(0); }
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
+        PLAYER(SPECIES_CLEFABLE);
+        PLAYER(SPECIES_CLEFABLE) { HP(0); }
+        PLAYER(SPECIES_CLEFABLE);
+        PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
+        PARTNER(SPECIES_CLEFAIRY);
+        PARTNER(SPECIES_CLEFAIRY);
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); }
+        OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
+        OPPONENT_B(SPECIES_WYNAUT);
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
     } SCENE {
@@ -118,17 +118,17 @@ DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags")
     } SCENE {
         // Turn 1
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("The opposing Starly used Revival Blessing!");
         MESSAGE("Geodude was revived and is ready to fight again!"); // Should have prefix but it doesn't currently.
         // Turn 2
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
     }
 }

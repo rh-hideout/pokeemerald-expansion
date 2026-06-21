@@ -136,7 +136,7 @@ static u32 OpenMarkingsMenu(struct Pokenav_ConditionMenu *menu)
         markings = menu->monMarks[menu->loadId];
 
         if (boxId == TOTAL_BOXES_COUNT)
-            SetMonData(&gPlayerParty[monId], MON_DATA_MARKINGS, &markings);
+            SetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_MARKINGS, &markings);
         else
             SetBoxMonDataAt(boxId, monId, MON_DATA_MARKINGS, &markings);
 
@@ -334,7 +334,8 @@ u8 *CopyStringLeftAlignedToConditionData(u8 *dst, const u8 *src, s16 n)
 
 static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
 {
-    u16 boxId, monId, gender, species, level, lvlDigits;
+    u16 boxId, monId, gender, level, lvlDigits;
+    enum Species species;
     struct BoxPokemon *boxMon;
     u8 *txtPtr, *str_;
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
@@ -358,8 +359,8 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
     species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
     if (boxId == TOTAL_BOXES_COUNT)
     {
-        level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-        gender = GetMonGender(&gPlayerParty[monId]);
+        level = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
+        gender = GetMonGender(&gParties[B_TRAINER_PLAYER][monId]);
     }
     else
     {
@@ -471,7 +472,7 @@ static void InitPartyConditionListParameters(void)
     menu->inSearchMode = FALSE;
     for (i = 0, count = 0; i < CalculatePlayerPartyCount(); i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG))
         {
             monListPtr->monData[count].boxId = TOTAL_BOXES_COUNT;
             monListPtr->monData[count].monId = i;
@@ -568,12 +569,6 @@ u8 GetConditionGraphMenuCurrentLoadIndex(void)
     return menu->loadId;
 }
 
-u8 GetConditionGraphMenuToLoadListIndex(void)
-{
-    struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
-    return menu->toLoadListIndex;
-}
-
 void *GetConditionMonPicGfx(u8 loadId)
 {
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
@@ -584,12 +579,6 @@ void *GetConditionMonPal(u8 loadId)
 {
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     return menu->monPal[loadId];
-}
-
-u8 GetConditionGraphMenuToLoadId(void)
-{
-    struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
-    return menu->toLoadId;
 }
 
 u8 *GetConditionMonNameText(u8 loadId)

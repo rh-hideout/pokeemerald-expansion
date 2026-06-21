@@ -72,6 +72,21 @@ SINGLE_BATTLE_TEST("OHKO moves always fails if the target has a higher level tha
     }
 }
 
+SINGLE_BATTLE_TEST("OHKO moves fail by level before checking Sturdy")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_GEODUDE) { Level(2); Ability(ABILITY_STURDY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+            ABILITY_POPUP(opponent, ABILITY_STURDY);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("OHKO moves fail if target protects")
 {
     GIVEN {

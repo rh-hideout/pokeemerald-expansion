@@ -20,7 +20,6 @@ FourIsland_PokemonDayCare_GiveMonToRaise::
 	msgbox DayCare_Text_WhichMonShouldWeRaise
 	fadescreen FADE_TO_BLACK
 	special ChooseSendDaycareMon
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, FourIsland_PokemonDayCare_ComeAgain
 	specialvar VAR_RESULT, CountPartyAliveNonEggMons_IgnoreVar0x8004Slot
 	goto_if_eq VAR_RESULT, 0, FourIsland_PokemonDayCare_OnlyOneAliveMonInParty
@@ -90,7 +89,6 @@ FourIsland_PokemonDayCare_TryRetrieveMon::
 	setvar VAR_0x8004, 0
 	goto_if_eq VAR_RESULT, DAYCARE_ONE_MON, FourIsland_PokemonDayCare_CostPrompt
 	special ShowDaycareLevelMenu
-	waitstate
 	copyvar VAR_0x8004, VAR_RESULT
 	goto_if_eq VAR_RESULT, DAYCARE_EXITED_LEVEL_MENU, FourIsland_PokemonDayCare_ComeAgain
 	goto FourIsland_PokemonDayCare_CostPrompt
@@ -180,7 +178,6 @@ FourIsland_PokemonDayCare_TwoMonsInDaycare::
 @ Unused
 FourIsland_PokemonDayCare_EventScript_UnusedRetrieveMon::
 	special ShowDaycareLevelMenu
-	waitstate
 	goto_if_eq VAR_RESULT, 2, FourIsland_PokemonDayCare_ComeAgain
 	copyvar VAR_0x8004, VAR_RESULT
 	specialvar VAR_RESULT, TakePokemonFromDaycare

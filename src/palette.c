@@ -755,6 +755,7 @@ static bool32 IsSoftwarePaletteFadeFinishing(void)
             gPaletteFade.active = FALSE;
             gPaletteFade.softwareFadeFinishing = FALSE;
             gPaletteFade.softwareFadeFinishingCounter = 0;
+            gPaletteFade.objPaletteToggle = 0;
         }
         else
         {
@@ -815,59 +816,6 @@ void BlendPalettes(u32 selectedPalettes, u8 coeff, u32 color)
 }
 
 #define DEFAULT_LIGHT_COLOR RGB2GBA(248, 224, 120)
-
-// Like BlendPalette, but ignores blendColor if the transparency high bit is set
-// Optimization help by lucktyphlosion
-void TimeBlendPalette(u16 palOffset, u32 coeff, u32 blendColor)
-{
-    s32 newR, newG, newB, defR, defG, defB;
-    u16 *src = gPlttBufferUnfaded + palOffset;
-    u16 *dst = gPlttBufferFaded + palOffset;
-    u32 defaultBlendColor = DEFAULT_LIGHT_COLOR;
-    u16 *srcEnd = src + 16;
-    u32 altBlendColor = *dst++ = *src++; // color 0 is copied through unchanged
-
-    coeff *= 2;
-    newR = (blendColor << 27) >> 27;
-    newG = (blendColor << 22) >> 27;
-    newB = (blendColor << 17) >> 27;
-
-    if (altBlendColor >> 15) // Transparency high bit set; alt blend color
-    {
-        defR = (altBlendColor << 27) >> 27;
-        defG = (altBlendColor << 22) >> 27;
-        defB = (altBlendColor << 17) >> 27;
-    }
-    else
-    {
-        defR = (defaultBlendColor << 27) >> 27;
-        defG = (defaultBlendColor << 22) >> 27;
-        defB = (defaultBlendColor << 17) >> 27;
-        altBlendColor = 0;
-    }
-    while (src != srcEnd)
-    {
-        u32 srcColor = *src;
-        s32 r = (srcColor << 27) >> 27;
-        s32 g = (srcColor << 22) >> 27;
-        s32 b = (srcColor << 16) >> 26;
-
-        if (srcColor >> 15)
-        {
-            *dst = ((r + (((defR - r) * (s32)coeff) >> 5)) << 0)
-                 | ((g + (((defG - g) * (s32)coeff) >> 5)) << 5)
-                 | ((b + (((defB - (b & 31)) * (s32)coeff) >> 5)) << 10);
-        }
-        else // Use provided blend color
-        {
-            *dst = ((r + (((newR - r) * (s32)coeff) >> 5)) << 0)
-                 | ((g + (((newG - g) * (s32)coeff) >> 5)) << 5)
-                 | ((b + (((newB - (b & 31)) * (s32)coeff) >> 5)) << 10);
-        }
-        src++;
-        dst++;
-    }
-}
 
 // Blends a weighted average of two blend parameters
 // Parameters can be either blended (as in BlendPalettes) or tinted (as in TintPaletteRGB_Copy)
@@ -1147,77 +1095,6 @@ void TintPalette_CustomTone(u16 *palette, u32 count, u16 rTone, u16 gTone, u16 b
             b = 31;
 
         *palette++ = RGB2(r, g, b);
-    }
-}
-
-// Tints from Unfaded to Faded, using a 15-bit GBA color
-void TintPalette_RGB_Copy(u16 palOffset, u32 blendColor)
-{
-    s32 newR, newG, newB, rTone = 0, gTone = 0, bTone = 0;
-    u16 *src = gPlttBufferUnfaded + palOffset;
-    u16 *dst = gPlttBufferFaded + palOffset;
-    u32 defaultBlendColor = DEFAULT_LIGHT_COLOR;
-    u16 *srcEnd = src + 16;
-    u16 altBlendIndices = *dst++ = *src++; // color 0 is copied through unchanged
-    u32 altBlendColor;
-
-    newR = ((blendColor << 27) >> 27) << 3;
-    newG = ((blendColor << 22) >> 27) << 3;
-    newB = ((blendColor << 17) >> 27) << 3;
-
-    if (altBlendIndices >> 15) // High bit set; bitmask of which colors to alt-blend
-    {
-        // Note that bit 0 of altBlendIndices specifies color 1
-        altBlendColor = src[14]; // color 15
-        if (altBlendColor >> 15)
-        {
-            // Set alternate blend color
-            rTone = ((altBlendColor << 27) >> 27) << 3;
-            gTone = ((altBlendColor << 22) >> 27) << 3;
-            bTone = ((altBlendColor << 17) >> 27) << 3;
-        }
-        else
-        {
-            // Set default blend color
-            rTone = ((defaultBlendColor << 27) >> 27) << 3;
-            gTone = ((defaultBlendColor << 22) >> 27) << 3;
-            bTone = ((defaultBlendColor << 17) >> 27) << 3;
-        }
-    }
-    else
-    {
-       altBlendIndices = 0;
-    }
-
-    while (src != srcEnd)
-    {
-        u32 srcColor = *src;
-        s32 r = (srcColor << 27) >> 27;
-        s32 g = (srcColor << 22) >> 27;
-        s32 b = (srcColor << 17) >> 27;
-
-        if (altBlendIndices & 1)
-        {
-            r = (u16)((rTone * r)) >> 8;
-            g = (u16)((gTone * g)) >> 8;
-            b = (u16)((bTone * b)) >> 8;
-        }
-        else
-        {
-            // Use provided blend color
-            r = (u16)((newR * r)) >> 8;
-            g = (u16)((newG * g)) >> 8;
-            b = (u16)((newB * b)) >> 8;
-        }
-        if (r > 31)
-            r = 31;
-        if (g > 31)
-            g = 31;
-        if (b > 31)
-            b = 31;
-        src++;
-        *dst++ = RGB2(r, g, b);
-        altBlendIndices >>= 1;
     }
 }
 

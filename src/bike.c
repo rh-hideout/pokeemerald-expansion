@@ -8,6 +8,8 @@
 #include "oras_dowse.h"
 #include "overworld.h"
 #include "sound.h"
+#include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "constants/songs.h"
 
 // this file's functions
@@ -1200,14 +1202,6 @@ static enum Collision GetBikeCollisionAt(struct ObjectEvent *objectEvent, s16 x,
         Bike_TryAdvanceCyclingRoadCollisions();
 
     return collision;
-}
-
-bool8 RS_IsRunningDisallowed(u8 tile)
-{
-    if (IsRunningDisallowedByMetatile(tile) != FALSE || gMapHeader.mapType == MAP_TYPE_INDOOR)
-        return TRUE;
-    else
-        return FALSE;
 }
 
 static bool8 IsRunningDisallowedByMetatile(u8 tile)

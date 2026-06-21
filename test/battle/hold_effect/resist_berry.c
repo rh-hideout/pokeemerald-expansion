@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
         TURN { MOVE(player, move); }
     } SCENE {
         if (1 == i % 2) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
 {
     enum Move move = MOVE_NONE;
     enum Item item = ITEM_NONE;
-    u32 defender = 0;
+    enum Species defender = SPECIES_NONE;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)

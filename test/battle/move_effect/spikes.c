@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         for (count = 0; count < layers; ++count) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+            MESSAGE("Spikes were scattered on the ground all around the opposing side!");
         }
         MESSAGE("2 sent out Wynaut!");
         HP_BAR(opponent, damage: maxHP / divisor);
@@ -51,11 +51,11 @@ SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
     } SCENE {
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing side!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing side!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing side!");
         MESSAGE("Wobbuffet used Spikes!");
         MESSAGE("But it failed!");
         MESSAGE("2 sent out Wynaut!");
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
 
 SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
 {
-    u32 species = SPECIES_WOBBUFFET;
+    enum Species species = SPECIES_WOBBUFFET;
     enum Item item = ITEM_NONE;
     enum Move move1 = MOVE_CELEBRATE;
     enum Move move2 = MOVE_CELEBRATE;

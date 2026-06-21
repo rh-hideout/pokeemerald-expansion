@@ -16,7 +16,6 @@
 #include "util.h"
 #include "battle_pyramid.h"
 #include "constants/battle_frontier.h"
-#include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
@@ -55,7 +54,7 @@ static void SpriteCB_TrainerIcons(struct Sprite *sprite);
 // IWRAM common
 COMMON_DATA u16 gWhichTrainerToFaceAfterBattle = 0;
 COMMON_DATA u8 gPostBattleMovementScript[4] = {0};
-COMMON_DATA struct ApproachingTrainer gApproachingTrainers[2] = {0};
+COMMON_DATA struct ApproachingTrainer gApproachingTrainers[NUM_APPROACHING_TRAINER] = {0};
 COMMON_DATA u8 gNoOfApproachingTrainers = 0;
 COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 
@@ -63,14 +62,14 @@ COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 EWRAM_DATA u8 gApproachingTrainerId = 0;
 
 // const rom data
-static const u16 sGfx_Emoticons[] = INCBIN_U16("graphics/misc/emoticons.4bpp");
-static const u8 sEmotion_ExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_exclamation.4bpp");
-static const u8 sEmotion_QuestionMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_question.4bpp");
-static const u8 sEmotion_HeartGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_heart.4bpp");
-static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_double_exclamation.4bpp");
-static const u8 sEmotion_XGfx[] = INCBIN_U8("graphics/field_effects/pics/emote_x.4bpp");
+static const u16 sGfx_Emoticons[] = INCGFX_U16("graphics/misc/emoticons.png", ".4bpp", "-mwidth 2 -mheight 2");
+static const u8 sEmotion_ExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_exclamation.png", ".4bpp");
+static const u8 sEmotion_QuestionMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_question.png", ".4bpp");
+static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_heart.png", ".4bpp");
+static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
+static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/field_effects/pics/emote_x.png", ".4bpp");
 // HGSS emote graphics ripped by Lemon on The Spriters Resource: https://www.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/sheet/30497/
-static const u8 sEmotion_Gfx[] = INCBIN_U8("graphics/misc/emotes.4bpp");
+static const u8 sEmotion_Gfx[] = INCGFX_U8("graphics/misc/emotes.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 static u8 (*const sDirectionalApproachDistanceFuncs[])(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y) =
 {
@@ -490,56 +489,19 @@ bool8 CheckForTrainersWantingBattle(void)
 
         if (gNoOfApproachingTrainers > 1)
             break;
-        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and cant have a double battle
+        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and can't have a double battle
             break;
     }
 
-
-    if (InBattlePyramid_() || InTrainerHillChallenge())
+    if (gNoOfApproachingTrainers > 0)
     {
-        u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
-
-        if (gNoOfApproachingTrainers > 0)
-        {
-            ResetTrainerOpponentIds();
-            InitTrainerBattleParameter();
-
-            gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
-            gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
-            BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-            if (gNoOfApproachingTrainers > 1)
-            {
-                gApproachingTrainerId++;
-                gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
-                gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
-                BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-                gApproachingTrainerId = 0;
-            }
-            ScriptContext_SetupScript(EventScript_StartTrainerApproach);
-            LockPlayerFieldControls();
-            return TRUE;
-        }
-    }
-
-    if (gNoOfApproachingTrainers == 1)
-    {
-        ResetTrainerOpponentIds();
-        ConfigureAndSetUpOneTrainerBattle(gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId,
-                                          gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr);
+        if (InBattlePyramid() || InTrainerHillChallenge())
+            ConfigureApproachingFacilityTrainerBattle(gApproachingTrainers);
+        else
+            ConfigureApproachingTrainerBattle(gApproachingTrainers);
+            
         gTrainerApproachedPlayer = TRUE;
-        return TRUE;
-    }
-    else if (gNoOfApproachingTrainers == 2)
-    {
-        ResetTrainerOpponentIds();
-        for (i = 0; i < gNoOfApproachingTrainers; i++, gApproachingTrainerId++)
-        {
-            ConfigureTwoTrainersBattle(gApproachingTrainers[i].objectEventId,
-                                       gApproachingTrainers[i].trainerScriptPtr);
-        }
-        SetUpTwoTrainersBattle();
         gApproachingTrainerId = 0;
-        gTrainerApproachedPlayer = TRUE;
         return TRUE;
     }
     else
@@ -558,9 +520,12 @@ static u8 CheckTrainer(u8 objectEventId)
     if (approachDistance == 0)
         return 0;
 
-    if (InTrainerHill() == TRUE)
+    if (InTrainerHill())
     {
         trainerBattlePtr = GetTrainerHillTrainerScript();
+    }
+    else if (InBattlePyramid()) {
+        trainerBattlePtr = GetBattlePyramidTrainerScript();
     }
     else
     {
@@ -584,7 +549,7 @@ static u8 CheckTrainer(u8 objectEventId)
         if (GetBattlePyramidTrainerFlag(objectEventId))
             return 0;
     }
-    else if (InTrainerHill() == TRUE)
+    else if (InTrainerHill())
     {
         if (GetHillTrainerFlag(objectEventId))
             return 0;
@@ -610,12 +575,10 @@ static u8 CheckTrainer(u8 objectEventId)
         numTrainers = 0xFF;
     }
 
-    if (trainerBattlePtr)
+    if (trainerBattlePtr && !InTrainerHillChallenge() && !InBattlePyramid()) 
     {
         TrainerBattleParameter *temp = (TrainerBattleParameter *)(trainerBattlePtr + 1);
-        if (temp->params.mode == TRAINER_BATTLE_DOUBLE
-            || temp->params.mode == TRAINER_BATTLE_REMATCH_DOUBLE
-            || temp->params.mode == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE)
+        if (temp->params.isDoubleBattle)
         {
             if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
                 return 0;
@@ -1004,22 +967,27 @@ static void Task_EndTrainerApproach(u8 taskId)
     ScriptContext_Enable();
 }
 
+void PrepareSecondApproachingTrainer(void)
+{
+    if (gApproachingTrainerId == 0)
+    {
+        gApproachingTrainerId++;
+        gSpecialVar_Result = TRUE;
+        UnfreezeObjectEvents();
+        FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
+    }
+    else
+    {
+        gApproachingTrainerId = 0;
+        gSpecialVar_Result = FALSE;
+    }
+}
+
 void TryPrepareSecondApproachingTrainer(void)
 {
     if (gNoOfApproachingTrainers == 2)
     {
-        if (gApproachingTrainerId == 0)
-        {
-            gApproachingTrainerId++;
-            gSpecialVar_Result = TRUE;
-            UnfreezeObjectEvents();
-            FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
-        }
-        else
-        {
-            gApproachingTrainerId = 0;
-            gSpecialVar_Result = FALSE;
-        }
+        PrepareSecondApproachingTrainer();
     }
     else
     {

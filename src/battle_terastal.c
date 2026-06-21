@@ -24,8 +24,7 @@ void ActivateTera(enum BattlerId battler)
     SetGimmickAsActivated(battler, GIMMICK_TERA);
 
     // Remove Tera Orb charge.
-    if (B_FLAG_TERA_ORB_CHARGED != 0
-        && (B_FLAG_TERA_ORB_NO_COST == 0 || !FlagGet(B_FLAG_TERA_ORB_NO_COST))
+    if (IsTeraOrbCharged()
         && IsOnPlayerSide(battler)
         && !(IsDoubleBattle() && !IsPartnerMonFromSameTrainer(battler)))
     {
@@ -58,6 +57,14 @@ void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
     BlendPalette(OBJ_PLTT_ID(battler), 16, 16, RGB_WHITEALPHA);
 }
 
+// Returns whether the Tera Orb is charged.
+bool32 IsTeraOrbCharged(void)
+{
+    if (FlagGet(B_FLAG_TERA_ORB_NO_COST) || B_TERA_ORB_ALWAYS_CHARGED)
+        return TRUE;
+    return FlagGet(B_FLAG_TERA_ORB_CHARGED);
+}
+
 // Returns whether a battler can Terastallize.
 bool32 CanTerastallize(enum BattlerId battler)
 {
@@ -78,11 +85,7 @@ bool32 CanTerastallize(enum BattlerId battler)
     {
         return FALSE;
     }
-    else if (FlagGet(B_FLAG_TERA_ORB_NO_COST))
-    {
-        // Tera Orb is not depleted, go to HasTrainerUsedGimmick
-    }
-    else if (!FlagGet(B_FLAG_TERA_ORB_CHARGED))
+    else if (!IsTeraOrbCharged())
     {
         return FALSE;
     }
@@ -117,21 +120,21 @@ enum Type GetBattlerTeraType(enum BattlerId battler)
 void ExpendTypeStellarBoost(enum BattlerId battler, enum Type type)
 {
     if (type < 32 && gBattleMons[battler].species != SPECIES_TERAPAGOS_STELLAR) // avoid OOB access
-        gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] |= 1u << type;
+        gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] |= 1u << type;
 }
 
 // Checks whether a type's Stellar boost has been expended.
 bool32 IsTypeStellarBoosted(enum BattlerId battler, enum Type type)
 {
     if (type < 32) // avoid OOB access
-        return !(gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] & (1u << type));
+        return !(gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] & (1u << type));
     else
         return FALSE;
 }
 
 // Returns the STAB power multiplier to use when Terastallized.
 // Power multipliers from Smogon Research thread.
-uq4_12_t GetTeraMultiplier(struct BattleContext *ctx)
+uq4_12_t GetTeraMultiplier(struct DamageContext *ctx)
 {
     enum Type teraType = GetBattlerTeraType(ctx->battlerAtk);
 
@@ -158,7 +161,7 @@ uq4_12_t GetTeraMultiplier(struct BattleContext *ctx)
     // Base and Tera type.
     if (ctx->moveType == teraType && IS_BATTLER_OF_BASE_TYPE(ctx->battlerAtk, ctx->moveType))
     {
-        if (ctx->abilityAtk == ABILITY_ADAPTABILITY)
+        if (ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY)
             return UQ_4_12(2.25);
         else
             return UQ_4_12(2.0);
@@ -166,7 +169,7 @@ uq4_12_t GetTeraMultiplier(struct BattleContext *ctx)
     // Tera type only (Adaptability applies).
     else if (ctx->moveType == teraType && !IS_BATTLER_OF_BASE_TYPE(ctx->battlerAtk, ctx->moveType))
     {
-        if (ctx->abilityAtk == ABILITY_ADAPTABILITY)
+        if (ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY)
             return UQ_4_12(2.0);
         else
             return UQ_4_12(1.5);
