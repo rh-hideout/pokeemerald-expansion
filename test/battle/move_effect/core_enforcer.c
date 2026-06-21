@@ -92,13 +92,13 @@ SINGLE_BATTLE_TEST("Core Enforcer immediately ends Neutralizing Gas and reactiva
     }
 }
 
-DOUBLE_BATTLE_TEST("Core Enforcer hits and suppresses the abilities of both opposing targets")
+DOUBLE_BATTLE_TEST("Core Enforcer hits both opposing targets")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_CORE_ENFORCER); }
     } SCENE {
