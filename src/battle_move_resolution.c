@@ -3753,6 +3753,7 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
 {
     if (!IsBattlerTurnDamaged(ejectButtonBattler, EXCLUDING_SUBSTITUTES)
      || HasAnyBattlerQueuedSwitch()
+     || IsPursuitTargetSet()
      || gBattleMons[ejectButtonBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
      || gBattleMons[ejectButtonBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
      || !CanBattlerSwitch(ejectButtonBattler))
@@ -4064,6 +4065,7 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
 {
     if (!gBattleMons[ejectPackBattler].volatiles.tryEjectPack
      || HasAnyBattlerQueuedSwitch()
+     || IsPursuitTargetSet()
      || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
      || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
      || !CanBattlerSwitch(ejectPackBattler)

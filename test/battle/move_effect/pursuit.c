@@ -695,4 +695,39 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
     }
 }
 
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Button")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
+// Extrapolated from the previous test's mechanic
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Pack")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        PLAYER(SPECIES_GOOMY) { Item(ITEM_EJECT_PACK); Ability(ABILITY_GOOEY); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ABILITY_POPUP(player, ABILITY_GOOEY);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
 TO_DO_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority");
