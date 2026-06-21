@@ -356,7 +356,10 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE:
-        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
+        side = GetBattlerSide(battler);
+        if ((gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_FIRE)
+         && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
         {
             gBattlerAttacker = battler;
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);

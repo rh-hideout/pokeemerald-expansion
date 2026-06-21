@@ -3304,7 +3304,7 @@ static enum MoveEndResult MoveEndDefrost(struct BattleCalcValues *cv)
         else
             battleScript = BattleScript_BattlerFrostbiteHealed;
 
-        if ((CanFireMoveThawTarget(cv->move) || CanBurnHitThaw(cv->move)) && gBattleMons[battler].status1 & STATUS1_FREEZE)
+        if ((CanFireMoveThawTarget(cv->move, GetBattleMoveType(cv->move)) || CanBurnHitThaw(cv->move)) && gBattleMons[battler].status1 & STATUS1_FREEZE)
         {
             DefrostBattler(battler, gBattleMons[battler].status1);
             BattleScriptCall(battleScript);

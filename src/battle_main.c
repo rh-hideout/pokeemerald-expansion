@@ -3217,6 +3217,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3303,6 +3304,7 @@ void FaintClearSetData(enum BattlerId battler)
     gProtectStructs[battler].statRaised = FALSE;
     gProtectStructs[battler].pranksterElevated = FALSE;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 

@@ -94,10 +94,10 @@ static inline u32 GetSpotRow(const u32* image, u32 row, enum SpotScale scale);
 
 // SPECIES_SPINDA
 static const SpotImage16 sSpindaSpotImages[4] = {
-    INCGFX_U32("graphics/pokemon/spinda/spots/spot_0.png", ".1bpp"),
-    INCGFX_U32("graphics/pokemon/spinda/spots/spot_1.png", ".1bpp"),
-    INCGFX_U32("graphics/pokemon/spinda/spots/spot_2.png", ".1bpp"),
-    INCGFX_U32("graphics/pokemon/spinda/spots/spot_3.png", ".1bpp"),
+    INCGFX_U32("graphics/pokemon/spinda/spots/spot_0.png", ".1bpp", "-plain -data_width 2"),
+    INCGFX_U32("graphics/pokemon/spinda/spots/spot_1.png", ".1bpp", "-plain -data_width 2"),
+    INCGFX_U32("graphics/pokemon/spinda/spots/spot_2.png", ".1bpp", "-plain -data_width 2"),
+    INCGFX_U32("graphics/pokemon/spinda/spots/spot_3.png", ".1bpp", "-plain -data_width 2"),
 };
 //NOTE: Spinda spots have been ordered in reverse for save compatibility
 static const struct MonSpot sSpindaSpots[] = {
@@ -123,7 +123,7 @@ static const struct MonSpotTemplate* GetSpeciesSpots(enum Species species)
 {
     switch (species)
     {
-    case SPECIES_SPINDA: 
+    case SPECIES_SPINDA:
             return &gSpindaSpotTemplate;
     default:
         return NULL;

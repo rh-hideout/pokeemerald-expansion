@@ -1267,7 +1267,12 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ACUPRESSURE); }
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight); EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight);
+            EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
     }
