@@ -7480,7 +7480,6 @@ static u32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 s
     {
     case ABILITY_CONTRARY:
         return (stage * -1);
-        break;
     case ABILITY_SIMPLE:
         return (stage * 2);
     default:
@@ -7765,6 +7764,24 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (CanStatChange(&cv, &st))
                 return TRUE;
         }
+    }
+
+    return FALSE;
+}
+
+bool32 AI_CanMoveTargetAffectAlly(enum MoveTarget target)
+{
+    switch (target)
+    {
+    case TARGET_SELECTED:
+    case TARGET_ALLY:
+    case TARGET_USER_OR_ALLY:
+    case TARGET_USER_AND_ALLY:
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_ALL_BATTLERS:
+        return TRUE;
+    default:
+        break;
     }
 
     return FALSE;
