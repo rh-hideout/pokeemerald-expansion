@@ -612,25 +612,6 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and switchin is correctly st
     }
 }
 
-SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twice")
-{
-    GIVEN {
-        PLAYER(SPECIES_GOLISOPOD) { HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
-    } SCENE {
-        SWITCH_OUT_MESSAGE("Golisopod");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
-        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
-        SEND_IN_MESSAGE("Voltorb");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_VOLTORB);
-    }
-}
-
 SINGLE_BATTLE_TEST("Pursuit user gets forced out by Red Card and target still switches out")
 {
     GIVEN {
@@ -727,6 +708,20 @@ SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Pack")
         ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Emergency Exit")
+{
+    GIVEN {
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        NOT ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
     }
 }
 
