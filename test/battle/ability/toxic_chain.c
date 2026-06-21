@@ -21,6 +21,30 @@ SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison when attacking")
     }
 }
 
+SINGLE_BATTLE_TEST("Toxic Chain is checked before the move's additional effect")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+            STATUS_ICON(opponent, paralysis: TRUE);
+        }
+        ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, badPoison: TRUE);    
+    } THEN {
+        EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+    }
+}
+
 SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison on any hit of a multi-hit move")
 {
     GIVEN {
