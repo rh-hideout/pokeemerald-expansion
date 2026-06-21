@@ -714,7 +714,7 @@ SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Pack")
 SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Emergency Exit")
 {
     GIVEN {
-        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); }
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); HP(251); MaxHP(500); }
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
