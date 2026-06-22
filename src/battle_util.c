@@ -119,6 +119,7 @@ struct TerrainInfo
     u8 abilityStartMessage;
     u8 moveStartMessage;
     u8 endMessage;
+    u32 statusFlag;
 };
 
 static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
@@ -128,6 +129,7 @@ static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .endMessage = B_MSG_TERRAIN_END_GRASSY,
+        .statusFlag = STATUS_FIELD_GRASSY_TERRAIN,
     },
 
     [B_TERRAIN_MISTY] = {
@@ -136,6 +138,7 @@ static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .endMessage = B_MSG_TERRAIN_END_MISTY,
+        .statusFlag = STATUS_FIELD_MISTY_TERRAIN,
     },
 
     [B_TERRAIN_ELECTRIC] = {
@@ -144,6 +147,7 @@ static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
+        .statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN,
     },
 
     [B_TERRAIN_PSYCHIC] = {
@@ -152,6 +156,7 @@ static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
+        .statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN,
     },
 };
 

@@ -1013,10 +1013,7 @@ BattleScript_EffectElectrify::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMistyTerrain::
-BattleScript_EffectGrassyTerrain::
-BattleScript_EffectElectricTerrain::
-BattleScript_EffectPsychicTerrain::
+BattleScript_EffectTerrain::
 	attackcanceler
 	setterrain BattleScript_ButItFailed
 	attackanimation
