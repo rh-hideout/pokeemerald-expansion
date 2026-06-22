@@ -360,6 +360,7 @@ static void DebugAction_Give_Item_SelectId(u8 taskId);
 static void DebugAction_Give_Item_SelectQuantity(u8 taskId);
 static void DebugAction_Give_PokemonSimple(u8 taskId);
 static void DebugAction_Give_PokemonComplex(u8 taskId);
+static void DebugAction_Give_NewEgg(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectId(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectLevel(u8 taskId);
 static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId);
@@ -678,6 +679,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
     { COMPOUND_STRING("Give item XYZ…"),    DebugAction_Give_Item },
     { COMPOUND_STRING("Pokémon (Basic)"),   DebugAction_Give_PokemonSimple },
     { COMPOUND_STRING("Pokémon (Complex)"), DebugAction_Give_PokemonComplex },
+    { COMPOUND_STRING("Give Egg"),          DebugAction_Give_NewEgg },
     { COMPOUND_STRING("Give Decoration…"),  DebugAction_Give_Decoration },
     { COMPOUND_STRING("Max Money"),         DebugAction_Give_MaxMoney },
     { COMPOUND_STRING("Max Coins"),         DebugAction_Give_MaxCoins },
@@ -3552,6 +3554,7 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
 
 #define tIsComplex  data[6]
 #define tIterator   data[7]
+#define tIsEgg      data[8]
 
 static void Debug_Display_SpeciesInfo(enum Species species, u32 number, u32 digit, u8 windowId)
 {
