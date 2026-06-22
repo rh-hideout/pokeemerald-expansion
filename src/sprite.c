@@ -89,6 +89,7 @@ static void ApplyAffineAnimFrame(u8 matrixNum, struct AffineAnimFrameCmd *frameC
 static void AllocSpriteTileRange(u16 tag, u16 start, u16 count);
 static void DoLoadSpritePalette(const u16 *src, u16 paletteOffset);
 static void UpdateSpriteMatrixAnchorPos(struct Sprite *, s32, s32);
+static bool8 AddObjWinMaskToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
 
 typedef void (*AnimFunc)(struct Sprite *);
 typedef void (*AnimCmdFunc)(struct Sprite *);
@@ -1749,11 +1750,29 @@ bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
     {
         gMain.oamBuffer[*oamIndex] = sprite->oam;
         (*oamIndex)++;
+        if (sprite->objWinMask)
+            return AddObjWinMaskToOamBuffer(sprite, oamIndex);
         return 0;
     }
     else
     {
         return AddSubspritesToOamBuffer(sprite, &gMain.oamBuffer[*oamIndex], oamIndex);
+    }
+}
+
+static bool8 AddObjWinMaskToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
+{
+    if (*oamIndex >= gOamLimit)
+    {
+        return 1;
+    }
+
+    else
+    {
+        struct OamData oam = sprite->oam;
+        oam.objMode = ST_OAM_OBJ_WINDOW;
+        gMain.oamBuffer[(*oamIndex)++] = oam;
+        return 0;
     }
 }
 
@@ -1796,7 +1815,9 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
             u16 x;
             u16 y;
 
-            if (*oamIndex >= gOamLimit)
+            u8 limit = sprite->objWinMask ? gOamLimit - 1 : gOamLimit;
+
+            if (*oamIndex >= limit)
                 return 1;
 
             x = subspriteTable->subsprites[i].x;
@@ -1820,16 +1841,28 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
                 y = ~y + 1;
             }
 
-            destOam[i] = *oam;
-            destOam[i].shape = subspriteTable->subsprites[i].shape;
-            destOam[i].size = subspriteTable->subsprites[i].size;
-            destOam[i].x = (s16)baseX + (s16)x;
-            destOam[i].y = baseY + y;
-            destOam[i].tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
+            struct OamData subspriteOam = *oam;
+            subspriteOam.shape = subspriteTable->subsprites[i].shape;
+            subspriteOam.size = subspriteTable->subsprites[i].size;
+            subspriteOam.x = (s16)baseX + (s16)x;
+            subspriteOam.y = baseY + y;
+            subspriteOam.tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
 
             if (sprite->subspriteMode < SUBSPRITES_IGNORE_PRIORITY)
-                destOam[i].priority = subspriteTable->subsprites[i].priority;
+                subspriteOam.priority = subspriteTable->subsprites[i].priority;
+
+            destOam[i] = subspriteOam;
+
+            if(sprite->objWinMask)
+            {
+                subspriteOam.objMode = ST_OAM_OBJ_WINDOW;
+                destOam[subspriteCount+i] = subspriteOam;
+            }
+
         }
+
+        if (sprite->objWinMask)
+            (*oamIndex) += subspriteCount;
     }
 
     return 0;
