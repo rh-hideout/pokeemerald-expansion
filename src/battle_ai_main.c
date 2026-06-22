@@ -5600,18 +5600,15 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage == 0)
                         continue;
 
-                    if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
-                        stage = -1 * stage;
-
                     if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
                         stage = -1 * stage;
 
                     stage = AI_GetAdjustedStatStage(battlerAtk, move, stage);
 
-                    if (stage > 0)
-                        ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
-                    else
-                        ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, stat));
+                    if (stage < 0)
+                        continue;
+
+                    ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
                 break;
             case MOVE_EFFECT_ORDER_UP:
