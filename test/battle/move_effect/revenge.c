@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_REVENGE) == EFFECT_DOUBLE_POWER_IF_DAMAGED);
+    ASSUME(GetMoveEffect(MOVE_REVENGE) == EFFECT_POWER_DOUBLE_IF_DAMAGED);
 }
 
 SINGLE_BATTLE_TEST("Revenge doubles in power if False Swipe connected but didn't do any damage")

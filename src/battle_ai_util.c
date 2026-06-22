@@ -623,8 +623,8 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         if (!CanUseLastResort(ctx->battlerAtk) && !IsConsideringZMove(ctx->battlerAtk, ctx->battlerDef, ctx->move))
             return TRUE;
         break;
-    case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
-    case EFFECT_POWER_BASED_ON_USER_WEIGHT:
+    case EFFECT_POWER_TARGET_WEIGHT:
+    case EFFECT_POWER_USER_WEIGHT:
         if (GetActiveGimmick(ctx->battlerDef) == GIMMICK_DYNAMAX)
             return TRUE;
         break;
@@ -1976,7 +1976,7 @@ bool32 IsHazardClearingMove(enum Move move)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     switch (moveEffect)
     {
-    case EFFECT_REMOVE_TRAPS:
+    case EFFECT_REMOVE_HAZARDS:
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
@@ -4126,7 +4126,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_DEFOG:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS | AI_EFFECT_BREAK_SCREENS;
         break;
-    case EFFECT_REMOVE_TRAPS:
+    case EFFECT_REMOVE_HAZARDS:
     case EFFECT_TIDY_UP:
         aiEffect |= AI_EFFECT_CLEAR_HAZARDS;
         break;
@@ -4705,7 +4705,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
     }
 
     // if already inclined to boost, be slightly more likely to if boost levels matter
-    if (tempScore > 0 && HasMoveWithEffect(battlerAtk, EFFECT_POWER_BASED_ON_USER_STATS))
+    if (tempScore > 0 && HasMoveWithEffect(battlerAtk, EFFECT_POWER_USER_STAT_BUFFS))
         tempScore += WEAK_EFFECT;
 
     return tempScore;

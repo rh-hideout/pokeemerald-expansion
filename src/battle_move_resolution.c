@@ -1414,8 +1414,8 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             }
             break;
         }
-        case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
-        case EFFECT_POWER_BASED_ON_USER_WEIGHT:
+        case EFFECT_POWER_TARGET_WEIGHT:
+        case EFFECT_POWER_USER_WEIGHT:
             if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             {
                 battleScript = BattleScript_MoveBlockedByDynamax;
@@ -4207,7 +4207,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
-    case EFFECT_GROUND_TARGET:
+    case EFFECT_GROUNDS_TARGET:
         if (IsBattlerAlive(cv->battlerDef)
          && IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
          && gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER
@@ -4232,7 +4232,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
-    case EFFECT_REMOVE_TRAPS:
+    case EFFECT_REMOVE_HAZARDS:
         if (IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
             if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)

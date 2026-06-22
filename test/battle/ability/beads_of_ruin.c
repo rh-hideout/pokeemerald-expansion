@@ -88,7 +88,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        ASSUME(GetMoveEffect(MOVE_ROUND) != EFFECT_PHYSICAL_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_ROUND) != EFFECT_PSYSHOCK);
         PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
