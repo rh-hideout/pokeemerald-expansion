@@ -91,6 +91,25 @@ static inline void Shuffle(void *data, size_t n, size_t size)
     }
 }
 
+/* Produces a random sample without replacement.
+ * The result is not in a random order after sampling. */
+
+void Sample8(void *data, void *out, size_t data_n, u16 out_n);
+void Sample16(void *data, void *out, size_t data_n, u16 out_n);
+void Sample32(void *data, void *out, size_t data_n, u16 out_n);
+void SampleN(void *data, void *out, size_t data_n, u16 out_n, size_t size);
+
+static inline void Sample(void *data, void *out, size_t data_n, u16 out_n, size_t size)
+{
+    switch (size)
+    {
+    case 1: Sample8(data, out, data_n, out_n); break;
+    case 2: Sample16(data, out, data_n, out_n); break;
+    case 4: Sample32(data, out, data_n, out_n); break;
+    default: SampleN(data, out, data_n, out_n, size); break;
+    }
+}
+
 /* Structured random number generator.
  * Instead of the caller converting bits from Random() to a meaningful
  * value, the caller provides metadata that is used to return the

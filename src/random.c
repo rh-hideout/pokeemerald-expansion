@@ -159,6 +159,56 @@ void ShuffleN(void *data, size_t n, size_t size)
     LOOP_RANDOM_END;
 }
 
+#define SAMPLE_IMPL \
+    u16 out_idx = 0; \
+    size_t data_idx; \
+    LOOP_RANDOM_START; \
+    for (data_idx = 0; data_idx < data_n && out_idx < out_n; data_idx++) \
+    { \
+        const u16 roll = ((u32)LOOP_RANDOM * (out_n - out_idx)) >> 16; \
+        if (roll < data_n - data_idx) \
+        { \
+            out[out_idx++] = data[data_idx]; \
+        } \
+    } \
+    LOOP_RANDOM_END
+
+void Sample8(void *data_, void *out_, size_t data_n, u16 out_n)
+{
+    u8 *data = data_;
+    u8 *out = out_;
+    SAMPLE_IMPL;
+}
+
+void Sample16(void *data_, void *out_, size_t data_n, u16 out_n)
+{
+    u16 *data = data_;
+    u16 *out = out_;
+    SAMPLE_IMPL;
+}
+
+void Sample32(void *data_, void *out_, size_t data_n, u16 out_n)
+{
+    u32 *data = data_;
+    u32 *out = out_;
+    SAMPLE_IMPL;
+}
+
+void SampleN(void *data, void *out, size_t data_n, u16 out_n, size_t size)
+{
+    u16 out_idx = 0;
+    LOOP_RANDOM_START;
+    for (size_t data_idx = 0; data_idx < data_n && out_idx < out_n; data_idx++)
+    {
+        const u16 roll = ((u32)LOOP_RANDOM * (out_n - out_idx)) >> 16;
+        if (roll < data_n - data_idx)
+        {
+            memcpy((u8 *)out + out_idx*size, (u8 *)data + data_idx*size, size);
+        }
+    }
+    LOOP_RANDOM_END;
+}
+
 __attribute__((weak, alias("RandomUniformDefault")))
 u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi);
 

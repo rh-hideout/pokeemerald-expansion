@@ -283,3 +283,21 @@ TEST("Thumb and C SFC32 implementations produce the same results")
 
     EXPECT_EQ(thumbSum, cSum);
 }
+
+TEST("Sample always fills output array")
+{
+    u8 test[100];
+    u8 ones[110];
+    u32 total = 0;
+    for (u32 i = 0; i < 100; i++)
+    {
+        memset(&test, 0, sizeof(test));
+        memset(&ones, 1, sizeof(ones));
+        Sample(&ones, &test, 110, 100, sizeof(u8));
+        for (u32 j = 0; j < 100; j++)
+        {
+            total += test[j];
+        }
+    }
+    EXPECT_EQ(total, 10000);
+}
