@@ -452,7 +452,6 @@ SINGLE_BATTLE_TEST("Knock Off is boosted against targets with Sticky Hold", s16 
     PARAMETRIZE { ability = ABILITY_STICKY_HOLD; }
 
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_DMG, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MUK) { MaxHP(100); Item(ITEM_MASTER_BALL); Ability(ability); }
     } WHEN {
