@@ -115,12 +115,44 @@ enum BattleTerrain
 struct TerrainInfo
 {
     u8 extender;
+    u8 seed;
     u8 abilityStartMessage;
     u8 moveStartMessage;
     u8 endMessage;
 };
 
 static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
+    [B_TERRAIN_GRASSY] = {
+        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
+        .seed = HOLD_EFFECT_PARAM_GRASSY_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
+        .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
+        .endMessage = B_MSG_TERRAIN_END_GRASSY,
+    },
+
+    [B_TERRAIN_MISTY] = {
+        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
+        .seed = HOLD_EFFECT_PARAM_MISTY_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
+        .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
+        .endMessage = B_MSG_TERRAIN_END_MISTY,
+    },
+
+    [B_TERRAIN_ELECTRIC] = {
+        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
+        .seed = HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
+        .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
+        .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
+    },
+
+    [B_TERRAIN_PSYCHIC] = {
+        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
+        .seed = HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
+        .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
+        .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
+    },
 };
 
 struct BattleWeatherInfo
