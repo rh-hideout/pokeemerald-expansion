@@ -472,7 +472,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Dire Claw cannot sleep a mon when sleep clause
     PASSES_RANDOMLY(100, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_DIRE_CLAW, MOVE_EFFECT_ONE_FROM_MANY));
+        ASSUME(MoveHasAdditionalEffect(MOVE_DIRE_CLAW, MOVE_EFFECT_LIST_SELECTION));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_WOBBUFFET);

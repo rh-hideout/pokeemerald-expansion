@@ -524,7 +524,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FROSTBITE = 7,
     MOVE_EFFECT_CONFUSION,
     MOVE_EFFECT_FLINCH,
-    MOVE_EFFECT_ONE_FROM_MANY, // Uses selectionMoveEffects to determine what to select
+    MOVE_EFFECT_LIST_SELECTION, // Uses selectionMoveEffects to determine what to select
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
     MOVE_EFFECT_WRAP,

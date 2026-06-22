@@ -2447,7 +2447,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         gBattlescriptCurrInstr = battleScript;
         break;
-    case MOVE_EFFECT_ONE_FROM_MANY:
+    case MOVE_EFFECT_LIST_SELECTION:
     {
         const enum MoveEffect *sOneFromManyEffects = GetMoveSelectionMoveEffects(gCurrentMove);
         u32 validEffectCount = 0;
@@ -2462,7 +2462,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             return;
         }
 
-        u32 chosenMoveEffect = RandomUniform(RNG_ONE_FROM_MANY, 0, validEffectCount - 1);
+        u32 chosenMoveEffect = RandomUniform(RNG_LIST_SELECTION, 0, validEffectCount - 1);
         if (sOneFromManyEffects[chosenMoveEffect] == MOVE_EFFECT_BURN)
             gBattleStruct->triAttackBurn = TRUE;
 
@@ -10938,7 +10938,7 @@ bool32 CanBurnHitThaw(enum Move move)
             if (additionalEffect->moveEffect == MOVE_EFFECT_BURN)
                 return TRUE;
 
-            if (additionalEffect->moveEffect == MOVE_EFFECT_ONE_FROM_MANY
+            if (additionalEffect->moveEffect == MOVE_EFFECT_LIST_SELECTION
              && gBattleStruct->triAttackBurn)
                 return TRUE;
         }

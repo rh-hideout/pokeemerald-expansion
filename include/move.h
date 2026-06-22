@@ -217,7 +217,7 @@ struct MoveInfo
 
     // primary/secondary effects
     const struct AdditionalEffect *additionalEffects;
-    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // For use by MOVE_EFFECT_ONE_FROM_MANY
+    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_LIST_SELECTION
 
     // contest parameters
     u8 contestEffect;
