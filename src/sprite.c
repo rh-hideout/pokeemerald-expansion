@@ -1851,7 +1851,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
 
             destOam[i] = subspriteOam;
 
-            if(sprite->objWinMask)
+            if (sprite->objWinMask)
             {
                 subspriteOam.objMode = ST_OAM_OBJ_WINDOW;
                 destOam[subspriteCount+i] = subspriteOam;
