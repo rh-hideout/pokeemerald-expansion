@@ -1763,17 +1763,13 @@ bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 static bool8 AddObjWinMaskToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     if (*oamIndex >= gOamLimit)
-    {
         return 1;
-    }
 
-    else
-    {
-        struct OamData oam = sprite->oam;
-        oam.objMode = ST_OAM_OBJ_WINDOW;
-        gMain.oamBuffer[(*oamIndex)++] = oam;
-        return 0;
-    }
+    struct OamData oam = sprite->oam;
+    oam.objMode = ST_OAM_OBJ_WINDOW;
+    gMain.oamBuffer[*oamIndex] = oam;
+    (*oamIndex)++;
+    return 0;
 }
 
 bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex)
@@ -1815,7 +1811,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
             u16 x;
             u16 y;
 
-            u8 limit = sprite->objWinMask ? gOamLimit - 1 : gOamLimit;
+            u32 limit = sprite->objWinMask ? gOamLimit - 1 : gOamLimit;
 
             if (*oamIndex >= limit)
                 return 1;
