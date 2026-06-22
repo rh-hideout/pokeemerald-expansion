@@ -1429,7 +1429,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_SPIT_UP
      && gBattleMons[battler].volatiles.stockpileCounter == 0
@@ -1438,7 +1438,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
      && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move))
@@ -1447,7 +1447,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_LAST_RESORT
      && !CanUseLastResort(battler)
@@ -6134,7 +6134,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_POWER_BASED_ON_USER_HP:
         basePower = gBattleMons[battlerAtk].hp * basePower / gBattleMons[battlerAtk].maxHP;
         break;
-    case EFFECT_MORE_POWER_WITH_LESS_HP:
+    case EFFECT_POWER_LOWER_HP:
         hpFraction = GetScaledHPFraction(gBattleMons[battlerAtk].hp, gBattleMons[battlerAtk].maxHP, 48);
         for (i = 0; i < sizeof(sFlailHpScaleToPowerTable); i += 2)
         {
@@ -6167,7 +6167,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_SPIT_UP:
         basePower = 100 * gBattleMons[battlerAtk].volatiles.stockpileCounter;
         break;
-    case EFFECT_DOUBLE_POWER_IF_DAMAGED:
+    case EFFECT_POWER_DOUBLE_IF_DAMAGED:
         if (gProtectStructs[battlerAtk].revengeDoubled & 1u << battlerDef)
             basePower *= 2;
         break;
@@ -6211,7 +6211,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             || (gSpecialStatuses[battlerAtk].gemBoost && ctx->holdEffects[battlerAtk] == HOLD_EFFECT_GEMS))
             basePower *= 2;
         break;
-    case EFFECT_POWER_BASED_ON_TARGET_WEIGHT:
+    case EFFECT_POWER_TARGET_WEIGHT:
         weight = GetBattlerWeight(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
         for (i = 0; sWeightToDamageTable[i] != 0xFFFF; i += 2)
         {
@@ -6223,7 +6223,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         else
             basePower = 120;
         break;
-    case EFFECT_POWER_BASED_ON_USER_WEIGHT:
+    case EFFECT_POWER_USER_WEIGHT:
         weight = GetBattlerWeight(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) / GetBattlerWeight(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
         if (weight >= ARRAY_COUNT(sHeatCrashPowerTable))
             basePower = sHeatCrashPowerTable[ARRAY_COUNT(sHeatCrashPowerTable) - 1];
@@ -6235,7 +6235,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         if (basePower > 200)
             basePower = 200;
         break;
-    case EFFECT_POWER_BASED_ON_USER_STATS:
+    case EFFECT_POWER_USER_STAT_BUFFS:
         basePower += (CountBattlerStatIncreases(battlerAtk, TRUE) * 20);
         break;
     case EFFECT_ELECTRO_BALL:
@@ -6280,7 +6280,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         }
         break;
-    case EFFECT_DOUBLE_POWER_IF_FASTER:
+    case EFFECT_POWER_DOUBLE_IF_FASTER:
         if (ctx->aiCalc)
         {
             if (!Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
@@ -7053,7 +7053,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     def = gBattleMons[battlerDef].defense;
     spDef = gBattleMons[battlerDef].spDefense;
 
-    if (moveEffect == EFFECT_PHYSICAL_DAMAGE || IsBattleMovePhysical(move)) // uses defense stat instead of sp.def
+    if (moveEffect == EFFECT_PSYSHOCK || IsBattleMovePhysical(move)) // uses defense stat instead of sp.def
     {
         if (ctx->fieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
         {
@@ -9428,7 +9428,7 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
         CalculateMonStatsCont(mon, FALSE);
     else
         CalculateMonStats(mon);
-        
+
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);

@@ -87,7 +87,7 @@ DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Won
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
         ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMoveEffect(MOVE_ROUND) != EFFECT_PHYSICAL_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_ROUND) != EFFECT_PSYSHOCK);
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

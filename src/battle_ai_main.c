@@ -2884,7 +2884,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         else
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_MORE_POWER_WITH_LESS_HP:
+    case EFFECT_POWER_LOWER_HP:
         if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) // Opponent should go first
             || aiData->hpPercents[battlerAtk] > 50)
             ADJUST_SCORE(-4);
@@ -3931,7 +3931,7 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
     u32 recoilDmg = 0;
     u32 monHP = GetNonDynamaxMaxHP(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    
+
     // Is recoil applicable
     if (!IsRecoilDamageEffect(effect) || !AI_IsDamagedByRecoil(battlerAtk))
         return FALSE;
@@ -3948,7 +3948,7 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
         opposingMons = CountUsablePartyMons(battlerDef);
     else
         opposingMons = CountUsableSideMons(battlerDef);
-    
+
     if (recoilDmg >= gBattleMons[battlerAtk].hp && opposingMons != 0)
         return TRUE;
 
@@ -4579,7 +4579,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_LEECH_SEED:
         if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)
           || gBattleMons[battlerDef].volatiles.leechSeed
-          || HasMoveWithEffect(battlerDef, EFFECT_REMOVE_TRAPS)
+          || HasMoveWithEffect(battlerDef, EFFECT_REMOVE_HAZARDS)
           || aiData->abilities[battlerDef] == ABILITY_LIQUID_OOZE
           || aiData->abilities[battlerDef] == ABILITY_MAGIC_GUARD)
             break;
@@ -4750,7 +4750,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
              && IsPinchBerryItemEffect(aiData->holdEffects[battlerAtk]))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if ((gBattleMons[battlerAtk].hp > 1) // Only spam endure for Flail/Reversal if you're not at Min Health
-             && (HasMoveWithEffect(battlerAtk, EFFECT_MORE_POWER_WITH_LESS_HP) || HasMoveWithEffect(battlerAtk, EFFECT_ENDEAVOR)))
+             && (HasMoveWithEffect(battlerAtk, EFFECT_POWER_LOWER_HP) || HasMoveWithEffect(battlerAtk, EFFECT_ENDEAVOR)))
                 ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
@@ -5538,12 +5538,12 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     }
-    case EFFECT_REMOVE_TRAPS:
+    case EFFECT_REMOVE_HAZARDS:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
          || (gBattleMons[battlerAtk].volatiles.leechSeed || gBattleMons[battlerAtk].volatiles.wrapped))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
-    case EFFECT_GROUND_TARGET:
+    case EFFECT_GROUNDS_TARGET:
         if (!AI_IsBattlerGrounded(battlerDef) && HasDamagingMoveOfType(battlerAtk, TYPE_GROUND) && !CanTargetFaintAi(battlerDef, battlerAtk))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
@@ -5831,7 +5831,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 }
                 break;
             case MOVE_EFFECT_WRAP:
-                if (!HasMoveWithEffect(battlerDef, EFFECT_REMOVE_TRAPS) && ShouldTrap(battlerAtk, battlerDef, move))
+                if (!HasMoveWithEffect(battlerDef, EFFECT_REMOVE_HAZARDS) && ShouldTrap(battlerAtk, battlerDef, move))
                     ADJUST_SCORE(BEST_EFFECT);
                 break;
             case MOVE_EFFECT_SALT_CURE:
@@ -6063,7 +6063,7 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         if (aiData->hpPercents[battlerAtk] < 50 && AI_RandLessThan(128))
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
-    case EFFECT_DOUBLE_POWER_IF_DAMAGED:
+    case EFFECT_POWER_DOUBLE_IF_DAMAGED:
         if (GetSpeciesBaseSpeed(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpeed(gBattleMons[battlerAtk].species) + 10)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
@@ -6242,7 +6242,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_RESTORE_HP:
             case EFFECT_REST:
             case EFFECT_DESTINY_BOND:
-            case EFFECT_MORE_POWER_WITH_LESS_HP:
+            case EFFECT_POWER_LOWER_HP:
             case EFFECT_ENDURE:
             case EFFECT_MORNING_SUN:
             case EFFECT_SYNTHESIS:
@@ -6523,7 +6523,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_WEATHER_AND_SWITCH:
-    case EFFECT_DOUBLE_POWER_IF_FASTER:
+    case EFFECT_POWER_DOUBLE_IF_FASTER:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_MAGNET_RISE:
@@ -6554,7 +6554,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
         if (opposingHazardFlags)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
-    case EFFECT_REMOVE_TRAPS:
+    case EFFECT_REMOVE_HAZARDS:
         if (aiHazardFlags)
             ADJUST_SCORE(BEST_EFFECT);
         break;

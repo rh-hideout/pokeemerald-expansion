@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_GROUND_TARGET);
+    ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_GROUNDS_TARGET);
 }
 
 SINGLE_BATTLE_TEST("Smack Down does not ground mons behind substitutes")
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Smack Down does not ground mons behind substitutes")
 SINGLE_BATTLE_TEST("Thousand Arrows does not ground mons behind substitutes")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_GROUND_TARGET);
+        ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_GROUNDS_TARGET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SKARMORY);
     } WHEN {
