@@ -28,6 +28,8 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define MAX_SELECTION_ADDITIONAL_EFFECTS    5
+
 struct AdditionalEffect
 {
     enum MoveEffect moveEffect;
@@ -215,6 +217,7 @@ struct MoveInfo
 
     // primary/secondary effects
     const struct AdditionalEffect *additionalEffects;
+    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // For use by MOVE_EFFECT_ONE_FROM_MANY
 
     // contest parameters
     u8 contestEffect;
@@ -805,6 +808,11 @@ static inline enum BattleWeather GetMoveWeatherType(enum Move move)
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Move moveId, u32 effect)
 {
     return &gMovesInfo[SanitizeMoveId(moveId)].additionalEffects[effect];
+}
+
+static inline const enum MoveEffect *GetMoveSelectionMoveEffects(enum Move move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].selectionMoveEffects;
 }
 
 static inline u32 GetMoveContestEffect(enum Move moveId)
