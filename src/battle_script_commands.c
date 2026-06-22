@@ -6593,16 +6593,16 @@ static void RemoveAllTerrains(void)
     switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
     {
     case STATUS_FIELD_MISTY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_MISTY;
+        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_MISTY].endMessage;
         break;
     case STATUS_FIELD_GRASSY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_GRASSY;
+        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_GRASSY].endMessage;
         break;
     case STATUS_FIELD_ELECTRIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_ELECTRIC;
+        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_ELECTRIC].endMessage;
         break;
     case STATUS_FIELD_PSYCHIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_PSYCHIC;
+        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_PSYCHIC].endMessage;
         break;
     default:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
@@ -11281,39 +11281,17 @@ void BS_SetTerrain(void)
     NATIVE_ARGS(const u8 *jumpInstr);
     u32 statusFlag = 0;
 
-    switch (GetMoveEffect(gCurrentMove))
+    if (GetMoveEffect(gCurrentMove) == EFFECT_TERRAIN)
     {
-    case EFFECT_MISTY_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+        struct TerrainInfo terrainTypeInfo = sBattleTerrainInfo[GetMoveTerrainType(gCurrentMove)];
+
+        if (!(gFieldStatuses & terrainTypeInfo.statusFlag))
         {
-            statusFlag = STATUS_FIELD_MISTY_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
+            statusFlag = terrainTypeInfo.statusFlag;
+            gBattleCommunication[MULTISTRING_CHOOSER] = terrainTypeInfo.moveStartMessage;
         }
-        break;
-    case EFFECT_GRASSY_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
-        {
-            statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
-        }
-        break;
-    case EFFECT_ELECTRIC_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
-        {
-            statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
-        }
-        break;
-    case EFFECT_PSYCHIC_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
-        {
-            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
-        }
-        break;
-    default:
-        break;
     }
+
     if (gBattleStruct->isSkyBattle)
     {
         gBattlescriptCurrInstr = cmd->jumpInstr;

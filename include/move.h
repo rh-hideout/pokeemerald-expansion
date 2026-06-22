@@ -807,6 +807,12 @@ static inline enum BattleWeather GetMoveWeatherType(enum Move move)
     return gMovesInfo[SanitizeMoveId(move)].argument.weatherType;
 }
 
+static inline enum BattleTerrain GetMoveTerrainType(enum Move move)
+{
+    assertf(gMovesInfo[move].effect == EFFECT_TERRAIN, "not a move that sets terrain: %S", gMovesInfo[move].name);
+    return gMovesInfo[SanitizeMoveId(move)].argument.terrainType;
+}
+
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Move moveId, u32 effect)
 {
     return &gMovesInfo[SanitizeMoveId(moveId)].additionalEffects[effect];

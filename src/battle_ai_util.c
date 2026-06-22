@@ -4092,10 +4092,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_WEATHER_AND_SWITCH:
         aiEffect |= AI_EFFECT_WEATHER;
         break;
-    case EFFECT_ELECTRIC_TERRAIN:
-    case EFFECT_GRASSY_TERRAIN:
-    case EFFECT_MISTY_TERRAIN:
-    case EFFECT_PSYCHIC_TERRAIN:
+    case EFFECT_TERRAIN:
     case EFFECT_STEEL_ROLLER:
     case EFFECT_ICE_SPINNER:
         aiEffect |= AI_EFFECT_TERRAIN;
