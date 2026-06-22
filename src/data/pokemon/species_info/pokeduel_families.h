@@ -101,9 +101,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 18,
     .weight = 690,
     .description = COMPOUND_STRING(
-        "Dark Magician is the ultimate wizard\n
-        in terms of attack and defense."
-    ),
+        "Dark Magician is the ultimate wizard\n"
+        "in terms of attack and defense."),
     .pokemonScale = 256,
     .pokemonOffset = 0,
     .trainerScale = 290,
@@ -115,7 +114,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
             ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 0,
+    .enemyMonElevation = 7,
     .backPic = gMonBackPic_DarkMagician,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 0,
@@ -170,9 +169,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 24,
     .weight = 890,
     .description = COMPOUND_STRING(
-        "A Dark Magician that carries with\n
-        him the experience and wisdom\n
-        from a long and fulfilling life."
+        "A Dark Magician that carries with\n"
+        "him the experience and wisdom\n"
+        "from a long and fulfilling life."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
@@ -193,7 +192,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .palette = gMonPalette_DarkSage,
     .shinyPalette = gMonShinyPalette_DarkSage,
     .iconSprite = gMonIcon_DarkSage,
-    .iconPalIndex = 0,
+    .iconPalIndex = 2,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
     FOOTPRINT(Mudkip)
@@ -233,15 +232,15 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = { ABILITY_KEEN_EYE, ABILITY_NONE, ABILITY_NONE },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Black Chick"),
-    .cryId = CRY_TORCHICK,
+    .cryId = CRY_TORCHIC,
     .natDexNum = NATIONAL_DEX_BLACK_DRAGONS_CHICK,
     .categoryName = _("Chick"),
     .height = 8,
     .weight = 35,
     .description = COMPOUND_STRING(
-        "A feisty baby chick who's eager\n
-        to leave its nest and take the\n
-        world by storm."
+        "A feisty baby chick who's eager\n"
+        "to leave its nest and take the\n"
+        "world by storm."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
@@ -249,7 +248,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_BlackDragonsChick,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 8,
     .frontAnimFrames = ANIM_FRAMES(
             ANIMCMD_FRAME(0, 1),
     ),
@@ -257,7 +256,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .enemyMonElevation = 0,
     .backPic = gMonBackPic_BlackDragonsChick,
     .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
+    .backPicYOffset = 8,
     .backAnimId = BACK_ANIM_H_SLIDE,
     .palette = gMonPalette_BlackDragonsChick,
     .shinyPalette = gMonShinyPalette_BlackDragonsChick,
@@ -310,8 +309,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 35,
     .weight = 1000,
     .description = COMPOUND_STRING(
-        "A ferocious dragon with a deadly\n
-        attack."
+        "A ferocious dragon with a deadly\n"
+        "attack."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
@@ -324,7 +323,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
             ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 0,
+    .enemyMonElevation = 7,
     .backPic = gMonBackPic_RedEyesBlackDragon,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 0,
@@ -332,7 +331,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .palette = gMonPalette_RedEyesBlackDragon,
     .shinyPalette = gMonShinyPalette_RedEyesBlackDragon,
     .iconSprite = gMonIcon_RedEyesBlackDragon,
-    .iconPalIndex = 0,
+    .iconPalIndex = 2,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
     FOOTPRINT(Mudkip)
@@ -380,9 +379,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 44,
     .weight = 3000,
     .description = COMPOUND_STRING(
-        "Equipped with metal, this monster\n
-        fears no one. When it sheds its\n
-        coat, craters will form in the ground."
+        "Equipped with metal, this monster\n"
+        "fears no one. When it sheds its\n"
+        "coat, craters will form in the ground."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
@@ -395,7 +394,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
             ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 0,
+    .enemyMonElevation = 8,
     .backPic = gMonBackPic_RedEyesBlackMetalDragon,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 0,
@@ -449,29 +448,29 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 25,
     .weight = 800,
     .description = COMPOUND_STRING(
-        "This dragon has much destructive\n
-        potential, but requires the watchful\n
-        eye of a dragon rider to tame it."
+        "This dragon has much destructive\n"
+        "potential, but requires the watchful\n"
+        "eye of a dragon rider to tame it."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
     .trainerScale = 290,
     .trainerOffset = 2,
-    .frontPic = gMonFrontPic_PaladinOfWhiteDragonDragon,
+    .frontPic = gMonFrontPic_PaladinOfWhiteDragon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
     .frontPicYOffset = 0,
     .frontAnimFrames = ANIM_FRAMES(
             ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 0,
-    .backPic = gMonBackPic_PaladinOfWhiteDragonDragon,
+    .enemyMonElevation = 8,
+    .backPic = gMonBackPic_PaladinOfWhiteDragon,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 0,
     .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_PaladinOfWhiteDragonDragon,
-    .shinyPalette = gMonShinyPalette_PaladinOfWhiteDragonDragon,
-    .iconSprite = gMonIcon_PaladinOfWhiteDragonDragon,
+    .palette = gMonPalette_PaladinOfWhiteDragon,
+    .shinyPalette = gMonShinyPalette_PaladinOfWhiteDragon,
+    .iconSprite = gMonIcon_PaladinOfWhiteDragon,
     .iconPalIndex = 0,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
@@ -485,9 +484,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         gOverworldPalette_Mudkip,
         gShinyOverworldPalette_Mudkip
     )
-    .levelUpLearnset = sPaladinOfWhiteDragonDragonLevelUpLearnset,
-    .teachableLearnset = sPaladinOfWhiteDragonDragonTeachableLearnset,
-    .eggMoveLearnset = sPaladinOfWhiteDragonDragonEggMoveLearnset,
+    .levelUpLearnset = sPaladinOfWhiteDragonLevelUpLearnset,
+    .teachableLearnset = sPaladinOfWhiteDragonTeachableLearnset,
+    .eggMoveLearnset = sPaladinOfWhiteDragonEggMoveLearnset,
     .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_BLUE_EYES_WHITE_DRAGON}),
 },
 
@@ -519,15 +518,15 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .height = 40,
     .weight = 1500,
     .description = COMPOUND_STRING(
-        "Virtually invincible, Very few have\n
-        faced this awesome creature and\n
-        lived to tell the tale."
+        "Virtually invincible, Very few have\n"
+        "faced this awesome creature and\n"
+        "lived to tell the tale."
     ),
     .pokemonScale = 256,
     .pokemonOffset = 0,
     .trainerScale = 290,
     .trainerOffset = 2,
-    .frontPic = gMonFrontPic_BlueEyesWhiteDragonDragon,
+    .frontPic = gMonFrontPic_BlueEyesWhiteDragon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
     .frontPicYOffset = 0,
     .frontAnimFrames = ANIM_FRAMES(
@@ -535,14 +534,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
     .enemyMonElevation = 0,
-    .backPic = gMonBackPic_BlueEyesWhiteDragonDragon,
+    .backPic = gMonBackPic_BlueEyesWhiteDragon,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 0,
     .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_BlueEyesWhiteDragonDragon,
-    .shinyPalette = gMonShinyPalette_BlueEyesWhiteDragonDragon,
-    .iconSprite = gMonIcon_BlueEyesWhiteDragonDragon,
-    .iconPalIndex = 0,
+    .palette = gMonPalette_BlueEyesWhiteDragon,
+    .shinyPalette = gMonShinyPalette_BlueEyesWhiteDragon,
+    .iconSprite = gMonIcon_BlueEyesWhiteDragon,
+    .iconPalIndex = 2,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
     FOOTPRINT(Mudkip)
@@ -555,9 +554,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         gOverworldPalette_Mudkip,
         gShinyOverworldPalette_Mudkip
     )
-    .levelUpLearnset = sBlueEyesWhiteDragonDragonLevelUpLearnset,
-    .teachableLearnset = sBlueEyesWhiteDragonDragonTeachableLearnset,
-    .eggMoveLearnset = sBlueEyesWhiteDragonDragonEggMoveLearnset,
+    .levelUpLearnset = sBlueEyesWhiteDragonLevelUpLearnset,
+    .teachableLearnset = sBlueEyesWhiteDragonTeachableLearnset,
+    .eggMoveLearnset = sBlueEyesWhiteDragonEggMoveLearnset,
     .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_BLUE_EYES_WHITE_DRAGON}),
 },
 

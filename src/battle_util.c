@@ -5626,6 +5626,10 @@ enum Obedience GetAttackerObedienceForAction(void)
     u8 obedienceLevel = 0;
     u8 levelReferenced;
 
+    //Always Obey regardless of Badge/Level
+    if(B_IGNORE_OBEDIENCE)
+        return OBEYS;
+
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return OBEYS;
     if (BattlerHasAi(gBattlerAttacker))

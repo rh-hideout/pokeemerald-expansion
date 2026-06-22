@@ -23,7 +23,7 @@ static const struct LevelUpMove sDarkMagicianLevelUpLearnset[] = {
 	LEVEL_UP_MOVE(1, MOVE_LEER),
 	LEVEL_UP_MOVE(7, MOVE_PURSUIT),
 	LEVEL_UP_MOVE(10, MOVE_FOCUS_ENERGY),
-	LEVEL_UP_MOVE(13, MOVE_NEGATE),
+	//LEVEL_UP_MOVE(13, MOVE_NEGATE),
 	LEVEL_UP_MOVE(16, MOVE_FEINT_ATTACK),
 	LEVEL_UP_MOVE(20, MOVE_PSYBEAM),
 	//LEVEL_UP_MOVE(22, MOVE_SPELLBINDING_CIRCLE),
@@ -41,11 +41,11 @@ static const struct LevelUpMove sDarkMagicianLevelUpLearnset[] = {
 static const struct LevelUpMove sDarkSageLevelUpLearnset[] = {
    // LEVEL_UP_MOVE(1, MOVE_YAMI_TERRAIN),
 	LEVEL_UP_MOVE(1, MOVE_FEINT_ATTACK),
-	LEVEL_UP_MOVE(1, MOVE_NEGATE),
+	//LEVEL_UP_MOVE(1, MOVE_NEGATE),
 	LEVEL_UP_MOVE(1, MOVE_AMNESIA),
 	LEVEL_UP_MOVE(7, MOVE_PURSUIT),
 	LEVEL_UP_MOVE(10, MOVE_FOCUS_ENERGY),
-	LEVEL_UP_MOVE(13, MOVE_NEGATE),
+	//LEVEL_UP_MOVE(13, MOVE_NEGATE),
 	LEVEL_UP_MOVE(20, MOVE_PSYBEAM),
 	//LEVEL_UP_MOVE(22, MOVE_SPELLBINDING_CIRCLE),
 	LEVEL_UP_MOVE(24, MOVE_DISABLE),
@@ -97,7 +97,7 @@ static const struct LevelUpMove sRedEyesBlackDragonLevelUpLearnset[] = {
 };
 
 //Red Eyes Black Metal Dragon
-static const struct LevelUpMove sRedEyesBlackMetalDragonChickLevelUpLearnset[] = {
+static const struct LevelUpMove sRedEyesBlackMetalDragonLevelUpLearnset[] = {
    	LEVEL_UP_MOVE(1, MOVE_STEEL_WING),
 	LEVEL_UP_MOVE(1, MOVE_GROWL),
 	LEVEL_UP_MOVE(7, MOVE_QUICK_ATTACK),
@@ -119,7 +119,7 @@ static const struct LevelUpMove sRedEyesBlackMetalDragonChickLevelUpLearnset[] =
 };
 
 //Paladin of White Dragon
-static const struct LevelUpMove sPaladinOfWhiteDragonDragonLevelUpLearnset[] = {
+static const struct LevelUpMove sPaladinOfWhiteDragonLevelUpLearnset[] = {
 	LEVEL_UP_MOVE(1, MOVE_SCRATCH),
 	LEVEL_UP_MOVE(1, MOVE_GROWL),
 	LEVEL_UP_MOVE(7, MOVE_RAGE),
@@ -134,7 +134,7 @@ static const struct LevelUpMove sPaladinOfWhiteDragonDragonLevelUpLearnset[] = {
 };
 
 //Blue Eyes White Dragon
-static const struct LevelUpMove sBlueEyesWhiteDragonDragonLevelUpLearnset[] = {
+static const struct LevelUpMove sBlueEyesWhiteDragonLevelUpLearnset[] = {
 	LEVEL_UP_MOVE(1, MOVE_SCRATCH),
 	LEVEL_UP_MOVE(1, MOVE_GROWL),
 	LEVEL_UP_MOVE(7, MOVE_RAGE),
