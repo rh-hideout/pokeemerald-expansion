@@ -1189,8 +1189,8 @@ static inline bool32 IsGhostBattleWithoutScope(void)
 
 struct TerrainInfo
 {
-    u8 extender;
-    u8 seed;
+    u8 extender; // Unused
+    u8 seed; // Unused
     u8 abilityStartMessage; // Unused
     u8 moveStartMessage;
     u8 endMessage;
