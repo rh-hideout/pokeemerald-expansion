@@ -15469,7 +15469,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The ground turns to grass\n"
             "for 5 turns. Restores HP."),
-        .effect = EFFECT_GRASSY_TERRAIN,
+        .effect = EFFECT_TERRAIN,
         .power = 0,
         .type = TYPE_GRASS,
         .accuracy = 0,
@@ -15477,6 +15477,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FIELD,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .terrainType = B_TERRAIN_GRASSY },
         .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -15494,7 +15495,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Covers the ground with mist\n"
             "for 5 turns. Blocks status."),
-        .effect = EFFECT_MISTY_TERRAIN,
+        .effect = EFFECT_TERRAIN,
         .power = 0,
         .type = TYPE_FAIRY,
         .accuracy = 0,
@@ -15502,6 +15503,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FIELD,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .terrainType = B_TERRAIN_MISTY },
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -16116,7 +16118,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Electrifies the ground for\n"
             "5 turns. Prevents sleep."),
-        .effect = EFFECT_ELECTRIC_TERRAIN,
+        .effect = EFFECT_TERRAIN,
         .power = 0,
         .type = TYPE_ELECTRIC,
         .accuracy = 0,
@@ -16124,6 +16126,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FIELD,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .terrainType = B_TERRAIN_ELECTRIC },
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,

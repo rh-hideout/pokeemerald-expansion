@@ -211,6 +211,7 @@ struct MoveInfo
         u32 nonVolatileStatus;
         u32 overwriteAbility;
         u32 weatherType;
+        u32 terrainType;
     } argument;
 
     // primary/secondary effects
