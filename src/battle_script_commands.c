@@ -2452,11 +2452,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         const enum MoveEffect *sOneFromManyEffects = GetMoveSelectionMoveEffects(gCurrentMove);
         u32 validEffectCount = 0;
 
-        while (sOneFromManyEffects[validEffectCount] != MOVE_EFFECT_NONE)
+        while (validEffectCount < MAX_SELECTION_ADDITIONAL_EFFECTS && sOneFromManyEffects[validEffectCount] != MOVE_EFFECT_NONE)
         {
             validEffectCount++;
-            if (ARRAY_COUNT(sOneFromManyEffects) == validEffectCount)
-                break;
         }
 
         assertf(validEffectCount != 0, "Missing or empty selectionMoveEffects array for move %S", gMovesInfo[gCurrentMove].name)
