@@ -2602,7 +2602,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_TERRAIN:
-        if (gFieldStatuses & sBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag
+        if (gFieldStatuses & gBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag
          || (HasPartner(battlerAtk) && AreMovesEquivalent(battlerAtk, BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)))
             ADJUST_SCORE(-10);
         break;
@@ -5219,7 +5219,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_TERRAIN:
         enum BattleTerrain terrainType = GetMoveTerrainType(move);
 
-        if (ShouldSetFieldStatus(battlerAtk, sBattleTerrainInfo[terrainType].statusFlag))
+        if (ShouldSetFieldStatus(battlerAtk, gBattleTerrainInfo[terrainType].statusFlag))
         {
             ADJUST_SCORE(GOOD_EFFECT);
             if (
@@ -6372,7 +6372,7 @@ static s32 AI_PowerfulStatus(enum BattlerId battlerAtk, enum BattlerId battlerDe
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_TERRAIN:
-        if (!(gFieldStatuses & sBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag))
+        if (!(gFieldStatuses & gBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_WEATHER:

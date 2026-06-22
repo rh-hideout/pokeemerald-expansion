@@ -1243,7 +1243,7 @@ static bool32 HandleEndTurnTerrain(enum BattlerId battler)
     if (gFieldTimers.terrainTimer > 0 && --gFieldTimers.terrainTimer == 0)
     {
         TryToRevertMimicryAndFlags();
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[gFieldTimers.terrain].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[gFieldTimers.terrain].endMessage;
         gBattleScripting.battler = gBattlerAttacker;
         BattleScriptCall(BattleScript_TerrainEnds);
         gFieldTimers.terrain = B_TERRAIN_NONE;

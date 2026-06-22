@@ -6593,16 +6593,16 @@ static void RemoveAllTerrains(void)
     switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
     {
     case STATUS_FIELD_MISTY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_MISTY].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[B_TERRAIN_MISTY].endMessage;
         break;
     case STATUS_FIELD_GRASSY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_GRASSY].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[B_TERRAIN_GRASSY].endMessage;
         break;
     case STATUS_FIELD_ELECTRIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_ELECTRIC].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[B_TERRAIN_ELECTRIC].endMessage;
         break;
     case STATUS_FIELD_PSYCHIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleTerrainInfo[B_TERRAIN_PSYCHIC].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[B_TERRAIN_PSYCHIC].endMessage;
         break;
     default:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
@@ -11283,7 +11283,7 @@ void BS_SetTerrain(void)
 
     if (GetMoveEffect(gCurrentMove) == EFFECT_TERRAIN)
     {
-        struct TerrainInfo terrainTypeInfo = sBattleTerrainInfo[GetMoveTerrainType(gCurrentMove)];
+        struct TerrainInfo terrainTypeInfo = gBattleTerrainInfo[GetMoveTerrainType(gCurrentMove)];
 
         if (!(gFieldStatuses & terrainTypeInfo.statusFlag))
         {
