@@ -386,7 +386,10 @@ void BuildOamBuffer(void)
     for (i = 0, oamIndex = 0; i < toSort; i++)
     {
         if (AddSpriteToOamBuffer(&gSprites[spritePriorities[i] & 0xFF], &oamIndex))
+        {
+            errorf("Failed to add sprite to OAM");
             break;
+        }
     }
 
     for (i = oamIndex; i < sOamDummyIndex; i++)
