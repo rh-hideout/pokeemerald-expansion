@@ -102,6 +102,27 @@ static const u8 sPkblToEscapeFactor[][3] = {
 static const u8 sGoNearCounterToCatchFactor[] = {4, 3, 2, 1};
 static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
 
+enum BattleTerrain
+{
+    B_TERRAIN_NONE,
+    B_TERRAIN_GRASSY,
+    B_TERRAIN_MISTY,
+    B_TERRAIN_ELECTRIC,
+    B_TERRAIN_PSYCHIC,
+    B_TERRAIN_COUNT,
+};
+
+struct TerrainInfo
+{
+    u8 extender;
+    u8 abilityStartMessage;
+    u8 moveStartMessage;
+    u8 endMessage;
+};
+
+static const struct TerrainInfo sBattleTerrainInfo[B_TERRAIN_COUNT] = {
+};
+
 struct BattleWeatherInfo
 {
     u16 flag;

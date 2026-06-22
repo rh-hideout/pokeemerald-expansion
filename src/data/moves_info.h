@@ -17069,7 +17069,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "The ground turns weird for\n"
             "5 turns. Blocks priority."),
-        .effect = EFFECT_PSYCHIC_TERRAIN,
+        .effect = EFFECT_TERRAIN,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
@@ -17077,6 +17077,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FIELD,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .terrainType = B_TERRAIN_PSYCHIC },
         .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
