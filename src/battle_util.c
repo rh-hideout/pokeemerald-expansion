@@ -8705,7 +8705,7 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
         return FALSE;
-    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId))
+    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId) || (DoesSpeciesUseHoldItemToChangeForm(otherSpecies, itemId) && GetConfig(B_KNOCK_OFF_REMOVAL) < GEN_CHAMPIONS))
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;

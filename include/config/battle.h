@@ -136,6 +136,7 @@
 #define B_ALLY_SWITCH_FAIL_CHANCE       GEN_LATEST // In Gen9+, Ally Switch has a chance to fail if used consecutively.
 #define B_SKETCH_BANS                   GEN_LATEST // In Gen9+, Sketch is able to copy less moves than in previous generations.
 #define B_KNOCK_OFF_REMOVAL             GEN_LATEST // In Gen5+, Knock Off removes the foe's item instead of rendering it unusable.
+                                                   // In Champions, Knock Off no longer checks if the target's item can be removed from the user when determining removal.
 #define B_HEAL_BELL_SOUNDPROOF          GEN_LATEST // In Gen6+, Heal Bell affects inactive party members with Soundproof. In Gen5 only, it affects all party members, including active ones. In Gen4 and earlier, it does not affect any Pokémon with Soundproof.
 #define B_CHARGE                        GEN_LATEST // In Gen7 and earlier, Charge status is lost regardless of the typing of the next move.
 #define B_POWDER_STATUS_HEAVY_RAIN      GEN_LATEST // In Gen7+, Powder no longer damages the user of a Fire-type move in heavy rain.
