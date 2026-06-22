@@ -8377,7 +8377,7 @@ static void Cmd_presentdamagecalculation(void)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE);
         SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 4);
-        gBattlescriptCurrInstr = BattleScript_PresentHealTarget;
+        gBattlescriptCurrInstr = BattleScript_HealTarget;
     }
 }
 

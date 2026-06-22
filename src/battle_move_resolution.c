@@ -25,7 +25,7 @@ static bool32 TryMagicBounce(struct BattleCalcValues *cv);
 static bool32 TryMagicCoat(struct BattleCalcValues *cv);
 static bool32 TryActivatePowderStatus(enum Move move);
 static void CalculateMagnitudeDamage(void);
-static void UpdateStallMons(void);
+static void UpdateStallMons(struct BattleCalcValues *cv);
 
 // Submoves
 static enum Move GetMirrorMoveMove(void);
@@ -490,7 +490,7 @@ static enum CancelerResult CancelerZMoves(struct BattleCalcValues *cv)
         SetGimmickAsActivated(cv->battlerAtk, GIMMICK_Z_MOVE);
 
         gBattleScripting.battler = cv->battlerAtk;
-        if (GetMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
+        if (IsBattleMoveStatus(cv->move))
             BattleScriptCall(BattleScript_ZMoveActivateStatus);
         else
             BattleScriptCall(BattleScript_ZMoveActivateDamaging);
@@ -688,7 +688,7 @@ static bool32 IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId batt
     if (battlerDef == BATTLE_PARTNER(battlerAtk) || battlerAtk == battlerDef)
     {
         // Because of Magic Bounce and Magic Coat we don't want to set MOVE_RESULT_NO_EFFECT
-        if (GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS)
+        if (!IsBattleMoveStatus(gCurrentMove))
             gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
         return skipFailure;
     }
@@ -1462,6 +1462,24 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             }
             else
             {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
+        case EFFECT_PRESENT:
+            if (gBattleStruct->presentBasePower > 0)
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            else if (gBattleMons[cv->battlerDef].maxHP == gBattleMons[cv->battlerDef].hp)
+            {
+                battleScript = BattleScript_AlreadyAtFullHp;
+            }
+            else
+            {
+                SetHealAmount(cv->battlerDef, GetNonDynamaxMaxHP(cv->battlerDef) / 4);
+                gBattlescriptCurrInstr = BattleScript_PresentHeal;
                 numAffectedTargets++;
                 continue;
             }
@@ -2279,7 +2297,7 @@ static bool32 IsMoveParentalBondAffected(struct BattleCalcValues *cv)
     if (cv->abilities[cv->battlerAtk] != ABILITY_PARENTAL_BOND
      || gBattleStruct->numSpreadTargets > 1
      || IsMoveParentalBondBanned(cv->move)
-     || GetMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS
+     || IsBattleMoveStatus(cv->move)
      || gBattleMoveEffects[cv->moveEffect].twoTurnEffect
      || cv->moveEffect == EFFECT_OHKO
      || GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE
@@ -2448,7 +2466,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
 
 static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 {
-    if (GetMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
+    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
         return CANCELER_RESULT_SUCCESS;
 
     struct DamageContext ctx = {
@@ -3142,7 +3160,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
 {
     if (!IsOnPlayerSide(cv->battlerAtk))
-        UpdateStallMons();
+        UpdateStallMons(cv);
 
     if (gBattleStruct->snatchedMoveIsUsed)
     {
@@ -4243,7 +4261,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
         {
             if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                 break;
-            
+
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
@@ -4489,7 +4507,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     // check if Stellar type boost should be used up
     if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_TERA
      && GetBattlerTeraType(cv->battlerAtk) == TYPE_STELLAR
-     && GetMoveCategory(cv->move) != DAMAGE_CATEGORY_STATUS
+     && !IsBattleMoveStatus(cv->move)
      && IsTypeStellarBoosted(cv->battlerAtk, moveType))
         ExpendTypeStellarBoost(cv->battlerAtk, moveType);
     memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
@@ -5446,30 +5464,19 @@ static void CalculateMagnitudeDamage(void)
     PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 2, magnitude)
 }
 
-static void UpdateStallMons(void)
+static void UpdateStallMons(struct BattleCalcValues *cv)
 {
-    if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) || GetMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_STATUS)
+    if (IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES) || IsBattleMoveStatus(cv->move))
         return;
 
-    struct BattleCalcValues cv = {
-        .battlerAtk = gBattlerAttacker,
-        .battlerDef = gBattlerTarget,
-        .move = gCurrentMove,
-    };
-
-    cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
-    cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
-    cv.holdEffects[cv.battlerAtk] = GetBattlerHoldEffect(cv.battlerAtk);
-    cv.holdEffects[cv.battlerDef] = GetBattlerHoldEffect(cv.battlerDef);
-
-    if (IsBattlerProtected(&cv))
+    if (IsBattlerProtected(cv))
         return;
 
-    enum MoveTarget target = GetBattlerMoveTargetType(cv.battlerAtk, cv.move);
+    enum MoveTarget target = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
     if (!IsDoubleBattle() || target == TARGET_SELECTED)
     {
-        if (gSpecialStatuses[cv.battlerDef].updateStallMons)
-            gAiBattleData->playerStallMons[gBattlerPartyIndexes[gBattlerTarget]]++;
+        if (gSpecialStatuses[cv->battlerDef].updateStallMons)
+            gAiBattleData->playerStallMons[gBattlerPartyIndexes[cv->battlerDef]]++;
     }
     //  Handling for moves that target multiple opponents in doubles not handled currently
 }

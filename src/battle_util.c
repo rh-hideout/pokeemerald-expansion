@@ -1429,7 +1429,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_SPIT_UP
      && gBattleMons[battler].volatiles.stockpileCounter == 0
@@ -1438,7 +1438,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
      && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move))
@@ -1447,7 +1447,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_LAST_RESORT
      && !CanUseLastResort(battler)
@@ -8158,7 +8158,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         TryNoticeIllusionInTypeEffectiveness(ctx->move, ctx->moveType, ctx->battlerAtk, ctx->battlerDef, modifier, illusionSpecies);
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
-    bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
+    bool32 ignoreTypeCalc = isPresentHealing || IsBattleMoveStatus(ctx->move);
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);
@@ -8970,6 +8970,8 @@ enum DamageCategory GetBattleMoveCategory(enum Move move)
 {
     if (gBattleStruct != NULL)
     {
+        if (GetMoveEffect(move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
+            return DAMAGE_CATEGORY_STATUS;
         if (gBattleStruct->swapDamageCategory) // Photon Geyser, Shell Side Arm, Light That Burns the Sky, Tera Blast
             return SwapMoveDamageCategory(move);
         if (IsZMove(move) || IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
@@ -9399,7 +9401,7 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
         CalculateMonStatsCont(mon, FALSE);
     else
         CalculateMonStats(mon);
-        
+
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);
