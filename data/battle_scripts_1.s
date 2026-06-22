@@ -5347,7 +5347,7 @@ BattleScript_ItemHealHP_RemoveItem::
 	return
 
 BattleScript_ItemHealHP_RemoveItemRet_AnimContinue:
-	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
+	playanimation BS_SCRIPTING, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	removeitem BS_SCRIPTING
