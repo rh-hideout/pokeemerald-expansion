@@ -387,7 +387,7 @@ void BuildOamBuffer(void)
     {
         if (AddSpriteToOamBuffer(&gSprites[spritePriorities[i] & 0xFF], &oamIndex))
         {
-            errorf("Failed to add sprite to OAM");
+            errorf("Failed to add sprite OAMs to OamBuffer");
             break;
         }
     }
@@ -1746,10 +1746,8 @@ void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subs
 
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
-    assertf(*oamIndex < gOamLimit, "Out of Oam slots")
-    {
+    if (*oamIndex >= gOamLimit)
         return 1;
-    }
 
     if (!sprite->subspriteTables || sprite->subspriteMode == SUBSPRITES_OFF)
     {
@@ -1767,10 +1765,9 @@ bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 
 static bool8 AddObjWinMaskToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
-    assertf(*oamIndex < gOamLimit, "Out of Oam slots")
-    {
+
+    if (*oamIndex >= gOamLimit)
         return 1;
-    }
 
     struct OamData oam = sprite->oam;
     oam.objMode = ST_OAM_OBJ_WINDOW;
@@ -1818,10 +1815,10 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
             u16 x;
             u16 y;
 
-            assertf (*oamIndex < gOamLimit, "Out of Oam Slots")
-            {
+            u32 limit = sprite->objWinMask ? gOamLimit - 1 : gOamLimit;
+
+            if (*oamIndex >= limit)
                 return 1;
-            }
 
             x = subspriteTable->subsprites[i].x;
             y = subspriteTable->subsprites[i].y;
@@ -1858,6 +1855,9 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
 
             if (sprite->objWinMask)
             {
+                if (*oamIndex >= gOamLimit)
+                    return 1;
+
                 subspriteOam.objMode = ST_OAM_OBJ_WINDOW;
                 destOam[subspriteCount+i] = subspriteOam;
             }
