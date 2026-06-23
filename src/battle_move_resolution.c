@@ -1049,7 +1049,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
             gBattleScripting.animTargetsHit = 0;
 
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
-            SetTypeBeforeUsingMove(cv->move, cv->battlerAtk);
+            SetDynamicMoveTypeAndCategory(cv->move, cv->battlerAtk);
             ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(cv->move);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -1310,7 +1310,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
          || gBattleMons[cv->battlerAtk].volatiles.embargo)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_PRESENT:
+    case EFFECT_PRESENT: // Might be better in SetDynamicMoveCategory?
     {
         u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
         if (rand < 102)
@@ -1320,7 +1320,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         else if (rand < 204)
             gBattleStruct->presentBasePower = 120;
         else
-            gBattleStruct->presentBasePower = 0; // Healing
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_STATUS;
         break;
     }
     case EFFECT_BELCH:
@@ -2301,7 +2301,6 @@ static bool32 IsMoveParentalBondAffected(struct BattleCalcValues *cv)
      || gBattleMoveEffects[cv->moveEffect].twoTurnEffect
      || cv->moveEffect == EFFECT_OHKO
      || GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE
-     || (cv->moveEffect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
      || cv->move == MOVE_STRUGGLE)
         return FALSE;
     return TRUE;
@@ -2492,7 +2491,6 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
             continue;
 
         ctx.battlerDef = battlerDef;
-        SetDynamicMoveCategory(cv->battlerAtk, battlerDef, cv->move);
         gBattleStruct->moveDamage[battlerDef] = CalculateMoveDamage(&ctx);
     }
 
@@ -4486,8 +4484,6 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gProtectStructs[cv->battlerAtk].shellTrap = FALSE;
     gBattleStruct->battlerState[cv->battlerAtk].ateBoost = FALSE;
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    gBattleStruct->swapDamageCategory = FALSE;
-    gBattleStruct->categoryOverride = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->triAttackBurn = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
@@ -4501,6 +4497,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
 
     if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE)
         SetActiveGimmick(cv->battlerAtk, GIMMICK_NONE);
+
     if (gBattleMons[cv->battlerAtk].volatiles.destinyBond > 0)
         gBattleMons[cv->battlerAtk].volatiles.destinyBond--;
 

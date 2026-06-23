@@ -505,7 +505,6 @@ static void Cmd_setvolatile(void);
 static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
 static void Cmd_setembargo(void);
-static void Cmd_presentdamagecalculation(void);
 static void Cmd_setsafeguard(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
@@ -723,7 +722,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
-    [B_SCR_OP_PRESENTDAMAGECALCULATION]              = Cmd_presentdamagecalculation,
     [B_SCR_OP_SETSAFEGUARD]                          = Cmd_setsafeguard,
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
@@ -818,6 +816,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_36]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_37]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1124,12 +1123,6 @@ static void Cmd_printselectionstringfromtable(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         gBattleCommunication[MSG_DISPLAY] = 1;
     }
-}
-
-static inline void SetDynamicMoveCategoryAndDamage(struct DamageContext *ctx)
-{
-    SetDynamicMoveCategory(gBattlerAttacker, ctx->battlerDef, gCurrentMove);
-    gBattleStruct->moveDamage[ctx->battlerDef] = CalculateMoveDamage(ctx);
 }
 
 static void Cmd_typecalc(void)
@@ -5922,7 +5915,7 @@ static void ResetValuesForCalledMove(void)
         gBattleStruct->eventState.atkCanceler = CANCELER_VOLATILE_BLOCKED;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
-    SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
+    SetDynamicMoveTypeAndCategory(gCurrentMove, gBattlerAttacker);
     ClearDamageCalcResults();
 }
 
@@ -8358,26 +8351,6 @@ static void Cmd_setembargo(void)
         gBattleMons[gBattlerTarget].volatiles.embargo = TRUE;
         gBattleMons[gBattlerTarget].volatiles.embargoTimer = B_EMBARGO_TIMER;
         gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-static void Cmd_presentdamagecalculation(void)
-{
-    CMD_ARGS();
-
-    if (gBattleStruct->presentBasePower)
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else if (gBattleMons[gBattlerTarget].maxHP == gBattleMons[gBattlerTarget].hp)
-    {
-        gBattlescriptCurrInstr = BattleScript_AlreadyAtFullHp;
-    }
-    else
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE);
-        SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 4);
-        gBattlescriptCurrInstr = BattleScript_HealTarget;
     }
 }
 
@@ -14575,12 +14548,12 @@ void BS_DestroyItemPopup(void)
 
     if (IsAnyAbilityPopUpActive())
         return;
-        
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         DestroyAbilityPopUp(battler);
 
     FreeAbilityPopUpGfx();
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14596,6 +14569,6 @@ void BS_MultiHitPlurality(void)
     {
         PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_S);
     }
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

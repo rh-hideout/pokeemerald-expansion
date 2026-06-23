@@ -865,8 +865,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
     }
 
-    SetDynamicMoveCategory(battlerAtk, battlerDef, move);
-    SetTypeBeforeUsingMove(move, battlerAtk);
+    SetDynamicMoveTypeAndCategory(move, battlerAtk);
 
     // We can set those globals because they are going to get rerolled on attack execution
     gBattleStruct->magnitudeBasePower = 70;
@@ -966,9 +965,6 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     // convert multiper to AI_EFFECTIVENESS_xX
     *typeEffectiveness = ctx.typeEffectivenessModifier;
 
-    // Undo temporary settings
-    gBattleStruct->dynamicMoveType = 0;
-    gBattleStruct->swapDamageCategory = FALSE;
     if (toggledGimmickAtk)
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
     if (toggledGimmickDef)
@@ -1318,7 +1314,7 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum
     SetBattlerData(battlerDef);
 
     gBattleStruct->dynamicMoveType = 0;
-    SetTypeBeforeUsingMove(move, battlerAtk);
+    SetDynamicMoveTypeAndCategory(move, battlerAtk);
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;

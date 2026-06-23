@@ -2860,9 +2860,6 @@ static void BattleStartClearSetData(void)
         }
     }
 
-    gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
-    gBattleStruct->categoryOverride = FALSE; // used for Z-Moves and Max Moves
-
     ClearPursuitValues();
     gSelectedMonPartyId = PARTY_SIZE; // Revival Blessing
     gCategoryIconSpriteId = 0xFF;
@@ -5645,7 +5642,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
                     hpTypes[hpTypeCount++] = i;
             }
             moveType = ((hpTypeCount - 1) * typeBits) / 63;
-            return ((hpTypes[moveType] | F_DYNAMIC_TYPE_IGNORE_PHYSICALITY) & 0x3F);
+            return hpTypes[moveType];
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
@@ -5793,28 +5790,30 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     return TYPE_NONE;
 }
 
-void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
+void SetDynamicMoveTypeAndCategory(enum Move move, enum BattlerId battler)
 {
     enum Type moveType;
     enum Item heldItem = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
-    gBattleStruct->dynamicMoveType = 0;
+    gBattleStruct->dynamicMoveType = TYPE_NONE;
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
     gBattleStruct->battlerState[battler].ateBoost = FALSE;
     gSpecialStatuses[battler].gemBoost = FALSE;
 
+    SetDynamicMoveCategory(battler, gBattlerTarget, move);
     moveType = GetDynamicMoveType(GetBattlerMon(battler),
                                   move,
                                   battler,
                                   MON_IN_BATTLE);
 
     if (moveType != TYPE_NONE)
-        gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
+        gBattleStruct->dynamicMoveType = moveType;
 
     moveType = GetBattleMoveType(move);
     if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL)
      || gBattleMons[battler].volatiles.electrified)
-        gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
+        gBattleStruct->dynamicMoveType = TYPE_ELECTRIC;
 
     // Check if a gem should activate.
     u32 effect = GetMoveEffect(move);

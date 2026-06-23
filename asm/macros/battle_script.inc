@@ -879,10 +879,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro presentdamagecalculation
-	.byte B_SCR_OP_PRESENTDAMAGECALCULATION
-	.endm
-
 	.macro setsafeguard
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
@@ -2124,7 +2120,7 @@
 	.macro catchornot
 	callnative BS_CatchOrNot
 	.endm
-	
+
 	.macro showitempopup battler:req
 	callnative BS_ShowItemPopup
 	.byte \battler
