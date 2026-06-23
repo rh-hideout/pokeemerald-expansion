@@ -811,11 +811,6 @@ static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Mo
     return &gMovesInfo[SanitizeMoveId(moveId)].additionalEffects[effect];
 }
 
-static inline const enum MoveEffect *GetMoveRandomMoveEffects(enum Move move, u32 effect)
-{
-    return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].randomMoveEffects;
-}
-
 static inline u32 GetMoveContestEffect(enum Move moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].contestEffect;

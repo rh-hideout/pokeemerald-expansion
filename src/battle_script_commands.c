@@ -2450,7 +2450,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_RANDOM_FROM_LIST:
     {
         // Better to pass the additional effect as an argument but for now that works
-        const enum MoveEffect *sRandomFromListEffects = GetMoveRandomMoveEffects(gCurrentMove, gBattleStruct->additionalEffectsCounter);;
+        const enum MoveEffect *sRandomFromListEffects = gMovesInfo[SanitizeMoveId(gCurrentMove)].additionalEffects[gBattleStruct->additionalEffectsCounter].randomMoveEffects;
         u32 validEffectCount = 0;
 
         while (validEffectCount < MAX_RANDOM_ADDITIONAL_EFFECTS && sRandomFromListEffects[validEffectCount] != MOVE_EFFECT_NONE)
