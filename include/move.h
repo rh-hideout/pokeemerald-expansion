@@ -28,7 +28,7 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
-#define MAX_RANDOM_ADDITIONAL_EFFECTS    5
+#define MAX_RANDOM_ADDITIONAL_EFFECTS   3
 
 struct AdditionalEffect
 {
