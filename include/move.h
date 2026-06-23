@@ -813,7 +813,7 @@ static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Mo
 
 static inline const enum MoveEffect *GetMoveSelectionMoveEffects(enum Move move, u32 effect)
 {
-    assertf(gMovesInfo[move].additionalEffects[effect].effect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses selectionMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].effect);
+    assertf(gMovesInfo[move].additionalEffects[effect].moveEffect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses selectionMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].moveEffect);
     return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].selectionMoveEffects;
 }
 
