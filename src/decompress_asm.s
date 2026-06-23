@@ -49,6 +49,12 @@ SmolFrameUncomp:
 	ldrh r3, [r0] // frame size in tiles and number of frames
 	and r5, r3, #0xFF00
 	lsr r5, r5, #3 // frame_size_bytes
+
+// check if frame_index is out of bounds
+	and r3, r3, #0x00FF
+	cmp r2, r3
+	bge decompress_done
+
 	lsl r2, r2, #1 // index of offset compound - 2
 	
 // opt: we can omit this by reframing the offset to index from 2 and using incrementing ldrh above
