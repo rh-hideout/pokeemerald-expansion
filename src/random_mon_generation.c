@@ -13,7 +13,6 @@
 #include "constants/pokeball.h"
 #include "constants/species.h"
 
-#define EXHAUSTIVE_SEARCH_POOL_MAX_SIZE 20
 #define INVALID_RANDOM_SPECIES SPECIES_NONE
 
 enum RandomSpeciesDexMode
@@ -232,9 +231,9 @@ static bool32 DoesSpeciesHaveValidForm(s32 species, void *params)
     if (!options->randomizeForms || formTable == NULL)
     {
         if (IsSpeciesBannedByRandomSpeciesOptions(species, options, filterFuncArgs))
-            return TRUE;
-        else
             return FALSE;
+        else
+            return TRUE;
     }
 
     u16 validForms[RANDOM_MON_MAX_FORMS];
@@ -304,6 +303,7 @@ enum Species GetRandomSpeciesWithSeed(rng_value_t *rng, u32 optionId, const stru
         .rng = rng,
         .randomForm = 0,
     };
+
     s32 randSpeciesIndex = RandomElementFromFilteredArray(rng, speciesIndexes, poolSize, &DoesSpeciesHaveValidForm, (void *)&speciesParams);
     enum Species result;
     if (randSpeciesIndex == poolSize)
@@ -357,11 +357,11 @@ struct RandomItemParams
     const struct FilterFuncArgs *filterFuncArgs;
 };
 
-static bool32 IsRandomItemExcluded(s32 index, void *params)
+static bool32 IsItemAllowed(s32 index, void *params)
 {
     const struct RandomItemParams *itemParams = (struct RandomItemParams *)params;
 
-    return !IsRandomItemAllowed(itemParams->options, index, itemParams->filterFuncArgs);
+    return IsRandomItemAllowed(itemParams->options, index, itemParams->filterFuncArgs);
 }
 
 static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs)
@@ -413,7 +413,7 @@ enum Item GetRandomItemWithSeed(rng_value_t *rng, u32 optionId, const struct Fil
         .options = options,
         .filterFuncArgs = filterFuncArgs,
     };
-    s32 randItemIndex = RandomElementFromFilteredArray(rng, itemIndexes, poolSize, &IsRandomItemExcluded, (void *)&itemParams);
+    s32 randItemIndex = RandomElementFromFilteredArray(rng, itemIndexes, poolSize, &IsItemAllowed, (void *)&itemParams);
     if (randItemIndex == poolSize)
     {
         errorf("Could not find a random held item matching random item options");
