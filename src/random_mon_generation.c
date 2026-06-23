@@ -337,8 +337,25 @@ enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterF
     return GetRandomSpeciesWithSeed(&gRngValue, optionId, filterFuncArgs);
 }
 
-static bool32 IsRandomItemAllowed(const struct RandomItemGeneratorOptions *options, enum Item item, const struct FilterFuncArgs *filterFuncArgs)
+static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs)
 {
+    (void)filterFuncArgs;
+
+    return GetItemHoldEffect(item) != HOLD_EFFECT_NONE;
+}
+
+struct RandomItemParams
+{
+    const struct RandomItemGeneratorOptions *options;
+    const struct FilterFuncArgs *filterFuncArgs;
+};
+
+static bool32 IsRandomItemAllowed(s32 item, void *params)
+{
+    struct RandomItemParams *itemParams = (struct RandomItemParams *)params;
+    const struct RandomItemGeneratorOptions *options = itemParams->options;
+    const struct FilterFuncArgs *filterFuncArgs = itemParams->filterFuncArgs;
+
     enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
     if (GetItemPocket(item) == POCKET_KEY_ITEMS)
@@ -354,26 +371,6 @@ static bool32 IsRandomItemAllowed(const struct RandomItemGeneratorOptions *optio
         return FALSE;
 
     return TRUE;
-}
-
-struct RandomItemParams
-{
-    const struct RandomItemGeneratorOptions *options;
-    const struct FilterFuncArgs *filterFuncArgs;
-};
-
-static bool32 IsItemAllowed(s32 index, void *params)
-{
-    const struct RandomItemParams *itemParams = (struct RandomItemParams *)params;
-
-    return IsRandomItemAllowed(itemParams->options, index, itemParams->filterFuncArgs);
-}
-
-static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs)
-{
-    (void)filterFuncArgs;
-
-    return GetItemHoldEffect(item) != HOLD_EFFECT_NONE;
 }
 
 enum Item GetRandomItemWithSeed(rng_value_t *rng, u32 optionId, const struct FilterFuncArgs *filterFuncArgs)
@@ -418,7 +415,7 @@ enum Item GetRandomItemWithSeed(rng_value_t *rng, u32 optionId, const struct Fil
         .options = options,
         .filterFuncArgs = filterFuncArgs,
     };
-    s32 randItemIndex = RandomElementFromFilteredArray(rng, itemIndexes, poolSize, &IsItemAllowed, (void *)&itemParams);
+    s32 randItemIndex = RandomElementFromFilteredArray(rng, itemIndexes, poolSize, &IsRandomItemAllowed, (void *)&itemParams);
     if (randItemIndex == poolSize)
     {
         errorf("Could not find a random held item matching random item options");
