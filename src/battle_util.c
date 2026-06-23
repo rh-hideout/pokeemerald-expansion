@@ -10437,10 +10437,6 @@ bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
     if (CanMoveSkipAccuracyCalc(cv, weather, RUN_SCRIPT))
         return FALSE;
 
-    enum BattlerId partnerAtk = BATTLE_PARTNER(cv->battlerAtk);
-    if (IsBattlerAlly(cv->battlerAtk, partnerAtk)) // Victory Star is not ignored by ally Mold Breaker
-        cv->abilities[partnerAtk] = GetBattlerAbilityIgnoreMoldBreaker(partnerAtk);
-
     u32 accuracy = GetTotalAccuracy(cv, weather);
 
     return !RandomPercentage(RNG_ACCURACY, accuracy);

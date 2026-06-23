@@ -696,7 +696,7 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (battlerAtk == battler || IsBattlerAlly(battlerAtk, battler)) // Victory Star is not ignored by Mold Breaker
+        if (battlerAtk == battler)
            cv.abilities[battler] = aiData->abilities[battler];
         else
             cv.abilities[battler] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battler], aiData->holdEffects[battler], move);
