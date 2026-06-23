@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Primal Reversion happens for Groudon only when holding Red Orb")
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_RED_ORB; }
     PARAMETRIZE { heldItem = ITEM_BLUE_ORB; }
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Primal Reversion happens for Groudon only when holding Red O
 
 SINGLE_BATTLE_TEST("Primal Reversion happens for Kyogre only when holding Blue Orb")
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_RED_ORB; }
     PARAMETRIZE { heldItem = ITEM_BLUE_ORB; }
@@ -335,7 +335,8 @@ DOUBLE_BATTLE_TEST("Primal Reversion and other switch-in effects trigger for all
 
 SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end")
 {
-    u32 species, item;
+    enum Species species;
+    enum Item item;
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
     PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; }
     GIVEN {
@@ -350,7 +351,8 @@ SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end")
 
 SINGLE_BATTLE_TEST("Primal Reversion is NOT reverted upon fainting")
 {
-    u32 species, item, targetSpecies;
+    enum Species species, targetSpecies;
+    enum Item item;
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB;  targetSpecies = SPECIES_GROUDON_PRIMAL; }
     PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; targetSpecies = SPECIES_KYOGRE_PRIMAL;  }
     GIVEN {

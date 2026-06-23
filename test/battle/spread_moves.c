@@ -71,9 +71,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Raichu!");
+        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
@@ -107,7 +107,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
@@ -266,8 +266,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
@@ -288,13 +288,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
+        MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It doesn't affect Misdreavus…");
     }
 }
 
@@ -331,7 +331,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
         TURN { MOVE(playerLeft, MOVE_WIDE_GUARD); MOVE(opponentLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, playerLeft);
-        MESSAGE("Wide Guard protected your team!");
+        MESSAGE("Wide Guard now protects your side!");
         MESSAGE("The opposing Wobbuffet used Hyper Voice!");
         MESSAGE("Wobbuffet protected itself!");
         MESSAGE("Wynaut protected itself!");
@@ -407,7 +407,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective Message on both opposing mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It's not very effective on the opposing Chikorita and Treecko!");
+        MESSAGE("It's not very effective on the opposing Chikorita and Treecko.");
     }
 }
 
@@ -425,23 +425,25 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        MESSAGE("It's not very effective on Chikorita and Treecko!");
+        MESSAGE("It's not very effective on Chikorita and Treecko.");
     }
 }
 
-DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect message on both opposing mons")
+DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect any target")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_PIDGEY);
         OPPONENT(SPECIES_PIDGEY);
         OPPONENT(SPECIES_HOOTHOOT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_PRECIPICE_BLADES); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
-        MESSAGE("It doesn't affect the opposing Pidgey and Hoothoot…");
+        MESSAGE("It doesn't affect Pidgey…");
+        MESSAGE("It doesn't affect the opposing Pidgey…");
+        MESSAGE("It doesn't affect the opposing Hoothoot…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
     }
 }
 

@@ -461,7 +461,7 @@
  *     MESSAGE("Wobbuffet used Dream Eater!");
  *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
- * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
+ * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis: | badPoison: | frostbite:)
  * Causes the test to fail if the battler's status is not changed to the
  * specified status.
  *     STATUS_ICON(player, badPoison: TRUE);
@@ -563,6 +563,7 @@
 #define MAX_TURNS 16
 #define MAX_QUEUED_EVENTS 30
 #define MAX_EXPECTED_ACTIONS 10
+#define TEST_ITEM_SLOTS 10
 
 enum {
     BATTLE_TEST_SINGLES,
@@ -767,8 +768,6 @@ struct BattleTrialData
     u8 targetTieCount;
 };
 
-extern struct BattleTrialData gBattleTrialData;
-
 struct BattleTestData
 {
     u8 stack[BATTLE_TEST_STACK_SIZE];
@@ -795,7 +794,9 @@ struct BattleTestData
     u8 moveBattlers;
     bool8 hasAI:1;
     bool8 logAI:1;
+    bool8 explicitInventory:1;
 
+    struct ItemSlot inventory[TEST_ITEM_SLOTS];
     struct RecordedBattleSave recordedBattle;
     u8 battleRecordTypes[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
     u8 battleRecordTurnNumbers[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
@@ -804,6 +805,7 @@ struct BattleTestData
     struct BattlerTurn battleRecordTurns[MAX_TURNS][MAX_BATTLERS_COUNT];
 
     u8 queuedEventsCount;
+    u8 queuedEventsFailIndex;
     u8 queueGroupType;
     u8 queueGroupStart;
     struct QueuedEvent queuedEvents[MAX_QUEUED_EVENTS];
@@ -1147,13 +1149,14 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SKIP_TURN(battler) SkipTurn(__LINE__, battler)
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
+#define GIVE_PLAYER_ITEM(item, quantity) GivePlayerItem(__LINE__, item, quantity)
 #define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
 #define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
 #define TIE_BREAK_TARGET(targetTieRes, value) TieBreakTarget(__LINE__, targetTieRes, value)
 
 struct MoveContext
 {
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
     u16 moveSlot:2;
     u16 explicitMoveSlot:1;
@@ -1184,7 +1187,7 @@ struct ItemContext
     u16 explicitItemId:1;
     u16 partyIndex;
     u16 explicitPartyIndex:1;
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
     struct RiggedRNG rng;
     u16 explicitRNG:1;
@@ -1203,6 +1206,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 void SkipTurn(u32 sourceLine, struct BattlePokemon *);
 void UseItem(u32 sourceLine, struct BattlePokemon *, struct ItemContext);
 void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
+void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 
 /* Scene */
 
@@ -1358,7 +1362,7 @@ void ValidateFinally(u32 sourceLine);
         s32 _am = Q_4_12_TO_INT(_a * _m); \
         s32 _t = max(Q_4_12_TO_INT(abs(_m) + Q_4_12_ROUND), 1); \
         if (abs(_am-_b) > _t) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_MUL_EQ(%d, %q, %d) failed: %d not in [%d..%d]", gTestRunnerState.test->filename, __LINE__, _a, _m, _b, _am, _b-_t, _b+_t); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, "%s:%d: EXPECT_MUL_EQ(%d, %q, %d) failed: %d not in [%d..%d]", gTestRunnerState.test->filename, __LINE__, _a, _m, _b, _am, _b-_t, _b+_t); \
     } while (0)
 
 #endif

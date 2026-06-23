@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Bla
 
 DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should not cause a message") // issue 7795
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_CASTFORM; }
     PARAMETRIZE { species = SPECIES_CHERRIM; }
     GIVEN {
@@ -72,7 +72,8 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
 
 SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing")
 {
-    u32 species, item;
+    enum Species species;
+    enum Item item;
     PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
     PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }

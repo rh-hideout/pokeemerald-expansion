@@ -6,10 +6,11 @@ ASSUMPTIONS
     ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE) == TRUE);
 }
 
-SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage per turn")
+SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage per turn (Gen9)")
 {
     u32 j;
     GIVEN {
+        WITH_CONFIG(B_SALT_CURE_DAMAGE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -28,14 +29,38 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage 
     }
 }
 
-SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum HP as damage per turn")
+SINGLE_BATTLE_TEST("Salt Cure inflicts 1/16 of the target's maximum HP as damage per turn (Champions)")
 {
-    u32 species;
+    u32 j;
+    GIVEN {
+        WITH_CONFIG(B_SALT_CURE_DAMAGE, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SALT_CURE); }
+        for (j = 0; j < 3; j++)
+            TURN {}
+    } SCENE {
+        s32 maxHP = GetMonData(&OPPONENT_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        MESSAGE("The opposing Wobbuffet is being salt cured!");
+        for (j = 0; j < 4; j++) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
+            HP_BAR(opponent, damage: maxHP / 16);
+            MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum HP as damage per turn (Gen9)")
+{
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_LAPRAS; }
     PARAMETRIZE { species = SPECIES_JIRACHI; }
 
     GIVEN {
+        WITH_CONFIG(B_SALT_CURE_DAMAGE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
@@ -48,6 +73,30 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum
         HP_BAR(opponent, damage: maxHP / 4);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
         HP_BAR(opponent, damage: maxHP / 4);
+    }
+}
+
+SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 to Water/Steel types of their maximum HP as damage per turn (Champions)")
+{
+    u32 species;
+
+    PARAMETRIZE { species = SPECIES_LAPRAS; }
+    PARAMETRIZE { species = SPECIES_JIRACHI; }
+
+    GIVEN {
+        WITH_CONFIG(B_SALT_CURE_DAMAGE, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SALT_CURE); }
+        TURN {}
+    } SCENE {
+        s32 maxHP = GetMonData(&OPPONENT_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
+        HP_BAR(opponent, damage: maxHP / 8);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
+        HP_BAR(opponent, damage: maxHP / 8);
     }
 }
 

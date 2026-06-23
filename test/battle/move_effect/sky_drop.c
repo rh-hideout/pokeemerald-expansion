@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampa
 
 DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while the move is being used")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_EJECT_BUTTON; }
     PARAMETRIZE { item = ITEM_EJECT_PACK; }

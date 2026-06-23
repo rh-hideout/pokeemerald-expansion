@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
 {
     enum Move move = MOVE_NONE;
     enum Item item = ITEM_NONE;
-    u32 defender = 0;
+    enum Species defender = SPECIES_NONE;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)

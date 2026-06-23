@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse boosts physical moves by 33% in sun", s16 d
 
 SINGLE_BATTLE_TEST("Orichalcum Pulse boost applies even if the target holds Utility Umbrella", s16 damage)
 {
-    u16 targetItem;
+    enum Item targetItem;
     PARAMETRIZE { targetItem = ITEM_NONE; }
     PARAMETRIZE { targetItem = ITEM_UTILITY_UMBRELLA; }
 
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse boost applies even if the target holds Util
 
 SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has Utility Umbrella", s16 damage)
 {
-    u16 holdItem;
+    enum Item holdItem;
     PARAMETRIZE { holdItem = ITEM_NONE; }
     PARAMETRIZE { holdItem = ITEM_UTILITY_UMBRELLA; }
 

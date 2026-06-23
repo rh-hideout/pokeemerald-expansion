@@ -2698,7 +2698,7 @@ static void SortPurchasesByQuantity(void)
         {
             if (gMartPurchaseHistory[i].quantity < gMartPurchaseHistory[j].quantity)
             {
-                u16 tempItemId = gMartPurchaseHistory[i].itemId;
+                enum Item tempItemId = gMartPurchaseHistory[i].itemId;
                 u16 tempQuantity = gMartPurchaseHistory[i].quantity;
                 gMartPurchaseHistory[i].itemId = gMartPurchaseHistory[j].itemId;
                 gMartPurchaseHistory[i].quantity = gMartPurchaseHistory[j].quantity;

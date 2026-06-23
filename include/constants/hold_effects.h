@@ -1,7 +1,7 @@
 #ifndef GUARD_HOLD_EFFECTS_H
 #define GUARD_HOLD_EFFECTS_H
 
-enum __attribute__((packed)) HoldEffect
+enum HoldEffect
 {
     HOLD_EFFECT_NONE,
     HOLD_EFFECT_RESTORE_HP,
@@ -13,11 +13,7 @@ enum __attribute__((packed)) HoldEffect
     HOLD_EFFECT_RESTORE_PP,
     HOLD_EFFECT_CURE_CONFUSION,
     HOLD_EFFECT_CURE_STATUS,
-    HOLD_EFFECT_CONFUSE_SPICY,
-    HOLD_EFFECT_CONFUSE_DRY,
-    HOLD_EFFECT_CONFUSE_SWEET,
-    HOLD_EFFECT_CONFUSE_BITTER,
-    HOLD_EFFECT_CONFUSE_SOUR,
+    HOLD_EFFECT_CONFUSE_FLAVOR,
     HOLD_EFFECT_ATTACK_UP,
     HOLD_EFFECT_DEFENSE_UP,
     HOLD_EFFECT_SPEED_UP,
@@ -142,6 +138,8 @@ enum __attribute__((packed)) HoldEffect
     HOLD_EFFECT_BERSERK_GENE,
     HOLD_EFFECT_COUNT
 };
+
+// HOLD_EFFECT_COUNT should not exceed 127 so that it can fit in an u8
 
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0

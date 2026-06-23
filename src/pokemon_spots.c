@@ -227,7 +227,7 @@ static void DrawPokemonSpots(u32 personality, const struct MonSpotTemplate* spot
     }
 }
 
-void DrawPokemonSpotsBothFrames(u32 personality, enum Species species, u8* dest)
+void DrawPokemonSpotsBothFrames(u32 personality, enum Species species, u8 *dest)
 {
     const struct MonSpotTemplate* spotTemplate = GetSpeciesSpots(species);
     DrawPokemonSpots(personality, spotTemplate, dest, FRAME_1);

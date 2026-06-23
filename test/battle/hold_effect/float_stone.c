@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Float Stone halves the holder's weight", s16 damage)
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_FLOAT_STONE; } //  10.0 - 24.9 kg  (40 power)
     PARAMETRIZE { item = ITEM_NONE;        } //  25.0 - 49.9 kg  (60 power)
 

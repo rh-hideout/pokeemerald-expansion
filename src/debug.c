@@ -42,6 +42,7 @@
 #include "pokemon_icon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "random_mon_generation.h"
 #include "region_map.h"
 #include "rtc.h"
 #include "script.h"
@@ -63,6 +64,7 @@
 #include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
+#include "constants/random_mon_generation.h"
 #include "constants/rgb.h"
 #include "constants/script_commands.h"
 #include "constants/songs.h"
@@ -214,21 +216,6 @@ struct DebugMenuOption
     const void *actionParams;
 };
 
-struct DebugMonData
-{
-    enum Species species;
-    u8 level;
-    bool8 isShiny:1;
-    u8 nature:5;
-    u8 abilityNum:2;
-    u8 monIVs[NUM_STATS];
-    u16 monMoves[MAX_MON_MOVES];
-    u8 monEVs[NUM_STATS];
-    u8 teraType;
-    u8 dynamaxLevel:7;
-    u8 gmaxFactor:1;
-};
-
 struct DebugMenuListData
 {
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
@@ -270,7 +257,7 @@ struct DebugSelection
 };
 
 // EWRAM
-static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
+static EWRAM_DATA struct PokemonTemplate *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
 EWRAM_DATA u64 gDebugAIFlags = 0;
@@ -302,6 +289,10 @@ static void DebugTask_HandleMenuInput_General(u8 taskId);
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
+static void DebugAction_Util_Species_Randomizer(u8 taskId);
+static void DebugAction_Util_Item_Randomizer(u8 taskId);
+static void DebugAction_Util_Randomizer_SelectId(u8 taskId);
+static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
@@ -540,7 +531,7 @@ static const s32 sPowersOfTen[] =
     1000000000,
 };
 
-static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+static u32 (*const generateListFunctions[])(const struct DebugMenuOption *) =
 {
     [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
     [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
@@ -613,18 +604,20 @@ static const struct DebugMenuOption sDebugMenu_Actions_FollowerNPCMenu[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
 {
-    { COMPOUND_STRING("Fly to map…"),       DebugAction_Util_Fly },
-    { COMPOUND_STRING("Warp to map warp…"), DebugAction_Selection_Init, &sWarpSelection},
-    { COMPOUND_STRING("Set weather…"),      DebugAction_Selection_Init, &sSetWeatherSelection },
-    { COMPOUND_STRING("Font Test…"),        DebugAction_ExecuteScript, Debug_EventScript_FontTest },
-    { COMPOUND_STRING("Time Functions…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
-    { COMPOUND_STRING("Watch credits…"),    DebugAction_Util_WatchCredits },
-    { COMPOUND_STRING("Cheat start"),       DebugAction_Util_CheatStart },
-    { COMPOUND_STRING("Berry Functions…"),  DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
-    { COMPOUND_STRING("EWRAM Counters…"),   DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
-    { COMPOUND_STRING("Follower NPC…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
-    { COMPOUND_STRING("Wally Tutorial"),    DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
-    { COMPOUND_STRING("Steven Multi"),      DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
+    { COMPOUND_STRING("Fly to map…"),               DebugAction_Util_Fly },
+    { COMPOUND_STRING("Warp to map warp…"),         DebugAction_Selection_Init, &sWarpSelection},
+    { COMPOUND_STRING("Set weather…"),              DebugAction_Selection_Init, &sSetWeatherSelection },
+    { COMPOUND_STRING("Font Test…"),                DebugAction_ExecuteScript, Debug_EventScript_FontTest },
+    { COMPOUND_STRING("Time Functions…"),           DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
+    { COMPOUND_STRING("Watch credits…"),            DebugAction_Util_WatchCredits },
+    { COMPOUND_STRING("Cheat start"),               DebugAction_Util_CheatStart },
+    { COMPOUND_STRING("Berry Functions…"),          DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
+    { COMPOUND_STRING("EWRAM Counters…"),           DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
+    { COMPOUND_STRING("Follower NPC…"),             DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
+    { COMPOUND_STRING("Test Species Randomizer"),   DebugAction_Util_Species_Randomizer },
+    { COMPOUND_STRING("Test Item Randomizer"),      DebugAction_Util_Item_Randomizer },
+    { COMPOUND_STRING("Wally Tutorial"),            DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
+    { COMPOUND_STRING("Steven Multi"),              DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
 };
 
@@ -854,6 +847,17 @@ static const struct WindowTemplate sDebugMenuWindowTemplateSound =
     .baseBlock = 1,
 };
 
+static const struct WindowTemplate sDebugMenuWindowTemplateFullScreen =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 28,
+    .height = 18,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
 static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems);
 
 // *******************************
@@ -992,8 +996,8 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     inputTaskId = CreateTask(HandleInput, 3);
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0xFF;
-    gTasks[inputTaskId].tSpriteId = 0xFF;
+    gTasks[inputTaskId].tSubWindowId = WINDOW_NONE;
+    gTasks[inputTaskId].tSpriteId = SPRITE_NONE;
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -1014,7 +1018,7 @@ static void Debug_CreateInputDisplayWindow(u8 taskId)
 
 static void DestroyDebugIcon(u8 taskId)
 {
-    if (gTasks[taskId].tSpriteId != 0xFF)
+    if (gTasks[taskId].tSpriteId != SPRITE_NONE)
     {
         FreeSpriteTilesByTag(DEBUG_ICON_TAG);
         FreeSpritePaletteByTag(DEBUG_ICON_TAG);
@@ -1047,7 +1051,7 @@ static void DebugNativeStep_PrintWindowSelection(u8 taskId)
 
 static void Debug_DestroyMenu(u8 taskId)
 {
-    if (gTasks[taskId].tSubWindowId != 0xFF)
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
     {
         DestroyDebugIcon(taskId);
         ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
@@ -1061,7 +1065,7 @@ static void Debug_DestroyMenu(u8 taskId)
 
 static void Debug_DestroyMenu_Full(u8 taskId)
 {
-    if (gTasks[taskId].tSubWindowId != 0xFF)
+    if (gTasks[taskId].tSubWindowId != WINDOW_NONE)
     {
         DestroyDebugIcon(taskId);
         ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
@@ -2075,6 +2079,217 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
     }
 }
 
+#define tRandomizerOption data[6]
+#define tArgCounter data[7]
+#define tArg1 data[8]
+#define tArg2 data[9]
+#define tType data[10]
+
+#define SPECIES_RANDOMIZER 0
+#define ITEM_RANDOMIZER 1
+
+static void DebugAction_Util_Randomizer_RefreshValues(u8 taskId)
+{
+    const u8 *str;
+    u32 x;
+    u32 font;
+    const struct FilterFuncArgs args = {
+        .arg1 = gTasks[taskId].tArg1,
+        .arg2 = gTasks[taskId].tArg2
+    };
+
+    for (u32 i = 0; i < 27; i++)
+    {
+        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
+        {
+            u32 species = GetRandomSpecies(gTasks[taskId].tRandomizerOption, &args);
+            str = GetSpeciesName(species);
+            x = (i % 3) * 72 + 16;
+            font = FONT_NORMAL;
+        }
+        else
+        {
+            u32 item = GetRandomItem(gTasks[taskId].tRandomizerOption, &args);
+            str = GetItemName(item);
+            x = (i % 3) * 80;
+            font = FONT_NARROW;
+        }
+        u32 y = (i / 3) * 16;
+        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, font, str, x, y, 0, NULL);
+    }
+}
+
+static void DebugAction_Util_Randomizer_Wait(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        FillWindowPixelBuffer(gTasks[taskId].tSubWindowId, PIXEL_FILL(1));
+        DebugAction_Util_Randomizer_RefreshValues(taskId);
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_Utilities);
+    }
+}
+
+static void DebugAction_Util_Randomizer_ShowValues(u8 taskId)
+{
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+
+    ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tSubWindowId);
+
+    gTasks[taskId].tSubWindowId = AddWindow(&sDebugMenuWindowTemplateFullScreen);
+    DrawStdWindowFrame(gTasks[taskId].tSubWindowId, FALSE);
+    CopyWindowToVram(gTasks[taskId].tSubWindowId, COPYWIN_FULL);
+
+    DebugAction_Util_Randomizer_RefreshValues(taskId);
+    gTasks[taskId].func = DebugAction_Util_Randomizer_Wait;
+}
+
+static void Debug_Display_RandomizerArg(u32 value, u32 index, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, index + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+    ConvertIntToDecimalStringN(gStringVar2, value, STR_CONV_MODE_LEADING_ZEROS, 5);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Arg {STR_VAR_1}: {STR_VAR_2}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Util_Randomizer_SelectArg(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        Debug_HandleInput_Numeric(taskId, 0, 0xFFFF, 5);
+        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tArgCounter += 1;
+        if (gTasks[taskId].tArgCounter == 2)
+        {
+            gTasks[taskId].func = DebugAction_Util_Randomizer_ShowValues;
+        }
+        else
+        {
+            if (gTasks[taskId].tArgCounter == 1)
+                gTasks[taskId].tArg1 = gTasks[taskId].tInput;
+            else if (gTasks[taskId].tArgCounter == 2)
+                gTasks[taskId].tArg2 = gTasks[taskId].tInput;
+            gTasks[taskId].tInput = 0;
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
+            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        if (gTasks[taskId].tArgCounter == 0)
+        {
+            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+            Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+        else
+        {
+            gTasks[taskId].tArgCounter -= 1;
+            gTasks[taskId].tInput = 0;
+            gTasks[taskId].tDigit = 0;
+            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        }
+    }
+}
+
+static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, optionsID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Options ID: {STR_VAR_1}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_Util_Randomizer_SelectId(u8 taskId)
+{
+    if (JOY_NEW(DPAD_ANY))
+    {
+        PlaySE(SE_SELECT);
+        u32 max;
+        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
+            max = RANDOM_SPECIES_OPTIONS_COUNT - 1;
+        else
+            max = RANDOM_ITEM_OPTIONS_COUNT - 1;
+        Debug_HandleInput_Numeric(taskId, 0, max, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
+        Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tRandomizerOption = gTasks[taskId].tInput;
+        gTasks[taskId].tArgCounter = 0;
+        gTasks[taskId].tInput = 0;
+        gTasks[taskId].tDigit = 0;
+        gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
+        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+    }
+
+    if (JOY_NEW(B_BUTTON))
+    {
+        Debug_RemoveCallbackMenu();
+        DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_Utilities);
+    }
+}
+
+static void DebugAction_Util_Species_Randomizer(u8 taskId)
+{
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+
+    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tRandomizerOption = 0;
+    gTasks[taskId].tArgCounter = 0;
+    gTasks[taskId].tArg1 = 0;
+    gTasks[taskId].tArg2 = 0;
+    gTasks[taskId].tType = SPECIES_RANDOMIZER;
+
+    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_Util_Item_Randomizer(u8 taskId)
+{
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+
+    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tRandomizerOption = 0;
+    gTasks[taskId].tArgCounter = 0;
+    gTasks[taskId].tArg1 = 0;
+    gTasks[taskId].tArg2 = 0;
+    gTasks[taskId].tType = ITEM_RANDOMIZER;
+
+    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+#undef tRandomizerOption
+#undef tArgCounter
+#undef tArg1
+#undef tArg2
+#undef tType
 
 // *******************************
 // Actions Trainers
@@ -2356,11 +2571,13 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     TRAINER_BATTLE_PARAM.opponentA = trainer1Id;
     TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_A], GetTrainerStructFromId(trainer1Id));
     if (sDebugMenuListData->data[5] || partnerId != PARTNER_NONE || trainer2Id != TRAINER_NONE)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
     if (trainer2Id != TRAINER_NONE)
     {
         TRAINER_BATTLE_PARAM.opponentB = trainer2Id;
+        CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_B], GetTrainerStructFromId(trainer2Id));
         gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
     }
     if (partnerId != PARTNER_NONE)
@@ -3045,21 +3262,32 @@ static const struct DebugSelection sGiveItemSelection = {
 };
 
 //Pokemon
-static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
+static void ResetMonDataStruct(struct PokemonTemplate *sDebugMonData)
 {
     sDebugMonData->species          = 1;
     sDebugMonData->level            = MIN_LEVEL;
     sDebugMonData->isShiny          = FALSE;
+    sDebugMonData->gender           = MON_GENDER_RANDOM;
     sDebugMonData->nature           = 0;
     sDebugMonData->abilityNum       = 0;
     sDebugMonData->teraType         = TYPE_NONE;
-    sDebugMonData->dynamaxLevel     = 0;
+    sDebugMonData->dmaxLevel        = 0;
     sDebugMonData->gmaxFactor       = FALSE;
+    sDebugMonData->origin           = GIFTMON_ORIGIN;
     for (u32 i = 0; i < NUM_STATS; i++)
     {
-        sDebugMonData->monIVs[i] = 0;
-        sDebugMonData->monEVs[i] = 0;
+        sDebugMonData->ivs[i] = 0;
+        sDebugMonData->evs[i] = 0;
     }
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        sDebugMonData->moves[i] = MOVE_DEFAULT;
+    }
+
+    sDebugMonData->doNotUseDefaultShinyness = TRUE;
+    sDebugMonData->doNotUseDefaultBall      = FALSE;
+    sDebugMonData->doNotUseDefaultAbility   = TRUE;
+    sDebugMonData->doNotUseDefaultTeraType  = FALSE;
 }
 
 #define tIsComplex  data[6]
@@ -3091,7 +3319,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3106,7 +3334,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3133,7 +3361,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3148,7 +3376,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3175,7 +3403,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3190,7 +3418,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(gTasks[taskId].tInput))
         species = SPECIES_NONE;
     else
@@ -3350,7 +3578,10 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->isShiny = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput)
+            sDebugMonData->isShiny = TRUE;
+        else
+            sDebugMonData->isShiny = FALSE;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
         Debug_Display_Nature(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3464,7 +3695,7 @@ static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         sDebugMonData->abilityNum = gTasks[taskId].tInput;
-        gTasks[taskId].tInput = 0;
+        gTasks[taskId].tInput = 1;
         gTasks[taskId].tDigit = 0;
 
         Debug_Display_TeraType(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3512,7 +3743,11 @@ static void DebugAction_Give_Pokemon_SelectTeraType(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->teraType = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput >= 1)
+        {
+            sDebugMonData->teraType = gTasks[taskId].tInput;
+            sDebugMonData->doNotUseDefaultTeraType = TRUE;
+        }
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
@@ -3544,7 +3779,7 @@ static void DebugAction_Give_Pokemon_SelectDynamaxLevel(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->dynamaxLevel = gTasks[taskId].tInput;
+        sDebugMonData->dmaxLevel = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
         Debug_Display_GigantamaxFactor(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId);
@@ -3608,7 +3843,7 @@ static void DebugAction_Give_Pokemon_SelectIVs(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set IVs for stat
-        sDebugMonData->monIVs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        sDebugMonData->ivs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
 
         //Check if all IVs set
         if (gTasks[taskId].tIterator != NUM_STATS - 1)
@@ -3642,7 +3877,7 @@ static u32 GetDebugPokemonTotalEV(void)
 {
     u32 totalEVs = 0;
     for (u32 i = 0; i < NUM_STATS; i++)
-        totalEVs += sDebugMonData->monEVs[i];
+        totalEVs += sDebugMonData->evs[i];
     return totalEVs;
 }
 
@@ -3685,7 +3920,7 @@ static void DebugAction_Give_Pokemon_SelectEVs(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set EVs for stat
-        sDebugMonData->monEVs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        sDebugMonData->evs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
 
         //Check if all EVs set
         if (gTasks[taskId].tIterator != NUM_STATS - 1)
@@ -3706,7 +3941,7 @@ static void DebugAction_Give_Pokemon_SelectEVs(u8 taskId)
             {
                 for (u32 i = 0; i < NUM_STATS; i++)
                 {
-                    sDebugMonData->monEVs[i] = 0;
+                    sDebugMonData->evs[i] = 0;
                 }
 
                 PlaySE(SE_FAILURE);
@@ -3741,10 +3976,9 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set current value
-        if (gTasks[taskId].tInput < MOVES_COUNT)
-            sDebugMonData->monMoves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
-        else
-            sDebugMonData->monMoves[gTasks[taskId].tIterator] = MOVE_DEFAULT;
+        if (gTasks[taskId].tInput != MOVE_NONE)
+            sDebugMonData->moves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+
         // If MOVE_NONE selected, stop asking for additional moves
         if (gTasks[taskId].tInput == MOVE_NONE)
             gTasks[taskId].tIterator = MAX_MON_MOVES;
@@ -3778,89 +4012,7 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
 
 static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://github.com/ghoulslash/pokeemerald/tree/custom-givemon
 {
-    struct Pokemon mon;
-    u8 i;
-    enum Move moves[MAX_MON_MOVES];
-    u8 IVs[NUM_STATS];
-    u8 iv_val;
-    u8 EVs[NUM_STATS];
-    u8 ev_val;
-    enum Species species = sDebugMonData->species;
-    u8 level        = sDebugMonData->level;
-    bool8 isShiny   = sDebugMonData->isShiny;
-    u8 nature       = sDebugMonData->nature;
-    u8 abilityNum   = sDebugMonData->abilityNum;
-    u32 teraType    = sDebugMonData->teraType;
-    u32 dmaxLevel   = sDebugMonData->dynamaxLevel;
-    u32 gmaxFactor  = sDebugMonData->gmaxFactor;
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        moves[i] = sDebugMonData->monMoves[i];
-    }
-    for (u32 i = 0; i < NUM_STATS; i++)
-    {
-        EVs[i] = sDebugMonData->monEVs[i];
-        IVs[i] = sDebugMonData->monIVs[i];
-    }
-
-    //Nature
-    u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
-
-    //Shininess
-    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
-
-    // Gigantamax factor
-    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
-
-    // Dynamax Level
-    SetMonData(&mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
-
-    // tera type
-    if (teraType == TYPE_NONE || teraType == TYPE_MYSTERY || teraType >= NUMBER_OF_MON_TYPES)
-        teraType = GetTeraTypeFromPersonality(&mon);
-    SetMonData(&mon, MON_DATA_TERA_TYPE, &teraType);
-
-    //IVs
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        iv_val = IVs[i];
-        if (iv_val != USE_RANDOM_IVS && iv_val != 0xFF)
-            SetMonData(&mon, MON_DATA_HP_IV + i, &iv_val);
-    }
-
-    //EVs
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        ev_val = EVs[i];
-        if (ev_val)
-            SetMonData(&mon, MON_DATA_HP_EV + i, &ev_val);
-    }
-
-    GiveMonInitialMoveset(&mon);
-    //Moves
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        // Non-default moveset chosen. Reset moves before setting the chosen moves.
-        if (moves[0] != MOVE_NONE)
-            SetMonMoveSlot(&mon, MOVE_NONE, i);
-
-        if (moves[i] == MOVE_NONE)
-            continue;
-
-        if (moves[i] == MOVE_DEFAULT)
-            GiveMonDefaultMove(&mon, i);
-        else
-            SetMonMoveSlot(&mon, moves[i], i);
-    }
-
-    // Ability
-    SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
-
-    //Update mon stats before giving it to the player
-    CalculateMonStats(&mon);
-
-    GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
+    ScriptGiveMonParameterized(B_SIDE_PLAYER, PARTY_SIZE, sDebugMonData);
 
     // Set flag for user convenience
     FlagSet(FLAG_SYS_POKEMON_GET);
@@ -3995,11 +4147,19 @@ void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId)
 // *******************************
 // Actions PCBag
 
+static enum Species GetNextSpecies(enum Species species)
+{
+    do {
+        species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
+    } while (!IsSpeciesEnabled(species));
+    return species;
+}
+
 static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffinity
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    enum Species species = SPECIES_BULBASAUR;
+    enum Species species = GetNextSpecies(SPECIES_NONE);
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
     CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
@@ -4007,7 +4167,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
-        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++, species++)
+        for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             if (!GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
             {
@@ -4016,6 +4176,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
                 SetBoxMonData(&boxMon, MON_DATA_SPECIES, &species);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
+                species = GetNextSpecies(species);
             }
         }
     }
@@ -4030,7 +4191,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    enum Species species = SPECIES_BULBASAUR;
+    enum Species species = GetNextSpecies(SPECIES_NONE);
     bool8 spaceAvailable = FALSE;
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
@@ -4045,7 +4206,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
                 SetBoxMonIVs(&boxMon, USE_RANDOM_IVS);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
-                species = (species < NUM_SPECIES - 1) ? species + 1 : 1;
+                species = GetNextSpecies(species);
                 spaceAvailable = TRUE;
             }
         }
@@ -5183,7 +5344,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER]);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -5192,8 +5353,9 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_A], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER]);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_A], GetDebugAiTrainer());
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)

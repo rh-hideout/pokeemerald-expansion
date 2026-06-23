@@ -195,12 +195,13 @@ static void CompleteOnBattlerSpritePosX_0(enum BattlerId battler)
         BtlController_Complete(battler);
 }
 
-static u16 GetPrevBall(u16 ballId)
+static enum Item GetPrevBall(enum Item ballId)
 {
     s32 i;
-    s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
-     for (i = 0; i < POKEBALL_COUNT; i++)
+    enum PokeBall index = ItemIdToBallId(ballId);
+    enum Item newBall = ITEM_NONE;
+
+    for (i = 0; i < POKEBALL_COUNT; i++)
     {
         index--;
         if (index == -1)
@@ -212,11 +213,12 @@ static u16 GetPrevBall(u16 ballId)
     return ballId;
 }
 
-static u32 GetNextBall(u32 ballId)
+static enum Item GetNextBall(enum Item ballId)
 {
     s32 i;
-    s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
+    enum PokeBall index = ItemIdToBallId(ballId);
+    enum Item newBall = ITEM_NONE;
+
     for (i = 0; i < POKEBALL_COUNT; i++)
     {
         index++;
@@ -1783,9 +1785,9 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     u8 cat_desc[7] = _("CAT: ");
     u8 pwr_desc[7] = _("PWR: ");
     u8 acc_desc[7] = _("ACC: ");
-    u8 cat_start[] = _("{CLEAR_TO 0x03}");
-    u8 pwr_start[] = _("{CLEAR_TO 0x38}");
-    u8 acc_start[] = _("{CLEAR_TO 0x6C}");
+    u8 cat_start[] = _("{CLEAR_TO 3}");
+    u8 pwr_start[] = _("{CLEAR_TO 56}");
+    u8 acc_start[] = _("{CLEAR_TO 108}");
     LoadMessageBoxAndBorderGfx();
     DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
     if (pwr < 2)
@@ -2384,9 +2386,11 @@ enum
 {
     EFFECTIVENESS_CANNOT_VIEW,
     EFFECTIVENESS_NO_EFFECT,
+    EFFECTIVENESS_MOSTLY_INEFFECTIVE,
     EFFECTIVENESS_NOT_VERY_EFFECTIVE,
     EFFECTIVENESS_NORMAL,
     EFFECTIVENESS_SUPER_EFFECTIVE,
+    EFFECTIVENESS_EXTREMELY_EFFECTIVE,
 };
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
@@ -2424,6 +2428,8 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
 
     if (modifier == UQ_4_12(0.0))
         return EFFECTIVENESS_NO_EFFECT; // No effect
+    else if (modifier <= UQ_4_12(0.25))
+        return EFFECTIVENESS_MOSTLY_INEFFECTIVE; // Mostly ineffective
     else if (modifier <= UQ_4_12(0.5))
         return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
     else if (modifier >= UQ_4_12(2.0))
@@ -2466,9 +2472,11 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum Bat
         switch (foeEffectiveness)
         {
         case EFFECTIVENESS_SUPER_EFFECTIVE:
+        case EFFECTIVENESS_EXTREMELY_EFFECTIVE:
             StringCopy(txtPtr, superEffectiveIcon);
             break;
         case EFFECTIVENESS_NOT_VERY_EFFECTIVE:
+        case EFFECTIVENESS_MOSTLY_INEFFECTIVE:
             StringCopy(txtPtr, notVeryEffectiveIcon);
             break;
         case EFFECTIVENESS_NO_EFFECT:

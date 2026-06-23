@@ -11,6 +11,7 @@
     F(B_MULTI_HIT_CHANCE,          multiHitChance,          (u32, GEN_COUNT - 1)) \
     F(B_WHITEOUT_MONEY,            whiteoutMoney,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_LIGHT_BALL_ATTACK_BOOST,   lightBallAttackBoost,    (u32, GEN_COUNT - 1)) \
+    F(B_PARALYSIS_CHANCE,          paralysisChance,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Experience settings */ \
     F(B_EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) \
     F(B_TRAINER_EXP_MULTIPLIER,    trainerExpMultiplier,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -59,6 +60,8 @@
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
     F(B_FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_MEGA_EVO_SPEED_SWAP,       megaEvoSpeedSwap,        (u32, GEN_COUNT - 1)) \
+    F(B_FREEZE_TURNS,              freezeTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Move data settings */ \
     F(B_UPDATED_MOVE_DATA,         updatedMoveData,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_UPDATED_MOVE_TYPES,        updatedMoveTypes,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -144,6 +147,15 @@
     F(B_COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
     F(B_UPROAR,                    uproar,                  (u32, GEN_COUNT - 1)) \
     F(B_UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) \
+    F(B_FIRST_TURN_MOVE,           firstTurnMove,           (u32, GEN_COUNT - 1)) \
+    F(B_SALT_CURE_DAMAGE,          saltCureDamage,          (u32, GEN_COUNT - 1)) \
+    F(B_BELCH_SELECTABLE,          belchSelectable,         (u32, GEN_COUNT - 1)) \
+    F(B_STUFF_CHEEKS_SELECTABLE,   stuffCheeksSelectable,   (u32, GEN_COUNT - 1)) \
+    F(B_SPIT_UP_SELECTABLE,        spitUpSelectable,        (u32, GEN_COUNT - 1)) \
+    F(B_MOVES_THAT_REMOVE_TYPE,    movesThatRemoveType,     (u32, GEN_COUNT - 1)) \
+    F(B_LAST_RESORT_SELECTABLE,    lastResortSelectable,    (u32, GEN_COUNT - 1)) \
+    F(B_FAINT_MOVE_EFFECT_TIMING,  faintEffectTiming,       (u32, GEN_COUNT - 1)) \
+    F(B_ENCORE_PRIORITY,           encorePriority,          (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(B_STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -175,6 +187,8 @@
     F(B_DEFIANT_STICKY_WEB,        defiantStickyWeb,        (u32, GEN_COUNT - 1)) \
     F(B_INFILTRATOR_SUBSTITUTE,    infiltratorSubstitute,   (u32, GEN_COUNT - 1)) \
     F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
+    F(B_UNSEEN_FIST_PIERCING_DRILL,unseenFistPiercingDrill, (u32, GEN_COUNT - 1)) \
+    F(B_SHEER_FORCE_AGAINST_ABILITIES, sheerForceAgainstAbilities, (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_X_ITEMS_BUFF,              xItemsBuff,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -235,6 +249,11 @@
     F(POKERUS_INFECT_EGG,        pokerusInfectEgg,        (u32, TRUE))          \
     F(POKERUS_HERD_IMMUNITY,     pokerusHerdImmunity,     (u32, TRUE))          \
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
+    F(BALL_INHERITANCE,          ballInheritance,         (u32, GEN_COUNT - 1)) \
+    F(MOVE_INHERITANCE,          moveInheritance,         (u32, GEN_COUNT - 1)) \
+    F(NATURE_INHERITANCE,        natureInheritance,       (u32, GEN_COUNT - 1)) \
+    F(ABILITY_INHERITANCE,       abilityInheritance,      (u32, GEN_COUNT - 1)) \
+    F(EGG_MOVE_TRANSFER,         eggMoveTransfer,         (u32, GEN_COUNT - 1)) \
 
 #define AI_CONFIG_DEFINITIONS(F) \
     F(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE,    reverseBattlerLogicChance,  (u32, 100)) \

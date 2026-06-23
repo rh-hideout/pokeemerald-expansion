@@ -226,7 +226,7 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
 SINGLE_BATTLE_TEST("Powder prevents Protean/Libero from changing its user to Fire type")
 {
     enum Ability ability;
-    u32 species;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {

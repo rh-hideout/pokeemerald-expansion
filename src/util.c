@@ -165,20 +165,6 @@ void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output)
     }
 }
 
-int CountTrailingZeroBits(u32 value)
-{
-    u8 i;
-
-    for (i = 0; i < 32; i++)
-    {
-        if ((value & 1) == 0)
-            value >>= 1;
-        else
-            return i;
-    }
-    return 0;
-}
-
 u16 CalcCRC16(const u8 *data, s32 length)
 {
     u16 i, j;
