@@ -555,7 +555,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items that can change the form of 
     PARAMETRIZE { item = ITEM_MALAMARITE; }
 
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_DMG, GEN_9);
+        WITH_CONFIG(B_KNOCK_OFF_REMOVAL, GEN_9);
         PLAYER(SPECIES_MALAMAR);
         OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
