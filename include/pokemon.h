@@ -523,6 +523,33 @@ struct SpeciesInfo /*0xC4*/
     enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
+// This struct represent values from user input (createmon/givemon) that have not been sanitized
+// The absence of enum and the use of large data types is there to reflect the full range of user input
+struct PokemonTemplate
+{
+    u16 species;
+    u16 heldItem;
+    u16 level;
+    u16 ball;
+    u16 gender;
+    u16 nature;
+    bool16 isShiny;
+    u16 abilityNum;
+    u16 evs[NUM_STATS];
+    u16 ivs[NUM_STATS];
+    u16 moves[MAX_MON_MOVES];
+    bool16 gmaxFactor;
+    u16 teraType;
+    u16 dmaxLevel;
+    bool16 isEgg;
+    enum GeneratedMonOrigin origin;
+    u8 doNotUseDefaultShinyness:1;
+    u8 doNotUseDefaultBall:1;
+    u8 doNotUseDefaultAbility:1;
+    u8 doNotUseDefaultTeraType:1;
+    u8 padding:4;
+};
+
 struct EggData
 {
     const u8 *eggIcon;
@@ -954,6 +981,7 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
+void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *monTemplate);
 
 static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
 {
