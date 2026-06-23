@@ -1749,17 +1749,14 @@ bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
     }
     else
     {
-        return AddSubspritesToOamBuffer(sprite, &gMain.oamBuffer[*oamIndex], oamIndex);
+        return AddSubspritesToOamBuffer(sprite, oamIndex);
     }
 }
 
-bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex)
+bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     const struct SubspriteTable *subspriteTable;
     struct OamData *oam;
-
-    if (*oamIndex >= gOamLimit)
-        return 1;
 
     subspriteTable = &sprite->subspriteTables[sprite->subspriteTableNum];
     oam = &sprite->oam;
@@ -1776,8 +1773,6 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         u8 subspriteCount;
         u8 hFlip;
         u8 vFlip;
-        u32 i;
-
         tileNum = oam->tileNum;
         subspriteCount = subspriteTable->subspriteCount;
         hFlip = ((s32)oam->matrixNum >> 3) & 1;
@@ -1785,7 +1780,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         baseX = oam->x - sprite->centerToCornerVecX;
         baseY = oam->y - sprite->centerToCornerVecY;
 
-        for (i = 0; i < subspriteCount; i++, (*oamIndex)++)
+        for (u32 i = 0; i < subspriteCount; i++)
         {
             u16 x;
             u16 y;
@@ -1824,21 +1819,13 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
             if (sprite->subspriteMode < SUBSPRITES_IGNORE_PRIORITY)
                 subspriteOam.priority = subspriteTable->subsprites[i].priority;
 
-            destOam[i] = subspriteOam;
-
-            if (sprite->objWinMask)
-            {
-                subspriteOam.objMode = ST_OAM_OBJ_WINDOW;
-                destOam[subspriteCount+i] = subspriteOam;
-            }
-
+            if (AddToOamBuffer(oamIndex, &subspriteOam, sprite->objWinMask))
+                return TRUE;
         }
 
-        if (sprite->objWinMask)
-            (*oamIndex) += subspriteCount;
     }
 
-    return 0;
+    return FALSE;
 }
 
 static bool32 AddToOamBuffer(u8 *oamIndex, const struct OamData *oam, bool32 copyToObjWin)

@@ -326,7 +326,7 @@ u16 GetSpritePaletteTagByPaletteNum(u8 paletteNum);
 void FreeSpritePaletteByTag(u16 tag);
 void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subspriteTables);
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
-bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex);
+bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
 void CopyToSprites(u8 *src);
 void CopyFromSprites(u8 *dest);
 u8 SpriteTileAllocBitmapOp(u16 bit, u8 op);
