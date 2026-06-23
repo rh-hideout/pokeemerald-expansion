@@ -386,10 +386,7 @@ void BuildOamBuffer(void)
     for (i = 0, oamIndex = 0; i < toSort; i++)
     {
         if (AddSpriteToOamBuffer(&gSprites[spritePriorities[i] & 0xFF], &oamIndex))
-        {
-            errorf("Failed to add sprite OAMs to OamBuffer");
             break;
-        }
     }
 
     for (i = oamIndex; i < sOamDummyIndex; i++)
@@ -1815,9 +1812,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
             u16 x;
             u16 y;
 
-            u32 limit = sprite->objWinMask ? gOamLimit - 1 : gOamLimit;
-
-            if (*oamIndex >= limit)
+            if (*oamIndex >= gOamLimit)
                 return 1;
 
             x = subspriteTable->subsprites[i].x;
@@ -1855,9 +1850,6 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
 
             if (sprite->objWinMask)
             {
-                if (*oamIndex >= gOamLimit)
-                    return 1;
-
                 subspriteOam.objMode = ST_OAM_OBJ_WINDOW;
                 destOam[subspriteCount+i] = subspriteOam;
             }
