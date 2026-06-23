@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffect(MOVE_DIRE_CLAW, MOVE_EFFECT_LIST_SELECTION) == TRUE);
+    ASSUME(MoveHasAdditionalEffect(MOVE_DIRE_CLAW, MOVE_EFFECT_RANDOM_FROM_LIST) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Dire Claw can inflict poison, paralysis or sleep")
@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Dire Claw can inflict poison, paralysis or sleep")
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; }
-    PASSES_RANDOMLY(1, 3, RNG_LIST_SELECTION);
+    PASSES_RANDOMLY(1, 3, RNG_RANDOM_FROM_LIST);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
-        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_LIST_SELECTION, rng)); }
+        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_RANDOM_FROM_LIST, rng)); }
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIRE_CLAW, player);
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokém
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
-        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_LIST_SELECTION, rng)); }
+        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_RANDOM_FROM_LIST, rng)); }
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIRE_CLAW, player);
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep a mon 
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
     } WHEN {
-        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_LIST_SELECTION, rng)); }
+        TURN { MOVE(player, MOVE_DIRE_CLAW, WITH_RNG(RNG_RANDOM_FROM_LIST, rng)); }
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIRE_CLAW, player);

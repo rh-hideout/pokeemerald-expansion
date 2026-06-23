@@ -2447,12 +2447,13 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         gBattlescriptCurrInstr = battleScript;
         break;
-    case MOVE_EFFECT_LIST_SELECTION:
+    case MOVE_EFFECT_RANDOM_FROM_LIST:
     {
-        const enum MoveEffect *sOneFromManyEffects = GetMoveSelectionMoveEffects(gCurrentMove);
+        // Better to pass the additional effect as an argument but for now that works
+        const enum MoveEffect *sRandomFromListEffects = GetMoveSelectionMoveEffects(gCurrentMove, gBattleStruct->additionalEffectsCounter);;
         u32 validEffectCount = 0;
 
-        while (validEffectCount < MAX_SELECTION_ADDITIONAL_EFFECTS && sOneFromManyEffects[validEffectCount] != MOVE_EFFECT_NONE)
+        while (validEffectCount < MAX_SELECTION_ADDITIONAL_EFFECTS && sRandomFromListEffects[validEffectCount] != MOVE_EFFECT_NONE)
         {
             validEffectCount++;
         }
@@ -2462,11 +2463,11 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             return;
         }
 
-        u32 chosenMoveEffect = RandomUniform(RNG_LIST_SELECTION, 0, validEffectCount - 1);
-        if (sOneFromManyEffects[chosenMoveEffect] == MOVE_EFFECT_BURN)
+        u32 chosenMoveEffect = RandomUniform(RNG_RANDOM_FROM_LIST, 0, validEffectCount - 1);
+        if (sRandomFromListEffects[chosenMoveEffect] == MOVE_EFFECT_BURN)
             gBattleStruct->triAttackBurn = TRUE;
 
-        SetMoveEffect(battlerAtk, effectBattler, sOneFromManyEffects[chosenMoveEffect], battleScript, effectFlags);
+        SetMoveEffect(battlerAtk, effectBattler, sRandomFromListEffects[chosenMoveEffect], battleScript, effectFlags);
         break;
     }
     case MOVE_EFFECT_WRAP:
@@ -2487,7 +2488,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_STAT_PLUS:
     case MOVE_EFFECT_STAT_MINUS:
     {
-        // Better to pass the addtional effect as an argument but for now that works
+        // Better to pass the additional effect as an argument but for now that works
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
 
         for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
@@ -10938,7 +10939,7 @@ bool32 CanBurnHitThaw(enum Move move)
             if (additionalEffect->moveEffect == MOVE_EFFECT_BURN)
                 return TRUE;
 
-            if (additionalEffect->moveEffect == MOVE_EFFECT_LIST_SELECTION
+            if (additionalEffect->moveEffect == MOVE_EFFECT_RANDOM_FROM_LIST
              && gBattleStruct->triAttackBurn)
                 return TRUE;
         }

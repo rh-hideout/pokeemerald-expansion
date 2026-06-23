@@ -42,6 +42,8 @@ struct AdditionalEffect
     u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
     u8 padding:1;
 
+    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_RANDOM_FROM_LIST
+
     union PACKED {
         enum WrappedStringID wrapped;
         enum BrokeProtectionStringID brokeProtect;
@@ -217,7 +219,6 @@ struct MoveInfo
 
     // primary/secondary effects
     const struct AdditionalEffect *additionalEffects;
-    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_LIST_SELECTION
 
     // contest parameters
     u8 contestEffect;
@@ -810,9 +811,10 @@ static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Mo
     return &gMovesInfo[SanitizeMoveId(moveId)].additionalEffects[effect];
 }
 
-static inline const enum MoveEffect *GetMoveSelectionMoveEffects(enum Move move)
+static inline const enum MoveEffect *GetMoveSelectionMoveEffects(enum Move move, u32 effect)
 {
-    return gMovesInfo[SanitizeMoveId(move)].selectionMoveEffects;
+    assertf(gMovesInfo[move].additionalEffects[effect].effect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses selectionMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].effect);
+    return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].selectionMoveEffects;
 }
 
 static inline u32 GetMoveContestEffect(enum Move moveId)
