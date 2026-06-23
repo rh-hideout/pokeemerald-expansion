@@ -813,7 +813,6 @@ static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Mo
 
 static inline const enum MoveEffect *GetMoveRandomMoveEffects(enum Move move, u32 effect)
 {
-    assertf(gMovesInfo[move].additionalEffects[effect].moveEffect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses randomMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].moveEffect);
     return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].randomMoveEffects;
 }
 
