@@ -20,6 +20,7 @@
 
 #include <cstring>
 #include "c_file.h"
+#include "../../include/config/overworld.h"
 
 CFile::CFile(std::string path)
 {
@@ -332,7 +333,13 @@ void CFile::CheckIncgfx()
     SkipWhitespace();
     std::string extensions = ReadString();
     if (incgfxType == 3)
+    {
+#if OW_GFX_COMPRESS == OGC_FAST
         extensions += ".rlfast";
+#elif OW_GFX_COMPRESS == OGC_SMALL
+        extensions += ".smol";
+#endif
+    }
 
     SkipWhitespace();
     std::string arguments;

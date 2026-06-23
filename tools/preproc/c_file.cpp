@@ -32,6 +32,7 @@
 #include "utf8.h"
 #include "string_parser.h"
 #include "io.h"
+#include "../../include/config/overworld.h"
 
 CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr)
 {
@@ -597,7 +598,13 @@ void CFile::TryConvertIncgfx()
     SkipWhitespace();
     auto extensions = ReadString();
     if (incgfxType == 3)
+    {
+#if OW_GFX_COMPRESS == OGC_FAST
         extensions += ".rlfast";
+#elif OW_GFX_COMPRESS == OGC_SMALL
+        extensions += ".smol";
+#endif
+    }
 
     SkipWhitespace();
     std::string arguments;
