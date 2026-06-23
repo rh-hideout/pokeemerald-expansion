@@ -9031,7 +9031,7 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
     }
     default:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
-            gBattleStruct->dynamicMoveCategory = GetMoveCategory(move);
+            gBattleStruct->dynamicMoveCategory = GetMoveCategory(GetBattlerChosenMove(battlerAtk));
         break;
     }
 }
