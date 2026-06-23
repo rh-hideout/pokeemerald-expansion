@@ -970,6 +970,12 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     if (toggledGimmickDef)
         SetActiveGimmick(battlerDef, GIMMICK_NONE);
 
+    // Undo temporary settings
+    gBattleStruct->dynamicMoveType = TYPE_NONE;
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+    gBattleStruct->battlerState[battlerAtk].ateBoost = FALSE;
+    gSpecialStatuses[battlerAtk].gemBoost = FALSE;
+
     gAiLogicData->aiCalcInProgress = FALSE;
     return simDamage;
 }

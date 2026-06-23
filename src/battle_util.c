@@ -8956,14 +8956,21 @@ bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, enum BattlerId battler)
 
 enum DamageCategory GetBattleMoveCategory(enum Move move)
 {
-    if (gBattleStruct != NULL && gBattleStruct->dynamicMoveCategory != DAMAGE_CATEGORY_NONE)
+    bool32 inBattle = gBattleStruct != NULL;
+
+    if (inBattle && gBattleStruct->dynamicMoveCategory != DAMAGE_CATEGORY_NONE)
         return gBattleStruct->dynamicMoveCategory;
 
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return DAMAGE_CATEGORY_STATUS;
 
     if (B_PHYSICAL_SPECIAL_SPLIT < GEN_4)
-        return gTypesInfo[GetMoveType(move)].damageCategory;
+    {
+        if (inBattle)
+            return gTypesInfo[GetBattleMoveType(move)].damageCategory;
+        else
+            return gTypesInfo[GetMoveType(move)].damageCategory;
+    }
 
     return GetMoveCategory(move);
 }
