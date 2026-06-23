@@ -1059,6 +1059,7 @@ static void DrawFollowerSprite(struct PokemonSpriteVisualizer *data)
     gSprites[data->followerspriteId].oam.size = graphicsInfo->oam->size;
     gSprites[data->followerspriteId].images = graphicsInfo->images;
     gSprites[data->followerspriteId].anims = graphicsInfo->anims;
+    gSprites[data->followerspriteId].compressedFast = graphicsInfo->compressedFast;
     gSprites[data->followerspriteId].subspriteTables = graphicsInfo->subspriteTables;
 }
 

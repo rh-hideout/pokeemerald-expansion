@@ -1,6 +1,6 @@
 // Normally, INCGFX_COMP acts like INCGFX_U32, but appends `.smol` to the file, compressing it;
 // If not compressing overworld gfx, make this an alias to INCGFX_32, so gfx will *not* be compressed
-#if !(OW_GFX_COMPRESS)
+#if OW_GFX_COMPRESS == OGC_NONE
 #define INCGFX_COMP INCGFX_U32
 #endif
 

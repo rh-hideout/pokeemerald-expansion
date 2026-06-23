@@ -41,7 +41,12 @@ struct SpriteCopyRequest
 {
     const u8 *src;
     u8 *dest;
-    u16 size;
+    union
+    {
+        u16 size;
+        u16 index;
+    };
+    bool8 compressed;
 };
 
 struct OamDimensions32
@@ -146,6 +151,7 @@ static const struct Sprite sDummySprite =
 {
     .oam = DUMMY_OAM_DATA,
     .anims = gDummySpriteAnimTable,
+    .compressedFast = FALSE,
     .affineAnims = gDummySpriteAffineAnimTable,
     .template = &gDummySpriteTemplate,
     .callback = SpriteCallbackDummy,
@@ -605,6 +611,7 @@ void ClearSpriteCopyRequests(void)
         sSpriteCopyRequests[i].src = 0;
         sSpriteCopyRequests[i].dest = 0;
         sSpriteCopyRequests[i].size = 0;
+        sSpriteCopyRequests[i].compressed = FALSE;
     }
 }
 
@@ -770,6 +777,8 @@ void SpriteCallbackDummy(struct Sprite *sprite)
 {
 }
 
+extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
+
 void ProcessSpriteCopyRequests(void)
 {
     if (sShouldProcessSpriteCopyRequests)
@@ -778,7 +787,10 @@ void ProcessSpriteCopyRequests(void)
 
         while (sSpriteCopyRequestCount > 0)
         {
-            CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
+            if (!sSpriteCopyRequests[i].compressed)
+                CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
+            else
+                SmolFrameUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index);
             sSpriteCopyRequestCount--;
             i++;
         }
@@ -787,21 +799,38 @@ void ProcessSpriteCopyRequests(void)
     }
 }
 
-void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images)
+void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images, bool8 compressed)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
-        if (!images[0].relativeFrames)
+        if (compressed)
         {
-            sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
-            sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
+            if (!images[0].relativeFrames)
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].index = 0;
+            }
+            else
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].index = index;
+            }
         }
         else
         {
-            sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data + images[0].size * index;
-            sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
+            if (!images[0].relativeFrames)
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
+            }
+            else
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data + images[0].size * index;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
+            }
         }
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileNum;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressed = compressed;
         sSpriteCopyRequestCount++;
     }
 }
@@ -813,6 +842,7 @@ void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size)
         sSpriteCopyRequests[sSpriteCopyRequestCount].src = src;
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = dest;
         sSpriteCopyRequests[sSpriteCopyRequestCount].size = size;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressed = FALSE;
         sSpriteCopyRequestCount++;
     }
 }
@@ -932,7 +962,7 @@ void BeginAnim(struct Sprite *sprite)
         if (sprite->usingSheet)
         {
             //  Inject OW decompression here
-            if (OW_GFX_COMPRESS && sprite->sheetSpan)
+            if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             {
                 imageValue = (imageValue + 1) << sprite->sheetSpan;
             }
@@ -940,7 +970,7 @@ void BeginAnim(struct Sprite *sprite)
         }
         else
         {
-            RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+            RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
         }
     }
 }
@@ -992,7 +1022,7 @@ void AnimCmd_frame(struct Sprite *sprite)
 
     if (sprite->usingSheet)
     {
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
         {
             //  Inject OW frame switcher here
             imageValue = (imageValue + 1) << sprite->sheetSpan;
@@ -1001,7 +1031,7 @@ void AnimCmd_frame(struct Sprite *sprite)
     }
     else
     {
-        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
     }
 }
 
@@ -1035,13 +1065,13 @@ void AnimCmd_jump(struct Sprite *sprite)
 
     if (sprite->usingSheet)
     {
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             imageValue = (imageValue + 1) << sprite->sheetSpan;
         sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
     }
     else
     {
-        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
     }
 }
 
@@ -1425,7 +1455,7 @@ void SetSpriteSheetFrameTileNum(struct Sprite *sprite)
     if (sprite->usingSheet)
     {
         s16 tileOffset = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.imageValue;
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             tileOffset = (tileOffset + 1) << sprite->sheetSpan;
         if (tileOffset < 0)
             tileOffset = 0;

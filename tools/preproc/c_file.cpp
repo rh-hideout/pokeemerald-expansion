@@ -597,7 +597,7 @@ void CFile::TryConvertIncgfx()
     SkipWhitespace();
     auto extensions = ReadString();
     if (incgfxType == 3)
-        extensions += ".smol";
+        extensions += ".rlfast";
 
     SkipWhitespace();
     std::string arguments;

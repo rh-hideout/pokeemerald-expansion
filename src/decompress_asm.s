@@ -19,6 +19,86 @@ FastUnsafeCopy32:
 	pop     {r4-r10}
 	bx    lr
 
+.global SmolFrameUncomp
+
+	// header (see src):
+	// struct RLFrameHeader {
+	//   u16 n_frames: 8;
+	//   u16 frame_size_tiles: 8;
+	//   struct Offset {
+	//     u16 offset: 15;
+	//     u16 start_fill_mode: 1; TODO: is this actually a thing?
+	//   }[n_frames];
+	// }
+	// followed by n_frames compressed data frames
+	// they are built as follows:
+	// [n] <data>
+	// where n signifies the amount of 0 bytes to fill in fill mode
+	// or the amount of bytes to copy from the compressed stream in copy mode
+	// after a fill mode [n] follows a copy mode [n]
+	// after a copy mode [n] follow <n> bytes of data, as well as a fill mode [n]
+	// if the stream is fully decompressed an additional [n] is omitted,
+	// the decompressor has to terminate then.
+
+	@ r0 = src (word aligned)
+	@ r1 = dst (word aligned)
+	@ r2 = frame_index
+
+SmolFrameUncomp:
+	push {r4-r7}
+	ldrh r3, [r0] // frame size in tiles and number of frames
+	and r5, r3, #0xFF00
+	lsr r5, r5, #3 // frame_size_bytes
+	lsl r2, r2, #1 // index of offset compound - 2
+	
+// opt: we can omit this by reframing the offset to index from 2 and using incrementing ldrh above
+	add r2, #2
+
+	ldrh r2, [r0, r2] // offset compound
+
+	add r0, r2, r0
+	add r5, r5, r1 // r5 = dst + frame_size_bytes
+
+	mov r6, #0 // for filling
+	mov r7, #0x4000000
+	orr r7, #0xD4 // dma3_sad
+	mov r3, #(0x8000 << 16)
+
+rlz_loop:
+	ldrh r4, [r0], #2 // first 8 byte: number of fill hwords, second 8 byte: number of copy hwords
+
+// fill stage
+// (can probably be faster by improving the store loop,
+// but alignment is tricky and there's a bunch of small fill compounds)
+	and r2, r4, #0xFF
+
+branch_fill_loop:
+    subs r2, r2, #1
+	strhge r6, [r1], #2
+	bgt branch_fill_loop
+
+// copy stage (can probably be faster by using DMA)
+	lsrs r2, r4, #8
+	beq skip_dma
+	orr r4, r2, r3
+	stmia r7, {r0, r1, r4} // dma
+	//sub r7, #12
+	lsl r2, #1
+	add r0, r2
+	add r1, r2
+//branch_copy_loop:
+//	subs r2, r2, #1
+//	ldrhge r4, [r0], #2
+//	strhge r4, [r1], #2
+//	bgt branch_copy_loop
+skip_dma:
+	cmp r1, r5
+	bne rlz_loop
+
+decompress_done:
+	pop {r4-r7}
+	bx lr
+
 	.section .text @Copied to stack on run-time
 	.align 2
 

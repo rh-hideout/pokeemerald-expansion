@@ -332,7 +332,7 @@ void CFile::CheckIncgfx()
     SkipWhitespace();
     std::string extensions = ReadString();
     if (incgfxType == 3)
-        extensions += ".smol";
+        extensions += ".rlfast";
 
     SkipWhitespace();
     std::string arguments;

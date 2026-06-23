@@ -27,8 +27,10 @@
 #define SIZE_32x32 1
 #define SIZE_64x64 0
 
-// Set .compressed = OW_GFX_COMPRESS
-#define COMP OW_GFX_COMPRESS
+// Set .compressed = (OW_GFX_COMPRESS == OGC_SMALL)
+// Set .compressedFast = (OW_GFX_COMPRESS == OGC_FAST)
+#define COMP (OW_GFX_COMPRESS == OGC_SMALL)
+#define COMP_FAST (OW_GFX_COMPRESS == OGC_FAST)
 
 #if OW_POKEMON_OBJECT_EVENTS
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
@@ -60,6 +62,7 @@
     .inanimate = FALSE,                                                                                                                 \
     .compressed = COMP,                                                                                                                 \
     .tracks = _tracks,                                                                                                                  \
+    .compressedFast = COMP_FAST,                                                                                                        \
     .oam = (_size == SIZE_32x32 ? &gObjectEventBaseOam_32x32 : &gObjectEventBaseOam_64x64),                                             \
     .subspriteTables = (_size == SIZE_32x32 ? sOamTables_32x32 : sOamTables_64x64),                                                     \
     .anims = _anims,                                                                                                                    \
@@ -139,6 +142,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
             .inanimate = FALSE,
             .compressed = COMP,
             .tracks = TRACKS_FOOT,
+            .compressedFast = COMP_FAST,
             .oam = &gObjectEventBaseOam_32x32,
             .subspriteTables = sOamTables_32x32,
             .anims = sAnimTable_Following,
