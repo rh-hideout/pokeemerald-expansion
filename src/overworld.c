@@ -3820,7 +3820,7 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
     iconSpriteId = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
 
     if (flash)
-        gSprites[iconSpriteId].objWinMask = TRUE;
+        gSprites[iconSpriteId].copyToObjWin = TRUE;
 
     if (iconSpriteId != MAX_SPRITES)
     {

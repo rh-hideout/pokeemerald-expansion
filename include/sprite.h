@@ -216,7 +216,7 @@ struct Sprite
              u16 coordOffsetEnabled:1;      //2
              u16 invisible:1;               //4
              // If set to TRUE a copy of the sprite's OAM is created with objMode set to ST_OAM_OBJ_WINDOW
-             u16 objWinMask:1;                 //8
+             u16 copyToObjWin:1;                 //8
              // if nonzero, tile offset for usingSheet sprites
              // is (offset + 1) << sheetSpan;
              // (This allows using frame-based anim tables for sheet sprites)

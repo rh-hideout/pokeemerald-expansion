@@ -1745,7 +1745,7 @@ bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     if (!sprite->subspriteTables || sprite->subspriteMode == SUBSPRITES_OFF)
     {
-        return AddToOamBuffer(oamIndex, &sprite->oam, sprite->objWinMask);
+        return AddToOamBuffer(oamIndex, &sprite->oam, sprite->copyToObjWin);
     }
     else
     {
@@ -1763,7 +1763,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 
     if (!subspriteTable || !subspriteTable->subsprites)
     {
-        return AddToOamBuffer(oamIndex, oam, sprite->objWinMask);
+        return AddToOamBuffer(oamIndex, oam, sprite->copyToObjWin);
     }
     else
     {
@@ -1819,7 +1819,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
             if (sprite->subspriteMode < SUBSPRITES_IGNORE_PRIORITY)
                 subspriteOam.priority = subspriteTable->subsprites[i].priority;
 
-            if (AddToOamBuffer(oamIndex, &subspriteOam, sprite->objWinMask))
+            if (AddToOamBuffer(oamIndex, &subspriteOam, sprite->copyToObjWin))
                 return TRUE;
         }
 
