@@ -289,10 +289,6 @@ static void DebugTask_HandleMenuInput_General(u8 taskId);
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
-static void DebugAction_Util_Species_Randomizer(u8 taskId);
-static void DebugAction_Util_Item_Randomizer(u8 taskId);
-static void DebugAction_Util_Randomizer_SelectId(u8 taskId);
-static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
@@ -437,6 +433,8 @@ extern const u8 Common_EventScript_MoveRelearner[];
 
 static const struct DebugSelection sWarpSelection;
 static const struct DebugSelection sSetWeatherSelection;
+static const struct DebugSelection sSpeciesGeneratorSelection;
+static const struct DebugSelection sItemGeneratorSelection;
 static const struct DebugSelection sMassOutbreakSpeciesSelection;
 static const struct DebugSelection sMassOutbreakLevelSelection;
 static const struct DebugSelection sMassOutbreakProbabilitySelection;
@@ -614,8 +612,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Berry Functions…"),          DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
     { COMPOUND_STRING("EWRAM Counters…"),           DebugAction_ExecuteScript, Debug_EventScript_EWRAMCounters },
     { COMPOUND_STRING("Follower NPC…"),             DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
-    { COMPOUND_STRING("Test Species Randomizer"),   DebugAction_Util_Species_Randomizer },
-    { COMPOUND_STRING("Test Item Randomizer"),      DebugAction_Util_Item_Randomizer },
+    { COMPOUND_STRING("Test Species Randomizer"),   DebugAction_Selection_Init, &sSpeciesGeneratorSelection },
+    { COMPOUND_STRING("Test Item Randomizer"),      DebugAction_Selection_Init, &sItemGeneratorSelection },
     { COMPOUND_STRING("Wally Tutorial"),            DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
     { COMPOUND_STRING("Steven Multi"),              DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
@@ -2079,11 +2077,7 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
     }
 }
 
-#define tRandomizerOption data[6]
-#define tArgCounter data[7]
-#define tArg1 data[8]
-#define tArg2 data[9]
-#define tType data[10]
+#define tRandomiserType data[8]
 
 #define SPECIES_RANDOMIZER 0
 #define ITEM_RANDOMIZER 1
@@ -2094,22 +2088,22 @@ static void DebugAction_Util_Randomizer_RefreshValues(u8 taskId)
     u32 x;
     u32 font;
     const struct FilterFuncArgs args = {
-        .arg1 = gTasks[taskId].tArg1,
-        .arg2 = gTasks[taskId].tArg2
+        .arg1 = DebugSelection_GetData(taskId, 1),
+        .arg2 = DebugSelection_GetData(taskId, 2),
     };
 
     for (u32 i = 0; i < 27; i++)
     {
-        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
+        if (gTasks[taskId].tRandomiserType == SPECIES_RANDOMIZER)
         {
-            u32 species = GetRandomSpecies(gTasks[taskId].tRandomizerOption, &args);
+            u32 species = GetRandomSpecies(DebugSelection_GetData(taskId, 0), &args);
             str = GetSpeciesName(species);
             x = (i % 3) * 72 + 16;
             font = FONT_NORMAL;
         }
         else
         {
-            u32 item = GetRandomItem(gTasks[taskId].tRandomizerOption, &args);
+            u32 item = GetRandomItem(DebugSelection_GetData(taskId, 0), &args);
             str = GetItemName(item);
             x = (i % 3) * 80;
             font = FONT_NARROW;
@@ -2151,145 +2145,81 @@ static void DebugAction_Util_Randomizer_ShowValues(u8 taskId)
     gTasks[taskId].func = DebugAction_Util_Randomizer_Wait;
 }
 
-static void Debug_Display_RandomizerArg(u32 value, u32 index, u32 digit, u8 windowId)
+static bool32 DebugSelection_SpeciesGenerator_OnComplete(u8 taskId)
 {
-    ConvertIntToDecimalStringN(gStringVar1, index + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
-    ConvertIntToDecimalStringN(gStringVar2, value, STR_CONV_MODE_LEADING_ZEROS, 5);
-    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
-    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Arg {STR_VAR_1}: {STR_VAR_2}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
-    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+    gTasks[taskId].tRandomiserType = SPECIES_RANDOMIZER;
+    DebugAction_Util_Randomizer_ShowValues(taskId);
+    return TRUE;
 }
 
-static void DebugAction_Util_Randomizer_SelectArg(u8 taskId)
+static bool32 DebugSelection_ItemGenerator_OnComplete(u8 taskId)
 {
-    if (JOY_NEW(DPAD_ANY))
-    {
-        PlaySE(SE_SELECT);
-        Debug_HandleInput_Numeric(taskId, 0, 0xFFFF, 5);
-        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-    }
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        gTasks[taskId].tArgCounter += 1;
-        if (gTasks[taskId].tArgCounter == 2)
-        {
-            gTasks[taskId].func = DebugAction_Util_Randomizer_ShowValues;
-        }
-        else
-        {
-            if (gTasks[taskId].tArgCounter == 1)
-                gTasks[taskId].tArg1 = gTasks[taskId].tInput;
-            else if (gTasks[taskId].tArgCounter == 2)
-                gTasks[taskId].tArg2 = gTasks[taskId].tInput;
-            gTasks[taskId].tInput = 0;
-            gTasks[taskId].tDigit = 0;
-            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
-            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-        }
-    }
-
-    if (JOY_NEW(B_BUTTON))
-    {
-        if (gTasks[taskId].tArgCounter == 0)
-        {
-            gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
-            Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-        }
-        else
-        {
-            gTasks[taskId].tArgCounter -= 1;
-            gTasks[taskId].tInput = 0;
-            gTasks[taskId].tDigit = 0;
-            Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-        }
-    }
+    gTasks[taskId].tRandomiserType = ITEM_RANDOMIZER;
+    DebugAction_Util_Randomizer_ShowValues(taskId);
+    return TRUE;
 }
 
-static void Debug_Display_RandomizerOptionsId(u32 optionsID, u32 digit, u8 windowId)
+static void DebugSelectionStep_UpdateGeneratorArgs(u8 taskId, u8 digits, u32 min, u32 max)
 {
-    ConvertIntToDecimalStringN(gStringVar1, optionsID, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
-    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
-    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Options ID: {STR_VAR_1}\n{CLEAR_TO 90}\n\n{STR_VAR_3}{CLEAR_TO 90}"));
-    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+    ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].tSubstep + 1, STR_CONV_MODE_LEADING_ZEROS, 1);
+    ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, digits);
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("Arg {STR_VAR_2}: {STR_VAR_3}"));
+    StringCopy(gStringVar2, COMPOUND_STRING(""));
+    StringCopy(gStringVar3, COMPOUND_STRING(""));
+    DebugNativeStep_PrintWindowSelection(taskId);
 }
 
-static void DebugAction_Util_Randomizer_SelectId(u8 taskId)
+static void DebugSelectionStep_UpdateGeneratorOption(u8 taskId, u8 digits, u32 min, u32 max)
 {
-    if (JOY_NEW(DPAD_ANY))
-    {
-        PlaySE(SE_SELECT);
-        u32 max;
-        if (gTasks[taskId].tType == SPECIES_RANDOMIZER)
-            max = RANDOM_SPECIES_OPTIONS_COUNT - 1;
-        else
-            max = RANDOM_ITEM_OPTIONS_COUNT - 1;
-        Debug_HandleInput_Numeric(taskId, 0, max, DEBUG_NUMBER_DIGITS_RANDOMISER_OPTIONS);
-        Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-    }
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        gTasks[taskId].tRandomizerOption = gTasks[taskId].tInput;
-        gTasks[taskId].tArgCounter = 0;
-        gTasks[taskId].tInput = 0;
-        gTasks[taskId].tDigit = 0;
-        gTasks[taskId].func = DebugAction_Util_Randomizer_SelectArg;
-        Debug_Display_RandomizerArg(gTasks[taskId].tInput, gTasks[taskId].tArgCounter, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-    }
-
-    if (JOY_NEW(B_BUTTON))
-    {
-        Debug_RemoveCallbackMenu();
-        DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_Utilities);
-    }
+    ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, digits);
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("Options ID: {STR_VAR_2}"));
+    StringCopy(gStringVar2, COMPOUND_STRING(""));
+    StringCopy(gStringVar3, COMPOUND_STRING(""));
+    DebugNativeStep_PrintWindowSelection(taskId);
 }
 
-static void DebugAction_Util_Species_Randomizer(u8 taskId)
-{
-    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
-    RemoveWindow(gTasks[taskId].tWindowId);
-    u8 windowId = DebugNativeStep_CreateDebugWindow();
+static const struct DebugSelectionStep sRandomGeneratorArgsSelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateGeneratorArgs,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = 0xFFFF,
+    .digits = 5,
+    .substepCount = 2,
+};
 
-    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
-    gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = 0;
-    gTasks[taskId].tDigit = 0;
-    gTasks[taskId].tRandomizerOption = 0;
-    gTasks[taskId].tArgCounter = 0;
-    gTasks[taskId].tArg1 = 0;
-    gTasks[taskId].tArg2 = 0;
-    gTasks[taskId].tType = SPECIES_RANDOMIZER;
+static const struct DebugSelectionStep sSpeciesGeneratorSelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateGeneratorOption,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = RANDOM_SPECIES_OPTIONS_COUNT - 1,
+    .digits = 2,
+};
 
-    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-}
+static const struct DebugSelectionStep sItemGeneratorSelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateGeneratorOption,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = RANDOM_ITEM_OPTIONS_COUNT - 1,
+    .digits = 2,
+};
 
-static void DebugAction_Util_Item_Randomizer(u8 taskId)
-{
-    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
-    RemoveWindow(gTasks[taskId].tWindowId);
-    u8 windowId = DebugNativeStep_CreateDebugWindow();
+static const struct DebugSelection sSpeciesGeneratorSelection = {
+    .onInit = Debug_CreateInputDisplayWindow,
+    .onCancel = DebugSelectionStep_ReturnToUtilMenu,
+    .onComplete = DebugSelection_SpeciesGenerator_OnComplete,//DebugSelection_SetWarp_OnComplete,
+    .steps = {&sSpeciesGeneratorSelectionStep, &sRandomGeneratorArgsSelectionStep},
+    .maxSteps = 2,
+};
 
-    gTasks[taskId].func = DebugAction_Util_Randomizer_SelectId;
-    gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = 0;
-    gTasks[taskId].tDigit = 0;
-    gTasks[taskId].tRandomizerOption = 0;
-    gTasks[taskId].tArgCounter = 0;
-    gTasks[taskId].tArg1 = 0;
-    gTasks[taskId].tArg2 = 0;
-    gTasks[taskId].tType = ITEM_RANDOMIZER;
+static const struct DebugSelection sItemGeneratorSelection = {
+    .onInit = Debug_CreateInputDisplayWindow,
+    .onCancel = DebugSelectionStep_ReturnToUtilMenu,
+    .onComplete = DebugSelection_ItemGenerator_OnComplete,//DebugSelection_SetWarp_OnComplete,
+    .steps = {&sItemGeneratorSelectionStep, &sRandomGeneratorArgsSelectionStep},
+    .maxSteps = 2,
+};
 
-    Debug_Display_RandomizerOptionsId(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
-}
-
-#undef tRandomizerOption
-#undef tArgCounter
-#undef tArg1
-#undef tArg2
-#undef tType
+#undef tRandomiserType
 
 // *******************************
 // Actions Trainers
