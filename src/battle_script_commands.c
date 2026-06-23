@@ -3854,7 +3854,7 @@ static void Cmd_getexp(void)
 
     gBattlerFainted = GetBattlerForBattleScript(cmd->battler);
 
-    u32 faintedSpecies;
+    enum Species faintedSpecies;
     if (!gBattleMons[gBattlerFainted].volatiles.transformed)
         faintedSpecies = gBattleMons[gBattlerFainted].species;
     else if (GetConfig(B_TRANSFORM_BATTLE_REWARDS) < GEN_3)
