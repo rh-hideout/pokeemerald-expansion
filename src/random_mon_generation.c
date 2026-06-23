@@ -63,13 +63,12 @@ static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count);
 static s32 RandomElementFromFilteredArray(rng_value_t *rng, s32 *array, u32 length, bool32 (*filterFunc)(s32 value, void *params), void *params)
 {
     u32 index;
-    s32 tmp;
     for (u32 i = 0; i < length; i++)
     {
-        index = LocalRandom32(rng) % (length - 1);
-        if (!filterFunc(array[index], params))
+        index = LocalRandom32(rng) % (length - 1 - i);
+        if (filterFunc(array[index], params))
             return index;
-        SWAP(array[length - 1 - i], array[index], tmp);
+        array[index] = array[length - 1 - i];
     }
     errorf("Could not find a value matching filter in array");
     return length;
