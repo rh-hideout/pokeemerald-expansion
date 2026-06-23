@@ -9018,7 +9018,18 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
         }
         break;
     case EFFECT_PRESENT:
-        break; // set in move resolution
+    {
+        u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
+        if (rand < 102)
+            gBattleStruct->presentBasePower = 40;
+        else if (rand < 178)
+            gBattleStruct->presentBasePower = 80;
+        else if (rand < 204)
+            gBattleStruct->presentBasePower = 120;
+        else
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_STATUS;
+        break;
+    }
     default:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
             gBattleStruct->dynamicMoveCategory = GetMoveCategory(move);

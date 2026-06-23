@@ -1310,19 +1310,6 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
          || gBattleMons[cv->battlerAtk].volatiles.embargo)
             battleScript = BattleScript_ButItFailed;
         break;
-    case EFFECT_PRESENT: // Might be better in SetDynamicMoveCategory?
-    {
-        u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
-        if (rand < 102)
-            gBattleStruct->presentBasePower = 40;
-        else if (rand < 178)
-            gBattleStruct->presentBasePower = 80;
-        else if (rand < 204)
-            gBattleStruct->presentBasePower = 120;
-        else
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_STATUS;
-        break;
-    }
     case EFFECT_BELCH:
         if (!GetBattlerPartyState(cv->battlerAtk)->ateBerry)
             battleScript = BattleScript_BelchFails;
