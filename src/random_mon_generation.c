@@ -218,7 +218,7 @@ struct RandomSpeciesParams
     const struct RandomSpeciesGeneratorOptions *options;
     const struct FilterFuncArgs *filterFuncArgs;
     rng_value_t *rng;
-    u32 randomForm;
+    s32 randomForm;
 };
 
 static bool32 DoesSpeciesHaveValidForm(s32 species, void *params)
@@ -236,17 +236,22 @@ static bool32 DoesSpeciesHaveValidForm(s32 species, void *params)
             return TRUE;
     }
 
-    u16 validForms[RANDOM_MON_MAX_FORMS];
-    u32 validFormsCount = 0;
+    u32 selectedFormScore = 0;
+    u32 currentFormScore;
     for (u32 i = 0; formTable[i] != FORM_SPECIES_END; i++)
     {
-        if (IsRandomSpeciesFormAllowed(formTable[i], formTable)
-         && !IsSpeciesBannedByRandomSpeciesOptions(formTable[i], options, filterFuncArgs))
-            validForms[validFormsCount++] = i;
+        if (!IsRandomSpeciesFormAllowed(formTable[i], formTable)
+         || IsSpeciesBannedByRandomSpeciesOptions(formTable[i], options, filterFuncArgs))
+            continue;
+        currentFormScore = LocalRandom32(speciesParams->rng);
+        if (currentFormScore >= selectedFormScore)
+        {
+            speciesParams->randomForm = i;
+            selectedFormScore = currentFormScore;
+        }
     }
-    if (validFormsCount == 0)
+    if (speciesParams->randomForm == -1)
         return FALSE;
-    speciesParams->randomForm = validForms[LocalRandom32(speciesParams->rng) % (validFormsCount - 1)];
     return TRUE;
 }
 
@@ -301,7 +306,7 @@ enum Species GetRandomSpeciesWithSeed(rng_value_t *rng, u32 optionId, const stru
         .options = options,
         .filterFuncArgs = filterFuncArgs,
         .rng = rng,
-        .randomForm = 0,
+        .randomForm = -1,
     };
 
     s32 randSpeciesIndex = RandomElementFromFilteredArray(rng, speciesIndexes, poolSize, &DoesSpeciesHaveValidForm, (void *)&speciesParams);
