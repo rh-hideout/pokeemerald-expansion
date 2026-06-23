@@ -234,14 +234,14 @@ struct Sprite
              u16 usingSheet:1;              //0x40
              u16 anchored:1;                //0x80
 
-    /*0x40*/ u16 sheetTileStart;
+    /*0x40*/ u16 sheetTileStart:10;
+             bool16 compressedFast:1;
+             u16 _unused1:5;
 
     /*0x42*/ u8 subspriteTableNum:6;
              u8 subspriteMode:2;
 
     /*0x43*/ u8 subpriority;
-
-    /*0x44*/ bool8 compressedFast; // TODO: are there any unused bits this could be packed into?
 };
 
 struct OamMatrix
