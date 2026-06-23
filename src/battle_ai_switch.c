@@ -509,6 +509,8 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
                 ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
                 if (!IsMoveBad(&ctx, moveIndex))
                     return FALSE;
+                // Restore opposing battler for next move check
+                ctx.battlerDef = switchContext->opposingBattler;
             }
         }
     }
