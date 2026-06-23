@@ -4399,7 +4399,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = 20,
         }),
-        .selectionMoveEffects = { MOVE_EFFECT_BURN, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_FREEZE_OR_FROSTBITE },
+        .randomMoveEffects = { MOVE_EFFECT_BURN, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_FREEZE_OR_FROSTBITE },
     #else
             "A triangular field of energy\n"
             "is created and launched."),
@@ -19960,7 +19960,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 30 : 50,
         }),
-        .selectionMoveEffects = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP },
+        .randomMoveEffects = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP },
         .battleAnimScript = gBattleAnimMove_DireClaw,
     },
 

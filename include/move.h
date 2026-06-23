@@ -28,7 +28,7 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
-#define MAX_SELECTION_ADDITIONAL_EFFECTS    5
+#define MAX_RANDOM_ADDITIONAL_EFFECTS    5
 
 struct AdditionalEffect
 {
@@ -42,7 +42,7 @@ struct AdditionalEffect
     u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
     u8 padding:1;
 
-    enum MoveEffect selectionMoveEffects[MAX_SELECTION_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_RANDOM_FROM_LIST
+    enum MoveEffect randomMoveEffects[MAX_RANDOM_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_RANDOM_FROM_LIST
 
     union PACKED {
         enum WrappedStringID wrapped;
@@ -811,10 +811,10 @@ static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Mo
     return &gMovesInfo[SanitizeMoveId(moveId)].additionalEffects[effect];
 }
 
-static inline const enum MoveEffect *GetMoveSelectionMoveEffects(enum Move move, u32 effect)
+static inline const enum MoveEffect *GetMoveRandomMoveEffects(enum Move move, u32 effect)
 {
-    assertf(gMovesInfo[move].additionalEffects[effect].moveEffect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses selectionMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].moveEffect);
-    return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].selectionMoveEffects;
+    assertf(gMovesInfo[move].additionalEffects[effect].moveEffect == MOVE_EFFECT_RANDOM_FROM_LIST, "not an additional effect that uses randomMoveEffects: %d", gMovesInfo[move].additionalEffects[effect].moveEffect);
+    return gMovesInfo[SanitizeMoveId(move)].additionalEffects[effect].randomMoveEffects;
 }
 
 static inline u32 GetMoveContestEffect(enum Move moveId)
