@@ -430,7 +430,7 @@ void HandleAction_UseMove(void)
     }
 
 
-    SetDynamicMoveTypeAndCategory(gChosenMove, gBattlerAttacker);
+    SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
 
     // check Z-Move used
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE
@@ -8977,6 +8977,8 @@ enum DamageCategory GetBattleMoveCategory(enum Move move)
 
 void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_PHOTON_GEYSER:
@@ -8986,10 +8988,7 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
             gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
         break;
     case EFFECT_SHELL_SIDE_ARM:
-        if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
-        else
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
+        gBattleStruct->dynamicMoveCategory = gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef];
         break;
     case EFFECT_TERA_BLAST:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
@@ -9033,8 +9032,6 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
     default:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
             gBattleStruct->dynamicMoveCategory = GetMoveCategory(move);
-        else
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
         break;
     }
 }

@@ -1241,7 +1241,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     enum Ability abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
 
-    SetDynamicMoveTypeAndCategory(move, battlerAtk);
+    SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
@@ -3071,7 +3071,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     enum Move incomingMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
 
-    SetDynamicMoveTypeAndCategory(move, battlerAtk);
+    SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
@@ -6203,7 +6203,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     enum BattleMoveEffects effect = GetMoveEffect(move);
     enum Type moveType = 0;
 
-    SetDynamicMoveTypeAndCategory(move, battlerAtk);
+    SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
     if (IsTargetingPartner(battlerAtk, battlerDef))

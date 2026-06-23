@@ -969,6 +969,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         return CANCELER_RESULT_FAILURE;
     }
 
+    SetDynamicMoveCategory(cv->battlerAtk, cv->battlerDef, cv->move);
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -1049,7 +1050,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
             gBattleScripting.animTargetsHit = 0;
 
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
-            SetDynamicMoveTypeAndCategory(cv->move, cv->battlerAtk);
+            SetTypeBeforeUsingMove(cv->move, cv->battlerAtk);
             ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(cv->move);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;

@@ -270,7 +270,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
         else
-            SetDynamicMoveTypeAndCategory(gCurrentMove, gBattlerAttacker);
+            SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
         BattleScriptCall(BattleScript_MonTookFutureAttack);
         effect = TRUE;
