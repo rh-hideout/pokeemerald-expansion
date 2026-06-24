@@ -8582,7 +8582,7 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
         const u8 *iconGfx = GetMonIconPtrIsEgg(species, personality, isEgg);
         u8 index = GetValidMonIconPalIndex(species) + 8;
 
-        static ALIGNED(4) u8 buffer[512];
+        EWRAM_DATA static ALIGNED(4) u8 buffer[512];
 
         SmolFrameUncomp(iconGfx, buffer, 0);
 

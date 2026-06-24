@@ -1794,7 +1794,7 @@ extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
 
 static void UNUSED DrawMonIconAtPos(u8 windowId, enum Species speciesId, u32 personality, u16 x, u16 y)
 {
-    static ALIGNED(4) u8 buffer[512];
+    EWRAM_DATA static ALIGNED(4) u8 buffer[512];
 
     SmolFrameUncomp(GetMonIconPtr(speciesId, personality), buffer, 0);
 
