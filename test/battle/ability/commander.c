@@ -264,18 +264,13 @@ DOUBLE_BATTLE_TEST("Commander prevents Eject Pack from activating after a switch
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_INCINEROAR) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
-        TURN {
-            MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft);
-            SEND_OUT(opponentLeft, 2);
-        }
+        TURN { SWITCH(opponentLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
-        HP_BAR(opponentLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         NONE_OF {
