@@ -1744,13 +1744,9 @@ void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subs
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     if (!sprite->subspriteTables || sprite->subspriteMode == SUBSPRITES_OFF)
-    {
         return AddToOamBuffer(oamIndex, &sprite->oam, sprite->copyToObjWin);
-    }
     else
-    {
         return AddSubspritesToOamBuffer(sprite, oamIndex);
-    }
 }
 
 bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
