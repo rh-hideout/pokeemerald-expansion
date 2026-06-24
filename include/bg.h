@@ -43,7 +43,7 @@ void ResetBgs(void);
 u32 GetBgMode(void);
 void ResetBgControlStructs(void);
 void Unused_ResetBgControlStruct(u32 bg);
-u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode);
+u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode, bool8 compressed);
 void SetTextModeAndHideBgs(void);
 bool32 IsInvalidBg(u32 bg);
 int BgTileAllocOp(int bg, int offset, int count, int mode);
@@ -53,6 +53,7 @@ void InitBgsFromTemplates(u32 bgMode, const struct BgTemplate *templates, u8 num
 void InitBgFromTemplate(const struct BgTemplate *template);
 void SetBgMode(u32 bgMode);
 u16 LoadBgTiles(u32 bg, const void *src, u16 size, u16 destOffset);
+u16 LoadBgTilesComp(u32 bg, const void *src, u16 size, u16 destOffset, bool8 compressed, u8 frame);
 u16 LoadBgTilemap(u32 bg, const void *src, u16 size, u16 destOffset);
 bool32 IsDma3ManagerBusyWithBgCopy(void);
 void ShowBg(u32 bg);

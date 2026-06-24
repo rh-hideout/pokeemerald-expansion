@@ -4437,6 +4437,7 @@ static void PutMonIconOnLvlUpBanner(void)
     spriteId = CreateSprite(&sSpriteTemplate_MonIconOnLvlUpBanner, 256, 10, 0);
     gSprites[spriteId].sDestroy = FALSE;
     gSprites[spriteId].sXOffset = gBattle_BG2_X;
+    gSprites[spriteId].compressedFast = TRUE;
 }
 
 static void SpriteCB_MonIconOnLvlUpBanner(struct Sprite *sprite)

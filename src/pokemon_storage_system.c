@@ -5144,6 +5144,8 @@ static u32 MakeIconIdFromSpeciesAndIconType(enum Species species, enum SpeciesIc
     return species;
 }
 
+extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
+
 static u16 TryLoadMonIconTiles(enum Species species, enum SpeciesIconType iconType)
 {
     u32 i, offset;
@@ -5175,7 +5177,7 @@ static u16 TryLoadMonIconTiles(enum Species species, enum SpeciesIconType iconTy
     sStorage->numIconsPerSpecies[i]++;
     offset = 16 * i;
     species &= SPECIES_MASK;
-    CpuCopy32(GetMonIconTilesByIconType(species, iconType), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
+    SmolFrameUncomp(GetMonIconTilesByIconType(species, iconType), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0);
 
     return offset;
 }
@@ -8566,6 +8568,8 @@ static void MultiMove_DeselectRow(u8 row, u8 minColumn, u8 maxColumn)
         MultiMove_ClearIconFromBg(minColumn++, row);
 }
 
+extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
+
 static void MultiMove_SetIconToBg(u8 x, u8 y)
 {
     u8 position = x + (IN_BOX_COLUMNS * y);
@@ -8578,8 +8582,12 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
         const u8 *iconGfx = GetMonIconPtrIsEgg(species, personality, isEgg);
         u8 index = GetValidMonIconPalIndex(species) + 8;
 
+        static ALIGNED(4) u8 buffer[512];
+
+        SmolFrameUncomp(iconGfx, buffer, 0);
+
         BlitBitmapRectToWindow4BitTo8Bit(sStorage->multiMoveWindowId,
-                                         iconGfx,
+                                         buffer,
                                          0,
                                          0,
                                          32,
