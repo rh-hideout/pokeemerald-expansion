@@ -622,6 +622,7 @@ static void RemoveMenu(void);
 static void InitMonIconFields(void);
 static void SpriteCB_BoxMonIconScrollOut(struct Sprite *);
 static void GetIncomingBoxMonData(u8);
+static void CreatePartyMonSprite(u8, bool8);
 static void CreatePartyMonsSprites(bool8);
 static void CompactPartySprites(void);
 static u8 GetNumPartySpritesCompacting(void);
@@ -4739,6 +4740,36 @@ static void SetBoxMonIconObjMode(u8 boxPosition, u8 objMode)
 {
     if (sStorage->boxMonsSprites[boxPosition] != NULL)
         sStorage->boxMonsSprites[boxPosition]->oam.objMode = objMode;
+}
+
+static void  CreatePartyMonSprite(u8 partyPosition, bool8 visible)
+{
+    enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_SPECIES);
+    bool32 isEgg = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_IS_EGG);
+    u32 personality = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_PERSONALITY);
+
+    if (partyPosition == 0)
+        sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12, isEgg);
+    else
+        sStorage->partySprites[partyPosition] = CreateMonIconSprite(species, personality, 152,  8 * (3 * (partyPosition - 1)) + 16, 1, 12, isEgg);
+
+    if (!visible)
+    {
+        sStorage->partySprites[partyPosition]->y -= DISPLAY_HEIGHT;
+        sStorage->partySprites[partyPosition]->invisible = TRUE;
+    }
+
+    if (sStorage->boxOption == OPTION_MOVE_ITEMS)
+    {
+        if (sStorage->partySprites[partyPosition] != NULL && GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_HELD_ITEM) == ITEM_NONE)
+            sStorage->partySprites[partyPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
+    }
+
+    if (sStorage->boxOption == OPTION_SELECT_MON)
+    {
+        if (sStorage->partySprites[partyPosition] != NULL && IsBoxMonExcluded(&(gParties[B_TRAINER_PLAYER][partyPosition].box)))
+            sStorage->partySprites[partyPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
+    }
 }
 
 static void CreatePartyMonsSprites(bool8 visible)
@@ -10077,8 +10108,8 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
         // Recreate icon sprite
         if (sInPartyMenu)
         {
-            DestroyAllPartyMonIcons();
-            CreatePartyMonsSprites(TRUE);
+            DestroyPartyMonIcon(sCursorPosition);
+            CreatePartyMonSprite(sCursorPosition, TRUE);
         }
         else
         {
