@@ -3709,7 +3709,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
 
             gBattleMons[cv->battlerDef].volatiles.smackDown = TRUE;
             gBattleMons[cv->battlerDef].volatiles.telekinesis = FALSE;
-            gBattleMons[cv->battlerDef].volatiles.magnetRise = FALSE;
+            gBattleMons[cv->battlerDef].volatiles.magnetRiseTimer = 0;
 
             if (onAir)
             {
@@ -4243,7 +4243,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
         {
             if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                 break;
-            
+
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }

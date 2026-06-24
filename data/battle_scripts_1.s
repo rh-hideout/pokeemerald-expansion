@@ -822,7 +822,8 @@ BattleScript_CoreEnforcerRet:
 
 BattleScript_EffectLaserFocus::
 	attackcanceler
-	trysetvolatile BS_ATTACKER, VOLATILE_LASER_FOCUS, BattleScript_ButItFailed
+	jumpifvolatile BS_ATTACKER, VOLATILE_LASER_FOCUS_TIMER, BattleScript_ButItFailed
+	setvolatile BS_ATTACKER, VOLATILE_LASER_FOCUS_TIMER, B_LASER_FOCUS_TIMER
 	attackanimation
 	waitanimation
 	printstring STRINGID_LASERFOCUS
@@ -1293,7 +1294,8 @@ BattleScript_EffectMagnetRise::
 	attackcanceler
 	jumpifvolatile BS_ATTACKER, VOLATILE_ROOT, BattleScript_ButItFailed
 	jumpifvolatile BS_ATTACKER, VOLATILE_SMACK_DOWN, BattleScript_ButItFailed
-	trysetvolatile BS_ATTACKER, VOLATILE_MAGNET_RISE, BattleScript_ButItFailed
+	jumpifvolatile BS_ATTACKER, VOLATILE_MAGNET_RISE_TIMER, BattleScript_ButItFailed
+	setvolatile BS_ATTACKER, VOLATILE_MAGNET_RISE_TIMER, B_MAGNET_RISE_TIMER
 	attackanimation
 	waitanimation
 	printstring STRINGID_PKMNLEVITATEDONELECTROMAGNETISM
@@ -1401,7 +1403,7 @@ BattleScript_GravityLoop:
 	jumpfifsemiinvulnerable BS_TARGET, STATE_ON_AIR, BattleScript_GravityLoopDrop
 	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_ATTACKER, BattleScript_GravityLoopDrop
 	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_TARGET, BattleScript_GravityLoopDrop
-	jumpifvolatile BS_TARGET, VOLATILE_MAGNET_RISE, BattleScript_GravityLoopDrop
+	jumpifvolatile BS_TARGET, VOLATILE_MAGNET_RISE_TIMER, BattleScript_GravityLoopDrop
 	jumpifvolatile BS_TARGET, VOLATILE_TELEKINESIS, BattleScript_GravityLoopDrop
 	goto BattleScript_GravityLoopEnd
 BattleScript_GravityLoopDrop:

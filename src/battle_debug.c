@@ -388,10 +388,8 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
     {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
     {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
-    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
     {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
     {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 

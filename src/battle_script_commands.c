@@ -9177,17 +9177,6 @@ static void Cmd_trysetvolatile(void)
     else
     {
         SetMonVolatile(battler, cmd->_volatile, TRUE);
-        switch (cmd->_volatile)
-        {
-        case VOLATILE_MAGNET_RISE:
-            gBattleMons[battler].volatiles.magnetRiseTimer = B_MAGNET_RISE_TIMER;
-            break;
-        case VOLATILE_LASER_FOCUS:
-            gBattleMons[battler].volatiles.laserFocusTimer = B_LASER_FOCUS_TIMER;
-            break;
-        default:
-            break;
-        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -12807,7 +12796,7 @@ void BS_GravityOnAirborneMons(void)
 {
     NATIVE_ARGS();
     gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
-    gBattleMons[gBattlerTarget].volatiles.magnetRise = FALSE;
+    gBattleMons[gBattlerTarget].volatiles.magnetRiseTimer = 0;
     gBattleMons[gBattlerTarget].volatiles.telekinesis = FALSE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -14575,12 +14564,12 @@ void BS_DestroyItemPopup(void)
 
     if (IsAnyAbilityPopUpActive())
         return;
-        
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         DestroyAbilityPopUp(battler);
 
     FreeAbilityPopUpGfx();
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14596,6 +14585,6 @@ void BS_MultiHitPlurality(void)
     {
         PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_S);
     }
-    
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
