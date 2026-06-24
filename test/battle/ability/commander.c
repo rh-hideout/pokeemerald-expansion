@@ -25,7 +25,7 @@ DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is trigger
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {  }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
@@ -35,6 +35,12 @@ DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is trigger
         MESSAGE("Dondozo's Sp. Atk rose sharply!");
         MESSAGE("Dondozo's Sp. Def rose sharply!");
         MESSAGE("Dondozo's Speed rose sharply!");
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
     }
 }
 
@@ -282,6 +288,33 @@ DOUBLE_BATTLE_TEST("Commander prevents Eject Pack from activating after a switch
     }
 }
 
+DOUBLE_BATTLE_TEST("Commander prevents Tatsugiri's Eject Pack from activating after Sticky Web")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_EJECT_PACK].holdEffect == HOLD_EFFECT_EJECT_PACK);
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Item(ITEM_EJECT_PACK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_STICKY_WEB); }
+        TURN { SWITCH(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            MESSAGE("Tatsugiri is switched out with the Eject Pack!");
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI);
+        EXPECT_EQ(playerRight->species, SPECIES_DONDOZO);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Commander prevents pivot moves from switching out Dondozo")
 {
     enum Move move;
@@ -317,6 +350,28 @@ DOUBLE_BATTLE_TEST("Commander prevents pivot moves from switching out Dondozo")
     }
 }
 
+DOUBLE_BATTLE_TEST("Commander prevents Ally Switch from swapping Dondozo with Tatsugiri")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ALLY_SWITCH) == EFFECT_ALLY_SWITCH);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerRight, MOVE_ALLY_SWITCH);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerRight);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI);
+        EXPECT_EQ(playerRight->species, SPECIES_DONDOZO);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move if Dondozo faints")
 {
     GIVEN {
@@ -341,6 +396,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
 DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damaging moves")
 {
     GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
@@ -763,5 +819,25 @@ DOUBLE_BATTLE_TEST("Red Card is still consumed but cannot force out Dondozo afte
     } THEN {
         EXPECT(playerLeft->item == ITEM_NONE);
         EXPECT(opponentLeft->species == SPECIES_DONDOZO);
+    }
+}
+
+MULTI_BATTLE_TEST("Commander will not activate in a multi battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PARTNER(SPECIES_DONDOZO);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
