@@ -41,7 +41,7 @@ void StartMining(void);
 /* >> Callbacks << */
 static void Mining_Init(MainCallback callback);
 static void Mining_SetupCB(void);
-static bool8 Mining_InitBgs(void);
+static bool32 Mining_InitBgs(void);
 static void Mining_MainCB(void);
 static void Mining_VBlankCB(void);
 
@@ -55,7 +55,7 @@ static void Task_MiningPrintResult(u8 taskId);
 
 /* >> Others << */
 static void Mining_FadeAndBail(void);
-static bool8 Mining_LoadBgGraphics(void);
+static bool32 Mining_LoadBgGraphics(void);
 static void Mining_LoadSpriteGraphics(void);
 static void Mining_FreeResources(void);
 static void Mining_UpdateStressLevel(void);
@@ -1324,7 +1324,7 @@ static u32 MiningUtil_GetLeftValue(u32 itemId)
     {
         for (y = 0; y < 4; y++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
                 left++;
                 break;
@@ -1343,7 +1343,7 @@ static u32 MiningUtil_GetTopValue(u32 itemId)
     {
         for (x = 0; x < 4; x++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
                 top++;
                 break;
@@ -1412,7 +1412,7 @@ static void Mining_Init(MainCallback callback)
 
     // Fisher-Yates shuffle implementation
     u32 n = 4;
-    u32 zones[4] = {0,1,2,3};
+    u32 zones[4] = {0, 1, 2, 3};
 
     // Do the shuffle
     for (u32 i = n - 1; i > 0; i--) 
@@ -1504,10 +1504,10 @@ static void Mining_SetupCB(void)
     }
 }
 
-static bool8 Mining_InitBgs(void)
-{
-    const u32 TILEMAP_BUFFER_SIZE = (1024 * 2);
+#define TILEMAP_BUFFER_SIZE 2048
 
+static bool32 Mining_InitBgs(void)
+{
     ResetAllBgsCoordinates();
 
     sMiningUiState->sBg1TilemapBuffer = AllocZeroed(TILEMAP_BUFFER_SIZE);
@@ -1542,12 +1542,12 @@ static bool8 Mining_InitBgs(void)
 
 static void Task_Mining_WaitFadeAndBail(u8 taskId)
 {
-    if (!gPaletteFade.active)
-    {
-        SetMainCallback2(sMiningUiState->leavingCallback);
-        Mining_FreeResources();
-        DestroyTask(taskId);
-    }
+    if (gPaletteFade.active)
+		return;
+
+    SetMainCallback2(sMiningUiState->leavingCallback);
+    Mining_FreeResources();
+    DestroyTask(taskId);
 }
 
 static void Mining_MainCB(void)
@@ -1560,11 +1560,9 @@ static void Mining_MainCB(void)
 
 static void MoveItemSprites(s16 dx, s16 dy)
 {
-    u32 i;
-
     if (sMiningUiState->toggleShakeDuringAnimation == FALSE)
     {
-        for (i = 0; i < MAX_SPRITES; i++)
+        for (u32 i = 0; i < MAX_SPRITES; i++)
         {
             gSprites[i].x += dx;
             gSprites[i].y += dy;
@@ -1574,7 +1572,7 @@ static void MoveItemSprites(s16 dx, s16 dy)
 
 static void MiningUi_Shake(u8 taskId)
 {
-    switch(sMiningUiState->shakeState)
+    switch (sMiningUiState->shakeState)
     {
         case 0: // Left 1 - Down 1
             MakeCursorInvisible();
@@ -1718,12 +1716,14 @@ static void Mining_FadeAndBail(void)
 
 #define TILE_POS(x, y) (32 * (y) + (x))
 
-static void OverwriteTileDataInTilemapBuffer(u8 tile, u8 x, u8 y, u16* tilemapBuf, u8 pal)
+static void OverwriteTileDataInTilemapBuffer(u8 tile, u8 x, u8 y, u16 *tilemapBuf, u8 pal)
 {
     tilemapBuf[TILE_POS(x, y)] = tile | (pal << 12);
 }
 
-static bool8 Mining_LoadBgGraphics(void)
+#undef TILE_POS
+
+static bool32 Mining_LoadBgGraphics(void)
 {
     u32 i, j;
     u16 *tilemapBuf = GetBgTilemapBuffer(1);
@@ -1766,9 +1766,7 @@ static bool8 Mining_LoadBgGraphics(void)
 
 static void ClearItemMap(void)
 {
-    u8 i;
-
-    for (i = 0; i < 96; i++)
+    for (u32 i = 0; i < 96; i++)
         sMiningUiState->itemMap[i] = MINING_ITEM_TILE_NONE;
 }
 
@@ -1849,12 +1847,14 @@ static u8 GetRandomItemId()
 }
 #endif
 
-static void InitItemsIfSelected(u32 item) {
+static void InitItemsIfSelected(u32 item) 
+{
     u32 itemId = 0;
     if (sMiningUiState->buriedItems[item].isSelected)
     {
         #if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-        switch(item) {
+        switch(item)
+		{
             case 0:
                 itemId = MINING_DEBUG_MININGID_ITEM1;
                 break;
@@ -1878,7 +1878,6 @@ static void InitItemsIfSelected(u32 item) {
 
 static void Mining_LoadSpriteGraphics(void)
 {
-
     LoadSpritePalette(sSpritePal_Cursor);
     LoadCompressedSpriteSheet(sSpriteSheet_Cursor);
 
@@ -1924,13 +1923,13 @@ static void Mining_LoadSpriteGraphics(void)
 
 static void Task_MiningWaitFadeIn(u8 taskId)
 {
-    if (!gPaletteFade.active)
-    {
-        ConvertIntToDecimalStringN(gStringVar1, GetTotalNumberOfBuriedItems(), STR_CONV_MODE_LEFT_ALIGN, 2);
-        StringExpandPlaceholders(gStringVar2, sText_SomethingPinged);
-        PrintMessage(gStringVar2);
-        gTasks[taskId].func = Task_WaitButtonPressOpening;
-    }
+    if (gPaletteFade.active)
+		return;
+
+    ConvertIntToDecimalStringN(gStringVar1, GetTotalNumberOfBuriedItems(), STR_CONV_MODE_LEFT_ALIGN, 2);
+    StringExpandPlaceholders(gStringVar2, sText_SomethingPinged);
+    PrintMessage(gStringVar2);
+    gTasks[taskId].func = Task_WaitButtonPressOpening;
 }
 
 #define BLUE_BUTTON 0
@@ -1964,7 +1963,8 @@ static void Task_MiningMainInput(u8 taskId)
                 m4aMPlayStop(&gMPlayInfo_SE2);
                 PlaySE(MINING_SE_HIT_HAMMER);
             }
-        } else
+        }
+		else
         {
             sMiningUiState->ShakeHitEffect = CreateSprite(&gSpriteHitEffectPickaxe, (sMiningUiState->cursorX * 16) + 8, (sMiningUiState->cursorY * 16) + 8, 0);
             sMiningUiState->ShakeHitTool = CreateSprite(&gSpriteHitPickaxe, (sMiningUiState->cursorX * 16) + 24, sMiningUiState->cursorY * 16, 0);
@@ -1988,15 +1988,18 @@ static void Task_MiningMainInput(u8 taskId)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].x -= 16;
         sMiningUiState->cursorX -= 1;
-    } else if (gMain.newAndRepeatedKeys & DPAD_RIGHT && sMiningUiState->cursorX < 11)
+    }
+	else if (gMain.newAndRepeatedKeys & DPAD_RIGHT && sMiningUiState->cursorX < 11)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].x += 16;
         sMiningUiState->cursorX += 1;
-    } else if (gMain.newAndRepeatedKeys & DPAD_UP && sMiningUiState->cursorY > 2)
+    }
+	else if (gMain.newAndRepeatedKeys & DPAD_UP && sMiningUiState->cursorY > 2)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].y -= 16;
         sMiningUiState->cursorY -= 1;
-    } else if (gMain.newAndRepeatedKeys & DPAD_DOWN && sMiningUiState->cursorY < 9)
+    }
+	else if (gMain.newAndRepeatedKeys & DPAD_DOWN && sMiningUiState->cursorY < 9)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].y += 16;
         sMiningUiState->cursorY += 1;
@@ -2007,7 +2010,8 @@ static void Task_MiningMainInput(u8 taskId)
         StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex],1);
         sMiningUiState->tool = RED_BUTTON;
         PlaySE(MINING_SE_TOOL_SWITCH);
-    } else if (gMain.newAndRepeatedKeys & L_BUTTON)
+    }
+	else if (gMain.newAndRepeatedKeys & L_BUTTON)
     {
         StartSpriteAnim(&gSprites[sMiningUiState->bRedSpriteIndex], 0);
         StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex], 0);
@@ -2027,7 +2031,7 @@ static void Task_MiningMainInput(u8 taskId)
     #endif
 }
 
-static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16 *ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x07, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x08, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
@@ -2037,7 +2041,7 @@ static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x14, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16 *ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x17, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x18, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2049,7 +2053,7 @@ static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16 *ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x27, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x28, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2064,7 +2068,7 @@ static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16 *ptr)
 {
     // Clean up 0x27, 0x28 and 0x29 from StressLevel_Draw_2
     OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2083,7 +2087,7 @@ static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16 *ptr)
 {
     // The same clean up as StressLevel_Draw_3 but only used when the hammer is used
     OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2106,7 +2110,7 @@ static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16 *ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x43, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x44, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
@@ -2123,7 +2127,7 @@ static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16 *ptr)
 {
     // Clean up 0x48 and 0x49 from StressLevel_Draw_5
     OverwriteTileDataInTilemapBuffer(0x00, 19 - ofs * 4 + ofs2, 3, ptr, 0x01);
@@ -2146,7 +2150,7 @@ static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16* ptr)
 }
 
 // This function draws the individual frames of the stress level indicator
-static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16* ptr)
+static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16 *ptr)
 {
     switch (sMiningUiState->stressLevelCount)
     {
@@ -2204,34 +2208,8 @@ static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16* ptr
 // This is the function that is called to easily update the stress level indicator on the top of the screen.
 static void Mining_UpdateStressLevel(void)
 {
-    u16 *ptr = GetBgTilemapBuffer(2);
-    switch (sMiningUiState->stressLevelPos)
-    {
-        case 0:
-            StressLevel_UpdateRelativeToFramePos(0, 0, ptr);
-            break;
-        case 1:
-            StressLevel_UpdateRelativeToFramePos(1, 1, ptr);
-            break;
-        case 2:
-            StressLevel_UpdateRelativeToFramePos(2, 2, ptr);
-            break;
-        case 3:
-            StressLevel_UpdateRelativeToFramePos(3, 3, ptr);
-            break;
-        case 4:
-            StressLevel_UpdateRelativeToFramePos(4, 4, ptr);
-            break;
-        case 5:
-            StressLevel_UpdateRelativeToFramePos(5, 5, ptr);
-            break;
-        case 6:
-            StressLevel_UpdateRelativeToFramePos(6, 6, ptr);
-            break;
-        case 7:
-            StressLevel_UpdateRelativeToFramePos(7, 7, ptr);
-            break;
-    }
+	u16 *ptr = GetBgTilemapBuffer(2);
+	StressLevel_UpdateRelativeToFramePos(sMiningUiState->stressLevelPos, sMiningUiState->stressLevelPos, ptr);
 }
 
 // Draws a tile layer to the screen.
@@ -2381,7 +2359,7 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     {
         for (y = 0; y < 4; y++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
                 SetItemState(posX, posY, x, y, itemStateId);
         }
     }
@@ -2392,15 +2370,12 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     posY + MiningUtil_GetTopValue(itemId) > yBorder
 #define IGNORE_COORDS 255
 
-static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder)
+static u32 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder)
 {
-    u32 i;
-
-    for(i = 1; i <= 4; i++)
+    for (u32 i = 1; i <= 4; i++)
     {
-        if (BORDERCHECK_COND(itemId)) {
-            return 0;
-        } // If it cannot be placed, return false, that means that item placement should regenerate
+        if (BORDERCHECK_COND(itemId))
+            return FALSE; // If it cannot be placed, return false, that means that item placement should regenerate
     }
     return TRUE; // If it can be placed, return true
 }
@@ -2532,22 +2507,23 @@ static void DoDrawRandomStone(u8 itemId)
     OverwriteItemMapData(x, y, 6, itemId);
 }
 
-static void HandleItemState(u32 itemId) {
-    u32 i;
+static void HandleItemState(u32 itemId)
+{
     u32 full = MiningUtil_GetTotalTileAmount(GetBuriedMiningItemId(itemId));
     u32 stop = full + 1;
 
     if (sMiningUiState->buriedItems[itemId].buriedState < full && sMiningUiState->buriedItems[itemId].isSelected)
     {
-        for(i = 0; i < 96; i++)
+        for(u32 i = 0; i < 96; i++)
         {
-            if(sMiningUiState->itemMap[i] == itemId+1 && sMiningUiState->layerMap[i] == 6)
+            if(sMiningUiState->itemMap[i] == itemId + 1 && sMiningUiState->layerMap[i] == 6)
             {
                 sMiningUiState->itemMap[i] = MINING_ITEM_TILE_DUG_UP;
                 sMiningUiState->buriedItems[itemId].buriedState++;
             }
         }
-    } else if (sMiningUiState->buriedItems[itemId].buriedState == full)
+    }
+	else if (sMiningUiState->buriedItems[itemId].buriedState == full)
     {
         BeginNormalPaletteFade(1 << (16 + gSprites[sMiningUiState->buriedItems[itemId].spriteId].oam.paletteNum), 2, 16, 0, RGB_WHITE);
         sMiningUiState->buriedItems[itemId].buriedState = stop;
