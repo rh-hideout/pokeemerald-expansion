@@ -2453,8 +2453,6 @@ static const s16 sAbilityPopUpCoordsSingles[MAX_BATTLERS_COUNT][2] =
 
 static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32 x, u32 y, bool32 isName)
 {
-    DebugPrintf("%u %u", spriteId1, spriteId2);
-
     //  Save old data
     s16 data1[8];
     s16 data2[8];

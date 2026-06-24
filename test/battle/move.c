@@ -1,26 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("blergh 1")
-{
-    GIVEN {
-        PLAYER(SPECIES_LATIOS);
-        OPPONENT(SPECIES_GYARADOS);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SKILL_SWAP); }
-    }
-}
-
-SINGLE_BATTLE_TEST("blergh 2")
-{
-    GIVEN {
-        PLAYER(SPECIES_GYARADOS);
-        OPPONENT(SPECIES_GYARADOS);
-    } WHEN {
-        TURN { }
-    }
-}
-
 SINGLE_BATTLE_TEST("Accuracy controls the proportion of misses")
 {
     enum Move move;
