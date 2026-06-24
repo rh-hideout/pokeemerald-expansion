@@ -2453,7 +2453,6 @@ static const s16 sAbilityPopUpCoordsSingles[MAX_BATTLERS_COUNT][2] =
 
 static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32 x, u32 y, bool32 isName)
 {
-    //  Save old data
     s16 data1[8];
     s16 data2[8];
     for (u32 i = 0; i < 8; i++)
@@ -2464,7 +2463,6 @@ static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32
 
     u32 font = GetFontIdToFit(str, FONT_SMALL, 0, ABILITY_POP_UP_STR_WIDTH);
 
-    //  Set up sprite for printing
     u8 ids[2] = {spriteId1, spriteId2};
     const u32 *spriteSrcs[2] = {&sAbilityPopUpGfx[0], &sAbilityPopUpGfx[256]};
     SetupSpritesForTextPrinting(ids, spriteSrcs, 2, 1);
@@ -2475,12 +2473,10 @@ static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32
     }
     else
     {
-        //  Clear out the area first for reasons
         FillSpriteRectSprite(spriteId1, x, y, ABILITY_POP_UP_STR_WIDTH, 16);
         AddSpriteTextPrinterParameterized6(spriteId1, font, x, y, 0, 0, sAbilityTextColor, TEXT_SKIP_DRAW, str);
     }
 
-    //  Restore data
     for (u32 i = 0; i < 8; i++)
     {
         gSprites[spriteId1].data[i] = data1[i];
