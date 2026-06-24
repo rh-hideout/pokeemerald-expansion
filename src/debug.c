@@ -3415,7 +3415,6 @@ static bool32 DebugSelection_GiveComplexPokemon_OnComplete(u8 taskId)
     u32 personality = GetMonPersonality(species, monData[2], monData[5] , RANDOM_UNOWN_LETTER);
     CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonData(&mon, MON_DATA_IS_SHINY, &monData[3]);
-    DebugPrintf("mondata %d", monData[4]);
     SetMonData(&mon, MON_DATA_ABILITY_NUM, &monData[4]);
 
     if (monData[6] == MOVE_NONE)
