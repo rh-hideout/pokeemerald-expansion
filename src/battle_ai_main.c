@@ -3925,7 +3925,7 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
     u32 recoilDmg = 0;
     u32 monHP = GetNonDynamaxMaxHP(battlerAtk);
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    
+
     // Is recoil applicable
     if (!IsRecoilDamageEffect(effect) || !AI_IsDamagedByRecoil(battlerAtk))
         return FALSE;
@@ -3942,7 +3942,7 @@ bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId b
         opposingMons = CountUsablePartyMons(battlerDef);
     else
         opposingMons = CountUsableSideMons(battlerDef);
-    
+
     if (recoilDmg >= gBattleMons[battlerAtk].hp && opposingMons != 0)
         return TRUE;
 

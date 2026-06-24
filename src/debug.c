@@ -222,21 +222,6 @@ struct DebugMenuOption
     const void *actionParams;
 };
 
-struct DebugMonData
-{
-    enum Species species;
-    u8 level;
-    bool8 isShiny:1;
-    u8 nature:5;
-    u8 abilityNum:2;
-    u8 monIVs[NUM_STATS];
-    u16 monMoves[MAX_MON_MOVES];
-    u8 monEVs[NUM_STATS];
-    u8 teraType;
-    u8 dynamaxLevel:7;
-    u8 gmaxFactor:1;
-};
-
 struct DebugMenuListData
 {
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
@@ -248,7 +233,7 @@ struct DebugMenuListData
 };
 
 // EWRAM
-static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
+static EWRAM_DATA struct PokemonTemplate *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
 EWRAM_DATA u64 gDebugAIFlags = 0;
@@ -3535,21 +3520,32 @@ static void DebugAction_Give_Item_SelectQuantity(u8 taskId)
 #undef tItemId
 
 //Pokemon
-static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
+static void ResetMonDataStruct(struct PokemonTemplate *sDebugMonData)
 {
     sDebugMonData->species          = 1;
     sDebugMonData->level            = MIN_LEVEL;
     sDebugMonData->isShiny          = FALSE;
+    sDebugMonData->gender           = MON_GENDER_RANDOM;
     sDebugMonData->nature           = 0;
     sDebugMonData->abilityNum       = 0;
     sDebugMonData->teraType         = TYPE_NONE;
-    sDebugMonData->dynamaxLevel     = 0;
+    sDebugMonData->dmaxLevel        = 0;
     sDebugMonData->gmaxFactor       = FALSE;
+    sDebugMonData->origin           = GIFTMON_ORIGIN;
     for (u32 i = 0; i < NUM_STATS; i++)
     {
-        sDebugMonData->monIVs[i] = 0;
-        sDebugMonData->monEVs[i] = 0;
+        sDebugMonData->ivs[i] = 0;
+        sDebugMonData->evs[i] = 0;
     }
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        sDebugMonData->moves[i] = MOVE_DEFAULT;
+    }
+
+    sDebugMonData->doNotUseDefaultShinyness = TRUE;
+    sDebugMonData->doNotUseDefaultBall      = FALSE;
+    sDebugMonData->doNotUseDefaultAbility   = TRUE;
+    sDebugMonData->doNotUseDefaultTeraType  = FALSE;
 }
 
 #define tIsComplex  data[6]
@@ -3581,7 +3577,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3622,7 +3618,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3663,7 +3659,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     u8 windowId;
 
     //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
+    sDebugMonData = AllocZeroed(sizeof(struct PokemonTemplate));
     ResetMonDataStruct(sDebugMonData);
 
     //Window initialization
@@ -3828,7 +3824,10 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->isShiny = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput)
+            sDebugMonData->isShiny = TRUE;
+        else
+            sDebugMonData->isShiny = FALSE;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
         Debug_Display_Nature(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3942,7 +3941,7 @@ static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         sDebugMonData->abilityNum = gTasks[taskId].tInput;
-        gTasks[taskId].tInput = 0;
+        gTasks[taskId].tInput = 1;
         gTasks[taskId].tDigit = 0;
 
         Debug_Display_TeraType(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3990,7 +3989,11 @@ static void DebugAction_Give_Pokemon_SelectTeraType(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->teraType = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput >= 1)
+        {
+            sDebugMonData->teraType = gTasks[taskId].tInput;
+            sDebugMonData->doNotUseDefaultTeraType = TRUE;
+        }
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
@@ -4022,7 +4025,7 @@ static void DebugAction_Give_Pokemon_SelectDynamaxLevel(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->dynamaxLevel = gTasks[taskId].tInput;
+        sDebugMonData->dmaxLevel = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
         Debug_Display_GigantamaxFactor(gTasks[taskId].tInput, gTasks[taskId].tSubWindowId);
@@ -4086,7 +4089,7 @@ static void DebugAction_Give_Pokemon_SelectIVs(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set IVs for stat
-        sDebugMonData->monIVs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        sDebugMonData->ivs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
 
         //Check if all IVs set
         if (gTasks[taskId].tIterator != NUM_STATS - 1)
@@ -4120,7 +4123,7 @@ static u32 GetDebugPokemonTotalEV(void)
 {
     u32 totalEVs = 0;
     for (u32 i = 0; i < NUM_STATS; i++)
-        totalEVs += sDebugMonData->monEVs[i];
+        totalEVs += sDebugMonData->evs[i];
     return totalEVs;
 }
 
@@ -4163,7 +4166,7 @@ static void DebugAction_Give_Pokemon_SelectEVs(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set EVs for stat
-        sDebugMonData->monEVs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+        sDebugMonData->evs[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
 
         //Check if all EVs set
         if (gTasks[taskId].tIterator != NUM_STATS - 1)
@@ -4184,7 +4187,7 @@ static void DebugAction_Give_Pokemon_SelectEVs(u8 taskId)
             {
                 for (u32 i = 0; i < NUM_STATS; i++)
                 {
-                    sDebugMonData->monEVs[i] = 0;
+                    sDebugMonData->evs[i] = 0;
                 }
 
                 PlaySE(SE_FAILURE);
@@ -4219,10 +4222,9 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         // Set current value
-        if (gTasks[taskId].tInput < MOVES_COUNT)
-            sDebugMonData->monMoves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
-        else
-            sDebugMonData->monMoves[gTasks[taskId].tIterator] = MOVE_DEFAULT;
+        if (gTasks[taskId].tInput != MOVE_NONE)
+            sDebugMonData->moves[gTasks[taskId].tIterator] = gTasks[taskId].tInput;
+
         // If MOVE_NONE selected, stop asking for additional moves
         if (gTasks[taskId].tInput == MOVE_NONE)
             gTasks[taskId].tIterator = MAX_MON_MOVES;
@@ -4256,89 +4258,7 @@ static void DebugAction_Give_Pokemon_Move(u8 taskId)
 
 static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://github.com/ghoulslash/pokeemerald/tree/custom-givemon
 {
-    struct Pokemon mon;
-    u8 i;
-    enum Move moves[MAX_MON_MOVES];
-    u8 IVs[NUM_STATS];
-    u8 iv_val;
-    u8 EVs[NUM_STATS];
-    u8 ev_val;
-    enum Species species = sDebugMonData->species;
-    u8 level        = sDebugMonData->level;
-    bool8 isShiny   = sDebugMonData->isShiny;
-    u8 nature       = sDebugMonData->nature;
-    u8 abilityNum   = sDebugMonData->abilityNum;
-    u32 teraType    = sDebugMonData->teraType;
-    u32 dmaxLevel   = sDebugMonData->dynamaxLevel;
-    u32 gmaxFactor  = sDebugMonData->gmaxFactor;
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        moves[i] = sDebugMonData->monMoves[i];
-    }
-    for (u32 i = 0; i < NUM_STATS; i++)
-    {
-        EVs[i] = sDebugMonData->monEVs[i];
-        IVs[i] = sDebugMonData->monIVs[i];
-    }
-
-    //Nature
-    u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
-
-    //Shininess
-    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
-
-    // Gigantamax factor
-    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
-
-    // Dynamax Level
-    SetMonData(&mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
-
-    // tera type
-    if (teraType == TYPE_NONE || teraType == TYPE_MYSTERY || teraType >= NUMBER_OF_MON_TYPES)
-        teraType = GetTeraTypeFromPersonality(&mon);
-    SetMonData(&mon, MON_DATA_TERA_TYPE, &teraType);
-
-    //IVs
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        iv_val = IVs[i];
-        if (iv_val != USE_RANDOM_IVS && iv_val != 0xFF)
-            SetMonData(&mon, MON_DATA_HP_IV + i, &iv_val);
-    }
-
-    //EVs
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        ev_val = EVs[i];
-        if (ev_val)
-            SetMonData(&mon, MON_DATA_HP_EV + i, &ev_val);
-    }
-
-    GiveMonInitialMoveset(&mon);
-    //Moves
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        // Non-default moveset chosen. Reset moves before setting the chosen moves.
-        if (moves[0] != MOVE_NONE)
-            SetMonMoveSlot(&mon, MOVE_NONE, i);
-
-        if (moves[i] == MOVE_NONE)
-            continue;
-
-        if (moves[i] == MOVE_DEFAULT)
-            GiveMonDefaultMove(&mon, i);
-        else
-            SetMonMoveSlot(&mon, moves[i], i);
-    }
-
-    // Ability
-    SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
-
-    //Update mon stats before giving it to the player
-    CalculateMonStats(&mon);
-
-    GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
+    ScriptGiveMonParameterized(B_SIDE_PLAYER, PARTY_SIZE, sDebugMonData);
 
     // Set flag for user convenience
     FlagSet(FLAG_SYS_POKEMON_GET);
