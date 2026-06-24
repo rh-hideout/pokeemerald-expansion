@@ -1309,7 +1309,6 @@ static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
        if (sSpriteTileTable[itemId][i] == 1)
            result++;
     }
-    DebugPrintf("ItemID: %d, Tiles-Calculated: %d", itemId, result);
     if (result == 0)
         return result+1;
     else 
@@ -1332,7 +1331,6 @@ static u32 MiningUtil_GetLeftValue(u32 itemId)
             }
         }
     }
-    DebugPrintf("ItemID: %d, Left: %d", itemId, left-1);
     return left - 1;
 }
 
@@ -1352,7 +1350,6 @@ static u32 MiningUtil_GetTopValue(u32 itemId)
             }
         }
     }
-    DebugPrintf("ItemID: %d, Top: %d", itemId, top-1);
     return top - 1;
 }
 
