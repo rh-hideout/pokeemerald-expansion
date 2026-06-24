@@ -4744,31 +4744,35 @@ static void SetBoxMonIconObjMode(u8 boxPosition, u8 objMode)
 
 static void  CreatePartyMonSprite(u8 partyPosition, bool8 visible)
 {
-    enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_SPECIES);
-    bool32 isEgg = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_IS_EGG);
-    u32 personality = GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_PERSONALITY);
+    struct Pokemon *partyPokemon = &gParties[B_TRAINER_PLAYER][partyPosition];
+
+    enum Species species = GetMonData(partyPokemon, MON_DATA_SPECIES);
+    bool32 isEgg = GetMonData(partyPokemon, MON_DATA_IS_EGG);
+    u32 personality = GetMonData(partyPokemon, MON_DATA_PERSONALITY);
 
     if (partyPosition == 0)
         sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12, isEgg);
     else
         sStorage->partySprites[partyPosition] = CreateMonIconSprite(species, personality, 152,  8 * (3 * (partyPosition - 1)) + 16, 1, 12, isEgg);
 
+    struct Sprite *partySprite = sStorage->partySprites[partyPosition];
+
     if (!visible)
     {
-        sStorage->partySprites[partyPosition]->y -= DISPLAY_HEIGHT;
-        sStorage->partySprites[partyPosition]->invisible = TRUE;
+        partySprite->y -= DISPLAY_HEIGHT;
+        partySprite->invisible = TRUE;
     }
 
     if (sStorage->boxOption == OPTION_MOVE_ITEMS)
     {
-        if (sStorage->partySprites[partyPosition] != NULL && GetMonData(&gParties[B_TRAINER_PLAYER][partyPosition], MON_DATA_HELD_ITEM) == ITEM_NONE)
-            sStorage->partySprites[partyPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
+        if (partySprite != NULL && GetMonData(partyPokemon, MON_DATA_HELD_ITEM) == ITEM_NONE)
+            partySprite->oam.objMode = ST_OAM_OBJ_BLEND;
     }
 
     if (sStorage->boxOption == OPTION_SELECT_MON)
     {
-        if (sStorage->partySprites[partyPosition] != NULL && IsBoxMonExcluded(&(gParties[B_TRAINER_PLAYER][partyPosition].box)))
-            sStorage->partySprites[partyPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
+        if (partySprite != NULL && IsBoxMonExcluded(&(partyPokemon->box)))
+            partySprite->oam.objMode = ST_OAM_OBJ_BLEND;
     }
 }
 
