@@ -3425,7 +3425,7 @@ static bool32 DebugSelection_GiveComplexPokemon_OnComplete(u8 taskId)
     {
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            SetMonData(&mon, MON_DATA_MOVE1 + i, &monData[6 + i]);
+            SetMonMoveSlot(&mon, monData[6 + i], i);
         }
     }
 
