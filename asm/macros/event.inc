@@ -2016,31 +2016,31 @@
 	.endif
 	.endm
 
-    .macro goto_if_lt a:req, b, c
-    trycompare goto_if, LESS_THAN, \a, \b, \c
-    .endm
+	.macro goto_if_lt a:req, b, c
+	trycompare goto_if, LESS_THAN, \a, \b, \c
+	.endm
 
-    .macro goto_if_eq a:req, b, c
-    trycompare goto_if, EQUAL, \a, \b, \c
-    .endm
+	.macro goto_if_eq a:req, b, c
+	trycompare goto_if, EQUAL, \a, \b, \c
+	.endm
 
-    .macro goto_if_gt a:req, b, c
-    trycompare goto_if, GREATER_THAN, \a, \b, \c
-    .endm
+	.macro goto_if_gt a:req, b, c
+	trycompare goto_if, GREATER_THAN, \a, \b, \c
+	.endm
 
-    .macro goto_if_le a:req, b, c
-    trycompare goto_if, LESS_THAN_OR_EQUAL, \a, \b, \c
-    .endm
+	.macro goto_if_le a:req, b, c
+	trycompare goto_if, LESS_THAN_OR_EQUAL, \a, \b, \c
+	.endm
 
-    .macro goto_if_ge a:req, b, c
-    trycompare goto_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
-    .endm
+	.macro goto_if_ge a:req, b, c
+	trycompare goto_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
+	.endm
 
-    .macro goto_if_ne a:req, b, c
-    trycompare goto_if, NOT_EQUAL, \a, \b, \c
-    .endm
+	.macro goto_if_ne a:req, b, c
+	trycompare goto_if, NOT_EQUAL, \a, \b, \c
+	.endm
 
-    .macro call_if_unset flag:req, dest:req
+	.macro call_if_unset flag:req, dest:req
 	checkflag \flag
 	call_if FALSE, \dest
 	.endm
