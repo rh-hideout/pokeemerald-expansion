@@ -272,7 +272,7 @@ BattleScript_EffectShedTail::
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectPsychicNoise::
 	savetarget
@@ -3425,8 +3425,7 @@ BattleScript_EncoredMove::
 BattleScript_EncoredMoveInPalace::
 	printselectionstring STRINGID_PKMNGOTENCOREDMOVE
 BattleScript_SelectingUnusableMoveInPalace::
-	moveendto MOVEEND_NEXT_TARGET
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_EncoredNoMore::
 	printstring STRINGID_PKMNENCOREENDED
@@ -5178,8 +5177,7 @@ BattleScript_BattlerGotOverItsInfatuation::
 BattleScript_IgnoresWhileAsleep::
 	printstring STRINGID_PKMNIGNORESASLEEP
 	waitmessage B_WAIT_TIME_LONG
-	moveendto MOVEEND_NEXT_TARGET
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_IgnoresAndUsesRandomMove::
 	printstring STRINGID_PKMNIGNOREDORDERS
@@ -5196,8 +5194,7 @@ BattleScript_MoveUsedLoafingAround::
 BattleScript_MoveUsedLoafingAroundMsg::
 	printfromtable gInobedientStringIds
 	waitmessage B_WAIT_TIME_LONG
-	moveendto MOVEEND_NEXT_TARGET
-	end
+	goto BattleScript_MoveEnd
 BattleScript_TruantLoafingAround::
 	flushtextbox
 	call BattleScript_AbilityPopUp
@@ -5207,8 +5204,7 @@ BattleScript_IgnoresAndFallsAsleep::
 	printstring STRINGID_PKMNBEGANTONAP
 	waitmessage B_WAIT_TIME_LONG
 	seteffectprimary BS_ATTACKER, BS_ATTACKER, MOVE_EFFECT_SLEEP
-	moveendto MOVEEND_NEXT_TARGET
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_IgnoresAndHitsItself::
 	printstring STRINGID_PKMNWONTOBEY

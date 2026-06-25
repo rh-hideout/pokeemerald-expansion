@@ -286,7 +286,7 @@ BattleScript_TrainerASlideMsgRet::
 	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
 	return
 
-BattleScript_TrainerASlideMsgEnd2::
+BattleScript_TrainerASlideMsgEnd::
 	call BattleScript_TrainerASlideMsgRet
 	end
 
@@ -299,7 +299,7 @@ BattleScript_TrainerBSlideMsgRet::
 	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
 	return
 
-BattleScript_TrainerBSlideMsgEnd2::
+BattleScript_TrainerBSlideMsgEnd::
 	call BattleScript_TrainerBSlideMsgRet
 	end
 
@@ -312,7 +312,7 @@ BattleScript_TrainerPartnerSlideMsgRet::
 	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
 	return
 
-BattleScript_TrainerPartnerSlideMsgEnd2::
+BattleScript_TrainerPartnerSlideMsgEnd::
 	call BattleScript_TrainerPartnerSlideMsgRet
 	end
 

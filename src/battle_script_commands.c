@@ -4667,7 +4667,7 @@ static void Cmd_tryselfconfusiondmgformchange(void)
 
 static void Cmd_return(void)
 {
-    assertf(gBattleResources->battleScriptsStack->size != 0, "return used with nothing to return to, did you mean end/end2/end3?");
+    assertf(gBattleResources->battleScriptsStack->size != 0, "return used with nothing to return to, did you mean end/end3?");
 
     BattleScriptPop();
 }
@@ -4693,7 +4693,7 @@ static void Cmd_end3(void)
     if (gBattleResources->battleCallbackStack->size != 0)
         gBattleResources->battleCallbackStack->size--;
     else // nothing to callback to
-        assertf(gBattleMainFunc != RunBattleScriptCommands_PopCallbacksStack, "incorrect use of end3 in battle script, did you mean end/end2?");
+        assertf(gBattleMainFunc != RunBattleScriptCommands_PopCallbacksStack, "incorrect use of end3 in battle script, did you mean end?");
 
     gBattleMainFunc = gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size];
 }

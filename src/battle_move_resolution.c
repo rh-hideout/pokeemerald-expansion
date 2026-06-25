@@ -2120,9 +2120,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        BattleArena_AddSkillPoints(cv->battlerAtk);
-
     if (moveBouncedBack)
     {
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
@@ -4457,6 +4454,9 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
 
     enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(cv->move);
+
+    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        BattleArena_AddSkillPoints(cv->battlerAtk);
 
     if (ShouldSetStompingTantrumTimer())
         gBattleStruct->battlerState[cv->battlerAtk].stompingTantrumTimer = 2;
