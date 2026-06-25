@@ -42,20 +42,13 @@ SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its e
         if (item == ITEM_CHESTO_BERRY) {
             TURN { MOVE(player, MOVE_SLEEP_TALK); }
         } else {
-            TURN { MOVE(player, MOVE_BUG_BITE); }
+            TURN { MOVE(player, MOVE_BUG_BITE, WITH_RNG(RNG_PARALYSIS, FALSE)); }
         }
 
     } SCENE {
-        switch (item)
+        if (item == ITEM_CHESTO_BERRY)
         {
-            case ITEM_CHESTO_BERRY:
-                MESSAGE("Wobbuffet used Sleep Talk!");
-                break;
-            case ITEM_CHERI_BERRY:
-                PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
-                break;
-            default:
-                break;
+            MESSAGE("Wobbuffet used Sleep Talk!");
         }
         MESSAGE("Wobbuffet used Bug Bite!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);

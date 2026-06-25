@@ -39,10 +39,9 @@ SINGLE_BATTLE_TEST("Last Resort as the only known move results in Struggle (Cham
     }
 }
 
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 2 moves (Gen9-)")
+SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 2 moves")
 {
     GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -58,26 +57,9 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
     }
 }
 
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 2 moves (Champions)")
+SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 3 moves")
 {
     GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_CHAMPIONS);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_LAST_RESORT); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Last Resort!");
-        HP_BAR(opponent);
-    }
-}
-
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 3 moves (Gen9-)")
-{
-    GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_QUICK_ATTACK, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -98,28 +80,9 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
     }
 }
 
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 3 moves (Champions)")
+SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 4 moves")
 {
     GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_CHAMPIONS);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_QUICK_ATTACK, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
-        TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_LAST_RESORT); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Quick Attack!");
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Last Resort!");
-        HP_BAR(opponent);
-    }
-}
-
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 4 moves (Gen9-)")
-{
-    GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_QUICK_ATTACK, MOVE_SCRATCH, MOVE_GUST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -139,26 +102,6 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("Wobbuffet used Last Resort!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Gust!");
-        MESSAGE("Wobbuffet used Last Resort!");
-        HP_BAR(opponent);
-    }
-}
-
-SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been used - 4 moves (Champions)")
-{
-    GIVEN {
-        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_CHAMPIONS);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT, MOVE_QUICK_ATTACK, MOVE_SCRATCH, MOVE_GUST); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
-        TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_GUST); }
-        TURN { MOVE(player, MOVE_LAST_RESORT); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Quick Attack!");
-        MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("Wobbuffet used Gust!");
         MESSAGE("Wobbuffet used Last Resort!");
         HP_BAR(opponent);
@@ -173,10 +116,9 @@ SINGLE_BATTLE_TEST("Last Resort fails if mon was paralyzed last turn")
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); Moves(MOVE_LAST_RESORT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, TRUE)); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
-        PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 1 : 2, 8, RNG_PARALYSIS);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_LAST_RESORT, player);

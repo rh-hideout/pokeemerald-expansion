@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Refresh cures the user of burn, frostbite, poison, and paral
         PLAYER(SPECIES_WOBBUFFET) { Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_REFRESH); }
+        TURN { MOVE(player, MOVE_REFRESH, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     } SCENE {
         switch (status1)
         {
@@ -30,7 +30,6 @@ SINGLE_BATTLE_TEST("Refresh cures the user of burn, frostbite, poison, and paral
                 MESSAGE("Wobbuffet's burn was cured!");
                 break;
             case STATUS1_PARALYSIS:
-                PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
                 MESSAGE("Wobbuffet was cured of paralysis!");
                 break;
             case STATUS1_FROSTBITE:

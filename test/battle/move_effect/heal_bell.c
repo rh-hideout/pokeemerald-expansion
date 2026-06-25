@@ -66,7 +66,7 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(playerLeft, move, target: playerLeft); }
+        TURN { MOVE(playerLeft, move, target: playerLeft, WITH_RNG(RNG_PARALYSIS, FALSE)); }
         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
@@ -85,7 +85,6 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
             STATUS_ICON(playerRight, burn: FALSE);
             break;
         case STATUS1_PARALYSIS:
-            PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
             STATUS_ICON(playerLeft, paralysis: FALSE);
             STATUS_ICON(playerRight, paralysis: FALSE);
             break;

@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
         PLAYER(SPECIES_WOBBUFFET) { Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_TAKE_HEART); }
+        TURN { MOVE(player, MOVE_TAKE_HEART, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     } SCENE {
         if (status1 == STATUS1_SLEEP) {
             MESSAGE("Wobbuffet is fast asleep.");
@@ -51,7 +51,6 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
                     MESSAGE("Wobbuffet's burn was cured!");
                     break;
                 case STATUS1_PARALYSIS:
-                    PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
                     MESSAGE("Wobbuffet was cured of paralysis!");
                     break;
                 case STATUS1_TOXIC_POISON:

@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party of the user from primar
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft, WITH_RNG(RNG_PARALYSIS, FALSE)); }
         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
     } SCENE {
         MESSAGE("Wobbuffet used Sparkly Swirl!");
@@ -50,7 +50,6 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party of the user from primar
             STATUS_ICON(playerRight, burn: FALSE);
             break;
         case STATUS1_PARALYSIS:
-            PASSES_RANDOMLY(GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 7 : 6, 8, RNG_PARALYSIS);
             STATUS_ICON(playerLeft, paralysis: FALSE);
             STATUS_ICON(playerRight, paralysis: FALSE);
             break;

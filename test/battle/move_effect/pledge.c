@@ -724,13 +724,12 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both R
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Left Faster")
 {
     GIVEN {
-        PASSES_RANDOMLY(1, GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 8 : 4, RNG_PARALYSIS);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Status1(STATUS1_PARALYSIS); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, TRUE)); }
     } SCENE {
         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
         MESSAGE("Wynaut couldn't move because it's paralyzed!");
@@ -747,13 +746,12 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
 DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Both Right Faster")
 {
     GIVEN {
-        PASSES_RANDOMLY(1, GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 8 : 4, RNG_PARALYSIS);
         PLAYER(SPECIES_WOBBUFFET) { Speed(30); Status1(STATUS1_PARALYSIS); }
         PLAYER(SPECIES_WYNAUT) { Speed(40); Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, TRUE)); }
     } SCENE {
         MESSAGE("Wynaut couldn't move because it's paralyzed!");
         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");

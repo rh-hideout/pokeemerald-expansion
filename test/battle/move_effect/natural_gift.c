@@ -38,9 +38,8 @@ SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is unable to use 
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_THUNDER_WAVE); MOVE(player, MOVE_NATURAL_GIFT); }
+        TURN { MOVE(opponent, MOVE_THUNDER_WAVE); MOVE(player, MOVE_NATURAL_GIFT, WITH_RNG(RNG_PARALYSIS, TRUE)); }
     } SCENE {
-        PASSES_RANDOMLY(1, GetConfig(B_PARALYSIS_CHANCE) >= GEN_CHAMPIONS ? 8 : 4, RNG_PARALYSIS);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
     } THEN {
