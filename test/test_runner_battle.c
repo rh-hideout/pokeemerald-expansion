@@ -3544,7 +3544,6 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
     };
 }
 
-
 void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext ctx)
 {
     enum BattlerId battlerId = battler - gBattleMons;
