@@ -28913,6 +28913,7 @@ gBattleAnimGeneral_MegaEvolution::
 	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
 	createsprite gMegaStoneSpriteTemplate, ANIM_ATTACKER, 41, 0, 0, 0, 0
 	delay 20
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_MEGA_STONE, 4, 0, 16, RGB_WHITEALPHA
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
 	waitforvisualfinish
 	createvisualtask SoundTask_PlayNormalCry, 0
@@ -29116,6 +29117,7 @@ General_PrimalReversion_Alpha:
 	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
 	createsprite gAlphaStoneSpriteTemplate, ANIM_ATTACKER, 41, 0, 0, 0, 0
 	delay 20
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ALPHA_STONE, 4, 0, 16, RGB_WHITEALPHA
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
 	waitforvisualfinish
 	createvisualtask AnimTask_HideSwapSprite, 2
@@ -29145,6 +29147,7 @@ General_PrimalReversion_Omega:
 	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
 	createsprite gOmegaStoneSpriteTemplate, ANIM_ATTACKER, 41, 0, 0, 0, 0
 	delay 20
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_OMEGA_STONE, 4, 0, 16, RGB_WHITEALPHA
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
 	waitforvisualfinish
 	createvisualtask AnimTask_HideSwapSprite, 2
