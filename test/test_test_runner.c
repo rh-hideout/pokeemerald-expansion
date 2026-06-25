@@ -235,3 +235,30 @@ MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
     }
 }
+
+SINGLE_BATTLE_TEST("ITEM_POPUP correctly detects popups")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ITEM_POPUP(player, ITEM_LEFTOVERS);
+    }
+
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
+{
+        GIVEN {
+            PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+            OPPONENT(SPECIES_WOBBUFFET);
+        } WHEN {
+            TURN {}
+        } SCENE {
+            EXPECT_FAIL {
+                ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
+            }
+        }
+}
