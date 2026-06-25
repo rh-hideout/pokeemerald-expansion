@@ -73,6 +73,9 @@ static void InitMiningWindows(void);
 static bool32 IsStressLevelMax(void);
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void EndMining(u8 taskId);
+static bool32 AreAllItemsFound(void);
+static u32 GetNumberOfFoundItems(void);
+static void WallCollapseAnimation();
 #endif
 static u32 ConvertLoadGameStateToItemIndex(void);
 static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId);
@@ -82,21 +85,12 @@ static void HandleGameFinish(u8 taskId);
 static void PrintItemSuccess(u32 buriedItemsIndex);
 static u32 GetTotalNumberOfBuriedItems(void);
 static void InitBuriedItems(void);
-#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
-static bool32 AreAllItemsFound(void);
-#endif
 static void SetBuriedItemsId(u32 index, u32 itemId);
 static void SetBuriedItemStatus(u32 index, bool32 status);
 static u32 GetBuriedBagItemId(u32 index);
 static u32 GetBuriedMiningItemId(u32 index);
-#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
-static u32 GetNumberOfFoundItems(void);
-#endif
 static bool32 GetBuriedItemStatus(u32 index);
 static void ExitMiningUI(u8 taskId);
-#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
-static void WallCollapseAnimation();
-#endif
 
 struct BuriedItem
 {
@@ -325,13 +319,13 @@ static const struct SpritePalette sSpritePal_Buttons[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_HitEffectHammer[] =
 {
-    {gHitEffectHammerGfx, 64 * 64 / 2 , TAG_HIT_EFFECT_HAMMER},
+    {gHitEffectHammerGfx, 2048 , TAG_HIT_EFFECT_HAMMER},
     {NULL},
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_HitEffectPickaxe[] =
 {
-    {gHitEffectPickaxeGfx, 64 * 64 / 2 , TAG_HIT_EFFECT_PICKAXE},
+    {gHitEffectPickaxeGfx, 2048 , TAG_HIT_EFFECT_PICKAXE},
     {NULL},
 };
 
@@ -682,7 +676,7 @@ static const u16 gItemFossilPal[] = INCGFX_U16("graphics/mining_minigame/items/f
 // Stone SpriteSheets and SpritePalettes
 static const struct CompressedSpriteSheet sSpriteSheet_Stone1x4[] =
 {
-    {gStone1x4Gfx, 64 * 64 / 2, MINING_TAG_STONE_1X4},
+    {gStone1x4Gfx, 2048, MINING_TAG_STONE_1X4},
     {NULL},
 };
 
@@ -694,7 +688,7 @@ static const struct SpritePalette sSpritePal_Stone1x4[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Stone4x1[] =
 {
-    {gStone4x1Gfx, 64 * 64 / 2, MINING_TAG_STONE_4X1},
+    {gStone4x1Gfx, 2048, MINING_TAG_STONE_4X1},
     {NULL},
 };
 
@@ -706,7 +700,7 @@ static const struct SpritePalette sSpritePal_Stone4x1[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Stone2x4[] =
 {
-    {gStone2x4Gfx, 64 * 64 / 2, MINING_TAG_STONE_2X4},
+    {gStone2x4Gfx, 2048, MINING_TAG_STONE_2X4},
     {NULL},
 };
 
@@ -718,7 +712,7 @@ static const struct SpritePalette sSpritePal_Stone2x4[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Stone4x2[] =
 {
-    {gStone4x2Gfx, 64 * 64 / 2, MINING_TAG_STONE_4X2},
+    {gStone4x2Gfx, 2048, MINING_TAG_STONE_4X2},
     {NULL},
 };
 
@@ -730,7 +724,7 @@ static const struct SpritePalette sSpritePal_Stone4x2[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Stone2x2[] =
 {
-    {gStone2x2Gfx, 64 * 64 / 2, MINING_TAG_STONE_2X2},
+    {gStone2x2Gfx, 2048, MINING_TAG_STONE_2X2},
     {NULL},
 };
 
@@ -742,7 +736,7 @@ static const struct SpritePalette sSpritePal_Stone2x2[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Stone3x3[] =
 {
-    {gStone3x3Gfx, 64 * 64 / 2, MINING_TAG_STONE_3X3},
+    {gStone3x3Gfx, 2048, MINING_TAG_STONE_3X3},
     {NULL},
 };
 
@@ -754,7 +748,7 @@ static const struct SpritePalette sSpritePal_Stone3x3[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_StoneSnake1[] =
 {
-    {gStoneSnake1Gfx, 64 * 64 / 2, MINING_TAG_STONE_SNAKE1},
+    {gStoneSnake1Gfx, 2048, MINING_TAG_STONE_SNAKE1},
     {NULL},
 };
 
@@ -766,7 +760,7 @@ static const struct SpritePalette sSpritePal_StoneSnake1[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_StoneSnake2[] =
 {
-    {gStoneSnake2Gfx, 64 * 64 / 2, MINING_TAG_STONE_SNAKE2},
+    {gStoneSnake2Gfx, 2048, MINING_TAG_STONE_SNAKE2},
     {NULL},
 };
 
@@ -778,7 +772,7 @@ static const struct SpritePalette sSpritePal_StoneSnake2[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_StoneMushroom1[] =
 {
-    {gStoneMushroom1Gfx, 64 * 64 / 2, MINING_TAG_STONE_MUSHROOM1},
+    {gStoneMushroom1Gfx, 2048, MINING_TAG_STONE_MUSHROOM1},
     {NULL},
 };
 
@@ -790,7 +784,7 @@ static const struct SpritePalette sSpritePal_StoneMushroom1[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_StoneMushroom2[] =
 {
-    {gStoneMushroom2Gfx, 64 * 64 / 2, MINING_TAG_STONE_MUSHROOM2},
+    {gStoneMushroom2Gfx, 2048, MINING_TAG_STONE_MUSHROOM2},
     {NULL},
 };
 
@@ -803,182 +797,182 @@ static const struct SpritePalette sSpritePal_StoneMushroom2[] =
 static const struct CompressedSpriteSheet sSpriteSheet_ItemHeartScale =
 {
     gItemHeartScaleGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_HEARTSCALE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemHardStone =
 {
     gItemHardStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_HARDSTONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemRevive =
 {
     gItemReviveGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_REVIVE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemStarPiece =
 {
     gItemStarPieceGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_STAR_PIECE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemDampRock =
 {
     gItemDampRockGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_DAMP_ROCK,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemRedShard =
 {
     gItemRedShardGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_RED_SHARD
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemBlueShard =
 {
     gItemBlueShardGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_BLUE_SHARD
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemYellowShard =
 {
     gItemYellowShardGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_YELLOW_SHARD
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemGreenShard =
 {
     gItemGreenShardGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_GREEN_SHARD
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemIronBall =
 {
     gItemIronBallGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_IRON_BALL
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemReviveMax =
 {
     gItemReviveMaxGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_REVIVE_MAX
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemEverStone =
 {
     gItemEverStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_EVER_STONE
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemOvalStone =
 {
     gItemOvalStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_OVAL_STONE
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemLightClay =
 {
     gItemLightClayGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_LIGHT_CLAY
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemHeatRock =
 {
     gItemHeatRockGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_HEAT_ROCK,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemIcyRock =
 {
     gItemIcyRockGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_ICY_ROCK,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemSmoothRock =
 {
     gItemSmoothRockGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_SMOOTH_ROCK,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemLeafStone =
 {
     gItemLeafStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_LEAF_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemFireStone =
 {
     gItemFireStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_FIRE_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemWaterStone =
 {
     gItemWaterStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_WATER_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemThunderStone =
 {
     gItemThunderStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_THUNDER_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemMoonStone =
 {
     gItemMoonStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_MOON_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemSunStone =
 {
     gItemSunStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_SUN_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemOddKeyStone =
 {
     gItemOddKeyStoneGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_ODD_KEY_STONE,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemSkullFossil =
 {
     gItemSkullFossilGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_SKULL_FOSSIL,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ItemArmorFossil =
 {
     gItemArmorFossilGfx,
-    64 * 64 / 2,
+    2048,
     MINING_TAG_ITEM_ARMOR_FOSSIL,
 };
 
@@ -1353,11 +1347,13 @@ static u32 MiningUtil_GetTopValue(u32 itemId)
     return top - 1;
 }
 
+#define RANDOM(a) (Random() % (a))
+
 // Creates a random number between 0 and amount-1
-static u32 random(u32 amount)
-{
-    return (Random() % amount);
-}
+//static u32 random(u32 amount)
+//{
+//    return (Random() % amount);
+//}
 
 void StartMining(void)
 {
@@ -1408,7 +1404,7 @@ static void Mining_Init(MainCallback callback)
         sMiningUiState->buriedItems[i].isSelected = TRUE;
 
     #else
-    u32 amountItemsToSelect = random(3) + 2; // The `+ 2` says that the min. amount of items to be generated are 2.
+    u32 amountItemsToSelect = RANDOM(3) + 2; // The `+ 2` says that the min. amount of items to be generated are 2.
 
     // Fisher-Yates shuffle implementation
     u32 n = 4;
@@ -1418,7 +1414,7 @@ static void Mining_Init(MainCallback callback)
     for (u32 i = n - 1; i > 0; i--) 
     {
         // Pick a random index from 0 to i (inclusive)
-        u32 j = random(i + 1);
+        u32 j = RANDOM(i + 1);
         // Swap the current element with the element at random index
         u32 temp = zones[i];
         zones[i] = zones[j];
@@ -1818,7 +1814,7 @@ static u8 GetRandomItemId()
     u32 rarity;
     u32 index;
     u32 itemId;
-    u32 rnd = random(7);
+    u32 rnd = RANDOM(7);
 
     if (rnd < 4)
         rarity = RARITY_COMMON;
@@ -1830,15 +1826,15 @@ static u8 GetRandomItemId()
     switch (rarity)
     {
         case RARITY_COMMON:
-            index = random(ARRAY_COUNT(ItemRarityTable_Common));
+            index = RANDOM(ARRAY_COUNT(ItemRarityTable_Common));
             itemId =  ItemRarityTable_Common[index];
             break;
         case RARITY_UNCOMMON:
-            index = random(ARRAY_COUNT(ItemRarityTable_Uncommon));
+            index = RANDOM(ARRAY_COUNT(ItemRarityTable_Uncommon));
             itemId =  ItemRarityTable_Uncommon[index];
             break;
         case RARITY_RARE:
-            index = random(ARRAY_COUNT(ItemRarityTable_Rare));
+            index = RANDOM(ARRAY_COUNT(ItemRarityTable_Rare));
             itemId =  ItemRarityTable_Rare[index];
             break;
     }
@@ -2580,19 +2576,19 @@ static void Mining_DrawRandomTerrain(void)
         sMiningUiState->layerMap[i] = 2;
 
     // Create patches of lighter dirt areas
-    totalTimes = 3 + random(5);
+    totalTimes = 3 + RANDOM(5);
     for (i = 0; i < totalTimes; ++i)
     {
         do
         {
-            row1 = random(9);
-            row2 = random(9);
+            row1 = RANDOM(9);
+            row2 = RANDOM(9);
         } while (row1 >= row2);
 
         do
         {
-            col1 = random(13);
-            col2 = random(13);
+            col1 = RANDOM(13);
+            col2 = RANDOM(13);
         } while (col1 >= col2);
 
         for (; row1 < row2; ++row1)
@@ -2610,7 +2606,7 @@ static void Mining_DrawRandomTerrain(void)
       0 0 0 0 0
         0 0 0
     */
-    totalTimes = random(5) + 2;
+    totalTimes = RANDOM(5) + 2;
     for (i = 0; i < totalTimes; ++i)
     {
         baseRow = RandRangeSigned(-4, 8);  // Rocks can go up to one row over on either top or bottom
