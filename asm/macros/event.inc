@@ -2052,27 +2052,27 @@
 
 	.macro call_if_lt a:req, b, c
 	trycompare call_if, LESS_THAN, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro call_if_eq a:req, b, c
 	trycompare call_if, EQUAL, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro call_if_gt a:req, b, c
 	trycompare call_if, GREATER_THAN, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro call_if_le a:req, b, c
 	trycompare call_if, LESS_THAN_OR_EQUAL, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro call_if_ge a:req, b, c
 	trycompare call_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro call_if_ne a:req, b, c
 	trycompare call_if, NOT_EQUAL, \a, \b, \c
- 	.endm
+	.endm
 
 	.macro vgoto_if_eq a:req, b, c
 	trycompare vgoto_if, TRUE, \a, \b, \c
