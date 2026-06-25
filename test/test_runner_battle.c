@@ -908,6 +908,81 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
     }
 }
 
+static s32 TryItemPopUp(s32 i, s32 n, enum BattlerId battlerId, enum Item item)
+{
+    struct QueuedItemEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_ITEM_POPUP_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.item;
+
+        if (event->battlerId == battlerId
+         && (event->item == ITEM_NONE || event->item == item))
+            return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordItemPopUp(enum BattlerId battlerId, enum Item item)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryItemPopUp(DATA.trial.queuedEvent, event->groupSize, battlerId, item) != -1)
+        {
+            DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_ITEM_POPUP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.item.item == ITEM_NONE)
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s, ITEM_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[item].name);
+        }
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryItemPopUp(queuedEvent, event->groupSize, battlerId, item)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Matched ITEM_POPUP", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryItemPopUp(queuedEvent, event->groupSize, battlerId, item) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
 static s32 TryAnimation(s32 i, s32 n, u32 animType, u32 animId)
 {
     struct QueuedAnimationEvent *event;
@@ -1962,6 +2037,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
     [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
     [QUEUED_EFFECTIVENESS_EVENT] = "EFFECTIVENESS_SE",
+    [QUEUED_ITEM_POPUP_EVENT] = "ITEM_POPUP",
 };
 
 static void TearDownBattle(void)
@@ -3464,6 +3540,29 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
         .as = { .ability = {
             .battlerId = battlerId,
             .ability = ctx.ability,
+        }},
+    };
+}
+
+
+void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext ctx)
+{
+    enum BattlerId battlerId = battler - gBattleMons;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
+    INVALID_IF(!STATE->runScene, "ITEMN_POPUP outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, "%s:%d: ITEM exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_ITEM_POPUP_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .item = {
+            .battlerId = battlerId,
+            .item = ctx.item,
         }},
     };
 }
