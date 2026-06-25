@@ -7028,7 +7028,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
     ResolveMoves(species, level, monTemplate->moves, moves);
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        SetMonData(mon, MON_DATA_MOVE1 + i, &moves[i]);
+        SetMonMoveSlot(mon, moves[i], i);
     }
 
     u32 dmaxLevel = ResolveDynamaxLevel(monTemplate->dmaxLevel);
