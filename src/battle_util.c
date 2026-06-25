@@ -4888,27 +4888,11 @@ u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability)
         return 0;
 }
 
-u32 IsAbilityOnOpposingSide(enum BattlerId battler, enum Ability ability)
-{
-    return IsAbilityOnSide(BATTLE_OPPOSITE(battler), ability);
-}
-
 u32 IsAbilityOnField(enum Ability ability)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
-            return i + 1;
-    }
-
-    return 0;
-}
-
-u32 IsAbilityOnFieldExcept(enum BattlerId battler, enum Ability ability)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (i != battler && IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
             return i + 1;
     }
 
@@ -5204,19 +5188,6 @@ bool32 CanBeFrozen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ab
             ABILITY_NONE, // attacker ability does not matter
             abilityDef,
             MOVE_EFFECT_FREEZE,
-            CHECK_TRIGGER))
-        return TRUE;
-    return FALSE;
-}
-// Unused, technically also redundant because it is just a copy of CanBeFrozen
-bool32 CanGetFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
-{
-    if (CanSetNonVolatileStatus(
-            battlerAtk,
-            battlerDef,
-            ABILITY_NONE, // attacker ability does not matter
-            abilityDef,
-            MOVE_EFFECT_FREEZE_OR_FROSTBITE, // also covers frostbite
             CHECK_TRIGGER))
         return TRUE;
     return FALSE;
@@ -5868,7 +5839,7 @@ static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, e
 {
     if (gBattleMons[battler].volatiles.telekinesis)
         return TRUE;
-    if (gBattleMons[battler].volatiles.magnetRise)
+    if (gBattleMons[battler].volatiles.magnetRiseTimer > 0)
         return TRUE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return TRUE;
@@ -7858,7 +7829,7 @@ s32 CalcCritChanceStage(struct DamageContext *ctx)
     {
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -7936,7 +7907,7 @@ s32 CalcCritChanceStageGen1(struct DamageContext *ctx)
             RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -8739,7 +8710,7 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
         return FALSE;
-    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId))
+    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId) || (DoesSpeciesUseHoldItemToChangeForm(otherSpecies, itemId) && GetConfig(B_KNOCK_OFF_REMOVAL) < GEN_CHAMPIONS))
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
@@ -9433,7 +9404,7 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
         CalculateMonStatsCont(mon, FALSE);
     else
         CalculateMonStats(mon);
-        
+
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);
@@ -9645,13 +9616,6 @@ void GetBattlerTypes(enum BattlerId battler, bool32 ignoreTera, enum Type types[
         else if (types[1] == TYPE_FLYING)
             types[1] = TYPE_MYSTERY;
     }
-}
-
-enum Type GetBattlerType(enum BattlerId battler, u32 typeIndex, bool32 ignoreTera)
-{
-    enum Type types[3];
-    GetBattlerTypes(battler, ignoreTera, types);
-    return types[typeIndex];
 }
 
 void RemoveBattlerType(enum BattlerId battler, enum Type type)
@@ -10164,15 +10128,6 @@ bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType)
         }
     }
     return FALSE;
-}
-
-void RemoveAllHazardsFromField(enum BattleSide side)
-{
-    gSideTimers[side].spikesAmount = 0;
-    gSideTimers[side].toxicSpikesAmount = 0;
-    gBattleStruct->numHazards[side] = 0;
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
 }
 
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)

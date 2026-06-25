@@ -1081,12 +1081,6 @@ static bool32 IsPlayerDefeated(u32 battleOutcome)
     }
 }
 
-void ResetTrainerOpponentIds(void)
-{
-    TRAINER_BATTLE_PARAM.opponentA = 0;
-    TRAINER_BATTLE_PARAM.opponentB = 0;
-}
-
 void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
@@ -1098,30 +1092,6 @@ void TrainerBattleLoadArgs(const u8 *data)
     InitTrainerBattleParameter();
     memcpy(gTrainerBattleParameter.data, data, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = (u8*)data + sizeof(TrainerBattleParameter);
-}
-
-void TrainerBattleLoadArgsTrainerA(const u8 *data)
-{
-    TrainerBattleParameter *temp = (TrainerBattleParameter*)data;
-
-    TRAINER_BATTLE_PARAM.playMusicA = temp->params.playMusicA;
-    TRAINER_BATTLE_PARAM.objEventLocalIdA = temp->params.objEventLocalIdA;
-    TRAINER_BATTLE_PARAM.opponentA = temp->params.opponentA;
-    TRAINER_BATTLE_PARAM.introTextA = temp->params.introTextA;
-    TRAINER_BATTLE_PARAM.defeatTextA = temp->params.defeatTextA;
-    TRAINER_BATTLE_PARAM.battleScriptRetAddrA = temp->params.battleScriptRetAddrA;
-}
-
-void TrainerBattleLoadArgsTrainerB(const u8 *data)
-{
-    TrainerBattleParameter *temp = (TrainerBattleParameter*)data;
-
-    TRAINER_BATTLE_PARAM.playMusicB = temp->params.playMusicB;
-    TRAINER_BATTLE_PARAM.objEventLocalIdB = temp->params.objEventLocalIdB;
-    TRAINER_BATTLE_PARAM.opponentB = temp->params.opponentB;
-    TRAINER_BATTLE_PARAM.introTextB = temp->params.introTextB;
-    TRAINER_BATTLE_PARAM.defeatTextB = temp->params.defeatTextB;
-    TRAINER_BATTLE_PARAM.battleScriptRetAddrB = temp->params.battleScriptRetAddrB;
 }
 
 // loads trainer A parameter to trainer B. Used for second trainer in trainer_see.c
@@ -1972,34 +1942,6 @@ void UpdateRematchIfDefeated(s32 rematchTableId)
         SetRematchIdForTrainer(gRematchTable, rematchTableId);
 }
 
-static bool32 DoesSomeoneWantRematchIn_(const struct RematchTrainer *table, u16 mapGroup, u16 mapNum)
-{
-#if FREE_MATCH_CALL == FALSE
-    s32 i;
-
-    for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
-    {
-        if (table[i].mapGroup == mapGroup && table[i].mapNum == mapNum && gSaveBlock1Ptr->trainerRematches[i] != 0)
-            return TRUE;
-    }
-#endif //FREE_MATCH_CALL
-
-    return FALSE;
-}
-
-static bool32 IsRematchTrainerIn_(const struct RematchTrainer *table, u16 mapGroup, u16 mapNum)
-{
-    s32 i;
-
-    for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
-    {
-        if (table[i].mapGroup == mapGroup && table[i].mapNum == mapNum)
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 static bool8 IsFirstTrainerIdReadyForRematch(const struct RematchTrainer *table, u16 firstBattleTrainerId)
 {
     s32 tableId = FirstBattleTrainerIdToRematchTableId(table, firstBattleTrainerId);
@@ -2190,16 +2132,6 @@ void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum)
         gSaveBlock1Ptr->trainerRematchStepCounter = 0;
 }
 #endif //FREE_MATCH_CALL
-
-bool32 DoesSomeoneWantRematchIn(u16 mapGroup, u16 mapNum)
-{
-    return DoesSomeoneWantRematchIn_(gRematchTable, mapGroup, mapNum);
-}
-
-bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
-{
-    return IsRematchTrainerIn_(gRematchTable, mapGroup, mapNum);
-}
 
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId)

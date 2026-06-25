@@ -343,10 +343,6 @@
 	.byte B_SCR_OP_END
 	.endm
 
-	.macro end2
-	.byte B_SCR_OP_END2
-	.endm
-
 	.macro end3
 	.byte B_SCR_OP_END3
 	.endm
@@ -2124,7 +2120,7 @@
 	.macro catchornot
 	callnative BS_CatchOrNot
 	.endm
-	
+
 	.macro showitempopup battler:req
 	callnative BS_ShowItemPopup
 	.byte \battler

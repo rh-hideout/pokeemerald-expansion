@@ -1019,20 +1019,6 @@ void Special_HasMoveToRelearn(void)
         gSpecialVar_Result = FALSE;
 }
 
-bool32 CanBoxMonRelearnAnyMove(struct BoxPokemon *boxMon)
-{
-    if (GetBoxMonData(boxMon, MON_DATA_IS_EGG))
-        return FALSE;
-    for (u32 i = MOVE_RELEARNER_LEVEL_UP_MOVES; i < MOVE_RELEARNER_COUNT; i++)
-    {
-        if (!sRelearnTypes[i].isActive())
-            continue;
-        if (sRelearnTypes[i].hasMoveToRelearn(boxMon))
-            return TRUE;
-    }
-    return FALSE;
-}
-
 bool32 CanBoxMonRelearnMoves(struct BoxPokemon *boxMon, enum MoveRelearnerStates state)
 {
     if (!sRelearnTypes[state].isActive())
