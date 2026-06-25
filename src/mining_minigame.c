@@ -271,33 +271,33 @@ static const struct BgTemplate sMiningBgTemplates[] =
 };
 
 // UI
-static const u32 sUiTiles[] = INCBIN_U32("graphics/mining_minigame/ui.4bpp.smol");
-static const u32 sUiTilemap[] = INCBIN_U32("graphics/mining_minigame/ui.bin.smolTM");
-static const u16 sUiPalette[] = INCBIN_U16("graphics/mining_minigame/ui.gbapal");
+static const u32 sUiTiles[] = INCGFX_U32("graphics/mining_minigame/ui.png", ".4bpp.smol");
+static const u32 sUiTilemap[] = INCGFX_U32("graphics/mining_minigame/ui.bin", ".smolTM");
+static const u16 sUiPalette[] = INCGFX_U16("graphics/mining_minigame/ui.png", ".gbapal");
 
 // Collapse screen
-static const u32 sCollapseScreenTiles[] = INCBIN_U32("graphics/mining_minigame/collapse.4bpp.smol");
-static const u16 sCollapseScreenPalette[] = INCBIN_U16("graphics/mining_minigame/collapse.gbapal");
+static const u32 sCollapseScreenTiles[] = INCGFX_U32("graphics/mining_minigame/collapse.png", ".4bpp.smol");
+static const u16 sCollapseScreenPalette[] = INCGFX_U16("graphics/mining_minigame/collapse.png", ".gbapal");
 
-static const u32 gStressLevelAndTerrainTiles[] = INCBIN_U32("graphics/mining_minigame/stress_level_terrain.4bpp.smol");
-static const u32 gStressLevelAndTerrainTilemap[] = INCBIN_U32("graphics/mining_minigame/stress_level_terrain.bin.smolTM");
-static const u16 gStressLevelAndTerrainPalette[] = INCBIN_U16("graphics/mining_minigame/stress_level_terrain.gbapal");
+static const u32 gStressLevelAndTerrainTiles[] = INCGFX_U32("graphics/mining_minigame/stress_level_terrain.png", ".4bpp.smol");
+static const u32 gStressLevelAndTerrainTilemap[] = INCGFX_U32("graphics/mining_minigame/stress_level_terrain.bin", ".smolTM");
+static const u16 gStressLevelAndTerrainPalette[] = INCGFX_U16("graphics/mining_minigame/stress_level_terrain.png", ".gbapal");
 
-static const u8 gMiningMessageBoxGfx[] = INCBIN_U8("graphics/mining_minigame/message_box.4bpp");
-static const u16 gMiningMessageBoxPal[] = INCBIN_U16("graphics/mining_minigame/message_box.gbapal");
+static const u8 gMiningMessageBoxGfx[] = INCGFX_U8("graphics/mining_minigame/message_box.png", ".4bpp");
+static const u16 gMiningMessageBoxPal[] = INCGFX_U16("graphics/mining_minigame/message_box.pal", ".gbapal");
 
 // Sprite data
-const u32 gCursorGfx[] = INCBIN_U32("graphics/mining_minigame/cursor.4bpp.smol");
-const u16 gCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
+const u32 gCursorGfx[] = INCGFX_U32("graphics/mining_minigame/cursor.png", ".4bpp.smol");
+const u16 gCursorPal[] = INCGFX_U16("graphics/mining_minigame/cursor.png", ".gbapal");
 
-const u32 gButtonGfx[] = INCBIN_U32("graphics/mining_minigame/buttons.4bpp.smol");
-const u16 gButtonPal[] = INCBIN_U16("graphics/mining_minigame/buttons.gbapal");
+const u32 gButtonGfx[] = INCGFX_U32("graphics/mining_minigame/buttons.png", ".4bpp.smol");
+const u16 gButtonPal[] = INCGFX_U16("graphics/mining_minigame/buttons.png", ".gbapal");
 
-const u32 gHitEffectHammerGfx[] = INCBIN_U32("graphics/mining_minigame/hit_effect_hammer.4bpp.smol");
-const u32 gHitEffectPickaxeGfx[] = INCBIN_U32("graphics/mining_minigame/hit_effect_pickaxe.4bpp.smol");
-const u32 gHitHammerGfx[] = INCBIN_U32("graphics/mining_minigame/hit_hammer.4bpp.smol");
-const u32 gHitPickaxeGfx[] = INCBIN_U32("graphics/mining_minigame/hit_pickaxe.4bpp.smol");
-const u16 gHitEffectPal[] = INCBIN_U16("graphics/mining_minigame/hit_effects.gbapal");
+const u32 gHitEffectHammerGfx[] = INCGFX_U32("graphics/mining_minigame/hit_effect_hammer.png", ".4bpp.smol");
+const u32 gHitEffectPickaxeGfx[] = INCGFX_U32("graphics/mining_minigame/hit_effect_pickaxe.png", ".4bpp.smol");
+const u32 gHitHammerGfx[] = INCGFX_U32("graphics/mining_minigame/hit_hammer.png", ".4bpp.smol");
+const u32 gHitPickaxeGfx[] = INCGFX_U32("graphics/mining_minigame/hit_pickaxe.png", ".4bpp.smol");
+const u16 gHitEffectPal[] = INCGFX_U16("graphics/mining_minigame/hit_effects.pal", ".gbapal");
 
 static const struct CompressedSpriteSheet sSpriteSheet_Cursor[] =
 {
@@ -591,93 +591,93 @@ static const struct SpriteTemplate gSpriteHitPickaxe =
     .callback = SpriteCallbackDummy,
 };
 
-static const u16 gStonePal[] = INCBIN_U16("graphics/mining_minigame/stones/stones.gbapal");
-static const u32 gStone1x4Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_1x4.4bpp.smol");
-static const u32 gStone4x1Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_4x1.4bpp.smol");
-static const u32 gStone2x4Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_2x4.4bpp.smol");
-static const u32 gStone4x2Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_4x2.4bpp.smol");
-static const u32 gStone2x2Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_2x2.4bpp.smol");
-static const u32 gStone3x3Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_3x3.4bpp.smol");
-static const u32 gStoneSnake1Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_snake1.4bpp.smol");
-static const u32 gStoneSnake2Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_snake2.4bpp.smol");
-static const u32 gStoneMushroom1Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_mushroom1.4bpp.smol");
-static const u32 gStoneMushroom2Gfx[] = INCBIN_U32("graphics/mining_minigame/stones/stone_mushroom2.4bpp.smol");
+static const u16 gStonePal[] = INCGFX_U16("graphics/mining_minigame/stones/stones.pal", ".gbapal");
+static const u32 gStone1x4Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_1x4.png", ".4bpp.smol");
+static const u32 gStone4x1Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_4x1.png", ".4bpp.smol");
+static const u32 gStone2x4Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_2x4.png", ".4bpp.smol");
+static const u32 gStone4x2Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_4x2.png", ".4bpp.smol");
+static const u32 gStone2x2Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_2x2.png", ".4bpp.smol");
+static const u32 gStone3x3Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_3x3.png", ".4bpp.smol");
+static const u32 gStoneSnake1Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_snake1.png", ".4bpp.smol");
+static const u32 gStoneSnake2Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_snake2.png", ".4bpp.smol");
+static const u32 gStoneMushroom1Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_mushroom1.png", ".4bpp.smol");
+static const u32 gStoneMushroom2Gfx[] = INCGFX_U32("graphics/mining_minigame/stones/stone_mushroom2.png", ".4bpp.smol");
 
-static const u32 gItemHeartScaleGfx[] = INCBIN_U32("graphics/mining_minigame/items/heart_scale.4bpp.smol");
-static const u16 gItemHeartScalePal[] = INCBIN_U16("graphics/mining_minigame/items/heart_scale.gbapal");
+static const u32 gItemHeartScaleGfx[] = INCGFX_U32("graphics/mining_minigame/items/heart_scale.png", ".4bpp.smol");
+static const u16 gItemHeartScalePal[] = INCGFX_U16("graphics/mining_minigame/items/heart_scale.png", ".gbapal");
 
-static const u32 gItemHardStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/hard_stone.4bpp.smol");
-static const u16 gItemHardStonePal[] = INCBIN_U16("graphics/mining_minigame/items/hard_stone.gbapal");
+static const u32 gItemHardStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/hard_stone.png", ".4bpp.smol");
+static const u16 gItemHardStonePal[] = INCGFX_U16("graphics/mining_minigame/items/hard_stone.png", ".gbapal");
 
-static const u32 gItemReviveGfx[] = INCBIN_U32("graphics/mining_minigame/items/revive.4bpp.smol");
-static const u16 gItemRevivePal[] = INCBIN_U16("graphics/mining_minigame/items/revive.gbapal");
+static const u32 gItemReviveGfx[] = INCGFX_U32("graphics/mining_minigame/items/revive.png", ".4bpp.smol");
+static const u16 gItemRevivePal[] = INCGFX_U16("graphics/mining_minigame/items/revive.png", ".gbapal");
 
-static const u32 gItemStarPieceGfx[] = INCBIN_U32("graphics/mining_minigame/items/star_piece.4bpp.smol");
-static const u16 gItemStarPiecePal[] = INCBIN_U16("graphics/mining_minigame/items/star_piece.gbapal");
+static const u32 gItemStarPieceGfx[] = INCGFX_U32("graphics/mining_minigame/items/star_piece.png", ".4bpp.smol");
+static const u16 gItemStarPiecePal[] = INCGFX_U16("graphics/mining_minigame/items/star_piece.png", ".gbapal");
 
-static const u32 gItemDampRockGfx[] = INCBIN_U32("graphics/mining_minigame/items/damp_rock.4bpp.smol");
-static const u16 gItemDampRockPal[] = INCBIN_U16("graphics/mining_minigame/items/damp_rock.gbapal");
+static const u32 gItemDampRockGfx[] = INCGFX_U32("graphics/mining_minigame/items/damp_rock.png", ".4bpp.smol");
+static const u16 gItemDampRockPal[] = INCGFX_U16("graphics/mining_minigame/items/damp_rock.png", ".gbapal");
 
-static const u32 gItemRedShardGfx[] = INCBIN_U32("graphics/mining_minigame/items/red_shard.4bpp.smol");
-static const u16 gItemRedShardPal[] = INCBIN_U16("graphics/mining_minigame/items/red_shard.gbapal");
+static const u32 gItemRedShardGfx[] = INCGFX_U32("graphics/mining_minigame/items/red_shard.png", ".4bpp.smol");
+static const u16 gItemRedShardPal[] = INCGFX_U16("graphics/mining_minigame/items/red_shard.png", ".gbapal");
 
-static const u32 gItemBlueShardGfx[] = INCBIN_U32("graphics/mining_minigame/items/blue_shard.4bpp.smol");
-static const u16 gItemBlueShardPal[] = INCBIN_U16("graphics/mining_minigame/items/blue_shard.gbapal");
+static const u32 gItemBlueShardGfx[] = INCGFX_U32("graphics/mining_minigame/items/blue_shard.png", ".4bpp.smol");
+static const u16 gItemBlueShardPal[] = INCGFX_U16("graphics/mining_minigame/items/blue_shard.png", ".gbapal");
 
-static const u32 gItemYellowShardGfx[] = INCBIN_U32("graphics/mining_minigame/items/yellow_shard.4bpp.smol");
-static const u16 gItemYellowShardPal[] = INCBIN_U16("graphics/mining_minigame/items/yellow_shard.gbapal");
+static const u32 gItemYellowShardGfx[] = INCGFX_U32("graphics/mining_minigame/items/yellow_shard.png", ".4bpp.smol");
+static const u16 gItemYellowShardPal[] = INCGFX_U16("graphics/mining_minigame/items/yellow_shard.png", ".gbapal");
 
-static const u32 gItemGreenShardGfx[] = INCBIN_U32("graphics/mining_minigame/items/green_shard.4bpp.smol");
-static const u16 gItemGreenShardPal[] = INCBIN_U16("graphics/mining_minigame/items/green_shard.gbapal");
+static const u32 gItemGreenShardGfx[] = INCGFX_U32("graphics/mining_minigame/items/green_shard.png", ".4bpp.smol");
+static const u16 gItemGreenShardPal[] = INCGFX_U16("graphics/mining_minigame/items/green_shard.png", ".gbapal");
 
-static const u32 gItemIronBallGfx[] = INCBIN_U32("graphics/mining_minigame/items/iron_ball.4bpp.smol");
-static const u16 gItemIronBallPal[] = INCBIN_U16("graphics/mining_minigame/items/iron_ball.gbapal");
+static const u32 gItemIronBallGfx[] = INCGFX_U32("graphics/mining_minigame/items/iron_ball.png", ".4bpp.smol");
+static const u16 gItemIronBallPal[] = INCGFX_U16("graphics/mining_minigame/items/iron_ball.png", ".gbapal");
 
-static const u32 gItemReviveMaxGfx[] = INCBIN_U32("graphics/mining_minigame/items/revive_max.4bpp.smol");
-static const u16 gItemReviveMaxPal[] = INCBIN_U16("graphics/mining_minigame/items/revive_max.gbapal");
+static const u32 gItemReviveMaxGfx[] = INCGFX_U32("graphics/mining_minigame/items/revive_max.png", ".4bpp.smol");
+static const u16 gItemReviveMaxPal[] = INCGFX_U16("graphics/mining_minigame/items/revive_max.png", ".gbapal");
 
-static const u32 gItemEverStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/ever_stone.4bpp.smol");
-static const u16 gItemEverStonePal[] = INCBIN_U16("graphics/mining_minigame/items/ever_stone.gbapal");
+static const u32 gItemEverStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/ever_stone.png", ".4bpp.smol");
+static const u16 gItemEverStonePal[] = INCGFX_U16("graphics/mining_minigame/items/ever_stone.png", ".gbapal");
 
-static const u32 gItemOvalStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/oval_stone.4bpp.smol");
-static const u16 gItemOvalStonePal[] = INCBIN_U16("graphics/mining_minigame/items/oval_stone.gbapal");
+static const u32 gItemOvalStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/oval_stone.png", ".4bpp.smol");
+static const u16 gItemOvalStonePal[] = INCGFX_U16("graphics/mining_minigame/items/oval_stone.png", ".gbapal");
 
-static const u32 gItemLightClayGfx[] = INCBIN_U32("graphics/mining_minigame/items/light_clay.4bpp.smol");
-static const u16 gItemLightClayPal[] = INCBIN_U16("graphics/mining_minigame/items/light_clay.gbapal");
+static const u32 gItemLightClayGfx[] = INCGFX_U32("graphics/mining_minigame/items/light_clay.png", ".4bpp.smol");
+static const u16 gItemLightClayPal[] = INCGFX_U16("graphics/mining_minigame/items/light_clay.png", ".gbapal");
 
-static const u32 gItemHeatRockGfx[] = INCBIN_U32("graphics/mining_minigame/items/heat_rock.4bpp.smol");
-static const u16 gItemHeatRockPal[] = INCBIN_U16("graphics/mining_minigame/items/heat_rock.gbapal");
+static const u32 gItemHeatRockGfx[] = INCGFX_U32("graphics/mining_minigame/items/heat_rock.png", ".4bpp.smol");
+static const u16 gItemHeatRockPal[] = INCGFX_U16("graphics/mining_minigame/items/heat_rock.png", ".gbapal");
 
-static const u32 gItemIcyRockGfx[] = INCBIN_U32("graphics/mining_minigame/items/icy_rock.4bpp.smol");
-static const u16 gItemIcyRockPal[] = INCBIN_U16("graphics/mining_minigame/items/icy_rock.gbapal");
+static const u32 gItemIcyRockGfx[] = INCGFX_U32("graphics/mining_minigame/items/icy_rock.png", ".4bpp.smol");
+static const u16 gItemIcyRockPal[] = INCGFX_U16("graphics/mining_minigame/items/icy_rock.png", ".gbapal");
 
-static const u32 gItemSmoothRockGfx[] = INCBIN_U32("graphics/mining_minigame/items/smooth_rock.4bpp.smol");
-static const u16 gItemSmoothRockPal[] = INCBIN_U16("graphics/mining_minigame/items/smooth_rock.gbapal");
+static const u32 gItemSmoothRockGfx[] = INCGFX_U32("graphics/mining_minigame/items/smooth_rock.png", ".4bpp.smol");
+static const u16 gItemSmoothRockPal[] = INCGFX_U16("graphics/mining_minigame/items/smooth_rock.png", ".gbapal");
 
-static const u32 gItemLeafStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/leaf_stone.4bpp.smol");
-static const u16 gItemLeafStonePal[] = INCBIN_U16("graphics/mining_minigame/items/leaf_stone.gbapal");
+static const u32 gItemLeafStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/leaf_stone.png", ".4bpp.smol");
+static const u16 gItemLeafStonePal[] = INCGFX_U16("graphics/mining_minigame/items/leaf_stone.png", ".gbapal");
 
-static const u32 gItemFireStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/fire_stone.4bpp.smol");
-static const u16 gItemFireStonePal[] = INCBIN_U16("graphics/mining_minigame/items/fire_stone.gbapal");
+static const u32 gItemFireStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/fire_stone.png", ".4bpp.smol");
+static const u16 gItemFireStonePal[] = INCGFX_U16("graphics/mining_minigame/items/fire_stone.png", ".gbapal");
 
-static const u32 gItemWaterStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/water_stone.4bpp.smol");
-static const u16 gItemWaterStonePal[] = INCBIN_U16("graphics/mining_minigame/items/water_stone.gbapal");
+static const u32 gItemWaterStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/water_stone.png", ".4bpp.smol");
+static const u16 gItemWaterStonePal[] = INCGFX_U16("graphics/mining_minigame/items/water_stone.png", ".gbapal");
 
-static const u32 gItemThunderStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/thunder_stone.4bpp.smol");
-static const u16 gItemThunderStonePal[] = INCBIN_U16("graphics/mining_minigame/items/thunder_stone.gbapal");
+static const u32 gItemThunderStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/thunder_stone.png", ".4bpp.smol");
+static const u16 gItemThunderStonePal[] = INCGFX_U16("graphics/mining_minigame/items/thunder_stone.png", ".gbapal");
 
-static const u32 gItemMoonStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/moon_stone.4bpp.smol");
-static const u16 gItemMoonStonePal[] = INCBIN_U16("graphics/mining_minigame/items/moon_stone.gbapal");
+static const u32 gItemMoonStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/moon_stone.png", ".4bpp.smol");
+static const u16 gItemMoonStonePal[] = INCGFX_U16("graphics/mining_minigame/items/moon_stone.png", ".gbapal");
 
-static const u32 gItemSunStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/sun_stone.4bpp.smol");
-static const u16 gItemSunStonePal[] = INCBIN_U16("graphics/mining_minigame/items/sun_stone.gbapal");
+static const u32 gItemSunStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/sun_stone.png", ".4bpp.smol");
+static const u16 gItemSunStonePal[] = INCGFX_U16("graphics/mining_minigame/items/sun_stone.png", ".gbapal");
 
-static const u32 gItemOddKeyStoneGfx[] = INCBIN_U32("graphics/mining_minigame/items/odd_key_stone.4bpp.smol");
-static const u16 gItemOddKeyStonePal[] = INCBIN_U16("graphics/mining_minigame/items/odd_key_stone.gbapal");
+static const u32 gItemOddKeyStoneGfx[] = INCGFX_U32("graphics/mining_minigame/items/odd_key_stone.png", ".4bpp.smol");
+static const u16 gItemOddKeyStonePal[] = INCGFX_U16("graphics/mining_minigame/items/odd_key_stone.png", ".gbapal");
 
-static const u32 gItemSkullFossilGfx[] = INCBIN_U32("graphics/mining_minigame/items/skull_fossil.4bpp.smol");
-static const u32 gItemArmorFossilGfx[] = INCBIN_U32("graphics/mining_minigame/items/armor_fossil.4bpp.smol");
-static const u16 gItemFossilPal[] = INCBIN_U16("graphics/mining_minigame/items/fossil.gbapal");
+static const u32 gItemSkullFossilGfx[] = INCGFX_U32("graphics/mining_minigame/items/skull_fossil.png", ".4bpp.smol");
+static const u32 gItemArmorFossilGfx[] = INCGFX_U32("graphics/mining_minigame/items/armor_fossil.png", ".4bpp.smol");
+static const u16 gItemFossilPal[] = INCGFX_U16("graphics/mining_minigame/items/fossil.pal", ".gbapal");
 
 // Stone SpriteSheets and SpritePalettes
 static const struct CompressedSpriteSheet sSpriteSheet_Stone1x4[] =
