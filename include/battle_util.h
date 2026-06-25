@@ -371,7 +371,7 @@ void ChooseStatBoostAnimation(enum BattlerId battler);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability);
 bool32 TryTriggerSymbiosis(enum BattlerId battler, u32 ally);
-bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, bool32 moveEnd);
+bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, const u8 *nextInstr);
 void BestowItem(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 ARM_FUNC u32 GetBattlerVolatile(enum BattlerId battler, enum Volatile _volatile);
 void SetMonVolatile(enum BattlerId battler, enum Volatile _volatile, u32 newValue);
