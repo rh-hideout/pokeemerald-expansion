@@ -929,7 +929,7 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
-        if (gBattleMons[battlerIndex].hp == 0)
+        if (gBattleMons[battlerIndex].hp == 0 || battler == battlerIndex)
         {
             actionOrMoveIndex[battlerIndex] = 0xFF;
             bestMovePointsForTarget[battlerIndex] = -1;
@@ -1274,14 +1274,16 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     }
 
     // Don't use anything but super effective thawing moves if target is frozen if any other attack available
-    if ((CanFireMoveThawTarget(move) || CanBurnHitThaw(move) || CanMoveThawTarget(abilityAtk, move))
+    if ((CanFireMoveThawTarget(move, moveType) || CanBurnHitThaw(move) || CanMoveThawTarget(abilityAtk, move))
      && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY))
     {
         enum Move aiMove;
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             aiMove = gBattleMons[battlerAtk].moves[moveIndex];
-            if (!CanFireMoveThawTarget(aiMove) && !CanBurnHitThaw(aiMove) && !CanMoveThawTarget(abilityAtk, aiMove))
+            if (!CanFireMoveThawTarget(aiMove, CheckDynamicMoveType(GetBattlerMon(battlerAtk), aiMove, battlerAtk, MON_IN_BATTLE))
+             && !CanBurnHitThaw(aiMove)
+             && !CanMoveThawTarget(abilityAtk, aiMove))
             {
                 ADJUST_SCORE(-1);
                 break;
@@ -2086,7 +2088,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         else if (gBattleMons[battlerAtk].status1 & STATUS1_SLEEP && !AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
             ADJUST_SCORE(-10);
-        else
+        else if (!(gBattleMons[battlerAtk].status1 & STATUS1_ANY))
             ADJUST_SCORE(-10);    // attacker has no status to transmit
         break;
     case EFFECT_MUD_SPORT:
@@ -2850,10 +2852,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SYNCHRONOISE:
         //Check holding ring target or is of same type
-        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_RING_TARGET
-          || DoBattlersShareType(battlerAtk, battlerDef))
-            break;
-        else
+        if (aiData->holdEffects[battlerDef] != HOLD_EFFECT_RING_TARGET
+        && !DoBattlersShareType(battlerAtk, battlerDef))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_FLAIL:
@@ -5591,6 +5591,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_STAT_PLUS:
+            case MOVE_EFFECT_STAT_MINUS:
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
                     enum Stat stat = sAccurateStatOrder[i];
@@ -5599,31 +5600,15 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage == 0)
                         continue;
 
-                    if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
+                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
                         stage = -1 * stage;
+
+                    stage = AI_GetAdjustedStatStage(battlerAtk, move, stage);
 
                     if (stage < 0)
                         continue;
 
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
-                }
-                break;
-            case MOVE_EFFECT_STAT_MINUS:
-                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                {
-                    enum Stat stat = sAccurateStatOrder[i];
-                    s32 stage = -1 * GetStatStage(stat, additionalEffect);
-
-                    if (stage == 0)
-                        continue;
-
-                    if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
-                        stage = -1 * stage;
-
-                    if (stage < 0)
-                        continue;
-
-                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, stat));
                 }
                 break;
             case MOVE_EFFECT_ORDER_UP:

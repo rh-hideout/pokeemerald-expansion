@@ -243,6 +243,7 @@ BattleScript_EffectShedTail::
 	waitstate
 	jumpifvolatile BS_ATTACKER, VOLATILE_SUBSTITUTE, BattleScript_AlreadyHasSubstitute
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
+	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
 	setsubstitute
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_SUBSTITUTE_FAILED, BattleScript_SubstituteString
@@ -311,6 +312,7 @@ BattleScript_MoveSwitchPursuitEnd:
 
 BattleScript_MoveSwitchPursuitRet:
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
+	jumpifcommanderactive BS_ATTACKER, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
@@ -319,6 +321,7 @@ BattleScript_MoveSwitchPursuitRet:
 
 BattleScript_MoveSwitch::
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
+	jumpifcommanderactive BS_ATTACKER, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
@@ -898,6 +901,7 @@ BattleScript_EffectPsychoShift::
 	jumpifstatus BS_ATTACKER, STATUS1_ANY, BattleScript_EffectPsychoShiftCanWork
 	goto BattleScript_ButItFailed
 BattleScript_EffectPsychoShiftCanWork:
+	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_ButItFailed
 	jumpifsafeguard BattleScript_SafeguardProtected
 	trypsychoshift BattleScript_ButItFailed, BattleScript_SleepClauseBlocked
@@ -908,6 +912,8 @@ BattleScript_EffectPsychoShiftCanWork:
 	waitmessage B_WAIT_TIME_LONG
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
+	waitstate
+	trysynchronize
 	curestatus BS_ATTACKER
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -1644,7 +1650,7 @@ BattleScript_SetUpBide::
 BattleScript_EffectRoar::
 	attackcanceler
 	jumpifroarfails BattleScript_ButItFailed
-	jumpifcommanderactive BattleScript_ButItFailed
+	jumpifcommanderactive BS_TARGET, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_GUARD_DOG, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
 	jumpifvolatile BS_TARGET, VOLATILE_ROOT, BattleScript_PrintMonIsRooted
@@ -2124,7 +2130,6 @@ BattleScript_NightmareWorked::
 BattleScript_EffectCurse::
 	attackcanceler
 	cursetarget BattleScript_CurseStatChange
-	setbyte sB_ANIM_TURN, 0
 	attackanimation
 	waitanimation
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
@@ -2238,6 +2243,7 @@ BattleScript_EffectSafeguard::
 BattleScript_EffectBatonPass::
 	attackcanceler
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
+	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -3626,12 +3632,8 @@ BattleScript_DoFutureAttackResult:
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_FutureAttackEnd::
-	moveendcase MOVEEND_SET_VALUES
-	moveendcase MOVEEND_RAGE
-	moveendcase MOVEEND_ABILITIES
-	moveendcase MOVEEND_ITEM_EFFECTS_TARGET
-	moveendfromto MOVEEND_SYMBIOSIS, MOVEEND_UPDATE_LAST_MOVES
-	moveendcase MOVEEND_COLOR_CHANGE
+	setadditionaleffects
+	moveendall
 	checkteamslost BattleScript_FutureAttackClearResults
 BattleScript_FutureAttackClearResults:
 	setmoveresultflags 0
@@ -4804,6 +4806,7 @@ BattleScript_BadDreamsIncrement:
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_BadDreamsLoop
 	jumpifbyteequal sFIXED_ABILITY_POPUP, sZero, BattleScript_BadDreamsEnd
 	destroyabilitypopup
+	setbyte sFIXED_ABILITY_POPUP, FALSE
 	pause 15
 BattleScript_BadDreamsEnd:
 	return
@@ -5559,12 +5562,12 @@ BattleScript_MirrorHerbCopyStatChange::
 	printstring STRINGID_MIRRORHERBCOPIED
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM | STAT_CHANGE_MIRROR_HERB
 	return
 
 BattleScript_OpportunistCopyStatChange::
 	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_NO_FLAGS
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_OPPORTUNIST
 	return
 
 BattleScript_TotemBoost::

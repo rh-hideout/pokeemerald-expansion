@@ -56,6 +56,7 @@
   - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)
 - [Changelog](./CHANGELOG.md)
     - [1.16.x]()
+        - [Version 1.16.1](changelogs/1.16.x/1.16.1.md)
         - [Version 1.16.0](changelogs/1.16.x/1.16.0.md)
     - [1.15.x]()
         - [Version 1.15.3](changelogs/1.15.x/1.15.3.md)

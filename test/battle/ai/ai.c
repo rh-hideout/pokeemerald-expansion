@@ -1267,7 +1267,12 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ACUPRESSURE); }
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight); EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight);
+            EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
     }
@@ -1353,5 +1358,95 @@ AI_DOUBLE_BATTLE_TEST("Bolt Beak damage will be correctly seen by AI (doubles)")
             EXPECT_MOVE(opponentLeft,   MOVE_THUNDER,   target:playerRight);
             EXPECT_MOVE(opponentRight,  MOVE_BOLT_BEAK, target:playerRight);
         }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_SELECTED)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_FLAMETHROWER) == TARGET_SELECTED);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_FLAMETHROWER); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(playerRight, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_FOES_AND_ALLY)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_LAVA_PLUME); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(playerRight, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(opponentRight, MOVE_LAVA_PLUME);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_BOTH)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_HEAT_WAVE) == TARGET_BOTH);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_HEAT_WAVE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(playerRight, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(opponentRight, MOVE_HEAT_WAVE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentRight);
+        NOT HP_BAR(opponentRight);
     }
 }

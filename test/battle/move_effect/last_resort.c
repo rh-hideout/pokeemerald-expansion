@@ -186,4 +186,3 @@ AI_SINGLE_BATTLE_TEST("AI uses Last Resort - 4 moves")
         TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT); }
     }
 }
-

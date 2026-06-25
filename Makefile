@@ -105,8 +105,8 @@ ASSETS_DIR_NAME := $(BUILD_DIR)/assets
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
-TESTELF = $(ROM_NAME:.gba=-test.elf)
-HEADLESSELF = $(ROM_NAME:.gba=-test-headless.elf)
+TESTELF := $(ROM_NAME:.gba=-test.elf)
+HEADLESSELF := $(ROM_NAME:.gba=-test-headless.elf)
 
 # Pick our active variables
 ROM := $(ROM_NAME)

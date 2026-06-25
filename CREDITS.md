@@ -1,6 +1,6 @@
 ## Credits ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/en/reference/emoji-key/)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
@@ -32,7 +32,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/khbsd"><img src="https://avatars.githubusercontent.com/u/26092020?v=4?s=100" width="100px;" alt="khbsd"/><br /><sub><b>khbsd</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=khbsd" title="Documentation">📖</a> <a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=khbsd" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Cafeei"><img src="https://avatars.githubusercontent.com/u/46283144?v=4?s=100" width="100px;" alt="Cafe"/><br /><sub><b>Cafe</b></sub></a><br /><a href="#design-Cafeei" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/agsmgmaster64"><img src="https://avatars.githubusercontent.com/u/67435611?v=4?s=100" width="100px;" alt="agsmgmaster64"/><br /><sub><b>agsmgmaster64</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=agsmgmaster64" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RubyRaven6"><img src="https://avatars.githubusercontent.com/u/178652077?v=4?s=100" width="100px;" alt="Ruby"/><br /><sub><b>Ruby</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=RubyRaven6" title="Code">💻</a> <a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=RubyRaven6" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RubyRaven6"><img src="https://avatars.githubusercontent.com/u/178652077?v=4?s=100" width="100px;" alt="Ruby"/><br /><sub><b>Ruby</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=RubyRaven6" title="Code">💻</a> <a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=RubyRaven6" title="Documentation">📖</a> <a href="#tool-RubyRaven6" title="Tools">🔧</a> <a href="#tutorial-RubyRaven6" title="Tutorials">✅</a></td>
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/mudskipper13"><img src="https://avatars.githubusercontent.com/u/105766191?v=4?s=100" width="100px;" alt="mudskipper13"/><br /><sub><b>mudskipper13</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=mudskipper13" title="Code">💻</a> <a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=mudskipper13" title="Documentation">📖</a></td>
@@ -83,7 +83,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Gamer2020"><img src="https://avatars.githubusercontent.com/u/6243575?v=4?s=100" width="100px;" alt="Gamer2020"/><br /><sub><b>Gamer2020</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=Gamer2020" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/SonikkuA-DatH"><img src="https://avatars.githubusercontent.com/u/58025603?v=4?s=100" width="100px;" alt="SonikkuA-DatH"/><br /><sub><b>SonikkuA-DatH</b></sub></a><br /><a href="#design-SonikkuA-DatH" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://jaizu.moe"><img src="https://avatars.githubusercontent.com/u/18596778?v=4?s=100" width="100px;" alt="Jaizu"/><br /><sub><b>Jaizu</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=Jaizu" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/izrofid"><img src="https://avatars.githubusercontent.com/u/206095739?v=4?s=100" width="100px;" alt="Kildemal"/><br /><sub><b>Kildemal</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=izrofid" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/miriamlefae"><img src="https://avatars.githubusercontent.com/u/206095739?v=4?s=100" width="100px;" alt="Miriam"/><br /><sub><b>Miriam</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=miriamlefae" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Skeli789"><img src="https://avatars.githubusercontent.com/u/17243618?v=4?s=100" width="100px;" alt="Skeli"/><br /><sub><b>Skeli</b></sub></a><br /><a href="#design-Skeli789" title="Design">🎨</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://hufford.io"><img src="https://avatars.githubusercontent.com/u/8021794?v=4?s=100" width="100px;" alt="Josh Hufford"/><br /><sub><b>Josh Hufford</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=ostomachion" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Kasenn"><img src="https://avatars.githubusercontent.com/u/115586266?v=4?s=100" width="100px;" alt="Kasenn"/><br /><sub><b>Kasenn</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=Kasenn" title="Code">💻</a></td>
@@ -120,7 +120,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/allcontributors.org) specification. Contributions of any kind welcome!
 
 ## Other Credits
 ### Mega Evolution Overworld Sprite Credits:
