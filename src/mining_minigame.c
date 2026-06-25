@@ -1288,12 +1288,6 @@ static const struct MiningItem MiningItemList[] =
     },
 };
 
-static const u8 sText_SomethingPinged[] = _("Something pinged in the wall!\n{STR_VAR_1} confirmed!");
-static const u8 sText_EverythingWas[] = _("Everything was dug up!");
-static const u8 sText_WasObtained[] = _("{STR_VAR_1}\nwas obtained!");
-static const u8 sText_TooBad[] = _("Too bad!\nYour Bag is full!");
-static const u8 sText_TheWall[] = _("The wall collapsed!");
-
 static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
 {
     u32 result = 0;
@@ -1305,7 +1299,7 @@ static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
     }
     if (result == 0)
         return result+1;
-    else 
+    else
         return result;
 }
 
@@ -1348,12 +1342,6 @@ static u32 MiningUtil_GetTopValue(u32 itemId)
 }
 
 #define RANDOM(a) (Random() % (a))
-
-// Creates a random number between 0 and amount-1
-//static u32 random(u32 amount)
-//{
-//    return (Random() % amount);
-//}
 
 void StartMining(void)
 {
@@ -1923,7 +1911,7 @@ static void Task_MiningWaitFadeIn(u8 taskId)
 		return;
 
     ConvertIntToDecimalStringN(gStringVar1, GetTotalNumberOfBuriedItems(), STR_CONV_MODE_LEFT_ALIGN, 2);
-    StringExpandPlaceholders(gStringVar2, sText_SomethingPinged);
+    StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Something pinged in the wall!\n{STR_VAR_1} confirmed!"));
     PrintMessage(gStringVar2);
     gTasks[taskId].func = Task_WaitButtonPressOpening;
 }
@@ -2973,7 +2961,7 @@ static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId)
     if (AddBagItem(itemId,1))
         return;
 
-    PrintMessage(sText_TooBad);
+    PrintMessage(COMPOUND_STRING("Too bad!\nYour Bag is full!"));
     gTasks[taskId].func = Task_WaitButtonPressOpening;
 }
 
@@ -3037,7 +3025,7 @@ static void Task_WallCollapseDelay(u8 taskId)
         case 40:
             DestroyTask(taskId);
             sMiningUiState->isCollapseAnimActive = FALSE;
-            PrintMessage(sText_TheWall);
+            PrintMessage(COMPOUND_STRING("The wall collapsed!"));
             break;
     }
 }
@@ -3062,7 +3050,7 @@ static void HandleGameFinish(u8 taskId)
         // Here, we only set the Shake Duration. The Task, which handles the shake effect, is created by the input handler.
         sMiningUiState->shakeDuration = 6;
     else
-        PrintMessage(sText_EverythingWas);
+        PrintMessage(COMPOUND_STRING("Everything was dug up!"));
 
     sMiningUiState->loadGameState++;
     gTasks[taskId].func = Task_WaitButtonPressOpening;
@@ -3071,7 +3059,7 @@ static void HandleGameFinish(u8 taskId)
 static void PrintItemSuccess(u32 itemId)
 {
     CopyItemName(itemId,gStringVar1);
-    StringExpandPlaceholders(gStringVar2,sText_WasObtained);
+    StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("{STR_VAR_1}\nwas obtained!"));
     PrintMessage(gStringVar2);
 }
 
