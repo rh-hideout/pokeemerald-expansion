@@ -246,19 +246,18 @@ SINGLE_BATTLE_TEST("ITEM_POPUP correctly detects popups")
     } SCENE {
         ITEM_POPUP(player, ITEM_LEFTOVERS);
     }
-
 }
 
 SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
 {
-        GIVEN {
-            PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
-            OPPONENT(SPECIES_WOBBUFFET);
-        } WHEN {
-            TURN {}
-        } SCENE {
-            EXPECT_FAIL {
-                ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
-            }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        EXPECT_FAIL {
+            ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
         }
+    }
 }
