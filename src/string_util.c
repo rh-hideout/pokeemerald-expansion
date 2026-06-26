@@ -842,7 +842,7 @@ u8* const GetStringVar(u8 index)
     case 2:
         return gStringVar3;
     default:
-        errorf("Incorrect stringvar index");
+        errorf("Incorrect StringVar index: %d", index);
         return gStringVar1;
     }
 }
