@@ -821,7 +821,7 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
     }
     else
     {
-        task->tFuncId++; // TRSEE_MOVE_TO_PLAYER
+        task->tFuncId++; // TRSEE_TURN_TO_FACE_PLAYER
         if (trainerObj->movementType == MOVEMENT_TYPE_TREE_DISGUISE || trainerObj->movementType == MOVEMENT_TYPE_MOUNTAIN_DISGUISE)
             task->tFuncId = TRSEE_REVEAL_DISGUISE;
         if (trainerObj->movementType == MOVEMENT_TYPE_BURIED)
