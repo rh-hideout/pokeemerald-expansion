@@ -263,12 +263,14 @@ s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
     return newValue;
 }
 
-size_t CountDigits(int value)
+u32 CountDigits(s32 value)
 {
-for (u32 i = 1; i < ARRAY_COUNT(gPowersOfTen); i++)
-{
-  if (value < gPowersOfTen[i])
-    return i;
-}
-return ARRAY_COUNT(gPowersOfTen);
+    u32 uvalue = value < 0 ? ~((u32)value) + 1 : (u32)value;
+
+    for (u32 i = 1; i < ARRAY_COUNT(gPowersOfTen); i++)
+    {
+        if (uvalue < gPowersOfTen[i])
+            return i;
+    }
+    return ARRAY_COUNT(gPowersOfTen);
 }
