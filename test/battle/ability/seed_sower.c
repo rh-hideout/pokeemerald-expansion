@@ -45,7 +45,7 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
 {
     u32 j, k, l;
     enum Move usedMove = MOVE_NONE;
-    static const enum Move moves[] = {MOVE_HYPER_VOICE, MOVE_SURF};
+    static const enum Move moves[] = {MOVE_HYPER_VOICE, MOVE_EARTHQUAKE};
     enum Ability abilities[MAX_BATTLERS_COUNT] = {0};
     u8 attacker = 0;
 
@@ -66,7 +66,7 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_PLAYER_LEFT]); }
         PLAYER(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_PLAYER_RIGHT]); }
         OPPONENT(SPECIES_ARBOLIVA) { Ability(abilities[B_POSITION_OPPONENT_LEFT]); }
@@ -114,7 +114,7 @@ DOUBLE_BATTLE_TEST("Multi-target moves hit correct battlers after Seed Sower is 
                     HP_BAR(playerRight);
                 }
             }
-        } else { // SURF
+        } else { // EARTHQUAKE
             switch (attacker) {
             case B_POSITION_PLAYER_LEFT:
                 HP_BAR(opponentLeft);

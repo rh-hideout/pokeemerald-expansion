@@ -370,14 +370,14 @@ DOUBLE_BATTLE_TEST("Commander prevents Ally Switch from swapping Dondozo with Ta
 DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move if Dondozo faints")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_DONDOZO) { HP(1); }
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_SURF); SEND_OUT(playerLeft, 2); }
+        TURN { MOVE(opponentLeft, MOVE_EARTHQUAKE); SEND_OUT(playerLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
@@ -391,24 +391,24 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
 DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damaging moves")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_SURF); MOVE(opponentRight, MOVE_SURF); SWITCH(playerLeft, 2); }
+        TURN { MOVE(opponentLeft, MOVE_EARTHQUAKE); MOVE(opponentRight, MOVE_EARTHQUAKE); SWITCH(playerLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
         HP_BAR(playerLeft);
         NOT HP_BAR(playerRight);
         HP_BAR(opponentRight);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentRight);
         HP_BAR(playerLeft);
         HP_BAR(opponentLeft);
         NOT HP_BAR(playerRight);
@@ -502,7 +502,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controll
 DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
@@ -510,13 +510,13 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_SCRATCH, target: opponentLeft); }
-        TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_SURF); }
+        TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri avoided the attack!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(opponentRight);
     }
@@ -525,7 +525,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
 DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot)")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DONDOZO);
@@ -533,13 +533,13 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot)")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_SCRATCH, target: opponentLeft); }
-        TURN { SWITCH(playerRight, 2); MOVE(opponentLeft, MOVE_SURF); }
+        TURN { SWITCH(playerRight, 2); MOVE(opponentLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri avoided the attack!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
         HP_BAR(playerRight);
         HP_BAR(opponentRight);
     }
@@ -822,17 +822,77 @@ MULTI_BATTLE_TEST("Commander will not activate in a multi battle")
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PARTNER(SPECIES_DONDOZO);
-        OPPONENT_A(SPECIES_WOBBUFFET);
-        OPPONENT_B(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        OPPONENT_B(SPECIES_DONDOZO);
     } WHEN {
         TURN {}
     } SCENE {
-        NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+            ABILITY_POPUP(opponentLeft, ABILITY_COMMANDER);
+        }        
     } THEN {
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("Commander only activates for the opponent side in a 2v1 battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PARTNER(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        OPPONENT(SPECIES_DONDOZO);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        ABILITY_POPUP(opponentLeft, ABILITY_COMMANDER);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("Commander only activates for the player side in a 1v2 battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_DONDOZO);
+        OPPONENT_A(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        OPPONENT_B(SPECIES_DONDOZO);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_COMMANDER);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }

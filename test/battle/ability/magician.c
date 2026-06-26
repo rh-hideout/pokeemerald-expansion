@@ -40,15 +40,15 @@ DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targe
     PARAMETRIZE { playerRightSpeed = 2; opponentLeftSpeed = 3; opponentRightSpeed = 4; expectedItem = ITEM_ULTRA_BALL; }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(playerRightSpeed); Item(ITEM_POKE_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentLeftSpeed); Item(ITEM_GREAT_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentRightSpeed); Item(ITEM_ULTRA_BALL); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
     } THEN {
         EXPECT_EQ(playerLeft->item, expectedItem);
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targe
 DOUBLE_BATTLE_TEST("Magician follows Trick Room order when choosing between foe targets")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
         PLAYER(SPECIES_DELPHOX) { Speed(3); Ability(ABILITY_MAGICIAN); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
@@ -66,10 +66,10 @@ DOUBLE_BATTLE_TEST("Magician follows Trick Room order when choosing between foe 
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_ULTRA_BALL); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_TRICK_ROOM); }
-        TURN { MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
     } THEN {
         // Under Trick Room, the slower foe should be chosen first.
@@ -80,15 +80,15 @@ DOUBLE_BATTLE_TEST("Magician follows Trick Room order when choosing between foe 
 DOUBLE_BATTLE_TEST("Magician can steal from ally if no opponent is a valid target")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_POKE_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_POKE_BALL);
@@ -104,15 +104,15 @@ DOUBLE_BATTLE_TEST("Magician is blocked by Sticky Hold unless the target faints"
     PARAMETRIZE { stickyHoldTargetFaints = TRUE; }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_POKE_BALL); }
         OPPONENT(SPECIES_MUK) { Speed(4); HP(stickyHoldTargetFaints ? 1 : 600); Ability(ABILITY_STICKY_HOLD); Item(ITEM_GREAT_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); Item(ITEM_ULTRA_BALL); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         if (stickyHoldTargetFaints)
             ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
         else
