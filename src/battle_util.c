@@ -2916,6 +2916,16 @@ static bool32 TryDancer(void)
     return FALSE;
 }
 
+static bool32 IsCommanderBlockedByGimmick(enum BattlerId battler)
+{
+    enum Gimmick selectedGimmick = gBattleStruct->gimmick.usableGimmick[battler];
+
+    if (!(gBattleStruct->gimmick.toActivate & (1u << battler)))
+        return FALSE;
+
+    return selectedGimmick == GIMMICK_MEGA || selectedGimmick == GIMMICK_TERA;
+}
+
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -4638,6 +4648,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !HasPartnerTrainer(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
+             && !IsCommanderBlockedByGimmick(battler)
              && (gChosenActionByBattler[battler] != B_ACTION_SWITCH || HasBattlerActedThisTurn(battler))
              && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
