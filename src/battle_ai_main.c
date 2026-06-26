@@ -2599,12 +2599,12 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_TERRAIN:
-        if (gFieldStatuses & gBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag
+        if (gFieldTimers.terrain == GetMoveTerrainType(move)
          || (HasPartner(battlerAtk) && AreMovesEquivalent(battlerAtk, BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_STEEL_ROLLER:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+        if (!(gFieldTimers.terrain != B_TERRAIN_NONE)
          || (HasPartner(battlerAtk) && AreMovesEquivalent(battlerAtk, BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)))
             ADJUST_SCORE(-10);
         break;
@@ -5215,13 +5215,13 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
     }
     case EFFECT_TERRAIN:
-        enum BattleTerrain terrainType = GetMoveTerrainType(move);
+        enum BattleTerrain terrain = GetMoveTerrainType(move);
 
-        if (ShouldSetFieldStatus(battlerAtk, gBattleTerrainInfo[terrainType].statusFlag))
+        if (ShouldSetFieldStatus(battlerAtk, terrain))
         {
             ADJUST_SCORE(GOOD_EFFECT);
             if (
-                (terrainType == B_TERRAIN_ELECTRIC || terrainType == B_TERRAIN_MISTY)
+                (terrain == B_TERRAIN_ELECTRIC || terrain == B_TERRAIN_MISTY)
                 && gBattleMons[battlerAtk].volatiles.yawn
                 && AI_IsBattlerGrounded(battlerAtk))
                 ADJUST_SCORE(BEST_EFFECT);
@@ -5231,7 +5231,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
     case EFFECT_STEEL_ROLLER:
         {
-            u32 terrain = gFieldStatuses & STATUS_FIELD_TERRAIN_ANY;
+            u32 terrain = gFieldTimers.terrain != B_TERRAIN_NONE;
             if (ShouldClearFieldStatus(battlerAtk, terrain))
                 ADJUST_SCORE(GOOD_EFFECT);
             if (ShouldSetFieldStatus(battlerDef, terrain))
@@ -5240,7 +5240,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
     case EFFECT_ICE_SPINNER:
         {
-            u32 terrain = gFieldStatuses & STATUS_FIELD_TERRAIN_ANY;
+            u32 terrain = gFieldTimers.terrain != B_TERRAIN_NONE;
             if (ShouldClearFieldStatus(battlerAtk, terrain))
                 ADJUST_SCORE(GOOD_EFFECT);
             if (ShouldSetFieldStatus(battlerDef, terrain))
@@ -5827,7 +5827,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     break;
                 }
                 if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_MISTY_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_GRASSY_TERRAIN:
@@ -5837,7 +5837,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     break;
                 }
                 if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_GRASSY_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_ELECTRIC_TERRAIN:
@@ -5847,7 +5847,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     break;
                 }
                 if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_PSYCHIC_TERRAIN:
@@ -5857,7 +5857,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     break;
                 }
                 if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_GRAVITY:
@@ -6370,7 +6370,7 @@ static s32 AI_PowerfulStatus(enum BattlerId battlerAtk, enum BattlerId battlerDe
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_TERRAIN:
-        if (!(gFieldStatuses & gBattleTerrainInfo[GetMoveTerrainType(move)].statusFlag))
+        if (gFieldTimers.terrain != GetMoveTerrainType(move))
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_WEATHER:
