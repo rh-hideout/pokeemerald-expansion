@@ -1189,11 +1189,13 @@ static inline bool32 IsGhostBattleWithoutScope(void)
 
 struct TerrainInfo
 {
-    u8 extender; // Unused
-    u8 seed; // Unused
-    u8 abilityStartMessage; // Unused
+    u8 abilityStartMessage;
     u8 moveStartMessage;
     u8 endMessage;
+    const u8 *secretPowerAnimation;
+    u16 secretPowerEffect;
+    enum Type camouflageType;
+    u8 battleBackground;
 };
 
 extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];

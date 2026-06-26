@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_scripts.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
 #include "battle_pyramid.h"
@@ -243,35 +244,43 @@ u32 GetCurrentBattleWeather(void)
 
 const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
     [B_TERRAIN_GRASSY] = {
-        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
-        .seed = HOLD_EFFECT_PARAM_GRASSY_TERRAIN,
         .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .endMessage = B_MSG_TERRAIN_END_GRASSY,
+        .secretPowerAnimation = gBattleAnimMove_NeedleArm,
+        .secretPowerEffect = MOVE_EFFECT_SLEEP,
+        .camouflageType = TYPE_GRASS,
+        .battleBackground = BG_GRASSY_TERRAIN,
     },
 
     [B_TERRAIN_MISTY] = {
-        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
-        .seed = HOLD_EFFECT_PARAM_MISTY_TERRAIN,
         .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .endMessage = B_MSG_TERRAIN_END_MISTY,
+        .secretPowerAnimation = gBattleAnimMove_FairyWind,
+        .secretPowerEffect = SECRET_POWER_SP_ATK_MINUS_1,
+        .camouflageType = TYPE_FAIRY,
+        .battleBackground = BG_MISTY_TERRAIN,
     },
 
     [B_TERRAIN_ELECTRIC] = {
-        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
-        .seed = HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN,
         .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
+        .secretPowerAnimation = gBattleAnimMove_ThunderShock,
+        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .camouflageType = TYPE_ELECTRIC,
+        .battleBackground = BG_ELECTRIC_TERRAIN,
     },
 
     [B_TERRAIN_PSYCHIC] = {
-        .extender = HOLD_EFFECT_TERRAIN_EXTENDER,
-        .seed = HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN,
         .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
+        .secretPowerAnimation = gBattleAnimMove_Confusion,
+        .secretPowerEffect = SECRET_POWER_SPD_MINUS_1,
+        .camouflageType = TYPE_PSYCHIC,
+        .battleBackground = BG_PSYCHIC_TERRAIN,
     },
 };
 
