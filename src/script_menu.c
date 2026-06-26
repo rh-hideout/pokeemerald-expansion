@@ -1375,7 +1375,7 @@ static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
     u8 numberBuffer[32];
     u8 formattedBuffer[256];
 
-    ConvertIntToDecimalStringN( numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, CountDigits(input.max));
+    ConvertIntToDecimalStringN(numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, CountDigits(input.max));
 
     formattedBuffer[0] = EOS;
 
