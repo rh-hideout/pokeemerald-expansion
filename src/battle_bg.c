@@ -1359,18 +1359,18 @@ bool8 LoadChosenBattleElement(u8 caseId)
 
 void DrawTerrainTypeBattleBackground(void)
 {
-    switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    switch (gFieldTimers.terrain)
     {
-    case STATUS_FIELD_GRASSY_TERRAIN:
+    case B_TERRAIN_GRASSY:
         LoadMoveBg(BG_GRASSY_TERRAIN);
         break;
-    case STATUS_FIELD_MISTY_TERRAIN:
+    case B_TERRAIN_MISTY:
         LoadMoveBg(BG_MISTY_TERRAIN);
         break;
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
+    case B_TERRAIN_ELECTRIC:
         LoadMoveBg(BG_ELECTRIC_TERRAIN);
         break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
+    case B_TERRAIN_PSYCHIC:
         LoadMoveBg(BG_PSYCHIC_TERRAIN);
         break;
     default:
