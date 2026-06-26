@@ -60,6 +60,7 @@
 #include "script_pokemon_util.h"
 #include "secret_base.h"
 #include "sound.h"
+#include "sprite.h"
 #include "start_menu.h"
 #include "string_util.h"
 #include "task.h"
@@ -194,7 +195,6 @@ static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
 
-static void *sUnusedOverworldCallback;
 static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
 // This callback is called with a player's key code. It then returns an
 // adjusted key code, effectively intercepting the input before anything
@@ -811,11 +811,6 @@ void SetWarpDestinationToFixedHoleWarp(s16 x, s16 y)
 static void SetWarpDestinationToContinueGameWarp(void)
 {
     sWarpDestination = gSaveBlock1Ptr->continueGameWarp;
-}
-
-void SetContinueGameWarp(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
-{
-    SetWarpData(&gSaveBlock1Ptr->continueGameWarp, mapGroup, mapNum, warpId, x, y);
 }
 
 void SetContinueGameWarpToHealLocation(u8 healLocationId)
@@ -1885,12 +1880,6 @@ void CB2_Overworld(void)
 void SetMainCallback1(MainCallback cb)
 {
     gMain.callback1 = cb;
-}
-
-// This function is never called.
-void SetUnusedCallback(void *func)
-{
-    sUnusedOverworldCallback = func;
 }
 
 static bool8 RunFieldCallback(void)
@@ -3703,7 +3692,6 @@ bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId)
 
 EWRAM_DATA static u8 sHeaderBoxWindowId = 0;
 EWRAM_DATA u8 sItemIconSpriteId = 0;
-EWRAM_DATA u8 sItemIconSpriteId2 = 0;
 
 static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash);
 static void DestroyItemIconSprite(void);
@@ -3822,7 +3810,6 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
 {
     s16 x = 0, y = 0;
     u8 iconSpriteId;
-    u8 spriteId2 = MAX_SPRITES;
 
     if (flash)
     {
@@ -3831,8 +3818,10 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
     }
 
     iconSpriteId = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
+
     if (flash)
-        spriteId2 = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
+        gSprites[iconSpriteId].copyToObjWin = TRUE;
+
     if (iconSpriteId != MAX_SPRITES)
     {
         if (!firstTime)
@@ -3853,15 +3842,6 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
         gSprites[iconSpriteId].oam.priority = 0;
     }
 
-    if (spriteId2 != MAX_SPRITES)
-    {
-        gSprites[spriteId2].x2 = x;
-        gSprites[spriteId2].y2 = y;
-        gSprites[spriteId2].oam.priority = 0;
-        gSprites[spriteId2].oam.objMode = ST_OAM_OBJ_WINDOW;
-        sItemIconSpriteId2 = spriteId2;
-    }
-
     sItemIconSpriteId = iconSpriteId;
 }
 
@@ -3871,12 +3851,6 @@ static void DestroyItemIconSprite(void)
     FreeSpritePaletteByTag(ITEM_TAG);
     FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId]);
     DestroySprite(&gSprites[sItemIconSpriteId]);
-
-    if ((GetFlashLevel() > 0 || InBattlePyramid()) && sItemIconSpriteId2 != MAX_SPRITES)
-    {
-        FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId2]);
-        DestroySprite(&gSprites[sItemIconSpriteId2]);
-    }
 }
 
 // returns old sHoursOverride
@@ -3886,12 +3860,6 @@ u16 SetTimeOfDay(u16 hours)
     sHoursOverride = hours;
     gTimeUpdateCounter = 0;
     return oldHours;
-}
-
-bool8 ScrFunc_settimeofday(struct ScriptContext *ctx)
-{
-    SetTimeOfDay(ScriptReadByte(ctx));
-    return FALSE;
 }
 
 // Credits

@@ -67,6 +67,8 @@ SINGLE_BATTLE_TEST("Tera Blast has correct effectiveness for every Tera Type")
     } SCENE {
         if (species == SPECIES_GASTLY && type == TYPE_NORMAL)
             MESSAGE("It doesn't affect the opposing Gastly…");
+        else if (species == SPECIES_SNEASEL && type == TYPE_FIGHTING)
+            MESSAGE("It's extremely effective!");
         else
             MESSAGE("It's super effective!");
     }

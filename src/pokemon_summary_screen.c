@@ -334,7 +334,7 @@ static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 te
 static u8 IncrementSkillsStatsMode(u8 mode);
 static void ClearStatLabel(u32 length, u32 statsCoordX, u32 statsCoordY);
 u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat);
-static void UpdateMoveRelearnerState(bool32 goingDown);
+static void UpdateMoveRelearnerState();
 static void UpdateRelearnPrompt(void);
 static struct BoxPokemon *GetCurrentBoxmon(void);
 
@@ -768,14 +768,6 @@ static const TaskFunc sTextPrinterTasks[] =
 };
 
 static const u8 sText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
-
-static const u8 *const sRelearnTexts[MOVE_RELEARNER_COUNT] =
-{
-    [MOVE_RELEARNER_LEVEL_UP_MOVES] = COMPOUND_STRING("{START_BUTTON} RELEARN LEVEL"),
-    [MOVE_RELEARNER_EGG_MOVES] =      COMPOUND_STRING("{START_BUTTON} RELEARN EGG"),
-    [MOVE_RELEARNER_TM_MOVES] =       COMPOUND_STRING("{START_BUTTON} RELEARN TM"),
-    [MOVE_RELEARNER_TUTOR_MOVES] =    COMPOUND_STRING("{START_BUTTON} RELEARN TUTOR"),
-};
 
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
 static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
@@ -1360,7 +1352,7 @@ static bool8 LoadGraphics(void)
         gMain.state++;
         break;
     case 15:
-        UpdateMoveRelearnerState(FALSE);
+        UpdateMoveRelearnerState();
         PutPageWindowTilemaps(sMonSummaryScreen->currPageIndex);
         gMain.state++;
         break;
@@ -1741,18 +1733,6 @@ static void HandleMoveRelearnerInput(u8 taskId)
         PlaySE(SE_SELECT);
         BeginCloseSummaryScreen(taskId);
     }
-    else if (JOY_NEW(R_BUTTON)) // R means increase. Level -> Egg -> TM -> Tutor
-    {
-        gMoveRelearnerState++;
-        UpdateMoveRelearnerState(FALSE);
-        PlaySE(SE_SELECT);
-    }
-    else if (JOY_NEW(L_BUTTON)) // L means decrease. Level <- Egg <- TM <- Tutor
-    {
-        gMoveRelearnerState--;
-        UpdateMoveRelearnerState(TRUE);
-        PlaySE(SE_SELECT);
-    }
 }
 
 static void Task_HandleInput(u8 taskId)
@@ -1944,14 +1924,13 @@ bool32 HasAnyRelearnableMoves(enum MoveRelearnerStates state)
     return CanBoxMonRelearnMoves(GetCurrentBoxmon(), state);
 }
 
-static void UpdateMoveRelearnerState(bool32 goingDown)
+static void UpdateMoveRelearnerState(void)
 {
-    s32 state;
-
+    u32 state;
     sMonSummaryScreen->hasRelearnableMoves = FALSE;
     for (u32 i = 0; i < MOVE_RELEARNER_COUNT; i++)
     {
-        state = (gMoveRelearnerState + i * (goingDown ? -1 : 1)) % MOVE_RELEARNER_COUNT;
+        state = (gMoveRelearnerState + i) % MOVE_RELEARNER_COUNT;
         if (HasAnyRelearnableMoves(state))
         {
             sMonSummaryScreen->hasRelearnableMoves = TRUE;
@@ -2048,7 +2027,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
         if (P_SUMMARY_SCREEN_MOVE_RELEARNER && IS_MOVE_PAGE(sMonSummaryScreen->currPageIndex))
         {
             gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
-            UpdateMoveRelearnerState(FALSE);
+            UpdateMoveRelearnerState();
         }
         break;
     case 5:
@@ -4866,10 +4845,7 @@ static void UpdateRelearnPrompt(void)
         return;
 
     const u8 *relearnText;
-    if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER || FlagGet(P_FLAG_EGG_MOVES) || FlagGet(P_FLAG_TUTOR_MOVES))
-        relearnText = sRelearnTexts[gMoveRelearnerState];
-    else
-        relearnText = sText_Relearn;
+    relearnText = sText_Relearn;
 
     s32 relearnTextXPos = GetStringRightAlignXOffset(FONT_SMALL, relearnText, TILE_WIDTH * sSummaryTemplate[PSS_LABEL_WINDOW_PROMPT_RELEARN].width);
     PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PROMPT_RELEARN, relearnText, relearnTextXPos, 4, 0, 0, FONT_SMALL);

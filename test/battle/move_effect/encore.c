@@ -334,3 +334,79 @@ DOUBLE_BATTLE_TEST("Encore allows choosing an opponent target (Gen 5+)")
         HP_BAR(opponentRight);
     }
 }
+
+SINGLE_BATTLE_TEST("Encore into Fake Out results in Struggle (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_CHAMPIONS);
+        ASSUME(gMovesInfo[MOVE_FAKE_OUT].effect == EFFECT_FIRST_TURN_ONLY);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FAKE_OUT); MOVE(opponent, MOVE_ENCORE); }
+        TURN { FORCED_MOVE(player); };
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Encore uses the priority of the selected move on the turn the target is Encored (Gen9)")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_9);
+        PLAYER(SPECIES_WHIMSICOTT) { Ability(ABILITY_PRANKSTER); Speed(500); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); };
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); };
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft);
+            MOVE(opponentLeft, MOVE_QUICK_ATTACK, target: playerRight);
+        }
+    } SCENE {
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Encore uses the priority of the Encored move on the turn the target is Encored instead of the selected move (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WHIMSICOTT) { Ability(ABILITY_PRANKSTER); Speed(500); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); };
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); };
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft);
+            MOVE(opponentLeft, MOVE_QUICK_ATTACK, target: playerRight);
+        }
+    } SCENE {
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}

@@ -541,7 +541,8 @@ struct PartyState
     enum Species changedSpecies:11; // For forms when multiple mons can change into the same Pokémon.
     u32 sentOut:1;
     u32 isKnockedOff:1;
-    u32 padding:8;
+    u32 freezeTurns:2;
+    u32 padding:6;
     enum Item usedHeldItem;
 };
 
@@ -702,7 +703,7 @@ struct BattleStruct
     u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
-    u8 calculatedDamageDone:1;
+    u8 unused4:1;
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:3;
@@ -717,14 +718,13 @@ struct BattleStruct
     u32 incrementEchoedVoice:1;
     u32 echoedVoiceCounter:3;
     u32 attackAnimPlayed:1;
-    u32 preAttackEffectHappened:1;
     u32 magicCoatPending:6;
     u32 magicBouncePending:6;
     u32 bouncedMoveIsUsed:1;
     u32 dancerSavedAttacker:3;
     u32 dancerSavedTarget:3;
     u32 statChangeBattler:3;
-    u32 padding5:4;
+    u32 padding5:5;
     u8 statChangeMoveAnim:1;
     u8 tidyUpActivates:1;
     u8 positiveAnimPlayed:1;

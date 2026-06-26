@@ -425,10 +425,18 @@ static void CB2_InitLearnMoveReturnFromSelectMove(void)
     SetMainCallback2(CB2_InitLearnMove_Basic);
 }
 
+static bool32 GameHasDifferentRelearners(void)
+{
+    if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER)
+        return TRUE;
+    if (P_FLAG_EGG_MOVES || P_FLAG_TUTOR_MOVES)
+        return TRUE;
+    return FALSE;
+}
+
 static void StoreMoveText(void)
 {
-    if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER
-    || FlagGet(P_FLAG_EGG_MOVES) || FlagGet(P_FLAG_TUTOR_MOVES))
+    if (GameHasDifferentRelearners() || gRelearnMode == RELEARN_MODE_SCRIPT)
         StringCopy(gStringVar3, sRelearnTypes[gMoveRelearnerState].moveText);
     else
         StringCopy(gStringVar3, MoveRelearner_Text_MoveLWR);
@@ -508,6 +516,16 @@ static void UIShowMoveList(u8 taskId)
     FreeMoveRelearnerResources();
 }
 
+static void RedrawMoveList(void)
+{
+    CreateLearnableMovesList();
+    if (sMoveRelearnerScrollState.listOffset > sMoveRelearnerStruct->numMenuChoices - sMoveRelearnerStruct->numToShowAtOnce)
+        sMoveRelearnerScrollState.listOffset = sMoveRelearnerStruct->numMenuChoices - sMoveRelearnerStruct->numToShowAtOnce;
+    DestroyListMenuTask(sMoveRelearnerStruct->moveListMenuTask, NULL, NULL);
+    sMoveRelearnerStruct->moveListMenuTask = ListMenuInit(&gMultiuseListMenuTemplate, sMoveRelearnerScrollState.listOffset, sMoveRelearnerScrollState.listRow);
+    ShowTeachMoveText();
+}
+
 static void UIEndTask(u8 taskId)
 {
     if (gSpecialVar_Result == TRUE && ShouldConsumeTmItem(gTasks[taskId].tMove))
@@ -523,11 +541,9 @@ static void UIEndTask(u8 taskId)
         return;
     }
     if (gSpecialVar_Result == TRUE)
-    {
-        CreateLearnableMovesList();
-        RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
-    }
-    ShowTeachMoveText();
+        RedrawMoveList();
+    else
+        ShowTeachMoveText();
     AddScrollArrows();
     gTasks[taskId].func = Task_MoveRelearner_HandleInput;
 }
@@ -602,6 +618,23 @@ static void Task_MoveRelearner_LearnMove(u8 taskId)
     gTasks[taskId].tState = LearnMove(&sMoveLearnUI, taskId);
 }
 
+static bool32 UpdateMoveRelearnerState(void)
+{
+    u32 state;
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    for (u32 i = 1; i < MOVE_RELEARNER_COUNT; i++)
+    {
+        state = (gMoveRelearnerState + i) % MOVE_RELEARNER_COUNT;
+        if (CanBoxMonRelearnMoves(boxmon, state))
+        {
+            gMoveRelearnerState = state;
+            StoreMoveText();
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 static void Task_MoveRelearner_HandleInput(u8 taskId)
 {
     s32 itemId = ListMenu_ProcessInput(sMoveRelearnerStruct->moveListMenuTask);
@@ -610,7 +643,21 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
     switch (itemId)
     {
     case LIST_NOTHING_CHOSEN:
-        if (!C_HIDE_CONTEST_DATA)
+        if (JOY_NEW(SELECT_BUTTON) && gRelearnMode != RELEARN_MODE_SCRIPT)
+        {
+            if (UpdateMoveRelearnerState())
+            {
+                PlaySE(SE_SUCCESS);
+                sMoveRelearnerScrollState.listOffset = 0;
+                sMoveRelearnerScrollState.listRow = 0;
+                RedrawMoveList();
+            }
+            else if (GameHasDifferentRelearners())
+            {
+                PlaySE(SE_FAILURE);
+            }
+        }
+        else if (!C_HIDE_CONTEST_DATA)
         {
             if (!(JOY_NEW(DPAD_LEFT | DPAD_RIGHT)) && !GetLRKeysPressed())
                 break;
@@ -631,10 +678,11 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
             MoveRelearnerShowHideHearts(GetCurrentSelectedMove());
 
             ScheduleBgCopyTilemapToVram(1);
+
+            if (B_SHOW_CATEGORY_ICON == TRUE)
+                MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
+            AddScrollArrows();
         }
-        if (B_SHOW_CATEGORY_ICON == TRUE)
-            MoveRelearnerShowHideCategoryIcon(GetCurrentSelectedMove());
-        AddScrollArrows();
         break;
     case LIST_CANCEL:
         PlaySE(SE_SELECT);
@@ -969,20 +1017,6 @@ void Special_HasMoveToRelearn(void)
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
-}
-
-bool32 CanBoxMonRelearnAnyMove(struct BoxPokemon *boxMon)
-{
-    if (GetBoxMonData(boxMon, MON_DATA_IS_EGG))
-        return FALSE;
-    for (u32 i = MOVE_RELEARNER_LEVEL_UP_MOVES; i < MOVE_RELEARNER_COUNT; i++)
-    {
-        if (!sRelearnTypes[i].isActive())
-            continue;
-        if (sRelearnTypes[i].hasMoveToRelearn(boxMon))
-            return TRUE;
-    }
-    return FALSE;
 }
 
 bool32 CanBoxMonRelearnMoves(struct BoxPokemon *boxMon, enum MoveRelearnerStates state)

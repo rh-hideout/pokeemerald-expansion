@@ -257,10 +257,8 @@ enum VolatileFlags
     F(VOLATILE_SMACK_DOWN,                  smackDown,                     (u32, 1)) \
     F(VOLATILE_TELEKINESIS,                 telekinesis,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MIRACLE_EYE,                 miracleEye,                    (u32, 1)) \
-    F(VOLATILE_MAGNET_RISE,                 magnetRise,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_HEAL_BLOCK,                  healBlock,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
     F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_NO_RETREAT,                  noRetreat,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_VESSEL_OF_RUIN,              vesselOfRuin,                  (u32, 1)) \
@@ -293,7 +291,7 @@ enum VolatileFlags
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
     F(VOLATILE_SLOW_START_TIMER,            slowStartTimer,                (u32, B_SLOW_START_TIMER)) \
     F(VOLATILE_EMBARGO_TIMER,               embargoTimer,                  (u32, B_EMBARGO_TIMER)) \
-    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER)) \
+    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER), V_BATON_PASSABLE) \
     F(VOLATILE_TELEKINESIS_TIMER,           telekinesisTimer,              (u32, B_TELEKINESIS_TIMER)) \
     F(VOLATILE_HEAL_BLOCK_TIMER,            healBlockTimer,                (u32, B_HEAL_BLOCK_TIMER)) \
     F(VOLATILE_TAUNT_TIMER,                 tauntTimer,                    (u32, B_TAUNT_TIMER)) \
@@ -327,7 +325,8 @@ enum VolatileFlags
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
     F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
-    F(VOLATILE_TRACE_ACTIVATED,             traceActivated,                (u32, 1))
+    F(VOLATILE_TRACE_ACTIVATED,             traceActivated,                (u32, 1)) \
+    F(VOLATILE_SPEED_SWAP,                  speedSwapped,                  (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -467,8 +466,12 @@ enum TypeSideHazard
 #define MOVE_RESULT_MIRROR_ARMOR_PENDING   (1 << 14)
 #define MOVE_RESULT_STAT_CHANGED           (1 << 15)
 #define MOVE_RESULT_PROTECTED              (1 << 16)
+#define MOVE_RESULT_EXTREMELY_EFFECTIVE    (1 << 17)
+#define MOVE_RESULT_MOSTLY_INEFFECTIVE     (1 << 18)
 #define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
 #define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
+#define MOVE_RESULT_HIGH_EFFECTIVENESS     (MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE)
+#define MOVE_RESULT_LOW_EFFECTIVENESS      (MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE)
 
 enum BattleWeather
 {
@@ -519,7 +522,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FROSTBITE = 7,
     MOVE_EFFECT_CONFUSION,
     MOVE_EFFECT_FLINCH,
-    MOVE_EFFECT_TRI_ATTACK,
+    MOVE_EFFECT_RANDOM_FROM_LIST, // Uses randomMoveEffects to determine what to select
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
     MOVE_EFFECT_WRAP,
@@ -545,7 +548,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_RECOIL_HP_25,
     MOVE_EFFECT_TRAP_BOTH,
     MOVE_EFFECT_ROUND,
-    MOVE_EFFECT_DIRE_CLAW,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_FLORAL_HEALING,
     MOVE_EFFECT_SECRET_POWER,

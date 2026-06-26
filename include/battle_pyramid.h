@@ -14,8 +14,6 @@ bool8 InBattlePyramid(void);
 void PausePyramidChallenge(void);
 void SoftResetInBattlePyramid(void);
 void CopyPyramidTrainerSpeechBefore(u16 trainerId);
-void CopyPyramidTrainerWinSpeech(u16 trainerId);
-void CopyPyramidTrainerLoseSpeech(u16 trainerId);
 u8 GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId);
 void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition);
 void LoadBattlePyramidObjectEventTemplates(void);
