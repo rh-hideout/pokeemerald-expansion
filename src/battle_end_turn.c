@@ -71,8 +71,8 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
         if (B_CHARGE < GEN_9 && gBattleMons[i].volatiles.chargeTimer > 0)
             gBattleMons[i].volatiles.chargeTimer--;
 
-        if (gBattleMons[i].volatiles.laserFocusTimer > 0 && --gBattleMons[i].volatiles.laserFocusTimer == 0)
-            gBattleMons[i].volatiles.laserFocus = FALSE;
+        if (gBattleMons[i].volatiles.laserFocusTimer > 0)
+            gBattleMons[i].volatiles.laserFocusTimer--;
 
         gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
@@ -850,7 +850,6 @@ static bool32 HandleEndTurnMagnetRise(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.magnetRiseTimer > 0 && --gBattleMons[battler].volatiles.magnetRiseTimer == 0)
     {
-        gBattleMons[battler].volatiles.magnetRise = FALSE;
         BattleScriptCall(BattleScript_BufferEndTurn);
         PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_ELECTROMAGNETISM);
         effect = TRUE;
