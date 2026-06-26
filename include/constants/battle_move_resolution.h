@@ -20,6 +20,17 @@ enum CancelerResult
     CANCELER_RESULT_END, // prevents going into canceler again
 };
 
+enum TargeFailure
+{
+    TARGET_FAILURE_SEMI_INVULNERABILITY,
+    TARGET_FAILURE_PSYICHIC_TERRAIN,
+    TARGET_FAILURE_PROTECT,
+    TARGET_FAILURE_BOUNCE,
+    TARGET_FAILURE_TARGET_BLOCKED,
+    TARGET_FAILUE_MOVE, // Sky Drop, Synchronoise
+    TARGET_FAILURE_EFFECTIVENESS,
+};
+
 enum CancelerState
 {
     CANCELER_STANCE_CHANGE_1,
