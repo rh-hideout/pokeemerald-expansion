@@ -2916,14 +2916,12 @@ static bool32 TryDancer(void)
     return FALSE;
 }
 
-static bool32 IsCommanderBlockedByGimmick(enum BattlerId battler)
+static bool32 ShouldCommanderCancelPendingGimmick(enum BattlerId battler)
 {
     enum Gimmick selectedGimmick = gBattleStruct->gimmick.usableGimmick[battler];
 
-    if (!(gBattleStruct->gimmick.toActivate & (1u << battler)))
-        return FALSE;
-
-    return selectedGimmick == GIMMICK_MEGA || selectedGimmick == GIMMICK_TERA;
+    return (gBattleStruct->gimmick.toActivate & (1u << battler))
+        && (selectedGimmick == GIMMICK_MEGA || selectedGimmick == GIMMICK_TERA);
 }
 
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
@@ -4648,7 +4646,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !HasPartnerTrainer(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
-             && !IsCommanderBlockedByGimmick(battler)
              && (gChosenActionByBattler[battler] != B_ACTION_SWITCH || HasBattlerActedThisTurn(battler))
              && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
@@ -4658,6 +4655,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
                 gBattleStruct->battlerState[partner].commanderSpecies = gBattleMons[battler].species;
                 gBattleMons[battler].volatiles.semiInvulnerable = STATE_COMMANDER;
+                if (ShouldCommanderCancelPendingGimmick(battler))
+                    gBattleStruct->gimmick.toActivate &= ~(1u << battler);
                 if (gBattleMons[battler].volatiles.confusionTurns > 0 && !gBattleMons[battler].volatiles.infiniteConfusion)
                     gBattleMons[battler].volatiles.confusionTurns--;
                 BtlController_EmitSpriteInvisibility(battler, B_COMM_TO_CONTROLLER, TRUE);

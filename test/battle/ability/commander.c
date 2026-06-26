@@ -705,7 +705,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Tatsugiri is about to switch 
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander will not activate if Tatsugiri is about to Mega Evolve")
+DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Mega Evolution")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Item(ITEM_TATSUGIRINITE); }
@@ -719,15 +719,16 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Tatsugiri is about to Mega Ev
             SWITCH(playerRight, 2);
         }
     } SCENE {
-        NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
     } THEN {
-        EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI_CURLY_MEGA);
+        EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI);
         EXPECT_EQ(playerRight->species, SPECIES_DONDOZO);
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander will not activate if Tatsugiri is about to Terastallize")
+DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Terastallization")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); TeraType(TYPE_FIRE); }
@@ -741,9 +742,12 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Tatsugiri is about to Terasta
             SWITCH(playerRight, 2);
         }
     } SCENE {
-        NOT ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
+        }
     } THEN {
         EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI);
         EXPECT_EQ(playerRight->species, SPECIES_DONDOZO);
