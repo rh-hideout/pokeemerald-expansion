@@ -1150,11 +1150,11 @@ static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 checkResultFlag)
+static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
         return TRUE;
-    if (checkResultFlag && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
         return TRUE;
     if (GetConfig(B_CHECK_USER_FAILURE) >= GEN_5 && battlerAtk == battlerDef)
         return TRUE;
@@ -1352,7 +1352,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef))
             continue;
 
         switch (cv->moveEffect)
@@ -1529,8 +1529,8 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
     {
         if (!IsBattlerAlive(battler) || IsBattlerAlly(cv->battlerAtk, battler))
             continue;
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler, TRUE)
-         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(cv->battlerAtk, BATTLE_PARTNER(battler), TRUE))) // either battler or partner is affected
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler)
+         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(cv->battlerAtk, BATTLE_PARTNER(battler)))) // either battler or partner is affected
             continue;
 
         ability = cv->abilities[battler];
@@ -2007,7 +2007,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             if (!CanBreakThroughSemiInvulnerablity(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move))
@@ -2021,7 +2021,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
-    case TARGET_FAILURE_PSYICHIC_TERRAIN:
+    case TARGET_FAILURE_PSYCHIC_TERRAIN:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
             cv->battlerDef = ctx.battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
@@ -2029,7 +2029,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             if (CanPsychicTerrainProtectTarget(&ctx, movePriority))
@@ -2048,7 +2048,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             if (IsBattlerProtected(cv))
@@ -2068,7 +2068,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         {
             cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             if (!IsSemiInvulnerable(cv->battlerDef, CHECK_ALL) && CanBattlerBounceBackMove(cv))
@@ -2095,7 +2095,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             if (CanMoveBeBlockedByTarget(&ctx, movePriority))
@@ -2114,7 +2114,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             switch (cv->moveEffect)
@@ -2149,7 +2149,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
             ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
@@ -2268,7 +2268,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
         gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
             continue;
 
         if (DoesMoveMissTarget(cv))
@@ -2487,7 +2487,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
             if (isSelf != additionalEffect->self)
                 continue;
 
-            if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler, TRUE))
+            if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler))
                 continue;
 
             u32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
@@ -2545,7 +2545,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef))
             continue;
 
         ctx.battlerDef = battlerDef;
