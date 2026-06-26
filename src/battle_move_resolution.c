@@ -1961,10 +1961,11 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->moveType = GetBattleMoveType(cv->move);
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
-    ctx->abilities[ctx->battlerAtk] = cv->abilities[cv->battlerAtk];
-    ctx->abilities[ctx->battlerDef] = cv->abilities[cv->battlerDef];
-    ctx->holdEffects[ctx->battlerAtk] = cv->holdEffects[cv->battlerAtk];
-    ctx->holdEffects[ctx->battlerDef] = cv->holdEffects[cv->battlerDef];
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        ctx->abilities[battler] = cv->abilities[battler];
+        ctx->holdEffects[battler] = cv->holdEffects[battler];
+    }
 }
 
 static bool32 IsTargetUnaffectedByDreamEater(struct BattleCalcValues *cv)
@@ -1993,6 +1994,9 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
     s32 movePriority = GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
 
+    struct DamageContext ctx = {0};
+    SetDamageContextValues(&ctx, cv);
+
     switch (gBattleStruct->eventState.moveEndBlock)
     {
     case TARGET_FAILURE_SEMI_INVULNERABILITY:
@@ -2020,16 +2024,13 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     case TARGET_FAILURE_PSYICHIC_TERRAIN:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
-            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+            cv->battlerDef = ctx.battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
 
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
                 continue;
-
-            struct DamageContext ctx = {0};
-            SetDamageContextValues(&ctx, cv);
 
             if (CanPsychicTerrainProtectTarget(&ctx, movePriority))
             {
@@ -2089,16 +2090,13 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     case TARGET_FAILURE_TARGET_BLOCKED:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
-            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+            cv->battlerDef = ctx.battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
 
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
                 continue;
-
-            struct DamageContext ctx = {0};
-            SetDamageContextValues(&ctx, cv);
 
             if (CanMoveBeBlockedByTarget(&ctx, movePriority))
             {
@@ -2108,7 +2106,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
-    case TARGET_FAILUE_MOVE:
+    case TARGET_FAILURE_MOVE:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
             cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
@@ -2146,7 +2144,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     case TARGET_FAILURE_EFFECTIVENESS:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
-            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+            cv->battlerDef = ctx.battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
 
             if (moveTarget == TARGET_OPPONENTS_FIELD)
                 continue;
@@ -2154,8 +2152,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, TRUE))
                 continue;
 
-            struct DamageContext ctx = {0};
-            SetDamageContextValues(&ctx, cv);
             ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
             if (ctx.abilityBlocked)
