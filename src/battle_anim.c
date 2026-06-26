@@ -439,24 +439,10 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
 
         if (sBattleAnimScriptPtr == gBattleAnimMove_SecretPower)
         {
-            switch (gFieldTimers.terrain)
-            {
-            case B_TERRAIN_MISTY:
-                sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
-                break;
-            case B_TERRAIN_GRASSY:
-                sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
-                break;
-            case B_TERRAIN_ELECTRIC:
-                sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
-                break;
-            case B_TERRAIN_PSYCHIC:
-                sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
-                break;
-            default:
+            if (gFieldTimers.terrain != B_TERRAIN_NONE)
+                sBattleAnimScriptPtr = gBattleTerrainInfo[gFieldTimers.terrain].secretPowerAnimation;
+            else
                 sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
-                break;
-            }
         }
         break;
     case ANIM_TYPE_STATUS:

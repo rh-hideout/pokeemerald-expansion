@@ -2725,7 +2725,10 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_SECRET_POWER:
         if (IsBattlerAlive(battlerAtk))
         {
-            moveEffect = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect;
+            if (gFieldTimers.terrain != B_TERRAIN_NONE)
+                moveEffect = gBattleTerrainInfo[gFieldTimers.terrain].secretPowerEffect;
+            else
+                moveEffect = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect;
 
             bool32 statDown = FALSE;
             switch (moveEffect)
@@ -2751,29 +2754,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 statDown = TRUE;
                 break;
             default:
-                break;
-            }
-
-            switch (gFieldTimers.terrain)
-            {
-            case B_TERRAIN_MISTY:
-                SetStatChange(effectBattler, STAT_SPATK, -1);
-                statDown = TRUE;
-                break;
-            case B_TERRAIN_GRASSY:
-                moveEffect = MOVE_EFFECT_SLEEP;
-                break;
-            case B_TERRAIN_ELECTRIC:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
-                break;
-            case B_TERRAIN_PSYCHIC:
-                SetStatChange(effectBattler, STAT_SPEED, -1);
-                statDown = TRUE;
-                break;
-            case B_TERRAIN_NONE:
-                break;
-            default:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
                 break;
             }
 
@@ -9507,24 +9487,11 @@ static void Cmd_settypetoenvironment(void)
     CMD_ARGS(const u8 *failInstr);
 
     u8 environmentType;
-    switch (gFieldTimers.terrain)
-    {
-    case B_TERRAIN_ELECTRIC:
-        environmentType = TYPE_ELECTRIC;
-        break;
-    case B_TERRAIN_GRASSY:
-        environmentType = TYPE_GRASS;
-        break;
-    case B_TERRAIN_MISTY:
-        environmentType = TYPE_FAIRY;
-        break;
-    case B_TERRAIN_PSYCHIC:
-        environmentType = TYPE_PSYCHIC;
-        break;
-    default:
+
+    if (gFieldTimers.terrain != B_TERRAIN_NONE)
+        environmentType = gBattleTerrainInfo[gFieldTimers.terrain].camouflageType;
+    else
         environmentType = gBattleEnvironmentInfo[gBattleEnvironment].camouflageType;
-        break;
-    }
 
     if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, environmentType) && GetActiveGimmick(gBattlerAttacker) != GIMMICK_TERA)
     {
