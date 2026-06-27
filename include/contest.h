@@ -310,6 +310,10 @@ struct ContestCategory
     const u8 *negativeTrait;
     u8 palette;
     u16 tile;
+    u8 stdString;
+    const u8 *text;
+    u8 tvShowState;
+    u8 tvShowStateExciting;
 };
 
 extern const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1];

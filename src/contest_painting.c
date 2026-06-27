@@ -58,15 +58,6 @@ static const u32 sPictureFrameTilemap_Smart[]     = INCGFX_U32("graphics/picture
 static const u32 sPictureFrameTilemap_Tough[]     = INCGFX_U32("graphics/picture_frame/tough_map.bin", ".smolTM");
 static const u32 sPictureFrameTilemap_HallLobby[] = INCGFX_U32("graphics/picture_frame/lobby_map.bin", ".smolTM");
 
-static const u8 *const sContestCategoryNames_Unused[] =
-{
-    [CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("COOLNESS"),
-    [CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("BEAUTY"),
-    [CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("CUTENESS"),
-    [CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("SMARTNESS"),
-    [CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("TOUGHNESS"),
-};
-
 static const u8 *const sContestRankNames[] =
 {
     [CONTEST_RANK_NORMAL] = COMPOUND_STRING("NORMAL RANK"),

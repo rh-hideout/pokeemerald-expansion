@@ -683,6 +683,10 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .negativeTrait = COMPOUND_STRING("shyness"),
         .palette = 13,
         .tile = 0x4040,
+        .stdString = STDSTRING_COOL,
+        .text = gText_Cool,
+        .tvShowState = CONTESTLIVE_STATE_COOL,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_COOL,
     },
 
     [CONTEST_CATEGORY_BEAUTY] =
@@ -693,6 +697,10 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .negativeTrait = COMPOUND_STRING("anxiety"),
         .palette = 14,
         .tile = 0x4045,
+        .stdString = STDSTRING_BEAUTY,
+        .text = gText_Beauty,
+        .tvShowState = CONTESTLIVE_STATE_BEAUTIFUL,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_BEAUTIFUL,
     },
 
     [CONTEST_CATEGORY_CUTE] =
@@ -703,6 +711,10 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .negativeTrait = COMPOUND_STRING("laziness"),
         .palette = 14,
         .tile = 0x404A,
+        .stdString = STDSTRING_CUTE,
+        .text = gText_Cute,
+        .tvShowState = CONTESTLIVE_STATE_CUTE,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_CUTE,
     },
 
     [CONTEST_CATEGORY_SMART] =
@@ -713,6 +725,10 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .negativeTrait = COMPOUND_STRING("hesitancy"),
         .palette = 15,
         .tile = 0x406A,
+        .stdString = STDSTRING_SMART,
+        .text = gText_Smart,
+        .tvShowState = CONTESTLIVE_STATE_SMART,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_SMART,
     },
 
     [CONTEST_CATEGORY_TOUGH] =
@@ -723,6 +739,10 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .negativeTrait = COMPOUND_STRING("fear"),
         .palette = 13,
         .tile = 0x408A,
+        .stdString = STDSTRING_TOUGH,
+        .text = gText_Tough,
+        .tvShowState = CONTESTLIVE_STATE_TOUGH,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_TOUGH,
     },
 
     [CONTEST_CATEGORIES_COUNT] =
