@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
         HP_BAR(player, captureDamage: &hits[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
+        MESSAGE("Wobbuffet lost some of its HP!");
         HP_BAR(player, captureDamage: &hits[1]);
     } THEN {
         EXPECT_MUL_EQ(hits[0], Q_4_12(2.0), hits[1]);

@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <cctype>
 #include <cstdio>
 #include <cstdarg>
 #include <stdexcept>
@@ -32,26 +33,29 @@
 #include "string_parser.h"
 #include "io.h"
 
-CFile::CFile(const char * filenameCStr, bool isStdin)
+CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr)
 {
     if (isStdin)
-        m_filename = std::string{"<stdin>/"}.append(filenameCStr);
+        m_location.filename = std::string{"<stdin>/"}.append(filenameCStr);
     else
-        m_filename = std::string(filenameCStr);
+        m_location.filename = std::string(filenameCStr);
+    m_location.lineNum = 1;
+    m_location.acceptLineMarker = isStdin;
 
     m_buffer = ReadFileToBuffer(filenameCStr, isStdin, &m_size);
 
     m_pos = 0;
-    m_lineNum = 1;
     m_isStdin = isStdin;
+    m_graphicsRoot = graphicsRootCStr;
+    if (m_graphicsRoot.empty()) m_graphicsRoot = "./";
+    if (m_graphicsRoot[m_graphicsRoot.length() - 1] != '/') m_graphicsRoot.push_back('/');
 }
 
-CFile::CFile(CFile&& other) : m_filename(std::move(other.m_filename))
+CFile::CFile(CFile&& other) : m_location(std::move(other.m_location))
 {
     m_buffer = other.m_buffer;
     m_pos = other.m_pos;
     m_size = other.m_size;
-    m_lineNum = other.m_lineNum;
     m_isStdin = other.m_isStdin;
 
     other.m_buffer = NULL;
@@ -88,6 +92,66 @@ void CFile::Preproc()
 
     while (m_pos < m_size)
     {
+        if (m_location.acceptLineMarker)
+        {
+            if (m_buffer[m_pos] == '#')
+            {
+                long hashPos = m_pos;
+
+                long startPos;
+                long lineNum;
+                std::string filename;
+
+                m_pos++;
+
+                if (m_buffer[m_pos] != ' ')
+                    goto linemarker_error;
+                m_pos++;
+
+                startPos = m_pos;
+                if (!IsAsciiDigit(m_buffer[m_pos]))
+                    goto linemarker_error;
+                do
+                    m_pos++;
+                while (IsAsciiDigit(m_buffer[m_pos]));
+                lineNum = atol(&m_buffer[startPos]);
+
+                if (m_buffer[m_pos] != ' ')
+                    goto linemarker_error;
+                m_pos++;
+
+                if (m_buffer[m_pos] != '"')
+                    goto linemarker_error;
+                m_pos++;
+
+                startPos = m_pos;
+                while (m_pos < m_size && m_buffer[m_pos] != '"')
+                    m_pos++;
+                filename = std::string(&m_buffer[startPos], m_pos - startPos);
+
+                if (m_buffer[m_pos] != '"')
+                    goto linemarker_error;
+                m_pos++;
+
+                while (m_pos < m_size && m_buffer[m_pos] != '\n')
+                    m_pos++;
+                if (m_buffer[m_pos] != '\n')
+                    goto linemarker_error;
+                m_pos++;
+
+                m_location.lineNum = lineNum - 1;
+                m_location.filename = std::move(filename);
+linemarker_error:
+                m_location.acceptLineMarker = false;
+                // Re-parse this line so that it's available to cc1.
+                m_pos = hashPos;
+            }
+            else if (!IsAsciiWhitespace(m_buffer[m_pos]))
+            {
+                m_location.acceptLineMarker = false;
+            }
+        }
+
         if (stringChar)
         {
             if (m_buffer[m_pos] == stringChar)
@@ -105,7 +169,7 @@ void CFile::Preproc()
             else
             {
                 if (m_buffer[m_pos] == '\n')
-                    m_lineNum++;
+                    Newline();
                 putchar(m_buffer[m_pos]);
                 m_pos++;
             }
@@ -115,6 +179,7 @@ void CFile::Preproc()
             TryConvertString();
             TryConvertCompoundString();
             TryConvertIncbin();
+            TryConvertIncgfx();
 
             if (m_pos >= m_size)
                 break;
@@ -124,7 +189,7 @@ void CFile::Preproc()
             putchar(c);
 
             if (c == '\n')
-                m_lineNum++;
+                Newline();
             else if (c == '"')
                 stringChar = '"';
             else if (c == '\'')
@@ -142,7 +207,7 @@ void CFile::Preproc()
         // would have put after the section name.
         // This will not work with Clang, see
         // https://discourse.llvm.org/t/creating-shf-merge-shf-strings-section/86399
-        std::printf("static const unsigned char __attribute__((section(\".rodata.compound_string.%016lx,\\\"aM\\\",%%progbits,%ld @\"))) sCompoundString_%016lx[] = {", it.second, it.first.size(), it.second);
+        std::printf("static const unsigned char __attribute__((section(\".rodata.compound_string.%016" PRIx64 ",\\\"aM\\\",%%progbits,%ld @\"))) sCompoundString_%016" PRIx64 "[] = {", it.second, it.first.size(), it.second);
         if (it.first.size() > 0)
         {
             std::printf(" 0x%02X", it.first[0]);
@@ -171,7 +236,7 @@ bool CFile::ConsumeNewline()
     if (m_buffer[m_pos] == '\r' && m_buffer[m_pos + 1] == '\n')
     {
         m_pos += 2;
-        m_lineNum++;
+        Newline();
         putchar('\n');
         return true;
     }
@@ -179,12 +244,18 @@ bool CFile::ConsumeNewline()
     if (m_buffer[m_pos] == '\n')
     {
         m_pos++;
-        m_lineNum++;
+        Newline();
         putchar('\n');
         return true;
     }
 
     return false;
+}
+
+void CFile::Newline()
+{
+    m_location.lineNum++;
+    m_location.acceptLineMarker = m_isStdin;
 }
 
 void CFile::SkipWhitespace()
@@ -238,7 +309,7 @@ std::vector<unsigned char> CFile::ConvertString()
 void CFile::TryConvertString()
 {
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
     bool noTerminator = false;
 
     if (m_buffer[m_pos] != '_' || (m_pos > 0 && IsIdentifierChar(m_buffer[m_pos - 1])))
@@ -257,7 +328,7 @@ void CFile::TryConvertString()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -288,7 +359,7 @@ static std::uint64_t fnv1a(const std::vector<unsigned char>& bytes)
 void CFile::TryConvertCompoundString()
 {
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
     std::string ident = "COMPOUND_STRING";
 
     if ((m_pos > 0 && IsIdentifierChar(m_buffer[m_pos - 1])) || !CheckIdentifier(ident))
@@ -301,7 +372,7 @@ void CFile::TryConvertCompoundString()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -313,7 +384,7 @@ void CFile::TryConvertCompoundString()
     m_compoundStrings[converted] = hash;
     // WARNING: Assumes no collisions.
     // TODO: Incorporate filename to prevent cross-TU collisions.
-    printf("sCompoundString_%016lx", hash);
+    printf("sCompoundString_%016" PRIx64, hash);
 }
 
 bool CFile::CheckIdentifier(const std::string& ident)
@@ -325,6 +396,37 @@ bool CFile::CheckIdentifier(const std::string& ident)
             return false;
 
     return (i == ident.length());
+}
+
+std::string CFile::ReadString()
+{
+    if (m_buffer[m_pos] != '"')
+        RaiseError("expected '\"'");
+    m_pos++;
+
+    long startPos = m_pos;
+
+    while (m_buffer[m_pos] != '"')
+    {
+        if (m_buffer[m_pos] == 0)
+        {
+            if (m_pos >= m_size)
+                RaiseError("unexpected EOF in string");
+            else
+                RaiseError("unexpected null character in string");
+        }
+
+        if (m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
+            RaiseError("unexpected end of line character in string");
+
+        if (m_buffer[m_pos] == '\\')
+            RaiseError("unexpected escape in string");
+
+        m_pos++;
+    }
+    m_pos++;
+
+    return std::string(&m_buffer[startPos], m_pos - 1 - startPos);
 }
 
 std::unique_ptr<unsigned char[]> CFile::ReadWholeFile(const std::string& path, int& size)
@@ -371,10 +473,10 @@ int ExtractData(const std::unique_ptr<unsigned char[]>& buffer, int offset, int 
 
 void CFile::TryConvertIncbin()
 {
-    std::string idents[8] = { "INCBIN_S8", "INCBIN_U8", "INCBIN_S16", "INCBIN_U16", "INCBIN_S32", "INCBIN_U32", "DUMMY", "INCBIN_COMP"};
+    std::string idents[4] = { "INCBIN_U8", "INCBIN_U16", "INCBIN_U32", "INCBIN_COMP"};
     int incbinType = -1;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 4; i++)
     {
         if (CheckIdentifier(idents[i]))
         {
@@ -386,13 +488,10 @@ void CFile::TryConvertIncbin()
     if (incbinType == -1)
         return;
 
-    int size = 1 << (incbinType / 2);
-    if (size > 4)
-        size = 4;
-    bool isSigned = ((incbinType % 2) == 0);
+    int size = incbinType < 3 ? 1 << incbinType : 4;
 
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
 
     m_pos += idents[incbinType].length();
 
@@ -401,7 +500,7 @@ void CFile::TryConvertIncbin()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -413,39 +512,11 @@ void CFile::TryConvertIncbin()
     {
         SkipWhitespace();
 
-        if (m_buffer[m_pos] != '"')
-            RaiseError("expected double quote");
-
-        m_pos++;
-
-        int startPos = m_pos;
-
-        while (m_buffer[m_pos] != '"')
-        {
-            if (m_buffer[m_pos] == 0)
-            {
-                if (m_pos >= m_size)
-                    RaiseError("unexpected EOF in path string");
-                else
-                    RaiseError("unexpected null character in path string");
-            }
-
-            if (m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
-                RaiseError("unexpected end of line character in path string");
-
-            if (m_buffer[m_pos] == '\\')
-                RaiseError("unexpected escape in path string");
-
-            m_pos++;
-        }
-
-        std::string path(&m_buffer[startPos], m_pos - startPos);
+        auto path = ReadString();
 
         // INCBIN_COMP; include *compressed* version of file
-        if (incbinType == 7)
+        if (incbinType == 3)
             path = path.append(".smol");
-
-        m_pos++;
 
         int fileSize;
         std::unique_ptr<unsigned char[]> buffer = ReadWholeFile(path, fileSize);
@@ -460,11 +531,7 @@ void CFile::TryConvertIncbin()
         {
             int data = ExtractData(buffer, offset, size);
             offset += size;
-
-            if (isSigned)
-                printf("%d,", data);
-            else
-                printf("%uu,", data);
+            printf("%uu,", data);
         }
 
         SkipWhitespace();
@@ -483,13 +550,117 @@ void CFile::TryConvertIncbin()
     printf("}");
 }
 
+void CFile::TryConvertIncgfx()
+{
+    if (!CheckIdentifier("INCGFX_"))
+        return;
+
+    std::string idents[4] = { "INCGFX_U8", "INCGFX_U16", "INCGFX_U32", "INCGFX_COMP" };
+    int incgfxType = -1;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (CheckIdentifier(idents[i]))
+        {
+            incgfxType = i;
+            break;
+        }
+    }
+
+    if (incgfxType == -1)
+        return;
+
+    int size = incgfxType < 3 ? 1 << incgfxType : 4;
+
+    long oldPos = m_pos;
+    auto oldLocation = m_location;
+
+    m_pos += idents[incgfxType].length();
+
+    SkipWhitespace();
+    if (m_buffer[m_pos] != '(')
+    {
+        m_pos = oldPos;
+        m_location = oldLocation;
+        return;
+    }
+    m_pos++;
+
+    SkipWhitespace();
+    auto source = ReadString();
+
+    SkipWhitespace();
+    if (m_buffer[m_pos] != ',')
+        RaiseError("expected ','");
+    m_pos++;
+
+    SkipWhitespace();
+    auto extensions = ReadString();
+    if (incgfxType == 3)
+        extensions += ".smol";
+
+    SkipWhitespace();
+    std::string arguments;
+    if (m_buffer[m_pos] == ',')
+    {
+        m_pos++;
+        SkipWhitespace();
+        arguments = ReadString();
+
+        SkipWhitespace();
+        if (m_buffer[m_pos] != ')')
+            RaiseError("expected ')'");
+        m_pos++;
+    }
+    else if (m_buffer[m_pos] == ')')
+    {
+        m_pos++;
+    }
+    else
+    {
+        RaiseError("exected ')' or ','");
+    }
+
+    // WARNING: This must stay in-sync with 'tools/scaninc/source_file.cpp'.
+    std::string arguments_as_path;
+    for (auto c : arguments)
+    {
+        if (std::isalnum(c))
+            arguments_as_path += c;
+        else
+            arguments_as_path += '_';
+    }
+
+    // WARNING: This must stay in-sync with 'tools/scaninc/scaninc.cpp'.
+    auto converted = m_graphicsRoot + source + arguments_as_path + extensions;
+
+    int fileSize;
+    std::unique_ptr<unsigned char[]> buffer = ReadWholeFile(converted, fileSize);
+
+    if ((fileSize % size) != 0)
+        RaiseError("Size %d doesn't evenly divide file size %d.\n", size, fileSize);
+
+    printf("{");
+
+    int count = fileSize / size;
+    int offset = 0;
+    for (int i = 0; i < count; i++)
+    {
+        int data = ExtractData(buffer, offset, size);
+        offset += size;
+        printf("%uu,", data);
+    }
+
+    printf("}");
+}
+
 // Reports a diagnostic message.
 void CFile::ReportDiagnostic(const char* type, const char* format, std::va_list args)
 {
     const int bufferSize = 1024;
     char buffer[bufferSize];
     std::vsnprintf(buffer, bufferSize, format, args);
-    std::fprintf(stderr, "%s:%ld: %s: %s\n", m_filename.c_str(), m_lineNum, type, buffer);
+    std::fprintf(stderr, "%s:%ld: %s: %s\n", m_location.filename.c_str(), m_location.lineNum, type, buffer);
 }
 
 #define DO_REPORT(type)                   \

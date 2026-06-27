@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Fur Coat doubles Defense", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
     PARAMETRIZE { ability = ABILITY_RATTLED; }
 
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Fur Coat doubles Defense", s16 damage)
 
 SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
     PARAMETRIZE { ability = ABILITY_RATTLED; }
 

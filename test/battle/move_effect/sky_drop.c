@@ -208,3 +208,125 @@ DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
     }
 }
 
+
+SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately")
+{
+    GIVEN {
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THRASH); MOVE(opponent, MOVE_SKY_DROP);}
+        TURN { SKIP_TURN(opponent); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        MESSAGE("The sunlight is strong.");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to status)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(2); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_THRASH, target: opponentRight);
+            MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft);
+            SEND_OUT(opponentLeft, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to target ability)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(2); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_THRASH, target: opponentRight);
+            MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft);
+        }
+        TURN {
+            SKIP_TURN(opponentLeft);
+            SEND_OUT(opponentLeft, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft); // 1st turn
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft); // 2nd turn
+        ABILITY_POPUP(playerLeft, ABILITY_ROUGH_SKIN);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampaged before being dropped")
+{
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_PIDGEY].weight < 2000);
+        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_THRASH); MOVE(player, MOVE_SKY_DROP); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        NOT HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while the move is being used")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_EJECT_BUTTON; }
+    PARAMETRIZE { item = ITEM_EJECT_PACK; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        ASSUME(gSpeciesInfo[SPECIES_VULLABY].weight < 2000);
+        ASSUME(GetSpeciesType(SPECIES_VULLABY, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_VULLABY, 1) == TYPE_FLYING);
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_BREAKING_SWIPE, MOVE_EFFECT_STAT_MINUS, 100));
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VULLABY) { Item(item); } // Flying type used here so Sky Drop doesn't damage
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft);
+               MOVE(opponentRight, MOVE_BREAKING_SWIPE);
+               MOVE(playerRight, MOVE_BREAKING_SWIPE); }
+        TURN { SKIP_TURN(playerLeft);
+               MOVE(opponentRight, MOVE_BREAKING_SWIPE);
+               MOVE(playerRight, MOVE_BREAKING_SWIPE);
+               SEND_OUT(playerLeft, 2);
+               SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+    }
+}

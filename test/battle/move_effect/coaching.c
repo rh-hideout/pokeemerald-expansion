@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_COACHING) == EFFECT_COACHING);
+    ASSUME_STAT_CHANGE(MOVE_COACHING, attack: +1, defense: +1);
 }
 
 DOUBLE_BATTLE_TEST("Coaching raises Attack and Defense of ally by 1 stage each")
@@ -135,5 +135,23 @@ AI_DOUBLE_BATTLE_TEST("AI uses Coaching")
             TURN { EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
         else
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Coaching ignores Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SUBSTITUTE); MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
+        MESSAGE("Wynaut's Attack rose!");
+        MESSAGE("Wynaut's Defense rose!");
     }
 }

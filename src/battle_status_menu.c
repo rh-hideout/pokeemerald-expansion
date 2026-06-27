@@ -1335,7 +1335,7 @@ void CB2_BattleStatusMenuFromBattle(void)
     CpuFill16(0, (void *)BG_CHAR_ADDR(0), BG_CHAR_SIZE);
     CpuFill16(0, (void *)BG_CHAR_ADDR(2), BG_CHAR_SIZE);
     CpuFill16(0, (void *)BG_CHAR_ADDR(3), BG_CHAR_SIZE);
-    
+
     InitBgsFromTemplates(0, sBattleStatusMenuBgTemplates, ARRAY_COUNT(sBattleStatusMenuBgTemplates));
     SetBgTilemapBuffer(BSTATUS_TEXT_BG, sData->bg0Tilemap);
     SetBgTilemapBuffer(BSTATUS_BACKDROP_BG, sData->bg1Tilemap);
@@ -1368,7 +1368,7 @@ void BattleStatusMenu_ResetUpdateTracker(void)
 
     if (!EnsureBattleStatusMenuData())
         return;
-    
+
     sData->snapshotTurn = 0;
     sData->snapshotInitialized = FALSE;
     sData->initialSlotsPlayer = 0;
@@ -1926,7 +1926,7 @@ static void DetailDrawLRButtonGlyphs(void)
     if (itemWindowId == WINDOW_NONE || statsWindowId == WINDOW_NONE)
         return;
 
-    glyphHeight = GetKeypadIconHeight(CHAR_L_BUTTON);
+    glyphHeight = 12;//GetKeypadIconHeight(CHAR_L_BUTTON);
     if (glyphHeight == 0)
         glyphHeight = GetFontAttribute(font, FONTATTR_MAX_LETTER_HEIGHT);
     if (glyphHeight <= 0)
@@ -2608,7 +2608,7 @@ static void DetailBuildActiveEffectsForBattler(enum BattlerId battler, struct Ba
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_TAUNT, entries, count);
     if (gBattleMons[battler].volatiles.telekinesis)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_TELEKINESIS, entries, count);
-    if (gBattleMons[battler].volatiles.magnetRise)
+    if (gBattleMons[battler].volatiles.magnetRiseTimer)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_MAGNET_RISE, entries, count);
     if (gBattleStruct->wish[battler].counter > 0)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_WISH, entries, count);
@@ -2634,7 +2634,7 @@ static void DetailBuildActiveEffectsForBattler(enum BattlerId battler, struct Ba
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_SMACK_DOWN, entries, count);
     if (gBattleMons[battler].volatiles.throatChopTimer > 0)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_THROAT_CHOP, entries, count);
-    if (gBattleMons[battler].volatiles.laserFocus || gBattleMons[battler].volatiles.laserFocusTimer > 0)
+    if (gBattleMons[battler].volatiles.laserFocusTimer > 0)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_LASER_FOCUS, entries, count);
     if (gBattleMons[battler].volatiles.tarShot)
         DetailTryAddActiveEffect(battler, side, BSTATUS_EFFECT_TAR_SHOT, entries, count);
@@ -4368,7 +4368,6 @@ static u64 GetTrackedVolatileMask(enum BattlerId battler)
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CHARGE, mon->volatiles.chargeTimer > 0);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TAUNT, mon->volatiles.tauntTimer > 0);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TELEKINESIS, mon->volatiles.telekinesis);
-    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_MAGNET_RISE, mon->volatiles.magnetRise);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_WISH, gBattleStruct->wish[battler].counter > 0);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_INGRAIN, mon->volatiles.root);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_CURSE, mon->volatiles.cursed);
@@ -4381,7 +4380,7 @@ static u64 GetTrackedVolatileMask(enum BattlerId battler)
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_AUTOTOMIZE, mon->volatiles.autotomizeCount > 0);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_SMACK_DOWN, mon->volatiles.smackDown);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_THROAT_CHOP, mon->volatiles.throatChopTimer > 0);
-    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_LASER_FOCUS, mon->volatiles.laserFocus || mon->volatiles.laserFocusTimer > 0);
+    TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_LASER_FOCUS, mon->volatiles.laserFocusTimer > 0);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_TAR_SHOT, mon->volatiles.tarShot);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_OCTOLOCK, mon->volatiles.octolock);
     TRACK_VOLATILE(BSTATUS_TRACKED_VOLATILE_FIXATED, mon->volatiles.glaiveRush);

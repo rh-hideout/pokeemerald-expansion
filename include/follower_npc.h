@@ -118,7 +118,6 @@ bool32 FollowerNPCCanBike(void);
 void FollowerNPC_HandleBike(void);
 
 void FollowerNPC_FollowerToWater(void);
-void FollowerNPC_SetIndicatorToRecreateSurfBlob(void);
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void);
 void PrepareFollowerNPCDismountSurf(void);
 
@@ -141,5 +140,7 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void);
 
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
+
+void Task_FollowerNPCOutOfDoor(u8 taskId);
 
 #endif // GUARD_FOLLOWER_NPC_H

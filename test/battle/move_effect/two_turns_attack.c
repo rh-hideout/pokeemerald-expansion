@@ -5,13 +5,13 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_RAZOR_WIND) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME(GetMoveEffect(MOVE_SKULL_BASH) == EFFECT_TWO_TURNS_ATTACK);
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_SKULL_BASH, MOVE_EFFECT_DEF_PLUS_1) == TRUE);
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SKULL_BASH, self: TRUE, defense: 1);
     ASSUME(GetMoveEffect(MOVE_SKY_ATTACK) == EFFECT_TWO_TURNS_ATTACK);
 
     // Electro shot - check for rain
     ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == B_WEATHER_RAIN);
     ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_ELECTRO_SHOT, MOVE_EFFECT_SP_ATK_PLUS_1) == TRUE);
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_ELECTRO_SHOT, self: TRUE, spAtk: 1);
 }
 
 SINGLE_BATTLE_TEST("Razor Wind needs a charging turn")
@@ -229,7 +229,7 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
         TURN { MOVE(opponent, move1); MOVE(player, move2); }
         TURN { SKIP_TURN(player); }
     } SCENE {
-        // Potential visual bug. 
+        // Potential visual bug.
         // The script has the B_WAIT_TIME_LONG waitmessage but it does not wait
         if (move2 == MOVE_SOLAR_BEAM) {
             MESSAGE("Wobbuffet used Solar Beam!");

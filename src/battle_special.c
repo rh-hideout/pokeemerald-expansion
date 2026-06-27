@@ -38,17 +38,20 @@ static void HandleSpecialTrainerBattleEnd(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             enum Item itemBefore = GetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HELD_ITEM);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &itemBefore);
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &itemBefore);
         }
         break;
     case SPECIAL_BATTLE_EREADER:
         CopyEReaderTrainerFarewellMessage();
         break;
     case SPECIAL_BATTLE_MULTI:
-        for (i = 0; i < 3; i++)
+        if (!AreMultiPartiesFullTeams())
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
-                gSaveBlock1Ptr->playerParty[i] = gPlayerParty[i];
+            for (i = 0; i < 3; i++)
+            {
+                if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
+                    gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_PLAYER][i];
+            }
         }
         break;
     }
@@ -76,7 +79,7 @@ void DoSpecialTrainerBattle(void)
     case SPECIAL_BATTLE_SECRET_BASE:
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            enum Item itemBefore = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+            enum Item itemBefore = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM);
             SetMonData(&gSaveBlock1Ptr->playerParty[i], MON_DATA_HELD_ITEM, &itemBefore);
         }
         CreateTask(Task_StartBattleAfterTransition, 1);
@@ -87,7 +90,7 @@ void DoSpecialTrainerBattle(void)
     #if FREE_BATTLE_TOWER_E_READER == FALSE
         ZeroEnemyPartyMons();
         for (i = 0; i < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.ereaderTrainer.party); i++)
-            CreateBattleTowerMon(&gEnemyParty[i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
+            CreateBattleTowerMon(&gParties[B_TRAINER_OPPONENT_A][i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_EREADER_TRAINER;
         TRAINER_BATTLE_PARAM.opponentA = 0;
         CreateTask(Task_StartBattleAfterTransition, 1);
@@ -96,31 +99,8 @@ void DoSpecialTrainerBattle(void)
     #endif //FREE_BATTLE_TOWER_E_READER
         break;
     case SPECIAL_BATTLE_MULTI:
-        if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD) // Player + AI against wild mon
-        {
-            gBattleTypeFlags = BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
-        }
-        else if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_1) // Player + AI against one trainer
-        {
-            TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
-            gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
-        }
-        else // MULTI_BATTLE_2_VS_2
-        {
-            gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
-        }
-
-        FillPartnerParty(gPartnerTrainerId);
-        CreateTask(Task_StartBattleAfterTransition, 1);
-        PlayMapChosenOrBattleBGM(0);
-        if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD)
-            BattleTransition_StartOnField(GetWildBattleTransition());
-        else
-            BattleTransition_StartOnField(GetTrainerBattleTransition());
-
-        if (gSpecialVar_0x8005 & MULTI_BATTLE_CHOOSE_MONS) // Skip mons restoring(done in the script)
-            gBattleScripting.specialTrainerBattleType = 0xFF;
-        break;
+    default:
+        errorf("Unknown special battle type %d", gSpecialVar_0x8004);
     }
 }
 
@@ -140,12 +120,12 @@ static void UNUSED FillEReaderTrainerWithPlayerData(void)
     if (gSaveBlock2Ptr->playerGender != MALE)
     {
         ereaderTrainer->facilityClass = gTowerFemaleFacilityClasses[(gSaveBlock2Ptr->playerTrainerId[0] + gSaveBlock2Ptr->playerTrainerId[1]
-                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerFemaleFacilityClasses)];
+                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerFemaleFacilityClasses)].class;
     }
     else
     {
         ereaderTrainer->facilityClass = gTowerMaleFacilityClasses[(gSaveBlock2Ptr->playerTrainerId[0] + gSaveBlock2Ptr->playerTrainerId[1]
-                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerMaleFacilityClasses)];
+                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerMaleFacilityClasses)].class;
     }
 
     CopyTrainerId(ereaderTrainer->trainerId, gSaveBlock2Ptr->playerTrainerId);
@@ -163,7 +143,7 @@ static void UNUSED FillEReaderTrainerWithPlayerData(void)
     }
 
     for (i = 0; i < (int)ARRAY_COUNT(ereaderTrainer->party); i++)
-        ConvertPokemonToBattleTowerPokemon(&gPlayerParty[i], &ereaderTrainer->party[i]);
+        ConvertPokemonToBattleTowerPokemon(&gParties[B_TRAINER_PLAYER][i], &ereaderTrainer->party[i]);
 
     SetEReaderTrainerChecksum(ereaderTrainer);
 #endif //FREE_BATTLE_TOWER_E_READER

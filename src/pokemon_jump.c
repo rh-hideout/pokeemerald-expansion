@@ -152,7 +152,7 @@ enum {
 struct PokemonJump_MonInfo
 {
     u16 isShiny:1;
-    u16 species:15;
+    enum Species species:15;
     u32 otId;
     u32 personality;
 };
@@ -233,7 +233,7 @@ struct PokemonJump
     u16 unused1;
     u16 unused2; // Set to 0, never read
     u16 timer;
-    u16 prizeItemId;
+    enum Item prizeItemId;
     u16 prizeItemQuantity;
     u16 playAgainComm;
     u8 unused3; // Set to 0, never read
@@ -272,7 +272,7 @@ static void InitGame(struct PokemonJump *);
 static void ResetForNewGame(struct PokemonJump *);
 static void InitPlayerAndJumpTypes(void);
 static void ResetPlayersForNewGame(void);
-static s16 GetSpeciesPokemonJumpType(u16 species);
+static s16 GetSpeciesPokemonJumpType(enum Species species);
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *, struct Pokemon *);
 static void CB2_PokemonJump(void);
 static void Task_StartPokemonJump(u8);
@@ -336,8 +336,8 @@ static int GetScoreBonus(int);
 static void TryUpdateExcellentsRecord(u16);
 static bool32 HasEnoughScoreForPrize(void);
 static u16 GetPrizeData(void);
-static void UnpackPrizeData(u16, u16 *, u16 *);
-static u16 GetPrizeItemId(void);
+static void UnpackPrizeData(u16, enum Item *, u16 *);
+static enum Item GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
 static u16 GetQuantityLimitedByBag(enum Item, u16);
 static void SpriteCB_Star(struct Sprite *);
@@ -423,7 +423,7 @@ void StartPokemonJump(u16 partyId, MainCallback exitCallback)
             sPokemonJump->exitCallback = exitCallback;
             sPokemonJump->taskId = taskId;
             sPokemonJump->multiplayerId = GetMultiplayerId();
-            InitJumpMonInfo(&sPokemonJump->monInfo[sPokemonJump->multiplayerId], &gPlayerParty[partyId]);
+            InitJumpMonInfo(&sPokemonJump->monInfo[sPokemonJump->multiplayerId], &gParties[B_TRAINER_PLAYER][partyId]);
             InitGame(sPokemonJump);
             SetWordTaskArg(taskId, 2, (u32)sPokemonJump);
             SetMainCallback2(CB2_PokemonJump);
@@ -520,7 +520,7 @@ static void ResetPlayersForNewGame(void)
     }
 }
 
-static s16 GetSpeciesPokemonJumpType(u16 species)
+static s16 GetSpeciesPokemonJumpType(enum Species species)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonJumpType;
 }
@@ -2120,7 +2120,7 @@ static void TryUpdateExcellentsRecord(u16 excellentsInRow)
         sPokemonJump->excellentsInRowRecord = excellentsInRow;
 }
 
-static const u16 sPrizeItems[] = {
+static const enum Item sPrizeItems[] = {
     ITEM_LEPPA_BERRY,
     ITEM_LUM_BERRY,
     ITEM_SITRUS_BERRY,
@@ -2158,13 +2158,13 @@ static u16 GetPrizeData(void)
     return (quantity << 12) | (itemId & 0xFFF);
 }
 
-static void UnpackPrizeData(u16 data, u16 *itemId, u16 *quantity)
+static void UnpackPrizeData(u16 data, enum Item *itemId, u16 *quantity)
 {
     *quantity = data >> 12;
     *itemId = data & 0xFFF;
 }
 
-static u16 GetPrizeItemId(void)
+static enum Item GetPrizeItemId(void)
 {
     u16 index = Random() % ARRAY_COUNT(sPrizeItems);
     return sPrizeItems[index];
@@ -2214,7 +2214,7 @@ static u8 *GetPokeJumpPlayerName(u8 multiplayerId)
     return sPokemonJump->players[multiplayerId].name;
 }
 
-bool32 IsSpeciesAllowedInPokemonJump(u16 species)
+bool32 IsSpeciesAllowedInPokemonJump(enum Species species)
 {
     return GetSpeciesPokemonJumpType(species) != PKMN_JUMP_TYPE_NONE;
 }
@@ -2225,9 +2225,9 @@ void IsPokemonJumpSpeciesInParty(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_HAS_SPECIES))
         {
-            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (IsSpeciesAllowedInPokemonJump(species))
             {
                 gSpecialVar_Result = TRUE;
@@ -2239,15 +2239,15 @@ void IsPokemonJumpSpeciesInParty(void)
     gSpecialVar_Result = FALSE;
 }
 
-static const u16 sPokeJumpPal1[] = INCBIN_U16("graphics/pokemon_jump/pal1.gbapal");
-static const u16 sPokeJumpPal2[] = INCBIN_U16("graphics/pokemon_jump/pal2.gbapal");
+static const u16 sPokeJumpPal1[] = INCGFX_U16("graphics/pokemon_jump/pal1.pal", ".gbapal");
+static const u16 sPokeJumpPal2[] = INCGFX_U16("graphics/pokemon_jump/pal2.pal", ".gbapal");
 
-static const u32 sVine1_Gfx[] = INCBIN_U32("graphics/pokemon_jump/vine1.4bpp.smol");
-static const u32 sVine2_Gfx[] = INCBIN_U32("graphics/pokemon_jump/vine2.4bpp.smol");
-static const u32 sVine3_Gfx[] = INCBIN_U32("graphics/pokemon_jump/vine3.4bpp.smol");
-static const u32 sVine4_Gfx[] = INCBIN_U32("graphics/pokemon_jump/vine4.4bpp.smol");
+static const u32 sVine1_Gfx[] = INCGFX_U32("graphics/pokemon_jump/vine1.png", ".4bpp.smol");
+static const u32 sVine2_Gfx[] = INCGFX_U32("graphics/pokemon_jump/vine2.png", ".4bpp.smol");
+static const u32 sVine3_Gfx[] = INCGFX_U32("graphics/pokemon_jump/vine3.png", ".4bpp.smol");
+static const u32 sVine4_Gfx[] = INCGFX_U32("graphics/pokemon_jump/vine4.png", ".4bpp.smol");
 
-static const u32 sStar_Gfx[] = INCBIN_U32("graphics/pokemon_jump/star.4bpp.smol");
+static const u32 sStar_Gfx[] = INCGFX_U32("graphics/pokemon_jump/star.png", ".4bpp.smol");
 
 static const struct CompressedSpriteSheet sCompressedSpriteSheets[] =
 {
@@ -2896,19 +2896,19 @@ static void InitPokeJumpGfx(struct PokemonJumpGfx *jumpGfx)
     jumpGfx->msgWindowId = WINDOW_NONE;
 }
 
-static const u16 sInterface_Pal[] = INCBIN_U16("graphics/pokemon_jump/interface.gbapal");
+static const u16 sInterface_Pal[] = INCGFX_U16("graphics/pokemon_jump/interface.pal", ".gbapal");
 
-static const u16 sBg_Pal[] = INCBIN_U16("graphics/pokemon_jump/bg.gbapal");
-static const u32 sBg_Gfx[] = INCBIN_U32("graphics/pokemon_jump/bg.4bpp.smol");
-static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/bg.bin.smolTM");
+static const u16 sBg_Pal[] = INCGFX_U16("graphics/pokemon_jump/bg.png", ".gbapal");
+static const u32 sBg_Gfx[] = INCGFX_U32("graphics/pokemon_jump/bg.png", ".4bpp.smol", "-num_tiles 63 -Wnum_tiles");
+static const u32 sBg_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/bg.bin", ".smolTM");
 
-static const u16 sVenusaur_Pal[] = INCBIN_U16("graphics/pokemon_jump/venusaur.gbapal");
-static const u32 sVenusaur_Gfx[] = INCBIN_U32("graphics/pokemon_jump/venusaur.4bpp.smol");
-static const u32 sVenusaur_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/venusaur.bin.smolTM");
+static const u16 sVenusaur_Pal[] = INCGFX_U16("graphics/pokemon_jump/venusaur.png", ".gbapal");
+static const u32 sVenusaur_Gfx[] = INCGFX_U32("graphics/pokemon_jump/venusaur.png", ".4bpp.smol");
+static const u32 sVenusaur_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/venusaur.bin", ".smolTM");
 
-static const u16 sBonuses_Pal[] = INCBIN_U16("graphics/pokemon_jump/bonuses.gbapal");
-static const u32 sBonuses_Gfx[] = INCBIN_U32("graphics/pokemon_jump/bonuses.4bpp.smol");
-static const u32 sBonuses_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/bonuses.bin.smolTM");
+static const u16 sBonuses_Pal[] = INCGFX_U16("graphics/pokemon_jump/bonuses.png", ".gbapal");
+static const u32 sBonuses_Gfx[] = INCGFX_U32("graphics/pokemon_jump/bonuses.png", ".4bpp.smol");
+static const u32 sBonuses_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/bonuses.bin", ".smolTM");
 
 static const struct BgTemplate sBgTemplates[] =
 {

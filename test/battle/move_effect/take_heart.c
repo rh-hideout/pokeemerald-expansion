@@ -27,6 +27,7 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
     PARAMETRIZE { status1 = STATUS1_BURN; }
     PARAMETRIZE { status1 = STATUS1_PARALYSIS; }
     PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; }
+    PARAMETRIZE { status1 = STATUS1_FROSTBITE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -41,7 +42,24 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         } else {
             STATUS_ICON(player, none: TRUE);
-            MESSAGE("Wobbuffet's status returned to normal!");
+            switch (status1)
+            {
+                case STATUS1_POISON:
+                    MESSAGE("Wobbuffet was cured of its poisoning!");
+                    break;
+                case STATUS1_BURN:
+                    MESSAGE("Wobbuffet's burn was cured!");
+                    break;
+                case STATUS1_PARALYSIS:
+                    MESSAGE("Wobbuffet was cured of paralysis!");
+                    break;
+                case STATUS1_TOXIC_POISON:
+                    MESSAGE("Wobbuffet was cured of its poisoning!");
+                    break;
+                case STATUS1_FROSTBITE:
+                    MESSAGE("Wobbuffet's frostbite was cured!");
+                    break;
+            }
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         }
     }
@@ -67,6 +85,6 @@ SINGLE_BATTLE_TEST("Take Heart cures sleep when used by Sleep Talk")
         MESSAGE("The opposing Wobbuffet used Take Heart!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_HEART, opponent);
         STATUS_ICON(opponent, none: TRUE);
-        MESSAGE("The opposing Wobbuffet's status returned to normal!");
+        MESSAGE("The opposing Wobbuffet woke up!");
     }
 }

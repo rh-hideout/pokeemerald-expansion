@@ -100,9 +100,9 @@ enum
     MULTI_FRONTIER_GAMBLER_BET,
     MULTI_TENT,
     MULTI_UNUSED_SSTIDAL_1,             // These 4 were replaced by CreateLilycoveSSTidalMultichoice
-    MULTI_UNUSED_SSTIDAL_2,             //
-    MULTI_UNUSED_SSTIDAL_3,             //
-    MULTI_UNUSED_SSTIDAL_4,             //
+    MULTI_UNUSED_SSTIDAL_2,
+    MULTI_UNUSED_SSTIDAL_3,
+    MULTI_UNUSED_SSTIDAL_4,
     MULTI_FOSSIL,
     MULTI_YESNO,
     MULTI_FRONTIER_RULES,

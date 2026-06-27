@@ -165,7 +165,7 @@ DOUBLE_BATTLE_TEST("Forecast transforms all Castforms present in weather")
 
 SINGLE_BATTLE_TEST("Forecast transforms Castform in weather from an ability")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { species = SPECIES_KYOGRE; ability = ABILITY_DRIZZLE; }
     PARAMETRIZE { species = SPECIES_GROUDON; ability = ABILITY_DROUGHT; }
@@ -200,7 +200,8 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in weather from an ability")
 
 SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
 {
-    u32 species, item;
+    enum Species species;
+    enum Item item;
     enum Ability ability;
     PARAMETRIZE { species = SPECIES_KYOGRE; ability = ABILITY_PRIMORDIAL_SEA; item = ITEM_BLUE_ORB; }
     PARAMETRIZE { species = SPECIES_GROUDON; ability = ABILITY_DESOLATE_LAND; item = ITEM_RED_ORB; }
@@ -280,8 +281,8 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal when Sandstorm i
 
 SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal under Cloud Nine/Air Lock")
 {
-    u32 species = 0;
-    enum Ability ability = 0;
+    enum Species species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
@@ -388,7 +389,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it switches out")
         MESSAGE("Castform transformed!");
         SWITCH_OUT_MESSAGE("Castform");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 
@@ -409,14 +410,14 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it uses a move that f
         MESSAGE("Castform transformed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 
 SINGLE_BATTLE_TEST("Forecast transforms Castform when Cloud Nine ability user leaves the field")
 {
-    u32 species = 0;
-    enum Ability ability = 0;
+    enum Species species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 
@@ -454,3 +455,30 @@ DOUBLE_BATTLE_TEST("Forecast reverts Castform back after Teraform Zero clears we
         EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
     }
 }
+
+DOUBLE_BATTLE_TEST("Forecast: All Forecast mons revert on the field if Primal Weather is removed due to fainting")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Speed(20); HP(1); Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_CASTFORM) { Speed(10); Ability(ABILITY_FORECAST); }
+        OPPONENT(SPECIES_CASTFORM) { Speed(40); Ability(ABILITY_FORECAST); }
+        OPPONENT(SPECIES_CASTFORM) { Speed(30); Ability(ABILITY_FORECAST); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerLeft);
+
+        ABILITY_POPUP(opponentLeft, ABILITY_FORECAST);
+        ABILITY_POPUP(opponentRight, ABILITY_FORECAST);
+        ABILITY_POPUP(playerRight, ABILITY_FORECAST);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
+    } THEN {
+        EXPECT_EQ(opponentLeft->species, SPECIES_CASTFORM_NORMAL);
+        EXPECT_EQ(opponentRight->species, SPECIES_CASTFORM_NORMAL);
+        EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
+    }
+}
+

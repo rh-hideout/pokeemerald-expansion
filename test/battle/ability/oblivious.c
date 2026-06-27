@@ -76,10 +76,10 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
-            MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+            MESSAGE("Slowpoke's Attack was not lowered!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The opposing Ekans's Intimidate cuts Slowpoke's Attack!");
+        MESSAGE("Slowpoke's Attack fell!");
     }
 }
 
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
-        MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+        MESSAGE("Slowpoke's Attack was not lowered!");
     }
 }
 
@@ -123,5 +123,26 @@ SINGLE_BATTLE_TEST("Oblivious cured infatuation should not persist toxic counter
         EXPECT_EQ(firstTick, 10);
         EXPECT_EQ(secondTick, 20);
         EXPECT_EQ(postSwitchTick, 10);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Oblivious cures infatuation and Taunt")
+{
+    GIVEN {
+        WITH_CONFIG(B_OBLIVIOUS_TAUNT, GEN_6);
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { Gender(MON_FEMALE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE);
+               MOVE(opponentLeft, MOVE_TAUNT, target: playerLeft);
+               MOVE(opponentRight, MOVE_ATTRACT, target: playerLeft);
+               MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_OBLIVIOUS);
+        MESSAGE("Wobbuffet got over its infatuation!");
+        ABILITY_POPUP(playerLeft, ABILITY_OBLIVIOUS);
+        MESSAGE("Wobbuffet shook off the taunt!");
     }
 }

@@ -38,8 +38,8 @@ static void EndOnPostEvoMon(u8 taskId);
 
 #define TAG_SPARKLE 1001
 
-static const u16 sEvoSparkle_Pal[] = INCBIN_U16("graphics/misc/evo_sparkle.gbapal");
-static const u32 sEvoSparkle_Gfx[] = INCBIN_U32("graphics/misc/evo_sparkle.4bpp.smol");
+static const u16 sEvoSparkle_Pal[] = INCGFX_U16("graphics/misc/evo_sparkle.png", ".gbapal");
+static const u32 sEvoSparkle_Gfx[] = INCGFX_U32("graphics/misc/evo_sparkle.png", ".4bpp.smol");
 
 static const struct CompressedSpriteSheet sEvoSparkleSpriteSheets[] =
 {
@@ -410,7 +410,7 @@ static void Task_Sparkles_CircleInward_End(u8 taskId)
 
 #define tSpecies data[2] // Never read
 
-u8 EvolutionSparkles_SprayAndFlash(u16 species)
+u8 EvolutionSparkles_SprayAndFlash(enum Species species)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlash_Init, 0);
     gTasks[taskId].tSpecies = species;
@@ -461,7 +461,7 @@ static void Task_Sparkles_SprayAndFlash_End(u8 taskId)
 }
 
 // Separate from EvolutionSparkles_SprayAndFlash for difference in fade color
-u8 EvolutionSparkles_SprayAndFlash_Trade(u16 species)
+u8 EvolutionSparkles_SprayAndFlash_Trade(enum Species species)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlashTrade_Init, 0);
     gTasks[taskId].tSpecies = species;

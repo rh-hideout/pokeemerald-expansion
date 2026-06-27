@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-static bool32 IsSpeciesMonotypeOf(u32 species, enum Type type)
+static bool32 IsSpeciesMonotypeOf(enum Species species, enum Type type)
 {
     return GetSpeciesType(species, 0) == type && GetSpeciesType(species, 1) == type;
 }
@@ -51,7 +51,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
 {
-    u32 species = SPECIES_NONE, move = MOVE_NONE;
+    enum Species species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
 
     static const u16 monotypeMons[] = {
         SPECIES_EEVEE,
@@ -121,4 +122,3 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
             MESSAGE("It's super effective!");
     }
 }
-

@@ -294,10 +294,10 @@ static void GenerateInitialRentalMons(void)
     s32 i, j;
     u8 firstMonId;
     u16 monSetId;
-    u16 currSpecies;
-    u16 species[PARTY_SIZE];
+    enum Species currSpecies;
+    enum Species species[PARTY_SIZE];
     u16 monIds[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
+    enum Item heldItems[PARTY_SIZE];
 
     firstMonId = 0;
     gFacilityTrainers = gSlateportBattleTentTrainers;
@@ -355,8 +355,8 @@ static void GenerateOpponentMons(void)
     u16 trainerId;
     s32 i, j, k;
     const u16 *monSet;
-    u16 species[FRONTIER_PARTY_SIZE];
-    u16 heldItems[FRONTIER_PARTY_SIZE];
+    enum Species species[FRONTIER_PARTY_SIZE];
+    enum Item heldItems[FRONTIER_PARTY_SIZE];
     s32 numMons = 0;
 
     gFacilityTrainers = gSlateportBattleTentTrainers;

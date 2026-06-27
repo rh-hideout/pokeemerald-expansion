@@ -38,6 +38,25 @@ SINGLE_BATTLE_TEST("Mirror Move fails if no move was used before")
     }
 }
 
+SINGLE_BATTLE_TEST("Mirror Move works even if the target was immune to it")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_ROOKIDEE, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_ROOKIDEE, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ROOKIDEE);
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTHQUAKE); MOVE(opponent, MOVE_MIRROR_MOVE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
+            HP_BAR(opponent);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRROR_MOVE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+        HP_BAR(player);
+    }
+}
+
 SINGLE_BATTLE_TEST("Mirror Move's called powder move fails against Grass Types")
 {
     GIVEN {
@@ -72,11 +91,11 @@ SINGLE_BATTLE_TEST("Mirror Move's called multi-hit move hits multiple times")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
         HP_BAR(opponent);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
         MESSAGE("The opposing Wobbuffet used Mirror Move!");
         MESSAGE("The opposing Wobbuffet used Bullet Seed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
         HP_BAR(player);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
     }
 }

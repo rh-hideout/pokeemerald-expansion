@@ -67,7 +67,7 @@ enum Direction GetMewMoveDirection(void)
     else
         mew->invisible = TRUE;
 
-    // Mew will stay in place for 1 step after its visible
+    // Mew will stay in place for 1 step after it's visible
     if (VarGet(VAR_FARAWAY_ISLAND_STEP_COUNTER) % 9 == 0)
         return DIR_NONE;
 

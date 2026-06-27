@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+    ASSUME_STAT_CHANGE(MOVE_DECORATE, attack: +2, spAtk: +2);
 }
 
 SINGLE_BATTLE_TEST("Decorate raises the target's Attack and Sp. Attack by 2 stages each")

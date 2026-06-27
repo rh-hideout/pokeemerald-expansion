@@ -1,6 +1,8 @@
 #ifndef GUARD_FRONTIER_UTIL_H
 #define GUARD_FRONTIER_UTIL_H
 
+#include "constants/species.h"
+
 void CallFrontierUtilFunc(void);
 u8 GetFrontierBrainStatus(void);
 void CopyFrontierTrainerText(u8 whichText, u16 trainerId);
@@ -18,7 +20,7 @@ void CopyFrontierBrainTrainerName(u8 *dst);
 bool8 IsFrontierBrainFemale(void);
 void SetFrontierBrainObjEventGfx_2(void);
 void CreateFrontierBrainPokemon(void);
-u16 GetFrontierBrainMonSpecies(u8 monId);
+enum Species GetFrontierBrainMonSpecies(u8 monId);
 void SetFrontierBrainObjEventGfx(u8 facility);
 u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId);
 u8 GetFrontierBrainMonNature(u8 monId);

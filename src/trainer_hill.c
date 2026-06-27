@@ -78,7 +78,7 @@ static u32 GetTimerValue(u32 *src);
 #endif //FREE_TRAINER_HILL
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level);
 #if FREE_TRAINER_HILL == FALSE
-static u16 GetPrizeItemId(void);
+static enum Item GetPrizeItemId(void);
 #endif //FREE_TRAINER_HILL
 
 // const data
@@ -146,29 +146,29 @@ struct
     {TRAINER_CLASS_SCHOOL_KID, TRAINER_ENCOUNTER_MUSIC_MALE},
 };
 
-static const u16 sPrizeListRareCandy1[]  = {ITEM_RARE_CANDY,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListLuxuryBall1[] = {ITEM_LUXURY_BALL,      ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListMaxRevive1[]  = {ITEM_MAX_REVIVE,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListMaxEther1[]   = {ITEM_MAX_ETHER,        ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListElixir1[]     = {ITEM_ELIXIR,           ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListRoar[]        = {ITEM_TM_ROAR,          ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListSludgeBomb[]  = {ITEM_TM_SLUDGE_BOMB,   ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListToxic[]       = {ITEM_TM_TOXIC,         ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListSunnyDay[]    = {ITEM_TM_SUNNY_DAY,     ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListEarthQuake[]  = {ITEM_TM_EARTHQUAKE,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListRareCandy1[]  = {ITEM_RARE_CANDY,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListLuxuryBall1[] = {ITEM_LUXURY_BALL,      ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListMaxRevive1[]  = {ITEM_MAX_REVIVE,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListMaxEther1[]   = {ITEM_MAX_ETHER,        ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListElixir1[]     = {ITEM_ELIXIR,           ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListRoar[]        = {ITEM_TM_ROAR,          ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListSludgeBomb[]  = {ITEM_TM_SLUDGE_BOMB,   ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListToxic[]       = {ITEM_TM_TOXIC,         ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListSunnyDay[]    = {ITEM_TM_SUNNY_DAY,     ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListEarthQuake[]  = {ITEM_TM_EARTHQUAKE,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
 
-static const u16 sPrizeListRareCandy2[]  = {ITEM_RARE_CANDY,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListLuxuryBall2[] = {ITEM_LUXURY_BALL,      ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListMaxRevive2[]  = {ITEM_MAX_REVIVE,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListMaxEther2[]   = {ITEM_MAX_ETHER,        ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListElixir2[]     = {ITEM_ELIXIR,           ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListBrickBreak[]  = {ITEM_TM_BRICK_BREAK,   ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListTorment[]     = {ITEM_TM_TORMENT,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListSkillSwap[]   = {ITEM_TM_SKILL_SWAP,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListGigaDrain[]   = {ITEM_TM_GIGA_DRAIN,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
-static const u16 sPrizeListAttract[]     = {ITEM_TM_ATTRACT,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListRareCandy2[]  = {ITEM_RARE_CANDY,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListLuxuryBall2[] = {ITEM_LUXURY_BALL,      ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListMaxRevive2[]  = {ITEM_MAX_REVIVE,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListMaxEther2[]   = {ITEM_MAX_ETHER,        ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListElixir2[]     = {ITEM_ELIXIR,           ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListBrickBreak[]  = {ITEM_TM_BRICK_BREAK,   ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListTorment[]     = {ITEM_TM_TORMENT,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListSkillSwap[]   = {ITEM_TM_SKILL_SWAP,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListGigaDrain[]   = {ITEM_TM_GIGA_DRAIN,    ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
+static const enum Item sPrizeListAttract[]     = {ITEM_TM_ATTRACT,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
 
-static const u16 *const sPrizeLists1[NUM_TRAINER_HILL_PRIZE_LISTS] =
+static const enum Item *const sPrizeLists1[NUM_TRAINER_HILL_PRIZE_LISTS] =
 {
     sPrizeListRareCandy1,
     sPrizeListLuxuryBall1,
@@ -182,7 +182,7 @@ static const u16 *const sPrizeLists1[NUM_TRAINER_HILL_PRIZE_LISTS] =
     sPrizeListEarthQuake
 };
 
-static const u16 *const sPrizeLists2[NUM_TRAINER_HILL_PRIZE_LISTS] =
+static const enum Item *const sPrizeLists2[NUM_TRAINER_HILL_PRIZE_LISTS] =
 {
     sPrizeListRareCandy2,
     sPrizeListLuxuryBall2,
@@ -196,13 +196,13 @@ static const u16 *const sPrizeLists2[NUM_TRAINER_HILL_PRIZE_LISTS] =
     sPrizeListAttract
 };
 
-static const u16 *const *const sPrizeListSets[] =
+static const enum Item *const *const sPrizeListSets[] =
 {
     sPrizeLists1,
     sPrizeLists2
 };
 
-static const u16 sEReader_Pal[] = INCBIN_U16("graphics/trainer_hill/ereader.gbapal");
+static const u16 sEReader_Pal[] = INCGFX_U16("graphics/trainer_hill/ereader.pal", ".gbapal");
 static const u8 sRecordWinColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
 static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_MODES] =
@@ -606,11 +606,6 @@ static void IsTrainerHillChallengeActive(void)
         gSpecialVar_Result = TRUE;
 }
 
-static void UNUSED TrainerHillDummy_Unused(void)
-{
-
-}
-
 static void TrainerHillDummy(void)
 {
 
@@ -896,7 +891,7 @@ static void ShowTrainerHillPostBattleText(void)
     ShowFieldMessageFromBuffer();
 }
 
-static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
+static void CreateNPCTrainerHillParty(u16 trainerId, enum BattleTrainer trainer)
 {
     u8 trId, level;
     s32 i, floorId, partySlot;
@@ -908,10 +903,10 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
     SetUpDataStruct();
     level = GetHighestLevelInPlayerParty();
     floorId = GetFloorId();
-    for (i = firstMonId, partySlot = 0; i < firstMonId + PARTY_SIZE / 2; i++, partySlot++)
+    for (i = 0, partySlot = 0; i < MULTI_PARTY_SIZE; i++, partySlot++)
     {
         u8 id = sTrainerPartySlots[trId][partySlot];
-        struct Pokemon *mon = &gEnemyParty[i];
+        struct Pokemon *mon = &gParties[trainer][i];
 
         CreateBattleTowerMon(mon, &sHillData->floors[floorId].trainers[trId].mons[id]);
         SetTrainerHillMonLevel(mon, level);
@@ -923,22 +918,14 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
 void FillHillTrainerParty(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
 }
 
 void FillHillTrainersParties(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, PARTY_SIZE / 2);
-}
-
-// This function is unused, but my best guess is
-// it was supposed to return AI scripts for trainer
-// hill trainers.
-u64 GetTrainerHillAIFlags(void)
-{
-    return (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B);
 }
 
 u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
@@ -962,7 +949,7 @@ u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
 
     SetMonData(mon, MON_DATA_EXP, &exp);
@@ -1067,7 +1054,7 @@ static u8 GetPrizeListId(bool8 allowTMs)
     return prizeListId;
 }
 
-static u16 GetPrizeItemId(void)
+static enum Item GetPrizeItemId(void)
 {
     u8 i;
     const u16 *prizeList;

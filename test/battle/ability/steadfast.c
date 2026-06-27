@@ -12,6 +12,7 @@ SINGLE_BATTLE_TEST("Steadfast boosts Speed when the user attempts to move but is
     } SCENE {
         ABILITY_POPUP(player, ABILITY_STEADFAST);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        MESSAGE("Lucario's Speed rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }

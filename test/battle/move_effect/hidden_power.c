@@ -23,7 +23,7 @@ ASSUMPTIONS
     ASSUME(gTypesInfo[TYPE_DRAGON].isHiddenPowerType == TRUE);
     ASSUME(gTypesInfo[TYPE_DARK].isHiddenPowerType == TRUE);
     // Any type after Dark shouldn't be part of Hidden Power officially.
-    for (u32 j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
+    for (enum Type j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
         ASSUME(gTypesInfo[j].isHiddenPowerType == FALSE);
     }
 }
@@ -32,7 +32,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 {
     enum Type type, foeType, j;
-    u32 foeSpecies, foeItem;
+    enum Species foeSpecies;
+    enum Item foeItem;
     u32 hp, atk, def, spAtk, spDef, speed;
     bool32 hidden;
 
@@ -126,7 +127,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     } SCENE {
         // Only test valid Hidden Power types
         if (hidden) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // Check that the item is triggered
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the item is triggered
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
             HP_BAR(opponent);
             MESSAGE("It's super effective!");

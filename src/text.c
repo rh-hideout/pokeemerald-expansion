@@ -66,10 +66,10 @@ EWRAM_DATA bool8 gDisableTextPrinters = 0;
 EWRAM_DATA TextFlags gTextFlags = {0};
 IWRAM_DATA struct TextGlyph gCurGlyph = {0};
 
-static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
-static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
-static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_blanked_down_arrow.4bpp");
-static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
+static const u8 sDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow.png", ".4bpp");
+static const u8 sDarkDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow_alt.png", ".4bpp");
+static const u8 sUnusedFRLGBlankedDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_blanked_down_arrow.png", ".4bpp");
+static const u8 sUnusedFRLGDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_down_arrow.png", ".4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
@@ -111,7 +111,7 @@ struct
     [CHAR_DPAD_NONE]      = { 0x22,  8, 12 }
 };
 
-static const u8 sKeypadIconTiles[] = INCBIN_U8("graphics/fonts/keypad_icons.4bpp");
+static const u8 sKeypadIconTiles[] = INCGFX_U8("graphics/fonts/keypad_icons.png", ".4bpp");
 
 static const struct FontInfo sFontInfos[] =
 {
@@ -314,7 +314,7 @@ static const u8 sTextScrollSpeeds[] =
     [OPTIONS_TEXT_SPEED_INSTANT] = 6,
 };
 
-static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
+static const u16 sFontBoldJapaneseGlyphs[] = INCGFX_U16("graphics/fonts/japanese_bold.png", ".hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
 {
@@ -385,7 +385,7 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
-u16 AddSpriteTextPrinterParametrerized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
+u16 AddSpriteTextPrinterParameterized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
 {
     struct TextPrinterTemplate printerTemplate;
 
@@ -480,7 +480,10 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.textSpeed = speed;
 
     if (printerTemplate->type == SPRITE_TEXT_PRINTER)
-        printerTemplate->firstSprite = printerTemplate->spriteId;
+    {
+        sTempTextPrinter.printerTemplate.firstSprite = printerTemplate->spriteId;
+        sTempTextPrinter.printerTemplate.firstSpriteInRow = printerTemplate->spriteId;
+    }
 
 
     GenerateFontHalfRowLookupTable(printerTemplate->color);
@@ -1300,7 +1303,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
     else
     {
         FillWindowPixelRect(windowId, (bgColor << 4) | bgColor, x, y, 0x8, 0x10);
-        if (drawArrow == 0)
+        if (!drawArrow)
         {
             switch (gTextFlags.useAlternateDownArrow)
             {
@@ -2143,19 +2146,9 @@ u8 DrawKeypadIcon(u8 windowId, u8 keypadIconId, u16 x, u16 y)
     return sKeypadIcons[keypadIconId].width;
 }
 
-u8 GetKeypadIconTileOffset(u8 keypadIconId)
-{
-    return sKeypadIcons[keypadIconId].tileOffset;
-}
-
 u8 GetKeypadIconWidth(u8 keypadIconId)
 {
     return sKeypadIcons[keypadIconId].width;
-}
-
-u8 GetKeypadIconHeight(u8 keypadIconId)
-{
-    return sKeypadIcons[keypadIconId].height;
 }
 
 void SetDefaultFontsPointer(void)
@@ -2205,7 +2198,7 @@ static void DecompressGlyph_Small(u16 glyphId, bool32 isJapanese)
 {
     const u16 *glyphs;
 
-    if (isJapanese == 1)
+    if (isJapanese)
     {
         glyphs = gFontSmallJapaneseGlyphs + (0x100 * (glyphId >> 0x4)) + (0x8 * (glyphId & 0xF));
         DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
@@ -2750,8 +2743,8 @@ static void FreeFinishedTextPrinters(void)
 
 extern const struct OamData gOamData_AffineOff_ObjNormal_16x16;
 
-static const u8 sDoubleArrowTiles1[]       = INCBIN_U8("graphics/fonts/down_arrow_3.4bpp");
-static const u8 sDoubleArrowTiles2[]       = INCBIN_U8("graphics/fonts/down_arrow_4.4bpp");
+static const u8 sDoubleArrowTiles1[]       = INCGFX_U8("graphics/fonts/down_arrow_3.png", ".4bpp");
+static const u8 sDoubleArrowTiles2[]       = INCGFX_U8("graphics/fonts/down_arrow_4.png", ".4bpp");
 
 static const struct SpriteSheet sSpriteSheets_TextCursor[] =
 {

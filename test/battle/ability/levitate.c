@@ -11,6 +11,7 @@ SINGLE_BATTLE_TEST("Levitate activates when targeted by ground type moves")
         TURN { MOVE(opponent, MOVE_MUD_SLAP); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_LEVITATE);
+        MESSAGE("It doesn't affect Lunatone…");
     }
 }
 

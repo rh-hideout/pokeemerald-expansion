@@ -622,7 +622,11 @@ static void AnimKnockOffAquaTailStep(struct Sprite *sprite)
 
 void AnimTask_CreateRaindrops(u8 taskId)
 {
-    u8 x, y;
+    if (!TryLoadSpriteAssets(&gRainDropSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     if (gTasks[taskId].tRaindropSpawnTimer == 0)
     {
@@ -633,8 +637,8 @@ void AnimTask_CreateRaindrops(u8 taskId)
     gTasks[taskId].tRaindropSpawnTimer++;
     if (gTasks[taskId].tRaindropSpawnTimer % gTasks[taskId].tRaindropSpawnInterval == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gRainDropSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].tRaindropSpawnTimer == gTasks[taskId].tRaindropSpawnDuration)
@@ -1233,6 +1237,12 @@ static void AnimSmallDriftingBubbles_Step(struct Sprite *sprite)
 
 void AnimTask_WaterSpoutLaunch(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gSmallWaterOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->data[15] = GetAnimBattlerSpriteId(ANIM_ATTACKER);
@@ -1419,6 +1429,13 @@ static void AnimSmallWaterOrb(struct Sprite *sprite)
 
 void AnimTask_BrineRain(u8 taskId)
 {
+    if (!(TryLoadSpriteAssets(&gSmallWaterOrbSpriteTemplate)
+       && TryLoadSpriteAssets(&gWaterHitSplatSpriteTemplate)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsOnPlayerSide(gBattleAnimAttacker))
@@ -1476,6 +1493,13 @@ static void AnimTask_BrineRain_Step(u8 taskId)
 
 void AnimTask_WaterSpoutRain(u8 taskId)
 {
+    if (!(TryLoadSpriteAssets(&gSmallWaterOrbSpriteTemplate)
+       && TryLoadSpriteAssets(&gWaterHitSplatSpriteTemplate)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->tWaterSpoutPower = GetWaterSpoutPowerForAnim();
@@ -1610,6 +1634,12 @@ static void AnimWaterSpoutRainHit(struct Sprite *sprite)
 
 void AnimTask_WaterSport(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gSmallWaterOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->data[3] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
@@ -1784,6 +1814,13 @@ static void AnimWaterPulseRingBubble(struct Sprite *sprite)
 
 void AnimWaterPulseRing(struct Sprite *sprite)
 {
+    if (!TryLoadSpriteAssets(&gWaterPulseRingBubbleSpriteTemplate))
+    {
+        DestroyAnimSprite(sprite);
+        return;
+    }
+
+
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);

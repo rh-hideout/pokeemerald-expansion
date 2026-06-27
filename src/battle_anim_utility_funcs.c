@@ -19,7 +19,7 @@ struct AnimStatsChangeData
     enum BattlerId battler2;
     bool8 hidBattler2;
     s16 data[8];
-    u16 species;
+    enum Species species;
 };
 
 static EWRAM_DATA struct AnimStatsChangeData *sAnimStatsChangeData = {0};
@@ -97,7 +97,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
     for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         if (battler != animBattlers[0] && battler != animBattlers[1] && IsBattlerSpriteVisible(battler))
-            selectedPalettes |= 0x10000 << GetSpritePalIdxByBattler(battler);
+            selectedPalettes |= 0x10000 << battler;
     }
 
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
@@ -112,6 +112,12 @@ void AnimTask_SetCamouflageBlend(u8 taskId)
 
 void AnimTask_BlendParticle(u8 taskId)
 {
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+    {
+        DestroyTask(taskId);
+        return;
+    }
+
     u8 paletteIndex = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
     u32 selectedPalettes = 1 << (paletteIndex + 16);
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
@@ -242,7 +248,7 @@ static void AnimMonTrace(struct Sprite *sprite)
 // Only used by Curse for non-Ghost mons
 void AnimTask_DrawFallingWhiteLinesOnAttacker(u8 taskId)
 {
-    u16 species;
+    enum Species species;
     int spriteId, newSpriteId;
     u16 var0;
     u32 bg1Cnt;
@@ -738,12 +744,6 @@ void AnimTask_GetAttackerSide(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void AnimTask_GetTargetSide(u8 taskId)
-{
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimTarget);
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 {
     gBattleAnimArgs[ARG_RET_ID] = BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget;
@@ -762,9 +762,9 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
+void StartMonScrollingBgMask(u8 taskId, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
-    u16 species;
+    enum Species species;
     u8 spriteId, spriteId2;
     u32 bg1Cnt;
     struct BattleAnimBgData animBgData;
@@ -881,12 +881,6 @@ static void UpdateMonScrollingBgMask(u8 taskId)
         }
         break;
     }
-}
-
-void AnimTask_GetBattleEnvironment(u8 taskId)
-{
-    gBattleAnimArgs[0] = gBattleEnvironment;
-    DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_GetFieldTerrain(u8 taskId)
@@ -1055,15 +1049,6 @@ static void AnimTask_WaitAndRestoreVisibility(u8 taskId)
 void AnimTask_IsDoubleBattle(u8 taskId)
 {
     gBattleAnimArgs[7] = (IsDoubleBattle() && !IsContest());
-    DestroyAnimVisualTask(taskId);
-}
-
-void AnimTask_CanBattlerSwitch(u8 taskId)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        gBattleAnimArgs[ARG_RET_ID] = FALSE;
-    else
-        gBattleAnimArgs[ARG_RET_ID] = CanBattlerSwitch(GetAnimBattlerId(gBattleAnimArgs[0]));
     DestroyAnimVisualTask(taskId);
 }
 

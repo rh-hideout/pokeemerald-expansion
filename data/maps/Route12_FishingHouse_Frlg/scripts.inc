@@ -34,7 +34,6 @@ Route12_FishingHouse_EventScript_CheckMagikarpRecord::
 	special GetMagikarpSizeRecordInfo
 	msgbox Route12_FishingHouse_Text_OhMagikarpAllowMeToSee
 	special ChoosePartyMon
-	waitstate
 	copyvar VAR_RESULT, VAR_0x8004
 	goto_if_ge VAR_RESULT, PARTY_SIZE, Route12_FishingHouse_EventScript_CancelShowMon
 	special CompareMagikarpSize

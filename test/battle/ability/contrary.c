@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
     } THEN {
@@ -56,14 +56,14 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(playerLeft, captureDamage: &results[i].damageLeft);
         HP_BAR(playerRight, captureDamage: &results[i].damageRight);
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_OVERHEAT, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_OVERHEAT, self: TRUE, spAtk: -2);
         ASSUME(GetMoveCategory(MOVE_OVERHEAT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SPINDA) { Ability(ability); }
@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
         if (ability == ABILITY_CONTRARY) {
             // ABILITY_POPUP(opponent, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Sp. Atk sharply rose!");
+            MESSAGE("The opposing Spinda's Sp. Atk rose sharply!");
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
         if (ability == ABILITY_CONTRARY) {
             // ABILITY_POPUP(opponent, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Sp. Atk sharply rose!");
+            MESSAGE("The opposing Spinda's Sp. Atk rose sharply!");
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET) { Defense(102); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Attack(100); }
     } WHEN {
@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack sharply rose!");
+            MESSAGE("The opposing Spinda's Attack rose sharply!");
         }
 
         // MESSAGE("The opposing Spinda used Scratch!");
@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Speed(2); }
     } WHEN {
@@ -234,7 +234,7 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
-        MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
+        MESSAGE("A sticky web has been laid out on the ground on the opposing side!");
         MESSAGE("2 sent out Snivy!");
         MESSAGE("The opposing Snivy was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -272,7 +272,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
 SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

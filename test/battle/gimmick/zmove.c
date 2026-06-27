@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_RESTORE_REPLACEMENT_HP fully heals the rep
 // This tests the functionality of Z_EFFECT_RECOVER_HP and Z_EFFECT_ATK_UP_1 (and thus by extension all stat-up Z-effects)
 SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_EFFECT_ATK_UP_1 depending on the type of the battler")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_DUSCLOPS; }
     GIVEN {
@@ -504,7 +504,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Light That Burns the Sky uses the battler's highest
     PARAMETRIZE { useSwordsDance = FALSE; }
     PARAMETRIZE { useSwordsDance = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }; // hits hard lol
     } WHEN {
@@ -598,6 +598,24 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
     }
 }
 
+SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain when the target is behind a Substitute")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
+        PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_PSYCHIC, gimmick: GIMMICK_Z_MOVE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
+        SUB_HIT(opponent);
+        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
+    }
+}
+
 SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
 {
     GIVEN {
@@ -616,10 +634,33 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
     }
 }
 
+SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain when the target is behind a Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_ICE_SPINNER);
+        PLAYER(SPECIES_LYCANROC_DUSK) { Item(ITEM_LYCANIUM_Z); }
+        OPPONENT(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_STONE_EDGE, gimmick: GIMMICK_Z_MOVE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLINTERED_STORMSHARDS, player);
+        SUB_HIT(opponent);
+        MESSAGE("The weirdness disappeared from the battlefield!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
+    }
+}
+
 SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by one stage")
 {
     GIVEN {
-        ASSUME(GetMoveAdditionalEffectById(MOVE_CLANGOROUS_SOULBLAZE, 0)->moveEffect == MOVE_EFFECT_ALL_STATS_UP);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(
+            MOVE_CLANGOROUS_SOULBLAZE, self: TRUE,
+            attack: 1, defense: 1,
+            spAtk: 1, spDef: 1, speed: 1
+        );
         PLAYER(SPECIES_KOMMO_O) { Item(ITEM_KOMMONIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -669,7 +710,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Searing Sunraze Smash ignores the target's abilitie
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck Blitz")
 {
-    u16 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_ORICORIO_BAILE; }
     PARAMETRIZE { species = SPECIES_ORICORIO_PAU; }
     PARAMETRIZE { species = SPECIES_ORICORIO_POM_POM; }
@@ -730,10 +771,10 @@ MULTI_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - Multi")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -749,10 +790,10 @@ TWO_VS_ONE_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 2v1")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -768,10 +809,10 @@ ONE_VS_TWO_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 1v2")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {

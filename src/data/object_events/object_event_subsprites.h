@@ -2540,9 +2540,9 @@ static const struct SubspriteTable sOamTables_32x24[] = {
 };
 
 
-// For following pokemon
+// For following Pokémon
 // Makes the top 32 pixels priority 1,
-// so that very tall pokemon's heads
+// so that very tall Pokémon's heads
 // will appear on top of buildings, etc.
 static const struct SubspriteTable sOamTables_64x64_Tall[] = {
     {}, // unused
@@ -2554,7 +2554,7 @@ static const struct SubspriteTable sOamTables_64x64_Tall[] = {
 };
 
 // Like sOamTables_64x64_Tall, but fewer pixels visible in long grass
-// Meant for pokemon that are more long than tall like Wailord
+// Meant for Pokémon that are more long than tall like Wailord
 static const struct SubspriteTable sOamTables_64x64_Long[] = {
     {}, // unused
     SUBSPRITE_TABLE_ENTRY(sOamTable_64x64_Follower), // elevation 3

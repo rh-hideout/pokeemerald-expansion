@@ -8,6 +8,8 @@
 #include "oras_dowse.h"
 #include "overworld.h"
 #include "sound.h"
+#include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "constants/songs.h"
 
 // this file's functions
@@ -1202,14 +1204,6 @@ static enum Collision GetBikeCollisionAt(struct ObjectEvent *objectEvent, s16 x,
     return collision;
 }
 
-bool8 RS_IsRunningDisallowed(u8 tile)
-{
-    if (IsRunningDisallowedByMetatile(tile) != FALSE || gMapHeader.mapType == MAP_TYPE_INDOOR)
-        return TRUE;
-    else
-        return FALSE;
-}
-
 static bool8 IsRunningDisallowedByMetatile(u8 tile)
 {
     if (MetatileBehavior_IsRunningDisallowed(tile))
@@ -1295,8 +1289,8 @@ void GetOnOffBike(u8 transitionFlags)
     {
         EndORASDowsing();
         SetPlayerAvatarTransitionFlags(transitionFlags);
-        Overworld_SetSavedMusic(MUS_CYCLING);
-        Overworld_ChangeMusicTo(MUS_CYCLING);
+        Overworld_SetSavedMusic(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+        Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
     }
 }
 

@@ -234,7 +234,7 @@ static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, cons
     if (ObjectEventIsHeldMovementActive(obj) && !ObjectEventClearHeldMovementIfFinished(obj))
     {
         // If, while undergoing scripted movement,
-        // a non-player object collides with an active follower pokemon,
+        // a non-player object collides with an active follower Pokémon,
         // put that follower into a pokeball
         // (sTimer helps limit this expensive check to once per step)
         if (OW_FOLLOWERS_SCRIPT_MOVEMENT && gSprites[obj->spriteId].sTimer == 1

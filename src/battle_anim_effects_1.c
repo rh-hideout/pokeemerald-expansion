@@ -6,6 +6,7 @@
 #include "decompress.h"
 #include "gpu_regs.h"
 #include "graphics.h"
+#include "item_icon.h"
 #include "main.h"
 #include "math_util.h"
 #include "palette.h"
@@ -3147,6 +3148,12 @@ void AnimTask_CreateSmallSolarBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSolarBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;
@@ -4014,12 +4021,9 @@ static void AnimConstrictBinding(struct Sprite *sprite)
 
 static void AnimConstrictBinding_Step1(struct Sprite *sprite)
 {
-    u8 UNUSED spriteId;
-
     if ((u16)gBattleAnimArgs[7] == 0xFFFF)
     {
         sprite->affineAnimPaused = 0;
-        spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
         sprite->data[0] = 0x100;
         sprite->callback = AnimConstrictBinding_Step2;
     }
@@ -4027,7 +4031,6 @@ static void AnimConstrictBinding_Step1(struct Sprite *sprite)
 
 static void AnimConstrictBinding_Step2(struct Sprite *sprite)
 {
-    u8 UNUSED spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
     if (!sprite->data[2])
         sprite->data[0] += 11;
     else
@@ -4366,6 +4369,30 @@ static void AnimKnockOffItem(struct Sprite *sprite)
     }
 }
 
+void AnimTask_KnockOffItem(u8 taskId)
+{
+    u8 iconSpriteId = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+
+    if (iconSpriteId != MAX_SPRITES)
+    {
+        struct Sprite* sprite = &gSprites[iconSpriteId];
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
+        sprite->oam.priority = 2;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->affineAnims = gFallingBagAffineAnimTable;
+        sprite->callback = AnimKnockOffItem;
+
+		CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+		InitSpriteAffineAnim(sprite);
+		++gAnimVisualTaskCount;
+    }
+
+    FreeSpriteTilesByTag(ANIM_TAG_ITEM_BAG);
+    FreeSpritePaletteByTag(ANIM_TAG_ITEM_BAG);
+    DestroyAnimVisualTask(taskId);
+}
+
 // Animates a heal particle upward.
 static void AnimPresentHealParticle(struct Sprite *sprite)
 {
@@ -4434,13 +4461,34 @@ static void AnimItemSteal_Step3(struct Sprite *sprite)
     }
 }
 
+void AnimTask_StealItem(u8 taskId)
+{
+    u8 iconSpriteId = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+
+    if (iconSpriteId != MAX_SPRITES)
+    {
+        struct Sprite* sprite = &gSprites[iconSpriteId];
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
+        sprite->oam.priority = 2;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->affineAnims = gFallingBagAffineAnimTable;
+        sprite->callback = AnimItemSteal;
+
+		CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+		InitSpriteAffineAnim(sprite);
+		++gAnimVisualTaskCount;
+    }
+
+    DestroyAnimVisualTask(taskId);
+    FreeSpriteTilesByTag(ANIM_TAG_ITEM_BAG);
+    FreeSpritePaletteByTag(ANIM_TAG_ITEM_BAG);
+}
+
 // Moves a bag in a circular motion.
 static void AnimTrickBag(struct Sprite *sprite)
 {
     CMD_ARGS(initialY, waveOffset);
-
-    int a;
-    int b;
 
     if (!sprite->data[0])
     {
@@ -4451,13 +4499,7 @@ static void AnimTrickBag(struct Sprite *sprite)
         }
         else
         {
-            a = cmd->waveOffset - 32;
-            if (a < 0)
-                b = cmd->waveOffset + 0xDF;
-            else
-                b = a;
-
-            sprite->data[1] = a - ((b >> 8) << 8);
+            sprite->data[1] = (cmd->waveOffset - 32) % 256;
             sprite->x = 70;
         }
 
@@ -4546,6 +4588,12 @@ static void AnimTrickBag_Step3(struct Sprite *sprite)
 void AnimTask_LeafBlade(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    if (!TryLoadSpriteAssets(&gLeafBladeSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     task->data[4] = GetBattlerSpriteSubpriority(gBattleAnimTarget) - 1;
     task->data[6] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -5674,18 +5722,18 @@ static void AnimLockOnMoveTarget(struct Sprite *sprite)
     CMD_ARGS(unk0);
 
     sprite->oam.affineParam = cmd->unk0;
-    if ((s16)sprite->oam.affineParam == 1)
+    if (cmd->unk0 == 1)
     {
         sprite->x -= 0x18;
         sprite->y -= 0x18;
     }
-    else if ((s16)sprite->oam.affineParam == 2)
+    else if (cmd->unk0 == 2)
     {
         sprite->x -= 0x18;
         sprite->y += 0x18;
         sprite->oam.matrixNum = ST_OAM_VFLIP;
     }
-    else if ((s16)sprite->oam.affineParam == 3)
+    else if (cmd->unk0 == 3)
     {
         sprite->x += 0x18;
         sprite->y -= 0x18;
@@ -5698,7 +5746,7 @@ static void AnimLockOnMoveTarget(struct Sprite *sprite)
         sprite->oam.matrixNum = ST_OAM_HFLIP | ST_OAM_VFLIP;
     }
 
-    sprite->oam.tileNum = (sprite->oam.tileNum + 16);
+    sprite->oam.tileNum += 16;
     sprite->callback = AnimLockOnTarget;
     sprite->callback(sprite);
 }
@@ -6583,24 +6631,6 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
     }
 }
 
-static void TrySwapSkyDropTargets(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
-{
-    u32 temp;
-
-    // battlerAtk is using Ally Switch
-    // check if our partner is the target of sky drop
-    // If so, change that index to battlerAtk
-    for (enum BattlerId i = 0; i < gBattlersCount; i++) {
-        if (gBattleStruct->skyDropTargets[i] == battlerPartner) {
-            gBattleStruct->skyDropTargets[i] = battlerAtk;
-            break;
-        }
-    }
-
-    // Then swap our own sky drop targets with the partner in case our partner is mid-skydrop
-    SWAP(gBattleStruct->skyDropTargets[battlerAtk], gBattleStruct->skyDropTargets[battlerPartner], temp);
-}
-
 #define TRY_SIDE_TIMER_BATTLER_ID_SWAP(battlerAtk, battlerPartner, side, field)    \
     if (gSideTimers[side].field == battlerAtk)                      \
         gSideTimers[side].field = battlerPartner;                   \
@@ -6748,7 +6778,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwitchTwoBattlersInParty(battlerAtk, battlerPartner);
     SWAP(gBattlerPartyIndexes[battlerAtk], gBattlerPartyIndexes[battlerPartner], temp);
 
-    TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
@@ -6974,7 +7003,7 @@ static void AnimWavyMusicNotes_Step(struct Sprite *sprite)
     u8 index;
 
     sprite->sMoveTimer++;
-    trigIdx = sprite->sMoveTimer * 5 - ((sprite->sMoveTimer * 5 / 256) << 8);
+    trigIdx = (sprite->sMoveTimer * 5) % 256;
     sprite->sX += sprite->sVelocX;
     sprite->sY += sprite->sVelocY;
     sprite->x = sprite->sX >> 4;
@@ -7374,6 +7403,12 @@ void AnimTask_CreateSmallSteelBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSteelBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;

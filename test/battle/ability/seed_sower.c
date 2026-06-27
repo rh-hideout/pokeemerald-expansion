@@ -9,12 +9,28 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain when hit by an attack")
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
-        ABILITY_POPUP(player);
+        ABILITY_POPUP(player, ABILITY_SEED_SOWER);
         MESSAGE("Grass grew to cover the battlefield!");
     }
 }
+
+SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain even when the user faints from an attack")
+{
+    GIVEN {
+        PLAYER(SPECIES_ARBOLIVA) { Ability(ABILITY_SEED_SOWER); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_SEED_SOWER);
+        MESSAGE("Grass grew to cover the battlefield!");
+        MESSAGE("Arboliva fainted!");
+    }
+} 
 
 #define ABILITY_PARAM(n)(abilities[n] = (k == n) ? ABILITY_SEED_SOWER : ABILITY_HARVEST)
 #define MOVE_HIT(target, position)                      \

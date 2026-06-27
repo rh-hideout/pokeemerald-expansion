@@ -596,15 +596,6 @@ bool8 ScriptMenu_YesNo(u8 left, u8 top)
     }
 }
 
-// Unused
-bool8 IsScriptActive(void)
-{
-    if (gSpecialVar_Result == 0xFF)
-        return FALSE;
-    else
-        return TRUE;
-}
-
 static void Task_HandleYesNoInput(u8 taskId)
 {
     if (gTasks[taskId].tRight < 5)
@@ -966,7 +957,7 @@ static void Task_PokemonPicWindow(u8 taskId)
     }
 }
 
-bool8 ScriptMenu_ShowPokemonPic(u16 species, u8 x, u8 y)
+bool8 ScriptMenu_ShowPokemonPic(enum Species species, u8 x, u8 y)
 {
     u8 taskId;
     u8 spriteId;
@@ -1210,7 +1201,6 @@ void DrawSeagallopDestinationMenu(void)
     u8 top;
     u8 numItems;
     u8 cursorWidth;
-    u8 UNUSED fontHeight;
     u8 windowId;
     u8 i;
     gSpecialVar_Result = 0xFF;
@@ -1231,7 +1221,6 @@ void DrawSeagallopDestinationMenu(void)
         top = 0;
     }
     cursorWidth = GetMenuCursorDimensionByFont(FONT_NORMAL, 0);
-    fontHeight = GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_HEIGHT);
     windowId = CreateWindowFromRect(17, top, 11, numItems * 2);
     SetStandardWindowBorderStyle(windowId, FALSE);
 

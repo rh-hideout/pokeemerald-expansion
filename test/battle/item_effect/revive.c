@@ -196,7 +196,7 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death types")
 
 DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immediately", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }

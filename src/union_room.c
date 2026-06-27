@@ -204,8 +204,8 @@ static EWRAM_DATA union
     struct WirelessLink_URoom *uRoom;
 } sWirelessLinkMain = {};
 EWRAM_DATA struct RfuGameCompatibilityData gRfuPartnerCompatibilityData = {};
-EWRAM_DATA u16 gUnionRoomOfferedSpecies = 0;
-EWRAM_DATA enum Type gUnionRoomRequestedMonType = 0;
+EWRAM_DATA enum Species gUnionRoomOfferedSpecies = SPECIES_NONE;
+EWRAM_DATA enum Type gUnionRoomRequestedMonType = TYPE_NONE;
 static EWRAM_DATA struct UnionRoomTrade sUnionRoomTrade = {};
 
 static struct WirelessLink_Leader *sLeader;
@@ -270,7 +270,7 @@ static void GetURoomActivityRejectMsg(u8 *, s32, u32);
 static u32 ConvPartnerUnameAndGetWhetherMetAlready(struct RfuPlayer *);
 static void GetURoomActivityStartMsg(u8 *, u8);
 static void UR_ClearBg0(void);
-static s32 IsRequestedTradeInPlayerParty(enum Type, u32);
+static s32 IsRequestedTradeInPlayerParty(enum Type, enum Species);
 static bool32 UR_PrintFieldMessage(const u8 *);
 static s32 GetChatLeaderActionRequestMessage(u8 *, u32, u16 *, struct WirelessLink_URoom *);
 static void Task_InitUnionRoom(u8 taskId);
@@ -1042,9 +1042,6 @@ static void Task_TryJoinLinkGroup(u8 taskId)
             id = ListMenu_ProcessInput(data->listTaskId);
             if (JOY_NEW(A_BUTTON) && id != LIST_NOTHING_CHOSEN)
             {
-                // Needed to match
-                u32 UNUSED activity = data->playerList->players[id].rfu.data.activity;
-
                 if (data->playerList->players[id].groupScheduledAnim == UNION_ROOM_SPAWN_IN && !data->playerList->players[id].rfu.data.startedActivity)
                 {
                     u32 readyStatus = IsTryingToTradeAcrossVersionTooSoon(data, id);
@@ -1481,12 +1478,12 @@ static void Task_StartUnionRoomTrade(u8 taskId)
     {
     case 0:
         gTasks[taskId].data[0]++;
-        SendBlock(0, &gPlayerParty[monId], sizeof(struct Pokemon));
+        SendBlock(0, &gParties[B_TRAINER_PLAYER][monId], sizeof(struct Pokemon));
         break;
     case 1:
         if (GetBlockReceivedStatus() == 3)
         {
-            gEnemyParty[0] = *(struct Pokemon *)(gBlockRecvBuffer[GetMultiplayerId() ^ 1]);
+            gParties[B_TRAINER_OPPONENT_A][0] = *(struct Pokemon *)(gBlockRecvBuffer[GetMultiplayerId() ^ 1]);
             IncrementGameStat(GAME_STAT_NUM_UNION_ROOM_BATTLES);
             ResetBlockReceivedFlags();
             gTasks[taskId].data[0]++;
@@ -1762,8 +1759,8 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
             gLinkPlayers[0].linkType = LINKTYPE_BATTLE;
             gLinkPlayers[0].id = 0;
             gLinkPlayers[1].id = 2;
-            sendBuff[0] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
-            sendBuff[1] = GetMonData(&gPlayerParty[gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
+            sendBuff[0] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
+            sendBuff[1] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
             gMain.savedCallback = NULL;
             data[0] = 4;
             SaveLinkTrainerNames();
@@ -1840,7 +1837,7 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
         data[0] = 8;
         break;
     case 8:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             DestroyWirelessStatusIndicatorSprite();
             ScriptContext_Enable();
@@ -2148,9 +2145,6 @@ static void Task_CardOrNewsWithFriend(u8 taskId)
             id = ListMenu_ProcessInput(data->listTaskId);
             if (JOY_NEW(A_BUTTON) && id != LIST_NOTHING_CHOSEN)
             {
-                // Needed to match
-                u32 UNUSED activity = data->playerList->players[id].rfu.data.activity;
-
                 if (data->playerList->players[id].groupScheduledAnim == UNION_ROOM_SPAWN_IN && !data->playerList->players[id].rfu.data.startedActivity)
                 {
                     data->leaderId = id;
@@ -4110,7 +4104,7 @@ static void ItemPrintFunc_EmptyList(u8 windowId, u32 itemId, u8 y)
 static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData *data, const u8 *playerName, u8 colorIdx)
 {
     u8 levelStr[4];
-    u16 species = data->tradeSpecies;
+    enum Species species = data->tradeSpecies;
     enum Type type = data->tradeType;
     u8 level = data->tradeLevel;
 
@@ -4181,15 +4175,15 @@ static s32 GetUnionRoomPlayerGender(s32 playerIdx, struct RfuPlayerList *list)
     return list->players[playerIdx].rfu.data.playerGender;
 }
 
-static s32 IsRequestedTradeInPlayerParty(enum Type type, u32 species)
+static s32 IsRequestedTradeInPlayerParty(enum Type type, enum Species species)
 {
     s32 i;
 
     if (species == SPECIES_EGG)
     {
-        for (i = 0; i < gPlayerPartyCount; i++)
+        for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
         {
-            species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG)
                 return UR_TRADE_MATCH;
         }
@@ -4197,9 +4191,9 @@ static s32 IsRequestedTradeInPlayerParty(enum Type type, u32 species)
     }
     else
     {
-        for (i = 0; i < gPlayerPartyCount; i++)
+        for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
         {
-            species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (GetSpeciesType(species, 0) == type || GetSpeciesType(species, 1) == type)
                 return UR_TRADE_MATCH;
         }
@@ -4248,7 +4242,7 @@ static void GetURoomActivityStartMsg(u8 *dst, u8 acitivty)
 static s32 GetChatLeaderActionRequestMessage(u8 *dst, u32 gender, u16 *activityData, struct WirelessLink_URoom *uroom)
 {
     s32 result = 0;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     s32 i;
 
     switch (activityData[0])
@@ -4329,10 +4323,10 @@ static bool32 HasAtLeastTwoMonsOfLevel30OrLower(void)
     s32 i;
     s32 count = 0;
 
-    for (i = 0; i < gPlayerPartyCount; i++)
+    for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_LEVEL) <= UNION_ROOM_MAX_LEVEL
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL) <= UNION_ROOM_MAX_LEVEL
+         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
             count++;
     }
 
@@ -4361,9 +4355,9 @@ void Script_ResetUnionRoomTrade(void)
 
 static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade *trade)
 {
-    trade->playerSpecies = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-    trade->playerLevel = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-    trade->playerPersonality = GetMonData(&gPlayerParty[monId], MON_DATA_PERSONALITY);
+    trade->playerSpecies = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_SPECIES_OR_EGG);
+    trade->playerLevel = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
+    trade->playerPersonality = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_PERSONALITY);
     if (trade->playerSpecies == SPECIES_EGG)
         return TRUE;
     else
@@ -4372,18 +4366,18 @@ static bool32 RegisterTradeMonAndGetIsEgg(u32 monId, struct UnionRoomTrade *trad
 
 static void RegisterTradeMon(u32 monId, struct UnionRoomTrade *trade)
 {
-    trade->species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-    trade->level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-    trade->personality = GetMonData(&gPlayerParty[monId], MON_DATA_PERSONALITY);
+    trade->species = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_SPECIES_OR_EGG);
+    trade->level = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
+    trade->personality = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_PERSONALITY);
 }
 
 static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade *trade, u8 multiplayerId)
 {
     u16 response = 0;
-    u16 species;
+    enum Species species;
     u32 personality;
     u32 cur_personality;
-    u16 cur_species;
+    enum Species cur_species;
     s32 i;
 
     if (multiplayerId == 0)
@@ -4398,12 +4392,12 @@ static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade *trade, u8 mult
     }
 
     // Find party position by comparing to personality and species
-    for (i = 0; i < gPlayerPartyCount; i++)
+    for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
-        cur_personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
+        cur_personality = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
         if (cur_personality != personality)
             continue;
-        cur_species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        cur_species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
         if (cur_species != species)
             continue;
         response = i;

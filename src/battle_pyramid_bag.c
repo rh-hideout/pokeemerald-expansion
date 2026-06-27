@@ -598,7 +598,7 @@ static bool8 LoadPyramidBagGfx(void)
 static void SetBagItemsListTemplate(void)
 {
     u16 i;
-    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 
     for (i = 0; i < gPyramidBagMenu->listMenuCount - 1; i++)
     {
@@ -619,7 +619,7 @@ static void CopyBagItemName(u8 *dst, enum Item itemId)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES)
     {
-        ConvertIntToDecimalStringN(gStringVar1, ITEM_TO_BERRY(itemId), STR_CONV_MODE_LEADING_ZEROS, MAX_PYRAMID_ITEM_DIGITS);
+        ConvertIntToDecimalStringN(gStringVar1, ItemIdToBerryType(itemId), STR_CONV_MODE_LEADING_ZEROS, MAX_PYRAMID_ITEM_DIGITS);
         CopyItemName(itemId, gStringVar2);
         StringExpandPlaceholders(dst, gText_NumberItem_TMBerry);
     }
@@ -723,7 +723,7 @@ static void CreatePyramidBagInputTask(void)
 static void SwapItems(u8 id1, u8 id2)
 {
     u16 temp;
-    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -736,7 +736,7 @@ static void SwapItems(u8 id1, u8 id2)
 
 static void MovePyramidBagItemSlotInList(u8 from, u8 to)
 {
-    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -774,7 +774,7 @@ static void MovePyramidBagItemSlotInList(u8 from, u8 to)
 static void CompactItems(void)
 {
     u8 i, j;
-    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 #else
@@ -802,7 +802,7 @@ static void CompactItems(void)
 void UpdatePyramidBagList(void)
 {
     u16 i;
-    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+    enum Item *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
 
     CompactItems();
     gPyramidBagMenu->listMenuCount = 0;
@@ -1419,14 +1419,14 @@ static void CancelItemSwap(u8 taskId)
 void TryStoreHeldItemsInPyramidBag(void)
 {
     u8 i;
-    struct Pokemon *party = gPlayerParty;
+    struct Pokemon *party = gParties[B_TRAINER_PLAYER];
     u16 *newItems = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
     u16 *newQuantities = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
 #else
     u8 *newQuantities = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
 #endif
-    u16 heldItem;
+    enum Item heldItem;
 
     memcpy(newItems, gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode], PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
     memcpy(newQuantities, gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
