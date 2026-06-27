@@ -941,7 +941,7 @@ static enum Collision CheckForPlayerAvatarCollision(enum Direction direction)
 
     x = playerObjEvent->currentCoords.x;
     y = playerObjEvent->currentCoords.y;
-    if (IsDirectionalStairWarpMetatileBehavior(MapGridGetMetatileBehaviorAt(x, y), direction))
+    if (IsDirectionalStairWarpMetatileBehavior(playerObjEvent->currentMetatileBehavior, direction))
         return COLLISION_STAIR_WARP;
 
     MoveCoords(direction, &x, &y);
