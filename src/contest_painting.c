@@ -45,17 +45,7 @@ static void _InitContestMonPixels(u8 *spriteGfx, u16 *palette, u16 (*destPixels)
 const u8 gContestHallPaintingCaption[] = _("{STR_VAR_1}\n{STR_VAR_2}'s {STR_VAR_3}");
 
 static const u16 sPictureFramePalettes[]          = INCGFX_U16("graphics/picture_frame/bg.pal", ".gbapal");
-static const u32 sPictureFrameTiles_Cool[]        = INCGFX_U32("graphics/picture_frame/cool.png", ".4bpp.smol");
-static const u32 sPictureFrameTiles_Beauty[]      = INCGFX_U32("graphics/picture_frame/beauty.png", ".4bpp.smol");
-static const u32 sPictureFrameTiles_Cute[]        = INCGFX_U32("graphics/picture_frame/cute.png", ".4bpp.smol");
-static const u32 sPictureFrameTiles_Smart[]       = INCGFX_U32("graphics/picture_frame/smart.png", ".4bpp.smol");
-static const u32 sPictureFrameTiles_Tough[]       = INCGFX_U32("graphics/picture_frame/tough.png", ".4bpp.smol");
 static const u32 sPictureFrameTiles_HallLobby[]   = INCGFX_U32("graphics/picture_frame/lobby.png", ".4bpp.smol", "-num_tiles 86 -Wnum_tiles");
-static const u32 sPictureFrameTilemap_Cool[]      = INCGFX_U32("graphics/picture_frame/cool_map.bin", ".smolTM");
-static const u32 sPictureFrameTilemap_Beauty[]    = INCGFX_U32("graphics/picture_frame/beauty_map.bin", ".smolTM");
-static const u32 sPictureFrameTilemap_Cute[]      = INCGFX_U32("graphics/picture_frame/cute_map.bin", ".smolTM");
-static const u32 sPictureFrameTilemap_Smart[]     = INCGFX_U32("graphics/picture_frame/smart_map.bin", ".smolTM");
-static const u32 sPictureFrameTilemap_Tough[]     = INCGFX_U32("graphics/picture_frame/tough_map.bin", ".smolTM");
 static const u32 sPictureFrameTilemap_HallLobby[] = INCGFX_U32("graphics/picture_frame/lobby_map.bin", ".smolTM");
 
 static const u8 *const sContestRankNames[] =
@@ -452,7 +442,7 @@ static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
     else
         contestCategory = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
 
-    return gContestCategoryInfo[contestCategory].stdString
+    return gContestCategoryInfo[contestCategory].stdString;
 }
 
 static void AllocPaintingResources(void)
