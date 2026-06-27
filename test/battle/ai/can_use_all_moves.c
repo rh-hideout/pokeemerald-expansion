@@ -530,7 +530,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_LASER_FOCUS:
         case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:
-        case EFFECT_SOAK:
+        case EFFECT_CHANGE_TARGET_TYPE:
 
         // tests exist elsewhere
         case EFFECT_ELECTRIC_TERRAIN:

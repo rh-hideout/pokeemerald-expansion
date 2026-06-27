@@ -372,7 +372,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
         WITH_CONFIG(B_POWDER_GRASS, GEN_6);
         ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_CHANGE_TARGET_TYPE);
         PLAYER(SPECIES_TREECKO);
         PLAYER(SPECIES_SCEPTILE);
         OPPONENT(SPECIES_WOBBUFFET);

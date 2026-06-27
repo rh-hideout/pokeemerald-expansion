@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affect the power of Low Kick", s
     PARAMETRIZE { ability = ABILITY_HEAVY_METAL; } //  50.0 - 99.9 kg  (80 power)
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_CHANGE_TARGET_TYPE);
         ASSUME(GetMoveArgType(MOVE_SOAK) == TYPE_WATER);
         ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
         PLAYER(SPECIES_WOBBUFFET);
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Autotomize applies before Light Metal and Heavy Metal when d
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_AUTOTOMIZE) == EFFECT_AUTOTOMIZE);
-        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_HEAT_CRASH);
+        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_POWER_USER_WEIGHT);
         ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
         ASSUME(GetSpeciesWeight(SPECIES_GASTLY) == 1);
         PLAYER(SPECIES_GASTLY);
