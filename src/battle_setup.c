@@ -1219,8 +1219,10 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
     PUSH       (EventSnippet_Lock)
     PUSH_IF_SET(EventSnippet_FacePlayer, battleParams->params.facePlayer)
     PUSH       (EventSnippet_RevealTrainer)
-    
-    if ((GetTrainerFlag() && !battleParams->params.isRematch) 
+
+    bool32 isTrainerDefeated = !battleParams->params.skipFlagCheck && GetTrainerFlag();
+
+    if (( isTrainerDefeated && !battleParams->params.isRematch)
     || (!IsTrainerReadyForRematch() && battleParams->params.isRematch)) {
         PUSH(EventSnippet_GotoPostBattleScript)
         return;
@@ -1259,7 +1261,7 @@ void ConfigureTrainerBattle(struct ScriptContext *ctx)
 
     struct ScriptStack trainerBattleScriptStack;
     InitScriptStack(&trainerBattleScriptStack);
-    
+
     TrainerBattleParameter *battleParams = (TrainerBattleParameter*)(ctx->scriptPtr);
     TrainerBattleLoadArgs(battleParams->data);
 
