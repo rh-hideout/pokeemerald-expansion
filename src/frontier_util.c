@@ -54,17 +54,6 @@ struct FrontierBrainMon
     enum Move moves[MAX_MON_MOVES];
 };
 
-struct FrontierBrain
-{
-    u16 trainerId;
-    u8 objEventGfx;
-    u8 isFemale;
-    const u8 *lostTexts[2];
-    const u8 *wonTexts[2];
-    u16 battledBit[2];
-    u8 streakAppearances[4];
-};
-
 // This file's functions.
 static void GetChallengeStatus(void);
 static void GetFrontierData(void);
