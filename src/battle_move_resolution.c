@@ -4074,6 +4074,7 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
      || IsPursuitTargetSet()
      || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
      || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
+     || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_COMMANDER
      || gBattleStruct->battlerState[ejectPackBattler].commanderSpecies != SPECIES_NONE
      || !CanBattlerSwitch(ejectPackBattler)
      || (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))

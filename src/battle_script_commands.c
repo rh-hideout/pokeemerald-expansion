@@ -11729,8 +11729,12 @@ void BS_AllySwitchSwapBattler(void)
 void BS_TryAllySwitch(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
+    enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
 
-    if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)) || HasPartnerTrainer(gBattlerAttacker))
+    if (!IsBattlerAlive(partner)
+     || HasPartnerTrainer(gBattlerAttacker)
+     || gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE
+     || gBattleStruct->battlerState[partner].commanderSpecies != SPECIES_NONE)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
