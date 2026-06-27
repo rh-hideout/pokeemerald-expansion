@@ -2957,6 +2957,9 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 {
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
+    // Data cleared both on switch and faint
+    ClearSetDataOnLeave(battler);
+
     ClearIllusionMon(battler);
     if (effect != EFFECT_BATON_PASS)
     {
@@ -3041,6 +3044,9 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
 void FaintClearSetData(enum BattlerId battler)
 {
+    // Data cleared both on switch and faint
+    ClearSetDataOnLeave(battler);
+
     for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
