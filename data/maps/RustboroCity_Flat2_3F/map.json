@@ -3,7 +3,6 @@
   "name": "RustboroCity_Flat2_3F",
   "layout": "LAYOUT_RUSTBORO_CITY_FLAT2_3F",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -52,5 +51,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

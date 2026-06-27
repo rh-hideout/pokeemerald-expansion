@@ -3,7 +3,6 @@
   "name": "OneIsland_TreasureBeach_Frlg",
   "layout": "LAYOUT_ONE_ISLAND_TREASURE_BEACH",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_TREASURE_BEACH",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -51,12 +50,8 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -138,5 +133,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

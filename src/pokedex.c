@@ -3145,7 +3145,6 @@ static u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
     u8 taskId;
 
     sPokedexListItem = item;
-    gAreaTimeOfDay = GetTimeOfDayForDex();
     taskId = CreateTask(Task_LoadInfoScreen, 0);
     gTasks[taskId].tScrolling = FALSE;
     gTasks[taskId].tMonSpriteDone = TRUE; // Already has sprite from list view
@@ -3464,7 +3463,7 @@ void Task_LoadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
         gMain.state = 0;
@@ -3488,7 +3487,7 @@ void Task_ReloadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState);
         gMain.state = 0;
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
@@ -3517,9 +3516,6 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
             break;
         case 2:
             gTasks[taskId].func = Task_LoadCryScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_ReloadAreaScreen;
             break;
         }
     }

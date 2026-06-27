@@ -3,7 +3,6 @@
   "name": "SixIsland_PatternBush_Frlg",
   "layout": "LAYOUT_SIX_ISLAND_PATTERN_BUSH",
   "music": "MUS_RG_VIRIDIAN_FOREST",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_PATTERN_BUSH",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -229,10 +228,10 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "NewMauville_Inside",
   "layout": "LAYOUT_NEW_MAUVILLE_INSIDE",
   "music": "MUS_MT_PYRE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_NEW_MAUVILLE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -286,5 +285,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "NewMauville_Inside_EventScript_Generator"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

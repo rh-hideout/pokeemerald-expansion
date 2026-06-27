@@ -3,7 +3,6 @@
   "name": "ThreeIsland_House1_Frlg",
   "layout": "LAYOUT_THREE_ISLAND_HOUSE1",
   "music": "MUS_RG_SEVII_123",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_THREE_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -50,5 +49,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ThreeIsland_House1_EventScript_DisplayCase"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

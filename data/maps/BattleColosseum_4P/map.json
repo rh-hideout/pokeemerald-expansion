@@ -3,7 +3,6 @@
   "name": "BattleColosseum_4P",
   "layout": "LAYOUT_BATTLE_COLOSSEUM_4P",
   "music": "MUS_EVER_GRANDE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -83,5 +82,8 @@
       "script": "EventScript_BattleColosseum_4P_PlayerSpot3"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

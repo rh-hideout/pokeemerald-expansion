@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattlePyramidLobby",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY",
   "music": "MUS_B_PYRAMID",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -97,5 +96,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "BattleFrontier_BattlePyramidLobby_EventScript_RulesBoard"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

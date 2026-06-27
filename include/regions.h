@@ -1,21 +1,9 @@
 #ifndef GUARD_REGIONS_H
 #define GUARD_REGIONS_H
 
-#include "global.h"
-#include "constants/regions.h"
+enum PokemonRegion GetPokemonRegionForSectionId(u32 sectionId);
+enum PokemonRegion GetCurrentPokemonRegion(void);
 
-enum KantoSubRegion GetKantoSubregion(u32 mapSecId);
-
-static inline enum Region GetRegionForSectionId(u32 sectionId)
-{
-    if (sectionId >= KANTO_MAPSEC_START && sectionId < MAPSEC_SPECIAL_AREA)
-        return REGION_KANTO;
-    return REGION_HOENN;
-}
-
-static inline enum Region GetCurrentRegion(void)
-{
-    return GetRegionForSectionId(gMapHeader.regionMapSectionId);
-}
+const u8 *GetPokemonRegionName(enum PokemonRegion region);
 
 #endif // GUARD_REGIONS_H

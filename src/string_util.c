@@ -1,6 +1,7 @@
 #include "global.h"
 #include "string_util.h"
 #include "text.h"
+#include "regions.h"
 #include "strings.h"
 #include "union_room_chat.h"
 
@@ -514,14 +515,6 @@ static const u8 *ExpandPlaceholder_Groudon(void)
     return gText_ExpandedPlaceholder_Groudon;
 }
 
-static const u8 *ExpandPlaceholder_Region(void)
-{
-    if (IS_FRLG)
-        return gText_Kanto;
-    else
-        return gText_Hoenn;
-}
-
 const u8 *GetExpandedPlaceholder(u32 id)
 {
     typedef const u8 *(*ExpandPlaceholderFunc)(void);
@@ -542,7 +535,6 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_MAXIE]        = ExpandPlaceholder_Maxie,
         [PLACEHOLDER_ID_KYOGRE]       = ExpandPlaceholder_Kyogre,
         [PLACEHOLDER_ID_GROUDON]      = ExpandPlaceholder_Groudon,
-        [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_Region,
     };
 
     if (id >= ARRAY_COUNT(funcs))

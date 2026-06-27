@@ -3,7 +3,6 @@
   "name": "RusturfTunnel",
   "layout": "LAYOUT_RUSTURF_TUNNEL",
   "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_RUSTURF_TUNNEL",
   "requires_flash": false,
   "weather": "WEATHER_FOG_HORIZONTAL",
@@ -221,5 +220,8 @@
       "script": "RusturfTunnel_EventScript_TunnelBlockagePos3"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

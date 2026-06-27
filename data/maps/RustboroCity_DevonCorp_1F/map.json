@@ -3,7 +3,6 @@
   "name": "RustboroCity_DevonCorp_1F",
   "layout": "LAYOUT_RUSTBORO_CITY_DEVON_CORP_1F",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -97,5 +96,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RustboroCity_DevonCorp_1F_EventScript_RocksMetalDisplay"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "CeruleanCity_Gym_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_GYM",
   "music": "MUS_RG_GYM",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -114,5 +113,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeruleanCity_Gym_EventScript_GymStatue"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

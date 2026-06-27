@@ -3,7 +3,6 @@
   "name": "MarineCave_End",
   "layout": "LAYOUT_MARINE_CAVE_END",
   "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MARINE_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_FOG_HORIZONTAL",
@@ -50,5 +49,8 @@
       "script": "MarineCave_End_EventScript_Kyogre"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

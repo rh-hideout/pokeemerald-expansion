@@ -3,7 +3,6 @@
   "name": "MauvilleCity",
   "layout": "LAYOUT_MAUVILLE_CITY",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MAUVILLE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -300,5 +299,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MauvilleCity_EventScript_GameCornerSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

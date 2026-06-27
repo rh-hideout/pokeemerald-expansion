@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattleArenaBattleRoom",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM",
   "music": "MUS_B_ARENA",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -143,5 +142,8 @@
   ],
   "warp_events": [],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

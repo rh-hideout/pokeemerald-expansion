@@ -3,7 +3,6 @@
   "name": "SaffronCity_House_Frlg",
   "layout": "LAYOUT_HOUSE5_FRLG",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -106,5 +105,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SaffronCity_House_EventScript_Letter"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

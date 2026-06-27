@@ -3,7 +3,6 @@
   "name": "PowerPlant_Frlg",
   "layout": "LAYOUT_POWER_PLANT",
   "music": "MUS_RG_POKE_MANSION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POWER_PLANT",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -166,9 +165,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -190,5 +187,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

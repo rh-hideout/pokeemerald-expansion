@@ -3,6 +3,8 @@
     {
       "id": "MAPSEC_LITTLEROOT_TOWN",
       "name": "LITTLEROOT TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 11,
       "width": 1,
@@ -11,6 +13,8 @@
     {
       "id": "MAPSEC_OLDALE_TOWN",
       "name": "OLDALE TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 9,
       "width": 1,
@@ -19,6 +23,8 @@
     {
       "id": "MAPSEC_DEWFORD_TOWN",
       "name": "DEWFORD TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 2,
       "y": 14,
       "width": 1,
@@ -27,6 +33,8 @@
     {
       "id": "MAPSEC_LAVARIDGE_TOWN",
       "name": "LAVARIDGE TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 5,
       "y": 3,
       "width": 1,
@@ -35,6 +43,8 @@
     {
       "id": "MAPSEC_FALLARBOR_TOWN",
       "name": "FALLARBOR TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 3,
       "y": 0,
       "width": 1,
@@ -43,6 +53,8 @@
     {
       "id": "MAPSEC_VERDANTURF_TOWN",
       "name": "VERDANTURF TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 6,
       "width": 1,
@@ -51,6 +63,8 @@
     {
       "id": "MAPSEC_PACIFIDLOG_TOWN",
       "name": "PACIFIDLOG TOWN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 17,
       "y": 10,
       "width": 1,
@@ -59,6 +73,8 @@
     {
       "id": "MAPSEC_PETALBURG_CITY",
       "name": "PETALBURG CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 1,
       "y": 9,
       "width": 1,
@@ -67,6 +83,8 @@
     {
       "id": "MAPSEC_SLATEPORT_CITY",
       "name": "SLATEPORT CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 10,
       "width": 1,
@@ -75,6 +93,8 @@
     {
       "id": "MAPSEC_MAUVILLE_CITY",
       "name": "MAUVILLE CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 6,
       "width": 2,
@@ -83,6 +103,8 @@
     {
       "id": "MAPSEC_RUSTBORO_CITY",
       "name": "RUSTBORO CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 5,
       "width": 1,
@@ -91,6 +113,8 @@
     {
       "id": "MAPSEC_FORTREE_CITY",
       "name": "FORTREE CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 12,
       "y": 0,
       "width": 1,
@@ -99,6 +123,8 @@
     {
       "id": "MAPSEC_LILYCOVE_CITY",
       "name": "LILYCOVE CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 18,
       "y": 3,
       "width": 2,
@@ -107,6 +133,8 @@
     {
       "id": "MAPSEC_MOSSDEEP_CITY",
       "name": "MOSSDEEP CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 5,
       "width": 2,
@@ -115,6 +143,8 @@
     {
       "id": "MAPSEC_SOOTOPOLIS_CITY",
       "name": "SOOTOPOLIS CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 21,
       "y": 7,
       "width": 1,
@@ -123,6 +153,8 @@
     {
       "id": "MAPSEC_EVER_GRANDE_CITY",
       "name": "EVER GRANDE CITY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 27,
       "y": 8,
       "width": 1,
@@ -131,6 +163,8 @@
     {
       "id": "MAPSEC_ROUTE_101",
       "name": "ROUTE 101",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 10,
       "width": 1,
@@ -139,6 +173,8 @@
     {
       "id": "MAPSEC_ROUTE_102",
       "name": "ROUTE 102",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 2,
       "y": 9,
       "width": 2,
@@ -147,6 +183,8 @@
     {
       "id": "MAPSEC_ROUTE_103",
       "name": "ROUTE 103",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 8,
       "width": 4,
@@ -155,6 +193,8 @@
     {
       "id": "MAPSEC_ROUTE_104",
       "name": "ROUTE 104",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 7,
       "width": 1,
@@ -163,6 +203,8 @@
     {
       "id": "MAPSEC_ROUTE_105",
       "name": "ROUTE 105",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 10,
       "width": 1,
@@ -171,6 +213,8 @@
     {
       "id": "MAPSEC_ROUTE_106",
       "name": "ROUTE 106",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 13,
       "width": 2,
@@ -179,6 +223,8 @@
     {
       "id": "MAPSEC_ROUTE_107",
       "name": "ROUTE 107",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 3,
       "y": 14,
       "width": 3,
@@ -187,6 +233,8 @@
     {
       "id": "MAPSEC_ROUTE_108",
       "name": "ROUTE 108",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 14,
       "width": 2,
@@ -195,6 +243,8 @@
     {
       "id": "MAPSEC_ROUTE_109",
       "name": "ROUTE 109",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 12,
       "width": 1,
@@ -203,6 +253,8 @@
     {
       "id": "MAPSEC_ROUTE_110",
       "name": "ROUTE 110",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 7,
       "width": 1,
@@ -211,6 +263,8 @@
     {
       "id": "MAPSEC_ROUTE_111",
       "name": "ROUTE 111",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 0,
       "width": 1,
@@ -219,6 +273,8 @@
     {
       "id": "MAPSEC_ROUTE_112",
       "name": "ROUTE 112",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 3,
       "width": 2,
@@ -227,6 +283,8 @@
     {
       "id": "MAPSEC_ROUTE_113",
       "name": "ROUTE 113",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 4,
       "y": 0,
       "width": 4,
@@ -235,6 +293,8 @@
     {
       "id": "MAPSEC_ROUTE_114",
       "name": "ROUTE 114",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 1,
       "y": 0,
       "width": 2,
@@ -243,6 +303,8 @@
     {
       "id": "MAPSEC_ROUTE_115",
       "name": "ROUTE 115",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 2,
       "width": 1,
@@ -251,6 +313,8 @@
     {
       "id": "MAPSEC_ROUTE_116",
       "name": "ROUTE 116",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 1,
       "y": 5,
       "width": 4,
@@ -259,6 +323,8 @@
     {
       "id": "MAPSEC_ROUTE_117",
       "name": "ROUTE 117",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 5,
       "y": 6,
       "width": 3,
@@ -267,6 +333,8 @@
     {
       "id": "MAPSEC_ROUTE_118",
       "name": "ROUTE 118",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 10,
       "y": 6,
       "width": 2,
@@ -275,6 +343,8 @@
     {
       "id": "MAPSEC_ROUTE_119",
       "name": "ROUTE 119",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 11,
       "y": 0,
       "width": 1,
@@ -283,6 +353,8 @@
     {
       "id": "MAPSEC_ROUTE_120",
       "name": "ROUTE 120",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 13,
       "y": 0,
       "width": 1,
@@ -291,6 +363,8 @@
     {
       "id": "MAPSEC_ROUTE_121",
       "name": "ROUTE 121",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 14,
       "y": 3,
       "width": 4,
@@ -299,6 +373,8 @@
     {
       "id": "MAPSEC_ROUTE_122",
       "name": "ROUTE 122",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 16,
       "y": 4,
       "width": 1,
@@ -307,6 +383,8 @@
     {
       "id": "MAPSEC_ROUTE_123",
       "name": "ROUTE 123",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 12,
       "y": 6,
       "width": 5,
@@ -315,6 +393,8 @@
     {
       "id": "MAPSEC_ROUTE_124",
       "name": "ROUTE 124",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 20,
       "y": 3,
       "width": 4,
@@ -323,6 +403,8 @@
     {
       "id": "MAPSEC_ROUTE_125",
       "name": "ROUTE 125",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 3,
       "width": 2,
@@ -331,6 +413,8 @@
     {
       "id": "MAPSEC_ROUTE_126",
       "name": "ROUTE 126",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 20,
       "y": 6,
       "width": 3,
@@ -339,6 +423,8 @@
     {
       "id": "MAPSEC_ROUTE_127",
       "name": "ROUTE 127",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 23,
       "y": 6,
       "width": 3,
@@ -347,6 +433,8 @@
     {
       "id": "MAPSEC_ROUTE_128",
       "name": "ROUTE 128",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 23,
       "y": 9,
       "width": 4,
@@ -355,6 +443,8 @@
     {
       "id": "MAPSEC_ROUTE_129",
       "name": "ROUTE 129",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 10,
       "width": 2,
@@ -363,6 +453,8 @@
     {
       "id": "MAPSEC_ROUTE_130",
       "name": "ROUTE 130",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 21,
       "y": 10,
       "width": 3,
@@ -371,6 +463,8 @@
     {
       "id": "MAPSEC_ROUTE_131",
       "name": "ROUTE 131",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 18,
       "y": 10,
       "width": 3,
@@ -379,6 +473,8 @@
     {
       "id": "MAPSEC_ROUTE_132",
       "name": "ROUTE 132",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 15,
       "y": 10,
       "width": 2,
@@ -387,6 +483,8 @@
     {
       "id": "MAPSEC_ROUTE_133",
       "name": "ROUTE 133",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 12,
       "y": 10,
       "width": 3,
@@ -395,6 +493,8 @@
     {
       "id": "MAPSEC_ROUTE_134",
       "name": "ROUTE 134",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 9,
       "y": 10,
       "width": 3,
@@ -403,6 +503,8 @@
     {
       "id": "MAPSEC_UNDERWATER_124",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 20,
       "y": 3,
       "width": 4,
@@ -411,6 +513,8 @@
     {
       "id": "MAPSEC_UNDERWATER_126",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 20,
       "y": 6,
       "width": 3,
@@ -419,6 +523,8 @@
     {
       "id": "MAPSEC_UNDERWATER_127",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 23,
       "y": 6,
       "width": 3,
@@ -427,6 +533,8 @@
     {
       "id": "MAPSEC_UNDERWATER_128",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 23,
       "y": 9,
       "width": 4,
@@ -435,6 +543,8 @@
     {
       "id": "MAPSEC_UNDERWATER_SOOTOPOLIS",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 21,
       "y": 7,
       "width": 1,
@@ -443,6 +553,8 @@
     {
       "id": "MAPSEC_GRANITE_CAVE",
       "name": "GRANITE CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 1,
       "y": 13,
       "width": 1,
@@ -451,6 +563,8 @@
     {
       "id": "MAPSEC_MT_CHIMNEY",
       "name": "MT. CHIMNEY",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 2,
       "width": 1,
@@ -459,6 +573,8 @@
     {
       "id": "MAPSEC_SAFARI_ZONE",
       "name": "SAFARI ZONE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 16,
       "y": 2,
       "width": 1,
@@ -467,6 +583,8 @@
     {
       "id": "MAPSEC_BATTLE_FRONTIER",
       "name": "BATTLE FRONTIER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 22,
       "y": 12,
       "width": 1,
@@ -475,6 +593,8 @@
     {
       "id": "MAPSEC_PETALBURG_WOODS",
       "name": "PETALBURG WOODS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 8,
       "width": 1,
@@ -483,6 +603,8 @@
     {
       "id": "MAPSEC_RUSTURF_TUNNEL",
       "name": "RUSTURF TUNNEL",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 2,
       "y": 5,
       "width": 1,
@@ -491,6 +613,8 @@
     {
       "id": "MAPSEC_ABANDONED_SHIP",
       "name": "ABANDONED SHIP",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 14,
       "width": 1,
@@ -499,6 +623,8 @@
     {
       "id": "MAPSEC_NEW_MAUVILLE",
       "name": "NEW MAUVILLE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 7,
       "width": 1,
@@ -507,6 +633,8 @@
     {
       "id": "MAPSEC_METEOR_FALLS",
       "name": "METEOR FALLS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 3,
       "width": 1,
@@ -515,6 +643,8 @@
     {
       "id": "MAPSEC_METEOR_FALLS2",
       "name": "METEOR FALLS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 1,
       "y": 2,
       "width": 1,
@@ -523,6 +653,8 @@
     {
       "id": "MAPSEC_MT_PYRE",
       "name": "MT. PYRE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 16,
       "y": 4,
       "width": 1,
@@ -531,6 +663,8 @@
     {
       "id": "MAPSEC_AQUA_HIDEOUT_OLD",
       "name": "{AQUA} HIDEOUT",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 19,
       "y": 3,
       "width": 1,
@@ -539,6 +673,8 @@
     {
       "id": "MAPSEC_SHOAL_CAVE",
       "name": "SHOAL CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 4,
       "width": 1,
@@ -547,6 +683,8 @@
     {
       "id": "MAPSEC_SEAFLOOR_CAVERN",
       "name": "SEAFLOOR CAVERN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 9,
       "width": 1,
@@ -555,6 +693,8 @@
     {
       "id": "MAPSEC_UNDERWATER_SEAFLOOR_CAVERN",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 9,
       "width": 1,
@@ -563,6 +703,8 @@
     {
       "id": "MAPSEC_VICTORY_ROAD",
       "name": "VICTORY ROAD",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 27,
       "y": 9,
       "width": 1,
@@ -571,6 +713,8 @@
     {
       "id": "MAPSEC_MIRAGE_ISLAND",
       "name": "MIRAGE ISLAND",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 17,
       "y": 10,
       "width": 1,
@@ -579,6 +723,8 @@
     {
       "id": "MAPSEC_CAVE_OF_ORIGIN",
       "name": "CAVE OF ORIGIN",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 21,
       "y": 7,
       "width": 1,
@@ -587,6 +733,8 @@
     {
       "id": "MAPSEC_SOUTHERN_ISLAND",
       "name": "SOUTHERN ISLAND",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 12,
       "y": 14,
       "width": 1,
@@ -595,6 +743,8 @@
     {
       "id": "MAPSEC_FIERY_PATH",
       "name": "FIERY PATH",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 3,
       "width": 1,
@@ -603,6 +753,8 @@
     {
       "id": "MAPSEC_FIERY_PATH2",
       "name": "FIERY PATH",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 7,
       "y": 3,
       "width": 1,
@@ -611,6 +763,8 @@
     {
       "id": "MAPSEC_JAGGED_PASS",
       "name": "JAGGED PASS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 3,
       "width": 1,
@@ -619,6 +773,8 @@
     {
       "id": "MAPSEC_JAGGED_PASS2",
       "name": "JAGGED PASS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 7,
       "y": 2,
       "width": 1,
@@ -627,6 +783,8 @@
     {
       "id": "MAPSEC_SEALED_CHAMBER",
       "name": "SEALED CHAMBER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 11,
       "y": 10,
       "width": 1,
@@ -635,6 +793,8 @@
     {
       "id": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 11,
       "y": 10,
       "width": 1,
@@ -643,6 +803,8 @@
     {
       "id": "MAPSEC_SCORCHED_SLAB",
       "name": "SCORCHED SLAB",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 13,
       "y": 0,
       "width": 1,
@@ -651,6 +813,8 @@
     {
       "id": "MAPSEC_ISLAND_CAVE",
       "name": "ISLAND CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 10,
       "width": 1,
@@ -659,6 +823,8 @@
     {
       "id": "MAPSEC_DESERT_RUINS",
       "name": "DESERT RUINS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 3,
       "width": 1,
@@ -667,6 +833,8 @@
     {
       "id": "MAPSEC_ANCIENT_TOMB",
       "name": "ANCIENT TOMB",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 13,
       "y": 2,
       "width": 1,
@@ -674,11 +842,15 @@
     },
     {
       "id": "MAPSEC_INSIDE_OF_TRUCK",
-      "name": "INSIDE OF TRUCK"
+      "name": "INSIDE OF TRUCK",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_SKY_PILLAR",
       "name": "SKY PILLAR",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 19,
       "y": 10,
       "width": 1,
@@ -694,6 +866,8 @@
     {
       "id": "MAPSEC_PALLET_TOWN",
       "name": "PALLET TOWN",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 11,
       "width": 1,
@@ -702,6 +876,8 @@
     {
       "id": "MAPSEC_VIRIDIAN_CITY",
       "name": "VIRIDIAN CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 8,
       "width": 1,
@@ -710,6 +886,8 @@
     {
       "id": "MAPSEC_PEWTER_CITY",
       "name": "PEWTER CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 4,
       "width": 1,
@@ -718,6 +896,8 @@
     {
       "id": "MAPSEC_CERULEAN_CITY",
       "name": "CERULEAN CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 3,
       "width": 1,
@@ -726,6 +906,8 @@
     {
       "id": "MAPSEC_LAVENDER_TOWN",
       "name": "LAVENDER TOWN",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 6,
       "width": 1,
@@ -734,6 +916,8 @@
     {
       "id": "MAPSEC_VERMILION_CITY",
       "name": "VERMILION CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 9,
       "width": 1,
@@ -742,6 +926,8 @@
     {
       "id": "MAPSEC_CELADON_CITY",
       "name": "CELADON CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 11,
       "y": 6,
       "width": 1,
@@ -750,6 +936,8 @@
     {
       "id": "MAPSEC_FUCHSIA_CITY",
       "name": "FUCHSIA CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 12,
       "y": 12,
       "width": 1,
@@ -758,6 +946,8 @@
     {
       "id": "MAPSEC_CINNABAR_ISLAND",
       "name": "CINNABAR ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 14,
       "width": 1,
@@ -766,6 +956,8 @@
     {
       "id": "MAPSEC_INDIGO_PLATEAU",
       "name": "INDIGO PLATEAU",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 2,
       "y": 3,
       "width": 1,
@@ -774,6 +966,8 @@
     {
       "id": "MAPSEC_SAFFRON_CITY",
       "name": "SAFFRON CITY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 6,
       "width": 1,
@@ -783,6 +977,8 @@
       "id": "MAPSEC_ROUTE_4_POKECENTER",
       "name": "ROUTE 4",
       "name_clone": true,
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 8,
       "y": 3,
       "width": 1,
@@ -792,6 +988,8 @@
       "id": "MAPSEC_ROUTE_10_POKECENTER",
       "name": "ROUTE 10",
       "name_clone": true,
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 3,
       "width": 1,
@@ -800,6 +998,8 @@
     {
       "id": "MAPSEC_ROUTE_1",
       "name": "ROUTE 1",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 9,
       "width": 1,
@@ -808,6 +1008,8 @@
     {
       "id": "MAPSEC_ROUTE_2",
       "name": "ROUTE 2",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 5,
       "width": 1,
@@ -816,6 +1018,8 @@
     {
       "id": "MAPSEC_ROUTE_3",
       "name": "ROUTE 3",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 5,
       "y": 4,
       "width": 4,
@@ -824,6 +1028,8 @@
     {
       "id": "MAPSEC_ROUTE_4",
       "name": "ROUTE 4",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 8,
       "y": 3,
       "width": 6,
@@ -832,6 +1038,8 @@
     {
       "id": "MAPSEC_ROUTE_5",
       "name": "ROUTE 5",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 4,
       "width": 1,
@@ -840,6 +1048,8 @@
     {
       "id": "MAPSEC_ROUTE_6",
       "name": "ROUTE 6",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 7,
       "width": 1,
@@ -848,6 +1058,8 @@
     {
       "id": "MAPSEC_ROUTE_7",
       "name": "ROUTE 7",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 12,
       "y": 6,
       "width": 2,
@@ -856,6 +1068,8 @@
     {
       "id": "MAPSEC_ROUTE_8",
       "name": "ROUTE 8",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 6,
       "width": 3,
@@ -864,6 +1078,8 @@
     {
       "id": "MAPSEC_ROUTE_9",
       "name": "ROUTE 9",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 3,
       "width": 3,
@@ -872,6 +1088,8 @@
     {
       "id": "MAPSEC_ROUTE_10",
       "name": "ROUTE 10",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 3,
       "width": 1,
@@ -880,6 +1098,8 @@
     {
       "id": "MAPSEC_ROUTE_11",
       "name": "ROUTE 11",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 9,
       "width": 3,
@@ -888,6 +1108,8 @@
     {
       "id": "MAPSEC_ROUTE_12",
       "name": "ROUTE 12",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 7,
       "width": 1,
@@ -896,6 +1118,8 @@
     {
       "id": "MAPSEC_ROUTE_13",
       "name": "ROUTE 13",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 16,
       "y": 11,
       "width": 2,
@@ -904,6 +1128,8 @@
     {
       "id": "MAPSEC_ROUTE_14",
       "name": "ROUTE 14",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 11,
       "width": 1,
@@ -912,6 +1138,8 @@
     {
       "id": "MAPSEC_ROUTE_15",
       "name": "ROUTE 15",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 13,
       "y": 12,
       "width": 2,
@@ -920,6 +1148,8 @@
     {
       "id": "MAPSEC_ROUTE_16",
       "name": "ROUTE 16",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 7,
       "y": 6,
       "width": 4,
@@ -928,6 +1158,8 @@
     {
       "id": "MAPSEC_ROUTE_17",
       "name": "ROUTE 17",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 7,
       "y": 7,
       "width": 1,
@@ -936,6 +1168,8 @@
     {
       "id": "MAPSEC_ROUTE_18",
       "name": "ROUTE 18",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 7,
       "y": 12,
       "width": 5,
@@ -944,6 +1178,8 @@
     {
       "id": "MAPSEC_ROUTE_19",
       "name": "ROUTE 19",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 12,
       "y": 13,
       "width": 1,
@@ -952,6 +1188,8 @@
     {
       "id": "MAPSEC_ROUTE_20",
       "name": "ROUTE 20",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 5,
       "y": 14,
       "width": 7,
@@ -960,6 +1198,8 @@
     {
       "id": "MAPSEC_ROUTE_21",
       "name": "ROUTE 21",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 12,
       "width": 1,
@@ -968,6 +1208,8 @@
     {
       "id": "MAPSEC_ROUTE_22",
       "name": "ROUTE 22",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 2,
       "y": 8,
       "width": 2,
@@ -976,6 +1218,8 @@
     {
       "id": "MAPSEC_ROUTE_23",
       "name": "ROUTE 23",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 2,
       "y": 4,
       "width": 1,
@@ -984,6 +1228,8 @@
     {
       "id": "MAPSEC_ROUTE_24",
       "name": "ROUTE 24",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 1,
       "width": 1,
@@ -992,6 +1238,8 @@
     {
       "id": "MAPSEC_ROUTE_25",
       "name": "ROUTE 25",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 1,
       "width": 2,
@@ -1000,6 +1248,8 @@
     {
       "id": "MAPSEC_VIRIDIAN_FOREST",
       "name": "VIRIDIAN FOREST",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 6,
       "width": 1,
@@ -1008,6 +1258,8 @@
     {
       "id": "MAPSEC_MT_MOON",
       "name": "MT. MOON",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 9,
       "y": 3,
       "width": 1,
@@ -1016,6 +1268,8 @@
     {
       "id": "MAPSEC_S_S_ANNE",
       "name": "S.S. ANNE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 9,
       "width": 1,
@@ -1024,6 +1278,8 @@
     {
       "id": "MAPSEC_UNDERGROUND_PATH",
       "name": "UNDERGROUND PATH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 7,
       "width": 1,
@@ -1033,6 +1289,8 @@
       "id": "MAPSEC_UNDERGROUND_PATH_2",
       "name": "UNDERGROUND PATH",
       "name_clone": true,
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 12,
       "y": 6,
       "width": 1,
@@ -1041,6 +1299,8 @@
     {
       "id": "MAPSEC_DIGLETTS_CAVE",
       "name": "DIGLETT'S CAVE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 15,
       "y": 9,
       "width": 1,
@@ -1049,6 +1309,8 @@
     {
       "id": "MAPSEC_KANTO_VICTORY_ROAD",
       "name": "VICTORY ROAD",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 2,
       "y": 4,
       "width": 1,
@@ -1057,6 +1319,8 @@
     {
       "id": "MAPSEC_ROCKET_HIDEOUT",
       "name": "ROCKET HIDEOUT",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 11,
       "y": 6,
       "width": 1,
@@ -1065,6 +1329,8 @@
     {
       "id": "MAPSEC_SILPH_CO",
       "name": "SILPH CO.",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 14,
       "y": 6,
       "width": 1,
@@ -1073,6 +1339,8 @@
     {
       "id": "MAPSEC_POKEMON_MANSION",
       "name": "POKéMON MANSION",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 4,
       "y": 14,
       "width": 1,
@@ -1081,6 +1349,8 @@
     {
       "id": "MAPSEC_KANTO_SAFARI_ZONE",
       "name": "SAFARI ZONE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 12,
       "y": 12,
       "width": 1,
@@ -1089,6 +1359,8 @@
     {
       "id": "MAPSEC_POKEMON_LEAGUE",
       "name": "POKéMON LEAGUE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 2,
       "y": 3,
       "width": 1,
@@ -1097,6 +1369,8 @@
     {
       "id": "MAPSEC_ROCK_TUNNEL",
       "name": "ROCK TUNNEL",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 5,
       "width": 1,
@@ -1105,6 +1379,8 @@
     {
       "id": "MAPSEC_SEAFOAM_ISLANDS",
       "name": "SEAFOAM ISLANDS",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 8,
       "y": 14,
       "width": 1,
@@ -1113,6 +1389,8 @@
     {
       "id": "MAPSEC_POKEMON_TOWER",
       "name": "POKéMON TOWER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 6,
       "width": 1,
@@ -1121,6 +1399,8 @@
     {
       "id": "MAPSEC_CERULEAN_CAVE",
       "name": "CERULEAN CAVE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 13,
       "y": 3,
       "width": 1,
@@ -1129,6 +1409,8 @@
     {
       "id": "MAPSEC_POWER_PLANT",
       "name": "POWER PLANT",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_KANTO",
       "x": 18,
       "y": 4,
       "width": 1,
@@ -1137,6 +1419,8 @@
     {
       "id": "MAPSEC_ONE_ISLAND",
       "name": "ONE ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 1,
       "y": 8,
       "width": 1,
@@ -1145,6 +1429,8 @@
     {
       "id": "MAPSEC_TWO_ISLAND",
       "name": "TWO ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 9,
       "y": 9,
       "width": 1,
@@ -1153,6 +1439,8 @@
     {
       "id": "MAPSEC_THREE_ISLAND",
       "name": "THREE ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 18,
       "y": 12,
       "width": 1,
@@ -1161,6 +1449,8 @@
     {
       "id": "MAPSEC_FOUR_ISLAND",
       "name": "FOUR ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 3,
       "y": 4,
       "width": 1,
@@ -1169,6 +1459,8 @@
     {
       "id": "MAPSEC_FIVE_ISLAND",
       "name": "FIVE ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 16,
       "y": 11,
       "width": 1,
@@ -1177,6 +1469,8 @@
     {
       "id": "MAPSEC_SEVEN_ISLAND",
       "name": "SEVEN ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 5,
       "y": 8,
       "width": 1,
@@ -1185,6 +1479,8 @@
     {
       "id": "MAPSEC_SIX_ISLAND",
       "name": "SIX ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 17,
       "y": 5,
       "width": 1,
@@ -1193,6 +1489,8 @@
     {
       "id": "MAPSEC_KINDLE_ROAD",
       "name": "KINDLE ROAD",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 2,
       "y": 3,
       "width": 1,
@@ -1201,6 +1499,8 @@
     {
       "id": "MAPSEC_TREASURE_BEACH",
       "name": "TREASURE BEACH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 1,
       "y": 9,
       "width": 1,
@@ -1209,6 +1509,8 @@
     {
       "id": "MAPSEC_CAPE_BRINK",
       "name": "CAPE BRINK",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 9,
       "y": 7,
       "width": 1,
@@ -1217,6 +1519,8 @@
     {
       "id": "MAPSEC_BOND_BRIDGE",
       "name": "BOND BRIDGE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 13,
       "y": 12,
       "width": 4,
@@ -1225,6 +1529,8 @@
     {
       "id": "MAPSEC_THREE_ISLE_PORT",
       "name": "THREE ISLE PORT",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 18,
       "y": 13,
       "width": 2,
@@ -1233,6 +1539,8 @@
     {
       "id": "MAPSEC_RESORT_GORGEOUS",
       "name": "RESORT GORGEOUS",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 16,
       "y": 9,
       "width": 3,
@@ -1241,6 +1549,8 @@
     {
       "id": "MAPSEC_WATER_LABYRINTH",
       "name": "WATER LABYRINTH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 14,
       "y": 10,
       "width": 3,
@@ -1249,6 +1559,8 @@
     {
       "id": "MAPSEC_FIVE_ISLE_MEADOW",
       "name": "FIVE ISLE MEADOW",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 17,
       "y": 10,
       "width": 1,
@@ -1257,6 +1569,8 @@
     {
       "id": "MAPSEC_MEMORIAL_PILLAR",
       "name": "MEMORIAL PILLAR",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 18,
       "y": 12,
       "width": 1,
@@ -1265,6 +1579,8 @@
     {
       "id": "MAPSEC_OUTCAST_ISLAND",
       "name": "OUTCAST ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 15,
       "y": 0,
       "width": 1,
@@ -1273,6 +1589,8 @@
     {
       "id": "MAPSEC_GREEN_PATH",
       "name": "GREEN PATH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 15,
       "y": 3,
       "width": 3,
@@ -1281,6 +1599,8 @@
     {
       "id": "MAPSEC_WATER_PATH",
       "name": "WATER PATH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 18,
       "y": 3,
       "width": 1,
@@ -1289,6 +1609,8 @@
     {
       "id": "MAPSEC_RUIN_VALLEY",
       "name": "RUIN VALLEY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 16,
       "y": 7,
       "width": 2,
@@ -1297,6 +1619,8 @@
     {
       "id": "MAPSEC_TRAINER_TOWER",
       "name": "TRAINER TOWER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 5,
       "y": 6,
       "width": 1,
@@ -1305,6 +1629,8 @@
     {
       "id": "MAPSEC_CANYON_ENTRANCE",
       "name": "CANYON ENTRANCE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 5,
       "y": 9,
       "width": 1,
@@ -1313,6 +1639,8 @@
     {
       "id": "MAPSEC_SEVAULT_CANYON",
       "name": "SEVAULT CANYON",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 6,
       "y": 9,
       "width": 1,
@@ -1321,6 +1649,8 @@
     {
       "id": "MAPSEC_TANOBY_RUINS",
       "name": "TANOBY RUINS",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 3,
       "y": 12,
       "width": 7,
@@ -1353,6 +1683,8 @@
     {
       "id": "MAPSEC_NAVEL_ROCK_FRLG",
       "name": "NAVEL ROCK",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 10,
       "y": 8,
       "width": 1,
@@ -1361,6 +1693,8 @@
     {
       "id": "MAPSEC_MT_EMBER",
       "name": "MT. EMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 2,
       "y": 3,
       "width": 1,
@@ -1369,6 +1703,8 @@
     {
       "id": "MAPSEC_BERRY_FOREST",
       "name": "BERRY FOREST",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 14,
       "y": 12,
       "width": 1,
@@ -1377,6 +1713,8 @@
     {
       "id": "MAPSEC_ICEFALL_CAVE",
       "name": "ICEFALL CAVE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 3,
       "y": 4,
       "width": 1,
@@ -1385,6 +1723,8 @@
     {
       "id": "MAPSEC_ROCKET_WAREHOUSE",
       "name": "ROCKET WAREHOUSE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 17,
       "y": 11,
       "width": 1,
@@ -1394,6 +1734,8 @@
       "id": "MAPSEC_TRAINER_TOWER_2",
       "name": "TRAINER TOWER",
       "name_clone": true,
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 5,
       "y": 6,
       "width": 1,
@@ -1402,6 +1744,8 @@
     {
       "id": "MAPSEC_DOTTED_HOLE",
       "name": "DOTTED HOLE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 16,
       "y": 8,
       "width": 1,
@@ -1410,6 +1754,8 @@
     {
       "id": "MAPSEC_LOST_CAVE",
       "name": "LOST CAVE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII45",
       "x": 18,
       "y": 9,
       "width": 1,
@@ -1418,6 +1764,8 @@
     {
       "id": "MAPSEC_PATTERN_BUSH",
       "name": "PATTERN BUSH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 17,
       "y": 3,
       "width": 1,
@@ -1426,6 +1774,8 @@
     {
       "id": "MAPSEC_ALTERING_CAVE_FRLG",
       "name": "ALTERING CAVE",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 15,
       "y": 0,
       "width": 1,
@@ -1434,6 +1784,8 @@
     {
       "id": "MAPSEC_TANOBY_CHAMBERS",
       "name": "TANOBY CHAMBERS",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1442,6 +1794,8 @@
     {
       "id": "MAPSEC_THREE_ISLE_PATH",
       "name": "THREE ISLE PATH",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123",
       "x": 18,
       "y": 13,
       "width": 1,
@@ -1450,6 +1804,8 @@
     {
       "id": "MAPSEC_TANOBY_KEY",
       "name": "TANOBY KEY",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 6,
       "y": 9,
       "width": 1,
@@ -1458,6 +1814,8 @@
     {
       "id": "MAPSEC_BIRTH_ISLAND_FRLG",
       "name": "BIRTH ISLAND",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 18,
       "y": 13,
       "width": 1,
@@ -1466,6 +1824,8 @@
     {
       "id": "MAPSEC_MONEAN_CHAMBER",
       "name": "MONEAN CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1474,6 +1834,8 @@
     {
       "id": "MAPSEC_LIPTOO_CHAMBER",
       "name": "LIPTOO CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1482,6 +1844,8 @@
     {
       "id": "MAPSEC_WEEPTH_CHAMBER",
       "name": "WEEPTH CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1490,6 +1854,8 @@
     {
       "id": "MAPSEC_DILFORD_CHAMBER",
       "name": "DILFORD CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1498,6 +1864,8 @@
     {
       "id": "MAPSEC_SCUFIB_CHAMBER",
       "name": "SCUFIB CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1506,6 +1874,8 @@
     {
       "id": "MAPSEC_RIXY_CHAMBER",
       "name": "RIXY CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1514,6 +1884,8 @@
     {
       "id": "MAPSEC_VIAPOIS_CHAMBER",
       "name": "VIAPOIS CHAMBER",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII67",
       "x": 9,
       "y": 12,
       "width": 1,
@@ -1521,7 +1893,9 @@
     },
     {
       "id": "MAPSEC_EMBER_SPA",
-      "name": "EMBER SPA"
+      "name": "EMBER SPA",
+      "pokemon_region": "POKEMON_REGION_KANTO",
+      "map_region": "REGION_MAP_SEVII123"
     },
     {
       "id": "MAPSEC_SPECIAL_AREA",
@@ -1530,6 +1904,8 @@
     {
       "id": "MAPSEC_AQUA_HIDEOUT",
       "name": "AQUA HIDEOUT",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 19,
       "y": 3,
       "width": 1,
@@ -1538,6 +1914,8 @@
     {
       "id": "MAPSEC_MAGMA_HIDEOUT",
       "name": "MAGMA HIDEOUT",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 3,
       "width": 1,
@@ -1546,6 +1924,8 @@
     {
       "id": "MAPSEC_MIRAGE_TOWER",
       "name": "MIRAGE TOWER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 2,
       "width": 1,
@@ -1553,15 +1933,21 @@
     },
     {
       "id": "MAPSEC_BIRTH_ISLAND",
-      "name": "BIRTH ISLAND"
+      "name": "BIRTH ISLAND",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_FARAWAY_ISLAND",
-      "name": "FARAWAY ISLAND"
+      "name": "FARAWAY ISLAND",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_ARTISAN_CAVE",
       "name": "ARTISAN CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 22,
       "y": 12,
       "width": 1,
@@ -1569,19 +1955,27 @@
     },
     {
       "id": "MAPSEC_MARINE_CAVE",
-      "name": "MARINE CAVE"
+      "name": "MARINE CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_UNDERWATER_MARINE_CAVE",
-      "name": "UNDERWATER"
+      "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_TERRA_CAVE",
-      "name": "TERRA CAVE"
+      "name": "TERRA CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_UNDERWATER_105",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 0,
       "y": 10,
       "width": 1,
@@ -1590,6 +1984,8 @@
     {
       "id": "MAPSEC_UNDERWATER_125",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 3,
       "width": 2,
@@ -1598,6 +1994,8 @@
     {
       "id": "MAPSEC_UNDERWATER_129",
       "name": "UNDERWATER",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 24,
       "y": 10,
       "width": 2,
@@ -1606,6 +2004,8 @@
     {
       "id": "MAPSEC_DESERT_UNDERPASS",
       "name": "DESERT UNDERPASS",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 2,
       "y": 0,
       "width": 1,
@@ -1614,6 +2014,8 @@
     {
       "id": "MAPSEC_ALTERING_CAVE",
       "name": "ALTERING CAVE",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 6,
       "y": 8,
       "width": 1,
@@ -1621,11 +2023,15 @@
     },
     {
       "id": "MAPSEC_NAVEL_ROCK",
-      "name": "NAVEL ROCK"
+      "name": "NAVEL ROCK",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN"
     },
     {
       "id": "MAPSEC_TRAINER_HILL",
       "name": "TRAINER HILL",
+      "pokemon_region": "POKEMON_REGION_HOENN",
+      "map_region": "REGION_MAP_HOENN",
       "x": 8,
       "y": 4,
       "width": 1,

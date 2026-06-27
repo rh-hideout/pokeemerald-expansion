@@ -3,7 +3,6 @@
   "name": "OneIsland_Frlg",
   "layout": "LAYOUT_ONE_ISLAND",
   "music": "MUS_RG_SEVII_123",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ONE_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -101,9 +100,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -121,5 +118,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "OneIsland_EventScript_PokemonNetCenterSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }
