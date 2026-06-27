@@ -35,6 +35,7 @@
 #include "tv.h"
 #include "pokeball.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "constants/battle_frontier.h"
 #include "constants/contest.h"
 #include "constants/decorations.h"
