@@ -53,6 +53,8 @@ struct FrontierBrain
     const u8 *wonTexts[2];
     u16 battledBit[2];
     u8 streakAppearances[4];
+    u16 goldSymbolFlag;
+    u16 silverSymbolFlag;
 };
 
 extern const struct FrontierBrain gFrontierBrainInfo[];
