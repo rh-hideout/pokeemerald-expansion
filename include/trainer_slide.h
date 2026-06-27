@@ -22,5 +22,6 @@ bool32 IsTrainerSlidePlayed(enum BattlerId battler, enum TrainerSlideType slideI
 void InitalizeTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId);
 void MarkTrainerSlideAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 void MarkInitializedTrainerSlidesAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
+u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold);
 
 #endif // GUARD_TRAINER_SLIDE_H

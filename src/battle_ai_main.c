@@ -3076,6 +3076,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
     bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER) && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
+    bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
 
     // check what effect partner is using
     if (aiData->partnerMove != MOVE_NONE && hasPartner)
@@ -3105,7 +3106,112 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (effect == EFFECT_AFTER_YOU && !(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(DECENT_EFFECT);
             break;
+        case EFFECT_STORED_POWER:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && effect == EFFECT_STAT_CHANGE)
+                {
+                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
+                    {
+                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
+                        u32 partnerIndex = GetBattlerMoveIndexWithEffect(battlerAtkPartner, EFFECT_STORED_POWER);
+                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
+                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
+
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+                    }
+                }
+            }
+            break;
+        case EFFECT_PROTECT:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && MoveIgnoresProtect(move) && AI_CanMoveTargetAffectAlly(moveTarget))
+                {
+                    if (effect == EFFECT_STAT_CHANGE)
+                    {
+                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
+                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
+                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
+
+                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
+                        {
+                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
+                            
+                            if (decision == STAT_CHANGE_GOOD)
+                            {
+                                RETURN_SCORE_PLUS(GOOD_EFFECT);
+                            }
+                        }
+                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
+                        {
+                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
+                            
+                            if (decision == STAT_CHANGE_GOOD)
+                            {
+                                RETURN_SCORE_PLUS(GOOD_EFFECT);
+                            }
+                        }
+                    }
+                }
+            }
         default:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && AI_CanMoveTargetAffectAlly(moveTarget))
+                {
+                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
+                    {
+                        enum StatChangeDecision oppDecision = STAT_CHANGE_BAD, oppParDecision = STAT_CHANGE_BAD;
+                        u32 partnerIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
+                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
+                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
+                        bool32 neutral = FALSE;
+
+                        for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
+                        {
+                            if ((oppDecision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, partnerIndex, context)))
+                            {
+                                if (oppDecision == STAT_CHANGE_GOOD)
+                                {
+                                    RETURN_SCORE_PLUS(GOOD_EFFECT);
+                                }
+                                else
+                                {
+                                    neutral = TRUE;
+                                }
+                            }
+
+                            if ((oppParDecision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, partnerIndex, context)))
+                            {
+                                if (oppParDecision == STAT_CHANGE_GOOD)
+                                {
+                                    RETURN_SCORE_PLUS(GOOD_EFFECT);
+                                }
+                                else
+                                {
+                                    neutral = TRUE;
+                                }
+                            }
+                        }
+
+                        if (neutral)
+                            RETURN_SCORE_PLUS(DECENT_EFFECT);
+                    }
+                }
+            }
             break;
         }
     } // check partner move effect
@@ -4340,6 +4446,30 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_GROWTH:
     case EFFECT_AUTOTOMIZE:
     case EFFECT_STAT_CHANGE:
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+        {
+            enum StatChangeDecision result = STAT_CHANGE_BAD;
+            bool32 neutral = FALSE;
+            for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
+            {
+                if ((result = BattlerShouldChangeStats(battlerAtk, battlerDef, battlerAtk, battlerDef, move, MAX_MON_MOVES, context)))
+                {
+                    if (result == STAT_CHANGE_GOOD)
+                    {
+                        RETURN_SCORE_PLUS(GOOD_EFFECT);
+                    }
+                    else
+                    {
+                        neutral = TRUE;
+                    }
+                }
+            }
+            if (neutral)
+            {
+                RETURN_SCORE_PLUS(DECENT_EFFECT); 
+            }
+            break;
+        }
         ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
         break;
     case EFFECT_STOCKPILE:
