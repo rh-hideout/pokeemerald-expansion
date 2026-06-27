@@ -2595,26 +2595,7 @@ void CopyContestRankToStringVar(u8 varIdx, u8 rank)
 
 void CopyContestCategoryToStringVar(u8 varIdx, enum ContestCategories category)
 {
-    switch (category)
-    {
-    case CONTEST_CATEGORY_COOL:
-        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_COOL]);
-        break;
-    case CONTEST_CATEGORY_BEAUTY:
-        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_BEAUTY]);
-        break;
-    case CONTEST_CATEGORY_CUTE:
-        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_CUTE]);
-        break;
-    case CONTEST_CATEGORY_SMART:
-        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_SMART]);
-        break;
-    case CONTEST_CATEGORY_TOUGH:
-        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_TOUGH]);
-        break;
-    default:
-        break;
-    }
+    StringCopy(GetStringVar(varIdx), gStdStrings[gContestCategoryInfo[category].stdString]);
 }
 
 void SetContestCategoryStringVarForInterview(void)
@@ -4849,24 +4830,7 @@ static void DoTVShowPokemonContestLiveUpdates(void)
         }
         break;
     case CONTESTLIVE_STATE_BETTER_ROUND1:
-        switch (show->contestLiveUpdates.category)
-        {
-        case CONTEST_CATEGORY_COOL:
-            StringCopy(gStringVar1, gText_Cool);
-            break;
-        case CONTEST_CATEGORY_BEAUTY:
-            StringCopy(gStringVar1, gText_Beauty);
-            break;
-        case CONTEST_CATEGORY_CUTE:
-            StringCopy(gStringVar1, gText_Cute);
-            break;
-        case CONTEST_CATEGORY_SMART:
-            StringCopy(gStringVar1, gText_Smart);
-            break;
-        case CONTEST_CATEGORY_TOUGH:
-            StringCopy(gStringVar1, gText_Tough);
-            break;
-        }
+        StringCopy(gStringVar1, gContestCategoryInfo[show->contestLiveUpdates.category].text);
         StringCopy(gStringVar2, GetSpeciesName(show->contestLiveUpdates.winningSpecies));
         switch (show->contestLiveUpdates.winnerAppealFlag)
         {
@@ -4910,24 +4874,7 @@ static void DoTVShowPokemonContestLiveUpdates(void)
         break;
     case CONTESTLIVE_STATE_EXCITING_APPEAL:
         StringCopy(gStringVar2, GetSpeciesName(show->contestLiveUpdates.winningSpecies));
-        switch (show->contestLiveUpdates.category)
-        {
-        case CONTEST_CATEGORY_COOL:
-            sTVShowState = CONTESTLIVE_STATE_COOL;
-            break;
-        case CONTEST_CATEGORY_BEAUTY:
-            sTVShowState = CONTESTLIVE_STATE_BEAUTIFUL;
-            break;
-        case CONTEST_CATEGORY_CUTE:
-            sTVShowState = CONTESTLIVE_STATE_CUTE;
-            break;
-        case CONTEST_CATEGORY_SMART:
-            sTVShowState = CONTESTLIVE_STATE_SMART;
-            break;
-        case CONTEST_CATEGORY_TOUGH:
-            sTVShowState = CONTESTLIVE_STATE_TOUGH;
-            break;
-        }
+        sTVShowState = gContestCategoryInfo[show->contestLiveUpdates.category].tvShowState;
         break;
     case CONTESTLIVE_STATE_COOL:
         StringCopy(gStringVar2, GetSpeciesName(show->contestLiveUpdates.winningSpecies));
@@ -4951,24 +4898,7 @@ static void DoTVShowPokemonContestLiveUpdates(void)
         break;
     case CONTESTLIVE_STATE_VERY_EXCITING_APPEAL:
         StringCopy(gStringVar2, GetSpeciesName(show->contestLiveUpdates.winningSpecies));
-        switch (show->contestLiveUpdates.category)
-        {
-        case CONTEST_CATEGORY_COOL:
-            sTVShowState = CONTESTLIVE_STATE_VERY_COOL;
-            break;
-        case CONTEST_CATEGORY_BEAUTY:
-            sTVShowState = CONTESTLIVE_STATE_VERY_BEAUTIFUL;
-            break;
-        case CONTEST_CATEGORY_CUTE:
-            sTVShowState = CONTESTLIVE_STATE_VERY_CUTE;
-            break;
-        case CONTEST_CATEGORY_SMART:
-            sTVShowState = CONTESTLIVE_STATE_VERY_SMART;
-            break;
-        case CONTEST_CATEGORY_TOUGH:
-            sTVShowState = CONTESTLIVE_STATE_VERY_TOUGH;
-            break;
-        }
+        sTVShowState = gContestCategoryInfo[show->contestLiveUpdates.category].tvShowStateExciting;
         break;
     case CONTESTLIVE_STATE_VERY_COOL:
         StringCopy(gStringVar2, GetSpeciesName(show->contestLiveUpdates.winningSpecies));
