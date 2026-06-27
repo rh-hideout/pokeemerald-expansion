@@ -51,17 +51,17 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas prevents ally's switch-in ability from acti
 DOUBLE_BATTLE_TEST("Neutralizing Gas ignores all battlers' ability effects")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SPARKLING_ARIA) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_WATER_ABSORB); }
         OPPONENT(SPECIES_BELLIBOLT) { Ability(ABILITY_ELECTROMORPHOSIS); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPARKLING_ARIA); MOVE(playerRight, MOVE_SPARKLING_ARIA); }
+        TURN { MOVE(playerLeft, MOVE_SURF); MOVE(playerRight, MOVE_SURF); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         NONE_OF {
             ABILITY_POPUP(playerRight, ABILITY_TELEPATHY);
             ABILITY_POPUP(opponentLeft, ABILITY_WATER_ABSORB);
@@ -70,7 +70,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores all battlers' ability effects")
         HP_BAR(opponentLeft);
         HP_BAR(playerRight);
         HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerRight);
         NONE_OF {
             ABILITY_POPUP(opponentLeft, ABILITY_WATER_ABSORB);
             ABILITY_POPUP(opponentRight, ABILITY_ELECTROMORPHOSIS);

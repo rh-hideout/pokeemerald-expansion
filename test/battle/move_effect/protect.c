@@ -509,12 +509,12 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
     enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }      // Single target
-    PARAMETRIZE { move = MOVE_EARTHQUAKE; }        // All targets
+    PARAMETRIZE { move = MOVE_SURF; }        // All targets
     PARAMETRIZE { move = MOVE_HYPER_VOICE; } // 2 foes
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SCRATCH) == TARGET_SELECTED);
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -538,7 +538,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
                 HP_BAR(opponentLeft);
                 HP_BAR(opponentRight);
             }
-        } else { // Earthquake
+        } else { // Surf
             MESSAGE("The opposing Wobbuffet protected itself!");
             MESSAGE("The opposing Wobbuffet protected itself!");
             NOT HP_BAR(opponentLeft);

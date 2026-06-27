@@ -32,18 +32,18 @@ SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
 DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints the message only once with moves hitting multiple targets")
 {
     GIVEN {
-        ASSUME(GetMoveCategory(MOVE_SPARKLING_ARIA) != DAMAGE_CATEGORY_STATUS);
-        ASSUME(GetMoveType(MOVE_SPARKLING_ARIA) == TYPE_WATER);
-        ASSUME(GetMoveTarget(MOVE_SPARKLING_ARIA) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_SURF) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_SPARKLING_ARIA); }
+        TURN { MOVE(opponentLeft, MOVE_SURF); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Sparkling Aria!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, opponentLeft);
+        MESSAGE("The opposing Wobbuffet used Surf!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         MESSAGE("The Water-type attack evaporated in the extremely harsh sunlight!");
         NOT MESSAGE("The Water-type attack evaporated in the extremely harsh sunlight!");
     } THEN {
