@@ -18599,7 +18599,7 @@ TeraBlastIce:
 	waitforvisualfinish
 	fadetobg BG_ICE
 	waitbgfadein
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 4, 2, 0, 9, RGB(12, 26, 31)
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 0, 9, RGB(12, 26, 31)
 	call CreateIceSpiral
 	delay 17
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 5, 3, 1
@@ -18616,7 +18616,7 @@ TeraBlastIce:
 	delay 5
 	call EternabeamGeyser
 	delay 5
-	createvisualtask AnimTask_BlendBattleAnimPal, 10, 4, 2, 9, 0, RGB(12, 26, 31)
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 9, 0, RGB(12, 26, 31)
 	waitforvisualfinish
 	blendoff
 	call UnsetBackground
