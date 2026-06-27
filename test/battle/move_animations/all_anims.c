@@ -2692,4 +2692,29 @@ SINGLE_BATTLE_TEST("Tera Blast animations work")
     }
 }
 
+DOUBLE_BATTLE_TEST("Gimmick Form Change animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); Speed(2); }
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(4); }
+        OPPONENT(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(1); };
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(3); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
 #endif // !T_SHOULD_RUN_MOVE_ANIM
