@@ -457,7 +457,7 @@ struct BattleStatusEffectData
     const u8 *description;
 };
 
-static void GoToBattleStatusMenu(void);
+static void CB2_BattleStatusMenu(void);
 static void BattleStatusMenu_VBlankCB(void);
 static void BattleStatusMenu_MainCB(void);
 static void BattleStatusMenu_Init(void);
@@ -1293,50 +1293,85 @@ void CB2_BattleStatusMenuFromBattle(void)
         return;
     }
 
-    GoToBattleStatusMenu();
+    SetMainCallback2(CB2_BattleStatusMenu);
 }
 
-static void GoToBattleStatusMenu(void)
+static void CB2_BattleStatusMenu(void)
 {
-    SetVBlankHBlankCallbacksToNull();
-    ClearScheduledBgCopiesToVram();
-    ScanlineEffect_Stop();
-    FreeAllSpritePalettes();
-    ResetPaletteFade();
-    gPaletteFade.bufferTransferDisabled = TRUE;
-    ResetSpriteData();
-    if (!MenuHelpers_IsLinkActive())
-        ResetTasks();
-    ResetVramOamAndBgCntRegs();
-    ResetBgsAndClearDma3BusyFlags(0);
-    CpuFill16(0, (void *)BG_CHAR_ADDR(0), BG_CHAR_SIZE);
-    CpuFill16(0, (void *)BG_CHAR_ADDR(2), BG_CHAR_SIZE);
-    CpuFill16(0, (void *)BG_CHAR_ADDR(3), BG_CHAR_SIZE);
-
-    InitBgsFromTemplates(0, sBattleStatusMenuBgTemplates, ARRAY_COUNT(sBattleStatusMenuBgTemplates));
-    SetBgTilemapBuffer(B_STATUS_TEXT_BG, sData->bg0Tilemap);
-    SetBgTilemapBuffer(B_STATUS_BACKDROP_BG, sData->bg1Tilemap);
-    FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
-    FillBgTilemapBufferRect(B_STATUS_BACKDROP_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
-    CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
-    CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
-    ResetAllBgsCoordinates();
-    LoadBgTiles(B_STATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
-    LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
-    LoadPalette(gBattleStatusTextPalette, BG_PLTT_ID(B_STATUS_TEXT_PAL), PLTT_SIZE_4BPP);
-    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
-    ShowBg(B_STATUS_BACKDROP_BG);
-    ShowBg(B_STATUS_TEXT_BG);
-    SetGpuReg(REG_OFFSET_BLDCNT, 0);
-    InitWindows((const struct WindowTemplate[]){DUMMY_WIN_TEMPLATE});
-    DeactivateAllTextPrinters();
-    BattleStatusMenu_Init();
-    BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
-    BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-    gPaletteFade.bufferTransferDisabled = FALSE;
-    sData->menuState = BATTLE_STATUS_MENU_STATE_FADE_IN;
-    SetVBlankCallback(BattleStatusMenu_VBlankCB);
-    SetMainCallback2(BattleStatusMenu_MainCB);
+    switch (gMain.state)
+    {
+    case 0:
+        SetVBlankHBlankCallbacksToNull();
+        ClearScheduledBgCopiesToVram();
+        gMain.state++;
+        break;
+    case 1:
+        ScanlineEffect_Stop();
+        gMain.state++;
+        break;
+    case 2:
+        FreeAllSpritePalettes();
+        gMain.state++;
+        break;
+    case 3:
+        ResetPaletteFade();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        gMain.state++;
+        break;
+    case 4:
+        ResetSpriteData();
+        gMain.state++;
+        break;
+    case 5:
+        if (!MenuHelpers_IsLinkActive())
+            ResetTasks();
+        gMain.state++;
+        break;
+    case 6:
+        ResetVramOamAndBgCntRegs();
+        ResetBgsAndClearDma3BusyFlags(0);
+        CpuFill16(0, (void *)BG_CHAR_ADDR(0), BG_CHAR_SIZE);
+        CpuFill16(0, (void *)BG_CHAR_ADDR(2), BG_CHAR_SIZE);
+        CpuFill16(0, (void *)BG_CHAR_ADDR(3), BG_CHAR_SIZE);
+        gMain.state++;
+        break;
+    case 7:
+        InitBgsFromTemplates(0, sBattleStatusMenuBgTemplates, ARRAY_COUNT(sBattleStatusMenuBgTemplates));
+        SetBgTilemapBuffer(B_STATUS_TEXT_BG, sData->bg0Tilemap);
+        SetBgTilemapBuffer(B_STATUS_BACKDROP_BG, sData->bg1Tilemap);
+        FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
+        FillBgTilemapBufferRect(B_STATUS_BACKDROP_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
+        CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
+        CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
+        gMain.state++;
+        break;
+    case 7:
+        ResetAllBgsCoordinates();
+        LoadBgTiles(B_STATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
+        LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
+        LoadPalette(gBattleStatusTextPalette, BG_PLTT_ID(B_STATUS_TEXT_PAL), PLTT_SIZE_4BPP);
+        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+        ShowBg(B_STATUS_BACKDROP_BG);
+        ShowBg(B_STATUS_TEXT_BG);
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        gMain.state++;
+        break;
+    case 8:
+        InitWindows((const struct WindowTemplate[]){DUMMY_WIN_TEMPLATE});
+        DeactivateAllTextPrinters();
+        BattleStatusMenu_Init();
+        BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        sData->menuState = BATTLE_STATUS_MENU_STATE_FADE_IN;
+        gMain.state++;
+        break;
+    case 9:
+        SetVBlankCallback(BattleStatusMenu_VBlankCB);
+        SetMainCallback2(BattleStatusMenu_MainCB);
+        gMain.state++;
+        break;
+    }
 }
 
 static void BattleStatusMenu_VBlankCB(void)
