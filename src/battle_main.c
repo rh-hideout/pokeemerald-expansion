@@ -2945,9 +2945,6 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
 
     ClearPursuitValuesIfSet(battler);
 
-    // Reset damage to prevent things like red card activating if the switched-in mon is holding it
-    gSpecialStatuses[battler].damagedByAttack = FALSE;
-
     // Reset Eject Button / Eject Pack switch detection
     gAiLogicData->ejectButtonSwitch = FALSE;
     gAiLogicData->ejectPackSwitch = FALSE;
@@ -3024,6 +3021,9 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->hazardsCounter = 0;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
     gBattleStruct->eventState.arenaTurn = 0xFF;
+
+    // Reset damage to prevent things like red card activating if the switched-in mon is holding it
+    gSpecialStatuses[battler].damagedByAttack = FALSE;
 
     // Clear selected party ID so Revival Blessing doesn't get confused.
     gSelectedMonPartyId = PARTY_SIZE;
