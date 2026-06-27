@@ -114,6 +114,8 @@
     F(B_TRANSFORM_USER_FAIL,       transformUserFail,       (u32, GEN_COUNT - 1)) \
     F(B_TRANSFORM_SUBSTITUTE_FAIL, transformSubstituteFail, (u32, GEN_COUNT - 1)) \
     F(B_TRANSFORM_SHINY,           transformShiny,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_TRANSFORM_CATCH_RATE,      transformCatchRewards,   (u32, GEN_COUNT - 1)) \
+    F(B_TRANSFORM_BATTLE_REWARDS,  transformBattleRewards,  (u32, GEN_COUNT - 1)) \
     F(B_TRANSFORM_FORM_CHANGES,    transformFormChanges,    (u32, GEN_COUNT - 1)) \
     F(B_WIDE_GUARD,                wideGuard,               (u32, GEN_COUNT - 1)) \
     F(B_QUICK_GUARD,               quickGuard,              (u32, GEN_COUNT - 1)) \
