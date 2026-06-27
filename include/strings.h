@@ -328,18 +328,8 @@ extern const u8 gText_Plus[];
 //Pokédex text
 extern const u8 gText_CryOf[];
 extern const u8 gText_SizeComparedTo[];
-extern const u8 gText_PokedexRegistration[];
 extern const u8 gText_NumberClear01[];
 extern const u8 gText_5MarksPokemon[];
-extern const u8 gText_UnkHeight[];
-extern const u8 gText_UnkHeightMetric[];
-extern const u8 gText_UnkWeight[];
-extern const u8 gText_UnkWeightMetric[];
-extern const u8 gText_HTHeight[];
-extern const u8 gText_WTWeight[];
-extern const u8 gText_SearchingPleaseWait[];
-extern const u8 gText_SearchCompleted[];
-extern const u8 gText_NoMatchingPkmnWereFound[];
 extern const u8 gText_SelectorArrow[];
 
 // birch dex rating text
@@ -683,20 +673,6 @@ extern const u8 gText_WhichPCShouldBeAccessed[];
 extern const u8 gText_Information[];
 extern const u8 gText_Yes[];
 extern const u8 gText_No[];
-
-// Pokédex strings
-extern const u8 gText_SearchForPkmnBasedOnParameters[];
-extern const u8 gText_SwitchPokedexListings[];
-extern const u8 gText_ReturnToPokedex[];
-extern const u8 gText_SelectPokedexMode[];
-extern const u8 gText_SelectPokedexListingMode[];
-extern const u8 gText_ListByFirstLetter[];
-extern const u8 gText_ListByBodyColor[];
-extern const u8 gText_ListByType[];
-extern const u8 gText_ExecuteSearchSwitch[];
-extern const u8 gText_DexEmptyString[];
-extern const u8 gText_DexSearchDontSpecify[];
-extern const u8 gText_DexSearchTypeNone[];
 
 extern const u8 gText_BattlePokemon[];
 extern const u8 gText_NormalTagMatch[];
