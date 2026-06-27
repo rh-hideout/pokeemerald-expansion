@@ -431,8 +431,7 @@ static void OpenBattleStatusMenu(enum BattlerId battler)
     if (!gPaletteFade.active)
     {
         gBattlerControllerFuncs[battler] = WaitForBattleStatusMenu;
-        ReshowBattleScreenDummy();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         CB2_BattleStatusMenuFromBattle();
     }
 }

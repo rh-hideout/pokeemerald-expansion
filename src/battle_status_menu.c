@@ -457,6 +457,7 @@ struct BattleStatusEffectData
     const u8 *description;
 };
 
+static void GoToBattleStatusMenu(void);
 static void BattleStatusMenu_VBlankCB(void);
 static void BattleStatusMenu_MainCB(void);
 static void BattleStatusMenu_Init(void);
@@ -1285,9 +1286,18 @@ static const struct WindowTemplate sBattleStatusDetailWindowTemplates[WIN_DETAIL
 void CB2_BattleStatusMenuFromBattle(void)
 {
     sData = AllocZeroed(sizeof(struct BattleStatusMenuData));
-    if (sData == NULL)
-        return;
 
+    if (sData == NULL)
+    {
+        SetMainCallback2(CB2_SetUpReshowBattleScreenAfterMenu);
+        return;
+    }
+
+    GoToBattleStatusMenu();
+}
+
+static void GoToBattleStatusMenu(void)
+{
     SetVBlankHBlankCallbacksToNull();
     ClearScheduledBgCopiesToVram();
     ScanlineEffect_Stop();
