@@ -38,7 +38,7 @@ static const u16 sWirelessLinkIconPalette[] = INCGFX_U16("graphics/link/wireless
 static const u32 sWirelessLinkIconPic[] = INCGFX_U32("graphics/link/wireless_icon.png", ".4bpp.smol");
 
 // Most of the below two tables won't make sense with ASCII encoding.
-static const u8 sWireless_ASCIItoRSETable[256] = {
+const u8 gWireless_ASCIItoRSETable[256] = {
     EOS,
     0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x37,
     0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f,
@@ -617,7 +617,7 @@ static void UNUSED ASCIIToPkmnStr(u8 *pkmnStr, const u8 *asciiStr)
     s32 i;
 
     for (i = 0; asciiStr[i] != 0; i++)
-        pkmnStr[i] = sWireless_ASCIItoRSETable[asciiStr[i]];
+        pkmnStr[i] = gWireless_ASCIItoRSETable[asciiStr[i]];
     pkmnStr[i] = EOS;
 }
 

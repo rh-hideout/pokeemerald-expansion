@@ -153,10 +153,10 @@ void TestRunner_CheckMemory(void)
 
             if (block->allocated)
             {
-                const char *location = MemBlockLocation(block);
-                if (location)
+                const void *caller = MemBlockCaller(block);
+                if (caller)
                 {
-                    Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
+                    Test_MgbaPrintf("%p: %d bytes not freed", caller, block->size);
                     gTestRunnerState.result = TEST_RESULT_FAIL;
 
                     if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
@@ -198,6 +198,7 @@ static void ClearSaveBlocks(void)
 
 void CB2_TestRunner(void)
 {
+    ClearCrashStack();
 top:
 
     switch (gTestRunnerState.state)
@@ -730,6 +731,14 @@ static void Intr_Timer2(void)
             if (gTestRunnerState.state == STATE_RUN_TEST)
                 gTestRunnerState.state = STATE_REPORT_RESULT;
             gTestRunnerState.result = TEST_RESULT_TIMEOUT;
+            const void *addresses[32];
+            // HINT: '+ 1' here assuming that the caller was in Thumb,
+            // if it was ARM then the result will look a little weird.
+            // TODO: Check the spsr to determine whether the caller was
+            // in Thumb or ARM.
+            u32 count = CrashStack(Intr_Timer2, (const void *)(IRQ_LR + 1), addresses, ARRAY_COUNT(addresses));
+            for (u32 i = 0; i < count; i++)
+                Test_MgbaPrintf("in %p", addresses[count - i - 1]);
             Test_MgbaPrintf("%s:%d: TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
             ReinitCallbacks();
             IRQ_LR = ((uintptr_t)JumpToAgbMainLoop & ~1) + 4;
@@ -776,8 +785,11 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
         {
             if (result == TEST_RESULT_INVALID)
             {
+                const void *addresses[32];
                 const void *return0 = __builtin_return_address(0);
-                Test_MgbaPrintf("in %p\nin %p", return1, return0);
+                u32 count = CrashStack(return0, return1, addresses, ARRAY_COUNT(addresses));
+                for (u32 i = 0; i < count; i++)
+                    Test_MgbaPrintf("in %p", addresses[count - i - 1]);
             }
             // TODO: If 'fmt' starts with ':', insert a space to prevent
             // Hydra interpreting it as a command.

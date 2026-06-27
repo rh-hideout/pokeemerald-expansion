@@ -5715,10 +5715,22 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
     }
 }
 
+static u32 CrashStackContext_BattleScript(const void *, const void **addresses, u32 maxAddresses)
+{
+    u32 i = 0;
+    addresses[i++] = gBattlescriptCurrInstr;
+    for (; i < gBattleResources->battleScriptsStack->size && i < maxAddresses; i++)
+        addresses[i] = gBattleResources->battleScriptsStack->ptr[gBattleResources->battleScriptsStack->size - i];
+    return i;
+}
+
 void RunBattleScriptCommands(void)
 {
     if (gBattleControllerExecFlags == 0)
+    {
+        ScopedCrashStackContext(CrashStackContext_BattleScript, NULL);
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
+    }
 }
 
 enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability attackerAbility)

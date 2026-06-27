@@ -635,8 +635,18 @@ static void WaitAnimFrameCount(void)
     }
 }
 
+static u32 CrashStackContext_BattleAnim(const void *, const void **addresses, u32 maxAddresses)
+{
+    u32 i = 0;
+    addresses[i++] = sBattleAnimScriptPtr;
+    for (; i < sBattleAnimScriptCallDepth && i < maxAddresses; i++)
+        addresses[i] = sBattleAnimScriptRetAddr[sBattleAnimScriptCallDepth - i];
+    return i;
+}
+
 static void RunAnimScriptCommand(void)
 {
+    ScopedCrashStackContext(CrashStackContext_BattleAnim, NULL);
     do
     {
         sScriptCmdTable[sBattleAnimScriptPtr[0]]();
