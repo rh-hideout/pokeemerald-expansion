@@ -20,6 +20,21 @@
 #include "../src/data/map_group_count.h"
 #include "test/overworld_script.h"
 
+TEST("StringExpandPlaceholders supports checkgender expressions")
+{
+    const u8 *text = COMPOUND_STRING("{checkgender:{PLAYER}'s son|young lady {PLAYER}}");
+
+    StringCopy(gSaveBlock2Ptr->playerName, COMPOUND_STRING("RED"));
+
+    gSaveBlock2Ptr->playerGender = MALE;
+    StringExpandPlaceholders(gStringVar4, text);
+    EXPECT_EQ(StringCompare(gStringVar4, COMPOUND_STRING("RED's son")), 0);
+
+    gSaveBlock2Ptr->playerGender = FEMALE;
+    StringExpandPlaceholders(gStringVar4, text);
+    EXPECT_EQ(StringCompare(gStringVar4, COMPOUND_STRING("young lady RED")), 0);
+}
+
 TEST("Move names fit on Pokemon Summary Screen")
 {
     u32 i;
