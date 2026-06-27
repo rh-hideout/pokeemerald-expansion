@@ -388,31 +388,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
     {
         // Load Artist's frame
         enum ContestCategories category = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
-        switch (category)
-        {
-        case CONTEST_CATEGORY_COOL:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Cool, (void *)VRAM);
-            DecompressDataWithHeaderWram(sPictureFrameTilemap_Cool, gContestMonPixels);
-            break;
-        case CONTEST_CATEGORY_BEAUTY:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Beauty, (void *)VRAM);
-            DecompressDataWithHeaderWram(sPictureFrameTilemap_Beauty, gContestMonPixels);
-            break;
-        case CONTEST_CATEGORY_CUTE:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Cute, (void *)VRAM);
-            DecompressDataWithHeaderWram(sPictureFrameTilemap_Cute, gContestMonPixels);
-            break;
-        case CONTEST_CATEGORY_SMART:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Smart, (void *)VRAM);
-            DecompressDataWithHeaderWram(sPictureFrameTilemap_Smart, gContestMonPixels);
-            break;
-        case CONTEST_CATEGORY_TOUGH:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Tough, (void *)VRAM);
-            DecompressDataWithHeaderWram(sPictureFrameTilemap_Tough, gContestMonPixels);
-            break;
-        default:
-            break;
-        }
+        DecompressDataWithHeaderVram(gContestCategoryInfo[category].paintingTiles, (void *)VRAM);
+        DecompressDataWithHeaderWram(gContestCategoryInfo[category].paintingTilemap, gContestMonPixels);
 
         // Set the background
         for (y = 0; y < 20; y++)
@@ -442,31 +419,8 @@ static void LoadContestPaintingFrame(u8 contestWinnerId, bool8 isForArtist)
     {
         // Load Museum frame
         enum ContestCategories category = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
-        switch (category)
-        {
-        case CONTEST_CATEGORY_COOL:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Cool, (void *)VRAM);
-            DecompressDataWithHeaderVram(sPictureFrameTilemap_Cool, (void *)(BG_SCREEN_ADDR(12)));
-            break;
-        case CONTEST_CATEGORY_BEAUTY:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Beauty, (void *)VRAM);
-            DecompressDataWithHeaderVram(sPictureFrameTilemap_Beauty, (void *)(BG_SCREEN_ADDR(12)));
-            break;
-        case CONTEST_CATEGORY_CUTE:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Cute, (void *)VRAM);
-            DecompressDataWithHeaderVram(sPictureFrameTilemap_Cute, (void *)(BG_SCREEN_ADDR(12)));
-            break;
-        case CONTEST_CATEGORY_SMART:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Smart, (void *)VRAM);
-            DecompressDataWithHeaderVram(sPictureFrameTilemap_Smart, (void *)(BG_SCREEN_ADDR(12)));
-            break;
-        case CONTEST_CATEGORY_TOUGH:
-            DecompressDataWithHeaderVram(sPictureFrameTiles_Tough, (void *)VRAM);
-            DecompressDataWithHeaderVram(sPictureFrameTilemap_Tough, (void *)(BG_SCREEN_ADDR(12)));
-            break;
-        default:
-            break;
-        }
+        DecompressDataWithHeaderVram(gContestCategoryInfo[category].paintingTiles, (void *)VRAM);
+        DecompressDataWithHeaderWram(gContestCategoryInfo[category].paintingTilemap, (void *)(BG_SCREEN_ADDR(12)));
     }
 }
 
@@ -498,23 +452,7 @@ static u8 GetImageEffectForContestWinner(u8 contestWinnerId)
     else
         contestCategory = gContestPaintingWinner->contestCategory / NUM_PAINTING_CAPTIONS;
 
-    switch (contestCategory)
-    {
-    case CONTEST_CATEGORY_COOL:
-        return IMAGE_EFFECT_OUTLINE_COLORED;
-    case CONTEST_CATEGORY_BEAUTY:
-        return IMAGE_EFFECT_SHIMMER;
-    case CONTEST_CATEGORY_CUTE:
-        return IMAGE_EFFECT_POINTILLISM;
-    case CONTEST_CATEGORY_SMART:
-        return IMAGE_EFFECT_CHARCOAL;
-    case CONTEST_CATEGORY_TOUGH:
-        return IMAGE_EFFECT_GRAYSCALE_LIGHT;
-    default:
-        break;
-    }
-
-    return contestCategory;
+    return gContestCategoryInfo[contestCategory].stdString
 }
 
 static void AllocPaintingResources(void)

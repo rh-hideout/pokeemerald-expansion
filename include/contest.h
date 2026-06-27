@@ -309,6 +309,9 @@ struct ContestCategory
     const u8 *generic;
     const u8 *negativeTrait;
     u8 ribbon;
+    u8 imageEffect;
+    const u32 *paintingTiles;
+    const u32 *paintingTilemap;
     u8 palette;
     u16 tile;
     const u16 *resultsTilemap;
