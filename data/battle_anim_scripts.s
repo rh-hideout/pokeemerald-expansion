@@ -8697,32 +8697,32 @@ ThousandWavesRecover:
 	delay 2
 	return
 ThousandWavesRotatingImpact:
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 28, 384, 50, 8, 50, 1 @1
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 28, 384, 50, 8, 50, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 70, 1984, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gThousandWavesPoundImpactTemplate, ANIM_TARGET, 2, 1, 0, 0, 3
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 32, 240, 40, 11, -46, 1    @2
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 32, 240, 40, 11, -46, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 0, 2816, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gThousandWavesPoundImpactTemplate, ANIM_TARGET, 2, 1, 5, -12, 3
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 33, 416, 40, 4, 42, 1  @3
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 33, 416, 40, 4, 42, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 60, 2560, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gThousandWavesPoundImpactTemplate, ANIM_TARGET, 2, 1, -6, 9, 3
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 31, 288, 45, 6, -42, 1  @4
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 31, 288, 45, 6, -42, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 10, 2304, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gThousandWavesPoundImpactTemplate, ANIM_TARGET, 2, 1, -6, -12, 3
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 28, 448, 45, 11, 46, 1  @5
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 28, 448, 45, 11, 46, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 90, 2048, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	createsprite gThousandWavesPoundImpactTemplate, ANIM_TARGET, 2, 1, 5, 9, 3
-	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 33, 464, 50, 10, -50, 1  @6
+	createsprite gThousandWavesRotatingImpactTemplate, ANIM_TARGET, 2, 35, 33, 464, 50, 10, -50, 1
 	createsprite gThousandWavesGreenWaveTemplate, ANIM_ATTACKER, 40, 50, 2560, 96, 1
 	delay 2
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
@@ -9318,7 +9318,7 @@ gBattleAnimMove_FloralHealing::
 	delay 2
 	createsprite gFloralHealingWindLeavesTemplate, ANIM_ATTACKER, 2, 90, 0, 64
 	delay 2
-	createsprite gSweetScentPetalSpriteTemplate, ANIM_ATTACKER, 2, 48, 0, 64   @2
+	createsprite gSweetScentPetalSpriteTemplate, ANIM_ATTACKER, 2, 48, 0, 64
 	delay 2
 	createsprite gFloralHealingWindLeavesTemplate, ANIM_ATTACKER, 2, 95, 1, 80
 	delay 2
@@ -29537,20 +29537,20 @@ gBattleAnimMove_BreakneckBlitz::
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	delay 8
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 0, 0, 1, 1		@ 0, 0
+	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 0, 0, 1, 1
 	delay 1
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 10, -10, 1, 1		@  +10, -10
+	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 10, -10, 1, 1
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	delay 1
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 15, -15, 1, 1		@ +15, -15
+	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 15, -15, 1, 1
 	delay 1
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 20, -20, 1, 1		@ +20, -20
+	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 20, -20, 1, 1
 	delay 1
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
-	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 25, -25, 1, 1		@ +25, -25
+	createsprite gBreakneckBlitzHitSpriteTemplate, ANIM_TARGET, 3, 25, -25, 1, 1
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4
 	waitforvisualfinish
 	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 8, -512, ANIM_TARGET, 0
@@ -29709,14 +29709,14 @@ FinishSupersonicSkystrike:
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=0
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -256, 21, 0, 4
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -24, -16, 24 	@ 12, -48, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -38, -10, 24 	@ 16, -16, -10, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -20, -18, 24 	@ 14, -52, -18, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -36, -16, 24 	@ 12, -32, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -48, -16, 24 	@ 12, -24, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -16, -10, 24 	@ 16, -38, -10, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -52, -18, 24 	@ 14, -20, -18, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -32, -16, 24 	@ 12, -36, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -24, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -38, -10, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -20, -18, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -36, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -48, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -16, -10, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -52, -18, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -32, -16, 24
 	delay 48
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
@@ -29998,14 +29998,14 @@ FinishContinentalCrush:
 	delay 5
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -256, 21, 0, 4
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 12, -24, -16, 24 	@ 12, -48, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16, -38, -10, 24	@ 16, -16, -10, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 14, -20, -18, 24 	@ 14, -52, -18, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 12, -36, -16, 24 	@ 12, -32, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 12, -48, -16, 24 	@ 12, -24, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16, -16, -10, 24	@ 16, -38, -10, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 14, -52, -18, 24 	@ 14, -20, -18, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 12, -32, -16, 24 	@ 12, -36, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 12, -24, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16, -38, -10, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 14, -20, -18, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 12, -36, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 12, -48, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16, -16, -10, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 14, -52, -18, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 12, -32, -16, 24
 	delay 5
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 7, 0, RGB_BLACK	@undo pal change on tgt
 	delay 16
@@ -30032,29 +30032,29 @@ ContinentalCrashBuffEffect:
 	createsprite gContinentalCrushFocusEnergySpriteTemplate, ANIM_ATTACKER, 2, 0, -12, 0, 1
 	return
 ContinentalCrushStockpileRocks:
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, -64, 32    @ 0,-32
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, -64, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 44, -44, 32   @ +44,-44
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 44, -44, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 60, 0, 32      @ +60,0
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 60, 0, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 40, 40, 32     @ +40,+40
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 40, 40, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, 56, 32      @ +0,+56
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, 56, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -38, 38, 32   @ -38,+38
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -38, 38, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -54, 0, 32    @ -54, +0
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -54, 0, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -36, -36, 32 @ -36, -36
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, -36, -36, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, -50, 32    @ 0, -50
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 0, -50, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 34, -34, 32   @ +34, -34
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 34, -34, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 46, 0, 32 		@ +46, +0
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 46, 0, 32
 	delay 2
-	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 32, 32, 32 	@ +32, +32
+	createsprite gContinentalCrushNeedleArmSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 32, 32, 32
 	delay 2
 	return
 
@@ -30105,7 +30105,7 @@ SavageSpinOutOnPlayer:
 FinishSavageSpinOut:
 	fadetobg BG_IN_AIR
 	waitbgfadeout
-	createvisualtask AnimTask_StartSlidingBg, 5, 0, 4096, 0, -1	@+4096
+	createvisualtask AnimTask_StartSlidingBg, 5, 0, 4096, 0, -1
 	waitbgfadein
 	delay 16
 	call SlowSavageSpinOutBackgroundSpeed
@@ -30200,7 +30200,7 @@ SavageSpinOutCrash_2:
 	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -32, -16, 24
 	return
 SlowSavageSpinOutBackgroundSpeed:
-	createvisualtask AnimTask_StartSlidingBg, 5, 0, -682, 0, -1	@-682
+	createvisualtask AnimTask_StartSlidingBg, 5, 0, -682, 0, -1
 	delay 1
 	return
 
@@ -30304,29 +30304,29 @@ NeverendingNightmareAttackerRings:
 	delay 14
 	return
 NeverendingNightmareHands:
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, -64, 32 	@ 0,-32
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, -64, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 44, -44, 32 	@ +44,-44
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 44, -44, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 60, 0, 32 		@ +60,0
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 60, 0, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 40, 40, 32 	@ +40,+40
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 40, 40, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 56, 32 		@ +0,+56
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 56, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -38, 38, 32 	@ -38,+38
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -38, 38, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -54, 0, 32 	@ -54, +0
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -54, 0, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -36, -36, 32 @ -36, -36
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, -36, -36, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, -50, 32 	@ 0, -50
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 0, -50, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 34, -34, 32 	@ +34, -34
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 34, -34, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 46, 0, 32 		@ +46, +0
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 46, 0, 32
 	delay 2
-	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 32, 32, 32 	@ +32, +32
+	createsprite gNeverEndingNightmareHandSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 32, 32, 32
 	delay 2
 	return
 NeverendingNightmareGeyser:
@@ -30836,7 +30836,7 @@ BloomDoomHurricane:
 	createvisualtask AnimTask_AnimateGustTornadoPalette, 5, 1, 70
 	return
 BloomDoomFlowerGeyser:
-	createsprite gBloomDoomFlowerGeyserSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, -4, 16	@ -4, -16
+	createsprite gBloomDoomFlowerGeyserSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, -4, 16
 	delay 0
 	createsprite gBloomDoomFlowerGeyserSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 4109, 16
 	delay 0
@@ -31046,7 +31046,7 @@ gBattleAnimMove_GigavoltHavoc::
 	waitforvisualfinish
 	end
 HavocSpearGeyser:
-	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, -4, 16	@ -4, -16
+	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, -4, 16
 	delay 1
 	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 4109, 16	@
 	delay 1
@@ -31124,7 +31124,7 @@ ShatteredPsycheFinish:
 	restorebg
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 15, 1
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -4, -4, 15, ANIM_TARGET, 1
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0  		@ -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 1, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 2, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 3, 0, 0
@@ -31133,88 +31133,88 @@ ShatteredPsycheFinish:
 	waitforvisualfinish
 	end
 ShatteredPsycheFlingOpponent:
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4	@ -26, +16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1,
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1	@ 26, -16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, -16, 1, 4	@ -26,-16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, -16, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, 16, 1, 1	@ 26, 16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, 16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 32, 1, 4	@ 0,32
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 32, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 0, -32, 1, 1	@ 0, -32
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 0, -32, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -32, 1, 4	@ 0,-32
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -32, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 0, 32, 1, 1	@ 0, 32
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 0, 32, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, 16, 1, 4	@ 26,16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, 16, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, -16, 1, 1	@ -26, -16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, -16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, -32, 1, 4	@ 26,-16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, -32, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, 16, 1, 1	@ 0, 32
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, 16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 5
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4	@ -26, +16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1	@ 26, -16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, -16, 1, 4	@ -26,-16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 26, -16, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, 16, 1, 1	@ 26, 16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -26, 16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
 	return
 ShatteredPsycheFlingPlayer:
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4	@ -26,-16
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1	@ 26, 16
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 32, 0, 1, 4	@ 32,0
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 32, 0, 1, 4
 	waitforvisualfinish
 	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -32, 0, 1, 1	@
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -32, 0, 1, 4	@ -32,0
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -32, 0, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 32, 0, 1, 1	@ 32, 0
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 32, 0, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
 	waitforvisualfinish
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 10, 32, 1, 4	@ 10, -32
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 10, 32, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -10, 5, 1, 1	@ 10, -32
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -10, 5, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 5
@@ -31301,7 +31301,7 @@ SubzeroSlammerFinish:
 	waitforvisualfinish
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
 	delay 3
-	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0  		@ -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 0, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 1, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 2, 0, 0
 	createsprite gBrickBreakWallShardSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 3, 0, 0
@@ -32007,10 +32007,10 @@ CatastropikaFinish:
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, -64, -40, 37, 44, 224, 8, 2, 3
 	delay 13
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -256, 21, 0, 4
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -24, -16, 24 	@ 12, -48, -16, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -38, -10, 24 	@ 16, -16, -10, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -20, -18, 24 	@ 14, -52, -18, 24
-	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -36, -16, 24 	@ 12, -32, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 12, -24, -16, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 16, -38, -10, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 14, -20, -18, 24
+	createsprite gDirtPlumeSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 1, 12, -36, -16, 24
 	call CatastropikaThundering
 	invisible ANIM_TARGET
 	unloadspritegfx ANIM_TAG_MUD_SAND
@@ -32639,7 +32639,7 @@ PulverizingPancakeDiggingRun:
 	delay 5
 	return
 PulverizingPancakeSlowBackground:
-	createvisualtask AnimTask_StartSlidingBg, 5, 0, -682, 0, -1	@-682
+	createvisualtask AnimTask_StartSlidingBg, 5, 0, -682, 0, -1
 	delay 1
 	return
 PulverizingPancakeExplosion:
