@@ -3296,7 +3296,6 @@ void FaintClearSetData(enum BattlerId battler)
 
     gProtectStructs[battler].quash = FALSE;
     gProtectStructs[battler].noValidMoves = FALSE;
-    gProtectStructs[battler].helpingHand = 0;
     gProtectStructs[battler].bounceMove = FALSE;
     gProtectStructs[battler].stealMove = FALSE;
     gProtectStructs[battler].chargingTurn = FALSE;
