@@ -1158,50 +1158,50 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
 
 static const struct SearchOptionText sDexModeOptions[] =
 {
-    [DEX_MODE_HOENN]    = {gText_DexHoennDescription, gText_DexHoennTitle},
-    [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle},
+    [DEX_MODE_HOENN]    = {COMPOUND_STRING("HOENN region's POKéDEX"),   COMPOUND_STRING("HOENN DEX")},
+    [DEX_MODE_NATIONAL] = {COMPOUND_STRING("National edition POKéDEX"), COMPOUND_STRING("NATIONAL DEX")},
     {},
 };
 
 static const struct SearchOptionText sDexOrderOptions[] =
 {
-    [ORDER_NUMERICAL]    = {gText_DexSortNumericalDescription, gText_DexSortNumericalTitle},
-    [ORDER_ALPHABETICAL] = {gText_DexSortAtoZDescription,      gText_DexSortAtoZTitle},
-    [ORDER_HEAVIEST]     = {gText_DexSortHeaviestDescription,  gText_DexSortHeaviestTitle},
-    [ORDER_LIGHTEST]     = {gText_DexSortLightestDescription,  gText_DexSortLightestTitle},
-    [ORDER_TALLEST]      = {gText_DexSortTallestDescription,   gText_DexSortTallestTitle},
-    [ORDER_SMALLEST]     = {gText_DexSortSmallestDescription,  gText_DexSortSmallestTitle},
+    [ORDER_NUMERICAL]    = {COMPOUND_STRING("POKéMON are listed according to their\nnumber."),               COMPOUND_STRING("NUMERICAL MODE")},
+    [ORDER_ALPHABETICAL] = {COMPOUND_STRING("Spotted and owned POKéMON are listed\nalphabetically."),        COMPOUND_STRING("A TO Z MODE")},
+    [ORDER_HEAVIEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nheaviest to the lightest."), COMPOUND_STRING("HEAVIEST MODE")},
+    [ORDER_LIGHTEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nlightest to the heaviest."), COMPOUND_STRING("LIGHTEST MODE")},
+    [ORDER_TALLEST]      = {COMPOUND_STRING("Owned POKéMON are listed from the\ntallest to the smallest."),  COMPOUND_STRING("TALLEST MODE")},
+    [ORDER_SMALLEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nsmallest to the tallest."),  COMPOUND_STRING("SMALLEST MODE")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchNameOptions[] =
 {
     {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC},
-    [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF},
-    [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI},
-    [NAME_JKL] = {gText_DexEmptyString, gText_DexSearchAlphaJKL},
-    [NAME_MNO] = {gText_DexEmptyString, gText_DexSearchAlphaMNO},
-    [NAME_PQR] = {gText_DexEmptyString, gText_DexSearchAlphaPQR},
-    [NAME_STU] = {gText_DexEmptyString, gText_DexSearchAlphaSTU},
-    [NAME_VWX] = {gText_DexEmptyString, gText_DexSearchAlphaVWX},
-    [NAME_YZ]  = {gText_DexEmptyString, gText_DexSearchAlphaYZ},
+    [NAME_ABC] = {gText_DexEmptyString, COMPOUND_STRING("ABC")},
+    [NAME_DEF] = {gText_DexEmptyString, COMPOUND_STRING("DEF")},
+    [NAME_GHI] = {gText_DexEmptyString, COMPOUND_STRING("GHI")},
+    [NAME_JKL] = {gText_DexEmptyString, COMPOUND_STRING("JKL")},
+    [NAME_MNO] = {gText_DexEmptyString, COMPOUND_STRING("MNO")},
+    [NAME_PQR] = {gText_DexEmptyString, COMPOUND_STRING("PQR")},
+    [NAME_STU] = {gText_DexEmptyString, COMPOUND_STRING("STU")},
+    [NAME_VWX] = {gText_DexEmptyString, COMPOUND_STRING("VWX")},
+    [NAME_YZ]  = {gText_DexEmptyString, COMPOUND_STRING("YZ")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchColorOptions[] =
 {
     {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, COMPOUND_STRING("RED")},
+    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, COMPOUND_STRING("BLUE")},
+    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, COMPOUND_STRING("YELLOW")},
+    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, COMPOUND_STRING("GREEN")},
+    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, COMPOUND_STRING("BLACK")},
+    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, COMPOUND_STRING("BROWN")},
+    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, COMPOUND_STRING("PURPLE")},
+    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, COMPOUND_STRING("GRAY")},
+    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, COMPOUND_STRING("WHITE")},
+    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, COMPOUND_STRING("PINK")},
     {},
 };
 
@@ -1555,7 +1555,7 @@ void Task_HandlePokedexInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForScroll;
-            HandleCreateStatBarsDPAD_HGSS(); 
+            HandleCreateStatBarsDPAD_HGSS();
         }
     }
 }
@@ -2051,7 +2051,7 @@ bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
         return !GetSetPokedexFlag(dexNumBefore, FLAG_GET_SEEN)
             && !GetSetPokedexFlag(dexNumAfter, FLAG_GET_SEEN);
 
-    return TRUE; 
+    return TRUE;
 }
 
 void CreatePokedexList(u8 dexMode, u8 order)
@@ -2367,7 +2367,7 @@ void ClearMonListEntry(u8 x, u8 y, u16 unused)
     u32 xMultiplier = 8;
     if (POKEDEX_PLUS_HGSS)
         xMultiplier = 6;
-    
+
     FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, 0x60, 16);
 }
 
@@ -3336,7 +3336,7 @@ void Task_HandleInfoScreenInput(u8 taskId)
         PlaySE(SE_PC_OFF);
         return;
     }
-    
+
     if (TryHandleInfoScreenInput_HGSS(taskId))
         return;
 
@@ -3718,7 +3718,7 @@ static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
     if (TryLoadPlayArrowPalette_HGSS(cryPlaying))
         return;
-    
+
     u16 color;
 
     if (cryPlaying)
