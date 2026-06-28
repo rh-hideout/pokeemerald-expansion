@@ -313,35 +313,6 @@ enum BattleStatusTrackedVolatile
     B_STATUS_TRACKED_VOLATILE_COUNT,
 };
 
-struct BattleStatusSnapshot
-{
-    u8 majorStatus;
-    u64 volatileMask;
-    u8 critBoostLevel;
-    u8 autotomizeCount;
-    u8 statStages[NUM_BATTLE_STATS];
-    u16 species;
-    u8 type1;
-    u8 type2;
-    u8 activeGimmick;
-    u8 teraType;
-    u32 sideStatusBits;
-    u8 spikesLayers;
-    u8 toxicSpikesLayers;
-    enum Item allyItem;
-    enum Ability allyAbility;
-
-    u8 isPrimal:1;
-    u8 isMega:1;
-    u8 isDynamaxed:1;
-    u8 isTera:1;
-    u8 stealthRock:1;
-    u8 stickyWeb:1;
-    u8 allyItemKnown:1;
-    u8 allyAbilityKnown:1;
-    u8 dynamaxTurns:1;
-};
-
 enum BattleStatusEffectId
 {
     B_STATUS_EFFECT_HARSH_SUNLIGHT,
@@ -558,15 +529,6 @@ static void UpdateHpBarTiles(u8 spriteId, s16 hp, s16 maxHp);
 static void DrawHpBarSprite(struct BattleStatusCard *card);
 static u8 GetBarGfxId(s16 hp, s16 maxHp);
 static u8 GetAilmentFromBattler(enum BattlerId battler);
-static void RefreshUnreadUpdates(void);
-static void PrimeSnapshotsFromCurrentState(void);
-static u64 GetTrackedVolatileMask(enum BattlerId battler);
-static void BuildSnapshotForBattler(enum BattlerId battler, struct BattleStatusSnapshot *snapshot);
-static u16 GetUpdateReasons(enum BattlerId battler, const struct BattleStatusSnapshot *previous, const struct BattleStatusSnapshot *current);
-static void LogUpdateReasons(enum BattlerId battler, u16 reasons);
-static void ClearUnreadUpdatesForNewTurn(void);
-static void SnapshotResetEntry(u8 battler);
-static void SnapshotStoreEntry(u8 battler, u32 identity, const struct BattleStatusSnapshot *snapshot);
 static enum BattlerId GetSelectedBattler(void);
 static enum BattlerId GetBattlerFromEnemySlot(u32 slot);
 static enum BattlerId GetBattlerFromPlayerSlot(u32 slot);
@@ -578,16 +540,7 @@ struct BattleStatusMenuData
     u16 bg0Tilemap[BG_SCREEN_SIZE];
     u16 bg1Tilemap[BG_SCREEN_SIZE];
     u8 detailTextBuffer[B_STATUS_DETAIL_TEXT_BUFFER_SIZE];
-    u16 snapshotTurn;
-    bool8 snapshotInitialized;
-    struct BattleStatusSnapshot lastSnapshot[MAX_BATTLERS_COUNT];
-    bool8 lastSnapshotValid[MAX_BATTLERS_COUNT];
-    u32 lastMonIdentity[MAX_BATTLERS_COUNT];
-    bool8 lastMonIdentityValid[MAX_BATTLERS_COUNT];
     bool8 unreadUpdates[MAX_BATTLERS_COUNT];
-    u16 updateReasons[MAX_BATTLERS_COUNT];
-    u16 updateLatchedTurn[MAX_BATTLERS_COUNT];
-    bool8 justSwitchedIn[MAX_BATTLERS_COUNT];
     u8 pendingPage;
     bool8 transitionUnloaded;
 };
@@ -1788,7 +1741,6 @@ static void OverviewEnter(void)
     sData->menu.page = BATTLE_STATUS_PAGE_OVERVIEW;
     LoadBackdropAssets();
     OverviewClearWindows();
-    RefreshUnreadUpdates();
     OverviewBufferLabelText();
     OverviewCreateCards();
     OverviewDrawBackground();
@@ -3068,7 +3020,7 @@ static void DetailInitEffectEntry(struct BattleStatusEffectEntry *entry, enum Ba
 }
 
 static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
-                                           enum BattleSide setterSide, bool8 isExtendable)
+                              enum BattleSide setterSide, bool8 isExtendable)
 {
     if (remaining == 0)
         return;
@@ -3795,15 +3747,16 @@ static void OverviewDrawCard(struct BattleStatusCard *card)
     }
     DrawHpBarSprite(card);
 
-    if (sData->unreadUpdates[card->battlerId])
-    {
-        s16 updateX = card->x + B_STATUS_CARD_W - 9;
-        s16 updateY = iconCenterY - 8;
-
-        card->updateSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusUpdateIcon, updateX, updateY, 0);
-        if (card->updateSpriteId != SPRITE_NONE)
-            gSprites[card->updateSpriteId].oam.priority = 0;
-    }
+    // ???
+    // if (sData->unreadUpdates[card->battlerId])
+    // {
+    //     s16 updateX = card->x + B_STATUS_CARD_W - 9;
+    //     s16 updateY = iconCenterY - 8;
+    //
+    //     card->updateSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusUpdateIcon, updateX, updateY, 0);
+    //     if (card->updateSpriteId != SPRITE_NONE)
+    //         gSprites[card->updateSpriteId].oam.priority = 0;
+    // }
 }
 
 static u8 GetBestFitNameFont(const u8 *name, s16 maxWidth)
@@ -4440,370 +4393,6 @@ static u8 GetAilmentFromBattler(enum BattlerId battler)
 
     status = gBattleMons[battler].status1;
     return GetAilmentFromStatus(status);
-}
-
-static void SnapshotResetEntry(u8 battler)
-{
-    memset(&sData->lastSnapshot[battler], 0, sizeof(sData->lastSnapshot[battler]));
-    sData->lastSnapshotValid[battler] = FALSE;
-    sData->lastMonIdentity[battler] = 0;
-    sData->lastMonIdentityValid[battler] = FALSE;
-    sData->unreadUpdates[battler] = FALSE;
-    sData->updateReasons[battler] = B_STATUS_UPDATE_REASON_NONE;
-    sData->updateLatchedTurn[battler] = 0;
-    sData->justSwitchedIn[battler] = FALSE;
-}
-
-static void SnapshotStoreEntry(u8 battler, u32 identity, const struct BattleStatusSnapshot *snapshot)
-{
-    sData->lastSnapshot[battler] = *snapshot;
-    sData->lastSnapshotValid[battler] = TRUE;
-    sData->lastMonIdentity[battler] = identity;
-    sData->lastMonIdentityValid[battler] = TRUE;
-}
-
-static u64 GetTrackedVolatileMask(enum BattlerId battler)
-{
-    const struct BattlePokemon *mon = &gBattleMons[battler];
-    u64 mask = 0;
-
-#define TRACK_VOLATILE(bit, condition)          \
-    do                                          \
-    {                                           \
-        if (condition)                          \
-            mask |= ((u64)1 << (bit));          \
-    } while (0)
-
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_CRIT_BOOST,
-                   mon->volatiles.focusEnergy
-                || mon->volatiles.dragonCheer
-                || mon->volatiles.bonusCritStages > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_CONFUSION,
-                   mon->volatiles.confusionTurns > 0 || mon->volatiles.infiniteConfusion);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_INFATUATION, mon->volatiles.infatuation);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_NIGHTMARE, mon->volatiles.nightmare);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_DROWSY, mon->volatiles.yawn);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_ENCORE, mon->volatiles.encoreTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_TORMENT, mon->volatiles.torment);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_GRUDGE, mon->volatiles.grudge);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_HEAL_BLOCK, mon->volatiles.healBlock);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_IDENTIFIED, mon->volatiles.foresight || mon->volatiles.miracleEye);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_CANT_ESCAPE, mon->volatiles.escapePrevention || mon->volatiles.noRetreat);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_LOCK_ON, mon->volatiles.lockOn);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_EMBARGO, mon->volatiles.embargo);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_CHARGE, mon->volatiles.chargeTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_TAUNT, mon->volatiles.tauntTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_TELEKINESIS, mon->volatiles.telekinesis);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_WISH, gBattleStruct->wish[battler].counter > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_INGRAIN, mon->volatiles.root);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_CURSE, mon->volatiles.cursed);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_DESTINY_BOND, mon->volatiles.destinyBond);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_BOUND, mon->volatiles.wrapped);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_BIDE, mon->volatiles.bideTurns > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_FUTURE_ATTACK, gBattleStruct->futureSight[battler].counter > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_UPROAR, mon->volatiles.uproarTurns > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_AQUA_RING, mon->volatiles.aquaRing);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_AUTOTOMIZE, mon->volatiles.autotomizeCount > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_SMACK_DOWN, mon->volatiles.smackDown);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_THROAT_CHOP, mon->volatiles.throatChopTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_LASER_FOCUS, mon->volatiles.laserFocusTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_TAR_SHOT, mon->volatiles.tarShot);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_OCTOLOCK, mon->volatiles.octolock);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_FIXATED, mon->volatiles.glaiveRush);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_STANCE_SWAP, mon->volatiles.powerTrick);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_SLOW_START, mon->volatiles.slowStartTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_SALT_CURE, mon->volatiles.saltCure);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_SYRUPY, mon->volatiles.syrupBomb || mon->volatiles.syrupBombTimer > 0);
-    TRACK_VOLATILE(B_STATUS_TRACKED_VOLATILE_RAMPAGING, mon->volatiles.rampageTurns > 0);
-
-#undef TRACK_VOLATILE
-
-    return mask;
-}
-
-static void BuildSnapshotForBattler(enum BattlerId battler, struct BattleStatusSnapshot *snapshot)
-{
-    const struct BattlePokemon *mon = &gBattleMons[battler];
-    enum BattleSide side = GetBattlerSide(battler);
-    enum Gimmick activeGimmick = GetActiveGimmick(battler);
-    u32 sideStatuses = gSideStatuses[side] & B_STATUS_TRACKED_SIDE_STATUS_BITS;
-
-    memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->majorStatus = GetAilmentFromStatus(mon->status1);
-    snapshot->volatileMask = GetTrackedVolatileMask(battler);
-    snapshot->critBoostLevel = mon->volatiles.bonusCritStages;
-    snapshot->autotomizeCount = mon->volatiles.autotomizeCount;
-    memcpy(snapshot->statStages, mon->statStages, sizeof(snapshot->statStages));
-    snapshot->species = mon->species;
-    snapshot->type1 = mon->types[0];
-    snapshot->type2 = mon->types[1];
-    snapshot->activeGimmick = (u8)activeGimmick;
-    snapshot->isPrimal = IsBattlerPrimalReverted(battler);
-    snapshot->isMega = (activeGimmick == GIMMICK_MEGA);
-    snapshot->isDynamaxed = (activeGimmick == GIMMICK_DYNAMAX);
-    if (snapshot->isDynamaxed)
-        snapshot->dynamaxTurns = gBattleStruct->dynamax.dynamaxTurns[battler];
-    snapshot->isTera = (activeGimmick == GIMMICK_TERA);
-    if (snapshot->isTera)
-        snapshot->teraType = GetBattlerTeraType(battler);
-    else
-        snapshot->teraType = TYPE_NONE;
-    snapshot->sideStatusBits = sideStatuses;
-    snapshot->stealthRock = IsHazardOnSide(side, HAZARDS_STEALTH_ROCK);
-    snapshot->stickyWeb = IsHazardOnSide(side, HAZARDS_STICKY_WEB);
-    if (IsHazardOnSide(side, HAZARDS_SPIKES))
-        snapshot->spikesLayers = gSideTimers[side].spikesAmount;
-    if (IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES))
-        snapshot->toxicSpikesLayers = gSideTimers[side].toxicSpikesAmount;
-
-    if (IsOnPlayerSide(battler))
-    {
-        snapshot->allyItemKnown = TRUE;
-        snapshot->allyItem = mon->item;
-        snapshot->allyAbilityKnown = TRUE;
-        snapshot->allyAbility = mon->ability;
-    }
-}
-
-static u16 GetUpdateReasons(enum BattlerId battler, const struct BattleStatusSnapshot *previous, const struct BattleStatusSnapshot *current)
-{
-    u16 reasons = B_STATUS_UPDATE_REASON_NONE;
-    bool8 gimmickEnded = FALSE;
-    bool8 megaActivated;
-    bool8 dynamaxActivated;
-    bool8 teraActivated;
-    bool8 teraTypeChangedWhileActive;
-    u64 gainedVolatiles = current->volatileMask & ~previous->volatileMask;
-    u32 gainedSideStatuses = current->sideStatusBits & ~previous->sideStatusBits;
-
-    if ((previous->activeGimmick != GIMMICK_NONE && current->activeGimmick == GIMMICK_NONE)
-     || (previous->isPrimal && !current->isPrimal))
-        gimmickEnded = TRUE;
-
-    megaActivated = (!previous->isMega && current->isMega);
-    dynamaxActivated = (!previous->isDynamaxed && current->isDynamaxed);
-    teraActivated = (!previous->isTera && current->isTera);
-    teraTypeChangedWhileActive = (previous->isTera && current->isTera && previous->teraType != current->teraType);
-
-    if (current->majorStatus != previous->majorStatus && current->majorStatus != AILMENT_NONE)
-        reasons |= B_STATUS_UPDATE_REASON_STATUS;
-
-    if (gainedVolatiles != 0)
-        reasons |= B_STATUS_UPDATE_REASON_VOLATILE_GAIN;
-    if (current->critBoostLevel > previous->critBoostLevel
-     || current->autotomizeCount > previous->autotomizeCount)
-        reasons |= B_STATUS_UPDATE_REASON_VOLATILE_STACK_RAISE;
-
-    if (!previous->stealthRock && current->stealthRock)
-        reasons |= B_STATUS_UPDATE_REASON_HAZARD_GAIN;
-    if (!previous->stickyWeb && current->stickyWeb)
-        reasons |= B_STATUS_UPDATE_REASON_HAZARD_GAIN;
-    if (current->spikesLayers > previous->spikesLayers
-     || current->toxicSpikesLayers > previous->toxicSpikesLayers)
-        reasons |= B_STATUS_UPDATE_REASON_HAZARD_LAYER_RAISE;
-
-    if (gainedSideStatuses != 0)
-        reasons |= B_STATUS_UPDATE_REASON_SIDE_STATUS_GAIN;
-
-    if (memcmp(previous->statStages, current->statStages, sizeof(current->statStages)) != 0)
-        reasons |= B_STATUS_UPDATE_REASON_STAT_STAGE;
-
-    if (!gimmickEnded
-     && (current->species != previous->species
-      || (!previous->isPrimal && current->isPrimal)))
-        reasons |= B_STATUS_UPDATE_REASON_FORM_CHANGE;
-    if (!gimmickEnded
-     && (current->type1 != previous->type1 || current->type2 != previous->type2))
-        reasons |= B_STATUS_UPDATE_REASON_TYPE_CHANGE;
-    if (!gimmickEnded
-     && ((previous->activeGimmick != current->activeGimmick && current->activeGimmick != GIMMICK_NONE)
-      || teraTypeChangedWhileActive))
-        reasons |= B_STATUS_UPDATE_REASON_GIMMICK_ACTIVATED;
-    if (megaActivated)
-        reasons |= B_STATUS_UPDATE_REASON_GIMMICK_MEGA;
-    if (dynamaxActivated)
-        reasons |= B_STATUS_UPDATE_REASON_GIMMICK_DYNAMAX;
-    if (teraActivated || teraTypeChangedWhileActive)
-        reasons |= B_STATUS_UPDATE_REASON_GIMMICK_TERA;
-
-    if (IsOnPlayerSide(battler))
-    {
-        if ((!previous->allyItemKnown && current->allyItemKnown)
-         || (previous->allyItemKnown && current->allyItemKnown && previous->allyItem != current->allyItem))
-            reasons |= B_STATUS_UPDATE_REASON_ALLY_ITEM;
-
-        if ((!previous->allyAbilityKnown && current->allyAbilityKnown)
-         || (previous->allyAbilityKnown && current->allyAbilityKnown && previous->allyAbility != current->allyAbility))
-            reasons |= B_STATUS_UPDATE_REASON_ALLY_ABILITY;
-    }
-
-    return reasons;
-}
-
-static void LogUpdateReasons(enum BattlerId battler, u16 reasons)
-{
-#if B_STATUS_DEBUG_UPDATE_REASON_LOG
-    if (reasons & B_STATUS_UPDATE_REASON_STATUS)
-        DebugPrintf("BattleStatus upd battler=%d STATUS", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_VOLATILE_GAIN)
-        DebugPrintf("BattleStatus upd battler=%d VOLATILE_GAIN", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_VOLATILE_STACK_RAISE)
-        DebugPrintf("BattleStatus upd battler=%d VOLATILE_STACK", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_HAZARD_GAIN)
-        DebugPrintf("BattleStatus upd battler=%d HAZARD_GAIN", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_HAZARD_LAYER_RAISE)
-        DebugPrintf("BattleStatus upd battler=%d HAZARD_LAYER", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_SIDE_STATUS_GAIN)
-        DebugPrintf("BattleStatus upd battler=%d SIDE_STATUS", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_FORM_CHANGE)
-        DebugPrintf("BattleStatus upd battler=%d FORM", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_TYPE_CHANGE)
-        DebugPrintf("BattleStatus upd battler=%d TYPE", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_STAT_STAGE)
-        DebugPrintf("BattleStatus upd battler=%d STAT_STAGE", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_GIMMICK_ACTIVATED)
-        DebugPrintf("BattleStatus upd battler=%d GIMMICK", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_GIMMICK_MEGA)
-        DebugPrintf("BattleStatus upd battler=%d MEGA", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_GIMMICK_DYNAMAX)
-        DebugPrintf("BattleStatus upd battler=%d DYNAMAX", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_GIMMICK_TERA)
-        DebugPrintf("BattleStatus upd battler=%d TERA", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_ALLY_ITEM)
-        DebugPrintf("BattleStatus upd battler=%d ALLY_ITEM", battler);
-    if (reasons & B_STATUS_UPDATE_REASON_ALLY_ABILITY)
-        DebugPrintf("BattleStatus upd battler=%d ALLY_ABILITY", battler);
-#else
-    (void)battler;
-    (void)reasons;
-#endif
-}
-
-static void PrimeSnapshotsFromCurrentState(void)
-{
-    u8 battler;
-
-    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
-    {
-        if (battler < gBattlersCount && IsBattlerAlive(battler))
-        {
-            struct BattleStatusSnapshot snapshot;
-            u32 identity = gBattleMons[battler].personality;
-
-            BuildSnapshotForBattler(battler, &snapshot);
-            SnapshotStoreEntry(battler, identity, &snapshot);
-            sData->unreadUpdates[battler] = FALSE;
-            sData->updateReasons[battler] = B_STATUS_UPDATE_REASON_NONE;
-            sData->updateLatchedTurn[battler] = gBattleTurnCounter;
-            sData->justSwitchedIn[battler] = FALSE;
-        }
-        else
-        {
-            SnapshotResetEntry(battler);
-        }
-    }
-
-    sData->snapshotInitialized = TRUE;
-    sData->snapshotTurn = gBattleTurnCounter;
-#if B_STATUS_DEBUG_UPDATE_REASON_LOG
-    DebugPrintf("BattleStatus snapshots initialized turn=%d battlers=%d", sData->snapshotTurn, gBattlersCount);
-#endif
-}
-
-static void ClearUnreadUpdatesForNewTurn(void)
-{
-    u8 battler;
-    u16 turn = gBattleTurnCounter;
-
-    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
-    {
-        if (sData->unreadUpdates[battler]
-         && (u16)(turn - sData->updateLatchedTurn[battler]) > 1)
-        {
-            sData->unreadUpdates[battler] = FALSE;
-            sData->updateReasons[battler] = B_STATUS_UPDATE_REASON_NONE;
-        }
-        sData->justSwitchedIn[battler] = FALSE;
-    }
-#if B_STATUS_DEBUG_UPDATE_REASON_LOG
-    DebugPrintf("BattleStatus unread updates clear pass for turn=%d", gBattleTurnCounter);
-#endif
-}
-
-static void RefreshUnreadUpdates(void)
-{
-    u8 battler;
-    u16 turn = gBattleTurnCounter;
-
-    if (sData->snapshotInitialized && turn < sData->snapshotTurn)
-        sData->snapshotInitialized = FALSE;
-
-    if (!sData->snapshotInitialized)
-        PrimeSnapshotsFromCurrentState();
-    else if (turn != sData->snapshotTurn)
-    {
-        ClearUnreadUpdatesForNewTurn();
-        sData->snapshotTurn = turn;
-    }
-
-    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
-    {
-        struct BattleStatusSnapshot currentSnapshot;
-        u32 identity;
-        u16 reasons;
-        u16 newReasons;
-
-        if (battler >= gBattlersCount || !IsBattlerAlive(battler))
-        {
-            SnapshotResetEntry(battler);
-            continue;
-        }
-
-        identity = gBattleMons[battler].personality;
-        BuildSnapshotForBattler(battler, &currentSnapshot);
-
-        if (!sData->lastMonIdentityValid[battler] || !sData->lastSnapshotValid[battler])
-        {
-            SnapshotStoreEntry(battler, identity, &currentSnapshot);
-            sData->unreadUpdates[battler] = FALSE;
-            sData->updateReasons[battler] = B_STATUS_UPDATE_REASON_NONE;
-            sData->updateLatchedTurn[battler] = turn;
-            sData->justSwitchedIn[battler] = FALSE;
-            continue;
-        }
-
-        if (identity != sData->lastMonIdentity[battler])
-        {
-            sData->unreadUpdates[battler] = FALSE;
-            sData->updateReasons[battler] = B_STATUS_UPDATE_REASON_NONE;
-            sData->updateLatchedTurn[battler] = turn;
-            sData->justSwitchedIn[battler] = TRUE;
-            SnapshotStoreEntry(battler, identity, &currentSnapshot);
-#if B_STATUS_DEBUG_UPDATE_REASON_LOG
-            DebugPrintf("BattleStatus battler=%d SWITCH BASELINE SET turn=%d", battler, turn);
-#endif
-            continue;
-        }
-
-        reasons = GetUpdateReasons(battler, &sData->lastSnapshot[battler], &currentSnapshot);
-        if (reasons != B_STATUS_UPDATE_REASON_NONE)
-            sData->updateLatchedTurn[battler] = turn;
-        newReasons = reasons & ~sData->updateReasons[battler];
-        if (newReasons != B_STATUS_UPDATE_REASON_NONE)
-        {
-            sData->unreadUpdates[battler] = TRUE;
-            sData->updateReasons[battler] |= newReasons;
-            if (sData->justSwitchedIn[battler])
-            {
-#if B_STATUS_DEBUG_UPDATE_REASON_LOG
-                DebugPrintf("BattleStatus battler=%d POST_SWITCH_DIFF reasons=0x%X", battler, newReasons);
-#endif
-                sData->justSwitchedIn[battler] = FALSE;
-            }
-            LogUpdateReasons(battler, newReasons);
-        }
-        SnapshotStoreEntry(battler, identity, &currentSnapshot);
-    }
 }
 
 static void OverviewGetCursorPos(const struct BattleStatusCard *card, s16 *outX, s16 *outY)
