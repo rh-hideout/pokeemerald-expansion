@@ -1,4 +1,5 @@
 #include "global.h"
+#include "palette.h"
 #include "wild_encounter_ow.h"
 #include "battle_setup.h"
 #include "battle_main.h"
@@ -233,8 +234,12 @@ void UpdateOverworldWildEncounter(void)
     //Check if possible to spawn.
 
     bool32 shouldSpawnWaterMons = ShouldSpawnWaterOWE();
-    
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !CheckCurrentWildMonHeaderForOWE(shouldSpawnWaterMons))
+
+    struct TimeBlendSettings tmpBlend = gTimeBlend;
+    bool32 hasEncounters = CheckCurrentWildMonHeaderForOWE(shouldSpawnWaterMons);
+    gTimeBlend = tmpBlend;
+
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !hasEncounters)
         return;
 
     if (!WE_OW_ENCOUNTERS
