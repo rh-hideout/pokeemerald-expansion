@@ -1475,7 +1475,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
     switch (environment)
     {
     case ENCOUNTER_TYPE_LAND:    // grass
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND, TRUE);
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
         const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
 
         if (landMonsInfo == NULL)
@@ -1491,7 +1491,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
         }
         break;
     case ENCOUNTER_TYPE_WATER:    //water
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER, TRUE);
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
         const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
 
         if (waterMonsInfo == NULL)
@@ -1507,7 +1507,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
         }
         break;
     case ENCOUNTER_TYPE_HIDDEN:
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, TRUE);
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
         const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
         if (hiddenMonsInfo == NULL)
@@ -1686,7 +1686,7 @@ static bool8 CapturedAllLandMons(u32 headerId)
 {
     u16 i, species;
     int count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND, TRUE);
+    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
 
     const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
 
@@ -1721,7 +1721,7 @@ static bool8 CapturedAllWaterMons(u32 headerId)
     u32 i;
     enum Species species;
     u8 count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER, TRUE);
+    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
 
     const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
 
@@ -1754,7 +1754,7 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
     u32 i;
     enum Species species;
     u8 count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, TRUE);
+    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 
         const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
@@ -1905,11 +1905,11 @@ static void DexNavLoadEncounterData(void)
     if (headerId == HEADER_NONE)
         return;
 
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND, TRUE);
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
     const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER, TRUE);
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
     const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, TRUE);
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
     const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
     // nop struct data
@@ -2493,7 +2493,7 @@ bool32 TryFindHiddenPokemon(void)
         if (headerId == HEADER_NONE)
             return FALSE;
 
-        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN, TRUE);
+        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
         const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
         bool8 isHiddenMon = FALSE;
 

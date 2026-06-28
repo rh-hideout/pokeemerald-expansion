@@ -1799,7 +1799,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
-            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND, TRUE);
+            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
             numSpecies = 0;
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo)
             {
@@ -1808,7 +1808,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
                 numSpecies++;
             }
 
-            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_WATER, TRUE);
+            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_WATER);
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo)
             {
                 slot = GetWaterEncounterSlot();

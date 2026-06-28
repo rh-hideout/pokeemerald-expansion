@@ -328,16 +328,15 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
         return hours >= begin && hours < end;
 }
 
-enum TimeOfDay GetTimeOfDay(bool32 updateTime)
+enum TimeOfDay GetTimeOfDay(void)
 {
-    if(updateTime)
-        UpdateTimeOfDay();
+    UpdateTimeOfDay();
     return gTimeOfDay;
 }
 
 enum TimeOfDay GetTimeOfDayForDex(void)
 {
-    enum TimeOfDay timeOfDay = OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay(TRUE) : TIME_OF_DAY_DEFAULT;
+    enum TimeOfDay timeOfDay = OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_OF_DAY_DEFAULT;
     return GenConfigTimeOfDay(timeOfDay);
 }
 
