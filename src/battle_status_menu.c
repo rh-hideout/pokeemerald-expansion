@@ -195,7 +195,6 @@ struct BattleStatusEffectEntry
     u8 effectId;
     u16 durationRemaining;
     u16 baseTotalDuration;
-    u16 extendedTotalDuration;
     u8 setterSide;
     u8 flags;
     u8 stackCount;
@@ -248,69 +247,6 @@ struct BattleStatusMenuState
     u8 detailEffectsScrollbarSpriteId;
     u16 detailEffectsScroll;
     u8 detailWindowIds[B_STATUS_DETAIL_WINDOW_COUNT];
-};
-
-enum BattleStatusUpdateReason
-{
-    B_STATUS_UPDATE_REASON_NONE                  = 0,
-    B_STATUS_UPDATE_REASON_STATUS                = (1 << 0),
-    B_STATUS_UPDATE_REASON_VOLATILE_GAIN         = (1 << 1),
-    B_STATUS_UPDATE_REASON_VOLATILE_STACK_RAISE  = (1 << 2),
-    B_STATUS_UPDATE_REASON_HAZARD_GAIN           = (1 << 3),
-    B_STATUS_UPDATE_REASON_HAZARD_LAYER_RAISE    = (1 << 4),
-    B_STATUS_UPDATE_REASON_SIDE_STATUS_GAIN      = (1 << 5),
-    B_STATUS_UPDATE_REASON_FORM_CHANGE           = (1 << 6),
-    B_STATUS_UPDATE_REASON_TYPE_CHANGE           = (1 << 7),
-    B_STATUS_UPDATE_REASON_GIMMICK_ACTIVATED     = (1 << 8),
-    B_STATUS_UPDATE_REASON_ALLY_ITEM             = (1 << 9),
-    B_STATUS_UPDATE_REASON_ALLY_ABILITY          = (1 << 10),
-    B_STATUS_UPDATE_REASON_STAT_STAGE            = (1 << 11),
-    B_STATUS_UPDATE_REASON_GIMMICK_MEGA          = (1 << 12),
-    B_STATUS_UPDATE_REASON_GIMMICK_DYNAMAX       = (1 << 13),
-    B_STATUS_UPDATE_REASON_GIMMICK_TERA          = (1 << 14),
-};
-
-enum BattleStatusTrackedVolatile
-{
-    B_STATUS_TRACKED_VOLATILE_CRIT_BOOST,
-    B_STATUS_TRACKED_VOLATILE_CONFUSION,
-    B_STATUS_TRACKED_VOLATILE_INFATUATION,
-    B_STATUS_TRACKED_VOLATILE_NIGHTMARE,
-    B_STATUS_TRACKED_VOLATILE_DROWSY,
-    B_STATUS_TRACKED_VOLATILE_ENCORE,
-    B_STATUS_TRACKED_VOLATILE_TORMENT,
-    B_STATUS_TRACKED_VOLATILE_GRUDGE,
-    B_STATUS_TRACKED_VOLATILE_HEAL_BLOCK,
-    B_STATUS_TRACKED_VOLATILE_IDENTIFIED,
-    B_STATUS_TRACKED_VOLATILE_CANT_ESCAPE,
-    B_STATUS_TRACKED_VOLATILE_LOCK_ON,
-    B_STATUS_TRACKED_VOLATILE_EMBARGO,
-    B_STATUS_TRACKED_VOLATILE_CHARGE,
-    B_STATUS_TRACKED_VOLATILE_TAUNT,
-    B_STATUS_TRACKED_VOLATILE_TELEKINESIS,
-    B_STATUS_TRACKED_VOLATILE_MAGNET_RISE,
-    B_STATUS_TRACKED_VOLATILE_WISH,
-    B_STATUS_TRACKED_VOLATILE_INGRAIN,
-    B_STATUS_TRACKED_VOLATILE_CURSE,
-    B_STATUS_TRACKED_VOLATILE_DESTINY_BOND,
-    B_STATUS_TRACKED_VOLATILE_BOUND,
-    B_STATUS_TRACKED_VOLATILE_BIDE,
-    B_STATUS_TRACKED_VOLATILE_FUTURE_ATTACK,
-    B_STATUS_TRACKED_VOLATILE_UPROAR,
-    B_STATUS_TRACKED_VOLATILE_AQUA_RING,
-    B_STATUS_TRACKED_VOLATILE_AUTOTOMIZE,
-    B_STATUS_TRACKED_VOLATILE_SMACK_DOWN,
-    B_STATUS_TRACKED_VOLATILE_THROAT_CHOP,
-    B_STATUS_TRACKED_VOLATILE_LASER_FOCUS,
-    B_STATUS_TRACKED_VOLATILE_TAR_SHOT,
-    B_STATUS_TRACKED_VOLATILE_OCTOLOCK,
-    B_STATUS_TRACKED_VOLATILE_FIXATED,
-    B_STATUS_TRACKED_VOLATILE_STANCE_SWAP,
-    B_STATUS_TRACKED_VOLATILE_SLOW_START,
-    B_STATUS_TRACKED_VOLATILE_SALT_CURE,
-    B_STATUS_TRACKED_VOLATILE_SYRUPY,
-    B_STATUS_TRACKED_VOLATILE_RAMPAGING,
-    B_STATUS_TRACKED_VOLATILE_COUNT,
 };
 
 enum BattleStatusEffectId
@@ -442,7 +378,6 @@ static void LoadBackdropAssets(void);
 static void OverviewComputeHeaderLayout(s16 labelWidth, u8 *outTextLenTiles, s16 *outHeaderX, s16 *outHeaderWidth);
 static void OverviewDrawStatusCard(u16 *tilemap, s16 x, s16 y, u8 width, u8 height, bool8 isActive, bool8 isBottomRow);
 static void OverviewDrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles);
-static void DetailDrawEntryBoxes(void);
 static void OverviewDrawBackground(void);
 static void OverviewDrawCardBackground(const struct BattleStatusCard *card, bool8 isActive);
 static void OverviewUpdateCardSelectionHighlight(u8 oldSelectedIndex);
@@ -485,11 +420,9 @@ static s16 DetailGetStatRowTextY(u8 row);
 static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag);
 static void DetailCycleBattler(s8 direction);
 static void DetailInitEffectsList(void);
-static void DetailBuildActiveEffects(void);
-static void DetailBuildActiveEffectsForBattler(enum BattlerId battler, struct BattleStatusEffectEntry *entries, u8 *count);
+static void DetailBuildActiveEffectsForBattler(void);
 static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide side, enum BattleStatusEffectId effectId,
-                                                  struct BattleStatusEffectEntry *entries, u8 *count);
-static void DetailInitEffectEntry(struct BattleStatusEffectEntry *entry, enum BattleStatusEffectId effectId, enum BattleSide side);
+                                     struct BattleStatusEffectEntry *entries);
 static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
                                            enum BattleSide setterSide, bool8 isExtendable);
 static void DetailSetDurationUnknownTotal(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
@@ -586,23 +519,16 @@ static const u8 sText_BattleStatus_DetailLButtonGlyph[] = _("{L_BUTTON}");
 static const u8 sText_BattleStatus_DetailRButtonGlyph[] = _("{R_BUTTON}");
 static const u8 sText_BattleStatus_DetailEffectsHeader[] = _("Active States and Effects");
 static const u8 sText_BattleStatus_DetailTeraTypeLabel[] = _("Tera\nType:");
-static const u8 sText_BattleStatus_DetailStatAttack[] = _("Attack");
-static const u8 sText_BattleStatus_DetailStatDefense[] = _("Defense");
-static const u8 sText_BattleStatus_DetailStatSpAtk[] = _("Sp. Atk");
-static const u8 sText_BattleStatus_DetailStatSpDef[] = _("Sp. Def");
-static const u8 sText_BattleStatus_DetailStatSpeed[] = _("Speed");
-static const u8 sText_BattleStatus_DetailStatAccuracy[] = _("Accuracy");
-static const u8 sText_BattleStatus_DetailStatEvasion[] = _("Evasion");
 
 static const u8 *const sBattleStatusDetailStatLabels[B_STATUS_DETAIL_STAT_ROW_COUNT] =
 {
-    sText_BattleStatus_DetailStatAttack,
-    sText_BattleStatus_DetailStatDefense,
-    sText_BattleStatus_DetailStatSpAtk,
-    sText_BattleStatus_DetailStatSpDef,
-    sText_BattleStatus_DetailStatSpeed,
-    sText_BattleStatus_DetailStatAccuracy,
-    sText_BattleStatus_DetailStatEvasion,
+    COMPOUND_STRING("Attack"),
+    COMPOUND_STRING("Defense"),
+    COMPOUND_STRING("Sp. Atk"),
+    COMPOUND_STRING("Sp. Def"),
+    COMPOUND_STRING("Speed"),
+    COMPOUND_STRING("Accuracy"),
+    COMPOUND_STRING("Evasion"),
 };
 
 static const u8 sBattleStatusDetailStatIds[B_STATUS_DETAIL_STAT_ROW_COUNT] =
@@ -1926,10 +1852,8 @@ static void DetailDrawStaticWindows(void)
     windowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
     if (windowId != WINDOW_NONE)
     {
-        u8 i;
-
         DetailDrawWindowFrame(windowId);
-        for (i = 0; i < B_STATUS_DETAIL_STAT_ROW_COUNT; i++)
+        for (u32 i = 0; i < B_STATUS_DETAIL_STAT_ROW_COUNT; i++)
         {
             AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROW, 2,
                                          DetailGetStatRowTextY(i), 0, 0,
@@ -2371,9 +2295,7 @@ static void DetailRefreshIcon(void)
 
 static void DetailDestroyTypeIcons(void)
 {
-    u8 i;
-
-    for (i = 0; i < ARRAY_COUNT(sData->menu.detailTypeIconSpriteIds); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sData->menu.detailTypeIconSpriteIds); i++)
     {
         if (sData->menu.detailTypeIconSpriteIds[i] != SPRITE_NONE)
             DestroySprite(&gSprites[sData->menu.detailTypeIconSpriteIds[i]]);
@@ -2595,100 +2517,96 @@ static void DetailInitEffectsList(void)
     sData->menu.detailActiveEffectsCount = 0;
     sData->menu.detailEffectsCursor = 0;
     sData->menu.detailEffectsScroll = 0;
-    DetailBuildActiveEffects();
+    DetailBuildActiveEffectsForBattler();
     DetailRefreshEffectsSection();
 }
 
-static void DetailBuildActiveEffects(void)
+static void DetailBuildActiveEffectsForBattler(void)
 {
-    DetailBuildActiveEffectsForBattler(GetSelectedBattler(),
-                                       sData->menu.detailActiveEffects,
-                                       &sData->menu.detailActiveEffectsCount);
-}
-
-static void DetailBuildActiveEffectsForBattler(enum BattlerId battler, struct BattleStatusEffectEntry *entries, u8 *count)
-{
+    enum BattlerId battler = GetSelectedBattler();
     enum BattleSide side = GetBattlerSide(battler);
+
     u32 status1 = gBattleMons[battler].status1;
     u32 sideStatuses = gSideStatuses[side];
 
+    struct BattleStatusEffectEntry *entries = sData->menu.detailActiveEffects;
+
     if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EXTREMELY_HARSH_SUNLIGHT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EXTREMELY_HARSH_SUNLIGHT, entries);
     else if (gBattleWeather & B_WEATHER_SUN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HARSH_SUNLIGHT, entries, count);
-
-    if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEAVY_RAIN, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HARSH_SUNLIGHT, entries);
+    else if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEAVY_RAIN, entries);
     else if (gBattleWeather & B_WEATHER_RAIN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAIN, entries, count);
-
-    if (gBattleWeather & B_WEATHER_SANDSTORM)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SANDSTORM, entries, count);
-    if (gBattleWeather & B_WEATHER_SNOW)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SNOW, entries, count);
-    if (gBattleWeather & B_WEATHER_STRONG_WINDS)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STRONG_WINDS, entries, count);
-    if (gBattleWeather & B_WEATHER_FOG)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FOG, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAIN, entries);
+    else if (gBattleWeather & B_WEATHER_SANDSTORM)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SANDSTORM, entries);
+    else if (gBattleWeather & B_WEATHER_SNOW)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SNOW, entries);
+    else if (gBattleWeather & B_WEATHER_STRONG_WINDS)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STRONG_WINDS, entries);
+    else if (gBattleWeather & B_WEATHER_FOG)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FOG, entries);
 
     if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_ELECTRIC_TERRAIN, entries, count);
-    if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRASSY_TERRAIN, entries, count);
-    if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MISTY_TERRAIN, entries, count);
-    if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PSYCHIC_TERRAIN, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_ELECTRIC_TERRAIN, entries);
+    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRASSY_TERRAIN, entries);
+    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MISTY_TERRAIN, entries);
+    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PSYCHIC_TERRAIN, entries);
+
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TRICK_ROOM, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TRICK_ROOM, entries);
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MAGIC_ROOM, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MAGIC_ROOM, entries);
     if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WONDER_ROOM, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WONDER_ROOM, entries);
     if (gFieldStatuses & STATUS_FIELD_GRAVITY)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRAVITY, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRAVITY, entries);
     if (gFieldStatuses & STATUS_FIELD_MUDSPORT)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MUD_SPORT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MUD_SPORT, entries);
     if (gFieldStatuses & STATUS_FIELD_WATERSPORT)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WATER_SPORT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WATER_SPORT, entries);
     if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FAIRY_LOCK, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FAIRY_LOCK, entries);
 
     if (sideStatuses & SIDE_STATUS_MIST)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MIST, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MIST, entries);
     if (sideStatuses & SIDE_STATUS_SAFEGUARD)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SAFEGUARD, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SAFEGUARD, entries);
     if (sideStatuses & SIDE_STATUS_LUCKY_CHANT)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LUCKY_CHANT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LUCKY_CHANT, entries);
     if (sideStatuses & SIDE_STATUS_TAILWIND)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAILWIND, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAILWIND, entries);
     if (sideStatuses & SIDE_STATUS_LIGHTSCREEN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LIGHT_SCREEN, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LIGHT_SCREEN, entries);
     if (sideStatuses & SIDE_STATUS_REFLECT)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_REFLECT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_REFLECT, entries);
     if (sideStatuses & SIDE_STATUS_AURORA_VEIL)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AURORA_VEIL, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AURORA_VEIL, entries);
     if (sideStatuses & SIDE_STATUS_RAINBOW)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAINBOW, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAINBOW, entries);
     if (sideStatuses & SIDE_STATUS_SWAMP)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SWAMP, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SWAMP, entries);
     if (sideStatuses & SIDE_STATUS_SEA_OF_FIRE)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SEA_OF_FIRE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SEA_OF_FIRE, entries);
     if (sideStatuses & SIDE_STATUS_DAMAGE_NON_TYPES)
     {
         switch (gSideTimers[side].damageNonTypesType)
         {
         case TYPE_FIRE:
-            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_WILDFIRE, entries, count);
+            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_WILDFIRE, entries);
             break;
         case TYPE_ROCK:
-            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_VOLCALITH, entries, count);
+            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_VOLCALITH, entries);
             break;
         case TYPE_GRASS:
-            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_VINE_LASH, entries, count);
+            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_VINE_LASH, entries);
             break;
         case TYPE_WATER:
-            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_CANNONADE, entries, count);
+            DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_G_MAX_CANNONADE, entries);
             break;
         default:
             break;
@@ -2696,128 +2614,141 @@ static void DetailBuildActiveEffectsForBattler(enum BattlerId battler, struct Ba
     }
 
     if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK))
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STEALTH_ROCK, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STEALTH_ROCK, entries);
     if (IsHazardOnSide(side, HAZARDS_SPIKES))
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SPIKES, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SPIKES, entries);
     if (IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES))
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TOXIC_SPIKES, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TOXIC_SPIKES, entries);
     if (IsHazardOnSide(side, HAZARDS_STICKY_WEB))
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STICKY_WEB, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STICKY_WEB, entries);
 
     if (status1 & STATUS1_TOXIC_POISON)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BADLY_POISONED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BADLY_POISONED, entries);
     else if (status1 & STATUS1_POISON)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_POISONED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_POISONED, entries);
 
     if (status1 & STATUS1_PARALYSIS)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PARALYZED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PARALYZED, entries);
     if (status1 & STATUS1_BURN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BURNED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BURNED, entries);
     if (status1 & STATUS1_FROSTBITE)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FROSTBITE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FROSTBITE, entries);
 
     if (gBattleMons[battler].volatiles.focusEnergy
      || gBattleMons[battler].volatiles.dragonCheer
      || gBattleMons[battler].volatiles.bonusCritStages > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CRITICAL_HIT_BOOST, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CRITICAL_HIT_BOOST, entries);
     if (gBattleMons[battler].volatiles.confusionTurns > 0
      || gBattleMons[battler].volatiles.infiniteConfusion)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CONFUSION, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CONFUSION, entries);
     if (gBattleMons[battler].volatiles.infatuation)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_INFATUATION, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_INFATUATION, entries);
     if (gBattleMons[battler].volatiles.nightmare)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_NIGHTMARE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_NIGHTMARE, entries);
     if (gBattleMons[battler].volatiles.yawn)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_DROWSY, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_DROWSY, entries);
     if (gBattleMons[battler].volatiles.encoreTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_ENCORE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_ENCORE, entries);
     if (gBattleMons[battler].volatiles.torment)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TORMENT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TORMENT, entries);
     if (gBattleMons[battler].volatiles.grudge)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRUDGE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRUDGE, entries);
     if (gBattleMons[battler].volatiles.healBlock)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEALING_PREVENTED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEALING_PREVENTED, entries);
     if (gBattleMons[battler].volatiles.foresight || gBattleMons[battler].volatiles.miracleEye)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_IDENTIFIED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_IDENTIFIED, entries);
     if (gBattleMons[battler].volatiles.disableTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MOVE_DISABLED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MOVE_DISABLED, entries);
     if (gBattleMons[battler].volatiles.escapePrevention || gBattleMons[battler].volatiles.noRetreat)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CANT_ESCAPE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CANT_ESCAPE, entries);
     if (gBattleMons[battler].volatiles.lockOn)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LOCK_ON, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LOCK_ON, entries);
     if (gBattleMons[battler].volatiles.embargo)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EMBARGO, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EMBARGO, entries);
     if (gBattleMons[battler].volatiles.chargeTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CHARGE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CHARGE, entries);
     if (gBattleMons[battler].volatiles.tauntTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAUNT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAUNT, entries);
     if (gBattleMons[battler].volatiles.telekinesis)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TELEKINESIS, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TELEKINESIS, entries);
     if (gBattleMons[battler].volatiles.magnetRiseTimer)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MAGNET_RISE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MAGNET_RISE, entries);
     if (gBattleStruct->wish[battler].counter > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WISH, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_WISH, entries);
     if (gBattleMons[battler].volatiles.root)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_INGRAIN, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_INGRAIN, entries);
     if (gBattleMons[battler].volatiles.cursed)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CURSE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_CURSE, entries);
     if (gBattleMons[battler].volatiles.destinyBond)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_DESTINY_BOND, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_DESTINY_BOND, entries);
     if (gBattleMons[battler].volatiles.wrapped)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BOUND, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BOUND, entries);
     if (gBattleMons[battler].volatiles.bideTurns > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BIDE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BIDE, entries);
     if (gBattleStruct->futureSight[battler].counter > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FUTURE_ATTACK, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FUTURE_ATTACK, entries);
     if (gBattleMons[battler].volatiles.uproarTurns > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_UPROAR, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_UPROAR, entries);
     if (gBattleMons[battler].volatiles.aquaRing)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AQUA_RING, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AQUA_RING, entries);
     if (gBattleMons[battler].volatiles.autotomizeCount > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AUTOTOMIZE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_AUTOTOMIZE, entries);
     if (gBattleMons[battler].volatiles.smackDown)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SMACK_DOWN, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SMACK_DOWN, entries);
     if (gBattleMons[battler].volatiles.throatChopTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_THROAT_CHOP, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_THROAT_CHOP, entries);
     if (gBattleMons[battler].volatiles.laserFocusTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LASER_FOCUS, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_LASER_FOCUS, entries);
     if (gBattleMons[battler].volatiles.tarShot)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAR_SHOT, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TAR_SHOT, entries);
     if (gBattleMons[battler].volatiles.octolock)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_OCTOLOCK, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_OCTOLOCK, entries);
     if (gBattleMons[battler].volatiles.glaiveRush)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FIXATED, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FIXATED, entries);
     if (gBattleMons[battler].volatiles.powerTrick)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STANCE_SWAP, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STANCE_SWAP, entries);
     if (gBattleMons[battler].volatiles.slowStartTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SLOW_START, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SLOW_START, entries);
     if (gBattleMons[battler].volatiles.saltCure)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SALT_CURE, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SALT_CURE, entries);
     if (gBattleMons[battler].volatiles.syrupBomb || gBattleMons[battler].volatiles.syrupBombTimer > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SYRUPY, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SYRUPY, entries);
     if (gBattleMons[battler].volatiles.rampageTurns > 0)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAMPAGING, entries, count);
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAMPAGING, entries);
+}
+
+static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal)
+{
+    if (extendedTotal > baseTotal && remaining <= (extendedTotal - baseTotal))
+    {
+        remaining = remaining;
+        baseTotal = extendedTotal;
+    }
+    else
+    {
+        if (extendedTotal == 8)
+            remaining = remaining - (extendedTotal - baseTotal);
+        else
+            remaining = remaining;
+    }
+
+    return remaining;
 }
 
 static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide side, enum BattleStatusEffectId effectId,
-                                                  struct BattleStatusEffectEntry *entries, u8 *count)
+                                     struct BattleStatusEffectEntry *entries)
 {
-    u8 i;
-    struct BattleStatusEffectEntry entry;
+    struct BattleStatusEffectEntry entry = {0};
+    entry.effectId = effectId;
 
-    if (effectId >= B_STATUS_EFFECT_COUNT)
-        return;
-
-    for (i = 0; i < *count; i++)
+    for (u32 i = 0; i < sData->menu.detailActiveEffectsCount; i++)
     {
-        if (entries[i].effectId == effectId)
+        assertf(entries[i].effectId != effectId, "duplicate entry %S", sBattleStatusEffects[effectId].name)
+        {
             return;
+        }
     }
 
-    if (*count >= B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS)
-        return;
-
-    DetailInitEffectEntry(&entry, effectId, side);
 
     switch (effectId)
     {
@@ -2828,10 +2759,11 @@ static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide sid
     case B_STATUS_EFFECT_FOG:
         if (gBattleStruct->weatherDuration > 0)
         {
-            u16 baseTotal = 5;
-            u16 actualTotal = gBattleStruct->weatherDurationTotal;
-            u16 extendedTotal = (actualTotal > baseTotal) ? actualTotal : 0;
-            DetailSetDuration(&entry, gBattleStruct->weatherDuration, baseTotal, extendedTotal, gBattleStruct->weatherSide, TRUE);
+            u32 baseTotal = 5;
+            u32 extendedTotal = gBattleStruct->weatherDurationTotal;
+            u32 remaining = gBattleStruct->weatherDuration;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gBattleStruct->weatherSide, TRUE);
         }
         break;
     case B_STATUS_EFFECT_ELECTRIC_TERRAIN:
@@ -2840,10 +2772,11 @@ static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide sid
     case B_STATUS_EFFECT_PSYCHIC_TERRAIN:
         if (gFieldTimers.terrainTimer > 0)
         {
-            u16 baseTotal = 5;
-            u16 actualTotal = gFieldTimers.terrainTimerTotal;
-            u16 extendedTotal = (actualTotal > baseTotal) ? actualTotal : 0;
-            DetailSetDuration(&entry, gFieldTimers.terrainTimer, baseTotal, extendedTotal, gFieldTimers.terrainSide, TRUE);
+            u32 baseTotal = 5;
+            u32 extendedTotal = gFieldTimers.terrainTimerTotal;
+            u32 remaining = gFieldTimers.terrainTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gFieldTimers.terrainSide, TRUE);
         }
         break;
     case B_STATUS_EFFECT_TRICK_ROOM:
@@ -2883,28 +2816,31 @@ static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide sid
     case B_STATUS_EFFECT_LIGHT_SCREEN:
         if (gSideTimers[side].lightscreenTimer > 0)
         {
-            u16 baseTotal = 5;
-            u16 actualTotal = gSideTimers[side].lightscreenTimerTotal;
-            u16 extendedTotal = (actualTotal > baseTotal) ? actualTotal : 0;
-            DetailSetDuration(&entry, gSideTimers[side].lightscreenTimer, baseTotal, extendedTotal, side, TRUE);
+            u32 baseTotal = 5;
+            u32 extendedTotal = gSideTimers[side].lightscreenTimerTotal;
+            u32 remaining = gSideTimers[side].lightscreenTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
         }
         break;
     case B_STATUS_EFFECT_REFLECT:
         if (gSideTimers[side].reflectTimer > 0)
         {
-            u16 baseTotal = 5;
-            u16 actualTotal = gSideTimers[side].reflectTimerTotal;
-            u16 extendedTotal = (actualTotal > baseTotal) ? actualTotal : 0;
-            DetailSetDuration(&entry, gSideTimers[side].reflectTimer, baseTotal, extendedTotal, side, TRUE);
+            u32 baseTotal = 5;
+            u16 extendedTotal  = gSideTimers[side].reflectTimerTotal;
+            u32 remaining = gSideTimers[side].reflectTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
         }
         break;
     case B_STATUS_EFFECT_AURORA_VEIL:
         if (gSideTimers[side].auroraVeilTimer > 0)
         {
-            u16 baseTotal = 5;
-            u16 actualTotal = gSideTimers[side].auroraVeilTimerTotal;
-            u16 extendedTotal = (actualTotal > baseTotal) ? actualTotal : 0;
-            DetailSetDuration(&entry, gSideTimers[side].auroraVeilTimer, baseTotal, extendedTotal, side, TRUE);
+            u32 baseTotal = 5;
+            u16 extendedTotal = gSideTimers[side].auroraVeilTimerTotal;
+            u32 remaining = gSideTimers[side].auroraVeilTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
         }
         break;
     case B_STATUS_EFFECT_RAINBOW:
@@ -3005,18 +2941,7 @@ static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide sid
         break;
     }
 
-    entries[(*count)++] = entry;
-}
-
-static void DetailInitEffectEntry(struct BattleStatusEffectEntry *entry, enum BattleStatusEffectId effectId, enum BattleSide side)
-{
-    entry->effectId = effectId;
-    entry->durationRemaining = 0;
-    entry->baseTotalDuration = 0;
-    entry->extendedTotalDuration = 0;
-    entry->setterSide = side;
-    entry->flags = 0;
-    entry->stackCount = 0;
+    entries[sData->menu.detailActiveEffectsCount++] = entry;
 }
 
 static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
@@ -3030,16 +2955,15 @@ static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaini
 
     entry->durationRemaining = remaining;
     entry->baseTotalDuration = baseTotal;
-    entry->extendedTotalDuration = extendedTotal;
     entry->setterSide = setterSide;
     entry->flags |= B_STATUS_EFFECT_FLAG_HAS_DURATION;
     entry->flags |= B_STATUS_EFFECT_FLAG_TOTAL_KNOWN;
-    if (isExtendable)
-    {
-        entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDABLE;
-        if (setterSide == B_SIDE_PLAYER)
-            entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN;
-    }
+    // if (isExtendable)
+    // {
+    //     entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDABLE;
+    //     if (setterSide == B_SIDE_PLAYER)
+    //         entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN;
+    // }
 }
 
 static void DetailSetDurationUnknownTotal(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
@@ -3066,13 +2990,16 @@ static bool8 DetailGetDisplayedDuration(const struct BattleStatusEffectEntry *en
     if (entry->baseTotalDuration == 0)
         return FALSE;
 
-    actualTotal = entry->extendedTotalDuration ? entry->extendedTotalDuration : entry->baseTotalDuration;
+    actualTotal = entry->baseTotalDuration;
     if (actualTotal == 0)
         return FALSE;
 
     remaining = entry->durationRemaining;
     displayedTotal = actualTotal;
 
+    // 1. Extendable flag set -> TRUE
+    // 2. viewerSide = player && setter side = enemy -> TRUE
+    // 3.
     if ((entry->flags & B_STATUS_EFFECT_FLAG_EXTENDABLE)
      && entry->setterSide != viewerSide
      && !(entry->flags & B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN)
@@ -3335,7 +3262,6 @@ static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
     s16 laneX;
     s16 laneYStart;
     s16 laneTileCount;
-    s16 i;
 
     if (windowId == WINDOW_NONE)
         return;
@@ -3353,7 +3279,7 @@ static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
     if (laneX < 0 || laneX >= B_STATUS_TILEMAP_WIDTH)
         return;
 
-    for (i = 0; i < laneTileCount; i++)
+    for (u32 i = 0; i < laneTileCount; i++)
     {
         s16 tileY = laneYStart + i;
         u16 index;
@@ -3515,7 +3441,6 @@ static void DetailRefreshDescriptionWindow(void)
 
 static void DetailRefreshEffectsSection(void)
 {
-    DetailDrawEntryBoxes();
     DetailRefreshEffectsWindow();
     DetailRefreshDescriptionWindow();
 }
@@ -3564,7 +3489,6 @@ static void OverviewComputeRowLayout(s16 *outXs)
     s16 gapTiles = 0;
     s16 totalWidthTiles;
     s16 startXTile;
-    s16 i;
     s16 safeLeft = B_STATUS_SAFE_LEFT_TILE;
     s16 safeRight = B_STATUS_SAFE_RIGHT_TILE;
     s16 safeWidthTiles = safeRight - safeLeft + 1;
@@ -3587,13 +3511,12 @@ static void OverviewComputeRowLayout(s16 *outXs)
     if (startXTile < safeLeft)
         startXTile = safeLeft;
 
-    for (i = 0; i < count; i++)
+    for (u32 i = 0; i < count; i++)
         outXs[i] = (startXTile + i * (B_STATUS_CARD_TILE_W + gapTiles)) * 8;
 }
 
 static void OverviewCreateCards(void)
 {
-    u32 i;
     u32 enemySlots = 0;
     u32 playerSlots = 0;
 
@@ -3610,7 +3533,7 @@ static void OverviewCreateCards(void)
     u32 cardCount = 0;
     OverviewComputeRowLayout(rowXs);
 
-    for (i = 0; i < enemySlots; i++)
+    for (u32 i = 0; i < enemySlots; i++)
     {
         struct BattleStatusCard *card = &sData->menu.cards[cardCount++];
         card->x = rowXs[i];
@@ -3618,7 +3541,7 @@ static void OverviewCreateCards(void)
         card->y = B_STATUS_ROW_Y_ENEMY;
     }
 
-    for (i = 0; i < playerSlots; i++)
+    for (u32 i = 0; i < playerSlots; i++)
     {
         struct BattleStatusCard *card = &sData->menu.cards[cardCount++];
         card->x = rowXs[i];
@@ -3747,7 +3670,6 @@ static void OverviewDrawCard(struct BattleStatusCard *card)
     }
     DrawHpBarSprite(card);
 
-    // ???
     // if (sData->unreadUpdates[card->battlerId])
     // {
     //     s16 updateX = card->x + B_STATUS_CARD_W - 9;
@@ -3790,10 +3712,6 @@ static void BackdropLoadBaseTilemap(const u16 *baseTilemap)
     CpuCopy16(baseTilemap, sData->bg1Tilemap,
               B_STATUS_TILEMAP_WIDTH * B_STATUS_TILEMAP_HEIGHT * sizeof(u16));
     CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
-}
-
-static void DetailDrawEntryBoxes(void)
-{
 }
 
 static void OverviewFillBgRect(u16 *tilemap, s16 x, s16 y, s16 width, s16 height, u16 tileNum, u16 attrs)
@@ -3946,18 +3864,17 @@ static void OverviewDrawStatusCard(u16 *tilemap, s16 x, s16 y, u8 width, u8 heig
 
 static void OverviewDrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles)
 {
-    s16 width;
-    s16 interior;
-
     if (textLenTiles == 0)
         textLenTiles = 1;
 
-    interior = textLenTiles;
+    u32 interior = textLenTiles;
     if (interior & 1)
         interior++;
-    width = interior + 2;
+
+    u32 width = interior + 2;
     if (width > B_STATUS_TILEMAP_WIDTH)
         width = B_STATUS_TILEMAP_WIDTH;
+
     if (x < 0)
         x = 0;
     if (x + width > B_STATUS_TILEMAP_WIDTH)
@@ -3986,9 +3903,6 @@ static void OverviewDrawCardBackground(const struct BattleStatusCard *card, bool
     s16 cardTileX;
     s16 cardTileY;
 
-    if (card == NULL)
-        return;
-
     cardTileX = card->x / 8;
     cardTileY = card->y / 8;
     OverviewFillBgRect(sData->bg1Tilemap, cardTileX, cardTileY,
@@ -4000,7 +3914,6 @@ static void OverviewDrawCardBackground(const struct BattleStatusCard *card, bool
 
 static void OverviewDrawBackground(void)
 {
-    u8 i;
     s16 enemyLabelWidth;
     s16 playerLabelWidth;
     u8 enemyTextLenTiles;
@@ -4026,7 +3939,7 @@ static void OverviewDrawBackground(void)
                                     B_STATUS_SAFE_RIGHT_TILE - B_STATUS_SAFE_LEFT_TILE + 1, B_STATUS_LABEL_TILE_H,
                                     B_STATUS_BG_TILE_FILL, 0);
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < gBattlersCount; i++)
         OverviewDrawCardBackground(&sData->menu.cards[i], i == sData->menu.selectedCardIndex);
 
     enemyLabelWidth = GetStringWidth(FONT_SMALL, sData->menu.enemyLabelText, 0);
@@ -4161,8 +4074,6 @@ static void DestroyOverviewCardSprites(struct BattleStatusCard *card, bool8 free
 
 static void BattleStatusMenu_Destroy(void)
 {
-    u32 i;
-
     if (sData->menu.cursorSpriteId != SPRITE_NONE)
         DestroySprite(&gSprites[sData->menu.cursorSpriteId]);
     sData->menu.cursorSpriteId = SPRITE_NONE;
@@ -4180,7 +4091,7 @@ static void BattleStatusMenu_Destroy(void)
         FreeAndDestroyMonIconSprite(&gSprites[sData->menu.detailIconSpriteId]);
     sData->menu.detailIconSpriteId = SPRITE_NONE;
 
-    for (i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < gBattlersCount; i++)
         DestroyOverviewCardSprites(&sData->menu.cards[i], TRUE);
 
     RemoveWindow(WIN_LABEL_TOP);
@@ -4286,7 +4197,6 @@ static void UpdateHpBarEndcaps(u8 leftEndcapSpriteId, u8 rightEndcapSpriteId, s1
 static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPixels, u8 segmentCount)
 {
     u8 array[B_STATUS_HP_BAR_SEGMENTS];
-    u8 i;
     u8 filledPixels;
     u8 barElementId;
     u16 tileNum;
@@ -4301,13 +4211,13 @@ static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPi
     filledPixels = GetScaledHPFraction(hp, maxHp, totalPixels);
     barElementId = GetBarGfxId(hp, maxHp);
 
-    for (i = 0; i < B_STATUS_HP_BAR_SEGMENTS; i++)
+    for (u32 i = 0; i < B_STATUS_HP_BAR_SEGMENTS; i++)
         array[i] = 0;
 
     if (filledPixels == 0 && hp > 0)
         filledPixels = 1;
 
-    for (i = 0; i < segmentCount; i++)
+    for (u32 i = 0; i < segmentCount; i++)
     {
         if (filledPixels >= 8)
         {
@@ -4322,7 +4232,7 @@ static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPi
     }
 
     tileNum = gSprites[spriteId].oam.tileNum;
-    for (i = 0; i < B_STATUS_HP_BAR_SEGMENTS; i++)
+    for (u32 i = 0; i < B_STATUS_HP_BAR_SEGMENTS; i++)
     {
         if (i < 3)
             dst = (void *)(OBJ_VRAM0 + (tileNum + 1 + i) * TILE_SIZE_4BPP);
@@ -4492,7 +4402,6 @@ static void OverviewHandleInput(void)
 
 static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
 {
-    u8 i;
     u8 bestIndex = sData->menu.selectedCardIndex;
     s16 bestMetric = 0x7FFF;
     s16 currX;
@@ -4504,7 +4413,7 @@ static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
 
     if (dx != 0)
     {
-        for (i = 0; i < gBattlersCount; i++)
+        for (u32 i = 0; i < gBattlersCount; i++)
         {
             const struct BattleStatusCard *card = &sData->menu.cards[i];
             s16 diff = card->x - currX;
@@ -4526,7 +4435,7 @@ static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
     {
         targetRowY = (currY == B_STATUS_ROW_Y_ENEMY) ? B_STATUS_ROW_Y_PLAYER : B_STATUS_ROW_Y_ENEMY;
 
-        for (i = 0; i < gBattlersCount; i++)
+        for (u32 i = 0; i < gBattlersCount; i++)
         {
             const struct BattleStatusCard *card = &sData->menu.cards[i];
             s16 diff;
