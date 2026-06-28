@@ -4055,7 +4055,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
             MarkBattlerForControllerExec(cv->battlerAtk);
             ClearBattlerItemEffectHistory(cv->battlerAtk);
 
-            if (!TrySymbiosis(cv->battlerAtk, item, TRUE))
+            if (!TrySymbiosis(cv->battlerAtk, item, NULL))
                 result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
