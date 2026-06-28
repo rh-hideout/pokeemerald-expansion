@@ -47,6 +47,7 @@ enum __attribute__((packed)) EggGroup
     EGG_GROUP_DITTO,
     EGG_GROUP_DRAGON,
     EGG_GROUP_NO_EGGS_DISCOVERED,
+    NUM_EGG_GROUPS
 };
 
 #define EGG_GROUPS_PER_MON            2

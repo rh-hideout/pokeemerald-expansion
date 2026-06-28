@@ -45,6 +45,7 @@ struct SearchOptionText
 {
     const u8 *description;
     const u8 *title;
+    const u8 *titleDecap;
 };
 
 struct SearchOption
@@ -1159,49 +1160,49 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
 static const struct SearchOptionText sDexModeOptions[] =
 {
     [DEX_MODE_HOENN]    = {gText_DexHoennDescription, gText_DexHoennTitle},
-    [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle},
+    [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle,    COMPOUND_STRING("National DEX")},
     {},
 };
 
 static const struct SearchOptionText sDexOrderOptions[] =
 {
-    [ORDER_NUMERICAL]    = {gText_DexSortNumericalDescription, gText_DexSortNumericalTitle},
-    [ORDER_ALPHABETICAL] = {gText_DexSortAtoZDescription,      gText_DexSortAtoZTitle},
-    [ORDER_HEAVIEST]     = {gText_DexSortHeaviestDescription,  gText_DexSortHeaviestTitle},
-    [ORDER_LIGHTEST]     = {gText_DexSortLightestDescription,  gText_DexSortLightestTitle},
-    [ORDER_TALLEST]      = {gText_DexSortTallestDescription,   gText_DexSortTallestTitle},
-    [ORDER_SMALLEST]     = {gText_DexSortSmallestDescription,  gText_DexSortSmallestTitle},
+    [ORDER_NUMERICAL]    = {gText_DexSortNumericalDescription, gText_DexSortNumericalTitle, COMPOUND_STRING("Numerical Mode")},
+    [ORDER_ALPHABETICAL] = {gText_DexSortAtoZDescription,      gText_DexSortAtoZTitle,      COMPOUND_STRING("A to Z Mode")},
+    [ORDER_HEAVIEST]     = {gText_DexSortHeaviestDescription,  gText_DexSortHeaviestTitle,  COMPOUND_STRING("Heaviest Mode")},
+    [ORDER_LIGHTEST]     = {gText_DexSortLightestDescription,  gText_DexSortLightestTitle,  COMPOUND_STRING("Lightest Mode")},
+    [ORDER_TALLEST]      = {gText_DexSortTallestDescription,   gText_DexSortTallestTitle,   COMPOUND_STRING("Tallest Mode")},
+    [ORDER_SMALLEST]     = {gText_DexSortSmallestDescription,  gText_DexSortSmallestTitle,  COMPOUND_STRING("Smallest Mode")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchNameOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC},
-    [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF},
-    [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI},
-    [NAME_JKL] = {gText_DexEmptyString, gText_DexSearchAlphaJKL},
-    [NAME_MNO] = {gText_DexEmptyString, gText_DexSearchAlphaMNO},
-    [NAME_PQR] = {gText_DexEmptyString, gText_DexSearchAlphaPQR},
-    [NAME_STU] = {gText_DexEmptyString, gText_DexSearchAlphaSTU},
-    [NAME_VWX] = {gText_DexEmptyString, gText_DexSearchAlphaVWX},
-    [NAME_YZ]  = {gText_DexEmptyString, gText_DexSearchAlphaYZ},
+    {gText_DexEmptyString, gText_DexSearchDontSpecify, COMPOUND_STRING("Don't Specify.")},
+    [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC,    COMPOUND_STRING("abc")},
+    [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF,    COMPOUND_STRING("def")},
+    [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI,    COMPOUND_STRING("ghi")},
+    [NAME_JKL] = {gText_DexEmptyString, gText_DexSearchAlphaJKL,    COMPOUND_STRING("jkl")},
+    [NAME_MNO] = {gText_DexEmptyString, gText_DexSearchAlphaMNO,    COMPOUND_STRING("mno")},
+    [NAME_PQR] = {gText_DexEmptyString, gText_DexSearchAlphaPQR,    COMPOUND_STRING("pqr")},
+    [NAME_STU] = {gText_DexEmptyString, gText_DexSearchAlphaSTU,    COMPOUND_STRING("stu")},
+    [NAME_VWX] = {gText_DexEmptyString, gText_DexSearchAlphaVWX,    COMPOUND_STRING("vwx")},
+    [NAME_YZ]  = {gText_DexEmptyString, gText_DexSearchAlphaYZ,     COMPOUND_STRING("yz")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchColorOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    {gText_DexEmptyString, gText_DexSearchDontSpecify, COMPOUND_STRING("Don't Specify.")},
+    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed,       COMPOUND_STRING("Red")},
+    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue,      COMPOUND_STRING("Blue")},
+    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow,    COMPOUND_STRING("Yellow")},
+    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen,     COMPOUND_STRING("Green")},
+    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack,     COMPOUND_STRING("Black")},
+    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown,     COMPOUND_STRING("Brown")},
+    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple,    COMPOUND_STRING("Purple")},
+    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray,      COMPOUND_STRING("Gray")},
+    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite,     COMPOUND_STRING("White")},
+    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink,      COMPOUND_STRING("Pink")},
     {},
 };
 
@@ -5626,6 +5627,15 @@ static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
     EraseAndPrintSearchTextBox(sSearchMenuItems[menuItem].description);
 }
 
+static const u8 *SearchOptionTitle(const struct SearchOptionText *searchOption, u32 searchParamId)
+{
+    const u8 *titleDecap = searchOption[searchParamId].titleDecap;
+    if (POKEDEX_PLUS_HGSS && HGSS_DECAPPED && titleDecap != NULL)
+        return titleDecap;
+    
+    return searchOption[searchParamId].title;
+}
+
 // Prints the currently selected search parameters in the search menu selection boxes
 void PrintSelectedSearchParameters(u8 taskId)
 {
@@ -5634,24 +5644,24 @@ void PrintSelectedSearchParameters(u8 taskId)
     ClearSearchMenuRect(40, 16, 96, 80);
 
     searchParamId = gTasks[taskId].tCursorPos_Name + gTasks[taskId].tScrollOffset_Name;
-    PrintSearchText(sDexSearchNameOptions[searchParamId].title, 0x2D, 0x11);
+    PrintSearchText(SearchOptionTitle(sDexSearchNameOptions, searchParamId), 0x2D, 0x11);
 
     searchParamId = gTasks[taskId].tCursorPos_Color + gTasks[taskId].tScrollOffset_Color;
-    PrintSearchText(sDexSearchColorOptions[searchParamId].title, 0x2D, 0x21);
+    PrintSearchText(SearchOptionTitle(sDexSearchColorOptions, searchParamId), 0x2D, 0x21);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeLeft + gTasks[taskId].tScrollOffset_TypeLeft;
-    PrintSearchTextToFit(sDexSearchTypeOptions[searchParamId].title, 0x2D, 0x31, 38);
+    PrintSearchTextToFit(SearchOptionTitle(sDexSearchTypeOptions, searchParamId), 0x2D, 0x31, 38);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeRight + gTasks[taskId].tScrollOffset_TypeRight;
-    PrintSearchTextToFit(sDexSearchTypeOptions[searchParamId].title, 0x5D, 0x31, 38);
+    PrintSearchTextToFit(SearchOptionTitle(sDexSearchTypeOptions, searchParamId), 0x5D, 0x31, 38);
 
     searchParamId = gTasks[taskId].tCursorPos_Order + gTasks[taskId].tScrollOffset_Order;
-    PrintSearchText(sDexOrderOptions[searchParamId].title, 0x2D, 0x41);
+    PrintSearchText(SearchOptionTitle(sDexOrderOptions, searchParamId), 0x2D, 0x41);
 
     if (IsNationalPokedexEnabled())
     {
         searchParamId = gTasks[taskId].tCursorPos_Mode + gTasks[taskId].tScrollOffset_Mode;
-        PrintSearchText(sDexModeOptions[searchParamId].title, 0x2D, 0x51);
+        PrintSearchText(SearchOptionTitle(sDexModeOptions, searchParamId), 0x2D, 0x51);
     }
 }
 
@@ -5701,7 +5711,7 @@ static void PrintSearchParameterText(u8 taskId)
     ClearSearchParameterBoxText();
 
     for (i = 0, j = *scrollOffset; i < MAX_SEARCH_PARAM_ON_SCREEN && texts[j].title != NULL; i++, j++)
-        PrintSearchParameterTitle(i, texts[j].title);
+        PrintSearchParameterTitle(i, SearchOptionTitle(texts, j));
 
     EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
 }
