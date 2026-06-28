@@ -35,6 +35,7 @@
 #include "tv.h"
 #include "pokeball.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "constants/battle_frontier.h"
 #include "constants/contest.h"
 #include "constants/decorations.h"
@@ -184,26 +185,6 @@ static const u8 sText_Slots[] = _("SLOTS");
 static const u8 sText_Roulette[] = _("ROULETTE");
 static const u8 sText_Jackpot[] = _("jackpot");
 
-static const u16 sGoldSymbolFlags[NUM_FRONTIER_FACILITIES] = {
-    [FRONTIER_FACILITY_TOWER]   = FLAG_SYS_TOWER_GOLD,
-    [FRONTIER_FACILITY_DOME]    = FLAG_SYS_DOME_GOLD,
-    [FRONTIER_FACILITY_PALACE]  = FLAG_SYS_PALACE_GOLD,
-    [FRONTIER_FACILITY_ARENA]   = FLAG_SYS_ARENA_GOLD,
-    [FRONTIER_FACILITY_FACTORY] = FLAG_SYS_FACTORY_GOLD,
-    [FRONTIER_FACILITY_PIKE]    = FLAG_SYS_PIKE_GOLD,
-    [FRONTIER_FACILITY_PYRAMID] = FLAG_SYS_PYRAMID_GOLD
-};
-
-static const u16 sSilverSymbolFlags[NUM_FRONTIER_FACILITIES] = {
-    [FRONTIER_FACILITY_TOWER]   = FLAG_SYS_TOWER_SILVER,
-    [FRONTIER_FACILITY_DOME]    = FLAG_SYS_DOME_SILVER,
-    [FRONTIER_FACILITY_PALACE]  = FLAG_SYS_PALACE_SILVER,
-    [FRONTIER_FACILITY_ARENA]   = FLAG_SYS_ARENA_SILVER,
-    [FRONTIER_FACILITY_FACTORY] = FLAG_SYS_FACTORY_SILVER,
-    [FRONTIER_FACILITY_PIKE]    = FLAG_SYS_PIKE_SILVER,
-    [FRONTIER_FACILITY_PYRAMID] = FLAG_SYS_PYRAMID_SILVER
-};
-
 static const u16 sNumberOneVarsAndThresholds[][2] = {
     {VAR_DAILY_SLOTS, 100},
     {VAR_DAILY_ROULETTE,  50},
@@ -236,12 +217,6 @@ static const u8 *const sPokeNewsTextGroup_Ending[NUM_POKENEWS_TYPES + 1] = {
     [POKENEWS_GAME_CORNER] = gPokeNewsTextGameCorner_Ending,
     [POKENEWS_LILYCOVE]    = gPokeNewsTextLilycove_Ending,
     [POKENEWS_BLENDMASTER] = gPokeNewsTextBlendMaster_Ending
-};
-
-u8 *const gTVStringVarPtrs[] = {
-    gStringVar1,
-    gStringVar2,
-    gStringVar3
 };
 
 static const u8 *const sTVFanClubTextGroup[] = {
@@ -1727,10 +1702,10 @@ void TryPutTodaysRivalTrainerOnAir(void)
         show->rivalTrainer.nGoldSymbols = 0;
         for (i = 0; i < NUM_FRONTIER_FACILITIES; i++)
         {
-            if (FlagGet(sSilverSymbolFlags[i]) == TRUE)
+            if (FlagGet(gFrontierBrainInfo[i].silverSymbolFlag) == TRUE)
                 show->rivalTrainer.nSilverSymbols++;
 
-            if (FlagGet(sGoldSymbolFlags[i]) == TRUE)
+            if (FlagGet(gFrontierBrainInfo[i].goldSymbolFlag) == TRUE)
                 show->rivalTrainer.nGoldSymbols++;
         }
         show->rivalTrainer.battlePoints = gSaveBlock2Ptr->frontier.battlePoints;
@@ -2585,16 +2560,16 @@ void CopyContestRankToStringVar(u8 varIdx, u8 rank)
     switch (rank)
     {
     case CONTEST_RANK_NORMAL:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_NORMAL]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_NORMAL]);
         break;
     case CONTEST_RANK_SUPER:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_SUPER]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_SUPER]);
         break;
     case CONTEST_RANK_HYPER:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_HYPER]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_HYPER]);
         break;
     case CONTEST_RANK_MASTER:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_MASTER]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_MASTER]);
         break;
     }
 }
@@ -2604,19 +2579,19 @@ void CopyContestCategoryToStringVar(u8 varIdx, enum ContestCategories category)
     switch (category)
     {
     case CONTEST_CATEGORY_COOL:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_COOL]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_COOL]);
         break;
     case CONTEST_CATEGORY_BEAUTY:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_BEAUTY]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_BEAUTY]);
         break;
     case CONTEST_CATEGORY_CUTE:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_CUTE]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_CUTE]);
         break;
     case CONTEST_CATEGORY_SMART:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_SMART]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_SMART]);
         break;
     case CONTEST_CATEGORY_TOUGH:
-        StringCopy(gTVStringVarPtrs[varIdx], gStdStrings[STDSTRING_TOUGH]);
+        StringCopy(GetStringVar(varIdx), gStdStrings[STDSTRING_TOUGH]);
         break;
     default:
         break;
@@ -2632,7 +2607,7 @@ void SetContestCategoryStringVarForInterview(void)
 void ConvertIntToDecimalString(u8 varIdx, int value)
 {
     int nDigits = CountDigits(value);
-    ConvertIntToDecimalStringN(gTVStringVarPtrs[varIdx], value, STR_CONV_MODE_LEFT_ALIGN, nDigits);
+    ConvertIntToDecimalStringN(GetStringVar(varIdx), value, STR_CONV_MODE_LEFT_ALIGN, nDigits);
 }
 
 size_t CountDigits(int value)
@@ -2924,7 +2899,7 @@ static void CompactTVShowArray(TVShow *shows)
 static enum Species GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, enum Species excludedSpecies)
 {
     enum Species species = GetRandomDifferentSpeciesSeenByPlayer(excludedSpecies);
-    StringCopy(gTVStringVarPtrs[varIdx], GetSpeciesName(species));
+    StringCopy(GetStringVar(varIdx), GetSpeciesName(species));
     return species;
 }
 
@@ -3098,7 +3073,7 @@ static void GetNicknameSubstring(u8 varIdx, u8 whichPosition, u8 charParam, u16 
             buff[1] = GetSpeciesName(species)[strlen - (whichPosition + 1)];
         }
     }
-    StringCopy(gTVStringVarPtrs[varIdx], buff);
+    StringCopy(GetStringVar(varIdx), buff);
 }
 
 // Unused script special

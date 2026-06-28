@@ -429,19 +429,19 @@ void HandleAction_UseMove(void)
             gBattleResults.lastUsedMoveOpponent = gCurrentMove;
     }
 
-    // Set dynamic move type.
+
     SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
 
     // check Z-Move used
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(gCurrentMove) && !IsZMove(gCurrentMove))
+    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE
+     && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS // Check the actual type, not the dynamic one
+     && !IsZMove(gCurrentMove))
     {
-        gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
         gCurrentMove = gChosenMove = GetUsableZMove(gBattlerAttacker, gCurrentMove);
     }
     // check Max Move used
     else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
     {
-        gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
 
@@ -1429,7 +1429,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_SPIT_UP
      && gBattleMons[battler].volatiles.stockpileCounter == 0
@@ -1438,7 +1438,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
      && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move))
@@ -1447,7 +1447,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (DYNAMAX_BYPASS_CHECK
      && moveEffect == EFFECT_LAST_RESORT
      && !CanUseLastResort(battler)
@@ -5834,7 +5834,7 @@ static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, e
 {
     if (gBattleMons[battler].volatiles.telekinesis)
         return TRUE;
-    if (gBattleMons[battler].volatiles.magnetRise)
+    if (gBattleMons[battler].volatiles.magnetRiseTimer > 0)
         return TRUE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return TRUE;
@@ -7824,7 +7824,7 @@ s32 CalcCritChanceStage(struct DamageContext *ctx)
     {
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -7902,7 +7902,7 @@ s32 CalcCritChanceStageGen1(struct DamageContext *ctx)
             RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -8158,7 +8158,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         TryNoticeIllusionInTypeEffectiveness(ctx->move, ctx->moveType, ctx->battlerAtk, ctx->battlerDef, modifier, illusionSpecies);
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
-    bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
+    bool32 ignoreTypeCalc = isPresentHealing || IsBattleMoveStatus(ctx->move);
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);
@@ -8705,7 +8705,7 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
         return FALSE;
-    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId))
+    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId) || (DoesSpeciesUseHoldItemToChangeForm(otherSpecies, itemId) && GetConfig(B_KNOCK_OFF_REMOVAL) < GEN_CHAMPIONS))
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
@@ -8954,57 +8954,84 @@ bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, enum BattlerId battler)
     return FALSE;
 }
 
-static enum DamageCategory SwapMoveDamageCategory(enum Move move)
-{
-    if (GetMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
-        return DAMAGE_CATEGORY_SPECIAL;
-    return DAMAGE_CATEGORY_PHYSICAL;
-}
-
-/*
-    The Global States gBattleStruct->categoryOverride and gBattleStruct->swapDamageCategory
-    can be removed but a lot of function arguments (battlerAtk and battlerDef) have to be added for this, about 50+.
-    This is potentially a good change because it is less likely to cause bugs in the future.
-*/
 enum DamageCategory GetBattleMoveCategory(enum Move move)
 {
-    if (gBattleStruct != NULL)
-    {
-        if (gBattleStruct->swapDamageCategory) // Photon Geyser, Shell Side Arm, Light That Burns the Sky, Tera Blast
-            return SwapMoveDamageCategory(move);
-        if (IsZMove(move) || IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
-            return gBattleStruct->categoryOverride;
-        if (IsBattleMoveStatus(move))
-            return DAMAGE_CATEGORY_STATUS;
-    }
+    bool32 inBattle = gBattleStruct != NULL;
+
+    if (inBattle && gBattleStruct->dynamicMoveCategory != DAMAGE_CATEGORY_NONE)
+        return gBattleStruct->dynamicMoveCategory;
+
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
+        return DAMAGE_CATEGORY_STATUS;
 
     if (B_PHYSICAL_SPECIAL_SPLIT < GEN_4)
-        return gTypesInfo[GetBattleMoveType(move)].damageCategory;
+    {
+        if (inBattle)
+            return gTypesInfo[GetBattleMoveType(move)].damageCategory;
+        else
+            return gTypesInfo[GetMoveType(move)].damageCategory;
+    }
 
     return GetMoveCategory(move);
 }
 
 void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_PHOTON_GEYSER:
-        gBattleStruct->swapDamageCategory = (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL);
+        if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+        else
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
         break;
     case EFFECT_SHELL_SIDE_ARM:
-        if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
-            gBattleStruct->swapDamageCategory = TRUE;
+        gBattleStruct->dynamicMoveCategory = gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef];
         break;
     case EFFECT_TERA_BLAST:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
-            gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
+        {
+            if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+            else
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
+        }
+        else
+        {
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+        }
         break;
     case EFFECT_TERA_STARSTORM:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battlerAtk), MON_DATA_SPECIES)) == SPECIES_TERAPAGOS)
-            gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
+        {
+            if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+            else
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
+        }
+        else
+        {
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+        }
         break;
+    case EFFECT_PRESENT:
+    {
+        u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
+        if (rand < 102)
+            gBattleStruct->presentBasePower = 40;
+        else if (rand < 178)
+            gBattleStruct->presentBasePower = 80;
+        else if (rand < 204)
+            gBattleStruct->presentBasePower = 120;
+        else
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_STATUS;
+        break;
+    }
     default:
-        gBattleStruct->swapDamageCategory = FALSE;
+        if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
+            gBattleStruct->dynamicMoveCategory = GetMoveCategory(GetBattlerChosenMove(battlerAtk));
         break;
     }
 }
@@ -9399,7 +9426,7 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
         CalculateMonStatsCont(mon, FALSE);
     else
         CalculateMonStats(mon);
-        
+
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);
@@ -9700,8 +9727,8 @@ enum Type GetBattleMoveType(enum Move move)
 {
     if (gMain.inBattle)
     {
-        if (gBattleStruct->dynamicMoveType)
-            return gBattleStruct->dynamicMoveType & DYNAMIC_TYPE_MASK;
+        if (gBattleStruct->dynamicMoveType != TYPE_NONE)
+            return gBattleStruct->dynamicMoveType;
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (B_UPDATED_MOVE_TYPES < GEN_5

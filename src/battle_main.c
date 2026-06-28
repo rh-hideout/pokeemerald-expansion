@@ -2860,9 +2860,6 @@ static void BattleStartClearSetData(void)
         }
     }
 
-    gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
-    gBattleStruct->categoryOverride = FALSE; // used for Z-Moves and Max Moves
-
     ClearPursuitValues();
     gSelectedMonPartyId = PARTY_SIZE; // Revival Blessing
     gCategoryIconSpriteId = 0xFF;
@@ -2877,9 +2874,85 @@ static void BattleStartClearSetData(void)
 
 #define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy->_fieldName;)
 
+static void ClearSetDataOnLeave(enum BattlerId battler)
+{
+    // Clear Rage Fist stacks
+    if (GetConfig(B_RAGE_FIST) >= GEN_CHAMPIONS)
+        GetBattlerPartyState(battler)->timesGotHit = 0;
+
+    if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
+        gProtectStructs[battler].protected = PROTECT_NONE;
+
+    if (battler == gBattlerAttacker)
+        gBattleStruct->moldBreakerActive = FALSE;
+
+    gActionSelectionCursor[battler] = 0;
+    gMoveSelectionCursor[battler] = 0;
+
+    gProtectStructs[battler].quash = FALSE;
+    gProtectStructs[battler].noValidMoves = FALSE;
+    gProtectStructs[battler].helpingHand = 0;
+    gProtectStructs[battler].bounceMove = FALSE;
+    gProtectStructs[battler].stealMove = FALSE;
+    gProtectStructs[battler].chargingTurn = FALSE;
+    gProtectStructs[battler].fleeType = 0;
+    gProtectStructs[battler].statRaised = FALSE;
+    gProtectStructs[battler].pranksterElevated = FALSE;
+    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gBattleStruct->battlerState[battler].isFirstTurn = 2;
+    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
+    gBattleStruct->battlerState[battler].canPickupItem = FALSE;
+    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+    gBattleStruct->choicedMove[battler] = MOVE_NONE;
+    gBattleStruct->palaceFlags &= ~(1u << battler);
+
+    gLastMoves[battler] = MOVE_NONE;
+    gLastLandedMoves[battler] = MOVE_NONE;
+    gLastHitByType[battler] = 0;
+    gLastUsedMoveType[battler] = 0;
+    gLastResultingMoves[battler] = MOVE_NONE;
+    gLastPrintedMoves[battler] = MOVE_NONE;
+    gLastHitBy[battler] = 0xFF;
+
+    for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
+    {
+        // User of sticky web fainted, so reset the stored battler ID
+        if (gSideTimers[i].stickyWebBattlerId == battler)
+            gSideTimers[i].stickyWebBattlerId = 0xFF;
+    }
+
+    gBattleStruct->lastTakenMove[battler] = 0;
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
+        if (i != battler && !IsBattlerAlly(i, battler))
+            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
+
+        gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
+        gBattleStruct->lastTakenMoveFrom[battler][i] = 0;
+
+        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
+            gBattleMons[i].volatiles.infatuation = 0;
+        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
+            gBattleMons[i].volatiles.wrapped = FALSE;
+        if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
+            gBattleMons[i].volatiles.syrupBomb = FALSE;
+        if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
+            gBattleMons[i].volatiles.octolock = FALSE;
+    }
+
+    ClearPursuitValuesIfSet(battler);
+
+    // Reset Eject Button / Eject Pack switch detection
+    gAiLogicData->ejectButtonSwitch = FALSE;
+    gAiLogicData->ejectPackSwitch = FALSE;
+}
+
 void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy)
 {
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
+
+    // Data cleared both on switch and faint
+    ClearSetDataOnLeave(battler);
 
     ClearIllusionMon(battler);
     if (effect != EFFECT_BATON_PASS)
@@ -2925,24 +2998,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
             gBattleMons[battler].volatiles.gastroAcid = FALSE;
     }
 
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
-            gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
-            gBattleMons[i].volatiles.wrapped = FALSE;
-        if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
-            gBattleMons[i].volatiles.syrupBomb = FALSE;
-        if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
-            gBattleMons[i].volatiles.octolock = FALSE;
-    }
-
-    gActionSelectionCursor[battler] = 0;
-    gMoveSelectionCursor[battler] = 0;
-
-    if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
-        gProtectStructs[battler].protected = PROTECT_NONE;
-
     if (effect == EFFECT_BATON_PASS)
     {
         gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
@@ -2957,56 +3012,15 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
     }
 
-    gBattleStruct->moveResultFlags[battler] = 0;
-    gBattleStruct->battlerState[battler].isFirstTurn = 2;
     gBattleStruct->battlerState[battler].notOnField = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
-    gLastMoves[battler] = MOVE_NONE;
-    gLastLandedMoves[battler] = MOVE_NONE;
-    gLastHitByType[battler] = 0;
-    gLastUsedMoveType[battler] = 0;
-    gLastResultingMoves[battler] = MOVE_NONE;
-    gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
 
-    gBattleStruct->lastTakenMove[battler] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
-    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
-    gBattleStruct->palaceFlags &= ~(1u << battler);
-    gBattleStruct->battlerState[battler].canPickupItem = FALSE;
-    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
-
-    ClearPursuitValuesIfSet(battler);
-
-    for (u32 i = 0; i < ARRAY_COUNT(gSideTimers); i++)
-    {
-        // Switched into sticky web user slot, so reset stored battler ID
-        if (gSideTimers[i].stickyWebBattlerId == battler)
-            gSideTimers[i].stickyWebBattlerId = 0xFF;
-    }
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (i != battler && !IsBattlerAlly(i, battler))
-            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
-
-        gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
-    }
-
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
     gSpecialStatuses[battler].damagedByAttack = FALSE;
-
-    // Reset Eject Button / Eject Pack switch detection
-    gAiLogicData->ejectButtonSwitch = FALSE;
-    gAiLogicData->ejectPackSwitch = FALSE;
 
     // Clear selected party ID so Revival Blessing doesn't get confused.
     gSelectedMonPartyId = PARTY_SIZE;
@@ -3027,6 +3041,9 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
 void FaintClearSetData(enum BattlerId battler)
 {
+    // Data cleared both on switch and faint
+    ClearSetDataOnLeave(battler);
+
     for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
@@ -3040,53 +3057,7 @@ void FaintClearSetData(enum BattlerId battler)
             gBattleMons[i].volatiles.battlerWithSureHit = 0;
         if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
             gBattleMons[i].volatiles.escapePrevention = FALSE;
-        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
-            gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
-            gBattleMons[i].volatiles.wrapped = FALSE;
-        if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
-            gBattleMons[i].volatiles.syrupBomb = FALSE;
-        if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
-            gBattleMons[i].volatiles.octolock = FALSE;
     }
-
-    gActionSelectionCursor[battler] = 0;
-    gMoveSelectionCursor[battler] = 0;
-
-    if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
-        gProtectStructs[battler].protected = PROTECT_NONE;
-
-    gProtectStructs[battler].quash = FALSE;
-    gProtectStructs[battler].noValidMoves = FALSE;
-    gProtectStructs[battler].helpingHand = 0;
-    gProtectStructs[battler].bounceMove = FALSE;
-    gProtectStructs[battler].stealMove = FALSE;
-    gProtectStructs[battler].chargingTurn = FALSE;
-    gProtectStructs[battler].fleeType = 0;
-    gProtectStructs[battler].statRaised = FALSE;
-    gProtectStructs[battler].pranksterElevated = FALSE;
-    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
-
-    gBattleStruct->battlerState[battler].isFirstTurn = 2;
-
-    gLastMoves[battler] = MOVE_NONE;
-    gLastLandedMoves[battler] = MOVE_NONE;
-    gLastHitByType[battler] = 0;
-    gLastUsedMoveType[battler] = 0;
-    gLastResultingMoves[battler] = MOVE_NONE;
-    gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
-
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
-    gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
-    gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][1] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][2] = 0;
-    gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
-    gBattleStruct->palaceFlags &= ~(1u << battler);
-    if (battler == gBattlerAttacker)
-        gBattleStruct->moldBreakerActive = FALSE;
-    ClearPursuitValuesIfSet(battler);
 
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
     {
@@ -3102,21 +3073,6 @@ void FaintClearSetData(enum BattlerId battler)
                 MarkBattlerForControllerExec(partner);
             }
         }
-    }
-
-    for (u32 i = 0; i < ARRAY_COUNT(gSideTimers); i++)
-    {
-        // User of sticky web fainted, so reset the stored battler ID
-        if (gSideTimers[i].stickyWebBattlerId == battler)
-            gSideTimers[i].stickyWebBattlerId = 0xFF;
-    }
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (i != battler && !IsBattlerAlly(i, battler))
-            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
-
-        gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
 
     gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
@@ -3558,7 +3514,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         break;
     case FIRST_TURN_EVENTS_TRAINER_SLIDE_A:
         if (ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_BEFORE_FIRST_TURN))
-            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd);
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_TRAINER_SLIDE_B:
@@ -3569,14 +3525,14 @@ static void TryDoEventsBeforeFirstTurn(void)
             || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
             || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
             {
-                BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+                BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd);
             }
         }
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_TRAINER_SLIDE_PARTNER:
         if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_BEFORE_FIRST_TURN))
-            BattleScriptExecute(BattleScript_TrainerPartnerSlideMsgEnd2);
+            BattleScriptExecute(BattleScript_TrainerPartnerSlideMsgEnd);
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_END:
@@ -5645,7 +5601,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
                     hpTypes[hpTypeCount++] = i;
             }
             moveType = ((hpTypeCount - 1) * typeBits) / 63;
-            return ((hpTypes[moveType] | F_DYNAMIC_TYPE_IGNORE_PHYSICALITY) & 0x3F);
+            return hpTypes[moveType];
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
@@ -5799,7 +5755,7 @@ void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
     enum Item heldItem = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
-    gBattleStruct->dynamicMoveType = 0;
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
     gBattleStruct->battlerState[battler].ateBoost = FALSE;
     gSpecialStatuses[battler].gemBoost = FALSE;
 
@@ -5809,12 +5765,12 @@ void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
                                   MON_IN_BATTLE);
 
     if (moveType != TYPE_NONE)
-        gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
+        gBattleStruct->dynamicMoveType = moveType;
 
     moveType = GetBattleMoveType(move);
     if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL)
      || gBattleMons[battler].volatiles.electrified)
-        gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
+        gBattleStruct->dynamicMoveType = TYPE_ELECTRIC;
 
     // Check if a gem should activate.
     u32 effect = GetMoveEffect(move);

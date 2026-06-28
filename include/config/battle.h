@@ -136,6 +136,7 @@
 #define B_ALLY_SWITCH_FAIL_CHANCE       GEN_LATEST // In Gen9+, Ally Switch has a chance to fail if used consecutively.
 #define B_SKETCH_BANS                   GEN_LATEST // In Gen9+, Sketch is able to copy less moves than in previous generations.
 #define B_KNOCK_OFF_REMOVAL             GEN_LATEST // In Gen5+, Knock Off removes the foe's item instead of rendering it unusable.
+                                                   // In Champions, Knock Off no longer checks if the target's item is able to change the user's form (i.e. Mega Evolution / Primal Reversion).
 #define B_HEAL_BELL_SOUNDPROOF          GEN_LATEST // In Gen6+, Heal Bell affects inactive party members with Soundproof. In Gen5 only, it affects all party members, including active ones. In Gen4 and earlier, it does not affect any Pokémon with Soundproof.
 #define B_CHARGE                        GEN_LATEST // In Gen7 and earlier, Charge status is lost regardless of the typing of the next move.
 #define B_POWDER_STATUS_HEAVY_RAIN      GEN_LATEST // In Gen7+, Powder no longer damages the user of a Fire-type move in heavy rain.
@@ -177,6 +178,7 @@
                                                    // Currently does nothing, as there is not enough info to confirm event orders for cases like Eject Pack and Eject Button
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
+#define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.

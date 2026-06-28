@@ -4396,8 +4396,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "May burn/paralyze/freeze."),
         #endif
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_TRI_ATTACK,
+            .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = 20,
+            .randomMoveEffects = { MOVE_EFFECT_BURN, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_FREEZE_OR_FROSTBITE },
         }),
     #else
             "A triangular field of energy\n"
@@ -19956,8 +19957,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .slicingMove = B_UPDATED_MOVE_FLAGS >= GEN_CHAMPIONS,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_DIRE_CLAW,
+            .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 30 : 50,
+            .randomMoveEffects = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP },
         }),
         .battleAnimScript = gBattleAnimMove_DireClaw,
     },
@@ -21024,7 +21026,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         },
         {
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
-            .spAtk = 1,
+            .spAtk = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 2 : 1,
             .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_MakeItRain,

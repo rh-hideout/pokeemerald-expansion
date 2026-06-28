@@ -515,7 +515,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PRESENT] =
     {
-        .battleScript = BattleScript_EffectPresent,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
