@@ -1968,15 +1968,46 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     }
 }
 
-static bool32 IsTargetUnaffectedByDreamEater(struct BattleCalcValues *cv)
+static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
 {
-    if (cv->moveEffect != EFFECT_DREAM_EATER)
-        return FALSE;
+    switch (cv->moveEffect)
+    {
+    case EFFECT_DREAM_EATER:
+        if (GetConfig(B_DREAM_EATER_SUBSTITUTE) < GEN_5 && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
+            return TRUE;
+        }
+        if (!IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]))
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
+            return TRUE;
+        }
+        break;
+    case EFFECT_SYNCHRONOISE:
+        if (!DoBattlersShareType(cv->battlerAtk, cv->battlerDef))
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
+            return TRUE;
+        }
+        break;
+    case EFFECT_SKY_DROP:
+        if (!gProtectStructs[cv->battlerAtk].chargingTurn
+         && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_SkyDropFlyingType);
+            return TRUE;
+        }
+        break;
+    default:
+        break;
+    }
 
-    if (GetConfig(B_DREAM_EATER_SUBSTITUTE) < GEN_5 && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
-        return TRUE;
-
-    return !IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]);
+    return FALSE;
 }
 
 static enum CancelerResult TargetAvoidedAttack(enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -2082,9 +2113,9 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 
         if (bounced && moveTarget == TARGET_OPPONENTS_FIELD)
         {
-             gBattleStruct->eventState.moveEndBlock = 0;
-             gBattlescriptCurrInstr = BattleScript_MoveEnd;
-             return CANCELER_RESULT_FAILURE;
+            gBattleStruct->eventState.moveEndBlock = 0;
+            gBattlescriptCurrInstr = BattleScript_MoveEnd;
+            return CANCELER_RESULT_FAILURE;
         }
         gBattleStruct->eventState.moveEndBlock++;
     case TARGET_FAILURE_TARGET_BLOCKED:
@@ -2103,41 +2134,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
-            }
-        }
-        gBattleStruct->eventState.moveEndBlock++;
-    case TARGET_FAILURE_MOVE:
-        for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
-        {
-            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
-
-            if (moveTarget == TARGET_OPPONENTS_FIELD)
-                continue;
-
-            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
-                continue;
-
-            switch (cv->moveEffect)
-            {
-            case EFFECT_SYNCHRONOISE:
-                if (!DoBattlersShareType(cv->battlerAtk, cv->battlerDef))
-                {
-                    gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
-                    BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
-                    return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
-                }
-                break;
-            case EFFECT_SKY_DROP:
-                if (!gProtectStructs[cv->battlerAtk].chargingTurn
-                 && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
-                {
-                    gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
-                    BattleScriptCall(BattleScript_SkyDropFlyingType);
-                    return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
-                }
-                break;
-            default:
-                break;
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
@@ -2170,12 +2166,18 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 BattleScriptCall(BattleScript_DoesntAffectScripting);
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
             }
-            else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0) || IsTargetUnaffectedByDreamEater(cv))
+            else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0))
             {
                 TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_FAILED;
                 BattleScriptCall(BattleScript_DoesntAffectScripting);
+                return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
+            }
+            else if (IsTargetUnaffectedByMoveEffect(cv))
+            {
+                TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
+                gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
             }
             else if (ctx.typeEffectivenessModifier > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(&ctx))
