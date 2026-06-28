@@ -1533,7 +1533,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (!IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
                 continue;
 
-            if (AI_CanAnyStatChange(battlerAtk, battlerDef, move))
+            if (AI_CanAnyStatChange(battlerAtk, battler, move))
                 decreaseScore = FALSE;
         }
 
@@ -1553,7 +1553,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
              && gAiLogicData->abilities[battler] != ABILITY_MINUS)
                 continue;
 
-            if (AI_CanAnyStatChange(battlerAtk, battlerDef, move))
+            if (AI_CanAnyStatChange(battlerAtk, battler, move))
                 decreaseScore = FALSE;
         }
 
