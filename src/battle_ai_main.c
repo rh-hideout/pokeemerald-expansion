@@ -639,7 +639,7 @@ void RecordMovesBasedOnStab(enum BattlerId battler)
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         enum Move playerMove = gBattleMons[battler].moves[moveIndex];
-        if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove != 0))
+        if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove) != 0)
             RecordKnownMove(battler, playerMove);
     }
 }
@@ -6388,7 +6388,7 @@ bool32 DoesSideHaveDamagingHazards(enum BattleSide side)
         case HAZARDS_STEELSURGE:
             return TRUE;
         default:
-            return FALSE;
+            break;
         }
     }
     return FALSE;
