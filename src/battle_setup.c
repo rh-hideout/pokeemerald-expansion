@@ -1222,7 +1222,7 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
 
     bool32 isTrainerDefeated = !battleParams->params.skipFlagCheck && GetTrainerFlag();
 
-    if (( isTrainerDefeated && !battleParams->params.isRematch)
+    if ((isTrainerDefeated && !battleParams->params.isRematch)
     || (!IsTrainerReadyForRematch() && battleParams->params.isRematch)) {
         PUSH(EventSnippet_GotoPostBattleScript)
         return;
