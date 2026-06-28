@@ -914,7 +914,7 @@ bool8 ScrCmd_gettimeofday(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_0x8000 = GetTimeOfDay();
+    gSpecialVar_0x8000 = GetTimeOfDay(TRUE);
     return FALSE;
 }
 

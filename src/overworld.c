@@ -193,6 +193,7 @@ static bool8 MapLdr_Credits(void);
 static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
+static inline bool32 CompareTimeBlendSettings(const struct TimeBlendSettings* a, const struct TimeBlendSettings* b);
 
 static void *sUnusedOverworldCallback;
 static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
@@ -1817,6 +1818,21 @@ u8 UpdateSpritePaletteWithTime(u8 paletteNum)
     return paletteNum;
 }
 
+static inline bool32 CompareTimeBlendSettings(const struct TimeBlendSettings* a, const struct TimeBlendSettings* b)
+{
+    bool32 cmpEndBlend = (a->endBlend.blendColor == b->endBlend.blendColor) &&
+                         (a->endBlend.coeff == b->endBlend.coeff) &&
+                         (a->endBlend.isTint == b->endBlend.isTint);
+
+    bool32 cmpStartBlend = (a->startBlend.blendColor == b->startBlend.blendColor) &&
+                           (a->startBlend.coeff == b->startBlend.coeff) &&
+                           (a->startBlend.isTint == b->startBlend.isTint);
+
+    bool32 cmpWeights = (a->altWeight == b->altWeight) && (a->weight == b->weight);
+
+    return cmpStartBlend && cmpEndBlend && cmpWeights;
+}
+
 static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
@@ -1832,15 +1848,10 @@ static void OverworldBasic(void)
     if (!gPaletteFade.active && --gTimeUpdateCounter <= 0)
     {
         struct TimeBlendSettings cachedBlend = gTimeBlend;
-        u32 *bld0 = (u32*)&cachedBlend;
-        u32 *bld1 = (u32*)&gTimeBlend;
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
         FormChangeTimeUpdate();
-        if (MapHasNaturalLight(gMapHeader.mapType) &&
-           (bld0[0] != bld1[0]
-         || bld0[1] != bld1[1]
-         || bld0[2] != bld1[2]))
+        if (MapHasNaturalLight(gMapHeader.mapType) && !CompareTimeBlendSettings(&cachedBlend, &gTimeBlend))
         {
             ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }

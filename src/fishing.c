@@ -579,7 +579,7 @@ static u32 CalculateFishingTimeOfDayBoost()
     if (!I_FISHING_TIME_OF_DAY_BOOST)
         return 0;
 
-    enum TimeOfDay timeOfDay = GetTimeOfDay();
+    enum TimeOfDay timeOfDay = GetTimeOfDay(TRUE);
     if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
         return FISHING_TIME_OF_DAY_BOOST;
     return 0;

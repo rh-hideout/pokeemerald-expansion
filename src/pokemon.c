@@ -4275,12 +4275,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         case IF_TIME:
-            if (GetTimeOfDay() == params[i].arg1)
+            if (GetTimeOfDay(TRUE) == params[i].arg1)
                 currentCondition = TRUE;
 
             break;
         case IF_NOT_TIME:
-            if (GetTimeOfDay() != params[i].arg1)
+            if (GetTimeOfDay(TRUE) != params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_HOLD_ITEM:
@@ -6149,11 +6149,11 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
                 switch (formChanges[i].param2)
                 {
                 case DAY:
-                    if (GetTimeOfDay() == TIME_NIGHT)
+                    if (GetTimeOfDay(TRUE) == TIME_NIGHT)
                         pass = FALSE;
                     break;
                 case NIGHT:
-                    if (GetTimeOfDay() != TIME_NIGHT)
+                    if (GetTimeOfDay(TRUE) != TIME_NIGHT)
                         pass = FALSE;
                     break;
                 }
@@ -6200,11 +6200,11 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             switch (formChanges[i].param1)
             {
             case DAY:
-                if (GetTimeOfDay() != TIME_NIGHT)
+                if (GetTimeOfDay(TRUE) != TIME_NIGHT)
                     targetSpecies = formChanges[i].targetSpecies;
                 break;
             case NIGHT:
-                if (GetTimeOfDay() == TIME_NIGHT)
+                if (GetTimeOfDay(TRUE) == TIME_NIGHT)
                     targetSpecies = formChanges[i].targetSpecies;
                 break;
             }

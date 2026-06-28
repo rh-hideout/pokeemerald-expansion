@@ -8649,7 +8649,7 @@ static void Cmd_recoverbasedonsunlight(void)
         else // B_TIME_OF_DAY_HEALING_MOVES == GEN_2
         {
             u32 healingModifier = 1;
-            u32 time = GetTimeOfDay();
+            u32 time = GetTimeOfDay(TRUE);
 
             switch (GetMoveEffect(gCurrentMove))
             {
@@ -9764,7 +9764,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         }
         break;
     case BALL_DUSK:
-        i = GetTimeOfDay();
+        i = GetTimeOfDay(TRUE);
         if (i == TIME_EVENING || i == TIME_NIGHT || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
             ball->multiplier = (B_DUSK_BALL_MODIFIER >= GEN_7 ? 300 : 350);
         break;

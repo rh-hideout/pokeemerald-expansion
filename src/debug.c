@@ -1791,7 +1791,7 @@ void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 
 void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
 {
-    enum TimeOfDay timeOfDay = GetTimeOfDay();
+    enum TimeOfDay timeOfDay = GetTimeOfDay(TRUE);
     switch (timeOfDay)
     {
     case TIME_MORNING:
