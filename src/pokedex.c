@@ -16,6 +16,7 @@
 #include "palette.h"
 #include "pokedex.h"
 #include "pokedex_area_screen.h"
+#include "pokedex_common.h"
 #include "pokedex_cry_screen.h"
 #include "pokedex_plus_hgss.h"
 #include "rtc.h"
@@ -38,8 +39,6 @@ static EWRAM_DATA u16 sLastSelectedPokemon = 0;
 static EWRAM_DATA u8 sPokeBallRotation = 0;
 EWRAM_DATA struct PokedexListItem *sPokedexListItem = NULL;
 
-// This is written to, but never read.
-COMMON_DATA u8 gUnusedPokedexU8 = 0;
 COMMON_DATA void (*gPokedexVBlankCB)(void) = NULL;
 
 struct SearchOptionText
@@ -683,6 +682,29 @@ static const u8 sText_No000[] = _("{NO}000");
 const u8 sCaughtBall_Gfx[] = INCGFX_U8("graphics/pokedex/caught_ball.png", ".4bpp");
 static const u8 sText_TenDashes[] = _("----------");
 
+static const u8 sText_UnkHeight[] = _("{CLEAR_TO 12}??'??”");
+static const u8 sText_UnkHeightMetric[] = _("???.? m");
+static const u8 sText_UnkWeight[] = _("????.? lbs.");
+static const u8 sText_UnkWeightMetric[] = _("???.? kg.");
+static const u8 sText_PokedexRegistration[] = _("POKéDEX registration completed.");
+static const u8 sText_HTHeight[] = _("HT");
+static const u8 sText_WTWeight[] = _("WT");
+static const u8 sText_SearchingPleaseWait[] = _("Searching…\nPlease wait.");
+static const u8 sText_SearchCompleted[] = _("Search completed.");
+static const u8 sText_NoMatchingPkmnWereFound[] = _("No matching POKéMON were found.");
+static const u8 sText_SearchForPkmnBasedOnParameters[] = _("Search for POKéMON based on\nselected parameters.");
+static const u8 sText_SwitchPokedexListings[] = _("Switch POKéDEX listings.");
+static const u8 sText_ReturnToPokedex[] = _("Return to the POKéDEX.");
+static const u8 sText_SelectPokedexMode[] = _("Select the POKéDEX mode.");
+static const u8 sText_SelectPokedexListingMode[] = _("Select the POKéDEX listing mode.");
+static const u8 sText_ListByFirstLetter[] = _("List by the first letter in the name.\nSpotted POKéMON only.");
+static const u8 sText_ListByBodyColor[] = _("List by body color.\nSpotted POKéMON only.");
+static const u8 sText_ListByType[] = _("List by type.\nOwned POKéMON only.");
+static const u8 sText_ExecuteSearchSwitch[] = _("Execute search/switch.");
+static const u8 sText_DexEmptyString[] = _("");
+static const u8 sText_DexSearchDontSpecify[] = _("DON'T SPECIFY.");
+static const u8 sText_DexSearchTypeNone[] = _("NONE");
+
 ALIGNED(4) static const u8 sExpandedPlaceholder_PokedexDescription[] = _("");
 
 static const u16 sSizeScreenSilhouette_Pal[] = INCGFX_U16("graphics/pokedex/size_silhouette.pal", ".gbapal");
@@ -848,21 +870,21 @@ static const struct SearchMenuTopBarItem sSearchMenuTopBarItems[SEARCH_TOPBAR_CO
 {
     [SEARCH_TOPBAR_SEARCH] =
     {
-        .description = gText_SearchForPkmnBasedOnParameters,
+        .description = sText_SearchForPkmnBasedOnParameters,
         .highlightX = 0,
         .highlightY = 0,
         .highlightWidth = 5,
     },
     [SEARCH_TOPBAR_SHIFT] =
     {
-        .description = gText_SwitchPokedexListings,
+        .description = sText_SwitchPokedexListings,
         .highlightX = 6,
         .highlightY = 0,
         .highlightWidth = 5,
     },
     [SEARCH_TOPBAR_CANCEL] =
     {
-        .description = gText_ReturnToPokedex,
+        .description = sText_ReturnToPokedex,
         .highlightX = 12,
         .highlightY = 0,
         .highlightWidth = 5,
@@ -873,7 +895,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
 {
     [SEARCH_NAME] =
     {
-        .description = gText_ListByFirstLetter,
+        .description = sText_ListByFirstLetter,
         .titleBgX = 0,
         .titleBgY = 2,
         .titleBgWidth = 5,
@@ -883,7 +905,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_COLOR] =
     {
-        .description = gText_ListByBodyColor,
+        .description = sText_ListByBodyColor,
         .titleBgX = 0,
         .titleBgY = 4,
         .titleBgWidth = 5,
@@ -893,7 +915,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_TYPE_LEFT] =
     {
-        .description = gText_ListByType,
+        .description = sText_ListByType,
         .titleBgX = 0,
         .titleBgY = 6,
         .titleBgWidth = 5,
@@ -903,7 +925,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_TYPE_RIGHT] =
     {
-        .description = gText_ListByType,
+        .description = sText_ListByType,
         .titleBgX = 0,
         .titleBgY = 6,
         .titleBgWidth = 5,
@@ -913,7 +935,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_ORDER] =
     {
-        .description = gText_SelectPokedexListingMode,
+        .description = sText_SelectPokedexListingMode,
         .titleBgX = 0,
         .titleBgY = 8,
         .titleBgWidth = 5,
@@ -923,7 +945,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_MODE] =
     {
-        .description = gText_SelectPokedexMode,
+        .description = sText_SelectPokedexMode,
         .titleBgX = 0,
         .titleBgY = 10,
         .titleBgWidth = 5,
@@ -933,7 +955,7 @@ static const struct SearchMenuItem sSearchMenuItems[SEARCH_COUNT] =
     },
     [SEARCH_OK] =
     {
-        .description = gText_ExecuteSearchSwitch,
+        .description = sText_ExecuteSearchSwitch,
         .titleBgX = 0,
         .titleBgY = 12,
         .titleBgWidth = 5,
@@ -1159,74 +1181,74 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
 
 static const struct SearchOptionText sDexModeOptions[] =
 {
-    [DEX_MODE_HOENN]    = {gText_DexHoennDescription, gText_DexHoennTitle},
-    [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle},
+    [DEX_MODE_HOENN]    = {COMPOUND_STRING("HOENN region's POKéDEX"),   COMPOUND_STRING("HOENN DEX")},
+    [DEX_MODE_NATIONAL] = {COMPOUND_STRING("National edition POKéDEX"), COMPOUND_STRING("NATIONAL DEX")},
     {},
 };
 
 static const struct SearchOptionText sDexOrderOptions[] =
 {
-    [ORDER_NUMERICAL]    = {gText_DexSortNumericalDescription, gText_DexSortNumericalTitle},
-    [ORDER_ALPHABETICAL] = {gText_DexSortAtoZDescription,      gText_DexSortAtoZTitle},
-    [ORDER_HEAVIEST]     = {gText_DexSortHeaviestDescription,  gText_DexSortHeaviestTitle},
-    [ORDER_LIGHTEST]     = {gText_DexSortLightestDescription,  gText_DexSortLightestTitle},
-    [ORDER_TALLEST]      = {gText_DexSortTallestDescription,   gText_DexSortTallestTitle},
-    [ORDER_SMALLEST]     = {gText_DexSortSmallestDescription,  gText_DexSortSmallestTitle},
+    [ORDER_NUMERICAL]    = {COMPOUND_STRING("POKéMON are listed according to their\nnumber."),               COMPOUND_STRING("NUMERICAL MODE")},
+    [ORDER_ALPHABETICAL] = {COMPOUND_STRING("Spotted and owned POKéMON are listed\nalphabetically."),        COMPOUND_STRING("A TO Z MODE")},
+    [ORDER_HEAVIEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nheaviest to the lightest."), COMPOUND_STRING("HEAVIEST MODE")},
+    [ORDER_LIGHTEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nlightest to the heaviest."), COMPOUND_STRING("LIGHTEST MODE")},
+    [ORDER_TALLEST]      = {COMPOUND_STRING("Owned POKéMON are listed from the\ntallest to the smallest."),  COMPOUND_STRING("TALLEST MODE")},
+    [ORDER_SMALLEST]     = {COMPOUND_STRING("Owned POKéMON are listed from the\nsmallest to the tallest."),  COMPOUND_STRING("SMALLEST MODE")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchNameOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC},
-    [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF},
-    [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI},
-    [NAME_JKL] = {gText_DexEmptyString, gText_DexSearchAlphaJKL},
-    [NAME_MNO] = {gText_DexEmptyString, gText_DexSearchAlphaMNO},
-    [NAME_PQR] = {gText_DexEmptyString, gText_DexSearchAlphaPQR},
-    [NAME_STU] = {gText_DexEmptyString, gText_DexSearchAlphaSTU},
-    [NAME_VWX] = {gText_DexEmptyString, gText_DexSearchAlphaVWX},
-    [NAME_YZ]  = {gText_DexEmptyString, gText_DexSearchAlphaYZ},
+    {sText_DexEmptyString, sText_DexSearchDontSpecify},
+    [NAME_ABC] = {sText_DexEmptyString, COMPOUND_STRING("ABC")},
+    [NAME_DEF] = {sText_DexEmptyString, COMPOUND_STRING("DEF")},
+    [NAME_GHI] = {sText_DexEmptyString, COMPOUND_STRING("GHI")},
+    [NAME_JKL] = {sText_DexEmptyString, COMPOUND_STRING("JKL")},
+    [NAME_MNO] = {sText_DexEmptyString, COMPOUND_STRING("MNO")},
+    [NAME_PQR] = {sText_DexEmptyString, COMPOUND_STRING("PQR")},
+    [NAME_STU] = {sText_DexEmptyString, COMPOUND_STRING("STU")},
+    [NAME_VWX] = {sText_DexEmptyString, COMPOUND_STRING("VWX")},
+    [NAME_YZ]  = {sText_DexEmptyString, COMPOUND_STRING("YZ")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchColorOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify},
-    [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed},
-    [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue},
-    [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow},
-    [BODY_COLOR_GREEN + 1]  = {gText_DexEmptyString, gText_DexSearchColorGreen},
-    [BODY_COLOR_BLACK + 1]  = {gText_DexEmptyString, gText_DexSearchColorBlack},
-    [BODY_COLOR_BROWN + 1]  = {gText_DexEmptyString, gText_DexSearchColorBrown},
-    [BODY_COLOR_PURPLE + 1] = {gText_DexEmptyString, gText_DexSearchColorPurple},
-    [BODY_COLOR_GRAY + 1]   = {gText_DexEmptyString, gText_DexSearchColorGray},
-    [BODY_COLOR_WHITE + 1]  = {gText_DexEmptyString, gText_DexSearchColorWhite},
-    [BODY_COLOR_PINK + 1]   = {gText_DexEmptyString, gText_DexSearchColorPink},
+    {sText_DexEmptyString, sText_DexSearchDontSpecify},
+    [BODY_COLOR_RED + 1]    = {sText_DexEmptyString, COMPOUND_STRING("RED")},
+    [BODY_COLOR_BLUE + 1]   = {sText_DexEmptyString, COMPOUND_STRING("BLUE")},
+    [BODY_COLOR_YELLOW + 1] = {sText_DexEmptyString, COMPOUND_STRING("YELLOW")},
+    [BODY_COLOR_GREEN + 1]  = {sText_DexEmptyString, COMPOUND_STRING("GREEN")},
+    [BODY_COLOR_BLACK + 1]  = {sText_DexEmptyString, COMPOUND_STRING("BLACK")},
+    [BODY_COLOR_BROWN + 1]  = {sText_DexEmptyString, COMPOUND_STRING("BROWN")},
+    [BODY_COLOR_PURPLE + 1] = {sText_DexEmptyString, COMPOUND_STRING("PURPLE")},
+    [BODY_COLOR_GRAY + 1]   = {sText_DexEmptyString, COMPOUND_STRING("GRAY")},
+    [BODY_COLOR_WHITE + 1]  = {sText_DexEmptyString, COMPOUND_STRING("WHITE")},
+    [BODY_COLOR_PINK + 1]   = {sText_DexEmptyString, COMPOUND_STRING("PINK")},
     {},
 };
 
 static const struct SearchOptionText sDexSearchTypeOptions[] =
 {
-    {gText_DexEmptyString, gTypesInfo[TYPE_NONE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_NORMAL].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FIGHTING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FLYING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_POISON].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GROUND].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ROCK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_BUG].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GHOST].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_STEEL].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FIRE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_WATER].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GRASS].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ELECTRIC].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_PSYCHIC].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ICE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_DRAGON].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_DARK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FAIRY].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_NONE].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_NORMAL].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_FIGHTING].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_FLYING].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_POISON].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_GROUND].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_ROCK].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_BUG].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_GHOST].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_STEEL].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_FIRE].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_WATER].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_GRASS].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_ELECTRIC].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_PSYCHIC].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_ICE].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_DRAGON].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_DARK].name},
+    {sText_DexEmptyString, gTypesInfo[TYPE_FAIRY].name},
     {},
 };
 
@@ -1338,7 +1360,6 @@ void ResetPokedex(void)
 
     sLastSelectedPokemon = 0;
     sPokeBallRotation = POKEBALL_ROTATION_TOP;
-    gUnusedPokedexU8 = 0;
     gSaveBlock2Ptr->pokedex.mode = DEX_MODE_HOENN;
     gSaveBlock2Ptr->pokedex.order = 0;
     gSaveBlock2Ptr->pokedex.nationalMagic = 0;
@@ -1557,7 +1578,7 @@ void Task_HandlePokedexInput(u8 taskId)
             sPokedexView->selectedPokemon = TryDoPokedexScroll(sPokedexView->selectedPokemon, 0xE);
             if (sPokedexView->scrollTimer)
                 gTasks[taskId].func = Task_WaitForScroll;
-            HandleCreateStatBarsDPAD_HGSS(); 
+            HandleCreateStatBarsDPAD_HGSS();
         }
     }
 }
@@ -2053,7 +2074,7 @@ bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
         return !GetSetPokedexFlag(dexNumBefore, FLAG_GET_SEEN)
             && !GetSetPokedexFlag(dexNumAfter, FLAG_GET_SEEN);
 
-    return TRUE; 
+    return TRUE;
 }
 
 void CreatePokedexList(u8 dexMode, u8 order)
@@ -2369,7 +2390,7 @@ void ClearMonListEntry(u8 x, u8 y, u16 unused)
     u32 xMultiplier = 8;
     if (POKEDEX_PLUS_HGSS)
         xMultiplier = 6;
-    
+
     FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, 0x60, 16);
 }
 
@@ -3338,7 +3359,7 @@ void Task_HandleInfoScreenInput(u8 taskId)
         PlaySE(SE_PC_OFF);
         return;
     }
-    
+
     if (TryHandleInfoScreenInput_HGSS(taskId))
         return;
 
@@ -3720,7 +3741,7 @@ static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
     if (TryLoadPlayArrowPalette_HGSS(cryPlaying))
         return;
-    
+
     u16 color;
 
     if (cryPlaying)
@@ -4146,7 +4167,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
     u8 digitCount = (NATIONAL_DEX_COUNT > 999 && IsNationalPokedexEnabled()) ? 4 : 3;
 
     if (newEntry)
-        PrintInfoScreenText(gText_PokedexRegistration, GetStringCenterAlignXOffset(FONT_NORMAL, gText_PokedexRegistration, DISPLAY_WIDTH), 0);
+        PrintInfoScreenText(sText_PokedexRegistration, GetStringCenterAlignXOffset(FONT_NORMAL, sText_PokedexRegistration, DISPLAY_WIDTH), 0);
     if (value == 0)
         value = NationalToRegionalOrder(num);
     else
@@ -4185,8 +4206,8 @@ void PrintMonMeasurements(enum Species species, u32 owned)
     u32 yTop = GetMeasurementTextPositions(DEX_Y_TOP);
     u32 yBottom = GetMeasurementTextPositions(DEX_Y_BOTTOM);
 
-    PrintInfoScreenText(gText_HTHeight, x, yTop);
-    PrintInfoScreenText(gText_WTWeight, x, yBottom);
+    PrintInfoScreenText(sText_HTHeight, x, yTop);
+    PrintInfoScreenText(sText_WTWeight, x, yBottom);
 
     if (owned)
         PrintOwnedMonMeasurements(species);
@@ -4232,17 +4253,17 @@ static void PrintUnknownMonMeasurements(void)
 static u8* GetUnknownMonHeightString(void)
 {
     if (UNITS == UNITS_IMPERIAL)
-        return ReplaceDecimalSeparator(gText_UnkHeight);
+        return ReplaceDecimalSeparator(sText_UnkHeight);
     else
-        return ReplaceDecimalSeparator(gText_UnkHeightMetric);
+        return ReplaceDecimalSeparator(sText_UnkHeightMetric);
 }
 
 static u8* GetUnknownMonWeightString(void)
 {
     if (UNITS == UNITS_IMPERIAL)
-        return ReplaceDecimalSeparator(gText_UnkWeight);
+        return ReplaceDecimalSeparator(sText_UnkWeight);
     else
-        return ReplaceDecimalSeparator(gText_UnkWeightMetric);
+        return ReplaceDecimalSeparator(sText_UnkWeightMetric);
 }
 
 static u8* ReplaceDecimalSeparator(const u8* originalString)
@@ -5252,7 +5273,7 @@ static void Task_HandleSearchMenuInput(u8 taskId)
             }
             else
             {
-                EraseAndPrintSearchTextBox(gText_SearchingPleaseWait);
+                EraseAndPrintSearchTextBox(sText_SearchingPleaseWait);
                 gTasks[taskId].func = Task_StartPokedexSearch;
                 PlaySE(SE_DEX_SEARCH);
                 CopyWindowToVram(0, COPYWIN_GFX);
@@ -5320,12 +5341,12 @@ static void Task_WaitAndCompleteSearch(u8 taskId)
         if (sPokedexView->pokemonListCount != 0)
         {
             PlaySE(SE_SUCCESS);
-            EraseAndPrintSearchTextBox(gText_SearchCompleted);
+            EraseAndPrintSearchTextBox(sText_SearchCompleted);
         }
         else
         {
             PlaySE(SE_FAILURE);
-            EraseAndPrintSearchTextBox(gText_NoMatchingPkmnWereFound);
+            EraseAndPrintSearchTextBox(sText_NoMatchingPkmnWereFound);
         }
         gTasks[taskId].func = Task_SearchCompleteWaitForInput;
         CopyWindowToVram(0, COPYWIN_GFX);

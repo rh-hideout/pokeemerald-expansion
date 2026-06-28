@@ -7747,7 +7747,7 @@ void AnimTask_PrimalReversion(u8 taskId)
 
 void AnimTask_ShellSideArm(u8 taskId)
 {
-    if (gBattleStruct->swapDamageCategory)
+    if (IsBattleMovePhysical(gCurrentMove))
         gBattleAnimArgs[0] = TRUE;
     else
         gBattleAnimArgs[0] = FALSE;

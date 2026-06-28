@@ -8,6 +8,9 @@
 #include "constants/characters.h"
 #include "constants/rgb.h"
 
+enum Mode { MODE_ASSERTF, MODE_FATALF };
+#define MODE_COUNT 2
+
 struct BitUnPackArgs
 {
     u16 compressedSize;
@@ -19,7 +22,12 @@ struct BitUnPackArgs
 
 extern void BitUnPack(const void *src, void *dest, const struct BitUnPackArgs *);
 
-static const u16 sPltt[2] = INCGFX_U16("graphics/crash_screen/palette.pal", ".gbapal");
+static const u16 sPltts[MODE_COUNT][2] =
+{
+    INCGFX_U16("graphics/crash_screen/assertf.pal", ".gbapal"),
+    INCGFX_U16("graphics/crash_screen/fatalf.pal", ".gbapal"),
+};
+
 static const u32 sGlyphs1BPP[] = INCGFX_U32("graphics/crash_screen/font.png", ".1bpp");
 
 enum
@@ -212,16 +220,19 @@ static bool32 Putx(u32 *x, u32 *y, unsigned u)
 }
 
 // This printf renders directly into VRAM rather than into a buffer.
-static void Vprintf(const void *return1, const void *return0, const char *fmt, va_list va)
+static void Vprintf(enum Mode mode, const void *return1, const void *return0, const char *fmt, va_list va)
 {
     u32 x, y;
     s32 n;
 
-    x = 3;
-    y = 19;
-    static const char footer[] = "Press START to continue.";
-    for (u32 i = 0; i < sizeof(footer) - 1; i++)
-        Putc(&x, &y, footer[i]);
+    if (mode == MODE_ASSERTF)
+    {
+        x = 3;
+        y = 19;
+        static const char footer[] = "Press START to continue.";
+        for (u32 i = 0; i < sizeof(footer) - 1; i++)
+            Putc(&x, &y, footer[i]);
+    }
 
     x = 0;
     y = 0;
@@ -312,7 +323,7 @@ struct Backup
 
 /* Blue Screen of Death style screen that displays the error message and
  * hijacks the main loop until the start button is pressed. */
-void AssertfCrashScreen(const void *return1, const char *fmt, ...)
+static void CrashScreen(enum Mode mode, const void *return1, const void *return0, const char *fmt, va_list va)
 {
     // Backup and override hardware state.
     struct Backup *backup = NULL;
@@ -360,19 +371,25 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
     REG_BG0HOFS = 0; // NOTE: REG_BG0HOFS is write-only.
     REG_BG0VOFS = 0; // NOTE: REG_BG0VOFS is write-only.
     memcpy(backup->bgPltt, (void *)BG_PLTT, sizeof(backup->bgPltt));
-    memcpy((void *)BG_PLTT, sPltt, sizeof(backup->bgPltt));
+    memcpy((void *)BG_PLTT, sPltts[mode], sizeof(backup->bgPltt));
     CpuFastCopy((void *)VRAM, &backup->vram, sizeof(backup->vram));
     for (u32 i = 0; i < 32 * 20; i++)
         ((vu16 *)VRAM)[i] = TILE0_OFFSET;
     BitUnPack(sGlyphs1BPP, (void *)(VRAM + TILE_OFFSET_4BPP(TILE0_OFFSET)), &sBitUnPack1BPP);
 
-    va_list va;
-    va_start(va, fmt);
-    Vprintf(return1, __builtin_return_address(0), fmt, va);
-    va_end(va);
+    Vprintf(mode, return1, return0, fmt, va);
 
     BusyWaitForVBlank();
     REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_BG0_ON;
+
+    if (mode == MODE_FATALF)
+    {
+        while (TRUE)
+        {
+            gMain.intrCheck &= ~INTR_FLAG_VBLANK;
+            VBlankIntrWait();
+        }
+    }
 
     u16 prevKeyinput = ~REG_KEYINPUT;
     enum { WAIT_FOR_PRESS, WAIT_FOR_RELEASE } state = WAIT_FOR_PRESS;
@@ -414,4 +431,22 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 
     if (backup->onHeap)
         Free(backup);
+}
+
+void AssertfCrashScreen(const void *return1, const char *fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    CrashScreen(MODE_ASSERTF, return1, __builtin_return_address(0), fmt, va);
+    va_end(va);
+}
+
+_Noreturn void FatalfCrashScreen(const void *return1, const char *fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    CrashScreen(MODE_FATALF, return1, __builtin_return_address(0), fmt, va);
+    va_end(va);
+
+    while (TRUE); // Unreachable: infinite loop in 'CrashScreen'.
 }

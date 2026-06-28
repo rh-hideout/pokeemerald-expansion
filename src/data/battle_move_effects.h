@@ -79,7 +79,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DREAM_EATER] =
     {
-        .battleScript = BattleScript_EffectDreamEater,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
@@ -515,7 +515,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PRESENT] =
     {
-        .battleScript = BattleScript_EffectPresent,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
@@ -1704,7 +1704,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SHELL_TRAP] =
     {
-        .battleScript = BattleScript_EffectShellTrap,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 

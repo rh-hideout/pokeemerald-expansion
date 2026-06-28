@@ -249,17 +249,6 @@ EWRAM_DATA static struct FallAnim_Tower *sFallingTower = NULL;
 EWRAM_DATA static struct BgRegOffsets *sBgShakeOffsets = NULL;
 EWRAM_DATA static struct MirageTowerPulseBlend *sMirageTowerPulseBlend = NULL;
 
-// Holds data about the disintegration effect for Mirage Tower / the unchosen fossil.
-// Never read, presumably for debugging
-static u16 sDebug_DisintegrationData[8];
-
-bool8 IsMirageTowerVisible(void)
-{
-    if (!(gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE111) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE111)))
-        return FALSE;
-    return FlagGet(FLAG_MIRAGE_TOWER_VISIBLE);
-}
-
 static void UpdateMirageTowerPulseBlend(u8 taskId)
 {
     UpdatePulseBlend(&sMirageTowerPulseBlend->pulseBlend);
@@ -749,27 +738,19 @@ static void UpdateDisintegrationEffect(u8 *tiles, u16 randId, u8 c, u8 size, u8 
     u8 flag, tileMask;
 
     height = randId / size;
-    sDebug_DisintegrationData[0] = height;
 
     width = randId % size;
-    sDebug_DisintegrationData[1] = width;
 
     row = height & 7;
     col = width & 7;
-    sDebug_DisintegrationData[2] = height & 7;
-    sDebug_DisintegrationData[3] = width & 7;
 
     widthTiles = width / 8;
     heightTiles = height / 8;
-    sDebug_DisintegrationData[4] = width / 8;
-    sDebug_DisintegrationData[5] = height / 8;
 
     var = (size / 8) * (heightTiles * 64) + (widthTiles * 64);
-    sDebug_DisintegrationData[6] = var;
 
     baseOffset = var + ((row * 8) + col);
     baseOffset /= 2;
-    sDebug_DisintegrationData[7] = var + ((row * 8) + col);
 
     flag = ((randId % 2) ^ 1);
     tileMask = (c << (flag << 2)) | 15 << (((flag ^ 1) << 2));

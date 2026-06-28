@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused m
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        MESSAGE("The Pokémon was hit 4 time(s)!");
+        MESSAGE("The Pokémon was hit 4 times!");
     } THEN {
         if (gen == GEN_5) {
             EXPECT_EQ(gBattleStruct->beatUpSpecies[0], SPECIES_WOBBUFFET);
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name (Gen5+)")
             MESSAGE("Wobbuffet's attack!");
             MESSAGE("Wynaut's attack!");
         }
-        MESSAGE("The Pokémon was hit 2 time(s)!");
+        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 

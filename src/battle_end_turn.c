@@ -71,8 +71,8 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
         if (B_CHARGE < GEN_9 && gBattleMons[i].volatiles.chargeTimer > 0)
             gBattleMons[i].volatiles.chargeTimer--;
 
-        if (gBattleMons[i].volatiles.laserFocusTimer > 0 && --gBattleMons[i].volatiles.laserFocusTimer == 0)
-            gBattleMons[i].volatiles.laserFocus = FALSE;
+        if (gBattleMons[i].volatiles.laserFocusTimer > 0)
+            gBattleMons[i].volatiles.laserFocusTimer--;
 
         gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
@@ -229,6 +229,18 @@ static bool32 HandleEndTurnAffection(enum BattlerId battler)
     return effect;
 }
 
+static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    struct Pokemon *party = GetBattlerParty(battlerAtk);
+    if (IsDoubleBattle())
+    {
+        return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
+            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
+    }
+
+    return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
+}
+
 // Note: Technically Future Sight, Doom Desire and Wish need a queue but
 // I think we should accept this slight inconsistency so custom moves don't have to touch this code
 static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
@@ -240,7 +252,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
     if (gBattleStruct->futureSight[battler].counter > 0
      && --gBattleStruct->futureSight[battler].counter == 0)
     {
-        if (!IsBattlerPresent(battler))
+        if (!IsBattlerPresent(battler)) // Looks like a bug in doubles?
             return effect;
 
         if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
@@ -255,7 +267,9 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gCurrentMove = gBattleStruct->futureSight[battler].move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
-        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+        if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
+            gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
+        else
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
         BattleScriptCall(BattleScript_MonTookFutureAttack);
@@ -502,15 +516,22 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
     bool32 effect = FALSE;
 
     enum Ability ability = GetBattlerAbility(battler);
+    bool32 isToxicPoison = gBattleMons[battler].status1 & STATUS1_TOXIC_POISON;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if ((gBattleMons[battler].status1 & STATUS1_POISON || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
-     && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
+    if (IsBattlerPresent(battler) && (gBattleMons[battler].status1 & STATUS1_POISON || isToxicPoison))
     {
-        if (ability == ABILITY_POISON_HEAL)
+        if (IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
+            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
+        }
+        else if (ability == ABILITY_POISON_HEAL)
+        {
+            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
+
             if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
             {
                 SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -518,7 +539,7 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
                 effect = TRUE;
             }
         }
-        else if (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
+        else if (isToxicPoison)
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             if ((gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
@@ -593,7 +614,7 @@ static bool32 HandleEndTurnNightmare(enum BattlerId battler)
      && IsBattlerPresent(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        if (gBattleMons[battler].status1 & STATUS1_SLEEP || GetBattlerAbility(battler) == ABILITY_COMATOSE)
+        if (IsAsleepOrComatose(battler, GetBattlerAbility(battler)))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
             BattleScriptCall(BattleScript_NightmareTurnDmg);
@@ -647,9 +668,9 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
             BattleScriptCall(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
             if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+                bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 6 : 8);
             else
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+                bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 8 : 16);
             SetPassiveDamageAmount(battler, bindDamage);
         }
         else  // broke free
@@ -676,9 +697,9 @@ static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
     {
         s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            saltCureDamage = GetNonDynamaxMaxHP(battler) / 4;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_SALT_CURE_DAMAGE) >= GEN_CHAMPIONS ? 8 : 4);
         else
-            saltCureDamage = GetNonDynamaxMaxHP(battler) / 8;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_SALT_CURE_DAMAGE) >= GEN_CHAMPIONS ? 16 : 8);
         SetPassiveDamageAmount(battler, saltCureDamage);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptCall(BattleScript_SaltCureExtraDamage);
@@ -829,7 +850,6 @@ static bool32 HandleEndTurnMagnetRise(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.magnetRiseTimer > 0 && --gBattleMons[battler].volatiles.magnetRiseTimer == 0)
     {
-        gBattleMons[battler].volatiles.magnetRise = FALSE;
         BattleScriptCall(BattleScript_BufferEndTurn);
         PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_ELECTROMAGNETISM);
         effect = TRUE;
@@ -931,9 +951,16 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
             }
             else
             {
-                if (B_SLEEP_TURNS >= GEN_5)
+                if (GetConfig(B_SLEEP_TURNS) >= GEN_CHAMPIONS)
+                {
+                    if (Random() % 3 == 0)
+                        gBattleMons[battler].status1 |= STATUS1_SLEEP_TURN(2);
+                    else
+                        gBattleMons[battler].status1 |= STATUS1_SLEEP_TURN(3);
+                }
+                else if (GetConfig(B_SLEEP_TURNS) >= GEN_5)
                     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 4));
-                else if (B_SLEEP_TURNS >= GEN_3)
+                else if (GetConfig(B_SLEEP_TURNS) >= GEN_3)
                     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 5));
                 else
                     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 8));
@@ -1587,7 +1614,7 @@ static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
     bool32 effect = FALSE;
     enum Ability ability = GetBattlerAbility(battler);
 
-    if (EmergencyExitCanBeTriggered(battler))
+    if (EmergencyExitCanBeTriggered(battler, ability))
     {
         gBattleScripting.battler = gBattlerAbility = battler;
         gLastUsedAbility = ability;

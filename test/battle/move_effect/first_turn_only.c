@@ -227,4 +227,3 @@ SINGLE_BATTLE_TEST("First Impression fails if it's called via Instruct")
         NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRST_IMPRESSION, player); }
     }
 }
-

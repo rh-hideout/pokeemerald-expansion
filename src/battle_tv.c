@@ -156,7 +156,10 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && stringId != STRINGID_ITDOESNTAFFECT && stringId != STRINGID_NOTVERYEFFECTIVE)
+    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK)
+     && stringId != STRINGID_ITDOESNTAFFECT
+     && stringId != STRINGID_NOTVERYEFFECTIVE
+     && stringId != STRINGID_MOSTLYINEFFECTIVE)
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -186,19 +189,22 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     switch (stringId)
     {
     case STRINGID_ITDOESNTAFFECT:
-    case STRINGID_ITDOESNTAFFECTTWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 2, 0);
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
             TrySetBattleSeminarShow();
         break;
     case STRINGID_NOTVERYEFFECTIVE:
     case STRINGID_NOTVERYEFFECTIVETWOFOES:
+    case STRINGID_MOSTLYINEFFECTIVE:
+    case STRINGID_MOSTLYINEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
     case STRINGID_SUPEREFFECTIVETWOFOES:
+    case STRINGID_EXTREMELYEFFECTIVE:
+    case STRINGID_EXTREMELYEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 0, 0);
         break;
     case STRINGID_PKMNFORESAWATTACK:
@@ -266,6 +272,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         gBattleStruct->anyMonHasTransformed = TRUE;
         break;
     case STRINGID_CRITICALHIT:
+    case STRINGID_CRITICALHITONDEF:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
     case STRINGID_STATROSE:

@@ -3,8 +3,6 @@
 
 #include "constants/species.h"
 
-extern u8 *const gTVStringVarPtrs[3];
-
 void ClearTVShowData(void);
 void TryPutBreakingNewsOnAir(void);
 void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, enum Move betterMove);

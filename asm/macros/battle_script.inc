@@ -16,10 +16,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro damagecalc
-	.byte B_SCR_OP_DAMAGECALC
-	.endm
-
 	.macro typecalc
 	.byte B_SCR_OP_TYPECALC
 	.endm
@@ -82,10 +78,6 @@
 	.macro printfromtable ptr:req
 	.byte B_SCR_OP_PRINTFROMTABLE
 	.4byte \ptr
-	.endm
-
-	.macro setpreattackadditionaleffect
-	.byte B_SCR_OP_SETPREATTACKADDITIONALEFFECT
 	.endm
 
 	.macro setadditionaleffects
@@ -349,10 +341,6 @@
 
 	.macro end
 	.byte B_SCR_OP_END
-	.endm
-
-	.macro end2
-	.byte B_SCR_OP_END2
 	.endm
 
 	.macro end3
@@ -887,10 +875,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro presentdamagecalculation
-	.byte B_SCR_OP_PRESENTDAMAGECALCULATION
-	.endm
-
 	.macro setsafeguard
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
@@ -1255,12 +1239,6 @@
 	.macro jumpifcantloseitem ptr:req
 	callnative BS_JumpIfCantLoseItem
 	.4byte \ptr
-	.endm
-
-	.macro jumpifshelltrap battler:req, jumpInstr:req
-	callnative BS_JumpIfShellTrap
-	.byte \battler
-	.4byte \jumpInstr
 	.endm
 
 	.macro setterrain failInstr:req
@@ -1907,6 +1885,10 @@
 	callnative BS_UpdateAbilityPopup
 	.endm
 
+	.macro waitabilitypopup
+	callnative BS_WaitAbilityPopup
+	.endm
+
 	.macro jumpiftargetally jumpInstr:req
 	callnative BS_JumpIfTargetAlly
 	.4byte \jumpInstr
@@ -2133,4 +2115,17 @@
 
 	.macro catchornot
 	callnative BS_CatchOrNot
+	.endm
+
+	.macro showitempopup battler:req
+	callnative BS_ShowItemPopup
+	.byte \battler
+	.endm
+
+	.macro destroyitempopup
+	callnative BS_DestroyItemPopup
+	.endm
+
+	.macro multihitplurality
+	callnative BS_MultiHitPlurality
 	.endm
