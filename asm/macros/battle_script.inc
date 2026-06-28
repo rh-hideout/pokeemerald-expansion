@@ -875,10 +875,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro presentdamagecalculation
-	.byte B_SCR_OP_PRESENTDAMAGECALCULATION
-	.endm
-
 	.macro setsafeguard
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
