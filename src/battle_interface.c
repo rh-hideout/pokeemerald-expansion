@@ -2779,6 +2779,13 @@ void CreateItemPopUp(enum BattlerId battler)
     struct SpriteTemplate template;
     const s16 (*coords)[2];
 
+    if (gTestRunnerEnabled)
+    {
+        TestRunner_Battle_RecordItemPopUp(battler, gLastUsedItem);
+        if (gTestRunnerHeadless)
+            return;
+    }
+
     if (!IsAnyAbilityPopUpActive())
         LoadSpritePalette(&sSpritePalette_AbilityPopUp);
 

@@ -611,6 +611,7 @@ enum
     QUEUED_STATUS_EVENT,
     QUEUED_CATCH_CHANCE_EVENT,
     QUEUED_EFFECTIVENESS_EVENT,
+    QUEUED_ITEM_POPUP_EVENT,
 };
 
 struct QueuedEffectiveness
@@ -623,6 +624,13 @@ struct QueuedAbilityEvent
 {
     enum BattlerId battlerId;
     enum Ability ability;
+};
+
+
+struct QueuedItemEvent
+{
+    enum BattlerId battlerId;
+    enum Item item;
 };
 
 struct QueuedAnimationEvent
@@ -683,6 +691,7 @@ struct QueuedEvent
     union
     {
         struct QueuedAbilityEvent ability;
+        struct QueuedItemEvent item;
         struct QueuedAnimationEvent animation;
         struct QueuedHPEvent hp;
         struct QueuedSubHitEvent subHit;
@@ -1229,6 +1238,8 @@ void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \
     (B_USE_FROSTBITE ? STATUS_ICON(battler, frostbite: isFrostbite) : STATUS_ICON(battler, freeze: isFrostbite))
 
+#define ITEM_POPUP(battler, ...) QueueItem(__LINE__, battler, (struct ItemEventContext) { __VA_ARGS__ })
+
 #define SWITCH_OUT_MESSAGE(name) ONE_OF {                                         \
                                      MESSAGE(name ", that's enough! Come back!"); \
                                      MESSAGE(name ", come back!");                \
@@ -1259,6 +1270,11 @@ struct EffectivenessEventContext
 struct AbilityEventContext
 {
     enum Ability ability;
+};
+
+struct ItemEventContext
+{
+    enum Item item;
 };
 
 struct AnimationEventContext
@@ -1342,6 +1358,7 @@ void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
 void QueueCatchingChance(u32 sourceLine, u32 *captureAdress);
 void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext);
+void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext);
 
 /* Then */
 
