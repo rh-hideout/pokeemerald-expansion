@@ -6501,19 +6501,27 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         .certain = (battlerAtk == battlerDef),
     };
 
-    cv.abilities[battlerAtk] = gAiLogicData->abilities[battlerAtk];
-    cv.holdEffects[battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
-
-    if (battlerAtk != battlerDef)
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
-        cv.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
-        cv.abilities[battlerDef] = AI_GetMoldBreakerSanitizedAbility(
-                                        battlerAtk,
-                                        cv.abilities[battlerAtk],
-                                        gAiLogicData->abilities[battlerDef],
-                                        cv.holdEffects[battlerDef],
-                                        move
-                                    );
+        cv.abilities[battler] = gAiLogicData->abilities[battler];
+        cv.holdEffects[battler] = gAiLogicData->holdEffects[battler];
+    }
+
+    if (!IsBattlerAlly(battlerAtk, battlerDef))
+    {
+        for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+        {
+            if (IsBattlerAlly(battlerDef, battler))
+            {
+                cv.abilities[battler] = AI_GetMoldBreakerSanitizedAbility(
+                                            battlerAtk,
+                                            cv.abilities[battlerAtk],
+                                            gAiLogicData->abilities[battler],
+                                            cv.holdEffects[battler],
+                                            move
+                                        );
+            }
+        }
     }
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
