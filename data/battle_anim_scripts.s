@@ -7918,7 +7918,7 @@ gBattleAnimMove_WaterShuriken::
 gBattleAnimMove_MysticalFire::
 	call SetPsychicBackground
 	setalpha 8, 8
-	playse 177
+	playse SE_M_SELF_DESTRUCT
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_ATTACKER, 1, 0, 10, 1
 	blend_color_cycle selector=F_PAL_ATTACKER, delay=0, num_blends=2, initial_blend_y=0, target_blend_y=8, color=RGB_WHITE
 	waitforvisualfinish
@@ -7939,7 +7939,7 @@ gBattleAnimMove_MysticalFire::
 	createsprite gLargeFlameScatterSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 30, 1, -2
 	delay 1
 	createsprite gLargeFlameScatterSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 30, 3, 1
-	playse 140
+	playse SE_M_MEGA_KICK
 	waitforvisualfinish
 	call UnsetPsychicBg
 	end
