@@ -371,16 +371,12 @@ static void AnimTask_AnimateGustTornadoPalette_Step(u8 taskId)
     if (gTasks[taskId].data[10]++ == gTasks[taskId].data[1])
     {
         gTasks[taskId].data[10] = 0;
-
         u32 palOffset = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_GUST));
-        u32 temp = gPlttBufferFaded[palOffset + 8];
+        u16 *palPtr = &gPlttBufferFaded[palOffset];
 
-        for (u32 i = 7; i > 0; i--)
-        {
-            gPlttBufferFaded[palOffset + 1 + i] = gPlttBufferFaded[palOffset + i];
-        }
-
-        gPlttBufferFaded[palOffset + 1] = temp;
+        u32 temp = palPtr[8];
+        memmove(&palPtr[2], &palPtr[1], PLTT_SIZEOF(7));
+        palPtr[1] = temp;
     }
 
     if (--gTasks[taskId].data[0] == 0)
