@@ -2916,14 +2916,6 @@ static bool32 TryDancer(void)
     return FALSE;
 }
 
-static bool32 ShouldCommanderCancelPendingGimmick(enum BattlerId battler)
-{
-    enum Gimmick selectedGimmick = gBattleStruct->gimmick.usableGimmick[battler];
-
-    return (gBattleStruct->gimmick.toActivate & (1u << battler))
-        && (selectedGimmick == GIMMICK_MEGA || selectedGimmick == GIMMICK_TERA);
-}
-
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -4655,7 +4647,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
                 gBattleStruct->battlerState[partner].commanderSpecies = gBattleMons[battler].species;
                 gBattleMons[battler].volatiles.semiInvulnerable = STATE_COMMANDER;
-                if (ShouldCommanderCancelPendingGimmick(battler))
+                if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
                     gBattleStruct->gimmick.toActivate &= ~(1u << battler);
                 if (gBattleMons[battler].volatiles.confusionTurns > 0 && !gBattleMons[battler].volatiles.infiniteConfusion)
                     gBattleMons[battler].volatiles.confusionTurns--;

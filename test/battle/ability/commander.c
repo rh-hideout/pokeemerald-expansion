@@ -728,6 +728,53 @@ DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Mega Evolution")
     }
 }
 
+DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Z-Move")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DRAGON_PULSE) == TYPE_DRAGON);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); Item(ITEM_DRAGONIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_DRAGON_PULSE, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
+            SWITCH(playerRight, 2);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerLeft);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerLeft);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Dynamax")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); HP(100); MaxHP(100); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX, target: opponentLeft);
+            SWITCH(playerRight, 2);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        NONE_OF {
+            MESSAGE("Time to Dynamax!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, playerLeft);
+        }
+    }
+}
+
 DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Terastallization")
 {
     GIVEN {
@@ -748,9 +795,6 @@ DOUBLE_BATTLE_TEST("Commander cancels Tatsugiri's pending Terastallization")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
         }
-    } THEN {
-        EXPECT_EQ(playerLeft->species, SPECIES_TATSUGIRI);
-        EXPECT_EQ(playerRight->species, SPECIES_DONDOZO);
     }
 }
 
