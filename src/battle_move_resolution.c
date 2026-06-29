@@ -3729,12 +3729,13 @@ static bool32 HasAnyBattlerQueuedSwitch(void)
     return FALSE;
 }
 
-static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler)
+static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum BattleMoveEffects moveEffect)
 {
     if (!IsBattlerAlive(redCardBattler)
      || !IsBattlerAlive(battlerAtk)
      || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
+     || moveEffect == EFFECT_FUTURE_SIGHT
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
 
@@ -3754,9 +3755,10 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
     return TRUE;
 }
 
-static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
+static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler, enum BattleMoveEffects moveEffect)
 {
     if (!IsBattlerTurnDamaged(ejectButtonBattler, EXCLUDING_SUBSTITUTES)
+     || moveEffect == EFFECT_FUTURE_SIGHT
      || HasAnyBattlerQueuedSwitch()
      || IsPursuitTargetSet()
      || gBattleMons[ejectButtonBattler].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
@@ -3786,11 +3788,11 @@ static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
         switch (cv->holdEffects[battler])
         {
         case HOLD_EFFECT_EJECT_BUTTON:
-            if (TryEjectButton(cv->battlerAtk, battler))
+            if (TryEjectButton(cv->battlerAtk, battler, cv->moveEffect))
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         case HOLD_EFFECT_RED_CARD:
-            if (TryRedCard(cv->battlerAtk, battler))
+            if (TryRedCard(cv->battlerAtk, battler, cv->moveEffect))
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         default:
