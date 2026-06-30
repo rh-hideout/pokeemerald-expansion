@@ -226,3 +226,61 @@ SINGLE_BATTLE_TEST("Mirror Armor does not trigger if the user is behind a Substi
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Mirror Armor reflects stat drops triggered by a damaging move")
+{
+    GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_ICY_WIND, speed: -1);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ICY_WIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Mirror Armor does not trigger ally's Defiant")
+{
+    GIVEN {
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_DEFIANT); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FAKE_TEARS, target: playerLeft); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_TEARS, playerRight);
+        ABILITY_POPUP(playerLeft, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        NOT ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Armor does not does not reflect Sticky Web stat drops (Gen9+)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STICKY_WEB); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+    }
+}

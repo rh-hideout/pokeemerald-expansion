@@ -1146,34 +1146,6 @@ static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
     return FALSE;
 }
 
-bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability)
-{
-    enum BattleSide side = GetBattlerSide(battler);
-
-    if (gBattleStruct->ignoreDefiant)
-        return FALSE;
-
-    switch (ability)
-    {
-    case ABILITY_DEFIANT:
-        if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ability))
-            return FALSE;
-        break;
-    case ABILITY_COMPETITIVE:
-        if (CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_EQUAL, ability))
-            return FALSE;
-        break;
-    default:
-        return FALSE;
-    }
-
-    if (GetConfig(B_DEFIANT_STICKY_WEB) >= GEN_9 || !gBattleScripting.stickyWebStatDrop)
-        return TRUE;
-
-    // only activate Defiant/Competitive if Web was setup by foe
-    return gSideTimers[side].stickyWebBattlerSide != side;
-}
-
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
 {
     switch (stringId)

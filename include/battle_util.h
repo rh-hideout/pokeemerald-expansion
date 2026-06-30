@@ -183,7 +183,6 @@ void MarkBattlerForControllerExec(enum BattlerId battler);
 void MarkBattlerReceivedLinkData(enum BattlerId battler);
 void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
-bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(enum BattlerId battler);
