@@ -292,7 +292,7 @@ Most formats are supported for conversion, but for simplicity's sake, we're gonn
 Now, let's copy the file to the `sound/direct_sound_samples/cries` folder.
 Once that's done, let's run the following command:
 ```
-ffmpeg -i sound/direct_sound_samples/cries/mewthree.mp3 -c:a pcm_s8 -ac 1 -ar 13379 sound/direct_sound_samples/cries/mewthree.aif
+ffmpeg -i sound/direct_sound_samples/cries/mewthree.mp3 -c:a pcm_u8 -ac 1 -ar 13379 sound/direct_sound_samples/cries/mewthree.wav
 ```
 This will convert your audio file to .aif, which is what's read by the compiler.
 
