@@ -965,7 +965,10 @@ BattleScript_FinalGambit::
 	return
 
 BattleScript_TryHitSwitchTarget::
+	savetarget
+	copybyte gBattlerTarget, gEffectBattler
 	forcerandomswitch BattleScript_HitSwitchTargetForceRandomSwitchFailed
+	restoretarget
 	return
 
 BattleScript_HitSwitchTargetDynamaxed::
@@ -3810,7 +3813,7 @@ BattleScript_PrintMonIsRootedRet::
 	return
 
 BattleScript_KnockedOff::
-	playanimation BS_TARGET, B_ANIM_ITEM_KNOCKOFF
+	playanimation BS_EFFECT_BATTLER, B_ANIM_ITEM_KNOCKOFF
 	printstring STRINGID_PKMNKNOCKEDOFF
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -4861,12 +4864,16 @@ BattleScript_FlashFireBoost::
 	return
 
 BattleScript_AbilityPreventsPhasingOut::
+	savetarget
+	copybyte gEffectBattler, gBattlerTarget
+	copybyte gBattlerAbility, gBattlerTarget
 	call BattleScript_AbilityPreventsPhasingOutRet
+	restoretarget
 	goto BattleScript_MoveEnd
 
 BattleScript_AbilityPreventsPhasingOutRet::
 	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUpTarget
+	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNANCHORSITSELFWITH
 	waitmessage B_WAIT_TIME_LONG
 	return
