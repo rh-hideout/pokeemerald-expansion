@@ -1,5 +1,5 @@
 #ifndef GUARD_CONSTANTS_BXPY_H
-#define GUARD_CONSTANTS_BXPY_H                     
+#define GUARD_CONSTANTS_BXPY_H
 
 enum BXPYBattleTypes
 {
@@ -365,5 +365,18 @@ enum BXPYSelected
 #define BXPY_TYPE_FRAME_DARK                      (TYPE_DARK               * BXPY_TYPE_FRAME_SIZE)
 #define BXPY_TYPE_FRAME_FAIRY                     (TYPE_FAIRY              * BXPY_TYPE_FRAME_SIZE)
 #define BXPY_TYPE_FRAME_STELLAR                   (TYPE_STELLAR            * BXPY_TYPE_FRAME_SIZE)
+
+#define BXPY_X_POSITION_OFFSET_ENEMY                     144
+#if BXPY_SKIN == GEN_CHAMPIONS
+#define BXPY_Y_POSITION_INITAL_PLAYER                    12
+#define BXPY_Y_POSITION_OFFSET_PLAYER                    24
+#define BXPY_Y_POSITION_INITAL_ENEMY                     19
+#define BXPY_Y_POSITION_OFFSET_ENEMY                     22
+#else
+#define BXPY_Y_POSITION_INITAL_PLAYER                    12
+#define BXPY_Y_POSITION_OFFSET_PLAYER                    24
+#define BXPY_Y_POSITION_INITAL_ENEMY                     20
+#define BXPY_Y_POSITION_OFFSET_ENEMY                     22
+#endif
 
 #endif //GUARD_CONSTANTS_BXPY_H

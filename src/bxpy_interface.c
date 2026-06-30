@@ -917,13 +917,13 @@ static void SpriteCB_BXPYCursor(struct Sprite *sprite)
     if (BXPY_IsCursorOnEnemy())
     {
         u32 enemyPos = position - BXPY_GetBringSize();
-        sprite->y = 16 + (enemyPos * 23);
-        sprite->x2 = (gSineTable[(u8)sprite->data[0]] / 128) + 144;
+        sprite->y = BXPY_Y_POSITION_INITAL_ENEMY + (enemyPos * BXPY_Y_POSITION_OFFSET_ENEMY);
+        sprite->x2 = (gSineTable[(u8)sprite->data[0]] / 128) + BXPY_X_POSITION_OFFSET_ENEMY;
         sprite->data[0] += 8;
     }
     else
     {
-        sprite->y = 15 + (position * 23);
+        sprite->y = BXPY_Y_POSITION_INITAL_PLAYER + (position * BXPY_Y_POSITION_OFFSET_PLAYER);
         sprite->x2 = gSineTable[(u8)sprite->data[0]] / 128;
         sprite->data[0] += 8;
     }
@@ -937,7 +937,7 @@ static void BXPY_CreateCursorSprite(void)
     TempSpriteTemplate.callback = SpriteCB_BXPYCursor;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
-    u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, 16, 0);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, BXPY_Y_POSITION_INITAL_PLAYER, 0);
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
     gSprites[spriteId].invisible = FALSE;
