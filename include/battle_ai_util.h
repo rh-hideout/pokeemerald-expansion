@@ -80,15 +80,34 @@ static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimit
         || moveLimitations & 1u << moveIndex;
 }
 
+struct StatConsiderationContext
+{
+    enum BattlerId battlerMoveUser;
+    enum BattlerId battlerMoveTarget;
+    enum BattlerId battlerAtk;
+    enum BattlerId battlerDef;
+    enum Move statMove;
+    u8 statMoveIndex;
+    u8 atkMoveIndex;
+    enum ChangeStatContext context;
+    bool8 isTargetingPartner:1;
+    u8 padding:7;
+    enum Move atkMove;
+};
+
 typedef bool32 (*MoveFlag)(enum Move move);
 
 bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
+bool32 AI_WouldBeFaster(struct StatConsiderationContext *ctx, enum Move defMove, enum ConsiderPriority considerPriority);
+bool32 AI_WouldBeSlower(struct StatConsiderationContext *ctx, enum Move defMove, enum ConsiderPriority considerPriority);
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(enum BattlerId battler);
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move);
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
+u32 AI_GetDamageWithStatChanges(struct StatConsiderationContext *ctx, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
+enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, enum BattlerId battlerStatDef, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);
@@ -325,6 +344,7 @@ bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount);
 bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move);
 bool32 CanMoveBeBouncedBack(enum BattlerId battler, enum Move move);
 bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+bool32 AI_CanMoveTargetAffectAlly(enum MoveTarget target);
 
 // Switching and item helpers
 bool32 AiExpectsToFaintPlayer(enum BattlerId battler);
