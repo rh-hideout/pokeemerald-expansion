@@ -120,7 +120,7 @@ static const u16 sStarterMon[STARTER_MON_COUNT] =
     FIRE_STARTER,
     WATER_STARTER,
 };
-
+static bool8 sStarterNightForm = TRUE;
 static const struct BgTemplate sBgTemplates[3] =
 {
     {
@@ -349,9 +349,25 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
-    if (chosenStarterId > STARTER_MON_COUNT)
+    if (chosenStarterId >= STARTER_MON_COUNT)
         chosenStarterId = 0;
-    return sStarterMon[chosenStarterId];
+
+    switch (chosenStarterId)
+    {
+        case 0:
+            return sStarterNightForm
+                ? SPECIES_GROWLITHE
+                : SPECIES_GROWLITHE_HISUI;
+
+        case 1:
+            return SPECIES_SOLOSIS;
+
+        case 2:
+            return SPECIES_DREEPY;
+
+        default:
+            return sStarterMon[chosenStarterId];
+    }
 }
 
 static void VblankCB_StarterChoose(void)
