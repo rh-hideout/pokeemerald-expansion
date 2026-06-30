@@ -7603,7 +7603,7 @@ gBattleAnimMove_PlayRough::
 	waitforvisualfinish
 	delay 13
 	stopsound
-	clearmonbg 3
+	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	waitforvisualfinish
 	end
@@ -8893,7 +8893,7 @@ gBattleAnimMove_PrecipiceBlades::
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
-	fadetobg 21
+	fadetobg BG_FISSURE
 	waitbgfadeout
 	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
 	createvisualtask AnimTask_HorizontalShake, 5, (MAX_BATTLERS_COUNT + 1), 10, 5
@@ -10870,7 +10870,7 @@ gBattleAnimMove_ShadowBone::
 	waitforvisualfinish
 	restorebg
 	waitbgfadein
-	clearmonbg 3
+	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
 
