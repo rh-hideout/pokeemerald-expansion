@@ -56,7 +56,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "fishing.h"
-#include "bxpy.h" // bringXpickY
+#include "bxpy.h"
 
 enum TransitionType
 {
@@ -1407,13 +1407,12 @@ void BattleSetup_StartTrainerBattle_Debug(void)
 
 static void SaveChangesToPlayerParty(void)
 {
-    // Start bringXpickY
     bool32 isSkyBattle = (B_FLAG_SKY_BATTLE != 0 && FlagGet(B_FLAG_SKY_BATTLE));
     bool32 isBXPY = FlagGet(B_FLAG_BXPY) && (BXPY_RETAIN_CHANGES == TRUE);
 
     if (!isSkyBattle && !isBXPY)
         return;
-    // End bringXpickY
+
     u8 i = 0, j = 0;
     u8 participatedPokemon = VarGet(B_VAR_SKY_BATTLE);
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1428,21 +1427,16 @@ static void SaveChangesToPlayerParty(void)
 
 static void HandleBattleVariantEndParty(void)
 {
-    // Start bringXpickY
-    // if (B_FLAG_SKY_BATTLE == 0 || !FlagGet(B_FLAG_SKY_BATTLE))
     bool32 isSkyBattle = (B_FLAG_SKY_BATTLE != 0 && FlagGet(B_FLAG_SKY_BATTLE));
     bool32 isBXPY = FlagGet(B_FLAG_BXPY);
 
     if (!isSkyBattle && !isBXPY)
-    // End bringXpickY
         return;
 
     SaveChangesToPlayerParty();
     LoadPlayerParty();
-    // Start bringXpickY
     BXPY_TryHealAfterBattle();
     FlagClear(B_FLAG_BXPY);
-    // End bringXpickY
     FlagClear(B_FLAG_SKY_BATTLE);
 }
 
@@ -2155,7 +2149,6 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
 
-// Start bringXpickY
 void BattleSetup_StartBXPYBattle(u32 battleFlags)
 {
     FlagSet(B_FLAG_BXPY);
@@ -2164,4 +2157,3 @@ void BattleSetup_StartBXPYBattle(u32 battleFlags)
     DoTrainerBattle();
     ScriptContext_Stop();
 }
-// End bringXpickY

@@ -62,7 +62,7 @@
 #include "window.h"
 #include "list_menu.h"
 #include "malloc.h"
-#include "bxpy.h" // bringXpickY
+#include "bxpy.h"
 #include "battle.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
@@ -3428,7 +3428,6 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
     return FALSE;
 }
 
-// Start bringXpickY
 bool8 ScrCmd_bringxpicky(struct ScriptContext *ctx)
 {
     enum BXPYBattleTypes battleType = ScriptReadHalfword(ctx);
@@ -3445,4 +3444,3 @@ bool8 ScrCmd_bringxpicky(struct ScriptContext *ctx)
     BXPY_Init(battleType, bringSize, pickSize, trainerA, loseTextA, trainerB, loseTextB, partner);
     return FALSE;
 }
-// End bringXpickY

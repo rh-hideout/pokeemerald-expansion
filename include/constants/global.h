@@ -30,7 +30,7 @@
 #include "config/pokemon.h"
 #include "config/summary_screen.h"
 #include "config/wild_encounter.h"
-#include "config/bxpy.h" // bringXpickY
+#include "config/bxpy.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.

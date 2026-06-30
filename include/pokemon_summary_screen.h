@@ -32,7 +32,7 @@ enum PokemonSummaryScreenMode
     SUMMARY_MODE_SELECT_MOVE,
     SUMMARY_MODE_RELEARNER_BATTLE, // returning from move relearner initiated from battle moves page
     SUMMARY_MODE_RELEARNER_CONTEST, // returning from move relearner initiated from contest moves page
-    SUMMARY_MODE_BXPY, // bringXpickY
+    SUMMARY_MODE_BXPY,
 };
 
 enum PokemonSummaryScreenPage
@@ -50,7 +50,6 @@ enum PokemonSummarySkillsMode
     SUMMARY_SKILLS_MODE_IVS,
     SUMMARY_SKILLS_MODE_EVS,
 };
-// Start bringXpickY
 #define MOVE_SELECTOR_SPRITES_COUNT 10
 #define TYPE_ICON_SPRITE_COUNT (MAX_MON_MOVES + 1)
 enum
@@ -63,7 +62,6 @@ enum
     SPRITE_ARR_ID_MOVE_SELECTOR2 = SPRITE_ARR_ID_MOVE_SELECTOR1 + MOVE_SELECTOR_SPRITES_COUNT,
     SPRITE_ARR_ID_COUNT = SPRITE_ARR_ID_MOVE_SELECTOR2 + MOVE_SELECTOR_SPRITES_COUNT
 };
-// End bringXpickY
 
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
 void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), u16 newMove);

@@ -2891,7 +2891,7 @@
 	.2byte \localIdTwo
 	.endm
 
-	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found. 
+	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found.
 	.macro getoverworldwildencounterspecies var:req, localId=VAR_LAST_TALKED
 	callnative SetOverworldObjectSpecies, requests_effects=1
 	.2byte \var
@@ -3013,7 +3013,6 @@
 	call EventScript_BrailleCursorWaitButton
 	.endm
 
-	@ Start bxpy
 	@ Credits: psf, Pawkkie, Linathan, Montblanc
 	@ Opens a UI that has the player choose a number of Pokemon (bringSize) in their party
 	@ to battle against a trainer(s) that will also pick the same number of Pokemon to battle.
@@ -3079,4 +3078,3 @@
 	.2byte \partnerId
 	waitstate
 	.endm
-	@ End bxpy

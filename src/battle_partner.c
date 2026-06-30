@@ -21,10 +21,7 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 
 #define STEVEN_OTID 61226
 
-// Start bringXpickY
-//static void FillPartnerParty(u16 trainerId)
 void FillPartnerParty(u16 trainerId)
-// End bringXpickY
 {
     s32 i, j, k;
     u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;
