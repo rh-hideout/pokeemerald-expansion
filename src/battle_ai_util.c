@@ -44,7 +44,7 @@ static bool32 AI_IsDoubleSpreadMove(enum BattlerId battlerAtk, enum Move move)
     u32 numOfTargets = 0;
     enum MoveTarget moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
-    if (!IsSpreadMove(moveTargetType))
+    if (!IsDoubleBattle() || !IsSpreadMove(moveTargetType))
         return FALSE;
 
     for (enum BattlerId battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
@@ -712,12 +712,33 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
         maximum = minimum = median = random;
         gBattleStruct->beatUpSlot = 0;
     }
-    else if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
+    else if (strikeCount > 1)
     {
-        median *= strikeCount;
-        minimum *= strikeCount;
-        maximum *= strikeCount;
-        random *= strikeCount;
+        bool32 multiplyDamage = FALSE;
+        if (IsDoubleBattle() && AI_GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART)
+        {
+            u32 originalTarget = ctx->battlerDef;
+            ctx->battlerDef = BATTLE_PARTNER(ctx->battlerAtk);
+
+            if (!IsDamageMoveUnusable(ctx) || CalculateMoveDamageVars(ctx) == 0) // Checks if any damage can be done
+                multiplyDamage = TRUE;
+            else
+                gAiLogicData->dragonDartsHitsBothTarget |= 1u << ctx->battlerAtk;
+
+            ctx->battlerDef = originalTarget;
+        }
+        else if (effect != EFFECT_TRIPLE_KICK)
+        {
+            multiplyDamage = TRUE;
+        }
+
+        if (multiplyDamage)
+        {
+            median *= strikeCount;
+            minimum *= strikeCount;
+            maximum *= strikeCount;
+            random *= strikeCount;
+        }
     }
     else if (IsMultiHitMove(ctx->move))
     {
@@ -1400,12 +1421,26 @@ s32 AI_WhoStrikesFirst(enum BattlerId battlerAI, enum BattlerId battler, enum Mo
     return AI_IS_SLOWER;
 }
 
+static bool32 DragonDartsHitsBothTargets(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    if (AI_GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
+        return FALSE;
+    if (gAiLogicData->dragonDartsHitsBothTarget & 1u << battlerAtk)
+        return TRUE;
+    return FALSE;
+}
+
 bool32 CanEndureHit(enum BattlerId battler, enum BattlerId battlerTarget, enum Move move)
 {
-    if (!AI_BattlerAtMaxHp(battlerTarget) || IsMultiHitMove(move) || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
+    if (!AI_BattlerAtMaxHp(battlerTarget) || IsMultiHitMove(move))
         return FALSE;
-    if (GetMoveStrikeCount(move) > 1 && !(AI_GetBattlerMoveTargetType(battler, move) == TARGET_SMART && !HasTwoOpponents(battler)))
+
+    if (gAiLogicData->abilities[battler] == ABILITY_PARENTAL_BOND && AI_IsDoubleSpreadMove(battler, move))
         return FALSE;
+
+    if (GetMoveStrikeCount(move) > 1 && !DragonDartsHitsBothTargets(battler, battlerTarget, move))
+        return FALSE;
+
     if (gAiLogicData->holdEffects[battlerTarget] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
 
