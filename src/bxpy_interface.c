@@ -423,9 +423,6 @@ static const struct BgTemplate sBXPYBgTemplates[] =
 #include "data/bxpy_graphics_emerald.h"
 #endif
 
-static const u16 bxpySexTiles[] = INCBIN_U16("graphics/bxpy/sex.4bpp");
-static const u16 bxpyTypesTiles[] = INCBIN_U16("graphics/bxpy/types.4bpp");
-static const u16 bxpyHitPointsTiles[] = INCBIN_U16("graphics/bxpy/hp.4bpp");
 static const u16 bxpyTypesPalette[] = INCBIN_U16("graphics/bxpy/types.gbapal");
 
 static const struct {
@@ -472,7 +469,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     [BXPY_SPRITEID_PLAYER_SEX_0] =
     {
         {
-            .data = bxpySexTiles,
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/sex.4bpp"),
             .size = TILE_OFFSET_4BPP(12),
             .tag = BXPY_SPRITETAG_SEX,
         },
@@ -528,7 +525,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     [BXPY_SPRITEID_PLAYER_HP_0] =
     {
         {
-            .data = bxpyHitPointsTiles,
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/hp.4bpp"),
             .size = TILE_OFFSET_4BPP(128),
             .tag = BXPY_SPRITETAG_HP,
         },
@@ -548,7 +545,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     [BXPY_SPRITEID_ENEMY_TYPE_0_MON_0] =
     {
         {
-            .data = bxpyTypesTiles,
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/types.4bpp"),
             .size = TILE_OFFSET_4BPP(84),
             .tag = BXPY_SPRITETAG_TYPE,
         },
