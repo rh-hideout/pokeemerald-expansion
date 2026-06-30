@@ -92,6 +92,7 @@ SINGLE_BATTLE_TEST("Ice Spinner removes terrain if user faints during attack exe
 SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched out due to Red Card")
 {
     GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);

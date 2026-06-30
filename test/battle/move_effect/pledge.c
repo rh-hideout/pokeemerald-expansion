@@ -729,7 +729,7 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
         OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, TRUE)); }
     } SCENE {
         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
         MESSAGE("Wynaut couldn't move because it's paralyzed!");
@@ -751,7 +751,7 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
         OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, TRUE)); }
     } SCENE {
         MESSAGE("Wynaut couldn't move because it's paralyzed!");
         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
