@@ -423,6 +423,146 @@ static const struct BgTemplate sBXPYBgTemplates[] =
 #include "data/bxpy_graphics_emerald.h"
 #endif
 
+static const u16 bxpySexTiles[] = INCBIN_U16("graphics/bxpy/sex.4bpp");
+static const u16 bxpyTypesTiles[] = INCBIN_U16("graphics/bxpy/types.4bpp");
+static const u16 bxpyHitPointsTiles[] = INCBIN_U16("graphics/bxpy/hp.4bpp");
+static const u16 bxpyTypesPalette[] = INCBIN_U16("graphics/bxpy/types.gbapal");
+
+static const struct {
+    const u32 *tiles;
+    const u32 *tilemap;
+} sBXPY_BackgroundGraphics[BG_BXPY_COUNT] =
+{
+    [BG0_BXPY_TEXT] =
+    {
+        .tiles = NULL,
+        .tilemap = NULL,
+    },
+    [BG1_BXPY_INFO] =
+    {
+        .tiles = NULL,
+        .tilemap = NULL,
+    },
+    [BG2_BXPY_PARTY_BG] =
+    {
+        .tiles = bxpyPartyBgTiles,
+        .tilemap = bxpyPartyBgTilemap,
+    },
+    [BG3_BXPY_WALLPAPER] =
+    {
+        .tiles = bxpyWallpaperTiles,
+        .tilemap = bxpyWallpaperTilemap,
+    },
+};
+
+static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
+{
+    [BXPY_SPRITEID_CURSOR] =
+    {
+        {
+            .data = bxpyCursorTiles,
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_CURSOR,
+        },
+        {
+            .data = bxpyCursorPalette,
+            .tag = BXPY_PALTAG_SPRITE,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SEX_0] =
+    {
+        {
+            .data = bxpySexTiles,
+            .size = TILE_OFFSET_4BPP(12),
+            .tag = BXPY_SPRITETAG_SEX,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_0] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_0,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_1] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_1,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_2] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_2,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_3] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_3,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_4] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_4,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_5] =
+    {
+        {
+            .data = bxpySelectedTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_5,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_HP_0] =
+    {
+        {
+            .data = bxpyHitPointsTiles,
+            .size = TILE_OFFSET_4BPP(128),
+            .tag = BXPY_SPRITETAG_HP,
+        },
+    },
+    [BXPY_SPRITEID_HIGHLIGHT_LEFT] =
+    {
+        {
+            .data = bxpyHighlightTiles,
+            .size = TILE_OFFSET_4BPP(96),
+            .tag = BXPY_SPRITETAG_HIGHLIGHT,
+        },
+        {
+            .data = bxpyHighlightPalette,
+            .tag = BXPY_PALTAG_HIGHLIGHT,
+        },
+    },
+    [BXPY_SPRITEID_ENEMY_TYPE_0_MON_0] =
+    {
+        {
+            .data = bxpyTypesTiles,
+            .size = TILE_OFFSET_4BPP(84),
+            .tag = BXPY_SPRITETAG_TYPE,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0] =
+    {
+        {
+            .data = bxpySelectedTailTiles,
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_TAIL,
+        },
+    },
+};
+
 static const struct WindowTemplate sBXPYWindows[] =
 {
     [WIN_BXPY_PLAYER_INFO] =
@@ -488,25 +628,25 @@ const u8 sBXPYWindowFontColors[BXPY_FONT_COLOR_COUNT][3] =
     {
         BXPY_TEXT_PALETTE_TRANSPERANT,
         BXPY_TEXT_PALETTE_WHITE,
-        BXPY_TEXT_PALETTE_PURPLE,
+        BXPY_TEXT_PALETTE_PLAYER_HIGHLIGHT,
     },
     [BXPY_FONT_COLOR_PLAYER_SELECTED] =
     {
         BXPY_TEXT_PALETTE_TRANSPERANT,
         BXPY_TEXT_PALETTE_BLACK,
-        BXPY_TEXT_PALETTE_YELLOW,
+        BXPY_TEXT_PALETTE_PLAYER_SELECTED_HIGHLIGHT,
     },
     [BXPY_FONT_COLOR_ENEMY_NAME] =
     {
         BXPY_TEXT_PALETTE_TRANSPERANT,
         BXPY_TEXT_PALETTE_WHITE,
-        BXPY_TEXT_PALETTE_RED,
+        BXPY_TEXT_PALETTE_ENEMY_HIGHLIGHT,
     },
     [BXPY_FONT_COLOR_ENEMY] =
     {
         BXPY_TEXT_PALETTE_TRANSPERANT,
         BXPY_TEXT_PALETTE_WHITE,
-        BXPY_TEXT_PALETTE_RED,
+        BXPY_TEXT_PALETTE_ENEMY_HIGHLIGHT,
     },
     [BXPY_FONT_COLOR_HELP_BAR] =
     {
@@ -629,9 +769,9 @@ static void LoadGraphics(void)
 static void LoadBXPYPalettes(void)
 {
     LoadMonIconPalettes();
-    LoadPalette(bxpyPartyBackgroundPalette, BXPY_PALETTE_PARTYBG_SLOT, PLTT_SIZE_4BPP*2);
+    LoadPalette(bxpyPartyBgPalette, BXPY_PALETTE_PARTYBG_SLOT, PLTT_SIZE_4BPP*2);
     LoadPalette(bxpyWallpaperPalette, BXPY_PALETTE_WALLPAPER_SLOT, PLTT_SIZE_4BPP);
-    LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
+    LoadPalette(bxpyTextPalettes, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
     LoadPalette(bxpyTypesPalette, BXPY_PALETTE_TYPES_SLOT, PLTT_SIZE_4BPP*3);
 }
 
