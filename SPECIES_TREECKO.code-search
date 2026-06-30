@@ -1,0 +1,108 @@
+# Query: SPECIES_TREECKO
+# ContextLines: 1
+
+22 results - 16 files
+
+data/scripts/debug.inc:
+  19  	setvar VAR_ROUTE101_STATE, 3
+  20: 	givemon SPECIES_TREECKO, 20, ITEM_NONE
+  21  	givemon SPECIES_TORCHIC, 20, ITEM_NONE
+
+docs/changelogs/1.8.x/1.8.0.md:
+  282          @ VAR_RESULT is one of Treecko, Torchic, or Mudkip
+  283:         randomelement SPECIES_TREECKO, SPECIES_TORCHIC, SPECIES_MUDKIP
+  284          @ Gives a random one of Treecko, Torchic, or Mudkip.
+
+docs/tutorials/how_to_random_mon_generator.md:
+   77  {
+   78:     SPECIES_TREECKO,
+   79      SPECIES_TORCHIC,
+
+  282  {
+  283:     SPECIES_TREECKO,
+  284      SPECIES_TORCHIC,
+
+include/constants/species.h:
+  262      SPECIES_CELEBI = 251,
+  263:     SPECIES_TREECKO = 252,
+  264      SPECIES_GROVYLE = 253,
+
+src/starter_choose.c:
+  112  
+  113: #define GRASS_STARTER (IS_FRLG ? SPECIES_BULBASAUR  : SPECIES_TREECKO)
+  114  #define FIRE_STARTER  (IS_FRLG ? SPECIES_CHARMANDER : SPECIES_TORCHIC)
+
+src/wild_encounter_ow.c:
+  513      case OBJ_EVENT_GFX_TREECKO_DOLL:
+  514:         speciesId = SPECIES_TREECKO;
+  515          break;
+
+src/data/bard_music/pokemon.h:
+  2022      },
+  2023:     [SPECIES_TREECKO] = {
+  2024          { .songId = PHONEME_ID(PH_FLEECE_BLEND) },
+
+src/data/battle_frontier/battle_frontier_mons.h:
+  755      [FRONTIER_MON_TREECKO] = {
+  756:         .species = SPECIES_TREECKO,
+  757          .moves = {MOVE_BULLET_SEED, MOVE_AERIAL_ACE, MOVE_QUICK_ATTACK, MOVE_DOUBLE_TEAM},
+
+src/data/easy_chat/easy_chat_group_pokemon.h:
+  180      SPECIES_TRAPINCH,
+  181:     SPECIES_TREECKO,
+  182      SPECIES_TROPIUS,
+
+src/data/pokemon/species_info/gen_3_families.h:
+  6  #if P_FAMILY_TREECKO
+  7:     [SPECIES_TREECKO] =
+  8      {
+
+test/battle/spread_moves.c:
+  402          OPPONENT(SPECIES_CHIKORITA);
+  403:         OPPONENT(SPECIES_TREECKO);
+  404      } WHEN {
+
+  418          PLAYER(SPECIES_CHIKORITA);
+  419:         PLAYER(SPECIES_TREECKO);
+  420          OPPONENT(SPECIES_WOBBUFFET);
+
+test/battle/ability/forewarn.c:
+  63          OPPONENT(SPECIES_WOBBUFFET);
+  64:         OPPONENT(SPECIES_TREECKO);
+  65          OPPONENT(SPECIES_TORCHIC);
+
+test/battle/ability/intimidate.c:
+  227          OPPONENT(SPECIES_WOBBUFFET);
+  228:         OPPONENT(SPECIES_TREECKO);
+  229          OPPONENT(SPECIES_TORCHIC);
+
+test/battle/ability/trace.c:
+  35          PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+  36:         OPPONENT(SPECIES_TREECKO) { HP(1); }
+  37          OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+
+test/battle/move_effect/instruct.c:
+  374          ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+  375:         PLAYER(SPECIES_TREECKO);
+  376          PLAYER(SPECIES_SCEPTILE);
+
+  400      GIVEN {
+  401:         PLAYER(SPECIES_TREECKO);
+  402          PLAYER(SPECIES_SCEPTILE);
+
+test/battle/move_effect/quash.c:
+   14          OPPONENT(SPECIES_TORCHIC) { Speed(20); }
+   15:         OPPONENT(SPECIES_TREECKO) { Speed(40); }
+   16      } WHEN {
+
+   33          OPPONENT(SPECIES_TORCHIC) { Speed(50); }
+   34:         OPPONENT(SPECIES_TREECKO) { Speed(40); }
+   35      } WHEN {
+
+   88          OPPONENT(SPECIES_TORCHIC) { Speed(speedLeft); }
+   89:         OPPONENT(SPECIES_TREECKO) { Speed(speedRight); }
+   90      } WHEN {
+
+  120          OPPONENT(SPECIES_TORCHIC) { Speed(10); }
+  121:         OPPONENT(SPECIES_TREECKO) { Speed(40); }
+  122      } WHEN {
