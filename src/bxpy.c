@@ -330,13 +330,12 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
     bool32 isMulti = BXPY_IsMultiBattle();
-    bool32 isHalf = (B_MULTI_HALF_TEAMS && isMulti);
 
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], isHalf, battleFlags);
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA]);
 
     if (isMulti == TRUE)
-        CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], isHalf, battleFlags);
+        CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB]);
 }
 
 void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSize)
