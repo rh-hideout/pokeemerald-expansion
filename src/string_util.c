@@ -344,8 +344,126 @@ u8 *ConvertIntToHexStringN(u8 *dest, s32 value, enum StringConvertMode mode, u8 
     return dest;
 }
 
-u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
+static bool8 TextConditionUsesSecondBranch(u8 conditionId)
 {
+    switch (conditionId)
+    {
+    case TEXT_CONDITION_CHECKGENDER:
+        return gSaveBlock2Ptr->playerGender == FEMALE;
+    default:
+        return FALSE;
+    }
+}
+
+static u8 GetExtCtrlCodeArgCountForPlaceholderExpansion(u8 code)
+{
+    switch (code)
+    {
+    case EXT_CTRL_CODE_RESET_FONT:
+    case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
+    case EXT_CTRL_CODE_WAIT_SE:
+    case EXT_CTRL_CODE_FILL_WINDOW:
+    case EXT_CTRL_CODE_JPN:
+    case EXT_CTRL_CODE_ENG:
+    case EXT_CTRL_CODE_PAUSE_MUSIC:
+    case EXT_CTRL_CODE_RESUME_MUSIC:
+    case EXT_CTRL_CODE_CONDITION_ELSE:
+    case EXT_CTRL_CODE_CONDITION_END:
+        return 0;
+    case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
+    case EXT_CTRL_CODE_TEXT_COLORS:
+        return 3;
+    case EXT_CTRL_CODE_PLAY_BGM:
+    case EXT_CTRL_CODE_PLAY_SE:
+        return 2;
+    default:
+        return 1;
+    }
+}
+
+static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
+{
+    const u8 *src = *srcPtr;
+    u8 i;
+    u8 argCount = GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
+
+    *dest++ = EXT_CTRL_CODE_BEGIN;
+    *dest++ = code;
+
+    for (i = 0; i < argCount; i++)
+        *dest++ = *src++;
+
+    *srcPtr = src;
+    return dest;
+}
+
+static void SkipExtCtrlCodeArgs(const u8 **srcPtr, u8 code)
+{
+    *srcPtr += GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
+}
+
+static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 stopAtEnd, u8 *stopCode)
+{
+    const u8 *src = *srcPtr;
+
+    for (;;)
+    {
+        u8 c = *src++;
+
+        switch (c)
+        {
+        case PLACEHOLDER_BEGIN:
+            src++;
+            break;
+        case EXT_CTRL_CODE_BEGIN:
+            c = *src++;
+
+            switch (c)
+            {
+            case EXT_CTRL_CODE_CONDITION:
+                {
+                    u8 branchStopCode = 0;
+
+                    src++;
+                    SkipPlaceholdersUntil(&src, TRUE, TRUE, &branchStopCode);
+                    if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                        SkipPlaceholdersUntil(&src, FALSE, TRUE, &branchStopCode);
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_ELSE:
+                if (stopAtElse)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return;
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_END:
+                if (stopAtEnd)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return;
+                }
+                break;
+            default:
+                SkipExtCtrlCodeArgs(&src, c);
+            }
+            break;
+        case EOS:
+            *stopCode = EOS;
+            *srcPtr = src;
+            return;
+        default:
+            break;
+        }
+    }
+}
+
+static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, bool8 stopAtElse, bool8 stopAtEnd, u8 *stopCode)
+{
+    const u8 *src = *srcPtr;
+
     for (;;)
     {
         u8 c = *src++;
@@ -357,34 +475,55 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
         case PLACEHOLDER_BEGIN:
             placeholderId = *src++;
             expandedString = GetExpandedPlaceholder(placeholderId);
-            dest = StringExpandPlaceholders(dest, expandedString);
+            dest = ExpandPlaceholdersUntil(dest, &expandedString, FALSE, FALSE, stopCode);
             break;
         case EXT_CTRL_CODE_BEGIN:
-            *dest++ = c;
             c = *src++;
-            *dest++ = c;
 
             switch (c)
             {
-            case EXT_CTRL_CODE_RESET_FONT:
-            case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
-            case EXT_CTRL_CODE_FILL_WINDOW:
-            case EXT_CTRL_CODE_JPN:
-            case EXT_CTRL_CODE_ENG:
-            case EXT_CTRL_CODE_PAUSE_MUSIC:
-            case EXT_CTRL_CODE_RESUME_MUSIC:
+            case EXT_CTRL_CODE_CONDITION:
+                {
+                    u8 branchStopCode = 0;
+                    bool8 useSecondBranch = TextConditionUsesSecondBranch(*src++);
+
+                    if (useSecondBranch)
+                    {
+                        SkipPlaceholdersUntil(&src, TRUE, TRUE, &branchStopCode);
+                        if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                            dest = ExpandPlaceholdersUntil(dest, &src, FALSE, TRUE, &branchStopCode);
+                    }
+                    else
+                    {
+                        dest = ExpandPlaceholdersUntil(dest, &src, TRUE, TRUE, &branchStopCode);
+                        if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                            SkipPlaceholdersUntil(&src, FALSE, TRUE, &branchStopCode);
+                    }
+                }
                 break;
-            case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-            case EXT_CTRL_CODE_TEXT_COLORS:
-                *dest++ = *src++;
-            case EXT_CTRL_CODE_PLAY_BGM:
-                *dest++ = *src++;
+            case EXT_CTRL_CODE_CONDITION_ELSE:
+                if (stopAtElse)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return dest;
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_END:
+                if (stopAtEnd)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return dest;
+                }
+                break;
             default:
-                *dest++ = *src++;
+                dest = CopyExtCtrlCode(dest, &src, c);
             }
             break;
         case EOS:
-            *dest = EOS;
+            *stopCode = EOS;
+            *srcPtr = src;
             return dest;
         case CHAR_PROMPT_SCROLL:
         case CHAR_PROMPT_CLEAR:
@@ -393,6 +532,15 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
             *dest++ = c;
         }
     }
+}
+
+u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
+{
+    u8 stopCode;
+
+    dest = ExpandPlaceholdersUntil(dest, &src, FALSE, FALSE, &stopCode);
+    *dest = EOS;
+    return dest;
 }
 
 u8 *StringBraille(u8 *dest, const u8 *src)
@@ -707,6 +855,9 @@ u8 GetExtCtrlCodeLength(u8 code)
         [EXT_CTRL_CODE_ACCENT]                 = 2,
         [EXT_CTRL_CODE_BACKGROUND]             = 2,
         [EXT_CTRL_CODE_TEXT_COLORS]            = 4,
+        [EXT_CTRL_CODE_CONDITION]              = 2,
+        [EXT_CTRL_CODE_CONDITION_ELSE]         = 1,
+        [EXT_CTRL_CODE_CONDITION_END]          = 1,
     };
 
     u8 length = 0;
