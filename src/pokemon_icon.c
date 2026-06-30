@@ -204,6 +204,36 @@ u8 CreateMonIconNoPersonalityIsEgg(enum Species species, void (*callback)(struct
     return spriteId;
 }
 
+u8 CreateTaggedMonIcon(enum Species species, u32 paletteTag, u32 tileTag)
+{
+    struct SpritePalette palette;
+    palette.data = gMonIconPaletteTable[gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex].data;
+    palette.tag = paletteTag;
+    LoadSpritePalette(&palette);
+
+    struct SpriteSheet spriteSheet;
+    spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
+    spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
+    spriteSheet.tag = tileTag;
+    LoadSpriteSheet(&spriteSheet);
+
+    struct SpriteTemplate spriteTemplate =
+    {
+        .tileTag = tileTag,
+        .paletteTag = paletteTag,
+        .oam = &sMonIconOamData,
+        .anims = sMonIconAnims,
+        .images = NULL,
+        .affineAnims = sMonIconAffineAnims
+    };
+
+    u8 spriteId = CreateSprite(&spriteTemplate, 0, 0, 0);
+    gSprites[spriteId].animPaused = TRUE;
+    gSprites[spriteId].animBeginning = FALSE;
+    UpdateMonIconFrame(&gSprites[spriteId]);
+    return spriteId;
+}
+
 enum Species GetIconSpecies(enum Species species, u32 personality)
 {
     species = SanitizeSpeciesId(species);
@@ -387,13 +417,20 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
             sprite->animCmdIndex = 0;
             break;
         default:
-            RequestSpriteCopy(
-                // pointer arithmetic is needed to get the correct pointer to perform the sprite copy on.
-                // because sprite->images is a struct def, it has to be casted to (u8 *) before any
-                // arithmetic can be performed.
-                (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
-                (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
-                sSpriteImageSizes[sprite->oam.shape][sprite->oam.size]);
+            if (sprite->usingSheet)
+            {
+                sprite->oam.tileNum = sprite->sheetTileStart + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame / TILE_SIZE_4BPP);
+            }
+            else
+            {
+                RequestSpriteCopy(
+                    // pointer arithmetic is needed to get the correct pointer to perform the sprite copy on.
+                    // because sprite->images is a struct def, it has to be casted to (u8 *) before any
+                    // arithmetic can be performed.
+                    (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
+                    (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
+                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size]);
+            }
             sprite->animDelayCounter = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.duration & 0xFF;
             sprite->animCmdIndex++;
             result = sprite->animCmdIndex;
