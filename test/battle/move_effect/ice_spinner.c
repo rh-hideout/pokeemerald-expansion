@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
 {
     u32 j;
-    static const u16 terrainMoves[] =
+    static const enum Move terrainMoves[] =
     {
         MOVE_ELECTRIC_TERRAIN,
         MOVE_PSYCHIC_TERRAIN,

@@ -108,12 +108,12 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps Mist, Safeguard, Auror
         MESSAGE("Wynaut used Court Change!");
         MESSAGE("Wynaut swapped the battle effects affecting each side of the field!");
         // The effects now end for the player side.
-        MESSAGE("Your team is no longer protected by Safeguard!");
-        MESSAGE("Your team's Mist wore off!");
-        MESSAGE("Your team's Reflect wore off!");
-        MESSAGE("Your team's Tailwind petered out!");
-        MESSAGE("Your team's Aurora Veil wore off!");
-        MESSAGE("Your team's Light Screen wore off!");
+        MESSAGE("Your side is no longer protected by the mystical veil!");
+        MESSAGE("Your side's Mist wore off!");
+        MESSAGE("Your side's Reflect wore off!");
+        MESSAGE("Your side's tailwind petered out!");
+        MESSAGE("Your side's Aurora Veil wore off!");
+        MESSAGE("Your side's Light Screen wore off!");
     }
 }
 
@@ -147,12 +147,12 @@ DOUBLE_BATTLE_TEST("Court Change used by the opponent swaps Mist, Safeguard, Aur
         MESSAGE("The opposing Wynaut swapped the battle effects affecting each side of the field!");
         // The effects now end for the player side.
         MESSAGE("The snow stopped.");
-        MESSAGE("The opposing team is no longer protected by Safeguard!");
-        MESSAGE("The opposing team's Mist wore off!");
-        MESSAGE("The opposing team's Reflect wore off!");
-        MESSAGE("The opposing team's Tailwind petered out!");
-        MESSAGE("The opposing team's Aurora Veil wore off!");
-        MESSAGE("The opposing team's Light Screen wore off!");
+        MESSAGE("The opposing side is no longer protected by the mystical veil!");
+        MESSAGE("The opposing side's Mist wore off!");
+        MESSAGE("The opposing side's Reflect wore off!");
+        MESSAGE("The opposing side's tailwind petered out!");
+        MESSAGE("The opposing side's Aurora Veil wore off!");
+        MESSAGE("The opposing side's Light Screen wore off!");
     }
 }
 
@@ -179,7 +179,8 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge")
 
 DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Vine Lash, G-Max Wildfire, G-Max Cannonade")
 {
-    u32 species, move;
+    enum Species species;
+    enum Move move;
     PARAMETRIZE { species = SPECIES_VENUSAUR;  move = MOVE_VINE_WHIP; }
     PARAMETRIZE { species = SPECIES_CHARIZARD; move = MOVE_EMBER; }
     PARAMETRIZE { species = SPECIES_BLASTOISE; move = MOVE_WATER_GUN; }
@@ -208,6 +209,8 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Vine Lash, G-Max
             case SPECIES_BLASTOISE:
                 MESSAGE("Blastoise used G-Max Cannonade!");
                 MESSAGE("Wobbuffet is hurt by G-Max Cannonade's vortex!");
+                break;
+            default:
                 break;
         }
         NONE_OF {

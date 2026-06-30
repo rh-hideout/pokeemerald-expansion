@@ -29,22 +29,25 @@ enum __attribute__((packed)) Type
 };
 
 // Pokémon egg groups
-#define EGG_GROUP_NONE                0
-#define EGG_GROUP_MONSTER             1
-#define EGG_GROUP_WATER_1             2
-#define EGG_GROUP_BUG                 3
-#define EGG_GROUP_FLYING              4
-#define EGG_GROUP_FIELD               5
-#define EGG_GROUP_FAIRY               6
-#define EGG_GROUP_GRASS               7
-#define EGG_GROUP_HUMAN_LIKE          8
-#define EGG_GROUP_WATER_3             9
-#define EGG_GROUP_MINERAL             10
-#define EGG_GROUP_AMORPHOUS           11
-#define EGG_GROUP_WATER_2             12
-#define EGG_GROUP_DITTO               13
-#define EGG_GROUP_DRAGON              14
-#define EGG_GROUP_NO_EGGS_DISCOVERED  15
+enum __attribute__((packed)) EggGroup
+{
+    EGG_GROUP_NONE,
+    EGG_GROUP_MONSTER,
+    EGG_GROUP_WATER_1,
+    EGG_GROUP_BUG,
+    EGG_GROUP_FLYING,
+    EGG_GROUP_FIELD,
+    EGG_GROUP_FAIRY,
+    EGG_GROUP_GRASS,
+    EGG_GROUP_HUMAN_LIKE,
+    EGG_GROUP_WATER_3,
+    EGG_GROUP_MINERAL,
+    EGG_GROUP_AMORPHOUS,
+    EGG_GROUP_WATER_2,
+    EGG_GROUP_DITTO,
+    EGG_GROUP_DRAGON,
+    EGG_GROUP_NO_EGGS_DISCOVERED,
+};
 
 #define EGG_GROUPS_PER_MON            2
 
@@ -179,8 +182,6 @@ enum OtIdMethod
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_MOVE_END  0xFFFF
 
-#define MAX_LEVEL_UP_MOVES       20
-
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
 #define MON_GENDERLESS 0xFF
@@ -240,7 +241,7 @@ enum __attribute__((packed)) DamageCategory
 };
 
 // Growth rates
-enum GrowthRate
+enum __attribute__((packed)) GrowthRate
 {
     GROWTH_MEDIUM_FAST,
     GROWTH_ERRATIC,

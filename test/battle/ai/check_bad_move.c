@@ -6,7 +6,8 @@
 AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by it's ability")
 {
     enum Ability ability;
-    u32 species, move;
+    enum Species species;
+    enum Move move;
 
     PARAMETRIZE { ability = ABILITY_SPEED_BOOST;  species = SPECIES_TORCHIC; move = MOVE_SCARY_FACE; }
     PARAMETRIZE { ability = ABILITY_HYPER_CUTTER; species = SPECIES_KRABBY;  move = MOVE_GROWL; }
@@ -99,7 +100,7 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Single
         MOVE_OBSTRUCT,
         MOVE_SILK_TRAP,
     };
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
@@ -148,7 +149,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Double
         MOVE_OBSTRUCT,
         MOVE_SILK_TRAP,
     };
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
@@ -257,7 +258,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protectio
 
 AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/Toxic Orb")
 {
-    u32 heldItem = ITEM_NONE;
+    enum Item heldItem = ITEM_NONE;
     bool32 shouldYawn = FALSE;
 
     PARAMETRIZE { heldItem = ITEM_NONE;      shouldYawn = TRUE; }
@@ -283,7 +284,7 @@ AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/
 
 AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_HITMONLEE; ability = ABILITY_LIMBER; }
@@ -304,7 +305,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target")
 
 AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BUIZEL; ability = ABILITY_WATER_VEIL; }
@@ -327,7 +328,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
 
 AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_HOOTHOOT; ability = ABILITY_INSOMNIA; }
@@ -348,7 +349,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
 
 AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SNORLAX; ability = ABILITY_IMMUNITY; }

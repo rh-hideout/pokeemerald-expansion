@@ -9,7 +9,6 @@ enum CompressionError {
 };
 
 void DoDecompressionError(void);
-void DecompressionError_CB2(void);
 void DecompressionError(const u32 *src, enum CompressionError error);
 
 #endif // GUARD_DECOMPRESS_ERROR_HANDLER_H

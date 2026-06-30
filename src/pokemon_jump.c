@@ -152,7 +152,7 @@ enum {
 struct PokemonJump_MonInfo
 {
     u16 isShiny:1;
-    u16 species:15;
+    enum Species species:15;
     u32 otId;
     u32 personality;
 };
@@ -233,7 +233,7 @@ struct PokemonJump
     u16 unused1;
     u16 unused2; // Set to 0, never read
     u16 timer;
-    u16 prizeItemId;
+    enum Item prizeItemId;
     u16 prizeItemQuantity;
     u16 playAgainComm;
     u8 unused3; // Set to 0, never read
@@ -336,8 +336,8 @@ static int GetScoreBonus(int);
 static void TryUpdateExcellentsRecord(u16);
 static bool32 HasEnoughScoreForPrize(void);
 static u16 GetPrizeData(void);
-static void UnpackPrizeData(u16, u16 *, u16 *);
-static u16 GetPrizeItemId(void);
+static void UnpackPrizeData(u16, enum Item *, u16 *);
+static enum Item GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
 static u16 GetQuantityLimitedByBag(enum Item, u16);
 static void SpriteCB_Star(struct Sprite *);
@@ -2120,7 +2120,7 @@ static void TryUpdateExcellentsRecord(u16 excellentsInRow)
         sPokemonJump->excellentsInRowRecord = excellentsInRow;
 }
 
-static const u16 sPrizeItems[] = {
+static const enum Item sPrizeItems[] = {
     ITEM_LEPPA_BERRY,
     ITEM_LUM_BERRY,
     ITEM_SITRUS_BERRY,
@@ -2158,13 +2158,13 @@ static u16 GetPrizeData(void)
     return (quantity << 12) | (itemId & 0xFFF);
 }
 
-static void UnpackPrizeData(u16 data, u16 *itemId, u16 *quantity)
+static void UnpackPrizeData(u16 data, enum Item *itemId, u16 *quantity)
 {
     *quantity = data >> 12;
     *itemId = data & 0xFFF;
 }
 
-static u16 GetPrizeItemId(void)
+static enum Item GetPrizeItemId(void)
 {
     u16 index = Random() % ARRAY_COUNT(sPrizeItems);
     return sPrizeItems[index];

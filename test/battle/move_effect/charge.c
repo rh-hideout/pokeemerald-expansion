@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Charge's effect is removed if the user fails using an Electr
 
 SINGLE_BATTLE_TEST("Charge's effect does not stack with Electromorphosis or Wind Power")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
     s16 damage[2];
 

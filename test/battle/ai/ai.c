@@ -427,7 +427,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 
 AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain abilities")
 {
-    u16 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -1275,7 +1275,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
 
 AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset indexes for effects")
 {
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     PARAMETRIZE { move = MOVE_TACKLE; }
     PARAMETRIZE { move = MOVE_DUAL_CHOP; }
     GIVEN {
@@ -1353,5 +1353,153 @@ AI_DOUBLE_BATTLE_TEST("Bolt Beak damage will be correctly seen by AI (doubles)")
             EXPECT_MOVE(opponentLeft,   MOVE_THUNDER,   target:playerRight);
             EXPECT_MOVE(opponentRight,  MOVE_BOLT_BEAK, target:playerRight);
         }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_SELECTED)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_FLAMETHROWER) == TARGET_SELECTED);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_FLAMETHROWER); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(playerRight, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_FOES_AND_ALLY)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_LAVA_PLUME); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(playerRight, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(opponentRight, MOVE_LAVA_PLUME);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_BOTH)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_HEAT_WAVE) == TARGET_BOTH);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_HEAT_WAVE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(playerRight, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(opponentRight, MOVE_HEAT_WAVE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ABILITY_OMNISCIENCE: AI knows the player's ability")
+{
+    u64 aiFlags;
+    u32 passChance;
+    PARAMETRIZE { passChance = 1; aiFlags = 0; }
+    PARAMETRIZE { passChance = 3; aiFlags = AI_FLAG_ABILITY_OMNISCIENCE; }
+    PASSES_RANDOMLY(passChance, 3, RNG_AI_ABILITY);
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_BRONZONG) { Ability(ABILITY_LEVITATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponent, MOVE_TACKLE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ITEM_OMNISCIENCE: AI knows the player's item")
+{
+    u64 aiFlags;
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_ITEM_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(IsPowderMove(MOVE_SPORE) == TRUE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_GULPIN) { Item(ITEM_SAFETY_GOGGLES); }
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlags == AI_FLAG_ITEM_OMNISCIENCE)
+            TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SPORE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_MOVE_OMNISCIENCE: AI knows the player's moves")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_MOVE_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_FLAMETHROWER) == TYPE_FIRE);
+        ASSUME(IsSpeciesOfType(SPECIES_TYPHLOSION, TYPE_FIRE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | aiFlag);
+        PLAYER(SPECIES_TYPHLOSION) { Speed(5); Moves(MOVE_TACKLE, MOVE_FLAMETHROWER); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_TACKLE); Level(1); }
+        OPPONENT(SPECIES_SCIZOR) { Speed(4); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_BLISSEY) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_MOVE_OMNISCIENCE)
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
+        else
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
     }
 }

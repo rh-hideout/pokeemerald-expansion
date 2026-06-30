@@ -250,6 +250,14 @@ enum RandomTag
     RNG_AI_FAKE_OUT_SAVE_ALLY,
     RNG_AI_DMG_ROLL_RANDOM,
     RNG_RANDOM_BERRY,
+    RNG_DAYCARE_MAKE_EGG,
+    RNG_DAYCARE_PICK_NATURE_PARENT,
+    RNG_DAYCARE_NATURE_INHERITANCE,
+    RNG_DAYCARE_INHERITED_STATS,
+    RNG_DAYCARE_PICK_IVS_PARENT,
+    RNG_DAYCARE_PICK_BALL_PARENT,
+    RNG_DAYCARE_ABILITY_INHERITANCE,
+    RNG_DEXNAV_RANDOM_EGG_MOVE,
     RNG_RANDOM_BALL,
 };
 
@@ -267,7 +275,11 @@ enum RandomTag
 #define RandomPercentage(tag, t) \
     ({ \
         u32 r; \
-        if (t <= 0) \
+        if_comptime (t == 50) \
+        { \
+            r = RandomUniform(tag, FALSE, TRUE); \
+        } \
+        else if (t <= 0) \
         { \
             r = FALSE; \
         } \

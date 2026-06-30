@@ -29,7 +29,6 @@
 #include "overworld.h"
 #include "scanline_effect.h"
 #include "field_weather.h"
-#include "international_string_util.h"
 #include "naming_screen.h"
 #include "pokemon_storage_system.h"
 #include "field_screen_effect.h"
@@ -305,69 +304,17 @@ static const s16 sEggShardVelocities[][2] =
     {Q_8_8(2.5),        Q_8_8(-7.5)},
 };
 
-static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
-{
-    enum Species species;
-    u32 personality, pokerus;
-    enum PokeBall ball;
-    u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter;
-    bool32 isShiny;
-    enum Move moves[MAX_MON_MOVES];
-    u32 ivs[NUM_STATS];
-
-    species = GetMonData(egg, MON_DATA_SPECIES);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        moves[i] = GetMonData(egg, MON_DATA_MOVE1 + i);
-
-    personality = GetMonData(egg, MON_DATA_PERSONALITY);
-
-    for (i = 0; i < NUM_STATS; i++)
-        ivs[i] = GetMonData(egg, MON_DATA_HP_IV + i);
-
-    // The language is initially read from the Egg but is later overwritten below
-    language = GetMonData(egg, MON_DATA_LANGUAGE);
-    gameMet = GetMonData(egg, MON_DATA_MET_GAME);
-    markings = GetMonData(egg, MON_DATA_MARKINGS);
-    pokerus = GetMonData(egg, MON_DATA_POKERUS);
-    isModernFatefulEncounter = GetMonData(egg, MON_DATA_MODERN_FATEFUL_ENCOUNTER);
-    isShiny = GetMonData(egg, MON_DATA_IS_SHINY);
-    ball = GetMonData(egg, MON_DATA_POKEBALL);
-
-    CreateMonWithIVs(temp, species, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    SetMonData(temp, MON_DATA_IS_SHINY, &isShiny);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonData(temp, MON_DATA_MOVE1 + i,  &moves[i]);
-
-    for (i = 0; i < NUM_STATS; i++)
-        SetMonData(temp, MON_DATA_HP_IV + i,  &ivs[i]);
-
-    language = GAME_LANGUAGE;
-    SetMonData(temp, MON_DATA_LANGUAGE, &language);
-    SetMonData(temp, MON_DATA_MET_GAME, &gameMet);
-    SetMonData(temp, MON_DATA_MARKINGS, &markings);
-
-    friendship = 120;
-    SetMonData(temp, MON_DATA_FRIENDSHIP, &friendship);
-    SetMonData(temp, MON_DATA_POKERUS, &pokerus);
-    SetMonData(temp, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
-    SetMonData(temp, MON_DATA_POKEBALL, &ball);
-
-    *egg = *temp;
-}
-
 static void AddHatchedMonToParty(u8 id)
 {
-    u8 isEgg = 0x46; // ?
     enum Species species;
     enum NationalDexOrder nationalDexNum;
     u8 name[POKEMON_NAME_LENGTH + 1];
-    u16 metLevel;
+    u32 metLevel, friendship;
+    enum Language language;
     metloc_u8_t metLocation;
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][id];
 
-    CreateHatchedMon(mon, &gParties[B_TRAINER_OPPONENT_A][0]);
+    bool32 isEgg = FALSE;
     SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
 
     species = GetMonData(mon, MON_DATA_SPECIES);
@@ -380,12 +327,25 @@ static void AddHatchedMonToParty(u8 id)
 
     GetMonNickname(mon, gStringVar1);
 
+    language = GAME_LANGUAGE;
+    SetMonData(mon, MON_DATA_LANGUAGE, &language);
+
+    friendship = 120;
+    SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);
+
     // A met level of 0 is interpreted on the summary screen as "hatched at"
     metLevel = 0;
     SetMonData(mon, MON_DATA_MET_LEVEL, &metLevel);
 
     metLocation = GetCurrentRegionMapSectionId();
     SetMonData(mon, MON_DATA_MET_LOCATION, &metLocation);
+
+    SetMonData(mon, MON_DATA_MET_GAME, &gGameVersion);
+
+    u32 otId = READ_OTID_FROM_SAVE;
+    SetMonData(mon, MON_DATA_OT_ID, &otId);
+    SetMonData(mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
+    SetMonData(mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
     MonRestorePP(mon);
     CalculateMonStats(mon);
@@ -396,30 +356,7 @@ void ScriptHatchMon(void)
     AddHatchedMonToParty(gSpecialVar_0x8004);
 }
 
-static bool8 _CheckDaycareMonReceivedMail(struct DayCare *daycare, u8 daycareId)
-{
-    u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
-    struct DaycareMon *daycareMon = &daycare->mons[daycareId];
-
-    GetBoxMonNickname(&daycareMon->mon, nickname);
-    if (daycareMon->mail.message.itemId != ITEM_NONE
-        && (StringCompareWithoutExtCtrlCodes(nickname, daycareMon->mail.monName) != 0
-         || StringCompareWithoutExtCtrlCodes(gSaveBlock2Ptr->playerName, daycareMon->mail.otName) != 0))
-    {
-        StringCopy(gStringVar1, nickname);
-        TVShowConvertInternationalString(gStringVar2, daycareMon->mail.otName, daycareMon->mail.gameLanguage);
-        TVShowConvertInternationalString(gStringVar3, daycareMon->mail.monName, daycareMon->mail.monLanguage);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-bool8 CheckDaycareMonReceivedMail(void)
-{
-    return _CheckDaycareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
-}
-
-static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesLoc)
+static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, enum Species *speciesLoc)
 {
     u8 position = 0;
     u8 spriteId = 0;
@@ -813,10 +750,8 @@ static void SpriteCB_Egg_Shake3(struct Sprite *sprite)
     {
         if (++sprite->sTimer > 38)
         {
-            u16 UNUSED species;
             sprite->callback = SpriteCB_Egg_WaitHatch;
             sprite->sTimer = 0;
-            species = GetMonData(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gSprites[sEggHatchData->monSpriteId].x2 = 0;
             gSprites[sEggHatchData->monSpriteId].y2 = 0;
         }
@@ -953,23 +888,6 @@ static void EggHatchPrintMessage(u8 windowId, u8 *string, u8 x, u8 y, u8 speed)
     sEggHatchData->textColor[1] = 5;
     sEggHatchData->textColor[2] = 6;
     AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sEggHatchData->textColor, speed, string);
-}
-
-u8 GetEggCyclesToSubtract(void)
-{
-    u8 count, i;
-    for (count = CalculatePlayerPartyCount(), i = 0; i < count; i++)
-    {
-        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_EGG))
-        {
-            enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][i]);
-            if (ability == ABILITY_MAGMA_ARMOR
-             || ability == ABILITY_FLAME_BODY
-             || ability == ABILITY_STEAM_ENGINE)
-                return 2;
-        }
-    }
-    return 1;
 }
 
 u16 CountPartyAliveNonEggMons(void)

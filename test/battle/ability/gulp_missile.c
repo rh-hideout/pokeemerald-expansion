@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Gulp Missile: Cramorant cannot change between Gorging and Gulping Forms")
 {
-    u32 species, hp;
+    enum Species species;
+    u32 hp;
     enum Move move;
     PARAMETRIZE { species = SPECIES_CRAMORANT_GULPING; hp = 240; move = MOVE_BELLY_DRUM; }
     PARAMETRIZE { species = SPECIES_CRAMORANT_GORGING; hp = 120; move = MOVE_RECOVER; }
@@ -163,7 +164,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: triggers even if the user is fainted by opposi
 
 SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense but is prevented by stat reduction preventing abilities")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { species = SPECIES_CORVIKNIGHT; ability = ABILITY_MIRROR_ARMOR; }

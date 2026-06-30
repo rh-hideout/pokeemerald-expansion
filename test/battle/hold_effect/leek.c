@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfetch'd Family")
 {
-    u32 species, genConfig, passes, trials;
+    enum Species species;
+    u32 genConfig, passes, trials;
 
     PARAMETRIZE { genConfig = GEN_1; passes = 15; trials = 16; species = SPECIES_FARFETCHD; }       // ~93.8% with Farfetch'd's base speed
     PARAMETRIZE { genConfig = GEN_1; passes = 27; trials = 32; species = SPECIES_FARFETCHD_GALAR; } // ~84.4% with Galarian Farfetch'd's base speed

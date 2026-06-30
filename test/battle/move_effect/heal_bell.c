@@ -197,7 +197,8 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 
 SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of config")
 {
-    u32 config, ability;
+    u32 config;
+    enum Ability ability;
 
     PARAMETRIZE { config = GEN_4, ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { config = GEN_5, ability = ABILITY_SOUNDPROOF; }

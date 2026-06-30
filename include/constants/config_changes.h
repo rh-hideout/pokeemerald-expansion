@@ -235,6 +235,11 @@
     F(POKERUS_INFECT_EGG,        pokerusInfectEgg,        (u32, TRUE))          \
     F(POKERUS_HERD_IMMUNITY,     pokerusHerdImmunity,     (u32, TRUE))          \
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
+    F(BALL_INHERITANCE,          ballInheritance,         (u32, GEN_COUNT - 1)) \
+    F(MOVE_INHERITANCE,          moveInheritance,         (u32, GEN_COUNT - 1)) \
+    F(NATURE_INHERITANCE,        natureInheritance,       (u32, GEN_COUNT - 1)) \
+    F(ABILITY_INHERITANCE,       abilityInheritance,      (u32, GEN_COUNT - 1)) \
+    F(EGG_MOVE_TRANSFER,         eggMoveTransfer,         (u32, GEN_COUNT - 1)) \
 
 #define AI_CONFIG_DEFINITIONS(F) \
     F(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE,    reverseBattlerLogicChance,  (u32, 100)) \

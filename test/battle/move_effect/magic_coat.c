@@ -142,7 +142,8 @@ DOUBLE_BATTLE_TEST("Magic Coat activates on the fastest opposing mon for hazard 
 
 SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GRENINJA; ability = ABILITY_PROTEAN; }
     PARAMETRIZE { species = SPECIES_CINDERACE; ability = ABILITY_LIBERO; }

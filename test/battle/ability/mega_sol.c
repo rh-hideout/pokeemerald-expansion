@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
 SINGLE_BATTLE_TEST("Mega Sol ignores Cloud Nine")
 {
     s16 damage[2];
-    u16 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }

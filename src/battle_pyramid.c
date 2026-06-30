@@ -50,7 +50,7 @@ struct PyramidWildMon
     enum Species species;
     u8 lvl;
     u8 abilityNum;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct PyramidFloorTemplate
@@ -1658,7 +1658,7 @@ u8 CurrentBattlePyramidLocation(void)
         return PYRAMID_LOCATION_NONE;
 }
 
-bool8 InBattlePyramid_(void)
+bool8 InBattlePyramid(void)
 {
     return gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR
         || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP;
@@ -2210,4 +2210,8 @@ u16 GetBattlePyramidPickupItemId(void)
         return sPickupItemsLvlOpen[round][i];
     else
         return sPickupItemsLvl50[round][i];
+}
+
+const u8 *GetBattlePyramidTrainerScript() {
+    return BattlePyramid_TrainerBattle;
 }

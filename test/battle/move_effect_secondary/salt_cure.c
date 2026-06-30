@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage 
 
 SINGLE_BATTLE_TEST("Salt Cure inflicts 1/4 to Water/Steel types of their maximum HP as damage per turn")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_LAPRAS; }
     PARAMETRIZE { species = SPECIES_JIRACHI; }

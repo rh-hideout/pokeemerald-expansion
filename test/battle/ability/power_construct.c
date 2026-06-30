@@ -5,7 +5,7 @@ TO_DO_BATTLE_TEST("TODO: Write Power Construct (Ability) test titles")
 
 SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below half")
 {
-    u16 baseSpecies;
+    enum Species baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
 
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below hal
 
 WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catching")
 {
-    u16 baseSpecies;
+    enum Species baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
 
@@ -58,7 +58,7 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
 
 SINGLE_BATTLE_TEST("Power Construct does not switch Zygarde's form if end-turn healing brings it above half HP")
 {
-    u16 baseSpecies;
+    enum Species baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
 
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Power Construct does not switch Zygarde's form if end-turn h
 
 SINGLE_BATTLE_TEST("Power Construct does not switch Zygarde's form if end-turn damage makes it faint")
 {
-    u16 baseSpecies;
+    enum Species baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
 

@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops if a damaging move hits the holder's Substi
 
 SINGLE_BATTLE_TEST("Air Balloon pops when Disguise is broken")
 {
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
     

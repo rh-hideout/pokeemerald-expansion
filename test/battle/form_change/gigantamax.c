@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Dynamax: Pokemon with Gigantamax forms change upon Dynamaxing")
 {
-    u32 species;
+    enum Species species;
     bool32 gigantamaxFactor;
     PARAMETRIZE { gigantamaxFactor = FALSE; species = SPECIES_VENUSAUR; }
     PARAMETRIZE { gigantamaxFactor = TRUE; species = SPECIES_VENUSAUR_GMAX; }
