@@ -163,32 +163,36 @@ enum
 #define B_STATUS_MOVE_TYPES_PAL_TAG_1       0xD7ED
 #define B_STATUS_MOVE_TYPES_PAL_TAG_2       0xD7EE
 
-#define B_STATUS_DEBUG_UPDATE_REASON_LOG FALSE
-#define B_STATUS_TRACKED_SIDE_STATUS_BITS (SIDE_STATUS_MIST          \
-                                        | SIDE_STATUS_SAFEGUARD     \
-                                        | SIDE_STATUS_LUCKY_CHANT   \
-                                        | SIDE_STATUS_TAILWIND      \
-                                        | SIDE_STATUS_LIGHTSCREEN   \
-                                        | SIDE_STATUS_REFLECT       \
-                                        | SIDE_STATUS_AURORA_VEIL   \
-                                        | SIDE_STATUS_RAINBOW       \
-                                        | SIDE_STATUS_SWAMP         \
-                                        | SIDE_STATUS_SEA_OF_FIRE   \
-                                        | SIDE_STATUS_DAMAGE_NON_TYPES)
-
-#define B_STATUS_DETAIL_WINDOW_COUNT     5
-#define B_STATUS_DETAIL_GIMMICK_W        8
-#define B_STATUS_DETAIL_GIMMICK_H        16
-#define B_STATUS_DETAIL_GIMMICK_GFX_SIZE ((B_STATUS_DETAIL_GIMMICK_W * B_STATUS_DETAIL_GIMMICK_H) / 2)
-#define B_STATUS_DETAIL_STAT_ROW_COUNT   7
-#define B_STATUS_DETAIL_STAT_PIPS_PER_ROW 6
-#define B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS 64
+#define B_STATUS_DETAIL_GIMMICK_W            8
+#define B_STATUS_DETAIL_GIMMICK_H            16
+#define B_STATUS_DETAIL_GIMMICK_GFX_SIZE     ((B_STATUS_DETAIL_GIMMICK_W * B_STATUS_DETAIL_GIMMICK_H) / 2)
+#define B_STATUS_DETAIL_STAT_ROW_COUNT       7
+#define B_STATUS_DETAIL_STAT_PIPS_PER_ROW    6
+#define B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS   64
 #define B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS 6
 
 #define B_STATUS_EFFECT_FLAG_HAS_DURATION    (1 << 0)
 #define B_STATUS_EFFECT_FLAG_EXTENDABLE      (1 << 1)
 #define B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN  (1 << 2)
 #define B_STATUS_EFFECT_FLAG_TOTAL_KNOWN     (1 << 3)
+
+#define B_STATUS_DETAIL_TEXT_BUFFER_SIZE 512
+
+#define TAG_STATUS_ICONS                1202
+
+#define HEALTHBOX_GFX_HP_BAR_GREEN      3
+#define HEALTHBOX_GFX_HP_BAR_YELLOW     50
+#define HEALTHBOX_GFX_HP_BAR_RED        59
+
+enum
+{
+    WIN_DETAIL_HEADER,
+    WIN_DETAIL_ITEM_ABILITY,
+    WIN_DETAIL_STATS,
+    WIN_DETAIL_EFFECTS,
+    WIN_DETAIL_DESCRIPTION,
+    WIN_DETAIL_COUNT,
+};
 
 struct BattleStatusEffectEntry
 {
@@ -199,14 +203,6 @@ struct BattleStatusEffectEntry
     u8 flags;
     u8 stackCount;
 };
-
-#define B_STATUS_DETAIL_TEXT_BUFFER_SIZE 512
-
-#define TAG_STATUS_ICONS                1202
-
-#define HEALTHBOX_GFX_HP_BAR_GREEN      3
-#define HEALTHBOX_GFX_HP_BAR_YELLOW     50
-#define HEALTHBOX_GFX_HP_BAR_RED        59
 
 struct BattleStatusCard
 {
@@ -238,15 +234,13 @@ struct BattleStatusMenuState
     u8 detailGimmickSpriteId;
     u8 detailTypeIconSpriteIds[2];
     u8 detailStatPipSpriteIds[B_STATUS_DETAIL_STAT_ROW_COUNT][B_STATUS_DETAIL_STAT_PIPS_PER_ROW];
-    u8 enemyLabelText[TRAINER_NAME_LENGTH + 1];
-    u8 playerLabelText[TRAINER_NAME_LENGTH + 1];
     struct BattleStatusCard cards[MAX_BATTLERS_COUNT];
     struct BattleStatusEffectEntry detailActiveEffects[B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS];
     u8 detailActiveEffectsCount;
     u8 detailEffectsCursor;
     u8 detailEffectsScrollbarSpriteId;
     u16 detailEffectsScroll;
-    u8 detailWindowIds[B_STATUS_DETAIL_WINDOW_COUNT];
+    u8 detailWindowIds[WIN_DETAIL_COUNT];
 };
 
 enum BattleStatusEffectId
@@ -365,7 +359,6 @@ static void BattleStatusMenu_MainCB(void);
 static void BattleStatusMenu_Init(void);
 static void OverviewEnter(void);
 static void OverviewExit(void);
-static void OverviewBufferLabelText(void);
 static void OverviewComputeRowLayout(s16 *outXs);
 static void OverviewCreateCards(void);
 static void OverviewDrawCards(void);
@@ -445,10 +438,10 @@ static void DetailSetDescriptionPlaceholder(enum BattleStatusEffectId effectId);
 static void DetailFormatDescriptionText(enum BattleStatusEffectId effectId, u8 *dst);
 static void DetailClampTextLines(u8 *text, u8 maxLines);
 static void DetailDrawWindowFrame(u8 windowId);
-static const u8 *GetPlayerTrainerName(void);
+static const u8 *GetPrimaryOpponentTrainerName(void);
+static const u8 *GetPlayerSideTrainerName(void);
 static const u8 *GetPrimaryOpponentTrainerName(void);
 static u8 GetOpponentTrainerCount(void);
-static bool8 HasPlayerPartnerTrainer(void);
 static void OverviewUpdateHpBars(void);
 static void BattleStatusMenu_Destroy(void);
 static void DestroyOverviewCardSprites(struct BattleStatusCard *card, bool8 freeHpBarTile);
@@ -1394,16 +1387,6 @@ static const struct WindowTemplate sBattleStatusMenuWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-enum
-{
-    WIN_DETAIL_HEADER,
-    WIN_DETAIL_ITEM_ABILITY,
-    WIN_DETAIL_STATS,
-    WIN_DETAIL_EFFECTS,
-    WIN_DETAIL_DESCRIPTION,
-    WIN_DETAIL_COUNT = B_STATUS_DETAIL_WINDOW_COUNT,
-};
-
 static const struct WindowTemplate sBattleStatusDetailWindowTemplates[WIN_DETAIL_COUNT] =
 {
     [WIN_DETAIL_HEADER] = {
@@ -1586,7 +1569,9 @@ static void BattleStatusMenu_MainCB(void)
             }
         }
         else
+        {
             DetailHandleInput();
+        }
         break;
     case BATTLE_STATUS_MENU_STATE_FADE_OUT:
         if (!gPaletteFade.active)
@@ -1667,7 +1652,6 @@ static void OverviewEnter(void)
     sData->menu.page = BATTLE_STATUS_PAGE_OVERVIEW;
     LoadBackdropAssets();
     OverviewClearWindows();
-    OverviewBufferLabelText();
     OverviewCreateCards();
     OverviewDrawBackground();
     OverviewDrawCards();
@@ -2741,15 +2725,6 @@ static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide sid
     struct BattleStatusEffectEntry entry = {0};
     entry.effectId = effectId;
 
-    for (u32 i = 0; i < sData->menu.detailActiveEffectsCount; i++)
-    {
-        assertf(entries[i].effectId != effectId, "duplicate entry %S", sBattleStatusEffects[effectId].name)
-        {
-            return;
-        }
-    }
-
-
     switch (effectId)
     {
     case B_STATUS_EFFECT_HARSH_SUNLIGHT:
@@ -3471,19 +3446,6 @@ static void DetailDrawWindowFrame(u8 windowId)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(B_STATUS_TEXT_COLOR_TRANSPARENT));
 }
 
-static void OverviewBufferLabelText(void)
-{
-    if (GetOpponentTrainerCount() == 1)
-        StringCopy(sData->menu.enemyLabelText, GetPrimaryOpponentTrainerName());
-    else
-        StringCopy(sData->menu.enemyLabelText, sText_BattleStatus_Opponent);
-
-    if (HasPlayerPartnerTrainer())
-        StringCopy(sData->menu.playerLabelText, sText_BattleStatus_Ally);
-    else
-        StringCopy(sData->menu.playerLabelText, GetPlayerTrainerName());
-}
-
 static void OverviewComputeRowLayout(s16 *outXs)
 {
     s16 gapTiles = 0;
@@ -3942,8 +3904,8 @@ static void OverviewDrawBackground(void)
     for (u32 i = 0; i < gBattlersCount; i++)
         OverviewDrawCardBackground(&sData->menu.cards[i], i == sData->menu.selectedCardIndex);
 
-    enemyLabelWidth = GetStringWidth(FONT_SMALL, sData->menu.enemyLabelText, 0);
-    playerLabelWidth = GetStringWidth(FONT_SMALL, sData->menu.playerLabelText, 0);
+    enemyLabelWidth = GetStringWidth(FONT_SMALL, GetPrimaryOpponentTrainerName(), 0);
+    playerLabelWidth = GetStringWidth(FONT_SMALL, GetPlayerSideTrainerName(), 0);
     OverviewComputeHeaderLayout(enemyLabelWidth, &enemyTextLenTiles, &enemyHeaderX, &enemyHeaderWidth);
     OverviewComputeHeaderLayout(playerLabelWidth, &playerTextLenTiles, &playerHeaderX, &playerHeaderWidth);
 
@@ -3967,32 +3929,27 @@ static void OverviewUpdateCardSelectionHighlight(u8 oldSelectedIndex)
 
 static void OverviewDrawLabels(void)
 {
-    const u8 *enemyLabel;
-    const u8 *playerLabel;
-    s16 enemyLabelX;
-    s16 playerLabelX;
-    s16 enemyLabelWidth;
-    s16 playerLabelWidth;
     s16 enemyHeaderX;
     s16 playerHeaderX;
     s16 enemyHeaderWidth;
     s16 playerHeaderWidth;
-    s16 labelY;
-    s16 labelHeight = GetFontAttribute(FONT_SMALL, FONTATTR_MAX_LETTER_HEIGHT);
+    s32 labelHeight = GetFontAttribute(FONT_SMALL, FONTATTR_MAX_LETTER_HEIGHT);
 
-    enemyLabel = sData->menu.enemyLabelText;
-    playerLabel = sData->menu.playerLabelText;
+    const u8 enemyLabel = GetPrimaryOpponentTrainerName();
+    const u8 playerLabel = GetPlayerSideTrainerName();
 
-    enemyLabelWidth = GetStringWidth(FONT_SMALL, enemyLabel, 0);
-    playerLabelWidth = GetStringWidth(FONT_SMALL, playerLabel, 0);
+    s32 enemyLabelWidth = GetStringWidth(FONT_SMALL, enemyLabel, 0);
+    s32 playerLabelWidth = GetStringWidth(FONT_SMALL, playerLabel, 0);
     OverviewComputeHeaderLayout(enemyLabelWidth, NULL, &enemyHeaderX, &enemyHeaderWidth);
     OverviewComputeHeaderLayout(playerLabelWidth, NULL, &playerHeaderX, &playerHeaderWidth);
 
-    enemyLabelX = enemyHeaderX * 8 + ((enemyHeaderWidth * 8) - enemyLabelWidth) / 2;
-    playerLabelX = playerHeaderX * 8 + ((playerHeaderWidth * 8) - playerLabelWidth) / 2;
+    s32 enemyLabelX = enemyHeaderX * 8 + ((enemyHeaderWidth * 8) - enemyLabelWidth) / 2;
+    s32 playerLabelX = playerHeaderX * 8 + ((playerHeaderWidth * 8) - playerLabelWidth) / 2;
+
     if (labelHeight <= 0 || labelHeight > B_STATUS_LABEL_H)
         labelHeight = 8;
-    labelY = (B_STATUS_LABEL_H - labelHeight) / 2;
+
+    s32 labelY = (B_STATUS_LABEL_H - labelHeight) / 2;
     labelY -= 2;
     if (labelY < 0)
         labelY = 0;
@@ -4010,16 +3967,17 @@ static void OverviewDrawLabels(void)
     CopyWindowToVram(WIN_LABEL_BOTTOM, COPYWIN_FULL);
 }
 
-static const u8 *GetPlayerTrainerName(void)
+static const u8 *GetPlayerSideTrainerName(void)
 {
+    if (HasPartnerTrainer(B_BATTLER_0))
+        return sText_BattleStatus_Ally;
     return gSaveBlock2Ptr->playerName;
 }
 
 static const u8 *GetPrimaryOpponentTrainerName(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (GetOpponentTrainerCount() == 1 && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         return GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA);
-
     return sText_BattleStatus_Opponent;
 }
 
@@ -4032,11 +3990,6 @@ static u8 GetOpponentTrainerCount(void)
         return 2;
 
     return 1;
-}
-
-static bool8 HasPlayerPartnerTrainer(void)
-{
-    return HasPartnerTrainer(B_BATTLER_0);
 }
 
 static void OverviewUpdateHpBars(void)
@@ -4319,7 +4272,6 @@ static void OverviewInitCursor(void)
     if (sData->menu.cursorSpriteId != SPRITE_NONE)
         DestroySprite(&gSprites[sData->menu.cursorSpriteId]);
 
-
     OverviewGetCursorPos(&sData->menu.cards[sData->menu.selectedCardIndex], &cursorX, &cursorY);
     sData->menu.cursorSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusCursor, cursorX, cursorY, 0);
     if (sData->menu.cursorSpriteId != SPRITE_NONE)
@@ -4393,7 +4345,7 @@ static void OverviewHandleInput(void)
         OverviewUpdateCursorPos();
     }
 
-    if (JOY_NEW(A_BUTTON) && gBattlersCount != 0)
+    if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
         RequestPageTransition(BATTLE_STATUS_PAGE_DETAIL);
