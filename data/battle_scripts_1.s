@@ -4861,7 +4861,6 @@ BattleScript_FlashFireBoost::
 	return
 
 BattleScript_AbilityPreventsPhasingOut::
-	savetarget
 	call BattleScript_AbilityPreventsPhasingOutRet
 	goto BattleScript_MoveEnd
 
