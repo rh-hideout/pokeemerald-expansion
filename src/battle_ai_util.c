@@ -6462,9 +6462,9 @@ s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
     return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore;
 }
 
-static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+static bool32 AI_CanStatChangeBePrevented(struct BattleCalcValues *cv)
 {
-    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
+    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
 
     switch (targetType)
     {
@@ -6474,11 +6474,11 @@ static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum Battle
     case TARGET_ALLY:
         return FALSE;
     case TARGET_ALL_BATTLERS:
-        if (battlerAtk == battlerDef)
+        if (cv->battlerAtk == cv->battlerDef)
             return FALSE;
     default:
-        if (IsSubstituteProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], move)
-         || gAiLogicData->abilities[battlerDef] == ABILITY_GOOD_AS_GOLD)
+        if (IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move)
+         || cv->abilities[cv->battlerDef] == ABILITY_GOOD_AS_GOLD)
             return TRUE;
     }
 
@@ -6488,9 +6488,6 @@ static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum Battle
 // Only checks if a stat can actually change. Doesn't do any other sophisticated decision
 bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
-    if (AI_CanStatChangeBePrevented(battlerAtk, battlerDef, move))
-        return FALSE;
-
     struct BattleCalcValues cv = {
         .battlerAtk = battlerAtk,
         .battlerDef = battlerDef,
@@ -6507,11 +6504,11 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         cv.holdEffects[battler] = gAiLogicData->holdEffects[battler];
     }
 
-    if (!IsBattlerAlly(battlerAtk, battlerDef))
+    if (battlerAtk != battlerDef)
     {
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
-            if (IsBattlerAlly(battlerDef, battler))
+            if (battler != battlerAtk && IsBattlerAlly(battlerDef, battler))
             {
                 cv.abilities[battler] = AI_GetMoldBreakerSanitizedAbility(
                                             battlerAtk,
@@ -6523,6 +6520,9 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             }
         }
     }
+
+    if (AI_CanStatChangeBePrevented(&cv))
+        return FALSE;
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
 
