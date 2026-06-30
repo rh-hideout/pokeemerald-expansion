@@ -1650,6 +1650,7 @@ bool8 ScrCmd_releaseall(struct ScriptContext *ctx)
         ClearObjectEventMovement(followerObject, &gSprites[followerObject->spriteId]);
 
     HideFieldMessageBox();
+    ClearFieldMessageDialogueStyle();
     playerObjectId = GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0);
     ObjectEventClearHeldMovementIfFinished(&gObjectEvents[playerObjectId]);
     ScriptMovement_UnfreezeObjectEvents();
@@ -1669,6 +1670,7 @@ bool8 ScrCmd_release(struct ScriptContext *ctx)
         ClearObjectEventMovement(followerObject, &gSprites[followerObject->spriteId]);
 
     HideFieldMessageBox();
+    ClearFieldMessageDialogueStyle();
     if (gObjectEvents[gSelectedObjectEvent].active)
         ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gSelectedObjectEvent]);
     playerObjectId = GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0);
@@ -1676,6 +1678,22 @@ bool8 ScrCmd_release(struct ScriptContext *ctx)
     ScriptMovement_UnfreezeObjectEvents();
     UnfreezeObjectEvents();
     gMsgBoxIsCancelable = FALSE;
+    return FALSE;
+}
+
+bool8 ScrCmd_setdialoguestyle(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    SetFieldMessageDialogueStyle(ScriptReadByte(ctx));
+    return FALSE;
+}
+
+bool8 ScrCmd_cleardialoguestyle(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    ClearFieldMessageDialogueStyle();
     return FALSE;
 }
 
