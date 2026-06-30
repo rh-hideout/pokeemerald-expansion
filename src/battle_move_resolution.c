@@ -3421,7 +3421,9 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
 
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battlerDef = gEffectBattler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
+
+        enum BattlerId battlerDef = gEffectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+        gBattleStruct->eventState.moveEndBattler++;
 
         if (battlerDef == cv->battlerAtk)
             continue;
@@ -3523,15 +3525,19 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             break;
         case EFFECT_HIT_SWITCH_TARGET:
-            if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+            battlerDef = gBattlerTarget;
+            if (IsBattlerTurnDamaged(battlerDef , EXCLUDING_SUBSTITUTES)
              && IsBattlerAlive(battlerDef)
              && IsBattlerAlive(cv->battlerAtk)
              && gBattleStruct->battlerState[battlerDef].commanderSpecies == SPECIES_NONE)
             {
                 if (cv->abilities[battlerDef] == ABILITY_GUARD_DOG)
-                    break;
-
-                if (cv->abilities[battlerDef] == ABILITY_SUCTION_CUPS)
+                {
+                    gBattleStruct->eventState.moveEndBattler = 0;
+                    gBattleScripting.moveendState++;
+                    return MOVEEND_RESULT_CONTINUE;
+                }
+                else if (cv->abilities[battlerDef] == ABILITY_SUCTION_CUPS)
                 {
                     gBattlerAbility = battlerDef;
                     BattleScriptCall(BattleScript_AbilityPreventsPhasingOutRet);
@@ -3549,6 +3555,9 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                     gBattleScripting.switchCase = B_SWITCH_HIT;
                     BattleScriptCall(BattleScript_TryHitSwitchTarget);
                 }
+
+                gBattleStruct->eventState.moveEndBattler = 0;
+                gBattleScripting.moveendState++;
                 return MOVEEND_RESULT_RUN_SCRIPT;
             }
             break;

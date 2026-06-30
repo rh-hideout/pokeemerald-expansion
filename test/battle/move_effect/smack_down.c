@@ -136,7 +136,7 @@ DOUBLE_BATTLE_TEST("Thousand Arrows will ground both targets")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THOUSAND_ARROWS, playerLeft);
-        MESSAGE("The opposing Flygon fell straight down!");
         MESSAGE("The opposing Pidgey fell straight down!");
+        MESSAGE("The opposing Flygon fell straight down!");
     }
 }

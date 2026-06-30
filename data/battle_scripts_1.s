@@ -965,10 +965,7 @@ BattleScript_FinalGambit::
 	return
 
 BattleScript_TryHitSwitchTarget::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
 	forcerandomswitch BattleScript_HitSwitchTargetForceRandomSwitchFailed
-	restoretarget
 	return
 
 BattleScript_HitSwitchTargetDynamaxed::
@@ -4865,10 +4862,7 @@ BattleScript_FlashFireBoost::
 
 BattleScript_AbilityPreventsPhasingOut::
 	savetarget
-	copybyte gEffectBattler, gBattlerTarget
-	copybyte gBattlerAbility, gBattlerTarget
 	call BattleScript_AbilityPreventsPhasingOutRet
-	restoretarget
 	goto BattleScript_MoveEnd
 
 BattleScript_AbilityPreventsPhasingOutRet::
