@@ -50,6 +50,7 @@
 #define B_VAR_BXPY                                      B_VAR_SKY_BATTLE // This var is used to maintain BXPY_RETAIN_CHANGES.
 #define B_FLAG_BXPY                                     0                // This flag is used to manage BXPY mode's interaction with other features.
 
+#define BXPY_SKIN                                       GEN_3            // This changes the graphical skin that the BXPY menu uses. The currently only valid values are GEN_3 or GEN_CHAMPIONS. If an invalid value is used, the game will fall back to GEN_3.
 #define BXPY_SCROLLING_BACKGROUND                       TRUE             // When TRUE, the background on the BXPY menu will scroll.
 #define MUS_BXPY_BACKGROUND                             MUS_B_DOME_LOBBY
 #define SE_BXPY_GENERIC                                 SE_SELECT
