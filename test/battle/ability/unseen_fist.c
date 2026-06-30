@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
     PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
 
     GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_9);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -72,6 +73,115 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
         EXPECT_EQ(player->status1, STATUS1_NONE);
         if (loweredStat != 0)
             EXPECT_EQ(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist no longer bypasses the contact effects of protect moves (Champions)")
+{
+    enum Move protectMove = MOVE_NONE;
+    u8 loweredStat = 0;
+
+    PARAMETRIZE { protectMove = MOVE_SPIKY_SHIELD;    loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_KINGS_SHIELD;    loweredStat = STAT_ATK; }
+    PARAMETRIZE { protectMove = MOVE_BANEFUL_BUNKER;  loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_BURNING_BULWARK; loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_OBSTRUCT;        loweredStat = STAT_DEF; }
+    PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_CHAMPIONS);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, protectMove); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, protectMove, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        switch (protectMove)
+        {
+        case MOVE_BANEFUL_BUNKER:
+            STATUS_ICON(player, poison: TRUE);
+            break;
+        case MOVE_BURNING_BULWARK:
+            STATUS_ICON(player, burn: TRUE);
+            break;
+        default:
+            break;
+        }
+    } THEN {
+        switch (protectMove)
+        {
+        case MOVE_SPIKY_SHIELD:
+            EXPECT_LT(player->hp, player->maxHP);
+            break;
+        case MOVE_KINGS_SHIELD:
+        case MOVE_OBSTRUCT:
+        case MOVE_SILK_TRAP:
+            EXPECT_NE(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist deals 25% of the damage dealt to protected targets (Champions)", s16 damage)
+{
+    u32 genConfig;
+    PARAMETRIZE { genConfig = GEN_9; }
+    PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, genConfig);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.25), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist still deals 100% of the damage dealt with Phantom Force (Champions)", s16 damage)
+{
+    u32 genConfig;
+    PARAMETRIZE { genConfig = GEN_9; }
+    PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, genConfig);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PHANTOM_FORCE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist KOs protected targets with OHKO moves (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_CHAMPIONS);
+        PLAYER(SPECIES_EXCADRILL) { Item(ITEM_EXCADRITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_HORN_DRILL, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HORN_DRILL, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
 

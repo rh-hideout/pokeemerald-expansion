@@ -1,10 +1,17 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(MoveMakesContact(MOVE_RAPID_SPIN));
+    ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
+    ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+    ASSUME(GetMoveEffect(MOVE_MORTAL_SPIN) == EFFECT_RAPID_SPIN);
+}
+
 SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -19,7 +26,6 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
 SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
         #endif
@@ -43,7 +49,6 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
 SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons foe")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MORTAL_SPIN) == EFFECT_RAPID_SPIN);
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -63,7 +68,6 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
 SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -94,7 +98,6 @@ TO_DO_BATTLE_TEST("Rapid Spin blows away Wrap, hazards, but doesn't raise Speed 
 SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed when Sheer Force boosted (Gen 9+)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
         #endif
@@ -157,5 +160,47 @@ SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin remove Leech Seed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         MESSAGE("Wobbuffet was freed from Leech Seed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin don't remove hazards if the user faints (Gen9)")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
+
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
+        NONE_OF {
+            MESSAGE("The pointed stones disappeared from around your team!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin remove hazards even if the user faints (Champions)")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
+
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
+        MESSAGE("The pointed stones disappeared from your side!");
     }
 }

@@ -28,6 +28,8 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define MAX_RANDOM_ADDITIONAL_EFFECTS   3
+
 struct AdditionalEffect
 {
     enum MoveEffect moveEffect;
@@ -40,8 +42,11 @@ struct AdditionalEffect
     u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
     u8 padding:1;
 
+    enum MoveEffect randomMoveEffects[MAX_RANDOM_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_RANDOM_FROM_LIST
+
     union PACKED {
         enum WrappedStringID wrapped;
+        enum BrokeProtectionStringID brokeProtect;
     } multistring;
 
     u8 chance; // 0% = effect certain, primary effect

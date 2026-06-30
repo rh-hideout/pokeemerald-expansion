@@ -827,16 +827,11 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         SetupAIPredictionData(battler, SWITCH_MID_BATTLE_OPTIONAL);
     }
 
+    gBattleStruct->dynamicMoveType = TYPE_NONE;
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+
     AIDebugTimerEnd();
     gAiLogicData->aiCalcInProgress = FALSE;
-}
-
-enum Ability GetPartyMonAbility(struct Pokemon *mon)
-{
-    // Doesn't have any special handling yet
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-    enum Ability ability = GetSpeciesAbility(species, GetMonData(mon, MON_DATA_ABILITY_NUM));
-    return ability;
 }
 
 static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -1995,7 +1990,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         else if (gBattleMons[battlerAtk].volatiles.substitute
               || gBattleMons[battlerAtk].volatiles.powerTrick
-              || gBattleMons[battlerAtk].volatiles.magnetRise
+              || gBattleMons[battlerAtk].volatiles.magnetRiseTimer > 0
               || gBattleMons[battlerAtk].volatiles.aquaRing
               || gBattleMons[battlerAtk].volatiles.root
               || AnyStatIsRaised(battlerAtk))
@@ -2248,7 +2243,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_LASER_FOCUS:
-        if (gBattleMons[battlerDef].volatiles.laserFocus)
+        if (gBattleMons[battlerDef].volatiles.laserFocusTimer > 0)
             ADJUST_SCORE(-10);
         else if (aiData->abilities[battlerDef] == ABILITY_SHELL_ARMOR || aiData->abilities[battlerDef] == ABILITY_BATTLE_ARMOR)
             ADJUST_SCORE(-8);
@@ -2868,7 +2863,6 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_IRON_BALL
           || gBattleMons[battlerAtk].volatiles.smackDown
           || gBattleMons[battlerAtk].volatiles.root
-          || gBattleMons[battlerAtk].volatiles.magnetRise
           || !AI_IsBattlerGrounded(battlerAtk))
             ADJUST_SCORE(-10);
         break;
@@ -3785,6 +3779,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     {
         // these checks mostly handled in AI_CheckBadMove and AI_CheckViability
 /*
+        IF WE FULLY RETIRE THIS CODEBLOCK LATER, ALSO REMOVE THE IsAbilityOfRating FUNCTION
+
         switch (effect)
         {
         case EFFECT_SKILL_SWAP:
@@ -3926,10 +3922,39 @@ static enum MoveComparisonResult CompareResistBerryEffects(enum BattlerId battle
     return MOVE_NEUTRAL_COMPARISON;
 }
 
+bool32 DoesBattlerKOItselfWithRecoil(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    u32 recoilDmg = 0;
+    u32 monHP = GetNonDynamaxMaxHP(battlerAtk);
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+
+    // Is recoil applicable
+    if (!IsRecoilDamageEffect(effect) || !AI_IsDamagedByRecoil(battlerAtk))
+        return FALSE;
+
+    // Get recoil damage
+    if (effect == EFFECT_CHLOROBLAST || effect == EFFECT_MAX_HP_50_RECOIL)
+        recoilDmg = (monHP + 1) / 2; // Half of max HP rounded up
+    if (GetMoveEffect(move) == EFFECT_RECOIL)
+        recoilDmg = monHP * GetMoveRecoil(move) / 100; // Recoil damage
+
+    // Does recoil KO attacker
+    s32 opposingMons = 0;
+    if ((GetConfig(B_MULTI_BATTLE_WHITEOUT) == GEN_3) && BattlerIsPlayer(battlerDef))
+        opposingMons = CountUsablePartyMons(battlerDef);
+    else
+        opposingMons = CountUsableSideMons(battlerDef);
+
+    if (recoilDmg >= gBattleMons[battlerAtk].hp && opposingMons != 0)
+        return TRUE;
+
+    return FALSE;
+}
+
 static enum MoveComparisonResult CompareMoveSelfSacrifice(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move1, enum Move move2)
 {
-    bool32 selfSacrifice1 = IsSelfSacrificeEffect(move1);
-    bool32 selfSacrifice2 = IsSelfSacrificeEffect(move2);
+    bool32 selfSacrifice1 = IsSelfSacrificeEffect(move1) || DoesBattlerKOItselfWithRecoil(battlerAtk, battlerDef, move1);
+    bool32 selfSacrifice2 = IsSelfSacrificeEffect(move2) || DoesBattlerKOItselfWithRecoil(battlerAtk, battlerDef, move2);
 
     if (selfSacrifice1 && !selfSacrifice2)
         return MOVE_LOST_COMPARISON;
@@ -4590,7 +4615,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_BATON_PASS:
         if ((aiData->shouldSwitch & (1u << battlerAtk)) && (gBattleMons[battlerAtk].volatiles.substitute
           || gBattleMons[battlerAtk].volatiles.powerTrick
-          || gBattleMons[battlerAtk].volatiles.magnetRise
+          || gBattleMons[battlerAtk].volatiles.magnetRiseTimer > 0
           || gBattleMons[battlerAtk].volatiles.aquaRing
           || gBattleMons[battlerAtk].volatiles.root
           || AnyStatIsRaised(battlerAtk)))

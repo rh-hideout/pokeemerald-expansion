@@ -429,19 +429,19 @@ void HandleAction_UseMove(void)
             gBattleResults.lastUsedMoveOpponent = gCurrentMove;
     }
 
-    // Set dynamic move type.
+
     SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
 
     // check Z-Move used
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(gCurrentMove) && !IsZMove(gCurrentMove))
+    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE
+     && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS // Check the actual type, not the dynamic one
+     && !IsZMove(gCurrentMove))
     {
-        gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
         gCurrentMove = gChosenMove = GetUsableZMove(gBattlerAttacker, gCurrentMove);
     }
     // check Max Move used
     else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
     {
-        gBattleStruct->categoryOverride = GetMoveCategory(gCurrentMove);
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
 
@@ -1304,11 +1304,28 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
     if (GetMoveEffect(move) != EFFECT_BELCH)
         return FALSE;
 
-    return !GetBattlerPartyState(battler)->ateBerry;
+    return (!GetBattlerPartyState(battler)->ateBerry && GetConfig(B_BELCH_SELECTABLE) < GEN_CHAMPIONS);
 }
 
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
 #define DYNAMAX_BYPASS_CHECK    (!IsGimmickSelected(battler, GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+
+static bool32 SetCantSelectScript(enum BattlerId battler, enum Move move, const u8 *palaceScript, const u8 *script)
+{
+    gCurrentMove = move;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    {
+        gPalaceSelectionBattleScripts[battler] = palaceScript;
+        gProtectStructs[battler].palaceUnableToUseMove = TRUE;
+        return FALSE;
+    }
+    else
+    {
+        gSelectionBattleScripts[battler] = script;
+        return TRUE;
+    }
+}
 
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 {
@@ -1323,34 +1340,14 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
      && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
-        gCurrentMove = gBattleMons[battler].volatiles.encoredMove;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_EncoredMove;
-            limitations++;
-        }
-        return limitations;
+        limitations = SetCantSelectScript(battler, gBattleMons[battler].volatiles.encoredMove, BattleScript_EncoredMoveInPalace, BattleScript_EncoredMove);
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingDisabledMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingDisabledMove;
+        if (SetCantSelectScript(battler, gBattleMons[battler].volatiles.disabledMove, BattleScript_SelectingDisabledMoveInPalace, BattleScript_SelectingDisabledMove))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
@@ -1375,124 +1372,89 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     {
         if ((GetActiveGimmick(battler) == GIMMICK_DYNAMAX))
             gCurrentMove = MOVE_MAX_GUARD;
-        else
-            gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveTauntInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveTaunt;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveTauntInPalace, BattleScript_SelectingNotAllowedMoveTaunt))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveThroatChopInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveThroatChop;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveThroatChopInPalace, BattleScript_SelectingNotAllowedMoveThroatChop))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && GetImprisonedMovesCount(battler, move))
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingImprisonedMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingImprisonedMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingImprisonedMoveInPalace, BattleScript_SelectingImprisonedMove))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsGravityPreventingMove(move))
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGravityInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGravity;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveGravityInPalace, BattleScript_SelectingNotAllowedMoveGravity))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsHealBlockPreventingMove(battler, move))
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveHealBlockInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveHealBlock;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveHealBlockInPalace, BattleScript_SelectingNotAllowedMoveHealBlock))
             limitations++;
-        }
     }
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsBelchPreventingMove(battler, move))
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedBelchInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedBelch;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedBelchInPalace, BattleScript_SelectingNotAllowedBelch))
             limitations++;
-        }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+    if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
     {
-        gCurrentMove = move;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedStuffCheeksInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedStuffCheeks;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedStuffCheeksInPalace, BattleScript_SelectingNotAllowedStuffCheeks))
             limitations++;
-        }
     }
 
     if (MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
     {
-        gCurrentMove = move;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, gCurrentMove);
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedCurrentMoveInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedCurrentMove;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedCurrentMoveInPalace, BattleScript_SelectingNotAllowedCurrentMove))
             limitations++;
-        }
+    }
+
+    // Unconfirmed: We're making an assumption that a Max Move variant of moves that otherwise result in
+    // "This move can't be used!" can be used while Dynamaxed
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_FIRST_TURN_ONLY
+     && !IsBattlersFirstTurn(battler)
+     && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+    {
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
+            limitations++;
+    }
+
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_SPIT_UP
+     && gBattleMons[battler].volatiles.stockpileCounter == 0
+     && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+    {
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
+            limitations++;
+    }
+
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
+     && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move))
+     && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+    {
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
+            limitations++;
+    }
+
+    if (DYNAMAX_BYPASS_CHECK
+     && moveEffect == EFFECT_LAST_RESORT
+     && !CanUseLastResort(battler)
+     && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)
+    {
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
+            limitations++;
     }
 
     gPotentialItemEffectBattler = battler;
@@ -1500,50 +1462,24 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveChoiceItemInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveChoiceItem;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveChoiceItemInPalace, BattleScript_SelectingNotAllowedMoveChoiceItem))
             limitations++;
-        }
     }
     else if (holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
     {
         if ((GetActiveGimmick(battler) == GIMMICK_DYNAMAX))
             gCurrentMove = MOVE_MAX_GUARD;
-        else
-            gCurrentMove = move;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveAssaultVestInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveAssaultVest;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveAssaultVestInPalace, BattleScript_SelectingNotAllowedMoveAssaultVest))
             limitations++;
-        }
     }
     if (DYNAMAX_BYPASS_CHECK && (GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS) && *choicedMove != MOVE_NONE
               && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        {
-            gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGorillaTacticsInPalace;
-            gProtectStructs[battler].palaceUnableToUseMove = TRUE;
-        }
-        else
-        {
-            gSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedMoveGorillaTactics;
+        if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingNotAllowedMoveGorillaTacticsInPalace, BattleScript_SelectingNotAllowedMoveGorillaTactics))
             limitations++;
-        }
     }
 
     if (gBattleMons[battler].pp[moveId] == 0)
@@ -1636,7 +1572,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_THROAT_CHOP && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
             unusableMoves |= 1u << i;
         // Stuff Cheeks
-        else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+        else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
             unusableMoves |= 1u << i;
         // Gorilla Tactics
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
@@ -1644,6 +1580,34 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
             unusableMoves |= 1u << i;
+        else if (check & MOVE_LIMITATION_UNUSABLE)
+        {
+            switch (moveEffect)
+            {
+                // Fake Out, First Impression
+                case EFFECT_FIRST_TURN_ONLY:
+                    if (!IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Spit Up
+                case EFFECT_SPIT_UP:
+                    if (gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Burn Up, Double Shock
+                case EFFECT_FAIL_IF_NOT_ARG_TYPE:
+                    if (!IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                // Last Resort
+                case EFFECT_LAST_RESORT:
+                    if (!CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)
+                        unusableMoves |= 1u << i;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     return unusableMoves;
 }
@@ -4919,27 +4883,11 @@ u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability)
         return 0;
 }
 
-u32 IsAbilityOnOpposingSide(enum BattlerId battler, enum Ability ability)
-{
-    return IsAbilityOnSide(BATTLE_OPPOSITE(battler), ability);
-}
-
 u32 IsAbilityOnField(enum Ability ability)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
-            return i + 1;
-    }
-
-    return 0;
-}
-
-u32 IsAbilityOnFieldExcept(enum BattlerId battler, enum Ability ability)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (i != battler && IsBattlerAlive(i) && GetBattlerAbility(i) == ability)
             return i + 1;
     }
 
@@ -5235,19 +5183,6 @@ bool32 CanBeFrozen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ab
             ABILITY_NONE, // attacker ability does not matter
             abilityDef,
             MOVE_EFFECT_FREEZE,
-            CHECK_TRIGGER))
-        return TRUE;
-    return FALSE;
-}
-// Unused, technically also redundant because it is just a copy of CanBeFrozen
-bool32 CanGetFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
-{
-    if (CanSetNonVolatileStatus(
-            battlerAtk,
-            battlerDef,
-            ABILITY_NONE, // attacker ability does not matter
-            abilityDef,
-            MOVE_EFFECT_FREEZE_OR_FROSTBITE, // also covers frostbite
             CHECK_TRIGGER))
         return TRUE;
     return FALSE;
@@ -5899,7 +5834,7 @@ static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, e
 {
     if (gBattleMons[battler].volatiles.telekinesis)
         return TRUE;
-    if (gBattleMons[battler].volatiles.magnetRise)
+    if (gBattleMons[battler].volatiles.magnetRiseTimer > 0)
         return TRUE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return TRUE;
@@ -7359,12 +7294,22 @@ static inline uq4_12_t GetGlaiveRushModifier(enum BattlerId battlerDef)
     return UQ_4_12(1.0);
 }
 
-static inline uq4_12_t GetZMaxMoveAgainstProtectionModifier(struct DamageContext *ctx)
+static inline uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ctx)
 {
+    if (MoveIgnoresProtect(ctx->move))
+        return UQ_4_12(1.0);
+
+    // Unseen Fist and Piercing Drill
+    u32 protected = gProtectStructs[ctx->battlerDef].protected;
+    if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD
+         && (ctx->abilities[ctx->battlerAtk] == ABILITY_UNSEEN_FIST || ctx->abilities[ctx->battlerAtk] == ABILITY_PIERCING_DRILL)
+         && GetConfig(B_UNSEEN_FIST_PIERCING_DRILL) >= GEN_CHAMPIONS)
+        return UQ_4_12(0.25);
+
+    // Z-Moves and Max Moves
     if (!IsZMove(ctx->move) && !IsMaxMove(ctx->move))
         return UQ_4_12(1.0);
 
-    u32 protected = gProtectStructs[ctx->battlerDef].protected;
     if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD)
         return UQ_4_12(0.25);
     return UQ_4_12(1.0);
@@ -7676,7 +7621,7 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
         DAMAGE_APPLY_MODIFIER(GetSameTypeAttackBonusModifier(ctx));
     DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
     DAMAGE_APPLY_MODIFIER(GetBurnOrFrostBiteModifier(ctx));
-    DAMAGE_APPLY_MODIFIER(GetZMaxMoveAgainstProtectionModifier(ctx));
+    DAMAGE_APPLY_MODIFIER(GetMoveAgainstProtectionModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetOtherModifiers(ctx));
 
     return dmg;
@@ -7879,7 +7824,7 @@ s32 CalcCritChanceStage(struct DamageContext *ctx)
     {
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -7957,7 +7902,7 @@ s32 CalcCritChanceStageGen1(struct DamageContext *ctx)
             RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocusTimer > 0
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilities[ctx->battlerAtk] == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
@@ -8213,7 +8158,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         TryNoticeIllusionInTypeEffectiveness(ctx->move, ctx->moveType, ctx->battlerAtk, ctx->battlerDef, modifier, illusionSpecies);
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
-    bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
+    bool32 ignoreTypeCalc = isPresentHealing || IsBattleMoveStatus(ctx->move);
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);
@@ -8760,7 +8705,7 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
         return FALSE;
-    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId))
+    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId) || (DoesSpeciesUseHoldItemToChangeForm(otherSpecies, itemId) && GetConfig(B_KNOCK_OFF_REMOVAL) < GEN_CHAMPIONS))
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
@@ -9009,57 +8954,84 @@ bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, enum BattlerId battler)
     return FALSE;
 }
 
-static enum DamageCategory SwapMoveDamageCategory(enum Move move)
-{
-    if (GetMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
-        return DAMAGE_CATEGORY_SPECIAL;
-    return DAMAGE_CATEGORY_PHYSICAL;
-}
-
-/*
-    The Global States gBattleStruct->categoryOverride and gBattleStruct->swapDamageCategory
-    can be removed but a lot of function arguments (battlerAtk and battlerDef) have to be added for this, about 50+.
-    This is potentially a good change because it is less likely to cause bugs in the future.
-*/
 enum DamageCategory GetBattleMoveCategory(enum Move move)
 {
-    if (gBattleStruct != NULL)
-    {
-        if (gBattleStruct->swapDamageCategory) // Photon Geyser, Shell Side Arm, Light That Burns the Sky, Tera Blast
-            return SwapMoveDamageCategory(move);
-        if (IsZMove(move) || IsMaxMove(move)) // TODO: Might be buggy depending on when this is called.
-            return gBattleStruct->categoryOverride;
-        if (IsBattleMoveStatus(move))
-            return DAMAGE_CATEGORY_STATUS;
-    }
+    bool32 inBattle = gBattleStruct != NULL;
+
+    if (inBattle && gBattleStruct->dynamicMoveCategory != DAMAGE_CATEGORY_NONE)
+        return gBattleStruct->dynamicMoveCategory;
+
+    if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
+        return DAMAGE_CATEGORY_STATUS;
 
     if (B_PHYSICAL_SPECIAL_SPLIT < GEN_4)
-        return gTypesInfo[GetBattleMoveType(move)].damageCategory;
+    {
+        if (inBattle)
+            return gTypesInfo[GetBattleMoveType(move)].damageCategory;
+        else
+            return gTypesInfo[GetMoveType(move)].damageCategory;
+    }
 
     return GetMoveCategory(move);
 }
 
 void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
+    gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_PHOTON_GEYSER:
-        gBattleStruct->swapDamageCategory = (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL);
+        if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+        else
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
         break;
     case EFFECT_SHELL_SIDE_ARM:
-        if (gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef] == DAMAGE_CATEGORY_PHYSICAL)
-            gBattleStruct->swapDamageCategory = TRUE;
+        gBattleStruct->dynamicMoveCategory = gBattleStruct->shellSideArmCategory[battlerAtk][battlerDef];
         break;
     case EFFECT_TERA_BLAST:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
-            gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
+        {
+            if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+            else
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
+        }
+        else
+        {
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+        }
         break;
     case EFFECT_TERA_STARSTORM:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battlerAtk), MON_DATA_SPECIES)) == SPECIES_TERAPAGOS)
-            gBattleStruct->swapDamageCategory = GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL;
+        {
+            if (GetCategoryBasedOnStats(battlerAtk) == DAMAGE_CATEGORY_PHYSICAL)
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
+            else
+                gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
+        }
+        else
+        {
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
+        }
         break;
+    case EFFECT_PRESENT:
+    {
+        u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
+        if (rand < 102)
+            gBattleStruct->presentBasePower = 40;
+        else if (rand < 178)
+            gBattleStruct->presentBasePower = 80;
+        else if (rand < 204)
+            gBattleStruct->presentBasePower = 120;
+        else
+            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_STATUS;
+        break;
+    }
     default:
-        gBattleStruct->swapDamageCategory = FALSE;
+        if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
+            gBattleStruct->dynamicMoveCategory = GetMoveCategory(GetBattlerChosenMove(battlerAtk));
         break;
     }
 }
@@ -9416,14 +9388,15 @@ u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
     return battler;
 }
 
-void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon)
+void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat)
 {
     gBattleMons[battler].level = GetMonData(mon, MON_DATA_LEVEL);
     gBattleMons[battler].hp = GetMonData(mon, MON_DATA_HP);
     gBattleMons[battler].maxHP = GetMonData(mon, MON_DATA_MAX_HP);
     gBattleMons[battler].attack = GetMonData(mon, MON_DATA_ATK);
     gBattleMons[battler].defense = GetMonData(mon, MON_DATA_DEF);
-    gBattleMons[battler].speed = GetMonData(mon, MON_DATA_SPEED);
+    if (updateSpeedStat)
+        gBattleMons[battler].speed = GetMonData(mon, MON_DATA_SPEED);
     gBattleMons[battler].spAttack = GetMonData(mon, MON_DATA_SPATK);
     gBattleMons[battler].spDefense = GetMonData(mon, MON_DATA_SPDEF);
 }
@@ -9449,7 +9422,11 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
 {
     u32 hp = GetMonData(mon, MON_DATA_HP);
     u32 oldMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
-    CalculateMonStats(mon);
+    if (gBattleMons[battler].volatiles.speedSwapped && GetConfig(B_MEGA_EVO_SPEED_SWAP) >= GEN_CHAMPIONS)
+        CalculateMonStatsCont(mon, FALSE);
+    else
+        CalculateMonStats(mon);
+
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);
@@ -9467,7 +9444,10 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
             }
         }
     }
-    CopyMonLevelAndBaseStatsToBattleMon(battler, mon);
+    if (gBattleMons[battler].volatiles.speedSwapped && GetConfig(B_MEGA_EVO_SPEED_SWAP) >= GEN_CHAMPIONS)
+        CopyMonLevelAndBaseStatsToBattleMon(battler, mon, FALSE);
+    else
+        CopyMonLevelAndBaseStatsToBattleMon(battler, mon, TRUE);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
 }
 
@@ -9660,13 +9640,6 @@ void GetBattlerTypes(enum BattlerId battler, bool32 ignoreTera, enum Type types[
     }
 }
 
-enum Type GetBattlerType(enum BattlerId battler, u32 typeIndex, bool32 ignoreTera)
-{
-    enum Type types[3];
-    GetBattlerTypes(battler, ignoreTera, types);
-    return types[typeIndex];
-}
-
 void RemoveBattlerType(enum BattlerId battler, enum Type type)
 {
     u32 i;
@@ -9754,8 +9727,8 @@ enum Type GetBattleMoveType(enum Move move)
 {
     if (gMain.inBattle)
     {
-        if (gBattleStruct->dynamicMoveType)
-            return gBattleStruct->dynamicMoveType & DYNAMIC_TYPE_MASK;
+        if (gBattleStruct->dynamicMoveType != TYPE_NONE)
+            return gBattleStruct->dynamicMoveType;
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (B_UPDATED_MOVE_TYPES < GEN_5
@@ -10177,15 +10150,6 @@ bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType)
         }
     }
     return FALSE;
-}
-
-void RemoveAllHazardsFromField(enum BattleSide side)
-{
-    gSideTimers[side].spikesAmount = 0;
-    gSideTimers[side].toxicSpikesAmount = 0;
-    gBattleStruct->numHazards[side] = 0;
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
 }
 
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)

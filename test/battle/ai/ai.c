@@ -1503,3 +1503,17 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_MOVE_OMNISCIENCE: AI knows the player's moves")
             TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI will prefer not using recoil moves that will KO its own mon")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_EDGE) == EFFECT_RECOIL);
+        ASSUME(GetMoveAccuracy(MOVE_STONE_EDGE) < 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(50); Speed(1); Moves(MOVE_TACKLE, MOVE_PROTECT); }
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); } 
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_STONE_EDGE, MOVE_DOUBLE_EDGE); HP(1); MaxHP(100); Speed(2); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_STONE_EDGE); MOVE(player, MOVE_PROTECT); }
+    }
+}
