@@ -204,7 +204,7 @@ gBattleAnimMove_HammerArm::
 
 gBattleAnimMove_GyroBall::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	waitplaysewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER, 8
@@ -2140,7 +2140,7 @@ gBattleAnimMove_ZenHeadbutt::
 
 gBattleAnimMove_MirrorShot::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=1
+	metallic_shine permanent=TRUE
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 10, RGB_WHITEALPHA
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_IMPACT, 0, 12, 12, RGB(21, 21, 21)
@@ -2702,7 +2702,7 @@ SetGunkShotBG:
 
 gBattleAnimMove_IronHead::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=1
+	metallic_shine permanent=TRUE
 	waitforvisualfinish
 	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0
 	playsewithpan SE_M_HEADBUTT, SOUND_PAN_ATTACKER
@@ -4019,7 +4019,7 @@ gBattleAnimMove_QuiverDance::
 
 gBattleAnimMove_HeavySlam::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -12046,7 +12046,7 @@ gBattleAnimMove_VeeveeVolley::
 
 gBattleAnimMove_DoubleIronBash::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -13150,7 +13150,7 @@ EternabeamGeyser:
 
 gBattleAnimMove_SteelBeam::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	delay 48
 	createvisualtask AnimTask_ElectricChargingParticles, 2, ANIM_ATTACKER, 20, 0, 2
 	playsewithpan SE_M_CHARGE, SOUND_PAN_ATTACKER
@@ -15504,7 +15504,7 @@ gBattleAnimMove_AquaCutter::
 gBattleAnimMove_GigatonHammer::
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 2, 4
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	createsprite gWoodHammerHammerSpriteTemplate, ANIM_TARGET, 2
 	delay 60
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 3, 0, 12, 4
@@ -16281,7 +16281,7 @@ gBattleAnimMove_AxeKick::
 
 gBattleAnimMove_SpinOut::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	call SetHighSpeedBg
 	loopsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER, 8, 3
@@ -18255,7 +18255,7 @@ TeraBlastSteel:
 	call ContinentalCrushStockpileRocks
 	delay 30
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	createsprite gReallyBigRockBlastRockSpriteTemplate, ANIM_TARGET, 2, 16, 0, 0, 0, 25, 257
@@ -22793,7 +22793,7 @@ gBattleAnimMove_AerialAce::
 
 gBattleAnimMove_IronDefense::
 	loopsewithpan SE_SHINY, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	complex_palette_blend selector=F_PAL_BG, delay=8, num_blends=2, color1=RGB_WHITEALPHA, blend_y1=14, color2=RGB_WHITEALPHA, blend_y2=0
 	waitforvisualfinish
 	end
@@ -22987,7 +22987,7 @@ gBattleAnimMove_ShockWave::
 
 gBattleAnimMove_Harden::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	end
 
@@ -25509,7 +25509,7 @@ gBattleAnimMove_ZapCannon::
 
 gBattleAnimMove_SteelWing::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	monbg ANIM_DEF_PARTNER
 	splitbgprio ANIM_TARGET
@@ -25534,7 +25534,7 @@ gBattleAnimMove_SteelWing::
 
 gBattleAnimMove_IronTail::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=1
+	metallic_shine permanent=TRUE
 	waitforvisualfinish
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -25552,7 +25552,7 @@ gBattleAnimMove_IronTail::
 
 gBattleAnimMove_PoisonTail::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=1, color=RGB(24, 6, 23)
+	metallic_shine permanent=TRUE, color=RGB(24, 6, 23)
 	waitforvisualfinish
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -25571,7 +25571,7 @@ gBattleAnimMove_PoisonTail::
 
 gBattleAnimMove_MetalClaw::
 	loopsewithpan SE_M_HARDEN, SOUND_PAN_ATTACKER, 28, 2
-	metallic_shine permanent=0
+	metallic_shine permanent=FALSE
 	waitforvisualfinish
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
 	delay 2
