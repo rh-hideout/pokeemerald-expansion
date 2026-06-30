@@ -918,7 +918,7 @@ static void SpriteCB_BXPYCursor(struct Sprite *sprite)
     {
         u32 enemyPos = position - BXPY_GetBringSize();
         sprite->y = 16 + (enemyPos * 23);
-        sprite->x2 = (gSineTable[(u8)sprite->data[0]] / 128) + 140;
+        sprite->x2 = (gSineTable[(u8)sprite->data[0]] / 128) + 144;
         sprite->data[0] += 8;
     }
     else
