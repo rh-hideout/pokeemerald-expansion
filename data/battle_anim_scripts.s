@@ -12815,7 +12815,7 @@ OverdriveRings:
 	createsprite gHyperVoiceRingSpriteTemplate, ANIM_ATTACKER, 0, 45, 0, 0, 0, 0, 0, 1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 1, 0, 6, 1
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_DEF_PARTNER, 1, 0, 6, 1
-	shake_battle_platforms priority=2, x_offset=1, y_offset=0, shakes=6, delay=1
+	shake_battle_platforms x_offset=1, y_offset=0, shakes=6, delay=1
 	createvisualtask SoundTask_WaitForCry, 5
 	return
 
