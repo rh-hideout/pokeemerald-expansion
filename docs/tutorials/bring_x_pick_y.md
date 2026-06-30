@@ -1,8 +1,6 @@
 # Introduction
 ![Demo of Bring X Pick Y Functionality](/docs/tutorials/img/bxpy/demo.png)
 
-This branch allows developers to add a new user interface and battle mode to their `pokeemerald-expansion` decompilation projects. 
-
 In this mode, the player must have X healthy, legal, Pokémon in the party. Using information about the opponent's team, they must then pick Y Pokémon to battle with. This mimicks the behavior from several official Pokémon titles.
 
 # Usage
@@ -315,36 +313,9 @@ Bring X Pick Y requires 1 flag, and optionally consumes 1 variable.
     * After battle, the experience / HP / PP changes that occured to the participating Pokémon are applied to the particpating Pokémon.
     * If `BXPY_RETAIN_CHANGES` is `TRUE`, the game will not compile if `B_VAR_BXPY` is not properly set.
 
-# Support
-## Frequently Asked Questions (FAQ)
+# Frequently Asked Questions (FAQ)
+> Are link battles supported?
+No.
 
-Q: Are link battles supported?
-A: No.
-
-Q: Can `bringxpicky` be called from trainer scripts?
-A: No, it requires its own script.
-
-## Other Questions
-If you have read all of the documentation here and still have questions, please [ask a good question](https://www.freecodecamp.org/news/how-to-ask-good-questions-as-a-developer-9f71ff809b63/) in the [`decomps` channel of the Rom Hacking Hideout Discord server](https://discord.gg/6CzjAG6GZk). You can tag `linathan` or `pkmnsnfrn` and we will try to help if we can.
-
-# Contributors 
-## [Pawkkie](https://www.twitch.tv/pawkkie)
-* Wrote the implemention that the AI uses to select the Pokémon to bring into battle.
-
-## [Montblanc](https://github.com/montmoguri/pokeemerald-expansion/wiki)
-* Designed the user interface used for Bring X Pick Y.
-
-## [Linathan](https://x.com/LinathanZel)
-* Wrote the user interface used for Bring X Pick Y.
-
-## [Zatsu](https://twitter.com/NotAnArchemage)
-* Created the type icons used for Bring X Pick Y.
-
-# CHANGELOG
-All changes to this project will be documented in this section. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## Unreleased
-n/a
-
-## [1.0.1] - XXXX-XX-XX
-### Fixed
+> Can `bringxpicky` be called from trainer scripts?
+No, it requires its own script.
