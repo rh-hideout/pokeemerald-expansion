@@ -2013,8 +2013,8 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
         {
             //  Start of area, offset start, covers rest of tile
             currWidth = PIXELS_PER_TILE - (currStart % PIXELS_PER_TILE);
-            srcMask = 0xFFFFFFFF << (BITS_PER_PIXEL * currWidth);
-            dstMask = ~srcMask;
+            dstMask = 0xFFFFFFFF >> (BITS_PER_PIXEL * currWidth);
+            srcMask = ~dstMask;
         }
         else
         {
