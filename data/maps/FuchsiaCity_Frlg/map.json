@@ -3,7 +3,6 @@
   "name": "FuchsiaCity_Frlg",
   "layout": "LAYOUT_FUCHSIA_CITY",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FUCHSIA_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -436,5 +435,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

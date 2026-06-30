@@ -5,7 +5,8 @@
 or<br>
 ```make leafgreen -j<output of nproc>```
 
-Note: If you switch between building emerald and FRLG, `make clean` is required at the moment.
+If you want to use non-standard command like `debug`, `check` or `release`, you can use
+```make <check/debug/release> -j<output of nproc>  BUILD=<firered/leafgreen>```<br>
 
 ## Porymap adjustments
 For Porymap to work with FRLG maps you need to adjust a few settings (`Options > Project Settings`):
@@ -23,25 +24,41 @@ For Porymap to work with FRLG maps you need to adjust a few settings (`Options >
 ![porymap_identifier](./img/frlg/porymap_identifier.png)
 
 ## How to add maps
-For maps to be included in the build process they need to have a custom attribute `region` with the value `REGION_KANTO` or `REGION_HOENN` for their respective games. 
-
-If you create a new map, the `region` will not be there, and must be added manually in the `map.json` or through Porymap.
-
-**Examples:**
-
-map.json:
+Newly added maps default to a "null" build version which means they are added to your ROM wether you are compiling emerald, leafgreen or firered.
+If you want to make a map that is only added to firered but not leafgreen, you can add
 ```
+"build_version": ["firered"],
+```
+to the map json and the map will not be compiled into any other game than firered
+This `build_version` field is also present in the json layout.
+
+## Layout Rules
+
+Because emerald and frlg layout don't work the same internally (most importantly, they have a different amount of metatiles), it is important to precise if you want the layout of a map you created to be treated as an "emerald" layour or an "frlg" layout.
+By default, the compiler will assume a new layout matches the game you are compiling, so if you are compiling firered or leafgreen, a layout with no explicir rules will be treated as an "frlg" layout and if you are compiling emerald, the same layout will be treated as an emerald layout.
+It is still recommended to be explicit what rules you want your layout to be using and you will be given warnings if you don't
+To set a layout rules, just add an `frlg_layout_rules` field set to `true` or `false` in the `data/layouts/layouts.json` file
+
+Layout Json Example:
+```json
 {
-  "id": "MAP_PALLET_TOWN",
-  "name": "PalletTown_Frlg",
-  "layout": "LAYOUT_PALLET_TOWN",
-  "music": "MUS_RG_PALLET",
-  "region": "REGION_KANTO",
-  ...
+      "id": "LAYOUT_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA",
+      "name": "OneIsland_KindleRoad_EmberSpa_Layout",
+      "width": 27,
+      "height": 39,
+      "border_width": 2,
+      "border_height": 2,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_MtEmber",
+      "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/map.bin",
+      "build_version": [
+        "firered",
+        "leafgreen"
+      ],
+      "frlg_layout_rules": true
+}
 ```
-Porymap:
-
-![porymap_region_attribute](./img/frlg/porymap_region_attribute.png)
 
 If a map does not have the `region` attribute, the compiler will default to what game you compile, and the map you created gets included in that game.
 
@@ -82,14 +99,12 @@ If you want that running `make -j<output of nproc>` to directly compile one of f
 -TITLE        ?= POKEMON EMER
 -GAME_CODE    ?= BPEE
 -BUILD_NAME   ?= emerald
--MAP_VERSION  ?= emerald
 +GAME_VERSION ?= LEAFGREEN
 +TITLE        ?= POKEMON LEAF
 +GAME_CODE    ?= BPGE
 +BUILD_NAME   ?= leafgreen
-+MAP_VERSION  ?= firered
 
-ifeq (firered,$(MAKECMDGOALS))
+ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))
   	GAME_VERSION 	:= FIRERED
 	TITLE       	:= POKEMON FIRE
 	GAME_CODE   	:= BPRE
@@ -97,51 +112,19 @@ ifeq (firered,$(MAKECMDGOALS))
 	MAP_VERSION 	:= firered
 else
 
--ifeq (leafgreen,$(MAKECMDGOALS))
+-ifeq (leafgreen, $(or $(BUILD), $(MAKECMDGOALS)))
 -	GAME_VERSION 	:= LEAFGREEN
 -	TITLE       	:= POKEMON LEAF
 -	GAME_CODE   	:= BPGE
 -	BUILD_NAME  	:= leafgreen
--	MAP_VERSION 	:= firered
-+ifeq (emerald,$(MAKECMDGOALS))
++ifeq (emerald, $(or $(BUILD), $(MAKECMDGOALS)))
 +	GAME_VERSION 	:= EMERALD
 +	TITLE       	:= POKEMON EMER
 +	GAME_CODE   	:= BPEE
 +	BUILD_NAME  	:= emerald
-+	MAP_VERSION 	:= emerald
 endif
 endif
 ```
-
-## Make empty region attibutes defaults to REGION_KANTO
-Another issue is that you need to add `REGION_KANTO` attribute to every new map you create
-
-Make the following changes to your `tools/mapjson/mapjson.cpp` so the new maps you add without the `REGION_KANTO` also work fine
-
-```diff
-string region = json_to_string(map_data, "region", true);
-
-        if (region.empty()) {
--            region = "REGION_HOENN";
-+            region = "REGION_KANTO";
-        }
-        string map_name = json_to_string(map_data, "name");
-
-        if ((version == "emerald" && region != "REGION_HOENN")
-         || (version == "firered" && region != "REGION_KANTO")) {
-            invalid_maps.push_back(map_name);
-        }
-```
-
-Then run this script to set `REGION_KANTO` as the region attribute for all the Hoenn Maps
-
-**Make sure you run this from the [root folder](../../) of your project!**
-
-```
-python3 migration_scripts/add_region_hoenn_attribute_to_hoenn_maps.py
-```
-
-Make sure to run `make clean` after running this script
 
 ## Fix CI if you are building FRLG by default
 If you make these I would also reccomend fixing your CI too to match these changes

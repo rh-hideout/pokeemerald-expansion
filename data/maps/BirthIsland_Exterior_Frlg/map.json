@@ -3,7 +3,6 @@
   "name": "BirthIsland_Exterior_Frlg",
   "layout": "LAYOUT_BIRTH_ISLAND_EXTERIOR_FRLG",
   "music": "MUS_NONE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_BIRTH_ISLAND_FRLG",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -56,10 +55,10 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

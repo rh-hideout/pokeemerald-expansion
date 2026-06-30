@@ -3,7 +3,6 @@
   "name": "FuchsiaCity_WardensHouse_Frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_WARDENS_HOUSE",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FUCHSIA_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -130,5 +129,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "FuchsiaCity_WardensHouse_EventScript_DisplaySign2"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

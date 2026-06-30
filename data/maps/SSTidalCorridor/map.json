@@ -3,7 +3,6 @@
   "name": "SSTidalCorridor",
   "layout": "LAYOUT_SS_TIDAL_CORRIDOR",
   "music": "MUS_SAILING",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -246,5 +245,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "SSTidalCorridor_EventScript_Cabin4Sign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

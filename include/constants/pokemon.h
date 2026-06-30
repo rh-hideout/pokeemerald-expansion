@@ -51,6 +51,23 @@ enum __attribute__((packed)) EggGroup
 
 #define EGG_GROUPS_PER_MON            2
 
+// Core-series regions
+enum PokemonRegion
+{
+    POKEMON_REGION_NONE,
+    POKEMON_REGION_KANTO,
+    POKEMON_REGION_JOHTO,
+    POKEMON_REGION_HOENN,
+    POKEMON_REGION_SINNOH,
+    POKEMON_REGION_UNOVA,
+    POKEMON_REGION_KALOS,
+    POKEMON_REGION_ALOLA,
+    POKEMON_REGION_GALAR,
+    POKEMON_REGION_HISUI,
+    POKEMON_REGION_PALDEA,
+    POKEMON_REGIONS_COUNT,
+};
+
 // Pokémon natures
 #define NATURE_HARDY    0 // Neutral
 #define NATURE_LONELY   1 // +Atk -Def

@@ -3,7 +3,6 @@
   "name": "SixIsland_DottedHole_SapphireRoom_Frlg",
   "layout": "LAYOUT_SIX_ISLAND_DOTTED_HOLE_SAPPHIRE_ROOM",
   "music": "MUS_RG_SEVII_DUNGEON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_DOTTED_HOLE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -63,9 +62,7 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -75,5 +72,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "SixIsland_DottedHole_SapphireRoom_EventScript_BrailleMessage"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

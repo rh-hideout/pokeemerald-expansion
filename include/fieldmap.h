@@ -66,6 +66,6 @@ bool32 AreCoordsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 bool32 AreCoordsInsidePlayerMap(s16 x, s16 y);
 
 // field_region_map.c
-void FieldInitRegionMap(MainCallback callback);
+void FieldInitRegionMap(MainCallback callback, enum RegionMapId regionMapId, bool32 allowRegionChange);
 
 #endif //GUARD_FIELDMAP_H

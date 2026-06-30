@@ -3,7 +3,6 @@
   "name": "LilycoveCity_DepartmentStore_1F",
   "layout": "LAYOUT_LILYCOVE_CITY_DEPARTMENT_STORE_1F",
   "music": "MUS_LILYCOVE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -135,5 +134,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "LilycoveCity_DepartmentStore_1F_EventScript_FloorNamesSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

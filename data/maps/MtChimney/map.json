@@ -3,7 +3,6 @@
   "name": "MtChimney",
   "layout": "LAYOUT_MT_CHIMNEY",
   "music": "MUS_MT_CHIMNEY",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MT_CHIMNEY",
   "requires_flash": false,
   "weather": "WEATHER_VOLCANIC_ASH",
@@ -459,5 +458,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MtChimney_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "ShoalCave_LowTideInnerRoom",
   "layout": "LAYOUT_SHOAL_CAVE_LOW_TIDE_INNER_ROOM",
   "music": "MUS_MT_PYRE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SHOAL_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -137,5 +136,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell4"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

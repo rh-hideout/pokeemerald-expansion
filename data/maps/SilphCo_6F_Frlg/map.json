@@ -3,7 +3,6 @@
   "name": "SilphCo_6F_Frlg",
   "layout": "LAYOUT_SILPH_CO_6F",
   "music": "MUS_RG_SILPH",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SILPH_CO",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -246,5 +245,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SilphCo_6F_EventScript_FloorSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

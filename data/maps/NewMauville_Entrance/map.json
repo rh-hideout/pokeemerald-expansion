@@ -3,7 +3,6 @@
   "name": "NewMauville_Entrance",
   "layout": "LAYOUT_NEW_MAUVILLE_ENTRANCE",
   "music": "MUS_MT_PYRE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_NEW_MAUVILLE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -42,5 +41,8 @@
       "script": "NewMauville_Entrance_EventScript_Door"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

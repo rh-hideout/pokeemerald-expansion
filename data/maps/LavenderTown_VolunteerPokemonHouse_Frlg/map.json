@@ -3,7 +3,6 @@
   "name": "LavenderTown_VolunteerPokemonHouse_Frlg",
   "layout": "LAYOUT_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE",
   "music": "MUS_RG_LAVENDER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_LAVENDER_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -150,5 +149,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LavenderTown_VolunteerPokemonHouse_EventScript_Bookshelf"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

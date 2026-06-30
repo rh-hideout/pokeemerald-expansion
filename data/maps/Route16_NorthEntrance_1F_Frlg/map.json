@@ -3,7 +3,6 @@
   "name": "Route16_NorthEntrance_1F_Frlg",
   "layout": "LAYOUT_ROUTE16_NORTH_ENTRANCE_1F",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_16",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -183,5 +182,9 @@
       "script": "Route16_NorthEntrance_1F_EventScript_NeedBikeTriggerBottom"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

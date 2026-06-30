@@ -3,7 +3,6 @@
   "name": "SSAnne_Deck_Frlg",
   "layout": "LAYOUT_SSANNE_DECK",
   "music": "MUS_RG_SS_ANNE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_S_S_ANNE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -104,5 +103,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }
