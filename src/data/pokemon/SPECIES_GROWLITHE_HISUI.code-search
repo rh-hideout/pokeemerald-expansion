@@ -1,0 +1,24 @@
+# Query: SPECIES_GROWLITHE_HISUI
+# ContextLines: 1
+
+4 results - 4 files
+
+include/constants/species.h:
+  1062      //Hisuian Forms
+  1063:     SPECIES_GROWLITHE_HISUI = 993,
+  1064      SPECIES_ARCANINE_HISUI = 994,
+
+src/starter_choose.c:
+  112  
+  113: #define GRASS_STARTER (IS_FRLG ? SPECIES_BULBASAUR  : SPECIES_GROWLITHE_HISUI)
+  114  #define FIRE_STARTER  (IS_FRLG ? SPECIES_CHARMANDER : SPECIES_SOLOSIS)
+
+src/data/pokemon/form_species_tables.h:
+  230  #if P_HISUIAN_FORMS
+  231:     SPECIES_GROWLITHE_HISUI,
+  232  #endif
+
+src/data/pokemon/species_info/gen_1_families.h:
+  8023  #if P_HISUIAN_FORMS
+  8024:     [SPECIES_GROWLITHE_HISUI] =
+  8025      {
