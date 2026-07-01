@@ -264,12 +264,13 @@ DOUBLE_BATTLE_TEST("Mirror Armor does not trigger ally's Defiant")
     }
 }
 
-SINGLE_BATTLE_TEST("Mirror Armor does not does not reflect Sticky Web stat drops (Gen9+)")
+SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+)")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL); 
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
