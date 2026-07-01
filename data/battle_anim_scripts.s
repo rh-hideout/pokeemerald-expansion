@@ -19144,6 +19144,7 @@ MatchaGotchaDoubleProjectile:
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 1-3 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_None::
+gBattleAnimMove_Count:: @Unused?
 gBattleAnimMove_MirrorMove::
 gBattleAnimMove_Pound::
 	monbg ANIM_TARGET
@@ -28030,17 +28031,6 @@ WeatherBallIce:
 	playsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET
 	call IceCrystalEffectShort
 	waitforvisualfinish
-	end
-
-gBattleAnimMove_Count::
-	monbg ANIM_TARGET
-	setalpha 12, 8
-	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
-	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
-	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
-	waitforvisualfinish
-	clearmonbg ANIM_TARGET
-	blendoff
 	end
 
 IceCrystalEffectShort:
