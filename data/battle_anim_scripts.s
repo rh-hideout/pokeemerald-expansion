@@ -13486,7 +13486,7 @@ gBattleAnimMove_RisingVoltage::
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	createvisualtask AnimTask_GetFieldTerrain, 5,
-	jumpargeq 0, STATUS_FIELD_ELECTRIC_TERRAIN, ANIM_RISING_VOLTAGE_STRONGER
+	jumpargeq 0, B_TERRAIN_ELECTRIC, ANIM_RISING_VOLTAGE_STRONGER
 ANIM_RISING_VOLTAGE_NORMAL:
 	createvisualtask AnimTask_BlendBattleAnimPal, 2, F_PAL_BG, 1, 0, 4, RGB_BLACK @;To black
 	waitforvisualfinish

@@ -244,42 +244,42 @@ u32 GetCurrentBattleWeather(void)
 
 const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
     [B_TERRAIN_GRASSY] = {
+        .type = TYPE_GRASS,
         .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
         .endMessage = B_MSG_TERRAIN_END_GRASSY,
         .secretPowerAnimation = gBattleAnimMove_NeedleArm,
         .secretPowerEffect = MOVE_EFFECT_SLEEP,
-        .camouflageType = TYPE_GRASS,
         .battleBackground = BG_GRASSY_TERRAIN,
     },
 
     [B_TERRAIN_MISTY] = {
+        .type = TYPE_FAIRY,
         .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
         .endMessage = B_MSG_TERRAIN_END_MISTY,
         .secretPowerAnimation = gBattleAnimMove_FairyWind,
         .secretPowerEffect = SECRET_POWER_SP_ATK_MINUS_1,
-        .camouflageType = TYPE_FAIRY,
         .battleBackground = BG_MISTY_TERRAIN,
     },
 
     [B_TERRAIN_ELECTRIC] = {
+        .type = TYPE_ELECTRIC,
         .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
         .secretPowerAnimation = gBattleAnimMove_ThunderShock,
         .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
-        .camouflageType = TYPE_ELECTRIC,
         .battleBackground = BG_ELECTRIC_TERRAIN,
     },
 
     [B_TERRAIN_PSYCHIC] = {
+        .type = TYPE_PSYCHIC,
         .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
         .secretPowerAnimation = gBattleAnimMove_Confusion,
         .secretPowerEffect = SECRET_POWER_SPD_MINUS_1,
-        .camouflageType = TYPE_PSYCHIC,
         .battleBackground = BG_PSYCHIC_TERRAIN,
     },
 };
@@ -2147,18 +2147,7 @@ static void ForewarnChooseMove(enum BattlerId battler)
 
 bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler)
 {
-    enum Type battlerType;
-
-    if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        battlerType = TYPE_ELECTRIC;
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        battlerType = TYPE_GRASS;
-    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        battlerType = TYPE_FAIRY;
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        battlerType = TYPE_PSYCHIC;
-    else // failsafe
-        return FALSE;
+    enum Type battlerType = gBattleTerrainInfo[gFieldTimers.terrain].type;
 
     SET_BATTLER_TYPE(battler, battlerType);
     PREPARE_TYPE_BUFFER(gBattleTextBuff1, battlerType);
@@ -2812,7 +2801,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
         if (B_THUNDERSTORM_TERRAIN == TRUE
-         && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+         && !(gFieldTimers.terrain == B_TERRAIN_ELECTRIC)
          && GetCurrentWeather() == WEATHER_RAIN_THUNDERSTORM)
         {
             // overworld weather started rain, so just do electric terrain anim
@@ -2824,7 +2813,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         }
         else if (B_OVERWORLD_FOG >= GEN_8
               && (GetCurrentWeather() == WEATHER_FOG_HORIZONTAL || GetCurrentWeather() == WEATHER_FOG_DIAGONAL)
-              && !(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+              && !(gFieldTimers.terrain == B_TERRAIN_MISTY))
         {
             gFieldStatuses = STATUS_FIELD_MISTY_TERRAIN;
             gFieldTimers.terrainTimer = 0;
@@ -4800,7 +4789,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_QUARK_DRIVE:
             if (!gBattleMons[battler].volatiles.terrainAbilityDone
-             && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN
+             && gFieldTimers.terrain == B_TERRAIN_ELECTRIC
              && !gBattleMons[battler].volatiles.transformed
              && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {
@@ -7170,7 +7159,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         {
             enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
+            if ((gFieldTimers.terrain == B_TERRAIN_ELECTRIC || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
