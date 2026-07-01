@@ -45,7 +45,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
 static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler);
 static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler);
 
-static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u32 terrain)
+static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u8 terrain)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -325,7 +325,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
     if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_ELECTRIC))
         return FIELD_EFFECT_POSITIVE;
 
     if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
@@ -341,8 +341,8 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
     || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), B_TERRAIN_ELECTRIC)
+     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), B_TERRAIN_ELECTRIC))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -382,8 +382,8 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
     if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_MISTY_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_MISTY_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_MISTY)
+     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), B_TERRAIN_MISTY))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -416,8 +416,8 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
     if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_PSYCHIC)
+     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), B_TERRAIN_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -438,8 +438,8 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
     if (grounded && HasDamagingMoveOfType(battler, TYPE_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), B_TERRAIN_PSYCHIC)
+     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), B_TERRAIN_PSYCHIC))
         return FIELD_EFFECT_NEGATIVE;
 
     if (AI_IsAbilityOnSide(battler, ABILITY_GALE_WINGS)
