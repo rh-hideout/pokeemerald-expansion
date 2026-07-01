@@ -264,7 +264,7 @@ DOUBLE_BATTLE_TEST("Mirror Armor does not trigger ally's Defiant")
     }
 }
 
-SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+)")
+SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+) / reflects onto Sticky Web setter (Gen 8)")
 {
     u32 config;
 
@@ -272,7 +272,7 @@ SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+)"
     PARAMETRIZE { config = GEN_9; }
 
     GIVEN {
-        WITH_CONFIG(B_MIRROR_ARMOR_DEFIANT, config);
+        WITH_CONFIG(B_MIRROR_ARMOR_STICKY_WEB, config);
         ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         PLAYER(SPECIES_WOBBUFFET);

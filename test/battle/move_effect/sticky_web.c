@@ -108,7 +108,7 @@ DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - the 
     PARAMETRIZE { playerSetUpper = 1; opponentSetUpper = 1; }
 
     GIVEN {
-        WITH_CONFIG(B_MIRROR_ARMOR_DEFIANT, GEN_8);
+        WITH_CONFIG(B_MIRROR_ARMOR_STICKY_WEB, GEN_8);
         PLAYER(SPECIES_SQUIRTLE);
         PLAYER(SPECIES_CHARMANDER);
         PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); } // Iron Ball, so that flying type Corviknight is affected by Sticky Web.
@@ -279,7 +279,7 @@ SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Memento")
 DOUBLE_BATTLE_TEST("Sticky Web setter has their speed lowered with Mirror Armor even after Ally Switch (Gen8)")
 {
     GIVEN {
-        WITH_CONFIG(B_MIRROR_ARMOR_DEFIANT, GEN_8);
+        WITH_CONFIG(B_MIRROR_ARMOR_STICKY_WEB, GEN_8);
         PLAYER(SPECIES_SQUIRTLE);
         PLAYER(SPECIES_CHARMANDER);
         PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); } // Iron Ball, so that flying type Corviknight is affected by Sticky Web.

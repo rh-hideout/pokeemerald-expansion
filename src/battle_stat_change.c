@@ -758,7 +758,7 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
 
         if (st->stickyWeb)
         {
-            if (GetConfig(B_MIRROR_ARMOR_DEFIANT) >= GEN_9)
+            if (GetConfig(B_MIRROR_ARMOR_STICKY_WEB) >= GEN_9)
             {
                 st->script = BattleScript_AbilityPopUp;
                 return TRUE;
