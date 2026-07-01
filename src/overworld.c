@@ -3707,6 +3707,8 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
             while (*desc != CHAR_SPACE && *desc != CHAR_NEWLINE)
             {
                 *dest = *desc;  //finish word
+                if (*desc == EOS)
+                    return numLines;
                 dest++;
                 desc++;
             }
@@ -3722,7 +3724,10 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
         *dest = *desc;
         if (*desc == CHAR_NEWLINE)
         {
-            *dest = CHAR_SPACE;
+            if (count > 0 && *(desc - 1) == CHAR_HYPHEN)
+                dest -= 2;
+            else
+                *dest = CHAR_SPACE;
         }
 
         dest++;
