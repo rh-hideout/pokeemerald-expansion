@@ -2273,7 +2273,6 @@ gBattleAnimMove_DracoMeteor::
 	setalpha 12, 8
 	waitforvisualfinish
 	playsewithpan SE_FALL, SOUND_PAN_ATTACKER
-	@setblends 2060
 	call DracoMeteor1
 	delay 7
 	call DracoMeteor2
@@ -30153,13 +30152,13 @@ FinishSavageSpinOut:
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
-	call SlowSavageSpinOutBackgroundSpeed	@0
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
 	call SlowSavageSpinOutBackgroundSpeed
-	call SlowSavageSpinOutBackgroundSpeed	@-4096
+	call SlowSavageSpinOutBackgroundSpeed
+	call SlowSavageSpinOutBackgroundSpeed
 	delay 4
 	call SavageSpinOutCrash_2 	@SeismicToss2
 	delay 10
@@ -31066,7 +31065,7 @@ gBattleAnimMove_GigavoltHavoc::
 HavocSpearGeyser:
 	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, -4, 16
 	delay 1
-	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 4109, 16	@
+	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 4109, 16
 	delay 1
 	createsprite gGigavoltHavocGeyserSpriteTemplate ANIM_TARGET, 2, ANIM_TARGET, 4, 16
 	delay 1
@@ -31207,7 +31206,7 @@ ShatteredPsycheFlingPlayer:
 	waitforvisualfinish
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 32, 0, 1, 4
 	waitforvisualfinish
-	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -32, 0, 1, 1	@
+	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, -32, 0, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
 	delay 2
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 4
@@ -32132,7 +32131,6 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	visible ANIM_TARGET
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER, 5, 10
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 50, 1
-	@flash_anim_tag_with_color tag=ANIM_TAG_ORBS, delay=1, num_blends=12, color1=RGB_RED, blend_y1=16, color2=0, blend_y2=0
 	call TenMillionVoltThunderboltBeamRed
 	call TenMillionVoltThunderboltBeamBlue
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 50, 1
@@ -32523,13 +32521,13 @@ PulverizingPancakeFinish:
 	call PulverizingPancakeSlowBackground
 	call PulverizingPancakeSlowBackground
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 0, 11, RGB_BLACK		@ target darkens
-	call PulverizingPancakeSlowBackground	@0
 	call PulverizingPancakeSlowBackground
 	call PulverizingPancakeSlowBackground
 	call PulverizingPancakeSlowBackground
 	call PulverizingPancakeSlowBackground
 	call PulverizingPancakeSlowBackground
-	call PulverizingPancakeSlowBackground	@-4096
+	call PulverizingPancakeSlowBackground
+	call PulverizingPancakeSlowBackground
 	delay 1
 	waitbgfadein
 	unloadspritegfx ANIM_TAG_MUD_SAND @dig
