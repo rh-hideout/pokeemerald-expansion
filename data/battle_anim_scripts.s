@@ -6988,20 +6988,20 @@ gBattleAnimMove_StickyWeb::
 	waitforvisualfinish
 	splitbgprio ANIM_TARGET
 	loopsewithpan SE_M_STRING_SHOT, SOUND_PAN_ATTACKER, 9, 6
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
 	waitforvisualfinish
 	playsewithpan SE_M_STRING_SHOT2, SOUND_PAN_TARGET
 	createsprite gSpiderWebSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, TRUE
@@ -25749,7 +25749,7 @@ gBattleAnimMove_StringShot::
 	end
 
 StringShotThread:
-	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=1
+	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=TRUE
 	delay 1
 	return
 
@@ -25784,7 +25784,7 @@ gBattleAnimMove_SpiderWeb::
 	end
 
 SpiderWebThread:
-	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=0
+	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=FALSE
 	delay 1
 	return
 
