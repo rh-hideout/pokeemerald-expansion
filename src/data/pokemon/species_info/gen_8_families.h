@@ -6667,6 +6667,71 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .eggMoveLearnset = sDreepyEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_DRAKLOAK}),
     },
+ [SPECIES_DREEPY_NIGHT] =
+    {
+        .baseHP        = 28,
+        .baseAttack    = 60,
+        .baseDefense   = 30,
+        .baseSpeed     = 82,
+        .baseSpAttack  = 40,
+        .baseSpDefense = 30,
+        .types = MON_TYPES(TYPE_DRAGON, TYPE_GHOST),
+        .catchRate = 45,
+        .expYield = 54,
+        .evYield_Speed = 1,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 40,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_INFILTRATOR, ABILITY_CURSED_BODY },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Dreepy"),
+        .cryId = CRY_DREEPY,
+        .natDexNum = NATIONAL_DEX_DREEPY,
+        .categoryName = _("Lingering"),
+        .height = 5,
+        .weight = 20,
+        .description = COMPOUND_STRING(
+            "After being reborn as a ghost Pokémon,\n"
+            "Dreepy wanders the areas it used to\n"
+            "inhabit back when it was alive in\n"
+            "prehistoric seas."),
+        .pokemonScale = 432,
+        .pokemonOffset = 13,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Dreepy,
+        .frontPicSize = MON_COORDS_SIZE(48, 40),
+        .frontPicYOffset = 14,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 5,
+        .backPic = gMonBackPic_Dreepy,
+        .backPicSize = MON_COORDS_SIZE(56, 40),
+        .backPicYOffset = 15,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_Dreepy,
+        .shinyPalette = gMonShinyPalette_Dreepy,
+        .iconSprite = gMonIcon_Dreepy,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 2, SHADOW_SIZE_S)
+        FOOTPRINT(Dreepy)
+        OVERWORLD(
+            sPicTable_Dreepy,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Dreepy,
+            gShinyOverworldPalette_Dreepy
+        )
+        .levelUpLearnset = sDreepyLevelUpLearnset,
+        .teachableLearnset = sDreepyTeachableLearnset,
+        .eggMoveLearnset = sDreepyEggMoveLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_DRAKLOAK}),
+    },
 
     [SPECIES_DRAKLOAK] =
     {
@@ -6731,7 +6796,69 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .teachableLearnset = sDrakloakTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 60, SPECIES_DRAGAPULT}),
     },
-
+[SPECIES_DRAKLOAK_NIGHT] =
+    {
+        .baseHP        = 68,
+        .baseAttack    = 80,
+        .baseDefense   = 50,
+        .baseSpeed     = 102,
+        .baseSpAttack  = 60,
+        .baseSpDefense = 50,
+        .types = MON_TYPES(TYPE_DRAGON, TYPE_GHOST),
+        .catchRate = 45,
+        .expYield = 144,
+        .evYield_Speed = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 40,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_INFILTRATOR, ABILITY_CURSED_BODY },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Drakloak"),
+        .cryId = CRY_DRAKLOAK,
+        .natDexNum = NATIONAL_DEX_DRAKLOAK,
+        .categoryName = _("Caretaker"),
+        .height = 14,
+        .weight = 110,
+        .description = COMPOUND_STRING(
+            "It's capable of flying faster than 120 mph.\n"
+            "It battles alongside Dreepy and dotes\n"
+            "on them until they successfully evolve."),
+        .pokemonScale = 265,
+        .pokemonOffset = 2,
+        .trainerScale = 262,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Drakloak,
+        .frontPicSize = MON_COORDS_SIZE(64, 56),
+        .frontPicYOffset = 7,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 5,
+        .backPic = gMonBackPic_Drakloak,
+        .backPicSize = MON_COORDS_SIZE(64, 48),
+        .backPicYOffset = 11,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_Drakloak,
+        .shinyPalette = gMonShinyPalette_Drakloak,
+        .iconSprite = gMonIcon_Drakloak,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 9, SHADOW_SIZE_M)
+        FOOTPRINT(Drakloak)
+        OVERWORLD(
+            sPicTable_Drakloak,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Drakloak,
+            gShinyOverworldPalette_Drakloak
+        )
+        .levelUpLearnset = sDrakloakLevelUpLearnset,
+        .teachableLearnset = sDrakloakTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 60, SPECIES_DRAGAPULT}),
+    },
     [SPECIES_DRAGAPULT] =
     {
         .baseHP        = 88,
@@ -6795,8 +6922,71 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sDragapultLevelUpLearnset,
         .teachableLearnset = sDragapultTeachableLearnset,
     },
-#endif //P_FAMILY_DREEPY
 
+[SPECIES_DRAGAPULT_NIGHT] =
+    {
+        .baseHP        = 88,
+        .baseAttack    = 120,
+        .baseDefense   = 75,
+        .baseSpeed     = 142,
+        .baseSpAttack  = 100,
+        .baseSpDefense = 75,
+        .types = MON_TYPES(TYPE_DRAGON, TYPE_GHOST),
+        .catchRate = 45,
+        .expYield = 300,
+        .evYield_Speed = 3,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 40,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_INFILTRATOR, ABILITY_CURSED_BODY },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Dragapult"),
+        .cryId = CRY_DRAGAPULT,
+        .natDexNum = NATIONAL_DEX_DRAGAPULT,
+        .categoryName = _("Stealth"),
+        .height = 30,
+        .weight = 500,
+        .description = COMPOUND_STRING(
+            "When it isn't battling, it keeps Dreepy\n"
+            "in the holes on its horns. Once a fight\n"
+            "starts, it launches the Dreepy like\n"
+            "supersonic missiles."),
+        .pokemonScale = 275,
+        .pokemonOffset = 7,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Dragapult,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 2,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 3,
+        .backPic = gMonBackPic_Dragapult,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 4,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_Dragapult,
+        .shinyPalette = gMonShinyPalette_Dragapult,
+        .iconSprite = gMonIcon_Dragapult,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 12, SHADOW_SIZE_M)
+        FOOTPRINT(Dragapult)
+        OVERWORLD(
+            sPicTable_Dragapult,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Dragapult,
+            gShinyOverworldPalette_Dragapult
+        )
+        .levelUpLearnset = sDragapultLevelUpLearnset,
+        .teachableLearnset = sDragapultTeachableLearnset,
+    },
+#endif //P_FAMILY_DREEPY
 #if P_FAMILY_ZACIAN
     [SPECIES_ZACIAN_HERO] =
     {

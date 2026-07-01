@@ -7433,8 +7433,148 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .eggMoveLearnset = sSolosisEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_DUOSION}),
     },
+[SPECIES_SOLOSIS_NIGHT] =
+    {
+        .baseHP        = 45,
+        .baseAttack    = 30,
+        .baseDefense   = 40,
+        .baseSpeed     = 20,
+        .baseSpAttack  = 105,
+        .baseSpDefense = 50,
+        .types = MON_TYPES(TYPE_PSYCHIC),
+        .catchRate = 200,
+        .expYield = 58,
+        .evYield_SpAttack = 1,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
+        .abilities = { ABILITY_OVERCOAT, ABILITY_MAGIC_GUARD, ABILITY_REGENERATOR },
+        .bodyColor = BODY_COLOR_GREEN,
+        .noFlip = TRUE,
+        .speciesName = _("Solosis"),
+        .cryId = CRY_SOLOSIS,
+        .natDexNum = NATIONAL_DEX_SOLOSIS,
+        .categoryName = _("Cell"),
+        .height = 3,
+        .weight = 10,
+        .description = COMPOUND_STRING(
+            "Because their bodies are enveloped\n"
+            "in a special liquid, they are fine in any\n"
+            "environment, no matter how severe. They\n"
+            "can use telepathy to talk with others."),
+        .pokemonScale = 530,
+        .pokemonOffset = 13,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Solosis,
+        .frontPicSize = MON_COORDS_SIZE(32, 32),
+        .frontPicYOffset = 17,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 5),
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 45),
+            ANIMCMD_FRAME(0, 5),
+        ),
+        .frontAnimId = ANIM_TWIST,
+        .enemyMonElevation = 14,
+        .backPic = gMonBackPic_Solosis,
+        .backPicSize = MON_COORDS_SIZE(48, 32),
+        .backPicYOffset = 19,
+        .backAnimId = BACK_ANIM_SHRINK_GROW,
+        .palette = gMonPalette_Solosis,
+        .shinyPalette = gMonShinyPalette_Solosis,
+        .iconSprite = gMonIcon_Solosis,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-1, 8, SHADOW_SIZE_S)
+        FOOTPRINT(Solosis)
+        OVERWORLD(
+            sPicTable_Solosis,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Solosis,
+            gShinyOverworldPalette_Solosis
+        )
+        .levelUpLearnset = sSolosisLevelUpLearnset,
+        .teachableLearnset = sSolosisTeachableLearnset,
+        .eggMoveLearnset = sSolosisEggMoveLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_DUOSION}),
+    },
 
     [SPECIES_DUOSION] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 40,
+        .baseDefense   = 50,
+        .baseSpeed     = 30,
+        .baseSpAttack  = 125,
+        .baseSpDefense = 60,
+        .types = MON_TYPES(TYPE_PSYCHIC),
+        .catchRate = 100,
+        .expYield = 130,
+        .evYield_SpAttack = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
+        .abilities = { ABILITY_OVERCOAT, ABILITY_MAGIC_GUARD, ABILITY_REGENERATOR },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Duosion"),
+        .cryId = CRY_DUOSION,
+        .natDexNum = NATIONAL_DEX_DUOSION,
+        .categoryName = _("Mitosis"),
+        .height = 6,
+        .weight = 80,
+        .description = COMPOUND_STRING(
+            "When their brains, now divided in two,\n"
+            "are thinking the same thoughts,\n"
+            "these Pokémon exhibit their maximized\n"
+            "psychic power."),
+        .pokemonScale = 422,
+        .pokemonOffset = 12,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Duosion,
+        .frontPicSize = MON_COORDS_SIZE(40, 48),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 10),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 10),
+            ANIMCMD_FRAME(0, 20),
+        ),
+        .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+        .enemyMonElevation = 7,
+        .backPic = gMonBackPic_Duosion,
+        .backPicSize = MON_COORDS_SIZE(56, 48),
+        .backPicYOffset = 13,
+        .backAnimId = BACK_ANIM_GROW,
+        .palette = gMonPalette_Duosion,
+        .shinyPalette = gMonShinyPalette_Duosion,
+        .iconSprite = gMonIcon_Duosion,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-1, 6, SHADOW_SIZE_M)
+        FOOTPRINT(Duosion)
+        OVERWORLD(
+            sPicTable_Duosion,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Duosion,
+            gShinyOverworldPalette_Duosion
+        )
+        .levelUpLearnset = sDuosionLevelUpLearnset,
+        .teachableLearnset = sDuosionTeachableLearnset,
+        .evolutions = EVOLUTION({EVO_LEVEL, 41, SPECIES_REUNICLUS}),
+    },
+[SPECIES_DUOSION_NIGHT] =
     {
         .baseHP        = 65,
         .baseAttack    = 40,
@@ -7573,8 +7713,77 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sReuniclusLevelUpLearnset,
         .teachableLearnset = sReuniclusTeachableLearnset,
     },
+    
+[SPECIES_REUNICLUS_NIGHT] =
+    {
+        .baseHP        = 110,
+        .baseAttack    = 65,
+        .baseDefense   = 75,
+        .baseSpeed     = 30,
+        .baseSpAttack  = 125,
+        .baseSpDefense = 85,
+        .types = MON_TYPES(TYPE_PSYCHIC),
+        .catchRate = 50,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 245 : 221,
+        .evYield_SpAttack = 3,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
+        .abilities = { ABILITY_OVERCOAT, ABILITY_MAGIC_GUARD, ABILITY_REGENERATOR },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Reuniclus"),
+        .cryId = CRY_REUNICLUS,
+        .natDexNum = NATIONAL_DEX_REUNICLUS,
+        .categoryName = _("Multiplying"),
+        .height = 10,
+        .weight = 201,
+        .description = COMPOUND_STRING(
+            "They use psychic power to control their\n"
+            "arms, which are made of a special liquid.\n"
+            "When Reuniclus shake hands, a network\n"
+            "forms between their brains."),
+        .pokemonScale = 305,
+        .pokemonOffset = 7,
+        .trainerScale = 257,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Reuniclus,
+        .frontPicSize = MON_COORDS_SIZE(64, 48),
+        .frontPicYOffset = 11,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 10),
+        ),
+        .frontAnimId = ANIM_V_SLIDE_WOBBLE,
+        .enemyMonElevation = 8,
+        .backPic = gMonBackPic_Reuniclus,
+        .backPicSize = MON_COORDS_SIZE(64, 48),
+        .backPicYOffset = 13,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_Reuniclus,
+        .shinyPalette = gMonShinyPalette_Reuniclus,
+        .iconSprite = gMonIcon_Reuniclus,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 8, SHADOW_SIZE_M)
+        FOOTPRINT(Reuniclus)
+        OVERWORLD(
+            sPicTable_Reuniclus,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Reuniclus,
+            gShinyOverworldPalette_Reuniclus
+        )
+        .levelUpLearnset = sReuniclusLevelUpLearnset,
+        .teachableLearnset = sReuniclusTeachableLearnset,
+    },
 #endif //P_FAMILY_SOLOSIS
-
 #if P_FAMILY_DUCKLETT
     [SPECIES_DUCKLETT] =
     {

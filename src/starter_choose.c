@@ -355,16 +355,19 @@ u16 GetStarterPokemon(u16 chosenStarterId)
     switch (chosenStarterId)
     {
         case 0:
-            return sStarterNightForm
-                ? SPECIES_GROWLITHE
-                : SPECIES_GROWLITHE_HISUI;
+    return sStarterNightForm
+        ? SPECIES_GROWLITHE
+        : SPECIES_GROWLITHE_HISUI;
 
-        case 1:
-            return SPECIES_SOLOSIS;
+case 1:
+    return sStarterNightForm
+        ? SPECIES_SOLOSIS_NIGHT
+        : SPECIES_SOLOSIS;
 
-        case 2:
-            return SPECIES_DREEPY;
-
+case 2:
+    return sStarterNightForm
+        ? SPECIES_DREEPY_NIGHT
+        : SPECIES_DREEPY;
         default:
             return sStarterMon[chosenStarterId];
     }
@@ -499,7 +502,7 @@ static void Task_StarterChoose(u8 taskId)
 static void Task_HandleStarterChooseInput(u8 taskId)
 {
     u8 selection = gTasks[taskId].tStarterSelection;
-if (selection == 0 && JOY_NEW(R_BUTTON))
+if (selection < STARTER_MON_COUNT && JOY_NEW(R_BUTTON))
 {
     sStarterNightForm = TRUE;
     PlaySE(SE_SELECT);
@@ -507,7 +510,7 @@ if (selection == 0 && JOY_NEW(R_BUTTON))
     return;
 }
 
-if (selection == 0 && JOY_NEW(L_BUTTON))
+if (selection < STARTER_MON_COUNT && JOY_NEW(L_BUTTON))
 {
     sStarterNightForm = FALSE;
     PlaySE(SE_SELECT);
