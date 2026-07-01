@@ -758,22 +758,19 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
 
         if (st->stickyWeb)
         {
-            if (gSideTimers[GetBattlerSide(cv->battlerDef)].stickyWebBattlerId != 0xFF)
-            {
-                gBattleScripting.battler = gSideTimers[GetBattlerSide(cv->battlerDef)].stickyWebBattlerId;
-            }
-            else
+            if (GetConfig(B_MIRROR_ARMOR_DEFIANT) >= GEN_9)
             {
                 st->script = BattleScript_AbilityPopUp;
                 return TRUE;
             }
+            else if (gSideTimers[GetBattlerSide(cv->battlerDef)].stickyWebBattlerId != 0xFF)
+            {
+                gBattleScripting.battler = gSideTimers[GetBattlerSide(cv->battlerDef)].stickyWebBattlerId;
+            }
         }
         else
         {
-            if (cv->battlerAtk == cv->battlerDef)
-                gBattleScripting.battler = cv->battlerDef;
-            else
-                gBattleScripting.battler = cv->battlerAtk;
+            gBattleScripting.battler = cv->battlerAtk;
 
             if (IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
                 gBattleStruct->ignoreDefiant = TRUE;

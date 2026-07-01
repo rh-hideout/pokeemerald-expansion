@@ -266,8 +266,14 @@ DOUBLE_BATTLE_TEST("Mirror Armor does not trigger ally's Defiant")
 
 SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+)")
 {
+    u32 config;
+
+    PARAMETRIZE { config = GEN_8; }
+    PARAMETRIZE { config = GEN_9; }
+
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL); 
+        WITH_CONFIG(B_MIRROR_ARMOR_DEFIANT, config);
+        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); }
@@ -278,10 +284,15 @@ SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+)"
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
-        NONE_OF {
-            ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
+        ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
+        if (config == GEN_8) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            }
         }
     }
 }

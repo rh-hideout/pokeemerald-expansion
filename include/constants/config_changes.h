@@ -173,6 +173,7 @@
     F(B_BATTLE_BOND,               battleBond,              (u32, GEN_COUNT - 1)) \
     F(B_ATE_MULTIPLIER,            ateMultiplier,           (u32, GEN_COUNT - 1)) \
     F(B_DEFIANT_STICKY_WEB,        defiantStickyWeb,        (u32, GEN_COUNT - 1)) \
+    F(B_MIRROR_ARMOR_DEFIANT,      mirrorArmorStickyWeb,    (u32, GEN_COUNT - 1)) \
     F(B_INFILTRATOR_SUBSTITUTE,    infiltratorSubstitute,   (u32, GEN_COUNT - 1)) \
     F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
