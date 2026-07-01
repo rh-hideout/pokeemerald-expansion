@@ -2801,10 +2801,10 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     case HOLD_EFFECT_TERRAIN_SEED:
     {
         u32 seedParam = GetItemHoldEffectParam(aiItem);
-        if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && (fieldStatus & STATUS_FIELD_MISTY_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
+        if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && gFieldTimers.terrain == B_TERRAIN_ELECTRIC)
+         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_GRASSY)
+         || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_MISTY)
+         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && gFieldTimers.terrain == B_TERRAIN_PSYCHIC))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     }
@@ -2880,7 +2880,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
         gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     case ABILITY_QUARK_DRIVE:
-        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
+        if (gFieldTimers.terrain == B_TERRAIN_ELECTRIC || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:
