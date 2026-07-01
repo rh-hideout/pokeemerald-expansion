@@ -432,6 +432,16 @@ enum TypeSideHazard
     TYPE_SIDE_HAZARD_SHARP_STEEL    = TYPE_STEEL,
 };
 
+enum BattleTerrain
+{
+    B_TERRAIN_NONE,
+    B_TERRAIN_GRASSY,
+    B_TERRAIN_MISTY,
+    B_TERRAIN_ELECTRIC,
+    B_TERRAIN_PSYCHIC,
+    B_TERRAIN_COUNT,
+};
+
 // Field affecting statuses.
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
 #define STATUS_FIELD_TRICK_ROOM                     (1 << 1)

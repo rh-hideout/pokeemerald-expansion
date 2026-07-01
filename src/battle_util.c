@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_anim_scripts.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
 #include "battle_pyramid.h"
@@ -240,6 +241,52 @@ u32 GetCurrentBattleWeather(void)
 
     return currBattleWeather;
 }
+
+const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
+    [B_TERRAIN_GRASSY] = {
+        .type = TYPE_GRASS,
+        .secretPowerAnimation = gBattleAnimMove_NeedleArm,
+        .secretPowerEffect = MOVE_EFFECT_SLEEP,
+        .naturePowerMove = MOVE_ENERGY_BALL,
+        .battleBackground = BG_GRASSY_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
+        .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
+        .endMessage = B_MSG_TERRAIN_END_GRASSY,
+    },
+
+    [B_TERRAIN_MISTY] = {
+        .type = TYPE_FAIRY,
+        .secretPowerAnimation = gBattleAnimMove_FairyWind,
+        .secretPowerEffect = SECRET_POWER_SP_ATK_MINUS_1,
+        .naturePowerMove = MOVE_MOONBLAST,
+        .battleBackground = BG_MISTY_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
+        .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
+        .endMessage = B_MSG_TERRAIN_END_MISTY,
+    },
+
+    [B_TERRAIN_ELECTRIC] = {
+        .type = TYPE_ELECTRIC,
+        .secretPowerAnimation = gBattleAnimMove_ThunderShock,
+        .secretPowerEffect = MOVE_EFFECT_PARALYSIS,
+        .naturePowerMove = MOVE_THUNDERBOLT,
+        .battleBackground = BG_ELECTRIC_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
+        .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
+        .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
+    },
+
+    [B_TERRAIN_PSYCHIC] = {
+        .type = TYPE_PSYCHIC,
+        .secretPowerAnimation = gBattleAnimMove_Confusion,
+        .secretPowerEffect = SECRET_POWER_SPD_MINUS_1,
+        .naturePowerMove = MOVE_PSYCHIC,
+        .battleBackground = BG_PSYCHIC_TERRAIN,
+        .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
+        .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
+        .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
+    },
+};
 
 bool32 EndOrContinueWeather(void)
 {
@@ -1979,15 +2026,23 @@ bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum 
     return TRUE;
 }
 
-bool32 TryChangeBattleTerrain(enum BattlerId battler, u32 statusFlag)
+bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain, enum Ability ability)
 {
+    if (terrain == B_TERRAIN_NONE || terrain == gFieldTimers.terrain)
+        return FALSE;
+
     if (gBattleStruct->isSkyBattle)
         return FALSE;
 
-    if (!(gFieldStatuses & statusFlag))
+    if (gFieldTimers.terrain != terrain)
     {
-        gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-        gFieldStatuses |= statusFlag;
+        gFieldTimers.terrain = terrain;
+
+        if (ability == ABILITY_NONE)
+            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].moveStartMessage;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].abilityStartMessage;
+
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
             gBattleMons[i].volatiles.terrainAbilityDone = FALSE;
@@ -2096,18 +2151,7 @@ static void ForewarnChooseMove(enum BattlerId battler)
 
 bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler)
 {
-    enum Type battlerType;
-
-    if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        battlerType = TYPE_ELECTRIC;
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        battlerType = TYPE_GRASS;
-    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        battlerType = TYPE_FAIRY;
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        battlerType = TYPE_PSYCHIC;
-    else // failsafe
-        return FALSE;
+    enum Type battlerType = gBattleTerrainInfo[gFieldTimers.terrain].type;
 
     SET_BATTLER_TYPE(battler, battlerType);
     PREPARE_TYPE_BUFFER(gBattleTextBuff1, battlerType);
@@ -2153,7 +2197,7 @@ bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority)
 bool32 CanPsychicTerrainProtectTarget(struct DamageContext *ctx, s32 movePriority)
 {
     if (movePriority <= 0
-     || !IsPsychicTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], gFieldStatuses)
+     || !IsPsychicTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef])
      || IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef)
      || GetMoveTarget(ctx->move) == TARGET_ALL_BATTLERS
      || GetMoveTarget(ctx->move) == TARGET_OPPONENTS_FIELD)
@@ -2329,7 +2373,7 @@ static u32 GetFirstBattlerOnSide(enum BattleSide side)
     return GetBattlerAtPosition(side == B_SIDE_PLAYER ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT);
 }
 
-static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer, u16 time)
+static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u8 *timer, u16 time)
 {
     if (!(gFieldStatuses & flag))
     {
@@ -2761,11 +2805,11 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
         if (B_THUNDERSTORM_TERRAIN == TRUE
-         && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+         && gFieldTimers.terrain != B_TERRAIN_ELECTRIC
          && GetCurrentWeather() == WEATHER_RAIN_THUNDERSTORM)
         {
             // overworld weather started rain, so just do electric terrain anim
-            gFieldStatuses = STATUS_FIELD_ELECTRIC_TERRAIN;
+            gFieldTimers.terrain = B_TERRAIN_ELECTRIC;
             gFieldTimers.terrainTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
             BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
@@ -2773,9 +2817,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         }
         else if (B_OVERWORLD_FOG >= GEN_8
               && (GetCurrentWeather() == WEATHER_FOG_HORIZONTAL || GetCurrentWeather() == WEATHER_FOG_DIAGONAL)
-              && !(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+              && gFieldTimers.terrain != B_TERRAIN_MISTY)
         {
-            gFieldStatuses = STATUS_FIELD_MISTY_TERRAIN;
+            gFieldTimers.terrain = B_TERRAIN_MISTY;
             gFieldTimers.terrainTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
             BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
@@ -2944,7 +2988,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         switch (gLastUsedAbility)
         {
         case ABILITY_TERAFORM_ZERO:
-            if (gBattleWeather != WEATHER_NONE || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            if (gBattleWeather != WEATHER_NONE || gFieldTimers.terrain != B_TERRAIN_NONE)
             {
                 BattleScriptCall(BattleScript_ActivateTeraformZero);
                 effect++;
@@ -3271,7 +3315,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_HADRON_ENGINE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_ELECTRIC, ABILITY_ELECTRIC_SURGE))
             {
                 BattleScriptCall(BattleScript_ElectricSurgeActivates);
                 effect++;
@@ -3280,7 +3324,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_GRASSY_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, STATUS_FIELD_GRASSY_TERRAIN))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_GRASSY, ABILITY_GRASSY_SURGE))
             {
                 BattleScriptCall(BattleScript_GrassySurgeActivates);
                 effect++;
@@ -3289,7 +3333,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_MISTY_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, STATUS_FIELD_MISTY_TERRAIN))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_MISTY, ABILITY_MISTY_SURGE))
             {
                 BattleScriptCall(BattleScript_MistySurgeActivates);
                 effect++;
@@ -3298,7 +3342,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_PSYCHIC_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_PSYCHIC, ABILITY_PSYCHIC_SURGE))
             {
                 BattleScriptCall(BattleScript_PsychicSurgeActivates);
                 effect++;
@@ -4210,7 +4254,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_SEED_SOWER:
             if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && TryChangeBattleTerrain(gBattlerTarget, STATUS_FIELD_GRASSY_TERRAIN))
+             && TryChangeBattleTerrain(gBattlerTarget, B_TERRAIN_GRASSY, ABILITY_SEED_SOWER))
             {
                 BattleScriptCall(BattleScript_SeedSowerActivates);
                 effect++;
@@ -4749,7 +4793,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_QUARK_DRIVE:
             if (!gBattleMons[battler].volatiles.terrainAbilityDone
-             && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN
+             && gFieldTimers.terrain == B_TERRAIN_ELECTRIC
              && !gBattleMons[battler].volatiles.transformed
              && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {
@@ -4940,34 +4984,39 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
         return TRUE;
 }
 
-bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
+bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, fieldStatuses, STATUS_FIELD_PSYCHIC_TERRAIN);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_PSYCHIC);
 }
 
-bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
+bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, fieldStatuses, STATUS_FIELD_MISTY_TERRAIN);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_MISTY);
 }
 
-bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
+bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, fieldStatuses, STATUS_FIELD_GRASSY_TERRAIN);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_GRASSY);
 }
 
-bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
+bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, fieldStatuses, STATUS_FIELD_ELECTRIC_TERRAIN);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_ELECTRIC);
 }
 
-bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatuses)
+bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, fieldStatuses, STATUS_FIELD_TERRAIN_ANY);
+    if (gFieldTimers.terrain == B_TERRAIN_NONE)
+        return FALSE;
+    if (IsSemiInvulnerable(battler, CHECK_ALL))
+        return FALSE;
+
+    return IsBattlerGrounded(battler, ability, holdEffect);
 }
 
-bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 fieldStatus, u32 terrainFlag)
+bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u8 terrain)
 {
-    if (!(fieldStatus & terrainFlag))
+    if (gFieldTimers.terrain != terrain)
         return FALSE;
     if (IsSemiInvulnerable(battler, CHECK_ALL))
         return FALSE;
@@ -5283,7 +5332,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         {
             battleScript = BattleScript_SleepClauseBlocked;
         }
-        else if (IsElectricTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldStatuses))
+        else if (IsElectricTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef)))
         {
             battleScript = BattleScript_ElectricTerrainPrevents;
         }
@@ -5330,7 +5379,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         abilityAffected = TRUE;
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
     }
-    else if (IsMistyTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldStatuses))
+    else if (IsMistyTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef)))
     {
         battleScript = BattleScript_MistyTerrainPrevents;
     }
@@ -5417,7 +5466,7 @@ bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 
     if (gBattleMons[effectBattler].volatiles.confusionTurns > 0
      || IsSafeguardProtected(battlerAtk, effectBattler, GetBattlerAbility(battlerAtk))
-     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler), gFieldStatuses)
+     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler))
      || IsAbilityAndRecord(effectBattler, effectAbility, ABILITY_OWN_TEMPO))
         return FALSE;
 
@@ -6020,9 +6069,9 @@ static inline u32 CalcTerrainBoostedPower(struct DamageContext *ctx, u32 basePow
     bool32 isTerrainAffected = FALSE;
 
     if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_USER)
-        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk], ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk], GetMoveTerrainBoost_Terrain(ctx->move));
     else if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_TARGET)
-        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], ctx->fieldStatuses, GetMoveTerrainBoost_Terrain(ctx->move));
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], GetMoveTerrainBoost_Terrain(ctx->move));
     else if (ctx->fieldStatuses & GetMoveTerrainBoost_Terrain(ctx->move)) // no ground check (Psyblade)
         isTerrainAffected = TRUE;
 
@@ -6305,7 +6354,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_TERRAIN_PULSE:
-        if (IsAnyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->fieldStatuses))
+        if (IsAnyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]))
             basePower *= 2;
         break;
     case EFFECT_BEAT_UP:
@@ -6425,13 +6474,13 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
     if (GetMoveEffect(ctx->chosenMove) == EFFECT_ME_FIRST)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
-    if (IsGrassyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->fieldStatuses) && moveType == TYPE_GRASS)
+    if (IsGrassyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_GRASS)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsMistyTerrainAffected(battlerDef, ctx->abilities[battlerAtk], ctx->holdEffects[battlerDef], ctx->fieldStatuses) && moveType == TYPE_DRAGON)
+    if (IsMistyTerrainAffected(battlerDef, ctx->abilities[battlerAtk], ctx->holdEffects[battlerDef]) && moveType == TYPE_DRAGON)
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
-    if (IsElectricTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->fieldStatuses) && moveType == TYPE_ELECTRIC)
+    if (IsElectricTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_ELECTRIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsPsychicTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->fieldStatuses) && moveType == TYPE_PSYCHIC)
+    if (IsPsychicTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
     if (IsFieldMudSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
@@ -7119,7 +7168,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         {
             enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
+            if ((gFieldTimers.terrain == B_TERRAIN_ELECTRIC || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -9343,7 +9392,7 @@ static u32 CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Move move
 {
     return effect == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
-        && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
+        && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), GetMoveTerrainBoost_Terrain(move));
 }
 
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move)

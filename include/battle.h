@@ -172,14 +172,15 @@ struct SideTimer
 
 struct FieldTimer
 {
-    u16 mudSportTimer;
-    u16 waterSportTimer;
-    u16 wonderRoomTimer;
-    u16 magicRoomTimer;
-    u16 trickRoomTimer;
-    u16 terrainTimer;
-    u16 gravityTimer;
-    u16 fairyLockTimer;
+    u8 mudSportTimer;
+    u8 waterSportTimer;
+    u8 wonderRoomTimer;
+    u8 magicRoomTimer;
+    u8 trickRoomTimer;
+    u8 terrain;
+    u8 terrainTimer;
+    u8 gravityTimer;
+    u8 fairyLockTimer;
 };
 
 struct AI_SavedBattleMon
@@ -1185,5 +1186,19 @@ static inline bool32 IsGhostBattleWithoutScope(void)
 {
     return (gBattleTypeFlags & BATTLE_TYPE_GHOST) && !CheckBagHasItem(ITEM_SILPH_SCOPE, 1);
 }
+
+struct TerrainInfo
+{
+    enum Type type;
+    const u8 *secretPowerAnimation;
+    u16 secretPowerEffect;
+    enum Move naturePowerMove;
+    u8 battleBackground;
+    u8 abilityStartMessage;
+    u8 moveStartMessage;
+    u8 endMessage;
+};
+
+extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
 
 #endif // GUARD_BATTLE_H

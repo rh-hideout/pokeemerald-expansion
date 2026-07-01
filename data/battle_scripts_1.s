@@ -1014,10 +1014,7 @@ BattleScript_EffectElectrify::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMistyTerrain::
-BattleScript_EffectGrassyTerrain::
-BattleScript_EffectElectricTerrain::
-BattleScript_EffectPsychicTerrain::
+BattleScript_EffectTerrain::
 	attackcanceler
 	setterrain BattleScript_ButItFailed
 	attackanimation
@@ -1778,7 +1775,7 @@ BattleScript_EffectConfuse::
 	jumpifability BS_TARGET, ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_AlreadyConfused
-	jumpifterrainaffected BS_TARGET, STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents
+	jumpifterrainaffected BS_TARGET, B_TERRAIN_MISTY, BattleScript_MistyTerrainPrevents
 	accuracycheck
 	jumpifsafeguard BattleScript_SafeguardProtected
 	attackanimation

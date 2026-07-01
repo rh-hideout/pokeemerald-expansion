@@ -23,7 +23,7 @@
 #include "constants/items.h"
 
 static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
-static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus);
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u32 fieldStatus);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(enum Move move);
 static bool32 HasLightSensitiveMove(enum BattlerId battler);
@@ -45,7 +45,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
 static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler);
 static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler);
 
-static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u32 terrain)
+static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u8 terrain)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -178,7 +178,7 @@ static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather)
     return FALSE;
 }
 
-static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus)
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u32 fieldStatus)
 {
     switch (ability)
     {
@@ -322,10 +322,10 @@ static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler)
 //TODO: when is electric terrain bad?
 static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_ELECTRIC))
         return FIELD_EFFECT_POSITIVE;
 
     if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
@@ -341,8 +341,8 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
     || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), B_TERRAIN_ELECTRIC)
+     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), B_TERRAIN_ELECTRIC))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -351,7 +351,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
 //TODO: when is grassy terrain bad?
 static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_GRASSY_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_GRASSY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(battler, EFFECT_GRASSY_GLIDE))
@@ -379,11 +379,11 @@ static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
 //TODO: when is misty terrain bad?
 static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_MISTY_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_MISTY_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_MISTY)
+     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), B_TERRAIN_MISTY))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -413,11 +413,11 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
 //TODO: when is Psychic Terrain negative?
 static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(battler, B_TERRAIN_PSYCHIC)
+     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), B_TERRAIN_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
@@ -438,8 +438,8 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
     if (grounded && HasDamagingMoveOfType(battler, TYPE_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), B_TERRAIN_PSYCHIC)
+     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), B_TERRAIN_PSYCHIC))
         return FIELD_EFFECT_NEGATIVE;
 
     if (AI_IsAbilityOnSide(battler, ABILITY_GALE_WINGS)
@@ -493,7 +493,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
     }
 
     // First checking if we have enough priority for one Pokémon to disregard Trick Room entirely.
-    if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (gFieldTimers.terrain != B_TERRAIN_PSYCHIC)
     {
         enum Move *aiMoves = GetMovesArray(battler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)

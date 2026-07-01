@@ -75,7 +75,7 @@ static bool32 AI_CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Mov
 {
     return effect == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
-        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses, GetMoveTerrainBoost_Terrain(move));
+        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], GetMoveTerrainBoost_Terrain(move));
 }
 
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move)
@@ -633,7 +633,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_STEEL_ROLLER:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+        if (gFieldTimers.terrain == B_TERRAIN_NONE)
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
@@ -3565,7 +3565,7 @@ bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 {
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
-     || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], gFieldStatuses)
+     || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef])
      || IsSafeguardProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk])
      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
         return FALSE;
@@ -4092,10 +4092,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_WEATHER_AND_SWITCH:
         aiEffect |= AI_EFFECT_WEATHER;
         break;
-    case EFFECT_ELECTRIC_TERRAIN:
-    case EFFECT_GRASSY_TERRAIN:
-    case EFFECT_MISTY_TERRAIN:
-    case EFFECT_PSYCHIC_TERRAIN:
+    case EFFECT_TERRAIN:
     case EFFECT_STEEL_ROLLER:
     case EFFECT_ICE_SPINNER:
         aiEffect |= AI_EFFECT_TERRAIN;
