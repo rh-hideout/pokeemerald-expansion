@@ -23,7 +23,7 @@
 #include "constants/items.h"
 
 static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
-static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus);
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u32 fieldStatus);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(enum Move move);
 static bool32 HasLightSensitiveMove(enum BattlerId battler);
@@ -178,7 +178,7 @@ static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather)
     return FALSE;
 }
 
-static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus)
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u32 fieldStatus)
 {
     switch (ability)
     {
@@ -322,7 +322,7 @@ static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler)
 //TODO: when is electric terrain bad?
 static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
@@ -351,7 +351,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
 //TODO: when is grassy terrain bad?
 static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_GRASSY_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_GRASSY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(battler, EFFECT_GRASSY_GLIDE))
@@ -379,7 +379,7 @@ static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
 //TODO: when is misty terrain bad?
 static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_MISTY_TERRAIN)
@@ -413,7 +413,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
 //TODO: when is Psychic Terrain negative?
 static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler)
 {
-    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (DoesAbilityBenefitFromTerrain(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_PSYCHIC_TERRAIN)
@@ -493,7 +493,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
     }
 
     // First checking if we have enough priority for one Pokémon to disregard Trick Room entirely.
-    if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (gFieldTimers.terrain != B_TERRAIN_PSYCHIC)
     {
         enum Move *aiMoves = GetMovesArray(battler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)

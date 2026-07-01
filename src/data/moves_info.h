@@ -19208,7 +19208,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .argument.terrainBoost = {
-            .terrain = STATUS_FIELD_PSYCHIC_TERRAIN,
+            .terrain = B_TERRAIN_PSYCHIC,
             .percent = 50,
             .groundCheck = GROUND_CHECK_USER,
             .hitsBothFoes = TRUE,
@@ -19337,7 +19337,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .explosion = TRUE,
         .dampBanned = TRUE,
         .argument.terrainBoost = {
-            .terrain = STATUS_FIELD_MISTY_TERRAIN,
+            .terrain = B_TERRAIN_MISTY,
             .percent = 50,
             .groundCheck = GROUND_CHECK_USER,
         },
@@ -19386,7 +19386,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .argument.terrainBoost = {
-            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .terrain = B_TERRAIN_ELECTRIC,
             .percent = 100,
             .groundCheck = GROUND_CHECK_TARGET,
         },
@@ -21633,7 +21633,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .argument.terrainBoost = {
-            .terrain = STATUS_FIELD_ELECTRIC_TERRAIN,
+            .terrain = B_TERRAIN_ELECTRIC,
             .percent = 50,
             .groundCheck = GROUND_CHECK_NONE,
         },
