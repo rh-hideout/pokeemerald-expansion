@@ -31133,7 +31133,7 @@ ShatteredPsycheFinish:
 	waitforvisualfinish
 	end
 ShatteredPsycheFlingOpponent:
-	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1,
+	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, -26, 16, 1, 4
 	waitforvisualfinish
 	createsprite gShatteredPsycheReflectHitSpriteTemplate, ANIM_TARGET, 3, 26, -16, 1, 1
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
