@@ -120,7 +120,7 @@ static const u16 sStarterMon[STARTER_MON_COUNT] =
     FIRE_STARTER,
     WATER_STARTER,
 };
-static bool8 sStarterNightForm = TRUE;
+static EWRAM_DATA bool8 sStarterNightForm = FALSE;
 static const struct BgTemplate sBgTemplates[3] =
 {
     {
@@ -499,7 +499,21 @@ static void Task_StarterChoose(u8 taskId)
 static void Task_HandleStarterChooseInput(u8 taskId)
 {
     u8 selection = gTasks[taskId].tStarterSelection;
+if (selection == 0 && JOY_NEW(R_BUTTON))
+{
+    sStarterNightForm = TRUE;
+    PlaySE(SE_SELECT);
+    gTasks[taskId].func = Task_MoveStarterChooseCursor;
+    return;
+}
 
+if (selection == 0 && JOY_NEW(L_BUTTON))
+{
+    sStarterNightForm = FALSE;
+    PlaySE(SE_SELECT);
+    gTasks[taskId].func = Task_MoveStarterChooseCursor;
+    return;
+}
     if (JOY_NEW(A_BUTTON))
     {
         u8 spriteId;
