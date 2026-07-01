@@ -9375,15 +9375,15 @@ bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
 {
     enum BattlerId battler;
-    for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    for (battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
     {
-        if (battler == gBattlerAttacker || !IsBattlerAlive(battler))
+        if (excludeCurrent && battler == gBattlerTarget)
             continue;
-
-        if (!(excludeCurrent && battler == gBattlerTarget)
-         && !gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
-         && (!IsBattlerAlly(battler, gBattlerAttacker) || moveTarget == TARGET_FOES_AND_ALLY))
-            break;
+        if (gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler])
+            continue;
+        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+            continue;
+        break;
     }
     return battler;
 }

@@ -1171,39 +1171,6 @@ static void Cmd_multihitresultmessage(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static inline bool32 DoesBattlerNegateDamage(enum BattlerId battler)
-{
-    enum Species species = gBattleMons[battler].species;
-    enum Ability ability = GetBattlerAbility(battler);
-
-    if (gBattleMons[battler].volatiles.transformed)
-        return FALSE;
-    if (ability == ABILITY_DISGUISE && IsMimikyuDisguised(battler))
-        return TRUE;
-    if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE_ICE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
-        return TRUE;
-
-    return FALSE;
-}
-
-static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags, u32 moveTarget)
-{
-    u32 ret = resultFlags;
-    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
-    {
-        if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
-                continue;
-
-        if (DoesBattlerNegateDamage(battlerDef))
-            continue; // doesnt contribute to SE
-        if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS))
-            ret &= ~MOVE_RESULT_NOT_VERY_EFFECTIVE; // any battler with 1x or better effectiveness removes NVE sound
-        if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
-            ret |= MOVE_RESULT_SUPER_EFFECTIVE; // any super effective result will play SE_SUPER_EFFECTIVE
-    }
-    return ret;
-}
-
 static void Cmd_attackanimation(void)
 {
     CMD_ARGS();
@@ -1214,9 +1181,6 @@ static void Cmd_attackanimation(void)
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
-
-    if (IsDoubleSpreadMove())
-        moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget], moveTarget);
 
     bool32 isAnimDisabled = (gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)
                           || gBattleStruct->attackAnimPlayed);
@@ -1426,7 +1390,8 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
         gBattlescriptCurrInstr = nextInstr;
         return;
     }
-    else if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gBattleMons[battler].volatiles.substituteHP)
+
+    if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gBattleMons[battler].volatiles.substituteHP)
     {
         if (gBattleMons[battler].volatiles.substituteHP >= gBattleStruct->moveDamage[battler])
         {
@@ -1582,83 +1547,15 @@ static void Cmd_effectivenesssound(void)
     if (gBattleControllerExecFlags)
         return;
 
-    u32 moveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
+    #if TESTING
+    if (gTestRunnerEnabled)
+        TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_EFFECTIVE);
+    #endif
 
-    if (IsDoubleSpreadMove())
-    {
-        if (gBattleStruct->doneDoublesSpreadHit
-         || GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_STATUS) //To handle Dark Void missing basically
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-            return;
-        }
-        moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(gBattleStruct->moveResultFlags[gBattlerTarget],
-                                                                  GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
-    }
-    else if (!IsBattlerUnaffectedByMove(gBattlerTarget) && DoesBattlerNegateDamage(gBattlerTarget))
-        moveResultFlags = 0;
+    // This was technically incorrect for everything that wasn't damage. It might not create any visible bugs though?
+    BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_EFFECTIVE);
+    MarkBattlerForControllerExec(gBattlerTarget);
 
-    if (!(moveResultFlags & MOVE_RESULT_MISSED))
-    {
-        switch (moveResultFlags & ~MOVE_RESULT_MISSED)
-        {
-        case MOVE_RESULT_SUPER_EFFECTIVE:
-        case MOVE_RESULT_EXTREMELY_EFFECTIVE:
-            #if TESTING
-            if (gTestRunnerEnabled)
-                TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_SUPER_EFFECTIVE);
-            #endif
-            BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_SUPER_EFFECTIVE);
-            MarkBattlerForControllerExec(gBattlerTarget);
-            break;
-        case MOVE_RESULT_NOT_VERY_EFFECTIVE:
-        case MOVE_RESULT_MOSTLY_INEFFECTIVE:
-            #if TESTING
-            if (gTestRunnerEnabled)
-                TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_NOT_EFFECTIVE);
-            #endif
-            BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_NOT_EFFECTIVE);
-            MarkBattlerForControllerExec(gBattlerTarget);
-            break;
-        case MOVE_RESULT_DOESNT_AFFECT_FOE:
-        case MOVE_RESULT_FAILED:
-            // no sound
-            break;
-        case MOVE_RESULT_FOE_ENDURED:
-        case MOVE_RESULT_ONE_HIT_KO:
-        case MOVE_RESULT_FOE_HUNG_ON:
-        case MOVE_RESULT_STURDIED:
-        default:
-            if (moveResultFlags & MOVE_RESULT_HIGH_EFFECTIVENESS)
-            {
-                #if TESTING
-                if (gTestRunnerEnabled)
-                    TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_SUPER_EFFECTIVE);
-                #endif
-                BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_SUPER_EFFECTIVE);
-                MarkBattlerForControllerExec(gBattlerTarget);
-            }
-            else if (moveResultFlags & MOVE_RESULT_LOW_EFFECTIVENESS)
-            {
-                #if TESTING
-                if (gTestRunnerEnabled)
-                    TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_NOT_EFFECTIVE);
-                #endif
-                BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_NOT_EFFECTIVE);
-                MarkBattlerForControllerExec(gBattlerTarget);
-            }
-            else if (!(moveResultFlags & (MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_FAILED)))
-            {
-                #if TESTING
-                if (gTestRunnerEnabled)
-                    TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_EFFECTIVE);
-                #endif
-                BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_EFFECTIVE);
-                MarkBattlerForControllerExec(gBattlerTarget);
-            }
-            break;
-        }
-    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -5596,34 +5493,16 @@ static void Cmd_hitanimation(void)
 {
     CMD_ARGS(u8 battler);
 
-    if (!IsDoubleSpreadMove())
-    {
-        enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
-        if (!IsBattlerUnaffectedByMove(battler))
-        {
-            if (gBattleStruct->passiveHpUpdate[battler] > 0
-             || !(DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove))
-             || gBattleMons[battler].volatiles.substituteHP == 0)
-            {
-                BtlController_EmitHitAnimation(battler, B_COMM_TO_CONTROLLER);
-                MarkBattlerForControllerExec(battler);
-            }
-        }
-    }
-    else if (!gBattleStruct->doneDoublesSpreadHit)
+    if (!IsBattlerUnaffectedByMove(battler))
     {
-        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+        if (gBattleStruct->passiveHpUpdate[battler] > 0
+         || !(DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove))
+         || gBattleMons[battler].volatiles.substituteHP == 0)
         {
-            if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
-                continue;
-
-            if (!(DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove))
-             || gBattleMons[battlerDef].volatiles.substituteHP == 0)
-            {
-                BtlController_EmitHitAnimation(battlerDef, B_COMM_TO_CONTROLLER);
-                MarkBattlerForControllerExec(battlerDef);
-            }
+            BtlController_EmitHitAnimation(battler, B_COMM_TO_CONTROLLER);
+            MarkBattlerForControllerExec(battler);
         }
     }
 
