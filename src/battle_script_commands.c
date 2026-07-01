@@ -9436,7 +9436,7 @@ static void Cmd_settypetoenvironment(void)
     u8 environmentType;
 
     if (gFieldTimers.terrain != B_TERRAIN_NONE)
-        environmentType = gBattleTerrainInfo[gFieldTimers.terrain].camouflageType;
+        environmentType = gBattleTerrainInfo[gFieldTimers.terrain].type;
     else
         environmentType = gBattleEnvironmentInfo[gBattleEnvironment].camouflageType;
 
