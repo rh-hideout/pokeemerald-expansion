@@ -2802,10 +2802,11 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     {
         u32 seedParam = GetItemHoldEffectParam(aiItem);
         if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && gFieldTimers.terrain == B_TERRAIN_ELECTRIC)
-         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_GRASSY)
-         || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_MISTY)
-         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && gFieldTimers.terrain == B_TERRAIN_PSYCHIC))
+         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_GRASSY))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
+        else if ((seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && gFieldTimers.terrain == B_TERRAIN_MISTY)
+         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && gFieldTimers.terrain == B_TERRAIN_PSYCHIC))
+            gBattleMons[battler].statStages[STAT_SPDEF] += 1;
         break;
     }
     case HOLD_EFFECT_ATTACK_UP:
