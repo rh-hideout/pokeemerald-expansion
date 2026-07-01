@@ -92,6 +92,7 @@ void BXPY_InitializeAIStructs(void)
 {
     gAiThinkingStruct = AllocZeroed(sizeof(*gAiThinkingStruct));
     gAiLogicData = AllocZeroed(sizeof(*gAiLogicData));
+    gBattleHistory = AllocZeroed(sizeof(*gBattleHistory));
 }
 
 void BXPY_ClearAIData(void)
@@ -102,6 +103,7 @@ void BXPY_ClearAIData(void)
     memset(gBattlerPositions, 0, sizeof(gBattlerPositions));
     FREE_AND_SET_NULL(gAiThinkingStruct);
     FREE_AND_SET_NULL(gAiLogicData);
+    FREE_AND_SET_NULL(gBattleHistory);
 }
 
 void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiPartyData)
@@ -232,7 +234,7 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move, opposingMove, bestOpposingMove = MOVE_NONE, bestOpposingPriorityMove = MOVE_NONE;
-    u32 hitsToKO = 0, hitsToKOOpponent = 0, minHitsToKO = gBattleMons[battler].hp, minHitsToKOPriority = gBattleMons[battler].hp;
+    u32 hitsToKO = gBattleMons[battler].hp, hitsToKOOpponent = gBattleMons[opposingBattler].hp, minHitsToKO = gBattleMons[battler].hp, minHitsToKOPriority = gBattleMons[battler].hp;
     bool32 canBattlerWin1v1 = FALSE, isBattlerFirst, isBattlerFirstPriority;
 
     // Get max damage mon could take
