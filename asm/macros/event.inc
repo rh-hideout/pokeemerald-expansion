@@ -1968,23 +1968,27 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, FALSE, \initialSelected, \callbacks, \argv
 	.endm
 
+	@ Creates an option to be collected with dynmultistack.
 	.macro dynmultipush name:req, id:req
 	.byte SCR_OP_DYNMULTIPUSH
 	.4byte \name
 	.2byte \id
 	.endm
 
-	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
-	.macro getbraillestringwidth msg:req
-	.byte SCR_OP_GETBRAILLESTRINGWIDTH
-	.4byte \msg
-	.endm
-
+	@ Displays a multichoice box using the dynmultipush options before it in the script, from which the user can choose a selection, and blocks script execution until a selection is made.
+	@ If ignoreBPress is set to a non-zero value, then the user will not be allowed to back out of the multichoice with the B button.
+	@ For a simple menu supply DYN_MULTICHOICE_CB_NONE in callbacks.
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
 @ Supplementary
+
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
 
 	.macro goto_if_unset flag:req, dest:req
 	checkflag \flag
