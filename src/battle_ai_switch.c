@@ -284,7 +284,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
         return FALSE;
     if (!AI_IsBattlerGrounded(battler))
         return FALSE;
-    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, gFieldStatuses))
+    if (IsMistyTerrainAffected(battler, ability, heldItemEffect))
         return FALSE;
     if (IsLeafGuardProtected(battler, ability))
         return FALSE;
@@ -1637,7 +1637,7 @@ static u32 GetSwitchinHazardsDamage(enum BattlerId battler)
             && status == 0
             && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], gFieldStatuses)
+            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler])
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
             && AI_IsBattlerGrounded(battler)))

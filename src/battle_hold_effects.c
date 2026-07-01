@@ -59,7 +59,7 @@ enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
         return ITEM_NO_EFFECT;
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !(GetWeather() & B_WEATHER_SUN))
-     || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
+     || ((ability == ABILITY_QUARK_DRIVE) && gFieldTimers.terrain != B_TERRAIN_ELECTRIC))
     {
         gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
         PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
@@ -87,9 +87,9 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrainFlag, enum Stat statId)
+enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrain, enum Stat statId)
 {
-    if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
+    if (gFieldTimers.terrain == terrain && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SetStatChange(battler, statId, 1);
@@ -106,16 +106,16 @@ static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
     switch (GetItemHoldEffectParam(item))
     {
     case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF);
+        effect = TryHandleSeed(battler, B_TERRAIN_ELECTRIC, STAT_DEF);
         break;
     case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF);
+        effect = TryHandleSeed(battler, B_TERRAIN_GRASSY, STAT_DEF);
         break;
     case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF);
+        effect = TryHandleSeed(battler, B_TERRAIN_MISTY, STAT_SPDEF);
         break;
     case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF);
+        effect = TryHandleSeed(battler, B_TERRAIN_PSYCHIC, STAT_SPDEF);
         break;
     }
 
@@ -126,7 +126,7 @@ static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
-      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
+      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler))
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;

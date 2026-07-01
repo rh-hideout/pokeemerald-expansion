@@ -4528,7 +4528,7 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
         priority++;
     }
     else if (GetMoveEffect(move) == EFFECT_GRASSY_GLIDE
-          && IsGrassyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
+          && IsGrassyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler))
           && GetActiveGimmick(gBattlerAttacker) != GIMMICK_DYNAMAX && !IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
         priority++;
@@ -5710,7 +5710,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     case EFFECT_TERRAIN_PULSE:
         if (state == MON_IN_BATTLE)
         {
-            if (IsAnyTerrainAffected(battler, ability, holdEffect, gFieldStatuses))
+            if (IsAnyTerrainAffected(battler, ability, holdEffect))
                 return gBattleTerrainInfo[gFieldTimers.terrain].type;
         }
         else
