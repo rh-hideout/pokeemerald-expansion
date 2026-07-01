@@ -1204,101 +1204,11 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags, u
     return ret;
 }
 
-static inline bool32 TryStrongWindsWeakenAttack(enum BattlerId battlerDef, enum Type moveType)
-{
-    if (GetWeather() & B_WEATHER_STRONG_WINDS)
-    {
-        if (GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
-         && IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING)
-         && gTypeEffectivenessTable[moveType][TYPE_FLYING] >= UQ_4_12(2.0)
-         && !gBattleStruct->printedStrongWindsWeakenedAttack)
-        {
-            gBattleStruct->printedStrongWindsWeakenedAttack = TRUE;
-            BattleScriptCall(BattleScript_AttackWeakenedByStrongWinds);
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
-static inline bool32 TryTeraShellDistortTypeMatchups(enum BattlerId battlerDef)
-{
-    if (gSpecialStatuses[battlerDef].teraShellAbilityDone)
-    {
-        gSpecialStatuses[battlerDef].teraShellAbilityDone = FALSE;
-        gBattleScripting.battler = battlerDef;
-        BattleScriptCall(BattleScript_TeraShellDistortingTypeMatchups);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-// According to Gen5 Weakness berry activation happens after the attackanimation.
-// It doesn't have any impact on gameplay and is only a visual thing which can be adjusted later.
-static inline bool32 TryActivateWeaknessBerry(enum BattlerId battlerDef)
-{
-    if (DoesDisguiseBlockMove(battlerDef, gCurrentMove))
-    {
-        gSpecialStatuses[battlerDef].berryReduced = FALSE;
-        return FALSE;
-    }
-    if (gSpecialStatuses[battlerDef].berryReduced && gBattleMons[battlerDef].item != ITEM_NONE)
-    {
-        gBattleScripting.battler = battlerDef;
-        gLastUsedItem = gBattleMons[battlerDef].item;
-        GetBattlerPartyState(battlerDef)->ateBerry = TRUE;
-        BattleScriptCall(BattleScript_BerryReduceDmg);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-static bool32 ProcessPreAttackAnimationFuncs(void)
-{
-    u32 moveType = GetBattleMoveType(gCurrentMove);
-    if (IsDoubleSpreadMove())
-    {
-        if (!gBattleStruct->printedStrongWindsWeakenedAttack)
-        {
-            for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
-            {
-                if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
-                    continue;
-                if (TryStrongWindsWeakenAttack(battlerDef, moveType))
-                    return TRUE;
-            }
-        }
-
-        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
-        {
-            if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
-                continue;
-            if (TryTeraShellDistortTypeMatchups(battlerDef))
-                return TRUE;
-            if (TryActivateWeaknessBerry(battlerDef))
-                return TRUE;
-        }
-    }
-    else
-    {
-        if (TryStrongWindsWeakenAttack(gBattlerTarget, moveType))
-            return TRUE;
-        if (TryTeraShellDistortTypeMatchups(gBattlerTarget))
-            return TRUE;
-        if (TryActivateWeaknessBerry(gBattlerTarget))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 static void Cmd_attackanimation(void)
 {
     CMD_ARGS();
 
-    if (gBattleControllerExecFlags || ProcessPreAttackAnimationFuncs())
+    if (gBattleControllerExecFlags)
         return;
 
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);

@@ -701,11 +701,9 @@ struct BattleStruct
     u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
-    u8 unused4:1;
-    u8 calculatedSpreadMoveAccuracy:1;
-    u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
+    u8 unused4:3;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];

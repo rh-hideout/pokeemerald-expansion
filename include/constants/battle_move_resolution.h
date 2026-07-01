@@ -30,6 +30,13 @@ enum TargetFailure
     TARGET_FAILURE_EFFECTIVENESS,
 };
 
+enum PreAnimActivations
+{
+    PRE_ANIM_STRONG_WINDS,
+    PRE_ANIM_TERA_SHELL,
+    PRE_ANIM_WEAKNESS_BERRY, // Not vanilla accurate for now (happens after anim)
+};
+
 enum CancelerState
 {
     CANCELER_STANCE_CHANGE_1,
@@ -82,6 +89,7 @@ enum CancelerState
     CANCELER_ACCURACY_CHECK,
     CANCELER_PRE_ATTACK_MOVE_EFFECT,
     CANCELER_DAMAGE_CALC,
+    CANCELER_PRE_ANIM_ACTIVATIONS,
     CANCELER_END,
 };
 

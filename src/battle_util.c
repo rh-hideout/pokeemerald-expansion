@@ -9828,8 +9828,6 @@ void ClearDamageCalcResults(void)
     }
 
     gBattleStruct->doneDoublesSpreadHit = FALSE;
-    gBattleStruct->calculatedSpreadMoveAccuracy = FALSE;
-    gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;

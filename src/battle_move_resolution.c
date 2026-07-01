@@ -2571,6 +2571,80 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+
+static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *cv)
+{
+    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
+        return CANCELER_RESULT_SUCCESS;
+
+    switch (gBattleStruct->eventState.moveEndBlock)
+    {
+    case PRE_ANIM_STRONG_WINDS:
+        if (GetWeather() & B_WEATHER_STRONG_WINDS)
+        {
+            for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+            {
+                if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef))
+                    continue;
+
+                if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS
+                 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING))
+                {
+                    BattleScriptCall(BattleScript_AttackWeakenedByStrongWinds);
+                    gBattleStruct->eventState.moveEndBlock++;
+                    return CANCELER_RESULT_RUN_SCRIPT;
+                }
+            }
+        }
+        gBattleStruct->eventState.moveEndBlock++;
+    case PRE_ANIM_TERA_SHELL:
+        for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+        {
+            enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef))
+                continue;
+
+            if (gSpecialStatuses[battlerDef].teraShellAbilityDone)
+            {
+                gSpecialStatuses[battlerDef].teraShellAbilityDone = FALSE;
+                gBattleScripting.battler = battlerDef;
+                BattleScriptCall(BattleScript_TeraShellDistortingTypeMatchups);
+                return CANCELER_RESULT_RUN_SCRIPT;
+            }
+        }
+        gBattleStruct->eventState.moveEndBlock++;
+    case PRE_ANIM_WEAKNESS_BERRY:
+        for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+        {
+            enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+
+            if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef))
+                continue;
+
+            if (!gSpecialStatuses[battlerDef].berryReduced
+             || gBattleMons[battlerDef].item == ITEM_NONE)
+                continue;
+
+            if (DoesDisguiseBlockMove(battlerDef, cv->move))
+            {
+                gSpecialStatuses[battlerDef].berryReduced = FALSE;
+                continue;
+            }
+
+            gBattleScripting.battler = battlerDef;
+            gLastUsedItem = gBattleMons[battlerDef].item;
+            GetBattlerPartyState(battlerDef)->ateBerry = TRUE;
+            BattleScriptCall(BattleScript_BerryReduceDmg);
+            return CANCELER_RESULT_RUN_SCRIPT;
+        }
+        gBattleStruct->eventState.moveEndBlock++;
+    }
+
+    gBattleStruct->eventState.moveEndBlock = 0;
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCalcValues *cv) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
@@ -2623,6 +2697,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
     [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
     [CANCELER_DAMAGE_CALC] = CancelerDamageCalc,
+    [CANCELER_PRE_ANIM_ACTIVATIONS] = CancelerPreAnimActivations,
 };
 
 enum CancelerResult DoAttackCanceler(void)
