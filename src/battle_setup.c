@@ -2246,7 +2246,12 @@ void BattleSetup_StartBXPYBattle(u32 battleFlags)
     FlagSet(B_FLAG_BXPY);
     gBattleTypeFlags = battleFlags;
     gMain.savedCallback = CB2_EndTrainerBattle;
-    DoTrainerBattle();
+
+    CreateBattleStartTask(GetTrainerBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
+    TryUpdateGymLeaderRematchFromTrainer();
+
     ScriptContext_Stop();
 }
 
