@@ -87,39 +87,19 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrain, enum Stat statId)
+static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
 {
-    if (gFieldTimers.terrain == terrain && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
+    struct TerrainInfo battleTerrain = gBattleTerrainInfo[gFieldTimers.terrain];
+    if (gFieldTimers.terrain != B_TERRAIN_NONE
+        && GetItemHoldEffectParam(item) == battleTerrain.seedHoldEffect
+        && CompareStat(battler, battleTerrain.seedStat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        SetStatChange(battler, statId, 1);
+        SetStatChange(battler, battleTerrain.seedStat, 1);
         BattleScriptCall(BattleScript_ConsumableItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
     return ITEM_NO_EFFECT;
-}
-
-static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
-{
-    enum ItemEffect effect = ITEM_NO_EFFECT;
-
-    switch (GetItemHoldEffectParam(item))
-    {
-    case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
-        effect = TryHandleSeed(battler, B_TERRAIN_ELECTRIC, STAT_DEF);
-        break;
-    case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
-        effect = TryHandleSeed(battler, B_TERRAIN_GRASSY, STAT_DEF);
-        break;
-    case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
-        effect = TryHandleSeed(battler, B_TERRAIN_MISTY, STAT_SPDEF);
-        break;
-    case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
-        effect = TryHandleSeed(battler, B_TERRAIN_PSYCHIC, STAT_SPDEF);
-        break;
-    }
-
-    return effect;
 }
 
 static bool32 CanBeInfinitelyConfused(enum BattlerId battler)

@@ -1194,6 +1194,8 @@ struct TerrainInfo
     u16 secretPowerEffect;
     enum Move naturePowerMove;
     u8 battleBackground;
+    enum Stat seedStat;
+    u8 seedHoldEffect;
     u8 abilityStartMessage;
     u8 moveStartMessage;
     u8 endMessage;
