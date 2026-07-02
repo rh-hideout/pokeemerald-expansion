@@ -857,7 +857,7 @@ int main(int argc, char *argv[])
 
         fprintf(stdout, "\n");
         if (fails > 0)
-            fprintf(stdout, "- Tests \e[31mFAILED\e[0m :         %d    Add TESTS='X' to run tests with the defined prefix.\n", fails);
+            fprintf(stdout, "- Tests \e[31mFAILED\e[0m:         %d    Add TESTS='X' to run tests with the defined prefix.\n", fails);
         if (expected_fails_passing > 0)
             fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expected_fails_passing);
         if (known_fails > 0)
