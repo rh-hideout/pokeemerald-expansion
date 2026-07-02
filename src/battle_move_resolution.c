@@ -1062,7 +1062,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
         }
     }
 
-    return CANCELER_RESULT_SUCCESS;
+    return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Apply power point change
 }
 
 // We don't have clear data on where this belongs to but I assume it should at least be checked before Protean
@@ -1981,6 +1981,14 @@ static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
 {
     switch (cv->moveEffect)
     {
+    case EFFECT_ENDEAVOR:
+        if (GetNonDynamaxHP(cv->battlerDef) <= gBattleMons[cv->battlerAtk].hp)
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
+            BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
+            return TRUE;
+        }
+        break;
     case EFFECT_DREAM_EATER:
         if (GetConfig(B_DREAM_EATER_SUBSTITUTE) < GEN_5 && IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move))
         {
@@ -2257,9 +2265,6 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
         TRY_SECOND_TARGET,
     };
 
-    if (GetMovePower(cv->move) == 0) // for now only limited to damage moves
-        return CANCELER_RESULT_SUCCESS;
-
     if (ShouldSkipFRLGAccuracyCheck()
      || ShouldSkipAccuracyCalcPastFirstHit(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->moveEffect)
      || IsMaxMove(cv->move)
@@ -2399,6 +2404,14 @@ static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
 
 static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 {
+    // Skip everything else if it's a status move
+    // This is as long as status moves are still handled with scripts
+    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_SUCCESS;
+    }
+
     SetPossibleNewSmartTarget(cv->move);
 
     if (IsBattlerUnaffectedByMove(gBattlerTarget))
@@ -2544,9 +2557,6 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
 
 static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     struct DamageContext ctx = {
         .battlerAtk = cv->battlerAtk,
         .move = cv->move,
@@ -2588,9 +2598,6 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     switch (gBattleStruct->eventState.moveEndBlock)
     {
     case PRE_ANIM_STRONG_WINDS:
@@ -2661,8 +2668,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
 
 static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS
-     || gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
+    if (gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
         return CANCELER_RESULT_SUCCESS;
 
     // handle special move animations.
@@ -2687,7 +2693,7 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
         cv->battlerAtk,
         B_COMM_TO_CONTROLLER,
         cv->move,
-        gBattleScripting.animTurn, // TODO: Expanding Force
+        gBattleScripting.animTurn,
         gBattleMovePower,
         gBattleStruct->moveDamage[cv->battlerDef],
         gBattleMons[cv->battlerAtk].friendship,
@@ -2699,8 +2705,6 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
     gSpriteAllocs = 0;
     #endif
 
-    gBattleScripting.animTurn++;
-    gBattleScripting.animTargetsHit++;
     MarkBattlerForControllerExec(gBattlerAttacker);
     BattleScriptCall(BattleScript_MoveAnimation);
 
@@ -2744,9 +2748,6 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(enum BattlerId bat
 
 static enum CancelerResult CancelerEffectivenessSound(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     u32 moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(cv->battlerAtk);
 
     switch (moveResultFlags)
@@ -2813,9 +2814,6 @@ static enum CancelerResult CancelerEffectivenessSound(struct BattleCalcValues *c
 
 static enum CancelerResult CancelerHitAnimation(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
@@ -2839,9 +2837,6 @@ static enum CancelerResult CancelerSkipFrame(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerHealthBarUpdate(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, cv->move))
@@ -2968,9 +2963,6 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
 {
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-        return CANCELER_RESULT_SUCCESS;
-
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         cv->battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);

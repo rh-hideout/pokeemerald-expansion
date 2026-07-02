@@ -13845,7 +13845,6 @@ void BS_ConsumeBerry(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
-
     gBattleScripting.overrideBerryRequirements = 1;
     GetBattlerPartyState(battler)->ateBerry = TRUE;
     if (ItemBattleEffects(battler, 0, GetItemHoldEffect(gLastUsedItem), IsOnBerryActivation))

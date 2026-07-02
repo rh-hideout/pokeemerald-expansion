@@ -7685,7 +7685,6 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         if (GetNonDynamaxHP(ctx->battlerDef) <= gBattleMons[ctx->battlerAtk].hp)
         {
             dmg = 0;
-            gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
         }
         else
         {
