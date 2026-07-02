@@ -2539,7 +2539,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
         .chosenMove = gChosenMove,
         .moveType = GetBattleMoveType(cv->move),
         .weather = GetWeather(),
-        .fieldStatuses = gFieldStatuses,
+        .terrain = gFieldTimers.terrain,
         .randomFactor = TRUE,
         .updateFlags = TRUE,
     };

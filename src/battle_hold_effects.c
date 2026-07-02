@@ -106,7 +106,7 @@ static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
-      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler))
+      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldTimers.terrain)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;

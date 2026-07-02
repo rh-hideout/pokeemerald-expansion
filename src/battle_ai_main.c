@@ -738,7 +738,7 @@ static void SetBattlerTurnOrder(u8 *aiTurnOrder)
     }
 }
 
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, u32 fieldStatus)
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain)
 {
     enum Move move;
     enum Move *moves = GetMovesArray(battlerAtk);
@@ -754,7 +754,7 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
             continue;
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, fieldStatus);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, terrain);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
@@ -1463,19 +1463,19 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             RETURN_SCORE_MINUS(10);
 
         // terrain & effect checks
-        if (IsElectricTerrainAffected(battlerDef, abilityDef, aiData->holdEffects[battlerDef]))
+        if (IsElectricTerrainAffected(battlerDef, abilityDef, aiData->holdEffects[battlerDef], gFieldTimers.terrain))
         {
             if (nonVolatileStatus == MOVE_EFFECT_SLEEP)
                 RETURN_SCORE_MINUS(20);
         }
 
-        if (IsMistyTerrainAffected(battlerDef, abilityDef, aiData->holdEffects[battlerDef]))
+        if (IsMistyTerrainAffected(battlerDef, abilityDef, aiData->holdEffects[battlerDef], gFieldTimers.terrain))
         {
             if (IsNonVolatileStatusMove(move) || IsConfusionMoveEffect(moveEffect))
                 RETURN_SCORE_MINUS(20);
         }
 
-        if (atkPriority > 0 && IsPsychicTerrainAffected(battlerAtk, abilityAtk, aiData->holdEffects[battlerAtk]))
+        if (atkPriority > 0 && IsPsychicTerrainAffected(battlerAtk, abilityAtk, aiData->holdEffects[battlerAtk], gFieldTimers.terrain))
         {
             RETURN_SCORE_MINUS(20);
         }
@@ -4871,7 +4871,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_SAFEGUARD:
-        if (!IsMistyTerrainAffected(battlerAtk, aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk]) || !AI_IsBattlerGrounded(battlerAtk))
+        if (!IsMistyTerrainAffected(battlerAtk, aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk], gFieldTimers.terrain) || !AI_IsBattlerGrounded(battlerAtk))
             ADJUST_SCORE(DECENT_EFFECT); // TODO: check if opp has status move?
         //if (CountUsablePartyMons(battlerDef) != 0)
             //ADJUST_SCORE(8);

@@ -75,7 +75,7 @@ static bool32 AI_CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Mov
 {
     return effect == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
-        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], GetMoveTerrainBoost_Terrain(move));
+        && IsBattlerTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], GetMoveTerrainBoost_Terrain(move), gFieldTimers.terrain);
 }
 
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move)
@@ -538,7 +538,7 @@ struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId 
     SaveBattlerData(battlerDef);
     SetBattlerData(battlerAtk);
     SetBattlerData(battlerDef);
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather(), gFieldStatuses);
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather(), gFieldTimers.terrain);
     RestoreBattlerData(battlerAtk);
     RestoreBattlerData(battlerDef);
     return dmg;
@@ -834,7 +834,7 @@ static s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     return dmg;
 }
 
-struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses)
+struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, enum BattleTerrain terrain)
 {
     struct SimulatedDamage simDamage = {0};
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -879,9 +879,9 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.battlerDef = battlerDef;
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
-    ctx.fieldStatuses = fieldStatuses;
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
+    ctx.terrain = terrain;
     ctx.weather = weather;
     ctx.fixedBasePower = 0;
 
@@ -1850,9 +1850,9 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     }
 }
 
-u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
+u32 AI_GetSwitchinTerrain(enum BattlerId battler)
 {
-    u8 newTerrain;
+    enum BattleTerrain newTerrain;
 
     if (gBattleStruct->isSkyBattle)
         return gFieldTimers.terrain;
@@ -1863,12 +1863,16 @@ u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
     case ABILITY_ELECTRIC_SURGE:
     case ABILITY_HADRON_ENGINE:
         newTerrain = B_TERRAIN_ELECTRIC;
+        break;
     case ABILITY_GRASSY_SURGE:
         newTerrain = B_TERRAIN_GRASSY;
+        break;
     case ABILITY_MISTY_SURGE:
         newTerrain = B_TERRAIN_MISTY;
+        break;
     case ABILITY_PSYCHIC_SURGE:
         newTerrain = B_TERRAIN_PSYCHIC;
+        break;
     default:
         return gFieldTimers.terrain;
     }
@@ -3568,7 +3572,7 @@ bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 {
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
-     || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef])
+     || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], gFieldTimers.terrain)
      || IsSafeguardProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk])
      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
         return FALSE;
@@ -5188,14 +5192,14 @@ void DecideTerastal(enum BattlerId battler)
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         if (!IsMoveUnusable(moveIndex, aiMoves[moveIndex], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[moveIndex]))
-            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(aiMoves[moveIndex], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather(), gFieldStatuses);
+            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(aiMoves[moveIndex], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather(), gFieldTimers.terrain);
         else
             altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
 
         if (!IsMoveUnusable(moveIndex, oppMoves[moveIndex], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[moveIndex]))
         {
-            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(oppMoves[moveIndex], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather(), gFieldStatuses);
+            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(oppMoves[moveIndex], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather(), gFieldTimers.terrain);
             effectivenessTakenWithTera[moveIndex] = effectiveness;
         }
         else

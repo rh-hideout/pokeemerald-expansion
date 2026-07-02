@@ -1249,7 +1249,7 @@
 	.macro jumpifterrainaffected battler:req, terrainFlags:req, jumpInstr:req
 	callnative BS_JumpIfTerrainAffected
 	.byte \battler
-	.4byte \terrainFlags
+	.byte \terrainFlags
 	.4byte \jumpInstr
 	.endm
 

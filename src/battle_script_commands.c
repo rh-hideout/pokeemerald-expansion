@@ -6970,11 +6970,11 @@ static void Cmd_trysetrest(void)
     enum Ability ability = GetBattlerAbility(gBattlerTarget);
     enum HoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget);
 
-    if (IsElectricTerrainAffected(gBattlerTarget, ability, holdEffect))
+    if (IsElectricTerrainAffected(gBattlerTarget, ability, holdEffect, gFieldTimers.terrain))
     {
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (IsMistyTerrainAffected(gBattlerTarget, ability, holdEffect))
+    else if (IsMistyTerrainAffected(gBattlerTarget, ability, holdEffect, gFieldTimers.terrain))
     {
         gBattlescriptCurrInstr = BattleScript_MistyTerrainPrevents;
     }
@@ -8928,13 +8928,13 @@ static void Cmd_setyawn(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (IsElectricTerrainAffected(gBattlerTarget, ability, holdEffect))
+    else if (IsElectricTerrainAffected(gBattlerTarget, ability, holdEffect, gFieldTimers.terrain))
     {
         // When Yawn is used while Electric Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
         gBattlescriptCurrInstr = BattleScript_ElectricTerrainPrevents;
     }
-    else if (IsMistyTerrainAffected(gBattlerTarget, ability, holdEffect))
+    else if (IsMistyTerrainAffected(gBattlerTarget, ability, holdEffect, gFieldTimers.terrain))
     {
         // When Yawn is used while Misty Terrain is set and drowsiness is set from Yawn being used against target in the previous turn:
         // "But it failed" will display first.
@@ -11259,10 +11259,10 @@ void BS_SetTerrain(void)
 
 void BS_JumpIfTerrainAffected(void)
 {
-    NATIVE_ARGS(u8 battler, u32 flags, const u8 *jumpInstr);
+    NATIVE_ARGS(u8 battler, u8 flags, const u8 *jumpInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
-    if (IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), cmd->flags))
+    if (IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), gFieldTimers.terrain, cmd->flags))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

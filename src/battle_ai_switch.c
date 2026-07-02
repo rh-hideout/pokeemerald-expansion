@@ -81,8 +81,9 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
     u32 switchinWeather = AI_GetSwitchinWeather(switchinBattler);
-    u32 switchinFieldStatus = AI_GetSwitchinFieldStatus(switchinBattler);
-    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
+    u32 switchinTerrain = AI_GetSwitchinTerrain(switchinBattler);
+    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinTerrain);
+
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     gAiLogicData->switchInCalc = TRUE;
@@ -91,10 +92,10 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
-        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinFieldStatus);
+        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinTerrain);
         SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinFieldStatus);
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
+        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinTerrain);
+        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinTerrain);
     }
 
     gAiLogicData->switchInCalc = FALSE;
@@ -284,7 +285,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
         return FALSE;
     if (!AI_IsBattlerGrounded(battler))
         return FALSE;
-    if (IsMistyTerrainAffected(battler, ability, heldItemEffect))
+    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, gFieldTimers.terrain)) // TODO
         return FALSE;
     if (IsLeafGuardProtected(battler, ability))
         return FALSE;
@@ -1637,7 +1638,7 @@ static u32 GetSwitchinHazardsDamage(enum BattlerId battler)
             && status == 0
             && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler])
+            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], gFieldTimers.terrain) // TODD
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
             && AI_IsBattlerGrounded(battler)))

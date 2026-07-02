@@ -23,7 +23,7 @@
 #include "constants/items.h"
 
 static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
-static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u8 terrain);
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, enum BattleTerrain terrain);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(enum Move move);
 static bool32 HasLightSensitiveMove(enum BattlerId battler);
@@ -194,7 +194,7 @@ static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather)
     return FALSE;
 }
 
-static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, u8 terrain)
+static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, enum BattleTerrain terrain)
 {
     switch (ability)
     {

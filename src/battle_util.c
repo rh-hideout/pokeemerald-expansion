@@ -2197,7 +2197,7 @@ bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority)
 bool32 CanPsychicTerrainProtectTarget(struct DamageContext *ctx, s32 movePriority)
 {
     if (movePriority <= 0
-     || !IsPsychicTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef])
+     || !IsPsychicTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], ctx->terrain)
      || IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef)
      || GetMoveTarget(ctx->move) == TARGET_ALL_BATTLERS
      || GetMoveTarget(ctx->move) == TARGET_OPPONENTS_FIELD)
@@ -4982,29 +4982,29 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
         return TRUE;
 }
 
-bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_PSYCHIC);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_PSYCHIC, currTerrain);
 }
 
-bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_MISTY);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_MISTY, currTerrain);
 }
 
-bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_GRASSY);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_GRASSY, currTerrain);
 }
 
-bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain)
 {
-    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_ELECTRIC);
+    return IsBattlerTerrainAffected(battler, ability, holdEffect, B_TERRAIN_ELECTRIC, currTerrain);
 }
 
-bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain)
 {
-    if (gFieldTimers.terrain == B_TERRAIN_NONE)
+    if (currTerrain == B_TERRAIN_NONE)
         return FALSE;
     if (IsSemiInvulnerable(battler, CHECK_ALL))
         return FALSE;
@@ -5012,9 +5012,9 @@ bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum H
     return IsBattlerGrounded(battler, ability, holdEffect);
 }
 
-bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u8 terrain)
+bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain terrain, enum BattleTerrain currTerrain)
 {
-    if (gFieldTimers.terrain != terrain)
+    if (currTerrain != terrain)
         return FALSE;
     if (IsSemiInvulnerable(battler, CHECK_ALL))
         return FALSE;
@@ -5330,7 +5330,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         {
             battleScript = BattleScript_SleepClauseBlocked;
         }
-        else if (IsElectricTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef)))
+        else if (IsElectricTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldTimers.terrain))
         {
             battleScript = BattleScript_ElectricTerrainPrevents;
         }
@@ -5377,7 +5377,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         abilityAffected = TRUE;
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
     }
-    else if (IsMistyTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef)))
+    else if (IsMistyTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldTimers.terrain))
     {
         battleScript = BattleScript_MistyTerrainPrevents;
     }
@@ -5464,7 +5464,7 @@ bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 
     if (gBattleMons[effectBattler].volatiles.confusionTurns > 0
      || IsSafeguardProtected(battlerAtk, effectBattler, GetBattlerAbility(battlerAtk))
-     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler))
+     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler), gFieldTimers.terrain)
      || IsAbilityAndRecord(effectBattler, effectAbility, ABILITY_OWN_TEMPO))
         return FALSE;
 
@@ -6067,9 +6067,9 @@ static inline u32 CalcTerrainBoostedPower(struct DamageContext *ctx, u32 basePow
     bool32 isTerrainAffected = FALSE;
 
     if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_USER)
-        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk], GetMoveTerrainBoost_Terrain(ctx->move));
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk], GetMoveTerrainBoost_Terrain(ctx->move), ctx->terrain);
     else if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_TARGET)
-        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], GetMoveTerrainBoost_Terrain(ctx->move));
+        isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], GetMoveTerrainBoost_Terrain(ctx->move), ctx->terrain);
     else if (gFieldTimers.terrain == GetMoveTerrainBoost_Terrain(ctx->move)) // no ground check (Psyblade)
         isTerrainAffected = TRUE;
 
@@ -6348,11 +6348,11 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         break;
     }
     case EFFECT_GRAV_APPLE:
-        if (ctx->fieldStatuses & STATUS_FIELD_GRAVITY)
+        if (gFieldStatuses & STATUS_FIELD_GRAVITY)
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_TERRAIN_PULSE:
-        if (IsAnyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]))
+        if (IsAnyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->terrain))
             basePower *= 2;
         break;
     case EFFECT_BEAT_UP:
@@ -6472,13 +6472,13 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
     if (GetMoveEffect(ctx->chosenMove) == EFFECT_ME_FIRST)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
-    if (IsGrassyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_GRASS)
+    if (IsGrassyTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->terrain) && moveType == TYPE_GRASS)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsMistyTerrainAffected(battlerDef, ctx->abilities[battlerAtk], ctx->holdEffects[battlerDef]) && moveType == TYPE_DRAGON)
+    if (IsMistyTerrainAffected(battlerDef, ctx->abilities[battlerAtk], ctx->holdEffects[battlerDef], ctx->terrain) && moveType == TYPE_DRAGON)
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
-    if (IsElectricTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_ELECTRIC)
+    if (IsElectricTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->terrain) && moveType == TYPE_ELECTRIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsPsychicTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) && moveType == TYPE_PSYCHIC)
+    if (IsPsychicTerrainAffected(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->terrain) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
     if (IsFieldMudSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
@@ -6791,7 +6791,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         {
             atkStat = gBattleMons[battlerAtk].defense;
             // Edge case: Body Press used during Wonder Room. For some reason, it still uses Defense over Sp.Def, but uses Sp.Def stat changes
-            if (ctx->fieldStatuses & STATUS_FIELD_WONDER_ROOM)
+            if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM)
                 atkStage = gBattleMons[battlerAtk].statStages[STAT_SPDEF];
             else
                 atkStage = gBattleMons[battlerAtk].statStages[STAT_DEF];
@@ -7073,7 +7073,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
 
     if (moveEffect == EFFECT_PSYSHOCK || IsBattleMovePhysical(move)) // uses defense stat instead of sp.def
     {
-        if (ctx->fieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
         {
             defStat = spDef;
             usesDefStat = FALSE;
@@ -7087,7 +7087,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     }
     else // is special
     {
-        if (ctx->fieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
         {
             defStat = def;
             usesDefStat = TRUE;
@@ -9390,7 +9390,7 @@ static u32 CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Move move
 {
     return effect == EFFECT_TERRAIN_BOOST
         && GetMoveTerrainBoost_HitsBothFoes(move)
-        && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), GetMoveTerrainBoost_Terrain(move));
+        && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), GetMoveTerrainBoost_Terrain(move), gFieldTimers.terrain);
 }
 
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move)

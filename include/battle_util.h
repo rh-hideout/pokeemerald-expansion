@@ -103,7 +103,6 @@ struct DamageContext
     u32 fixedBasePower:8;
     u32 weather:16;
     u32 unused:2;
-    u32 fieldStatuses;
 
     enum Move move:13;
     enum Move chosenMove:13; // May be different to 'move', e.g. for Z moves.
@@ -124,7 +123,8 @@ struct DamageContext
     u32 airBalloonBlocked:1;
     u32 abilityBlocked:1;
     u32 runScript:1;  // Used during actual combat where scripts have to be run / flags need to be set
-    u32 padding:22;
+    u32 terrain:4;
+    u32 padding:18;
 };
 
 // Helper struct to keep the arg list small and prevent constant recalculations of abilities/hold effects.
@@ -317,12 +317,12 @@ bool32 CanTargetPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsBattlerUnaffectedByMove(enum BattlerId battler);
 bool32 MoodyCantRaiseStat(u32 stat);
 bool32 MoodyCantLowerStat(u32 stat);
-bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
-bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
-bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
-bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
-bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
-bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u8 terrain);
+bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
+bool32 IsMistyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
+bool32 IsGrassyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
+bool32 IsElectricTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
+bool32 IsAnyTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
+bool32 IsBattlerTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain terrain, enum BattleTerrain currTerrain);
 enum Stat GetHighestStatId(enum BattlerId battler);
 enum Stat GetParadoxHighestStatId(enum BattlerId battler);
 enum Stat GetParadoxBoostedStatId(enum BattlerId battler);

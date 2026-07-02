@@ -529,6 +529,9 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_INSTRUCT:
         case EFFECT_SOAK:
 
+        // Needs Snow / Hail on the field
+        case EFFECT_AURORA_VEIL:
+
         // tests exist elsewhere
         case EFFECT_TERRAIN:
 
