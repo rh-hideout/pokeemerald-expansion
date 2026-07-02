@@ -1850,38 +1850,35 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     }
 }
 
-u32 SwitchinChangeBattleTerrain(u32 newTerrain, u32 fieldStatus)
+u32 SwitchinChangeBattleTerrain(u8 newTerrain, u8 currentTerrain)
 {
     if (gBattleStruct->isSkyBattle)
-        return fieldStatus;
+        return currentTerrain;
 
-    if (!(fieldStatus & newTerrain))
-    {
-        fieldStatus &= ~STATUS_FIELD_TERRAIN_ANY;
-        fieldStatus |= newTerrain;
-        return fieldStatus;
-    }
+    if (currentTerrain != newTerrain)
+        return newTerrain;
 
-    return fieldStatus;
+    return currentTerrain;
 }
 
 u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
 {
-    u32 startingFieldStatus = gFieldStatuses;
+    u8 startingTerrain = gFieldTimers.terrain;
+
     // Switchin will introduce new terrain
     switch (gAiLogicData->abilities[battler])
     {
     case ABILITY_ELECTRIC_SURGE:
     case ABILITY_HADRON_ENGINE:
-        return SwitchinChangeBattleTerrain(STATUS_FIELD_ELECTRIC_TERRAIN, startingFieldStatus);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_ELECTRIC, startingTerrain);
     case ABILITY_GRASSY_SURGE:
-        return SwitchinChangeBattleTerrain(STATUS_FIELD_GRASSY_TERRAIN, startingFieldStatus);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_GRASSY, startingTerrain);
     case ABILITY_MISTY_SURGE:
-        return SwitchinChangeBattleTerrain(STATUS_FIELD_MISTY_TERRAIN, startingFieldStatus);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_MISTY, startingTerrain);
     case ABILITY_PSYCHIC_SURGE:
-        return SwitchinChangeBattleTerrain(STATUS_FIELD_PSYCHIC_TERRAIN, startingFieldStatus);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_PSYCHIC, startingTerrain);
     default:
-        return startingFieldStatus;
+        return startingTerrain;
     }
 }
 
