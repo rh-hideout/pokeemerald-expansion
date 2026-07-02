@@ -1014,9 +1014,10 @@ void AnimTask_CreateSurfWave(u8 taskId)
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Surf, animBg.tilesOffset);
 
     const u16 *const wavePalettes[] = {
-        [ANIM_SURF_PAL_SURF] = B_NEW_SURF_PARTICLE_PALETTE ? gBattleAnimSpritePal_NewSurf : gBattleAnimBgPalette_Surf,
-        [ANIM_SURF_PAL_MUDDY_WATER] = gBattleAnimBackgroundImageMuddyWater_Pal,
-        [ANIM_SURF_PAL_SLUDGE_WAVE] = gBattleAnimBgPalette_SludgeWave,
+        [ANIM_SURF_PAL_SURF_ORIGINAL] = gBattleAnimBgPalette_Surf,
+        [ANIM_SURF_PAL_MUDDY_WATER]   = gBattleAnimBackgroundImageMuddyWater_Pal,
+        [ANIM_SURF_PAL_SLUDGE_WAVE]   = gBattleAnimBgPalette_SludgeWave,
+        [ANIM_SURF_PAL_SURF_NEW]      = gBattleAnimSpritePal_NewSurf,
     };
 
     LoadPalette(wavePalettes[cmd->palette], BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);

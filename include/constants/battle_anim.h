@@ -674,9 +674,16 @@ enum AnimBattler
 #define ANIM_CHOP    3
 
 // Surf wave palettes
-#define ANIM_SURF_PAL_SURF           0
+#define ANIM_SURF_PAL_SURF_ORIGINAL  0
 #define ANIM_SURF_PAL_MUDDY_WATER    1
 #define ANIM_SURF_PAL_SLUDGE_WAVE    2
+#define ANIM_SURF_PAL_SURF_NEW       3
+
+#if B_NEW_SURF_PARTICLE_PALETTE
+#define ANIM_SURF_PAL_SURF ANIM_SURF_PAL_SURF_NEW
+#else
+#define ANIM_SURF_PAL_SURF ANIM_SURF_PAL_SURF_ORIGINAL
+#endif
 
 // Order Up palettes for Commander
 #define ANIM_ORDER_UP_NONE           0
