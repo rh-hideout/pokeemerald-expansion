@@ -1196,8 +1196,7 @@ struct TerrainInfo
     u8 battleBackground;
     enum Stat seedStat;
     u8 seedHoldEffect;
-    u8 abilityStartMessage;
-    u8 moveStartMessage;
+    u8 startMessage;
     u8 endMessage;
 };
 

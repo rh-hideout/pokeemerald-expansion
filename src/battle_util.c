@@ -251,8 +251,7 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .battleBackground = BG_GRASSY_TERRAIN,
         .seedStat = STAT_DEF,
         .seedHoldEffect = HOLD_EFFECT_PARAM_GRASSY_TERRAIN,
-        .abilityStartMessage = B_MSG_TERRAIN_SET_GRASSY,
-        .moveStartMessage = B_MSG_TERRAIN_SET_GRASSY,
+        .startMessage = B_MSG_TERRAIN_SET_GRASSY,
         .endMessage = B_MSG_TERRAIN_END_GRASSY,
     },
 
@@ -264,8 +263,7 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .battleBackground = BG_MISTY_TERRAIN,
         .seedStat = STAT_SPDEF,
         .seedHoldEffect = HOLD_EFFECT_PARAM_MISTY_TERRAIN,
-        .abilityStartMessage = B_MSG_TERRAIN_SET_MISTY,
-        .moveStartMessage = B_MSG_TERRAIN_SET_MISTY,
+        .startMessage = B_MSG_TERRAIN_SET_MISTY,
         .endMessage = B_MSG_TERRAIN_END_MISTY,
     },
 
@@ -277,8 +275,7 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .battleBackground = BG_ELECTRIC_TERRAIN,
         .seedStat = STAT_DEF,
         .seedHoldEffect = HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN,
-        .abilityStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
-        .moveStartMessage = B_MSG_TERRAIN_SET_ELECTRIC,
+        .startMessage = B_MSG_TERRAIN_SET_ELECTRIC,
         .endMessage = B_MSG_TERRAIN_END_ELECTRIC,
     },
 
@@ -290,8 +287,7 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
         .battleBackground = BG_PSYCHIC_TERRAIN,
         .seedStat = STAT_SPDEF,
         .seedHoldEffect = HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN,
-        .abilityStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
-        .moveStartMessage = B_MSG_TERRAIN_SET_PSYCHIC,
+        .startMessage = B_MSG_TERRAIN_SET_PSYCHIC,
         .endMessage = B_MSG_TERRAIN_END_PSYCHIC,
     },
 };
@@ -2034,7 +2030,7 @@ bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum 
     return TRUE;
 }
 
-bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain, enum Ability ability)
+bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain)
 {
     if (terrain == B_TERRAIN_NONE || terrain == gFieldTimers.terrain)
         return FALSE;
@@ -2045,11 +2041,7 @@ bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain
     if (gFieldTimers.terrain != terrain)
     {
         gFieldTimers.terrain = terrain;
-
-        if (ability == ABILITY_NONE)
-            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].moveStartMessage;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].abilityStartMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].startMessage;
 
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
@@ -2381,23 +2373,33 @@ static u32 GetFirstBattlerOnSide(enum BattleSide side)
     return GetBattlerAtPosition(side == B_SIDE_PLAYER ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT);
 }
 
+static inline bool32 SetStartingFieldTerrain(u8 terrain, u8 *timer, u16 time)
+{
+    if (gFieldTimers.terrain != terrain)
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[terrain].startMessage;
+        gFieldTimers.terrain = terrain;
+        gBattleScripting.animArg1 = 0;
+        *timer = time;
+
+        BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u8 *timer, u16 time)
 {
     if (!(gFieldStatuses & flag))
     {
-        bool32 isTerrain = (STATUS_FIELD_TERRAIN_ANY & flag);
-
         gBattleCommunication[MULTISTRING_CHOOSER] = message;
-        if (isTerrain)
-            gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= flag;
         gBattleScripting.animArg1 = anim;
         *timer = time;
 
-        if (isTerrain)
-            BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-        else
-            BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+        BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
 
         return TRUE;
     }
@@ -2517,41 +2519,29 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
         if (gStartingStatuses.electricTerrain || gStartingStatuses.electricTerrainTemporary)
         {
-            effect = SetStartingFieldStatus(
-                        STATUS_FIELD_ELECTRIC_TERRAIN,
-                        B_MSG_TERRAIN_SET_ELECTRIC,
-                        0,
-                        &gFieldTimers.terrainTimer, gStartingStatuses.electricTerrain ? 0 : 5);
+            effect = SetStartingFieldTerrain(B_TERRAIN_ELECTRIC, &gFieldTimers.terrainTimer,
+                gStartingStatuses.electricTerrain ? 0 : 5);
             gStartingStatuses.electricTerrainTemporary = gStartingStatuses.electricTerrain = FALSE;
             return effect;
         }
         else if (gStartingStatuses.mistyTerrain || gStartingStatuses.mistyTerrainTemporary)
         {
-            effect = SetStartingFieldStatus(
-                        STATUS_FIELD_MISTY_TERRAIN,
-                        B_MSG_TERRAIN_SET_MISTY,
-                        0,
-                        &gFieldTimers.terrainTimer, gStartingStatuses.mistyTerrain ? 0 : 5);
+            effect = SetStartingFieldTerrain(B_TERRAIN_MISTY, &gFieldTimers.terrainTimer,
+                gStartingStatuses.mistyTerrain ? 0 : 5);
             gStartingStatuses.mistyTerrainTemporary = gStartingStatuses.mistyTerrain = FALSE;
             return effect;
         }
         else if (gStartingStatuses.grassyTerrain || gStartingStatuses.grassyTerrainTemporary)
         {
-            effect = SetStartingFieldStatus(
-                        STATUS_FIELD_GRASSY_TERRAIN,
-                        B_MSG_TERRAIN_SET_GRASSY,
-                        0,
-                        &gFieldTimers.terrainTimer, gStartingStatuses.grassyTerrain ? 0 : 5);
+            effect = SetStartingFieldTerrain(B_TERRAIN_GRASSY, &gFieldTimers.terrainTimer,
+                gStartingStatuses.grassyTerrain ? 0 : 5);
             gStartingStatuses.grassyTerrainTemporary = gStartingStatuses.grassyTerrain = FALSE;
             return effect;
         }
         else if (gStartingStatuses.psychicTerrain || gStartingStatuses.psychicTerrainTemporary)
         {
-            effect = SetStartingFieldStatus(
-                        STATUS_FIELD_PSYCHIC_TERRAIN,
-                        B_MSG_TERRAIN_SET_PSYCHIC,
-                        0,
-                        &gFieldTimers.terrainTimer, gStartingStatuses.psychicTerrain ? 0 : 5);
+            effect = SetStartingFieldTerrain(B_TERRAIN_PSYCHIC, &gFieldTimers.terrainTimer,
+                gStartingStatuses.psychicTerrain ? 0 : 5);
             gStartingStatuses.psychicTerrainTemporary = gStartingStatuses.psychicTerrain = FALSE;
             return effect;
         }
@@ -3323,7 +3313,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_HADRON_ENGINE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, B_TERRAIN_ELECTRIC, ABILITY_ELECTRIC_SURGE))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_ELECTRIC))
             {
                 BattleScriptCall(BattleScript_ElectricSurgeActivates);
                 effect++;
@@ -3332,7 +3322,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_GRASSY_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, B_TERRAIN_GRASSY, ABILITY_GRASSY_SURGE))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_GRASSY))
             {
                 BattleScriptCall(BattleScript_GrassySurgeActivates);
                 effect++;
@@ -3341,7 +3331,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_MISTY_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, B_TERRAIN_MISTY, ABILITY_MISTY_SURGE))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_MISTY))
             {
                 BattleScriptCall(BattleScript_MistySurgeActivates);
                 effect++;
@@ -3350,7 +3340,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_PSYCHIC_SURGE:
             if (!shouldAbilityTrigger)
                 break;
-            if (TryChangeBattleTerrain(battler, B_TERRAIN_PSYCHIC, ABILITY_PSYCHIC_SURGE))
+            if (TryChangeBattleTerrain(battler, B_TERRAIN_PSYCHIC))
             {
                 BattleScriptCall(BattleScript_PsychicSurgeActivates);
                 effect++;
@@ -4262,7 +4252,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_SEED_SOWER:
             if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && TryChangeBattleTerrain(gBattlerTarget, B_TERRAIN_GRASSY, ABILITY_SEED_SOWER))
+             && TryChangeBattleTerrain(gBattlerTarget, B_TERRAIN_GRASSY))
             {
                 BattleScriptCall(BattleScript_SeedSowerActivates);
                 effect++;
