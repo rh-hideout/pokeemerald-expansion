@@ -673,7 +673,7 @@ enum AnimBattler
 #define ANIM_FOOT_2  2
 #define ANIM_CHOP    3
 
-// surf wave palettes
+// Surf wave palettes
 #define ANIM_SURF_PAL_SURF           0
 #define ANIM_SURF_PAL_MUDDY_WATER    1
 #define ANIM_SURF_PAL_SLUDGE_WAVE    2
@@ -693,10 +693,6 @@ enum SpeciesGfxChange
     SPECIES_GFX_CHANGE_ILLUSION_OFF,
     SPECIES_GFX_CHANGE_GHOST_UNVEIL,
 };
-
-// Surf wave palettes
-#define ANIM_SURF_PAL_SURF           0
-#define ANIM_SURF_PAL_MUDDY_WATER    1
 
 // Flags given to various functions to indicate which palettes to consider.
 // Handled by UnpackSelectedBattlePalettes

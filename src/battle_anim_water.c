@@ -1012,22 +1012,14 @@ void AnimTask_CreateSurfWave(u8 taskId)
         AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_SurfContest, TRUE);
     }
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Surf, animBg.tilesOffset);
-    switch (cmd->palette)
-    {
-    case ANIM_SURF_PAL_SURF:
-    default:
-        if (B_NEW_SURF_PARTICLE_PALETTE == TRUE)
-            LoadPalette(gBattleAnimSpritePal_NewSurf, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        else
-            LoadPalette(gBattleAnimBgPalette_Surf, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    case ANIM_SURF_PAL_MUDDY_WATER:
-        LoadPalette(gBattleAnimBackgroundImageMuddyWater_Pal, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    case ANIM_SURF_PAL_SLUDGE_WAVE:
-        LoadPalette(gBattleAnimBgPalette_SludgeWave, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    }
+
+    const u16 *const wavePalettes[] = {
+        [ANIM_SURF_PAL_SURF] = B_NEW_SURF_PARTICLE_PALETTE ? gBattleAnimSpritePal_NewSurf : gBattleAnimBgPalette_Surf,
+        [ANIM_SURF_PAL_MUDDY_WATER] = gBattleAnimBackgroundImageMuddyWater_Pal,
+        [ANIM_SURF_PAL_SLUDGE_WAVE] = gBattleAnimBgPalette_SludgeWave,
+    };
+
+    LoadPalette(wavePalettes[cmd->palette], BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
     taskId2 = CreateTask(AnimTask_SurfWaveScanlineEffect, gTasks[taskId].priority + 1);
     gTasks[taskId].data[15] = taskId2;
