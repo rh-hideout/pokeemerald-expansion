@@ -228,14 +228,14 @@ static bool32 HasLightSensitiveMove(enum BattlerId battler)
 }
 
 // Sun
-// Utility Umbrella does NOT block Ancient Pokemon from their stat boosts.
+// Utility Umbrella does not block Protosynthesis, but it does block Orichalcum Pulse's Attack boost.
 static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
     {
-        if (ability == ABILITY_ORICHALCUM_PULSE || ability == ABILITY_PROTOSYNTHESIS)
+        if (ability == ABILITY_PROTOSYNTHESIS)
             return FIELD_EFFECT_POSITIVE;
         else
             return FIELD_EFFECT_NEUTRAL;
