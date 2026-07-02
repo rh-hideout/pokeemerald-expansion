@@ -5823,43 +5823,43 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     ADJUST_SCORE(BAD_EFFECT);
                 break;
             case MOVE_EFFECT_MISTY_TERRAIN:
-                if (ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_MISTY_TERRAIN))
+                if (ShouldClearTerrain(battlerAtk, B_TERRAIN_MISTY))
                 {
                     ADJUST_SCORE(BAD_EFFECT);
                     break;
                 }
-                if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_MISTY_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
+                if (ShouldSetTerrain(battlerAtk, B_TERRAIN_MISTY)
+                 || ShouldClearTerrain(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_GRASSY_TERRAIN:
-                if (ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_GRASSY_TERRAIN))
+                if (ShouldClearTerrain(battlerAtk, B_TERRAIN_GRASSY))
                 {
                     ADJUST_SCORE(BAD_EFFECT);
                     break;
                 }
-                if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_GRASSY_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
+                if (ShouldSetTerrain(battlerAtk, B_TERRAIN_GRASSY)
+                 || ShouldClearTerrain(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_ELECTRIC_TERRAIN:
-                if (ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN))
+                if (ShouldClearTerrain(battlerAtk, B_TERRAIN_ELECTRIC))
                 {
                     ADJUST_SCORE(BAD_EFFECT);
                     break;
                 }
-                if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
+                if (ShouldSetTerrain(battlerAtk, B_TERRAIN_ELECTRIC)
+                 || ShouldClearTerrain(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_PSYCHIC_TERRAIN:
-                if (ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN))
+                if (ShouldClearTerrain(battlerAtk, B_TERRAIN_PSYCHIC))
                 {
                     ADJUST_SCORE(BAD_EFFECT);
                     break;
                 }
-                if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN)
-                 || ShouldClearFieldStatus(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
+                if (ShouldSetTerrain(battlerAtk, B_TERRAIN_PSYCHIC)
+                 || ShouldClearTerrain(battlerAtk, gFieldTimers.terrain != B_TERRAIN_NONE))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_GRAVITY:

@@ -1850,8 +1850,10 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     }
 }
 
-u32 SwitchinChangeBattleTerrain(u8 newTerrain, u8 currentTerrain)
+u32 SwitchinChangeBattleTerrain(u8 newTerrain)
 {
+    u8 currentTerrain = gFieldTimers.terrain;
+
     if (gBattleStruct->isSkyBattle)
         return currentTerrain;
 
@@ -1863,22 +1865,20 @@ u32 SwitchinChangeBattleTerrain(u8 newTerrain, u8 currentTerrain)
 
 u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
 {
-    u8 startingTerrain = gFieldTimers.terrain;
-
     // Switchin will introduce new terrain
     switch (gAiLogicData->abilities[battler])
     {
     case ABILITY_ELECTRIC_SURGE:
     case ABILITY_HADRON_ENGINE:
-        return SwitchinChangeBattleTerrain(B_TERRAIN_ELECTRIC, startingTerrain);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_ELECTRIC);
     case ABILITY_GRASSY_SURGE:
-        return SwitchinChangeBattleTerrain(B_TERRAIN_GRASSY, startingTerrain);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_GRASSY);
     case ABILITY_MISTY_SURGE:
-        return SwitchinChangeBattleTerrain(B_TERRAIN_MISTY, startingTerrain);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_MISTY);
     case ABILITY_PSYCHIC_SURGE:
-        return SwitchinChangeBattleTerrain(B_TERRAIN_PSYCHIC, startingTerrain);
+        return SwitchinChangeBattleTerrain(B_TERRAIN_PSYCHIC);
     default:
-        return startingTerrain;
+        return gFieldTimers.terrain;
     }
 }
 
@@ -2140,6 +2140,16 @@ bool32 ShouldSetWeather(enum BattlerId battler, u32 weather)
 bool32 ShouldClearWeather(enum BattlerId battler, u32 weather)
 {
     return WeatherChecker(battler, weather, FIELD_EFFECT_NEGATIVE);
+}
+
+bool32 ShouldSetTerrain(enum BattlerId battler, enum BattleTerrain terrain)
+{
+    return TerrainChecker(battler, terrain, FIELD_EFFECT_POSITIVE);
+}
+
+bool32 ShouldClearTerrain(enum BattlerId battler, enum BattleTerrain terrain)
+{
+    return TerrainChecker(battler, terrain, FIELD_EFFECT_NEGATIVE);
 }
 
 bool32 ShouldSetFieldStatus(enum BattlerId battler, u32 fieldStatus)

@@ -211,6 +211,8 @@ s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Mov
 bool32 ShouldRaiseAnyStat(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 ShouldSetWeather(enum BattlerId battler, u32 weather);
 bool32 ShouldClearWeather(enum BattlerId battler, u32 weather);
+bool32 ShouldSetTerrain(enum BattlerId battler, enum BattleTerrain terrain);
+bool32 ShouldClearTerrain(enum BattlerId battler, enum BattleTerrain terrain);
 bool32 ShouldSetFieldStatus(enum BattlerId battler, u32 fieldStatus);
 bool32 ShouldClearFieldStatus(enum BattlerId battler, u32 fieldStatus);
 bool32 HasSleepMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef);
