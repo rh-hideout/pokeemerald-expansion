@@ -6449,7 +6449,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case EFFECT_MAGNITUDE:
     case EFFECT_EARTHQUAKE:
-        if (ctx->fieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
+        if (gFieldTimers.terrain == B_TERRAIN_GRASSY && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_KNOCK_OFF:
@@ -6945,7 +6945,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
             enum Stat atkHighestStat = GetParadoxBoostedStatId(battlerAtk);
-            if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerAtk].volatiles.boosterEnergyActivated)
+            if (gFieldTimers.terrain == B_TERRAIN_ELECTRIC || gBattleMons[battlerAtk].volatiles.boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
                     modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -6958,7 +6958,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
         break;
     case ABILITY_HADRON_ENGINE:
-        if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN && IsBattleMoveSpecial(move))
+        if (gFieldTimers.terrain == B_TERRAIN_ELECTRIC && IsBattleMoveSpecial(move))
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3333));
         break;
     case ABILITY_FIRE_MANE:
@@ -7143,7 +7143,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         }
         break;
     case ABILITY_GRASS_PELT:
-        if (ctx->fieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && usesDefStat)
+        if (gFieldTimers.terrain == B_TERRAIN_GRASSY && usesDefStat)
         {
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             if (ctx->updateFlags)
