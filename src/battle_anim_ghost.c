@@ -870,7 +870,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
             if (battler != gBattleAnimAttacker
              && battler != BATTLE_PARTNER(gBattleAnimAttacker)
              && IsBattlerSpriteVisible(battler)
-             && (GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH || gAnimMoveIndex == MOVE_DESTINY_BOND || battler == gBattleAnimTarget))
+             && (GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH // Move hits both foes on purpose, e.g. Dark Void
+              || GetMoveTarget(gAnimMoveIndex) == TARGET_USER // Real target isn't known yet at animation time, e.g. Destiny Bond
+              || battler == gBattleAnimTarget)) // Otherwise only send the shadow to the actual move target
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
