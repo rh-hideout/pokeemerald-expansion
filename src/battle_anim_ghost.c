@@ -869,7 +869,8 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
         {
             if (battler != gBattleAnimAttacker
              && battler != BATTLE_PARTNER(gBattleAnimAttacker)
-             && IsBattlerSpriteVisible(battler))
+             && IsBattlerSpriteVisible(battler)
+             && (gAnimMoveIndex == MOVE_DARK_VOID || gAnimMoveIndex == MOVE_DESTINY_BOND || battler == gBattleAnimTarget))
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
