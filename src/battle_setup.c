@@ -1540,7 +1540,7 @@ void BattleSetup_StartTrainerBattle_Debug(void)
 
 static void SaveChangesToPlayerParty(void)
 {
-    bool32 isSkyBattle = (B_FLAG_SKY_BATTLE != 0 && FlagGet(B_FLAG_SKY_BATTLE));
+    bool32 isSkyBattle = FlagGet(B_FLAG_SKY_BATTLE);
     bool32 isBXPY = FlagGet(B_FLAG_BXPY) && (BXPY_RETAIN_CHANGES == TRUE);
 
     if (!isSkyBattle && !isBXPY)
@@ -1560,7 +1560,7 @@ static void SaveChangesToPlayerParty(void)
 
 static void HandleBattleVariantEndParty(void)
 {
-    bool32 isSkyBattle = (B_FLAG_SKY_BATTLE != 0 && FlagGet(B_FLAG_SKY_BATTLE));
+    bool32 isSkyBattle =FlagGet(B_FLAG_SKY_BATTLE);
     bool32 isBXPY = FlagGet(B_FLAG_BXPY);
 
     if (!isSkyBattle && !isBXPY)

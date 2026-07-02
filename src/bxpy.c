@@ -684,13 +684,13 @@ u32 BXPY_TransformSpeciesId(u32 originalSpeciesId)
 {
     switch (BXPY_GetEnemySpeciesVisibilityLevel())
     {
-        case BXPY_SPECIES_SHOW_TRUE:
-            return originalSpeciesId;
-        case BXPY_SPECIES_SHOW_BASE:
-            return GET_BASE_SPECIES_ID(originalSpeciesId);
-        default:
-        case BXPY_SPECIES_HIDE:
-            return SPECIES_NONE;
+    case BXPY_SPECIES_SHOW_TRUE:
+        return originalSpeciesId;
+    case BXPY_SPECIES_SHOW_BASE:
+        return GET_BASE_SPECIES_ID(originalSpeciesId);
+    default:
+    case BXPY_SPECIES_HIDE:
+        return SPECIES_NONE;
     }
 }
 
