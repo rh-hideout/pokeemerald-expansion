@@ -9017,6 +9017,7 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
         break;
     case EFFECT_PRESENT:
     {
+        gBattleStruct->presentBasePower = 0;
         u32 rand = RandomUniform(RNG_PRESENT, 0, 0xFF);
         if (rand < 102)
             gBattleStruct->presentBasePower = 40;

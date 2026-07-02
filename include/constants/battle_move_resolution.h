@@ -34,7 +34,6 @@ enum PreAnimActivations
 {
     PRE_ANIM_STRONG_WINDS,
     PRE_ANIM_TERA_SHELL,
-    PRE_ANIM_WEAKNESS_BERRY, // Not vanilla accurate for now (happens after anim)
 };
 
 enum CancelerState
@@ -96,6 +95,7 @@ enum CancelerState
     CANCELER_SKIP_FRAME,
     CANCELER_HEALTH_BAR_UPDATE,
     CANCELER_MOVE_DAMAGE_UPDATE,
+    CANCELER_WEAKNESS_BERRY,
     CANCELER_END,
 };
 

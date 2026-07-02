@@ -2409,7 +2409,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
     if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
     {
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
-        return CANCELER_RESULT_SUCCESS;
+        return CANCELER_RESULT_END;
     }
 
     SetPossibleNewSmartTarget(cv->move);
@@ -2491,7 +2491,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 ShouldSkipBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (gBattleStruct->numSpreadTargets == 0 && battlerDef != gBattlerTarget)
         return TRUE;
@@ -2576,7 +2576,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
             continue;
 
         ctx.battlerDef = battlerDef;
@@ -2605,7 +2605,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
         {
             for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
             {
-                if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
+                if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
                     continue;
 
                 if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS
@@ -2623,7 +2623,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
         {
             enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
 
-            if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
+            if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
                 continue;
 
             if (gSpecialStatuses[battlerDef].teraShellAbilityDone)
@@ -2633,31 +2633,6 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
                 BattleScriptCall(BattleScript_TeraShellDistortingTypeMatchups);
                 return CANCELER_RESULT_RUN_SCRIPT;
             }
-        }
-        gBattleStruct->eventState.moveEndBlock++;
-    case PRE_ANIM_WEAKNESS_BERRY:
-        for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
-        {
-            enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
-
-            if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
-                continue;
-
-            if (!gSpecialStatuses[battlerDef].berryReduced
-             || gBattleMons[battlerDef].item == ITEM_NONE)
-                continue;
-
-            if (DoesDisguiseBlockMove(battlerDef, cv->move))
-            {
-                gSpecialStatuses[battlerDef].berryReduced = FALSE;
-                continue;
-            }
-
-            gBattleScripting.battler = battlerDef;
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            GetBattlerPartyState(battlerDef)->ateBerry = TRUE;
-            BattleScriptCall(BattleScript_BerryReduceDmg);
-            return CANCELER_RESULT_RUN_SCRIPT;
         }
         gBattleStruct->eventState.moveEndBlock++;
     }
@@ -2731,7 +2706,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(enum BattlerId bat
     u32 resultFlags = 0;
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipBattler(battlerAtk, battlerDef))
+        if (ShouldSkipBattlerForDamage(battlerAtk, battlerDef))
             continue;
         if (DoesBattlerNegateDamage(battlerDef))
             continue;
@@ -2816,7 +2791,7 @@ static enum CancelerResult CancelerHitAnimation(struct BattleCalcValues *cv)
 {
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipBattler(cv->battlerAtk, battlerDef))
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
             continue;
 
         if (!(DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, gCurrentMove))
@@ -2845,7 +2820,7 @@ static enum CancelerResult CancelerHealthBarUpdate(struct BattleCalcValues *cv)
             continue;
         }
 
-        if (ShouldSkipBattler(cv->battlerAtk, battlerDef)
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef)
          || DoesDisguiseBlockMove(battlerDef, cv->move)
          || DoesIceFaceBlockMove(battlerDef, cv->move))
             continue;
@@ -2968,7 +2943,7 @@ static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
         cv->battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
         gBattleStruct->eventState.moveEndBattler++;
 
-        if (ShouldSkipBattler(cv->battlerAtk, cv->battlerDef))
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, cv->battlerDef))
             continue;
 
         if (TryMoveDamageUpdate(cv))
@@ -2980,6 +2955,36 @@ static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
     gBattleStruct->eventState.moveEndBattler = 0;
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
 }
+
+static enum CancelerResult CancelerMoveWeaknessBerry(struct BattleCalcValues *cv)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
+
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
+            continue;
+
+        if (!gSpecialStatuses[battlerDef].berryReduced
+         || gBattleMons[battlerDef].item == ITEM_NONE)
+            continue;
+
+        if (DoesDisguiseBlockMove(battlerDef, cv->move))
+        {
+            gSpecialStatuses[battlerDef].berryReduced = FALSE;
+            continue;
+        }
+
+        gBattleScripting.battler = battlerDef;
+        gLastUsedItem = gBattleMons[battlerDef].item;
+        GetBattlerPartyState(battlerDef)->ateBerry = TRUE;
+        BattleScriptCall(BattleScript_BerryReduceDmg);
+        return CANCELER_RESULT_RUN_SCRIPT;
+    }
+
+    return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
+}
+
 
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCalcValues *cv) =
 {
@@ -3040,6 +3045,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_SKIP_FRAME] = CancelerSkipFrame,
     [CANCELER_HEALTH_BAR_UPDATE] = CancelerHealthBarUpdate,
     [CANCELER_MOVE_DAMAGE_UPDATE] = CancelerMoveDamageUpdate,
+    [CANCELER_WEAKNESS_BERRY] = CancelerMoveWeaknessBerry,
 };
 
 enum CancelerResult DoAttackCanceler(void)
