@@ -2129,3 +2129,10 @@
 	.macro multihitplurality
 	callnative BS_MultiHitPlurality
 	.endm
+
+	.macro jumpifterrain comparison:req, terrain:req, jumpInstr:req
+	.byte B_SCR_OP_JUMPIFTERRAIN
+	.byte \comparison
+	.byte \terrain
+	.4byte \jumpInstr
+	.endm

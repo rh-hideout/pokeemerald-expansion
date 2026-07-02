@@ -6070,7 +6070,7 @@ static inline u32 CalcTerrainBoostedPower(struct DamageContext *ctx, u32 basePow
         isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk], GetMoveTerrainBoost_Terrain(ctx->move));
     else if (GetMoveTerrainBoost_GroundCheck(ctx->move) == GROUND_CHECK_TARGET)
         isTerrainAffected = IsBattlerTerrainAffected(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], GetMoveTerrainBoost_Terrain(ctx->move));
-    else if (ctx->fieldStatuses & GetMoveTerrainBoost_Terrain(ctx->move)) // no ground check (Psyblade)
+    else if (gFieldTimers.terrain == GetMoveTerrainBoost_Terrain(ctx->move)) // no ground check (Psyblade)
         isTerrainAffected = TRUE;
 
     if (isTerrainAffected)

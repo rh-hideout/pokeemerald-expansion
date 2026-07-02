@@ -5653,14 +5653,14 @@ BattleScript_ActivateTeraformZero::
 	call BattleScript_AbilityPopUp
 	waitmessage B_WAIT_TIME_LONG
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_ANY, BattleScript_ActivateTeraformZero_RemoveWeather
-	jumpifhalfword CMP_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_RemoveTerrain
+	jumpifterrain CMP_NOT_EQUAL, B_TERRAIN_NONE, BattleScript_ActivateTeraformZero_RemoveTerrain
 	goto BattleScript_ActivateTeraformZero_Ret
 BattleScript_ActivateTeraformZero_RemoveWeather:
 	removeweather
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_ActivateWeatherAbilities
-	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZeroEffects
+	jumpifterrain CMP_NOT_EQUAL, B_TERRAIN_NONE, BattleScript_ActivateTeraformZero_RemoveTerrain
 BattleScript_ActivateTeraformZero_RemoveTerrain:
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG

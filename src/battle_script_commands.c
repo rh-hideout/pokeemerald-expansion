@@ -560,6 +560,7 @@ static void Cmd_tryconfusionafterskydrop(void);
 static void Cmd_trymovestatchanges(void);
 static void Cmd_trystatchanges(void);
 static void Cmd_trybattlerstatchange(void);
+static void Cmd_jumpifterrain(void);
 static void Cmd_dummy(void);
 static void Cmd_callnative(void);
 
@@ -776,6 +777,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYMOVESTATCHANGES]                    = Cmd_trymovestatchanges,
     [B_SCR_OP_TRYSTATCHANGES]                        = Cmd_trystatchanges,
     [B_SCR_OP_TRYBATTLERSTATCHANGE]                  = Cmd_trybattlerstatchange,
+    [B_SCR_OP_JUMPIFTERRAIN]                         = Cmd_jumpifterrain,
     [B_SCR_OP_UNUSED_1]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_2]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_3]                              = Cmd_dummy,
@@ -814,7 +816,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_36]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_37]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -14473,4 +14474,24 @@ void BS_MultiHitPlurality(void)
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+static void Cmd_jumpifterrain(void)
+{
+    CMD_ARGS(u8 comparison, u8 terrain, const u8 *jumpInstr);
+
+    bool32 ret = 0;
+    u8 terrain = cmd->terrain;
+    u8 comparison = cmd->comparison;
+
+    if (comparison == CMP_NOT_EQUAL)
+        ret = (gFieldTimers.terrain != terrain);
+    else
+        ret = (gFieldTimers.terrain == terrain);
+
+
+    if (ret)
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
