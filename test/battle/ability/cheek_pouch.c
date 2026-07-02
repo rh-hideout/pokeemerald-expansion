@@ -179,9 +179,9 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_KARATE_CHOP); }
+        HP_BAR(player, captureDamage: &damage);
         ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
         HP_BAR(player, captureDamage: &healing);
-        HP_BAR(player, captureDamage: &damage);
     } THEN {
         EXPECT_LT(healing, 0);
         EXPECT_GT(damage, 0);

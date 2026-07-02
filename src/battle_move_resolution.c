@@ -2686,29 +2686,28 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
 }
 
-static inline bool32 DoesBattlerNegateDamage(enum BattlerId battler)
+static inline bool32 DoesBattlerNegateDamage(enum BattlerId battler, enum Ability ability, enum Move move)
 {
     enum Species species = gBattleMons[battler].species;
-    enum Ability ability = GetBattlerAbility(battler);
 
     if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
     if (ability == ABILITY_DISGUISE && IsMimikyuDisguised(battler))
         return TRUE;
-    if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE_ICE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
+    if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(move))
         return TRUE;
 
     return FALSE;
 }
 
-static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(enum BattlerId battlerAtk)
+static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(struct BattleCalcValues *cv)
 {
     u32 resultFlags = 0;
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipBattlerForDamage(battlerAtk, battlerDef))
+        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
             continue;
-        if (DoesBattlerNegateDamage(battlerDef))
+        if (DoesBattlerNegateDamage(battlerDef, cv->abilities[battlerDef], cv->move))
             continue;
 
         resultFlags |= gBattleStruct->moveResultFlags[battlerDef];
@@ -2723,7 +2722,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(enum BattlerId bat
 
 static enum CancelerResult CancelerEffectivenessSound(struct BattleCalcValues *cv)
 {
-    u32 moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(cv->battlerAtk);
+    u32 moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(cv);
 
     switch (moveResultFlags)
     {
