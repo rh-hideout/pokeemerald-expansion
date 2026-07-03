@@ -71,7 +71,6 @@ bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutco
 
     enum SideBattlers sideBattlers = USER;
     enum FieldEffectOutcome result[COUNT] = { FIELD_EFFECT_NEUTRAL, FIELD_EFFECT_NEUTRAL };
-    enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
     for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
