@@ -137,19 +137,20 @@ bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEff
 {
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
-    u32 battlersOnSide = 0;
 
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    u32 battlersOnSide = 1;
+
+    if (HasPartner(battler))
+        battlersOnSide = 2;
+
+    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
     {
-        if (!IsBattlerAlive(battler) || !IsBattlerAlly(battler, battlerIndex))
-            continue;
-
-        battlersOnSide++;
-
         if (fieldStatus & STATUS_FIELD_GRAVITY)
-            result = BenefitsFromGravity(battlerIndex);
+            result = BenefitsFromGravity(battler);
         if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
-            result = BenefitsFromTrickRoom(battlerIndex);
+            result = BenefitsFromTrickRoom(battler);
+
+        battler = BATTLE_PARTNER(battler);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
