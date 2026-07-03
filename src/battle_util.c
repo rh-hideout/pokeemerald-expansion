@@ -10709,8 +10709,6 @@ bool32 IsMimikyuDisguised(enum BattlerId battler)
         || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
 }
 
-#define UNPACK_STARTING_STATUS_TO_EWRAM(_enum, _fieldName, ...) case _enum: gStartingStatuses._fieldName = TRUE; break;
-
 void SetStartingStatus(enum StartingStatus status)
 {
     switch (status)
@@ -10718,8 +10716,6 @@ void SetStartingStatus(enum StartingStatus status)
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_EWRAM);
     }
 }
-
-#define UNPACK_STARTING_STATUS_RESET(_enum, _fieldName, ...) gStartingStatuses._fieldName = FALSE;
 
 void ResetStartingStatuses(void)
 {
@@ -11052,4 +11048,58 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
 {
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
+}
+
+u32 GetBattleWeatherFromOverworldWeather(u32 owWeather)
+{
+    switch (owWeather)
+    {
+    case WEATHER_NONE:                  return B_WEATHER_NONE;
+    case WEATHER_SUNNY_CLOUDS:          return B_WEATHER_NONE;
+    case WEATHER_SUNNY:                 return B_WEATHER_NONE;
+    case WEATHER_RAIN:                  return B_WEATHER_RAIN_NORMAL;
+    case WEATHER_SNOW:                  return B_OVERWORLD_SNOW >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+    case WEATHER_RAIN_THUNDERSTORM:     return B_WEATHER_RAIN_NORMAL;
+    case WEATHER_FOG_HORIZONTAL:        return B_OVERWORLD_FOG == GEN_4 ? B_WEATHER_FOG : B_WEATHER_NONE;
+    case WEATHER_VOLCANIC_ASH:          return B_WEATHER_NONE;
+    case WEATHER_SANDSTORM:             return B_WEATHER_SANDSTORM;
+    case WEATHER_FOG_DIAGONAL:          return B_OVERWORLD_FOG == GEN_4 ? B_WEATHER_FOG : B_WEATHER_NONE;
+    case WEATHER_UNDERWATER:            return B_WEATHER_NONE;
+    case WEATHER_SHADE:                 return B_WEATHER_NONE;
+    case WEATHER_DROUGHT:               return B_WEATHER_SUN_NORMAL;
+    case WEATHER_DOWNPOUR:              return B_WEATHER_RAIN_NORMAL;
+    case WEATHER_UNDERWATER_BUBBLES:    return B_WEATHER_NONE;
+    case WEATHER_ABNORMAL:              return B_WEATHER_NONE;
+    case WEATHER_ROUTE119_CYCLE:        return B_WEATHER_NONE;
+    case WEATHER_ROUTE123_CYCLE:        return B_WEATHER_NONE;
+    case WEATHER_FOG:                   return B_WEATHER_NONE;
+    default:                            return B_WEATHER_NONE;
+    }
+}
+
+u32 GetBattleTerrainFromOverworldWeather(u32 owWeather)
+{
+    switch (owWeather)
+    {
+    case WEATHER_NONE:                  return STATUS_FIELD_NONE;
+    case WEATHER_SUNNY_CLOUDS:          return STATUS_FIELD_NONE;
+    case WEATHER_SUNNY:                 return STATUS_FIELD_NONE;
+    case WEATHER_RAIN:                  return STATUS_FIELD_NONE;
+    case WEATHER_SNOW:                  return STATUS_FIELD_NONE;
+    case WEATHER_RAIN_THUNDERSTORM:     return B_THUNDERSTORM_TERRAIN ? STATUS_FIELD_ELECTRIC_TERRAIN : STATUS_FIELD_NONE;
+    case WEATHER_FOG_HORIZONTAL:        return B_OVERWORLD_FOG >= GEN_8 ? STATUS_FIELD_MISTY_TERRAIN : STATUS_FIELD_NONE;
+    case WEATHER_VOLCANIC_ASH:          return STATUS_FIELD_NONE;
+    case WEATHER_SANDSTORM:             return STATUS_FIELD_NONE;
+    case WEATHER_FOG_DIAGONAL:          return B_OVERWORLD_FOG >= GEN_8 ? STATUS_FIELD_MISTY_TERRAIN : STATUS_FIELD_NONE;
+    case WEATHER_UNDERWATER:            return STATUS_FIELD_NONE;
+    case WEATHER_SHADE:                 return STATUS_FIELD_NONE;
+    case WEATHER_DROUGHT:               return STATUS_FIELD_NONE;
+    case WEATHER_DOWNPOUR:              return STATUS_FIELD_NONE;
+    case WEATHER_UNDERWATER_BUBBLES:    return STATUS_FIELD_NONE;
+    case WEATHER_ABNORMAL:              return STATUS_FIELD_NONE;
+    case WEATHER_ROUTE119_CYCLE:        return STATUS_FIELD_NONE;
+    case WEATHER_ROUTE123_CYCLE:        return STATUS_FIELD_NONE;
+    case WEATHER_FOG:                   return STATUS_FIELD_NONE;
+    default:                            return STATUS_FIELD_NONE;
+    }
 }

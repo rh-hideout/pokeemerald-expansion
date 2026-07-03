@@ -2,12 +2,14 @@
 #include "main.h"
 #include "malloc.h"
 #include "battle.h"
+#include "battle_util.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
 #include "battle_ai_switch.h"
 #include "battle_setup.h"
 #include "battle_controllers.h"
 #include "bxpy_ai.h"
+#include "field_weather.h"
 #include "random.h"
 #include "constants/battle_ai.h"
 
@@ -16,12 +18,17 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
 static void BXPY_SetupBattlers(void);
 static void BXPY_SetupAIFlags(void);
 static void BXPY_InitializeAIStructs(void);
+static u32 BXPY_GetWeather(void);
+static u32 BXPY_GetFieldStatus(void);
+static u32 BXPY_GetStartingWeather(void);
+static u32 BXPY_GetStartingFieldStatus(void);
 
 void BXPY_SetupAIData()
 {
     BXPY_InitializeAIStructs();
     BXPY_SetupBattlers();
     BXPY_SetupAIFlags();
+    InitializeStartingStatus();
 }
 
 void BXPY_SetupBattlers()
@@ -101,6 +108,7 @@ void BXPY_ClearAIData(void)
     gBattlersCount = 0;
     gBattleTypeFlags = 0;
     memset(gBattlerPositions, 0, sizeof(gBattlerPositions));
+    ResetStartingStatuses();
     FREE_AND_SET_NULL(gAiThinkingStruct);
     FREE_AND_SET_NULL(gAiLogicData);
     FREE_AND_SET_NULL(gBattleHistory);
@@ -218,6 +226,8 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 {
     enum Move move;
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+    u32 weather = BXPY_GetWeather();
+    u32 fieldStatus = BXPY_GetFieldStatus();
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -226,7 +236,7 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
             continue;
         struct SimulatedDamage dmg = {0};
         uq4_12_t effectiveness = Q_4_12(0.0);
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, B_WEATHER_NONE, 0);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, fieldStatus);
         gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
     }
 }
@@ -234,7 +244,10 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move, opposingMove, bestOpposingMove = MOVE_NONE, bestOpposingPriorityMove = MOVE_NONE;
-    u32 hitsToKO = gBattleMons[battler].hp, hitsToKOOpponent = gBattleMons[opposingBattler].hp, minHitsToKO = gBattleMons[battler].hp, minHitsToKOPriority = gBattleMons[battler].hp;
+    u32 hitsToKO = gBattleMons[battler].hp;
+    u32 hitsToKOOpponent = gBattleMons[opposingBattler].hp;
+    u32 minHitsToKO = gBattleMons[battler].hp;
+    u32 minHitsToKOPriority = gBattleMons[battler].hp;
     bool32 canBattlerWin1v1 = FALSE, isBattlerFirst, isBattlerFirstPriority;
 
     // Get max damage mon could take
@@ -278,4 +291,58 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
     }
 
     return canBattlerWin1v1;
+}
+
+static u32 BXPY_GetWeather()
+{
+    u32 startingWeather = BXPY_GetStartingWeather();
+    if (startingWeather != B_WEATHER_NONE)
+        return startingWeather;
+    return GetBattleWeatherFromOverworldWeather(GetCurrentWeather());
+}
+
+static u32 BXPY_GetFieldStatus()
+{
+    u32 startingFieldStatus = GetBattleTerrainFromOverworldWeather(GetCurrentWeather());
+    startingFieldStatus |= BXPY_GetStartingFieldStatus(); // Overrides overworld effects
+    return startingFieldStatus;
+}
+
+static u32 BXPY_GetStartingWeather()
+{
+    u32 weather = B_WEATHER_NONE;
+    if (gStartingStatuses.weatherSun || gStartingStatuses.weatherSunTemporary)
+        weather = B_WEATHER_SUN;
+    else if (gStartingStatuses.weatherRain || gStartingStatuses.weatherRainTemporary)
+        weather = B_WEATHER_RAIN;
+    else if (gStartingStatuses.weatherSandstorm || gStartingStatuses.weatherSandstormTemporary)
+        weather = B_WEATHER_SANDSTORM;
+    else if (gStartingStatuses.weatherHail || gStartingStatuses.weatherHailTemporary)
+        weather = B_WEATHER_HAIL;
+    else if (gStartingStatuses.weatherSnow || gStartingStatuses.weatherSnowTemporary)
+        weather = B_WEATHER_SNOW;
+    else if (gStartingStatuses.weatherFog || gStartingStatuses.weatherFogTemporary)
+        weather = B_WEATHER_FOG;
+    return weather;
+
+}
+
+static u32 BXPY_GetStartingFieldStatus()
+{
+    u32 fieldStatus = STATUS_FIELD_NONE;
+    if (gStartingStatuses.electricTerrain || gStartingStatuses.electricTerrainTemporary)
+        fieldStatus |= STATUS_FIELD_ELECTRIC_TERRAIN;
+    else if (gStartingStatuses.mistyTerrain || gStartingStatuses.mistyTerrainTemporary)
+        fieldStatus |= STATUS_FIELD_MISTY_TERRAIN;
+    else if (gStartingStatuses.grassyTerrain || gStartingStatuses.grassyTerrainTemporary)
+        fieldStatus |= STATUS_FIELD_GRASSY_TERRAIN;
+    else if (gStartingStatuses.psychicTerrain || gStartingStatuses.psychicTerrainTemporary)
+        fieldStatus |= STATUS_FIELD_PSYCHIC_TERRAIN;
+    else if (gStartingStatuses.trickRoom || gStartingStatuses.trickRoomTemporary)
+        fieldStatus |= STATUS_FIELD_TRICK_ROOM;
+    else if (gStartingStatuses.magicRoom || gStartingStatuses.magicRoomTemporary)
+        fieldStatus |= STATUS_FIELD_MAGIC_ROOM;
+    else if (gStartingStatuses.wonderRoom || gStartingStatuses.wonderRoomTemporary)
+        fieldStatus |= STATUS_FIELD_WONDER_ROOM;
+    return fieldStatus;
 }
