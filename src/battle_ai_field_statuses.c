@@ -67,7 +67,10 @@ bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutco
     if (IsWeatherActive(B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return (FIELD_EFFECT_BLOCKED == desiredResult);
 
-    enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
+    enum SideBattlers { USER, PARTNER, COUNT };
+
+    enum SideBattlers sideBattlers = USER;
+    enum FieldEffectOutcome result[COUNT] = { FIELD_EFFECT_NEUTRAL, FIELD_EFFECT_NEUTRAL };
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
     for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
@@ -76,23 +79,18 @@ bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutco
             continue;
 
         if (weather & B_WEATHER_RAIN)
-            result = BenefitsFromRain(battlerIndex);
+            result[sideBattlers] = BenefitsFromRain(battlerIndex);
         else if (weather & B_WEATHER_SUN)
-            result = BenefitsFromSun(battlerIndex);
+            result[sideBattlers] = BenefitsFromSun(battlerIndex);
         else if (weather & B_WEATHER_SANDSTORM)
-            result = BenefitsFromSandstorm(battlerIndex);
+            result[sideBattlers] = BenefitsFromSandstorm(battlerIndex);
         else if (weather & B_WEATHER_ICY_ANY)
-            result = BenefitsFromHailOrSnow(battlerIndex, weather);
+            result[sideBattlers] = BenefitsFromHailOrSnow(battlerIndex, weather);
 
-        if (result != FIELD_EFFECT_NEUTRAL)
-        {
-            if (weather & B_WEATHER_DAMAGING_ANY && battlerIndex == LEFT_ALLY(battler))
-                firstResult = result;
-        }
+        sideBattlers = PARTNER;
     }
-    if (firstResult != FIELD_EFFECT_NEUTRAL)
-        return (firstResult == result) && (result == desiredResult);
-    return (result == desiredResult);
+
+    return result[USER] == desiredResult || result[PARTNER] == desiredResult;
 }
 
 bool32 TerrainChecker(enum BattlerId battler, enum BattleTerrain terrain, enum FieldEffectOutcome desiredResult)
