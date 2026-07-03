@@ -150,6 +150,7 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
         TURN { MOVE(player, move); }
     }
     SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WORRY_SEED, player);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         EFFECTIVENESS_SE(opponent, GetInverseEffectivenessSound(move, species));
         HP_BAR(opponent);
