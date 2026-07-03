@@ -70,27 +70,23 @@ bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutco
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
-    u32 battlersOnSide = 1;
-
-    if (HasPartner(battler))
-        battlersOnSide = 2;
-
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (weather & B_WEATHER_RAIN)
-            result = BenefitsFromRain(battler);
-        else if (weather & B_WEATHER_SUN)
-            result = BenefitsFromSun(battler);
-        else if (weather & B_WEATHER_SANDSTORM)
-            result = BenefitsFromSandstorm(battler);
-        else if (weather & B_WEATHER_ICY_ANY)
-            result = BenefitsFromHailOrSnow(battler, weather);
+        if (!IsBattlerAlive(battlerIndex) || !IsBattlerAlly(battler, battlerIndex))
+            continue;
 
-        battler = BATTLE_PARTNER(battler);
+        if (weather & B_WEATHER_RAIN)
+            result = BenefitsFromRain(battlerIndex);
+        else if (weather & B_WEATHER_SUN)
+            result = BenefitsFromSun(battlerIndex);
+        else if (weather & B_WEATHER_SANDSTORM)
+            result = BenefitsFromSandstorm(battlerIndex);
+        else if (weather & B_WEATHER_ICY_ANY)
+            result = BenefitsFromHailOrSnow(battlerIndex, weather);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
-            if (weather & B_WEATHER_DAMAGING_ANY && battlerIndex == 0 && battlersOnSide == 2)
+            if (weather & B_WEATHER_DAMAGING_ANY && battlerIndex == LEFT_ALLY(battler))
                 firstResult = result;
         }
     }
@@ -106,7 +102,7 @@ bool32 TerrainChecker(enum BattlerId battler, enum BattleTerrain terrain, enum F
 
     for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (!IsBattlerAlive(battler) || !IsBattlerAlly(battler, battlerIndex))
+        if (!IsBattlerAlive(battlerIndex) || !IsBattlerAlly(battler, battlerIndex))
             continue;
 
         switch (terrain)
@@ -138,24 +134,21 @@ bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEff
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
-    u32 battlersOnSide = 1;
-
-    if (HasPartner(battler))
-        battlersOnSide = 2;
-
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (fieldStatus & STATUS_FIELD_GRAVITY)
-            result = BenefitsFromGravity(battler);
-        if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
-            result = BenefitsFromTrickRoom(battler);
+        if (!IsBattlerAlive(battlerIndex) || !IsBattlerAlly(battler, battlerIndex))
+            continue;
 
-        battler = BATTLE_PARTNER(battler);
+        // other field statuses
+        if (fieldStatus & STATUS_FIELD_GRAVITY)
+            result = BenefitsFromGravity(battlerIndex);
+        if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
+            result = BenefitsFromTrickRoom(battlerIndex);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
             // Trick room wants both Pokémon to agree, not just one
-            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && battlerIndex == 0 && battlersOnSide == 2)
+            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && battlerIndex == LEFT_ALLY(battler))
                 firstResult = result;
         }
     }

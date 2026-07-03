@@ -93,6 +93,9 @@ enum __attribute__((packed)) BattleTrainer
 #define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
 #define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
 
+#define LEFT_ALLY(battler) (battler & BIT_SIDE)
+#define RIGHT_ALLY(battler) ((battler & BIT_SIDE) | BIT_FLANK)
+
 enum BattleSide
 {
     B_SIDE_PLAYER = 0,
