@@ -1965,6 +1965,8 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->move = cv->move;
     ctx->chosenMove = gChosenMove;
     ctx->moveType = GetBattleMoveType(cv->move);
+    ctx->weather = GetWeather();
+    ctx->terrain = gFieldTimers.terrain;
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)

@@ -199,16 +199,16 @@ static bool32 DoesAbilityBenefitFromTerrain(enum Ability ability, enum BattleTer
     switch (ability)
     {
     case ABILITY_MIMICRY:
-        return terrain != B_TERRAIN_NONE && gFieldTimers.terrain != B_TERRAIN_NONE;
+        return terrain != B_TERRAIN_NONE;
     case ABILITY_HADRON_ENGINE:
     case ABILITY_QUARK_DRIVE:
     case ABILITY_SURGE_SURFER:
-        return terrain == B_TERRAIN_ELECTRIC && gFieldTimers.terrain == B_TERRAIN_ELECTRIC;
+        return terrain == B_TERRAIN_ELECTRIC;
     case ABILITY_GRASS_PELT:
-        return terrain == B_TERRAIN_GRASSY && gFieldTimers.terrain == B_TERRAIN_GRASSY;
+        return terrain == B_TERRAIN_GRASSY;
     // no abilities inherently benefit from Misty or Psychic Terrains
-    // return terrain == B_TERRAIN_MISTY && gFieldTimers.terrain == B_TERRAIN_MISTY;
-    // return terrain == B_TERRAIN_PSYCHIC && gFieldTimers.terrain == B_TERRAIN_PSYCHIC;
+    // return terrain == B_TERRAIN_MISTY;
+    // return terrain == B_TERRAIN_PSYCHIC;
     default:
         break;
     }

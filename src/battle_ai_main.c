@@ -848,6 +848,8 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain;
     memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
@@ -1335,6 +1337,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         ctx.battlerDef = battlerDef;
         ctx.move = ctx.chosenMove = move;
         ctx.moveType = moveType;
+        ctx.weather = GetWeather();
+        ctx.terrain = gFieldTimers.terrain;
         ctx.abilities[ctx.battlerAtk] = abilityAtk;
         ctx.abilities[ctx.battlerDef] = abilityDef;
         ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
