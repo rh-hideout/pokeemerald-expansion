@@ -6,6 +6,21 @@ static bool32 IsSpeciesMonotypeOf(u32 species, enum Type type)
     return GetSpeciesType(species, 0) == type && GetSpeciesType(species, 1) == type;
 }
 
+static u16 GetInverseEffectivenessSound(enum Move move, u32 species)
+{
+    switch (gTypeEffectivenessTable[GetMoveType(move)][GetSpeciesType(species, 0)])
+    {
+    case UQ_4_12(2.0):
+        return SE_NOT_EFFECTIVE;
+    case UQ_4_12(0.0):
+    case UQ_4_12(0.5):
+        return SE_SUPER_EFFECTIVE;
+    case UQ_4_12(1.0):
+    default:
+        return SE_EFFECTIVE;
+    }
+}
+
 ASSUMPTIONS
 {
     // Pokemon Types
@@ -47,6 +62,26 @@ ASSUMPTIONS
     ASSUME(GetMoveType(MOVE_DRAGON_BREATH) == TYPE_DRAGON);
     ASSUME(GetMoveType(MOVE_BITE)          == TYPE_DARK);
     ASSUME(GetMoveType(MOVE_FAIRY_WIND)    == TYPE_FAIRY);
+
+    // Move power
+    ASSUME(GetMovePower(MOVE_TACKLE)        > 0);
+    ASSUME(GetMovePower(MOVE_KARATE_CHOP)   > 0);
+    ASSUME(GetMovePower(MOVE_GUST)          > 0);
+    ASSUME(GetMovePower(MOVE_POISON_STING)  > 0);
+    ASSUME(GetMovePower(MOVE_MUD_SLAP)      > 0);
+    ASSUME(GetMovePower(MOVE_ROCK_THROW)    > 0);
+    ASSUME(GetMovePower(MOVE_BUG_BITE)      > 0);
+    ASSUME(GetMovePower(MOVE_SHADOW_BALL)   > 0);
+    ASSUME(GetMovePower(MOVE_METAL_CLAW)    > 0);
+    ASSUME(GetMovePower(MOVE_EMBER)         > 0);
+    ASSUME(GetMovePower(MOVE_WATER_GUN)     > 0);
+    ASSUME(GetMovePower(MOVE_VINE_WHIP)     > 0);
+    ASSUME(GetMovePower(MOVE_THUNDER_SHOCK) > 0);
+    ASSUME(GetMovePower(MOVE_CONFUSION)     > 0);
+    ASSUME(GetMovePower(MOVE_ICE_BEAM)      > 0);
+    ASSUME(GetMovePower(MOVE_DRAGON_BREATH) > 0);
+    ASSUME(GetMovePower(MOVE_BITE)          > 0);
+    ASSUME(GetMovePower(MOVE_FAIRY_WIND)    > 0);
 }
 
 SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
@@ -96,16 +131,17 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
         MOVE_FAIRY_WIND,
     };
 
-    for (u32 i = 0; i < ARRAY_COUNT(monotypeMons); i++)
+    for (u32 monIdx = 0; monIdx < ARRAY_COUNT(monotypeMons); monIdx++)
     {
-        for (u32 j = 0; j < ARRAY_COUNT(typeMoves); j++)
+        for (u32 moveIdx = 0; moveIdx < ARRAY_COUNT(typeMoves); moveIdx++)
         {
-            PARAMETRIZE { species = monotypeMons[i]; move = typeMoves[j]; }
+            PARAMETRIZE { species = monotypeMons[monIdx]; move = typeMoves[moveIdx]; }
         }
     }
 
     GIVEN {
         FLAG_SET(B_FLAG_INVERSE_BATTLE);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     }
@@ -115,10 +151,9 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
     }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
+        EFFECTIVENESS_SE(opponent, GetInverseEffectivenessSound(move, species));
         HP_BAR(opponent);
-        if (gTypeEffectivenessTable[GetMoveType(move)][GetSpeciesType(species, 0)] == Q_4_12(2))
-            MESSAGE("It's not very effective…");
-        if (gTypeEffectivenessTable[GetMoveType(move)][GetSpeciesType(species, 0)] == Q_4_12(0.5))
-            MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT_EQ(opponent->ability, ABILITY_INSOMNIA);
     }
 }
