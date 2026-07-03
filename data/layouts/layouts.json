@@ -9330,7 +9330,7 @@
       "width": 50,
       "height": 50,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/TARC3_base/border.bin",
       "blockdata_filepath": "data/layouts/TARC3_base/map.bin",
       "layout_version": "emerald"
@@ -9341,7 +9341,7 @@
       "width": 50,
       "height": 50,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/TARC3_rainy/border.bin",
       "blockdata_filepath": "data/layouts/TARC3_rainy/map.bin",
       "layout_version": "emerald"
@@ -9352,7 +9352,7 @@
       "width": 50,
       "height": 50,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/TARC3_sunny/border.bin",
       "blockdata_filepath": "data/layouts/TARC3_sunny/map.bin",
       "layout_version": "emerald"
@@ -9363,7 +9363,7 @@
       "width": 50,
       "height": 50,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/TARC3_snowy/border.bin",
       "blockdata_filepath": "data/layouts/TARC3_snowy/map.bin",
       "layout_version": "emerald"
