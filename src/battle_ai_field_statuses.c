@@ -104,21 +104,28 @@ bool32 TerrainChecker(enum BattlerId battler, enum BattleTerrain terrain, enum F
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
-    u32 battlersOnSide = 1;
-
-    if (HasPartner(battler))
-        battlersOnSide = 2;
-
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (terrain == B_TERRAIN_ELECTRIC)
-            result = BenefitsFromElectricTerrain(battler);
-        if (terrain == B_TERRAIN_GRASSY)
-            result = BenefitsFromGrassyTerrain(battler);
-        if (terrain == B_TERRAIN_MISTY)
-            result = BenefitsFromMistyTerrain(battler);
-        if (terrain == B_TERRAIN_PSYCHIC)
-            result = BenefitsFromPsychicTerrain(battler);
+        if (!IsBattlerAlive(battler) || !IsBattlerAlly(battler, battlerIndex))
+            continue;
+
+        switch (terrain)
+        {
+        case B_TERRAIN_ELECTRIC:
+            result = BenefitsFromElectricTerrain(battlerIndex);
+            break;
+        case B_TERRAIN_GRASSY:
+            result = BenefitsFromGrassyTerrain(battlerIndex);
+            break;
+        case B_TERRAIN_MISTY:
+            result = BenefitsFromMistyTerrain(battlerIndex);
+            break;
+        case B_TERRAIN_PSYCHIC:
+            result = BenefitsFromPsychicTerrain(battlerIndex);
+            break;
+        default:
+            break;
+        }
     }
 
     if (firstResult != FIELD_EFFECT_NEUTRAL)
@@ -130,20 +137,19 @@ bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEff
 {
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
+    u32 battlersOnSide = 0;
 
-    u32 battlersOnSide = 1;
-
-    if (HasPartner(battler))
-        battlersOnSide = 2;
-
-    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (fieldStatus & STATUS_FIELD_GRAVITY)
-            result = BenefitsFromGravity(battler);
-        if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
-            result = BenefitsFromTrickRoom(battler);
+        if (!IsBattlerAlive(battler) || !IsBattlerAlly(battler, battlerIndex))
+            continue;
 
-        battler = BATTLE_PARTNER(battler);
+        battlersOnSide++;
+
+        if (fieldStatus & STATUS_FIELD_GRAVITY)
+            result = BenefitsFromGravity(battlerIndex);
+        if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
+            result = BenefitsFromTrickRoom(battlerIndex);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {

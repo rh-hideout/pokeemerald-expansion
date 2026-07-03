@@ -6574,7 +6574,7 @@ static void RemoveAllTerrains(void)
 {
     if (gFieldTimers.terrain != B_TERRAIN_NONE)
         gBattleCommunication[MULTISTRING_CHOOSER] = gBattleTerrainInfo[gFieldTimers.terrain].endMessage;
-    else // Might be beneficial to add the failsafe to the struct then we can remove the if
+    else
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
 
     gFieldTimers.terrain = B_TERRAIN_NONE;
