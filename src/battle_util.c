@@ -7229,13 +7229,13 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 {
     bool32 isAdaptability = ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY;
 
+    if (IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) && ctx->move != MOVE_STRUGGLE)
+        return isAdaptability ? UQ_4_12(2.0) : UQ_4_12(1.5);
+
     if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(ctx->battlerAtk), ctx->moveType))
         return isAdaptability ? UQ_4_12(2.0) : UQ_4_12(1.5);
 
-    if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) || ctx->move == MOVE_STRUGGLE)
-        return UQ_4_12(1.0);
-
-    return isAdaptability ? UQ_4_12(2.0) : UQ_4_12(1.5);
+    return UQ_4_12(1.0);
 }
 
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
