@@ -700,6 +700,7 @@ struct BattleStruct
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
+    u32 savedMoveResultFlags[MAX_BATTLERS_COUNT]; // for Bounced moves
     u8 doneDoublesSpreadHit:1;
     u8 calculatedDamageDone:1;
     u8 calculatedSpreadMoveAccuracy:1;
