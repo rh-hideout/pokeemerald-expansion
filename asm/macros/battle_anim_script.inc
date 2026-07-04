@@ -488,7 +488,7 @@
 	createsprite gHyperBeamOrbSpriteTemplate, \anim_battler, \subpriority_offset
 	.endm
 
-	.macro createleechseedsprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
+	.macro create_leech_seed_sprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
 	createsprite gLeechSeedSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration, \wave_amplitude
 	.endm
 

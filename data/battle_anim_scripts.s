@@ -19536,13 +19536,13 @@ FireBlastCross:
 
 gBattleAnimMove_LeechSeed::
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=0, target_y=24, duration=35, wave_amplitude=-32
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=0, target_y=24, duration=35, wave_amplitude=-32
 	delay 8
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=-16, target_y=24, duration=35, wave_amplitude=-40
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=-16, target_y=24, duration=35, wave_amplitude=-40
 	delay 8
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=16, target_y=24, duration=35, wave_amplitude=-37
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=16, target_y=24, duration=35, wave_amplitude=-37
 	delay 12
 	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_TARGET, 10, 8
 	waitforvisualfinish
