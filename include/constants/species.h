@@ -1692,6 +1692,8 @@ enum __attribute__((packed)) Species
 
     SPECIES_CUSTOM_START = SPECIES_GLIMMORA_MEGA,
     // Add any custom species between here and SPECIES_CUSTOM_END
+
+    //Pokeduel
     SPECIES_ILLUSION_MAGICIAN = 1573,
     SPECIES_DARK_MAGICIAN = 1574,
     SPECIES_DARK_SAGE = 1575,
@@ -1700,9 +1702,10 @@ enum __attribute__((packed)) Species
     SPECIES_RED_EYES_BLACK_METAL_DRAGON = 1578,
     SPECIES_PALADIN_OF_WHITE_DRAGON = 1579,
     SPECIES_BLUE_EYES_WHITE_DRAGON = 1580,
+    SPECIES_BLUE_EYES_ULTIMATE_DRAGON = 1581,
 
+    //////////////////////////////End//////////////////////////////
     SPECIES_CUSTOM_END,
-
     SPECIES_EGG = SPECIES_CUSTOM_END,
     NUM_SPECIES = SPECIES_EGG,
 };

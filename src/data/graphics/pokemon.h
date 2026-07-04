@@ -27553,3 +27553,9 @@ const u16 gMonPalette_BlueEyesWhiteDragon[] = INCGFX_U16("graphics/pokemon/BlueE
 const u32 gMonBackPic_BlueEyesWhiteDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/back.png", ".4bpp.smol");
 const u16 gMonShinyPalette_BlueEyesWhiteDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/shiny.pal", ".gbapal");
 const u8 gMonIcon_BlueEyesWhiteDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesWhiteDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_BlueEyesUltimateDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesWhiteDragon/icon.png", ".4bpp");
