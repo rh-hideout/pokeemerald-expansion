@@ -3153,6 +3153,26 @@ BattleScript_SandSpitActivates::
 	printstring STRINGID_ASANDSTORMKICKEDUP
 	goto BattleScript_WeatherAbilityActivatesContinue
 
+BattleScript_OrichalcumPulseActivates::
+	pause B_WAIT_TIME_SHORT
+	copybyte sSAVED_BATTLER, sBATTLER
+	call BattleScript_AbilityPopUp
+	printfromtable gAbilityWeatherChangeStringId
+	waitstate
+	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
+	call BattleScript_ActivateWeatherAbilities
+	copybyte sBATTLER, sSAVED_BATTLER
+	printstring STRINGID_ORICHALCUMPULSEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_OrichalcumPulseActivatesInSun::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ORICHALCUMPULSEACTIVATESINSUN
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_WeatherContinues::
 	printfromtable gWeatherTurnStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -4752,6 +4772,22 @@ BattleScript_ElectricSurgeActivates::
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_SCRIPTING, B_ANIM_RESTORE_BG
 	call BattleScript_ActivateTerrainEffects
+	return
+
+BattleScript_HadronEngineActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_HADRONENGINEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_SCRIPTING, B_ANIM_RESTORE_BG
+	call BattleScript_ActivateTerrainEffects
+	return
+
+BattleScript_HadronEngineActivatesInTerrain::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_HADRONENGINEACTIVATESINTERRAIN
+	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_MistySurgeActivates::

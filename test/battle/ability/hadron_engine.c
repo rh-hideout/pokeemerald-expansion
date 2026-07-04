@@ -10,7 +10,22 @@ SINGLE_BATTLE_TEST("Hadron Engine creates Electric Terrain when entering the bat
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_HADRON_ENGINE);
-        MESSAGE("An electric current ran across the battlefield!");
+        MESSAGE("Miraidon turned the ground into Electric Terrain, energizing its futuristic engine!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Hadron Engine activates when entering battle on Electric Terrain")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MIRAIDON) { Ability(ABILITY_HADRON_ENGINE); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_HADRON_ENGINE);
+        MESSAGE("Miraidon used the Electric Terrain to energize its futuristic engine!");
     }
 }
 
