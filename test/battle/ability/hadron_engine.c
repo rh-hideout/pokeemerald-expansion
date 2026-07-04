@@ -29,6 +29,22 @@ SINGLE_BATTLE_TEST("Hadron Engine activates when entering battle on Electric Ter
     }
 }
 
+SINGLE_BATTLE_TEST("Hadron Engine announces Electric Terrain before triggering Quark Drive")
+{
+    GIVEN {
+        PLAYER(SPECIES_MIRAIDON) { Ability(ABILITY_HADRON_ENGINE); }
+        OPPONENT(SPECIES_IRON_BUNDLE) { Ability(ABILITY_QUARK_DRIVE); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_HADRON_ENGINE);
+        MESSAGE("Miraidon turned the ground into Electric Terrain, energizing its futuristic engine!");
+        ABILITY_POPUP(opponent, ABILITY_QUARK_DRIVE);
+        MESSAGE("The Electric Terrain activated the opposing Iron Bundle's Quark Drive!");
+        MESSAGE("The opposing Iron Bundle's Sp. Atk was heightened!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Hadron Engine boosts the Pokemon's Special Attack on Electric Terrain even if not grounded", s16 damage)
 {
     bool32 overrideTerrain, airBalloon;
