@@ -746,6 +746,21 @@ struct AiBattleData
     u8 padding:6;
 };
 
+struct TerrainInfo
+{
+    const u8 *secretPowerAnimation;
+    u16 secretPowerEffect:10;
+    enum Type type:6;
+    enum Move naturePowerMove;
+    u8 battleBackground;
+    enum Stat seedStat:4;
+    u8 seedHoldEffect:4;
+    u8 startMessage:4;
+    u8 endMessage:4;
+};
+
+extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
+
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).
 // The assert below is to ensure palaceFlags is large enough to store these flags without overlap.
@@ -1186,20 +1201,5 @@ static inline bool32 IsGhostBattleWithoutScope(void)
 {
     return (gBattleTypeFlags & BATTLE_TYPE_GHOST) && !CheckBagHasItem(ITEM_SILPH_SCOPE, 1);
 }
-
-struct TerrainInfo
-{
-    const u8 *secretPowerAnimation;
-    u16 secretPowerEffect:10;
-    enum Type type:6;
-    enum Move naturePowerMove;
-    u8 battleBackground;
-    enum Stat seedStat:4;
-    u8 seedHoldEffect:4;
-    u8 startMessage:4;
-    u8 endMessage:4;
-};
-
-extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
 
 #endif // GUARD_BATTLE_H

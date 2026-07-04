@@ -45,7 +45,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
 static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler);
 static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler);
 
-static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u8 terrain)
+static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, enum BattleTerrain terrain)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;

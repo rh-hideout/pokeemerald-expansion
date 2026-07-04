@@ -285,7 +285,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
         return FALSE;
     if (!AI_IsBattlerGrounded(battler))
         return FALSE;
-    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, gFieldTimers.terrain)) // TODO
+    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, AI_GetSwitchinTerrain(battler)))
         return FALSE;
     if (IsLeafGuardProtected(battler, ability))
         return FALSE;
@@ -486,7 +486,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
     ctx.battlerDef = switchContext->opposingBattler;
     ctx.aiCalc = TRUE;
     ctx.weather = AI_GetWeather();
-    ctx.terrain = gFieldTimers.terrain;
+    ctx.terrain = gFieldTimers.terrain; // Should check current terrain
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
     ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[ctx.battlerAtk];
@@ -844,7 +844,7 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = moveType;
     ctx.weather = GetWeather();
-    ctx.terrain = gFieldTimers.terrain;
+    ctx.terrain = gFieldTimers.terrain; // Curr terrain check
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
 
@@ -1643,7 +1643,7 @@ static u32 GetSwitchinHazardsDamage(enum BattlerId battler)
             && status == 0
             && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], gFieldTimers.terrain) // TODD
+            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], AI_GetSwitchinTerrain(battler))
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
             && AI_IsBattlerGrounded(battler)))

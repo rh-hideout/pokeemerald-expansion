@@ -91,8 +91,8 @@ static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
 {
     struct TerrainInfo battleTerrain = gBattleTerrainInfo[gFieldTimers.terrain];
     if (gFieldTimers.terrain != B_TERRAIN_NONE
-        && GetItemHoldEffectParam(item) == battleTerrain.seedHoldEffect
-        && CompareStat(battler, battleTerrain.seedStat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
+     && GetItemHoldEffectParam(item) == battleTerrain.seedHoldEffect
+     && CompareStat(battler, battleTerrain.seedStat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SetStatChange(battler, battleTerrain.seedStat, 1);
