@@ -7225,15 +7225,22 @@ static inline uq4_12_t GetParentalBondModifier(enum BattlerId battlerAtk)
     return B_PARENTAL_BOND_DMG >= GEN_7 ? UQ_4_12(0.25) : UQ_4_12(0.5);
 }
 
+static inline uq4_12_t GetStabModifier(enum Ability ability)
+{
+    if (ability == ABILITY_ADAPTABILITY)
+        return UQ_4_12(2.0);
+    return UQ_4_12(1.5);
+}
+
 static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 {
-    if (ctx->moveType == TYPE_MYSTERY)
+    if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(ctx->battlerAtk), ctx->moveType))
+        return GetStabModifier(ctx->abilities[ctx->battlerAtk]);
+
+    if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) || ctx->move == MOVE_STRUGGLE)
         return UQ_4_12(1.0);
-    else if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(ctx->battlerAtk), ctx->moveType))
-        return (ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY) ? UQ_4_12(2.0) : UQ_4_12(1.5);
-    else if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) || ctx->move == MOVE_STRUGGLE || ctx->move == MOVE_NONE)
-        return UQ_4_12(1.0);
-    return (ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY) ? UQ_4_12(2.0) : UQ_4_12(1.5);
+
+    return GetStabModifier(ctx->abilities[ctx->battlerAtk]);
 }
 
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
