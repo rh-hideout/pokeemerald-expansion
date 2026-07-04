@@ -110,26 +110,26 @@ static void BXPY_ErrorCheck_BringSizeTooLarge(void)
     gSpecialVar_Result = FALSE;
 
     u32 bringSize = VarGet(VAR_BXPY_BRING_SIZE);
-    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && (B_MULTI_HALF_TEAMS == TRUE)) ? (bringSize / 2) : bringSize;
+    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && B_MULTI_HALF_TEAMS) ? (bringSize / 2) : bringSize;
     u32 partyCount = CountPartyAliveNonEggMonsExcept(PARTY_SIZE);
 
-    if (partyCount <=maxSize)
+    if (partyCount <= maxSize)
         return;
 
     gSpecialVar_Result = TRUE;
 
-    ConvertIntToDecimalStringN(gStringVar1,maxSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(maxSize));
+    ConvertIntToDecimalStringN(gStringVar1, maxSize, STR_CONV_MODE_LEFT_ALIGN, CountDigits(maxSize));
 }
 
 static void BXPY_ErrorCheck_BringSizeNotEnough(void)
 {
     gSpecialVar_Result = FALSE;
 
-    if (BXPY_FORCE_MINIMUM_MONS == FALSE)
+    if (!BXPY_FORCE_MINIMUM_MONS)
         return;
 
     u32 bringSize = VarGet(VAR_BXPY_BRING_SIZE);
-    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && (B_MULTI_HALF_TEAMS == TRUE)) ? (bringSize / 2) : bringSize;
+    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && B_MULTI_HALF_TEAMS) ? (bringSize / 2) : bringSize;
 
     u32 partyCount = CountPartyAliveNonEggMonsExcept(PARTY_SIZE);
 
@@ -138,7 +138,7 @@ static void BXPY_ErrorCheck_BringSizeNotEnough(void)
 
     gSpecialVar_Result = TRUE;
 
-    ConvertIntToDecimalStringN(gStringVar1,bringSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(bringSize));
+    ConvertIntToDecimalStringN(gStringVar1, bringSize, STR_CONV_MODE_LEFT_ALIGN, CountDigits(bringSize));
 }
 
 static void BXPY_FormatProblemListList(u32 *ids, u32 count, const u8 *(*getName)(u16))
@@ -167,7 +167,6 @@ static u32 BXPY_GetUniqueDuplicates(u32 *inputList, u32 inputCount, u32 *uniqueD
     {
         for (u32 j = i + 1; j < inputCount; j++)
         {
-
             if (inputList[i] == inputList[j])
             {
                 bool32 alreadyFlagged = FALSE;
@@ -190,7 +189,7 @@ static u32 BXPY_GetUniqueDuplicates(u32 *inputList, u32 inputCount, u32 *uniqueD
 static void BXPY_ErrorCheck_ClauseSpecies(void)
 {
     gSpecialVar_Result = FALSE;
-    if (BXPY_CLAUSE_SPECIES == FALSE)
+    if (!BXPY_CLAUSE_SPECIES)
         return;
 
     u32 speciesList[PARTY_SIZE] = {0};
@@ -254,7 +253,7 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
         if (species == SPECIES_NONE || species == SPECIES_EGG)
             continue;
 
-        if ((!gSpeciesInfo[species].isMythical) && (!gSpeciesInfo[species].isFrontierBanned))
+        if (!gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].isFrontierBanned)
             continue;
 
         bool32 alreadyAdded = FALSE;
@@ -289,8 +288,8 @@ static void Debug_BXPY_PrintArguments(enum BXPYBattleTypes battleType, u32 bring
 
 void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
 {
-    Debug_BXPY_PrintArguments(battleType,bringSize,pickSize,trainerA,loseTextA,trainerB,loseTextB,partnerId);
-    BXPY_InitTrainerBattleParams(trainerA,loseTextA,trainerB,loseTextB,partnerId);
+    Debug_BXPY_PrintArguments(battleType, bringSize, pickSize, trainerA, loseTextA, trainerB, loseTextB, partnerId);
+    BXPY_InitTrainerBattleParams(trainerA, loseTextA, trainerB, loseTextB, partnerId);
     u32 battleFlags = BXPY_ConvertBattleTypeToFlags(battleType);
 
     u8 playerEnteredMons[PARTY_SIZE];
@@ -298,16 +297,16 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
     for (u32 monsIndex = 0; monsIndex < PARTY_SIZE; monsIndex++)
         playerEnteredMons[monsIndex] = BXPY_EMPTY_MON;
 
-    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A,TRUE);
+    BXPY_PreparePartiesAndInit(bringSize, pickSize, battleFlags, playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A,TRUE);
 
 }
 
 void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime)
 {
-    BXPY_PrepareEnemyParty(bringSize,battleFlags);
+    BXPY_PrepareEnemyParty(bringSize, battleFlags);
     BXPY_PrepareParty(pickSize);
 
-    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags,playerEnteredMons, position, page, isFirstTime);
+    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags, playerEnteredMons, position, page, isFirstTime);
 }
 
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
@@ -329,12 +328,10 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
-    bool32 isMulti = BXPY_IsMultiBattle();
-
     ZeroEnemyPartyMons();
     CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA]);
 
-    if (isMulti == TRUE)
+    if (BXPY_IsMultiBattle())
         CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB]);
 }
 
@@ -408,17 +405,17 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum Battle
         if (trainer == B_TRAINER_PLAYER)
         {
             participatingPokemonSlot += 1 << slot;
-            VarSet(B_VAR_SKY_BATTLE,participatingPokemonSlot);
+            VarSet(B_VAR_SKY_BATTLE, participatingPokemonSlot);
         }
 
-        CopyMon(&tempParty[i],&party[slot],sizeof(struct Pokemon));
+        CopyMon(&tempParty[i], &party[slot], sizeof(struct Pokemon));
     }
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&party[i]);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
-        CopyMon(&party[i],&tempParty[i],sizeof(struct Pokemon));
+        CopyMon(&party[i], &tempParty[i], sizeof(struct Pokemon));
 }
 
 static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType)
@@ -448,7 +445,7 @@ bool8 BXPY_ShouldHideEnemyAbility(enum PokemonSummaryScreenMode mode)
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY;
 }
 
 bool8 BXPY_ShouldHideEnemyNature(enum PokemonSummaryScreenMode mode)
@@ -456,7 +453,7 @@ bool8 BXPY_ShouldHideEnemyNature(enum PokemonSummaryScreenMode mode)
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE;
 }
 
 bool8 BXPY_ShouldHideEnemyIndividualValues(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
@@ -467,7 +464,7 @@ bool8 BXPY_ShouldHideEnemyIndividualValues(enum PokemonSummaryScreenMode mode, e
     if (stats != SUMMARY_SKILLS_MODE_IVS)
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV;
 }
 
 bool8 BXPY_ShouldHideEnemyEffortValues(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
@@ -478,21 +475,21 @@ bool8 BXPY_ShouldHideEnemyEffortValues(enum PokemonSummaryScreenMode mode, enum 
     if (stats != SUMMARY_SKILLS_MODE_EVS)
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV;
 }
 
 bool8 BXPY_ShouldHideEnemyTeraType(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA;
 }
 
 enum Type BXPY_TransformPageInfoType(enum PokemonSummaryScreenMode mode, enum Type originalTypeId, u32 spriteArrayId, u32 species)
 {
     if (spriteArrayId == SUMMARY_SCREEN_SPRITE_ID_TYPE_TERA)
-        return (BXPY_ShouldHideEnemyTeraType(mode)) ? TYPE_MYSTERY : originalTypeId;
+        return BXPY_ShouldHideEnemyTeraType(mode) ? TYPE_MYSTERY : originalTypeId;
 
     if (spriteArrayId != SUMMARY_SCREEN_SPRITE_ID_TYPE_1 && spriteArrayId != SUMMARY_SCREEN_SPRITE_ID_TYPE_2)
         return originalTypeId;
@@ -507,13 +504,13 @@ enum Type BXPY_TransformType(enum BXPYTeamPreviewSpeciesModes mode, enum Type or
 {
     switch (mode)
     {
-        case BXPY_SPECIES_HIDE:
-            return TYPE_MYSTERY;
-        case BXPY_SPECIES_SHOW_BASE:
-            return GetSpeciesType(GET_BASE_SPECIES_ID(species), typeIndex);
-        default:
-        case BXPY_SPECIES_SHOW_TRUE:
-            return originalTypeId;
+    case BXPY_SPECIES_HIDE:
+        return TYPE_MYSTERY;
+    case BXPY_SPECIES_SHOW_BASE:
+        return GetSpeciesType(GET_BASE_SPECIES_ID(species), typeIndex);
+    default:
+    case BXPY_SPECIES_SHOW_TRUE:
+        return originalTypeId;
     }
 }
 
@@ -535,12 +532,12 @@ enum Type BXPY_TransformTypeIfHidden(enum PokemonSummaryScreenMode mode, enum Ty
 
     switch (page)
     {
-        case PSS_PAGE_INFO:
-            return BXPY_TransformPageInfoType(mode, originalTypeId, spriteArrayId, species);
-        case PSS_PAGE_BATTLE_MOVES:
-            return BXPY_TransformPageBattleMoves(mode, originalTypeId, spriteArrayId);
-        default:
-            return originalTypeId;
+    case PSS_PAGE_INFO:
+        return BXPY_TransformPageInfoType(mode, originalTypeId, spriteArrayId, species);
+    case PSS_PAGE_BATTLE_MOVES:
+        return BXPY_TransformPageBattleMoves(mode, originalTypeId, spriteArrayId);
+    default:
+        return originalTypeId;
     }
 }
 
@@ -549,7 +546,7 @@ bool8 BXPY_ShouldHideEnemyMoves(enum PokemonSummaryScreenMode mode)
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE;
 }
 
 enum BXPYTeamPreviewItemModes BXPY_GetEnemyItemVisibilityLevel(void)
@@ -589,19 +586,19 @@ const u8 *BXPY_ReturnItemText(enum Item item)
 
     switch (BXPY_GetEnemyItemVisibilityLevel())
     {
-        default:
-        case BXPY_ITEM_SHOW_ITEM:
-            if (hasItem)
-                return GetItemName(item);
-            else
-                return sText_None;
-        case BXPY_ITEM_NO_VISIBILITY:
-            return sText_Unknown;
-        case BXPY_ITEM_SHOW_POSSESSION:
-            if (hasItem)
-                return sText_Question;
-            else
-                return sText_None;
+    default:
+    case BXPY_ITEM_SHOW_ITEM:
+        if (hasItem)
+            return GetItemName(item);
+        else
+            return sText_None;
+    case BXPY_ITEM_NO_VISIBILITY:
+        return sText_Unknown;
+    case BXPY_ITEM_SHOW_POSSESSION:
+        if (hasItem)
+            return sText_Question;
+        else
+            return sText_None;
     }
     return sText_Unknown;
 }
@@ -645,7 +642,7 @@ bool8 BXPY_SummaryScreen_ShowTrueSpecies(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_ShouldHideEnemyGender(void)
 {
-    return !(BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER);
+    return !BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER;
 }
 
 bool8 BXPY_TeamPreview_ShouldHideEnemyGender(enum BattleSide side)
@@ -696,7 +693,7 @@ u32 BXPY_TransformSpeciesId(u32 originalSpeciesId)
 
 bool8 BXPY_ShouldHideEnemyLevel(void)
 {
-    return !(BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL);
+    return !BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL;
 }
 
 bool8 BXPY_TeamPreview_ShouldHideEnemyLevel(enum BattleSide side)
@@ -726,12 +723,12 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
     if (BXPY_SummaryScreen_ShouldHideEnemyLevel(mode))
         return TRUE;
 
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV == FALSE)
+    if (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV)
         return TRUE;
 
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV == FALSE)
+    if (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV)
         return TRUE;
 
-    return (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE == FALSE);
+    return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE;
 }
 

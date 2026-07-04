@@ -175,24 +175,31 @@ static void Task_BXPY_PartySelection(u8 taskId)
     if (JOY_NEW(A_BUTTON) || JOY_REPEAT(A_BUTTON))
     {
         if (BXPY_IsCursorOnEmpty())
-{
-        PlaySE(SE_BXPY_ERROR);
-            return;
-}
-        else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
+        {
+            PlaySE(SE_BXPY_ERROR);
+        }
+        else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn())
+        {
             BXPY_GoToPokemonSummary(taskId);
+        }
         else if (BXPY_IsCursorOnPartner())
+        {
             BXPY_GoToPokemonSummary(taskId);
-        else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == FALSE)
+        }
+        else if (BXPY_IsCursorOnEnemy() && !BXPY_IsOpenTeamSheetOn())
+        {
             return;
+        }
         else
+        {
             BXPY_SelectMonAndShowMenu(taskId);
+        }
         return;
     }
 
     if (JOY_NEW(START_BUTTON) || JOY_REPEAT(START_BUTTON))
     {
-        if (BXPY_HasSelectedEnough() == FALSE)
+        if (!BXPY_HasSelectedEnough())
             return;
 
         PlaySoundStartFadeQuitApp(taskId);
@@ -200,11 +207,11 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(SELECT_BUTTON) || JOY_REPEAT(SELECT_BUTTON))
     {
-        if (BXPY_IsMultiBattle() == FALSE)
-{
-        PlaySE(SE_BXPY_ERROR);
-            return;
-}
+        if (!BXPY_IsMultiBattle())
+        {
+            PlaySE(SE_BXPY_ERROR);
+                return;
+        }
         PlaySE(SE_BXPY_SWITCH_PAGE);
         BXPY_TogglePage();
         BXPY_DrawPage();
@@ -219,12 +226,9 @@ static void BXPY_AddRemoveSelectedMon(void)
     {
         BXPY_RemoveIndexFromSelected(currentIndex);
     }
-    else
+    else if (!BXPY_HasSelectedEnough())
     {
-        if (BXPY_HasSelectedEnough() == FALSE)
-        {
-            BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
-        }
+        BXPY_SetSelectedMons(BXPY_CountNumberSelected(), currentIndex);
     }
 
     BXPY_RefreshSelectedSprites();
