@@ -4248,7 +4248,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
         RestoreAttacker();
         RestoreTarget();
         gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattleStruct->moveendState = MOVEEND_BOUNCED_MOVE;
+        gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
             gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
         return MOVEEND_RESULT_RUN_SCRIPT;
