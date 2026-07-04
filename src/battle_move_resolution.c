@@ -684,9 +684,7 @@ static bool32 IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId batt
 {
     if (battlerDef == BATTLE_PARTNER(battlerAtk) || battlerAtk == battlerDef)
     {
-        // Because of Magic Bounce and Magic Coat we don't want to set MOVE_RESULT_NO_EFFECT
-        if (GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS)
-            gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
         return skipFailure;
     }
     return checkFailure;
@@ -3142,7 +3140,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
 {
     if (gBattleStruct->bouncedMoveIsUsed)
-    {        
+    {
         gBattleScripting.moveendState++;
         return MOVEEND_RESULT_CONTINUE;
     }
