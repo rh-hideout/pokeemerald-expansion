@@ -11073,8 +11073,8 @@ u32 GetBattleWeatherFromOverworldWeather(u32 owWeather)
     case WEATHER_ROUTE119_CYCLE:        return B_WEATHER_NONE;
     case WEATHER_ROUTE123_CYCLE:        return B_WEATHER_NONE;
     case WEATHER_FOG:                   return B_WEATHER_NONE;
-    default:                            return B_WEATHER_NONE;
     }
+    return B_WEATHER_NONE;
 }
 
 u32 GetBattleTerrainFromOverworldWeather(u32 owWeather)
@@ -11100,6 +11100,6 @@ u32 GetBattleTerrainFromOverworldWeather(u32 owWeather)
     case WEATHER_ROUTE119_CYCLE:        return STATUS_FIELD_NONE;
     case WEATHER_ROUTE123_CYCLE:        return STATUS_FIELD_NONE;
     case WEATHER_FOG:                   return STATUS_FIELD_NONE;
-    default:                            return STATUS_FIELD_NONE;
     }
+    return B_WEATHER_NONE;
 }
