@@ -3227,12 +3227,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_ORICHALCUM_PULSE:
             if (!shouldAbilityTrigger)
                 break;
-            if (GetWeather() & B_WEATHER_PRIMAL_ANY)
-            {
-                BattleScriptCall(BattleScript_BlockedByPrimalWeather);
-                effect++;
-            }
-            else if (GetWeather() & B_WEATHER_SUN_NORMAL)
+            if (GetWeather() & B_WEATHER_SUN_NORMAL)
             {
                 BattleScriptCall(BattleScript_OrichalcumPulseActivatesInSun);
                 effect++;
@@ -3240,6 +3235,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             else if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SUN, gLastUsedAbility))
             {
                 BattleScriptCall(BattleScript_OrichalcumPulseActivates);
+                effect++;
+            }
+            else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
+            {
+                BattleScriptCall(BattleScript_BlockedByPrimalWeather);
                 effect++;
             }
             break;
