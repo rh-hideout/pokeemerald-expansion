@@ -124,7 +124,8 @@ struct SpecialStatus
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
     u8 shellBellEmergencyExit:1;
-    u8 padding:2;
+    u8 breaksThroughProtectFully:1;
+    u8 padding:1;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
