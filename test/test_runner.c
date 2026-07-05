@@ -7,6 +7,7 @@
 #include "malloc.h"
 #include "random.h"
 #include "task.h"
+#include "union_room_chat.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
@@ -826,14 +827,19 @@ static s32 MgbaPutchar_(s32 i, s32 c)
 }
 
 // Bare-bones, supports:
+// - %c: print an ASCII character.
+// - %C: print a GF-encoded character.
 // - %s, %.*s: print an ASCII string.
 // - %S, %.*S: print a GF-encoded string.
+// - %U: print a GF-encoded upper-case string.
 // - %d: print a signed integer.
 // - %q: print a Q20.12 fixed-point number.
 // - %p: print a pointer (which mgba-rom-test-hydra will convert into a
 //   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
+    extern char mini_pchar_decode(u8);
+
     s32 i = 0;
     s32 n;
     s32 c, d;
@@ -859,6 +865,14 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
             {
             case '%':
                 i = MgbaPutchar_(i, '%');
+                break;
+            case 'c':
+                c = va_arg(va, int);
+                i = MgbaPutchar_(i, c);
+                break;
+            case 'C':
+                c = va_arg(va, unsigned);
+                i = MgbaPutchar_(i, mini_pchar_decode(c));
                 break;
             case 'd':
                 d = va_arg(va, int);
@@ -960,9 +974,31 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS && n-- > 0)
                         i = MgbaPutchar_(i, mini_pchar_decode(c));
+                }
+                break;
+            case 'U':
+                pokeS = va_arg(va, const u8 *);
+                bool32 wasUnderscore = FALSE;
+                while (*pokeS != EOS)
+                {
+                    u8 c = *pokeS++;
+                    if (CHAR_a <= c && c <= CHAR_z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(gCaseToggleTable[c]));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (CHAR_A <= c && c <= CHAR_Z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (!wasUnderscore)
+                    {
+                        i = MgbaPutchar_(i, '_');
+                        wasUnderscore = TRUE;
+                    }
                 }
                 break;
             }
