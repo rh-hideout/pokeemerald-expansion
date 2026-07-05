@@ -217,3 +217,22 @@ SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of
         NOT MESSAGE("Exploud was hurt by its poisoning!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Aromatherapy will be blocked on ally by Sap Sipper but not user")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_AROMATHERAPY) == TYPE_GRASS);
+        PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
+        PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_AROMATHERAPY); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_SAP_SIPPER);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Marill's Attack rose!");
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
