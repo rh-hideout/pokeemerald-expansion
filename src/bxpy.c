@@ -192,7 +192,7 @@ static void BXPY_ErrorCheck_ClauseSpecies(void)
     if (!BXPY_CLAUSE_SPECIES)
         return;
 
-    enum Species speciesList[PARTY_SIZE] = {0};
+    u32 speciesList[PARTY_SIZE] = {0};
     u32 uniqueDuplicates[PARTY_SIZE] = {0};
     u32 partyCount = 0;
 
@@ -217,7 +217,8 @@ static void BXPY_ErrorCheck_ClauseItem(void)
     gSpecialVar_Result = FALSE;
     if (BXPY_CLAUSE_ITEMS == FALSE)
         return;
-    enum Item itemList[PARTY_SIZE] = {0};
+
+    u32 itemList[PARTY_SIZE] = {0};
     u32 uniqueDuplicates[PARTY_SIZE] = {0};
     u32 itemCount = 0;
 
@@ -243,7 +244,7 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
     if (BXPY_CLAUSE_SPECIAL_POKEMON == FALSE)
         return;
 
-    enum Species bannedMons[PARTY_SIZE];
+    u32 bannedMons[PARTY_SIZE];
     u32 bannedCount = 0;
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
