@@ -79,8 +79,9 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
     u32 switchinWeather = AI_GetSwitchinWeather(switchinBattler);
-    u32 switchinFieldStatus = AI_GetSwitchinFieldStatus(switchinBattler);
-    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
+    u32 switchinTerrain = AI_GetSwitchinTerrain(switchinBattler);
+    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinTerrain);
+
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     gAiLogicData->switchInCalc = TRUE;
@@ -89,10 +90,10 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
-        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinFieldStatus);
+        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinTerrain);
         SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinFieldStatus);
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
+        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinTerrain);
+        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinTerrain);
     }
 
     gAiLogicData->switchInCalc = FALSE;
@@ -282,7 +283,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
         return FALSE;
     if (!AI_IsBattlerGrounded(battler))
         return FALSE;
-    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, gFieldStatuses))
+    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, AI_GetSwitchinTerrain(battler)))
         return FALSE;
     if (IsLeafGuardProtected(battler, ability))
         return FALSE;
@@ -481,6 +482,9 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
     struct DamageContext ctx = {0};
     ctx.battlerAtk = switchContext->battler;
     ctx.battlerDef = switchContext->opposingBattler;
+    ctx.aiCalc = TRUE;
+    ctx.weather = AI_GetWeather();
+    ctx.terrain = gFieldTimers.terrain; // Should check current terrain
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
     ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[ctx.battlerAtk];
@@ -837,6 +841,8 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     ctx.battlerAtk = battlerAtk;
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = moveType;
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain; // Curr terrain check
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
 
@@ -1635,7 +1641,7 @@ static u32 GetSwitchinHazardsDamage(enum BattlerId battler)
             && status == 0
             && !(gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], gFieldStatuses)
+            && !IsMistyTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], AI_GetSwitchinTerrain(battler))
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
             && AI_IsBattlerGrounded(battler)))
@@ -2798,12 +2804,9 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     {
     case HOLD_EFFECT_TERRAIN_SEED:
     {
-        u32 seedParam = GetItemHoldEffectParam(aiItem);
-        if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && (fieldStatus & STATUS_FIELD_MISTY_TERRAIN))
-         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
-            gBattleMons[battler].statStages[STAT_DEF] += 1;
+        struct TerrainInfo battleTerrain = gBattleTerrainInfo[gFieldTimers.terrain];
+        if (gFieldTimers.terrain != B_TERRAIN_NONE && GetItemHoldEffectParam(aiItem) == battleTerrain.seedHoldEffect)
+            gBattleMons[battler].statStages[battleTerrain.seedStat] += 1;
         break;
     }
     case HOLD_EFFECT_ATTACK_UP:
@@ -2878,7 +2881,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
         gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     case ABILITY_QUARK_DRIVE:
-        if ((fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN) || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
+        if (gFieldTimers.terrain == B_TERRAIN_ELECTRIC || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:

@@ -171,7 +171,7 @@ gBattleAnimMove_MiracleEye::
 	blend_color_cycle selector=F_PAL_BG, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=10, color=RGB_BLACK
 	call MindReaderEyeSpikeEffect
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
@@ -332,7 +332,7 @@ gBattleAnimMove_Tailwind::
 	call CreateTailwindCrescents
 	waitforvisualfinish
 	stopsound
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	delay 1
@@ -345,7 +345,7 @@ gBattleAnimGeneral_Tailwind::
 	call CreateTailwindCrescents
 	waitforvisualfinish
 	stopsound
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	blendoff
 	delay 1
 	end
@@ -491,7 +491,7 @@ gBattleAnimMove_CloseCombat::
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
 	playsewithpan SE_M_MEGA_KICK2, +63
 	delay 1
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
@@ -940,7 +940,7 @@ gBattleAnimMove_LastResort::
 	delay 3
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 2, 1, 0, 7
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_WorrySeed::
@@ -1204,7 +1204,7 @@ gBattleAnimMove_AuraSphere::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 8, 0, 16, 1
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	delay 1
@@ -1488,7 +1488,7 @@ gBattleAnimMove_AirSlash::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 18, 1
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	waitforvisualfinish
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_XScissor::
@@ -1651,7 +1651,7 @@ gBattleAnimMove_FocusBlast::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 8, 0, 16, 1
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
 	delay 1
@@ -1696,7 +1696,7 @@ gBattleAnimMove_BraveBird::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_ATTACKER, 0, 15, 0, RGB_WHITE
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_EarthPower::
@@ -1713,10 +1713,7 @@ gBattleAnimMove_EarthPower::
 	waitforvisualfinish
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
 	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Switcheroo::
@@ -1781,7 +1778,7 @@ gBattleAnimMove_NastyPlot::
 	delay 54
 	loopsewithpan SE_M_METRONOME, SOUND_PAN_ATTACKER, 16, 3
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_BulletPunch::
@@ -2630,7 +2627,7 @@ gBattleAnimMove_RockWrecker::
 	waitforvisualfinish
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_CrossPoison::
@@ -2679,7 +2676,7 @@ gBattleAnimMove_GunkShot::
 	call GunkShotImpact
 	call PoisonBubblesEffect
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -3444,7 +3441,7 @@ gBattleAnimMove_DarkVoid::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16
 	createsprite gSlideMonToOriginalPosPartnerSpriteTemplate, ANIM_ATTACKER, 2, ANIM_DEF_PARTNER, 0, 16
 	delay 32
-	call UnsetPsychicBg
+	call UnsetBackground
 	visible ANIM_TARGET
 	visible ANIM_DEF_PARTNER
 	end
@@ -3625,7 +3622,7 @@ ShadowForceAttack:
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitbgfadein
 	goto ShadowForceWaitEnd
 ShadowForceBg:
@@ -4407,7 +4404,7 @@ gBattleAnimMove_StoredPower::
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
 	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=12, y=-10, relative_to=1, animation=1
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -4444,7 +4441,7 @@ gBattleAnimMove_AllySwitch::
 	createvisualtask AnimTask_AllySwitchAttacker, 2
 	createvisualtask AnimTask_AllySwitchPartner, 2
 	call DoubleTeamAnimRet
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Scald::
@@ -4689,7 +4686,7 @@ gBattleAnimMove_Acrobatics::
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	visible ANIM_ATTACKER
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 
 AcrobaticsSlashes:
@@ -5297,7 +5294,7 @@ gBattleAnimMove_FrostBreath::
 	waitforvisualfinish
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_DragonTail::
@@ -5424,7 +5421,7 @@ gBattleAnimMove_DrillRun::
 	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
 	call CreateSharpDrill
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_DualChop::
@@ -5704,7 +5701,7 @@ gBattleAnimMove_Hurricane::
 	stopsound
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 HurricaneGust:
 	createsprite gEllipticalGustSpriteTemplate, ANIM_ATTACKER, 2, 0, -16
@@ -5830,7 +5827,7 @@ gBattleAnimMove_SearingShot::
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_ADJACENT, 2, 9, 0, RGB_RED
 	delay 30
-	call UnsetPsychicBg
+	call UnsetBackground
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 0, RGB_BLACK
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
@@ -6396,7 +6393,7 @@ gBattleAnimMove_Glaciate::
 	waitforvisualfinish
 	blendoff
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_BoltStrike::
@@ -6432,7 +6429,7 @@ gBattleAnimMove_BoltStrike::
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 9, 0, RGB(30, 31, 1)
-	call UnsetPsychicBg
+	call UnsetBackground
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 0, RGB_BLACK
 	blendoff
 	waitforvisualfinish
@@ -6479,7 +6476,7 @@ gBattleAnimMove_BlueFlare::
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 0, 0, 0, RGB_BLACK
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 1, 9, 0, RGB_RED
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 BlueFlareFireSpin:
@@ -6660,7 +6657,7 @@ gBattleAnimMove_Snarl::
 	create_basic_hitsplat_sprite ANIM_TARGET, 3, x=32, y=20, relative_to=ANIM_TARGET, animation=3
 	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -6782,7 +6779,7 @@ gBattleAnimMove_VCreate::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 5
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 0, RGB_WHITEALPHA
 	waitforvisualfinish
 	end
@@ -6988,20 +6985,20 @@ gBattleAnimMove_StickyWeb::
 	waitforvisualfinish
 	splitbgprio ANIM_TARGET
 	loopsewithpan SE_M_STRING_SHOT, SOUND_PAN_ATTACKER, 9, 6
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
-	call SpiderWebThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
+	call StringShotThread
 	waitforvisualfinish
 	playsewithpan SE_M_STRING_SHOT2, SOUND_PAN_TARGET
 	createsprite gSpiderWebSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, TRUE
@@ -7949,7 +7946,7 @@ gBattleAnimMove_MysticalFire::
 	createsprite gLargeFlameScatterSpriteTemplate, ANIM_TARGET, 2, 0, 0, 30, 30, 3, 1
 	playse 140
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_SpikyShield::
@@ -8749,7 +8746,7 @@ gBattleAnimMove_LandsWrath::
 	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
 	waitbgfadein
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 0, RGB_BLACK
 	clearmonbg ANIM_ATTACKER
 	end
@@ -8886,7 +8883,7 @@ gBattleAnimMove_OriginPulse::
 	delay 5
 	createsprite gOriginPulseBasicSplatTemplate, ANIM_TARGET, 3, -32, 5, 1, 1
 	waitsound
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -8931,7 +8928,7 @@ PrecipiceBladesContinue:
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 2, ANIM_TARGET, 0, 6
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 2, ANIM_DEF_PARTNER, 0, 6
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -8980,7 +8977,7 @@ gBattleAnimMove_DragonAscent::
 	waitforvisualfinish
 	blendoff
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_HyperspaceFury::
@@ -9048,7 +9045,7 @@ gBattleAnimMove_HyperspaceFury::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 0, 3, 32, 1
 	playsewithpan SE_M_FIRE_PUNCH, SOUND_PAN_TARGET
 	invisible ANIM_ATTACKER
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	visible ANIM_ATTACKER
 	delay 1
@@ -9173,7 +9170,7 @@ gBattleAnimMove_DarkestLariat::
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 DarkestLariatImpact:
 	createsprite gDarkestLariatImpactTemplate, ANIM_ATTACKER, 3, 0, -12, 1, 1
@@ -9509,7 +9506,7 @@ SolarBladeUnleash:
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 6, 0, RGB_WHITE
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_ATTACKER
 	blendoff
 	end
@@ -10001,7 +9998,7 @@ gBattleAnimMove_BurnUp::
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 2, 12, 0, RGB(28, 0, 0)
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -10352,7 +10349,7 @@ gBattleAnimMove_CoreEnforcer::
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gCoreEnforcerExplosionTemplate, ANIM_ATTACKER, 3, -24, 24, ANIM_TARGET, 1
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_TARGET
 	blendoff
 	end
@@ -10491,7 +10488,7 @@ gBattleAnimMove_DragonHammer::
 	delay 51
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 5
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	blendoff
 	end
 
@@ -10545,7 +10542,7 @@ gBattleAnimMove_AuroraVeil::
 	playsewithpan SE_SHINY, SOUND_PAN_ATTACKER
 	blend_color_cycle selector=F_PAL_ATK_SIDE, delay=0, num_blends=2, initial_blend_y=0, target_blend_y=10, color=RGB_WHITE
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
@@ -10801,7 +10798,7 @@ PsychicFangsEnd:
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 PsychicFangsShatteredWall:
 	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 33, 10
@@ -12875,7 +12872,7 @@ gBattleAnimMove_GravApple::
 	delay 48
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 SmallAppleShower:
 	createsprite gGravAppleSmallApple, ANIM_TARGET, 2, 35, 60, 4, ANIM_TARGET
@@ -13186,7 +13183,7 @@ gBattleAnimMove_SteelBeam::
 	call SteelBeam_Continuity
 	waitforvisualfinish
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 1, 10, 0, RGB(24, 24, 48)
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	end
 SteelBeam_Continuity:
 	createsprite gSteelBeamBigOrbSpriteTemplate, ANIM_TARGET, 3, 15, 0, 20, 0
@@ -13230,7 +13227,7 @@ ExpandingForceSingleTarget:
 	createvisualtask AnimTask_ShakeTargetBasedOnMovePowerOrDmg, 2, 0, 1, 24, 1, 0
 	call MaxKnuckleExplosionGeyser
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
@@ -13242,7 +13239,7 @@ ExpandingForceBothTargets:
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_DEF_PARTNER, 5, 0, 24, 1
 	call ExpandingForceExplosionGeyser
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
@@ -13369,7 +13366,7 @@ MeteorBeamCharge:
 	call ContinentalCrushStockpileRocks
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 MeteorBeamBlast:
@@ -13402,7 +13399,7 @@ MeteorBeamBlast:
 	call MeteorBeamRockLaunch
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 MeteorBeamRockLaunch:
@@ -13486,7 +13483,7 @@ gBattleAnimMove_RisingVoltage::
 	monbg ANIM_ATTACKER
 	setalpha 12, 8
 	createvisualtask AnimTask_GetFieldTerrain, 5,
-	jumpargeq 0, STATUS_FIELD_ELECTRIC_TERRAIN, ANIM_RISING_VOLTAGE_STRONGER
+	jumpargeq 0, B_TERRAIN_ELECTRIC, ANIM_RISING_VOLTAGE_STRONGER
 ANIM_RISING_VOLTAGE_NORMAL:
 	createvisualtask AnimTask_BlendBattleAnimPal, 2, F_PAL_BG, 1, 0, 4, RGB_BLACK @;To black
 	waitforvisualfinish
@@ -14203,7 +14200,7 @@ gBattleAnimMove_FreezingGlare::
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 4, 28, 1
 	call IceCrystalEffectShort
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 
@@ -14313,7 +14310,7 @@ gBattleAnimMove_ThunderousKick::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 5
 	clearmonbg ANIM_TARGET
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 
@@ -14476,7 +14473,7 @@ gBattleAnimMove_EerieSpell::
 	call EerieSpellConvergingFlames
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -14544,7 +14541,7 @@ gBattleAnimMove_PsyshieldBash::
 	delay 3
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
@@ -14647,7 +14644,7 @@ gBattleAnimMove_MysticalPower::
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 1, 11, 0, RGB(15, 29, 31) @;Light blue
-	call UnsetPsychicBg
+	call UnsetBackground
 	blendoff
 	end
 
@@ -14831,7 +14828,7 @@ gBattleAnimMove_HeadlongRush::
 	call MaxQuake_DirtGeyser
 	waitforvisualfinish
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0, 5
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 @ from max quake
@@ -14933,7 +14930,7 @@ gBattleAnimMove_EsperWing::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 12, 1
 	call WingAttackFeatherScatter
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
@@ -15166,7 +15163,7 @@ gBattleAnimMove_WildboltStorm::
 	waitforvisualfinish
 	stopsound
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_TARGET | F_PAL_DEF_PARTNER), 1, 11, 0, RGB(30, 31, 1)
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -15334,7 +15331,7 @@ gBattleAnimMove_DoubleShock::
 	delay 2
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 3, 0, 11, 1
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -15714,7 +15711,7 @@ gBattleAnimMove_PsychicNoise::
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, -2, 25, 1
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_TemperFlare::
@@ -16307,7 +16304,7 @@ gBattleAnimMove_SpinOut::
 	createvisualtask AnimTask_RapinSpinMonElevation, 2, 0, 2, 1
 	loopsewithpan SE_M_RAZOR_WIND2, SOUND_PAN_ATTACKER, 8, 4
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_ATTACKER
 	end
 
@@ -16480,7 +16477,7 @@ gBattleAnimMove_TwinBeam::
 	call PsybeamRings
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Comeuppance::
@@ -16725,7 +16722,7 @@ gBattleAnimMove_HardPress::
 	createsprite gCrushGripExplosionTemplate, ANIM_TARGET, 0, 16, 16, 1, 1
 	waitforvisualfinish
 	blendoff
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_DragonCheer::
@@ -17065,7 +17062,7 @@ gBattleAnimMove_GlaiveRush::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_ATTACKER, 0, 15, 0, RGB_WHITE
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_ArmorCannon::
@@ -17107,7 +17104,7 @@ gBattleAnimMove_ArmorCannon::
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_TripleDive::
@@ -17297,7 +17294,7 @@ gBattleAnimMove_ElectroDrift::
 	waitforvisualfinish
 	blendoff
 	delay 2
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Psyblade::
@@ -17325,7 +17322,7 @@ gBattleAnimMove_Psyblade::
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_MightyCleave::
@@ -17366,7 +17363,7 @@ gBattleAnimMove_MightyCleave::
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	waitbgfadein
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 MightyCleaveDiggingRun:
@@ -17468,7 +17465,7 @@ gBattleAnimMove_BlazingTorque::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_WickedTorque::
@@ -17507,7 +17504,7 @@ gBattleAnimMove_WickedTorque::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_NoxiousTorque::
@@ -17556,7 +17553,7 @@ gBattleAnimMove_NoxiousTorque::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_CombatTorque::
@@ -17597,7 +17594,7 @@ gBattleAnimMove_CombatTorque::
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_MagicalTorque::
@@ -17633,7 +17630,7 @@ gBattleAnimMove_MagicalTorque::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 7
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_TeraBlast::
@@ -17836,7 +17833,7 @@ TeraBlastFighting:
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	waitbgfadein
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 TeraBlastPoison:
@@ -17895,7 +17892,7 @@ TeraBlastPoison:
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 0
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 TeraBlastFlying:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_METAL_SOUND_WAVES, 0, 12, 12, RGB_WHITE
@@ -17941,7 +17938,7 @@ TeraBlastFlying:
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 0
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 TeraBlastRock:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_FIRE_PLUME, 0, 12, 12, RGB(29, 24, 2)
@@ -18012,7 +18009,7 @@ TeraBlastRock:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastBug:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB_GREEN
@@ -18142,10 +18139,7 @@ TeraBlastGround:
 	delay 5
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_TARGET, 66, 0, 0, 4
 	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 TeraBlastGhost:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB_PURPLE
@@ -18226,7 +18220,7 @@ TeraBlastGhost:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastSteel:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ROCKS, 0, 12, 12, RGB(25, 25, 25)
@@ -18275,7 +18269,7 @@ TeraBlastSteel:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastFire:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB(31, 0, 0)
@@ -18424,7 +18418,7 @@ TeraBlastWater:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastGrass:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB(0, 31, 0)
@@ -18469,7 +18463,7 @@ TeraBlastGrass:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastElectric:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB_YELLOW
@@ -18534,7 +18528,7 @@ TeraBlastElectric:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastPsychic:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_PINKVIO_ORB, 0, 12, 12, RGB_PURPLE
@@ -18578,7 +18572,7 @@ TeraBlastPsychic:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastIce:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB(12, 26, 31) @ light blue
@@ -18625,7 +18619,7 @@ TeraBlastIce:
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, 4, 2, 9, 0, RGB(12, 26, 31)
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastDragon:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SMALL_EMBER, 0, 12, 12, RGB(10, 25, 31)
@@ -18682,7 +18676,7 @@ TeraBlastDragonOnOpponent:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastDragonOnPlayer:
 	panse SE_M_FLAMETHROWER, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
@@ -18706,7 +18700,7 @@ TeraBlastDragonOnPlayer:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastDark:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_PURPLE_FLAME, 0, 12, 12, RGB_BLACK
@@ -18750,7 +18744,7 @@ TeraBlastDark:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastFairy:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB_MAGENTA
@@ -18801,7 +18795,7 @@ TeraBlastFairy:
 	delay 5
 	waitforvisualfinish
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 TeraBlastStellar:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_EXPLOSION, 0, 12, 12, RGB_WHITE
@@ -19150,6 +19144,7 @@ MatchaGotchaDoubleProjectile:
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 1-3 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_None::
+gBattleAnimMove_Count:: @Unused?
 gBattleAnimMove_MirrorMove::
 gBattleAnimMove_Pound::
 	monbg ANIM_TARGET
@@ -19541,13 +19536,13 @@ FireBlastCross:
 
 gBattleAnimMove_LeechSeed::
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=0, target_y=24, duration=35, wave_amplitude=-32
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=0, target_y=24, duration=35, wave_amplitude=-32
 	delay 8
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=-16, target_y=24, duration=35, wave_amplitude=-40
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=-16, target_y=24, duration=35, wave_amplitude=-40
 	delay 8
 	playsewithpan SE_M_POISON_POWDER, SOUND_PAN_ATTACKER
-	createleechseedsprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=16, target_y=24, duration=35, wave_amplitude=-37
+	create_leech_seed_sprite ANIM_TARGET, 2, initial_x=15, initial_y=0, target_x=16, target_y=24, duration=35, wave_amplitude=-37
 	delay 12
 	loopsewithpan SE_M_TAIL_WHIP, SOUND_PAN_TARGET, 10, 8
 	waitforvisualfinish
@@ -21032,10 +21027,7 @@ HornDrillContinue:
 	setalpha 12, 8
 	call CreateSharpDrill
 	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 
 HornDrillInContest:
@@ -21183,10 +21175,7 @@ gBattleAnimMove_Fissure::
 	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
 	waitbgfadein
 	delay 40
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 
 FissureDirtPlumeFar:
@@ -21256,7 +21245,7 @@ gBattleAnimMove_Meditate::
 	delay 16
 	playsewithpan SE_M_TAKE_DOWN, SOUND_PAN_ATTACKER
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Agility::
@@ -21320,7 +21309,7 @@ gBattleAnimMove_Teleport::
 	createvisualtask AnimTask_Teleport, 2
 	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
 	delay 15
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -21413,7 +21402,7 @@ gBattleAnimMove_Amnesia::
 	delay 54
 	loopsewithpan SE_M_METRONOME, SOUND_PAN_ATTACKER, 16, 3
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Kinesis::
@@ -21430,7 +21419,7 @@ gBattleAnimMove_Kinesis::
 	delay 70
 	playsewithpan SE_M_SWAGGER2, SOUND_PAN_ATTACKER
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Glare::
@@ -21520,7 +21509,7 @@ SkyAttackUnleash:
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_ATTACKER, 0, 15, 0, RGB_WHITE
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
-	call UnsetSkyBg
+	call UnsetBackground
 	goto SkyAttackEnd
 
 gBattleAnimMove_Flash::
@@ -21670,13 +21659,6 @@ SetHighSpeedBgFade:
 	waitbgfadein
 	return
 
-UnsetHighSpeedBg:
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
-	return
-
 gBattleAnimMove_MachPunch::
 	monbg ANIM_ATK_PARTNER
 	call SetHighSpeedBg
@@ -21692,7 +21674,7 @@ gBattleAnimMove_MachPunch::
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Foresight::
@@ -21935,7 +21917,7 @@ gBattleAnimMove_ExtremeSpeed::
 	createvisualtask AnimTask_ExtremeSpeedMonReappear, 2
 	loopsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_ATTACKER, 8, 4
 	waitforvisualfinish
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_TARGET
 	blendoff
 	delay 1
@@ -22299,7 +22281,7 @@ gBattleAnimMove_SkillSwap::
 	createvisualtask AnimTask_SkillSwap, 3, ANIM_ATTACKER
 	createvisualtask AnimTask_BlendMonInAndOut, 5, ANIM_ATTACKER, RGB_WHITE, 12, 3, 1
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Imprison::
@@ -22314,7 +22296,7 @@ gBattleAnimMove_Imprison::
 	createvisualtask AnimTask_HorizontalShake, 5, MAX_BATTLERS_COUNT, 1, 10
 	playsewithpan SE_M_HYPER_BEAM, SOUND_PAN_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Grudge::
@@ -22405,7 +22387,7 @@ gBattleAnimMove_LusterPurge::
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_MistBall::
@@ -22780,7 +22762,7 @@ gBattleAnimMove_Extrasensory::
 	waitforvisualfinish
 	blendoff
 	clearmonbg ANIM_DEF_PARTNER
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_AerialAce::
@@ -23139,7 +23121,7 @@ gBattleAnimMove_Confusion::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_Psychic::
@@ -23156,7 +23138,7 @@ gBattleAnimMove_Psychic::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_FutureSight::
@@ -23164,7 +23146,7 @@ gBattleAnimMove_FutureSight::
 FutureSightContinue:
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 FutureSight:
 	monbg ANIM_ATK_PARTNER
@@ -23230,10 +23212,7 @@ gBattleAnimMove_Thunder::
 	delay 1
 	simple_palette_blend unused_anim_battler=ANIM_TARGET, selector=F_PAL_BG, delay=2, initial_blend_y=16, target_blend_y=0, color=RGB_BLACK
 	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 
 gBattleAnimMove_ThunderPunch::
@@ -23931,7 +23910,7 @@ gBattleAnimMove_Blizzard::
 	call IceCrystalEffectLong
 	waitforvisualfinish
 	delay 20
-	call UnsetHighSpeedBg
+	call UnsetBackground
 	clearmonbg ANIM_DEF_PARTNER
 	end
 BlizzardIceCrystals:
@@ -24491,10 +24470,7 @@ MegahornContinue:
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 MegahornInContest:
 	fadetobg BG_DRILL_CONTESTS
@@ -24565,7 +24541,7 @@ gBattleAnimMove_Aeroblast::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 0
-	call UnsetSkyBg
+	call UnsetBackground
 	end
 AeroblastBeam:
 	playsewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER
@@ -25330,7 +25306,7 @@ gBattleAnimMove_DreamEater::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 DreamEaterAbsorb:
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_TARGET
@@ -25449,7 +25425,7 @@ gBattleAnimMove_Psybeam::
 	call PsybeamRings
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 PsybeamRings:
 	createsprite gGoldRingSpriteTemplate, ANIM_TARGET, 2, 16, 0, 0, 0, 13, 0
@@ -25464,7 +25440,7 @@ gBattleAnimMove_Hypnosis::
 	blend_color_cycle selector=F_PAL_TARGET, delay=2, num_blends=2, initial_blend_y=0, target_blend_y=12, color=RGB(31, 18, 31)
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 HypnosisRings:
 	playsewithpan SE_M_SUPERSONIC, SOUND_PAN_ATTACKER
@@ -25487,7 +25463,7 @@ gBattleAnimMove_Psywave::
 	call PsywaveRings
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 PsywaveRings:
 	createsprite gPsywaveRingSpriteTemplate, ANIM_TARGET, 3, 10, 10, 0, 16
@@ -25749,7 +25725,7 @@ gBattleAnimMove_StringShot::
 	end
 
 StringShotThread:
-	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=1
+	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=TRUE
 	delay 1
 	return
 
@@ -25784,7 +25760,7 @@ gBattleAnimMove_SpiderWeb::
 	end
 
 SpiderWebThread:
-	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=0
+	create_web_thread_sprite ANIM_TARGET, 2, x=20, y=0, unk2=512, amplitude=20, targets_both=FALSE
 	delay 1
 	return
 
@@ -27291,10 +27267,7 @@ gBattleAnimMove_CosmicPower::
 	delay 40
 	createvisualtask AnimTask_BlendNonAttackerPalettes, 2, 0, 15, 0, RGB_BLACK
 	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -27732,7 +27705,7 @@ gBattleAnimMove_PsychoBoost::
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimMove_KnockOff::
@@ -27810,10 +27783,7 @@ gBattleAnimMove_SkyUppercut::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 1, 0, 6
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
+	call UnsetBackground
 	end
 
 gBattleAnimMove_SecretPower::
@@ -28061,17 +28031,6 @@ WeatherBallIce:
 	playsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET
 	call IceCrystalEffectShort
 	waitforvisualfinish
-	end
-
-gBattleAnimMove_Count::
-	monbg ANIM_TARGET
-	setalpha 12, 8
-	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
-	create_basic_hitsplat_sprite ANIM_ATTACKER, 2, x=0, y=0, relative_to=ANIM_TARGET, animation=2
-	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 6, 1
-	waitforvisualfinish
-	clearmonbg ANIM_TARGET
-	blendoff
 	end
 
 IceCrystalEffectShort:
@@ -28324,7 +28283,7 @@ SetPsychicBackground:
 	waitbgfadein
 	return
 
-UnsetPsychicBg:
+UnsetBackground:
 	restorebg
 	waitbgfadeout
 	setarg 7, -1
@@ -28344,13 +28303,6 @@ SetSkyBgContest:
 	waitbgfadeout
 	createvisualtask AnimTask_StartSlidingBg, 5, 2304, 768, 0, -1
 	goto SetSkyBgContinue
-
-UnsetSkyBg:
-	restorebg
-	waitbgfadeout
-	setarg 7, -1
-	waitbgfadein
-	return
 
 SetSolarBeamBg:
 	createvisualtask AnimTask_IsContest, 2
@@ -28778,7 +28730,7 @@ gBattleAnimGeneral_FutureSightHit::
 	blendoff
 	waitforvisualfinish
 	delay 1
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 gBattleAnimGeneral_DoomDesireHit::
@@ -29042,7 +28994,7 @@ gBattleAnimGeneral_ZMoveActivate::
 	call ZMoveBuffEffect
 	call ZMoveBuffEffect
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	blendoff
 	clearmonbg ANIM_ATTACKER
 	end
@@ -29618,7 +29570,7 @@ gBattleAnimMove_BreakneckBlitz::
 	clearmonbg ANIM_DEF_PARTNER
 	createvisualtask AnimTask_AllBattlersVisible, 10
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 
@@ -29703,7 +29655,7 @@ gBattleAnimMove_AllOutPummeling::
 	clearmonbg ANIM_DEF_PARTNER
 	createvisualtask AnimTask_AllBattlersVisible, 10
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	end
 
 
@@ -29770,7 +29722,7 @@ FinishSupersonicSkystrike:
 	blendoff
 	createvisualtask AnimTask_AllBattlersVisible, 10
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, 16
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	end
 
@@ -29937,7 +29889,7 @@ gBattleAnimMove_TectonicRage::
 	createsprite gTectonicRageBlastBurnSpriteTemplate, ANIM_ATTACKER, 2, -60, 30, 24, 0, 0, 0
 	call TectonicRageExplosion
 	waitforvisualfinish
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitbgfadein
 	clearmonbg_static ANIM_ATTACKER
 	createvisualtask AnimTask_AllBattlersVisible, 10
@@ -30177,7 +30129,7 @@ FinishSavageSpinOut:
 	delay 10
 	call SavageSpinOutCrash_1 	@SeismicToss1
 	delay 12
-	call UnsetPsychicBg
+	call UnsetBackground
 	setarg 7, 0 	@;Clear arg 7 so task works properly in Link battles - no idea why though - something to do with the background scrolling
 	createvisualtask AnimTask_SnatchOpposingMonMove, 2		@ user fly on screen on enemy side
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_ATTACKER
@@ -31471,7 +31423,7 @@ DevastatingDrakeOnPlayer:
 	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_ATTACKER
 	createsprite gDevastatingDrakeLeftSpriteTemplate, ANIM_ATTACKER, 50, 288, 120, -16, 88, 21		@right to left
 DevastatingDrakeFinish:
-	call UnsetPsychicBg
+	call UnsetBackground
 	waitforvisualfinish
 	visible ANIM_TARGET
 	delay 10
@@ -32197,7 +32149,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 42, 44, SOUND_PAN_ATTACKER, 40, 2, 3
 	waitforvisualfinish
 	unloadallspritepals
-	call UnsetPsychicBg
+	call UnsetBackground
 	visible ANIM_TARGET
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER, 5, 10
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 50, 1
