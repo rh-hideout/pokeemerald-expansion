@@ -23144,13 +23144,6 @@ gBattleAnimMove_Psychic::
 gBattleAnimMove_FutureSight::
 	choosetwoturnanim FutureSightSetUp FutureSightHit
 FutureSightSetUp::
-	goto FutureSight
-FutureSightContinue:
-	waitforvisualfinish
-	delay 1
-	call UnsetBackground
-	end
-FutureSight:
 	monbg ANIM_ATK_PARTNER
 	playsewithpan SE_M_PSYBEAM, SOUND_PAN_ATTACKER
 	call SetPsychicBackground
@@ -23161,7 +23154,10 @@ FutureSight:
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
 	blendoff
-	goto FutureSightContinue
+	waitforvisualfinish
+	delay 1
+	call UnsetBackground
+	end
 FutureSightHit::
 	createvisualtask AnimTask_SetAnimTargetToBattlerTarget, 2
 	monbg ANIM_DEF_PARTNER

@@ -7,7 +7,6 @@ extern const u8 BattleScript_MirrorHerbCopyStatChange[];
 extern const u8 BattleScript_NotAffected[];
 extern const u8 BattleScript_MoveEnd[];
 extern const u8 BattleScript_MoveAnimation[];
-extern const u8 BattleScript_MoveMissedPause[];
 extern const u8 BattleScript_MoveMissed[];
 extern const u8 BattleScript_FlingMessage[];
 extern const u8 BattleScript_FlingFailConsumeItem[];

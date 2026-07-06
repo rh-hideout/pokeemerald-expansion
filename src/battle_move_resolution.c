@@ -2654,17 +2654,9 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
 
     u32 multiHit = gMultiHitCounter;
-    if (gBattleMons[gBattlerTarget].volatiles.substitute)
-    {
-        multiHit = gMultiHitCounter;
-    }
-    else if (gMultiHitCounter > 1)
-    {
-        if (gBattleMons[cv->battlerDef].hp <= gBattleStruct->moveDamage[cv->battlerDef])
-            multiHit = 1;
-        else
-            multiHit = gMultiHitCounter;
-    }
+    bool32 willDamageFaintBattler = (gBattleMons[cv->battlerDef].hp <= gBattleStruct->moveDamage[cv->battlerDef]);
+    if (!gBattleMons[cv->battlerDef].volatiles.substitute && willDamageFaintBattler)
+        multiHit = 1;
 
     BtlController_EmitMoveAnimation(
         cv->battlerAtk,
