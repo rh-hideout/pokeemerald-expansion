@@ -124,7 +124,8 @@ struct SpecialStatus
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
     u8 shellBellEmergencyExit:1;
-    u8 padding:2;
+    u8 breaksThroughProtectFully:1;
+    u8 padding:1;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -700,6 +701,7 @@ struct BattleStruct
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
+    u32 savedMoveResultFlags[MAX_BATTLERS_COUNT]; // for Bounced moves
     u8 doneDoublesSpreadHit:1;
     u8 calculatedDamageDone:1;
     u8 calculatedSpreadMoveAccuracy:1;
