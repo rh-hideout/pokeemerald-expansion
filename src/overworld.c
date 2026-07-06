@@ -32,6 +32,7 @@
 #include "io_reg.h"
 #include "item.h"
 #include "item_icon.h"
+#include "line_break.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "load_save.h"
@@ -3695,44 +3696,17 @@ static void DestroyItemIconSprite(void);
 
 static u8 ReformatItemDescription(enum Item item, u8 *dest)
 {
-    u8 count = 0;
-    u8 numLines = 1;
-    u8 maxChars = 32;
     u8 *desc = (u8 *)GetItemDescription(item);
-
-    while (*desc != EOS)
+    u32 index = 0;
+    while (desc[index] != EOS)
     {
-        if (count >= maxChars)
-        {
-            while (*desc != CHAR_SPACE && *desc != CHAR_NEWLINE)
-            {
-                *dest = *desc;  //finish word
-                dest++;
-                desc++;
-            }
-
-            *dest = CHAR_NEWLINE;
-            count = 0;
-            numLines++;
-            dest++;
-            desc++;
-            continue;
-        }
-
-        *dest = *desc;
-        if (*desc == CHAR_NEWLINE)
-        {
-            *dest = CHAR_SPACE;
-        }
-
-        dest++;
-        desc++;
-        count++;
+        dest[index] = desc[index];
+        index++;
     }
-
-    // finish string
-    *dest = EOS;
-    return numLines;
+    dest[index] = desc[index];
+    StripLineBreaks(dest);
+    BreakStringAutomatic(dest, 196, 2, FONT_SMALL, HIDE_SCROLL_PROMPT);
+    return CountLineBreaks(dest) + 1;
 }
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)

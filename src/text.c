@@ -1355,7 +1355,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         do {
             currChar = *textPrinter->printerTemplate.currentChar;
             textPrinter->printerTemplate.currentChar++;
-        } while (currChar != CHAR_ZWS);
+        } while (currChar == CHAR_ZWS);
 
         switch (currChar)
         {
