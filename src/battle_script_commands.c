@@ -11388,6 +11388,11 @@ void BS_ItemIncreaseStat(void)
 {
     NATIVE_ARGS();
 
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+    if (ItemUseTargetsPartnerParty(gBattlerAttacker))
+        gBattlerAttacker = BATTLE_PARTNER(gBattlerAttacker);
+    else
+#endif
     if (gBattlerPartyIndexes[gBattlerAttacker] != gBattleStruct->itemPartyIndex[gBattlerAttacker])
         gBattlerAttacker = BATTLE_PARTNER(gBattlerAttacker);
 

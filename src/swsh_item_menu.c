@@ -6028,6 +6028,8 @@ static void Task_BagMenu_PartyAfterItemUse(u8 taskId)
         gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + newSlot] = SPRITE_NONE;
     }
     gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + newSlot] = keepSpriteId;
+    if (keepSpriteId != SPRITE_NONE)
+        gSprites[keepSpriteId].invisible = FALSE;
 
     if (sPartyGiveMode)
     {
@@ -7080,6 +7082,7 @@ static void BagMenu_GiveItem(u8 taskId)
         itemBytes[1] = item >> 8;
         SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
         TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+        BagMenu_UpdateHeldItemIcon(tPartySlot);
         RemoveBagItem(item, 1);
         StringExpandPlaceholders(gStringVar4, gText_PkmnWasGivenItem);
         if (GetMonData(mon, MON_DATA_SPECIES) != speciesBefore)
@@ -7138,6 +7141,7 @@ static void BagMenu_GiveSwapYes(u8 taskId)
         enum Species speciesBefore = GetMonData(mon, MON_DATA_SPECIES);
         SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
         TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+        BagMenu_UpdateHeldItemIcon(tPartySlot);
         CopyItemName(item, gStringVar1);
         CopyItemName(sPartyGiveSwapItem, gStringVar2);
         StringExpandPlaceholders(gStringVar4, gText_SwitchedPkmnItem);
@@ -8400,16 +8404,16 @@ static void Task_BagMenu_MultiFullSwap(u8 taskId)
 #if SWSH_ITEM_MENU_ACTION_IN_BATTLE
 static u8 BagMenu_BattleTargetSlotId(bool8 partner, u8 partyIndex)
 {
-    if (partner)
+    if (IsMultiBattle())
     {
-        if (gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] == partyIndex)
-            return 1;
-        return PARTY_SIZE;
+        u8 battler = partner ? BATTLE_PARTNER(gBattlerInMenuId) : gBattlerInMenuId;
+        if (gBattlerPartyIndexes[battler] != partyIndex)
+            return PARTY_SIZE;
+        return (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT) ? 1 : 0;
     }
     if (gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] == partyIndex)
         return 0;
-    if (IsDoubleBattle() && !IsMultiBattle()
-     && gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] == partyIndex)
+    if (IsDoubleBattle() && gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] == partyIndex)
         return 1;
     return PARTY_SIZE;
 }
