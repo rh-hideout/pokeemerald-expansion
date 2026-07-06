@@ -2944,7 +2944,6 @@ static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
     }
 
     cv->battlerDef = gBattlerTarget;
-    gBattleStruct->doneDoublesSpreadHit = TRUE;
     gBattleStruct->eventState.moveEndBattler = 0;
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
 }
@@ -3247,7 +3246,6 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
     }
 
     if (IsExplosionMove(cv->move)
-     && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
      && !IsBattlerAlive(cv->battlerAtk)
      && !gBattleStruct->battlerState[cv->battlerAtk].notOnField)
     {
@@ -3283,7 +3281,6 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
     case EFFECT_MAX_HP_50_RECOIL:
         if (IsBattlerAlive(cv->battlerAtk)
          && !gBattleStruct->unableToUseMove
-         && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
          && !gSpecialStatuses[cv->battlerAtk].mindBlownRecoil
          && !IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
         {
@@ -3534,7 +3531,6 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
             if (cv->moveEffect == EFFECT_FINAL_GAMBIT
              && IsBattlerAlive(cv->battlerAtk)
              && !gBattleStruct->unableToUseMove
-             && (gBattleStruct->doneDoublesSpreadHit || !IsDoubleSpreadMove())
              && !IsBattlerUnaffectedByMove(cv->battlerDef))
             {
                 BattleScriptCall(BattleScript_FinalGambit);

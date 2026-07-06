@@ -9878,7 +9878,6 @@ void ClearDamageCalcResults(void)
         gSpecialStatuses[battler].damagedByAttack = FALSE;
     }
 
-    gBattleStruct->doneDoublesSpreadHit = FALSE;
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;
