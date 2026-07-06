@@ -1263,7 +1263,7 @@ static void Cmd_waitanimation(void)
 
 static void Cmd_healthbarupdate(void)
 {
-    CMD_ARGS(u8 battler, u8 updateState);
+    CMD_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
     if (gBattleControllerExecFlags)
@@ -1276,7 +1276,7 @@ static void Cmd_healthbarupdate(void)
 
 static void Cmd_datahpupdate(void)
 {
-    CMD_ARGS(u8 battler, u8 updateState);
+    CMD_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
     if (gBattleControllerExecFlags)
@@ -1299,6 +1299,11 @@ static void Cmd_datahpupdate(void)
         gProtectStructs[battler].assuranceDoubled = TRUE;
     }
 
+    gBattleStruct->passiveHpUpdate[battler] = 0;
+
+    if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
+        gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
+
     // Send updated HP
     BtlController_EmitSetMonData(
         battler,
@@ -1307,11 +1312,6 @@ static void Cmd_datahpupdate(void)
         0,
         sizeof(gBattleMons[battler].hp), &gBattleMons[battler].hp);
     MarkBattlerForControllerExec(battler);
-
-    gBattleStruct->passiveHpUpdate[battler] = 0;
-
-    if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
-        gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
