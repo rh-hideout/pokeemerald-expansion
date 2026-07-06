@@ -14,6 +14,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "test/battle.h"
 #include "test_runner.h"
 #include "trig.h"
 #include "util.h"
@@ -2272,7 +2273,7 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
     if (illusionMon != NULL)
         mon = illusionMon;
 
-    if (IsBattlerSpriteVisible(battler) && IsValidForBattle(mon) && !gTestRunnerHeadless)
+    if (IsBattlerSpriteVisible(battler) && IsValidForBattle(mon) && (!gTestRunnerHeadless || gBattleTestRunnerState->forceMoveAnim))
     {
         if (isShiny)
         {
