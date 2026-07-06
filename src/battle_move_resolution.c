@@ -1290,7 +1290,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_STEEL_ROLLER:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+        if (gFieldTimers.terrain == B_TERRAIN_NONE)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_STOCKPILE:
@@ -1968,6 +1968,8 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->move = cv->move;
     ctx->chosenMove = gChosenMove;
     ctx->moveType = GetBattleMoveType(cv->move);
+    ctx->weather = GetWeather();
+    ctx->terrain = gFieldTimers.terrain;
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
@@ -2563,7 +2565,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
         .chosenMove = gChosenMove,
         .moveType = GetBattleMoveType(cv->move),
         .weather = GetWeather(),
-        .fieldStatuses = gFieldStatuses,
+        .terrain = gFieldTimers.terrain,
         .randomFactor = TRUE,
         .updateFlags = TRUE,
     };
@@ -4735,14 +4737,14 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
     switch (cv->moveEffect)
     {
     case EFFECT_STEEL_ROLLER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
+        if (gFieldTimers.terrain != B_TERRAIN_NONE && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     case EFFECT_ICE_SPINNER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
+        if (gFieldTimers.terrain != B_TERRAIN_NONE
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
             if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
@@ -5794,14 +5796,9 @@ static enum Move GetAssistMove(void)
 enum Move GetNaturePowerMove(void)
 {
     enum Move move = gBattleEnvironmentInfo[gBattleEnvironment].naturePower;
-    if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
-        move = MOVE_MOONBLAST;
-    else if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-        move = MOVE_THUNDERBOLT;
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
-        move = MOVE_ENERGY_BALL;
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
-        move = MOVE_PSYCHIC;
+
+    if (gFieldTimers.terrain != B_TERRAIN_NONE)
+        move = gBattleTerrainInfo[gFieldTimers.terrain].naturePowerMove;
     else if (gBattleEnvironmentInfo[gBattleEnvironment].naturePower == MOVE_NONE)
         move = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT;
 

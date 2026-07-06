@@ -172,14 +172,15 @@ struct SideTimer
 
 struct FieldTimer
 {
-    u16 mudSportTimer;
-    u16 waterSportTimer;
-    u16 wonderRoomTimer;
-    u16 magicRoomTimer;
-    u16 trickRoomTimer;
-    u16 terrainTimer;
-    u16 gravityTimer;
-    u16 fairyLockTimer;
+    u8 mudSportTimer;
+    u8 waterSportTimer;
+    u8 wonderRoomTimer;
+    u8 magicRoomTimer;
+    u8 trickRoomTimer;
+    u8 terrain;
+    u8 terrainTimer;
+    u8 gravityTimer;
+    u8 fairyLockTimer;
 };
 
 struct AI_SavedBattleMon
@@ -742,6 +743,21 @@ struct AiBattleData
     u8 choiceWatch:1;
     u8 padding:6;
 };
+
+struct TerrainInfo
+{
+    const u8 *secretPowerAnimation;
+    u16 secretPowerEffect:10;
+    enum Type type:6;
+    enum Move naturePowerMove;
+    u8 battleBackground;
+    enum Stat seedStat:4;
+    u8 seedHoldEffect:4;
+    u8 startMessage:4;
+    u8 endMessage:4;
+};
+
+extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).
