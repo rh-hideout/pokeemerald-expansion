@@ -1560,7 +1560,7 @@ static void SaveChangesToPlayerParty(void)
 
 static void HandleBattleVariantEndParty(void)
 {
-    bool32 isSkyBattle =FlagGet(B_FLAG_SKY_BATTLE);
+    bool32 isSkyBattle = FlagGet(B_FLAG_SKY_BATTLE);
     bool32 isBXPY = FlagGet(B_FLAG_BXPY);
 
     if (!isSkyBattle && !isBXPY)

@@ -3045,7 +3045,7 @@
 	.if \trainer_b != TRAINER_NONE && \lose_text_b == NULL
 		.error "bringxpicky trainer_b must have valid lose text"
 	.endif
-	.if \trainer_b != TRAINER_NONE && \trainer_b > TRAINERS_COUNT
+	.if \trainer_b >= TRAINERS_COUNT
 		.error "bringxpicky trainer_b (\trainer_b) must be a valid trainer Id"
 	.endif
 	.if \trainer_b == TRAINER_NONE && \lose_text_b != NULL
