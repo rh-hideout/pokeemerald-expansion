@@ -559,11 +559,11 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
             for (chosenMonId = 0; chosenMonId < lastId; chosenMonId++)
             {
                 if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
-                 && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
-                 && !((chosenMonId == gBattlerPartyIndexes[battler2]) && BattlersShareParty(battler, battler2)))
+                 && !IsPartyMonOnFieldOrChosenToSwitch(battler, chosenMonId, battler1, battler2))
                     break;
             }
         }
+
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
     }
     else

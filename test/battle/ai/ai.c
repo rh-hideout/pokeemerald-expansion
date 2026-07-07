@@ -1450,3 +1450,24 @@ AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (
         NOT HP_BAR(opponentRight);
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI does not switch in into invalid Pokemon")
+{
+    u64 flags = 0;
+
+    PARAMETRIZE { flags = (AI_FLAG_ACE_POKEMON | AI_FLAG_SMART_TRAINER); }
+    PARAMETRIZE { flags = AI_FLAG_ACE_POKEMON; }
+
+    GIVEN {
+        AI_FLAGS(flags);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WYNAUT) { Level(1); }
+        OPPONENT(SPECIES_HAPPINY) { Level(1); }
+        OPPONENT(SPECIES_CHANSEY) { Level(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+        TURN { }
+    }
+}

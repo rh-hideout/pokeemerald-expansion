@@ -415,8 +415,10 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     // AI's switching data
     enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL; // Risky AI switches aggressively even mid battle
     gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
+
     if (ShouldSwitch(battler))
         gAiLogicData->shouldSwitch |= (1u << battler);
+
     gBattleStruct->prevTurnSpecies[battler] = gBattleMons[battler].species;
 
     // AI's move scoring
@@ -483,8 +485,31 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
                             continue;
                         if (IsAceMon(battler, monToSwitchId))
                             continue;
-
                         break;
+                    }
+
+                }
+
+                if (monToSwitchId < 0)
+                {
+                    enum BattlerId battler1, battler2;
+                    s32 lastId = GetAILastPartyIndex(battler); // + 1
+
+                    if (!IsDoubleBattle())
+                    {
+                        battler2 = battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                    }
+                    else
+                    {
+                        battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                        battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+                    }
+
+                    for (monToSwitchId = 0; monToSwitchId < lastId; monToSwitchId ++)
+                    {
+                        if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][monToSwitchId])
+                         && !IsPartyMonOnFieldOrChosenToSwitch(battler, monToSwitchId, battler1, battler2))
+                            break;
                     }
                 }
 
