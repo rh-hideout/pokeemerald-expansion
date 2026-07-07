@@ -412,8 +412,7 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum Battle
         CopyMon(&tempParty[i], &party[slot], sizeof(struct Pokemon));
     }
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
-        ZeroMonData(&party[i]);
+    ZeroPartyMons(party);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         CopyMon(&party[i], &tempParty[i], sizeof(struct Pokemon));
