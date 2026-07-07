@@ -1929,7 +1929,6 @@ static enum BattleTrainer BXPY_DetermineTrainer(enum BattleSide side, enum BXPYP
 
 static void BXPY_DrawPage(void)
 {
-
     BXPY_RemoveAllSprites();
     BXPY_DisplayPlayerParty();
     BXPY_DisplayEnemyParty();
@@ -2148,7 +2147,6 @@ static void SpriteCB_BXPYType(struct Sprite *sprite)
     enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
     enum Species species = BXPY_GetSpeciesFromPosition(trainer,partyMonIndex);
     species = BXPY_TeamPreview_TransformSpeciesId(species,side);
-
 
     enum Type type[] = {GetSpeciesType(species,0), GetSpeciesType(species,1)};
 
