@@ -2169,9 +2169,9 @@ static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum
     for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
     {
 
-    u32 spriteIndex = BXPY_SPRITEID_ENEMY_TYPE_0_MON_0 + typeIndex + (10 * partyMonIndex);
-    if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
-        continue;
+        u32 spriteIndex = BXPY_SPRITEID_ENEMY_TYPE_0_MON_0 + typeIndex + (10 * partyMonIndex);
+        if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
+            continue;
 
         struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
         TempSpriteTemplate.tileTag = BXPY_SPRITETAG_TYPE;
