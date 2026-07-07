@@ -2,6 +2,7 @@
 #include "item_menu.h"
 #include "battle.h"
 #include "battle_controllers.h"
+#include "battle_message.h"
 #include "battle_pyramid.h"
 #include "frontier_util.h"
 #include "battle_pyramid_bag.h"
@@ -1508,11 +1509,11 @@ static const struct WindowTemplate sContextMenuWindowTemplates[] =
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
     [ITEMWIN_PP_MOVE_SELECT] = {
         .bg = 0,
-        .tilemapLeft = 19,
+        .tilemapLeft = 15,
         .tilemapTop = 11,
-        .width = 10,
+        .width = 14,
         .height = 8,
-        .paletteNum = 15,
+        .paletteNum = 5,
         .baseBlock = 475,
     },
     [ITEMWIN_LEVEL_UP_STATS] = {
@@ -1996,7 +1997,7 @@ static bool8 LoadBagMenu_Graphics(void)
         gBagMenu->graphicsLoadState++;
         break;
     case 4:
-        LoadPalette(sBagScreen_Pal, BG_PLTT_ID(0), 5 * PLTT_SIZE_4BPP);
+        LoadPalette(sBagScreen_Pal, BG_PLTT_ID(0), 6 * PLTT_SIZE_4BPP);
         gBagMenu->graphicsLoadState++;
         break;
     case 5:
@@ -6553,6 +6554,12 @@ static void BagMenu_UsePPOnMove(u8 taskId, u8 moveSlot)
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyAfterItemUse);
 }
 
+static const u8 sPPMoveSelectColors[][3] = {
+    [0] = {0, 4, 5},
+    [1] = {0, 6, 7},
+    [2] = {0, 8, 9},
+};
+
 static void BagMenu_ShowPPMoveSelectWindow(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -6567,7 +6574,24 @@ static void BagMenu_ShowPPMoveSelectWindow(u8 taskId)
         u8 fontId = GetFontIdToFit(GetMoveName(move), FONT_NORMAL, 0, 72);
         AddTextPrinterParameterized(windowId, fontId, GetMoveName(move), 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
         if (move != MOVE_NONE)
+        {
+            u8 currentPp = GetMonData(mon, MON_DATA_PP1 + i);
+            u8 maxPp = CalculatePPWithBonus(move, GetMonData(mon, MON_DATA_PP_BONUSES), i);
+            u8 ppState = GetCurrentPpToMaxPpState(currentPp, maxPp);
+            s32 x;
+
+            ConvertIntToDecimalStringN(gStringVar1, currentPp, STR_CONV_MODE_RIGHT_ALIGN, 2);
+            ConvertIntToDecimalStringN(gStringVar2, maxPp, STR_CONV_MODE_RIGHT_ALIGN, 2);
+            StringCopy(gStringVar3, gStringVar1);
+            StringAppend(gStringVar3, gText_Slash);
+            StringAppend(gStringVar3, gStringVar2);
+            x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar3, WindowWidthPx(windowId));
+            if (ppState == 3)
+                AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar3, x, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
+            else
+                AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, (i * 16) + 1, 0, 0, sPPMoveSelectColors[ppState], TEXT_SKIP_DRAW, gStringVar3);
             moveCount++;
+        }
     }
     InitMenuInUpperLeftCornerNormal(windowId, moveCount, 0);
     ScheduleBgCopyTilemapToVram(0);
