@@ -44,7 +44,7 @@ static void (*const sBXPYErrorCheckFuncs[])(void) =
     [BXPY_ERROR_CLAUSE_SPECIAL_POKEMON] = BXPY_ErrorCheck_ClauseSpecialPokemon,
 };
 
-STATIC_ASSERT((B_VAR_BXPY != 0 && B_VAR_BXPY <= VARS_END) || BXPY_RETAIN_CHANGES == FALSE, BVarSkyBattleMustBeSetForBXPYToRun);
+_Static_assert((B_VAR_BXPY != 0 && B_VAR_BXPY <= VARS_END) || BXPY_RETAIN_CHANGES == FALSE, "If BXPY_RETAIN_CHANGES is TRUE, B_VAR_SKY_BATTLE must be set");
 
 void BXPY_OverworldRun_ErrorCheck_BringSizeTooLarge(void)
 {
