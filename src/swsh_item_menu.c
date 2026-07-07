@@ -85,6 +85,7 @@
 #define TAG_FRAME_PRICE_QUANTITY 120
 #define TAG_PARTY_HELD_ITEM      121
 #define TAG_STATUS_ICON          122
+#define TAG_SWAP_PROMPT          123
 
 #define HOVER_SLOT_SPRITES_COUNT     5
 #define FRAME_MONEY_SPRITES_COUNT    3
@@ -736,7 +737,7 @@ static const u32 sBerryFlavorMark_Gfx[]         = INCGFX_U32("graphics/bag/swsh/
 static const u8 sPartySlots_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/party_slots.bin");
 static const u32 sStatusIcons_Gfx[]             = INCGFX_U32("graphics/bag/swsh/status_icons.png", ".4bpp.smol");
 #if SWSH_ITEM_MENU_ACTION_IN_BATTLE
-static const u8 sMultiBattleSwapPrompt_Tilemap[] = INCBIN_U8("graphics/bag/swsh/multi_battle_swap_prompt.bin");
+static const u32 sMultiBattleSwapPrompt_Gfx[]   = INCGFX_U32("graphics/bag/swsh/prompt_swap.png", ".4bpp.smol");
 #endif
 #endif
 
@@ -822,6 +823,50 @@ static const struct SpriteTemplate sSpriteTemplate_SwapCursor =
     .oam = &sOamData_SwapCursor,
     .anims = sAnims_SwapCursor,
 };
+
+#if SWSH_ITEM_MENU_ACTION_IN_BAG && SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static const struct OamData sOamData_MultiSwapPrompt =
+{
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .size = SPRITE_SIZE(32x16),
+    .priority = 2,
+};
+
+static const union AnimCmd sAnim_MultiSwapPrompt_0[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+static const union AnimCmd sAnim_MultiSwapPrompt_1[] =
+{
+    ANIMCMD_FRAME(8, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_MultiSwapPrompt[] =
+{
+    sAnim_MultiSwapPrompt_0,
+    sAnim_MultiSwapPrompt_1,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_MultiSwapPrompt =
+{
+    .data = sMultiBattleSwapPrompt_Gfx,
+    .size = (32 * 16 * 2) / 2,
+    .tag = TAG_SWAP_PROMPT,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_MultiSwapPrompt =
+{
+    .tileTag = TAG_SWAP_PROMPT,
+    .paletteTag = TAG_ITEM_CURSOR,
+    .oam = &sOamData_MultiSwapPrompt,
+    .anims = sAnims_MultiSwapPrompt,
+};
+#endif
 
 static const struct OamData sOamData_HoverSlot =
 {
@@ -1256,6 +1301,9 @@ static u8  sStatusIconSpriteIds[PARTY_SIZE];
 static s8  sPrevHPBarSlot;
 static bool8 sHPBarWindowMapped;
 static u8  sMultiFullPage; // 0 = player team, 1 = partner team (12v12 multi battle)
+#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+static u8  sMultiSwapPromptSpriteIds[2];
+#endif
 #endif
 
 enum {
@@ -1655,6 +1703,9 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         sCursorSpriteId = SPRITE_NONE;
         sSwapCursorSpriteId = SPRITE_NONE;
         memset(sHoverSlotSpriteIds, SPRITE_NONE, sizeof(sHoverSlotSpriteIds));
+#if SWSH_ITEM_MENU_ACTION_IN_BAG && SWSH_ITEM_MENU_ACTION_IN_BATTLE
+        memset(sMultiSwapPromptSpriteIds, SPRITE_NONE, sizeof(sMultiSwapPromptSpriteIds));
+#endif
         sScrollThumbSpriteId = SPRITE_NONE;
         memset(sPocketScrollArrowSpriteIds, SPRITE_NONE, sizeof(sPocketScrollArrowSpriteIds));
         memset(sFrameQuantityIds, SPRITE_NONE, sizeof(sFrameQuantityIds));
@@ -1983,7 +2034,10 @@ static bool8 LoadBagMenu_Graphics(void)
             BagMenu_DrawPartySlots();
 #if SWSH_ITEM_MENU_ACTION_IN_BATTLE
             if (BagMenu_IsMultiFull())
+            {
+                LoadCompressedSpriteSheet(&sSpriteSheet_MultiSwapPrompt);
                 ShowMultiBattleSwapPrompt(TRUE);
+            }
 #endif
         }
 #endif
@@ -8336,18 +8390,18 @@ static u8 BagMenu_StepSlot(u8 cur, s8 dir, u8 limit)
 
 static void ShowMultiBattleSwapPrompt(bool8 show)
 {
-    u16 *buf = (u16 *)gBagMenu->mainTilemapBuffer;
-    u8 row, col;
+    u8 i;
 
-    for (row = 0; row < 2; row++)
+    if (sMultiSwapPromptSpriteIds[0] == SPRITE_NONE)
     {
-        for (col = 0; col < 5; col++)
+        for (i = 0; i < 2; i++)
         {
-            u32 idx = row * 32 + (7 + col);
-            buf[idx] = show ? sMultiBattleSwapPrompt_Tilemap[row * 5 + col] : 4;
+            sMultiSwapPromptSpriteIds[i] = CreateSprite(&sSpriteTemplate_MultiSwapPrompt, 56 + i * 32, 8, 0);
+            StartSpriteAnim(&gSprites[sMultiSwapPromptSpriteIds[i]], i);
         }
     }
-    ScheduleBgCopyTilemapToVram(2);
+    for (i = 0; i < 2; i++)
+        gSprites[sMultiSwapPromptSpriteIds[i]].invisible = !show;
 }
 
 static void BagMenu_MoveMultiFullSlotSprites(u8 slot, s16 x2)
@@ -8390,6 +8444,7 @@ static void BagMenu_MultiFullFlipPage(void)
     DecompressDataWithHeaderWram(sBagScreen_BG2TileMap, gBagMenu->mainTilemapBuffer);
     BagMenu_DrawPartySlots();
     ShowMultiBattleSwapPrompt(TRUE);
+    ScheduleBgCopyTilemapToVram(2);
 
     for (i = 0; i < PARTY_SIZE; i++)
         BagMenu_CreatePanelMonIcon(i, -8 * MULTI_FULL_SWAP_TILES);
