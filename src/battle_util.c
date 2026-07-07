@@ -11101,7 +11101,7 @@ bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
 }
 
-u32 GetBattleWeatherFromOverworldWeather(u32 owWeather)
+enum BattleWeather GetBattleWeatherFromOverworldWeather(u32 owWeather)
 {
     switch (owWeather)
     {
@@ -11128,29 +11128,29 @@ u32 GetBattleWeatherFromOverworldWeather(u32 owWeather)
     return B_WEATHER_NONE;
 }
 
-u32 GetBattleTerrainFromOverworldWeather(u32 owWeather)
+enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather)
 {
     switch (owWeather)
     {
-    case WEATHER_NONE:                  return STATUS_FIELD_NONE;
-    case WEATHER_SUNNY_CLOUDS:          return STATUS_FIELD_NONE;
-    case WEATHER_SUNNY:                 return STATUS_FIELD_NONE;
-    case WEATHER_RAIN:                  return STATUS_FIELD_NONE;
-    case WEATHER_SNOW:                  return STATUS_FIELD_NONE;
-    case WEATHER_RAIN_THUNDERSTORM:     return B_THUNDERSTORM_TERRAIN ? STATUS_FIELD_ELECTRIC_TERRAIN : STATUS_FIELD_NONE;
-    case WEATHER_FOG_HORIZONTAL:        return B_OVERWORLD_FOG >= GEN_8 ? STATUS_FIELD_MISTY_TERRAIN : STATUS_FIELD_NONE;
-    case WEATHER_VOLCANIC_ASH:          return STATUS_FIELD_NONE;
-    case WEATHER_SANDSTORM:             return STATUS_FIELD_NONE;
-    case WEATHER_FOG_DIAGONAL:          return B_OVERWORLD_FOG >= GEN_8 ? STATUS_FIELD_MISTY_TERRAIN : STATUS_FIELD_NONE;
-    case WEATHER_UNDERWATER:            return STATUS_FIELD_NONE;
-    case WEATHER_SHADE:                 return STATUS_FIELD_NONE;
-    case WEATHER_DROUGHT:               return STATUS_FIELD_NONE;
-    case WEATHER_DOWNPOUR:              return STATUS_FIELD_NONE;
-    case WEATHER_UNDERWATER_BUBBLES:    return STATUS_FIELD_NONE;
-    case WEATHER_ABNORMAL:              return STATUS_FIELD_NONE;
-    case WEATHER_ROUTE119_CYCLE:        return STATUS_FIELD_NONE;
-    case WEATHER_ROUTE123_CYCLE:        return STATUS_FIELD_NONE;
-    case WEATHER_FOG:                   return STATUS_FIELD_NONE;
+    case WEATHER_NONE:                  return B_TERRAIN_NONE;
+    case WEATHER_SUNNY_CLOUDS:          return B_TERRAIN_NONE;
+    case WEATHER_SUNNY:                 return B_TERRAIN_NONE;
+    case WEATHER_RAIN:                  return B_TERRAIN_NONE;
+    case WEATHER_SNOW:                  return B_TERRAIN_NONE;
+    case WEATHER_RAIN_THUNDERSTORM:     return B_THUNDERSTORM_TERRAIN ? B_TERRAIN_ELECTRIC : B_TERRAIN_NONE;
+    case WEATHER_FOG_HORIZONTAL:        return B_OVERWORLD_FOG >= GEN_8 ? B_TERRAIN_MISTY : B_TERRAIN_NONE;
+    case WEATHER_VOLCANIC_ASH:          return B_TERRAIN_NONE;
+    case WEATHER_SANDSTORM:             return B_TERRAIN_NONE;
+    case WEATHER_FOG_DIAGONAL:          return B_OVERWORLD_FOG >= GEN_8 ? B_TERRAIN_MISTY : B_TERRAIN_NONE;
+    case WEATHER_UNDERWATER:            return B_TERRAIN_NONE;
+    case WEATHER_SHADE:                 return B_TERRAIN_NONE;
+    case WEATHER_DROUGHT:               return B_TERRAIN_NONE;
+    case WEATHER_DOWNPOUR:              return B_TERRAIN_NONE;
+    case WEATHER_UNDERWATER_BUBBLES:    return B_TERRAIN_NONE;
+    case WEATHER_ABNORMAL:              return B_TERRAIN_NONE;
+    case WEATHER_ROUTE119_CYCLE:        return B_TERRAIN_NONE;
+    case WEATHER_ROUTE123_CYCLE:        return B_TERRAIN_NONE;
+    case WEATHER_FOG:                   return B_TERRAIN_NONE;
     }
     return B_WEATHER_NONE;
 }
