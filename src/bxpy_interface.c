@@ -85,7 +85,7 @@ static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon 
 static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
-static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_PrintGender(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex, u32 species);
 static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_DisplayEnemyParty(void);
@@ -119,9 +119,9 @@ static void BXPY_DrawPage(void);
 static void BXPY_RemoveSprite(enum BXPYSpriteIds first, enum BXPYSpriteIds last);
 static void BXPY_RemovePlayerMonSprites(void);
 static void BXPY_RemovePlayerHPSprites(void);
-static void BXPY_RemovePlayerSexSprites(void);
+static void BXPY_RemovePlayerGenderSprites(void);
 static void BXPY_RemoveEnemyMonSprites(void);
-static void BXPY_RemoveEnemySexSprites(void);
+static void BXPY_RemoveEnemyGenderSprites(void);
 static void BXPY_RemoveAllSprites(void);
 static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex);
 static void SpriteCB_BXPYType(struct Sprite *sprite);
@@ -470,12 +470,12 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
             .tag = BXPY_PALTAG_SPRITE,
         },
     },
-    [BXPY_SPRITEID_PLAYER_SEX_0] =
+    [BXPY_SPRITEID_PLAYER_GENDER_0] =
     {
         {
-            .data = (const u16[])INCBIN_U16("graphics/bxpy/sex.4bpp"),
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/gender.4bpp"),
             .size = TILE_OFFSET_4BPP(12),
-            .tag = BXPY_SPRITETAG_SEX,
+            .tag = BXPY_SPRITETAG_GENDER,
         },
     },
     [BXPY_SPRITEID_PLAYER_SELECTED_0] =
@@ -1167,7 +1167,7 @@ static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *
 
 static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon *mon, u32 partyMonIndex, enum BattleSide side, u32 species)
 {
-    BXPY_PrintSex(windowId, mon, side, partyMonIndex);
+    BXPY_PrintGender(windowId, mon, side, partyMonIndex);
     BXPY_PrintTypes(windowId, mon, side, partyMonIndex);
     BXPY_PrintMonIcon(windowId, mon, side, partyMonIndex,species);
     BXPY_PrintHP(windowId, mon, side, partyMonIndex);
@@ -1243,41 +1243,41 @@ static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
 }
 
-static const union AnimCmd sAnim_MonSexFemale[] =
+static const union AnimCmd sAnim_MonGenderFemale[] =
 {
-    ANIMCMD_FRAME(BXPY_SEX_FRAME_FEMALE,4),
+    ANIMCMD_FRAME(BXPY_GENDER_FRAME_FEMALE,4),
     ANIMCMD_END,
 };
 
-static const union AnimCmd sAnim_MonSexMale[] =
+static const union AnimCmd sAnim_MonGenderMale[] =
 {
-    ANIMCMD_FRAME(BXPY_SEX_FRAME_MALE,4),
+    ANIMCMD_FRAME(BXPY_GENDER_FRAME_MALE,4),
     ANIMCMD_END,
 };
 
-static const union AnimCmd sAnim_MonSexHidden[] =
+static const union AnimCmd sAnim_MonGenderHidden[] =
 {
-    ANIMCMD_FRAME(BXPY_SEX_FRAME_HIDDEN,4),
+    ANIMCMD_FRAME(BXPY_GENDER_FRAME_HIDDEN,4),
     ANIMCMD_END,
 };
 
-static const union AnimCmd * const sSpriteAnimTable_MonSexIcon[] =
+static const union AnimCmd * const sSpriteAnimTable_MonGenderIcon[] =
 {
-    sAnim_MonSexFemale,
-    sAnim_MonSexMale,
-    sAnim_MonSexHidden,
+    sAnim_MonGenderFemale,
+    sAnim_MonGenderMale,
+    sAnim_MonGenderHidden,
 };
 
-static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+static void BXPY_PrintGender(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
 {
-    u32 sex = GetMonGender(mon);
+    u32 gender = GetMonGender(mon);
 
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
-    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SEX;
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_GENDER;
     TempSpriteTemplate.callback = SpriteCallbackDummy;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
-    TempSpriteTemplate.anims = sSpriteAnimTable_MonSexIcon;
+    TempSpriteTemplate.anims = sSpriteAnimTable_MonGenderIcon;
 
     u32 x = (side == B_SIDE_PLAYER) ? 103 : 220;
     u32 y = (side == B_SIDE_PLAYER) ?  19 + (partyMonIndex * 24) : 29 + (partyMonIndex * 22);
@@ -1290,16 +1290,16 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
 
     if (BXPY_TeamPreview_ShouldHideEnemyGender(side))
     {
-        animState = BXPY_SEX_HIDDEN;
+        animState = BXPY_GENDER_HIDDEN;
     }
     else
     {
-        animState = (sex == MON_FEMALE) ? BXPY_SEX_FEMALE : BXPY_SEX_MALE;
-        gSprites[spriteId].invisible = (sex == MON_GENDERLESS);
+        animState = (gender == MON_FEMALE) ? BXPY_GENDER_FEMALE : BXPY_GENDER_MALE;
+        gSprites[spriteId].invisible = (gender == MON_GENDERLESS);
     }
 
     StartSpriteAnimIfDifferent(&gSprites[spriteId],animState);
-    u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_SEX_0 : BXPY_SPRITEID_ENEMY_SEX_0;
+    u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_GENDER_0 : BXPY_SPRITEID_ENEMY_GENDER_0;
     BXPY_SetSpriteId(spriteIdStart + partyMonIndex,spriteId);
 }
 
@@ -1961,26 +1961,26 @@ static void BXPY_RemovePlayerHPSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_HP_0,BXPY_SPRITEID_PLAYER_HP_5);
 }
-static void BXPY_RemovePlayerSexSprites(void)
+static void BXPY_RemovePlayerGenderSprites(void)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_SEX_0,BXPY_SPRITEID_PLAYER_SEX_5);
+    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_GENDER_0,BXPY_SPRITEID_PLAYER_GENDER_5);
 }
 static void BXPY_RemoveEnemyMonSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_MON_0,BXPY_SPRITEID_ENEMY_MON_5);
 }
-static void BXPY_RemoveEnemySexSprites(void)
+static void BXPY_RemoveEnemyGenderSprites(void)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_SEX_0,BXPY_SPRITEID_ENEMY_SEX_5);
+    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_GENDER_0,BXPY_SPRITEID_ENEMY_GENDER_5);
 }
 
 static void BXPY_RemoveAllSprites(void)
 {
     BXPY_RemovePlayerMonSprites();
     BXPY_RemovePlayerHPSprites();
-    BXPY_RemovePlayerSexSprites();
+    BXPY_RemovePlayerGenderSprites();
     BXPY_RemoveEnemyMonSprites();
-    BXPY_RemoveEnemySexSprites();
+    BXPY_RemoveEnemyGenderSprites();
 }
 
 static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex)
