@@ -168,15 +168,18 @@ int MyFunction(int bar)
 }
 ```
 
-Braces are required around any statement on a new line, with exceptions the following exceptions.
+A chain of `if-else` statements in which any condition or block is more
+than one line of code should use braces. If all blocks *and* conditions
+are single-line, then no braces are necessary.
 
 ```c
-if (foo) // incorrect
+if (foo) // correct
     return 1;
 
-if (foo)
+if (foo
+ && bar) // correct
 {
-    return 1; // correct
+    return 1;
 }
 
 if (foo) // correct
@@ -197,6 +200,11 @@ else if (foo
       && bar)
 {
     return 0;
+}
+
+if (foo) // incorrect
+{
+    return 1;
 }
 
 if (foo
@@ -216,14 +224,12 @@ if (foo) // incorrect
 else if (foo
       && bar)
     return 0;
+```
 
-while (foo) // incorrect
-    MyFunction();
+The exception is `assertf` which should always use braces if it has a recovery path, even for one line of conditions and one line of code.
 
-while (foo) // correct
-{
-    MyFunction();
-}
+```c
+assertf(true); // correct
 
 assertf(true) // correct
 {
@@ -233,22 +239,6 @@ assertf(true) // correct
 assertf(true) // incorrect
     return NULL;
 ```
-
-The exception are small control flow statements
-
-```c
-if (foo) 
-    break; // incorrect
-
-if (foo) break; // correct
-
-if (foo) continue; // correct
-
-if (foo) return; // correct
-
-assertf(true); // correct
-```
-
 
 ### Control Structures
 
