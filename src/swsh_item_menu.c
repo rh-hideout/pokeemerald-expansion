@@ -2214,22 +2214,32 @@ static void SpriteCB_BagScrollThumb(struct Sprite *sprite)
     sprite->y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sScrollThumbAnimId]);
 }
 
-static void RefreshItemListColors(struct ListMenu *list)
+static void RefreshItemListRow(struct ListMenu *list, u8 row)
 {
     u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + list->template.itemVerticalPadding;
     u8 windowWidth = sDefaultBagWindows[WIN_ITEM_LIST].width * 8;
+    s32 absIndex = (s32)(list->scrollOffset + row);
+    u8 rowY;
+
+    if (absIndex >= (s32)gBagMenu->numItemStacks[gBagPosition.pocket])
+        return;
+
+    rowY = list->template.upText_Y + row * rowHeight;
+    FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, rowY, windowWidth, rowHeight);
+    BagMenu_ItemPrintCallback(WIN_ITEM_LIST, (u32)absIndex, rowY);
+    BagMenu_Print(WIN_ITEM_LIST, FONT_NARROW, gMultiuseListMenuTemplate.items[absIndex].name,
+                  sItemListMenu.item_X, rowY, 0, 0, TEXT_SKIP_DRAW,
+                  absIndex == sHoveredItemIndex ? COLORID_HOVER_NAME : COLORID_NORMAL);
+}
+
+static void RefreshItemListColors(struct ListMenu *list)
+{
     u8 row;
     for (row = 0; row < list->template.maxShowed; row++)
     {
-        s32 absIndex = (s32)(list->scrollOffset + row);
-        if (absIndex >= (s32)gBagMenu->numItemStacks[gBagPosition.pocket])
+        if ((s32)(list->scrollOffset + row) >= (s32)gBagMenu->numItemStacks[gBagPosition.pocket])
             break;
-        u8 rowY = list->template.upText_Y + row * rowHeight;
-        FillWindowPixelRect(WIN_ITEM_LIST, PIXEL_FILL(0), 0, rowY, windowWidth, rowHeight);
-        BagMenu_ItemPrintCallback(WIN_ITEM_LIST, (u32)absIndex, rowY);
-        BagMenu_Print(WIN_ITEM_LIST, FONT_NARROW, gMultiuseListMenuTemplate.items[absIndex].name,
-                      sItemListMenu.item_X, rowY, 0, 0, TEXT_SKIP_DRAW,
-                      absIndex == sHoveredItemIndex ? COLORID_HOVER_NAME : COLORID_NORMAL);
+        RefreshItemListRow(list, row);
     }
     CopyWindowToVram(WIN_ITEM_LIST, COPYWIN_GFX);
 }
@@ -2273,8 +2283,24 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         }
     }
 
-    sHoveredItemIndex = itemIndex;
-    RefreshItemListColors(list);
+    {
+        s32 oldHovered = sHoveredItemIndex;
+        sHoveredItemIndex = itemIndex;
+        if (!onInit
+         && oldHovered >= 0 && itemIndex >= 0
+         && (oldHovered - itemIndex == 1 || itemIndex - oldHovered == 1)
+         && gBagMenu->toSwapPos == NOT_SWAPPING)
+        {
+            s32 oldRow = oldHovered - (s32)list->scrollOffset;
+            if (oldRow >= 0 && oldRow < list->template.maxShowed)
+                RefreshItemListRow(list, oldRow);
+            RefreshItemListRow(list, list->selectedRow);
+        }
+        else
+        {
+            RefreshItemListColors(list);
+        }
+    }
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
     if (gBagPosition.pocket == POCKET_TM_HM)
         BagMenu_UpdateTMHMPartyBlend(itemIndex);
