@@ -11101,7 +11101,7 @@ bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
 }
 
-enum BattleWeather GetBattleWeatherFromOverworldWeather(u32 owWeather)
+u32 GetWeatherFromOverworldWeather(u32 owWeather)
 {
     switch (owWeather)
     {
@@ -11152,5 +11152,5 @@ enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather)
     case WEATHER_ROUTE123_CYCLE:        return B_TERRAIN_NONE;
     case WEATHER_FOG:                   return B_TERRAIN_NONE;
     }
-    return B_WEATHER_NONE;
+    return B_TERRAIN_NONE;
 }
