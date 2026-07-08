@@ -207,7 +207,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(SELECT_BUTTON) || JOY_REPEAT(SELECT_BUTTON))
     {
-        if (!BXPY_IsMultiBattle())
+        if (!BXPY_BattleGreaterThanTwoTrainers())
         {
             PlaySE(SE_BXPY_ERROR);
                 return;
@@ -1588,7 +1588,7 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
     bool32 onEnemy = BXPY_IsCursorOnEnemy();
     bool32 isOTSOn = BXPY_IsOpenTeamSheetOn();
     bool32 isPartnerPage = BXPY_IsOnPartnerPage();
-    bool32 isMultiBattle = BXPY_IsMultiBattle();
+    bool32 isMultiBattle = BXPY_BattleGreaterThanTwoTrainers();
     bool32 hasSelectedEnough = BXPY_HasSelectedEnough();
 
     StringCopy(gStringVar4, COMPOUND_STRING(""));
@@ -1661,12 +1661,12 @@ static bool8 BXPY_IsCursorOnPartner(void)
     return (BXPY_IsCursorOnEnemy() == FALSE);
 }
 
-bool8 BXPY_IsMultiBattle(void)
+bool8 BXPY_BattleGreaterThanTwoTrainers(void)
 {
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+    if ((TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE) && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
         return TRUE;
 
-    return (gPartnerTrainerId != TRAINER_NONE);
+    return ((gPartnerTrainerId != TRAINER_NONE) && (gPartnerTrainerId != 0xFFFF));
 }
 
 static void BXPY_ResetAllSpriteIds(void)

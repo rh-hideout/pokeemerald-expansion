@@ -332,7 +332,7 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
     ZeroEnemyPartyMons();
     CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA]);
 
-    if (BXPY_IsMultiBattle())
+    if (BXPY_BattleGreaterThanTwoTrainers())
         CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB]);
 }
 

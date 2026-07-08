@@ -54,7 +54,7 @@ void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSiz
 void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum BattleTrainer trainer);
 void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime);
 void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime);
-bool8 BXPY_IsMultiBattle(void);
+bool8 BXPY_BattleGreaterThanTwoTrainers(void);
 
 struct BXPYState
 {
