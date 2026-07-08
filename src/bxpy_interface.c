@@ -842,7 +842,6 @@ static void FreeSpritePalettesResetSpriteData(void)
     FreeSpriteTileRanges();
     FreeAllSpritePalettes();
     ClearDma3Requests();
-
 }
 
 static void BXPY_FreeResources(void)
@@ -1956,18 +1955,22 @@ static void BXPY_RemovePlayerMonSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_MON_0,BXPY_SPRITEID_PLAYER_MON_5);
 }
+
 static void BXPY_RemovePlayerHPSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_HP_0,BXPY_SPRITEID_PLAYER_HP_5);
 }
+
 static void BXPY_RemovePlayerGenderSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_GENDER_0,BXPY_SPRITEID_PLAYER_GENDER_5);
 }
+
 static void BXPY_RemoveEnemyMonSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_MON_0,BXPY_SPRITEID_ENEMY_MON_5);
 }
+
 static void BXPY_RemoveEnemyGenderSprites(void)
 {
     BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_GENDER_0,BXPY_SPRITEID_ENEMY_GENDER_5);
@@ -2166,7 +2169,6 @@ static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum
 
     for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
     {
-
         u32 spriteIndex = BXPY_SPRITEID_ENEMY_TYPE_0_MON_0 + typeIndex + (10 * partyMonIndex);
         if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
             continue;

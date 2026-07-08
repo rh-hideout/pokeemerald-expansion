@@ -422,16 +422,17 @@ static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType)
     bool32 hasSecondEnemy = (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
     bool32 hasPartner = (gPartnerTrainerId != PARTNER_NONE);
 
-    if (hasSecondEnemy && hasPartner)
-        return (BATTLE_TYPE_MULTI | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER); // from battle_setup.c
-    else if (hasSecondEnemy && !hasPartner)
-        return (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER); // from battle_setup.c
-    else if (!hasSecondEnemy && hasPartner)
-        return (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER); // from battle_setup.c
-    else if (battleType == BXPY_BATTLE_SINGLE)
-        return BATTLE_TYPE_TRAINER;
-    else
-        return (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER);
+    u32 flags = BATTLE_TYPE_TRAINER;
+    if (battleType == BXPY_BATTLE_SINGLE)
+        return flags;
+
+    flags |= BATTLE_TYPE_DOUBLE;
+    if (hasSecondEnemy)
+        flags |= BATTLE_TYPE_TWO_OPPONENTS;
+    if (hasPartner)
+        flags |= (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER);
+
+    return flags;
 }
 
 bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode)

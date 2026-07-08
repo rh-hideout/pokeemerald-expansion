@@ -4634,7 +4634,7 @@ static u8 CreateMonSprite(struct Pokemon *unused)
     gSprites[spriteId].callback = SpriteCB_Pokemon;
     gSprites[spriteId].oam.priority = 0;
 
-    if(!IsMonSpriteNotFlipped(BXPY_SummaryScreen_TransformSpeciesId(sMonSummaryScreen->mode,summary->species2)))
+    if (!IsMonSpriteNotFlipped(BXPY_SummaryScreen_TransformSpeciesId(sMonSummaryScreen->mode,summary->species2)))
         gSprites[spriteId].hFlip = TRUE;
     else
         gSprites[spriteId].hFlip = FALSE;
