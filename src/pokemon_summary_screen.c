@@ -3886,18 +3886,30 @@ static void BufferStat(u8 *dst, enum Stat statIndex, u32 stat, u32 strId, u32 n)
 
     if (!P_SUMMARY_SCREEN_IV_EV_VALUES
         && (BXPY_ShouldHideEnemyIndividualValues(sMonSummaryScreen->mode, sMonSummaryScreen->skillsPageMode)))
+    {
         StringAppend(dst, COMPOUND_STRING("?"));
+    }
     else if (!P_SUMMARY_SCREEN_IV_EV_VALUES
         && sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS)
+    {
         StringAppend(dst, GetLetterGrade(stat));
+    }
     else if (BXPY_ShouldHideEnemyEffortValues(sMonSummaryScreen->mode, sMonSummaryScreen->skillsPageMode))
+    {
         StringAppend(dst, COMPOUND_STRING("?"));
+    }
     else if (BXPY_ShouldHideEnemyIndividualValues(sMonSummaryScreen->mode, sMonSummaryScreen->skillsPageMode))
+    {
         StringAppend(dst, COMPOUND_STRING("?"));
+    }
     else if (BXPY_SummaryScreen_ShouldHideStats(sMonSummaryScreen->mode, sMonSummaryScreen->skillsPageMode))
+    {
         StringAppend(dst, COMPOUND_STRING("???"));
+    }
     else
+    {
         ConvertIntToDecimalStringN(txtPtr, stat, STR_CONV_MODE_RIGHT_ALIGN, n);
+    }
 
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(strId, dst);
 }
