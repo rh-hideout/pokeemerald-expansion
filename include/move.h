@@ -179,10 +179,8 @@ struct MoveInfo
     union {
         struct {
             u16 stringId;
-            union {
-                u16 status;
-                u16 weather;
-            };
+            enum SemiInvulnerableState state:8;
+            enum BattleWeather weather:8;
         } twoTurnAttack;
         struct {
             enum Species species;
@@ -234,8 +232,8 @@ extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
 
-// Does not pass right now. Will be fixed later
-// _Static_assert(sizeof(gMovesInfo[0].argument) == 4, "sizeof_MoveInfo_argument_not_4");
+// The argument field in MovesInfo is on purpose limited to 4 bytes
+_Static_assert(sizeof(gMovesInfo[0].argument) == 4, "MovesInfo argument does not fit into 4 bytes");
 
 static inline enum Move SanitizeMoveId(enum Move moveId)
 {
@@ -603,12 +601,12 @@ static inline u32 GetMoveTwoTurnAttackStringId(enum Move moveId)
     return gMovesInfo[moveId].argument.twoTurnAttack.stringId;
 }
 
-static inline u32 GetMoveTwoTurnAttackStatus(enum Move moveId)
+static inline u32 GetTwoTurnMoveSemiInvulnerability(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
     assertf(effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP, "not a two-turn move with status: %S", gMovesInfo[moveId].name);
-    return gMovesInfo[moveId].argument.twoTurnAttack.status;
+    return gMovesInfo[moveId].argument.twoTurnAttack.state;
 }
 
 static inline u32 GetMoveTwoTurnAttackWeather(enum Move moveId)

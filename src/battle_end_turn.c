@@ -102,7 +102,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
     bool32 effect = FALSE;
 
     enum Ability ability = GetBattlerAbility(battler);
-    u32 currBattleWeather = GetCurrentBattleWeather();
+    u32 currBattleWeather = GetCurrentBattleWeather(gBattleWeather);
 
     if (currBattleWeather == 0xFF)
     {
