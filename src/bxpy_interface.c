@@ -210,7 +210,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
         if (!BXPY_BattleGreaterThanTwoTrainers())
         {
             PlaySE(SE_BXPY_ERROR);
-                return;
+            return;
         }
         PlaySE(SE_BXPY_SWITCH_PAGE);
         BXPY_TogglePage();
