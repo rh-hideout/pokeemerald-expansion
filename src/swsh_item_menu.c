@@ -38,6 +38,7 @@
 #include "pokemon_summary_screen.h"
 #include "scanline_effect.h"
 #include "script.h"
+#include "field_weather.h"
 #include "shop.h"
 #include "sound.h"
 #include "sprite.h"
@@ -248,6 +249,8 @@ static void PrintContestDescription(s32);
 static bool8 IsWallysBag(void);
 static void Task_WallyTutorialBagMenu(u8);
 static void Task_BagMenu_HandleInput(u8);
+static enum Item BagList_GetItemId(u8 pocketId, u32 pos);
+static struct ItemSlot BagList_GetSlot(u8 pocketId, u32 pos);
 static void GetItemNameFromPocket(u8 *dest, enum Item itemId);
 static void PrintItemDescription(int);
 static void UpdateEmptyPocket(void);
@@ -652,6 +655,12 @@ static const u8 sContextMenuItems_Give[] = {
 static const u8 sContextMenuItems_Cancel[] = {
     ACTION_CANCEL
 };
+
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+static const u8 sContextMenuItems_PyramidToss[] = {
+    ACTION_TOSS,        ACTION_CANCEL
+};
+#endif
 
 #if SWSH_ITEM_MENU_CHECK_BERRY_TAG
 static const u8 sContextMenuItems_BerryBlenderCrush[] = {
@@ -1685,6 +1694,9 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
     else
     {
         gBagMenu->hideCloseBagText = TRUE;
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+        gBagPosition.isPyramid = FALSE;
+#endif
         if (location != ITEMMENULOCATION_LAST)
             gBagPosition.location = location;
         if (exitCallback)
@@ -1883,7 +1895,12 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 13:
-        PrintPocketName(sPocketNamesStringsTable[gBagPosition.pocket]);
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+        if (gBagPosition.isPyramid)
+            PrintPocketName(COMPOUND_STRING("Pyramid"));
+        else
+#endif
+            PrintPocketName(sPocketNamesStringsTable[gBagPosition.pocket]);
         gMain.state++;
         break;
     case 14:
@@ -1969,7 +1986,7 @@ static bool8 SetupBagMenu(void)
         if (gBagPosition.location == ITEMMENULOCATION_SHOP)
         {
             SetupSellWindows();
-            UpdateSellPrice(GetBagItemId(gBagPosition.pocket,
+            UpdateSellPrice(BagList_GetItemId(gBagPosition.pocket,
                 gBagPosition.cursorPosition[gBagPosition.pocket]));
         }
         gMain.state++;
@@ -2114,6 +2131,155 @@ static void AllocateBagItemListBuffers(void)
     sListBuffer2 = Alloc(sizeof(*sListBuffer2));
 }
 
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+
+static enum Item BagList_GetItemId(u8 pocketId, u32 pos)
+{
+    if (gBagPosition.isPyramid)
+        return gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode][pos];
+    return GetBagItemId(pocketId, pos);
+}
+
+static struct ItemSlot BagList_GetSlot(u8 pocketId, u32 pos)
+{
+    if (gBagPosition.isPyramid)
+    {
+        return (struct ItemSlot){
+            .itemId = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode][pos],
+            .quantity = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode][pos],
+        };
+    }
+    return GetBagItemIdAndQuantity(pocketId, pos);
+}
+
+static void BagList_CompactPyramid(void)
+{
+    u16 *itemIds = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+#if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
+    u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#else
+    u8 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#endif
+    u8 i, j;
+
+    for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT; i++)
+    {
+        if (itemIds[i] == ITEM_NONE || quantities[i] == 0)
+        {
+            itemIds[i] = ITEM_NONE;
+            quantities[i] = 0;
+        }
+    }
+    for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT - 1; i++)
+    {
+        for (j = i + 1; j < PYRAMID_BAG_ITEMS_COUNT; j++)
+        {
+            if (itemIds[i] == ITEM_NONE || quantities[i] == 0)
+            {
+                u16 tmpId = itemIds[i];
+                itemIds[i] = itemIds[j];
+                itemIds[j] = tmpId;
+                {
+                    u16 tmpQ = quantities[i];
+                    quantities[i] = quantities[j];
+                    quantities[j] = tmpQ;
+                }
+            }
+        }
+    }
+}
+
+static struct ItemSlot sPyramidScratch[PYRAMID_BAG_ITEMS_COUNT];
+static struct BagPocket sPyramidScratchPocket;
+
+static struct BagPocket *BagList_PyramidScratchPocket(void)
+{
+    u16 *ids = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+#if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
+    u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#else
+    u8 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#endif
+    u32 i;
+
+    for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT; i++)
+    {
+        sPyramidScratch[i].itemId = ids[i];
+        sPyramidScratch[i].quantity = quantities[i];
+    }
+    sPyramidScratchPocket.itemSlots = sPyramidScratch;
+    sPyramidScratchPocket.capacity = PYRAMID_BAG_ITEMS_COUNT;
+    sPyramidScratchPocket.id = POCKET_DUMMY;
+    return &sPyramidScratchPocket;
+}
+
+static void BagList_PyramidScratchWriteBack(void)
+{
+    u16 *ids = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
+#if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
+    u16 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#else
+    u8 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
+#endif
+    u32 i;
+
+    for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT; i++)
+    {
+        ids[i] = sPyramidScratch[i].itemId;
+        quantities[i] = sPyramidScratch[i].quantity;
+    }
+}
+
+static void BagList_SortPyramid(enum BagSortOptions type)
+{
+    SortItemsInBag(BagList_PyramidScratchPocket(), type);
+    BagList_PyramidScratchWriteBack();
+}
+
+static void BagList_MovePyramidSlot(u32 from, u32 to)
+{
+    struct BagPocket *pocket = BagList_PyramidScratchPocket();
+
+    if (from != to)
+    {
+        s8 shift = (to > from) ? 1 : -1;
+        struct ItemSlot fromSlot;
+        u32 i;
+
+        if (to > from)
+            to--;
+        fromSlot = BagPocket_GetSlotData(pocket, from);
+        for (i = from; i != to; i += shift)
+            BagPocket_SetSlotData(pocket, i, BagPocket_GetSlotData(pocket, i + shift));
+        BagPocket_SetSlotData(pocket, to, fromSlot);
+    }
+    BagList_PyramidScratchWriteBack();
+}
+
+static void BagList_MoveSlot(u8 pocketId, u32 from, u32 to)
+{
+    if (gBagPosition.isPyramid)
+        BagList_MovePyramidSlot(from, to);
+    else
+        MoveItemSlotInPocket(pocketId, from, to);
+}
+#else
+static enum Item BagList_GetItemId(u8 pocketId, u32 pos)
+{
+    return GetBagItemId(pocketId, pos);
+}
+
+static struct ItemSlot BagList_GetSlot(u8 pocketId, u32 pos)
+{
+    return GetBagItemIdAndQuantity(pocketId, pos);
+}
+
+static void BagList_MoveSlot(u8 pocketId, u32 from, u32 to)
+{
+    MoveItemSlotInPocket(pocketId, from, to);
+}
+#endif
+
 static void LoadBagItemListBuffers(u8 pocketId)
 {
     u16 i;
@@ -2123,7 +2289,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId] - 1; i++)
         {
-            GetItemNameFromPocket(sListBuffer2->name[i], GetBagItemId(pocketId, i));
+            GetItemNameFromPocket(sListBuffer2->name[i], BagList_GetItemId(pocketId, i));
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -2137,7 +2303,7 @@ static void LoadBagItemListBuffers(u8 pocketId)
     {
         for (i = 0; i < gBagMenu->numItemStacks[pocketId]; i++)
         {
-            GetItemNameFromPocket(sListBuffer2->name[i], GetBagItemId(pocketId, i));
+            GetItemNameFromPocket(sListBuffer2->name[i], BagList_GetItemId(pocketId, i));
             subBuffer = sListBuffer1->subBuffers;
             subBuffer[i].name = sListBuffer2->name[i];
             subBuffer[i].id = i;
@@ -2337,6 +2503,14 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         }
     }
 
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    if (gBagPosition.isPyramid && itemIndex != LIST_CANCEL)
+    {
+        gPyramidBagMenuState.scrollPosition = 0;
+        gPyramidBagMenuState.cursorPosition = itemIndex;
+    }
+#endif
+
     {
         s32 oldHovered = sHoveredItemIndex;
         sHoveredItemIndex = itemIndex;
@@ -2369,7 +2543,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         u8 iconSpriteId;
         RemoveBagItemIconSprite(iconSlot ^ 1);
         if (itemIndex != LIST_CANCEL)
-            AddBagItemIconSprite(GetBagItemId(gBagPosition.pocket, itemIndex), iconSlot);
+            AddBagItemIconSprite(BagList_GetItemId(gBagPosition.pocket, itemIndex), iconSlot);
         else
             AddBagItemIconSprite(ITEM_LIST_END, iconSlot);
         gBagMenu->itemIconSlot ^= 1;
@@ -2412,7 +2586,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
      && gBagMenu->windowIds[ITEMWIN_SELL_PRICE] != WINDOW_NONE)
     {
         u16 itemId = (itemIndex != LIST_CANCEL)
-            ? GetBagItemId(gBagPosition.pocket, itemIndex) : ITEM_NONE;
+            ? BagList_GetItemId(gBagPosition.pocket, itemIndex) : ITEM_NONE;
         UpdateSellPrice(itemId);
     }
 }
@@ -2423,7 +2597,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
     {
         s32 offset;
 
-        struct ItemSlot itemSlot = GetBagItemIdAndQuantity(gBagPosition.pocket, itemIndex);
+        struct ItemSlot itemSlot = BagList_GetSlot(gBagPosition.pocket, itemIndex);
 
         // Draw HM icon
         if (gBagPosition.pocket == POCKET_TM_HM && GetItemTMHMIndex(itemSlot.itemId) > NUM_TECHNICAL_MACHINES)
@@ -2462,7 +2636,7 @@ static void PrintItemDescription(int itemIndex)
 
     if (itemIndex != LIST_CANCEL)
     {
-        str = GetItemDescription(GetBagItemId(gBagPosition.pocket, itemIndex));
+        str = GetItemDescription(BagList_GetItemId(gBagPosition.pocket, itemIndex));
     }
     else
     {
@@ -2531,6 +2705,11 @@ static void CreatePocketScrollArrowPair(void)
     static const u8 sArrowX[2] = {104, 223};
     struct ComfyAnimEasingConfig animConfig;
     u8 i;
+
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    if (gBagPosition.isPyramid)
+        return; // no pocket-switch arrows in pyramid bag
+#endif
 
     if (sPocketScrollArrowSpriteIds[0] != SPRITE_NONE)
         return;
@@ -2672,6 +2851,25 @@ void UpdatePocketItemList(enum Pocket pocketId)
 {
     if (pocketId >= POCKETS_COUNT)
         return; // shouldn't even get here
+
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    if (gBagPosition.isPyramid)
+    {
+        BagList_CompactPyramid();
+        gBagMenu->numItemStacks[pocketId] = 0;
+        for (u32 i = 0; i < PYRAMID_BAG_ITEMS_COUNT && BagList_GetItemId(pocketId, i); i++)
+            gBagMenu->numItemStacks[pocketId]++;
+
+        if (!gBagMenu->hideCloseBagText)
+            gBagMenu->numItemStacks[pocketId]++;
+
+        if (gBagMenu->numItemStacks[pocketId] > MAX_ITEMS_SHOWN)
+            gBagMenu->numShownItems[pocketId] = MAX_ITEMS_SHOWN;
+        else
+            gBagMenu->numShownItems[pocketId] = gBagMenu->numItemStacks[pocketId];
+        return;
+    }
+#endif
 
     struct BagPocket *pocket = &gBagPockets[pocketId];
     switch (pocketId)
@@ -2855,7 +3053,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
             }
             else if (JOY_NEW(START_BUTTON))
             {
-                if ((gBagMenu->numItemStacks[gBagPosition.pocket] - 1) <= 1) //can't sort with 0 or 1 item in bag
+                if ((gBagMenu->numItemStacks[gBagPosition.pocket] - (gBagMenu->hideCloseBagText ? 0 : 1)) <= 1)
                 {
                     static const u8 sText_NothingToSort[] = _("There's nothing to sort!");
                     PlaySE(SE_FAILURE);
@@ -2866,7 +3064,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
                 {
                     struct ItemSlot tempItem;
                     data[1] = GetItemListPosition(gBagPosition.pocket);
-                    tempItem = GetBagItemIdAndQuantity(gBagPosition.pocket, data[1]);
+                    tempItem = BagList_GetSlot(gBagPosition.pocket, data[1]);
                     data[2] = tempItem.quantity;
                     if (gBagPosition.cursorPosition[gBagPosition.pocket] == gBagMenu->numItemStacks[gBagPosition.pocket])
                         break;
@@ -2909,7 +3107,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
                     PlaySE(SE_FAILURE);
                     break;
                 }
-                struct ItemSlot itemSlot = GetBagItemIdAndQuantity(gBagPosition.pocket, listPosition);
+                struct ItemSlot itemSlot = BagList_GetSlot(gBagPosition.pocket, listPosition);
                 PlaySE(SE_SELECT);
                 BagMenu_PrintCursor(tListTaskId, COLORID_NONE);
                 tListPosition = listPosition;
@@ -3184,7 +3382,7 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         }
         else if (JOY_REPEAT(DPAD_DOWN) && tListPosition < lastRealPos)
         {
-            MoveItemSlotInPocket(pocket, tListPosition, tListPosition + 2);
+            BagList_MoveSlot(pocket, tListPosition, tListPosition + 2);
             tListPosition++;
             gBagMenu->toSwapPos = tListPosition;
             LoadBagItemListBuffers(pocket);
@@ -3193,7 +3391,7 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         }
         else if (JOY_NEW(DPAD_DOWN) && tListPosition == lastRealPos && lastRealPos > 0)
         {
-            MoveItemSlotInPocket(pocket, tListPosition, 0);
+            BagList_MoveSlot(pocket, tListPosition, 0);
             tListPosition = 0;
             gBagMenu->toSwapPos = tListPosition;
             LoadBagItemListBuffers(pocket);
@@ -3201,7 +3399,7 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         }
         else if (JOY_REPEAT(DPAD_UP) && tListPosition > 0)
         {
-            MoveItemSlotInPocket(pocket, tListPosition, tListPosition - 1);
+            BagList_MoveSlot(pocket, tListPosition, tListPosition - 1);
             tListPosition--;
             gBagMenu->toSwapPos = tListPosition;
             LoadBagItemListBuffers(pocket);
@@ -3210,7 +3408,7 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         }
         else if (JOY_NEW(DPAD_UP) && tListPosition == 0 && lastRealPos > 0)
         {
-            MoveItemSlotInPocket(pocket, tListPosition, lastRealPos + 1);
+            BagList_MoveSlot(pocket, tListPosition, lastRealPos + 1);
             tListPosition = lastRealPos;
             gBagMenu->toSwapPos = tListPosition;
             LoadBagItemListBuffers(pocket);
@@ -3221,6 +3419,14 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
 
 static void OpenContextMenu(u8 taskId)
 {
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    if (gBagPosition.isPyramid && gPyramidBagMenuState.location == PYRAMIDBAG_LOC_CHOOSE_TOSS)
+    {
+        gBagMenu->contextMenuItemsPtr = sContextMenuItems_PyramidToss;
+        gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_PyramidToss);
+    }
+    else
+#endif
     switch (gBagPosition.location)
     {
     case ITEMMENULOCATION_BATTLE:
@@ -3643,8 +3849,18 @@ static void ItemMenu_Give(u8 taskId)
         else
         {
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
-            sPartyGiveMode = TRUE;
-            BagMenu_OpenPartySelect(taskId);
+#if SWSH_ITEM_MENU_PYRAMID_BAG && !SWSH_ITEM_MENU_PYRAMID_ACTION
+            if (gBagPosition.isPyramid)
+            {
+                gBagMenu->newScreenCallback = CB2_ChooseMonToGiveItem;
+                Task_FadeAndCloseBagMenu(taskId);
+            }
+            else
+#endif
+            {
+                sPartyGiveMode = TRUE;
+                BagMenu_OpenPartySelect(taskId);
+            }
 #else
             gBagMenu->newScreenCallback = CB2_ChooseMonToGiveItem;
             Task_FadeAndCloseBagMenu(taskId);
@@ -4406,7 +4622,7 @@ static void UpdateMoveBattleInfo(s32 itemIndex)
         return;
     }
 
-    move = ItemIdToBattleMoveId(GetBagItemId(gBagPosition.pocket, itemIndex));
+    move = ItemIdToBattleMoveId(BagList_GetItemId(gBagPosition.pocket, itemIndex));
 
     // PP
     ConvertIntToDecimalStringN(gStringVar1, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -4458,7 +4674,7 @@ static void PrintContestDescription(s32 itemIndex)
 
     if (itemIndex != LIST_CANCEL)
     {
-        enum Move move = ItemIdToBattleMoveId(GetBagItemId(gBagPosition.pocket, itemIndex));
+        enum Move move = ItemIdToBattleMoveId(BagList_GetItemId(gBagPosition.pocket, itemIndex));
         str = gContestEffects[GetMoveContestEffect(move)].description;
     }
     else
@@ -4619,7 +4835,7 @@ static void UpdateMoveContestInfo(s32 itemIndex)
         return;
     }
 
-    move = ItemIdToBattleMoveId(GetBagItemId(gBagPosition.pocket, itemIndex));
+    move = ItemIdToBattleMoveId(BagList_GetItemId(gBagPosition.pocket, itemIndex));
 
     // PP
     ConvertIntToDecimalStringN(gStringVar1, GetMovePP(move), STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -4780,7 +4996,12 @@ static void SortBagItems(u8 taskId)
 
     RemoveContextWindow();
 
-    SortItemsInBag(&gBagPockets[gBagPosition.pocket], tSortType);
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    if (gBagPosition.isPyramid)
+        BagList_SortPyramid(tSortType);
+    else
+#endif
+        SortItemsInBag(&gBagPockets[gBagPosition.pocket], tSortType);
     DestroyListMenuTask(data[0], scrollPos, cursorPos);
     UpdatePocketListPosition(gBagPosition.pocket);
     LoadBagItemListBuffers(gBagPosition.pocket);
@@ -5145,7 +5366,7 @@ static void UpdateBerryInfo(s32 itemIndex)
     }
 
     {
-        const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(GetBagItemId(gBagPosition.pocket, itemIndex)));
+        const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(BagList_GetItemId(gBagPosition.pocket, itemIndex)));
 
         if (berryInfo->size != 0)
         {
@@ -5189,7 +5410,7 @@ static void PrintBerryDescriptionInfo(s32 itemIndex)
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     if (itemIndex != LIST_CANCEL)
     {
-        const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(GetBagItemId(gBagPosition.pocket, itemIndex)));
+        const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(BagList_GetItemId(gBagPosition.pocket, itemIndex)));
         AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3,  2, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description1);
         AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3, 15, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description2);
     }
@@ -5683,7 +5904,7 @@ static void BagMenu_UpdateTMHMPartyBlend(s32 itemIndex)
         else
         {
             struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
-            enum Item itemId = GetBagItemId(gBagPosition.pocket, itemIndex);
+            enum Item itemId = BagList_GetItemId(gBagPosition.pocket, itemIndex);
             enum Move move = ItemIdToBattleMoveId(itemId);
             enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
@@ -8614,5 +8835,153 @@ static void BagMenu_UseItem(u8 taskId)
 }
 
 #endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+
+EWRAM_DATA struct PyramidBagMenu *gPyramidBagMenu = NULL;
+EWRAM_DATA struct PyramidBagMenuState gPyramidBagMenuState = {0};
+
+static void BagMenu_SyncPyramidSelection(void)
+{
+    gPyramidBagMenuState.scrollPosition = gBagPosition.scrollPosition[gBagPosition.pocket];
+    gPyramidBagMenuState.cursorPosition = gBagPosition.cursorPosition[gBagPosition.pocket];
+}
+
+void GoToBattlePyramidBagMenu(u8 location, MainCallback exitCallback)
+{
+    u8 itemMenuLocation;
+
+    switch (location)
+    {
+    case PYRAMIDBAG_LOC_FIELD:
+    case PYRAMIDBAG_LOC_CHOOSE_TOSS:
+        itemMenuLocation = ITEMMENULOCATION_FIELD;
+        break;
+    case PYRAMIDBAG_LOC_BATTLE:
+        itemMenuLocation = ITEMMENULOCATION_BATTLE;
+        break;
+    case PYRAMIDBAG_LOC_PARTY:
+        itemMenuLocation = ITEMMENULOCATION_PARTY;
+        break;
+    case PYRAMIDBAG_LOC_PREV:
+    default:
+        itemMenuLocation = ITEMMENULOCATION_LAST;
+        break;
+    }
+
+    if (location != PYRAMIDBAG_LOC_PREV)
+        gPyramidBagMenuState.location = location;
+    if (exitCallback != NULL)
+        gPyramidBagMenuState.exitCallback = exitCallback;
+
+    GoToBagMenu(itemMenuLocation, POCKET_ITEMS, exitCallback);
+    if (gBagMenu != NULL)
+    {
+        gBagPosition.isPyramid = TRUE;
+        gBagMenu->pocketSwitchDisabled = TRUE;
+        gPyramidBagMenu = (struct PyramidBagMenu *)gBagMenu;
+    }
+}
+
+void CB2_PyramidBagMenuFromStartMenu(void)
+{
+    GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_FIELD, CB2_ReturnToFieldWithOpenMenu);
+}
+
+void CB2_ReturnToPyramidBagMenu(void)
+{
+    GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PREV, gPyramidBagMenuState.exitCallback);
+}
+
+void InitBattlePyramidBagCursorPosition(void)
+{
+    gPyramidBagMenuState.cursorPosition = 0;
+    gPyramidBagMenuState.scrollPosition = 0;
+    gBagPosition.cursorPosition[POCKET_ITEMS] = 0;
+    gBagPosition.scrollPosition[POCKET_ITEMS] = 0;
+}
+
+void UpdatePyramidBagList(void)
+{
+    UpdatePocketItemList(gBagPosition.pocket);
+    BagMenu_SyncPyramidSelection();
+}
+
+void UpdatePyramidBagCursorPos(void)
+{
+    UpdatePocketListPosition(gBagPosition.pocket);
+    BagMenu_SyncPyramidSelection();
+}
+
+void CloseBattlePyramidBag(u8 taskId)
+{
+    Task_FadeAndCloseBagMenu(taskId);
+}
+
+void Task_CloseBattlePyramidBagMessage(u8 taskId)
+{
+    CloseItemMessage(taskId);
+}
+
+void DisplayItemMessageInBattlePyramid(u8 taskId, const u8 *str, TaskFunc callback)
+{
+    DisplayItemMessage(taskId, FONT_NORMAL, str, callback);
+}
+
+void TryStoreHeldItemsInPyramidBag(void)
+{
+    u8 i;
+    struct Pokemon *party = gParties[B_TRAINER_PLAYER];
+    u16 *newItems = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
+#if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
+    u16 *newQuantities = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
+#else
+    u8 *newQuantities = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
+#endif
+    u16 heldItem;
+
+    memcpy(newItems, gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode], PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
+    memcpy(newQuantities, gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
+    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        heldItem = GetMonData(&party[i], MON_DATA_HELD_ITEM);
+        if (heldItem != ITEM_NONE && !AddBagItem(heldItem, 1))
+        {
+            memcpy(gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode], newItems, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
+            memcpy(gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], newQuantities, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
+            Free(newItems);
+            Free(newQuantities);
+            gSpecialVar_Result = 1;
+            return;
+        }
+    }
+
+    heldItem = ITEM_NONE;
+    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        SetMonData(&party[i], MON_DATA_HELD_ITEM, &heldItem);
+    gSpecialVar_Result = 0;
+    Free(newItems);
+    Free(newQuantities);
+}
+
+static void Task_ChooseItemsToTossFromPyramidBag(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        gFieldCallback2 = CB2_FadeFromPartyMenu;
+        GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_CHOOSE_TOSS, CB2_ReturnToField);
+        DestroyTask(taskId);
+    }
+}
+
+void ChooseItemsToTossFromPyramidBag(void)
+{
+    LockPlayerFieldControls();
+    FadeScreen(FADE_TO_BLACK, 0);
+    CreateTask(Task_ChooseItemsToTossFromPyramidBag, 10);
+}
+
+#endif // SWSH_ITEM_MENU_PYRAMID_BAG
 
 #endif // SWSH_ITEM_MENU

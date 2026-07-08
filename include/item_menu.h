@@ -72,6 +72,9 @@ struct BagPosition
     MainCallback exitCallback;
     u8 location;
     u8 pocket;
+#if SWSH_ITEM_MENU_PYRAMID_BAG
+    bool8 isPyramid; // Battle Pyramid bag from frontier.pyramidBag
+#endif
     u16 pocketSwitchArrowPos;
     u16 cursorPosition[POCKETS_COUNT];
     u16 scrollPosition[POCKETS_COUNT];
