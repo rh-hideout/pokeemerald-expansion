@@ -806,7 +806,7 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     {
         BXPY_GetEnemyEnterMons(B_BATTLER_3, enemyEnteredMons[B_TRAINER_OPPONENT_B], BXPY_GetPickSize());
     }
-    if (gPartnerTrainerId != TRAINER_NONE && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
+    if (gPartnerTrainerId != TRAINER_NONE && gPartnerTrainerId != 0xFFFF)
     {
         BXPY_GetEnemyEnterMons(B_BATTLER_2, enemyEnteredMons[B_TRAINER_PARTNER], BXPY_GetPickSize());
     }
