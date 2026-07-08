@@ -394,8 +394,7 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum Battle
     if (trainer == B_TRAINER_PLAYER)
         VarSet(B_VAR_SKY_BATTLE,0);
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
-        ZeroMonData(&tempParty[i]);
+    ZeroPartyMons(tempParty);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
