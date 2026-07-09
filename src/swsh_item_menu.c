@@ -80,13 +80,12 @@
 #define TAG_BAG_SCROLL_THUMB     114
 #define TAG_MOVE_TYPE_ICON       115
 #define TAG_CATEGORY_ICON        116
-#define TAG_BERRY_FLAVOR_MARK    117
-#define TAG_SWAP_CURSOR          118
-#define TAG_FRAME_MONEY          119
-#define TAG_FRAME_PRICE_QUANTITY 120
-#define TAG_PARTY_HELD_ITEM      121
-#define TAG_STATUS_ICON          122
-#define TAG_SWAP_PROMPT          123
+#define TAG_SWAP_CURSOR          117
+#define TAG_FRAME_MONEY          118
+#define TAG_FRAME_PRICE_QUANTITY 119
+#define TAG_PARTY_HELD_ITEM      120
+#define TAG_STATUS_ICON          121
+#define TAG_SWAP_PROMPT          122
 
 #define HOVER_SLOT_SPRITES_COUNT     5
 #define FRAME_MONEY_SPRITES_COUNT    3
@@ -739,10 +738,6 @@ static const u32 sMoveTypeIcons_Gfx[]           = INCGFX_U32("graphics/bag/swsh/
 static const u16 sMoveTypeIcons_Pal[]           = INCGFX_U16("graphics/bag/swsh/move_types.png", ".gbapal");
 static const u8 sInfoPrompt_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/info_prompt.bin");
 
-#if SWSH_ITEM_MENU_BERRY_INFO
-static const u32 sBerryFlavorMark_Gfx[]         = INCGFX_U32("graphics/bag/swsh/berry_flavor_mark.png", ".4bpp.smol");
-#endif
-
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 static const u8 sPartySlots_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/party_slots.bin");
 static const u32 sStatusIcons_Gfx[]             = INCGFX_U32("graphics/bag/swsh/status_icons.png", ".4bpp.smol");
@@ -1112,7 +1107,7 @@ static const struct OamData sOamData_MoveTypeIcon =
     .bpp = ST_OAM_4BPP,
     .shape = SPRITE_SHAPE(32x16),
     .size = SPRITE_SIZE(32x16),
-    .priority = 0,
+    .priority = 1,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_MoveTypeIcon =
@@ -1130,7 +1125,7 @@ static const struct OamData sOamData_CategoryIcon =
     .bpp = ST_OAM_4BPP,
     .shape = SPRITE_SHAPE(32x16),
     .size = SPRITE_SIZE(32x16),
-    .priority = 0,
+    .priority = 1,
 };
 
 static const union AnimCmd sSpriteAnim_CategoryPhysical[] =
@@ -1172,32 +1167,6 @@ static const struct SpriteTemplate sSpriteTemplate_CategoryIcon =
     .oam = &sOamData_CategoryIcon,
     .anims = sSpriteAnimTable_CategoryIcons,
 };
-
-#if SWSH_ITEM_MENU_BERRY_INFO
-static const struct OamData sOamData_BerryFlavorMark =
-{
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(8x8),
-    .size = SPRITE_SIZE(8x8),
-    .priority = 0,
-};
-
-static const struct CompressedSpriteSheet sSpriteSheet_BerryFlavorMark =
-{
-    .data = sBerryFlavorMark_Gfx,
-    .size = 8 * 8 / 2,
-    .tag = TAG_BERRY_FLAVOR_MARK,
-};
-
-static const struct SpriteTemplate sSpriteTemplate_BerryFlavorMark =
-{
-    .tileTag = TAG_BERRY_FLAVOR_MARK,
-    .paletteTag = TAG_ITEM_CURSOR,
-    .oam = &sOamData_BerryFlavorMark,
-};
-#endif
 
 static const struct OamData sOamData_FrameMoney =
 {
@@ -1298,7 +1267,6 @@ static u8 sFrameQuantityIds[FRAME_QUANTITY_SPRITES_COUNT];
 static u16 *sMoveTypeIconTilesPtr;
 #if SWSH_ITEM_MENU_BERRY_INFO
 static u8 sBerryInfoMode;
-static u8 sBerryFlavorMarkSpriteIds[FLAVOR_COUNT];
 #endif
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
 static bool8 sPartyGiveMode;
@@ -1323,6 +1291,7 @@ enum {
     COLORID_POCKET_NAME,
     COLORID_GRAY_CURSOR,
     COLORID_TMHM_INFO,
+    COLORID_NO_FLAVOR,
     COLORID_NONE = 0xFF
 };
 static const u8 sFontColorTable[][3] = {
@@ -1332,7 +1301,8 @@ static const u8 sFontColorTable[][3] = {
     [COLORID_HOVER_QTY]   = {0,  2,  5},
     [COLORID_POCKET_NAME] = {0,  2,  6},
     [COLORID_GRAY_CURSOR] = {0,  3,  6},
-    [COLORID_TMHM_INFO]   = {0, 14, 10}
+    [COLORID_TMHM_INFO]   = {0, 14, 10},
+    [COLORID_NO_FLAVOR]   = {0,  3,  7}
 };
 
 static const struct WindowTemplate sDefaultBagWindows[] =
@@ -1407,7 +1377,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .width = 3,
         .height = 2,
         .paletteNum = 1,
-        .baseBlock = 499,
+        .baseBlock = 619,
     },
 #if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
     [WIN_APP_JAM_LABEL] = {
@@ -1432,21 +1402,21 @@ static const struct WindowTemplate sDefaultBagWindows[] =
 #if SWSH_ITEM_MENU_BERRY_INFO
     [WIN_BERRY_INFO] = {
         .bg = 1,
-        .tilemapLeft = 7,
+        .tilemapLeft = 8,
         .tilemapTop = 16,
-        .width = 7,
+        .width = 6,
         .height = 4,
         .paletteNum = 1,
-        .baseBlock = 475,
+        .baseBlock = 625,
     },
     [WIN_BERRY_FLAVORS] = {
         .bg = 1,
-        .tilemapLeft = 14,
+        .tilemapLeft = 15,
         .tilemapTop = 16,
-        .width = 12,
+        .width = 11,
         .height = 4,
         .paletteNum = 1,
-        .baseBlock = 349,
+        .baseBlock = 649,
     },
 #endif
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
@@ -1455,9 +1425,9 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .tilemapLeft = 2,
         .tilemapTop  = 3,
         .width       = 4,
-        .height      = 16,
+        .height      = 1,
         .paletteNum  = 2,
-        .baseBlock   = 619,
+        .baseBlock   = 693,
     },
 #endif
     DUMMY_WIN_TEMPLATE,
@@ -1884,6 +1854,12 @@ static bool8 SetupBagMenu(void)
         UpdatePocketItemLists();
         InitPocketListPositions();
         InitPocketScrollPositions();
+        sMoveInfoMode = FALSE;
+        sMoveTypeIconSpriteId = SPRITE_NONE;
+        sCategoryIconSpriteId = SPRITE_NONE;
+#if SWSH_ITEM_MENU_BERRY_INFO
+        sBerryInfoMode = 0;
+#endif
         gMain.state++;
         break;
     case 11:
@@ -1955,9 +1931,6 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 20:
-        sMoveInfoMode = FALSE;
-        sMoveTypeIconSpriteId = SPRITE_NONE;
-        sCategoryIconSpriteId = SPRITE_NONE;
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
         sPartyBlendActive = FALSE;
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
@@ -1965,10 +1938,6 @@ static bool8 SetupBagMenu(void)
         if (gBagPosition.pocket == POCKET_TM_HM
          && gBagMenu->numItemStacks[gBagPosition.pocket] != (u8)(!gBagMenu->hideCloseBagText))
             BagMenu_UpdateTMHMPartyBlend(gBagPosition.cursorPosition[gBagPosition.pocket]);
-#endif
-#if SWSH_ITEM_MENU_BERRY_INFO
-        sBerryInfoMode = 0;
-        memset(sBerryFlavorMarkSpriteIds, SPRITE_NONE, sizeof(sBerryFlavorMarkSpriteIds));
 #endif
         if (gBagMenu->numItemStacks[gBagPosition.pocket] != (u8)(!gBagMenu->hideCloseBagText))
         {
@@ -3143,6 +3112,13 @@ static void ReturnToItemList(u8 taskId)
         PutWindowTilemap(WIN_APP_JAM_LABEL);
     }
 #endif
+#if SWSH_ITEM_MENU_BERRY_INFO
+    else if (gBagPosition.pocket == POCKET_BERRIES && sBerryInfoMode == 1)
+    {
+        PutWindowTilemap(WIN_BERRY_INFO);
+        PutWindowTilemap(WIN_BERRY_FLAVORS);
+    }
+#endif
     else
     {
         PutWindowTilemap(WIN_DESCRIPTION);
@@ -3222,16 +3198,6 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
         {
             if (sBerryInfoMode == 1)
             {
-                u8 i;
-                for (i = 0; i < FLAVOR_COUNT; i++)
-                {
-                    if (sBerryFlavorMarkSpriteIds[i] != SPRITE_NONE)
-                    {
-                        DestroySprite(&gSprites[sBerryFlavorMarkSpriteIds[i]]);
-                        sBerryFlavorMarkSpriteIds[i] = SPRITE_NONE;
-                    }
-                }
-                FreeSpriteTilesByTag(TAG_BERRY_FLAVOR_MARK);
                 ClearWindowTilemap(WIN_BERRY_INFO);
                 ClearWindowTilemap(WIN_BERRY_FLAVORS);
             }
@@ -5377,9 +5343,6 @@ static void UpdateBerryInfo(s32 itemIndex)
 
     if (itemIndex == LIST_CANCEL)
     {
-        u8 i;
-        for (i = 0; i < FLAVOR_COUNT; i++)
-            gSprites[sBerryFlavorMarkSpriteIds[i]].invisible = TRUE;
         CopyWindowToVram(WIN_BERRY_INFO, COPYWIN_GFX);
         CopyWindowToVram(WIN_BERRY_FLAVORS, COPYWIN_GFX);
         return;
@@ -5402,26 +5365,20 @@ static void UpdateBerryInfo(s32 itemIndex)
             ptr = ConvertIntToDecimalStringN(ptr, fraction, STR_CONV_MODE_LEFT_ALIGN, 1);
             *ptr++ = CHAR_DBL_QUOTE_RIGHT;
             *ptr = EOS;
-            BagMenu_Print(WIN_BERRY_INFO, FONT_SHORT_NARROW, gStringVar4, GetStringCenterAlignXOffset(FONT_SHORT_NARROW, gStringVar4, 56), 2, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
+            BagMenu_Print(WIN_BERRY_INFO, FONT_SHORT_NARROW, gStringVar4, GetStringRightAlignXOffset(FONT_SHORT_NARROW, gStringVar4, 48), 2, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
         }
 
         if (berryInfo->firmness != BERRY_FIRMNESS_UNKNOWN)
-            BagMenu_Print(WIN_BERRY_INFO, FONT_SHORT_NARROW, sBerryFirmnessStrings[berryInfo->firmness], GetStringCenterAlignXOffset(FONT_SHORT_NARROW, sBerryFirmnessStrings[berryInfo->firmness], 56), 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
+            BagMenu_Print(WIN_BERRY_INFO, FONT_SHORT_NARROW, sBerryFirmnessStrings[berryInfo->firmness], GetStringRightAlignXOffset(FONT_SHORT_NARROW, sBerryFirmnessStrings[berryInfo->firmness], 48), 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
 
-        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSpicy,   0,  0, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
-        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorDry,    40,  0, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
-        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSweet,  71,  0, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
-        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorBitter, 14, 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
-        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSour,   60, 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
+        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSpicy,   4,  0, 0, 0, TEXT_SKIP_DRAW, berryInfo->spicy  ? COLORID_NORMAL : COLORID_NO_FLAVOR);
+        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorDry,    39,  0, 0, 0, TEXT_SKIP_DRAW, berryInfo->dry    ? COLORID_NORMAL : COLORID_NO_FLAVOR);
+        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSweet,  63,  0, 0, 0, TEXT_SKIP_DRAW, berryInfo->sweet  ? COLORID_NORMAL : COLORID_NO_FLAVOR);
+        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorBitter,  4, 16, 0, 0, TEXT_SKIP_DRAW, berryInfo->bitter ? COLORID_NORMAL : COLORID_NO_FLAVOR);
+        BagMenu_Print(WIN_BERRY_FLAVORS, FONT_SHORT_NARROW, sText_BerryFlavorSour,   42, 16, 0, 0, TEXT_SKIP_DRAW, berryInfo->sour   ? COLORID_NORMAL : COLORID_NO_FLAVOR);
 
         CopyWindowToVram(WIN_BERRY_INFO, COPYWIN_GFX);
         CopyWindowToVram(WIN_BERRY_FLAVORS, COPYWIN_GFX);
-
-        gSprites[sBerryFlavorMarkSpriteIds[FLAVOR_SPICY]].invisible  = (berryInfo->spicy  == 0);
-        gSprites[sBerryFlavorMarkSpriteIds[FLAVOR_DRY]].invisible    = (berryInfo->dry    == 0);
-        gSprites[sBerryFlavorMarkSpriteIds[FLAVOR_SWEET]].invisible  = (berryInfo->sweet  == 0);
-        gSprites[sBerryFlavorMarkSpriteIds[FLAVOR_BITTER]].invisible = (berryInfo->bitter == 0);
-        gSprites[sBerryFlavorMarkSpriteIds[FLAVOR_SOUR]].invisible   = (berryInfo->sour   == 0);
     }
 }
 
@@ -5442,13 +5399,6 @@ static void SwitchBerryInfoMode(s32 itemIndex)
     {
         sBerryInfoMode = 1;
 
-        LoadCompressedSpriteSheet(&sSpriteSheet_BerryFlavorMark);
-        sBerryFlavorMarkSpriteIds[FLAVOR_SPICY]  = CreateSprite(&sSpriteTemplate_BerryFlavorMark, 106, 136, 0);
-        sBerryFlavorMarkSpriteIds[FLAVOR_DRY]    = CreateSprite(&sSpriteTemplate_BerryFlavorMark, 146, 136, 0);
-        sBerryFlavorMarkSpriteIds[FLAVOR_SWEET]  = CreateSprite(&sSpriteTemplate_BerryFlavorMark, 177, 136, 0);
-        sBerryFlavorMarkSpriteIds[FLAVOR_BITTER] = CreateSprite(&sSpriteTemplate_BerryFlavorMark, 120, 152, 0);
-        sBerryFlavorMarkSpriteIds[FLAVOR_SOUR]   = CreateSprite(&sSpriteTemplate_BerryFlavorMark, 166, 152, 0);
-
         ClearWindowTilemap(WIN_DESCRIPTION);
         UpdateBerryInfo(itemIndex);
         PutWindowTilemap(WIN_BERRY_INFO);
@@ -5458,18 +5408,7 @@ static void SwitchBerryInfoMode(s32 itemIndex)
     }
     else if (sBerryInfoMode == 1)
     {
-        u8 i;
         sBerryInfoMode = 2;
-
-        for (i = 0; i < FLAVOR_COUNT; i++)
-        {
-            if (sBerryFlavorMarkSpriteIds[i] != SPRITE_NONE)
-            {
-                DestroySprite(&gSprites[sBerryFlavorMarkSpriteIds[i]]);
-                sBerryFlavorMarkSpriteIds[i] = SPRITE_NONE;
-            }
-        }
-        FreeSpriteTilesByTag(TAG_BERRY_FLAVOR_MARK);
 
         ClearWindowTilemap(WIN_BERRY_INFO);
         ClearWindowTilemap(WIN_BERRY_FLAVORS);
@@ -5713,28 +5652,34 @@ static void BagMenu_UpdateStatusIconPos(u8 hoveredSlot)
     }
 }
 
+static void BagMenu_MoveHPBarWindow(u8 slot)
+{
+    if (sHPBarWindowMapped && sPrevHPBarSlot == (s8)slot)
+        return;
+    if (sHPBarWindowMapped)
+        ClearWindowTilemap(WIN_PARTY_HP_BAR);
+    SetWindowAttribute(WIN_PARTY_HP_BAR, WINDOW_TILEMAP_TOP, 3 + slot * 3);
+    PutWindowTilemap(WIN_PARTY_HP_BAR);
+    sHPBarWindowMapped = TRUE;
+    sPrevHPBarSlot = (s8)slot;
+}
+
 static void BagMenu_DrawPartyHPBarPixels(u8 slot, u8 filledWidth)
 {
-    u16 y = (u16)slot * 3 * 8 + PARTY_HP_BAR_Y_OFFSET;
     u8 colorIdx;
 
     if (filledWidth > 16)     colorIdx = 12;    // green
     else if (filledWidth > 6) colorIdx = 13;    // yellow
     else                      colorIdx = 14;    // red
 
-    if (sPrevHPBarSlot >= 0 && sPrevHPBarSlot != (s8)slot)
-    {
-        u16 prevY = (u16)sPrevHPBarSlot * 3 * 8 + PARTY_HP_BAR_Y_OFFSET;
-        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, prevY, 32, 2);
-    }
-    FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, y, 32, 2);
+    BagMenu_MoveHPBarWindow(slot);
+    FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, PARTY_HP_BAR_Y_OFFSET, 32, 2);
     if (filledWidth > 0)
-        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(colorIdx), 0, y, filledWidth, 2);
+        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(colorIdx), 0, PARTY_HP_BAR_Y_OFFSET, filledWidth, 2);
     if (filledWidth < 32)
-        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(15), filledWidth, y, 32 - filledWidth, 2);
+        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(15), filledWidth, PARTY_HP_BAR_Y_OFFSET, 32 - filledWidth, 2);
     CopyWindowToVram(WIN_PARTY_HP_BAR, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(1);
-    sPrevHPBarSlot = (s8)slot;
 }
 
 static void Task_BagMenu_HPBarAnim(u8 taskId)
@@ -5775,8 +5720,6 @@ static void BagMenu_DrawPartyHPBar(s8 slot)
     {
         if (sHPBarWindowMapped)
         {
-            FillWindowPixelBuffer(WIN_PARTY_HP_BAR, PIXEL_FILL(0));
-            CopyWindowToVram(WIN_PARTY_HP_BAR, COPYWIN_GFX);
             ClearWindowTilemap(WIN_PARTY_HP_BAR);
             ScheduleBgCopyTilemapToVram(1);
             sHPBarWindowMapped = FALSE;
@@ -5785,25 +5728,14 @@ static void BagMenu_DrawPartyHPBar(s8 slot)
         return;
     }
 
-    if (!sHPBarWindowMapped)
-    {
-        PutWindowTilemap(WIN_PARTY_HP_BAR);
-        sHPBarWindowMapped = TRUE;
-    }
-
-    if (sPrevHPBarSlot >= 0 && sPrevHPBarSlot != slot)
-    {
-        u16 prevY = sPrevHPBarSlot * 3 * 8 + PARTY_HP_BAR_Y_OFFSET;
-        FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, prevY, 32, 2);
-    }
+    BagMenu_MoveHPBarWindow(slot);
 
     {
         struct Pokemon *mon = BagMenu_GetPanelMon(slot);
-        u16 y = slot * 3 * 8 + PARTY_HP_BAR_Y_OFFSET;
 
         if (GetMonData(mon, MON_DATA_IS_EGG))
         {
-            FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, y, 32, 2);
+            FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(0), 0, PARTY_HP_BAR_Y_OFFSET, 32, 2);
         }
         else
         {
@@ -5822,15 +5754,14 @@ static void BagMenu_DrawPartyHPBar(s8 slot)
 
             hpFraction = GetScaledHPFraction(hp, maxHp, 32);
             if (hpFraction > 0)
-                FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(fillColorIdx), 0, y, hpFraction, 2);
+                FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(fillColorIdx), 0, PARTY_HP_BAR_Y_OFFSET, hpFraction, 2);
             if (hpFraction < 32)
-                FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(15), hpFraction, y, 32 - hpFraction, 2);
+                FillWindowPixelRect(WIN_PARTY_HP_BAR, PIXEL_FILL(15), hpFraction, PARTY_HP_BAR_Y_OFFSET, 32 - hpFraction, 2);
         }
     }
 
     CopyWindowToVram(WIN_PARTY_HP_BAR, COPYWIN_GFX);
     ScheduleBgCopyTilemapToVram(1);
-    sPrevHPBarSlot = slot;
 }
 
 static void SpriteCB_HeldItemIcon_WaitDisappear(struct Sprite *sprite)
