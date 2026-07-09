@@ -1,41 +1,2119 @@
 {
-  "ILLUSION_MAGICIAN": [
-		"MOVE_ENDURE"
+  "AGIDO": [
+    "MOVE_ENDURE"
   ],
 
-  "DARK_MAGICIAN": [
-		"MOVE_ENDURE"
+  "AGIDO_THE_ANCIENT_SENTINEL": [
+    "MOVE_ENDURE"
   ],
 
-  "DARK_SAGE": [
-		"MOVE_ENDURE"
+  "AIR_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "ALECTOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "ALLIGATOR_SWORD": [
+    "MOVE_ENDURE"
+  ],
+
+  "ALLIGATOR_SWORD_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "ALPHA_THE_MAGNET_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMAZONESS_BABY_TIGER": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMAZONESS_PRINCESS": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMAZONESS_QUEEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMAZONESS_TIGER": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMBULANCEROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "AMBULANCE_RESCUEROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "ANCHORBOLT_HEDGEHOG": [
+    "MOVE_ENDURE"
+  ],
+
+  "ANCIENT_FAIRY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "ANCIENT_GEAR_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "ANCIENT_GEAR_SOLDIER": [
+    "MOVE_ENDURE"
+  ],
+
+  "ANCIENT_PIXIE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "AQUA_MADOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "AQUA_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCANA_FORCE_THE_DARK_RULER": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCANA_FORCE_THE_FIEND": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCANA_FORCE_THE_LIGHT_RULER": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCANA_FORCE_THE_WORLD": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCHFIENDS_MIRROR": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARCHFIENDS_ZOMBIE_SKULL": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMED_DRAGON_LEVEL10": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMED_DRAGON_LEVEL3": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMED_DRAGON_LEVEL5": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMED_DRAGON_LEVEL7": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMORED_BEE": [
+    "MOVE_ENDURE"
+  ],
+
+  "ARMOURED_BASIC_INSECT": [
+    "MOVE_ENDURE"
+  ],
+
+  "AVATAR_OF_THE_POT": [
+    "MOVE_ENDURE"
+  ],
+
+  "AVIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "AXE_RAIDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "BABY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BARREL_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BASIC_INSECT": [
+    "MOVE_ENDURE"
+  ],
+
+  "BATTLE_OX": [
+    "MOVE_ENDURE"
+  ],
+
+  "BEAVER_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "BEELZE_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "BEHEMOTH_KING_OF_ALL_ANIMALS": [
+    "MOVE_ENDURE"
+  ],
+
+  "BERFORMET": [
+    "MOVE_ENDURE"
+  ],
+
+  "BERSERKION": [
+    "MOVE_ENDURE"
+  ],
+
+  "BERSERK_GORILLA": [
+    "MOVE_ENDURE"
+  ],
+
+  "BETA_THE_MAGNET_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "BIG_PIECE_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "BIG_SHIELD_GARDNA": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACKWING_ARMOR_MASTER": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACKWING_ASSAULT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACKWING_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACKWING_GALE_THE_WHIRLWIND": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACKWING_GHIBLI": [
+    "MOVE_ENDURE"
   ],
 
   "BLACK_DRAGONS_CHICK": [
-		"MOVE_ENDURE"
+    "MOVE_ENDURE"
   ],
 
-  "RED_EYES_BLACK_DRAGON": [
-		"MOVE_ENDURE"
+  "BLACK_LUSTER_SOLDIER": [
+    "MOVE_ENDURE"
   ],
 
-  "RED_EYES_BLACK_METAL_DRAGON": [
-		"MOVE_ENDURE"
+  "BLACK_PTERA": [
+    "MOVE_ENDURE"
   ],
 
-  "PALADIN_OF_WHITE_DRAGON": [
-		"MOVE_ENDURE"
+  "BLACK_ROSE_DRAGON": [
+    "MOVE_ENDURE"
   ],
 
-  "BLUE_EYES_WHITE_DRAGON": [
-    "MOVE_DRAGON_CLAW",
-		"MOVE_ENDURE"
+  "BLACK_SKULL_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLACK_TYRANNO": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLADEDGE": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLADE_SKATER": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLAZING_INPACHI": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLOCK_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLOWBACK_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BLUE_EYES_TOON_DRAGON": [
+    "MOVE_ENDURE"
   ],
 
   "BLUE_EYES_ULTIMATE_DRAGON": [
-		"MOVE_ENDURE"
+    "MOVE_ENDURE"
   ],
 
+  "BLUE_EYES_WHITE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "BREAKER_THE_MAGICAL_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "BUBBLEMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "BURSTINATRIX": [
+    "MOVE_ENDURE"
+  ],
+
+  "BUSTER_BLADER": [
+    "MOVE_ENDURE"
+  ],
+
+  "CATAPULT_TURTLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "CELTIC_GUARDIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "CELTIC_GUARDIAN_OF_NOBLE_ARMS": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHANGE_OF_HEART": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHAOS_EMPEROR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHARCOAL_INPACHI": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHIMAERA_THE_MASTER_OF_BEASTS": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHIMERATECH_OVERDRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CHIMERA_THE_FLYING_MYTHICAL_BEAST": [
+    "MOVE_ENDURE"
+  ],
+
+  "CLAYMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "CLEAR_VICE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CLOUDIAN_EYE_OF_THE_TYPHOON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CLOUDIAN_NIMBUSMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "COCKROACH_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "COCOON_OF_EVOLUTION": [
+    "MOVE_ENDURE"
+  ],
+
+  "CRAB_TURTLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "CRIMSON_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CRIMSON_RESONATOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "CRITIAS": [
+    "MOVE_ENDURE"
+  ],
+
+  "CRYSTAL_BEAST_SAPHIRE_PEGASUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "CURSE_OF_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBERDARK_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBERDARK_HORN": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBERNETIC_CYCLOPEAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBERTECH_ALLIGATOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_ANGEL_BENTEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_ANGEL_DAKINI": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_BLADER": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_END_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_HARPIE_LADY": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_PETIT_ANGEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_SLASH_HARPIE_LADY": [
+    "MOVE_ENDURE"
+  ],
+
+  "CYBER_TWIN_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "D3S_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "DAEDALUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "DANDYLION": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_CAVALRY": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_DIVINER": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_FLARE_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_FLATTOP": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_JEROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_KING_OF_THE_ABYSS": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_MAGICIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_MAGICIAN_GIRL": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_MAGICIAN_GIRL_THE_DRAGON_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_NECROFEAR": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_PALADIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_RESONATOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_RULER_HA_DES": [
+    "MOVE_ENDURE"
+  ],
+
+  "DARK_SAGE": [
+    "MOVE_ENDURE"
+  ],
+
+  "DEBRIS_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "DESTINY_HERO_DREADMASTER": [
+    "MOVE_ENDURE"
+  ],
+
+  "DESTINY_HERO_PLASMA": [
+    "MOVE_ENDURE"
+  ],
+
+  "DES_FERAL_IMP": [
+    "MOVE_ENDURE"
+  ],
+
+  "DES_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "DES_KANGAROO": [
+    "MOVE_ENDURE"
+  ],
+
+  "DIAMOND_HEAD_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "DIVINE_SERPENT_GEH": [
+    "MOVE_ENDURE"
+  ],
+
+  "DOOM_KRAKEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "DORA_DRACO": [
+    "MOVE_ENDURE"
+  ],
+
+  "DRAGONMAID_NUDYARL": [
+    "MOVE_ENDURE"
+  ],
+
+  "DRAGON_MASTER_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "DRAGON_QUEEN_OF_TRAGIC_ENDING": [
+    "MOVE_ENDURE"
+  ],
+
+  "DRILLROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "DUNGEON_WORM": [
+    "MOVE_ENDURE"
+  ],
+
+  "DUPE_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_ASLLA_PISCU": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_ASLLA_PISCU_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CCAPAC_APU": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CCAPAC_APU_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CCARAYHUA": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CCARAYHUA_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CHACU_CHALLHUA": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CHACU_CHALLHUA_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CUSILLU": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_CUSILLU_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_URU": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_URU_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_WIRAQOCHA_RASCA": [
+    "MOVE_ENDURE"
+  ],
+
+  "EARTHBOUND_IMMORTAL_WIRAQOCHA_RASCA_AWAKENED": [
+    "MOVE_ENDURE"
+  ],
+
+  "EGYPTIAN_GOD_SLIME": [
+    "MOVE_ENDURE"
+  ],
+
+  "ELDLICH": [
+    "MOVE_ENDURE"
+  ],
+
+  "ELECTROMAGNETIC_TURTLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "EMBODIMENT_OF_APOPHIS": [
+    "MOVE_ENDURE"
+  ],
+
+  "EMPEROR_PENGUIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "ENRAGED_MUKA_MUKA": [
+    "MOVE_ENDURE"
+  ],
+
+  "EXODIA_HEAD": [
+    "MOVE_ENDURE"
+  ],
+
+  "EXODIA_NECROSS": [
+    "MOVE_ENDURE"
+  ],
+
+  "EXODIA_THE_FORBIDDEN_ONE": [
+    "MOVE_ENDURE"
+  ],
+
+  "FAIRY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FERAL_IMP": [
+    "MOVE_ENDURE"
+  ],
+
+  "FIEND_KRAKEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "FIREWALL_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FIVE_GOD_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FLAME_CEREBRUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "FLAME_MANIPULATOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "FLAME_SWORDSMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "FLAME_WINGMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "FLARE_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORMULA_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTRESS_WHALE": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_BUG": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_DARK": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_ELECTRIC": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_FIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_FIRE": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_FLYING": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_GHOST": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_GRASS": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_GROUND": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_ICE": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_POISON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_PSYCHIC": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_ROCK": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_STEEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "FORTUNE_LADY_EVERY_WATER": [
+    "MOVE_ENDURE"
+  ],
+
+  "FROG_THE_JAM": [
+    "MOVE_ENDURE"
+  ],
+
+  "FROST_AND_FLAME_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "FROZEN_FITZGERALD": [
+    "MOVE_ENDURE"
+  ],
+
+  "GAIA_KNIGHT_THE_FORCE_OF_EARTH": [
+    "MOVE_ENDURE"
+  ],
+
+  "GAIA_THE_DRAGON_CHAMPION": [
+    "MOVE_ENDURE"
+  ],
+
+  "GAIA_THE_FIERCE_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "GAMECIEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "GANDORA": [
+    "MOVE_ENDURE"
+  ],
+
+  "GATE_GUARDIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "GATE_GUARDIAN_THUNDER_WIND": [
+    "MOVE_ENDURE"
+  ],
+
+  "GEARFRIED_THE_IRON_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "GEARFRIED_THE_SWORDMASTER": [
+    "MOVE_ENDURE"
+  ],
+
+  "GEMINI_ELF": [
+    "MOVE_ENDURE"
+  ],
+
+  "GHOSTRICK_WITCH": [
+    "MOVE_ENDURE"
+  ],
+
+  "GIANT_REX": [
+    "MOVE_ENDURE"
+  ],
+
+  "GIANT_SOLDIER_OF_STEEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "GIANT_SOLDIER_OF_STONE": [
+    "MOVE_ENDURE"
+  ],
+
+  "GILFORD_THE_LIGHTNING": [
+    "MOVE_ENDURE"
+  ],
+
+  "GLOW_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "GOKIBORE": [
+    "MOVE_ENDURE"
+  ],
+
+  "GOKIPOLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "GRAND_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "GRAND_TIKI_ELDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "GREAT_MAMMOTH_OF_GOLDFINE": [
+    "MOVE_ENDURE"
+  ],
+
+  "GREAT_MOTH": [
+    "MOVE_ENDURE"
+  ],
+
+  "GUARDIAN_EATOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HAMON": [
+    "MOVE_ENDURE"
+  ],
+
+  "HAPPY_LOVER": [
+    "MOVE_ENDURE"
+  ],
+
+  "HARPIES_PET_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "HARPIE_BROTHER": [
+    "MOVE_ENDURE"
+  ],
+
+  "HARPIE_LADY": [
+    "MOVE_ENDURE"
+  ],
+
+  "HARPIE_LADY_SISTERS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HARPIE_QUEEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "HEAVY_METAL_KING": [
+    "MOVE_ENDURE"
+  ],
+
+  "HELIOS_DUO_MEGISTUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HELIOS_THE_PRIMORDIAL_SUN": [
+    "MOVE_ENDURE"
+  ],
+
+  "HELIOS_TRICE_MEGISTUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HERMOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HITOTSU_ME_GIANT": [
+    "MOVE_ENDURE"
+  ],
+
+  "HONEST": [
+    "MOVE_ENDURE"
+  ],
+
+  "HONEST_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "HORUS_LEVEL_FOUR": [
+    "MOVE_ENDURE"
+  ],
+
+  "HORUS_LEVEL_SIX": [
+    "MOVE_ENDURE"
+  ],
+
+  "HORUS_LEVEL_EIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "HUMANOID_SLIME": [
+    "MOVE_ENDURE"
+  ],
+
+  "HUMANOID_WORM_DRAKE": [
+    "MOVE_ENDURE"
+  ],
+
+  "HUNDRED_EYES_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "HUNGRY_BURGER": [
+    "MOVE_ENDURE"
+  ],
+
+  "HYOZANRYU": [
+    "MOVE_ENDURE"
+  ],
+
+  "ILLUSIONIST_FACELESS_MAGE": [
+    "MOVE_ENDURE"
+  ],
+
+  "ILLUSIONIST_FACELESS_MAGICIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "ILLUSION_MAGICIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "INFERNITY_ARCHFIEND": [
+    "MOVE_ENDURE"
+  ],
+
+  "INFERNITY_DOOM_ARCHFIEND": [
+    "MOVE_ENDURE"
+  ],
+
+  "INFERNO_WING": [
+    "MOVE_ENDURE"
+  ],
+
+  "INJECTION_FAIRY_LILY": [
+    "MOVE_ENDURE"
+  ],
+
+  "INPACHI": [
+    "MOVE_ENDURE"
+  ],
+
+  "INSECT_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "INSECT_PRINCESS": [
+    "MOVE_ENDURE"
+  ],
+
+  "INSECT_QUEEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "JACKS_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "JERRY_BEANS_MAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "JINZO": [
+    "MOVE_ENDURE"
+  ],
+
+  "JINZO_RETURNER": [
+    "MOVE_ENDURE"
+  ],
+
+  "JIRAI_GUMO": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUDGE_MAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUDGMENT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNKURIBOH": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNK_ARCHER": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNK_DESTROYER": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNK_SPEEDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNK_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "JUNK_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "KAIRYU_SHIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "KARATE_MAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "KELDO": [
+    "MOVE_ENDURE"
+  ],
+
+  "KELDO_THE_SACRED_PROTECTOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "KILLER_NEEDLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "KINGS_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "KING_OF_D": [
+    "MOVE_ENDURE"
+  ],
+
+  "KING_OF_THE_FERAL_IMPS": [
+    "MOVE_ENDURE"
+  ],
+
+  "KING_OF_THE_SKULL_SERVANTS": [
+    "MOVE_ENDURE"
+  ],
+
+  "KING_OF_YAMIMAKAI": [
+    "MOVE_ENDURE"
+  ],
+
+  "KOUMORI_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "KURIBABYLON": [
+    "MOVE_ENDURE"
+  ],
+
+  "KURIBOH": [
+    "MOVE_ENDURE"
+  ],
+
+  "KURIBON": [
+    "MOVE_ENDURE"
+  ],
+
+  "KYUOTORA": [
+    "MOVE_ENDURE"
+  ],
+
+  "LARVAE_MOTH": [
+    "MOVE_ENDURE"
+  ],
+
+  "LAUNCHER_SPIDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "LAUNDRY_DRAGONMAID": [
+    "MOVE_ENDURE"
+  ],
+
+  "LAVA_BATTLEGUARD": [
+    "MOVE_ENDURE"
+  ],
+
+  "LAVA_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "LA_JINN": [
+    "MOVE_ENDURE"
+  ],
+
+  "LEGENDARY_FISHERMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "LEGENDARY_FISHERMAN_TWO": [
+    "MOVE_ENDURE"
+  ],
+
+  "LEVEL_EATER": [
+    "MOVE_ENDURE"
+  ],
+
+  "LINKURIBOH": [
+    "MOVE_ENDURE"
+  ],
+
+  "LITTLE_D": [
+    "MOVE_ENDURE"
+  ],
+
+  "LITTLE_WINGUARD": [
+    "MOVE_ENDURE"
+  ],
+
+  "LORD_OF_D": [
+    "MOVE_ENDURE"
+  ],
+
+  "LORD_POISON": [
+    "MOVE_ENDURE"
+  ],
+
+  "LUSTER_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "LUSTER_DRAGON_TWO": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAD_DOG_OF_DARKNESS": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAGICIAN_OF_BLACK_CHAOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAJESTIC_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAJESTIC_RED_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAJESTIC_STAR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAMMOTH_GRAVEYARD": [
+    "MOVE_ENDURE"
+  ],
+
+  "MANGA_RYU_RAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "MAN_EATER_BUG": [
+    "MOVE_ENDURE"
+  ],
+
+  "MARSHMALLON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MASKED_BEAST": [
+    "MOVE_ENDURE"
+  ],
+
+  "MASKED_BEAST_DES_GARDIUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "MASTER_OF_OZ": [
+    "MOVE_ENDURE"
+  ],
+
+  "MEDA_BAT": [
+    "MOVE_ENDURE"
+  ],
+
+  "MEDIUM_PIECE_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "MEGAZOWLER": [
+    "MOVE_ENDURE"
+  ],
+
+  "MELCHID_THE_FOUR_FACE_BEAST": [
+    "MOVE_ENDURE"
+  ],
+
+  "METALZOA": [
+    "MOVE_ENDURE"
+  ],
+
+  "METEOR_BLACK_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "METEOR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MIMICAT": [
+    "MOVE_ENDURE"
+  ],
+
+  "MISTAR_BOY": [
+    "MOVE_ENDURE"
+  ],
+
+  "MOBIUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "MOKEY_KING": [
+    "MOVE_ENDURE"
+  ],
+
+  "MOKEY_MOKEY": [
+    "MOVE_ENDURE"
+  ],
+
+  "MONTAGE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "MOON_DRAGON_QUILLA": [
+    "MOVE_ENDURE"
+  ],
+
+  "MUDBALLMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "MUKA_MUKA": [
+    "MOVE_ENDURE"
+  ],
+
+  "MUSHROOM_MAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "MUSICIAN_KING": [
+    "MOVE_ENDURE"
+  ],
+
+  "MYSTICAL_BEAST_OF_SERKET": [
+    "MOVE_ENDURE"
+  ],
+
+  "MYSTICAL_ELF": [
+    "MOVE_ENDURE"
+  ],
+
+  "MYSTIC_TOMATO": [
+    "MOVE_ENDURE"
+  ],
+
+  "NECROID_SHAMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "NECROSHADE": [
+    "MOVE_ENDURE"
+  ],
+
+  "NECROSS_HEAD": [
+    "MOVE_ENDURE"
+  ],
+
+  "NEEDLE_WORM": [
+    "MOVE_ENDURE"
+  ],
+
+  "NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "NEO_AQUA_MADOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "NIBIRU": [
+    "MOVE_ENDURE"
+  ],
+
+  "NIBIRU_MONSTER_FORM": [
+    "MOVE_ENDURE"
+  ],
+
+  "NIGHTMARE_PENGUIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "NITRO_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "NITRO_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "NIWATORI": [
+    "MOVE_ENDURE"
+  ],
+
+  "NOBLEMAN_EATER_BUG": [
+    "MOVE_ENDURE"
+  ],
+
+  "OBELISK_THE_TORMENTOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "OBNOXIOUS_CELTIC_GUARDIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "OCEAN_DRAGON_LORD_KAIRYU_SHIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "OJAMA_KING": [
+    "MOVE_ENDURE"
+  ],
+
+  "OJAMA_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "OJAMA_YELLOW": [
+    "MOVE_ENDURE"
+  ],
+
+  "ORGOTH_THE_RELENTLESS": [
+    "MOVE_ENDURE"
+  ],
+
+  "OUTSTANDING_DOG_MARRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "OVERTEX_QOATLUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "PALADIN_OF_WHITE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "PANTHER_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "PARASITE_CATERPILLAR": [
+    "MOVE_ENDURE"
+  ],
+
+  "PARROT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "PENDULUM_MACHINE": [
+    "MOVE_ENDURE"
+  ],
+
+  "PENGUIN_SOLDIER": [
+    "MOVE_ENDURE"
+  ],
+
+  "PERFECTLY_ULTIMATE_GREAT_MOTH": [
+    "MOVE_ENDURE"
+  ],
+
+  "PETEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "PETIT_MOTH": [
+    "MOVE_ENDURE"
+  ],
+
+  "PLASMA_VICE": [
+    "MOVE_ENDURE"
+  ],
+
+  "POISON_BUTTERFLY": [
+    "MOVE_ENDURE"
+  ],
+
+  "POKI_DRACO": [
+    "MOVE_ENDURE"
+  ],
+
+  "POT_OF_GREED": [
+    "MOVE_ENDURE"
+  ],
+
+  "PREDAPLANT_VERTE_ANACONDA": [
+    "MOVE_ENDURE"
+  ],
+
+  "PUMPKING": [
+    "MOVE_ENDURE"
+  ],
+
+  "QUEENS_KNIGHT": [
+    "MOVE_ENDURE"
+  ],
+
+  "QUICKDRAW_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "QUILLBOLT_HEDGEHOG": [
+    "MOVE_ENDURE"
+  ],
+
+  "RABID_HORSEMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "RAINBOW_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RAINBOW_NEOS": [
+    "MOVE_ENDURE"
+  ],
+
+  "RAMPART_BLASTER": [
+    "MOVE_ENDURE"
+  ],
+
+  "RAVIEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "REAPER_OF_THE_CARDS": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_ARCHERY_GIRL": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_DRAGON_ARCHFIEND": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_EYES_BLACK_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_EYES_BLACK_METAL_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_EYES_TOON_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_NOVA_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_RISING_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RED_ROSE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "REGENERATING_ROSE": [
+    "MOVE_ENDURE"
+  ],
+
+  "RELINQUISHED": [
+    "MOVE_ENDURE"
+  ],
+
+  "REPTILIANNE_SERVANT": [
+    "MOVE_ENDURE"
+  ],
+
+  "RESCUE_CAT": [
+    "MOVE_ENDURE"
+  ],
+
+  "RESCURE_RABBIT": [
+    "MOVE_ENDURE"
+  ],
+
+  "REVIVAL_HAM": [
+    "MOVE_ENDURE"
+  ],
+
+  "REVIVAL_ROSE": [
+    "MOVE_ENDURE"
+  ],
+
+  "ROAD_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "ROAD_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "ROCKET_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "RONINTOADIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "ROSE_TENTACLES": [
+    "MOVE_ENDURE"
+  ],
+
+  "RUBY_CARBUNCLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "RUDDY_ROSE_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "RYU_KISHIN": [
+    "MOVE_ENDURE"
+  ],
+
+  "RYU_KISHIN_POWERED": [
+    "MOVE_ENDURE"
+  ],
+
+  "RYU_RAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SAGGI": [
+    "MOVE_ENDURE"
+  ],
+
+  "SAMSARAS_LOTUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "SANGAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SANGA_OF_THE_THUNDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "SANWITCH": [
+    "MOVE_ENDURE"
+  ],
+
+  "SEIYARYU": [
+    "MOVE_ENDURE"
+  ],
+
+  "SERPENT_NIGHT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SEVEN_COLOURED_FISH": [
+    "MOVE_ENDURE"
+  ],
+
+  "SHINING_FLARE_WINGMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SHINING_FRIENDSHIP": [
+    "MOVE_ENDURE"
+  ],
+
+  "SHOOTING_QUASAR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SHOOTING_STAR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SHUNOROS": [
+    "MOVE_ENDURE"
+  ],
+
+  "SILENT_MAGICIAN_LEVEL4": [
+    "MOVE_ENDURE"
+  ],
+
+  "SILENT_MAGICIAN_LEVEL8": [
+    "MOVE_ENDURE"
+  ],
+
+  "SILENT_SWORDSMAN_LEVEL3": [
+    "MOVE_ENDURE"
+  ],
+
+  "SILENT_SWORDSMAN_LEVEL7": [
+    "MOVE_ENDURE"
+  ],
+
+  "SINISTER_SERPENT": [
+    "MOVE_ENDURE"
+  ],
+
+  "SKULL_DICE": [
+    "MOVE_ENDURE"
+  ],
+
+  "SKULL_DOG_MARRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SKULL_SERVANT": [
+    "MOVE_ENDURE"
+  ],
+
+  "SLIFER_THE_SKY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SLOT_MACHINE": [
+    "MOVE_ENDURE"
+  ],
+
+  "SMALL_PIECE_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "SNOWDUST_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SNOWMAN_EATER": [
+    "MOVE_ENDURE"
+  ],
+
+  "SNOWMAN_EATER_BUSTED": [
+    "MOVE_ENDURE"
+  ],
+
+  "SNOW_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SOLITAIRE_MAGICIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SONIC_BIRD": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPACE_MAMBO": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPARKMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPEAR_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "GRACEFUL_DICE": [
+    "MOVE_ENDURE"
+  ],
+
+  "LIFE_STREAM_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "POWER_TOOL_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "REVOLUTION_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPEED_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPHERE_KURIBOH": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPORE": [
+    "MOVE_ENDURE"
+  ],
+
+  "SPORE_THE_FAIRY_SEED": [
+    "MOVE_ENDURE"
+  ],
+
+  "STARDUST_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "STARRY_NIGHT_STARRY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "STAR_BOY": [
+    "MOVE_ENDURE"
+  ],
+
+  "STEAMROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "STEAM_GYROID": [
+    "MOVE_ENDURE"
+  ],
+
+  "STEAM_HEALER": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUBSTITOAD": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUMMONED_SKULL": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUNLIGHT_UNICORN": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUN_DRAGON_INTI": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUPAY": [
+    "MOVE_ENDURE"
+  ],
+
+  "SUPER_VEHICROID_JUMBO_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "SWAMP_BATTLEGUARD": [
+    "MOVE_ENDURE"
+  ],
+
+  "SWAP_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "SWORDSMAN_OF_LANDSTAR": [
+    "MOVE_ENDURE"
+  ],
+
+  "SWORDSTALKER": [
+    "MOVE_ENDURE"
+  ],
+
+  "TADPOLE": [
+    "MOVE_ENDURE"
+  ],
+
+  "THE_GREAT_LEVIATHAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "THIRTEENTH_GRAVE": [
+    "MOVE_ENDURE"
+  ],
+
+  "THOUSAND_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "THOUSAND_EYES_IDOL": [
+    "MOVE_ENDURE"
+  ],
+
+  "THOUSAND_EYES_RESTRICT": [
+    "MOVE_ENDURE"
+  ],
+
+  "THUNDERGIANT": [
+    "MOVE_ENDURE"
+  ],
+
+  "THUNDER_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "THUNDER_DRAGON_COLOSSUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "THUNDER_DRAGON_TITAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "THUNDER_KID": [
+    "MOVE_ENDURE"
+  ],
+
+  "TIMAEUS": [
+    "MOVE_ENDURE"
+  ],
+
+  "TIME_WIZARD": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOADALLY_AWESOME": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_ALLIGATOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_ANCIENT_GEAR_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_DARK_MAGICIAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_DARK_MAGICIAN_GIRL": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_GEMINI_ELF": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_MERMAID": [
+    "MOVE_ENDURE"
+  ],
+
+  "TOON_SUMMONED_SKULL": [
+    "MOVE_ENDURE"
+  ],
+
+  "TRADETOAD": [
+    "MOVE_ENDURE"
+  ],
+
+  "TREEBORN_FROG": [
+    "MOVE_ENDURE"
+  ],
+
+  "TRI_HORNED_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "TURBO_SYNCHRON": [
+    "MOVE_ENDURE"
+  ],
+
+  "TURBO_WARRIOR": [
+    "MOVE_ENDURE"
+  ],
+
+  "TWIN_HEADED_REX": [
+    "MOVE_ENDURE"
+  ],
+
+  "TWIN_HEADED_THUNDER_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "TYRANT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "ULTIMATE_ANCIENT_GEAR_GOLEM": [
+    "MOVE_ENDURE"
+  ],
+
+  "ULTIMATE_BASEBALL_KID": [
+    "MOVE_ENDURE"
+  ],
+
+  "UNDERGROUND_ARACHNID": [
+    "MOVE_ENDURE"
+  ],
+
+  "URABY": [
+    "MOVE_ENDURE"
+  ],
+
+  "URIA": [
+    "MOVE_ENDURE"
+  ],
+
+  "VALKYRION": [
+    "MOVE_ENDURE"
+  ],
+
+  "VAMPIRE_BAT": [
+    "MOVE_ENDURE"
+  ],
+
+  "VAMPIRE_GENESIS": [
+    "MOVE_ENDURE"
+  ],
+
+  "VAMPIRE_GRACE": [
+    "MOVE_ENDURE"
+  ],
+
+  "VAMPIRE_LADY": [
+    "MOVE_ENDURE"
+  ],
+
+  "VAMPIRE_LORD": [
+    "MOVE_ENDURE"
+  ],
+
+  "VENNOMINAGA": [
+    "MOVE_ENDURE"
+  ],
+
+  "VENNOMINON": [
+    "MOVE_ENDURE"
+  ],
+
+  "VENOM_BOA": [
+    "MOVE_ENDURE"
+  ],
+
+  "VICTORY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_DOOMFIRE": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_HAMMERER": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_QUEEN": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_SCATTERSHOT": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_SHELL": [
+    "MOVE_ENDURE"
+  ],
+
+  "VOLCANIC_SLICER": [
+    "MOVE_ENDURE"
+  ],
+
+  "VORSE_RAIDER": [
+    "MOVE_ENDURE"
+  ],
+
+  "WALL_SHADOW": [
+    "MOVE_ENDURE"
+  ],
+
+  "WARM_WORM": [
+    "MOVE_ENDURE"
+  ],
+
+  "WARRIOR_OF_ZERA": [
+    "MOVE_ENDURE"
+  ],
+
+  "WATAPON": [
+    "MOVE_ENDURE"
+  ],
+
+  "WHITE_NIGHT_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "WILDHEART": [
+    "MOVE_ENDURE"
+  ],
+
+  "WILD_WINGMAN": [
+    "MOVE_ENDURE"
+  ],
+
+  "WINGED_DRAGON_GUARDIAN_OF_THE_FORTRESS": [
+    "MOVE_ENDURE"
+  ],
+
+  "WINGED_DRAGON_OF_RA": [
+    "MOVE_ENDURE"
+  ],
+
+  "WINGED_KURIBOH": [
+    "MOVE_ENDURE"
+  ],
+
+  "WINGED_KURIBOH_LEVEL10": [
+    "MOVE_ENDURE"
+  ],
+
+  "WITCH_OF_THE_BLACK_FOREST": [
+    "MOVE_ENDURE"
+  ],
+
+  "XYZ_DRAGON_CANNON": [
+    "MOVE_ENDURE"
+  ],
+
+  "XY_DRAGON": [
+    "MOVE_ENDURE"
+  ],
+
+  "X_CANNON": [
+    "MOVE_ENDURE"
+  ],
+
+  "YATA_GARASU": [
+    "MOVE_ENDURE"
+  ],
+
+  "YUBEL": [
+    "MOVE_ENDURE"
+  ],
+
+  "YUBEL_TERROR_INCARNATE": [
+    "MOVE_ENDURE"
+  ],
+
+  "YUBEL_ULTIMATE_KNIGHTMARE": [
+    "MOVE_ENDURE"
+  ],
+
+  "ZEMAN_THE_APE_KING": [
+    "MOVE_ENDURE"
+  ],
+
+  "ZERA_THE_MANT": [
+    "MOVE_ENDURE"
+  ],
+
+  "ZOA": [
+    "MOVE_ENDURE"
+  ],
 
   "PINCURCHIN": [
     "MOVE_ACUPRESSURE",

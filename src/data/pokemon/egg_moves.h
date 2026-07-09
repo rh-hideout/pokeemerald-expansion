@@ -6360,2526 +6360,3176 @@ static const u16 sFrigibaxEggMoveLearnset[] = {
 };
 #endif //P_FAMILY_FRIGIBAX
 
+
+
 static const u16 sEmptyEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sIllusionMagicianEggMoveLearnset[] = {
-    MOVE_ANCIENT_POWER,
-   // MOVE_CASTLE_WALLS,
-   // MOVE_CARD_DESTRUCTION,
-   // MOVE_DKMAGICATK,
-  //  MOVE_MAKIU_THE_MAGICAL_MIST,
-  //  MOVE_MIRACLE_RESTORING,
-  //  MOVE_THOUSAND_KNIVES,
+static const u16 sAgidoEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAgidoTheAncientSentinelEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAirNeosEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAlectorEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAlligatorSwordEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAlligatorSwordDragonEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAlphaTheMagnetWarriorEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmazonessBabyTigerEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmazonessPrincessEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmazonessQueenEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmazonessTigerEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmbulanceroidEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAmbulanceRescueroidEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAnchorboltHedgehogEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAncientFairyDragonEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAncientGearGolemEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAncientGearSoldierEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAncientPixieDragonEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sAquaMadorEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkMagicianEggMoveLearnset[] = {
-    MOVE_ANCIENT_POWER,
-   // MOVE_CASTLE_WALLS,
-   // MOVE_CARD_DESTRUCTION,
-   // MOVE_DKMAGICATK,
-  //  MOVE_MAKIU_THE_MAGICAL_MIST,
-  //  MOVE_MIRACLE_RESTORING,
-  //  MOVE_THOUSAND_KNIVES,
+static const u16 sAquaNeosEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkSageEggMoveLearnset[] = {
-    MOVE_ANCIENT_POWER,
-   // MOVE_CASTLE_WALLS,
-   // MOVE_CARD_DESTRUCTION,
-   // MOVE_DKMAGICATK,
-  //  MOVE_MAKIU_THE_MAGICAL_MIST,
-  //  MOVE_MIRACLE_RESTORING,
-  //  MOVE_THOUSAND_KNIVES,
+static const u16 sArcanaForceTheDarkRulerEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackDragonsChickEggMoveLearnset[] = {
+static const u16 sArcanaForceTheFiendEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sArcanaForceTheLightRulerEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sRedEyesBlackDragonEggMoveLearnset[] = {
+static const u16 sArcanaForceTheWorldEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRedEyesBlackMetalDragonEggMoveLearnset[] = {
+static const u16 sArchfiendsMirrorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPaladinOfWhiteDragonEggMoveLearnset[] = {
+static const u16 sArchfiendsZombieSkullEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlueEyesWhiteDragonEggMoveLearnset[] = {
+static const u16 sArmedDragonLevel10EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlueEyesUltimateDragonEggMoveLearnset[] = {
+static const u16 sArmedDragonLevel3EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPetitMothEggMoveLearnset[] = {
+static const u16 sArmedDragonLevel5EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLarvaeMothEggMoveLearnset[] = {
+static const u16 sArmedDragonLevel7EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCocoonOfEvolutionEggMoveLearnset[] = {
+static const u16 sArmoredBeeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGreatMothEggMoveLearnset[] = {
+static const u16 sArmouredBasicInsectEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPerfectlyUltimateGreatMothEggMoveLearnset[] = {
+static const u16 sAvatarOfThePotEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sParasiteCaterpillarEggMoveLearnset[] = {
+static const u16 sAvianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPoisonButterflyEggMoveLearnset[] = {
+static const u16 sAxeRaiderEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBeaverWarriorEggMoveLearnset[] = {
+static const u16 sBabyDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKuribohEggMoveLearnset[] = {
+static const u16 sBarrelDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWingedKuribohEggMoveLearnset[] = {
+static const u16 sBasicInsectEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWingedKuribohLevel10EggMoveLearnset[] = {
+static const u16 sBattleOxEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLinkuribohEggMoveLearnset[] = {
+static const u16 sBeaverWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKuribabylonEggMoveLearnset[] = {
+static const u16 sBeelzeFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sBehemothKingOfAllAnimalsEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sKuribonEggMoveLearnset[] = {
+static const u16 sBerformetEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sBerserkionEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sSphereKuribohEggMoveLearnset[] = {
+static const u16 sBerserkGorillaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkuribohEggMoveLearnset[] = {
+static const u16 sBetaTheMagnetWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLittleWinguardEggMoveLearnset[] = {
+static const u16 sBigPieceGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRocketWarriorEggMoveLearnset[] = {
+static const u16 sBigShieldGardnaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSwordsmanOfLandstarEggMoveLearnset[] = {
+static const u16 sBlackwingArmorMasterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGilfordTheLightningEggMoveLearnset[] = {
+static const u16 sBlackwingAssaultDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHappyLoverEggMoveLearnset[] = {
+static const u16 sBlackwingDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sShiningFriendshipEggMoveLearnset[] = {
+static const u16 sBlackwingGaleTheWhirlwindEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSpeedWarriorEggMoveLearnset[] = {
+static const u16 sBlackwingGhibliEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkSpeederEggMoveLearnset[] = {
+static const u16 sBlackDragonsChickEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFlameManipulatorEggMoveLearnset[] = {
+static const u16 sBlackLusterSoldierEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFlameSwordsmanEggMoveLearnset[] = {
+static const u16 sBlackPteraEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkFlareKnightEggMoveLearnset[] = {
+static const u16 sBlackRoseDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFeralImpEggMoveLearnset[] = {
+static const u16 sBlackSkullDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDesFeralImpEggMoveLearnset[] = {
+static const u16 sBlackTyrannoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKingOfTheFeralImpEggMoveLearnset[] = {
+static const u16 sBladedgeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBabyDragonEggMoveLearnset[] = {
+static const u16 sBladeSkaterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThousandDragonEggMoveLearnset[] = {
+static const u16 sBlazingInpachiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJerryBeansManEggMoveLearnset[] = {
+static const u16 sBlockDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWitchOfTheBlackForestEggMoveLearnset[] = {
+static const u16 sBlowbackDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSanganEggMoveLearnset[] = {
+static const u16 sBlueEyesToonDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSanwitchEggMoveLearnset[] = {
+static const u16 sBlueEyesUltimateDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInjectionFairyLilyEggMoveLearnset[] = {
+static const u16 sBlueEyesWhiteDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBetaTheMagnetWarriorEggMoveLearnset[] = {
+static const u16 sBreakerTheMagicalWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sValkyrionEggMoveLearnset[] = {
+static const u16 sBubblemanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAlphaTheMagnetWarriorEggMoveLearnset[] = {
+static const u16 sBurstinatrixEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBerserkionEggMoveLearnset[] = {
+static const u16 sBusterBladerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGokiboreEggMoveLearnset[] = {
+static const u16 sCatapultTurtleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGokipoleEggMoveLearnset[] = {
+static const u16 sCelticGuardianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBerfometEggMoveLearnset[] = {
+static const u16 sCelticGuardianOfNobleArmsEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sChimeraEggMoveLearnset[] = {
+static const u16 sChangeOfHeartEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sChimaeraEggMoveLearnset[] = {
+static const u16 sChaosEmperorDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSwampBattleguardEggMoveLearnset[] = {
+static const u16 sCharcoalInpachiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLavaBattleguardEggMoveLearnset[] = {
+static const u16 sChimaeraTheMasterOfBeastsEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKillerNeedleEggMoveLearnset[] = {
+static const u16 sChimeratechOverdragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmouredBeeEggMoveLearnset[] = {
+static const u16 sChimeraTheFlyingMythicalBeastEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPokiDracoEggMoveLearnset[] = {
+static const u16 sClaymanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDoraDracoEggMoveLearnset[] = {
+static const u16 sClearViceDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMukaMukaEggMoveLearnset[] = {
+static const u16 sCloudianEyeOfTheTyphoonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEnragedMukaMukaEggMoveLearnset[] = {
+static const u16 sCloudianNimbusmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sQuilboltHedgehogEggMoveLearnset[] = {
+static const u16 sCockroachKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAnchorboltHedgehogEggMoveLearnset[] = {
+static const u16 sCocoonOfEvolutionEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFrogTheJamEggMoveLearnset[] = {
+static const u16 sCrabTurtleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToadallyAwesomeEggMoveLearnset[] = {
+static const u16 sCrimsonDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTreebornFrogEggMoveLearnset[] = {
+static const u16 sCrimsonResonatorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTradetoadEggMoveLearnset[] = {
+static const u16 sCritiasEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSubstitoadEggMoveLearnset[] = {
+static const u16 sCrystalBeastSaphirePegasusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDesFrogEggMoveLearnset[] = {
+static const u16 sCurseOfDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sD3sFrogEggMoveLearnset[] = {
+static const u16 sCyberdarkDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTadpoleEggMoveLearnset[] = {
+static const u16 sCyberdarkHornEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBeelzeFrogEggMoveLearnset[] = {
+static const u16 sCyberneticCyclopeanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSwapFrogEggMoveLearnset[] = {
+static const u16 sCybertechAlligatorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRonintoadinEggMoveLearnset[] = {
+static const u16 sCyberAngelBentenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDupeFrogEggMoveLearnset[] = {
+static const u16 sCyberAngelDakiniEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLusterDragonEggMoveLearnset[] = {
+static const u16 sCyberBladerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLusterDragon2EggMoveLearnset[] = {
+static const u16 sCyberDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDiamondHeadDragonEggMoveLearnset[] = {
+static const u16 sCyberEndDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLittleDEggMoveLearnset[] = {
+static const u16 sCyberPetitAngelEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sUrabyEggMoveLearnset[] = {
+static const u16 sCyberSlashHarpieLadyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackTyrannoEggMoveLearnset[] = {
+static const u16 sCyberTwinDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBasicInsectEggMoveLearnset[] = {
+static const u16 sD3sFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmouredBasicInsectEggMoveLearnset[] = {
+static const u16 sDaedalusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInsectPrincessEggMoveLearnset[] = {
+static const u16 sDandylionEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInsectQueenEggMoveLearnset[] = {
+static const u16 sDarkCavalryEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTwoHeadedKingRexEggMoveLearnset[] = {
+static const u16 sDarkDivinerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCelticGuardianEggMoveLearnset[] = {
+static const u16 sDarkFlareKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sObnoxiousCelticGuardianEggMoveLearnset[] = {
+static const u16 sDarkFlattopEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCelticGuardianOfNobleArmsEggMoveLearnset[] = {
+static const u16 sDarkJeroidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRyuKishinEggMoveLearnset[] = {
+static const u16 sDarkKingOfTheAbyssEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRyuKishinPoweredEggMoveLearnset[] = {
+static const u16 sDarkMagicianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWataponEggMoveLearnset[] = {
+static const u16 sDarkMagicianGirlEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMarshmallonEggMoveLearnset[] = {
+static const u16 sDarkMagicianGirlTheDragonKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSporeEggMoveLearnset[] = {
+static const u16 sDarkNecrofearEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSporeTheFairyCellEggMoveLearnset[] = {
+static const u16 sDarkNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOjamaYellowEggMoveLearnset[] = {
+static const u16 sDarkPaladinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOjamaKnightEggMoveLearnset[] = {
+static const u16 sDarkResonatorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOjamaKingEggMoveLearnset[] = {
+static const u16 sDarkRulerHaDesEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMysticElfEggMoveLearnset[] = {
+static const u16 sDarkSageEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFlameCerebrusEggMoveLearnset[] = {
+static const u16 sDebrisDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAligatorSwordEggMoveLearnset[] = {
+static const u16 sDestinyHeroDreadmasterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCybertechAligatorEggMoveLearnset[] = {
+static const u16 sDestinyHeroPlasmaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAligatorSwordDragonEggMoveLearnset[] = {
+static const u16 sDesFeralImpEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAxeRaiderEggMoveLearnset[] = {
+static const u16 sDesFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVorseRaiderEggMoveLearnset[] = {
+static const u16 sDesKangarooEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWildheartEggMoveLearnset[] = {
+static const u16 sDiamondHeadDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWildWingmanEggMoveLearnset[] = {
+static const u16 sDivineSerpentGehEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWingedDragonGuardianOfTheFortressEggMoveLearnset[] = {
+static const u16 sDoomKrakenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkMagicianGirlEggMoveLearnset[] = {
+static const u16 sDoraDracoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkMagicianGirlTheDragonKnightEggMoveLearnset[] = {
+static const u16 sDragonmaidNudyarlEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKairyuShinEggMoveLearnset[] = {
+static const u16 sDragonMasterKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOceanDragonLordKairyuShinEggMoveLearnset[] = {
+static const u16 sDragonQueenOfTragicEndingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackwingGaleTheWhirlwindEggMoveLearnset[] = {
+static const u16 sDrillroidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackwingArmorMasterEggMoveLearnset[] = {
+static const u16 sDungeonWormEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCockroachKnightEggMoveLearnset[] = {
+static const u16 sDupeFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInsectKnightEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalAsllaPiscuEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sUltimateBaseballKidEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalAsllaPiscuAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHarpieLadyEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCcapacApuEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHarpieLadySistersEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCcapacApuAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberHarpieLadyEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCcarayhuaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberSlashHarpieLadyEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCcarayhuaAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHarpieQueenEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalChacuChallhuaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHarpieBroEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalChacuChallhuaAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHarpiesPetDragonEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCusilluEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmazonessBabyTigerEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalCusilluAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmazonessTigerEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalUruEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmazonessPrincessEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalUruAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmazonessQueenEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalWiraqochaRascaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRevivalRoseEggMoveLearnset[] = {
+static const u16 sEarthboundImmortalWiraqochaRascaAwakenedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRegeneratorRoseEggMoveLearnset[] = {
+static const u16 sEgyptianGodSlimeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRoseTentaclesEggMoveLearnset[] = {
+static const u16 sEldlichEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkResonatorEggMoveLearnset[] = {
+static const u16 sElectromagneticTurtleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCrimsonResonatorEggMoveLearnset[] = {
+static const u16 sEmbodimentOfApophisEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSmallPieceGolemEggMoveLearnset[] = {
+static const u16 sEmperorPenguinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMidPieceGolemEggMoveLearnset[] = {
+static const u16 sEnragedMukaMukaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBigPieceGolemEggMoveLearnset[] = {
+static const u16 sExodiaHeadEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSummonedSkullEggMoveLearnset[] = {
+static const u16 sExodiaNecrossEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackSkullDragonEggMoveLearnset[] = {
+static const u16 sExodiaTheForbiddenOneEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sZombieSkullEggMoveLearnset[] = {
+static const u16 sFairyDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCurseOfDragonEggMoveLearnset[] = {
+static const u16 sFeralImpEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGaiaTheDragonChampionEggMoveLearnset[] = {
+static const u16 sFiendKrakenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sQueensKnightEggMoveLearnset[] = {
+static const u16 sFirewallDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKingsKnightEggMoveLearnset[] = {
+static const u16 sFiveGodDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJacksKnightEggMoveLearnset[] = {
+static const u16 sFlameCerebrusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInfernityArchfiendEggMoveLearnset[] = {
+static const u16 sFlameManipulatorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInfernityDoomArchfiendEggMoveLearnset[] = {
+static const u16 sFlameSwordsmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArcheryGirlEggMoveLearnset[] = {
+static const u16 sFlameWingmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSaggiEggMoveLearnset[] = {
+static const u16 sFlareNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPetenEggMoveLearnset[] = {
+static const u16 sFormulaSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAgidoEggMoveLearnset[] = {
+static const u16 sFortressWhaleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAgidoTheAncientSentinelEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKeldoEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryBugEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKeldoTheSacredProtectorEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryDarkEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackPteraEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOvertexQoatlusEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryElectricEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLordOfDEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryFightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKingOfDEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryFireEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGearfriedTheIronKnightEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryFlyingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGearfriedTheSwordmasterEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryGhostEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGiantSoldierOfStoneEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryGrassEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGiantSoldierOfSteelEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryGroundEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCrabTurtleEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryIceEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLegendaryFishermanEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryPoisonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLegendaryFisherman2EggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryPsychicEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKoumoriDragonEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryRockEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSerpentNightDragonEggMoveLearnset[] = {
+static const u16 sFortuneLadyEverySteelEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkSynchronEggMoveLearnset[] = {
+static const u16 sFortuneLadyEveryWaterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkWarriorEggMoveLearnset[] = {
+static const u16 sFrogTheJamEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkDestroyerEggMoveLearnset[] = {
+static const u16 sFrostAndFlameDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJunkArcherEggMoveLearnset[] = {
+static const u16 sFrozenFitzgeraldEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNitroSynchronEggMoveLearnset[] = {
+static const u16 sGaiaKnightTheForceOfEarthEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNitroWarriorEggMoveLearnset[] = {
+static const u16 sGaiaTheDragonChampionEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTurboSynchronEggMoveLearnset[] = {
+static const u16 sGaiaTheFierceKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTurboWarriorEggMoveLearnset[] = {
+static const u16 sGamecielEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRoadSynchronEggMoveLearnset[] = {
+static const u16 sGandoraEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRoadWarriorEggMoveLearnset[] = {
+static const u16 sGateGuardianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sQuickdrawSynchronEggMoveLearnset[] = {
+static const u16 sGateGuardianThunderWindEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLevelEaterEggMoveLearnset[] = {
+static const u16 sGearfriedTheIronKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOutstandingDogMarronEggMoveLearnset[] = {
+static const u16 sGearfriedTheSwordmasterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSkullDogMarronEggMoveLearnset[] = {
+static const u16 sGeminiElfEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMadDogOfDarknessEggMoveLearnset[] = {
+static const u16 sGhostrickWitchEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBehemothKingOfAllAnimalsEggMoveLearnset[] = {
+static const u16 sGiantRexEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInpachiEggMoveLearnset[] = {
+static const u16 sGiantSoldierOfSteelEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlazingInpachiEggMoveLearnset[] = {
+static const u16 sGiantSoldierOfStoneEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCharcoalInpachiEggMoveLearnset[] = {
+static const u16 sGilfordTheLightningEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGaiaTheFierceKnightEggMoveLearnset[] = {
+static const u16 sGlowNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGaiaEarthEggMoveLearnset[] = {
+static const u16 sGokiboreEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkCalvaryEggMoveLearnset[] = {
+static const u16 sGokipoleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAvianEggMoveLearnset[] = {
+static const u16 sGrandNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFlameWingmanEggMoveLearnset[] = {
+static const u16 sGrandTikiElderEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sShiningFlameWingmanEggMoveLearnset[] = {
+static const u16 sGreatMammothOfGoldfineEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberPetitAngelEggMoveLearnset[] = {
+static const u16 sGreatMothEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberAngelBentenEggMoveLearnset[] = {
+static const u16 sGuardianEatosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberAngelDakiniEggMoveLearnset[] = {
+static const u16 sHamonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWarriorOfZeraEggMoveLearnset[] = {
+static const u16 sHappyLoverEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sZeraTheMantEggMoveLearnset[] = {
+static const u16 sHarpiesPetDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMegazowlerEggMoveLearnset[] = {
+static const u16 sHarpieBrotherEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sIlusionistFacelessMageEggMoveLearnset[] = {
+static const u16 sHarpieLadyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sIlusionistFacelessMagicianEggMoveLearnset[] = {
+static const u16 sHarpieLadySistersEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sParrotDragonEggMoveLearnset[] = {
+static const u16 sHarpieQueenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTriHornedDragonEggMoveLearnset[] = {
+static const u16 sHeavyMetalKingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMysticTomatoEggMoveLearnset[] = {
+static const u16 sHeliosDuoMegistusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHungryBurgerEggMoveLearnset[] = {
+static const u16 sHeliosThePrimordialSunEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThunderDragonEggMoveLearnset[] = {
+static const u16 sHeliosTriceMegistusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTwinThunderDragonEggMoveLearnset[] = {
+static const u16 sHermosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThunderDragonTitanEggMoveLearnset[] = {
+static const u16 sHitotsuMeGiantEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThunderDragonColossusEggMoveLearnset[] = {
+static const u16 sHonestEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPantherWarriorEggMoveLearnset[] = {
+static const u16 sHonestNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSolitaireMagicianEggMoveLearnset[] = {
+static const u16 sHorusLevelFourEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFortuneLadyEveryEggMoveLearnset[] = {
+static const u16 sHorusLevelSixEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMusicianKingEggMoveLearnset[] = {
+static const u16 sHorusLevelEightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHeavyMetalKingEggMoveLearnset[] = {
+static const u16 sHumanoidSlimeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSlotMachineEggMoveLearnset[] = {
+static const u16 sHumanoidWormDrakeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBattleOxEggMoveLearnset[] = {
+static const u16 sHundredEyesDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRabidHorsemanEggMoveLearnset[] = {
+static const u16 sHungryBurgerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJiraiGumoEggMoveLearnset[] = {
+static const u16 sHyozanryuEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLauncherSpiderEggMoveLearnset[] = {
+static const u16 sIllusionistFacelessMageEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVampireBatEggMoveLearnset[] = {
+static const u16 sIllusionistFacelessMagicianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVampireLordEggMoveLearnset[] = {
+static const u16 sIllusionMagicianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVampireGenesisEggMoveLearnset[] = {
+static const u16 sInfernityArchfiendEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVampireLadyEggMoveLearnset[] = {
+static const u16 sInfernityDoomArchfiendEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVampireGraceEggMoveLearnset[] = {
+static const u16 sInfernoWingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sClaymanEggMoveLearnset[] = {
+static const u16 sInjectionFairyLilyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMudballmanEggMoveLearnset[] = {
+static const u16 sInpachiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGracefulDiceEggMoveLearnset[] = {
+static const u16 sInsectKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSkullDiceEggMoveLearnset[] = {
+static const u16 sInsectPrincessEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sOrgothEggMoveLearnset[] = {
+static const u16 sInsectQueenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLaJinnEggMoveLearnset[] = {
+static const u16 sJacksKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLordPoisonEggMoveLearnset[] = {
+static const u16 sJerryBeansManEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLavaGolemEggMoveLearnset[] = {
+static const u16 sJinzoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRevivalJamEggMoveLearnset[] = {
+static const u16 sJinzoReturnerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHumanoidSlimeEggMoveLearnset[] = {
+static const u16 sJiraiGumoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHumanoidWormDrakeEggMoveLearnset[] = {
+static const u16 sJudgeManEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEgyptianGodSlimeEggMoveLearnset[] = {
+static const u16 sJudgmentDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPendulumMachineEggMoveLearnset[] = {
+static const u16 sJunkuribohEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSpearDragonEggMoveLearnset[] = {
+static const u16 sJunkArcherEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSilentMagicianLevel4EggMoveLearnset[] = {
+static const u16 sJunkDestroyerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSilentMagicianLevel8EggMoveLearnset[] = {
+static const u16 sJunkSpeederEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSilentSwordsmanLevel3EggMoveLearnset[] = {
+static const u16 sJunkSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSilentSwordsmanLevel7EggMoveLearnset[] = {
+static const u16 sJunkWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGandoraEggMoveLearnset[] = {
+static const u16 sKairyuShinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sReaperOfTheCardsEggMoveLearnset[] = {
+static const u16 sKarateManEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKingOfYamimakaiEggMoveLearnset[] = {
+static const u16 sKeldoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRescueRabbitEggMoveLearnset[] = {
+static const u16 sKeldoTheSacredProtectorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRescueCatEggMoveLearnset[] = {
+static const u16 sKillerNeedleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWarmWormEggMoveLearnset[] = {
+static const u16 sKingsKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNeedleWormEggMoveLearnset[] = {
+static const u16 sKingOfDEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDungeonWormEggMoveLearnset[] = {
+static const u16 sKingOfTheFeralImpsEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKarateManEggMoveLearnset[] = {
+static const u16 sKingOfTheSkullServantsEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDesKangarooEggMoveLearnset[] = {
+static const u16 sKingOfYamimakaiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMasterOfOzEggMoveLearnset[] = {
+static const u16 sKoumoriDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBerserkGorillaEggMoveLearnset[] = {
+static const u16 sKuribabylonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSinisterSerpentEggMoveLearnset[] = {
+static const u16 sKuribohEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThirteenthGraveEggMoveLearnset[] = {
+static const u16 sKuribonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSkullServantEggMoveLearnset[] = {
+static const u16 sKyuotoraEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKingOfTheSkullServantEggMoveLearnset[] = {
+static const u16 sLarvaeMothEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCatapultTurtleEggMoveLearnset[] = {
+static const u16 sLauncherSpiderEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sElectromagnetTurtleEggMoveLearnset[] = {
+static const u16 sLaundryDragonmaidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlockDragonEggMoveLearnset[] = {
+static const u16 sLavaBattleguardEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBusterBladerEggMoveLearnset[] = {
+static const u16 sLavaGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkPaladinEggMoveLearnset[] = {
+static const u16 sLaJinnEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sXCannonEggMoveLearnset[] = {
+static const u16 sLegendaryFishermanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sXYDragonEggMoveLearnset[] = {
+static const u16 sLegendaryFishermanTwoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sXYZDragonEggMoveLearnset[] = {
+static const u16 sLevelEaterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJinzoReturnerEggMoveLearnset[] = {
+static const u16 sLinkuribohEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJinzoEggMoveLearnset[] = {
+static const u16 sLittleDEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRyuRanEggMoveLearnset[] = {
+static const u16 sLittleWinguardEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMangaRyuRanEggMoveLearnset[] = {
+static const u16 sLordOfDEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlueEyesToonDragonEggMoveLearnset[] = {
+static const u16 sLordPoisonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonAlligatorEggMoveLearnset[] = {
+static const u16 sLusterDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonGeminiElfEggMoveLearnset[] = {
+static const u16 sLusterDragonTwoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonDarkMagicianGirlEggMoveLearnset[] = {
+static const u16 sMadDogOfDarknessEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonSummonedSkullEggMoveLearnset[] = {
+static const u16 sMagicianOfBlackChaosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonAncientGearGolemEggMoveLearnset[] = {
+static const u16 sMajesticDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEggMoveLearnset[] = {
+static const u16 sMajesticRedDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonRedEyesEggMoveLearnset[] = {
+static const u16 sMajesticStarDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonDarkMagicianEggMoveLearnset[] = {
+static const u16 sMammothGraveyardEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBigShieldGardnaEggMoveLearnset[] = {
+static const u16 sMangaRyuRanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPotOfGreedEggMoveLearnset[] = {
+static const u16 sManEaterBugEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAvatarOfThePotEggMoveLearnset[] = {
+static const u16 sMarshmallonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPumpkingEggMoveLearnset[] = {
+static const u16 sMaskedBeastEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGuardianEatosEggMoveLearnset[] = {
+static const u16 sMaskedBeastDesGardiusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHyozanryuEggMoveLearnset[] = {
+static const u16 sMasterOfOzEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkNecrofearEggMoveLearnset[] = {
+static const u16 sMedaBatEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMeteorDragonEggMoveLearnset[] = {
+static const u16 sMediumPieceGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMeteorBlackDragonEggMoveLearnset[] = {
+static const u16 sMegazowlerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sYataGarasuEggMoveLearnset[] = {
+static const u16 sMelchidTheFourFaceBeastEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackLusterSoldierEggMoveLearnset[] = {
+static const u16 sMetalzoaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sChaosEmperorDragonEggMoveLearnset[] = {
+static const u16 sMeteorBlackDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDragonMasterKnightEggMoveLearnset[] = {
+static const u16 sMeteorDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNeosEggMoveLearnset[] = {
+static const u16 sMimicatEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAquaNeosEggMoveLearnset[] = {
+static const u16 sMistarBoyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFlareNeosEggMoveLearnset[] = {
+static const u16 sMobiusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGlowNeosEggMoveLearnset[] = {
+static const u16 sMokeyKingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAirNeosEggMoveLearnset[] = {
+static const u16 sMokeyMokeyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGrandNeosEggMoveLearnset[] = {
+static const u16 sMontageDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkNeosEggMoveLearnset[] = {
+static const u16 sMoonDragonQuillaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHonestNeosEggMoveLearnset[] = {
+static const u16 sMudballmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThousandEyesIdolEggMoveLearnset[] = {
+static const u16 sMukaMukaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRelinquishEggMoveLearnset[] = {
+static const u16 sMushroomManEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThousandEyesRestrictEggMoveLearnset[] = {
+static const u16 sMusicianKingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTheGreatLeviathanEggMoveLearnset[] = {
+static const u16 sMysticalBeastOfSerketEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFiveGodDragonEggMoveLearnset[] = {
+static const u16 sMysticalElfEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHamonEggMoveLearnset[] = {
+static const u16 sMysticTomatoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRavielEggMoveLearnset[] = {
+static const u16 sNecroidShamanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sUriaEggMoveLearnset[] = {
+static const u16 sNecroshadeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sObeliskTheTormentorEggMoveLearnset[] = {
+static const u16 sNecrossHeadEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWingedDragonOfRaEggMoveLearnset[] = {
+static const u16 sNeedleWormEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSliferTheSkyDragonEggMoveLearnset[] = {
+static const u16 sNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHorusLevel4EggMoveLearnset[] = {
+static const u16 sNeoAquaMadorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHorusLevel6EggMoveLearnset[] = {
+static const u16 sNibiruEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHorusLevel8EggMoveLearnset[] = {
+static const u16 sNibiruMonsterFormEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberdarkHornEggMoveLearnset[] = {
+static const u16 sNightmarePenguinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberdarkDragonEggMoveLearnset[] = {
+static const u16 sNitroSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberDragonEggMoveLearnset[] = {
+static const u16 sNitroWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberTwinDragonEggMoveLearnset[] = {
+static const u16 sNiwatoriEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberEndDragonEggMoveLearnset[] = {
+static const u16 sNoblemanEaterBugEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sChimeratechOverdragonEggMoveLearnset[] = {
+static const u16 sObeliskTheTormentorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sExodiaEggMoveLearnset[] = {
+static const u16 sObnoxiousCelticGuardianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sExodiaNecrossEggMoveLearnset[] = {
+static const u16 sOceanDragonLordKairyuShinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmedDragonLevel3EggMoveLearnset[] = {
+static const u16 sOjamaKingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmedDragonLevel5EggMoveLearnset[] = {
+static const u16 sOjamaKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmedDragonLevel7EggMoveLearnset[] = {
+static const u16 sOjamaYellowEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArmedDragonLevel10EggMoveLearnset[] = {
+static const u16 sOrgothTheRelentlessEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMobiusEggMoveLearnset[] = {
+static const u16 sOutstandingDogMarronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMokeyMokeyEggMoveLearnset[] = {
+static const u16 sOvertexQoatlusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMokeyKingEggMoveLearnset[] = {
+static const u16 sPaladinOfWhiteDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicShellEggMoveLearnset[] = {
+static const u16 sPantherWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicSlicerEggMoveLearnset[] = {
+static const u16 sParasiteCaterpillarEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicScattershotEggMoveLearnset[] = {
+static const u16 sParrotDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicHammererEggMoveLearnset[] = {
+static const u16 sPendulumMachineEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicDoomfireEggMoveLearnset[] = {
+static const u16 sPenguinSoldierEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVolcanicQueenEggMoveLearnset[] = {
+static const u16 sPerfectlyUltimateGreatMothEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTimeWizardEggMoveLearnset[] = {
+static const u16 sPetenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSnowDragonEggMoveLearnset[] = {
+static const u16 sPetitMothEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSnowdustDragonEggMoveLearnset[] = {
+static const u16 sPlasmaViceEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWhiteNightDragonEggMoveLearnset[] = {
+static const u16 sPoisonButterflyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSteamroidEggMoveLearnset[] = {
+static const u16 sPokiDracoEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSteamGyroidEggMoveLearnset[] = {
+static const u16 sPotOfGreedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDrillroidEggMoveLearnset[] = {
+static const u16 sPredaplantVerteAnacondaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSuperVehicroidJumboDrillEggMoveLearnset[] = {
+static const u16 sPumpkingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmbulanceroidEggMoveLearnset[] = {
+static const u16 sQueensKnightEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAmbulanceRescueroidEggMoveLearnset[] = {
+static const u16 sQuickdrawSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNecroshadeEggMoveLearnset[] = {
+static const u16 sQuillboltHedgehogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNecroidShamanEggMoveLearnset[] = {
+static const u16 sRabidHorsemanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSangaOfTheThunderEggMoveLearnset[] = {
+static const u16 sRainbowDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGateGuardianOfThunderWindEggMoveLearnset[] = {
+static const u16 sRainbowNeosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGateGuardianEggMoveLearnset[] = {
+static const u16 sRampartBlasterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSevenColouredFishEggMoveLearnset[] = {
+static const u16 sRavielEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBurstinatrixEggMoveLearnset[] = {
+static const u16 sReaperOfTheCardsEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRampartBlasterEggMoveLearnset[] = {
+static const u16 sRedArcheryGirlEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sInfernoWingEggMoveLearnset[] = {
+static const u16 sRedDragonArchfiendEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFortressWhaleEggMoveLearnset[] = {
+static const u16 sRedEyesBlackDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSeiyaryuEggMoveLearnset[] = {
+static const u16 sRedEyesBlackMetalDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sStarryNightStarryDragonEggMoveLearnset[] = {
+static const u16 sRedEyesToonDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBreakerTheMagicalWarriorEggMoveLearnset[] = {
+static const u16 sRedNovaDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAquaMadorEggMoveLearnset[] = {
+static const u16 sRedRisingDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNeoAwuaMadorEggMoveLearnset[] = {
+static const u16 sRedRoseDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAncientGearSoldierEggMoveLearnset[] = {
+static const u16 sRegeneratingRoseEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAncientGearGolemEggMoveLearnset[] = {
+static const u16 sRelinquishedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sUltimateAncientGearGolemEggMoveLearnset[] = {
+static const u16 sReptilianneServantEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sWallShadowEggMoveLearnset[] = {
+static const u16 sRescueCatEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFirewallDragonEggMoveLearnset[] = {
+static const u16 sRescureRabbitEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVerteAnacondaEggMoveLearnset[] = {
+static const u16 sRevivalHamEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlowbackDragonEggMoveLearnset[] = {
+static const u16 sRevivalRoseEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBarrelDragonEggMoveLearnset[] = {
+static const u16 sRoadSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBladeSkaterEggMoveLearnset[] = {
+static const u16 sRoadWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberBladerEggMoveLearnset[] = {
+static const u16 sRocketWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHeliosThePrimordialSunEggMoveLearnset[] = {
+static const u16 sRonintoadinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHeliosDuoMegistusEggMoveLearnset[] = {
+static const u16 sRoseTentaclesEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHeliosTrisMegistusEggMoveLearnset[] = {
+static const u16 sRubyCarbuncleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sStarBoyEggMoveLearnset[] = {
+static const u16 sRuddyRoseDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMistarBoyEggMoveLearnset[] = {
+static const u16 sRyuKishinEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkRulerHaDesEggMoveLearnset[] = {
+static const u16 sRyuKishinPoweredEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkKingOfTheAbyssEggMoveLearnset[] = {
+static const u16 sRyuRanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSunlightUnicornEggMoveLearnset[] = {
+static const u16 sSaggiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFiendKrakenEggMoveLearnset[] = {
+static const u16 sSamsarasLotusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDoomKrakenEggMoveLearnset[] = {
+static const u16 sSanganEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMontageDragonEggMoveLearnset[] = {
+static const u16 sSangaOfTheThunderEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBladeedgeEggMoveLearnset[] = {
+static const u16 sSanwitchEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPlasmaViceEggMoveLearnset[] = {
+static const u16 sSeiyaryuEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEmbodimentOfApophisEggMoveLearnset[] = {
+static const u16 sSerpentNightDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFormulaSynchronEggMoveLearnset[] = {
+static const u16 sSevenColouredFishEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMammothGraveyardEggMoveLearnset[] = {
+static const u16 sShiningFlareWingmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGreatMammothOfGoldfineEggMoveLearnset[] = {
+static const u16 sShiningFriendshipEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLaundryDragonmaidEggMoveLearnset[] = {
+static const u16 sShootingQuasarDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHitotsuMeGiantEggMoveLearnset[] = {
+static const u16 sShootingStarDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCyberneticCyclopeanEggMoveLearnset[] = {
+static const u16 sShunorosEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSonicBirdEggMoveLearnset[] = {
+static const u16 sSilentMagicianLevel4EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAlectorEggMoveLearnset[] = {
+static const u16 sSilentMagicianLevel8EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRubyCarbuncleEggMoveLearnset[] = {
+static const u16 sSilentSwordsmanLevel3EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCrystalBeastSaphirePegasusEggMoveLearnset[] = {
+static const u16 sSilentSwordsmanLevel7EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPenguinSoldierEggMoveLearnset[] = {
+static const u16 sSinisterSerpentEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNightmarePenguinEggMoveLearnset[] = {
+static const u16 sSkullDiceEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSwordstalkerEggMoveLearnset[] = {
+static const u16 sSkullDogMarronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sToonMermaidEggMoveLearnset[] = {
+static const u16 sSkullServantEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGeminiElfEggMoveLearnset[] = {
+static const u16 sSliferTheSkyDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkJeroidEggMoveLearnset[] = {
+static const u16 sSlotMachineEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSparkmanEggMoveLearnset[] = {
+static const u16 sSmallPieceGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThundergiantEggMoveLearnset[] = {
+static const u16 sSnowdustDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sChangeOfHeartEggMoveLearnset[] = {
+static const u16 sSnowmanEaterEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMimicatEggMoveLearnset[] = {
+static const u16 sSnowmanEaterBustedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArchfiendsMirrorEggMoveLearnset[] = {
+static const u16 sSnowDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNiwatoriEggMoveLearnset[] = {
+static const u16 sSolitaireMagicianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sThunderKidEggMoveLearnset[] = {
+static const u16 sSonicBirdEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSpaceMamboEggMoveLearnset[] = {
+static const u16 sSpaceMamboEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMushroomManEggMoveLearnset[] = {
+static const u16 sSparkmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMedaBatEggMoveLearnset[] = {
+static const u16 sSpearDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBubblemanEggMoveLearnset[] = {
+static const u16 sGracefulDiceEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSteamHealerEggMoveLearnset[] = {
+static const u16 sLifeStreamDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMelchidFourFacedBeastEggMoveLearnset[] = {
+static const u16 sPowerToolDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMaskedBeastDesGardiusEggMoveLearnset[] = {
+static const u16 sRevolutionSynchronEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTikiElderEggMoveLearnset[] = {
+static const u16 sSpeedWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMaskedBeastEggMoveLearnset[] = {
+static const u16 sSphereKuribohEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCloudianNimbussmanEggMoveLearnset[] = {
+static const u16 sSporeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCloudianEyeOfTheTyphoonEggMoveLearnset[] = {
+static const u16 sSporeTheFairySeedEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHonestEggMoveLearnset[] = {
+static const u16 sStardustDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sClearViceDragonEggMoveLearnset[] = {
+static const u16 sStarryNightStarryDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMagicianOfBlackChaosEggMoveLearnset[] = {
+static const u16 sStarBoyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRainbowDragonEggMoveLearnset[] = {
+static const u16 sSteamroidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRainbowNeosEggMoveLearnset[] = {
+static const u16 sSteamGyroidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGhostrickWitchEggMoveLearnset[] = {
+static const u16 sSteamHealerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGamecielEggMoveLearnset[] = {
+static const u16 sSubstitoadEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMysticalBeastSerketEggMoveLearnset[] = {
+static const u16 sSummonedSkullEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJudgeManEggMoveLearnset[] = {
+static const u16 sSunlightUnicornEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sJudgmentDragonEggMoveLearnset[] = {
+static const u16 sSunDragonIntiEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEldlichEggMoveLearnset[] = {
+static const u16 sSupayEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDestinyHeroPlasmaEggMoveLearnset[] = {
+static const u16 sSuperVehicroidJumboDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDestinyHeroDreadmasterEggMoveLearnset[] = {
+static const u16 sSwampBattleguardEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDivineGehEggMoveLearnset[] = {
+static const u16 sSwapFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFrostAndFlameDragonEggMoveLearnset[] = {
+static const u16 sSwordsmanOfLandstarEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sReptillianeServantEggMoveLearnset[] = {
+static const u16 sSwordstalkerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sZoaEggMoveLearnset[] = {
+static const u16 sTadpoleEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMetalzoaEggMoveLearnset[] = {
+static const u16 sTheGreatLeviathanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sKyuotoraEggMoveLearnset[] = {
+static const u16 sThirteenthGraveEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sShunorosEggMoveLearnset[] = {
+static const u16 sThousandDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTyrantDragonEggMoveLearnset[] = {
+static const u16 sThousandEyesIdolEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLeviaDragonDaedalusEggMoveLearnset[] = {
+static const u16 sThousandEyesRestrictEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDandylionEggMoveLearnset[] = {
+static const u16 sThundergiantEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sGiantRexEggMoveLearnset[] = {
+static const u16 sThunderDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSnowmanEaterEggMoveLearnset[] = {
+static const u16 sThunderDragonColossusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVenomBoaEggMoveLearnset[] = {
+static const u16 sThunderDragonTitanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVennominonEggMoveLearnset[] = {
+static const u16 sThunderKidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVennominagaEggMoveLearnset[] = {
+static const u16 sTimaeusEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArcanaForceTheFiendEggMoveLearnset[] = {
+static const u16 sTimeWizardEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArcanaForceDarkRulerEggMoveLearnset[] = {
+static const u16 sToadallyAwesomeEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArcanaForceLightRulerEggMoveLearnset[] = {
+static const u16 sToonAlligatorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sArcanaForceTheWorldEggMoveLearnset[] = {
+static const u16 sToonAncientGearGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSamsaraLotusEggMoveLearnset[] = {
+static const u16 sToonDarkMagicianEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sYubelEggMoveLearnset[] = {
+static const u16 sToonDarkMagicianGirlEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sYubelTerrorIncarnateEggMoveLearnset[] = {
+static const u16 sToonGeminiElfEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sYubelUltimateNightmareEggMoveLearnset[] = {
+static const u16 sToonMermaidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sDarkDivinerEggMoveLearnset[] = {
+static const u16 sToonSummonedSkullEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sUndergroundArachnidEggMoveLearnset[] = {
+static const u16 sTradetoadEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sFrozenFitzgeraldEggMoveLearnset[] = {
+static const u16 sTreebornFrogEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sZemanTheApeKingEggMoveLearnset[] = {
+static const u16 sTriHornedDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sTurboSynchronEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sDarkFlattopEggMoveLearnset[] = {
+static const u16 sTurboWarriorEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHundredEyesDragonEggMoveLearnset[] = {
+static const u16 sTwinHeadedRexEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSupayEggMoveLearnset[] = {
+static const u16 sTwinHeadedThunderDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sTyrantDragonEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sMoonDragonQuillaEggMoveLearnset[] = {
+static const u16 sUltimateAncientGearGolemEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sSunDragonIntiEggMoveLearnset[] = {
+static const u16 sUltimateBaseballKidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEarthboundImmortalCcpacApuEggMoveLearnset[] = {
+static const u16 sUndergroundArachnidEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sUrabyEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sEarthboundImmortalCusilluEggMoveLearnset[] = {
+static const u16 sUriaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEarthboundImmortalCcarayhuaEggMoveLearnset[] = {
+static const u16 sValkyrionEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEarthboundImmortalUruEggMoveLearnset[] = {
+static const u16 sVampireBatEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVampireGenesisEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sEarthboundImmortalChacuChallhuaEggMoveLearnset[] = {
+static const u16 sVampireGraceEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEarthboundImmortalAsllaPiscuEggMoveLearnset[] = {
+static const u16 sVampireLadyEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sEarthboundImmortalWiraqochaRascaEggMoveLearnset[] = {
+static const u16 sVampireLordEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVennominagaEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sDebrisDragonEggMoveLearnset[] = {
+static const u16 sVennominonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sStardustDragonEggMoveLearnset[] = {
+static const u16 sVenomBoaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sShootingStarDragonEggMoveLearnset[] = {
+static const u16 sVictoryDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVolcanicDoomfireEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sRedRisingDragonEggMoveLearnset[] = {
+static const u16 sVolcanicHammererEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRedDragonArchfiendEggMoveLearnset[] = {
+static const u16 sVolcanicQueenEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRedNovaDragonEggMoveLearnset[] = {
+static const u16 sVolcanicScattershotEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sVolcanicShellEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sRedRoseDragonEggMoveLearnset[] = {
+static const u16 sVolcanicSlicerEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackRoseDragonEggMoveLearnset[] = {
+static const u16 sVorseRaiderEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRudyRoseDragonEggMoveLearnset[] = {
+static const u16 sWallShadowEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sWarmWormEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sBlackwingGhibliEggMoveLearnset[] = {
+static const u16 sWarriorOfZeraEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackwingDragonEggMoveLearnset[] = {
+static const u16 sWataponEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sBlackwingAssaultDragonEggMoveLearnset[] = {
+static const u16 sWhiteNightDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sWildheartEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
 
-static const u16 sFairyDragonEggMoveLearnset[] = {
+static const u16 sWildWingmanEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAncientFairyDragonEggMoveLearnset[] = {
+static const u16 sWingedDragonGuardianOfTheFortressEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sAncientPixieDragonEggMoveLearnset[] = {
+static const u16 sWingedDragonOfRaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
-\
-static const u16 sRevolutionSynchronEggMoveLearnset[] = {
+
+static const u16 sWingedKuribohEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sPowertoolDragonEggMoveLearnset[] = {
+static const u16 sWingedKuribohLevel10EggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sLifeStreamDragonEggMoveLearnset[] = {
+static const u16 sWitchOfTheBlackForestEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMajesticDragonEggMoveLearnset[] = {
+static const u16 sXyzDragonCannonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMajesticStarDragonEggMoveLearnset[] = {
+static const u16 sXyDragonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sMajesticRedDragonEggMoveLearnset[] = {
+static const u16 sXCannonEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sShootingQuasarDragonEggMoveLearnset[] = {
+static const u16 sYataGarasuEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCrimsonDragonEggMoveLearnset[] = {
+static const u16 sYubelEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sNibiruEggMoveLearnset[] = {
+static const u16 sYubelTerrorIncarnateEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sVictoryDragonEggMoveLearnset[] = {
+static const u16 sYubelUltimateKnightmareEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sCritiasEggMoveLearnset[] = {
+static const u16 sZemanTheApeKingEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sTimaeusEggMoveLearnset[] = {
+static const u16 sZeraTheMantEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sHermosEggMoveLearnset[] = {
+static const u16 sZoaEggMoveLearnset[] =
+{
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,
 };
