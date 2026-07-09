@@ -3349,8 +3349,7 @@ bool8 ScrCmd_setstartingstatus(struct ScriptContext *ctx)
 bool8 ScrCmd_textcolor(struct ScriptContext * ctx)
 {
     // gSpecialVar_PrevTextColor = gSpecialVar_TextColor;
-    // u16 UNUSED gSpecialVar_TextColor = ScriptReadByte(ctx);
-    ctx->scriptPtr++;
+    u16 UNUSED gSpecialVar_TextColor = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
