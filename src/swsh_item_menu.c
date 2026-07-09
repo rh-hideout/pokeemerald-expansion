@@ -491,6 +491,7 @@ static const u8 sText_PartyAbilityAsk[]      = _("Would you like to change {STR_
 static const u8 sText_PartyAbilityDone[]     = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PartyMintAsk[]         = _("It might affect {STR_VAR_1}'s stats.\nAre you sure you want to use it?{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PartyMintDone[]        = _("{STR_VAR_1}'s stats may have changed due\nto the effects of the {STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_PkmnCantLearnMove[]    = _("{STR_VAR_1} cannot learn\n{STR_VAR_2}.{PAUSE_UNTIL_PRESS}");
 
 static const struct YesNoFuncTable sPartyAbilityChangeYesNo    = {BagMenu_AbilityChangeYes, BagMenu_AbilityChangeNo};
 static const struct YesNoFuncTable sPartyMintYesNo             = {BagMenu_MintYes, BagMenu_MintNo};
@@ -3671,6 +3672,19 @@ static void RemoveContextWindow(void)
         BagMenu_RemoveWindow(ITEMWIN_2x3);
 }
 
+// skips ItemUseOutOfBattle_TMHM boot-up/teach prompts sequences and goes straight to choosing a mon
+static void ItemMenu_UseTMHM(u8 taskId)
+{
+    PlaySE(SE_PC_LOGIN);
+    gItemUseCB = ItemUseCB_TMHM;
+#if SWSH_ITEM_MENU_ACTION_IN_BAG
+    BagMenu_OpenPartySelect(taskId);
+#else
+    gBagMenu->newScreenCallback = CB2_ShowPartyMenuForItemUse;
+    Task_FadeAndCloseBagMenu(taskId);
+#endif
+}
+
 static void ItemMenu_UseOutOfBattle(u8 taskId)
 {
     if (GetItemFieldFunc(gSpecialVar_ItemId))
@@ -3684,7 +3698,9 @@ static void ItemMenu_UseOutOfBattle(u8 taskId)
         {
             FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
             ScheduleBgCopyTilemapToVram(1);
-            if (gBagPosition.pocket != POCKET_BERRIES)
+            if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_TMHM)
+                ItemMenu_UseTMHM(taskId);
+            else if (gBagPosition.pocket != POCKET_BERRIES)
                 GetItemFieldFunc(gSpecialVar_ItemId)(taskId);
             else
                 ItemUseOutOfBattle_Berry(taskId);
@@ -6224,6 +6240,14 @@ static void Task_BagMenu_PartyInput(u8 taskId)
         if (BagMenu_ShouldShowHPBar())
             BagMenu_DrawPartyHPBar(tPartySlot);
     }
+    else if (JOY_NEW(SELECT_BUTTON))
+    {
+        if (gBagPosition.pocket == POCKET_TM_HM)
+        {
+            PlaySE(SE_SELECT);
+            SwitchMoveInfoMode(sHoveredItemIndex);
+        }
+    }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
@@ -8316,7 +8340,7 @@ static void BagMenu_UseTMHM(u8 taskId)
 
     if (GetMonData(mon, MON_DATA_IS_EGG) || !CanLearnTeachableMove(species, move))
     {
-        DisplayItemMessage(taskId, FONT_NORMAL, gText_PkmnCantLearnMove, Task_BagMenu_PartyStayAfterMessage);
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_PkmnCantLearnMove, Task_BagMenu_PartyStayAfterMessage);
         return;
     }
 
