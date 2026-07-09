@@ -2,6 +2,7 @@
 #include "constants/songs.h"
 #include "constants/weather.h"
 #include "constants/rgb.h"
+#include "gba/defines.h"
 #include "util.h"
 #include "decompress.h"
 #include "event_object_movement.h"
@@ -794,7 +795,7 @@ void FadeSelectedPals(u8 mode, s8 delay, u32 selectedPalettes)
     else
     {
         gWeatherPtr->fadeDestColor = fadeColor;
-        UpdateTimeOfDay();
+        UpdateTimeOfDay(TRUE);
         if (useWeatherPal)
         {
             gWeatherPtr->fadeScreenCounter = 0; // Triggers gamma-shift-based fade-in
