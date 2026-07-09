@@ -2,7 +2,6 @@
 #include "constants/songs.h"
 #include "constants/weather.h"
 #include "constants/rgb.h"
-#include "gba/defines.h"
 #include "util.h"
 #include "decompress.h"
 #include "event_object_movement.h"
