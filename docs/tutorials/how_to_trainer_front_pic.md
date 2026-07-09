@@ -24,15 +24,15 @@ We will start with a graphic that we want to use for our new trainer pic. Unlike
 ### 2. Register the sprites
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them by linking the graphic files in [`src/data/graphics/trainers`](./data/graphics/trainers.h):
 ```diff
- const u16 gTrainerPalette_RubySapphireBrendan[] = INCBIN_U16("graphics/trainers/palettes/brendan_rs.gbapal");
+ const u16 gTrainerPalette_RubySapphireBrendan[] = INCGFX_U16("graphics/trainers/palettes/brendan_rs.pal", ".gbapal");
 
- const u32 gTrainerFrontPic_RubySapphireMay[] = INCBIN_U32("graphics/trainers/front_pics/may_rs.4bpp.smol");
- const u16 gTrainerPalette_RubySapphireMay[] = INCBIN_U16("graphics/trainers/palettes/may_rs.gbapal");
+ const u32 gTrainerFrontPic_RubySapphireMay[] = INCGFX_U32("graphics/trainers/front_pics/may_rs.png", ".4bpp.smol");
+ const u16 gTrainerPalette_RubySapphireMay[] = INCGFX_U16("graphics/trainers/palettes/may_rs.pal", ".gbapal");
 +
-+const u32 gTrainerFrontPic_NewOne[] = INCBIN_U32("graphics/trainers/front_pics/new_one.4bpp.smol");
-+const u16 gTrainerPalette_NewOne[] = INCBIN_U16("graphics/trainers/front_pics/new_one.gbapal");
++const u32 gTrainerFrontPic_NewOne[] = INCGFX_U32("graphics/trainers/front_pics/new_one.png", ".4bpp.smol");
++const u16 gTrainerPalette_NewOne[] = INCGFX_U16("graphics/trainers/front_pics/new_one.pal", ".gbapal");
 
- const u8 gTrainerBackPic_Brendan[] = INCBIN_U8("graphics/trainers/back_pics/brendan.4bpp");
+ const u8 gTrainerBackPic_Brendan[] = INCGFX_U8("graphics/trainers/back_pics/brendan.png", ".4bpp");
 ```
 
 ### 3. Connecting the Pictures to the Data

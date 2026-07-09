@@ -253,7 +253,7 @@ static void CB2_MysteryEventMenu(void)
         gMain.state++;
         break;
     case 11:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             // No clue what is going on here, and from where gDecompressionBuffer gets actually populated with mystery event script.
             /*

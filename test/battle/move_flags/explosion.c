@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
             HP_BAR(player, hp: 0);
         }
         ABILITY_POPUP(opponent, ABILITY_DAMP);
-        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Explosion!");
+        MESSAGE("Wobbuffet cannot use Explosion!");
     }
 }
 

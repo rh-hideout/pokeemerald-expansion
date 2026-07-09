@@ -9,8 +9,6 @@
  * COMMANDS
  * N: Sets the test name to the remainder of the line.
  * L: Sets the filename to the remainder of the line.
- * R: Sets the result to the remainder of the line, and flushes any
- *    output buffered since the previous R.
  * P/E/K/F/A: Sets the result to the remaining of the line, flushes any
  *    output since the previous P/E/K/F/A and increment the number of
  *    passes/expected fails/known fails/assumption fails/fails.
@@ -37,11 +35,61 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-#define MAX_PROCESSES               32 // See also test/test.h
-#define MAX_SUMMARY_TESTS_TO_LIST   50
-#define MAX_TEST_LIST_BUFFER_LENGTH 256
+#ifndef _GNU_SOURCE
+// Very naive implementation of 'memmem' for systems which don't make it
+// available by default.
+void *memmem(const void *haystack, size_t haystacklen, const void *needle, size_t needlelen)
+{
+    if (haystacklen < needlelen)
+        return NULL;
+    const char *haystack_ = haystack;
+    const char *needle_ = needle;
+    for (size_t i = 0; i < haystacklen - needlelen; i++)
+    {
+        size_t j;
+        for (j = 0; j < needlelen; j++)
+        {
+            if (haystack_[i+j] != needle_[j])
+                break;
+        }
+        if (j == needlelen)
+            return (void *)&haystack_[i];
+    }
+    return NULL;
+}
+
+void *memrchr(const void *s_, int c, size_t n)
+{
+    const char *s = s_;
+    while (n > 0)
+    {
+        n--;
+        if (s[n] == c)
+            return (void *)&s[n];
+    }
+    return NULL;
+}
+#endif
+
+#define MAX_PROCESSES             32 // See also test/test.h
+#define MAX_SUMMARY_TESTS_TO_LIST 50
 
 #define ARRAY_COUNT(arr) (sizeof((arr)) / sizeof((arr)[0]))
+
+struct SummaryResult
+{
+    char test_name[256];
+    char filename_line[256];
+    char output_line[256];
+};
+
+struct SummaryResults
+{
+    struct SummaryResult results[MAX_SUMMARY_TESTS_TO_LIST];
+    int count;
+};
+
+struct SummaryResults fails_summaries, known_fails_passing_summaries, expected_failing_summaries, assumption_fails_summaries;
 
 struct Runner
 {
@@ -57,23 +105,54 @@ struct Runner
     size_t output_buffer_capacity;
     char *output_buffer;
     int passes;
-    int knownFails;
-    int knownFailsPassing;
-    int expectedFails;
-    int expectedFailsPassing;
+    int expected_fails;
+    int expected_fails_passing;
+    int known_fails;
+    int known_fails_passing;
     int todos;
-    int assumptionFails;
+    int assumption_fails;
     int fails;
     int results;
-    char failed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char failed_TestFilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
 };
+
+void push_summary_result(struct SummaryResults *summaries, const struct Runner *runner)
+{
+    if (summaries->count < ARRAY_COUNT(summaries->results))
+    {
+        struct SummaryResult *result = &summaries->results[summaries->count++];
+
+        memcpy(result->test_name, runner->test_name, sizeof(result->test_name));
+
+        memcpy(result->filename_line, runner->filename_line, sizeof(result->filename_line));
+
+        // Extract the last line of the output buffer.
+        // NOTE: '- 1' because 'output_buffer' ends with a '\n'.
+        const char *nl = memrchr(runner->output_buffer, '\n', runner->output_buffer_size - 1);
+        if (nl == NULL)
+            nl = runner->output_buffer;
+        else
+            nl++;
+        // Strip the 'filename:' prefix, if any.
+        size_t nl_n = runner->output_buffer + runner->output_buffer_size - nl - 1;
+        const char *colon = memchr(nl, ':', nl_n);
+        size_t n;
+        if (colon)
+        {
+            colon++;
+            n = nl + nl_n - colon;
+            memcpy(result->output_line, colon, n);
+        }
+        else
+        {
+            n = nl_n;
+            memcpy(result->output_line, nl, n);
+        }
+        if (n < sizeof(result->output_line))
+            result->output_line[n] = '\0';
+        else
+            result->output_line[sizeof(result->output_line) - 1] = '\0';
+    }
+}
 
 struct Symbol {
     const char *name;
@@ -109,30 +188,6 @@ static const struct Symbol *lookup_address(uint32_t address)
     }
     return NULL;
 }
-
-#ifndef _GNU_SOURCE
-// Very naive implementation of 'memmem' for systems which don't make it
-// available by default.
-void *memmem(const void *haystack, size_t haystacklen, const void *needle, size_t needlelen)
-{
-    if (haystacklen < needlelen)
-        return NULL;
-    const char *haystack_ = haystack;
-    const char *needle_ = needle;
-    for (size_t i = 0; i < haystacklen - needlelen; i++)
-    {
-        size_t j;
-        for (j = 0; j < needlelen; j++)
-        {
-            if (haystack_[i+j] != needle_[j])
-                break;
-        }
-        if (j == needlelen)
-            return (void *)&haystack_[i];
-    }
-    return NULL;
-}
-#endif
 
 // Similar to 'fwrite(buffer, 1, size, f)' except that anything which
 // looks like the output of '%p' (i.e. '<0x\d{7}>') is translated into
@@ -246,44 +301,28 @@ static void handle_read(int i, struct Runner *runner)
                     runner->passes++;
                     goto add_to_results;
                 case 'E':
-                    runner->expectedFails++;
+                    runner->expected_fails++;
                     goto add_to_results;
                 case 'K':
-                    runner->knownFails++;
+                    runner->known_fails++;
                     goto add_to_results;
                 case 'U':
-                    if (runner->knownFailsPassing < MAX_SUMMARY_TESTS_TO_LIST)
-                    {
-                        strcpy(runner->knownFailingPassed_TestNames[runner->knownFailsPassing], runner->test_name);
-                        strcpy(runner->knownFailingPassed_FilenameLine[runner->knownFailsPassing], runner->filename_line);
-                    }
-                    runner->knownFailsPassing++;
+                    push_summary_result(&known_fails_passing_summaries, runner);
+                    runner->known_fails_passing++;
                     goto add_to_results;
                 case 'V':
-                    if (runner->expectedFailsPassing < MAX_SUMMARY_TESTS_TO_LIST)
-                    {
-                        strcpy(runner->expectedFailingPassed_TestNames[runner->expectedFailsPassing], runner->test_name);
-                        strcpy(runner->expectedFailingPassed_FilenameLine[runner->expectedFailsPassing], runner->filename_line);
-                    }
-                    runner->expectedFailsPassing++;
+                    push_summary_result(&expected_failing_summaries, runner);
+                    runner->expected_fails_passing++;
                     goto add_to_results;
                 case 'T':
                     runner->todos++;
                     goto add_to_results;
                 case 'A':
-                    if (runner->assumptionFails < MAX_SUMMARY_TESTS_TO_LIST)
-                    {
-                        strcpy(runner->assumeFailed_TestNames[runner->assumptionFails], runner->test_name);
-                        strcpy(runner->assumeFailed_FilenameLine[runner->assumptionFails], runner->filename_line);
-                    }
-                    runner->assumptionFails++;
+                    push_summary_result(&assumption_fails_summaries, runner);
+                    runner->assumption_fails++;
                     goto add_to_results;
                 case 'F':
-                    if (runner->fails < MAX_SUMMARY_TESTS_TO_LIST)
-                    {
-                        strcpy(runner->failed_TestNames[runner->fails], runner->test_name);
-                        strcpy(runner->failed_TestFilenameLine[runner->fails], runner->filename_line);
-                    }
+                    push_summary_result(&fails_summaries, runner);
                     runner->fails++;
 add_to_results:
                     runner->results++;
@@ -752,26 +791,14 @@ int main(int argc, char *argv[])
     // Reap test runners and collate exit codes.
     int exit_code = 0;
     int passes = 0;
-    int expectedFails = 0;
-    int expectedFailsPassing = 0;
-    int knownFails = 0;
-    int knownFailsPassing = 0;
+    int expected_fails = 0;
+    int expected_fails_passing = 0;
+    int known_fails = 0;
+    int known_fails_passing = 0;
     int todos = 0;
-    int assumptionFails = 0;
+    int assumption_fails = 0;
     int fails = 0;
     int results = 0;
-
-    char failed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char failed_TestFilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-
-    char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-
-    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-
-    char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
     for (int i = 0; i < nrunners; i++)
     {
@@ -786,45 +813,13 @@ int main(int argc, char *argv[])
         if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) > exit_code)
             exit_code = WEXITSTATUS(wstatus);
         passes += runners[i].passes;
-        expectedFails += runners[i].expectedFails;
-        knownFails += runners[i].knownFails;
-        for (int j = 0; j < runners[i].knownFailsPassing; j++)
-        {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
-            {
-                strcpy(knownFailingPassed_TestNames[knownFailsPassing], runners[i].knownFailingPassed_TestNames[j]);
-                strcpy(knownFailingPassed_FilenameLine[knownFailsPassing], runners[i].knownFailingPassed_FilenameLine[j]);
-            }
-            knownFailsPassing++;
-        }
-        for (int j = 0; j < runners[i].expectedFailsPassing; j++)
-        {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
-            {
-                strcpy(expectedFailingPassed_TestNames[expectedFailsPassing], runners[i].expectedFailingPassed_TestNames[j]);
-                strcpy(expectedFailingPassed_FilenameLine[expectedFailsPassing], runners[i].expectedFailingPassed_FilenameLine[j]);
-            }
-            expectedFailsPassing++;
-        }
+        expected_fails += runners[i].expected_fails;
+        expected_fails_passing += runners[i].expected_fails_passing;
+        known_fails += runners[i].known_fails;
+        known_fails_passing += runners[i].known_fails_passing;
         todos += runners[i].todos;
-        for (int j = 0; j < runners[i].assumptionFails; j++)
-        {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
-            {
-                strcpy(assumeFailed_TestNames[assumptionFails], runners[i].assumeFailed_TestNames[j]);
-                strcpy(assumeFailed_FilenameLine[assumptionFails], runners[i].assumeFailed_FilenameLine[j]);
-            }
-            assumptionFails++;
-        }
-        for (int j = 0; j < runners[i].fails; j++)
-        {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
-            {
-                strcpy(failed_TestNames[fails], runners[i].failed_TestNames[j]);
-                strcpy(failed_TestFilenameLine[fails], runners[i].failed_TestFilenameLine[j]);
-            }
-            fails++;
-        }
+        assumption_fails += runners[i].assumption_fails;
+        fails += runners[i].fails;
         results += runners[i].results;
     }
 
@@ -837,66 +832,45 @@ int main(int argc, char *argv[])
         if (fails > 0)
         {
             fprintf(stdout, "\n  \e[31mFAILED\e[0m tests:\n");
-            for (int i = 0; i < fails; i++)
-            {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
-                {
-                    fprintf(stdout, "  - \e[31mand %d more...\e[0m\n", fails - MAX_SUMMARY_TESTS_TO_LIST);
-                    break;
-                }
-                fprintf(stdout, "  - \e[31m");
-                fprint_buffer(stdout, failed_TestFilenameLine[i], strlen(failed_TestFilenameLine[i]));
-                fprintf(stdout, "\e[0m - %s.\n", failed_TestNames[i]);
-            }
+            for (int i = 0; i < fails_summaries.count; i++)
+                fprintf(stdout, "  - \e[31m%s\e[0m: %s: %s\n", fails_summaries.results[i].filename_line, fails_summaries.results[i].test_name, fails_summaries.results[i].output_line);
+            if (fails > fails_summaries.count)
+                fprintf(stdout, "  - \e[31mand %d more...\e[0m\n", fails - fails_summaries.count);
         }
 
-        if (assumptionFails > 0)
+        if (assumption_fails > 0)
         {
             fprintf(stdout, "\n  Tests with \e[33mASSUMPTIONS_FAILED\e[0m:\n");
-            for (int i = 0; i < assumptionFails; i++)
-            {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
-                {
-                    fprintf(stdout, "  - \e[33mand %d more...\e[0m\n", assumptionFails - MAX_SUMMARY_TESTS_TO_LIST);
-                    break;
-                }
-                fprintf(stdout, "  - \e[33m");
-                fprint_buffer(stdout, assumeFailed_FilenameLine[i], strlen(assumeFailed_FilenameLine[i]));
-                fprintf(stdout, "\e[0m - %s.\n", assumeFailed_TestNames[i]);
-            }
+            for (int i = 0; i < assumption_fails_summaries.count; i++)
+                fprintf(stdout, "  - \e[33m%s\e[0m: %s: %s\n", assumption_fails_summaries.results[i].filename_line, assumption_fails_summaries.results[i].test_name, assumption_fails_summaries.results[i].output_line);
+            if (assumption_fails > assumption_fails_summaries.count)
+                fprintf(stdout, "  - \e[33mand %d more...\e[0m\n", assumption_fails - assumption_fails_summaries.count);
         }
 
-        if (knownFailsPassing > 0)
+        if (known_fails_passing > 0)
         {
             fprintf(stdout, "\n  \e[33mKNOWN_FAILING\e[0m tests \e[32mPASSING\e[0m:\n");
-            for (int i = 0; i < knownFailsPassing; i++)
-            {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
-                {
-                    fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", knownFailsPassing - MAX_SUMMARY_TESTS_TO_LIST);
-                    break;
-                }
-                fprintf(stdout, "  - \e[32m");
-                fprint_buffer(stdout, knownFailingPassed_FilenameLine[i], strlen(knownFailingPassed_FilenameLine[i]));
-                fprintf(stdout, "\e[0m - %s.\n", knownFailingPassed_TestNames[i]);
-            }
+            for (int i = 0; i < known_fails_passing_summaries.count; i++)
+                fprintf(stdout, "  - \e[32m%s\e[0m: %s: %s.\n", known_fails_passing_summaries.results[i].filename_line, known_fails_passing_summaries.results[i].test_name, known_fails_passing_summaries.results[i].output_line);
+            if (known_fails_passing > known_fails_passing_summaries.count)
+                fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", known_fails_passing - known_fails_passing_summaries.count);
         }
 
         fprintf(stdout, "\n");
         if (fails > 0)
             fprintf(stdout, "- Tests \e[31mFAILED\e[0m :         %d    Add TESTS='X' to run tests with the defined prefix.\n", fails);
-        if (expectedFailsPassing > 0)
-            fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expectedFailsPassing);
-        if (knownFails > 0)
-            fprintf(stdout, "- Tests \e[33mKNOWN_FAILING\e[0m:   %d\n", knownFails);
-        if (assumptionFails > 0)
-            fprintf(stdout, "- \e[33mASSUMPTIONS_FAILED\e[0m:    %d\n", assumptionFails);
+        if (expected_fails_passing > 0)
+            fprintf(stdout, "- \e[31mEXPECTED_FAIL_PASSING\e[0m: %d\n", expected_fails_passing);
+        if (known_fails > 0)
+            fprintf(stdout, "- Tests \e[33mKNOWN_FAILING\e[0m:   %d\n", known_fails);
+        if (assumption_fails > 0)
+            fprintf(stdout, "- \e[33mASSUMPTIONS_FAILED\e[0m:    %d\n", assumption_fails);
         if (todos > 0)
             fprintf(stdout, "- Tests \e[33mTO_DO\e[0m:           %d\n", todos);
-        if (knownFailsPassing > 0)
-            fprintf(stdout, "- \e[32mKNOWN_FAILING_PASSING\e[0m: %d   \e[33mPlease remove KNOWN_FAILING if these tests intentionally PASS\e[0m\n", knownFailsPassing);
-        if (expectedFails > 0)
-            fprintf(stdout, "- Tests \e[32mEXPECT_FAILING\e[0m:  %d\n", expectedFails);
+        if (known_fails_passing > 0)
+            fprintf(stdout, "- \e[32mKNOWN_FAILING_PASSING\e[0m: %d   \e[33mPlease remove KNOWN_FAILING if these tests intentionally PASS\e[0m\n", known_fails_passing);
+        if (expected_fails > 0)
+            fprintf(stdout, "- Tests \e[32mEXPECT_FAILING\e[0m:  %d\n", expected_fails);
         if (passes > 0)
             fprintf(stdout, "- Tests \e[32mPASSED\e[0m:          %d\n", passes);
         fprintf(stdout, "- Tests \e[34mTOTAL\e[0m:           %d\n", results);

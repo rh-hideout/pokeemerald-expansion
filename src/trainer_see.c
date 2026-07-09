@@ -40,6 +40,7 @@ static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 ran
 static bool8 TrainerSeeIdle(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 TrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool8 TrainerTurnToFacePlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 PlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitPlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
@@ -63,14 +64,14 @@ COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 EWRAM_DATA u8 gApproachingTrainerId = 0;
 
 // const rom data
-static const u16 sGfx_Emoticons[] = INCBIN_U16("graphics/misc/emoticons.4bpp");
-static const u8 sEmotion_ExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_exclamation.4bpp");
-static const u8 sEmotion_QuestionMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_question.4bpp");
-static const u8 sEmotion_HeartGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_heart.4bpp");
-static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_double_exclamation.4bpp");
-static const u8 sEmotion_XGfx[] = INCBIN_U8("graphics/field_effects/pics/emote_x.4bpp");
+static const u16 sGfx_Emoticons[] = INCGFX_U16("graphics/misc/emoticons.png", ".4bpp", "-mwidth 2 -mheight 2");
+static const u8 sEmotion_ExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_exclamation.png", ".4bpp");
+static const u8 sEmotion_QuestionMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_question.png", ".4bpp");
+static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_heart.png", ".4bpp");
+static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
+static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/field_effects/pics/emote_x.png", ".4bpp");
 // HGSS emote graphics ripped by Lemon on The Spriters Resource: https://www.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/sheet/30497/
-static const u8 sEmotion_Gfx[] = INCBIN_U8("graphics/misc/emotes.4bpp");
+static const u8 sEmotion_Gfx[] = INCGFX_U8("graphics/misc/emotes.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 static u8 (*const sDirectionalApproachDistanceFuncs[])(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y) =
 {
@@ -84,6 +85,7 @@ enum {
     TRSEE_NONE,
     TRSEE_EXCLAMATION,
     TRSEE_EXCLAMATION_WAIT,
+    TRSEE_TURN_TO_FACE_PLAYER,
     TRSEE_MOVE_TO_PLAYER,
     TRSEE_PLAYER_FACE,
     TRSEE_PLAYER_FACE_WAIT,
@@ -100,6 +102,7 @@ static bool8 (*const sTrainerSeeFuncList[])(u8 taskId, struct Task *task, struct
     [TRSEE_NONE]                 = TrainerSeeIdle,
     [TRSEE_EXCLAMATION]          = TrainerExclamationMark,
     [TRSEE_EXCLAMATION_WAIT]     = WaitTrainerExclamationMark,
+    [TRSEE_TURN_TO_FACE_PLAYER]  = TrainerTurnToFacePlayer,
     [TRSEE_MOVE_TO_PLAYER]       = TrainerMoveToPlayer,
     [TRSEE_PLAYER_FACE]          = PlayerFaceApproachingTrainer,
     [TRSEE_PLAYER_FACE_WAIT]     = WaitPlayerFaceApproachingTrainer,
@@ -490,7 +493,7 @@ bool8 CheckForTrainersWantingBattle(void)
 
         if (gNoOfApproachingTrainers > 1)
             break;
-        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and cant have a double battle
+        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and can't have a double battle
             break;
     }
 
@@ -818,7 +821,7 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
     }
     else
     {
-        task->tFuncId++; // TRSEE_MOVE_TO_PLAYER
+        task->tFuncId++; // TRSEE_TURN_TO_FACE_PLAYER
         if (trainerObj->movementType == MOVEMENT_TYPE_TREE_DISGUISE || trainerObj->movementType == MOVEMENT_TYPE_MOUNTAIN_DISGUISE)
             task->tFuncId = TRSEE_REVEAL_DISGUISE;
         if (trainerObj->movementType == MOVEMENT_TYPE_BURIED)
@@ -827,21 +830,30 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
     }
 }
 
+// TRSEE_TURN_TO_FACE_PLAYER
+static bool8 TrainerTurnToFacePlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
+{
+    if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
+    {
+        ObjectEventSetHeldMovement(trainerObj, MOVEMENT_ACTION_FACE_PLAYER);
+
+        if (!task->tTrainerRange)
+            task->tFuncId = TRSEE_PLAYER_FACE;
+        else
+            task->tFuncId++; // TRSEE_MOVE_TO_PLAYER
+    }
+    return FALSE;
+}
+
 // TRSEE_MOVE_TO_PLAYER
 static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
     {
-        if (task->tTrainerRange)
-        {
+        if (task->tTrainerRange--)
             ObjectEventSetHeldMovement(trainerObj, GetWalkNormalMovementAction(trainerObj->facingDirection));
-            task->tTrainerRange--;
-        }
         else
-        {
-            ObjectEventSetHeldMovement(trainerObj, MOVEMENT_ACTION_FACE_PLAYER);
-            task->tFuncId++; // TRSEE_PLAYER_FACE
-        }
+            task->tFuncId++;
     }
     return FALSE;
 }

@@ -51,3 +51,31 @@ SINGLE_BATTLE_TEST("Torment allows non-consecutive move uses")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
+
+DOUBLE_BATTLE_TEST("Torment works even if the target's last move failed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SUCKER_PUNCH); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerRight);
+            MOVE(opponentRight, MOVE_SUCKER_PUNCH, target: playerLeft);
+            MOVE(playerRight, MOVE_FOLLOW_ME);
+            MOVE(playerLeft, MOVE_TORMENT, target: opponentLeft);
+        }
+        TURN {
+            MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerLeft, allowed: FALSE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentLeft);
+        MESSAGE("But it failed!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentRight);
+        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TORMENT, playerLeft);
+        MESSAGE("The opposing Wobbuffet was subjected to torment!");
+    }
+}

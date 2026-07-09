@@ -200,7 +200,6 @@ BattleFrontier_BattleTowerLobby_EventScript_TryEnterSinglesChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -264,7 +263,6 @@ BattleFrontier_BattleTowerLobby_EventScript_TryEnterDoublesChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_DOUBLES_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -329,7 +327,6 @@ BattleFrontier_BattleTowerLobby_EventScript_TryEnterMultisChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_MULTI_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -393,7 +390,6 @@ BattleFrontier_BattleTowerLobby_EventScript_TryEnterLinkMultisChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, FRONTIER_MULTI_PARTY_SIZE
 	special ChoosePartyForBattleFrontier
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge
 	msgbox BattleFrontier_BattleTowerLobby_Text_OkayToSaveBeforeEntering, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -773,7 +769,6 @@ BattleFrontier_BattleTowerLobby_EventScript_TryCableLink::
 	waitmessage
 	setvar VAR_0x8005, 0
 	special TryBattleLinkup
-	waitstate
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, BattleFrontier_BattleTowerLobby_EventScript_CableLinkSuccessful
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady
 	goto_if_eq VAR_RESULT, LINKUP_DIFF_SELECTIONS, BattleFrontier_BattleTowerLobby_EventScript_AbortLinkDifferentSelections
@@ -831,7 +826,6 @@ BattleFrontier_BattleTowerLobby_EventScript_CableLinkSuccessful::
 	waitmessage
 	tower_save CHALLENGE_STATUS_SAVING
 	special SaveForBattleTowerLink
-	waitstate
 	playse SE_SAVE
 	waitse
 	special TrySetBattleTowerLinkType
@@ -884,7 +878,6 @@ BattleFrontier_BattleTowerLobby_EventScript_WirelessLinkSuccessful::
 	waitmessage
 	tower_save CHALLENGE_STATUS_SAVING
 	special SaveForBattleTowerLink
-	waitstate
 	playse SE_SAVE
 	waitse
 	goto BattleFrontier_BattleTowerLobby_EventScript_EnterElevator

@@ -7,6 +7,8 @@
 #include "pokemon_storage_system.h"
 #include "string_util.h"
 #include "text.h"
+#include "constants/party_menu.h"
+#include "constants/pokemon_size_record.h"
 
 #define DEFAULT_MAX_SIZE 0x8000 // was 0x8100 in Ruby/Sapphire
 #define DEFAULT_MAX_SIZE_MAGIKARP 0
@@ -37,14 +39,6 @@ static const struct UnknownStruct sBigMonSizeTable[] =
     { 1500,   2,   -326 },
     { 1600,   1,   -126 },
     { 1700,   1,   -26 },
-};
-
-// - 4 for unused gift ribbon bits in MON_DATA_UNUSED_RIBBONS
-static const u8 sGiftRibbonsMonDataIds[GIFT_RIBBONS_COUNT - 4] =
-{
-    MON_DATA_MARINE_RIBBON, MON_DATA_LAND_RIBBON, MON_DATA_SKY_RIBBON,
-    MON_DATA_COUNTRY_RIBBON, MON_DATA_NATIONAL_RIBBON, MON_DATA_EARTH_RIBBON,
-    MON_DATA_WORLD_RIBBON
 };
 
 enum
@@ -85,7 +79,7 @@ static u8 TranslateBigMonSizeTableIndex(u16 a)
     return i;
 }
 
-static u32 GetMonSize(u16 species, u16 b)
+static u32 GetMonSize(enum Species species, u16 b)
 {
     u64 unk2;
     u64 unk4;
@@ -124,9 +118,9 @@ static u8* ReturnHeightStringNoWhitespace(u32 size)
     return heightStr;
 }
 
-static u8 CompareMonSize(u16 species, u16 *sizeRecord)
+static u8 CompareMonSize(enum Species species, u16 *sizeRecord)
 {
-    if (gSpecialVar_Result == 0xFF)
+    if (gSpecialVar_Result == PARTY_NOTHING_CHOSEN)
     {
         return POKEMON_NONE;
     }
@@ -159,7 +153,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 }
 
 // Stores species name in gStringVar1, trainer's name in gStringVar2, and size in gStringVar3
-static void GetMonSizeRecordInfo(u16 species, u16 *sizeRecord)
+static void GetMonSizeRecordInfo(enum Species species, u16 *sizeRecord)
 {
     u32 size = GetMonSize(species, *sizeRecord);
 
@@ -249,30 +243,4 @@ void CompareMagikarpSize(void)
     u16 *sizeRecord = GetVarPointer(VAR_MAGIKARP_SIZE_RECORD);
 
     gSpecialVar_Result = CompareMonSize(SPECIES_MAGIKARP, sizeRecord);
-}
-
-void GiveGiftRibbonToParty(u8 index, u8 ribbonId)
-{
-    s32 i;
-    bool32 gotRibbon = FALSE;
-    u8 data = 1;
-    u8 array[ARRAY_COUNT(sGiftRibbonsMonDataIds)];
-    memcpy(array, sGiftRibbonsMonDataIds, sizeof(sGiftRibbonsMonDataIds));
-
-    if (index < GIFT_RIBBONS_COUNT && ribbonId <= MAX_GIFT_RIBBON)
-    {
-        gSaveBlock1Ptr->giftRibbons[index] = ribbonId;
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            struct Pokemon *mon = &gPlayerParty[i];
-
-            if (GetMonData(mon, MON_DATA_SPECIES) != 0 && GetMonData(mon, MON_DATA_SANITY_IS_EGG) == 0)
-            {
-                SetMonData(mon, array[index], &data);
-                gotRibbon = TRUE;
-            }
-        }
-        if (gotRibbon)
-            FlagSet(FLAG_SYS_RIBBON_GET);
-    }
 }

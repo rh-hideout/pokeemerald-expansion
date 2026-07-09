@@ -53,13 +53,13 @@ bool32 IsGimmickSelected(enum BattlerId battler, enum Gimmick gimmick)
 // Sets a battler as having a gimmick active using their party index.
 void SetActiveGimmick(enum BattlerId battler, enum Gimmick gimmick)
 {
-    gBattleStruct->gimmick.activeGimmick[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]] = gimmick;
+    gBattleStruct->gimmick.activeGimmick[GetBattlerTrainer(battler)][gBattlerPartyIndexes[battler]] = gimmick;
 }
 
 // Returns a battler's active gimmick, if any.
 enum Gimmick GetActiveGimmick(enum BattlerId battler)
 {
-    return gBattleStruct->gimmick.activeGimmick[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
+    return gBattleStruct->gimmick.activeGimmick[GetBattlerTrainer(battler)][gBattlerPartyIndexes[battler]];
 }
 
 // Returns whether a trainer mon is intended to use an unrestrictive gimmick via .useGimmick (i.e Tera).
@@ -112,12 +112,12 @@ void SetGimmickAsActivated(enum BattlerId battler, enum Gimmick gimmick)
 #define SINGLES_GIMMICK_TRIGGER_POS_X_OPTIMAL (30)
 #define SINGLES_GIMMICK_TRIGGER_POS_X_PRIORITY (31)
 #define SINGLES_GIMMICK_TRIGGER_POS_X_SLIDE (15)
-#define SINGLES_GIMMICK_TRIGGER_POS_Y_DIFF (-11)
+#define SINGLES_GIMMICK_TRIGGER_POS_Y_DIFF (-5)
 
 #define DOUBLES_GIMMICK_TRIGGER_POS_X_OPTIMAL (30)
 #define DOUBLES_GIMMICK_TRIGGER_POS_X_PRIORITY (31)
 #define DOUBLES_GIMMICK_TRIGGER_POS_X_SLIDE (15)
-#define DOUBLES_GIMMICK_TRIGGER_POS_Y_DIFF (-4)
+#define DOUBLES_GIMMICK_TRIGGER_POS_Y_DIFF (-2)
 
 #define tBattler    data[0]
 #define tHide       data[1]

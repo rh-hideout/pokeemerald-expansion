@@ -1,97 +1,77 @@
 #include "global.h"
 #include "test/battle.h"
 
-DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers") // Electric, Ice, Rock
+ASSUMPTIONS
+{
+    ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
+    ASSUME(GetMoveType(MOVE_ICE_BEAM) == TYPE_ICE);
+    ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
+    ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
+}
+
+DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers")
 {
     enum Move move;
-    bool32 targetPlayer;
-
-    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; targetPlayer = TRUE; }
-    PARAMETRIZE { move = MOVE_ICE_BEAM; targetPlayer = TRUE; }
-    PARAMETRIZE { move = MOVE_ROCK_THROW; targetPlayer = TRUE; }
-    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; targetPlayer = FALSE; }
-    PARAMETRIZE { move = MOVE_ICE_BEAM; targetPlayer = FALSE; }
-    PARAMETRIZE { move = MOVE_ROCK_THROW; targetPlayer = FALSE; }
+    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; }
+    PARAMETRIZE { move = MOVE_ICE_BEAM; }
+    PARAMETRIZE { move = MOVE_ROCK_THROW; }
 
     GIVEN {
-        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
-        ASSUME(GetMoveType(MOVE_ICE_BEAM) == TYPE_ICE);
-        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
         PLAYER(SPECIES_PIDGEY);
         OPPONENT(SPECIES_PIDGEY);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        if (targetPlayer)
-            TURN { MOVE(opponentLeft, move, target: playerRight); }
-        else
-            TURN { MOVE(playerRight, move, target: opponentLeft); }
-    } SCENE {
-        if (targetPlayer) {
-            if (move == MOVE_THUNDER_SHOCK)
-                MESSAGE("The opposing Pidgey used Thunder Shock!");
-            else if (move == MOVE_ICE_BEAM)
-                MESSAGE("The opposing Pidgey used Ice Beam!");
-            else
-                MESSAGE("The opposing Pidgey used Rock Throw!");
-            MESSAGE("The mysterious strong winds weakened the attack!");
-            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
-        } else {
-            if (move == MOVE_THUNDER_SHOCK)
-                MESSAGE("Pidgey used Thunder Shock!");
-            else if (move == MOVE_ICE_BEAM)
-                MESSAGE("Pidgey used Ice Beam!");
-            else
-                MESSAGE("Pidgey used Rock Throw!");
-            MESSAGE("The mysterious strong winds weakened the attack!");
-            ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN {
+            MOVE(playerLeft, move, target: opponentLeft);
+            MOVE(opponentRight, move, target: playerRight);
         }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+        EFFECTIVENESS_SE(playerRight, SE_EFFECTIVE);
+        HP_BAR(playerRight);
     }
 }
 
-DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers - Inverse Battle", s16 damagePlayer, s16 damageOpponent) // Bug, Fighting, Grass
+DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers - Inverse Battle")
 {
     enum Move move;
-    bool32 strongWinds;
-
-    PARAMETRIZE { move = MOVE_BUG_BITE; strongWinds = FALSE; }
-    PARAMETRIZE { move = MOVE_BUG_BITE; strongWinds = TRUE; }
-    PARAMETRIZE { move = MOVE_KARATE_CHOP; strongWinds = FALSE; }
-    PARAMETRIZE { move = MOVE_KARATE_CHOP; strongWinds = TRUE; }
-    PARAMETRIZE { move = MOVE_VINE_WHIP; strongWinds = FALSE; }
-    PARAMETRIZE { move = MOVE_VINE_WHIP; strongWinds = TRUE; }
+    PARAMETRIZE { move = MOVE_BUG_BITE; }
+    PARAMETRIZE { move = MOVE_KARATE_CHOP; }
+    PARAMETRIZE { move = MOVE_VINE_WHIP; }
+    PARAMETRIZE { move = MOVE_MUD_SLAP; }
 
     GIVEN {
         FLAG_SET(B_FLAG_INVERSE_BATTLE);
         ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
         ASSUME(GetMoveType(MOVE_KARATE_CHOP) == TYPE_FIGHTING);
         ASSUME(GetMoveType(MOVE_VINE_WHIP) == TYPE_GRASS);
+        ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
-        if (strongWinds)
-            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
-        else
-            PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
         PLAYER(SPECIES_TORNADUS);
         OPPONENT(SPECIES_TORNADUS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN {
-            MOVE(opponentLeft, move, target: playerRight);
-            MOVE(playerRight, move, target: opponentLeft);
+            MOVE(playerLeft, move, target: opponentLeft);
+            MOVE(opponentRight, move, target: playerRight);
         }
     } SCENE {
-        HP_BAR(playerRight, captureDamage: &results[i].damagePlayer);
-        HP_BAR(opponentLeft, captureDamage: &results[i].damageOpponent);
-    } FINALLY {
-        EXPECT_GT(results[0].damagePlayer, results[1].damagePlayer);
-        EXPECT_GT(results[0].damageOpponent, results[1].damageOpponent);
-        EXPECT_GT(results[2].damagePlayer, results[3].damagePlayer);
-        EXPECT_GT(results[2].damageOpponent, results[3].damageOpponent);
-        EXPECT_GT(results[4].damagePlayer, results[5].damagePlayer);
-        EXPECT_GT(results[4].damageOpponent, results[5].damageOpponent);
+        ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+        EFFECTIVENESS_SE(playerRight, SE_EFFECTIVE);
+        HP_BAR(playerRight);
     }
 }
 
@@ -99,16 +79,13 @@ SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flyi
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_WEAKNESS_POLICY) == HOLD_EFFECT_WEAKNESS_POLICY);
-        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_THUNDER_SHOCK); }
         OPPONENT(SPECIES_PIDGEY) { Item(ITEM_WEAKNESS_POLICY); }
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
-        MESSAGE("Rayquaza used Thunder Shock!");
-        MESSAGE("The mysterious strong winds weakened the attack!");
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -118,35 +95,36 @@ SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flyi
 SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_CELEBRATE); }
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_ROCK_THROW, MOVE_SKILL_SWAP); }
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
-        MESSAGE("Rayquaza used Celebrate!");
-        MESSAGE("The opposing Pidgey used Celebrate!");
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
 }
 
-SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active in Inverse Battle")
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle")
 {
     GIVEN {
         FLAG_SET(B_FLAG_INVERSE_BATTLE);
-        ASSUME(GetMoveType(MOVE_VINE_WHIP) == TYPE_GRASS);
-        ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
-        ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_VINE_WHIP, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_TORNADUS) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_CELEBRATE); }
+        ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Moves(MOVE_BUG_BITE, MOVE_SKILL_SWAP); }
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
-        MESSAGE("Rayquaza used Celebrate!");
-        MESSAGE("The opposing Tornadus used Celebrate!");
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
 }
 
@@ -154,18 +132,17 @@ SINGLE_BATTLE_TEST("Strong winds don't affect Stealth Rock's damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_PIDGEY);
-        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_PIDGEY){ HP(200); MaxHP(200); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_STEALTH_ROCK); }
     } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
         TURN { SWITCH(player, 1); }
     } SCENE {
-        s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
+        ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
-        HP_BAR(player, damage: maxHP / 4);
+        HP_BAR(player, damage: 50);
     }
 }
 
@@ -185,11 +162,13 @@ SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
         ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
         ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetMoveWeatherType(MOVE_SNOWSCAPE) == BATTLE_WEATHER_SNOW);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(opponent, move); }
     } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
         NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
     } THEN {
         EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
@@ -198,17 +177,19 @@ SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
 
 SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities")
 {
-    u16 ability, species;
+    enum Ability ability;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
 
     GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(opponent, ability);
@@ -220,10 +201,11 @@ SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities")
 SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land")
 {
     GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
@@ -236,15 +218,37 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land")
 SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
 {
     GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_PRIMORDIAL_SEA);
         MESSAGE("A heavy rain began to fall!");
     } THEN {
         EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong winds don't reduce Synthesis, Morning Sun or Moonlight recovery")
+{
+    enum Move move;
+    enum BattleMoveEffects effect;
+    PARAMETRIZE { move = MOVE_SYNTHESIS;   effect = EFFECT_SYNTHESIS; }
+    PARAMETRIZE { move = MOVE_MORNING_SUN; effect = EFFECT_MORNING_SUN; }
+    PARAMETRIZE { move = MOVE_MOONLIGHT;   effect = EFFECT_MOONLIGHT; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == effect);
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); MaxHP(200); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        HP_BAR(player, damage: -100);
     }
 }

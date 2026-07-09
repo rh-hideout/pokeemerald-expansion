@@ -19,10 +19,41 @@
  *   | Player's side             |
  *   |  Left   Right             |
  *   |   0       2               |
- *   ----------------------------+
+ *   +---------------------------+
  *   |                           |
  *   |                           |
  *   +---------------------------+
+ */
+
+/*
+ * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_PLAYER] is always the player's party.
+ * gParties[B_TRAINER_OPPONENT_A] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_PARTNER] is only used in multibattles where
+ * the player's side has a second trainer such as Mossdeep Space Center tag battle with
+ * trainer Steven. gParties[B_TRAINER_OPPONENT_B] is only used in battles with two opponent trainers.
+ * In a double battle where the battle side only has a single trainer, both battlers on that battle
+ * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and 
+ * gParties[B_TRAINER_OPPONENT_A] for opponent side).
+ * Note in link multi battles, parties are set locally on each player's device, meaning
+ * even if a player is in the right position, on their device they will still occupy
+ * gParties[B_TRAINER_PLAYER], with their link partner using gParties[B_TRAINER_PARTNER].
+ *
+ *          Regular battles              Link multi (player on left)         Link multi (player on right)
+ *   + ------------------------- +      + ------------------------- +       + ------------------------- +
+ *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
+ *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
+ *   | (1 trainer) opA     opA   |      |             opB     opA   |       |             opB     opA   |
+ *   | (2 trainers)opB     opA   |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   | Player's side             |      |                           |       |                           |
+ *   |  Left   Right             |      | Player's side             |       | Player's side             |
+ *   |  pla     pla(double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |  pla     par(multi)       |      |  pla     par              |       |  par     pla              |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
+ *   |                           |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
  */
 
 enum BattlerPosition
@@ -46,10 +77,10 @@ enum __attribute__((packed)) BattlerId
 
 enum __attribute__((packed)) BattleTrainer
 {
-    B_TRAINER_0,
-    B_TRAINER_1,
-    B_TRAINER_2,
-    B_TRAINER_3,
+    B_TRAINER_PLAYER,
+    B_TRAINER_OPPONENT_A,
+    B_TRAINER_PARTNER,
+    B_TRAINER_OPPONENT_B,
     MAX_BATTLE_TRAINERS,
 };
 
@@ -183,9 +214,12 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
+    F(VOLATILE_WRAPPED_BINDING_BAND,        wrappedBindingBand,            (u32, 1)) \
     F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
     F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
     F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
@@ -279,6 +313,7 @@ enum VolatileFlags
     F(VOLATILE_TERRAIN_ABILITY_DONE,        terrainAbilityDone,            (u32, 1)) \
     F(VOLATILE_SYRUP_BOMB_IS_SHINY,         syrupBombIsShiny,              (u32, 1)) \
     F(VOLATILE_USED_PROTEAN_LIBERO,         usedProteanLibero,             (u32, 1)) \
+    F(VOLATILE_EMBODY_ASPECT_ACTIVATED,     embodyAspectActivated,         (u32, 1)) \
     F(VOLATILE_FLASH_FIRE_BOOSTED,          flashFireBoosted,              (u32, 1)) \
     F(VOLATILE_BOOSTER_ENERGY_ACTIVATED,    boosterEnergyActivated,        (u32, 1)) \
     F(VOLATILE_OVERWRITTEN_ABILITY,         overwrittenAbility,            (enum Ability, ABILITIES_COUNT)) \
@@ -291,7 +326,8 @@ enum VolatileFlags
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
-    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
+    F(VOLATILE_TRACE_ACTIVATED,             traceActivated,                (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -318,7 +354,8 @@ enum SemiInvulnerableState
     STATE_UNDERWATER,
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
-    STATE_SKY_DROP,
+    STATE_SKY_DROP_ATTACKER,
+    STATE_SKY_DROP_TARGET,
     STATE_COMMANDER,
     SEMI_INVULNERABLE_COUNT
 };
@@ -327,6 +364,13 @@ enum SemiInvulnerableExclusion
 {
     CHECK_ALL,
     EXCLUDE_COMMANDER,
+};
+
+enum QueuedSwitch
+{
+    NO_QUEUED_SWITCH,
+    QUEUED_SWITCH_SEND_REPLACEMENT,
+    QUEUED_SWITCH_OPEN_PARTY_SCREEN,
 };
 
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -406,20 +450,25 @@ enum TypeSideHazard
 #define STATUS_FIELD_TERRAIN_ANY        (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN)
 
 // Flags describing move's result
-#define MOVE_RESULT_MISSED                (1 << 0)
-#define MOVE_RESULT_SUPER_EFFECTIVE       (1 << 1)
-#define MOVE_RESULT_NOT_VERY_EFFECTIVE    (1 << 2)
-#define MOVE_RESULT_DOESNT_AFFECT_FOE     (1 << 3)
-#define MOVE_RESULT_ONE_HIT_KO            (1 << 4)
-#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT  (1 << 5)
-#define MOVE_RESULT_ONE_HIT_KO_STURDY     (1 << 6)
-#define MOVE_RESULT_FAILED                (1 << 7)
-#define MOVE_RESULT_FOE_ENDURED           (1 << 8)
-#define MOVE_RESULT_FOE_HUNG_ON           (1 << 9)
-#define MOVE_RESULT_STURDIED              (1 << 10)
-#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 11)
-#define MOVE_RESULT_AVOIDED_ATTACK        (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
-#define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
+#define MOVE_RESULT_MISSED                 (1 << 0)
+#define MOVE_RESULT_SUPER_EFFECTIVE        (1 << 1)
+#define MOVE_RESULT_NOT_VERY_EFFECTIVE     (1 << 2)
+#define MOVE_RESULT_DOESNT_AFFECT_FOE      (1 << 3)
+#define MOVE_RESULT_ONE_HIT_KO             (1 << 4)
+#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT   (1 << 5)
+#define MOVE_RESULT_ONE_HIT_KO_STURDY      (1 << 6)
+#define MOVE_RESULT_FAILED                 (1 << 7)
+#define MOVE_RESULT_FOE_ENDURED            (1 << 8)
+#define MOVE_RESULT_FOE_HUNG_ON            (1 << 9)
+#define MOVE_RESULT_STURDIED               (1 << 10)
+#define MOVE_RESULT_FOE_ENDURED_AFFECTION  (1 << 11)
+#define MOVE_RESULT_ATTEMPT_STAT_CHANGE    (1 << 12)
+#define MOVE_RESULT_STAT_CHANGE_PREVENTED  (1 << 13)
+#define MOVE_RESULT_MIRROR_ARMOR_PENDING   (1 << 14)
+#define MOVE_RESULT_STAT_CHANGED           (1 << 15)
+#define MOVE_RESULT_PROTECTED              (1 << 16)
+#define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
+#define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
 enum BattleWeather
 {
@@ -474,50 +523,20 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
     MOVE_EFFECT_WRAP,
-    MOVE_EFFECT_ATK_PLUS_1,
-    MOVE_EFFECT_DEF_PLUS_1,
-    MOVE_EFFECT_SPD_PLUS_1,
-    MOVE_EFFECT_SP_ATK_PLUS_1,
-    MOVE_EFFECT_SP_DEF_PLUS_1,
-    MOVE_EFFECT_ACC_PLUS_1,
-    MOVE_EFFECT_EVS_PLUS_1,
-    MOVE_EFFECT_ATK_MINUS_1,
-    MOVE_EFFECT_DEF_MINUS_1,
-    MOVE_EFFECT_SPD_MINUS_1,
-    MOVE_EFFECT_SP_ATK_MINUS_1,
-    MOVE_EFFECT_SP_DEF_MINUS_1,
-    MOVE_EFFECT_ACC_MINUS_1,
-    MOVE_EFFECT_EVS_MINUS_1,
+    MOVE_EFFECT_STAT_PLUS,
+    MOVE_EFFECT_STAT_MINUS,
+
     MOVE_EFFECT_REMOVE_ARG_TYPE,
     MOVE_EFFECT_RECHARGE,
     MOVE_EFFECT_RAGE,
     MOVE_EFFECT_PREVENT_ESCAPE,
     MOVE_EFFECT_NIGHTMARE,
     MOVE_EFFECT_GLAIVE_RUSH,
-    MOVE_EFFECT_ALL_STATS_UP,
     MOVE_EFFECT_REMOVE_STATUS,
-    MOVE_EFFECT_ATK_DEF_DOWN,
-    MOVE_EFFECT_ATK_PLUS_2,
-    MOVE_EFFECT_DEF_PLUS_2,
-    MOVE_EFFECT_SPD_PLUS_2,
-    MOVE_EFFECT_SP_ATK_PLUS_2,
-    MOVE_EFFECT_SP_DEF_PLUS_2,
-    MOVE_EFFECT_ACC_PLUS_2,
-    MOVE_EFFECT_EVS_PLUS_2,
-    MOVE_EFFECT_ATK_MINUS_2,
-    MOVE_EFFECT_DEF_MINUS_2,
-    MOVE_EFFECT_SPD_MINUS_2,
-    MOVE_EFFECT_SP_ATK_MINUS_2,
-    MOVE_EFFECT_SP_DEF_MINUS_2,
-    MOVE_EFFECT_ACC_MINUS_2,
-    MOVE_EFFECT_EVS_MINUS_2,
-    MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
-    MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
     MOVE_EFFECT_FLAME_BURST,
     MOVE_EFFECT_FEINT,
-    MOVE_EFFECT_V_CREATE,
     MOVE_EFFECT_HAPPY_HOUR,
     MOVE_EFFECT_CORE_ENFORCER,
     MOVE_EFFECT_THROAT_CHOP,
@@ -540,21 +559,15 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
+    MOVE_EFFECT_RAINBOW,
+    MOVE_EFFECT_SEA_OF_FIRE,
+    MOVE_EFFECT_SWAMP,
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
     // Stone Axe can also fail to set up rocks if user faints where as Stonesurge will always go up.
     // This means we need to be careful if we want to re-use those effects for (new) vanilla moves
-    MOVE_EFFECT_RAISE_TEAM_ATTACK,
-    MOVE_EFFECT_RAISE_TEAM_DEFENSE,
-    MOVE_EFFECT_RAISE_TEAM_SPEED,
-    MOVE_EFFECT_RAISE_TEAM_SP_ATK,
-    MOVE_EFFECT_RAISE_TEAM_SP_DEF,
-    MOVE_EFFECT_LOWER_ATTACK_SIDE,
-    MOVE_EFFECT_LOWER_DEFENSE_SIDE,
-    MOVE_EFFECT_LOWER_SPEED_SIDE,
-    MOVE_EFFECT_LOWER_SP_ATK_SIDE,
-    MOVE_EFFECT_LOWER_SP_DEF_SIDE,
     MOVE_EFFECT_SUN,
     MOVE_EFFECT_RAIN,
     MOVE_EFFECT_SANDSTORM,
@@ -587,17 +600,29 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_CONFUSE_SIDE,
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
-    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused for rocks set up from Ceasless Edge (same but differ in execution order)
+    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
     MOVE_EFFECT_TORMENT_SIDE,
-    MOVE_EFFECT_LOWER_SPEED_2_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    // For status stat change moves
+    STAT_CHANGE_EFFECT_PLUS,
+    STAT_CHANGE_EFFECT_MINUS,
+
     // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
-    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2,3 and 4
+    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
+    MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
+
+    // Only for secret power usage but better to remove/refactor the abstraction
+    // renamed so that users don't think those are usable constatns
+    SECRET_POWER_ATK_MINUS_1,
+    SECRET_POWER_DEF_MINUS_1,
+    SECRET_POWER_SPD_MINUS_1,
+    SECRET_POWER_SP_ATK_MINUS_1,
+    SECRET_POWER_ACC_MINUS_1,
 
     NUM_MOVE_EFFECTS
 };

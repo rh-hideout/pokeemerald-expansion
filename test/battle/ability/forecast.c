@@ -281,7 +281,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal when Sandstorm i
 SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal under Cloud Nine/Air Lock")
 {
     u32 species = 0;
-    enum Ability ability = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
@@ -388,7 +388,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it switches out")
         MESSAGE("Castform transformed!");
         SWITCH_OUT_MESSAGE("Castform");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 
@@ -409,14 +409,14 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back when it uses a move that f
         MESSAGE("Castform transformed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CASTFORM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CASTFORM);
     }
 }
 
 SINGLE_BATTLE_TEST("Forecast transforms Castform when Cloud Nine ability user leaves the field")
 {
     u32 species = 0;
-    enum Ability ability = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 

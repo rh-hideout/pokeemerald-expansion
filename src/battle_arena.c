@@ -389,7 +389,7 @@ void BattleArena_AddSkillPoints(enum BattlerId battler)
         }
         else if (IsBattlerUnaffectedByMove(gBattlerTarget))
         {
-            if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
+            if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED))
                 skillPoints[battler] -= 2;
         }
         else if ((gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE) && (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
@@ -421,7 +421,6 @@ void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringI
     case STRINGID_PKMNSXMADEITINEFFECTIVE:
     case STRINGID_PKMNSXPREVENTSFLINCHING:
     case STRINGID_PKMNSXBLOCKSY:
-    case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_PKMNSXMADEYINEFFECTIVE:
     case STRINGID_PKMNPROTECTEDBY:
     case STRINGID_PKMNPREVENTSUSAGE:
@@ -430,7 +429,6 @@ void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringI
     case STRINGID_PKMNPREVENTSCONFUSIONWITH:
     case STRINGID_PKMNRAISEDFIREPOWERWITH:
     case STRINGID_PKMNANCHORSITSELFWITH:
-    case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
         break;

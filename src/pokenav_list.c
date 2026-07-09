@@ -93,8 +93,8 @@ static u32 LoopedTask_EraseListForCheckPage(s32);
 static u32 LoopedTask_ReshowListFromCheckPage(s32);
 static u32 LoopedTask_PrintCheckPageInfo(s32);
 
-static const u16 sListArrow_Pal[] = INCBIN_U16("graphics/pokenav/list_arrows.gbapal");
-static const u32 sListArrow_Gfx[] = INCBIN_U32("graphics/pokenav/list_arrows.4bpp.smol");
+static const u16 sListArrow_Pal[] = INCGFX_U16("graphics/pokenav/list_arrows.png", ".gbapal");
+static const u32 sListArrow_Gfx[] = INCGFX_U32("graphics/pokenav/list_arrows.png", ".4bpp.smol");
 
 static const u8 gText_PokenavMatchCall_Strategy[] = _("STRATEGY");
 static const u8 gText_PokenavMatchCall_TrainerPokemon[] = _("TRAINER'S POKéMON");

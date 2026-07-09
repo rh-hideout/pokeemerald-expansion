@@ -19,6 +19,7 @@
 #include "constants/berry.h"
 #include "constants/cable_club.h"
 #include "constants/coins.h"
+#include "constants/comparison_operators.h"
 #include "constants/contest.h"
 #include "constants/daycare.h"
 #include "constants/decorations.h"
@@ -53,6 +54,8 @@
 #include "constants/pokeball.h"
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
+#include "constants/pokemon_size_record.h"
+#include "constants/random_mon_generation.h"
 #include "constants/rtc.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"
@@ -106,6 +109,8 @@ gSpecialVars::
 	.4byte gSpecialVar_Unused_0x8014
 	.4byte gTrainerBattleParameter + 2 // gTrainerBattleParameter.params.opponentA
 
+	.purgem def_special
+	.set ALLOCATE_SPECIAL_TABLE, 1
 	.include "data/specials.inc"
 
 gStdScripts::
@@ -1249,7 +1254,6 @@ EventScript_RegionMap::
 	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK
 	special FieldShowRegionMap
-	waitstate
 	releaseall
 	end
 
@@ -1332,7 +1336,6 @@ Common_EventScript_FerryDepartIsland::
 Common_EventScript_NameReceivedPartyMon::
 	fadescreen FADE_TO_BLACK
 	special ChangePokemonNickname
-	waitstate
 	return
 
 Common_EventScript_PlayerHandedOverTheItem::
@@ -1347,10 +1350,10 @@ Common_EventScript_PlayerHandedOverTheItem::
 	.include "data/scripts/elite_four.inc"
 	.include "data/scripts/movement.inc"
 	.include "data/scripts/check_furniture.inc"
+	.include "data/scripts/mart_clerk.inc"
 	.include "data/text/record_mix.inc"
 	.include "data/text/pc.inc"
 	.include "data/text/pkmn_center_nurse.inc"
-	.include "data/text/mart_clerk.inc"
 	.include "data/text/obtain_item.inc"
 	.include "data/text/move_relearner.inc"
 
@@ -1533,7 +1536,6 @@ EventScript_GetInGameTradeSpeciesInfo::
 
 EventScript_ChooseMonForInGameTrade::
 	special ChoosePartyMon
-	waitstate
 	lock
 	faceplayer
 	return
@@ -1545,7 +1547,6 @@ EventScript_GetInGameTradeSpecies::
 EventScript_DoInGameTrade::
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
-	waitstate
 	lock
 	faceplayer
 	return
@@ -1678,7 +1679,6 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	playse SE_PC_ON
 	msgbox gText_PlayerHouseBootPC
 	special BedroomPC
-	waitstate
 	releaseall
 	end
 
@@ -1737,3 +1737,4 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
+	.include "data/scripts/wild_encounter.inc"

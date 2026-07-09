@@ -105,6 +105,20 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
                 stack.top().OutputLine();
             break;
         }
+        case Directive::Macro:
+        {
+            // GNU as misreports the filename (but not line!) when an
+            // error occurs in a macro, so we work around this bug by
+            // emitting an explicit location inside the macro
+            // definition.
+            // ... but only on the first pass, because on the second
+            // pass we have lost track of our location.
+            if (!isStdin)
+            {
+                stack.top().OutputLine();
+                stack.top().OutputLocation();
+            }
+        }
         case Directive::Unknown:
         {
             Label label = stack.top().GetLabel();
@@ -119,6 +133,9 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
 
                 if (label.type == Label::global)
                     std::printf(".global %s\n%s:\n", s, s);
+
+                if (doSize)
+                    stack.top().OutputLocation();
 
                 prevLabel = label;
             }
@@ -138,9 +155,9 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
     }
 }
 
-void PreprocCFile(const char * filename, bool isStdin)
+void PreprocCFile(const char * filename, bool isStdin, const char * graphicsRoot)
 {
-    CFile cFile(filename, isStdin);
+    CFile cFile(filename, isStdin, graphicsRoot);
     cFile.Preproc();
 }
 
@@ -167,7 +184,7 @@ const char* GetFileExtension(const char* filename)
 
 static void UsageAndExit(const char *program)
 {
-    std::fprintf(stderr, "Usage: %s [-i] [-e] [-s] SRC_FILE CHARMAP_FILE\nwhere -i denotes if input is from stdin\n      -e enables enum handling\n        -s enables '.size' handling\n", program);
+    std::fprintf(stderr, "Usage: %s [-i] [-e] [-g PATH] [-s] SRC_FILE CHARMAP_FILE\nwhere -i denotes if input is from stdin\n      -e enables enum handling\n      -g specifies the root for INCGFX\n      -s enables '.size' handling\n", program);
     std::exit(EXIT_FAILURE);
 }
 
@@ -178,10 +195,11 @@ int main(int argc, char **argv)
     const char *charmap = NULL;
     bool isStdin = false;
     bool doEnum = false;
+    const char *graphicsRoot = "";
     bool doSize = false;
 
     /* preproc [-i] [-e] [-s] SRC_FILE CHARMAP_FILE */
-    while ((opt = getopt(argc, argv, "ies")) != -1)
+    while ((opt = getopt(argc, argv, "ieg:s")) != -1)
     {
         switch (opt)
         {
@@ -193,6 +211,9 @@ int main(int argc, char **argv)
             break;
         case 's':
             doSize = true;
+            break;
+        case 'g':
+            graphicsRoot = optarg;
             break;
         default:
             UsageAndExit(argv[0]);
@@ -226,7 +247,7 @@ int main(int argc, char **argv)
     {
         if (doEnum)
             FATAL_ERROR("-e is invalid for C sources\n");
-        PreprocCFile(source, isStdin);
+        PreprocCFile(source, isStdin, graphicsRoot);
     }
     else
     {

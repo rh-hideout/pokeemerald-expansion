@@ -12,7 +12,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
 }
 
-SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect and Aurora Veil from the target's side of the field")
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove Light Screen, Reflect and Aurora Veil from the target's side of the field")
 {
     enum Move move;
     u32 breakingMove;
@@ -23,6 +23,9 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect a
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_RAGING_BULL; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -34,12 +37,23 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs remove Light Screen, Reflect a
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, player);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         ANIMATION(ANIM_TYPE_MOVE, breakingMove, player);
-        MESSAGE("The wall shattered!");
+        switch (move)
+        {
+            case MOVE_REFLECT:
+                MESSAGE("The opposing team's Reflect wore off!");
+                break;
+            case MOVE_LIGHT_SCREEN:
+                MESSAGE("The opposing team's Light Screen wore off!");
+                break;
+            default:
+                MESSAGE("The opposing team's Aurora Veil wore off!");
+                break;
+        }
         HP_BAR(opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if the target is immune")
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Light Screen, Reflect and Aurora Veil if the target is immune")
 {
     enum Move move;
     u32 breakingMove;
@@ -50,6 +64,9 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_RAGING_BULL; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -62,13 +79,24 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, breakingMove, player);
-            MESSAGE("The wall shattered!");
+            switch (move)
+            {
+                case MOVE_REFLECT:
+                    MESSAGE("The opposing team's Reflect wore off!");
+                    break;
+                case MOVE_LIGHT_SCREEN:
+                    MESSAGE("The opposing team's Light Screen wore off!");
+                    break;
+                default:
+                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    break;
+            }
             HP_BAR(opponent);
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if the target Protected")
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Light Screen, Reflect and Aurora Veil if the target Protected")
 {
     enum Move move;
     u32 breakingMove;
@@ -79,6 +107,9 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_RAGING_BULL; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -92,13 +123,24 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, breakingMove, player);
-            MESSAGE("The wall shattered!");
+            switch (move)
+            {
+                case MOVE_REFLECT:
+                    MESSAGE("The opposing team's Reflect wore off!");
+                    break;
+                case MOVE_LIGHT_SCREEN:
+                    MESSAGE("The opposing team's Light Screen wore off!");
+                    break;
+                default:
+                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    break;
+            }
             HP_BAR(opponent);
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if it misses")
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Light Screen, Reflect and Aurora Veil if it misses")
 {
     enum Move move;
     u32 breakingMove;
@@ -109,6 +151,9 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_RAGING_BULL; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -121,13 +166,24 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, breakingMove, player);
-            MESSAGE("The wall shattered!");
+            switch (move)
+            {
+                case MOVE_REFLECT:
+                    MESSAGE("The opposing team's Reflect wore off!");
+                    break;
+                case MOVE_LIGHT_SCREEN:
+                    MESSAGE("The opposing team's Light Screen wore off!");
+                    break;
+                default:
+                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    break;
+            }
             HP_BAR(opponent);
         }
     }
 }
 
-DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Reflect and Aurora Veil on users side")
+DOUBLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull can remove Light Screen, Reflect and Aurora Veil on users side")
 {
     enum Move move;
     u32 breakingMove;
@@ -138,6 +194,9 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
     PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_RAGING_BULL; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_RAGING_BULL; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -154,20 +213,31 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, breakingMove, playerRight);
-        MESSAGE("The wall shattered!");
+        switch (move)
+        {
+            case MOVE_REFLECT:
+                MESSAGE("Your team's Reflect wore off!");
+                break;
+            case MOVE_LIGHT_SCREEN:
+                MESSAGE("Your team's Light Screen wore off!");
+                break;
+            default:
+                MESSAGE("Your team's Aurora Veil wore off!");
+                break;
+        }
         HP_BAR(playerLeft);
     }
 }
 
-SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove screens when the target is behind a Substitute")
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull can remove screens when the target is behind a Substitute")
 {
     enum Move move;
 
     PARAMETRIZE { move = MOVE_BRICK_BREAK; }
     PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_RAGING_BULL; }
 
     GIVEN {
-
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -177,7 +247,33 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove screens when the ta
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        MESSAGE("The wall shattered!");
+        MESSAGE("Your team's Reflect wore off!");
         SUB_HIT(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens in the following order - Reflect, Light Screen, Aurora Veil")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_NINETALES_ALOLA) Ability(ABILITY_SNOW_WARNING);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_AURORA_VEIL); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("The opposing team's Reflect wore off!");
+        MESSAGE("The opposing team's Light Screen wore off!");
+        MESSAGE("The opposing team's Aurora Veil wore off!");
     }
 }

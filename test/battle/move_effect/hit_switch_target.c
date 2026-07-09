@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Iron Barbs!");
+        MESSAGE("Wobbuffet was hurt!");
         HP_BAR(player);
         MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
         MESSAGE("The opposing Charmander was dragged out!");
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         ABILITY_POPUP(opponent, ABILITY_SUCTION_CUPS);
-        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        MESSAGE("The opposing Octillery is anchored in place with its suction cups!");
         NOT MESSAGE("The opposing Charmander was dragged out!");
     }
 }

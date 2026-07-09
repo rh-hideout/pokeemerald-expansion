@@ -447,6 +447,8 @@ If a branch has a config that performs either of the following, it should be on 
 *  improves the backend / developer quality of life
 *  emulates present day, modern day Pokémon
 
+The sole excpetion to this is content who's sole source is Pokémon Champions. Champions content should use the `GEN_CHAMPIONS` config, but `GEN_LATEST` will remain `GEN_9` unless explicitly stated otherwise by a maintainer.
+
 If a branch's behavior is one that Game Freak does not have a consistent stance on, the default behavior of the config should be disussed by the maintainers.
 
 All other configs should be off.

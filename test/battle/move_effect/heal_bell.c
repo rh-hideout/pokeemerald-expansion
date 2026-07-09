@@ -5,7 +5,7 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
     ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
-    ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
+    ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
 DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
         STATUS_ICON(playerRight, none: TRUE);
         NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
         for (i = 0; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
         case STATUS1_FROSTBITE:    STATUS_ICON(playerLeft, frostbite: FALSE); STATUS_ICON(playerRight, frostbite: FALSE); break;
         }
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[j], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -169,7 +169,8 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
 
 DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 {
-    u32 ability, config;
+    enum Ability ability;
+    u32 config;
 
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_5; }
@@ -214,5 +215,24 @@ SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, player);
         SEND_IN_MESSAGE("Exploud");
         NOT MESSAGE("Exploud was hurt by its poisoning!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Aromatherapy will be blocked on ally by Sap Sipper but not user")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_AROMATHERAPY) == TYPE_GRASS);
+        PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
+        PLAYER(SPECIES_MARILL) { Ability(ABILITY_SAP_SIPPER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_AROMATHERAPY); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_SAP_SIPPER);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Marill's Attack rose!");
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }

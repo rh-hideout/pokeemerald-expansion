@@ -7,7 +7,7 @@
 // This file handles the braille font.
 // For printing braille messages, see ScrCmd_braillemessage
 
-static const u16 sFont_Braille[] = INCBIN_U16("graphics/fonts/braille.fwjpnfont");
+static const u16 sFont_Braille[] = INCGFX_U16("graphics/fonts/braille.png", ".fwjpnfont");
 
 static void DecompressGlyph_Braille(u16);
 

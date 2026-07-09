@@ -4,7 +4,6 @@ Class: Pkmn Trainer 1
 Pic: Brendan
 Gender: Male
 Music: Male
-Back Pic: Brendan
 
 === PARTNER_STEVEN_TEST ===
 Name: STEVEN
@@ -12,8 +11,8 @@ Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 AI: Basic Trainer
+Difficulty: Normal
 
 Metang
 Brave Nature
@@ -45,38 +44,24 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Solar Beam
 - Dragon Claw
 
-=== 2 ===
+=== PARTNER_STEVEN_TEST ===
 Name: Test2
 Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
-Difficulty: Normal
-
-Mewtwo
-Level: 50
-
-=== 2 ===
-Name: Test2
-Class: Rival
-Pic: Steven
-Gender: Male
-Music: Male
-Back Pic: Steven
 Battle Type: Singles
 Difficulty: Easy
 
 Metapod
 Level: 1
 
-=== 2 ===
+=== PARTNER_STEVEN_TEST ===
 Name: Test2
 Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 Battle Type: Singles
 Difficulty: Hard
 

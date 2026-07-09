@@ -18,13 +18,13 @@ SINGLE_BATTLE_TEST("Poison Point inflicts poison on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Wobbuffet was poisoned by the opposing Nidoran♂'s Poison Point!");
+            MESSAGE("Wobbuffet was poisoned!");
             STATUS_ICON(player, poison: TRUE);
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-                MESSAGE("Wobbuffet was poisoned by the opposing Nidoran♂'s Poison Point!");
+                MESSAGE("Wobbuffet was poisoned!");
                 STATUS_ICON(player, poison: TRUE);
             }
         }
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Poison Point triggers 1/3 times (Gen3) or 30% (Gen 4+) of th
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-        MESSAGE("Wobbuffet was poisoned by the opposing Nidoran♂'s Poison Point!");
+        MESSAGE("Wobbuffet was poisoned!");
         STATUS_ICON(player, poison: TRUE);
     }
 }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Poison Point will not poison Poison-Type targets with corros
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Salandit was poisoned by the opposing Nidoran♂'s Poison Point!");
+            MESSAGE("Salandit was poisoned!");
             STATUS_ICON(player, poison: TRUE);
         }
     }

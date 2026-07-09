@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailw
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponent);
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Wind Rider raised its Attack!");
+        MESSAGE("The opposing Bramblin's Attack rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Wind Rider activates when it's no longer effected by Neutral
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Wind Rider raised its Attack!");
+        MESSAGE("The opposing Bramblin's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }

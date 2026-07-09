@@ -15,6 +15,7 @@
 #include "trainer_hill.h"
 #include "tv.h"
 #include "constants/rgb.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/metatile_behaviors_frlg.h"
 #include "wild_encounter.h"
@@ -1080,4 +1081,26 @@ void LoadMapTilesetPalettes(struct MapLayout const *mapLayout)
         LoadPrimaryTilesetPalette(mapLayout);
         LoadSecondaryTilesetPalette(mapLayout, FALSE);
     }
+}
+
+bool32 AreCoordsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+{
+    const struct MapLayout *layout = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->mapLayout;
+    s32 width = layout->width;
+    s32 height = layout->height;
+    x -= MAP_OFFSET;
+    y -= MAP_OFFSET;
+
+    if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
+    {
+        width *= PYRAMID_FLOOR_SQUARES_WIDE;
+        height *= PYRAMID_FLOOR_SQUARES_HIGH;
+    }
+
+    return (x >= 0 && x < width && y >= 0 && y < height);
+}
+
+bool32 AreCoordsInsidePlayerMap(s16 x, s16 y)
+{
+    return AreCoordsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
 }

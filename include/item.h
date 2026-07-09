@@ -6,6 +6,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/tms_hms.h"
+#include "constants/berries.h"
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
@@ -63,6 +64,7 @@ enum PACKED ItemSortType
 };
 
 typedef void (*ItemUseFunc)(u8);
+typedef bool32 (*ShopCriteriaFunc)(enum Item);
 
 struct ItemInfo
 {
@@ -84,6 +86,7 @@ struct ItemInfo
     u8 flingPower;
     const u32 *iconPic;
     const u16 *iconPalette;
+    ShopCriteriaFunc shopCriteriaFunc;
 };
 
 struct ALIGNED(2) BagPocket
@@ -174,10 +177,40 @@ static inline enum Item GetTMHMItemId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].itemId;
 }
 
-static inline u16 GetTMHMMoveId(enum TMHMIndex index)
+static inline enum Move GetTMHMMoveId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].moveId;
 }
+
+#define GET_BERRY_ID(_berry) case ITEM_##_berry##_BERRY: return BERRY_ID_##_berry;
+#define GET_BERRY_ITEM_ID(_berry) case BERRY_ID_##_berry: return ITEM_##_berry##_BERRY;
+
+static inline enum BerryId ItemIdToBerryType(enum Item itemId)
+{
+    switch (itemId)
+    {
+    FOREACH_BERRY(GET_BERRY_ID)
+    case ITEM_ENIGMA_BERRY_E_READER:
+        return BERRY_ID_ENGIMA_E_READER;
+    default:
+        return BERRY_ID_NONE;
+    }
+};
+
+static inline enum Item BerryTypeToItemId(enum BerryId berryId)
+{
+    switch (berryId)
+    {
+    FOREACH_BERRY(GET_BERRY_ITEM_ID)
+    case BERRY_ID_ENGIMA_E_READER:
+        return ITEM_ENIGMA_BERRY_E_READER;
+    default:
+        return ITEM_NONE;
+    }
+};
+
+#undef GET_BERRY_ID
+#undef GET_BERRY_ITEM_ID
 
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
@@ -187,7 +220,7 @@ static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32
     BagPocket_SetSlotData(pocket, pocketPos, (struct ItemSlot) {itemId, quantity});
 }
 
-static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
+static inline enum Item GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 {
     return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).itemId;
 }
@@ -246,5 +279,7 @@ u32 GetItemStatus1Mask(enum Item itemId);
 bool32 ItemHasVolatileFlag(enum Item itemId, enum Volatile volatile);
 u32 GetItemSellPrice(enum Item itemId);
 bool32 IsHoldEffectChoice(enum HoldEffect holdEffect);
+ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId);
+bool32 IsItemShopCriteriaFulfilled(u32 itemId);
 
 #endif // GUARD_ITEM_H

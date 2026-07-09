@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp")
             HP_BAR(player, damage: 200);
         }
         ABILITY_POPUP(opponent, ABILITY_DAMP);
-        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Mind Blown!");
+        MESSAGE("Wobbuffet cannot use Mind Blown!");
     }
 }
 

@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Relic Song is prevented by Soundproof")
         TURN { MOVE(player, MOVE_RELIC_SONG); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
-        MESSAGE("The opposing Voltorb's Soundproof blocks Relic Song!");
+        MESSAGE("It doesn't affect the opposing Voltorb…");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
             HP_BAR(opponent);
