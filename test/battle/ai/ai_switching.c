@@ -1,5 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
+#include "battle_ai_main.h"
+#include "battle_ai_util.h"
 
 AI_SINGLE_BATTLE_TEST("AI gets baited by Protect Switch tactics") // This behavior is to be fixed.
 {
@@ -718,6 +720,51 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Eject Pack will send out Ace M
 }
 
 // General AI_FLAG_SMART_MON_CHOICES behaviour
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Move data does not spill over between switch-in candidates")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(IsBattleMoveStatus(MOVE_CELEBRATE));
+        ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_WOBBUFFET) { HP(80); MaxHP(80); Speed(50); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_MAGIKARP) { HP(1); Speed(10); Moves(MOVE_SPLASH); }
+        OPPONENT(SPECIES_ABRA) { HP(30); MaxHP(30); Speed(40); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(200); MaxHP(200); Speed(60); Moves(MOVE_CELEBRATE); Item(ITEM_ASSAULT_VEST); }
+        OPPONENT(SPECIES_MAGIKARP) { Speed(30); Moves(MOVE_SPLASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_SEND_OUT(opponent, 3); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switchin move data is reset before recalculation")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_DRAGON_RAGE); }
+    } THEN {
+        enum BattlerId battlerAtk = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerDef = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        u32 moveIndex = 0;
+        EXPECT_GT(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
+        EXPECT_GT(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT_GT(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
+
+        gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = TRUE;
+        gAiLogicData->moveLimitations[battlerAtk] |= 1u << moveIndex;
+        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+
+        EXPECT_EQ(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
+        EXPECT_EQ(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT_EQ(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT(!gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex]);
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculation checks whether incoming damage is less than recurring healing to avoid an infinite loop")
 {
     GIVEN {

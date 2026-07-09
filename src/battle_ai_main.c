@@ -749,6 +749,12 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
         uq4_12_t effectiveness = Q_4_12(0.0);
         move = moves[moveIndex];
 
+        // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
+        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
+        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
+        aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
+
         if (IsMoveUnusable(moveIndex, move, moveLimitations))
             continue;
 
