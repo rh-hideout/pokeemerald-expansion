@@ -1767,7 +1767,6 @@ void VBlankCB_BagMenuRun(void)
 #define tQuantity               data[2]
 #define tNeverRead              data[3]
 #define tPartySlot              data[4]
-#define tPartySavedIconY        data[5]
 #define tPartyTemp              data[6]
 #define tItemCount              data[8]
 #define tMsgWindowId            data[10]
@@ -2464,11 +2463,16 @@ static void RefreshItemListColors(struct ListMenu *list)
     CopyWindowToVram(WIN_ITEM_LIST, COPYWIN_GFX);
 }
 
-static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
+static s16 BagMenu_GetListRowSpriteY(struct ListMenu *list)
 {
     u8 rowHeight = GetFontAttribute(FONT_NARROW, FONTATTR_MAX_LETTER_HEIGHT) + list->template.itemVerticalPadding;
     u8 windowTop = sDefaultBagWindows[WIN_ITEM_LIST].tilemapTop * 8;
-    s16 spriteY = windowTop + list->template.upText_Y + list->selectedRow * rowHeight + 8;
+    return windowTop + list->template.upText_Y + list->selectedRow * rowHeight + 8;
+}
+
+static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
+{
+    s16 spriteY = BagMenu_GetListRowSpriteY(list);
     u32 durationFrames = 8;
 
     if (!onInit && !gComfyAnims[sCursorAnimId].completed)
@@ -4368,9 +4372,9 @@ static void CB2_QuizLadyExitBagMenu(void)
 
 static void PrintPocketName(const u8 *name)
 {
-    u8 offset = GetStringCenterAlignXOffset(FONT_SHORT, name, 88);
+    u8 offset = GetStringCenterAlignXOffset(FONT_SHORT_NARROW, name, 88);
     FillWindowPixelBuffer(WIN_POCKET_NAME, PIXEL_FILL(0));
-    BagMenu_Print(WIN_POCKET_NAME, FONT_SHORT, name, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
+    BagMenu_Print(WIN_POCKET_NAME, FONT_SHORT_NARROW, name, offset, 1, 0, 0, TEXT_SKIP_DRAW, COLORID_POCKET_NAME);
     PutWindowTilemap(WIN_POCKET_NAME);
     CopyWindowToVram(WIN_POCKET_NAME, COPYWIN_GFX);
 }
@@ -6124,7 +6128,6 @@ void BagMenu_OpenPartySelect(u8 taskId)
     }
 
     tPartySlot = 0;
-    tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
 
     if (sPartyGiveMode)
     {
@@ -6275,11 +6278,12 @@ static void BagMenu_ClosePartySelect(u8 taskId)
     {
         struct Sprite *spr = &gSprites[iconSpriteId];
         spr->x2 = 102;
-        spr->y2 = tPartySavedIconY + 4;
+        spr->y2 = BagMenu_GetListRowSpriteY((void *) gTasks[tListTaskId].data) + 4;
         spr->invisible = FALSE;
     }
 
     BagMenu_SetPartySlotPalette(tPartySlot, 0);
+    UpdateEmptyPocket();
     ReturnToItemList(taskId);
 }
 
@@ -7191,7 +7195,6 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     case BAG_REENTRY_MOVE_FORGET:
     {
         tPartySlot = sBagItemUseState->slot;
-        tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
         gSprites[sCursorSpriteId].invisible = TRUE;
         sBagItemUseState->reentryPhase = BAG_REENTRY_NONE;
         gTasks[taskId].func = Task_BagMenu_MoveLearnAfterForget;
@@ -7201,7 +7204,6 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     {
         u8 slot = sBagItemUseState->slot;
         tPartySlot = slot;
-        tPartySavedIconY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
         gSprites[sCursorSpriteId].invisible = TRUE;
         BagMenu_SetPartySlotPalette(slot, 2);
         BagMenu_UpdateStatusIconPos(slot);
