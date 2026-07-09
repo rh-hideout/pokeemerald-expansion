@@ -561,8 +561,8 @@ enum AnimBattler
 #define B_ANIM_MON_HIT                  14
 #define B_ANIM_ITEM_STEAL               15
 #define B_ANIM_SNATCH_MOVE              16
-#define B_ANIM_FUTURE_SIGHT_HIT         17
-#define B_ANIM_DOOM_DESIRE_HIT          18
+#define B_ANIM_UNUSED_17                17
+#define B_ANIM_UNUSED_18                18
 #define B_ANIM_FOCUS_PUNCH_SETUP        19
 #define B_ANIM_INGRAIN_HEAL             20
 #define B_ANIM_WISH_HEAL                21

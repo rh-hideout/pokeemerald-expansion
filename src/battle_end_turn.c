@@ -272,6 +272,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         else
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
+        gBattleScripting.animTurn = 1; // to play correct anim
         BattleScriptCall(BattleScript_MonTookFutureAttack);
         effect = TRUE;
     }

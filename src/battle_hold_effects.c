@@ -853,6 +853,7 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
         if (override && missingMove == MAX_MON_MOVES)
         {
             u32 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+
             if (currentPP < maxPP)
                 missingMove = i;
         }

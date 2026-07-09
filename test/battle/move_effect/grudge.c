@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
         MESSAGE("The opposing Wobbuffet foresaw an attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         MESSAGE("Wobbuffet took the Future Sight attack!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FUTURE_SIGHT_HIT);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
         NOT MESSAGE("The opposing Wobbuffet lost all of Future Sight's PP due to the grudge!");
         MESSAGE("Wobbuffet fainted!");
     }

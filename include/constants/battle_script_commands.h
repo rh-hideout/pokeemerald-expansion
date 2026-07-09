@@ -381,12 +381,6 @@ enum TriggerOnFieldStatus
     ON_WEATHER,
 };
 
-enum HealthUpdate
-{
-    PASSIVE_HP_UPDATE,
-    MOVE_DAMAGE_HP_UPDATE,
-};
-
 enum FlungItem
 {
     FLUNG_ITEM_NONE,
