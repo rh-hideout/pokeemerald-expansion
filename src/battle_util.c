@@ -3350,7 +3350,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_INTREPID_SWORD:
             if (shouldAbilityTrigger && !GetBattlerPartyState(battler)->intrepidSwordBoost)
             {
-                if (GetConfig(B_INTREPID_SWORD) == GEN_9)
+                if (GetConfig(B_INTREPID_SWORD) >= GEN_9)
                     GetBattlerPartyState(battler)->intrepidSwordBoost = TRUE;
 
                 if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
@@ -3365,7 +3365,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_DAUNTLESS_SHIELD:
             if (shouldAbilityTrigger && !GetBattlerPartyState(battler)->dauntlessShieldBoost)
             {
-                if (GetConfig(B_DAUNTLESS_SHIELD) == GEN_9)
+                if (GetConfig(B_DAUNTLESS_SHIELD) >= GEN_9)
                     GetBattlerPartyState(battler)->dauntlessShieldBoost = TRUE;
 
                 if (CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
