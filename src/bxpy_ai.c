@@ -18,10 +18,9 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
 static void BXPY_SetupBattlers(void);
 static void BXPY_SetupAIFlags(void);
 static void BXPY_InitializeAIStructs(void);
-static enum BattleWeather BXPY_GetWeather(void);
-static u32 BXPY_GetFieldStatus(void);
+static u32 BXPY_GetWeather(void);
 static enum BattleTerrain BXPY_GetTerrain(void);
-static enum BattleWeather BXPY_GetStartingWeather(void);
+static u32 BXPY_GetStartingWeather(void);
 static u32 BXPY_GetStartingFieldStatus(void);
 static enum BattleTerrain BXPY_GetStartingTerrain(void);
 
@@ -79,7 +78,7 @@ void BXPY_SetupAIFlags(void)
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
     memset(gAiThinkingStruct, 0, sizeof(struct AiThinkingStruct));
     gAiThinkingStruct->aiFlags[B_BATTLER_1] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_BATTLER_1);
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
         gAiThinkingStruct->aiFlags[B_BATTLER_3] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_BATTLER_3);
     else
         gAiThinkingStruct->aiFlags[B_BATTLER_3] = gAiThinkingStruct->aiFlags[B_BATTLER_1];
@@ -228,9 +227,9 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 {
     enum Move move;
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
-    enum BattleWeather weather = BXPY_GetWeather();
+    u32 weather = BXPY_GetWeather();
     enum BattleTerrain terrain = BXPY_GetTerrain();
-    gFieldStatuses = BXPY_GetFieldStatus();
+    gFieldStatuses = BXPY_GetStartingFieldStatus();
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -298,19 +297,12 @@ static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opp
     return canBattlerWin1v1;
 }
 
-static enum BattleWeather BXPY_GetWeather()
+static u32 BXPY_GetWeather()
 {
-    enum BattleWeather startingWeather = BXPY_GetStartingWeather();
+    u32 startingWeather = BXPY_GetStartingWeather();
     if (startingWeather != B_WEATHER_NONE)
         return startingWeather;
-    return GetBattleWeatherFromOverworldWeather(GetCurrentWeather());
-}
-
-static u32 BXPY_GetFieldStatus()
-{
-    u32 startingFieldStatus = STATUS_FIELD_NONE;
-    startingFieldStatus |= BXPY_GetStartingFieldStatus(); // Overrides overworld effects
-    return startingFieldStatus;
+    return GetWeatherFromOverworldWeather(GetCurrentWeather());
 }
 
 static enum BattleTerrain BXPY_GetTerrain()
@@ -321,9 +313,9 @@ static enum BattleTerrain BXPY_GetTerrain()
     return GetBattleTerrainFromOverworldWeather(GetCurrentWeather());
 }
 
-static enum BattleWeather BXPY_GetStartingWeather()
+static u32 BXPY_GetStartingWeather()
 {
-    enum BattleWeather weather = B_WEATHER_NONE;
+    u32 weather = B_WEATHER_NONE;
     if (gStartingStatuses.weatherSun || gStartingStatuses.weatherSunTemporary)
         weather = B_WEATHER_SUN;
     else if (gStartingStatuses.weatherRain || gStartingStatuses.weatherRainTemporary)

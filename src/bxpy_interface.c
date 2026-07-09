@@ -802,11 +802,11 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     // AI calcs using full parties
     BXPY_GetEnemyEnterMons(B_BATTLER_1, enemyEnteredMons[B_TRAINER_OPPONENT_A], BXPY_GetPickSize());
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
     {
         BXPY_GetEnemyEnterMons(B_BATTLER_3, enemyEnteredMons[B_TRAINER_OPPONENT_B], BXPY_GetPickSize());
     }
-    if (gPartnerTrainerId != TRAINER_NONE)
+    if (gPartnerTrainerId != TRAINER_NONE && gPartnerTrainerId != 0xFFFF)
     {
         BXPY_GetEnemyEnterMons(B_BATTLER_2, enemyEnteredMons[B_TRAINER_PARTNER], BXPY_GetPickSize());
     }
