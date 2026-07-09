@@ -609,7 +609,7 @@ static inline u32 GetTwoTurnMoveSemiInvulnerability(enum Move moveId)
     return gMovesInfo[moveId].argument.twoTurnAttack.state;
 }
 
-static inline u32 GetMoveTwoTurnAttackWeather(enum Move moveId)
+static inline u32 GetTwoTurnMoveWeather(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;

@@ -294,7 +294,7 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
 
 bool32 EndOrContinueWeather(void)
 {
-    u32 currBattleWeather = GetCurrentBattleWeather(gBattleWeather);
+    enum BattleWeather currBattleWeather = GetCurrentBattleWeather(gBattleWeather);
 
     if (currBattleWeather == 0xFF)
         return FALSE;

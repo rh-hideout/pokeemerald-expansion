@@ -339,7 +339,7 @@ SINGLE_BATTLE_TEST("Mega Sol: Growth increases Attack and Sp. Atk by 2 stages un
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Electro Shot)")
 {
     GIVEN {
-        ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == BATTLE_WEATHER_RAIN);
+        ASSUME(GetTwoTurnMoveWeather(MOVE_ELECTRO_SHOT) == BATTLE_WEATHER_RAIN);
         ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
         PLAYER(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
         OPPONENT(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
