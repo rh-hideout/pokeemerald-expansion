@@ -2235,12 +2235,18 @@ bool32 IsBattlerDamagedByStatus(enum BattlerId battler)
 static bool32 ShouldAvoidProtectingAgainstPartnerMove(enum BattlerId battler, enum Move protectMove)
 {
     enum BattlerId partner = BATTLE_PARTNER(battler);
-    enum Move partnerMove = gAiLogicData->partnerMove;
+    enum Move partnerMove;
 
     if (!IsDoubleBattle()
      || !HasPartner(battler)
-     || partner > battler
-     || partnerMove == MOVE_NONE
+     || !(gAiLogicData->battlerMovesScored & (1u << partner))
+     || gAiLogicData->shouldSwitch & (1u << partner))
+    {
+        return FALSE;
+    }
+
+    partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+    if (partnerMove == MOVE_NONE
      || partnerMove == MOVE_UNAVAILABLE
      || MoveIgnoresProtect(partnerMove)
      || !AI_IsFaster(battler, partner, protectMove, partnerMove, CONSIDER_PRIORITY)

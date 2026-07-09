@@ -425,6 +425,7 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
     BattlerChooseNonMoveAction();
     ModifySwitchAfterMoveScoring(battler);
+    gAiLogicData->battlerMovesScored |= 1u << battler;
 
         AIDebugTimerEnd();
 
