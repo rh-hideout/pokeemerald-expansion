@@ -1070,7 +1070,10 @@ static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum
         if (target == TARGET_BOTH || target == TARGET_OPPONENTS_FIELD)
             return FALSE;
     }
-    if (!IsBattlerAlly(battlerAi, battlerDef) && target == TARGET_USER_OR_ALLY)
+    if (!IsBattlerAlly(battlerAi, battlerDef)
+     && (target == TARGET_ALLY
+      || target == TARGET_USER_AND_ALLY
+      || target == TARGET_USER_OR_ALLY))
         return FALSE;
     return TRUE;
 }

@@ -748,12 +748,12 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
                                        gAiBattleData->finalScore[data->aiBattlerId][battlerDef][i],
                                        STR_CONV_MODE_RIGHT_ALIGN, 3);
             // If chosen move and chosen target
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
                 AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
                 AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (i * 15) + 15, 0, NULL);
 
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
                 AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
             else
                 AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (i * 15) + 15, 0, NULL);
@@ -761,7 +761,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
             ConvertIntToDecimalStringN(text,
                                        AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
                                        STR_CONV_MODE_LEADING_ZEROS, 3);
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
                 AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
                 AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (i * 15) + 15, 0, NULL);
