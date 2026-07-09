@@ -357,3 +357,19 @@ SINGLE_BATTLE_TEST("Pickpocket activates after an Item was knocked off")
     }
 }
 
+SINGLE_BATTLE_TEST("Pickpocket can steal the attacker's Air Balloon")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_AIR_BALLOON);
+    }
+}

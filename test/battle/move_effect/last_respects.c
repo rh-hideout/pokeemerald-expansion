@@ -65,3 +65,53 @@ SINGLE_BATTLE_TEST("Last Respects power is multiplied by the amount of fainted m
             EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0 + faintCount), results[faintCount].damage);
     }
 }
+
+MULTI_BATTLE_TEST("Last Respects does not count a partner Trainer's fainted Pokemon in a multi battle", s16 damage)
+{
+    bool32 faintPartner = FALSE;
+
+    PARAMETRIZE { faintPartner = FALSE; }
+    PARAMETRIZE { faintPartner = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (faintPartner)
+            TURN { MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight, 1); }
+        TURN { MOVE(playerLeft, MOVE_LAST_RESPECTS, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAST_RESPECTS, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+MULTI_BATTLE_TEST("Last Respects does not count an opposing partner Trainer's fainted Pokemon in a multi battle", s16 damage)
+{
+    bool32 faintPartner = FALSE;
+
+    PARAMETRIZE { faintPartner = FALSE; }
+    PARAMETRIZE { faintPartner = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (faintPartner)
+            TURN { MOVE(opponentLeft, MOVE_MEMENTO, target: playerLeft); SEND_OUT(opponentLeft, 1); }
+        TURN { MOVE(opponentRight, MOVE_LAST_RESPECTS, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAST_RESPECTS, opponentRight);
+        HP_BAR(playerLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}

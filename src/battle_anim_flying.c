@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_anim.h"
 #include "palette.h"
+#include "sprite.h"
 #include "trig.h"
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
@@ -362,31 +363,20 @@ void AnimTask_AnimateGustTornadoPalette(u8 taskId)
 {
     gTasks[taskId].data[0] = gBattleAnimArgs[1];
     gTasks[taskId].data[1] = gBattleAnimArgs[0];
-    gTasks[taskId].data[2] = IndexOfSpritePaletteTag(ANIM_TAG_GUST);
     gTasks[taskId].func = AnimTask_AnimateGustTornadoPalette_Step;
 }
 
 static void AnimTask_AnimateGustTornadoPalette_Step(u8 taskId)
 {
-    u8 data2;
-    u16 temp;
-    int i, base;
-
     if (gTasks[taskId].data[10]++ == gTasks[taskId].data[1])
     {
         gTasks[taskId].data[10] = 0;
-        data2 = gTasks[taskId].data[2];
-        temp = gPlttBufferFaded[OBJ_PLTT_ID(data2) + 8];
-        i = 7;
-        base = PLTT_ID(data2);
+        u32 palOffset = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_GUST));
+        u16 *palPtr = &gPlttBufferFaded[palOffset];
 
-        do
-        {
-            gPlttBufferFaded[base + OBJ_PLTT_OFFSET + 1 + i] = gPlttBufferFaded[base + OBJ_PLTT_OFFSET + i];
-            i--;
-        } while (i > 0);
-
-        gPlttBufferFaded[base + OBJ_PLTT_OFFSET + 1] = temp;
+        u32 temp = palPtr[8];
+        memmove(&palPtr[2], &palPtr[1], PLTT_SIZEOF(7));
+        palPtr[1] = temp;
     }
 
     if (--gTasks[taskId].data[0] == 0)
@@ -933,14 +923,20 @@ static void AnimWhirlwindLine_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-void AnimTask_DrillPeckHitSplats(u8 task)
+void AnimTask_DrillPeckHitSplats(u8 taskId)
 {
-    if (!(gTasks[task].data[0] % 32))
+    if (!(gTasks[taskId].data[0] % 32))
     {
+        if (!TryLoadSpriteAssets(&gFlashingHitSplatSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gAnimVisualTaskCount++;
 
-        gBattleAnimArgs[0] = Sin(gTasks[task].data[0], -13);
-        gBattleAnimArgs[1] = Cos(gTasks[task].data[0], -13);
+        gBattleAnimArgs[0] = Sin(gTasks[taskId].data[0], -13);
+        gBattleAnimArgs[1] = Cos(gTasks[taskId].data[0], -13);
         gBattleAnimArgs[2] = 1;
         gBattleAnimArgs[3] = 3;
 
@@ -950,10 +946,10 @@ void AnimTask_DrillPeckHitSplats(u8 task)
                                3);
     }
 
-    gTasks[task].data[0] += 8;
+    gTasks[taskId].data[0] += 8;
 
-    if (gTasks[task].data[0] > 255)
-        DestroyAnimVisualTask(task);
+    if (gTasks[taskId].data[0] > 255)
+        DestroyAnimVisualTask(taskId);
 }
 
 static void AnimBounceBallShrink(struct Sprite *sprite)

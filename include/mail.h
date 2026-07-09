@@ -24,7 +24,7 @@ void ClearAllMail(void);
 void ClearMail(struct Mail *mail);
 bool8 MonHasMail(struct Pokemon *mon);
 u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId);
-u16 SpeciesToMailSpecies(u16 species, u32 personality);
+u16 SpeciesToMailSpecies(enum Species species, u32 personality);
 u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer);
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail);
 void TakeMailFromMon(struct Pokemon *mon);

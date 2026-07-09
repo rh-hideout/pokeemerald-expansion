@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     } SCENE {
         // Only test valid Hidden Power types
         if (hidden) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // Check that the item is triggered
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the item is triggered
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
             HP_BAR(opponent);
             MESSAGE("It's super effective!");

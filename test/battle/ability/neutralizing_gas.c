@@ -256,8 +256,8 @@ SINGLE_BATTLE_TEST("Neutralizing Gas prevents Trace from copying it")
 SINGLE_BATTLE_TEST("Neutralizing Gas prevents Contrary inverting stat boosts")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
         PLAYER(SPECIES_INKAY) { Ability(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
@@ -394,5 +394,31 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit e
         HP_BAR(playerRight);
         NOT MESSAGE("Golem fainted!");
         ABILITY_POPUP(playerRight, ABILITY_STURDY);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas doesn't reactivate Beads of Ruin after Chi-Yu faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(2); }
+        OPPONENT(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); HP(1); Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("The opposing Chi-Yu fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NONE_OF {
+            ABILITY_POPUP(opponentRight, ABILITY_BEADS_OF_RUIN);
+            MESSAGE("The opposing Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        }
+        MESSAGE("The opposing Weezing fainted!");
     }
 }

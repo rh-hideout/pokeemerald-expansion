@@ -342,6 +342,18 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
+enum EvoTriggerVersion {
+    EVO_TRIGGER_TABLET_CURSE,
+    EVO_TRIGGER_DARK_SCROLL,
+    EVO_TRIGGER_WATER_SCROLL,
+};
+
+enum EvolutionEventResult {
+    EVO_EVENT_IMPOSSIBLE,
+    EVO_EVENT_INTERRUPTED,
+    EVO_EVENT_SUCCESSFUL,
+};
+
 // used to determine whether an evolution is happening or not, so we know if items should be removed
 enum EvoState {
     CHECK_EVO,

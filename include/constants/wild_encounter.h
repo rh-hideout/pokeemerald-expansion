@@ -9,4 +9,7 @@
 
 #define NUM_ALTERING_CAVE_TABLES 9
 
+#define WILD_CHECK_REPEL    (1 << 0)
+#define WILD_CHECK_KEEN_EYE (1 << 1)
+
 #endif // GUARD_CONSTANTS_WILD_ENCOUNTER_H

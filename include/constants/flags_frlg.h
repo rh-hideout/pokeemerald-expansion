@@ -1532,7 +1532,7 @@
 #define FLAG_OCEANIC_MUSEUM_MET_REPORTER     0
 #define FLAG_RECEIVED_HM_STRENGTH            0
 #define FLAG_RECEIVED_HM_ROCK_SMASH          0
-#define FLAG_WHITEOUT_TO_LAVARIDGE           0 // Set after defeating Flannery, so the player cant white out from poison before receiving Go Goggles
+#define FLAG_WHITEOUT_TO_LAVARIDGE           0 // Set after defeating Flannery, so the player can't white out from poison before receiving Go Goggles
 #define FLAG_RECEIVED_HM_FLASH               0
 #define FLAG_RECEIVED_HM_FLY                 0
 #define FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT  0

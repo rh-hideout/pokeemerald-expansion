@@ -1,11 +1,11 @@
 @ commands
 
-	.macro loadspritegfx tag:req
+	.macro unloadspritegfx tag:req
 	.byte 0x0
 	.2byte \tag
 	.endm
 
-	.macro unloadspritegfx tag:req
+	.macro unloadspritepal tag:req
 	.byte 0x1
 	.2byte \tag
 	.endm
@@ -334,6 +334,10 @@
 .Lsprite_\@_2:
 	.endm
 
+	.macro unloadallspritepals
+	.byte 0x35
+	.endm
+
 @ useful macros
 	.macro jumpreteq value:req, ptr:req
 	jumpargeq ARG_RET_ID, \value, \ptr
@@ -460,6 +464,10 @@
 	createsprite gPoisonPowderParticleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
 	.endm
 
+	.macro create_magic_powder_particle_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, y_velocity:req, wave_amplitude:req, wave_speed:req
+	createsprite gMagicPowderBluePowderTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
+	.endm
+
 	.macro create_power_absorption_orb_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req
 	createsprite gPowerAbsorptionOrbSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration
 	.endm
@@ -582,6 +590,22 @@
 
 	.macro create_flashing_hitsplat_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, relative_to:req, animation:req
 	createsprite gFlashingHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
+	.endm
+
+	.macro create_fist_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, initPosition=ANIM_TARGET
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \initPosition, 0
+	.endm
+
+	.macro create_wide_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, initPosition=ANIM_TARGET
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \initPosition, 1
+	.endm
+
+	.macro create_narrow_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, initPosition=ANIM_TARGET
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \initPosition, 2
+	.endm
+
+	.macro create_electric_puff_sprite anim_battler:req, subpriority_offset:req, relative_to:req, x:req, y:req
+	createsprite gElectricPuffSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \x, \y
 	.endm
 
 @ createvisualtask wrappers

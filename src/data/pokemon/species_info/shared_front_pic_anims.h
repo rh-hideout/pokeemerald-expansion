@@ -345,6 +345,19 @@ static const union AnimCmd *const sAnims_Zygarde10[] =
 };
 #endif //P_FAMILY_ZYGARDE
 
+#if P_FAMILY_YUNGOOS
+static const union AnimCmd *const sAnims_Gumshoos[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+        ANIMCMD_FRAME(0, 10),
+        ANIMCMD_FRAME(1, 60),
+        ANIMCMD_FRAME(0, 1),
+        ANIMCMD_END,
+    },
+};
+#endif //P_FAMILY_YUNGOOS
+
 #if P_FAMILY_GRUBBIN
 static const union AnimCmd *const sAnims_Vikavolt[] =
 {
@@ -431,6 +444,20 @@ static const union AnimCmd *const sAnims_Togedemaru[] =
     },
 };
 #endif //P_FAMILY_TOGEDEMARU
+
+#if P_FAMILY_MIMIKYU
+static const union AnimCmd *const sAnims_MimikyuDisguised[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+        ANIMCMD_FRAME(1, 30),
+        ANIMCMD_FRAME(0, 10),
+        ANIMCMD_FRAME(1, 20),
+        ANIMCMD_FRAME(0, 1),
+        ANIMCMD_END,
+    },
+};
+#endif //P_FAMILY_MIMIKYU
 
 #if P_FAMILY_JANGMO_O
 static const union AnimCmd *const sAnims_Kommo_O[] =

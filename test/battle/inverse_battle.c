@@ -51,7 +51,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
 {
-    u32 species = SPECIES_NONE, move = MOVE_NONE;
+    u32 species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
 
     static const u16 monotypeMons[] = {
         SPECIES_EEVEE,
@@ -121,4 +122,3 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
             MESSAGE("It's super effective!");
     }
 }
-

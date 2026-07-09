@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Tidy Up removes hazards and raises Stats")
         MESSAGE("Wobbuffet used Tidy Up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
         MESSAGE("The spikes disappeared from the ground around your team!");
-        MESSAGE("The sticky web has disappeared from the ground around your team!");
+        MESSAGE("The sticky web has disappeared from the ground around you!");
         MESSAGE("The poison spikes disappeared from the ground around your team!");
         MESSAGE("The pointed stones disappeared from around your team!");
         MESSAGE("Tidying up complete!");

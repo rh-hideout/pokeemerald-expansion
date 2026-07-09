@@ -19,7 +19,7 @@ struct AnimStatsChangeData
     enum BattlerId battler2;
     bool8 hidBattler2;
     s16 data[8];
-    u16 species;
+    enum Species species;
 };
 
 static EWRAM_DATA struct AnimStatsChangeData *sAnimStatsChangeData = {0};
@@ -112,6 +112,12 @@ void AnimTask_SetCamouflageBlend(u8 taskId)
 
 void AnimTask_BlendParticle(u8 taskId)
 {
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+    {
+        DestroyTask(taskId);
+        return;
+    }
+
     u8 paletteIndex = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
     u32 selectedPalettes = 1 << (paletteIndex + 16);
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
@@ -242,7 +248,7 @@ static void AnimMonTrace(struct Sprite *sprite)
 // Only used by Curse for non-Ghost mons
 void AnimTask_DrawFallingWhiteLinesOnAttacker(u8 taskId)
 {
-    u16 species;
+    enum Species species;
     int spriteId, newSpriteId;
     u16 var0;
     u32 bg1Cnt;
@@ -764,7 +770,7 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
 
 void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
-    u16 species;
+    enum Species species;
     u8 spriteId, spriteId2;
     u32 bg1Cnt;
     struct BattleAnimBgData animBgData;

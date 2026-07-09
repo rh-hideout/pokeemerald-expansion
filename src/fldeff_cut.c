@@ -163,7 +163,7 @@ bool32 SetUpFieldMove_Cut(void)
     else
     {
         PlayerGetDestCoords(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
-        userAbility = GetMonAbility(&gPlayerParty[GetCursorSelectionMonId()]);
+        userAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][GetCursorSelectionMonId()]);
         if (userAbility == ABILITY_HYPER_CUTTER)
         {
             sCutSquareSide = CUT_HYPER_SIDE;

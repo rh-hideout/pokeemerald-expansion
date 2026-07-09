@@ -1,11 +1,13 @@
 #ifndef GUARD_TV_H
 #define GUARD_TV_H
 
+#include "constants/species.h"
+
 extern u8 *const gTVStringVarPtrs[3];
 
 void ClearTVShowData(void);
 void TryPutBreakingNewsOnAir(void);
-void TryPutBattleSeminarOnAir(u16 foeSpecies, u16 species, u8 moveIndex, const u16 *movePtr, u16 betterMove);
+void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, enum Move betterMove);
 void TryPutFrontierTVShowOnAir(u16 winStreak, u8 facilityAndMode);
 void DoTVShow(void);
 void DoTVShowInSearchOfTrainers(void);
@@ -39,11 +41,11 @@ void IncrementDailyBerryBlender(void);
 void SanitizeTVShowsForRuby(TVShow *shows);
 void TryPutSafariFanClubOnAir(u8 monsCaught, u8 pokeblocksUsed);
 bool8 Put3CheersForPokeblocksOnTheAir(const u8 *partnersName, enum Flavor flavor, u8 color, u8 sheen, u8 language);
-void SetPokemonAnglerSpecies(u16 species);
+void SetPokemonAnglerSpecies(enum Species species);
 void UpdateTVShowsPerDay(u16 days);
 void TryPutPokemonTodayOnAir(void);
 void TryPutSecretBaseVisitOnAir(void);
-void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 speciesPlayer, u16 speciesOpponent);
+void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, enum Species speciesPlayer, enum Species speciesOpponent);
 void BravoTrainerPokemonProfile_BeforeInterview1(enum Move move);
 void InterviewBefore(void);
 void InterviewAfter(void);
