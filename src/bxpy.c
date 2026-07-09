@@ -28,7 +28,6 @@ static u32 BXPY_GetUniqueDuplicates(u32 *inputList, u32 inputCount, u32 *uniqueD
 static void BXPY_ErrorCheck_ClauseSpecies(void);
 static void BXPY_ErrorCheck_ClauseItem(void);
 static void BXPY_ErrorCheck_ClauseSpecialPokemon(void);
-static void Debug_BXPY_PrintArguments(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId);
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId);
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags);
 static void BXPY_PrepareParty(u32 pickSize);
@@ -273,23 +272,8 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
     BXPY_FormatProblemListList(bannedMons, bannedCount, GetSpeciesName);
 }
 
-static void Debug_BXPY_PrintArguments(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
-{
-    return;
-    DebugPrintf("battleType %d",battleType);
-    DebugPrintf("bringSize %d",bringSize);
-    DebugPrintf("pickSize %d",pickSize);
-    DebugPrintf("trainerA %d",trainerA);
-    DebugPrintf("loseTextA %S",loseTextA);
-    DebugPrintf("trainerB %d",trainerB);
-    if (loseTextB != NULL)
-        DebugPrintf("loseTextB %S",loseTextB);
-    DebugPrintf("partner %d",partnerId);
-}
-
 void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
 {
-    Debug_BXPY_PrintArguments(battleType, bringSize, pickSize, trainerA, loseTextA, trainerB, loseTextB, partnerId);
     BXPY_InitTrainerBattleParams(trainerA, loseTextA, trainerB, loseTextB, partnerId);
     u32 battleFlags = BXPY_ConvertBattleTypeToFlags(battleType);
 
