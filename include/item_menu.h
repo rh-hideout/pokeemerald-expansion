@@ -37,7 +37,6 @@ enum {
     ITEMWIN_MONEY,
 #if SWSH_ITEM_MENU
     ITEMWIN_SELL_PRICE,
-    ITEMWIN_SELL_QUANTITY,
 #endif
 #if SWSH_ITEM_MENU_ACTION_IN_BAG
     ITEMWIN_PP_MOVE_SELECT,
@@ -86,6 +85,7 @@ struct BagMenu
 {
     MainCallback newScreenCallback;
 #if SWSH_ITEM_MENU
+    u8 bg0TilemapBuffer[BG_SCREEN_SIZE];
     u8 mainTilemapBuffer[BG_SCREEN_SIZE];
     u8 scrollingBgTilemapBuffer[BG_SCREEN_SIZE];
 #else
