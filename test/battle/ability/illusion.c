@@ -78,12 +78,13 @@ ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a batt
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT_A(SPECIES_WYNAUT);
-        OPPONENT_B(SPECIES_ZOROARK);
+        OPPONENT_B(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
         OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {}
     } THEN {
-        // opponentRight (OPPONENT_B's battler) has its own isolated 2-mon party (Zoroark, Wynaut),
-        // so Illusion should find Wynaut as the last party member and activate.
         EXPECT_EQ(gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_OPPONENT_B][1] == gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].mon);
     }
 }
 

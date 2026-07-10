@@ -8763,11 +8763,6 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
 
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
-    // Each trainer (player, partner, and both opponents) already has its own
-    // isolated party array starting at index 0, so no left/right split is
-    // needed here. Just search up to that trainer's actual party count, so
-    // link multi battles (which only populate the first MULTI_PARTY_SIZE
-    // slots) don't pick up stale data from a previous battle.
     s32 partyEnd = gPartiesCount[GetBattlerTrainer(battler)];
 
     // Find last alive non-egg Pokémon.
