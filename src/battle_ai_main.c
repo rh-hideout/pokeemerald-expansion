@@ -4440,13 +4440,34 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
 
     case EFFECT_STAT_CHANGE_HALF_HP: // CheckBadMove check for failure
     case EFFECT_BELLY_DRUM:
-        if (HasHPForDamagingSetup(battlerAtk, battlerDef, 50))
-            ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
-        break;
     case EFFECT_CLANGOROUS_SOUL:
-        if (HasHPForDamagingSetup(battlerAtk, battlerDef, 33))
-            ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
-        break;
+        u32 percentage = 101;
+        switch (moveEffect)
+        {
+        case EFFECT_STAT_CHANGE_HALF_HP:
+        case EFFECT_BELLY_DRUM:
+            percentage = 50;
+            break;
+        case EFFECT_CLANGOROUS_SOUL:
+            percentage = 33;
+            break;
+        default:
+            break;
+        }
+
+        if (!(HasHPForDamagingSetup(battlerAtk, battlerDef, percentage)))
+        {
+            break;
+        }
+        else
+        {
+            if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES))
+            {
+                ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
+                break;
+            }
+        }
+        // Fallthrough
     case EFFECT_STUFF_CHEEKS:
     case EFFECT_STAT_CHANGE_MAGNETIC:
     case EFFECT_MINIMIZE:
