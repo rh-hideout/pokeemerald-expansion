@@ -509,6 +509,7 @@ extern const u8 BattleScript_DecreaseStatChangeMessageMinStat[];
 extern const u8 BattleScript_StatDidntChangeMessagePause[];
 extern const u8 BattleScript_WildBattleVictory[];
 extern const u8 BattleScript_BelchFails[];
+extern const u8 BattleScript_MegaSolActivatesTwoTurnMove[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

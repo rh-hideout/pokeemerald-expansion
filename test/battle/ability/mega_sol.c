@@ -109,6 +109,7 @@ SINGLE_BATTLE_TEST("Synthesis, Morning Sun and Moonlight recover 2/3 of the user
     } WHEN {
         TURN { MOVE(player, move, gimmick: GIMMICK_MEGA); }
     } SCENE {
+        ABILITY_POPUP(player, ABILITY_MEGA_SOL);
         HP_BAR(player, damage: -(300 * 2 / 3));
     }
 }
@@ -311,6 +312,7 @@ SINGLE_BATTLE_TEST("Mega Sol: Solar Beam does not need a charging turn if user h
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM, gimmick: GIMMICK_MEGA); }
     } SCENE {
+        ABILITY_POPUP(player, ABILITY_MEGA_SOL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
         HP_BAR(opponent);
     }

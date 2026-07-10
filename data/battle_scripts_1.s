@@ -2255,8 +2255,20 @@ BattleScript_EffectSynthesis::
 BattleScript_EffectMoonlight::
 BattleScript_EffectShoreUp::
 	attackcanceler
+	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_MegaSolActivatesHealing
+BattleScript_EffectSunHealContinue::
 	recoverbasedonsunlight BattleScript_AlreadyAtFullHp
 	goto BattleScript_HealTarget
+
+BattleScript_MegaSolActivatesHealing::
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	goto BattleScript_EffectSunHealContinue
+
+BattleScript_MegaSolActivatesTwoTurnMove::
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	return
 
 BattleScript_EffectWeather::
 	attackcanceler
