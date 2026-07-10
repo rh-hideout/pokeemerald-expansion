@@ -328,162 +328,205 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
             if (!MoveEffectIsGuaranteed(ctx->battlerMoveUser, abilityAtk, additionalEffect))
                 continue;
 
-            // Consider move effects that target self
-            if (additionalEffect->self)
+            if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
             {
-                bool32 considerSimple = (abilityAtk == ABILITY_SIMPLE 
-                 && !edgeCase
-                 && additionalEffect->moveEffect != MOVE_EFFECT_HAZE);
-                switch (additionalEffect->moveEffect)
+                bool32 considerSimple = (abilityAtk == ABILITY_SIMPLE);
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
-                case MOVE_EFFECT_STAT_PLUS:
-                case STAT_CHANGE_EFFECT_PLUS:
-                    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                    {
-                        enum Stat stat = sAccurateStatOrder[i];
-                        s8 stage = GetStatStage(stat, additionalEffect);
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = GetStatStage(stat, additionalEffect);
 
-                        if (stage == 0)
-                            continue;
-
-                        if (abilityAtk == ABILITY_CONTRARY)
-                            stage *= -1;
-
-                        if (considerSimple)
-                            stage *= 2;
-
-                        s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
-                        *statChangePtr += stage;
-
-                        AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
-                    }
-                    break;
-                case MOVE_EFFECT_STAT_MINUS:
-                case STAT_CHANGE_EFFECT_MINUS:
-                    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                    {
-                        enum Stat stat = sAccurateStatOrder[i];
-                        s8 stage = -1 * GetStatStage(stat, additionalEffect);
-
-                        if (stage == 0)
-                            continue;
-
-                        if (abilityAtk == ABILITY_CONTRARY)
-                            stage *= -1;
-
-                        if (considerSimple)
-                            stage *= 2;
-
-                        s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
-                        *statChangePtr += stage;
-
-                        AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
-                    }
-                    break;
-                default:
-                    break;
-                }
-            }
-            else
-            {
-                bool32 considerSimple = (abilityDef == ABILITY_SIMPLE 
-                 && !edgeCase
-                 && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
-                 && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
-                switch (additionalEffect->moveEffect)
-                {
-                case MOVE_EFFECT_STAT_PLUS:
-                    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                    {
-                        enum Stat stat = sAccurateStatOrder[i];
-                        s8 stage = GetStatStage(stat, additionalEffect);
-
-                        if (stage == 0)
-                            continue;
-
-                        if (abilityDef == ABILITY_CONTRARY)
-                            stage = -1 * stage;
-
-                        if (considerSimple)
-                            stage *= 2;
-
-                        if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
-                            continue;
-
-                        s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
-                        statChangePtr += stage;
-
-                        AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
-                    }
-                    break;
-                case MOVE_EFFECT_STAT_MINUS:
-                    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                    {
-                        enum Stat stat = sAccurateStatOrder[i];
-                        s8 stage = -1 * GetStatStage(stat, additionalEffect);
-
-                        if (stage == 0)
-                            continue;
-
-                        if (abilityDef == ABILITY_CONTRARY)
-                            stage = -1 * stage;
-
-                        if (considerSimple)
-                            stage *= 2;
-
-                        if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
-                            continue;
-
-                        s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
-                        statChangePtr += stage;
-                        AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
-                    }
-                    break;
-                case MOVE_EFFECT_BUG_BITE:
-                    s8 stage = 1;
-                    enum Stat stat = STAT_HP;
-
-                    if ((abilityAtk == ABILITY_SIMPLE || abilityAtk == ABILITY_RIPEN))
-                        stage = 2;
+                    if (stage == 0)
+                        continue;
 
                     if (abilityAtk == ABILITY_CONTRARY)
                         stage *= -1;
 
-                    switch (holdEffectDef)
+                    if (considerSimple)
+                        stage *= 2;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
+                    *statChangePtr += stage;
+
+                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                }
+            }
+            else if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+            {
+                bool32 considerSimple = (abilityDef == ABILITY_SIMPLE);
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s8 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (abilityAtk == ABILITY_CONTRARY)
+                        stage *= -1;
+
+                    if (considerSimple)
+                        stage *= 2;
+
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
+                    *statChangePtr += stage;
+
+                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                }
+            }
+            else
+            {
+                if (additionalEffect->self)
+                {
+                    bool32 considerSimple = (abilityAtk == ABILITY_SIMPLE && additionalEffect->moveEffect != MOVE_EFFECT_HAZE);
+                    switch (additionalEffect->moveEffect)
                     {
-                    case HOLD_EFFECT_ATTACK_UP:
-                        stat = STAT_ATK;
+                    case MOVE_EFFECT_STAT_PLUS:
+                        for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                        {
+                            enum Stat stat = sAccurateStatOrder[i];
+                            s8 stage = GetStatStage(stat, additionalEffect);
+
+                            if (stage == 0)
+                                continue;
+
+                            if (abilityAtk == ABILITY_CONTRARY)
+                                stage *= -1;
+
+                            if (considerSimple)
+                                stage *= 2;
+
+                            s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
+                            *statChangePtr += stage;
+
+                            AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                        }
                         break;
-                    case HOLD_EFFECT_DEFENSE_UP:
-                        stat = STAT_DEF;
-                        break;
-                    case HOLD_EFFECT_SPEED_UP:
-                        stat = STAT_SPEED;
-                        break;
-                    case HOLD_EFFECT_SP_ATTACK_UP:
-                        stat = STAT_SPATK;
-                        break;
-                    case HOLD_EFFECT_SP_DEFENSE_UP:
-                        stat = STAT_SPDEF;
-                        break;
-                    case HOLD_EFFECT_MICLE_BERRY:
-                        stat = STAT_ACC;
+                    case MOVE_EFFECT_STAT_MINUS:
+                        for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                        {
+                            enum Stat stat = sAccurateStatOrder[i];
+                            s8 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                            if (stage == 0)
+                                continue;
+
+                            if (abilityAtk == ABILITY_CONTRARY)
+                                stage *= -1;
+
+                            if (considerSimple)
+                                stage *= 2;
+
+                            s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
+                            *statChangePtr += stage;
+
+                            AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                        }
                         break;
                     default:
                         break;
                     }
+                }
+                else
+                {
+                    bool32 considerSimple = (abilityDef == ABILITY_SIMPLE 
+                     && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
+                     && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
+                    switch (additionalEffect->moveEffect)
+                    {
+                    case MOVE_EFFECT_STAT_PLUS:
+                        for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                        {
+                            enum Stat stat = sAccurateStatOrder[i];
+                            s8 stage = GetStatStage(stat, additionalEffect);
 
-                    if (stat == STAT_HP) // Safeguard
+                            if (stage == 0)
+                                continue;
+
+                            if (abilityDef == ABILITY_CONTRARY)
+                                stage = -1 * stage;
+
+                            if (considerSimple)
+                                stage *= 2;
+
+                            if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
+                                continue;
+
+                            s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
+                            statChangePtr += stage;
+
+                            AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                        }
                         break;
+                    case MOVE_EFFECT_STAT_MINUS:
+                        for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                        {
+                            enum Stat stat = sAccurateStatOrder[i];
+                            s8 stage = -1 * GetStatStage(stat, additionalEffect);
 
-                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
-                    *statChangePtr += stage;
-                    // Treat as if target is changing our stats for Mirror herb and Opportunist
-                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveTarget, ctx->battlerMoveUser, stat, stage, ctx->isTargetingPartner, aiData);
-                    
-                    break;
-                default:
-                    break;
+                            if (stage == 0)
+                                continue;
+
+                            if (abilityDef == ABILITY_CONTRARY)
+                                stage = -1 * stage;
+
+                            if (considerSimple)
+                                stage *= 2;
+
+                            if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
+                                continue;
+
+                            s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
+                            statChangePtr += stage;
+                            AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                        }
+                        break;
+                    case MOVE_EFFECT_BUG_BITE:
+                        s8 stage = 1;
+                        enum Stat stat = STAT_HP;
+
+                        if ((abilityAtk == ABILITY_SIMPLE || abilityAtk == ABILITY_RIPEN))
+                            stage = 2;
+
+                        if (abilityAtk == ABILITY_CONTRARY)
+                            stage *= -1;
+
+                        switch (holdEffectDef)
+                        {
+                        case HOLD_EFFECT_ATTACK_UP:
+                            stat = STAT_ATK;
+                            break;
+                        case HOLD_EFFECT_DEFENSE_UP:
+                            stat = STAT_DEF;
+                            break;
+                        case HOLD_EFFECT_SPEED_UP:
+                            stat = STAT_SPEED;
+                            break;
+                        case HOLD_EFFECT_SP_ATTACK_UP:
+                            stat = STAT_SPATK;
+                            break;
+                        case HOLD_EFFECT_SP_DEFENSE_UP:
+                            stat = STAT_SPDEF;
+                            break;
+                        case HOLD_EFFECT_MICLE_BERRY:
+                            stat = STAT_ACC;
+                            break;
+                        default:
+                            break;
+                        }
+
+                        if (stat == STAT_HP) // Safeguard
+                            break;
+
+                        s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
+                        *statChangePtr += stage;
+                        // Treat as if target is changing our stats for Mirror herb and Opportunist
+                        AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveTarget, ctx->battlerMoveUser, stat, stage, ctx->isTargetingPartner, aiData);
+                        
+                        break;
+                    default:
+                        break;
+                    }
                 }
             }
         }
