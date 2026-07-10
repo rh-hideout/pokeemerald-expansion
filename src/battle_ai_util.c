@@ -1178,17 +1178,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             }
         }
         // Neutral if not KO'd either way
-        for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        {
-            ctx->atkMoveIndex = i;
-            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp)
-             && !(AI_GetDamage(battlerDef, battlerAtk, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp))
-            {
-                return STAT_CHANGE_NEUTRAL;
-            }
-        }
-        // Default to not doing it
-        return STAT_CHANGE_BAD;
+        return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_SPEEDS: // Changes that make user move first = good; changes that make user move second = bad; else neutral.
         if (AI_IsSlower(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
@@ -1358,11 +1348,17 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             {
                 return STAT_CHANGE_NEUTRAL;
             }
-            // Default to not do it
-            return STAT_CHANGE_BAD;
+            // If opponent KOs in fewer hits even with mods, bad decision
+            else if ((bestTurnsToKOModifiedAtk > (bestTurnsToKOModifiedDef - 1)))
+            {
+                return STAT_CHANGE_BAD;
+            }
+            // No notable benefit but not making things worse
+            return STAT_CHANGE_NEUTRAL;
         }
     default:
-        return STAT_CHANGE_NEUTRAL;
+        // Default to not do it
+        return STAT_CHANGE_BAD;
     }
 }
 

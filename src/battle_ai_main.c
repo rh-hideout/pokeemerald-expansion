@@ -3187,7 +3187,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                         u32 partnerIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
                         enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
                         enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
-                        bool32 neutral = FALSE;
+                        bool32 foundBad = FALSE;
 
                         for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
                         {
@@ -3197,9 +3197,9 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                                 {
                                     RETURN_SCORE_PLUS(GOOD_EFFECT);
                                 }
-                                else
+                                else if (oppDecision == STAT_CHANGE_BAD)
                                 {
-                                    neutral = TRUE;
+                                    foundBad = TRUE;
                                 }
                             }
 
@@ -3209,15 +3209,19 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                                 {
                                     RETURN_SCORE_PLUS(GOOD_EFFECT);
                                 }
-                                else
+                                else if (oppParDecision == STAT_CHANGE_BAD)
                                 {
-                                    neutral = TRUE;
+                                    foundBad = TRUE;
                                 }
                             }
+
+                            // Don't do it if found a way this makes the 1v1 worse
+                            if (foundBad)
+                                break;
                         }
 
-                        if (neutral)
-                            RETURN_SCORE_PLUS(DECENT_EFFECT);
+                        // Neutral result, not risky but not beneficial in assessed 1v1. Maybe worth setting up for in the 1v1 is won.
+                        RETURN_SCORE_PLUS(DECENT_EFFECT);
                     }
                 }
             }
