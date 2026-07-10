@@ -2315,17 +2315,14 @@ const u8 *AbsorbedByFlashFire(struct DamageContext *ctx)
 {
     if (!gBattleMons[ctx->battlerDef].volatiles.flashFireBoosted)
     {
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_BOOST;
         if (ctx->runScript)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_BOOST;
             gBattleMons[ctx->battlerDef].volatiles.flashFireBoosted = TRUE;
-        }
         return BattleScript_FlashFireBoost;
     }
     else
     {
-        if (ctx->runScript)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_NO_BOOST;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_NO_BOOST;
         return BattleScript_FlashFireBoost;
     }
 }
