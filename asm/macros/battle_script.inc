@@ -32,16 +32,14 @@
 	.byte B_SCR_OP_WAITANIMATION
 	.endm
 
-	.macro healthbarupdate battler:req updateState:req
+	.macro healthbarupdate battler:req
 	.byte B_SCR_OP_HEALTHBARUPDATE
 	.byte \battler
-	.byte \updateState
 	.endm
 
-	.macro datahpupdate battler:req updateState:req
+	.macro datahpupdate battler:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
-	.byte \updateState
 	.endm
 
 	.macro critmessage
@@ -341,10 +339,6 @@
 
 	.macro end
 	.byte B_SCR_OP_END
-	.endm
-
-	.macro end2
-	.byte B_SCR_OP_END2
 	.endm
 
 	.macro end3
@@ -879,10 +873,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro presentdamagecalculation
-	.byte B_SCR_OP_PRESENTDAMAGECALCULATION
-	.endm
-
 	.macro setsafeguard
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
@@ -1257,7 +1247,7 @@
 	.macro jumpifterrainaffected battler:req, terrainFlags:req, jumpInstr:req
 	callnative BS_JumpIfTerrainAffected
 	.byte \battler
-	.4byte \terrainFlags
+	.byte \terrainFlags
 	.4byte \jumpInstr
 	.endm
 
@@ -2124,7 +2114,7 @@
 	.macro catchornot
 	callnative BS_CatchOrNot
 	.endm
-	
+
 	.macro showitempopup battler:req
 	callnative BS_ShowItemPopup
 	.byte \battler
@@ -2136,4 +2126,11 @@
 
 	.macro multihitplurality
 	callnative BS_MultiHitPlurality
+	.endm
+
+	.macro jumpifterrain comparison:req, terrain:req, jumpInstr:req
+	.byte B_SCR_OP_JUMPIFTERRAIN
+	.byte \comparison
+	.byte \terrain
+	.4byte \jumpInstr
 	.endm

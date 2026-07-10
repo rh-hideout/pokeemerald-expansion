@@ -968,8 +968,6 @@ extern const u8 gBattleAnimGeneral_LeechSeedDrain[];
 extern const u8 gBattleAnimGeneral_MonHit[];
 extern const u8 gBattleAnimGeneral_ItemSteal[];
 extern const u8 gBattleAnimGeneral_SnatchMove[];
-extern const u8 gBattleAnimGeneral_FutureSightHit[];
-extern const u8 gBattleAnimGeneral_DoomDesireHit[];
 extern const u8 gBattleAnimGeneral_FocusPunchSetUp[];
 extern const u8 gBattleAnimGeneral_IngrainHeal[];
 extern const u8 gBattleAnimGeneral_WishHeal[];

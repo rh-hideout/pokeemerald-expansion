@@ -383,12 +383,6 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
     }
 }
 
-u32 RtcGetMinuteCount(void)
-{
-    RtcGetInfo(&sRtc);
-    return (HOURS_PER_DAY * MINUTES_PER_HOUR) * RtcGetDayCount(&sRtc) + MINUTES_PER_HOUR * sRtc.hour + sRtc.minute;
-}
-
 u32 RtcGetLocalDayCount(void)
 {
     return RtcGetDayCount(&sRtc);

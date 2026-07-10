@@ -462,10 +462,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         case EFFECT_FAIRY_LOCK:
 
         // tests exist elsewhere
-        case EFFECT_ROTOTILLER:
-        case EFFECT_FLOWER_SHIELD:
-        case EFFECT_GRASSY_TERRAIN:
-        case EFFECT_MISTY_TERRAIN:
+        case EFFECT_TERRAIN:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -532,11 +529,11 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_INSTRUCT:
         case EFFECT_SOAK:
 
-        // tests exist elsewhere
-        case EFFECT_ELECTRIC_TERRAIN:
-        case EFFECT_PSYCHIC_TERRAIN:
+        // Needs Snow / Hail on the field
         case EFFECT_AURORA_VEIL:
-        case EFFECT_STAT_CHANGE_MAGNETIC:
+
+        // tests exist elsewhere
+        case EFFECT_TERRAIN:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
