@@ -2051,7 +2051,7 @@ static void InitStartingPosData(void)
 
 static void SetMonIconTransparency(void)
 {
-    if (sStorage->boxOption == OPTION_MOVE_ITEMS)
+    if (sStorage->boxOption == OPTION_MOVE_ITEMS || sStorage->boxOption == OPTION_SELECT_MON)
     {
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(7, 11));
