@@ -324,6 +324,9 @@ SINGLE_BATTLE_TEST("Mega Sol: Solar Beam does not need a charging turn if user h
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
         HP_BAR(opponent);
         // No ability pop-up while Sun is active
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_MEGA_SOL);
+        }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
         HP_BAR(opponent);
     }
