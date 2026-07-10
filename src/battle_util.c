@@ -8763,7 +8763,7 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
 
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
-    s32 partyEnd = gPartiesCount[GetBattlerTrainer(battler)];
+    s32 partyEnd = PARTY_SIZE;
 
     // Find last alive non-egg Pokémon.
     for (s32 id = partyEnd - 1; id >= 0; id--)
