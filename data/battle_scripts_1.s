@@ -2266,7 +2266,7 @@ BattleScript_MegaSolActivatesHealing::
 	goto BattleScript_EffectSunHealContinue
 
 BattleScript_MegaSolActivatesTwoTurnMove::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_SHORT
 	return
 
