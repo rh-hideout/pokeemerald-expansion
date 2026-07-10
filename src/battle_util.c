@@ -8763,10 +8763,8 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
 
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
-    s32 partyEnd = PARTY_SIZE;
-
     // Find last alive non-egg Pokémon.
-    for (s32 id = partyEnd - 1; id >= 0; id--)
+    for (s32 id = PARTY_SIZE - 1; id >= 0; id--)
     {
         if (GetMonData(&party[id], MON_DATA_SANITY_HAS_SPECIES)
             && GetMonData(&party[id], MON_DATA_HP)
