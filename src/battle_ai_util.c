@@ -1098,45 +1098,34 @@ bool32 AI_WouldBeSlower(struct StatConsiderationContext *ctx, enum Move defMove,
     return result;
 }
 
-enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, enum BattlerId battlerStatDef, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context)
+enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext *ctx, struct AiLogicData *aiData)
 {
-    struct AiLogicData *aiData = gAiLogicData;
-    struct StatConsiderationContext *ctx = NULL;
+    ctx->atkMove = (ctx->atkMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[ctx->battlerAtk].moves[ctx->atkMoveIndex]); // Generic move if no move index specified
+    ctx->isTargetingPartner = IsTargetingPartner(ctx->battlerMoveUser, ctx->battlerMoveTarget);
 
-    ctx->battlerMoveUser = battlerStatAtk;
-    ctx->battlerMoveTarget = battlerStatDef;
-    ctx->battlerAtk = battlerAtk;
-    ctx->battlerDef = battlerDef;
-    ctx->statMoveIndex = GetMoveIndex(battlerStatAtk, statMove);
-    ctx->statMove = statMove;
-    ctx->atkMoveIndex = dmgMoveIndex;
-    ctx->atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
-    ctx->context = context;
-    ctx->isTargetingPartner = IsTargetingPartner(battlerStatAtk, battlerStatDef);
-
-    enum Move predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    enum Move predictedMove = GetIncomingMove(ctx->battlerAtk, ctx->battlerDef, gAiLogicData);
     enum Move atkBestMoves[MAX_MON_MOVES];
     enum Move defBestMoves[MAX_MON_MOVES];
 
     // Only care about chosen move if passed
-    if (dmgMoveIndex != MAX_MON_MOVES)
+    if (ctx->atkMoveIndex != MAX_MON_MOVES)
     {
-        atkBestMoves[0] = gBattleMons[battlerAtk].moves[dmgMoveIndex];
+        atkBestMoves[0] = gBattleMons[ctx->battlerAtk].moves[ctx->atkMoveIndex];
     }
     else
     {
-        GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, atkBestMoves);
-        GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
+        GetBestDmgMovesFromBattler(ctx->battlerAtk, ctx->battlerDef, AI_ATTACKING, atkBestMoves);
+        GetBestDmgMovesFromBattler(ctx->battlerDef, ctx->battlerAtk, AI_DEFENDING, defBestMoves);
     }
 
-    switch (context)
+    switch (ctx->context)
     {
     case CHANGE_STAT_DMG_DEALT:
         if (ctx->atkMoveIndex != MAX_MON_MOVES) // Move index specified
         {
-            if (AI_GetDamage(battlerAtk, battlerDef, ctx->atkMoveIndex, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+            if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
                 return STAT_CHANGE_BAD;
-            else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+            else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
                 return STAT_CHANGE_GOOD;
         }
         else // No move index specified; check all
@@ -1144,15 +1133,15 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             // No point if can already KO
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
                     return STAT_CHANGE_BAD;
             }
             // Good if makes a move KO where it previously would not
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
                 ctx->atkMoveIndex = i;
-                if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
-                 && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
+                 && !(AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp))
                 {
                     return STAT_CHANGE_GOOD;
                 }
@@ -1164,15 +1153,15 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             // Bad if KO's with stat changes
-            if (AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp)
+            if (AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp)
                 return STAT_CHANGE_BAD;
         }
         // Good if saves from being KO'd
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             ctx->atkMoveIndex = i;
-            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp)
-             && (AI_GetDamage(battlerDef, battlerAtk, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp))
+            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp)
+             && (AI_GetDamage(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp))
             {
                 return STAT_CHANGE_GOOD;
             }
@@ -1180,27 +1169,27 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
         // Neutral if not KO'd either way
         return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_SPEEDS: // Changes that make user move first = good; changes that make user move second = bad; else neutral.
-        if (AI_IsSlower(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+        if (AI_IsSlower(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
-         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+         && (GetMoveEffect(aiData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
         {
             return STAT_CHANGE_GOOD;
         }
-        else if (AI_IsFaster(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+        else if (AI_IsFaster(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeSlower(ctx, predictedMove, CONSIDER_PRIORITY)
-         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+         && ((GetMoveEffect(aiData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
         {
             return STAT_CHANGE_GOOD;
         }
-        else if (AI_IsFaster(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+        else if (AI_IsFaster(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeSlower(ctx, predictedMove, CONSIDER_PRIORITY)
-         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+         && (GetMoveEffect(aiData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
         {
             return STAT_CHANGE_BAD;
         }
-        else if (AI_IsSlower(battlerAtk, battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
+        else if (AI_IsSlower(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
-         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+         && ((GetMoveEffect(aiData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
         {
             return STAT_CHANGE_BAD;
         }
@@ -1212,14 +1201,14 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
         u32 totalAccuracy = 100, totalAccuracyModified;
         u32 weather = GetWeather();
         struct BattleCalcValues cv = {
-            .battlerAtk = battlerAtk,
-            .battlerDef = battlerDef,
+            .battlerAtk = ctx->battlerAtk,
+            .battlerDef = ctx->battlerDef,
         };
 
-        if (dmgMoveIndex != MAX_MON_MOVES)
+        if (ctx->atkMoveIndex != MAX_MON_MOVES)
         {
             cv.move = ctx->atkMove;
-            hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, ctx->atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
+            hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
             totalAccuracy = GetTotalAccuracy(&cv, weather);
             
             // Move already hits, no point
@@ -1258,12 +1247,12 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             // Get fewest expected moves for battlers to KO each other without stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[battlerAtk].moves[i];
+                cv.move = gBattleMons[ctx->battlerAtk].moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
 
-                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, gBattleMons[ctx->battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOAtk = ((hitsToKO * 100) / totalAccuracy);
                 
@@ -1273,15 +1262,15 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
 
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[battlerDef].moves[i];
+                cv.move = gBattleMons[ctx->battlerDef].moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
 
-                cv.battlerAtk = battlerDef;
-                cv.battlerDef = battlerAtk;                
+                cv.battlerAtk = ctx->battlerDef;
+                cv.battlerDef = ctx->battlerAtk;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, gBattleMons[ctx->battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
                 
@@ -1296,15 +1285,15 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             // Get fewest expected moves for battlers to KO each other with stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[battlerAtk].moves[i];
+                cv.move = gBattleMons[ctx->battlerAtk].moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
 
-                cv.battlerAtk = battlerAtk;
-                cv.battlerDef = battlerDef;                
+                cv.battlerAtk = ctx->battlerAtk;
+                cv.battlerDef = ctx->battlerDef;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, gBattleMons[ctx->battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
                 
@@ -1313,15 +1302,15 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
             }
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[battlerDef].moves[i];
+                cv.move = gBattleMons[ctx->battlerDef].moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
 
-                cv.battlerAtk = battlerDef;
-                cv.battlerDef = battlerAtk;                
+                cv.battlerAtk = ctx->battlerDef;
+                cv.battlerDef = ctx->battlerAtk;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, gBattleMons[ctx->battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedDef = ((hitsToKO * 100) / totalAccuracyModified);
                 
@@ -1359,6 +1348,60 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerStatAtk, 
     default:
         // Default to not do it
         return STAT_CHANGE_BAD;
+    }
+}
+
+// Return used to inform whether should continue with further checks
+bool32 AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct AiLogicData *aiData, s32 *score)
+{
+    enum StatChangeDecision decision = STAT_CHANGE_BAD;
+    bool32 shouldKeepChecking = TRUE;
+
+#if TESTING
+    enum BattlerId battlerAtk = ctx->battlerMoveUser;
+#endif
+
+    if (ctx->context == CHANGE_STAT_CONTEXT_COUNT) // Check all
+    {
+        for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
+        {
+            ctx->context = context;
+
+            if ((decision = BattlerShouldChangeStats(ctx, aiData)))
+            {
+                if (decision == STAT_CHANGE_GOOD)
+                {
+                    ADJUST_SCORE_PTR(GOOD_EFFECT);
+                    return FALSE; // Good found, stop
+                }
+            }
+            else // Bad found, stop
+            {
+                return FALSE;
+            }
+        }
+
+        return TRUE; // Only neutral found, continue
+    }
+    else // Checking specific context
+    {
+        if ((decision = BattlerShouldChangeStats(ctx, aiData)))
+        {
+            if (decision == STAT_CHANGE_GOOD)
+            {
+                ADJUST_SCORE_PTR(GOOD_EFFECT);
+                shouldKeepChecking = FALSE;
+            }
+
+            if (!shouldKeepChecking) // Good found, else if neutral then keep looking
+                return FALSE;
+            
+            return TRUE; // Neutral found
+        }
+        else // Bad found
+        {
+            return FALSE;
+        }
     }
 }
 

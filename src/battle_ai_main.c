@@ -3122,24 +3122,23 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 {
                     if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
                     {
-                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
-                        u32 partnerIndex = GetBattlerMoveIndexWithEffect(battlerAtkPartner, EFFECT_STORED_POWER);
-                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
-                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
+                        struct StatConsiderationContext ctx = {0};
+                        ctx.battlerMoveUser = battlerAtk;
+                        ctx.battlerMoveTarget = battlerAtkPartner;
+                        ctx.battlerAtk = battlerAtkPartner;
+                        ctx.battlerDef = GetOppositeBattler(battlerAtkPartner);
+                        ctx.statMove = move;
+                        ctx.statMoveIndex = GetMoveIndex(battlerAtk, move);
+                        ctx.atkMoveIndex = GetBattlerMoveIndexWithEffect(battlerAtkPartner, EFFECT_STORED_POWER);
+                        ctx.context = CHANGE_STAT_DMG_DEALT;
 
-                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
 
-                        if (decision == STAT_CHANGE_GOOD)
-                        {
-                            RETURN_SCORE_PLUS(GOOD_EFFECT);
-                        }
-
-                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, partnerIndex, CHANGE_STAT_DMG_DEALT);
-
-                        if (decision == STAT_CHANGE_GOOD)
-                        {
-                            RETURN_SCORE_PLUS(GOOD_EFFECT);
-                        }
+                        // Set target partner
+                        ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
                     }
                 }
             }
@@ -3151,28 +3150,23 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 {
                     if (effect == EFFECT_STAT_CHANGE)
                     {
-                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
-                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
-                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
+                        struct StatConsiderationContext ctx = {0};
+                        ctx.battlerMoveUser = battlerAtk;
+                        ctx.battlerMoveTarget = battlerAtkPartner;
+                        ctx.battlerAtk = battlerAtkPartner;
+                        ctx.battlerDef = GetOppositeBattler(battlerAtkPartner);
+                        ctx.statMove = move;
+                        ctx.statMoveIndex = GetMoveIndex(battlerAtk, move);
+                        ctx.atkMoveIndex = MAX_MON_MOVES;
+                        ctx.context = CHANGE_STAT_CONTEXT_COUNT;
 
-                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
-                        {
-                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
-                            
-                            if (decision == STAT_CHANGE_GOOD)
-                            {
-                                RETURN_SCORE_PLUS(GOOD_EFFECT);
-                            }
-                        }
-                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
-                        {
-                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
-                            
-                            if (decision == STAT_CHANGE_GOOD)
-                            {
-                                RETURN_SCORE_PLUS(GOOD_EFFECT);
-                            }
-                        }
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
+
+                        // Set target partner
+                        ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
                     }
                 }
             }
@@ -3183,45 +3177,25 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 {
                     if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
                     {
-                        enum StatChangeDecision oppDecision = STAT_CHANGE_BAD, oppParDecision = STAT_CHANGE_BAD;
-                        u32 partnerIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
-                        enum BattlerId battlerOpposite = GetOppositeBattler(battlerAtkPartner); // Diagonal to partner
-                        enum BattlerId battlerOppositePartner = GetPartnerBattler(battlerOpposite);
-                        bool32 foundBad = FALSE;
+                        struct StatConsiderationContext ctx = {0};
+                        ctx.battlerMoveUser = battlerAtk;
+                        ctx.battlerMoveTarget = battlerAtkPartner;
+                        ctx.battlerAtk = battlerAtkPartner;
+                        ctx.battlerDef = GetOppositeBattler(battlerAtkPartner);
+                        ctx.statMove = move;
+                        ctx.statMoveIndex = GetMoveIndex(battlerAtk, move);
+                        ctx.atkMoveIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
+                        ctx.context = CHANGE_STAT_CONTEXT_COUNT;
 
-                        for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
-                        {
-                            if ((oppDecision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOpposite, move, partnerIndex, context)))
-                            {
-                                if (oppDecision == STAT_CHANGE_GOOD)
-                                {
-                                    RETURN_SCORE_PLUS(GOOD_EFFECT);
-                                }
-                                else if (oppDecision == STAT_CHANGE_BAD)
-                                {
-                                    foundBad = TRUE;
-                                }
-                            }
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
 
-                            if ((oppParDecision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, battlerOppositePartner, move, partnerIndex, context)))
-                            {
-                                if (oppParDecision == STAT_CHANGE_GOOD)
-                                {
-                                    RETURN_SCORE_PLUS(GOOD_EFFECT);
-                                }
-                                else if (oppParDecision == STAT_CHANGE_BAD)
-                                {
-                                    foundBad = TRUE;
-                                }
-                            }
+                        // Set target partner
+                        ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
+                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                            break;
 
-                            // Don't do it if found a way this makes the 1v1 worse
-                            if (foundBad)
-                                break;
-                        }
-
-                        // Neutral result, not risky but not beneficial in assessed 1v1. Maybe worth setting up for in the 1v1 is won.
-                        RETURN_SCORE_PLUS(DECENT_EFFECT);
+                        ADJUST_SCORE(DECENT_EFFECT);
                     }
                 }
             }
@@ -4480,26 +4454,26 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_STAT_CHANGE:
         if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
         {
-            enum StatChangeDecision result = STAT_CHANGE_BAD;
-            bool32 neutral = FALSE;
-            for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
-            {
-                if ((result = BattlerShouldChangeStats(battlerAtk, battlerDef, battlerAtk, battlerDef, move, MAX_MON_MOVES, context)))
-                {
-                    if (result == STAT_CHANGE_GOOD)
-                    {
-                        RETURN_SCORE_PLUS(GOOD_EFFECT);
-                    }
-                    else
-                    {
-                        neutral = TRUE;
-                    }
-                }
-            }
-            if (neutral)
-            {
-                RETURN_SCORE_PLUS(DECENT_EFFECT); 
-            }
+            struct StatConsiderationContext ctx = {0};
+            ctx.battlerMoveUser = battlerAtk;
+            ctx.battlerMoveTarget = battlerAtkPartner;
+            ctx.battlerAtk = battlerAtkPartner;
+            ctx.battlerDef = GetOppositeBattler(battlerAtkPartner);
+            ctx.statMove = move;
+            ctx.statMoveIndex = GetMoveIndex(battlerAtk, move);
+            ctx.atkMoveIndex = MAX_MON_MOVES;
+            ctx.context = CHANGE_STAT_CONTEXT_COUNT;
+
+            if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                break;
+
+            // Set target partner
+            ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
+            if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                break;
+
+            // Only neutral found
+            RETURN_SCORE_PLUS(DECENT_EFFECT); 
             break;
         }
         ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
