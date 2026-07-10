@@ -104,13 +104,20 @@ SINGLE_BATTLE_TEST("Synthesis, Morning Sun and Moonlight recover 2/3 of the user
 
     GIVEN {
         ASSUME(GetMoveEffect(move) == effect);
-        PLAYER(SPECIES_MEGANIUM) { HP(1); MaxHP(300); Item(ITEM_MEGANIUMITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MEGANIUM) { HP(1); MaxHP(300); Item(ITEM_MEGANIUMITE); Speed(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
-        TURN { MOVE(player, move, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, move, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SUNNY_DAY); }
+        TURN { MOVE(player, move); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MEGA_SOL);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(player, damage: -(300 * 2 / 3));
+        // No ability pop-up while Sun is active
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_MEGA_SOL);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
     }
 }
 
@@ -307,12 +314,16 @@ SINGLE_BATTLE_TEST("Mega Sol: Solar Beam does not need a charging turn if user h
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
         ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
-        PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); Speed(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SOLAR_BEAM, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_SOLAR_BEAM, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, MOVE_SOLAR_BEAM); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MEGA_SOL);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
+        HP_BAR(opponent);
+        // No ability pop-up while Sun is active
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
         HP_BAR(opponent);
     }

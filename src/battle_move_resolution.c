@@ -1797,7 +1797,8 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
             if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
                 gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
             if (cv->abilities[cv->battlerAtk] == ABILITY_MEGA_SOL
-                && cv->moveEffect == EFFECT_SOLAR_BEAM)
+                && cv->moveEffect == EFFECT_SOLAR_BEAM
+                && !(GetWeather() & B_WEATHER_SUN))
             {
                 BattleScriptCall(BattleScript_MegaSolActivatesTwoTurnMove);
                 result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;

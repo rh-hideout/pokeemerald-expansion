@@ -2255,6 +2255,7 @@ BattleScript_EffectSynthesis::
 BattleScript_EffectMoonlight::
 BattleScript_EffectShoreUp::
 	attackcanceler
+	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_SUN, BattleScript_EffectSunHealContinue
 	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_MegaSolActivatesHealing
 BattleScript_EffectSunHealContinue::
 	recoverbasedonsunlight BattleScript_AlreadyAtFullHp
