@@ -315,7 +315,7 @@ static void ItemMenu_Register(u8);
 static void ItemMenu_Give(u8);
 static void ItemMenu_Cancel(u8);
 static void ItemMenu_UseInBattle(u8);
-#if SWSH_ITEM_MENU_CHECK_BERRY_TAG
+#if SWSH_ITEM_MENU_BERRY_TAG
 static void ItemMenu_CheckTag(u8);
 #endif
 static void ItemMenu_Show(u8);
@@ -592,7 +592,7 @@ static const struct MenuAction sItemMenuActions[] = {
     [ACTION_CHECK]             = {COMPOUND_STRING("CHECK"),     {ItemMenu_UseOutOfBattle}},
     [ACTION_WALK]              = {COMPOUND_STRING("WALK"),      {ItemMenu_UseOutOfBattle}},
     [ACTION_DESELECT]          = {COMPOUND_STRING("DESELECT"),  {ItemMenu_Register}},
-#if SWSH_ITEM_MENU_CHECK_BERRY_TAG
+#if SWSH_ITEM_MENU_BERRY_TAG
     [ACTION_CHECK_TAG]         = {COMPOUND_STRING("CHECK TAG"), {ItemMenu_CheckTag}},
 #endif
     [ACTION_CONFIRM]           = {gMenuText_Confirm,            {Task_FadeAndCloseBagMenu}},
@@ -628,7 +628,7 @@ static const u8 sContextMenuItems_TmHmPocket[] = {
     ACTION_DUMMY,       ACTION_CANCEL
 };
 
-#if SWSH_ITEM_MENU_CHECK_BERRY_TAG
+#if SWSH_ITEM_MENU_BERRY_TAG
 static const u8 sContextMenuItems_BerriesPocket[] = {
     ACTION_CHECK_TAG,   ACTION_DUMMY,
     ACTION_USE,         ACTION_GIVE,
@@ -659,7 +659,7 @@ static const u8 sContextMenuItems_PyramidToss[] = {
 };
 #endif
 
-#if SWSH_ITEM_MENU_CHECK_BERRY_TAG
+#if SWSH_ITEM_MENU_BERRY_TAG
 static const u8 sContextMenuItems_BerryBlenderCrush[] = {
     ACTION_CONFIRM,     ACTION_CHECK_TAG,
     ACTION_DUMMY,       ACTION_CANCEL
@@ -3851,7 +3851,7 @@ static void HandleErrorMessage(u8 taskId)
     }
 }
 
-#if SWSH_ITEM_MENU_CHECK_BERRY_TAG
+#if SWSH_ITEM_MENU_BERRY_TAG
 static void ItemMenu_CheckTag(u8 taskId)
 {
     gBagMenu->newScreenCallback = DoBerryTagScreen;
@@ -6234,6 +6234,12 @@ static void Task_BagMenu_PartyAfterItemUse(u8 taskId)
     gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + newSlot] = keepSpriteId;
     if (keepSpriteId != SPRITE_NONE)
         gSprites[keepSpriteId].invisible = FALSE;
+
+    if (!SWSH_ITEM_MENU_PARTY_ITEM_REUSE)
+    {
+        BagMenu_ClosePartySelect(taskId);
+        return;
+    }
 
     if (sPartyGiveMode)
     {
