@@ -5616,10 +5616,6 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
 
-            case MOVE_EFFECT_ABSORB:
-                if (ShouldAbsorb(battlerAtk, battlerDef, move, additionalEffect->argument.absorbPercentage))
-                    ADJUST_SCORE(DECENT_EFFECT);
-                break;
             case MOVE_EFFECT_STAT_PLUS:
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
@@ -5692,6 +5688,10 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
 
             switch (additionalEffect->moveEffect)
             {
+            case MOVE_EFFECT_ABSORB:
+                if (ShouldAbsorb(battlerAtk, battlerDef, move, additionalEffect->argument.absorbPercentage))
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
             case MOVE_EFFECT_STAT_PLUS:
                 for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {

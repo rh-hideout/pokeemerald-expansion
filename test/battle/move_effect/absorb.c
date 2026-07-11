@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Matcha Gatcha restores HP before applying burn to target")
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_ABSORB));
         ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_BURN));
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MATCHA_GOTCHA); }
