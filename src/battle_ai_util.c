@@ -328,9 +328,33 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
             if (!MoveEffectIsGuaranteed(ctx->battlerMoveUser, abilityAtk, additionalEffect))
                 continue;
 
-            if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
+            if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_PLUS
+             || additionalEffect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
             {
-                bool32 considerSimple = (abilityAtk == ABILITY_SIMPLE);
+                enum MoveTarget targetType = AI_GetBattlerMoveTargetType(battlerAtk, ctx->statMove);
+                bool32 simple;
+                bool32 contrary;
+                bool32 isSelf = TRUE;
+                enum BattlerId statChangeBattler = ctx->battlerMoveUser;
+
+                switch (targetType)
+                {
+                case TARGET_ALL_BATTLERS:
+                case TARGET_USER:
+                case TARGET_USER_AND_ALLY:
+                case TARGET_USER_OR_ALLY:
+                case TARGET_ALLY:
+                    simple = (abilityAtk == ABILITY_SIMPLE);
+                    contrary = (abilityAtk == ABILITY_CONTRARY);
+                    break;
+                default:
+                    simple = (abilityDef == ABILITY_SIMPLE);
+                    contrary = (abilityDef == ABILITY_CONTRARY);
+                    isSelf = FALSE;
+                    statChangeBattler = ctx->battlerMoveTarget;
+                    break;
+                }
+
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
                     enum Stat stat = sAccurateStatOrder[i];
@@ -339,37 +363,20 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                     if (stage == 0)
                         continue;
 
-                    if (abilityAtk == ABILITY_CONTRARY)
-                        stage *= -1;
+                    if (contrary)
+                        stage = -1 * stage;
 
-                    if (considerSimple)
+                    if (simple)
                         stage *= 2;
 
-                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
-                    *statChangePtr += stage;
+                    if (!isSelf)
+                    {
+                        if (stage < 0 && !CanLowerStat(statChangeBattler, ctx->battlerMoveTarget, aiData, stat))
+                            continue;
+                    }
 
-                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
-                }
-            }
-            else if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
-            {
-                bool32 considerSimple = (abilityDef == ABILITY_SIMPLE);
-                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                {
-                    enum Stat stat = sAccurateStatOrder[i];
-                    s8 stage = -1 * GetStatStage(stat, additionalEffect);
-
-                    if (stage == 0)
-                        continue;
-
-                    if (abilityAtk == ABILITY_CONTRARY)
-                        stage *= -1;
-
-                    if (considerSimple)
-                        stage *= 2;
-
-                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
-                    *statChangePtr += stage;
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
+                    statChangePtr += stage;
 
                     AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
                 }
@@ -378,7 +385,7 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
             {
                 if (additionalEffect->self)
                 {
-                    bool32 considerSimple = (abilityAtk == ABILITY_SIMPLE && additionalEffect->moveEffect != MOVE_EFFECT_HAZE);
+                    bool32 simple = (abilityAtk == ABILITY_SIMPLE && additionalEffect->moveEffect != MOVE_EFFECT_HAZE);
                     switch (additionalEffect->moveEffect)
                     {
                     case MOVE_EFFECT_STAT_PLUS:
@@ -393,7 +400,7 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                             if (abilityAtk == ABILITY_CONTRARY)
                                 stage *= -1;
 
-                            if (considerSimple)
+                            if (simple)
                                 stage *= 2;
 
                             s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
@@ -414,7 +421,7 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                             if (abilityAtk == ABILITY_CONTRARY)
                                 stage *= -1;
 
-                            if (considerSimple)
+                            if (simple)
                                 stage *= 2;
 
                             s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
@@ -429,7 +436,7 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                 }
                 else
                 {
-                    bool32 considerSimple = (abilityDef == ABILITY_SIMPLE 
+                    bool32 simple = (abilityDef == ABILITY_SIMPLE 
                      && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
                      && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
                     switch (additionalEffect->moveEffect)
@@ -446,11 +453,8 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                             if (abilityDef == ABILITY_CONTRARY)
                                 stage = -1 * stage;
 
-                            if (considerSimple)
+                            if (simple)
                                 stage *= 2;
-
-                            if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
-                                continue;
 
                             s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
                             statChangePtr += stage;
@@ -470,7 +474,7 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                             if (abilityDef == ABILITY_CONTRARY)
                                 stage = -1 * stage;
 
-                            if (considerSimple)
+                            if (simple)
                                 stage *= 2;
 
                             if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, ctx->battlerMoveTarget, aiData, stat))
@@ -520,9 +524,9 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
 
                         s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveUser, stat);
                         *statChangePtr += stage;
+
                         // Treat as if target is changing our stats for Mirror herb and Opportunist
                         AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveTarget, ctx->battlerMoveUser, stat, stage, ctx->isTargetingPartner, aiData);
-                        
                         break;
                     default:
                         break;
@@ -607,6 +611,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
     enum Ability abilityDef = aiData->abilities[ctx->battlerMoveTarget];
     enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->atkMove);
     enum HoldEffect holdEffectAtk = aiData->holdEffects[ctx->battlerMoveUser];
+    struct BattlePokemon *targetMon = &gBattleMons[ctx->battlerMoveTarget];
 
     // Consider attacker abilities
     switch (abilityAtk)
@@ -704,7 +709,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
     case ABILITY_ANGER_POINT:
         if (MoveAlwaysCrits(ctx->statMove) && BattlerStatCanRise(ctx->battlerMoveTarget, abilityDef, STAT_ATK))
         {
-            s8 stage = MAX_STAT_STAGE - gBattleMons[ctx->battlerMoveTarget].statStages[STAT_ATK];
+            s8 stage = MAX_STAT_STAGE - targetMon->statStages[STAT_ATK];
 
             aiData->aiStatChanges[ctx->battlerMoveTarget].atk = stage;
             AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, STAT_ATK, stage, ctx->isTargetingPartner, aiData);
@@ -714,7 +719,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
         if (BattlerHPPercentage(ctx->battlerMoveTarget, GREATER_THAN, 2))
         {
             u32 damage = AI_GetDamage(ctx->battlerMoveUser, ctx->battlerMoveTarget, ctx->atkMoveIndex, AI_ATTACKING, aiData);
-            if ((gBattleMons[ctx->battlerMoveTarget].hp - damage) < (gBattleMons[ctx->battlerMoveTarget].hp / 2))
+            if ((targetMon->hp - damage) < (targetMon->hp / 2))
             {
                 s8 stage = 1;
 
@@ -734,7 +739,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
         if (BattlerHPPercentage(ctx->battlerMoveTarget, GREATER_THAN, 2))
         {
             u32 damage = AI_GetDamage(ctx->battlerMoveUser, ctx->battlerMoveTarget, ctx->atkMoveIndex, AI_ATTACKING, aiData);
-            if ((gBattleMons[ctx->battlerMoveTarget].hp - damage) < (gBattleMons[ctx->battlerMoveTarget].hp / 2))
+            if ((targetMon->hp - damage) < (targetMon->hp / 2))
             {
                 s8 stage = 1;
                 
@@ -984,7 +989,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
     case ABILITY_STEAM_ENGINE:
         if (GetMoveType(ctx->statMove) == TYPE_WATER || GetMoveType(ctx->statMove) == TYPE_FIRE)
         {
-            s8 stage = MAX_STAT_STAGE - gBattleMons[ctx->battlerMoveTarget].statStages[STAT_SPEED];
+            s8 stage = MAX_STAT_STAGE - targetMon->statStages[STAT_SPEED];
             if (stage > 6)
                 stage = 6;
 
@@ -1143,7 +1148,9 @@ bool32 AI_WouldBeSlower(struct StatConsiderationContext *ctx, enum Move defMove,
 
 enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext *ctx, struct AiLogicData *aiData)
 {
-    ctx->atkMove = (ctx->atkMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[ctx->battlerAtk].moves[ctx->atkMoveIndex]); // Generic move if no move index specified
+    struct BattlePokemon *atkMon = &gBattleMons[ctx->battlerAtk];
+    struct BattlePokemon *defMon = &gBattleMons[ctx->battlerDef];
+    ctx->atkMove = (ctx->atkMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : atkMon->moves[ctx->atkMoveIndex]); // Generic move if no move index specified
     ctx->isTargetingPartner = IsTargetingPartner(ctx->battlerMoveUser, ctx->battlerMoveTarget);
 
     enum Move predictedMove = GetIncomingMove(ctx->battlerAtk, ctx->battlerDef, gAiLogicData);
@@ -1153,7 +1160,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
     // Only care about chosen move if passed
     if (ctx->atkMoveIndex != MAX_MON_MOVES)
     {
-        atkBestMoves[0] = gBattleMons[ctx->battlerAtk].moves[ctx->atkMoveIndex];
+        atkBestMoves[0] = atkMon->moves[ctx->atkMoveIndex];
     }
     else
     {
@@ -1166,9 +1173,9 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
     case CHANGE_STAT_DMG_DEALT:
         if (ctx->atkMoveIndex != MAX_MON_MOVES) // Move index specified
         {
-            if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
+            if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, AI_ATTACKING, aiData) >= defMon->hp)
                 return STAT_CHANGE_BAD;
-            else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
+            else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= defMon->hp)
                 return STAT_CHANGE_GOOD;
         }
         else // No move index specified; check all
@@ -1176,15 +1183,15 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             // No point if can already KO
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
+                if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= defMon->hp)
                     return STAT_CHANGE_BAD;
             }
             // Good if makes a move KO where it previously would not
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
                 ctx->atkMoveIndex = i;
-                if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp)
-                 && !(AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= gBattleMons[ctx->battlerDef].hp))
+                if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= defMon->hp)
+                 && !(AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= defMon->hp))
                 {
                     return STAT_CHANGE_GOOD;
                 }
@@ -1196,15 +1203,15 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             // Bad if KO's with stat changes
-            if (AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp)
+            if (AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= atkMon->hp)
                 return STAT_CHANGE_BAD;
         }
         // Good if saves from being KO'd
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             ctx->atkMoveIndex = i;
-            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp)
-             && (AI_GetDamage(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, aiData) >= gBattleMons[ctx->battlerAtk].hp))
+            if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= atkMon->hp)
+             && (AI_GetDamage(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, aiData) >= atkMon->hp))
             {
                 return STAT_CHANGE_GOOD;
             }
@@ -1290,12 +1297,12 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             // Get fewest expected moves for battlers to KO each other without stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[ctx->battlerAtk].moves[i];
+                cv.move = atkMon->moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, gBattleMons[ctx->battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, atkMon->moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOAtk = ((hitsToKO * 100) / totalAccuracy);
                 
@@ -1305,7 +1312,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
 
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[ctx->battlerDef].moves[i];
+                cv.move = defMon->moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
@@ -1313,7 +1320,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 cv.battlerAtk = ctx->battlerDef;
                 cv.battlerDef = ctx->battlerAtk;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, gBattleMons[ctx->battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, defMon->moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
                 
@@ -1328,7 +1335,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             // Get fewest expected moves for battlers to KO each other with stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[ctx->battlerAtk].moves[i];
+                cv.move = atkMon->moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
@@ -1336,7 +1343,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 cv.battlerAtk = ctx->battlerAtk;
                 cv.battlerDef = ctx->battlerDef;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, gBattleMons[ctx->battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, atkMon->moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
                 
@@ -1345,7 +1352,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             }
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                cv.move = gBattleMons[ctx->battlerDef].moves[i];
+                cv.move = defMon->moves[i];
 
                 if (cv.move == MOVE_NONE)
                     break;
@@ -1353,7 +1360,7 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 cv.battlerAtk = ctx->battlerDef;
                 cv.battlerDef = ctx->battlerAtk;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, gBattleMons[ctx->battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, defMon->moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedDef = ((hitsToKO * 100) / totalAccuracyModified);
                 
