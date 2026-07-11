@@ -394,10 +394,12 @@ static const union AffineAnimCmd sSkyDropFlyBallAffineAnimCmd_0[] =
     AFFINEANIMCMD_FRAME(0xa0, 0x100, 0x50, 0x0),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSkyDropFlyBallAffineAnimCmds[] =
 {
     sSkyDropFlyBallAffineAnimCmd_0
 };
+
 const struct SpriteTemplate gSkyDropFlyBallTemplate =
 {
     .tileTag = ANIM_TAG_ROUND_SHADOW,
@@ -679,10 +681,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_SearingShotRock[] =
     AFFINEANIMCMD_FRAME(-8, -8, 9, 15),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_SearingShotRock[] =
 {
     sSpriteAffineAnim_SearingShotRock,
 };
+
 const struct SpriteTemplate gSearingShotEruptionImpactTemplate =
 {
     .tileTag = ANIM_TAG_WARM_ROCK,
@@ -702,6 +706,7 @@ const struct SpriteTemplate gTechnoBlastWhiteChargeTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gTechnoBlastWhiteCircleTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -711,6 +716,7 @@ const struct SpriteTemplate gTechnoBlastWhiteCircleTemplate =
     .affineAnims = gPowerAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gTechnoBlastWhiteBlastTemplate =
 {
     .tileTag = ANIM_TAG_BLACK_BALL_2,
@@ -718,6 +724,7 @@ const struct SpriteTemplate gTechnoBlastWhiteBlastTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
+
 const struct SpriteTemplate gTechnoBlastWhiteSparkTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -726,6 +733,7 @@ const struct SpriteTemplate gTechnoBlastWhiteSparkTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
+
 const struct SpriteTemplate gTechnoBlastWhiteSmokeTemplate =
 {
     .tileTag = ANIM_TAG_GRAY_SMOKE,
@@ -742,6 +750,7 @@ const struct SpriteTemplate gTechnoBlastYellowBlastTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
+
 const struct SpriteTemplate gTechnoBlastYellowSparkTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -750,6 +759,7 @@ const struct SpriteTemplate gTechnoBlastYellowSparkTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
+
 const struct SpriteTemplate gTechnoBlastYellowSmokeTemplate =
 {
     .tileTag = ANIM_TAG_GRAY_SMOKE,
@@ -767,6 +777,7 @@ const struct SpriteTemplate gTechnoBlastBlueChargeTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gTechnoBlastBlueBubbleTemplate =
 {
     .tileTag = ANIM_TAG_BUBBLE,
@@ -775,6 +786,7 @@ const struct SpriteTemplate gTechnoBlastBlueBubbleTemplate =
     .anims = gAnims_WaterBubbleProjectile,
     .callback = AnimSmallBubblePair,
 };
+
 const struct SpriteTemplate gTechnoBlastBlueBlastTemplate =
 {
     .tileTag = ANIM_TAG_BLACK_BALL_2,
@@ -782,6 +794,7 @@ const struct SpriteTemplate gTechnoBlastBlueBlastTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
+
 const struct SpriteTemplate gTechnoBlastBlueSparkTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -790,6 +803,7 @@ const struct SpriteTemplate gTechnoBlastBlueSparkTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
+
 const struct SpriteTemplate gTechnoBlastBlueSmokeTemplate =
 {
     .tileTag = ANIM_TAG_GRAY_SMOKE,
@@ -807,6 +821,7 @@ const struct SpriteTemplate gTechnoBlastRedChargeTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gTechnoBlastRedBlastTemplate =
 {
     .tileTag = ANIM_TAG_BLACK_BALL_2,
@@ -814,6 +829,7 @@ const struct SpriteTemplate gTechnoBlastRedBlastTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
+
 const struct SpriteTemplate gTechnoBlastRedSparkTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -822,6 +838,7 @@ const struct SpriteTemplate gTechnoBlastRedSparkTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
+
 const struct SpriteTemplate gTechnoBlastRedSmokeTemplate =
 {
     .tileTag = ANIM_TAG_GRAY_SMOKE,
@@ -839,6 +856,7 @@ const struct SpriteTemplate gTechnoBlastIceChargeTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gTechnoBlastIceBlastTemplate =
 {
     .tileTag = ANIM_TAG_BLACK_BALL_2,
@@ -846,6 +864,7 @@ const struct SpriteTemplate gTechnoBlastIceBlastTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
+
 const struct SpriteTemplate gTechnoBlastIceSparkTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -854,6 +873,7 @@ const struct SpriteTemplate gTechnoBlastIceSparkTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimZapCannonSpark,
 };
+
 const struct SpriteTemplate gTechnoBlastIceSmokeTemplate =
 {
     .tileTag = ANIM_TAG_GRAY_SMOKE,
@@ -862,6 +882,7 @@ const struct SpriteTemplate gTechnoBlastIceSmokeTemplate =
     .anims = gOctazookaAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gTechnoBlastIceCrystalsTemplate =
 {
     .tileTag = ANIM_TAG_ICE_CRYSTALS,
@@ -953,10 +974,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_IcicleCrash[] =
     AFFINEANIMCMD_FRAME(0, 0, 128, 1), //180 degree turn
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_IcicleCrash[] =
 {
     sSpriteAffineAnim_IcicleCrash,
 };
+
 const struct SpriteTemplate gIcicleCrashSpearTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -1035,16 +1058,19 @@ static const union AffineAnimCmd sSpriteAffineAnim_DrakeStrikePlayer[] =
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_DrakeStrikeOpponent[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sAffineAnimCmdTable_DrakeStriking[] =  // Devestating Drake, Fusion Bolt
 {
     sSpriteAffineAnim_DrakeStrikePlayer,
     sSpriteAffineAnim_DrakeStrikeOpponent,
 };
+
 const struct SpriteTemplate gFusionBoltBallTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -1072,10 +1098,12 @@ static const union AnimCmd sAnimCmdBerryEaten[] =
     ANIMCMD_FRAME(16, 3),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdFramesBerryEaten[] =
 {
     sAnimCmdBerryEaten,
 };
+
 const struct SpriteTemplate gBelchBerryTemplate =
 {
     .tileTag = ANIM_TAG_BERRY_NORMAL,
@@ -1101,10 +1129,12 @@ static const union AnimCmd sAnimCmd_PetalBlizzard1_0[] =
     ANIMCMD_FRAME(0, 10),
     ANIMCMD_JUMP(0),
 };
+
 static const union AnimCmd *const sAnimCmdTable_PetalBlizzard1[] =
 {
     sAnimCmd_PetalBlizzard1_0,
 };
+
 const struct SpriteTemplate gPetalBlizzardTwister1Template =
 {
     .tileTag = ANIM_TAG_FLOWER,
@@ -1113,6 +1143,7 @@ const struct SpriteTemplate gPetalBlizzardTwister1Template =
     .anims = sAnimCmdTable_PetalBlizzard1,
     .callback = AnimMoveTwisterParticle,
 };
+
 static const u16 sPetalBlizzardFlowerOam[] = {0x0, 0x2000,0x0800,0x0};  //todo: convert to oam data
 static const union AnimCmd sAnimCmd_PetalBlizzard2_0[] =
 {
@@ -1120,10 +1151,12 @@ static const union AnimCmd sAnimCmd_PetalBlizzard2_0[] =
     ANIMCMD_FRAME(4, 0),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_PetalBlizzard2[] =
 {
     sAnimCmd_PetalBlizzard2_0,
 };
+
 const struct SpriteTemplate gPetalBlizzardTwister2Template =
 {
     .tileTag = ANIM_TAG_FLOWER,
@@ -1513,10 +1546,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_GrowingRing[] =
     AFFINEANIMCMD_FRAME(8, 8, 0, 16), //Double in size
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_GrowingRing[] =
 {
     sSpriteAffineAnim_GrowingRing,
 };
+
 const struct SpriteTemplate gOblivionWingBeamTemplate =
 {
     .tileTag = ANIM_TAG_HYDRO_PUMP,
@@ -1629,6 +1664,7 @@ const struct SpriteTemplate gLightOfRuinPinkOrbsTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate gLightOfRuinPinkDischargeTemplate =
 {
     .tileTag = ANIM_TAG_ELECTRICITY,
@@ -1702,10 +1738,12 @@ static const union AnimCmd sAnimCmdLargeSpike[] =
     ANIMCMD_FRAME(96, 3),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_LargeSpike[] =
 {
     sAnimCmdLargeSpike,
 };
+
 const struct SpriteTemplate gPrecipiceBladesSpikeTemplate =
 {
     .tileTag = ANIM_TAG_LARGE_SPIKE,
@@ -1720,10 +1758,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_LargeHailRock[] =
     AFFINEANIMCMD_FRAME(256, 256, 0, 1), //Double sprite size
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_LargeHailRock[] =
 {
     sSpriteAffineAnim_LargeHailRock,
 };
+
 const struct SpriteTemplate gPrecipiceBladesLargeSpikeTemplate =
 {
     .tileTag = ANIM_TAG_LARGE_SPIKE,
@@ -1749,11 +1789,13 @@ static const union AffineAnimCmd sAffineAnimCmd_Drake[] =
     AFFINEANIMCMD_FRAME(0, 0, 0, 1), //drake faces up
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sAffineAnimCmdTable_DrakeFaceNorth[] =
 {
     sAffineAnimCmd_Drake,
     sAffineAnimCmd_Drake,
 };
+
 const struct SpriteTemplate gDragonAscentFlyUpTemplate =
 {
     .tileTag = ANIM_TAG_DRAGON_ASCENT,
@@ -2684,6 +2726,7 @@ static const struct OamData sSunsteelStrikeBlastOAM =
     .size = SPRITE_SIZE(64x64),
     .priority = 1, //Above sprites
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_SunsteelStrikeBlastEnemySide[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, -64, 1), //90 degree turn
@@ -2691,6 +2734,7 @@ static const union AffineAnimCmd sSpriteAffineAnim_SunsteelStrikeBlastEnemySide[
     AFFINEANIMCMD_FRAME(16, 16, 0, 15), //Double in size
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_SunsteelStrikeBlastPlayerSide[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 128, 1), //180 degree turn
@@ -2698,11 +2742,13 @@ static const union AffineAnimCmd sSpriteAffineAnim_SunsteelStrikeBlastPlayerSide
     AFFINEANIMCMD_FRAME(16, 16, 0, 15), //Double in size
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_SunsteelStrikeBlast[] =
 {
     sSpriteAffineAnim_SunsteelStrikeBlastEnemySide,
     sSpriteAffineAnim_SunsteelStrikeBlastPlayerSide,
 };
+
 const struct SpriteTemplate gSunsteelStrikeSuperpowerTemplate =
 {
     .tileTag = ANIM_TAG_METEOR,
@@ -2895,27 +2941,32 @@ static const union AnimCmd sAnimCmdPhotonGeyserBeam1[] =
     ANIMCMD_FRAME(0, 1),
     ANIMCMD_END
 };
+
 static const union AnimCmd sAnimCmdSmiteBeam[] =
 {
     ANIMCMD_FRAME(4, 1),
     ANIMCMD_END
 };
+
 static const union AnimCmd sAnimCmdPhotonGeyserBeam2[] =
 {
     ANIMCMD_FRAME(8, 1),
     ANIMCMD_END
 };
+
 static const union AnimCmd *const sAnimCmdTable_PhotonGeyserBeam[] =
 {
     sAnimCmdPhotonGeyserBeam1,
     sAnimCmdSmiteBeam,
     sAnimCmdPhotonGeyserBeam2,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_DoNothing[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0, 1), //Do nothing
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_PhotonGeyserBeam[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0, 16), //Delay
@@ -2925,11 +2976,13 @@ static const union AffineAnimCmd sSpriteAffineAnim_PhotonGeyserBeam[] =
     AFFINEANIMCMD_FRAME(128, 128, 0, 1),
     AFFINEANIMCMD_JUMP(2),
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_PhotonGeyserBeam[] =
 {
     sSpriteAffineAnim_DoNothing,
     sSpriteAffineAnim_PhotonGeyserBeam,
 };
+
 const struct SpriteTemplate gPhotonGeyserBeam =
 {
     .tileTag = ANIM_TAG_STRAIGHT_BEAM,
@@ -3007,6 +3060,7 @@ static const union AffineAnimCmd sSpriteAffineAnim_LargeSpikePointedRight[] =
     AFFINEANIMCMD_FRAME(0, 0, -32, 1), //45 degree turn
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_LargeSpike[] =
 {
     sSpriteAffineAnim_LargeSpikePointedLeft,
@@ -3017,6 +3071,7 @@ static const union AffineAnimCmd* const sSpriteAffineAnimTable_SnipeShot[] =
 {
     sSpriteAffineAnim_LargeSpikePointedRight,
 };
+
 static const union AnimCmd sAnimCmdSnipeShot[] =
 {
     ANIMCMD_FRAME(64, 4),
@@ -3026,10 +3081,12 @@ static const union AnimCmd sAnimCmdSnipeShot[] =
     ANIMCMD_FRAME(0, 4),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_SnipeShot[] =
 {
     sAnimCmdSnipeShot,
 };
+
 const struct SpriteTemplate gSnipeShotBallTemplate =    //used in Aura Sphere
 {
     .tileTag = ANIM_TAG_IMPACT_2,
@@ -3058,10 +3115,12 @@ static const union AnimCmd sAnimCmdBerryChomp[] =
     ANIMCMD_FRAME(16, 3),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_BerryChomp[] =
 {
     sAnimCmdBerryChomp,
 };
+
 const struct SpriteTemplate gFloatingBerryTemplate =
 {
     .tileTag = ANIM_TAG_BERRY_NORMAL,
@@ -3081,6 +3140,7 @@ static const struct OamData sPyroBallFlamesOAM =
     .size = SPRITE_SIZE(32x32),
     .priority = 1, //Above sprites
 };
+
 const struct SpriteTemplate gNoRetreatFlameTemplate =
 {
     .tileTag = ANIM_TAG_SMALL_EMBER,
@@ -3109,6 +3169,7 @@ const struct SpriteTemplate gDreepyMissilePlayerTemplate =
     .anims = gAnims_DreepyMissilePlayer,
     .callback = AnimShadowBall,
 };
+
 const struct SpriteTemplate gDreepyMissileOpponentTemplate =
 {
     .tileTag = ANIM_TAG_DREEPY,
@@ -3117,6 +3178,7 @@ const struct SpriteTemplate gDreepyMissileOpponentTemplate =
     .anims = gAnims_DreepyMissileOpponent,
     .callback = AnimShadowBall,
 };
+
 const struct SpriteTemplate gDreepyMissilePlayerShinyTemplate =
 {
     .tileTag = ANIM_TAG_DREEPY,
@@ -3125,6 +3187,7 @@ const struct SpriteTemplate gDreepyMissilePlayerShinyTemplate =
     .anims = gAnims_DreepyMissilePlayer,
     .callback = AnimShadowBall,
 };
+
 const struct SpriteTemplate gDreepyMissileOpponentShinyTemplate =
 {
     .tileTag = ANIM_TAG_DREEPY,
@@ -3161,6 +3224,7 @@ static const struct OamData sFishiousRendTeethOam =
     .size = SPRITE_SIZE(64x64),
     .priority = 1, //Above sprites
 };
+
 const struct SpriteTemplate gFishiousRendTeethTemplate =
 {
     .tileTag = ANIM_TAG_SHARP_TEETH,
@@ -3224,6 +3288,7 @@ static const struct OamData sPyroBallRockOAM =
     .size = SPRITE_SIZE(16x16),
     .priority = 1, //Above sprites
 };
+
 const struct SpriteTemplate gPyroBallRockTemplate =
 {
     .tileTag = ANIM_TAG_FLAT_ROCK,
@@ -3334,6 +3399,7 @@ static const struct OamData sAppleOAM =
     .size = SPRITE_SIZE(32x32),
     .priority = 1, //Above sprites
 };
+
 const struct SpriteTemplate gGravAppleSmallApple =
 {
     .tileTag = ANIM_TAG_APPLE,
@@ -3347,10 +3413,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_ScaledApple[] =
     AFFINEANIMCMD_FRAME(64, 64, 0, 10), //Quadruple in size
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_ScaledApple[] =
 {
     sSpriteAffineAnim_ScaledApple,
 };
+
 const struct SpriteTemplate gGravAppleLargeApple =
 {
     .tileTag = ANIM_TAG_APPLE,
@@ -3397,6 +3465,7 @@ static const union AnimCmd sAnimCmdWaterDropletDrip[] =
     ANIMCMD_FRAME(48, 3),
     ANIMCMD_END,
 };
+
 static const union AnimCmd sAnimCmdWaterDropletSplash[] =
 {
     ANIMCMD_FRAME(64, 3),
@@ -3405,11 +3474,13 @@ static const union AnimCmd sAnimCmdWaterDropletSplash[] =
     ANIMCMD_FRAME(112, 10),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdWaterDroplet[] =
 {
     sAnimCmdWaterDropletDrip,
     sAnimCmdWaterDropletSplash,
 };
+
 const struct SpriteTemplate gLifeDewDropletTemplate =
 {
     .tileTag = ANIM_TAG_WATER_DROPLET,
@@ -3446,6 +3517,7 @@ static const struct OamData sGrowingSuperpowerOAM =
     .size = SPRITE_SIZE(64x64),
     .priority = 2,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_GrowingSuperpowerEnemyAttack[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 128, 1), //180 degree turn
@@ -3453,17 +3525,20 @@ static const union AffineAnimCmd sSpriteAffineAnim_GrowingSuperpowerEnemyAttack[
     AFFINEANIMCMD_FRAME(16, 16, 0, 15), //Double in size
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_GrowingSuperpowerPlayerAttack[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0, 2), //Pause
     AFFINEANIMCMD_FRAME(16, 16, 0, 15), //Double in size
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_GrowingSuperpower[] =
 {
     sSpriteAffineAnim_GrowingSuperpowerPlayerAttack,
     sSpriteAffineAnim_GrowingSuperpowerEnemyAttack,
 };
+
 const struct SpriteTemplate gGrowingSuperpowerTemplate =    // Used in Breakneck Blitz
 {
     .tileTag = ANIM_TAG_METEOR,
@@ -3510,10 +3585,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_WingAttackFeather[] =
     AFFINEANIMCMD_FRAME(0, 0, 1, 28), //Rotate a little left
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_WingAttackFeather[] =
 {
     sSpriteAffineAnim_WingAttackFeather,
 };
+
 const struct SpriteTemplate gDualWingbeatFeatherSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WHITE_FEATHER,
@@ -3543,6 +3620,7 @@ static const struct OamData sGeyserOam =
     .size = SPRITE_SIZE(32x32),
     .priority = 1, //Above sprites
 };
+
 const struct SpriteTemplate gSpriteTemplate_ExpandingForceExplode =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -3559,10 +3637,12 @@ static const union AffineAnimCmd sSpriteAffineAnim_SpiritBreakBall[] =
     AFFINEANIMCMD_FRAME(2, 2, 0, 50), //Grow slowly to half size
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_SpiritBreakBall[] =
 {
     sSpriteAffineAnim_SpiritBreakBall,
 };
+
 const struct SpriteTemplate gSpriteTemplate_SpiritBreakChargeBall =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -3587,10 +3667,12 @@ const union AffineAnimCmd sSpriteAffineAnim_HydroCannonBall[] =
     AFFINEANIMCMD_FRAME(16, 16, 0, 16), //Double in size
     AFFINEANIMCMD_END
 };
+
 const union AffineAnimCmd* const sSpriteAffineAnimTable_HydroCannonBall[] =
 {
     sSpriteAffineAnim_HydroCannonBall,
 };
+
 const struct SpriteTemplate gSpriteTemplate_ChloroblastShot =
 {
     .tileTag = ANIM_TAG_HYDRO_PUMP,
@@ -3639,6 +3721,7 @@ const struct SpriteTemplate gSpriteTemplate_BurningJealousyFireBuff =
     .anims = gAnims_FireBlastCross,
     .callback = SpriteCB_MoveSpriteUpwardsForDuration,
 };
+
 const struct SpriteTemplate gSpriteTemplate_BurningJealousyEmit =
 {
     .tileTag = ANIM_TAG_SMALL_EMBER,
@@ -3678,6 +3761,7 @@ const struct SpriteTemplate gSpriteTemplate_FlipTurnThere =
     .affineAnims = gAffineAnims_ShadowBall,
     .callback = AnimShadowBall,
 };
+
 const struct SpriteTemplate gSpriteTemplate_FlipTurnBack =
 {
     .tileTag = ANIM_TAG_HYDRO_PUMP,
@@ -3723,6 +3807,7 @@ static const union AffineAnimCmd sSpriteAffineAnim_DrainPunchFist[] =
     AFFINEANIMCMD_FRAME(-32, -32, 0, 8),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_DrainPunchFist[] =
 {
     sSpriteAffineAnim_DrainPunchFist,
@@ -3736,6 +3821,7 @@ const struct SpriteTemplate gSpriteTemplate_WickedBlowFist =
     .affineAnims = sSpriteAffineAnimTable_DrainPunchFist,
     .callback = SpriteCB_SpriteOnMonForDurationUseY,
 };
+
 const struct SpriteTemplate gSpriteTemplate_WickedBlowBlackStars =
 {
     .tileTag = ANIM_TAG_PAIN_SPLIT,
@@ -3743,6 +3829,7 @@ const struct SpriteTemplate gSpriteTemplate_WickedBlowBlackStars =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = AnimDizzyPunchDuck,
 };
+
 const struct SpriteTemplate gSpriteTemplate_WickedBlowRedStars =
 {
     .tileTag = ANIM_TAG_PAIN_SPLIT,
@@ -3760,10 +3847,12 @@ static const union AnimCmd sAnimCmdSurgingStrike[] =
     ANIMCMD_FRAME(32, 4),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_SurgingStrike[] =
 {
     sAnimCmdSurgingStrike,
 };
+
 const struct SpriteTemplate gSpriteTemplate_SurgingStrikesImpact =
 {
     .tileTag = ANIM_TAG_IMPACT_2,
@@ -3800,24 +3889,28 @@ static const union AffineAnimCmd sSpriteAffineAnim_GlacialLance_Grow[] =
     AFFINEANIMCMD_FRAME(0x10, 0x10, 0, 30), //Double sprite size
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_GlacialLance_OnFoe[] =
 {
     AFFINEANIMCMD_FRAME(256, 256, 0, 1), //Double sprite size
     AFFINEANIMCMD_FRAME(0, 0, -8, 4), //Rotate 45 degrees right
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_GlacialLance_OnPlayer[] =
 {
     AFFINEANIMCMD_FRAME(256, 256, 0, 1), //Double sprite size
     AFFINEANIMCMD_FRAME(0, 0, 24, 4), //Rotate 135 degrees left
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_GlacialLance[] =
 {
     sSpriteAffineAnim_GlacialLance_Grow,
     sSpriteAffineAnim_GlacialLance_OnFoe,
     sSpriteAffineAnim_GlacialLance_OnPlayer,
 };
+
 const struct SpriteTemplate gSpriteTemplate_GlacialLance =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -3841,6 +3934,7 @@ static const struct OamData sOamData_EerieSpellFlame =
     .priority = 2,
     .paletteNum = 0,
 };
+
 const struct SpriteTemplate gSpriteTemplate_EerieSpellFlame =
 {
     .tileTag = ANIM_TAG_PURPLE_FLAME,
@@ -3872,6 +3966,7 @@ const struct SpriteTemplate gSpriteTemplate_PowerShiftOffenseBall =
     .affineAnims = sSpriteAffineAnimTable_LargeHailRock,
     .callback = SpriteCB_PowerShiftBall,
 };
+
 const struct SpriteTemplate gSpriteTemplate_PowerShiftDefenseBall =
 {
     .tileTag = ANIM_TAG_BLUEGREEN_ORB,
@@ -3887,10 +3982,12 @@ static const union AnimCmd sAnimCmdFlippedX[] =
     ANIMCMD_FRAME(0, 1, .hFlip = TRUE),
     ANIMCMD_END,
 };
+
 static const union AnimCmd *const sAnimCmdTable_FlippedX[] =
 {
     sAnimCmdFlippedX,
 };
+
 const struct SpriteTemplate gSpriteTemplate_StoneAxeSlash =
 {
     .tileTag = ANIM_TAG_SLAM_HIT_2,
@@ -3917,16 +4014,19 @@ const struct SpriteTemplate gSpriteTemplate_VioletMind = {  // also Psystrike
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_MysticalPowerRing[] =
 {
     AFFINEANIMCMD_FRAME(16, 16, 0, 0), //Start small
     AFFINEANIMCMD_FRAME(16, 16, 0, 15), //Grow sprite
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_MysticalPowerRing[] =
 {
     sSpriteAffineAnim_MysticalPowerRing,
 };
+
 const struct SpriteTemplate gSpriteTemplate_MysticalPowerRing =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -3966,6 +4066,7 @@ const struct SpriteTemplate gSpriteTemplate_HeadlongRushImpact =
     .affineAnims = sSpriteAffineAnimTable_DrainPunchFist,
     .callback = AnimHitSplatBasic,
 };
+
 const struct SpriteTemplate gSpriteTemplate_MaxQuakeDirtGeyser =
 {
     .tileTag = ANIM_TAG_MUD_SAND,
@@ -3973,6 +4074,7 @@ const struct SpriteTemplate gSpriteTemplate_MaxQuakeDirtGeyser =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = AnimMudSportDirt,
 };
+
 const struct SpriteTemplate gSpriteTemplate_MaxQuakeRockGeyser =
 {
     .tileTag = ANIM_TAG_ROCKS,
@@ -4018,16 +4120,19 @@ static const union AffineAnimCmd sSpriteAffineAnim_FlutterbyPulsate[] =
     AFFINEANIMCMD_FRAME(-16, -16, 0, 4),
     AFFINEANIMCMD_JUMP(0),
 };
+
 static const union AffineAnimCmd sSpriteAffineAnim_FlutterbyGrow[] =
 {
     AFFINEANIMCMD_FRAME(8, 8, 0, 16), //Double in size
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSpriteAffineAnimTable_Flutterby[] =
 {
     sSpriteAffineAnim_FlutterbyPulsate,
     sSpriteAffineAnim_FlutterbyGrow,
 };
+
 const struct SpriteTemplate gSpriteTemplate_InfernalParadeFlame =
 {
     .tileTag = ANIM_TAG_PURPLE_FLAME,
@@ -4056,10 +4161,12 @@ static const union AnimCmd sAnimCmdAnimatedSpark2[] =
     ANIMCMD_FRAME((16 * 16) / (8 * 8) * 2, 8),
     ANIMCMD_JUMP(0)
 };
+
 static const union AnimCmd *const sAnimCmdTable_AnimatedSpark2[] =
 {
     sAnimCmdAnimatedSpark2,
 };
+
 const struct SpriteTemplate gSpriteTemplate_WildboltStormSpark =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -4087,6 +4194,7 @@ const struct SpriteTemplate gSpriteTemplate_TakeHeartFallingHeart =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = SpriteCB_FallingObject,
 };
+
 const struct SpriteTemplate gSpriteTemplate_TakeHeartRing =
 {
     .tileTag = ANIM_TAG_GUARD_RING,
@@ -4135,6 +4243,7 @@ const struct SpriteTemplate gZMoveSymbolSpriteTemplate =
     .affineAnims = gAffineAnims_LusterPurgeCircle,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlueZMoveEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4143,6 +4252,7 @@ const struct SpriteTemplate gBlueZMoveEnergySpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gGreenZMoveEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4151,6 +4261,7 @@ const struct SpriteTemplate gGreenZMoveEnergySpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gYellowZMoveEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4167,6 +4278,7 @@ const struct SpriteTemplate gBreakneckBlitzDanceSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = AnimDragonDanceOrb,
 };
+
 const struct SpriteTemplate gBreakneckBlitzHitSpriteTemplate =
 {
     .tileTag = ANIM_TAG_IMPACT,
@@ -4190,16 +4302,19 @@ static const union AffineAnimCmd sSupersonicSkystrikeAffinePlayerSide[] =
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd sSupersonicSkystrikeAffineOpponentSide[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sSupersonicSkystrikeAffineAnimTable[] =
 {
     sSupersonicSkystrikeAffinePlayerSide,
     sSupersonicSkystrikeAffineOpponentSide,
 };
+
 const struct SpriteTemplate gSupersonicSkystrikeFlySpriteTemplate =
 {
     .tileTag = ANIM_TAG_BIRD,
@@ -4216,6 +4331,7 @@ const struct SpriteTemplate gAcidDownpourReversalSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .callback = AnimReversalOrb,
 };
+
 const struct SpriteTemplate gAcidDownpourAuraSpriteTemplate =
 {
     .tileTag = ANIM_TAG_POISON_BUBBLE,
@@ -4232,6 +4348,7 @@ const struct SpriteTemplate gTectonicRageBlastBurnSpriteTemplate =
     .anims = gAnims_FirePlume,
     .callback = AnimBlastBurnTargetPlume,
 };
+
 const struct SpriteTemplate gTectonicRageExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4250,6 +4367,7 @@ const struct SpriteTemplate gContinentalCrushNeedleArmSpriteTemplate =
     .anims = gAnims_FlyingRock,
     .callback = AnimNeedleArmSpike,
 };
+
 const struct SpriteTemplate gContinentalCrushBigRockStompSpriteTemplate =
 {
     .tileTag = ANIM_TAG_REALLY_BIG_ROCK,
@@ -4258,6 +4376,7 @@ const struct SpriteTemplate gContinentalCrushBigRockStompSpriteTemplate =
     .affineAnims = sSpriteAffineAnimTable_LargeHailRock,
     .callback = SpriteCB_FallingObject,
 };
+
 const struct SpriteTemplate gContinentalCrushFocusEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4266,6 +4385,7 @@ const struct SpriteTemplate gContinentalCrushFocusEnergySpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gContinentalCrushGrowingRockSpriteTemplate =
 {
     .tileTag = ANIM_TAG_REALLY_BIG_ROCK,
@@ -4274,6 +4394,7 @@ const struct SpriteTemplate gContinentalCrushGrowingRockSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gContinentalCrushEruptionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ROCKS,
@@ -4291,6 +4412,7 @@ const struct SpriteTemplate gSavageSpinOutStringBlastSpriteTemplate =
     .anims = gAffineAnims_AirWaveCrescent,
     .callback = AnimAirWaveCrescent,
 };
+
 const struct SpriteTemplate gSavageSpinOutCacoonSpriteTemplate =
 {
     .tileTag = ANIM_TAG_COCOON,
@@ -4299,6 +4421,7 @@ const struct SpriteTemplate gSavageSpinOutCacoonSpriteTemplate =
     .affineAnims = gAffineAnims_Bite,
     .callback = AnimBite,
 };
+
 const struct SpriteTemplate gSavageSpinOutGreenChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4307,6 +4430,7 @@ const struct SpriteTemplate gSavageSpinOutGreenChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gSavageSpinOutGreenCutSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CUT,
@@ -4315,6 +4439,7 @@ const struct SpriteTemplate gSavageSpinOutGreenCutSpriteTemplate =
     .anims = gCuttingSliceAnimTable,
     .callback = AnimCuttingSlice,
 };
+
 const struct SpriteTemplate gSavageSpinOutWhiteExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4333,6 +4458,7 @@ const struct SpriteTemplate gNeverEndingNightmareRingAttackerSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareRingTargetSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4341,6 +4467,7 @@ const struct SpriteTemplate gNeverEndingNightmareRingTargetSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareFocusEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4349,6 +4476,7 @@ const struct SpriteTemplate gNeverEndingNightmareFocusEnergySpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareHandSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ASSURANCE_HAND,
@@ -4356,6 +4484,7 @@ const struct SpriteTemplate gNeverEndingNightmareHandSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
     .callback = AnimNeedleArmSpike,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareBlastBurnSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FIRE_PLUME,
@@ -4364,6 +4493,7 @@ const struct SpriteTemplate gNeverEndingNightmareBlastBurnSpriteTemplate =
     .anims = gAnims_FirePlume,
     .callback = AnimBlastBurnTargetPlume,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareGeyserHexSpriteTemplate =
 {
     .tileTag = ANIM_TAG_VERTICAL_HEX,
@@ -4372,6 +4502,7 @@ const struct SpriteTemplate gNeverEndingNightmareGeyserHexSpriteTemplate =
     .anims = gRazorLeafParticleAnimTable,
     .callback = SpriteCB_GeyserTarget,
 };
+
 const struct SpriteTemplate gNeverEndingNightmareExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4390,6 +4521,7 @@ const struct SpriteTemplate gCorkscrewCrashMetalBitSpriteTemplate =
     .affineAnims = gAffineAnims_TearDrop,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gCorkscrewCrashChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4398,6 +4530,7 @@ const struct SpriteTemplate gCorkscrewCrashChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gCorkscrewCrashCorkscrewFlyUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4406,15 +4539,18 @@ const struct SpriteTemplate gCorkscrewCrashCorkscrewFlyUpSpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimParticleInVortex,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashFlyDownAffineOpponentSide[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x80, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd* const sCorkscrewCrashFlyDownAffineAnimTable[] =
 {
     sCorkscrewCrashFlyDownAffineOpponentSide,
 };
+
 const struct SpriteTemplate gCorkscrewCrashCorkscrewFlyDownSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4423,21 +4559,25 @@ const struct SpriteTemplate gCorkscrewCrashCorkscrewFlyDownSpriteTemplate =
     .affineAnims = sCorkscrewCrashFlyDownAffineAnimTable,
     .callback = AnimStompFoot,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashStrikePlayerAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashStrikeTargetAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sCorkscrewCrashStrikeAffineAnimTable[] =
 {
     sCorkscrewCrashStrikePlayerAffineAnims,
     sCorkscrewCrashStrikeTargetAffineAnims,
 };
+
 const struct SpriteTemplate gCorkscrewCrashStrikeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4446,15 +4586,18 @@ const struct SpriteTemplate gCorkscrewCrashStrikeSpriteTemplate =
     .affineAnims = sCorkscrewCrashStrikeAffineAnimTable,
     .callback = AnimFlyBallAttack,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashLeftAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x40, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sCorkscrewCrashLeftAffineAnimTable[] =
 {
     sCorkscrewCrashLeftAffineAnims,
 };
+
 const struct SpriteTemplate gCorkscrewCrashLeftUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4463,6 +4606,7 @@ const struct SpriteTemplate gCorkscrewCrashLeftUpSpriteTemplate =
     .affineAnims = sCorkscrewCrashLeftAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gCorkscrewCrashLeftDownSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4471,15 +4615,18 @@ const struct SpriteTemplate gCorkscrewCrashLeftDownSpriteTemplate =
     .affineAnims = sCorkscrewCrashLeftAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashRightUpAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xc2, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sCorkscrewCrashRightUpAffineAnimTable[] =
 {
     sCorkscrewCrashRightUpAffineAnims,
 };
+
 const struct SpriteTemplate gCorkscrewCrashRightUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4488,15 +4635,18 @@ const struct SpriteTemplate gCorkscrewCrashRightUpSpriteTemplate =
     .affineAnims = sCorkscrewCrashRightUpAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sCorkscrewCrashRightDownAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xba, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sCorkscrewCrashRightDownAffineAnimTable[] =
 {
     sCorkscrewCrashRightDownAffineAnims,
 };
+
 const struct SpriteTemplate gCorkscrewCrashRightDownSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CORKSCREW,
@@ -4515,6 +4665,7 @@ const struct SpriteTemplate gInfernoOverdriveSuperpowerSpriteTemplate =
     .affineAnims = sSpriteAffineAnimTable_GrowingSuperpower,
     .callback = SpriteCB_GrowingSuperpower,
 };
+
 const struct SpriteTemplate gInfernoOverdriveChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4523,6 +4674,7 @@ const struct SpriteTemplate gInfernoOverdriveChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gInfernoOverdriveExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4541,6 +4693,7 @@ const struct SpriteTemplate gHydroVortexSuperpowerSpriteTemplate =
     .affineAnims = sSpriteAffineAnimTable_GrowingSuperpower,
     .callback = SpriteCB_GrowingSuperpower,
 };
+
 const struct SpriteTemplate gHydroVortexHurricaneSpriteTemplate =
 {
     .tileTag = ANIM_TAG_GUST,
@@ -4548,6 +4701,7 @@ const struct SpriteTemplate gHydroVortexHurricaneSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x64,
     .callback = AnimEllipticalGust,
 };
+
 const struct SpriteTemplate gHydroVortexImpactSpriteTemplate =
 {
     .tileTag = ANIM_TAG_IMPACT,
@@ -4566,6 +4720,7 @@ const struct SpriteTemplate gBloomDoomPetalSpinSpriteTemplate =
     .anims = gPetalDanceBigFlowerAnimTable,
     .callback = AnimFireSpiralOutward,
 };
+
 const struct SpriteTemplate gBloomDoomGreenChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4574,6 +4729,7 @@ const struct SpriteTemplate gBloomDoomGreenChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gBloomDoomHurricaneSpriteTemplate =
 {
     .tileTag = ANIM_TAG_GUST,
@@ -4581,6 +4737,7 @@ const struct SpriteTemplate gBloomDoomHurricaneSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x64,
     .callback = AnimEllipticalGustAttacker,
 };
+
 const struct SpriteTemplate gBloomDoomFlowerGeyserSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FLOWER,
@@ -4589,6 +4746,7 @@ const struct SpriteTemplate gBloomDoomFlowerGeyserSpriteTemplate =
     .anims = gPetalDanceBigFlowerAnimTable,
     .callback = SpriteCB_Geyser,
 };
+
 const struct SpriteTemplate gBloomDoomGreenBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -4597,6 +4755,7 @@ const struct SpriteTemplate gBloomDoomGreenBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate gBloomDoomPetalStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FLOWER,
@@ -4605,6 +4764,7 @@ const struct SpriteTemplate gBloomDoomPetalStarSpriteTemplate =
     .anims = gPetalDanceBigFlowerAnimTable,
     .callback = AnimNeedleArmSpike,
 };
+
 const struct SpriteTemplate gBloomDoomExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -4623,6 +4783,7 @@ const struct SpriteTemplate gGigavoltHavocChargingSpearSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gGigavoltHavocLaunchSpearSpriteTemplate =
 {
     .tileTag = ANIM_TAG_HAVOC_SPEAR,
@@ -4630,6 +4791,7 @@ const struct SpriteTemplate gGigavoltHavocLaunchSpearSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimSuperpowerFireball,
 };
+
 const struct SpriteTemplate gGigavoltHavocRingsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4638,6 +4800,7 @@ const struct SpriteTemplate gGigavoltHavocRingsSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gGigavoltHavocGeyserSpriteTemplate =
 {
     .tileTag = ANIM_TAG_VERTICAL_HEX,
@@ -4656,6 +4819,7 @@ const struct SpriteTemplate gShatteredPsycheReflectHitSpriteTemplate =
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatBasic,
 };
+
 const struct SpriteTemplate gShatteredPsychePinkChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4664,6 +4828,7 @@ const struct SpriteTemplate gShatteredPsychePinkChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gShatteredPsycheRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4683,6 +4848,7 @@ const struct SpriteTemplate gSubzeroSlammerIceSpinSpriteTemplate =
     .affineAnims = gAffineAnims_IceCrystalHit,
     .callback = AnimFireSpiralOutward,
 };
+
 const struct SpriteTemplate gSubzeroSlammerExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4691,6 +4857,7 @@ const struct SpriteTemplate gSubzeroSlammerExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSubzeroSlammerIceSwirlSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICE_CRYSTALS,
@@ -4707,45 +4874,54 @@ static const union AffineAnimCmd sDevastatingDrakeStrikePlayer[] =
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd sDevastatingDrakeStrikeOpponent[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sDevastatingDrakeStrikeAffineAnimTable[] =
 {
     sDevastatingDrakeStrikePlayer,
     sDevastatingDrakeStrikeOpponent,
 };
+
 static const union AffineAnimCmd sDevastatingDrakeFlyUpAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sDevastatingDrakeFlyUpAffineAnimTable[] =  {
     sDevastatingDrakeFlyUpAffineAnims,
     sDevastatingDrakeFlyUpAffineAnims
 };
+
 static const union AffineAnimCmd sDevastatingDrakeRightAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xc2, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sDevastatingDrakeRightAffineAnimTable[] =
 {
     sDevastatingDrakeRightAffineAnims,
     sDevastatingDrakeRightAffineAnims
 };
+
 static const union AffineAnimCmd sDevastatingDrakeLeftAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x40, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd* const sDevastatingDrakeLeftAffineAnimTable[] =
 {
     sDevastatingDrakeLeftAffineAnims,
     sDevastatingDrakeLeftAffineAnims,
 };
+
 const struct SpriteTemplate gDevastatingDrakePurpleEnergySpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -4754,6 +4930,7 @@ const struct SpriteTemplate gDevastatingDrakePurpleEnergySpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gDevastatingDrakeShockwaveSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -4762,6 +4939,7 @@ const struct SpriteTemplate gDevastatingDrakeShockwaveSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrb,
 };
+
 const struct SpriteTemplate gDevastatingDrakeDrakeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_DRAKE,
@@ -4770,6 +4948,7 @@ const struct SpriteTemplate gDevastatingDrakeDrakeUpSpriteTemplate =
     .affineAnims = sDevastatingDrakeFlyUpAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gDevastatingDrakeRightSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_DRAKE,
@@ -4778,6 +4957,7 @@ const struct SpriteTemplate gDevastatingDrakeRightSpriteTemplate =
     .affineAnims = sDevastatingDrakeRightAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gDevastatingDrakeLeftSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_DRAKE,
@@ -4786,6 +4966,7 @@ const struct SpriteTemplate gDevastatingDrakeLeftSpriteTemplate =
     .affineAnims = sDevastatingDrakeLeftAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gDevastatingDrakeStrikeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_DRAKE,
@@ -4794,6 +4975,7 @@ const struct SpriteTemplate gDevastatingDrakeStrikeSpriteTemplate =
     .affineAnims = sDevastatingDrakeStrikeAffineAnimTable,
     .callback = AnimFlyBallAttack,
 };
+
 const struct SpriteTemplate gDevastatingDrakePurpleBlastSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FIRE_PLUME,
@@ -4802,6 +4984,7 @@ const struct SpriteTemplate gDevastatingDrakePurpleBlastSpriteTemplate =
     .anims = gAnims_FirePlume,
     .callback = AnimBlastBurnTargetPlume,
 };
+
 const struct SpriteTemplate gDevastatingDrakeHexSpriteTemplate =
 {
     .tileTag = ANIM_TAG_VERTICAL_HEX,
@@ -4810,6 +4993,7 @@ const struct SpriteTemplate gDevastatingDrakeHexSpriteTemplate =
     .anims = gRazorLeafParticleAnimTable,
     .callback = SpriteCB_Geyser,
 };
+
 const struct SpriteTemplate gDevastatingDrakeExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -4818,6 +5002,7 @@ const struct SpriteTemplate gDevastatingDrakeExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gDevastatingDrakeExplosion2SpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4836,6 +5021,7 @@ const struct SpriteTemplate gBlackHoleEclipseShockwaveSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrb,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseBlueRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4844,6 +5030,7 @@ const struct SpriteTemplate gBlackHoleEclipseBlueRingSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseBlackRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4852,6 +5039,7 @@ const struct SpriteTemplate gBlackHoleEclipseBlackRingSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseRedExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -4860,6 +5048,7 @@ const struct SpriteTemplate gBlackHoleEclipseRedExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseWispSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WISP_ORB,
@@ -4868,6 +5057,7 @@ const struct SpriteTemplate gBlackHoleEclipseWispSpriteTemplate =
     .anims = gAnims_WillOWispOrb,
     .callback = AnimWillOWispOrb,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseRedRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4876,6 +5066,7 @@ const struct SpriteTemplate gBlackHoleEclipseRedRingSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseBlueRingInwardsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4884,6 +5075,7 @@ const struct SpriteTemplate gBlackHoleEclipseBlueRingInwardsSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseRedRingInwardsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4892,16 +5084,19 @@ const struct SpriteTemplate gBlackHoleEclipseRedRingInwardsSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 static const union AffineAnimCmd sGrowingBackHoleTargetAffineCmds[] =
 {
     AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
     AFFINEANIMCMD_FRAME(0, 0, -10, 0x88),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd *const gGrowingBlackHoleTargetAffineAnimTable[] =
 {
     sGrowingBackHoleTargetAffineCmds,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseHoleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SHADOW_BALL,
@@ -4910,16 +5105,19 @@ const struct SpriteTemplate gBlackHoleEclipseHoleSpriteTemplate =
     .affineAnims = gGrowingBlackHoleTargetAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 static const union AffineAnimCmd sShrinkingBlackHoleAffineCmds[] =
 {
     AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
     AFFINEANIMCMD_FRAME(-0x10, -0x10, 0xf6, 8),
     AFFINEANIMCMD_END_ALT(1),
 };
+
 static const union AffineAnimCmd *const gShrinkingBlackHoleAffineAnimTable[] =
 {
     sShrinkingBlackHoleAffineCmds,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseHoleShrinkSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SHADOW_BALL,
@@ -4928,16 +5126,19 @@ const struct SpriteTemplate gBlackHoleEclipseHoleShrinkSpriteTemplate =
     .affineAnims = gShrinkingBlackHoleAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 static const union AffineAnimCmd sGrowingBackHoleAffineCmds[] =
 {
     AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
     AFFINEANIMCMD_FRAME(0, 0, -10, 0x48),
     AFFINEANIMCMD_END,
 };
+
 static const union AffineAnimCmd *const gGrowingBlackHoleAffineAnimTable[] =
 {
     sGrowingBackHoleAffineCmds,
 };
+
 const struct SpriteTemplate gBlackHoleEclipseHoleUserSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SHADOW_BALL,
@@ -4946,6 +5147,7 @@ const struct SpriteTemplate gBlackHoleEclipseHoleUserSpriteTemplate =
     .affineAnims = gGrowingBlackHoleAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gTargetTwinkleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_4,
@@ -4962,17 +5164,20 @@ static const union AffineAnimCmd sTwinkleTackleStarPlayerAffineAnims[] =
     AFFINEANIMCMD_FRAME(0x10, 0x10, 0x0, 0x1e),
     AFFINEANIMCMD_END_ALT(1),
 };
+
 static const union AffineAnimCmd sTwinkleTackleStarOpponentAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(8, 8, 0, 0),
     AFFINEANIMCMD_FRAME(0x20, 0x20, 0, 0xf),
     AFFINEANIMCMD_END_ALT(1),
 };
+
 static const union AffineAnimCmd *const sTwinkleTackleStarAffineAnimTable[] =
 {
     sTwinkleTackleStarPlayerAffineAnims,
     sTwinkleTackleStarOpponentAffineAnims
 };
+
 const struct SpriteTemplate gTwinkleTacklePinkStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_2,
@@ -4981,6 +5186,7 @@ const struct SpriteTemplate gTwinkleTacklePinkStarSpriteTemplate =
     .anims = gGrantingStarsAnimTable,
     .callback = AnimGrantingStars,
 };
+
 const struct SpriteTemplate gTwinkleTacklePinkRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -4989,6 +5195,7 @@ const struct SpriteTemplate gTwinkleTacklePinkRingSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gTwinkleTackleStarGrowSpriteTemplate =
 {
     .tileTag = ANIM_TAG_YELLOW_STAR,
@@ -4997,6 +5204,7 @@ const struct SpriteTemplate gTwinkleTackleStarGrowSpriteTemplate =
     .affineAnims = sTwinkleTackleStarAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gTwinkleTackleTwinkleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_4,
@@ -5005,6 +5213,7 @@ const struct SpriteTemplate gTwinkleTackleTwinkleSpriteTemplate =
     .anims = gAnims_SpinningSparkle,
     .callback = SpriteCB_TwinkleOnBattler,
 };
+
 const struct SpriteTemplate gTwinkleTackleDigStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_YELLOW_STAR,
@@ -5012,6 +5221,7 @@ const struct SpriteTemplate gTwinkleTackleDigStarSpriteTemplate =
     .oam = &gOamData_AffineDouble_ObjNormal_32x32,
     .callback = AnimDirtPlumeParticle,
 };
+
 const struct SpriteTemplate gTwinkleTackleYellowImpactSpriteTemplate =
 {
     .tileTag = ANIM_TAG_IMPACT,
@@ -5020,6 +5230,7 @@ const struct SpriteTemplate gTwinkleTackleYellowImpactSpriteTemplate =
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatBasic,
 };
+
 const struct SpriteTemplate gTwinkleTackleImpactStarsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PAIN_SPLIT,
@@ -5047,6 +5258,7 @@ const struct SpriteTemplate g10MillionVoltBoltYellowFlySpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltShockwaveSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5055,6 +5267,7 @@ const struct SpriteTemplate g10MillionVoltBoltShockwaveSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrbOnTarget,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltRedBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5063,6 +5276,7 @@ const struct SpriteTemplate g10MillionVoltBoltRedBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltBlueBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5071,6 +5285,7 @@ const struct SpriteTemplate g10MillionVoltBoltBlueBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltPinkBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5079,6 +5294,7 @@ const struct SpriteTemplate g10MillionVoltBoltPinkBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltYellowBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5087,6 +5303,7 @@ const struct SpriteTemplate g10MillionVoltBoltYellowBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltGreenBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5095,6 +5312,7 @@ const struct SpriteTemplate g10MillionVoltBoltGreenBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate g10MillionVoltBoltPurpleBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -5122,6 +5340,7 @@ const struct SpriteTemplate gExtremeEvoboostRedChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPinkChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5129,6 +5348,7 @@ const struct SpriteTemplate gExtremeEvoboostPinkChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostIceChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5136,6 +5356,7 @@ const struct SpriteTemplate gExtremeEvoboostIceChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlackChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5143,6 +5364,7 @@ const struct SpriteTemplate gExtremeEvoboostBlackChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlueChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5150,6 +5372,7 @@ const struct SpriteTemplate gExtremeEvoboostBlueChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPurpleChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5157,6 +5380,7 @@ const struct SpriteTemplate gExtremeEvoboostPurpleChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostYellowChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5164,6 +5388,7 @@ const struct SpriteTemplate gExtremeEvoboostYellowChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostGreenChargeUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5171,6 +5396,7 @@ const struct SpriteTemplate gExtremeEvoboostGreenChargeUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gExtremeEvoboostRedChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5178,6 +5404,7 @@ const struct SpriteTemplate gExtremeEvoboostRedChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPinkChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5185,6 +5412,7 @@ const struct SpriteTemplate gExtremeEvoboostPinkChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostIceChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5192,6 +5420,7 @@ const struct SpriteTemplate gExtremeEvoboostIceChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlackChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5199,6 +5428,7 @@ const struct SpriteTemplate gExtremeEvoboostBlackChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlueChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5206,6 +5436,7 @@ const struct SpriteTemplate gExtremeEvoboostBlueChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPurpleChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5213,6 +5444,7 @@ const struct SpriteTemplate gExtremeEvoboostPurpleChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostYellowChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5220,6 +5452,7 @@ const struct SpriteTemplate gExtremeEvoboostYellowChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostGreenChargeCircleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5227,6 +5460,7 @@ const struct SpriteTemplate gExtremeEvoboostGreenChargeCircleSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimExtremeEvoboostCircle,
 };
+
 const struct SpriteTemplate gExtremeEvoboostRedStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5235,6 +5469,7 @@ const struct SpriteTemplate gExtremeEvoboostRedStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPinkStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5243,6 +5478,7 @@ const struct SpriteTemplate gExtremeEvoboostPinkStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostIceStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5251,6 +5487,7 @@ const struct SpriteTemplate gExtremeEvoboostIceStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlackStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5259,6 +5496,7 @@ const struct SpriteTemplate gExtremeEvoboostBlackStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostBlueStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5267,6 +5505,7 @@ const struct SpriteTemplate gExtremeEvoboostBlueStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostPurpleStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5275,6 +5514,7 @@ const struct SpriteTemplate gExtremeEvoboostPurpleStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostYellowStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5283,6 +5523,7 @@ const struct SpriteTemplate gExtremeEvoboostYellowStockpileSpriteTemplate =
     .affineAnims = gStockpileAbsorptionOrbAffineAnimTable,
     .callback = AnimPowerAbsorptionOrb,
 };
+
 const struct SpriteTemplate gExtremeEvoboostGreenStockpileSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5301,6 +5542,7 @@ const struct SpriteTemplate gPulverizingPancakeRedDetectSpriteTemplate =
     .anims = gAnims_SpinningSparkle,
     .callback = AnimSpinningSparkle,
 };
+
 const struct SpriteTemplate gPulverizingPancakeExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -5309,6 +5551,7 @@ const struct SpriteTemplate gPulverizingPancakeExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gPulverizingPancakeYellowRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5328,6 +5571,7 @@ const struct SpriteTemplate gGenesisSupernovaOrbRiseSpriteTemplate =
     .affineAnims = gAffineAnims_Bubble,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gGenesisSupernovaReversalSpriteTemplate =
 {
     .tileTag = ANIM_TAG_POISON_BUBBLE,
@@ -5335,6 +5579,7 @@ const struct SpriteTemplate gGenesisSupernovaReversalSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .callback = AnimReversalOrb,
 };
+
 const struct SpriteTemplate gGenesisSupernovaSpinUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_POISON_BUBBLE,
@@ -5342,6 +5587,7 @@ const struct SpriteTemplate gGenesisSupernovaSpinUpSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gGenesisSupernovaChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5350,6 +5596,7 @@ const struct SpriteTemplate gGenesisSupernovaChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gGenesisSupernovaSuperpowerSpriteTemplate =
 {
     .tileTag = ANIM_TAG_METEOR,
@@ -5358,6 +5605,7 @@ const struct SpriteTemplate gGenesisSupernovaSuperpowerSpriteTemplate =
     .affineAnims = sSpriteAffineAnimTable_GrowingSuperpower,
     .callback = SpriteCB_GrowingSuperpower,
 };
+
 const struct SpriteTemplate gGenesisSupernovaBubbleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_POISON_BUBBLE,
@@ -5367,6 +5615,7 @@ const struct SpriteTemplate gGenesisSupernovaBubbleSpriteTemplate =
     .affineAnims = gAffineAnims_Bubble,
     .callback = AnimBubbleEffect,
 };
+
 const struct SpriteTemplate gGenesisSupernovaExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -5382,36 +5631,43 @@ static const union AffineAnimCmd sArrowRaidFlyStrikePlayerAffineAnims[] =
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd sArrowRaidFlyStrikeOpponentAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidFlyStrikeAffineAnimTable[] =
 {
     sArrowRaidFlyStrikePlayerAffineAnims,
     sArrowRaidFlyStrikeOpponentAffineAnims
 };
+
 static const union AffineAnimCmd sArrowRaidFlyRightAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xc2, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidFlyRightAffineAnimTable[] =
 {
     sArrowRaidFlyRightAffineAnims,
     sArrowRaidFlyRightAffineAnims
 };
+
 static const union AffineAnimCmd sArrowRaidFlyLeftAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x40, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidFlyLeftAffineAnimTable[] =
 {
     sArrowRaidFlyLeftAffineAnims,
     sArrowRaidFlyLeftAffineAnims
 };
+
 const struct SpriteTemplate gArrowRaidExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -5420,6 +5676,7 @@ const struct SpriteTemplate gArrowRaidExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gArrowRaidFlyUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ROUND_SHADOW,
@@ -5428,6 +5685,7 @@ const struct SpriteTemplate gArrowRaidFlyUpSpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate gArrowRaidFlyRightSpriteTemplate =
 {
     .tileTag = ANIM_TAG_BIRD,
@@ -5436,6 +5694,7 @@ const struct SpriteTemplate gArrowRaidFlyRightSpriteTemplate =
     .affineAnims = sArrowRaidFlyRightAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gArrowRaidFlyLeftSpriteTemplate =
 {
     .tileTag = ANIM_TAG_BIRD,
@@ -5444,6 +5703,7 @@ const struct SpriteTemplate gArrowRaidFlyLeftSpriteTemplate =
     .affineAnims = sArrowRaidFlyLeftAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 const struct SpriteTemplate gArrowRaidFlyStrikeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_BIRD,
@@ -5452,15 +5712,18 @@ const struct SpriteTemplate gArrowRaidFlyStrikeSpriteTemplate =
     .affineAnims = sArrowRaidFlyStrikeAffineAnimTable,
     .callback = AnimFlyBallAttack,
 };
+
 static const union AffineAnimCmd sArrowRaidArrowUpAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xa0, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidArrowUpAffineAnimTable[] =
 {
     sArrowRaidArrowUpAffineAnims,
 };
+
 const struct SpriteTemplate gArrowRaidArrowUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5469,15 +5732,18 @@ const struct SpriteTemplate gArrowRaidArrowUpSpriteTemplate =
     .affineAnims = sArrowRaidArrowUpAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
+
 static const union AffineAnimCmd sArrowRaidArrowRightUpAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x75, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidArrowRightUpAffineAnimTable[] =
 {
     sArrowRaidArrowRightUpAffineAnims,
 };
+
 const struct SpriteTemplate gArrowRaidRightUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5486,15 +5752,18 @@ const struct SpriteTemplate gArrowRaidRightUpSpriteTemplate =
     .affineAnims = sArrowRaidArrowRightUpAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidRightDownAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x60, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidRightDownAffineAnimTable[] =
 {
     sArrowRaidRightDownAffineAnims,
 };
+
 const struct SpriteTemplate gArrowRaidRightDownSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5503,15 +5772,18 @@ const struct SpriteTemplate gArrowRaidRightDownSpriteTemplate =
     .affineAnims = sArrowRaidRightDownAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidArrowLeftUpAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xe0, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidLeftUpAffineAnimTable[] =
 {
     sArrowRaidArrowLeftUpAffineAnims,
 };
+
 const struct SpriteTemplate gArrowRaidLeftUpSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5520,15 +5792,18 @@ const struct SpriteTemplate gArrowRaidLeftUpSpriteTemplate =
     .affineAnims = sArrowRaidLeftUpAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidFaceUpLeftAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xe0, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidFaceUpLeftAffineAnimTable[] =
 {
     sArrowRaidFaceUpLeftAffineAnims,
 };
+
 const struct SpriteTemplate gArrowRaidFaceUpLeftSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5537,15 +5812,18 @@ const struct SpriteTemplate gArrowRaidFaceUpLeftSpriteTemplate =
     .affineAnims = sArrowRaidFaceUpLeftAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidArrowFaceRightAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x60, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidArrowFaceRightAffineAnimTable[] =
 {
     sArrowRaidArrowFaceRightAffineAnims
 };
+
 const struct SpriteTemplate gArrowRaidRightSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5554,15 +5832,18 @@ const struct SpriteTemplate gArrowRaidRightSpriteTemplate =
     .affineAnims = sArrowRaidArrowFaceRightAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidLeftDownAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xd0, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidLeftDownAffineAnimTable[] =
 {
     sArrowRaidLeftDownAffineAnims
 };
+
 const struct SpriteTemplate gArrowRaidLeftDownSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5571,15 +5852,18 @@ const struct SpriteTemplate gArrowRaidLeftDownSpriteTemplate =
     .affineAnims = sArrowRaidLeftDownAffineAnimTable,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sArrowRaidOnslaughtAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x30, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sArrowRaidOnslaughtAffineAnimTable[] =
 {
     sArrowRaidOnslaughtAffineAnims
 };
+
 const struct SpriteTemplate gArrowRaidArrowOnslaughtSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPIRIT_ARROW,
@@ -5598,6 +5882,7 @@ const struct SpriteTemplate gMaliciousMoonsaultRedFlySpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate gMaliciousMoonsaultRedBounceSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ROUND_SHADOW,
@@ -5606,6 +5891,7 @@ const struct SpriteTemplate gMaliciousMoonsaultRedBounceSpriteTemplate =
     .affineAnims = gAffineAnims_BounceBallLand,
     .callback = AnimBounceBallLand,
 };
+
 const struct SpriteTemplate gMaliciousMoonsaultRedImpactSpriteTemplate =
 {
     .tileTag = ANIM_TAG_IMPACT,
@@ -5614,6 +5900,7 @@ const struct SpriteTemplate gMaliciousMoonsaultRedImpactSpriteTemplate =
     .affineAnims = gAffineAnims_HitSplat,
     .callback = AnimHitSplatBasic,
 };
+
 const struct SpriteTemplate gMaliciousMoonsaultFireblastSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SMALL_EMBER,
@@ -5622,6 +5909,7 @@ const struct SpriteTemplate gMaliciousMoonsaultFireblastSpriteTemplate =
     .anims = gAnims_FireBlastCross,
     .callback = AnimFireCross,
 };
+
 const struct SpriteTemplate gMaliciousMoonsaultExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -5640,6 +5928,7 @@ const struct SpriteTemplate gOceanOperaSpotlightSpriteTemplate =
     .affineAnims = gSpotlightAffineAnimTable,
     .callback = AnimOceanicOperettaSpotlight,
 };
+
 const struct SpriteTemplate gOceanOperaBlueFlareSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -5648,6 +5937,7 @@ const struct SpriteTemplate gOceanOperaBlueFlareSpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gOceanOperaBlueChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5656,6 +5946,7 @@ const struct SpriteTemplate gOceanOperaBlueChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gOceanOperaBlueRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5664,6 +5955,7 @@ const struct SpriteTemplate gOceanOperaBlueRingSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gOceanOperaMovingOrbsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5671,6 +5963,7 @@ const struct SpriteTemplate gOceanOperaMovingOrbsSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimThrowMistBall,
 };
+
 const struct SpriteTemplate gOceanOperaBlueOrbsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5678,6 +5971,7 @@ const struct SpriteTemplate gOceanOperaBlueOrbsSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
     .callback = AnimBite,
 };
+
 const struct SpriteTemplate gOceanOperaExpandingRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5686,6 +5980,7 @@ const struct SpriteTemplate gOceanOperaExpandingRingSpriteTemplate =
     .affineAnims = gThinRingExpandingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gOceanOperaExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -5694,6 +5989,7 @@ const struct SpriteTemplate gOceanOperaExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gOceanOperaSparkleSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_2,
@@ -5712,6 +6008,7 @@ const struct SpriteTemplate gSplinteredShardsFlySpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate gSplinteredShardsExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -5720,6 +6017,7 @@ const struct SpriteTemplate gSplinteredShardsExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSplinteredShardsRisingSpearSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -5727,15 +6025,18 @@ const struct SpriteTemplate gSplinteredShardsRisingSpearSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .callback = AnimAssistPawprint,
 };
+
 static const union AffineAnimCmd sSplinteredShardsOpponentSteepAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xca, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSplinteredShardsOpponentSteepAffineAnimTable[] =
 {
     sSplinteredShardsOpponentSteepAffineAnims,
 };
+
 const struct SpriteTemplate gSplinteredShardsSplinterOpponentSteepSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -5744,15 +6045,18 @@ const struct SpriteTemplate gSplinteredShardsSplinterOpponentSteepSpriteTemplate
     .affineAnims = sSplinteredShardsOpponentSteepAffineAnimTable,
     .callback = AnimJumpKick,
 };
+
 static const union AffineAnimCmd sSplinteredShardsOpponentShallowAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0xb9, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSplinteredShardsOpponentShallowAffineAnimTable[] =
 {
     sSplinteredShardsOpponentShallowAffineAnims
 };
+
 const struct SpriteTemplate gSplinteredShardsSplinterOpponentShallowSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -5761,15 +6065,18 @@ const struct SpriteTemplate gSplinteredShardsSplinterOpponentShallowSpriteTempla
     .affineAnims = sSplinteredShardsOpponentShallowAffineAnimTable,
     .callback = AnimJumpKick,
 };
+
 static const union AffineAnimCmd sSplinteredShardsPlayerSteepAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x60, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSplinteredShardsPlayerSteepAffineAnimTable[] =
 {
     sSplinteredShardsPlayerSteepAffineAnims
 };
+
 const struct SpriteTemplate gSplinteredShardsSplinterPlayerSteepSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -5778,15 +6085,18 @@ const struct SpriteTemplate gSplinteredShardsSplinterPlayerSteepSpriteTemplate =
     .affineAnims = sSplinteredShardsPlayerSteepAffineAnimTable,
     .callback = AnimJumpKick,
 };
+
 static const union AffineAnimCmd sSplinteredShardsPlayerShallowAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0, 0, 0x50, 1),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSplinteredShardsPlayerShallowAffineAnimTable[] =
 {
     sSplinteredShardsPlayerShallowAffineAnims
 };
+
 const struct SpriteTemplate gSplinteredShardsSplinterPlayerShallowSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
@@ -5805,6 +6115,7 @@ const struct SpriteTemplate gSnuggleForeverEyesSpriteTemplate =
     .anims = gAnims_SpinningSparkle,
     .callback = AnimSpinningSparkle,
 };
+
 const struct SpriteTemplate gSnuggleForeverStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PAIN_SPLIT,
@@ -5812,6 +6123,7 @@ const struct SpriteTemplate gSnuggleForeverStarSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = AnimDizzyPunchDuck,
 };
+
 const struct SpriteTemplate gSnuggleForeverHeartSpriteTemplate =
 {
     .tileTag = ANIM_TAG_MAGENTA_HEART,
@@ -5829,6 +6141,7 @@ const struct SpriteTemplate gClangoorousSoulblazeWhiteFlySpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate gClangoorousSoulblazePurpleSwirlSpriteTemplate =
 {
     .tileTag = ANIM_TAG_WATER_ORB,
@@ -5838,6 +6151,7 @@ const struct SpriteTemplate gClangoorousSoulblazePurpleSwirlSpriteTemplate =
     .affineAnims = gAffineAnims_Whirlpool,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gClangoorousSoulblazePurpleChargeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5846,6 +6160,7 @@ const struct SpriteTemplate gClangoorousSoulblazePurpleChargeSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gClangoorousSoulblazePulseSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5862,6 +6177,7 @@ const struct SpriteTemplate gGuardianOfAlolaFistSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .callback = AnimStompFoot,
 };
+
 const struct SpriteTemplate gGuardianOfAlolaDirtGeyserSpriteTemplate =
 {
     .tileTag = ANIM_TAG_MUD_SAND,
@@ -5877,10 +6193,12 @@ static const union AffineAnimCmd sSearingSunrazeSmashWormholeGrowingAffineAnims[
     AFFINEANIMCMD_FRAME(0, 0, 0xf8, 0x88),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sSearingSunrazeSmashWormholeGrowingAffineAnimTable[] =
 {
     sSearingSunrazeSmashWormholeGrowingAffineAnims
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashGrowWormholeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SHADOW_BALL,
@@ -5889,6 +6207,7 @@ const struct SpriteTemplate gSearingSunrazeSmashGrowWormholeSpriteTemplate =
     .affineAnims = sSearingSunrazeSmashWormholeGrowingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashBlueRingInwardsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5897,6 +6216,7 @@ const struct SpriteTemplate gSearingSunrazeSmashBlueRingInwardsSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashWhiteRingInwardsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5905,6 +6225,7 @@ const struct SpriteTemplate gSearingSunrazeSmashWhiteRingInwardsSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashCrossImpactSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CROSS_IMPACT,
@@ -5912,6 +6233,7 @@ const struct SpriteTemplate gSearingSunrazeSmashCrossImpactSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_32x32,
     .callback = AnimCrossImpact,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashWhiteCutSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CUT,
@@ -5920,6 +6242,7 @@ const struct SpriteTemplate gSearingSunrazeSmashWhiteCutSpriteTemplate =
     .anims = gCuttingSliceAnimTable,
     .callback = AnimCuttingSlice,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashInfernoOrbSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5928,6 +6251,7 @@ const struct SpriteTemplate gSearingSunrazeSmashInfernoOrbSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingChargeOrb,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashShockwaveSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -5936,6 +6260,7 @@ const struct SpriteTemplate gSearingSunrazeSmashShockwaveSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrbOnTarget,
 };
+
 const struct SpriteTemplate gSearingSunrazeSmashRedFlySpriteTemplate =
 {
     .tileTag = ANIM_TAG_ROUND_SHADOW,
@@ -5954,6 +6279,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBlueBuffSpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromBlackBuffSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -5962,6 +6288,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBlackBuffSpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromPurpleBuffSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -5970,6 +6297,7 @@ const struct SpriteTemplate gMoonrazeMaelstromPurpleBuffSpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromBlackSparklesSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARKLE_2,
@@ -5978,6 +6306,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBlackSparklesSpriteTemplate =
     .anims = gGrantingStarsAnimTable,
     .callback = AnimGrantingStars,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromBlueRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5986,6 +6315,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBlueRingSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromWhiteRingSpriteTemplate =
 {
     .tileTag = ANIM_TAG_THIN_RING,
@@ -5994,6 +6324,7 @@ const struct SpriteTemplate gMoonrazeMaelstromWhiteRingSpriteTemplate =
     .affineAnims = gThinRingShrinkingAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromSuperpowerSpriteTemplate =
 {
     .tileTag = ANIM_TAG_METEOR,
@@ -6001,6 +6332,7 @@ const struct SpriteTemplate gMoonrazeMaelstromSuperpowerSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .callback = AnimSuperpowerFireball,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromBlackOrbsSpriteTemplate =
 {
     .tileTag = ANIM_TAG_POISON_BUBBLE,
@@ -6008,6 +6340,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBlackOrbsSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .callback = AnimParticleInVortex,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromBeamSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ORBS,
@@ -6016,6 +6349,7 @@ const struct SpriteTemplate gMoonrazeMaelstromBeamSpriteTemplate =
     .anims = gSolarBeamBigOrbAnimTable,
     .callback = AnimHyperBeamOrb,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -6024,6 +6358,7 @@ const struct SpriteTemplate gMoonrazeMaelstromExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromShockwaveSpriteTemplate =
 {
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
@@ -6032,16 +6367,19 @@ const struct SpriteTemplate gMoonrazeMaelstromShockwaveSpriteTemplate =
     .affineAnims = gAffineAnims_GrowingElectricOrb,
     .callback = AnimGrowingShockWaveOrbOnTarget,
 };
+
 static const union AffineAnimCmd sMoonrazeMaelstromWormholeAffineAnims[] =
 {
     AFFINEANIMCMD_FRAME(0x100, 0x100, 0, 0),
     AFFINEANIMCMD_FRAME(0, 0, 0xf6, 0x88),
     AFFINEANIMCMD_END
 };
+
 static const union AffineAnimCmd *const sMoonrazeMaelstromWormholeAffineAnimTable[] =
 {
     sMoonrazeMaelstromWormholeAffineAnims
 };
+
 const struct SpriteTemplate gMoonrazeMaelstromWormholeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SHADOW_BALL,
@@ -6060,6 +6398,7 @@ const struct SpriteTemplate gLightThatBurnsTheSkyGreenSparkSpriteTemplate =
     .affineAnims = gAffineAnims_FlashingSpark,
     .callback = AnimSparkElectricityFlashing,
 };
+
 const struct SpriteTemplate gLightThatBurnsTheSkyBlastBurnSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FIRE_PLUME,
@@ -6068,6 +6407,7 @@ const struct SpriteTemplate gLightThatBurnsTheSkyBlastBurnSpriteTemplate =
     .anims = gAnims_FirePlume,
     .callback = AnimBlastBurnTargetPlume,
 };
+
 const struct SpriteTemplate gLightThatBurnsTheSkyExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION_2,
@@ -6086,6 +6426,7 @@ const struct SpriteTemplate gSoulStealBlackFlySpriteTemplate =
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
+
 const struct SpriteTemplate gSoulStealIceBuffSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FOCUS_ENERGY,
@@ -6094,6 +6435,7 @@ const struct SpriteTemplate gSoulStealIceBuffSpriteTemplate =
     .anims = gEndureEnergyAnimTable,
     .callback = AnimEndureEnergy,
 };
+
 const struct SpriteTemplate gSoulStealBlueFistSpriteTemplate =
 {
     .tileTag = ANIM_TAG_HANDS_AND_FEET,
@@ -6102,6 +6444,7 @@ const struct SpriteTemplate gSoulStealBlueFistSpriteTemplate =
     .anims = gAnims_HandsAndFeet,
     .callback = AnimJumpKick,
 };
+
 const struct SpriteTemplate gSoulStealBlueStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PAIN_SPLIT,
@@ -6110,6 +6453,7 @@ const struct SpriteTemplate gSoulStealBlueStarSpriteTemplate =
     .affineAnims = gAffineAnims_Bite,
     .callback = AnimSoulStealingStar,
 };
+
 const struct SpriteTemplate gSoulStealBlueParalyzeSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SPARK_2,
@@ -6117,6 +6461,7 @@ const struct SpriteTemplate gSoulStealBlueParalyzeSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .callback = AnimElectricity,
 };
+
 const struct SpriteTemplate gSoulStealBlastburnSpriteTemplate =
 {
     .tileTag = ANIM_TAG_FIRE_PLUME,
@@ -6125,6 +6470,7 @@ const struct SpriteTemplate gSoulStealBlastburnSpriteTemplate =
     .anims = gAnims_FirePlume,
     .callback = AnimFirePlume,
 };
+
 const struct SpriteTemplate gSoulStealExplosionSpriteTemplate =
 {
     .tileTag = ANIM_TAG_EXPLOSION,
@@ -6133,6 +6479,7 @@ const struct SpriteTemplate gSoulStealExplosionSpriteTemplate =
     .anims = gExplosionAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
+
 const struct SpriteTemplate gSoulStealZStarSpriteTemplate =
 {
     .tileTag = ANIM_TAG_SNORE_Z,
