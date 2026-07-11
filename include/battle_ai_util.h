@@ -255,7 +255,7 @@ bool32 AI_CanGiveFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 bool32 AI_CanBeInfatuated(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility);
 bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof);
 bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move);
-bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 considerWrapDamage);
+bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum AIConsiderWrapDamage considerWrapDamage);
 bool32 IsWakeupTurn(enum BattlerId battler);
 
 // ability logic
