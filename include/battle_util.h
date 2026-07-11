@@ -138,6 +138,19 @@ struct BattleCalcValues
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };
 
+struct SetEffect
+{
+    const u8 *script;
+    const struct AdditionalEffect *additionalEffect;
+
+    enum MoveEffect moveEffect:8;
+    enum BattlerId effectBattler:3;
+
+    u16 primary:1;
+    u16 certain:1;
+    u16 onSide:1;
+};
+
 enum SleepClauseBlock
 {
     NOT_BLOCKED_BY_SLEEP_CLAUSE,

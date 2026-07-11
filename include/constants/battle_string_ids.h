@@ -841,7 +841,7 @@ enum ProtectLikeUsedStringID
 };
 
 // gBrokeProtectionStringIds
-enum __attribute__((packed)) BrokeProtectionStringID
+enum BrokeProtectionStringID
 {
     B_MSG_FEINT,
     B_MSG_BROKE_THROUGH_PROTECT,
@@ -1151,7 +1151,7 @@ enum StartingStatusStringID
 };
 
 // gWrappedStringIds
-enum __attribute__((packed)) WrappedStringID
+enum WrappedStringID
 {
     B_MSG_WRAPPED_BIND,
     B_MSG_WRAPPED_WRAP,

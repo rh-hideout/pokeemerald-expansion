@@ -404,7 +404,7 @@ SINGLE_BATTLE_TEST("Rage Fist counter will be updated correctly after absorb mov
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GIGA_DRAIN) == EFFECT_ABSORB);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_GIGA_DRAIN, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

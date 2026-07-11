@@ -368,7 +368,6 @@ static void Cmd_waitmessage(void);
 static void Cmd_printfromtable(void);
 static void Cmd_setadditionaleffects(void);
 static void Cmd_seteffectprimary(void);
-static void Cmd_seteffectsecondary(void);
 static void Cmd_clearvolatile(void);
 static void Cmd_tryfaintmon(void);
 static void Cmd_dofaintanimation(void);
@@ -584,7 +583,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_PRINTFROMTABLE]                        = Cmd_printfromtable,
     [B_SCR_OP_SETADDITIONALEFFECTS]                  = Cmd_setadditionaleffects,
     [B_SCR_OP_SETEFFECTPRIMARY]                      = Cmd_seteffectprimary,
-    [B_SCR_OP_SETEFFECTSECONDARY]                    = Cmd_seteffectsecondary,
     [B_SCR_OP_CLEARVOLATILE]                         = Cmd_clearvolatile,
     [B_SCR_OP_TRYFAINTMON]                           = Cmd_tryfaintmon,
     [B_SCR_OP_DOFAINTANIMATION]                      = Cmd_dofaintanimation,
@@ -815,6 +813,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_37]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1885,16 +1884,34 @@ static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, e
     return FALSE;
 }
 
-void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
+void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
-    enum Ability abilities[MAX_BATTLERS_COUNT] = {ABILITY_NONE};
-    abilities[battlerAtk] = GetBattlerAbility(battlerAtk);
-    if (battlerAtk != effectBattler)
-        abilities[effectBattler] = GetBattlerAbility(effectBattler);
+    struct BattleCalcValues cv = {0};
+    cv.battlerAtk = battlerAtk;
+    cv.battlerDef = gBattlerTarget;
+    cv.move = gCurrentMove; // Should be set to None eventually. When Cmd_seteffectprimary is gone
+    cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
+    cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+
+    struct SetEffect se = {0};
+    se.moveEffect = moveEffect;
+    se.script = battleScript;
+    se.effectBattler = effectBattler;
+    se.primary = effectFlags & EFFECT_PRIMARY;
+    se.certain = effectFlags & EFFECT_CERTAIN;
+
+    SetMoveEffect(&cv, &se);
+}
+
+void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    enum BattlerId effectBattler = se->effectBattler;
+    enum BattlerId battlerAtk = cv->battlerAtk;
+
+    const u8 *battleScript = se->script;
+    enum MoveEffect moveEffect = se->moveEffect;
 
     s32 i;
-    bool32 primary = effectFlags & EFFECT_PRIMARY;
-    bool32 certain = effectFlags & EFFECT_CERTAIN;
     bool32 affectsUser = (battlerAtk == effectBattler);
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
@@ -1908,10 +1925,10 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     gBattleScripting.battler = battlerAtk;
     gEffectBattler = effectBattler;
 
-    if (!primary && !affectsUser && IsMoveEffectBlockedByTarget(abilities[effectBattler]))
+    if (!se->primary && !affectsUser && IsMoveEffectBlockedByTarget(cv->abilities[effectBattler]))
         moveEffect = MOVE_EFFECT_NONE;
-    else if (!primary
-          && IsSheerForceAffected(gCurrentMove, abilities[battlerAtk])
+    else if (!se->primary
+          && IsSheerForceAffected(gCurrentMove, cv->abilities[battlerAtk])
           && !(moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[battlerAtk].commanderSpecies != SPECIES_NONE))
         moveEffect = MOVE_EFFECT_NONE;
     else if (!IsBattlerAlive(effectBattler) && !IgnoreTargetingForMoveEffect(moveEffect))
@@ -1931,15 +1948,15 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (IsSafeguardProtected(battlerAtk, effectBattler, abilities[battlerAtk]) && !primary)
+        if (IsSafeguardProtected(battlerAtk, effectBattler, cv->abilities[battlerAtk]) && !se->primary)
         {
             gBattlescriptCurrInstr = battleScript;
         }
         else if (CanSetNonVolatileStatus(
                     battlerAtk,
                     effectBattler,
-                    abilities[battlerAtk],
-                    abilities[effectBattler],
+                    cv->abilities[battlerAtk],
+                    cv->abilities[effectBattler],
                     moveEffect,
                     CHECK_TRIGGER))
         {
@@ -1963,9 +1980,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_FLINCH:
-        if (abilities[effectBattler] == ABILITY_INNER_FOCUS)
+        if (cv->abilities[effectBattler] == ABILITY_INNER_FOCUS)
         {
-            if (primary || certain)
+            if (se->primary || se->certain)
             {
                 gLastUsedAbility = ABILITY_INNER_FOCUS;
                 gBattlerAbility = effectBattler;
@@ -2027,7 +2044,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
             }
             else
+            {
                 gBattlescriptCurrInstr = battleScript;
+            }
         }
         else
         {
@@ -2042,10 +2061,38 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         gBattlescriptCurrInstr = battleScript;
         break;
+    case MOVE_EFFECT_ABSORB:
+        if (gBattleStruct->moveDamage[cv->battlerDef] > 0
+         && IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES)
+         && IsBattlerAlive(battlerAtk))
+        {
+            u32 absorbPercentage = se->additionalEffect->argument.absorbPercentage;
+            s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
+            healAmount = GetDrainedBigRootHp(battlerAtk, healAmount);
+            gEffectBattler = battlerAtk;
+
+            if (cv->abilities[cv->battlerDef] == ABILITY_LIQUID_OOZE
+             && (GetMoveEffect(gCurrentMove)!= EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
+            {
+                SetPassiveDamageAmount(battlerAtk, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
+            }
+            else if (!IsBattlerAtMaxHp(effectBattler) || GetConfig(B_ABSORB_MESSAGE) < GEN_5)
+            {
+                SetHealAmount(battlerAtk, healAmount);
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+                BattleScriptPush(battleScript);
+                gBattlescriptCurrInstr = BattleScript_EffectAbsorb;
+            }
+        }
+        break;
     case MOVE_EFFECT_RANDOM_FROM_LIST:
     {
         // Better to pass the additional effect as an argument but for now that works
-        const enum MoveEffect *sRandomFromListEffects = gMovesInfo[SanitizeMoveId(gCurrentMove)].additionalEffects[gBattleStruct->additionalEffectsCounter].randomMoveEffects;
+        const enum MoveEffect *sRandomFromListEffects = se->additionalEffect->argument.randomMoveEffects;
         u32 validEffectCount = 0;
 
         while (validEffectCount < MAX_RANDOM_ADDITIONAL_EFFECTS && sRandomFromListEffects[validEffectCount] != MOVE_EFFECT_NONE)
@@ -2062,7 +2109,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         if (sRandomFromListEffects[chosenMoveEffect] == MOVE_EFFECT_BURN)
             gBattleStruct->triAttackBurn = TRUE;
 
-        SetMoveEffect(battlerAtk, effectBattler, sRandomFromListEffects[chosenMoveEffect], battleScript, effectFlags);
+        se->moveEffect = sRandomFromListEffects[chosenMoveEffect];
+        SetMoveEffect(cv, se);
         break;
     }
     case MOVE_EFFECT_WRAP:
@@ -2076,6 +2124,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             gBattleMons[effectBattler].volatiles.wrapped = TRUE;
             gBattleMons[effectBattler].volatiles.wrappedMove = gCurrentMove;
             gBattleMons[effectBattler].volatiles.wrappedBy = battlerAtk;
+            gBattleCommunication[MULTISTRING_CHOOSER] = se->additionalEffect->argument.wrapped;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
         }
@@ -2083,22 +2132,19 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_STAT_PLUS:
     case MOVE_EFFECT_STAT_MINUS:
     {
-        // Better to pass the additional effect as an argument but for now that works
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-
         for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
         {
             enum Stat stat = sAccurateStatOrder[i];
-            s32 stage = GetStatStage(stat, effect);
+            s32 stage = GetStatStage(stat, se->additionalEffect);
 
             if (stage == 0)
                 continue;
 
-            if (effect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+            if (se->additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
                 stage = -1 * stage;
 
             SetStatChange(effectBattler, stat, stage);
-            if (effectFlags & EFFECT_ON_SIDE)
+            if (se->additionalEffect->onSide)
                 SetStatChange(BATTLE_PARTNER(effectBattler), stat, stage);
         }
 
@@ -2107,7 +2153,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         break;
     }
     case MOVE_EFFECT_RECHARGE:
-        if (B_SKIP_RECHARGE == GEN_1 && !IsBattlerAlive(gBattlerTarget))  // Skip recharge if gen 1 and foe is KO'd
+        if (B_SKIP_RECHARGE == GEN_1 && !IsBattlerAlive(cv->battlerDef))  // Skip recharge if gen 1 and foe is KO'd
             break;
 
         gBattleMons[effectBattler].volatiles.rechargeTimer = 2;
@@ -2201,6 +2247,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         if (i)
         {
+            gBattleCommunication[MULTISTRING_CHOOSER] = se->additionalEffect->argument.brokeProtect;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectFeint;
         }
@@ -2224,7 +2271,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_INCINERATE:
         if ((gItemsInfo[gBattleMons[effectBattler].item].pocket == POCKET_BERRIES
           || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(effectBattler) == HOLD_EFFECT_GEMS))
-         && abilities[effectBattler] != ABILITY_STICKY_HOLD)
+         && cv->abilities[effectBattler] != ABILITY_STICKY_HOLD)
         {
             gLastUsedItem = gBattleMons[effectBattler].item;
             gBattleMons[effectBattler].item = ITEM_NONE;
@@ -2243,7 +2290,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             gBattlescriptCurrInstr = battleScript;
         }
         else if (GetItemPocket(gBattleMons[effectBattler].item) == POCKET_BERRIES
-            && abilities[effectBattler] != ABILITY_STICKY_HOLD)
+            && cv->abilities[effectBattler] != ABILITY_STICKY_HOLD)
         {
             // target loses their berry
             gLastUsedItem = gBattleMons[effectBattler].item;
@@ -2359,7 +2406,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             }
             else
             {
-                SetMoveEffect(battlerAtk, effectBattler, moveEffect, battleScript, effectFlags);
+                se->moveEffect = moveEffect;
+                SetMoveEffect(cv, se);
             }
         }
         break;
@@ -2503,7 +2551,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_FLING:
-        if (CanFling(battlerAtk, abilities[battlerAtk]) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
+        if (CanFling(battlerAtk, cv->abilities[battlerAtk]) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
         {
             enum Item item = ITEM_NONE;
 
@@ -2522,7 +2570,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
-            if (IsMoveEffectBlockedByTarget(abilities[effectBattler]))
+            if (IsMoveEffectBlockedByTarget(cv->abilities[effectBattler]))
             {
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
@@ -2538,23 +2586,35 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_RemoveItem;
+
+            struct SetEffect flingEffect = {0};
+            flingEffect.script = gBattlescriptCurrInstr;
+            flingEffect.effectBattler = effectBattler;
+
             switch (holdEffect)
             {
             case HOLD_EFFECT_FLAME_ORB:
-                SetMoveEffect(battlerAtk, effectBattler, MOVE_EFFECT_BURN, gBattlescriptCurrInstr, NO_FLAGS);
+                flingEffect.moveEffect = MOVE_EFFECT_BURN;
+                SetMoveEffect(cv, &flingEffect);
                 break;
             case HOLD_EFFECT_TOXIC_ORB:
-                SetMoveEffect(battlerAtk, effectBattler, MOVE_EFFECT_TOXIC, gBattlescriptCurrInstr, NO_FLAGS);
+                flingEffect.moveEffect = MOVE_EFFECT_TOXIC;
+                SetMoveEffect(cv, &flingEffect);
                 break;
             case HOLD_EFFECT_LIGHT_BALL:
-                SetMoveEffect(battlerAtk, effectBattler, MOVE_EFFECT_PARALYSIS, gBattlescriptCurrInstr, NO_FLAGS);
+                flingEffect.moveEffect = MOVE_EFFECT_PARALYSIS;
+                SetMoveEffect(cv, &flingEffect);
                 break;
             case HOLD_EFFECT_TYPE_POWER:
                 if (GetItemSecondaryId(item) == TYPE_POISON)
-                    SetMoveEffect(battlerAtk, effectBattler, MOVE_EFFECT_POISON, gBattlescriptCurrInstr, NO_FLAGS);
+                {
+                    flingEffect.moveEffect = MOVE_EFFECT_POISON;
+                    SetMoveEffect(cv, &flingEffect);
+                }
                 break;
             case HOLD_EFFECT_FLINCH:
-                SetMoveEffect(battlerAtk, effectBattler, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
+                flingEffect.moveEffect = MOVE_EFFECT_FLINCH;
+                SetMoveEffect(cv, &flingEffect);
                 break;
             case HOLD_EFFECT_MENTAL_HERB:
             case HOLD_EFFECT_WHITE_HERB:
@@ -2752,7 +2812,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         break;
     case MOVE_EFFECT_YAWN_FOE:
         if (gBattleMons[effectBattler].volatiles.yawn == 0
-         && CanBeSlept(battlerAtk, effectBattler, abilities[effectBattler], BLOCKED_BY_SLEEP_CLAUSE)
+         && CanBeSlept(battlerAtk, effectBattler, cv->abilities[effectBattler], BLOCKED_BY_SLEEP_CLAUSE)
          && RandomPercentage(RNG_G_MAX_SNOOZE, 50))
         {
             gBattleMons[effectBattler].volatiles.yawn = 2;
@@ -2837,7 +2897,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     {
         u32 argStatus = GetMoveEffectArg_Status(gCurrentMove);
         if ((gBattleMons[effectBattler].status1 & argStatus)
-         && (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(abilities[effectBattler])))
+         && (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(cv->abilities[effectBattler])))
         {
             gBattleScripting.battler = effectBattler;
             gBattleMons[effectBattler].status1 &= ~(argStatus);
@@ -2874,7 +2934,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     }
     case MOVE_EFFECT_BREAK_SCREEN:
         if (B_BRICK_BREAK >= GEN_4)
-            i = GetBattlerSide(gBattlerTarget); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
+            i = GetBattlerSide(cv->battlerDef); // From Gen 4 onwards, Brick Break can remove screens on the user's side if used on an ally
         else
             i = GetBattlerSide(battlerAtk) ^ BIT_SIDE;
 
@@ -2883,7 +2943,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             bool32 failed;
 
             if (B_BRICK_BREAK >= GEN_5)
-                failed = gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT;
+                failed = gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_NO_EFFECT;
             else
                 failed = FALSE;
 
@@ -2936,7 +2996,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         if (GetConfig(B_BEAT_UP) >= GEN_5) // Gen5+ don't print any custom message on attack
             break;
 
-        if (!IsBattlerAlive(gBattlerTarget))
+        if (!IsBattlerAlive(cv->battlerDef))
         {
             gMultiHitCounter = 0;
             gBattlescriptCurrInstr = BattleScript_MoveEnd;
@@ -3017,6 +3077,15 @@ static void Cmd_setadditionaleffects(void)
 
     if (!IsBattlerUnaffectedByMove(gBattlerTarget))
     {
+        struct BattleCalcValues cv = {0};
+        cv.battlerAtk = gBattlerAttacker;
+        cv.battlerDef = gBattlerTarget;
+        cv.move = gCurrentMove;
+        cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
+        cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+
+        struct SetEffect se = {0};
+
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
         SetToxicChainPriority();
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
@@ -3027,25 +3096,19 @@ static void Cmd_setadditionaleffects(void)
             // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(additionalEffect))
             {
-                percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+                percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect);
 
                 // Activate effect if it's primary (chance == 0) or if RNGesus says so
                 if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
                 {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
-
-                    enum SetMoveEffectFlags flags = NO_FLAGS;
-                    if (percentChance == 0)       flags |= EFFECT_PRIMARY;
-                    if (percentChance >= 100)     flags |= EFFECT_CERTAIN;
-                    if (additionalEffect->onSide) flags |= EFFECT_ON_SIDE;
-
-                    SetMoveEffect(
-                        gBattlerAttacker,
-                        additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
-                        additionalEffect->moveEffect,
-                        gBattlescriptCurrInstr,
-                        flags
-                    );
+                    se.additionalEffect = additionalEffect;
+                    se.moveEffect = additionalEffect->moveEffect;
+                    se.script = gBattlescriptCurrInstr;
+                    se.effectBattler = additionalEffect->self ? gBattlerAttacker : gBattlerTarget;
+                    se.primary = percentChance == 0;
+                    se.certain = percentChance >= 100;
+                    se.onSide = additionalEffect->onSide; // TODO
+                    SetMoveEffect(&cv, &se);
                 }
             }
 
@@ -3066,17 +3129,7 @@ static void Cmd_seteffectprimary(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum BattlerId effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    SetMoveEffect(battler, effectBattler, gBattleScripting.moveEffect, gBattlescriptCurrInstr, EFFECT_PRIMARY);
-}
-
-static void Cmd_seteffectsecondary(void)
-{
-    CMD_ARGS(u8 battler, u8 effectBattler);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum BattlerId effectBattler = GetBattlerForBattleScript(cmd->effectBattler);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-    SetMoveEffect(battler, effectBattler, gBattleScripting.moveEffect, gBattlescriptCurrInstr, NO_FLAGS);
+    SetMoveEffectHelper(battler, effectBattler, gBattleScripting.moveEffect, gBattlescriptCurrInstr, EFFECT_PRIMARY);
 }
 
 static void Cmd_clearvolatile(void)
@@ -10008,7 +10061,7 @@ static void Cmd_setnonvolatilestatus(void)
     {
     case TRIGGER_ON_ABILITY:
         if (gBattleScripting.moveEffect >= MOVE_EFFECT_CONFUSION)
-            SetMoveEffect(gBattleScripting.battler, gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, EFFECT_PRIMARY);
+            SetMoveEffectHelper(gBattleScripting.battler, gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, EFFECT_PRIMARY);
         else
             SetNonVolatileStatus(gBattleScripting.battler, gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_ABILITY);
         break;
