@@ -30,6 +30,9 @@ void BXPY_SetupAIData()
     BXPY_SetupBattlers();
     BXPY_SetupAIFlags();
     InitializeStartingStatus();
+    gFieldStatuses = BXPY_GetStartingFieldStatus();
+    gBattleWeather = BXPY_GetWeather();
+    gFieldTimers.terrain = BXPY_GetTerrain();
 }
 
 void BXPY_SetupBattlers()
@@ -105,10 +108,13 @@ void BXPY_InitializeAIStructs(void)
 
 void BXPY_ClearAIData(void)
 {
-    // Zero all AI globals used as a safety net
+    // Zero all AI globals
     gBattlersCount = 0;
     gBattleTypeFlags = 0;
+    gFieldStatuses = 0;
+    gBattleWeather = 0;
     memset(gBattlerPositions, 0, sizeof(gBattlerPositions));
+    memset(&gFieldTimers, 0, sizeof(gFieldTimers));
     ResetStartingStatuses();
     FREE_AND_SET_NULL(gAiThinkingStruct);
     FREE_AND_SET_NULL(gAiLogicData);
@@ -227,10 +233,7 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 {
     enum Move move;
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
-    u32 weather = BXPY_GetWeather();
-    enum BattleTerrain terrain = BXPY_GetTerrain();
-    gFieldStatuses = BXPY_GetStartingFieldStatus();
-
+    
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         move = gBattleMons[battlerAtk].moves[moveIndex];
@@ -238,11 +241,9 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
             continue;
         struct SimulatedDamage dmg = {0};
         uq4_12_t effectiveness = Q_4_12(0.0);
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, terrain);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, BXPY_GetWeather(), BXPY_GetTerrain());
         gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
     }
-
-    gFieldStatuses = 0;
 }
 
 static bool32 BXPY_CanCandidateWin1v1(enum BattlerId battler, enum BattlerId opposingBattler)
