@@ -3652,16 +3652,27 @@ bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
     return FALSE;   // don't try to flinch
 }
 
-bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 considerWrapDamage)
 {
+    bool32 shouldTrap = FALSE;
+    bool32 wrapState = gBattleMons[battlerDef].volatiles.wrapped;
+
     if (AI_CanBattlerEscape(battlerDef))
         return FALSE;
 
     if (IsBattlerTrapped(battlerAtk, battlerDef))
         return FALSE;
+    
+    if (considerWrapDamage)
+        gBattleMons[battlerDef].volatiles.wrapped = TRUE;
 
     if (BattlerWillFaintFromSecondaryDamage(battlerDef, gAiLogicData->abilities[battlerDef]))
-        return TRUE;    // battler is taking secondary damage with low HP
+        shouldTrap = TRUE;    // battler is taking secondary damage with low HP
+
+    gBattleMons[battlerDef].volatiles.wrapped = wrapState;
+
+    if (shouldTrap)
+        return TRUE;
 
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_STALL)
     {

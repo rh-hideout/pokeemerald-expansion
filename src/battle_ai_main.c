@@ -4535,7 +4535,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_MEAN_LOOK:
-        if (ShouldTrap(battlerAtk, battlerDef, move))
+        if (ShouldTrap(battlerAtk, battlerDef, move, FALSE))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_FOCUS_ENERGY:
@@ -5369,7 +5369,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_FAIRY_LOCK:
-        if (ShouldTrap(battlerAtk, battlerDef, move))
+        if (ShouldTrap(battlerAtk, battlerDef, move, FALSE))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_QUASH:
@@ -5794,7 +5794,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 }
                 break;
             case MOVE_EFFECT_WRAP:
-                if (!HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
+                if (!HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move, TRUE))
                     ADJUST_SCORE(BEST_EFFECT);
                 break;
             case MOVE_EFFECT_SALT_CURE:
