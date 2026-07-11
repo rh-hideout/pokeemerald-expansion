@@ -2381,6 +2381,7 @@ BattleScript_HealTarget::
 	attackanimation
 	waitanimation
 BattleScript_HealTargetContinue::
+	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
 	printstring STRINGID_PKMNREGAINEDHEALTH

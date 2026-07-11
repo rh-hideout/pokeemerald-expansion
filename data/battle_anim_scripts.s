@@ -135,8 +135,6 @@ gBattleAnimMove_Roost::
 	createsprite gFallingFeatherSpriteTemplate, ANIM_ATTACKER, 0, 0, -16, 96, 2, 104, 11304, 32, 1
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
-	call HealingEffect
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_Gravity::
@@ -9068,7 +9066,6 @@ gBattleAnimMove_ShoreUp::
 	createvisualtask AnimTask_LoadSandstormBackground, 5, 0
 	delay 16
 	create_flying_sand_crescents anim_battler=ANIM_ATTACKER, unknown=0
-	call HealingEffect
 	waitforvisualfinish
 	end
 
@@ -21887,8 +21884,6 @@ gBattleAnimMove_Moonlight::
 	delay 20
 	createvisualtask AnimTask_MoonlightEndFade, 2
 	waitforvisualfinish
-	call HealingEffect
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_ExtremeSpeed::
@@ -24282,8 +24277,6 @@ gBattleAnimMove_Synthesis::
 	unloadspritegfx ANIM_TAG_SPARKLE_2
 	unloadspritepal ANIM_TAG_SPARKLE_2
 	delay 1
-	call HealingEffect
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_Toxic::
@@ -25962,7 +25955,6 @@ gBattleAnimMove_SoftBoiled::
 	setarg 7, -1
 	waitforvisualfinish
 	clearmonbg ANIM_ATK_PARTNER
-	call HealingEffect2
 	end
 
 gBattleAnimMove_HealBell::
@@ -26555,7 +26547,6 @@ gBattleAnimMove_MorningSun::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 3, 12, 0, RGB_WHITE
 	waitforvisualfinish
 	waitsound
-	call HealingEffect
 	end
 MorningSunStar:
 	createsprite gGreenStarSpriteTemplate, ANIM_ATTACKER, 2, 30, 640
