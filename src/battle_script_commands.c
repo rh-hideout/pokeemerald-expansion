@@ -1858,6 +1858,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_RAINBOW:
     case MOVE_EFFECT_SEA_OF_FIRE:
     case MOVE_EFFECT_SWAMP:
+    case MOVE_EFFECT_ABSORB:
         return TRUE;
     default:
         return FALSE;
@@ -2067,20 +2068,26 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
          && IsBattlerAlive(battlerAtk))
         {
             u32 absorbPercentage = se->additionalEffect->argument.absorbPercentage;
+
+            assertf(absorbPercentage != 0, "Missing absorb percentage for %S", gMovesInfo[gCurrentMove].name)
+            {
+                return;
+            }
+
             s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
             healAmount = GetDrainedBigRootHp(battlerAtk, healAmount);
             gEffectBattler = battlerAtk;
+            gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
 
             if (cv->abilities[cv->battlerDef] == ABILITY_LIQUID_OOZE
              && (GetMoveEffect(gCurrentMove)!= EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
             {
                 SetPassiveDamageAmount(battlerAtk, healAmount);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-                gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
             }
-            else if (!IsBattlerAtMaxHp(effectBattler) || GetConfig(B_ABSORB_MESSAGE) < GEN_5)
+            else if (!IsBattlerAtMaxHp(battlerAtk) || GetConfig(B_ABSORB_MESSAGE) < GEN_5)
             {
                 SetHealAmount(battlerAtk, healAmount);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;

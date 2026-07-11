@@ -3245,6 +3245,7 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[cv->battlerAtk];
             healAmount = GetDrainedBigRootHp(cv->battlerAtk, healAmount);
+            gEffectBattler = cv->battlerAtk;
 
             if (cv->abilities[cv->battlerDef] == ABILITY_LIQUID_OOZE)
             {

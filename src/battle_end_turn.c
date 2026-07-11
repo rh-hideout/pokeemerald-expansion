@@ -476,35 +476,43 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
 static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
 {
     bool32 effect = FALSE;
-    enum BattlerId drainedBattler = gBattleMons[battler].volatiles.leechSeed;
+    enum BattlerId drainedBattler = battler;
+    enum BattlerId receiverBattler = gBattleMons[drainedBattler].volatiles.leechSeed;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (drainedBattler
-     && IsBattlerPresent(drainedBattler - 1)
-     && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+    if (receiverBattler == 0)
+        return effect;
+
+    receiverBattler = receiverBattler - 1;
+
+    if (IsBattlerPresent(drainedBattler)
+     && IsBattlerPresent(receiverBattler)
+     && !IsAbilityAndRecord(drainedBattler, GetBattlerAbility(drainedBattler), ABILITY_MAGIC_GUARD))
     {
-        gBattlerTarget = drainedBattler - 1; // leech seed receiver
-        gBattleScripting.animArg1 = gBattlerTarget;
-        gBattleScripting.animArg2 = gBattlerAttacker;
-        s32 drainAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-        s32 healAmount = GetDrainedBigRootHp(gBattlerTarget, drainAmount);
-        if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
+        gBattlerAttacker = receiverBattler;
+        gBattlerAbility = gBattleScripting.battler = drainedBattler;
+        gBattleScripting.animArg1 = receiverBattler;
+        gBattleScripting.animArg2 = drainedBattler;
+
+        s32 drainAmount = GetNonDynamaxMaxHP(drainedBattler) / 8;
+        s32 healAmount = GetDrainedBigRootHp(receiverBattler, drainAmount);
+
+        if (GetBattlerAbility(drainedBattler) == ABILITY_LIQUID_OOZE)
         {
-            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
-            SetPassiveDamageAmount(gBattlerTarget, healAmount);
+            SetPassiveDamageAmount(drainedBattler, drainAmount);
+            SetPassiveDamageAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
-        else if (gBattleMons[gBattlerTarget].volatiles.healBlock)
+        else if (gBattleMons[receiverBattler].volatiles.healBlock)
         {
             BattleScriptCall(BattleScript_LeechSeedTurnDrainHealBlock);
         }
         else
         {
-            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
-            SetHealAmount(gBattlerTarget, healAmount);
+            SetPassiveDamageAmount(drainedBattler, drainAmount);
+            SetHealAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_DRAIN;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainRecovery);
         }
