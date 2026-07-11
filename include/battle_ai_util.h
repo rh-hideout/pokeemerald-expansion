@@ -73,6 +73,12 @@ enum ConsiderPriority
     CONSIDER_PRIORITY,
 };
 
+enum AIConsiderWrapDamage
+{
+    DONT_CONSIDER_WRAP_DAMAGE,
+    CONSIDER_WRAP_DAMAGE,
+};
+
 static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)
 {
     return move == MOVE_NONE

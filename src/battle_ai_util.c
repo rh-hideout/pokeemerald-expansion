@@ -3654,7 +3654,7 @@ bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
     return FALSE;   // don't try to flinch
 }
 
-bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 considerWrapDamage)
+bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum AIConsiderWrapDamage considerWrapDamage)
 {
     bool32 shouldTrap = FALSE;
     bool32 wrapState = gBattleMons[battlerDef].volatiles.wrapped;
@@ -3664,8 +3664,9 @@ bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Mov
 
     if (IsBattlerTrapped(battlerAtk, battlerDef))
         return FALSE;
-    
-    if (considerWrapDamage)
+
+    // Consider Wrap Damage when trying to trap with Wrap
+    if (considerWrapDamage == CONSIDER_WRAP_DAMAGE)
         gBattleMons[battlerDef].volatiles.wrapped = TRUE;
 
     if (BattlerWillFaintFromSecondaryDamage(battlerDef, gAiLogicData->abilities[battlerDef]))
