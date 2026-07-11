@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe")
 
 SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting Shot to switch out")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_VOLT_SWITCH; }
     PARAMETRIZE { move = MOVE_U_TURN; }
     PARAMETRIZE { move = MOVE_PARTING_SHOT; }
@@ -47,11 +47,11 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
 
 DOUBLE_BATTLE_TEST("Pursuit doesn't attack a foe using Teleport / Baton Pass to switch out")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_TELEPORT; }
     PARAMETRIZE { move = MOVE_BATON_PASS; }
     GIVEN {
-        WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(B_TELEPORT_BEHAVIOR, GEN_8);
         ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
         ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
@@ -116,8 +116,9 @@ SINGLE_BATTLE_TEST("Pursuit ignores accuracy checks when attacking a switching t
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         PLAYER(SPECIES_GLACEON) { Ability(ABILITY_SNOW_CLOAK); }
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -534,18 +535,18 @@ DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
         SWITCH_OUT_MESSAGE("Eldegoss");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         SEND_IN_MESSAGE("Wobbuffet");

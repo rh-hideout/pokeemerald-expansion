@@ -132,7 +132,6 @@ enum RandomTag
     RNG_CURSED_BODY,
     RNG_CUTE_CHARM,
     RNG_DAMAGE_MODIFIER,
-    RNG_DIRE_CLAW,
     RNG_EFFECT_SPORE,
     RNG_FLAME_BODY,
     RNG_FORCE_RANDOM_SWITCH,
@@ -149,6 +148,7 @@ enum RandomTag
     RNG_METRONOME,
     RNG_MOODY_INCREASE,
     RNG_MOODY_DECREASE,
+    RNG_RANDOM_FROM_LIST,
     RNG_PARALYSIS,
     RNG_PICKUP,
     RNG_POISON_POINT,
@@ -160,14 +160,16 @@ enum RandomTag
     RNG_SECONDARY_EFFECT_3,
     RNG_SHED_SKIN,
     RNG_SLEEP_TURNS,
+    RNG_TAUNT_TURNS,
+    RNG_ENCORE_TURNS,
     RNG_SPEED_TIE,
     RNG_STATIC,
     RNG_STENCH,
     RNG_TOXIC_CHAIN,
-    RNG_TRI_ATTACK,
     RNG_QUICK_DRAW,
     RNG_QUICK_CLAW,
     RNG_TRACE,
+    RNG_FOREWARN,
     RNG_FICKLE_BEAM,
     RNG_AI_ABILITY,
     RNG_AI_SCORE_TIE_DOUBLES_MOVE,
@@ -185,6 +187,7 @@ enum RandomTag
     RNG_AI_SWITCH_ABSORBING_STAY_IN,
     RNG_AI_SWITCH_NATURAL_CURE,
     RNG_AI_SWITCH_REGENERATOR,
+    RNG_AI_SWITCH_INTIMIDATE,
     RNG_AI_SWITCH_ENCORE,
     RNG_AI_SWITCH_CHOICE_LOCKED,
     RNG_AI_SWITCH_STATS_LOWERED,
@@ -198,6 +201,8 @@ enum RandomTag
     RNG_AI_CONSERVE_TERA,
     RNG_AI_SWITCH_ALL_SCORES_BAD,
     RNG_AI_SWITCH_ABSORBING_HIDDEN_POWER,
+    RNG_AI_SWITCH_WISH_PASSING,
+    RNG_AI_SWITCH_LOSES_1V1,
     RNG_AI_PP_STALL_DISREGARD_MOVE,
     RNG_AI_SUCKER_PUNCH,
     RNG_AI_CONSIDER_EXPLOSION,
@@ -218,6 +223,11 @@ enum RandomTag
     RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE,
     RNG_HEALER,
     RNG_DEXNAV_ENCOUNTER_LEVEL,
+    RNG_POKERUS_PARTY_MEMBER,
+    RNG_POKERUS_INFECTION,
+    RNG_POKERUS_STRAIN_DISTRIBUTION,
+    RNG_POKERUS_SPREAD,
+    RNG_POKERUS_SPREAD_SIDE,
     RNG_AI_ASSUME_STATUS_SLEEP,
     RNG_AI_ASSUME_STATUS_NONVOLATILE,
     RNG_AI_ASSUME_STATUS_HIGH_ODDS,
@@ -226,6 +236,7 @@ enum RandomTag
     RNG_AI_ASSUME_ALL_STATUS,
     RNG_AI_REFRESH_TRICK_ROOM_ON_LAST_TURN,
     RNG_AI_APPLY_TAILWIND_ON_LAST_TURN_OF_TRICK_ROOM,
+    RNG_AI_REVERSE_BATTLER_LOGIC_ORDER,
     RNG_WRAP,
     RNG_BALLTHROW_CRITICAL,
     RNG_BALLTHROW_SHAKE,
@@ -234,12 +245,24 @@ enum RandomTag
     RNG_MAGNITUDE,
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
-    RNG_TAUNT,
+    RNG_WILD_MON_TARGET,
+    RNG_AI_FAKE_OUT_SAVE_ALLY,
+    RNG_AI_DMG_ROLL_RANDOM,
+    RNG_RANDOM_BERRY,
+    RNG_DAYCARE_MAKE_EGG,
+    RNG_DAYCARE_PICK_NATURE_PARENT,
+    RNG_DAYCARE_NATURE_INHERITANCE,
+    RNG_DAYCARE_INHERITED_STATS,
+    RNG_DAYCARE_PICK_IVS_PARENT,
+    RNG_DAYCARE_PICK_BALL_PARENT,
+    RNG_DAYCARE_ABILITY_INHERITANCE,
+    RNG_DEXNAV_RANDOM_EGG_MOVE,
+    RNG_RANDOM_BALL,
 };
 
 #define RandomWeighted(tag, ...) \
     ({ \
-        const u8 weights[] = { __VA_ARGS__ }; \
+        const u16 weights[] = { __VA_ARGS__ }; \
         u32 sum, i; \
         for (i = 0, sum = 0; i < ARRAY_COUNT(weights); i++) \
             sum += weights[i]; \
@@ -251,7 +274,11 @@ enum RandomTag
 #define RandomPercentage(tag, t) \
     ({ \
         u32 r; \
-        if (t <= 0) \
+        if_comptime (t == 50) \
+        { \
+            r = RandomUniform(tag, FALSE, TRUE); \
+        } \
+        else if (t <= 0) \
         { \
             r = FALSE; \
         } \
@@ -261,7 +288,7 @@ enum RandomTag
         } \
         else \
         { \
-          const u8 weights[] = { 100 - t, t }; \
+          const u16 weights[] = { 100 - t, t }; \
           r = RandomWeightedArray(tag, 100, ARRAY_COUNT(weights), weights); \
         } \
         r; \
@@ -274,26 +301,27 @@ enum RandomTag
 
 u32 RandomUniform(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExcept(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
-u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u8 *weights);
+u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArray(enum RandomTag, const void *array, size_t size, size_t count);
 
 u32 RandomUniformDefault(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExceptDefault(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
-u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u8 *weights);
+u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
 
-u32 RandomBit(enum RandomTag tag, u32 bits);
 u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
 #if TESTING
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
 u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller);
-u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller);
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller);
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weights, void *caller);
 const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif
+
+u32 Crc32B (const u8 *data, u32 size);
 
 #endif // GUARD_RANDOM_H

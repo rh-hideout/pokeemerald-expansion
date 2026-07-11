@@ -1,4 +1,4 @@
-VermilionCity_House2_MapScripts::
+VermilionCity_House2_Frlg_MapScripts::
 	.byte 0
 
 VermilionCity_House2_EventScript_Elyssa::

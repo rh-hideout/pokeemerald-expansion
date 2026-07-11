@@ -25,7 +25,9 @@ static const u16 sMoveItemTable[][4] =
 
 SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", s16 damage)
 {
-    u32 move = 0, item = 0, defender = 0;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u32 defender = 0;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
@@ -50,10 +52,10 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
-        if (1 == i % 2) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        }
         HP_BAR(opponent, captureDamage: &results[i].damage);
+        if (1 == i % 2) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        }
     } FINALLY {
         for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
             EXPECT_MUL_EQ(results[j*2].damage, Q_4_12(0.5), results[(j*2)+1].damage);
@@ -63,7 +65,9 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
 
 SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effective", s16 damage)
 {
-    u32 move = 0, item = 0, defender = 0;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    enum Species defender = SPECIES_NONE;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
@@ -99,7 +103,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
 
 SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16 damage)
 {
-    u32 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_CHILAN_BERRY; }

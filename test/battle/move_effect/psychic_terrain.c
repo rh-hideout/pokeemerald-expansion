@@ -116,17 +116,18 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves")
 
 SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets")
 {
-    u32 move = 0, shouldWork = 0;
-    PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE;}
-    PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE;}
+    enum Move move = MOVE_NONE;
+    bool32 shouldWork = FALSE;
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE; }
+    PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE; }
     GIVEN {
-        WITH_CONFIG(CONFIG_TOXIC_NEVER_MISS, GEN_6);
+        WITH_CONFIG(B_TOXIC_NEVER_MISS, GEN_6);
         ASSUME(IsSpeciesOfType(SPECIES_SHROODLE, TYPE_POISON));
         PLAYER(SPECIES_SHROODLE) { Ability(ABILITY_PRANKSTER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move);}
-        TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent);}
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move); }
+        TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent); }
     } SCENE {
         if (shouldWork)
         {
@@ -208,5 +209,26 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain prevents priority status moves before Magic Bounce can bounce them")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
+        ASSUME(IsBattleMoveStatus(MOVE_CONFUSE_RAY));
+        ASSUME(MoveCanBeBouncedBack(MOVE_CONFUSE_RAY));
+        PLAYER(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_CONFUSE_RAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_TERRAIN, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
+            ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+        }
     }
 }

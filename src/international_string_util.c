@@ -82,7 +82,7 @@ int Intl_GetListMenuWidth(const struct ListMenuTemplate *listMenu)
     return finalWidth;
 }
 
-void CopyMonCategoryText(u16 species, u8 *dest)
+void CopyMonCategoryText(enum Species species, u8 *dest)
 {
     u8 *str = StringCopy(dest, GetSpeciesCategory(species));
     *str = CHAR_SPACE;
@@ -203,7 +203,7 @@ void TVShowConvertInternationalString(u8 *dest, const u8 *src, int language)
 }
 
 // It's impossible to distinguish between Latin languages just from a string alone, so the function defaults to LANGUAGE_ENGLISH. This is the case in all of the versions of the game.
-int GetNicknameLanguage(u8 *str)
+enum Language GetNicknameLanguage(u8 *str)
 {
     if (str[0] == EXT_CTRL_CODE_BEGIN && str[1] == EXT_CTRL_CODE_JPN)
         return LANGUAGE_JAPANESE;

@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Simple Beam fails if the target already has Simple")
 
 SINGLE_BATTLE_TEST("Simple Beam fails if target has an ability that can't be overwritten")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
@@ -117,7 +117,7 @@ DOUBLE_BATTLE_TEST("Worry Seed fails if the target already has Insomnia")
 
 SINGLE_BATTLE_TEST("Worry Seed fails if target has an ability that can't be overwritten")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }

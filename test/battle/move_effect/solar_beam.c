@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
-    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_SOLAR_BEAM) == B_WEATHER_SUN);
+    ASSUME(GetTwoTurnMoveWeather(MOVE_SOLAR_BEAM) == BATTLE_WEATHER_SUN);
 }
 
 SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up")
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Solar Beam does half damage if Sandstorm is up (Gen3+)", s16
     PARAMETRIZE { ability = ABILITY_SAND_STREAM; config = GEN_3; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_SANDSTORM_SOLAR_BEAM, config);
+        WITH_CONFIG(B_SANDSTORM_SOLAR_BEAM, config);
         PLAYER(SPECIES_HIPPOWDON) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -61,17 +61,17 @@ static void SpriteCB_SandPillar_BreakTop(struct Sprite *);
 static void SpriteCB_SandPillar_BreakBase(struct Sprite *);
 static void SpriteCB_SandPillar_End(struct Sprite *);
 
-static const u8 sSecretPowerCave_Gfx[] = INCBIN_U8("graphics/field_effects/pics/secret_power_cave.4bpp");
+static const u8 sSecretPowerCave_Gfx[] = INCGFX_U8("graphics/field_effects/pics/secret_power_cave.png", ".4bpp", "-mwidth 2 -mheight 2");
 static const u8 sFiller[32] = {0};
-static const u16 sSecretPowerCave_Pal[] = INCBIN_U16("graphics/field_effects/palettes/secret_power_cave.gbapal");
-static const u8 sSecretPowerShrub_Gfx[] = INCBIN_U8("graphics/field_effects/pics/secret_power_shrub.4bpp");
-static const u8 sSecretPowerTree_Gfx[] = INCBIN_U8("graphics/field_effects/pics/secret_power_tree.4bpp");
-static const u16 sSecretPowerPlant_Pal[] = INCBIN_U16("graphics/field_effects/palettes/secret_power_plant.gbapal");
+static const u16 sSecretPowerCave_Pal[] = INCGFX_U16("graphics/field_effects/palettes/secret_power_cave.pal", ".gbapal");
+static const u8 sSecretPowerShrub_Gfx[] = INCGFX_U8("graphics/field_effects/pics/secret_power_shrub.png", ".4bpp", "-mwidth 2 -mheight 2");
+static const u8 sSecretPowerTree_Gfx[] = INCGFX_U8("graphics/field_effects/pics/secret_power_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
+static const u16 sSecretPowerPlant_Pal[] = INCGFX_U16("graphics/field_effects/palettes/secret_power_plant.pal", ".gbapal");
 
 // TODO: These should also be combined into a single image, not matching for some reason
-static const u8 sSandPillar0_Gfx[] = INCBIN_U8("graphics/field_effects/pics/sand_pillar/0.4bpp");
-static const u8 sSandPillar1_Gfx[] = INCBIN_U8("graphics/field_effects/pics/sand_pillar/1.4bpp");
-static const u8 sSandPillar2_Gfx[] = INCBIN_U8("graphics/field_effects/pics/sand_pillar/2.4bpp");
+static const u8 sSandPillar0_Gfx[] = INCGFX_U8("graphics/field_effects/pics/sand_pillar/0.png", ".4bpp");
+static const u8 sSandPillar1_Gfx[] = INCGFX_U8("graphics/field_effects/pics/sand_pillar/1.png", ".4bpp");
+static const u8 sSandPillar2_Gfx[] = INCGFX_U8("graphics/field_effects/pics/sand_pillar/2.png", ".4bpp");
 
 static const struct OamData sOam_SecretPower =
 {
@@ -165,30 +165,18 @@ static const union AnimCmd *const sAnimTable_SecretPowerShrub[] =
 
 static const struct SpriteFrameImage sPicTable_SecretPowerCave[] =
 {
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerCave_Gfx, 2, 2),
 };
 
 static const struct SpriteFrameImage sPicTable_SecretPowerTree[] =
 {
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerTree_Gfx, 2, 2),
     // 6th frame exists but isnt accessed, the tree vine metatile is used instead
 };
 
 static const struct SpriteFrameImage sPicTable_SecretPowerShrub[] =
 {
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerShrub_Gfx, 2, 2),
 };
 
 static const struct SpriteTemplate sSpriteTemplate_SecretPowerCave =
@@ -268,14 +256,12 @@ static const struct SpriteTemplate sSpriteTemplate_SandPillar =
 
 const struct SpritePalette gSpritePalette_SandPillar = {gTilesetPalettes_SecretBase[5], FLDEFF_PAL_TAG_SAND_PILLAR};
 
-static const u8 sRecordMixLights_Gfx[] = INCBIN_U8("graphics/field_effects/pics/record_mix_lights.4bpp");
-static const u16 sRecordMixLights_Pal[] = INCBIN_U16("graphics/field_effects/palettes/record_mix_lights.gbapal");
+static const u8 sRecordMixLights_Gfx[] = INCGFX_U8("graphics/field_effects/pics/record_mix_lights.png", ".4bpp", "-mwidth 4 -mheight 1");
+static const u16 sRecordMixLights_Pal[] = INCGFX_U16("graphics/field_effects/palettes/record_mix_lights.pal", ".gbapal");
 
 static const struct SpriteFrameImage sPicTable_RecordMixLights[] =
 {
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 0),
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 1),
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 2),
+    overworld_ascending_frames(sRecordMixLights_Gfx, 4, 1),
 };
 
 static const struct SpritePalette sSpritePalette_RecordMixLights = {sRecordMixLights_Pal, 0x1000};
@@ -492,9 +478,10 @@ static void SetCurrentSecretBase(void)
 
 static void AdjustSecretPowerSpritePixelOffsets(void)
 {
+    enum Direction direction = gFieldEffectArguments[1];
     if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 16;
@@ -511,12 +498,14 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
     else
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 8;
@@ -533,6 +522,8 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
@@ -929,7 +920,7 @@ static void Task_ShatterSecretBaseBreakableDoor(u8 taskId)
 
 void ShatterSecretBaseBreakableDoor(s16 x, s16 y)
 {
-    u8 dir = GetPlayerFacingDirection();
+    enum Direction dir = GetPlayerFacingDirection();
 
     if (dir == DIR_SOUTH)
     {
@@ -1066,6 +1057,8 @@ bool8 FldEff_SandPillar(void)
                      gSprites[gPlayerAvatar.spriteId].oam.y + 16,
                      148);
 
+        break;
+    default:
         break;
     }
 

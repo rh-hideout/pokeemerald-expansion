@@ -4,6 +4,7 @@
 #include "window.h"
 #include "link.h"
 #include "battle.h"
+#include "event_data.h"
 #include "overworld.h"
 #include "text.h"
 #include "text_window.h"
@@ -22,6 +23,7 @@
 #include "gpu_regs.h"
 #include "constants/game_stat.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "constants/rgb.h"
 
 static void Task_CloseTrainerHillRecordsOnButton(u8 taskId);
@@ -33,8 +35,8 @@ static void CB2_ShowTrainerHillRecords(void);
 EWRAM_DATA u8 gRecordsWindowId = 0;
 EWRAM_DATA static u8 *sTilemapBuffer = NULL;
 
-static const u32 sTrainerHillWindowTileset[] = INCBIN_U32("graphics/trainer_hill/records_window.4bpp");
-static const u16 sTrainerHillWindowPalette[] = INCBIN_U16("graphics/trainer_hill/records_window.gbapal");
+static const u32 sTrainerHillWindowTileset[] = INCGFX_U32("graphics/trainer_hill/records_window.png", ".4bpp");
+static const u16 sTrainerHillWindowPalette[] = INCGFX_U16("graphics/trainer_hill/records_window.png", ".gbapal");
 static const u32 sTrainerHillWindowTilemap[] = INCBIN_U32("graphics/trainer_hill/records_window.bin");
 
 static const struct BgTemplate sTrainerHillRecordsBgTemplates[] =
@@ -202,7 +204,7 @@ static void UpdateLinkBattleGameStats(s32 battleOutcome)
         IncrementGameStat(stat);
 }
 
-static void UpdateLinkBattleRecords(struct LinkBattleRecords *records, const u8 *name, u16 trainerId, s32 battleOutcome, u8 battler)
+static void UpdateLinkBattleRecords(struct LinkBattleRecords *records, const u8 *name, u16 trainerId, s32 battleOutcome, enum BattlerId battler)
 {
     s32 index;
 
@@ -527,7 +529,10 @@ static void CB2_ShowTrainerHillRecords(void)
     case 7:
         SetDispcntReg();
         SetVBlankCallback(VblankCB_TrainerHillRecords);
-        PrintOnTrainerHillRecordsWindow();
+        if (gSpecialVar_0x8004)
+            PrintTrainerTowerRecords();
+        else
+            PrintOnTrainerHillRecordsWindow();
         CreateTask(Task_TrainerHillWaitForPaletteFade, 8);
         SetMainCallback2(MainCB2_TrainerHillRecords);
         gMain.state = 0;

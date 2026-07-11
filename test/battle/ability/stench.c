@@ -63,7 +63,7 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WYNAUT) { Speed(10); }
         OPPONENT(SPECIES_GRIMER) { Speed(100); Ability(ABILITY_STENCH); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_FAKE_OUT, target: opponentLeft);
@@ -76,6 +76,39 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         NOT MESSAGE("Wynaut flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stench is blocked by Shield Dust")
+{
+    GIVEN {
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); }
+        OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NONE_OF {
+            MESSAGE("The opposing Vivillon flinched and couldn't move!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Stench is blocked by Covert Cloak")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        }
     }
 }
 

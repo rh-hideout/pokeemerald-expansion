@@ -1257,7 +1257,7 @@ static void CloseTossPokeblockWindow(u8 taskId)
 
 static void PokeblockAction_UseInBattle(u8 taskId)
 {
-    u8 nature = GetNature(&gEnemyParty[0]);
+    u8 nature = GetNature(&gParties[B_TRAINER_OPPONENT_A][0]);
     s16 gain = PokeblockGetGain(nature, &gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId]);
     StringCopy(gBattleTextBuff1, gPokeblockNames[gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId].color]);
     TryClearPokeblock(gSpecialVar_ItemId);
@@ -1408,7 +1408,7 @@ s16 GetPokeblockData(const struct Pokeblock *pokeblock, u8 field)
 
 s16 PokeblockGetGain(u8 nature, const struct Pokeblock *pokeblock)
 {
-    u8 flavor;
+    enum Flavor flavor;
     s16 curGain, totalGain = 0;
 
     for (flavor = 0; flavor < FLAVOR_COUNT; flavor++)

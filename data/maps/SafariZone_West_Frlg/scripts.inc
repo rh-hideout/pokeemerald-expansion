@@ -1,4 +1,4 @@
-SafariZone_West_MapScripts::
+SafariZone_West_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_West_EventScript_RestHouseSign::
@@ -18,22 +18,22 @@ SafariZone_West_EventScript_AreaSign::
 	end
 
 SafariZone_West_Text_RestHouse::
-    .string "REST HOUSE$"
+	.string "REST HOUSE$"
 
 SafariZone_West_Text_PleaseFindWardensLostTeeth::
-    .string "REQUEST NOTICE\p"
-    .string "Please find the SAFARI WARDEN's\n"
-    .string "lost GOLD TEETH.\l"
-    .string "They're around here somewhere.\p"
-    .string "Reward offered!\n"
-    .string "Contact: WARDEN$"
+	.string "REQUEST NOTICE\p"
+	.string "Please find the SAFARI WARDEN's\n"
+	.string "lost GOLD TEETH.\l"
+	.string "They're around here somewhere.\p"
+	.string "Reward offered!\n"
+	.string "Contact: WARDEN$"
 
 SafariZone_West_Text_SearchForSecretHouse::
-    .string "TRAINER TIPS\p"
-    .string "Zone Exploration Campaign!\n"
-    .string "The Search for the SECRET HOUSE!$"
+	.string "TRAINER TIPS\p"
+	.string "Zone Exploration Campaign!\n"
+	.string "The Search for the SECRET HOUSE!$"
 
 SafariZone_West_Text_AreaSign::
-    .string "AREA 3\n"
-    .string "EAST: CENTER AREA$"
+	.string "AREA 3\n"
+	.string "EAST: CENTER AREA$"
 

@@ -3,10 +3,10 @@
 
 
 #define FREE_AND_SET_NULL(ptr)          \
-{                                       \
+do {                                    \
     Free(ptr);                          \
     ptr = NULL;                         \
-}
+} while (0)
 
 #define TRY_FREE_AND_SET_NULL(ptr) if (ptr != NULL) FREE_AND_SET_NULL(ptr)
 
@@ -41,25 +41,33 @@ struct MemBlock
     u8 data[0];
 };
 
-#define HEAP_SIZE 0x1C300
+#define HEAP_SIZE 0x1C500
 extern u8 gHeap[HEAP_SIZE];
 
 #if TESTING || !defined(NDEBUG)
 
 #define Alloc(size) Alloc_(size, __FILE__ ":" STR(__LINE__))
+#define AllocUnchecked(size) AllocUnchecked_(size, __FILE__ ":" STR(__LINE__))
+
 #define AllocZeroed(size) AllocZeroed_(size, __FILE__ ":" STR(__LINE__))
+#define AllocZeroedUnchecked(size) AllocZeroedUnchecked_(size, __FILE__ ":" STR(__LINE__))
 
 #else
 
 #define Alloc(size) Alloc_(size, NULL)
+#define AllocUnchecked(size) AllocUnchecked_(size, NULL)
 #define AllocZeroed(size) AllocZeroed_(size, NULL)
+#define AllocZeroedUnchecked(size) AllocZeroedUnchecked_(size, NULL)
 
 #endif
 
 void *Alloc_(u32 size, const char *location);
+void *AllocUnchecked_(u32 size, const char *location);
 void *AllocZeroed_(u32 size, const char *location);
+void *AllocZeroedUnchecked_(u32 size, const char *location);
 void Free(void *pointer);
 void InitHeap(void *heapStart, u32 heapSize);
+void PrintHeap(void);
 
 const struct MemBlock *HeapHead(void);
 const char *MemBlockLocation(const struct MemBlock *block);

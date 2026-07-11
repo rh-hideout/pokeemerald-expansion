@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
         PLAYER(mon) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
-        MESSAGE("The opposing team is too nervous to eat Berries!");
+        MESSAGE("The opposing side is too nervous to eat Berries!");
     }
 }
 
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
         TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ability);
-        MESSAGE("Your team is too nervous to eat Berries!");
+        MESSAGE("Your side is too nervous to eat Berries!");
     }
 }
 
@@ -103,8 +103,8 @@ SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
 DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
 {
     u16 mon;
-    u16 ability;
-    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE;}
+    enum Ability ability;
+    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
@@ -118,9 +118,9 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
         TURN {  USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_WILL_O_WISP, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
     }
 
 }

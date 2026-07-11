@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Embargo blocks the effect of an affected Pokémon's held ite
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(player, MOVE_FISSURE); }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Embargo blocks an affected Pokémon's trainer from using ite
 
 WILD_BATTLE_TEST("Embargo doesn't block held item effects that affect experience gain", s32 exp)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_LUCKY_EGG; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -91,7 +91,7 @@ WILD_BATTLE_TEST("Embargo doesn't block held item effects that affect effort val
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
         finalHPEVAmount = (GetMonData(&PLAYER_PARTY[0], MON_DATA_HP_EV) + gItemsInfo[ITEM_POWER_WEIGHT].holdEffectParam + gSpeciesInfo[SPECIES_CATERPIE].evYield_HP);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), finalHPEVAmount);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), finalHPEVAmount);
     }
 }
 
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Embargo negates a held item's Speed reduction")
 //     KNOWN_FAILING; // Pokémon are currently not obtaining Friendship for using items in battle.
 //     GIVEN {
 //         ASSUME(gItemsInfo[ITEM_X_ACCURACY].battleUsage == EFFECT_ITEM_INCREASE_STAT);
-//         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SOOTHE_BELL); };
+//         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SOOTHE_BELL); }
 //         OPPONENT(SPECIES_WOBBUFFET);
 //     } WHEN {
 //         TURN { USE_ITEM(player, ITEM_X_ACCURACY); }
@@ -136,20 +136,20 @@ SINGLE_BATTLE_TEST("Embargo negates a held item's Speed reduction")
 //         MESSAGE("Wild Wobbuffet fell asleep!");
 //     } THEN {
 //         initialFriendship = GetMonData(&PLAYER_PARTY[0], MON_DATA_FRIENDSHIP);
-//         finalFriendship = GetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP);
+//         finalFriendship = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_FRIENDSHIP);
 //         EXPECT_EQ(finalFriendship, initialFriendship + 2);
 //     }
 // }
 
 SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, but it does block its other effects", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_MEADOW_PLATE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_ARCEUS_GRASS) { Item(heldItem); };
+        OPPONENT(SPECIES_ARCEUS_GRASS) { Item(heldItem); }
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffectParam == 20);
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].secondaryId == TYPE_GRASS);
@@ -164,12 +164,13 @@ SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, bu
 
 SINGLE_BATTLE_TEST("Embargo makes Fling and Natural Gift fail")
 {
-    u32 heldItem, moveId;
+    enum Item heldItem;
+    enum Move moveId;
 
     PARAMETRIZE { heldItem = ITEM_LIGHT_BALL; moveId = MOVE_FLING; }
     PARAMETRIZE { heldItem = ITEM_CHERI_BERRY; moveId = MOVE_NATURAL_GIFT; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(heldItem); };
+        PLAYER(SPECIES_WOBBUFFET) { Item(heldItem); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
@@ -190,7 +191,7 @@ SINGLE_BATTLE_TEST("Embargo makes Fling and Natural Gift fail")
 SINGLE_BATTLE_TEST("Embargo doesn't stop an item flung at an affected target from activating")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); };
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
@@ -211,7 +212,7 @@ SINGLE_BATTLE_TEST("Baton Pass passes Embargo's effect")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LIGHT_BALL); };
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LIGHT_BALL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
@@ -236,8 +237,8 @@ SINGLE_BATTLE_TEST("Embargo doesn't block the effects of berries obtained throug
     u32 hp = 10;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); };
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
         TURN { MOVE(player, MOVE_PLUCK); }
@@ -255,12 +256,12 @@ SINGLE_BATTLE_TEST("Embargo doesn't block the effects of berries obtained throug
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move Judgment", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_PIXIE_PLATE; }
     GIVEN {
-        PLAYER(SPECIES_ARCEUS) { Item(heldItem); };
+        PLAYER(SPECIES_ARCEUS) { Item(heldItem); }
         OPPONENT(SPECIES_DRAGONITE);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_JUDGMENT); }
@@ -276,12 +277,12 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move J
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move Techno Blast", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_SHOCK_DRIVE; }
     GIVEN {
-        PLAYER(SPECIES_GENESECT) { Item(heldItem); };
+        PLAYER(SPECIES_GENESECT) { Item(heldItem); }
         OPPONENT(SPECIES_GYARADOS);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_TECHNO_BLAST); }
@@ -297,12 +298,12 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move T
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Memory items on the move Multi Attack", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_FIRE_MEMORY; }
     GIVEN {
-        PLAYER(SPECIES_SILVALLY) { Item(heldItem); };
+        PLAYER(SPECIES_SILVALLY) { Item(heldItem); }
         OPPONENT(SPECIES_VENUSAUR);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_MULTI_ATTACK); }
@@ -320,7 +321,7 @@ SINGLE_BATTLE_TEST("Embargo can be reflected by Magic Coat")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); }
     } WHEN {
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_FLING); }
@@ -342,7 +343,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Mega Evolution")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_Y); };
+        OPPONENT(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_Y); }
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -367,7 +368,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); };
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }

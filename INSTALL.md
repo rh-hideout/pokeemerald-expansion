@@ -140,7 +140,7 @@ git remote add RHH https://github.com/rh-hideout/pokeemerald-expansion
 2. Pull your desired branch
 There are three different options to pull from.
 ```console
-git pull RHH master # if you've chosen to use the upcoming branch, replace the word master with upcoming. 
+git pull RHH master # if you've chosen to use the upcoming branch, replace the word master with upcoming.
 # If you've chosen the latest patch, replace the word master with expansion
 # If you've chosen Latest Patch, replace the word master with expansion/1.11.0 where 1.11.0 is replaced with whatever the latest released version is.
 ```
@@ -173,7 +173,7 @@ For example, if your version is 1.7.0, you should update to 1.7.4.
 git pull RHH expansion/X.Y.Z # Replace X, Y and Z with the target version, such as `1.9.3`, `master`, or `upcoming`.
 ```
 
-You may have merge conflicts that you need to resolve. 
+You may have merge conflicts that you need to resolve.
 
 If you targeted a specific version that is not the latest version listed on the [tags](https://github.com/rh-hideout/pokeemerald-expansion/tags) page, you should repeat steps 3 and 4 until you are.
 

@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
 {
     u32 j;
-    static const u16 terrainMoves[] =
+    static const enum Move terrainMoves[] =
     {
         MOVE_ELECTRIC_TERRAIN,
         MOVE_PSYCHIC_TERRAIN,
@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
         MOVE_MISTY_TERRAIN,
     };
 
-    u16 terrainMove = MOVE_NONE;
-    u16 removeTerrainMove = MOVE_NONE;
+    enum Move terrainMove = MOVE_NONE;
+    enum Move removeTerrainMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(terrainMoves); j++)
     {
@@ -27,10 +27,11 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
     }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
-        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
-        ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
+        ASSUME(GetMoveEffect(terrainMove) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
+        ASSUME(GetMoveTerrainType(MOVE_MISTY_TERRAIN) == B_TERRAIN_MISTY);
         ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -53,13 +54,16 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
         case MOVE_MISTY_TERRAIN:
             MESSAGE("The mist disappeared from the battlefield.");
             break;
+        default:
+            break;
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution")
+SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
@@ -68,6 +72,21 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
         NOT MESSAGE("The electricity disappeared from the battlefield.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Ice Spinner removes terrain if user faints during attack execution (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
+        MESSAGE("The electricity disappeared from the battlefield.");
     }
 }
 
@@ -105,7 +124,7 @@ SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field
 
 AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a terrain or not")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_NONE; }
@@ -121,5 +140,22 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a 
         } else {
             TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Ice Spinner will remove terrain if target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_ICE_SPINNER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
+        SUB_HIT(player);
+        NOT HP_BAR(player);
     }
 }

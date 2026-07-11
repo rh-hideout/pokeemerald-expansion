@@ -24,15 +24,15 @@ We will start with a graphic that we want to use for our new trainer pic. Unlike
 ### 2. Register the sprites
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them by linking the graphic files in [`src/data/graphics/trainers`](./data/graphics/trainers.h):
 ```diff
- const u16 gTrainerPalette_RubySapphireBrendan[] = INCBIN_U16("graphics/trainers/palettes/brendan_rs.gbapal");
+ const u16 gTrainerPalette_RubySapphireBrendan[] = INCGFX_U16("graphics/trainers/palettes/brendan_rs.pal", ".gbapal");
 
- const u32 gTrainerFrontPic_RubySapphireMay[] = INCBIN_U32("graphics/trainers/front_pics/may_rs.4bpp.smol");
- const u16 gTrainerPalette_RubySapphireMay[] = INCBIN_U16("graphics/trainers/palettes/may_rs.gbapal");
+ const u32 gTrainerFrontPic_RubySapphireMay[] = INCGFX_U32("graphics/trainers/front_pics/may_rs.png", ".4bpp.smol");
+ const u16 gTrainerPalette_RubySapphireMay[] = INCGFX_U16("graphics/trainers/palettes/may_rs.pal", ".gbapal");
 +
-+const u32 gTrainerFrontPic_NewOne[] = INCBIN_U32("graphics/trainers/front_pics/new_one.4bpp.smol");
-+const u16 gTrainerPalette_NewOne[] = INCBIN_U16("graphics/trainers/front_pics/new_one.gbapal");
++const u32 gTrainerFrontPic_NewOne[] = INCGFX_U32("graphics/trainers/front_pics/new_one.png", ".4bpp.smol");
++const u16 gTrainerPalette_NewOne[] = INCGFX_U16("graphics/trainers/front_pics/new_one.pal", ".gbapal");
 
- const u8 gTrainerBackPic_Brendan[] = INCBIN_U8("graphics/trainers/back_pics/brendan.4bpp");
+ const u8 gTrainerBackPic_Brendan[] = INCGFX_U8("graphics/trainers/back_pics/brendan.png", ".4bpp");
 ```
 
 ### 3. Connecting the Pictures to the Data
@@ -51,11 +51,11 @@ So, finally, it needs to look like this:
 
  const struct TrainerSprite gTrainerSprites[] =
  {
-     TRAINER_SPRITE(TRAINER_PIC_HIKER, gTrainerFrontPic_Hiker, gTrainerPalette_Hiker),
-     TRAINER_SPRITE(TRAINER_PIC_AQUA_GRUNT_M, gTrainerFrontPic_AquaGruntM, gTrainerPalette_AquaGruntM),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_HIKER, gTrainerFrontPic_Hiker, gTrainerPalette_Hiker),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_AQUA_GRUNT_M, gTrainerFrontPic_AquaGruntM, gTrainerPalette_AquaGruntM),
      ...
-     TRAINER_SPRITE(TRAINER_PIC_RS_MAY, gTrainerFrontPic_RubySapphireMay, gTrainerPalette_RubySapphireMay),
-+    TRAINER_SPRITE(TRAINER_PIC_NEW_ONE, gTrainerFrontPic_NewOne, gTrainerPalette_NewOne),
+     TRAINER_SPRITE(TRAINER_PIC_FRONT_RS_MAY, gTrainerFrontPic_RubySapphireMay, gTrainerPalette_RubySapphireMay),
++    TRAINER_SPRITE(TRAINER_PIC_FRONT_NEW_ONE, gTrainerFrontPic_NewOne, gTrainerPalette_NewOne),
  };
 ```
 ### The Data
@@ -63,16 +63,16 @@ So, finally, it needs to look like this:
 Finally, let's bring it all together by defining our new trainer pic in [`include/constants/trainers.h`](./include/constants/trainers.h):
 
 ```diff
- #define TRAINER_PIC_RS_MAY                92
-+#define TRAINER_PIC_NEW_ONE               93
-
- #define TRAINER_BACK_PIC_BRENDAN                0
- #define TRAINER_BACK_PIC_MAY                    1
+    TRAINER_PIC_FRONT_RS_MAY,
++   TRAINER_PIC_FRONT_NEW_ONE,
+    TRAINER_PIC_FRONT_COUNT,
+    TRAINER_PIC_BACK_BRENDAN = TRAINER_PIC_FRONT_COUNT, // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
+    TRAINER_PIC_BACK_MAY,
 ```
-Remember to count the number next to the trainer pic up by one!
+Remember to add new front pics before `TRAINER_PIC_FRONT_COUNT`!
 
 ## Usage
-You can test your trainer type by going to [`src/data/trainers.party`](./src/data/trainers.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_PIC_NEW_ONE`) with the underscore replaced by spaces. For example:
+You can test your trainer type by going to [`src/data/trainers.party`](./src/data/trainers.party) and change the `Pic` field. The syntax should match the constant (`TRAINER_PIC_FRONT_NEW_ONE`) with the underscore replaced by spaces. For example:
 ```diff
  === TRAINER_BRENDAN_PLACEHOLDER ===
  Name: BRENDAN
@@ -90,8 +90,8 @@ Otherwise if you use [`src/data/trainers.h`](./src/data/trainers.h), change the 
      {
          .trainerName = _("BRENDAN"),
          .trainerClass = TRAINER_CLASS_RS_PROTAG,
--        .trainerPic = TRAINER_PIC_RS_BRENDAN,
-+        .trainerPic = TRAINER_PIC_NEW_ONE,
+-        .trainerPic = TRAINER_PIC_FRONT_RS_BRENDAN,
++        .trainerPic = TRAINER_PIC_FRONT_NEW_ONE,
          .encounterMusic_gender = TRAINER_ENCOUNTER_MUSIC_MALE,
          .doubleBattle = FALSE,
 ```

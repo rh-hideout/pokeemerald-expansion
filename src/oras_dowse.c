@@ -19,13 +19,13 @@
 
 static void StartORASDowseFieldEffect(void);
 static void UpdateORASDowsingFieldEffect(struct Sprite *sprite);
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite);
+static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite);
 static void ClearDowsingColor(struct Sprite *sprite);
 static void PlayDowseSound(u32 dowseState);
 
-const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_brendan.4bpp");
-const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_may.4bpp");
-const u16 gFieldEffectPal_ORASDowsing[] = INCBIN_U16("graphics/field_effects/palettes/oras_dowsing.gbapal");
+const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_brendan.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_may.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gFieldEffectPal_ORASDowsing[] = INCGFX_U16("graphics/field_effects/palettes/oras_dowsing.pal", ".gbapal");
 
 static const struct SpriteFrameImage sPicTable_ORASDowsingBrendan[] = {
     overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingBrendan, 2, 4),
@@ -396,8 +396,8 @@ void UpdateDowseState(struct Sprite *sprite)
     {
         s8 distX = sprite->tItemDistanceX;
         s8 distY = sprite->tItemDistanceY;
-        u8 directionToItem = CARDINAL_DIRECTION_COUNT;
-        u8 playerDirToItem = GetDirectionToHiddenItem(distX, distY);
+        enum Direction directionToItem = CARDINAL_DIRECTION_COUNT;
+        enum Direction playerDirToItem = GetDirectionToHiddenItem(distX, distY);
         if (playerDirToItem != DIR_NONE)
             directionToItem = sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1];
 
@@ -434,7 +434,7 @@ void UpdateDowseState(struct Sprite *sprite)
     UpdateDowsingAnimDirection(sprite, playerObj);
 }
 
-static void ChangeDowsingColor(u8 direction, struct Sprite *sprite)
+static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite)
 {
     s16 distance;
     u16 color = I_ORAS_DOWSING_COLOR_NONE;
@@ -529,7 +529,7 @@ void UpdateDowsingAnimDirection(struct Sprite *sprite, struct ObjectEvent *playe
         anim += 16;
         break;
     }
-    
+
     // Don't completely restart anim if wiggling didn't stop.
     if (sprite->sPrevDowseState != ORASD_WIGGLE_NONE && sprite->sDowseState != ORASD_WIGGLE_NONE)
         SetAndStartSpriteAnim(sprite, anim, sprite->animCmdIndex);

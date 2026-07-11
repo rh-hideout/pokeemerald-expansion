@@ -16,9 +16,11 @@ SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent i
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         ABILITY_POPUP(player, ABILITY_FLASH_FIRE);
+        MESSAGE("The power of Heatran's Fire-type moves rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
         ABILITY_POPUP(player, ABILITY_FLASH_FIRE);
+        MESSAGE("Heatran made it ineffective!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {

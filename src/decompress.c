@@ -4,6 +4,7 @@
 #include "decompress.h"
 #include "decompress_error_handler.h"
 #include "pokemon.h"
+#include "pokemon_spots.h"
 #include "pokemon_sprite_visualizer.h"
 #include "text.h"
 #include "menu.h"
@@ -244,17 +245,12 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 
 }
 
-void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
-{
-    DecompressDataWithHeaderWram(src->data, buffer);
-}
-
-void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
+void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, enum Species species, u32 personality)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
 }
 
-void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg)
+void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, enum Species species, u32 personality, bool32 isEgg)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, isEgg);
 }
@@ -268,22 +264,22 @@ void DecompressDataWithHeaderVram(const u32 *src, void *dest)
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
-        case MODE_LZ77:
-            LZ77UnCompVram(src, dest);
-            break;
-        case IS_TILEMAP:
-            SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
-            break;
-        case BASE_ONLY:
-        case ENCODE_SYMS:
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_LO:
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            SmolDecompressData(&header.smol, &src[2], dest);
-            break;
-        default:
-            DecompressionError(src, HEADER_ERROR);
+    case MODE_LZ77:
+        LZ77UnCompVram(src, dest);
+        break;
+    case IS_TILEMAP:
+        SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
+        break;
+    case BASE_ONLY:
+    case ENCODE_SYMS:
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_LO:
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        SmolDecompressData(&header.smol, &src[2], dest);
+        break;
+    default:
+        DecompressionError(src, HEADER_ERROR);
     }
 }
 
@@ -296,22 +292,22 @@ void DecompressDataWithHeaderWram(const u32 *src, void *dest)
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
-        case MODE_LZ77:
-            FastLZ77UnCompWram(src, dest);
-            break;
-        case IS_TILEMAP:
-            SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
-            break;
-        case BASE_ONLY:
-        case ENCODE_SYMS:
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_LO:
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            SmolDecompressData(&header.smol, &src[2], dest);
-            break;
-        default:
-            DecompressionError(src, HEADER_ERROR);
+    case MODE_LZ77:
+        FastLZ77UnCompWram(src, dest);
+        break;
+    case IS_TILEMAP:
+        SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
+        break;
+    case BASE_ONLY:
+    case ENCODE_SYMS:
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_LO:
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        SmolDecompressData(&header.smol, &src[2], dest);
+        break;
+    default:
+        DecompressionError(src, HEADER_ERROR);
     }
 }
 
@@ -964,24 +960,24 @@ static void SmolDecompressData(const struct SmolHeader *header, const u32 *data,
     //  Use different decoding flows depending on which mode the data is compressed with
     switch (header->mode)
     {
-        case BASE_ONLY: // Used by .fastSmol, there is no encoding there, so we can quickly decode all the instructions and quit.
-            DecodeInstructionsIwram(headerLoSize, leftoverPos + headerSymSize*2, (void *) leftoverPos, dest);
-            return;
-        case ENCODE_LO:
-            pLoFreqs = &data[0];
-            sDataPtr = &data[3];
-            break;
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_SYMS:
-            pSymFreqs = &data[0];
-            sDataPtr = &data[3];
-            break;
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            pLoFreqs = &data[0];
-            pSymFreqs = &data[3];
-            sDataPtr = &data[6];
-            break;
+    case BASE_ONLY: // Used by .fastSmol, there is no encoding there, so we can quickly decode all the instructions and quit.
+        DecodeInstructionsIwram(headerLoSize, leftoverPos + headerSymSize*2, (void *) leftoverPos, dest);
+        return;
+    case ENCODE_LO:
+        pLoFreqs = &data[0];
+        sDataPtr = &data[3];
+        break;
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_SYMS:
+        pSymFreqs = &data[0];
+        sDataPtr = &data[3];
+        break;
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        pLoFreqs = &data[0];
+        pSymFreqs = &data[3];
+        sDataPtr = &data[6];
+        break;
     }
 
     bool32 loEncoded = isModeLoEncoded(header->mode);
@@ -1129,12 +1125,12 @@ static bool32 isModeSymDelta(enum CompressionMode mode)
     return FALSE;
 }
 
-void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic)
+void LoadSpecialPokePic(void *dest, enum Species species, u32 personality, bool8 isFrontPic)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
 }
 
-void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg)
+void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, bool8 isFrontPic, bool32 isEgg)
 {
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
@@ -1172,10 +1168,9 @@ void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isF
             DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_NONE].backPic, dest);
     }
 
-    if (species == SPECIES_SPINDA && isFrontPic)
+    if (ShouldDrawSpotsOnSpecies(species) && isFrontPic)
     {
-        DrawSpindaSpots(personality, dest, FALSE);
-        DrawSpindaSpots(personality, dest, TRUE);
+        DrawPokemonSpotsBothFrames(personality, species, dest);
     }
 }
 
@@ -1225,7 +1220,7 @@ static void UNUSED StitchObjectsOn8x8Canvas(s32 object_size, s32 object_count, u
                 }
             }
 
-            // Clear the columns to the left and right that wont be used completely
+            // Clear the columns to the left and right that won't be used completely
             // Unlike the previous loops, this will clear the later used space as well
             for (j = 0; j < 2; j++)
             {
@@ -1338,12 +1333,12 @@ u32 GetDecompressedDataSize(const u32 *ptr)
     union CompressionHeader *header = (union CompressionHeader *)ptr;
     switch (header->smol.mode)
     {
-        case MODE_LZ77:
-            return header->lz77.size;
-        case IS_TILEMAP:
-            return header->smolTilemap.tilemapSize;
-        default:
-            return header->smol.imageSize*SMOL_IMAGE_SIZE_MULTIPLIER;
+    case MODE_LZ77:
+        return header->lz77.size;
+    case IS_TILEMAP:
+        return header->smolTilemap.tilemapSize;
+    default:
+        return header->smol.imageSize*SMOL_IMAGE_SIZE_MULTIPLIER;
     }
 }
 

@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetItemHoldEffect(ITEM_LIGHT_BALL) == HOLD_EFFECT_LIGHT_BALL);
 }
 
-static const u32 speciesToCheck[] = {
+static const enum Species speciesToCheck[] = {
     SPECIES_PICHU,
     SPECIES_PIKACHU,
     SPECIES_PIKACHU_COSPLAY,
@@ -28,7 +28,8 @@ static const u32 speciesToCheck[] = {
 
 SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack", s16 damage)
 {
-    u32 species = 0, item = 0;
+    enum Species species = SPECIES_NONE;
+    enum Item item = ITEM_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(speciesToCheck); j++) {
         PARAMETRIZE { item = ITEM_NONE;       species = speciesToCheck[j]; }
@@ -62,7 +63,9 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack", s16 damage)
 
 SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
 {
-    u32 species = 0, item = 0, config = 0;
+    enum Species species = SPECIES_NONE;
+    enum Item item = ITEM_NONE;
+    u32 config = 0;
 
     for (u32 j = 0; j < ARRAY_COUNT(speciesToCheck); j++) {
         PARAMETRIZE { item = ITEM_NONE;       config = GEN_3; species = speciesToCheck[j]; }
@@ -71,7 +74,7 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
     }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_LIGHT_BALL_ATTACK_BOOST, config);
+        WITH_CONFIG(B_LIGHT_BALL_ATTACK_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SPARK) == DAMAGE_CATEGORY_PHYSICAL);
         if (species == SPECIES_PIKACHU_GMAX) {
             PLAYER(SPECIES_PIKACHU) { Item(item); GigantamaxFactor(TRUE); }

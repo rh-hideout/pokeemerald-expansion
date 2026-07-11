@@ -132,8 +132,8 @@ static const u8 sClockFrames[8][3] =
     { 5, 1, 0 },
 };
 
-static const u8 sSaveFailedClockPal[] = INCBIN_U8("graphics/misc/clock_small.gbapal");
-static const u32 sSaveFailedClockGfx[] = INCBIN_U32("graphics/misc/clock_small.4bpp.smol");
+static const u8 sSaveFailedClockPal[] = INCGFX_U8("graphics/misc/clock_small.png", ".gbapal");
+static const u32 sSaveFailedClockGfx[] = INCGFX_U32("graphics/misc/clock_small.png", ".4bpp.smol");
 
 static void CB2_SaveFailedScreen(void);
 static void CB2_WipeSave(void);
@@ -424,7 +424,8 @@ void CB2_FlashNotDetectedScreen(void)
             .height = 16,
             .paletteNum = 15,
             .baseBlock = 1,
-        }
+        },
+        DUMMY_WIN_TEMPLATE
     };
 
     if (gMain.state)
@@ -444,8 +445,8 @@ void CB2_FlashNotDetectedScreen(void)
     DeactivateAllTextPrinters();
     ResetTasks();
     ResetPaletteFade();
-    LoadPalette(gTextWindowFrame1_Pal, 0xE0, 0x20);
-    LoadPalette(gStandardMenuPalette, 0xF0, 0x20);
+    LoadPalette(gTextWindowFrame1_Pal, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
+    LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
     InitWindows(textWin);
     DrawStdFrameWithCustomTileAndPalette(0, TRUE, 0x214, 0xE);
     static const u8 saveFailedMessage[] =_(

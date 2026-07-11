@@ -226,14 +226,14 @@ static const struct RotatingGatePuzzle sRotatingGate_TrickHousePuzzleConfig[] =
 // something else, using vars that persist when exiting the map could softlock the puzzle.
 STATIC_ASSERT(MAX_GATES <= (2 * NUM_TEMP_VARS), TooManyRotatingGates)
 
-static const u8 sRotatingGateTiles_1[] = INCBIN_U8("graphics/rotating_gates/l1.4bpp");
-static const u8 sRotatingGateTiles_2[] = INCBIN_U8("graphics/rotating_gates/l2.4bpp");
-static const u8 sRotatingGateTiles_3[] = INCBIN_U8("graphics/rotating_gates/l3.4bpp");
-static const u8 sRotatingGateTiles_4[] = INCBIN_U8("graphics/rotating_gates/l4.4bpp");
-static const u8 sRotatingGateTiles_5[] = INCBIN_U8("graphics/rotating_gates/t1.4bpp");
-static const u8 sRotatingGateTiles_6[] = INCBIN_U8("graphics/rotating_gates/t2.4bpp");
-static const u8 sRotatingGateTiles_7[] = INCBIN_U8("graphics/rotating_gates/t3.4bpp");
-static const u8 sRotatingGateTiles_8[] = INCBIN_U8("graphics/rotating_gates/t4.4bpp");
+static const u8 sRotatingGateTiles_1[] = INCGFX_U8("graphics/rotating_gates/l1.png", ".4bpp");
+static const u8 sRotatingGateTiles_2[] = INCGFX_U8("graphics/rotating_gates/l2.png", ".4bpp");
+static const u8 sRotatingGateTiles_3[] = INCGFX_U8("graphics/rotating_gates/l3.png", ".4bpp");
+static const u8 sRotatingGateTiles_4[] = INCGFX_U8("graphics/rotating_gates/l4.png", ".4bpp");
+static const u8 sRotatingGateTiles_5[] = INCGFX_U8("graphics/rotating_gates/t1.png", ".4bpp");
+static const u8 sRotatingGateTiles_6[] = INCGFX_U8("graphics/rotating_gates/t2.png", ".4bpp");
+static const u8 sRotatingGateTiles_7[] = INCGFX_U8("graphics/rotating_gates/t3.png", ".4bpp");
+static const u8 sRotatingGateTiles_8[] = INCGFX_U8("graphics/rotating_gates/t4.png", ".4bpp");
 
 static const struct OamData sOamData_RotatingGateLarge =
 {
@@ -911,7 +911,7 @@ static void RotatingGate_TriggerRotationAnimation(u8 gateId, s32 rotationDirecti
     }
 }
 
-static u8 RotatingGate_GetRotationInfo(u8 direction, s16 x, s16 y)
+static u8 RotatingGate_GetRotationInfo(enum Direction direction, s16 x, s16 y)
 {
     const u8 *ptr;
 
@@ -957,7 +957,7 @@ void RotatingGate_InitPuzzleAndGraphics(void)
     }
 }
 
-bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollision(enum Direction direction, s16 x, s16 y)
 {
     s32 i;
 
@@ -995,7 +995,7 @@ bool32 CheckForRotatingGatePuzzleCollision(u8 direction, s16 x, s16 y)
     return FALSE;
 }
 
-bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(u8 direction, s16 x, s16 y)
+bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(enum Direction direction, s16 x, s16 y)
 {
     s32 i;
 

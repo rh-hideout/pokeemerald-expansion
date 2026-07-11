@@ -1,7 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 #include "battle_ai_util.h"
-#include "constants/battle_z_move_effects.h"
 
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves.")
 {
@@ -35,7 +34,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- conserves Z-move if target will faint 
 
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves to ensure a low-accuracy KO.")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
     PARAMETRIZE { species = SPECIES_TORKOAL; ability = ABILITY_DROUGHT; }
     PARAMETRIZE { species = SPECIES_PELIPPER; ability = ABILITY_DRIZZLE; }
     GIVEN {
@@ -140,7 +140,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is used when about to d
 
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Detect")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THUNDERBOLT; }
     PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }
 

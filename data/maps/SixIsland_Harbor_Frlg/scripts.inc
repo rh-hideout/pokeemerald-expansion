@@ -1,4 +1,4 @@
-SixIsland_Harbor_MapScripts::
+SixIsland_Harbor_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_Harbor_EventScript_Sailor::

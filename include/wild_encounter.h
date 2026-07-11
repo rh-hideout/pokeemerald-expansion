@@ -3,6 +3,7 @@
 
 #include "rtc.h"
 #include "constants/wild_encounter.h"
+#include "wild_encounter_ow.h"
 
 #define HEADER_NONE 0xFFFF
 
@@ -18,7 +19,7 @@ struct WildPokemon
 {
     u8 minLevel;
     u8 maxLevel;
-    u16 species;
+    enum Species species;
 };
 
 struct WildPokemonInfo
@@ -45,12 +46,14 @@ struct WildPokemonHeader
 
 
 extern const struct WildPokemonHeader gWildMonHeaders[];
+extern const struct WildPokemonHeader gBattlePikeWildMonHeaders[];
+extern const struct WildPokemonHeader gBattlePyramidWildMonHeaders[];
+extern const struct WildPokemon gWildFeebas;
 extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
 extern u8 gChainFishingDexNavStreak;
 
-void DisableWildEncounters(bool8 disabled);
-u8 PickWildMonNature(void);
+u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area);
 bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior);
 bool8 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(void);
@@ -58,11 +61,15 @@ void FishingWildEncounter(u8 rod);
 u16 GetLocalWildMon(bool8 *isWaterMon);
 u16 GetLocalWaterMon(void);
 bool8 UpdateRepelCounter(void);
+bool8 IsWildLevelAllowedByRepel(u8 wildLevel);
+bool8 IsAbilityAllowingEncounter(u8 level);
 bool8 TryDoDoubleWildBattle(void);
-bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
-void CreateWildMon(u16 species, u8 level);
+void CreateWildMon(enum Species species, u8 level);
+bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPokemonArea area, u8 flags);
+bool8 AreLegendariesInSootopolisPreventingEncounters(void);
 u16 GetCurrentMapWildMonHeaderId(void);
+bool8 CheckFeebasAtCoords(s16 x, s16 y);
 u32 ChooseWildMonIndex_Land(void);
 u32 ChooseWildMonIndex_Water(void);
 u32 ChooseWildMonIndex_Rocks(void);

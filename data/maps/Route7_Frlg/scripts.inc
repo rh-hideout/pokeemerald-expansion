@@ -1,4 +1,4 @@
-Route7_MapScripts::
+Route7_Frlg_MapScripts::
 	.byte 0
 
 Route7_EventScript_UndergroundPathSign::
@@ -6,6 +6,6 @@ Route7_EventScript_UndergroundPathSign::
 	end
 
 Route7_Text_UndergroundPathSign::
-    .string "UNDERGROUND PATH\n"
-    .string "CELADON CITY - LAVENDER TOWN$"
+	.string "UNDERGROUND PATH\n"
+	.string "CELADON CITY - LAVENDER TOWN$"
 

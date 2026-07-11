@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
 {
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_TING_LU);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_TING_LU);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
@@ -144,5 +144,30 @@ DOUBLE_BATTLE_TEST("Vessel of Ruin is active if removed by Mold Breaker Entrainm
         bool32 isSwordOfRuinActive = gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.swordOfRuin;
         EXPECT_EQ(isVesselOfRuinActive, TRUE);
         EXPECT_EQ(isSwordOfRuinActive, TRUE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Vessel of Ruin affects a Gastro Acid-suppressed Vessel of Ruin user")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_GASTRO_ACID, target: playerRight); }
+        TURN { MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerRight);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerRight);
+        HP_BAR(opponentLeft, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[1], Q_4_12(1.33), damage[0]);
     }
 }

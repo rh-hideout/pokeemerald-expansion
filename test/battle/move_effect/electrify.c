@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+}
+
 SINGLE_BATTLE_TEST("Electrify makes the target's move Electric-type for the remainder of the turn (single move)")
 {
     GIVEN {
@@ -37,18 +42,20 @@ DOUBLE_BATTLE_TEST("Electrify makes the target's move Electric-type for the rema
 
 SINGLE_BATTLE_TEST("Electrify can change status moves to Electric-type")
 {
-    KNOWN_FAILING;
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_SANDSLASH, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSLASH, 1) == TYPE_GROUND);
         ASSUME(GetMoveCategory(MOVE_LEER) == DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveType(MOVE_LEER) != TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SANDSLASH);
+        OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); HP(25); MaxHP(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_LEER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
+        ABILITY_POPUP(opponent, ABILITY_VOLT_ABSORB);
+        HP_BAR(opponent, damage: -25);
+        MESSAGE("The opposing Jolteon had its HP restored.");
+        NOT MESSAGE("But it failed!");
     }
 }
 

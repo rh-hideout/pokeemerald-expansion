@@ -1,7 +1,7 @@
 /* Embedded DSL for testing overworld scripts in isolation.
  * The overworld is not available, so it is only possible to test
  * commands which don't affect the overworld itself, e.g. givemon can
- * be tested because it only alters gPlayerParty, but addobject cannot
+ * be tested because it only alters gParties[B_TRAINER_PLAYER], but addobject cannot
  * because it affects object events (which aren't loaded).
  *
  * OVERWORLD_SCRIPT(instructions...)
@@ -30,12 +30,12 @@
     ({ \
         const u8 *_script; \
         asm("mov %0, pc\n" \
-            "b .Lend" STR(__LINE__) "\n" \
+            "b 1f\n" \
             STR(__VA_ARGS__) \
             "\n" \
             "end\n" \
             ".balign 2\n" \
-            ".Lend" STR(__LINE__) ":\n" \
+            "1:\n" \
         : "=r" (_script)); \
         _script; \
     })
@@ -49,6 +49,8 @@ asm(".set FALSE, 0\n"
     ".set PARTY_SIZE, " STR(PARTY_SIZE) "\n"
     ".set VARS_START, " STR(VARS_START) "\n"
     ".set VARS_END, " STR(VARS_END) "\n"
+    ".set MON_GENDER_MAY_CUTE_CHARM, " STR(MON_GENDER_MAY_CUTE_CHARM) "\n"
+    ".set NATURE_MAY_SYNCHRONIZE, " STR(NATURE_MAY_SYNCHRONIZE) "\n"
     ".set SPECIAL_VARS_START, " STR(SPECIAL_VARS_START) "\n"
     ".set SPECIAL_VARS_END, " STR(SPECIAL_VARS_END) "\n");
 

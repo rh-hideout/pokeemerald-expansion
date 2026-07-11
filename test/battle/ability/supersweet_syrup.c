@@ -34,7 +34,7 @@ DOUBLE_BATTLE_TEST("Supersweet Syrup lowers evasion of both opposing mon's in ba
         OPPONENT(SPECIES_DIPPLIN) { Ability(ABILITY_SUPERSWEET_SYRUP); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_SUPERSWEET_SYRUP);
         MESSAGE("A supersweet aroma is wafting from the syrup covering the opposing Dipplin!");
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if 
         TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
         TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
         TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
-        if (GetMoveEffect(MOVE_SWEET_SCENT) == EFFECT_EVASION_DOWN) {
+        if (B_UPDATED_MOVE_DATA < GEN_6) {
             TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
             TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
             TURN { MOVE(opponent, MOVE_SWEET_SCENT); }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);
-        if (GetMoveEffect(MOVE_SWEET_SCENT) == EFFECT_EVASION_DOWN) {
+        if (B_UPDATED_MOVE_DATA < GEN_6) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, opponent);

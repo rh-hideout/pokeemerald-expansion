@@ -1,56 +1,87 @@
 [DIFFICULTY_NORMAL] =
 {
-    [TRAINER_SLIDE_BEFORE_FIRST_TURN] =
+    [TRAINER_LEAF_TEST] =
     {
-        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer A: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer A: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer A: This message plays after the attacker lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer A: This message plays after the defender takes their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN] = COMPOUND_STRING("Trainer A: This message plays after the defender loses one mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_MON_UNAFFECTED] = COMPOUND_STRING("Trainer A: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer A: Defender takes their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_SWITCHIN] = COMPOUND_STRING("Trainer A: This message plays after the battler switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_HALF_HP] = COMPOUND_STRING("Trainer A: Self last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_LOW_HP] = COMPOUND_STRING("Trainer A: Self last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer A: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_Z_MOVE] = COMPOUND_STRING("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_DYNAMAX] = COMPOUND_STRING("Trainer A: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_TERA] = COMPOUND_STRING("Trainer A: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer A: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_Z_MOVE] = COMPOUND_STRING("Trainer A: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_DYNAMAX] = COMPOUND_STRING("Trainer A: This message plays before the opponent activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_TERA] = COMPOUND_STRING("Trainer A: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer A: This message plays after the attacker lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer A: Attacker lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer A: This message plays after the attacker KOs one opponent mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED] = COMPOUND_STRING("Trainer A: Attacker attacked opponent with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer A: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer A: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer A: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] =
+    [TRAINER_RED_TEST] =
     {
-        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("This message plays after the player lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer B: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer B: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer B: This message plays after the attacker lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer B: This message plays after the defender takes their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN] = COMPOUND_STRING("Trainer B: This message plays after the defender loses one mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_MON_UNAFFECTED] = COMPOUND_STRING("Trainer B: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer B: Defender takes their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_SWITCHIN] = COMPOUND_STRING("Trainer B: This message plays after the battler switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_HALF_HP] = COMPOUND_STRING("Trainer B: Self last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_LOW_HP] = COMPOUND_STRING("Trainer B: Self last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer B: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_Z_MOVE] = COMPOUND_STRING("Trainer B: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_DYNAMAX] = COMPOUND_STRING("Trainer B: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_TERA] = COMPOUND_STRING("Trainer B: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer B: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_Z_MOVE] = COMPOUND_STRING("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_DYNAMAX] = COMPOUND_STRING("Trainer B: This message plays before the opponent activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_TERA] = COMPOUND_STRING("Trainer B: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer B: This message plays after the attacker lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer B: Attacker lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer B: This message plays after the attacker KOs one opponent mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED] = COMPOUND_STRING("Trainer B: Attacker attacked opponent with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer B: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer B: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer B: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] =
+    [TRAINER_PARTNER(PARTNER_STEVEN_TEST)] =
     {
-        [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("This message plays after the enemy lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] =
-    {
-        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] =
-    {
-        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] = COMPOUND_STRING("This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_ENEMY_MON_UNAFFECTED] =
-    {
-        [TRAINER_SLIDE_ENEMY_MON_UNAFFECTED] = COMPOUND_STRING("Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE] =
-    {
-        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Player lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_LAST_SWITCHIN] =
-    {
-        [TRAINER_SLIDE_LAST_SWITCHIN] = COMPOUND_STRING("This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_LAST_HALF_HP] =
-    {
-        [TRAINER_SLIDE_LAST_HALF_HP] = COMPOUND_STRING("Enemy last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_LAST_LOW_HP] =
-    {
-        [TRAINER_SLIDE_LAST_LOW_HP] = COMPOUND_STRING("Enemy last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_MEGA_EVOLUTION] =
-    {
-        [TRAINER_SLIDE_MEGA_EVOLUTION] = COMPOUND_STRING("This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_Z_MOVE] =
-    {
-        [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
-    },
-    [TRAINER_SLIDE_DYNAMAX] =
-    {
-        [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING("This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer Partner: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the defender takes their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the attacker lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the defender takes their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN] = COMPOUND_STRING("Trainer Partner: This message plays after the defender loses one mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_MON_UNAFFECTED] = COMPOUND_STRING("Trainer Partner: Opponent attacked defender with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer Partner: Defender takes their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_SWITCHIN] = COMPOUND_STRING("Trainer Partner: This message plays after the battler switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_HALF_HP] = COMPOUND_STRING("Trainer Partner: Self last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_SELF_LAST_LOW_HP] = COMPOUND_STRING("Trainer Partner: Self last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_Z_MOVE] = COMPOUND_STRING("Trainer Partner: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_DYNAMAX] = COMPOUND_STRING("Trainer Partner: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_TERA] = COMPOUND_STRING("Trainer Partner: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION] = COMPOUND_STRING("Trainer Partner: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_Z_MOVE] = COMPOUND_STRING("Trainer Partner: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_DYNAMAX] = COMPOUND_STRING("Trainer Partner: This message plays before the opponent activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_TERA] = COMPOUND_STRING("Trainer Partner: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the attacker lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Trainer Partner: Attacker lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer Partner: This message plays after the attacker KOs one opponent mon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED] = COMPOUND_STRING("Trainer Partner: Attacker attacked opponent with ineffective move.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer Partner: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer Partner: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer Partner: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
     },
 },
-

@@ -1,8 +1,8 @@
 #include "global.h"
 #include "battle.h"
-#include "battle_ai_main.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
+#include "constants/battle.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -39,22 +39,22 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "test_runner.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
-static void OpponentHandleDrawTrainerPic(u32 battler);
-static void OpponentHandleTrainerSlideBack(u32 battler);
-static void OpponentHandleChooseAction(u32 battler);
-static void OpponentHandleChooseMove(u32 battler);
-static void OpponentHandleChooseItem(u32 battler);
-static void OpponentHandleChoosePokemon(u32 battler);
-static void OpponentHandleIntroTrainerBallThrow(u32 battler);
-static void OpponentHandleDrawPartyStatusSummary(u32 battler);
-static void OpponentHandleEndLinkBattle(u32 battler);
-static void OpponentBufferRunCommand(u32 battler);
+static void OpponentHandleDrawTrainerPic(enum BattlerId battler);
+static void OpponentHandleTrainerSlideBack(enum BattlerId battler);
+static void OpponentHandleChooseAction(enum BattlerId battler);
+static void OpponentHandleChooseMove(enum BattlerId battler);
+static void OpponentHandleChooseItem(enum BattlerId battler);
+static void OpponentHandleChoosePokemon(enum BattlerId battler);
+static void OpponentHandleIntroTrainerBallThrow(enum BattlerId battler);
+static void OpponentHandleDrawPartyStatusSummary(enum BattlerId battler);
+static void OpponentHandleEndLinkBattle(enum BattlerId battler);
+static void OpponentBufferRunCommand(enum BattlerId battler);
 
-static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
+static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
 {
     [CONTROLLER_GETMONDATA]               = BtlController_HandleGetMonData,
     [CONTROLLER_GETRAWMONDATA]            = BtlController_HandleGetRawMonData,
@@ -111,14 +111,14 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
 
-void SetControllerToOpponent(u32 battler)
+void SetControllerToOpponent(enum BattlerId battler)
 {
     gBattlerBattleController[battler] = BATTLE_CONTROLLER_OPPONENT;
     gBattlerControllerEndFuncs[battler] = OpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
 }
 
-static void OpponentBufferRunCommand(u32 battler)
+static void OpponentBufferRunCommand(enum BattlerId battler)
 {
     if (IsBattleControllerActiveOnLocal(battler))
     {
@@ -129,7 +129,7 @@ static void OpponentBufferRunCommand(u32 battler)
     }
 }
 
-static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
+static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 {
     bool8 healthboxAnimDone = FALSE;
     bool8 twoMons;
@@ -169,7 +169,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         }
         else if (gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim)
         {
-            if (GetBattlerPosition(battler) == 3)
+            if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT)
             {
                 if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
                  && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim)
@@ -194,7 +194,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
     }
 }
 
-static void Intro_TryShinyAnimShowHealthbox(u32 battler)
+static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 {
     bool32 bgmRestored = FALSE;
     bool32 battlerAnimsDone = FALSE;
@@ -240,7 +240,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
             {
-                if (GetBattlerPosition(battler) == 1)
+                if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
                     m4aMPlayContinue(&gMPlayInfo_BGM);
             }
             else
@@ -292,7 +292,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
     }
 }
 
-void OpponentBufferExecCompleted(u32 battler)
+void OpponentBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
@@ -308,9 +308,9 @@ void OpponentBufferExecCompleted(u32 battler)
     }
 }
 
-static u32 OpponentGetTrainerPicId(u32 battlerId)
+static u32 OpponentGetTrainerPicId(enum BattlerId battlerId)
 {
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
@@ -319,6 +319,10 @@ static u32 OpponentGetTrainerPicId(u32 battlerId)
     else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
     {
         trainerPicId = GetFrontierBrainTrainerPicIndex();
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    {
+        trainerPicId = GetTrainerTowerTrainerFrontSpriteId();
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
     {
@@ -367,13 +371,13 @@ static u32 OpponentGetTrainerPicId(u32 battlerId)
     return trainerPicId;
 }
 
-static void OpponentHandleDrawTrainerPic(u32 battler)
+static void OpponentHandleDrawTrainerPic(enum BattlerId battler)
 {
     s16 xPos;
-    u32 trainerPicId;
+    enum TrainerPicID trainerPicId;
 
-    // Sets Multibattle test opponent sprites to not be Hiker
-    if (IsMultibattleTest())
+    // Sets battle test opponent sprites to Leaf and Red
+    if (TESTING)
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
@@ -409,24 +413,24 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
 }
 
-void OpponentHandleTrainerSlide(u32 battler)
+void OpponentHandleTrainerSlide(enum BattlerId battler)
 {
-    u32 trainerPicId = OpponentGetTrainerPicId(battler);
+    enum TrainerPicID trainerPicId = OpponentGetTrainerPicId(battler);
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
-static void OpponentHandleTrainerSlideBack(u32 battler)
+static void OpponentHandleTrainerSlideBack(enum BattlerId battler)
 {
     BtlController_HandleTrainerSlideBack(battler, 35, FALSE);
 }
 
-static void OpponentHandleChooseAction(u32 battler)
+static void OpponentHandleChooseAction(enum BattlerId battler)
 {
     AI_TrySwitchOrUseItem(battler);
     BtlController_Complete(battler);
 }
 
-static void OpponentHandleChooseMove(u32 battler)
+static void OpponentHandleChooseMove(enum BattlerId battler)
 {
     u32 chosenMoveIndex;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
@@ -456,8 +460,11 @@ static void OpponentHandleChooseMove(u32 battler)
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
             enum MoveTarget target = GetBattlerMoveTargetType(battler, chosenMove);
 
-            if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
+            if (target == TARGET_USER)
                 gBattlerTarget = battler;
+
+            if (target == TARGET_ALLY)
+                gBattlerTarget = BATTLE_PARTNER(battler);
 
             if (target == TARGET_BOTH)
             {
@@ -480,43 +487,49 @@ static void OpponentHandleChooseMove(u32 battler)
         }
         BtlController_Complete(battler);
     }
-    else // Wild pokemon - use random move
+    else // Wild Pokémon - use random move
     {
-        u32 move;
+        enum Move move;
         do
         {
             chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        enum MoveTarget target = GetBattlerMoveTargetType(battler, move);
-        if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
+        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
+        else if (moveTarget == TARGET_ALLY)
+        {
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (BATTLE_PARTNER(battler) << 8));
+        }
         else if (IsDoubleBattle())
         {
+            enum BattlerId targetBattler;
             do {
-                target = GetBattlerAtPosition(Random() & 2);
-            } while (!CanTargetBattler(battler, target, move));
+                enum BattlerPosition pos = RandomPercentage(RNG_WILD_MON_TARGET, 50) ? B_POSITION_PLAYER_LEFT : B_POSITION_PLAYER_RIGHT;
+                targetBattler = GetBattlerAtPosition(pos);
+            } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
+            if (WE_WILD_NATURAL_ENEMIES && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
             {
-                u32 speciesAttacker, speciesTarget;
+                enum Species speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;
                 speciesTarget = gBattleMons[GetBattlerAtPosition(BATTLE_PARTNER(battler))].species;
 
                 bool32 isPartnerEnemy = IsNaturalEnemy(speciesAttacker, speciesTarget);
 
-                if (isPartnerEnemy && CanTargetBattler(battler, target, move))
+                if (isPartnerEnemy && CanTargetBattler(battler, GetBattlerAtPosition(BATTLE_PARTNER(battler)), move))
                     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetBattlerAtPosition(BATTLE_PARTNER(battler)) << 8));
                 else
-                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (target << 8));
+                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (targetBattler << 8));
             }
             else
             {
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (target << 8));
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (targetBattler << 8));
             }
         }
         else
@@ -526,13 +539,13 @@ static void OpponentHandleChooseMove(u32 battler)
     }
 }
 
-static void OpponentHandleChooseItem(u32 battler)
+static void OpponentHandleChooseItem(enum BattlerId battler)
 {
     BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
     BtlController_Complete(battler);
 }
 
-static void OpponentHandleChoosePokemon(u32 battler)
+static void OpponentHandleChoosePokemon(enum BattlerId battler)
 {
     s32 chosenMonId;
     enum SwitchType switchType = SWITCH_AFTER_KO;
@@ -559,7 +572,8 @@ static void OpponentHandleChoosePokemon(u32 battler)
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
-            s32 battler1, battler2, firstId, lastId;
+            enum BattlerId battler1, battler2;
+            s32 lastId = GetAILastPartyIndex(battler); // + 1
 
             if (!IsDoubleBattle())
             {
@@ -571,12 +585,11 @@ static void OpponentHandleChoosePokemon(u32 battler)
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             }
 
-            GetAIPartyIndexes(battler, &firstId, &lastId);
-            for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
+            for (chosenMonId = 0; chosenMonId < lastId; chosenMonId++)
             {
-                if (IsValidForBattle(&gEnemyParty[chosenMonId])
-                 && chosenMonId != gBattlerPartyIndexes[battler1]
-                 && chosenMonId != gBattlerPartyIndexes[battler2])
+                if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
+                 && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
+                 && !((chosenMonId == gBattlerPartyIndexes[battler2]) && BattlersShareParty(battler, battler2)))
                     break;
             }
         }
@@ -595,17 +608,17 @@ static void OpponentHandleChoosePokemon(u32 battler)
     BtlController_Complete(battler);
 }
 
-static void OpponentHandleIntroTrainerBallThrow(u32 battler)
+static void OpponentHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     BtlController_HandleIntroTrainerBallThrow(battler, 0, NULL, 0, Intro_TryShinyAnimShowHealthbox);
 }
 
-static void OpponentHandleDrawPartyStatusSummary(u32 battler)
+static void OpponentHandleDrawPartyStatusSummary(enum BattlerId battler)
 {
     BtlController_HandleDrawPartyStatusSummary(battler, B_SIDE_OPPONENT, TRUE);
 }
 
-static void OpponentHandleEndLinkBattle(u32 battler)
+static void OpponentHandleEndLinkBattle(enum BattlerId battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_LINK && !(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
     {

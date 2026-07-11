@@ -37,7 +37,7 @@ static void SetArenaPrize(void);
 static void GiveArenaPrize(void);
 static void BufferArenaOpponentName(void);
 static void SpriteCB_JudgmentIcon(struct Sprite *sprite);
-static void ShowJudgmentSprite(u8 x, u8 y, u8 category, u8 battler);
+static void ShowJudgmentSprite(u8 x, u8 y, u8 category, enum BattlerId battler);
 
 #define JUDGMENT_STATE_FINISHED 8
 
@@ -212,8 +212,8 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         break;
     case 4:
         PlaySE(SE_ARENA_TIMEUP1);
-        ShowJudgmentSprite(80, 40, ARENA_CATEGORY_MIND, B_POSITION_PLAYER_LEFT);
-        ShowJudgmentSprite(160, 40, ARENA_CATEGORY_MIND, B_POSITION_OPPONENT_LEFT);
+        ShowJudgmentSprite(80, 40, ARENA_CATEGORY_MIND, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+        ShowJudgmentSprite(160, 40, ARENA_CATEGORY_MIND, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
         BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
@@ -221,8 +221,8 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         break;
     case 5:
         PlaySE(SE_ARENA_TIMEUP1);
-        ShowJudgmentSprite(80, 56, ARENA_CATEGORY_SKILL, B_POSITION_PLAYER_LEFT);
-        ShowJudgmentSprite(160, 56, ARENA_CATEGORY_SKILL, B_POSITION_OPPONENT_LEFT);
+        ShowJudgmentSprite(80, 56, ARENA_CATEGORY_SKILL, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+        ShowJudgmentSprite(160, 56, ARENA_CATEGORY_SKILL, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
         BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
@@ -230,8 +230,8 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         break;
     case 6:
         PlaySE(SE_ARENA_TIMEUP1);
-        ShowJudgmentSprite(80, 72, ARENA_CATEGORY_BODY, B_POSITION_PLAYER_LEFT);
-        ShowJudgmentSprite(160, 72, ARENA_CATEGORY_BODY, B_POSITION_OPPONENT_LEFT);
+        ShowJudgmentSprite(80, 72, ARENA_CATEGORY_BODY, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+        ShowJudgmentSprite(160, 72, ARENA_CATEGORY_BODY, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
         BattleStringExpandPlaceholdersToDisplayedString(gText_Judgment);
         BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TITLE);
         (*state)++;
@@ -281,7 +281,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
     return result;
 }
 
-static void ShowJudgmentSprite(u8 x, u8 y, u8 category, u8 battler)
+static void ShowJudgmentSprite(u8 x, u8 y, u8 category, enum BattlerId battler)
 {
     int animNum = 0;
     int pointsPlayer = 0;
@@ -310,7 +310,7 @@ static void ShowJudgmentSprite(u8 x, u8 y, u8 category, u8 battler)
     {
         animNum = ANIM_ICON_CIRCLE;
         // +2 to score total for winning
-        if (battler != 0)
+        if (battler != B_BATTLER_0)
             gBattleTextBuff2[0] += 2;
         else
             gBattleTextBuff1[0] += 2;
@@ -319,7 +319,7 @@ static void ShowJudgmentSprite(u8 x, u8 y, u8 category, u8 battler)
     {
         animNum = ANIM_ICON_TRIANGLE;
         // +1 to score total for a tie
-        if (battler != 0)
+        if (battler != B_BATTLER_0)
             gBattleTextBuff2[0] += 1;
         else
             gBattleTextBuff1[0] += 1;
@@ -353,7 +353,7 @@ void BattleArena_InitPoints(void)
     hpAtStart[1] = gBattleMons[1].hp;
 }
 
-void BattleArena_AddMindPoints(u8 battler)
+void BattleArena_AddMindPoints(enum BattlerId battler)
 {
 // All moves with power != 0 give 1 point, with the following exceptions:
 //    - Counter, Mirror Coat, and Bide give 0 points
@@ -376,42 +376,47 @@ void BattleArena_AddMindPoints(u8 battler)
     }
 }
 
-void BattleArena_AddSkillPoints(u8 battler)
+void BattleArena_AddSkillPoints(enum BattlerId battlerAtk)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (!gBattleStruct->unableToUseMove)
+    if (gBattleStruct->unableToUseMove)
+        return;
+
+    if (gBattleStruct->battlerState[battlerAtk].alreadyStatusedMoveAttempt)
     {
-        if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
+        gBattleStruct->battlerState[battlerAtk].alreadyStatusedMoveAttempt = FALSE;
+        skillPoints[battlerAtk] -= 2;
+        return;
+    }
+
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (IsBattlerUnaffectedByMove(battlerDef))
         {
-            gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt = FALSE;
-            skillPoints[battler] -= 2;
+            if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_MISSED))
+                skillPoints[battlerAtk] -= 2;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+        else if ((gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS) && (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS))
         {
-            if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
-                skillPoints[battler] -= 2;
+            skillPoints[battlerAtk] += 1;
         }
-        else if ((gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE) && (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
+        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
         {
-            skillPoints[battler] += 1;
+            skillPoints[battlerAtk] += 2;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE)
+        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS)
         {
-            skillPoints[battler] += 2;
+            skillPoints[battlerAtk] -= 1;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE)
+        else if (!gProtectStructs[battlerDef].protected)
         {
-            skillPoints[battler] -= 1;
-        }
-        else if (!gProtectStructs[battler].protected)
-        {
-            skillPoints[battler] += 1;
+            skillPoints[battlerAtk] += 1;
         }
     }
 }
 
-void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
+void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringId)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
@@ -420,10 +425,8 @@ void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
     case STRINGID_PKMNSXMADEYUSELESS:
     case STRINGID_PKMNSXMADEITINEFFECTIVE:
     case STRINGID_PKMNSXPREVENTSFLINCHING:
-    case STRINGID_PKMNSXBLOCKSY2:
-    case STRINGID_PKMNSXPREVENTSYLOSS:
-    case STRINGID_PKMNSXMADEYINEFFECTIVE:
     case STRINGID_PKMNSXBLOCKSY:
+    case STRINGID_PKMNSXMADEYINEFFECTIVE:
     case STRINGID_PKMNPROTECTEDBY:
     case STRINGID_PKMNPREVENTSUSAGE:
     case STRINGID_PKMNRESTOREDHPUSING:
@@ -431,7 +434,6 @@ void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
     case STRINGID_PKMNPREVENTSCONFUSIONWITH:
     case STRINGID_PKMNRAISEDFIREPOWERWITH:
     case STRINGID_PKMNANCHORSITSELFWITH:
-    case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
         break;
@@ -440,7 +442,7 @@ void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
     }
 }
 
-static void UNUSED UpdateHPAtStart(u8 battler)
+static void UNUSED UpdateHPAtStart(enum BattlerId battler)
 {
     u16 *hpAtStart = gBattleStruct->arenaStartHp;
 
@@ -452,7 +454,7 @@ static void UNUSED UpdateHPAtStart(u8 battler)
 static void InitArenaChallenge(void)
 {
     bool32 isCurrent;
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     gSaveBlock2Ptr->frontier.challengeStatus = 0;
     gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
@@ -472,7 +474,7 @@ static void InitArenaChallenge(void)
 
 static void GetArenaData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -493,7 +495,7 @@ static void GetArenaData(void)
 
 static void SetArenaData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -533,7 +535,7 @@ static void SaveArenaChallenge(void)
 
 static void SetArenaPrize(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     if (gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode] > 41)
         gSaveBlock2Ptr->frontier.arenaPrize = sLongStreakPrizeItems[Random() % ARRAY_COUNT(sLongStreakPrizeItems)];

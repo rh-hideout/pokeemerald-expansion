@@ -1,4 +1,4 @@
-SafariZone_Center_MapScripts::
+SafariZone_Center_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SafariZone_Center_OnTransition
 	.byte 0
 
@@ -19,13 +19,13 @@ SafariZone_Center_EventScript_AreaSign::
 	end
 
 SafariZone_Center_Text_RestHouse::
-    .string "REST HOUSE$"
+	.string "REST HOUSE$"
 
 SafariZone_Center_Text_PressStartToCheckTime::
-    .string "TRAINER TIPS\p"
-    .string "Press START to check\n"
-    .string "remaining time.$"
+	.string "TRAINER TIPS\p"
+	.string "Press START to check\n"
+	.string "remaining time.$"
 
 SafariZone_Center_Text_CenterArea::
-    .string "CENTER AREA$"
+	.string "CENTER AREA$"
 

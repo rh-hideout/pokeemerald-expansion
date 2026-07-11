@@ -1,4 +1,4 @@
-ThreeIsland_Harbor_MapScripts::
+ThreeIsland_Harbor_Frlg_MapScripts::
 	.byte 0
 
 ThreeIsland_Harbor_EventScript_Sailor::

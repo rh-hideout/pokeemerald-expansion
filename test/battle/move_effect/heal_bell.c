@@ -5,7 +5,7 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
     ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
-    ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
+    ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
 DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
         STATUS_ICON(playerRight, none: TRUE);
         NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
         for (i = 0; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
         case STATUS1_FROSTBITE:    STATUS_ICON(playerLeft, frostbite: FALSE); STATUS_ICON(playerRight, frostbite: FALSE); break;
         }
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[j], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -96,7 +96,7 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)"
 
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Heal Bell cures inactive Soundproof Pokemon (Gen5+)")
 
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
@@ -152,7 +152,7 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
     PARAMETRIZE { config = GEN_8; }
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_EXPLOUD) { Ability(ABILITY_SOUNDPROOF); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
@@ -169,7 +169,8 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
 
 DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 {
-    u32 ability, config;
+    enum Ability ability;
+    u32 config;
 
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_5; }
@@ -178,8 +179,8 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 
     GIVEN {
         ASSUME(!IsSoundMove(MOVE_AROMATHERAPY));
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Status1(STATUS1_POISON); };
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); Status1(STATUS1_POISON); }
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
@@ -196,14 +197,15 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 
 SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of config")
 {
-    u32 config, ability;
+    u32 config;
+    enum Ability ability;
 
     PARAMETRIZE { config = GEN_4, ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { config = GEN_5, ability = ABILITY_SOUNDPROOF; }
 
     GIVEN {
         ASSUME(!IsSoundMove(MOVE_AROMATHERAPY));
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);

@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Color Change changes the type of a Pokemon being hit by a mo
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYWAVE, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Psychic type!");
+        MESSAGE("The opposing Kecleon's type changed to Psychic!");
     }
 }
 
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Color Change changes the user to Electric type if hit by a m
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_CUT, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Electric type!");
+        MESSAGE("The opposing Kecleon's type changed to Electric!");
     }
 }
 
@@ -90,13 +90,13 @@ SINGLE_BATTLE_TEST("Color Change changes the type when a Pokemon is hit by Futur
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Kecleon took the Future Sight attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Psychic type!");
+        MESSAGE("The opposing Kecleon's type changed to Psychic!");
     }
 }
 
@@ -107,13 +107,13 @@ SINGLE_BATTLE_TEST("Color Change changes the type when a Pokemon is hit by Doom 
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
     } WHEN {
         TURN { MOVE(player, MOVE_DOOM_DESIRE); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOOM_DESIRE, player);
         MESSAGE("The opposing Kecleon took the Doom Desire attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Steel type!");
+        MESSAGE("The opposing Kecleon's type changed to Steel!");
     }
 }
 
@@ -124,13 +124,13 @@ SINGLE_BATTLE_TEST("Color Change changes the type to Electric when a Pokemon is 
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
+        TURN {}
         TURN { MOVE(opponent, MOVE_ELECTRIFY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Kecleon took the Future Sight attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Electric type!");
+        MESSAGE("The opposing Kecleon's type changed to Electric!");
     }
 }
 
@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Color Change changes the type to Normal when a Pokemon is hi
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN { MOVE(player, MOVE_SOAK); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("Wobbuffet used Soak!");
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Color Change changes the type to Normal when a Pokemon is hi
         MESSAGE("The opposing Kecleon transformed into the Water type!");
         MESSAGE("The opposing Kecleon took the Future Sight attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Normal type!");
+        MESSAGE("The opposing Kecleon's type changed to Normal!");
     }
 }
 
@@ -162,21 +162,22 @@ SINGLE_BATTLE_TEST("Color Change does not change the type to Normal when a Pokem
     } WHEN {
         TURN { MOVE(player, MOVE_SOAK); }
         TURN { MOVE(player, MOVE_STRUGGLE); }
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, player);
         MESSAGE("The opposing Kecleon transformed into the Water type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-            MESSAGE("The opposing Kecleon's Color Change made it the Normal type!");
+            MESSAGE("The opposing Kecleon's type changed to Normal!");
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer Force")
+SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer Force (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
@@ -184,5 +185,20 @@ SINGLE_BATTLE_TEST("Color Change does not activate if move is boosted by Sheer F
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         NOT ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Color Change does activate if move is boosted by Sheer Force (Champions)")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); }
+        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
     }
 }

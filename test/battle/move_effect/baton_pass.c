@@ -45,8 +45,6 @@ TO_DO_BATTLE_TEST("Baton Pass passes Heal Block's effect");                     
 TO_DO_BATTLE_TEST("Baton Pass doesn't pass Imprison's effect");                                             // test/battle/move_effect/imprison.c
 TO_DO_BATTLE_TEST("Baton Pass passes Ingrain's effect");                                                    // test/battle/move_effect/ingrain.c
 TO_DO_BATTLE_TEST("Baton Pass passes Magnet Rise's effect");                                                // test/battle/move_effect/magnet_rise.c
-TO_DO_BATTLE_TEST("Baton Pass passes escape prevention primary effect if it's used by the target");         // test/battle/move_effect/mean_look.c (Spider Web, Mean Look, Block)
-TO_DO_BATTLE_TEST("Baton Pass doesn't pass escape prevention primary effects if it's used by the user");    // test/battle/move_effect/mean_look.c (Spider Web, Mean Look, Block)
 TO_DO_BATTLE_TEST("Baton Pass doesn't pass Mimic's learnt move");                                           // test/battle/move_effect/mimic.c
 TO_DO_BATTLE_TEST("Baton Pass passes Minimize's evasion but not the weakness to stomping moves");           // test/battle/move_effect/minimize.c
 TO_DO_BATTLE_TEST("Baton Pass passes No Retreat's escape prevention effect");                               // test/battle/move_effect/no_retreat.c

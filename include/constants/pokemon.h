@@ -29,22 +29,25 @@ enum __attribute__((packed)) Type
 };
 
 // Pokémon egg groups
-#define EGG_GROUP_NONE                0
-#define EGG_GROUP_MONSTER             1
-#define EGG_GROUP_WATER_1             2
-#define EGG_GROUP_BUG                 3
-#define EGG_GROUP_FLYING              4
-#define EGG_GROUP_FIELD               5
-#define EGG_GROUP_FAIRY               6
-#define EGG_GROUP_GRASS               7
-#define EGG_GROUP_HUMAN_LIKE          8
-#define EGG_GROUP_WATER_3             9
-#define EGG_GROUP_MINERAL             10
-#define EGG_GROUP_AMORPHOUS           11
-#define EGG_GROUP_WATER_2             12
-#define EGG_GROUP_DITTO               13
-#define EGG_GROUP_DRAGON              14
-#define EGG_GROUP_NO_EGGS_DISCOVERED  15
+enum __attribute__((packed)) EggGroup
+{
+    EGG_GROUP_NONE,
+    EGG_GROUP_MONSTER,
+    EGG_GROUP_WATER_1,
+    EGG_GROUP_BUG,
+    EGG_GROUP_FLYING,
+    EGG_GROUP_FIELD,
+    EGG_GROUP_FAIRY,
+    EGG_GROUP_GRASS,
+    EGG_GROUP_HUMAN_LIKE,
+    EGG_GROUP_WATER_3,
+    EGG_GROUP_MINERAL,
+    EGG_GROUP_AMORPHOUS,
+    EGG_GROUP_WATER_2,
+    EGG_GROUP_DITTO,
+    EGG_GROUP_DRAGON,
+    EGG_GROUP_NO_EGGS_DISCOVERED,
+};
 
 #define EGG_GROUPS_PER_MON            2
 
@@ -75,6 +78,9 @@ enum __attribute__((packed)) Type
 #define NATURE_CAREFUL  23 // +SpDef -SpAtk
 #define NATURE_QUIRKY   24 // Neutral
 #define NUM_NATURES     25
+
+#define NATURE_RANDOM            NUM_NATURES
+#define NATURE_MAY_SYNCHRONIZE   NUM_NATURES + 1
 
 // Pokémon Stats
 enum __attribute__((packed)) Stat
@@ -154,9 +160,12 @@ enum __attribute__((packed)) Stat
 
 #define MAX_DYNAMAX_LEVEL 10
 
-#define OT_ID_PLAYER_ID       0
-#define OT_ID_PRESET          1
-#define OT_ID_RANDOM_NO_SHINY 2
+enum OtIdMethod
+{
+    OT_ID_PLAYER_ID,
+    OT_ID_PRESET,
+    OT_ID_RANDOM_NO_SHINY
+};
 
 #define MON_GIVEN_TO_PARTY      0
 #define MON_GIVEN_TO_PC         1
@@ -173,11 +182,12 @@ enum __attribute__((packed)) Stat
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_MOVE_END  0xFFFF
 
-#define MAX_LEVEL_UP_MOVES       20
-
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
 #define MON_GENDERLESS 0xFF
+
+#define MON_GENDER_RANDOM         0x01
+#define MON_GENDER_MAY_CUTE_CHARM 0x02
 
 // Constants for AdjustFriendship
 #define FRIENDSHIP_EVENT_GROW_LEVEL       0
@@ -189,6 +199,7 @@ enum __attribute__((packed)) Stat
 #define FRIENDSHIP_EVENT_FAINT_SMALL      6
 #define FRIENDSHIP_EVENT_FAINT_FIELD_PSN  7
 #define FRIENDSHIP_EVENT_FAINT_LARGE      8 // If opponent was >= 30 levels higher. See AdjustFriendshipOnBattleFaint
+#define FRIENDSHIP_EVENT_MASSAGE          9
 
 // Constants for GetLeadMonFriendshipScore
 #define FRIENDSHIP_NONE        0
@@ -224,13 +235,14 @@ enum __attribute__((packed)) Stat
 // Move category defines.
 enum __attribute__((packed)) DamageCategory
 {
+    DAMAGE_CATEGORY_NONE,
     DAMAGE_CATEGORY_PHYSICAL,
     DAMAGE_CATEGORY_SPECIAL,
     DAMAGE_CATEGORY_STATUS
 };
 
 // Growth rates
-enum GrowthRate
+enum __attribute__((packed)) GrowthRate
 {
     GROWTH_MEDIUM_FAST,
     GROWTH_ERRATIC,
@@ -332,6 +344,18 @@ enum EvolutionMode {
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
+enum EvoTriggerVersion {
+    EVO_TRIGGER_TABLET_CURSE,
+    EVO_TRIGGER_DARK_SCROLL,
+    EVO_TRIGGER_WATER_SCROLL,
+};
+
+enum EvolutionEventResult {
+    EVO_EVENT_IMPOSSIBLE,
+    EVO_EVENT_INTERRUPTED,
+    EVO_EVENT_SUCCESSFUL,
+};
+
 // used to determine whether an evolution is happening or not, so we know if items should be removed
 enum EvoState {
     CHECK_EVO,
@@ -354,9 +378,18 @@ enum EvoSpinDirections {
 };
 
 enum ShinyMode {
+    SHINY_MODE_NEVER,
     SHINY_MODE_ALWAYS,
     SHINY_MODE_RANDOM,
-    SHINY_MODE_NEVER
+};
+
+enum GeneratedMonOrigin
+{
+    UNDEFINED_MON_ORIGIN,
+    WILDMON_ORIGIN,
+    STATIC_WILDMON_ORIGIN,
+    ROAMER_ORIGIN,
+    GIFTMON_ORIGIN
 };
 
 #define MON_PIC_WIDTH 64

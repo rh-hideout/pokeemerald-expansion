@@ -85,7 +85,7 @@ lt_o_SoundInfo_pcmBuffer: .word o_SoundInfo_pcmBuffer
 lt_PCM_DMA_BUF_SIZE:      .word PCM_DMA_BUF_SIZE
 	thumb_func_end SoundMain
 
-	.section .iwram.code
+	.section .iwram.code, "ax", %progbits
 	thumb_func_start SoundMainRAM
 SoundMainRAM:
 	ldrb r3, [r0, o_SoundInfo_reverb]

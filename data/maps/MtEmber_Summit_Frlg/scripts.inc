@@ -1,4 +1,4 @@
-MtEmber_Summit_MapScripts::
+MtEmber_Summit_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MtEmber_Summit_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, MtEmber_Summit_OnResume
 	.byte 0
@@ -35,7 +35,6 @@ MtEmber_Summit_EventScript_Moltres::
 	waitbuttonpress
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
-	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, MtEmber_Summit_EventScript_DefeatedMoltres

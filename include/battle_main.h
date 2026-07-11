@@ -9,8 +9,8 @@
 // For displaying a multi battle partner's Pokémon in the party menu
 struct MultiPartnerMenuPokemon
 {
-    /*0x00*/ u16 species;
-    /*0x02*/ u16 heldItem;
+    /*0x00*/ enum Species species;
+    /*0x02*/ enum Item heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x0F*/ u8 level;
     /*0x10*/ u16 hp;
@@ -58,6 +58,9 @@ enum FirstTurnEventsStates
     FIRST_TURN_EVENTS_TOTEM_BOOST,
     FIRST_TURN_SWITCH_IN_EVENTS,
     FIRST_TURN_FAINTED_BATTLERS,
+    FIRST_TURN_EVENTS_TRAINER_SLIDE_A,
+    FIRST_TURN_EVENTS_TRAINER_SLIDE_B,
+    FIRST_TURN_EVENTS_TRAINER_SLIDE_PARTNER,
     FIRST_TURN_EVENTS_END,
 };
 
@@ -78,42 +81,41 @@ void SpriteCB_HideAsMoveTarget(struct Sprite *sprite);
 void SpriteCB_OpponentMonFromBall(struct Sprite *sprite);
 void SpriteCB_BattleSpriteStartSlideLeft(struct Sprite *sprite);
 void SpriteCB_FaintSlideAnim(struct Sprite *sprite);
-void DoBounceEffect(u8 battler, u8 which, s8 delta, s8 amplitude);
-void EndBounceEffect(u8 battler, u8 which);
+void DoBounceEffect(enum BattlerId battler, u8 which, s8 delta, s8 amplitude);
+void EndBounceEffect(enum BattlerId battler, u8 which);
 void SpriteCB_PlayerMonFromBall(struct Sprite *sprite);
 void SpriteCB_PlayerMonSlideIn(struct Sprite *sprite);
 void SpriteCB_TrainerThrowObject(struct Sprite *sprite);
 void AnimSetCenterToCornerVecX(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);
 void BeginBattleIntro(void);
-void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy);
-const u8* FaintClearSetData(u32 battler);
+void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy);
+void FaintClearSetData(enum BattlerId battler);
 void BattleTurnPassed(void);
-u8 IsRunningFromBattleImpossible(u32 battler);
-void SwitchTwoBattlersInParty(u32 battler, u32 battler2);
-void SwitchPartyOrder(u32 battler);
+bool32 EndTurnEvents(void);
+u8 IsRunningFromBattleImpossible(enum BattlerId battler);
+void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2);
+void SwitchPartyOrder(enum BattlerId battler);
 void SwapTurnOrder(u8 id1, u8 id2);
-u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
-s32 GetChosenMovePriority(u32 battler, enum Ability ability);
-s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move);
+u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
+s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability);
+s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Move move);
 s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
 s32 GetWhichBattlerFasterOrTies(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
 s32 GetWhichBattlerFaster(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
-void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
+enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState monInBattle);
+void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler);
 bool32 IsWildMonSmart(void);
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
-u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
 s32 Factorial(s32 n);
 
-extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
+extern struct MultiPartnerMenuPokemon *gMultiPartnerParty;
 
 extern const struct SpriteTemplate gUnusedBattleInitSprite;
 extern const struct OamData gOamData_BattleSpriteOpponentSide;

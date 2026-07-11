@@ -3,36 +3,12 @@
 
 
 typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
-typedef bool32 (*AiSwitchFunc)(u32);
 
 #define UNKNOWN_NO_OF_HITS UINT32_MAX
 
 // for AI_WhoStrikesFirst
 #define AI_IS_FASTER   1
 #define AI_IS_SLOWER   -1
-
-// for stat increasing / decreasing scores
-enum StatChange
-{
-    STAT_CHANGE_ATK,
-    STAT_CHANGE_DEF,
-    STAT_CHANGE_SPEED,
-    STAT_CHANGE_SPATK,
-    STAT_CHANGE_SPDEF,
-    STAT_CHANGE_ATK_2,
-    STAT_CHANGE_DEF_2,
-    STAT_CHANGE_SPEED_2,
-    STAT_CHANGE_SPATK_2,
-    STAT_CHANGE_SPDEF_2,
-    STAT_CHANGE_ATK_3,
-    STAT_CHANGE_DEF_3,
-    STAT_CHANGE_SPEED_3,
-    STAT_CHANGE_SPATK_3,
-    STAT_CHANGE_SPDEF_3,
-    STAT_CHANGE_ATK_MAX,
-    STAT_CHANGE_ACC,
-    STAT_CHANGE_EVASION
-};
 
 #define BEST_DAMAGE_MOVE         1  // Move with the most amount of hits with the best accuracy/effect
 #define POWERFUL_STATUS_MOVE     10 // Moves with this score will be chosen over a move that faints target
@@ -124,19 +100,19 @@ enum MoveComparisonResult
     return score;                   \
 }
 
+void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler);
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
-void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler);
-void ComputeBattlerDecisions(u32 battler);
-u32 BattleAI_ChooseMoveIndex(u32 battler);
+void ComputeAiBattlerDecisions(enum BattlerId battler);
+u32 BattleAI_ChooseMoveIndex(enum BattlerId battler);
 void Ai_InitPartyStruct(void);
-void Ai_UpdateSwitchInData(u32 battler);
-void Ai_UpdateFaintData(u32 battler);
+void Ai_UpdateSwitchInData(enum BattlerId battler);
+void Ai_UpdateFaintData(enum BattlerId battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunctions(void);
-void AI_TrySwitchOrUseItem(u32 battler);
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus);
-
-extern AiSwitchFunc gDynamicAiSwitchFunc;
+void AI_TrySwitchOrUseItem(enum BattlerId battler);
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain);
+void AIDebugTimerStart(void);
+void AIDebugTimerEnd(void);
 
 #endif // GUARD_BATTLE_AI_MAIN_H

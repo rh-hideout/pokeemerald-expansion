@@ -1,4 +1,4 @@
-OneIsland_Harbor_MapScripts::
+OneIsland_Harbor_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, OneIsland_Harbor_OnWarp
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, OneIsland_Harbor_OnFrame
 	.byte 0

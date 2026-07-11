@@ -1,4 +1,4 @@
-NavelRock_Summit_MapScripts::
+NavelRock_Summit_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NavelRock_Summit_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, NavelRock_Summit_OnResume
 	.byte 0
@@ -58,7 +58,6 @@ NavelRock_Summit_EventScript_HoOh::
 	seteventmon SPECIES_HO_OH, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
-	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	setvar VAR_LAST_TALKED, LOCALID_NAVEL_ROCK_HO_OH
 	specialvar VAR_RESULT, GetBattleOutcome

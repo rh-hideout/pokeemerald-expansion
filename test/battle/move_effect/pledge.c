@@ -29,8 +29,8 @@ DOUBLE_BATTLE_TEST("Water and Fire Pledge create a rainbow on the user's side of
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A rainbow appeared in the sky on your team's side!");
-        MESSAGE("The rainbow on your team's side disappeared!");
+        MESSAGE("A rainbow appeared in the sky on your side!");
+        MESSAGE("The rainbow on your side disappeared!");
     }
 }
 
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns tha
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A sea of fire enveloped the opposing team!");
+        MESSAGE("A sea of fire enveloped the opposing side!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SEA_OF_FIRE, opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
@@ -111,7 +111,7 @@ DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns tha
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
         MESSAGE("The opposing Wynaut was hurt by the sea of fire!");
-        MESSAGE("The sea of fire around the opposing team disappeared!");
+        MESSAGE("The sea of fire around the opposing side disappeared!");
     }
 }
 
@@ -155,8 +155,8 @@ DOUBLE_BATTLE_TEST("Grass and Water Pledge create a swamp on the user's side of 
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A swamp enveloped the opposing team!");
-        MESSAGE("The swamp around the opposing team disappeared!");
+        MESSAGE("A swamp enveloped the opposing side!");
+        MESSAGE("The swamp around the opposing side disappeared!");
     }
 }
 
@@ -217,7 +217,7 @@ DOUBLE_BATTLE_TEST("Pledge moves can not be redirected by absorbing abilities")
         OPPONENT(SPECIES_LILEEP) { Ability(ABILITY_STORM_DRAIN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentRight);}
+        TURN { MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerLeft);
         HP_BAR(opponentRight);
@@ -226,7 +226,7 @@ DOUBLE_BATTLE_TEST("Pledge moves can not be redirected by absorbing abilities")
 
 DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used again")
 {
-    u16 pledgeMove1, pledgeMove2;
+    enum Move pledgeMove1, pledgeMove2;
 
     PARAMETRIZE { pledgeMove1 = MOVE_WATER_PLEDGE; pledgeMove2 = MOVE_FIRE_PLEDGE; }
     PARAMETRIZE { pledgeMove1 = MOVE_FIRE_PLEDGE; pledgeMove2 = MOVE_GRASS_PLEDGE; }
@@ -252,25 +252,25 @@ DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used 
         ANIMATION(ANIM_TYPE_MOVE, pledgeMove1, playerRight);
         if (pledgeMove1 == MOVE_WATER_PLEDGE && pledgeMove2 == MOVE_FIRE_PLEDGE)
         {
-            NOT MESSAGE("A rainbow appeared in the sky on your team's side!");
-            MESSAGE("The rainbow on your team's side disappeared!");
+            NOT MESSAGE("A rainbow appeared in the sky on your side!");
+            MESSAGE("The rainbow on your side disappeared!");
         }
         if (pledgeMove1 == MOVE_FIRE_PLEDGE && pledgeMove2 == MOVE_GRASS_PLEDGE)
         {
-            NOT MESSAGE("A sea of fire enveloped the opposing team!");
-            MESSAGE("The sea of fire around the opposing team disappeared!");
+            NOT MESSAGE("A sea of fire enveloped the opposing side!");
+            MESSAGE("The sea of fire around the opposing side disappeared!");
         }
         if (pledgeMove1 == MOVE_GRASS_PLEDGE && pledgeMove2 == MOVE_WATER_PLEDGE)
         {
-            NOT MESSAGE("A swamp enveloped the opposing team!");
-            MESSAGE("The swamp around the opposing team disappeared!");
+            NOT MESSAGE("A swamp enveloped the opposing side!");
+            MESSAGE("The swamp around the opposing side disappeared!");
         }
     }
 }
 
 DOUBLE_BATTLE_TEST("Pledge moves get same attack type bonus from partner", s16 damage)
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_CHARMANDER; }
@@ -334,7 +334,8 @@ DOUBLE_BATTLE_TEST("Damage calculation: Combined pledge move")
 DOUBLE_BATTLE_TEST("Pledge move combo interactions with Powder are correct")
 {
     // Fire Pledge as the first move or Fire Pledge combo should fail
-    u32 moveLeft, moveRight, speedLeft, speedRight;
+    enum Move moveLeft, moveRight;
+    u32 speedLeft, speedRight;
     PARAMETRIZE { moveLeft = MOVE_FIRE_PLEDGE; moveRight = MOVE_WATER_PLEDGE; speedLeft = 4; speedRight = 3; } // FAIL 1
     PARAMETRIZE { moveLeft = MOVE_FIRE_PLEDGE; moveRight = MOVE_WATER_PLEDGE; speedLeft = 3; speedRight = 4; }
     PARAMETRIZE { moveLeft = MOVE_WATER_PLEDGE; moveRight = MOVE_FIRE_PLEDGE; speedLeft = 4; speedRight = 3; }
@@ -910,7 +911,7 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
 DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move - Storm Drain")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_GASTRODON) { Ability(ABILITY_STORM_DRAIN); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

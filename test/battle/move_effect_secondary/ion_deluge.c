@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Plasma Fists does not set up Ion Deluge if it does not conne
 SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate")
 {
     GIVEN {
-        PLAYER(SPECIES_KRABBY) { Speed(300); };
+        PLAYER(SPECIES_KRABBY) { Speed(300); }
         OPPONENT(SPECIES_SYLVEON) { Speed(1); Ability(ABILITY_PIXILATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
@@ -114,5 +114,24 @@ SINGLE_BATTLE_TEST("Plasma Fists turns normal type dynamax-moves into electric t
         MESSAGE("A deluge of ions showers the battlefield!");
         MESSAGE("The opposing Wobbuffet used Max Lightning!");
         MESSAGE("It's super effective!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Plasma Fists turns normal moves into electric moves even if it hits a substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, player);
+        SUB_HIT(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+            HP_BAR(player);
+        }
     }
 }

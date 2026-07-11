@@ -1,4 +1,4 @@
-SSAnne_1F_Room7_MapScripts::
+SSAnne_1F_Room7_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_1F_Room7_EventScript_Thomas::
@@ -7,13 +7,13 @@ SSAnne_1F_Room7_EventScript_Thomas::
 	end
 
 SSAnne_1F_Room7_Text_ThomasIntro::
-    .string "I am but a solitary traveler…\p"
-    .string "My sole companions and friends are\n"
-    .string "POKéMON I caught on my journeys…$"
+	.string "I am but a solitary traveler…\p"
+	.string "My sole companions and friends are\n"
+	.string "POKéMON I caught on my journeys…$"
 
 SSAnne_1F_Room7_Text_ThomasDefeat::
-    .string "My, my friends…$"
+	.string "My, my friends…$"
 
 SSAnne_1F_Room7_Text_ThomasPostBattle::
-    .string "You should be nice to friends!$"
+	.string "You should be nice to friends!$"
 

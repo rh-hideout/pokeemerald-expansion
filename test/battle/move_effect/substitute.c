@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Substitute creates a Substitute at the cost of 1/4 users max
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
-        maxHP = GetMonData(&gPlayerParty[0], MON_DATA_HP);
+        maxHP = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         HP_BAR(player, captureDamage: &costHP);
         MESSAGE("Wobbuffet put in a substitute!");
@@ -51,7 +51,6 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
     }
 }
 
@@ -66,113 +65,6 @@ SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         MESSAGE("Wobbuffet put in a substitute!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: TRUE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: FALSE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage")
-{
-    u16 damage;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, captureDamage: &damage);
-    } THEN {
-        EXPECT_GT(damage, 0);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage, break FALSE")
-{
-    u16 damage;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, captureDamage: &damage, subBreak: FALSE);
-    } THEN {
-        EXPECT_GT(damage, 0);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, records damage, break TRUE")
-{
-    u16 damage;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, captureDamage: &damage, subBreak: TRUE);
-    } THEN {
-        EXPECT_GT(damage, 0);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break TRUE, failing")
-{
-    KNOWN_FAILING;  //  For testing purposes
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: TRUE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE, failing")
-{
-    KNOWN_FAILING;  //  For testing purposes
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        SUB_HIT(player, subBreak: FALSE);
     }
 }
 

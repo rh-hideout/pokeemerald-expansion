@@ -1,4 +1,4 @@
-UndergroundPath_NorthEntrance_MapScripts::
+UndergroundPath_NorthEntrance_Frlg_MapScripts::
 	.byte 0
 
 UndergroundPath_NorthEntrance_EventScript_Saige::

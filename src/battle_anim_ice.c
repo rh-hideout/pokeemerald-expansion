@@ -959,7 +959,7 @@ static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
 static void InitSwirlingFogAnim(struct Sprite *sprite)
 {
     s16 tempVar;
-    u8  battler;
+    enum BattlerId battler;
 
     if (gBattleAnimArgs[4] == 0)
     {
@@ -1031,10 +1031,11 @@ static void AnimSwirlingFogAnim(struct Sprite *sprite)
         sprite->x2 += Sin(sprite->data[5], sprite->data[6]);
         sprite->y2 += Cos(sprite->data[5], -6);
 
+        enum BattlerId battler = sprite->data[7];
         if ((u16)(sprite->data[5] - 64) <= 0x7F)
-            sprite->oam.priority = GetBattlerSpriteBGPriority(sprite->data[7]);
+            sprite->oam.priority = GetBattlerSpriteBGPriority(battler);
         else
-            sprite->oam.priority = GetBattlerSpriteBGPriority(sprite->data[7]) + 1;
+            sprite->oam.priority = GetBattlerSpriteBGPriority(battler) + 1;
 
         sprite->data[5] = (sprite->data[5] + 3) & 0xFF;
     }
@@ -1418,6 +1419,12 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
 
 void AnimTask_Hail(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gHailParticleSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->func = AnimTask_Hail2;
@@ -1493,21 +1500,21 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
 
     if (type != HAILSTRUCTTYPE_FIXED_POSITION)
     {
-        id = GetBattlerAtPosition(sHailCoordData[hailStructId].bPosition);
-        if (IsBattlerSpriteVisible(id))
+        enum BattlerId battler = GetBattlerAtPosition(sHailCoordData[hailStructId].bPosition);
+        if (IsBattlerSpriteVisible(battler))
         {
             shouldSpawnImpactEffect = TRUE;
-            battlerX = GetBattlerSpriteCoord(id, BATTLER_COORD_X_2);
-            battlerY = GetBattlerSpriteCoord(id, BATTLER_COORD_Y_PIC_OFFSET);
+            battlerX = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2);
+            battlerY = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
             switch (type)
             {
             case HAILSTRUCTTYPE_NEGATIVE_POS_MOD:
-                battlerX -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
-                battlerY -= GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
+                battlerX -= GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_WIDTH) / 6;
+                battlerY -= GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
             case HAILSTRUCTTYPE_POSITIVE_POS_MOD:
-                battlerX += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_WIDTH) / 6;
-                battlerY += GetBattlerSpriteCoordAttr(id, BATTLER_COORD_ATTR_HEIGHT) / 6;
+                battlerX += GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_WIDTH) / 6;
+                battlerY += GetBattlerSpriteCoordAttr(battler, BATTLER_COORD_ATTR_HEIGHT) / 6;
                 break;
             }
         }
@@ -1543,6 +1550,12 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
 
 static void AnimHailBegin(struct Sprite *sprite)
 {
+    if (!TryLoadSpriteAssets(&gIceCrystalHitLargeSpriteTemplate))
+    {
+        DestroyAnimSprite(sprite);
+        return;
+    }
+
     u8 spriteId;
 
     sprite->x += 4;
@@ -1710,7 +1723,11 @@ const struct SpriteTemplate gSnowFlakesSpriteTemplate =
 
 void AnimTask_CreateSnowflakes(u8 taskId)
 {
-    u8 x, y;
+    if (!TryLoadSpriteAssets(&gSnowFlakesSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     if (gTasks[taskId].data[0] == 0)
     {
@@ -1721,8 +1738,8 @@ void AnimTask_CreateSnowflakes(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gSnowFlakesSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].data[0] == gTasks[taskId].data[3])

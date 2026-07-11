@@ -6,8 +6,8 @@ DOUBLE_BATTLE_TEST("Teraform Zero clears weather and terrain upon activation")
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_KYOGRE) {Ability(ABILITY_DRIZZLE); }
-        OPPONENT(SPECIES_TAPU_KOKO) {Ability(ABILITY_ELECTRIC_SURGE); }
+        OPPONENT(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -22,9 +22,9 @@ DOUBLE_BATTLE_TEST("Teraform Zero can be supressed")
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WEEZING) {Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_KYOGRE) {Ability(ABILITY_DRIZZLE); }
-        OPPONENT(SPECIES_TAPU_KOKO) {Ability(ABILITY_ELECTRIC_SURGE); }
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Teraform Zero can be replaced")
         MESSAGE("Terapagos acquired Insomnia!");
         MESSAGE("Terapagos used Rest!");
         ABILITY_POPUP(player, ABILITY_INSOMNIA);
-        MESSAGE("Terapagos stayed awake using its Insomnia!");
+        MESSAGE("Terapagos stayed awake!");
     }
 }
 
@@ -87,10 +87,10 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
 {
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
-        PLAYER(SPECIES_ABSOL) {Ability(ABILITY_PRESSURE); }
-        PLAYER(SPECIES_WEEZING) {Ability(ABILITY_NEUTRALIZING_GAS); }
-        OPPONENT(SPECIES_KYOGRE) {Ability(ABILITY_DRIZZLE); }
-        OPPONENT(SPECIES_TAPU_KOKO) {Ability(ABILITY_ELECTRIC_SURGE); }
+        PLAYER(SPECIES_ABSOL) { Ability(ABILITY_PRESSURE); }
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN {  SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -98,5 +98,44 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
         MESSAGE("Terapagos terastallized into the Stellar type!");
         NOT ABILITY_POPUP(playerRight, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Terapagos used Celebrate!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Teraform Zero doesn't activate if there is no weather or terrain")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        NOT ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+    }
+}
+
+SINGLE_BATTLE_TEST("Teraform Zero doesn't reactivate when Terapagos-Stellar switches back in")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_RAIN_DANCE); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+        MESSAGE("The rain stopped.");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+            MESSAGE("The rain stopped.");
+        }
     }
 }

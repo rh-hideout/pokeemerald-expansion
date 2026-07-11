@@ -31,8 +31,7 @@
 #define APPEND_COMMA(a) a,
 
 /* Converts a string to a compound literal, essentially making it a pointer to const u8 */
-#define COMPOUND_STRING(str) (const u8[]) _(str)
-#define COMPOUND_STRING_SIZE_LIMIT(str, limit) (const u8[COMPOUND_STRING_CHECK_SIZE(str, limit)]) _(str)
+#define COMPOUND_STRING_SIZE_LIMIT(str, limit) ((sizeof(COMPOUND_STRING(str)) <= (limit)) ? COMPOUND_STRING(str) : (const u8 [COMPOUND_STRING_CHECK_SIZE(str, limit)]) _(str))
 
 /* Used for COMPOUND_STRING_SIZE_LIMIT. Stupid, but makes sure we only get
  * one error message regardless of how many characters over the limit we are.
@@ -74,7 +73,8 @@
 
 /* Same as INVOKE_WITH but uses UNPACK_B to unpack arguments and only applies macro to args if there are any. */
 #define INVOKE_WITH_B(macro, args, ...) INVOKE_B(macro, UNPACK_B(args) __VA_OPT__(, __VA_ARGS__))
-#define INVOKE_B(macro, ...) __VA_OPT__(macro(__VA_ARGS__))
+#define INVOKE_B(macro, ...) INVOKE_B_(macro, __VA_ARGS__)
+#define INVOKE_B_(macro, ...) __VA_OPT__(macro(__VA_ARGS__))
 
 /* Recursive macros.
  * Based on https://www.scs.stanford.edu/~dm/blog/va-opt.html
@@ -206,5 +206,15 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1
+
+/* Expands to 'if (true)' if 'cond' can be evaluated at compile-time and
+ * evaluates to non-zero; expands to 'if (false)' otherwise.
+ *
+ * GCC will not generate code for an 'if (false) { ... }', so this can
+ * be used to write compile-time optimizations without a run-time cost.
+ *
+ * Because 'cond' must be known at compile-time, this is rarely useful
+ * outside macros. */
+#define if_comptime(cond) if (__builtin_constant_p((cond) ? 0 : *(int *)0))
 
 #endif

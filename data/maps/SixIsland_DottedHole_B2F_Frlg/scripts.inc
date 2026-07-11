@@ -1,2 +1,2 @@
-SixIsland_DottedHole_B2F_MapScripts::
+SixIsland_DottedHole_B2F_Frlg_MapScripts::
 	.byte 0

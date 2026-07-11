@@ -8,14 +8,14 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Foul Play uses the target's Attack stat and stat stages of target", s16 damage)
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HIGH_HORSEPOWER; }
     PARAMETRIZE { move = MOVE_FOUL_PLAY; }
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_HIGH_HORSEPOWER) == GetMovePower(MOVE_FOUL_PLAY));
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_SHELLDER);
         OPPONENT(SPECIES_SHELLDER);
     } WHEN {

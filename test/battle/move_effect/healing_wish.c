@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacement's HP and status (singles)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_7);
         ASSUME(GetMovePP(MOVE_SCRATCH) == 35);
         ASSUME(GetMovePP(MOVE_WATER_GUN) == 25);
         ASSUME(GetMovePP(MOVE_LEAFAGE) == 40);
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
 DOUBLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacement's HP and status (doubles)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_7);
         ASSUME(GetMovePP(MOVE_SCRATCH) == 35);
         ASSUME(GetMovePP(MOVE_WATER_GUN) == 25);
         ASSUME(GetMovePP(MOVE_LEAFAGE) == 40);
@@ -77,7 +77,7 @@ DOUBLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
 SINGLE_BATTLE_TEST("Healing Wish effect activates even if the the switched Pokémon can't be healed (Gen4-7)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates only if the switched Pokémon 
     PARAMETRIZE { switchTo = 3; }
     PARAMETRIZE { switchTo = 4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_8);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_8);
         PLAYER(SPECIES_GARDEVOIR) { Speed(300); }
         PLAYER(SPECIES_NINJASK) { Speed(400); }
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); Speed(50); }

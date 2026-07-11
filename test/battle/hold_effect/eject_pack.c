@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if there are no Pokémon left t
         PLAYER(SPECIES_WOBBUFFET) { HP(0); }
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
@@ -64,12 +64,32 @@ SINGLE_BATTLE_TEST("Eject Pack is triggered by self-inflicting stat decreases")
     }
 }
 
+SINGLE_BATTLE_TEST("Eject Pack switches the user out even if rooted by Ingrain")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_INGRAIN) == EFFECT_INGRAIN);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_INGRAIN); }
+        TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
 SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency Exit was activated on target")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(opponent, 1); }
@@ -125,7 +145,7 @@ DOUBLE_BATTLE_TEST("Eject Pack will not trigger if the conditions are not met")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); };
+        PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
@@ -164,7 +184,8 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Eject Butt
 DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after an ability stat drop")
 {
     u32 speed;
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_EKANS; ability = ABILITY_INTIMIDATE; speed = 1; }
     PARAMETRIZE { species = SPECIES_EKANS; ability = ABILITY_INTIMIDATE; speed = 11; }
@@ -323,7 +344,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Ej
     GIVEN {
         PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_ARENA_TRAP); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -361,3 +382,20 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     }
 }
+
+SINGLE_BATTLE_TEST("Eject Pack will trigger after a Mega Evolution")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+

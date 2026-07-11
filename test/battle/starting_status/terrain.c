@@ -19,13 +19,13 @@ SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning o
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         // More than 5 turns
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         switch (terrain)
         {
@@ -75,12 +75,12 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
     } WHEN {
         // More than 5 turns
         TURN { MOVE(player, viaMove == TRUE ? MOVE_GRASSY_TERRAIN : MOVE_CELEBRATE); }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
-        TURN { ; }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
     } SCENE {
         // Electric Terrain at battle's start
         MESSAGE("An electric current is running across the battlefield!");

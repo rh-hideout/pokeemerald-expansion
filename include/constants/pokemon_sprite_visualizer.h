@@ -34,20 +34,17 @@
 #define WIN_FOOTPRINT 4
 #define WIN_END 5
 
-//Battle backgrounds
-#define MAP_BATTLE_SCENE_NORMAL       0
-#define MAP_BATTLE_SCENE_GYM          1
-#define MAP_BATTLE_SCENE_MAGMA        2
-#define MAP_BATTLE_SCENE_AQUA         3
-#define MAP_BATTLE_SCENE_SIDNEY       4
-#define MAP_BATTLE_SCENE_PHOEBE       5
-#define MAP_BATTLE_SCENE_GLACIA       6
-#define MAP_BATTLE_SCENE_DRAKE        7
-#define MAP_BATTLE_SCENE_FRONTIER     8
-#define MAP_BATTLE_SCENE_LEADER       9
-#define MAP_BATTLE_SCENE_WALLACE      10
-#define MAP_BATTLE_SCENE_GROUDON      11
-#define MAP_BATTLE_SCENE_KYOGRE       12
-#define MAP_BATTLE_SCENE_RAYQUAZA     13
+//Background positions
+#define BACKGROUND_1_CHAR_BASE  1
+#define BACKGROUND_1_MAP_BASE  28
+#define BACKGROUND_3_CHAR_BASE  2
+#define BACKGROUND_3_MAP_BASE  26
+
+//Submenus
+#define SUBMENU_SPECIES          0
+#define SUBMENU_ANIMS_BG         1
+#define SUBMENU_SPRITE_COORDS    2
+#define SUBMENU_SHADOW_COORDS    3
+#define SUBMENU_MOVE_BACKGROUNDS 4
 
 #endif // GUARD_CONSTANTS_POKEMON_SPRITE_VISUALIZER_H

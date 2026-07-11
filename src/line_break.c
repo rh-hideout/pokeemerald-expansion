@@ -295,7 +295,7 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
             currWordIndex++;
             while (currWordIndex < numWords)
             {
-                if (currLineWidth + spaceWidth + allWords[currWordIndex].width > maxWidth)
+                if (currLineWidth + spaceWidth + allWords[currWordIndex].width + ((toggleScrollPrompt == SHOW_SCROLL_PROMPT) ? SCROLL_PROMPT_WIDTH : 0) > maxWidth)
                 {
                     //  go to next line
                     currLineIndex++;
@@ -350,10 +350,10 @@ bool32 IsWordSplittingChar(const u8 *src, u32 index)
 {
     switch (src[index])
     {
-        case CHAR_SPACE:
-            return TRUE;
-        default:
-            return FALSE;
+    case CHAR_SPACE:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 

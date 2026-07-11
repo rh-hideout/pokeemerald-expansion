@@ -100,14 +100,14 @@ void ClearFollowerNPCData(void);
 
 void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
 void DestroyFollowerNPC(void);
-u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
+u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Direction direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
 bool32 PlayerHasFollowerNPC(void);
 void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive);
 void CreateFollowerNPCAvatar(void);
 void FollowerNPC_HandleSprite(void);
-u32 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
+enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 u32 GetFollowerNPCObjectId(void);
 bool32 CheckFollowerNPCFlag(u32 flag);
 bool32 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
@@ -118,7 +118,6 @@ bool32 FollowerNPCCanBike(void);
 void FollowerNPC_HandleBike(void);
 
 void FollowerNPC_FollowerToWater(void);
-void FollowerNPC_SetIndicatorToRecreateSurfBlob(void);
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void);
 void PrepareFollowerNPCDismountSurf(void);
 
@@ -141,5 +140,7 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void);
 
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
+
+void Task_FollowerNPCOutOfDoor(u8 taskId);
 
 #endif // GUARD_FOLLOWER_NPC_H

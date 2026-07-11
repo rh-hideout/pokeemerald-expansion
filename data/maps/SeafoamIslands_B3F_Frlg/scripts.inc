@@ -1,6 +1,6 @@
 .equ NUM_BOULDERS_PRESENT, VAR_TEMP_2
 
-SeafoamIslands_B3F_MapScripts::
+SeafoamIslands_B3F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SeafoamIslands_B3F_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SeafoamIslands_B3F_OnFrame
 	.byte 0

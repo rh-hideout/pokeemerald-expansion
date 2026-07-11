@@ -11,8 +11,7 @@ SlateportCity_NameRatersHouse_EventScript_NameRater::
 
 SlateportCity_NameRatersHouse_EventScript_ChooseMonToRate::
 	msgbox SlateportCity_NameRatersHouse_Text_CritiqueWhichMonNickname, MSGBOX_DEFAULT
-	fadescreen FADE_TO_BLACK
-	special ChooseBoxMon
+	chooseboxmon
 	waitstate
 	goto_if_ne VAR_0x8004, PARTY_NOTHING_CHOSEN, SlateportCity_NameRatersHouse_EventScript_RateMonNickname
 	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, SlateportCity_NameRatersHouse_EventScript_DeclineNameRate
@@ -49,8 +48,7 @@ SlateportCity_NameRatersHouse_EventScript_PlayerNotMonsOT::
 
 SlateportCity_NameRatersHouse_EventScript_ChangeNickname::
 	msgbox SlateportCity_NameRatersHouse_Text_WhatShallNewNameBe, MSGBOX_DEFAULT
-	call_if_eq VAR_MON_BOX_ID, 0xFF, Common_EventScript_NameReceivedPartyMon
-	call_if_ne VAR_MON_BOX_ID, 0xFF, Common_EventScript_NameReceivedBoxMon
+	call Common_EventScript_NameReceivedPartyMon
 	specialvar VAR_RESULT, TryPutNameRaterShowOnTheAir
 	special BufferMonNickname
 	goto_if_eq VAR_RESULT, TRUE, SlateportCity_NameRatersHouse_EventScript_NewNameDifferent
