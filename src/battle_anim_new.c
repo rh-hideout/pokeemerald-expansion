@@ -3742,16 +3742,6 @@ const struct SpriteTemplate gSpriteTemplate_LashOutStrike =
     .callback = SpriteCB_LashOutStrike,
 };
 
-// Corrosize Gas
-const struct SpriteTemplate gSpriteTemplate_CorrosiveGasSmoke =
-{
-    .tileTag = ANIM_TAG_PINK_CLOUD,
-    .paletteTag = ANIM_TAG_PINK_CLOUD,
-    .oam = &gOamData_AffineDouble_ObjNormal_32x32,
-    .affineAnims = gSmokeBallEscapeCloudAffineAnimTable,
-    .callback = AnimSmokeBallEscapeCloud,
-};
-
 // Flip Turn
 const struct SpriteTemplate gSpriteTemplate_FlipTurnThere =
 {

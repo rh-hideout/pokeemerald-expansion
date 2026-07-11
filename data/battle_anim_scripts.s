@@ -13800,17 +13800,17 @@ gBattleAnimMove_CorrosiveGas::
 	loopsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_ATTACKER, 8, 3
 	delay 0
 	blend_color_cycle selector=F_PAL_ATTACKER, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=15, color=RGB(15, 15, 6)@;Garbage green
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 122, 3, -14, 18, 46
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 122, 3, -14, 18, 46
 	delay 0
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 121, 3, 14, -14, 46
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 121, 3, 14, -14, 46
 	delay 0
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 120, 3, -12, -10, 46
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 120, 3, -12, -10, 46
 	delay 0
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 119, 3, 14, 14, 46
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 119, 3, 14, 14, 46
 	delay 0
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 118, 3, 0, 0, 46
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 118, 3, 0, 0, 46
 	delay 0
-	createsprite gSpriteTemplate_CorrosiveGasSmoke, ANIM_ATTACKER, 123, 3, 4, 4, 30
+	createsprite gSmokeBallEscapeCloudSpriteTemplate, ANIM_ATTACKER, 123, 3, 4, 4, 30
 	waitforvisualfinish
 	playsewithpan SE_M_TOXIC, SOUND_PAN_TARGET
 	blend_color_cycle selector=(F_PAL_BG | F_PAL_TARGET | F_PAL_ATK_PARTNER | F_PAL_DEF_PARTNER), delay=1, num_blends=2, initial_blend_y=0, target_blend_y=14, color=RGB(15, 15, 6)@;Garbage green
