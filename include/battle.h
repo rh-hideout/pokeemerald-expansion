@@ -680,7 +680,7 @@ struct BattleStruct
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     bool8 itemTargetPartner[MAX_BATTLERS_COUNT];
 #endif
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.

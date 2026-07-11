@@ -139,7 +139,7 @@ static void SetUpItemUseCallback(u8 taskId)
     else
     {
         bool8 inPyramid = (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE);
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         bool8 useInline = !inPyramid;
 #if SWSH_ITEM_MENU_PYRAMID_ACTION
         useInline = TRUE;
@@ -1220,7 +1220,7 @@ void ItemUseInBattle_PokeBall(u8 taskId)
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
     bool8 inPyramid = (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE);
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     bool8 useInline = !inPyramid;
 #if SWSH_ITEM_MENU_PYRAMID_ACTION
     useInline = TRUE;

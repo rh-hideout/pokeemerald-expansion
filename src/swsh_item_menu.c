@@ -55,11 +55,11 @@
 #include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
 #include "contest.h"
 #include "contest_effect.h"
 #endif
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 #include "battle_interface.h"
 #include "caps.h"
 #include "easy_chat.h"
@@ -87,10 +87,8 @@
 #define TAG_STATUS_ICON          121
 #define TAG_SWAP_PROMPT          122
 
-#define HOVER_SLOT_SPRITES_COUNT     5
 #define FRAME_MONEY_SPRITES_COUNT    3
 #define FRAME_PRICE_SPRITES_COUNT    3
-#define FRAME_QUANTITY_SPRITES_COUNT 2
 
 // The buffer for the bag item list needs to be large enough to hold the maximum
 // number of item slots that could fit in a single pocket, + 1 for Cancel.
@@ -141,14 +139,14 @@ enum {
     WIN_POW_ACC_LABEL,
     WIN_PP_INFO,
     WIN_POW_ACC_INFO,
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
     WIN_APP_JAM_LABEL,
 #endif
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
     WIN_BERRY_INFO,
     WIN_BERRY_FLAVORS,
 #endif
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     WIN_PARTY_HP_BAR,
 #endif
 };
@@ -182,7 +180,7 @@ struct TempWallyBag {
     u16 unused;
     u16 pocket;
 };
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 struct BagItemUseState {
     u8 slot;
     u8 initialLevel;
@@ -211,7 +209,7 @@ struct BagFusionState {
     u16 moveToLearn;
     u8 extraMoveHandling;
 };
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
 static void CB2_Bag(void);
 static bool8 SetupBagMenu(void);
@@ -232,14 +230,16 @@ static void CreateScrollThumbSprite(void);
 static void CreatePocketScrollArrowPair(void);
 static void SpriteCB_MoveTypeIcon(struct Sprite *);
 static void SwitchMoveInfoMode(s32);
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
 static void SwitchBerryInfoMode(s32);
 static void UpdateBerryInfo(s32);
+#if SWSH_ITEM_MENU_BERRY_TAG
 static void PrintBerryDescriptionInfo(s32);
+#endif
 #endif
 static void UpdateMoveBattleInfo(s32);
 static void ShowInfoPrompt(u8);
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
 static void UpdateMoveContestInfo(s32);
 static void PrintContestDescription(s32);
 #endif
@@ -331,7 +331,7 @@ static void CancelToss(u8);
 static void ConfirmSell(u8);
 static void CancelSell(u8);
 static void Task_FadeAndCloseBagMenuIfMulch(u8 taskId);
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 static void BagMenu_DrawPartySlots(void);
 static void BagMenu_SetPartySlotPalette(u8 slot, u8 pal);
 static void BagMenu_CreatePartyIcons(void);
@@ -435,7 +435,7 @@ static u8 BagMenu_PanelSlotLimit(void);
 static bool8 BagMenu_PanelSlotOccupied(u8);
 static u8 BagMenu_StepSlot(u8, s8, u8);
 static void BagMenu_CreatePanelMonIcon(u8, s16);
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static void ShowMultiBattleSwapPrompt(bool8);
 static void BagMenu_UseBattleItem(u8);
 static void BagMenu_BattleApplyItem(u8, u8, bool8);
@@ -445,7 +445,7 @@ static u8 BagMenu_FullMultiPartyId(u8);
 static void BagMenu_StartMultiFullSwap(u8);
 static void Task_BagMenu_MultiFullSwap(u8);
 #endif
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
 static const u8 *const sPocketNamesStringsTable[] =
 {
@@ -459,7 +459,7 @@ static const u8 *const sPocketNamesStringsTable[] =
 static const u8 sText_MoveInfoPower[]          = _("Power");
 static const u8 sText_MoveInfoAccuracy[]       = _("Accuracy");
 static const u8 sText_MoveInfoPP[]             = _("PP");
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
 static const u8 sText_BerryFlavorSpicy[]       = _("Spicy");
 static const u8 sText_BerryFlavorDry[]         = _("Dry");
 static const u8 sText_BerryFlavorSweet[]       = _("Sweet");
@@ -475,12 +475,12 @@ static const u8 *const sBerryFirmnessStrings[] =
     [BERRY_FIRMNESS_SUPER_HARD] = COMPOUND_STRING("Super hard"),
 };
 #endif
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
 static const u8 sText_MoveInfoAppeal[]   = _("Appeal");
 static const u8 sText_MoveInfoJam[]      = _("Jam");
 #endif
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 static const u8 sText_PartyBasePointsReset[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PartyDynamaxLevelUp[]  = _("{STR_VAR_1}'s Dynamax Level\nincreased by 1!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PartyAbilityAsk[]      = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?{PAUSE_UNTIL_PRESS}");
@@ -494,7 +494,7 @@ static const struct YesNoFuncTable sPartyMintYesNo             = {BagMenu_MintYe
 static const struct YesNoFuncTable sPartyRareCandyReplaceYesNo = {BagMenu_RareCandyReplaceYes, BagMenu_RareCandyReplaceNo};
 static const struct YesNoFuncTable sPartyGiveSwapYesNo         = {BagMenu_GiveSwapYes, BagMenu_GiveSwapNo};
 static const struct YesNoFuncTable sPartyRotomMoveReplaceYesNo = {BagMenu_RotomMoveReplaceYes, BagMenu_RotomMoveReplaceNo};
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
 static const u8 sText_NumberItem_HM[]           = _("{CLEAR_TO 15}{STR_VAR_1}{CLEAR 3}{STR_VAR_2}");
 static const u8 sText_Var1CantBeHeldHere[]      = _("The {STR_VAR_1} can't be held\nhere.");
@@ -653,7 +653,7 @@ static const u8 sContextMenuItems_Cancel[] = {
     ACTION_CANCEL
 };
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
 static const u8 sContextMenuItems_PyramidToss[] = {
     ACTION_TOSS,        ACTION_CANCEL
 };
@@ -735,10 +735,10 @@ static const u32 sMoveTypeIcons_Gfx[]           = INCGFX_U32("graphics/bag/swsh/
 static const u16 sMoveTypeIcons_Pal[]           = INCGFX_U16("graphics/bag/swsh/move_types.png", ".gbapal");
 static const u8 sInfoPrompt_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/info_prompt.bin");
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 static const u8 sPartySlots_Tilemap[]           = INCBIN_U8("graphics/bag/swsh/party_slots.bin");
 static const u32 sStatusIcons_Gfx[]             = INCGFX_U32("graphics/bag/swsh/status_icons.png", ".4bpp.smol");
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static const u32 sMultiBattleSwapPrompt_Gfx[]   = INCGFX_U32("graphics/bag/swsh/prompt_swap.png", ".4bpp.smol");
 #endif
 #endif
@@ -826,7 +826,7 @@ static const struct SpriteTemplate sSpriteTemplate_SwapCursor =
     .anims = sAnims_SwapCursor,
 };
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG && SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BAG_USE && SWSH_ITEM_MENU_IN_BATTLE_USE
 static const struct OamData sOamData_MultiSwapPrompt =
 {
     .affineMode = ST_OAM_AFFINE_OFF,
@@ -1011,7 +1011,7 @@ static const union AffineAnimCmd *const sAffineAnims_BagItemIcon[] =
     sAffineAnim_BagItemIcon_Appear,
 };
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 static const struct OamData sOamData_HeldItemIcon =
 {
     .affineMode = ST_OAM_AFFINE_NORMAL,
@@ -1095,7 +1095,7 @@ static const struct SpriteTemplate sSpriteTemplate_StatusIcon =
     .oam = &sOamData_StatusIcon,
     .anims = sSpriteAnims_StatusIcon,
 };
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
 static const struct OamData sOamData_MoveTypeIcon =
 {
@@ -1245,44 +1245,9 @@ static const struct SpriteTemplate sSpriteTemplate_FramePriceQuantity = {
     .anims = sSpriteAnimTable_FramePriceQuantity,
 };
 
-static u8 sCursorSpriteId;
-static u8 sSwapCursorSpriteId;
-static u8 sHoverSlotSpriteIds[HOVER_SLOT_SPRITES_COUNT];
 static u8 sScrollThumbSpriteId;
-static u8 sPocketScrollArrowSpriteIds[2];
-static u32 sCursorAnimId;
-static s32 sHoveredItemIndex;
-static u16 sShowItemIconId;
-static u32 sScrollThumbAnimId;
-static u32 sPocketScrollArrowAnimIds[2];
-static u32 sPartyItemIconAnimId;
-static u8 sMoveInfoMode;
-static u8 sMoveTypeIconSpriteId;
-static u8 sCategoryIconSpriteId;
 static u8 sFrameMoneyIds[FRAME_MONEY_SPRITES_COUNT];
 static u8 sFramePriceIds[FRAME_PRICE_SPRITES_COUNT];
-static u8 sFrameQuantityIds[FRAME_QUANTITY_SPRITES_COUNT];
-static u16 *sMoveTypeIconTilesPtr;
-#if SWSH_ITEM_MENU_BERRY_INFO
-static u8 sBerryInfoMode;
-#endif
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
-static const struct YesNoFuncTable *sPartyYesNoFuncs;
-static bool8 sPartyGiveMode;
-static bool8 sPartyBlendActive;
-static u16 sPartyGiveSwapItem;
-static u8  sHeldItemIconSpriteId;
-static u16 sHeldItemPalIndex;
-static s8  sHeldItemShownSlot;
-static u16 sHeldItemShownItem;
-static u8  sStatusIconSpriteIds[PARTY_SIZE];
-static s8  sPrevHPBarSlot;
-static bool8 sHPBarWindowMapped;
-static u8  sMultiFullPage; // 0 = player team, 1 = partner team (12v12 multi battle)
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
-static u8  sMultiSwapPromptSpriteIds[2];
-#endif
-#endif
 
 enum {
     COLORID_NORMAL,
@@ -1370,7 +1335,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .paletteNum = 1,
         .baseBlock = 341,
     },
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
     [WIN_APP_JAM_LABEL] = {
         .bg = 1,
         .tilemapLeft = 17,
@@ -1381,7 +1346,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .baseBlock = 349,
     },
 #endif
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
     [WIN_BERRY_INFO] = {
         .bg = 1,
         .tilemapLeft = 8,
@@ -1401,7 +1366,7 @@ static const struct WindowTemplate sDefaultBagWindows[] =
         .baseBlock = 643,
     },
 #endif
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     [WIN_PARTY_HP_BAR] = {
         .bg          = 1,
         .tilemapLeft = 2,
@@ -1498,7 +1463,7 @@ static const struct WindowTemplate sContextMenuWindowTemplates[] =
         .paletteNum = 1,
         .baseBlock = 599,
     },
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     [ITEMWIN_PP_MOVE_SELECT] = {
         .bg = 0,
         .tilemapLeft = 15,
@@ -1545,7 +1510,7 @@ static EWRAM_DATA struct ListBuffer2 *sListBuffer2 = 0;
 EWRAM_DATA u16 gSpecialVar_ItemId = 0;
 static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
 static EWRAM_DATA u8 *sMoveTypeIconsCache = NULL;
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 static EWRAM_DATA struct BagItemUseState *sBagItemUseState = NULL;
 static EWRAM_DATA struct BagMailGiveState *sBagMailGiveState = NULL;
 static EWRAM_DATA struct BagFusionState *sBagFusionState = NULL;
@@ -1629,7 +1594,7 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
     else
     {
         gBagMenu->hideCloseBagText = TRUE;
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
         gBagPosition.isPyramid = FALSE;
 #endif
         if (location != ITEMMENULOCATION_LAST)
@@ -1645,31 +1610,31 @@ void GoToBagMenu(u8 location, u8 pocket, MainCallback exitCallback)
         gBagMenu->newScreenCallback = NULL;
         gBagMenu->toSwapPos = NOT_SWAPPING;
         memset(gBagMenu->spriteIds, SPRITE_NONE, sizeof(gBagMenu->spriteIds));
-        sCursorSpriteId = SPRITE_NONE;
-        sSwapCursorSpriteId = SPRITE_NONE;
-        memset(sHoverSlotSpriteIds, SPRITE_NONE, sizeof(sHoverSlotSpriteIds));
-#if SWSH_ITEM_MENU_ACTION_IN_BAG && SWSH_ITEM_MENU_ACTION_IN_BATTLE
-        memset(sMultiSwapPromptSpriteIds, SPRITE_NONE, sizeof(sMultiSwapPromptSpriteIds));
+        gBagMenu->cursorSpriteId = SPRITE_NONE;
+        gBagMenu->swapCursorSpriteId = SPRITE_NONE;
+        memset(gBagMenu->hoverSlotSpriteIds, SPRITE_NONE, sizeof(gBagMenu->hoverSlotSpriteIds));
+#if SWSH_ITEM_MENU_IN_BAG_USE && SWSH_ITEM_MENU_IN_BATTLE_USE
+        memset(gBagMenu->multiSwapPromptSpriteIds, SPRITE_NONE, sizeof(gBagMenu->multiSwapPromptSpriteIds));
 #endif
         sScrollThumbSpriteId = SPRITE_NONE;
-        memset(sPocketScrollArrowSpriteIds, SPRITE_NONE, sizeof(sPocketScrollArrowSpriteIds));
-        memset(sFrameQuantityIds, SPRITE_NONE, sizeof(sFrameQuantityIds));
-        sPocketScrollArrowAnimIds[0] = INVALID_COMFY_ANIM;
-        sPocketScrollArrowAnimIds[1] = INVALID_COMFY_ANIM;
-        sCursorAnimId = INVALID_COMFY_ANIM;
-        sScrollThumbAnimId = INVALID_COMFY_ANIM;
-        sPartyItemIconAnimId = INVALID_COMFY_ANIM;
-        sHoveredItemIndex = LIST_CANCEL;
-        sShowItemIconId = ITEM_NONE;
+        memset(gBagMenu->pocketScrollArrowSpriteIds, SPRITE_NONE, sizeof(gBagMenu->pocketScrollArrowSpriteIds));
+        memset(gBagMenu->frameQuantityIds, SPRITE_NONE, sizeof(gBagMenu->frameQuantityIds));
+        gBagMenu->pocketScrollArrowAnimIds[0] = INVALID_COMFY_ANIM;
+        gBagMenu->pocketScrollArrowAnimIds[1] = INVALID_COMFY_ANIM;
+        gBagMenu->cursorAnimId = INVALID_COMFY_ANIM;
+        gBagMenu->scrollThumbAnimId = INVALID_COMFY_ANIM;
+        gBagMenu->partyItemIconAnimId = INVALID_COMFY_ANIM;
+        gBagMenu->hoveredItemIndex = LIST_CANCEL;
+        gBagMenu->showItemIconId = ITEM_NONE;
         memset(gBagMenu->windowIds, WINDOW_NONE, sizeof(gBagMenu->windowIds));
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
-        sHeldItemIconSpriteId = SPRITE_NONE;
-        sHeldItemShownSlot = -1;
-        sHeldItemShownItem = ITEM_NONE;
-        memset(sStatusIconSpriteIds, SPRITE_NONE, sizeof(sStatusIconSpriteIds));
-        sPrevHPBarSlot = -1;
-        sHPBarWindowMapped = FALSE;
-        sMultiFullPage = 0;
+#if SWSH_ITEM_MENU_IN_BAG_USE
+        gBagMenu->heldItemIconSpriteId = SPRITE_NONE;
+        gBagMenu->heldItemShownSlot = -1;
+        gBagMenu->heldItemShownItem = ITEM_NONE;
+        memset(gBagMenu->statusIconSpriteIds, SPRITE_NONE, sizeof(gBagMenu->statusIconSpriteIds));
+        gBagMenu->prevHPBarSlot = -1;
+        gBagMenu->hpBarWindowMapped = FALSE;
+        gBagMenu->multiFullPage = 0;
 #endif
         SetMainCallback2(CB2_Bag);
     }
@@ -1716,7 +1681,7 @@ static void CB2_Bag(void)
         {};
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 #define PARTY_ITEM_ICON_X       16
 #define PARTY_ITEM_ICON_Y(i)    (24 * (i) + 16)
 
@@ -1756,7 +1721,7 @@ static const u16 sBagRotomFormChangeMoves[] = {
 extern void DeleteMove(struct Pokemon *mon, enum Move move);
 extern bool32 DoesMonHaveAnyMoves(struct Pokemon *mon);
 extern u8 IsFusionMon(enum Species species);
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
 // Matching the enum in item_menu_icons.c to reserve palette slots.
 #define TAG_BAG_ITEM_ICON_0  102
@@ -1824,11 +1789,11 @@ static bool8 SetupBagMenu(void)
         UpdatePocketItemLists();
         InitPocketListPositions();
         InitPocketScrollPositions();
-        sMoveInfoMode = FALSE;
-        sMoveTypeIconSpriteId = SPRITE_NONE;
-        sCategoryIconSpriteId = SPRITE_NONE;
-#if SWSH_ITEM_MENU_BERRY_INFO
-        sBerryInfoMode = 0;
+        gBagMenu->moveInfoMode = FALSE;
+        gBagMenu->moveTypeIconSpriteId = SPRITE_NONE;
+        gBagMenu->categoryIconSpriteId = SPRITE_NONE;
+#if SWSH_ITEM_MENU_BERRY_STAT
+        gBagMenu->berryInfoMode = 0;
 #endif
         gMain.state++;
         break;
@@ -1841,7 +1806,7 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 13:
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
         if (gBagPosition.isPyramid)
             PrintPocketName(COMPOUND_STRING("Pyramid"));
         else
@@ -1854,7 +1819,7 @@ static bool8 SetupBagMenu(void)
         gTasks[taskId].tListTaskId = ListMenuInit(&gMultiuseListMenuTemplate, gBagPosition.scrollPosition[gBagPosition.pocket], gBagPosition.cursorPosition[gBagPosition.pocket]);
         gTasks[taskId].tNeverRead = 0;
         gTasks[taskId].tItemCount = 0;
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         if (sBagItemUseState != NULL && sBagItemUseState->reentryPhase != BAG_REENTRY_NONE)
             gTasks[taskId].func = Task_BagMenu_RareCandyReentry;
 #endif
@@ -1865,7 +1830,7 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 16:
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         if (sBagItemUseState != NULL && sBagItemUseState->reentryPhase != BAG_REENTRY_NONE)
         {
             u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
@@ -1874,12 +1839,12 @@ static bool8 SetupBagMenu(void)
                 gSprites[iconSpriteId].x2 = PARTY_ITEM_ICON_X;
                 gSprites[iconSpriteId].y2 = PARTY_ITEM_ICON_Y(sBagItemUseState->slot);
             }
-            gSprites[sCursorSpriteId].invisible = TRUE;
+            gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
         }
         else
 #endif
         if (gBagMenu->numItemStacks[gBagPosition.pocket] == (u8)(!gBagMenu->hideCloseBagText))
-            gSprites[sCursorSpriteId].invisible = TRUE;
+            gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
         gMain.state++;
         break;
     case 17:
@@ -1888,7 +1853,7 @@ static bool8 SetupBagMenu(void)
         {
             u8 i;
             for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
-                gSprites[sHoverSlotSpriteIds[i]].invisible = TRUE;
+                gSprites[gBagMenu->hoverSlotSpriteIds[i]].invisible = TRUE;
         }
         gMain.state++;
         break;
@@ -1901,8 +1866,8 @@ static bool8 SetupBagMenu(void)
         gMain.state++;
         break;
     case 20:
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
-        sPartyBlendActive = FALSE;
+#if SWSH_ITEM_MENU_IN_BAG_USE
+        gBagMenu->partyBlendActive = FALSE;
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
         if (sBagItemUseState != NULL && sBagItemUseState->reentryPhase != BAG_REENTRY_NONE)
@@ -1921,7 +1886,7 @@ static bool8 SetupBagMenu(void)
             {
                 ShowInfoPrompt(INFO_PROMPT_BATTLE_STAT);
             }
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
             else if (gBagPosition.pocket == POCKET_BERRIES)
             {
                 ShowInfoPrompt(INFO_PROMPT_BERRY_STAT);
@@ -1992,11 +1957,11 @@ static bool8 LoadBagMenu_Graphics(void)
         }
         break;
     case 2:
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         if (BagMenu_ShouldLoadPartyPanel())
         {
             BagMenu_DrawPartySlots();
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
             if (BagMenu_IsMultiFull())
             {
                 LoadCompressedSpriteSheet(&sSpriteSheet_MultiSwapPrompt);
@@ -2008,7 +1973,7 @@ static bool8 LoadBagMenu_Graphics(void)
         gBagMenu->graphicsLoadState++;
         break;
     case 3:
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         if (BagMenu_ShouldLoadPartyPanel())
             BagMenu_CreatePartyIcons();
 #endif
@@ -2078,7 +2043,7 @@ static void AllocateBagItemListBuffers(void)
     sListBuffer2 = Alloc(sizeof(*sListBuffer2));
 }
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
 
 static enum Item BagList_GetItemId(u8 pocketId, u32 pos)
 {
@@ -2136,9 +2101,6 @@ static void BagList_CompactPyramid(void)
     }
 }
 
-static struct ItemSlot sPyramidScratch[PYRAMID_BAG_ITEMS_COUNT];
-static struct BagPocket sPyramidScratchPocket;
-
 static struct BagPocket *BagList_PyramidScratchPocket(void)
 {
     u16 *ids = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
@@ -2151,13 +2113,13 @@ static struct BagPocket *BagList_PyramidScratchPocket(void)
 
     for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT; i++)
     {
-        sPyramidScratch[i].itemId = ids[i];
-        sPyramidScratch[i].quantity = quantities[i];
+        gBagMenu->pyramidScratch[i].itemId = ids[i];
+        gBagMenu->pyramidScratch[i].quantity = quantities[i];
     }
-    sPyramidScratchPocket.itemSlots = sPyramidScratch;
-    sPyramidScratchPocket.capacity = PYRAMID_BAG_ITEMS_COUNT;
-    sPyramidScratchPocket.id = POCKET_DUMMY;
-    return &sPyramidScratchPocket;
+    gBagMenu->pyramidScratchPocket.itemSlots = gBagMenu->pyramidScratch;
+    gBagMenu->pyramidScratchPocket.capacity = PYRAMID_BAG_ITEMS_COUNT;
+    gBagMenu->pyramidScratchPocket.id = POCKET_DUMMY;
+    return &gBagMenu->pyramidScratchPocket;
 }
 
 static void BagList_PyramidScratchWriteBack(void)
@@ -2172,8 +2134,8 @@ static void BagList_PyramidScratchWriteBack(void)
 
     for (i = 0; i < PYRAMID_BAG_ITEMS_COUNT; i++)
     {
-        ids[i] = sPyramidScratch[i].itemId;
-        quantities[i] = sPyramidScratch[i].quantity;
+        ids[i] = gBagMenu->pyramidScratch[i].itemId;
+        quantities[i] = gBagMenu->pyramidScratch[i].quantity;
     }
 }
 
@@ -2308,10 +2270,10 @@ static void CreateCursorSprite(void)
     animConfig.to = Q_24_8(initialY);
     animConfig.durationFrames = 1;
     animConfig.easingFunc = ComfyAnimEasing_EaseOutCubic;
-    sCursorAnimId = CreateComfyAnim_Easing(&animConfig);
+    gBagMenu->cursorAnimId = CreateComfyAnim_Easing(&animConfig);
 
-    sCursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, 80, initialY, 0);
-    gSprites[sCursorSpriteId].callback = SpriteCB_SlideCursorY;
+    gBagMenu->cursorSpriteId = CreateSprite(&sSpriteTemplate_Cursor, 80, initialY, 0);
+    gSprites[gBagMenu->cursorSpriteId].callback = SpriteCB_SlideCursorY;
 }
 
 static void CreateScrollThumbSprite(void)
@@ -2327,7 +2289,7 @@ static void CreateScrollThumbSprite(void)
     animConfig.to = Q_24_8(initialY2);
     animConfig.durationFrames = 1;
     animConfig.easingFunc = ComfyAnimEasing_EaseOutCubic;
-    sScrollThumbAnimId = CreateComfyAnim_Easing(&animConfig);
+    gBagMenu->scrollThumbAnimId = CreateComfyAnim_Easing(&animConfig);
 
     sScrollThumbSpriteId = CreateSprite(&sSpriteTemplate_ScrollThumb, 236, 28, 1);
 }
@@ -2341,8 +2303,8 @@ static void CreateHoverSlotSprites(void)
 
     for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
     {
-        sHoverSlotSpriteIds[i] = CreateSprite(&sHoverSlotSpriteTemplate, 86 + i * 32, initialY, 1);
-        StartSpriteAnim(&gSprites[sHoverSlotSpriteIds[i]], sHoverSlotAnims[i]);
+        gBagMenu->hoverSlotSpriteIds[i] = CreateSprite(&sHoverSlotSpriteTemplate, 86 + i * 32, initialY, 1);
+        StartSpriteAnim(&gSprites[gBagMenu->hoverSlotSpriteIds[i]], sHoverSlotAnims[i]);
     }
 }
 
@@ -2350,20 +2312,20 @@ static void SpriteCB_SlideCursorY(struct Sprite *sprite)
 {
     s16 y;
     u8 i;
-    y = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
+    y = ReadComfyAnimValueSmooth(&gComfyAnims[gBagMenu->cursorAnimId]);
     sprite->y = y;
     for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
     {
-        if (sHoverSlotSpriteIds[i] != SPRITE_NONE)
-            gSprites[sHoverSlotSpriteIds[i]].y = y;
+        if (gBagMenu->hoverSlotSpriteIds[i] != SPRITE_NONE)
+            gSprites[gBagMenu->hoverSlotSpriteIds[i]].y = y;
     }
     if (gBagMenu->toSwapPos != NOT_SWAPPING)
     {
         u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
         if (iconSpriteId != SPRITE_NONE)
             gSprites[iconSpriteId].y2 = y + 4;
-        if (sSwapCursorSpriteId != SPRITE_NONE)
-            gSprites[sSwapCursorSpriteId].y = y;
+        if (gBagMenu->swapCursorSpriteId != SPRITE_NONE)
+            gSprites[gBagMenu->swapCursorSpriteId].y = y;
     }
 }
 
@@ -2378,7 +2340,7 @@ static void SpriteCB_BagScrollThumb(struct Sprite *sprite)
         return;
     }
     sprite->invisible = FALSE;
-    sprite->y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sScrollThumbAnimId]);
+    sprite->y2 = ReadComfyAnimValueSmooth(&gComfyAnims[gBagMenu->scrollThumbAnimId]);
 }
 
 static void RefreshItemListRow(struct ListMenu *list, u8 row)
@@ -2396,7 +2358,7 @@ static void RefreshItemListRow(struct ListMenu *list, u8 row)
     BagMenu_ItemPrintCallback(WIN_ITEM_LIST, (u32)absIndex, rowY);
     BagMenu_Print(WIN_ITEM_LIST, FONT_NARROW, gMultiuseListMenuTemplate.items[absIndex].name,
                   sItemListMenu.item_X, rowY, 0, 0, TEXT_SKIP_DRAW,
-                  absIndex == sHoveredItemIndex ? COLORID_HOVER_NAME : COLORID_NORMAL);
+                  absIndex == gBagMenu->hoveredItemIndex ? COLORID_HOVER_NAME : COLORID_NORMAL);
 }
 
 static void RefreshItemListColors(struct ListMenu *list)
@@ -2423,7 +2385,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     s16 spriteY = BagMenu_GetListRowSpriteY(list);
     u32 durationFrames = 8;
 
-    if (!onInit && !gComfyAnims[sCursorAnimId].completed)
+    if (!onInit && !gComfyAnims[gBagMenu->cursorAnimId].completed)
     {
         if (gMain.heldKeys & (DPAD_UP | DPAD_DOWN))
             durationFrames = 1;
@@ -2434,11 +2396,11 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     {
         struct ComfyAnimEasingConfig animConfig;
         InitComfyAnimConfig_Easing(&animConfig);
-        animConfig.from = gComfyAnims[sCursorAnimId].position;
+        animConfig.from = gComfyAnims[gBagMenu->cursorAnimId].position;
         animConfig.to = Q_24_8(spriteY);
         animConfig.durationFrames = durationFrames;
         animConfig.easingFunc = ComfyAnimEasing_EaseOutCubic;
-        InitComfyAnim_Easing(&animConfig, &gComfyAnims[sCursorAnimId]);
+        InitComfyAnim_Easing(&animConfig, &gComfyAnims[gBagMenu->cursorAnimId]);
     }
 
     {
@@ -2447,15 +2409,15 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         {
             struct ComfyAnimEasingConfig animConfig;
             InitComfyAnimConfig_Easing(&animConfig);
-            animConfig.from = gComfyAnims[sScrollThumbAnimId].position;
+            animConfig.from = gComfyAnims[gBagMenu->scrollThumbAnimId].position;
             animConfig.to = Q_24_8(itemIndex * 88 / (total - 1));
             animConfig.durationFrames = durationFrames;
             animConfig.easingFunc = ComfyAnimEasing_EaseOutCubic;
-            InitComfyAnim_Easing(&animConfig, &gComfyAnims[sScrollThumbAnimId]);
+            InitComfyAnim_Easing(&animConfig, &gComfyAnims[gBagMenu->scrollThumbAnimId]);
         }
     }
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
     if (gBagPosition.isPyramid && itemIndex != LIST_CANCEL)
     {
         gPyramidBagMenuState.scrollPosition = 0;
@@ -2464,8 +2426,8 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 #endif
 
     {
-        s32 oldHovered = sHoveredItemIndex;
-        sHoveredItemIndex = itemIndex;
+        s32 oldHovered = gBagMenu->hoveredItemIndex;
+        gBagMenu->hoveredItemIndex = itemIndex;
         if (!onInit
          && oldHovered >= 0 && itemIndex >= 0
          && (oldHovered - itemIndex == 1 || itemIndex - oldHovered == 1)
@@ -2481,7 +2443,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
             RefreshItemListColors(list);
         }
     }
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     if (gBagPosition.pocket == POCKET_TM_HM)
         BagMenu_UpdateTMHMPartyBlend(itemIndex);
 #endif
@@ -2496,12 +2458,12 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         u8 iconSlot = gBagMenu->itemIconSlot;
         u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (iconSlot ^ 1)];
 
-        if (iconItemId != sShowItemIconId || iconSpriteId == SPRITE_NONE)
+        if (iconItemId != gBagMenu->showItemIconId || iconSpriteId == SPRITE_NONE)
         {
             RemoveBagItemIconSprite(iconSlot ^ 1);
             AddBagItemIconSprite(iconItemId, iconSlot);
             gBagMenu->itemIconSlot ^= 1;
-            sShowItemIconId = iconItemId;
+            gBagMenu->showItemIconId = iconItemId;
             iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + iconSlot];
             if (iconSpriteId != SPRITE_NONE)
             {
@@ -2530,19 +2492,21 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
     if (gBagMenu->toSwapPos == NOT_SWAPPING
      && (!onInit || gBagMenu->numItemStacks[gBagPosition.pocket] != (u8)(!gBagMenu->hideCloseBagText)))
     {
-        if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 1)
+        if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode == 1)
             UpdateMoveBattleInfo(itemIndex);
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
-        else if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 2)
+#if SWSH_ITEM_MENU_CONTEST_INFO
+        else if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode == 2)
             PrintContestDescription(itemIndex);
-        else if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 3)
+        else if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode == 3)
             UpdateMoveContestInfo(itemIndex);
 #endif
-#if SWSH_ITEM_MENU_BERRY_INFO
-        else if (gBagPosition.pocket == POCKET_BERRIES && sBerryInfoMode == 1)
+#if SWSH_ITEM_MENU_BERRY_STAT
+        else if (gBagPosition.pocket == POCKET_BERRIES && gBagMenu->berryInfoMode == 1)
             UpdateBerryInfo(itemIndex);
-        else if (gBagPosition.pocket == POCKET_BERRIES && sBerryInfoMode == 2)
+#if SWSH_ITEM_MENU_BERRY_TAG
+        else if (gBagPosition.pocket == POCKET_BERRIES && gBagMenu->berryInfoMode == 2)
             PrintBerryDescriptionInfo(itemIndex);
+#endif
 #endif
         else
             PrintItemDescription(itemIndex);
@@ -2568,7 +2532,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
         if (gBagPosition.pocket == POCKET_TM_HM && GetItemTMHMIndex(itemSlot.itemId) > NUM_TECHNICAL_MACHINES)
             BlitBitmapToWindow(windowId, sBagMenuHMIcon_Gfx, 8, y, 16, 16);
 
-        bool8 isHovered = ((s32)itemIndex == sHoveredItemIndex);
+        bool8 isHovered = ((s32)itemIndex == gBagMenu->hoveredItemIndex);
 
         if (gBagPosition.pocket != POCKET_KEY_ITEMS && GetItemImportance(itemSlot.itemId) == FALSE)
         {
@@ -2620,12 +2584,12 @@ static void UpdateEmptyPocket(void)
     bool8 pocketEmpty = gBagMenu->numItemStacks[gBagPosition.pocket] == (u8)(!gBagMenu->hideCloseBagText);
     u8 i;
 
-    if (sCursorSpriteId != SPRITE_NONE)
-        gSprites[sCursorSpriteId].invisible = pocketEmpty;
+    if (gBagMenu->cursorSpriteId != SPRITE_NONE)
+        gSprites[gBagMenu->cursorSpriteId].invisible = pocketEmpty;
     for (i = 0; i < HOVER_SLOT_SPRITES_COUNT; i++)
     {
-        if (sHoverSlotSpriteIds[i] != SPRITE_NONE)
-            gSprites[sHoverSlotSpriteIds[i]].invisible = pocketEmpty;
+        if (gBagMenu->hoverSlotSpriteIds[i] != SPRITE_NONE)
+            gSprites[gBagMenu->hoverSlotSpriteIds[i]].invisible = pocketEmpty;
     }
 
     if (pocketEmpty)
@@ -2640,7 +2604,7 @@ static void UpdateEmptyPocket(void)
         CopyWindowToVram(WIN_DESCRIPTION, COPYWIN_GFX);
 
         if (gBagPosition.pocket == POCKET_TM_HM
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
          || gBagPosition.pocket == POCKET_BERRIES
 #endif
             )
@@ -2671,12 +2635,12 @@ static void CreatePocketScrollArrowPair(void)
     struct ComfyAnimEasingConfig animConfig;
     u8 i;
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
     if (gBagPosition.isPyramid)
         return; // no pocket-switch arrows in pyramid bag
 #endif
 
-    if (sPocketScrollArrowSpriteIds[0] != SPRITE_NONE)
+    if (gBagMenu->pocketScrollArrowSpriteIds[0] != SPRITE_NONE)
         return;
 
     for (i = 0; i < 2; i++)
@@ -2689,14 +2653,14 @@ static void CreatePocketScrollArrowPair(void)
         animConfig.to = Q_24_8(0);
         animConfig.durationFrames = 1;
         animId = CreateComfyAnim_Easing(&animConfig);
-        sPocketScrollArrowAnimIds[i] = animId;
+        gBagMenu->pocketScrollArrowAnimIds[i] = animId;
 
         spriteId = CreateSprite(&sSpriteTemplate_PocketScrollArrows, sArrowX[i], 16, 0);
         if (spriteId != MAX_SPRITES)
         {
             StartSpriteAnim(&gSprites[spriteId], i);
             gSprites[spriteId].data[0] = animId;
-            sPocketScrollArrowSpriteIds[i] = spriteId;
+            gBagMenu->pocketScrollArrowSpriteIds[i] = spriteId;
         }
     }
 }
@@ -2707,15 +2671,15 @@ void BagDestroyPocketScrollArrowPair(void)
 
     for (i = 0; i < 2; i++)
     {
-        if (sPocketScrollArrowSpriteIds[i] != SPRITE_NONE)
+        if (gBagMenu->pocketScrollArrowSpriteIds[i] != SPRITE_NONE)
         {
-            DestroySprite(&gSprites[sPocketScrollArrowSpriteIds[i]]);
-            sPocketScrollArrowSpriteIds[i] = SPRITE_NONE;
+            DestroySprite(&gSprites[gBagMenu->pocketScrollArrowSpriteIds[i]]);
+            gBagMenu->pocketScrollArrowSpriteIds[i] = SPRITE_NONE;
         }
-        if (sPocketScrollArrowAnimIds[i] != INVALID_COMFY_ANIM)
+        if (gBagMenu->pocketScrollArrowAnimIds[i] != INVALID_COMFY_ANIM)
         {
-            ReleaseComfyAnim(sPocketScrollArrowAnimIds[i]);
-            sPocketScrollArrowAnimIds[i] = INVALID_COMFY_ANIM;
+            ReleaseComfyAnim(gBagMenu->pocketScrollArrowAnimIds[i]);
+            gBagMenu->pocketScrollArrowAnimIds[i] = INVALID_COMFY_ANIM;
         }
     }
 }
@@ -2732,7 +2696,7 @@ static void AnimatePocketScrollArrow(s8 direction)
     u8 arrowIdx = (direction < 0) ? 0 : 1;
     struct ComfyAnimEasingConfig config;
 
-    if (sPocketScrollArrowAnimIds[arrowIdx] == INVALID_COMFY_ANIM)
+    if (gBagMenu->pocketScrollArrowAnimIds[arrowIdx] == INVALID_COMFY_ANIM)
         return;
 
     InitComfyAnimConfig_Easing(&config);
@@ -2740,12 +2704,12 @@ static void AnimatePocketScrollArrow(s8 direction)
     config.to = Q_24_8(0);
     config.durationFrames = 12;
     config.easingFunc = ComfyAnimEasing_EaseOutCubic;
-    InitComfyAnim_Easing(&config, &gComfyAnims[sPocketScrollArrowAnimIds[arrowIdx]]);
+    InitComfyAnim_Easing(&config, &gComfyAnims[gBagMenu->pocketScrollArrowAnimIds[arrowIdx]]);
 }
 
 static void FreeBagMenu(void)
 {
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     if (BagMenu_ShouldLoadPartyPanel())
         BagMenu_FreePartyIcons();
 #endif
@@ -2795,12 +2759,12 @@ static void Task_CloseBagMenu(u8 taskId)
             SetMainCallback2(gBagPosition.exitCallback);
 
         BagDestroyPocketScrollArrowPair();
-        ReleaseComfyAnim(sCursorAnimId);
-        ReleaseComfyAnim(sScrollThumbAnimId);
-        if (sPartyItemIconAnimId != INVALID_COMFY_ANIM)
+        ReleaseComfyAnim(gBagMenu->cursorAnimId);
+        ReleaseComfyAnim(gBagMenu->scrollThumbAnimId);
+        if (gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM)
         {
-            ReleaseComfyAnim(sPartyItemIconAnimId);
-            sPartyItemIconAnimId = INVALID_COMFY_ANIM;
+            ReleaseComfyAnim(gBagMenu->partyItemIconAnimId);
+            gBagMenu->partyItemIconAnimId = INVALID_COMFY_ANIM;
         }
         ResetSpriteData();
         FreeAllSpritePalettes();
@@ -2814,7 +2778,7 @@ void UpdatePocketItemList(enum Pocket pocketId)
     if (pocketId >= POCKETS_COUNT)
         return; // shouldn't even get here
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
     if (gBagPosition.isPyramid)
     {
         BagList_CompactPyramid();
@@ -2971,7 +2935,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
 
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
     {
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
         if (BagMenu_IsMultiFull() && GetLRKeysPressed())
         {
             BagMenu_StartMultiFullSwap(taskId);
@@ -2993,13 +2957,13 @@ static void Task_BagMenu_HandleInput(u8 taskId)
                 if (!pocketEmpty && gBagPosition.pocket == POCKET_TM_HM)
                 {
                     PlaySE(SE_SELECT);
-                    SwitchMoveInfoMode(sHoveredItemIndex);
+                    SwitchMoveInfoMode(gBagMenu->hoveredItemIndex);
                 }
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
                 else if (!pocketEmpty && gBagPosition.pocket == POCKET_BERRIES)
                 {
                     PlaySE(SE_SELECT);
-                    SwitchBerryInfoMode(sHoveredItemIndex);
+                    SwitchBerryInfoMode(gBagMenu->hoveredItemIndex);
                 }
 #endif
                 else if (!pocketEmpty && CanSwapItems() == TRUE)
@@ -3084,23 +3048,23 @@ static void Task_BagMenu_HandleInput(u8 taskId)
 static void ReturnToItemList(u8 taskId)
 {
     CreatePocketScrollArrowPair();
-    if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 1)
+    if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode == 1)
     {
         PutWindowTilemap(WIN_PP_LABEL);
         PutWindowTilemap(WIN_PP_INFO);
         PutWindowTilemap(WIN_POW_ACC_LABEL);
         PutWindowTilemap(WIN_POW_ACC_INFO);
     }
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
-    else if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode == 3)
+#if SWSH_ITEM_MENU_CONTEST_INFO
+    else if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode == 3)
     {
         PutWindowTilemap(WIN_PP_LABEL);
         PutWindowTilemap(WIN_PP_INFO);
         PutWindowTilemap(WIN_APP_JAM_LABEL);
     }
 #endif
-#if SWSH_ITEM_MENU_BERRY_INFO
-    else if (gBagPosition.pocket == POCKET_BERRIES && sBerryInfoMode == 1)
+#if SWSH_ITEM_MENU_BERRY_STAT
+    else if (gBagPosition.pocket == POCKET_BERRIES && gBagMenu->berryInfoMode == 1)
     {
         PutWindowTilemap(WIN_BERRY_INFO);
         PutWindowTilemap(WIN_BERRY_FLAVORS);
@@ -3156,45 +3120,45 @@ static void SwitchBagPocket(u8 taskId, s16 deltaBagPocketId, bool16 skipEraseLis
     ChangeBagPocketId(&newPocket, deltaBagPocketId);
     if (!skipEraseList)
     {
-        if (gBagPosition.pocket == POCKET_TM_HM && sMoveInfoMode)
+        if (gBagPosition.pocket == POCKET_TM_HM && gBagMenu->moveInfoMode)
         {
-            if (sMoveTypeIconSpriteId != SPRITE_NONE)
+            if (gBagMenu->moveTypeIconSpriteId != SPRITE_NONE)
             {
-                DestroySprite(&gSprites[sMoveTypeIconSpriteId]);
+                DestroySprite(&gSprites[gBagMenu->moveTypeIconSpriteId]);
                 FreeSpriteTilesByTag(TAG_MOVE_TYPE_ICON);
-                sMoveTypeIconSpriteId = SPRITE_NONE;
+                gBagMenu->moveTypeIconSpriteId = SPRITE_NONE;
             }
-            if (sCategoryIconSpriteId != SPRITE_NONE)
+            if (gBagMenu->categoryIconSpriteId != SPRITE_NONE)
             {
-                DestroySprite(&gSprites[sCategoryIconSpriteId]);
+                DestroySprite(&gSprites[gBagMenu->categoryIconSpriteId]);
                 FreeSpriteTilesByTag(TAG_CATEGORY_ICON);
-                sCategoryIconSpriteId = SPRITE_NONE;
+                gBagMenu->categoryIconSpriteId = SPRITE_NONE;
             }
             ClearWindowTilemap(WIN_PP_LABEL);
             ClearWindowTilemap(WIN_POW_ACC_LABEL);
             ClearWindowTilemap(WIN_PP_INFO);
             ClearWindowTilemap(WIN_POW_ACC_INFO);
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
             ClearWindowTilemap(WIN_APP_JAM_LABEL);
             FillBgTilemapBufferRect_Palette0(2, 4, 21, 16, 4, 4);
 #endif
-            sMoveInfoMode = 0;
+            gBagMenu->moveInfoMode = 0;
         }
-#if SWSH_ITEM_MENU_BERRY_INFO
-        if (gBagPosition.pocket == POCKET_BERRIES && sBerryInfoMode)
+#if SWSH_ITEM_MENU_BERRY_STAT
+        if (gBagPosition.pocket == POCKET_BERRIES && gBagMenu->berryInfoMode)
         {
-            if (sBerryInfoMode == 1)
+            if (gBagMenu->berryInfoMode == 1)
             {
                 ClearWindowTilemap(WIN_BERRY_INFO);
                 ClearWindowTilemap(WIN_BERRY_FLAVORS);
             }
-            sBerryInfoMode = 0;
+            gBagMenu->berryInfoMode = 0;
         }
 #endif
         {
             bool8 srcHasInfoPrompt = (gBagPosition.pocket == POCKET_TM_HM);
             bool8 destHasInfoPrompt = (newPocket == POCKET_TM_HM);
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
             srcHasInfoPrompt |= (gBagPosition.pocket == POCKET_BERRIES);
             destHasInfoPrompt |= (newPocket == POCKET_BERRIES);
 #endif
@@ -3241,7 +3205,7 @@ static void Task_SwitchBagPocket(u8 taskId)
             tPocketSwitchState++;
         break;
     case 1:
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
         if (gBagPosition.pocket == POCKET_TM_HM)
             BagMenu_DisableTMHMPartyBlend();
 #endif
@@ -3258,7 +3222,7 @@ static void Task_SwitchBagPocket(u8 taskId)
             {
                 ShowInfoPrompt(INFO_PROMPT_BATTLE_STAT);
             }
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
             else if (gBagPosition.pocket == POCKET_BERRIES)
             {
                 ShowInfoPrompt(INFO_PROMPT_BERRY_STAT);
@@ -3293,12 +3257,12 @@ static bool8 CanSwapItems(void)
 static void StartItemSwap(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    s16 cursorY = ReadComfyAnimValueSmooth(&gComfyAnims[sCursorAnimId]);
+    s16 cursorY = ReadComfyAnimValueSmooth(&gComfyAnims[gBagMenu->cursorAnimId]);
 
     tListPosition = gBagPosition.scrollPosition[gBagPosition.pocket] + gBagPosition.cursorPosition[gBagPosition.pocket];
     gBagMenu->toSwapPos = tListPosition;
-    gSprites[sCursorSpriteId].invisible = TRUE;
-    sSwapCursorSpriteId = CreateSprite(&sSpriteTemplate_SwapCursor, 84, cursorY, 1);
+    gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
+    gBagMenu->swapCursorSpriteId = CreateSprite(&sSpriteTemplate_SwapCursor, 84, cursorY, 1);
     gTasks[taskId].func = Task_HandleSwappingItemsInput;
 }
 
@@ -3333,9 +3297,9 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
         {
             PlaySE(SE_SELECT);
             gBagMenu->toSwapPos = NOT_SWAPPING;
-            DestroySprite(&gSprites[sSwapCursorSpriteId]);
-            sSwapCursorSpriteId = SPRITE_NONE;
-            gSprites[sCursorSpriteId].invisible = FALSE;
+            DestroySprite(&gSprites[gBagMenu->swapCursorSpriteId]);
+            gBagMenu->swapCursorSpriteId = SPRITE_NONE;
+            gSprites[gBagMenu->cursorSpriteId].invisible = FALSE;
             gTasks[taskId].func = Task_BagMenu_HandleInput;
         }
         else if (JOY_REPEAT(DPAD_DOWN) && tListPosition < lastRealPos)
@@ -3377,7 +3341,7 @@ static void Task_HandleSwappingItemsInput(u8 taskId)
 
 static void OpenContextMenu(u8 taskId)
 {
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
     if (gBagPosition.isPyramid && gPyramidBagMenuState.location == PYRAMIDBAG_LOC_CHOOSE_TOSS)
     {
         gBagMenu->contextMenuItemsPtr = sContextMenuItems_PyramidToss;
@@ -3630,7 +3594,7 @@ static void ItemMenu_UseTMHM(u8 taskId)
 {
     PlaySE(SE_PC_LOGIN);
     gItemUseCB = ItemUseCB_TMHM;
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     BagMenu_OpenPartySelect(taskId);
 #else
     gBagMenu->newScreenCallback = CB2_ShowPartyMenuForItemUse;
@@ -3805,8 +3769,8 @@ static void ItemMenu_Give(u8 taskId)
         }
         else
         {
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
-#if SWSH_ITEM_MENU_PYRAMID_BAG && !SWSH_ITEM_MENU_PYRAMID_ACTION
+#if SWSH_ITEM_MENU_IN_BAG_USE
+#if SWSH_ITEM_MENU_PYRAMID && !SWSH_ITEM_MENU_PYRAMID_ACTION
             if (gBagPosition.isPyramid)
             {
                 gBagMenu->newScreenCallback = CB2_ChooseMonToGiveItem;
@@ -3815,7 +3779,7 @@ static void ItemMenu_Give(u8 taskId)
             else
 #endif
             {
-                sPartyGiveMode = TRUE;
+                gBagMenu->partyGiveMode = TRUE;
                 BagMenu_OpenPartySelect(taskId);
             }
 #else
@@ -4336,7 +4300,7 @@ static void LoadBagMenuTextWindows(void)
     }
     ScheduleBgCopyTilemapToVram(1);
     ScheduleBgCopyTilemapToVram(0);
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
     FillWindowPixelBuffer(WIN_PARTY_HP_BAR, PIXEL_FILL(0));
 #endif
 }
@@ -4428,8 +4392,8 @@ static void CreateQuantityFrameSprites(u8 y)
     u8 i;
     for (i = 0; i < FRAME_QUANTITY_SPRITES_COUNT; i++)
     {
-        sFrameQuantityIds[i] = CreateSprite(&sSpriteTemplate_FramePriceQuantity, 192 + i * 32, y, 3);
-        StartSpriteAnim(&gSprites[sFrameQuantityIds[i]], sFrameQuantityAnims[i]);
+        gBagMenu->frameQuantityIds[i] = CreateSprite(&sSpriteTemplate_FramePriceQuantity, 192 + i * 32, y, 3);
+        StartSpriteAnim(&gSprites[gBagMenu->frameQuantityIds[i]], sFrameQuantityAnims[i]);
     }
 }
 
@@ -4438,10 +4402,10 @@ static void DestroyQuantityFrameSprites(void)
     u8 i;
     for (i = 0; i < FRAME_QUANTITY_SPRITES_COUNT; i++)
     {
-        if (sFrameQuantityIds[i] != SPRITE_NONE)
+        if (gBagMenu->frameQuantityIds[i] != SPRITE_NONE)
         {
-            DestroySprite(&gSprites[sFrameQuantityIds[i]]);
-            sFrameQuantityIds[i] = SPRITE_NONE;
+            DestroySprite(&gSprites[gBagMenu->frameQuantityIds[i]]);
+            gBagMenu->frameQuantityIds[i] = SPRITE_NONE;
         }
     }
 }
@@ -4534,8 +4498,8 @@ static void SpriteCB_MoveTypeIcon(struct Sprite *sprite)
     if (sprite->data[0] != 0xFF)
     {
         u32 offset = sprite->data[0] * 0x100;
-        if (sMoveTypeIconTilesPtr != NULL)
-            RequestDma3Copy(&sMoveTypeIconsCache[offset], sMoveTypeIconTilesPtr, 0x100, 0x10);
+        if (gBagMenu->moveTypeIconTilesPtr != NULL)
+            RequestDma3Copy(&sMoveTypeIconsCache[offset], gBagMenu->moveTypeIconTilesPtr, 0x100, 0x10);
         sprite->data[0] = 0xFF;
     }
 }
@@ -4562,8 +4526,8 @@ static void UpdateMoveBattleInfo(s32 itemIndex)
             GetStringRightAlignXOffset(FONT_SHORT_NARROW, gText_ThreeDashes, valInfoWidth), 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
         CopyWindowToVram(WIN_PP_INFO, COPYWIN_GFX);
         CopyWindowToVram(WIN_POW_ACC_INFO, COPYWIN_GFX);
-        gSprites[sMoveTypeIconSpriteId].invisible = TRUE;
-        gSprites[sCategoryIconSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->moveTypeIconSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->categoryIconSpriteId].invisible = TRUE;
         return;
     }
 
@@ -4600,16 +4564,16 @@ static void UpdateMoveBattleInfo(s32 itemIndex)
         GetStringRightAlignXOffset(FONT_SHORT_NARROW, text, valInfoWidth), 16, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
     CopyWindowToVram(WIN_POW_ACC_INFO, COPYWIN_GFX);
 
-    gSprites[sMoveTypeIconSpriteId].x = 112;
-    gSprites[sMoveTypeIconSpriteId].oam.paletteNum = gTypesInfo[GetMoveType(move)].palette;
-    gSprites[sMoveTypeIconSpriteId].data[0] = GetMoveType(move);
-    gSprites[sMoveTypeIconSpriteId].invisible = FALSE;
+    gSprites[gBagMenu->moveTypeIconSpriteId].x = 112;
+    gSprites[gBagMenu->moveTypeIconSpriteId].oam.paletteNum = gTypesInfo[GetMoveType(move)].palette;
+    gSprites[gBagMenu->moveTypeIconSpriteId].data[0] = GetMoveType(move);
+    gSprites[gBagMenu->moveTypeIconSpriteId].invisible = FALSE;
 
-    StartSpriteAnim(&gSprites[sCategoryIconSpriteId], GetBattleMoveCategory(move));
-    gSprites[sCategoryIconSpriteId].invisible = FALSE;
+    StartSpriteAnim(&gSprites[gBagMenu->categoryIconSpriteId], GetBattleMoveCategory(move));
+    gSprites[gBagMenu->categoryIconSpriteId].invisible = FALSE;
 }
 
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
 static void PrintContestDescription(s32 itemIndex)
 {
     const u8 *str;
@@ -4636,9 +4600,9 @@ static void PrintContestDescription(s32 itemIndex)
 
 static void SwitchMoveInfoMode(s32 itemIndex)
 {
-    if (sMoveInfoMode == 0)
+    if (gBagMenu->moveInfoMode == 0)
     {
-        sMoveInfoMode = 1;
+        gBagMenu->moveInfoMode = 1;
 
         LoadPalette(sMoveTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
         {
@@ -4647,12 +4611,12 @@ static void SwitchMoveInfoMode(s32 itemIndex)
         }
         LoadCompressedSpriteSheet(&sSpriteSheet_CategoryIcon);
 
-        sMoveTypeIconSpriteId = CreateSprite(&sSpriteTemplate_MoveTypeIcon, 112, 136, 0);
+        gBagMenu->moveTypeIconSpriteId = CreateSprite(&sSpriteTemplate_MoveTypeIcon, 112, 136, 0);
         {
             u16 tileStart = GetSpriteTileStartByTag(TAG_MOVE_TYPE_ICON);
-            sMoveTypeIconTilesPtr = (tileStart == 0xFFFF) ? NULL : (u16 *)((u8 *)OBJ_VRAM0 + 32 * tileStart);
+            gBagMenu->moveTypeIconTilesPtr = (tileStart == 0xFFFF) ? NULL : (u16 *)((u8 *)OBJ_VRAM0 + 32 * tileStart);
         }
-        sCategoryIconSpriteId = CreateSprite(&sSpriteTemplate_CategoryIcon, 80, 136, 0);
+        gBagMenu->categoryIconSpriteId = CreateSprite(&sSpriteTemplate_CategoryIcon, 80, 136, 0);
 
         FillWindowPixelBuffer(WIN_PP_LABEL, PIXEL_FILL(0));
         BagMenu_Print(WIN_PP_LABEL, FONT_SHORT_NARROW, sText_MoveInfoPP, 0, 0, 0, 0, TEXT_SKIP_DRAW, COLORID_NORMAL);
@@ -4675,20 +4639,20 @@ static void SwitchMoveInfoMode(s32 itemIndex)
         PutWindowTilemap(WIN_POW_ACC_LABEL);
         PutWindowTilemap(WIN_PP_INFO);
         PutWindowTilemap(WIN_POW_ACC_INFO);
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
         ShowInfoPrompt(INFO_PROMPT_CONTEST_INFO);
 #else
         ShowInfoPrompt(INFO_PROMPT_BATTLE_INFO);
 #endif
         ScheduleBgCopyTilemapToVram(1);
     }
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
-    else if (sMoveInfoMode == 1)
+#if SWSH_ITEM_MENU_CONTEST_INFO
+    else if (gBagMenu->moveInfoMode == 1)
     {
-        sMoveInfoMode = 2;
+        gBagMenu->moveInfoMode = 2;
 
-        gSprites[sMoveTypeIconSpriteId].invisible = TRUE;
-        gSprites[sCategoryIconSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->moveTypeIconSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->categoryIconSpriteId].invisible = TRUE;
 
         FillWindowPixelBuffer(WIN_PP_LABEL, PIXEL_FILL(0));
         ClearWindowTilemap(WIN_PP_LABEL);
@@ -4704,10 +4668,10 @@ static void SwitchMoveInfoMode(s32 itemIndex)
         ShowInfoPrompt(INFO_PROMPT_CONTEST_STAT);
         ScheduleBgCopyTilemapToVram(1);
     }
-    else if (sMoveInfoMode == 2)
+    else if (gBagMenu->moveInfoMode == 2)
     {
         int winWidth;
-        sMoveInfoMode = 3;
+        gBagMenu->moveInfoMode = 3;
 
         ClearWindowTilemap(WIN_DESCRIPTION);
 
@@ -4733,26 +4697,26 @@ static void SwitchMoveInfoMode(s32 itemIndex)
 #endif
     else
     {
-        sMoveInfoMode = 0;
+        gBagMenu->moveInfoMode = 0;
 
-        if (sMoveTypeIconSpriteId != SPRITE_NONE)
+        if (gBagMenu->moveTypeIconSpriteId != SPRITE_NONE)
         {
-            DestroySprite(&gSprites[sMoveTypeIconSpriteId]);
+            DestroySprite(&gSprites[gBagMenu->moveTypeIconSpriteId]);
             FreeSpriteTilesByTag(TAG_MOVE_TYPE_ICON);
-            sMoveTypeIconSpriteId = SPRITE_NONE;
+            gBagMenu->moveTypeIconSpriteId = SPRITE_NONE;
         }
-        if (sCategoryIconSpriteId != SPRITE_NONE)
+        if (gBagMenu->categoryIconSpriteId != SPRITE_NONE)
         {
-            DestroySprite(&gSprites[sCategoryIconSpriteId]);
+            DestroySprite(&gSprites[gBagMenu->categoryIconSpriteId]);
             FreeSpriteTilesByTag(TAG_CATEGORY_ICON);
-            sCategoryIconSpriteId = SPRITE_NONE;
+            gBagMenu->categoryIconSpriteId = SPRITE_NONE;
         }
 
         ClearWindowTilemap(WIN_PP_LABEL);
         ClearWindowTilemap(WIN_POW_ACC_LABEL);
         ClearWindowTilemap(WIN_PP_INFO);
         ClearWindowTilemap(WIN_POW_ACC_INFO);
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
         ClearWindowTilemap(WIN_APP_JAM_LABEL);
         FillBgTilemapBufferRect_Palette0(2, 4, 21, 16, 4, 4);
 #endif
@@ -4764,7 +4728,7 @@ static void SwitchMoveInfoMode(s32 itemIndex)
     }
 }
 
-#if SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#if SWSH_ITEM_MENU_CONTEST_INFO
 static void UpdateMoveContestInfo(s32 itemIndex)
 {
     enum Move move;
@@ -4777,7 +4741,7 @@ static void UpdateMoveContestInfo(s32 itemIndex)
     if (itemIndex == LIST_CANCEL)
     {
         FillBgTilemapBufferRect_Palette0(2, 13, 21, 16, 4, 4);
-        gSprites[sMoveTypeIconSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->moveTypeIconSpriteId].invisible = TRUE;
         ScheduleBgCopyTilemapToVram(2);
         CopyWindowToVram(WIN_PP_INFO, COPYWIN_GFX);
         return;
@@ -4794,10 +4758,10 @@ static void UpdateMoveContestInfo(s32 itemIndex)
     // Contest type icon
     {
         u32 category = GetMoveContestCategory(move);
-        gSprites[sMoveTypeIconSpriteId].x = 96;
-        gSprites[sMoveTypeIconSpriteId].oam.paletteNum = gContestCategoryInfo[category].palette;
-        gSprites[sMoveTypeIconSpriteId].data[0] = NUMBER_OF_MON_TYPES + category;
-        gSprites[sMoveTypeIconSpriteId].invisible = FALSE;
+        gSprites[gBagMenu->moveTypeIconSpriteId].x = 96;
+        gSprites[gBagMenu->moveTypeIconSpriteId].oam.paletteNum = gContestCategoryInfo[category].palette;
+        gSprites[gBagMenu->moveTypeIconSpriteId].data[0] = NUMBER_OF_MON_TYPES + category;
+        gSprites[gBagMenu->moveTypeIconSpriteId].invisible = FALSE;
     }
 
     // Appeal/Jam tile grid
@@ -4817,7 +4781,7 @@ static void UpdateMoveContestInfo(s32 itemIndex)
         buf[(18 + i / 4) * 32 + (21 + i % 4)] = (jam == 0xFF || i < jam) ? 15 : 13;
     ScheduleBgCopyTilemapToVram(2);
 }
-#endif // SWSH_ITEM_MENU_TMHM_CONTEST_INFO
+#endif // SWSH_ITEM_MENU_CONTEST_INFO
 
 static const u8 sText_SortItemsHow[] = _("Sort items how?");
 static const u8 sText_ItemsSorted[] = _("Items sorted by {STR_VAR_1}!");
@@ -4944,7 +4908,7 @@ static void SortBagItems(u8 taskId)
 
     RemoveContextWindow();
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
     if (gBagPosition.isPyramid)
         BagList_SortPyramid(tSortType);
     else
@@ -5297,7 +5261,7 @@ static u8 FormatDescriptionByWidth(u8 *result, s32 maxWidth, u8 fontId, const u8
     return fontId;
 }
 
-#if SWSH_ITEM_MENU_BERRY_INFO
+#if SWSH_ITEM_MENU_BERRY_STAT
 static void UpdateBerryInfo(s32 itemIndex)
 {
     FillWindowPixelBuffer(WIN_BERRY_INFO, PIXEL_FILL(0));
@@ -5344,6 +5308,7 @@ static void UpdateBerryInfo(s32 itemIndex)
     }
 }
 
+#if SWSH_ITEM_MENU_BERRY_TAG
 static void PrintBerryDescriptionInfo(s32 itemIndex)
 {
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
@@ -5354,23 +5319,29 @@ static void PrintBerryDescriptionInfo(s32 itemIndex)
         AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_SMALL_NARROWER, 3, 15, 0, 1, sFontColorTable[COLORID_NORMAL], 0, berryInfo->description2);
     }
 }
+#endif
 
 static void SwitchBerryInfoMode(s32 itemIndex)
 {
-    if (sBerryInfoMode == 0)
+    if (gBagMenu->berryInfoMode == 0)
     {
-        sBerryInfoMode = 1;
+        gBagMenu->berryInfoMode = 1;
 
         ClearWindowTilemap(WIN_DESCRIPTION);
         UpdateBerryInfo(itemIndex);
         PutWindowTilemap(WIN_BERRY_INFO);
         PutWindowTilemap(WIN_BERRY_FLAVORS);
+#if SWSH_ITEM_MENU_BERRY_TAG
         ShowInfoPrompt(INFO_PROMPT_BERRY_TAG);
+#else
+        ShowInfoPrompt(INFO_PROMPT_BERRY_INFO);
+#endif
         ScheduleBgCopyTilemapToVram(1);
     }
-    else if (sBerryInfoMode == 1)
+#if SWSH_ITEM_MENU_BERRY_TAG
+    else if (gBagMenu->berryInfoMode == 1)
     {
-        sBerryInfoMode = 2;
+        gBagMenu->berryInfoMode = 2;
 
         ClearWindowTilemap(WIN_BERRY_INFO);
         ClearWindowTilemap(WIN_BERRY_FLAVORS);
@@ -5384,7 +5355,7 @@ static void SwitchBerryInfoMode(s32 itemIndex)
     }
     else
     {
-        sBerryInfoMode = 0;
+        gBagMenu->berryInfoMode = 0;
 
         ClearWindowTilemap(WIN_DESCRIPTION);
         PrintItemDescription(itemIndex);
@@ -5392,11 +5363,24 @@ static void SwitchBerryInfoMode(s32 itemIndex)
         ShowInfoPrompt(INFO_PROMPT_BERRY_STAT);
         ScheduleBgCopyTilemapToVram(1);
     }
+#else
+    else
+    {
+        gBagMenu->berryInfoMode = 0;
+
+        ClearWindowTilemap(WIN_BERRY_INFO);
+        ClearWindowTilemap(WIN_BERRY_FLAVORS);
+        PrintItemDescription(itemIndex);
+        PutWindowTilemap(WIN_DESCRIPTION);
+        ShowInfoPrompt(INFO_PROMPT_BERRY_STAT);
+        ScheduleBgCopyTilemapToVram(1);
+    }
+#endif
 }
 
-#endif // SWSH_ITEM_MENU_BERRY_INFO
+#endif // SWSH_ITEM_MENU_BERRY_STAT
 
-#if SWSH_ITEM_MENU_ACTION_IN_BAG
+#if SWSH_ITEM_MENU_IN_BAG_USE
 
 // ============================================================
 // Party Panel
@@ -5415,7 +5399,7 @@ static bool8 BagMenu_ShouldLoadPartyPanel(void)
     case ITEMMENULOCATION_FIELD:
     case ITEMMENULOCATION_PARTY:
         return TRUE;
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     case ITEMMENULOCATION_BATTLE:
     case ITEMMENULOCATION_WALLY:
         return TRUE;
@@ -5520,9 +5504,9 @@ static void BagMenu_CreatePartyIcons(void)
         FreeItemIconTemporaryBuffers();
         if (palSlot == 0xFF)
             palSlot = AllocSpritePalette(TAG_PARTY_HELD_ITEM);
-        sHeldItemPalIndex = OBJ_PLTT_ID(palSlot);
-        sHeldItemIconSpriteId = CreateSprite(&sSpriteTemplate_HeldItemIcon, 0, 0, 5);
-        gSprites[sHeldItemIconSpriteId].invisible = TRUE;
+        gBagMenu->heldItemPalIndex = OBJ_PLTT_ID(palSlot);
+        gBagMenu->heldItemIconSpriteId = CreateSprite(&sSpriteTemplate_HeldItemIcon, 0, 0, 5);
+        gSprites[gBagMenu->heldItemIconSpriteId].invisible = TRUE;
     }
 
     for (i = 0; i < count; i++)
@@ -5531,7 +5515,7 @@ static void BagMenu_CreatePartyIcons(void)
     for (i = 0; i < count; i++)
     {
         u8 sid = CreateSprite(&sSpriteTemplate_StatusIcon, 44, 23 + i * 24, 2);
-        sStatusIconSpriteIds[i] = (sid == MAX_SPRITES) ? SPRITE_NONE : sid;
+        gBagMenu->statusIconSpriteIds[i] = (sid == MAX_SPRITES) ? SPRITE_NONE : sid;
     }
     BagMenu_UpdateStatusIcons();
     BagMenu_UpdateStatusIconPos(PARTY_SIZE);
@@ -5551,19 +5535,19 @@ static void BagMenu_FreePartyIcons(void)
     }
     FreeMonIconPalettes();
 
-    if (sHeldItemIconSpriteId != SPRITE_NONE)
+    if (gBagMenu->heldItemIconSpriteId != SPRITE_NONE)
     {
-        DestroySprite(&gSprites[sHeldItemIconSpriteId]);
+        DestroySprite(&gSprites[gBagMenu->heldItemIconSpriteId]);
         FreeSpriteTilesByTag(TAG_PARTY_HELD_ITEM);
-        sHeldItemIconSpriteId = SPRITE_NONE;
+        gBagMenu->heldItemIconSpriteId = SPRITE_NONE;
     }
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (sStatusIconSpriteIds[i] != SPRITE_NONE)
+        if (gBagMenu->statusIconSpriteIds[i] != SPRITE_NONE)
         {
-            DestroySprite(&gSprites[sStatusIconSpriteIds[i]]);
-            sStatusIconSpriteIds[i] = SPRITE_NONE;
+            DestroySprite(&gSprites[gBagMenu->statusIconSpriteIds[i]]);
+            gBagMenu->statusIconSpriteIds[i] = SPRITE_NONE;
         }
     }
     FreeSpriteTilesByTag(TAG_STATUS_ICON);
@@ -5587,17 +5571,17 @@ static void BagMenu_UpdateStatusIcons(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u8 ailment;
-        if (sStatusIconSpriteIds[i] == SPRITE_NONE)
+        if (gBagMenu->statusIconSpriteIds[i] == SPRITE_NONE)
             continue;
         ailment = BagMenu_GetMonAilment(i);
         if (ailment == AILMENT_NONE)
         {
-            gSprites[sStatusIconSpriteIds[i]].invisible = TRUE;
+            gSprites[gBagMenu->statusIconSpriteIds[i]].invisible = TRUE;
         }
         else
         {
-            StartSpriteAnim(&gSprites[sStatusIconSpriteIds[i]], ailment - 1);
-            gSprites[sStatusIconSpriteIds[i]].invisible = FALSE;
+            StartSpriteAnim(&gSprites[gBagMenu->statusIconSpriteIds[i]], ailment - 1);
+            gSprites[gBagMenu->statusIconSpriteIds[i]].invisible = FALSE;
         }
     }
 }
@@ -5607,23 +5591,23 @@ static void BagMenu_UpdateStatusIconPos(u8 hoveredSlot)
     u8 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (sStatusIconSpriteIds[i] == SPRITE_NONE)
+        if (gBagMenu->statusIconSpriteIds[i] == SPRITE_NONE)
             continue;
-        gSprites[sStatusIconSpriteIds[i]].y = 23 + i * 24
+        gSprites[gBagMenu->statusIconSpriteIds[i]].y = 23 + i * 24
             + (BagMenu_ShouldShowHPBar() && i == hoveredSlot ? 0 : 4);
     }
 }
 
 static void BagMenu_MoveHPBarWindow(u8 slot)
 {
-    if (sHPBarWindowMapped && sPrevHPBarSlot == (s8)slot)
+    if (gBagMenu->hpBarWindowMapped && gBagMenu->prevHPBarSlot == (s8)slot)
         return;
-    if (sHPBarWindowMapped)
+    if (gBagMenu->hpBarWindowMapped)
         ClearWindowTilemap(WIN_PARTY_HP_BAR);
     SetWindowAttribute(WIN_PARTY_HP_BAR, WINDOW_TILEMAP_TOP, 3 + slot * 3);
     PutWindowTilemap(WIN_PARTY_HP_BAR);
-    sHPBarWindowMapped = TRUE;
-    sPrevHPBarSlot = (s8)slot;
+    gBagMenu->hpBarWindowMapped = TRUE;
+    gBagMenu->prevHPBarSlot = (s8)slot;
 }
 
 static void BagMenu_DrawPartyHPBarPixels(u8 slot, u8 filledWidth)
@@ -5665,7 +5649,7 @@ static void Task_BagMenu_HPBarAnim(u8 taskId)
 static bool8 BagMenu_ShouldShowHPBar(void)
 {
     return SWSH_ITEM_MENU_PARTY_HP_BAR
-        && !sPartyGiveMode
+        && !gBagMenu->partyGiveMode
         && (gItemUseCB == ItemUseCB_Medicine
             || gItemUseCB == ItemUseCB_SacredAsh
             || gItemUseCB == ItemUseCB_RareCandy
@@ -5677,13 +5661,13 @@ static void BagMenu_DrawPartyHPBar(s8 slot)
 {
     if (slot < 0)
     {
-        if (sHPBarWindowMapped)
+        if (gBagMenu->hpBarWindowMapped)
         {
             ClearWindowTilemap(WIN_PARTY_HP_BAR);
             ScheduleBgCopyTilemapToVram(1);
-            sHPBarWindowMapped = FALSE;
+            gBagMenu->hpBarWindowMapped = FALSE;
         }
-        sPrevHPBarSlot = -1;
+        gBagMenu->prevHPBarSlot = -1;
         return;
     }
 
@@ -5741,7 +5725,7 @@ static void BagMenu_LoadHeldItemIconGfx(enum Item itemId)
     CopyItemIconPicTo4x4Buffer(gItemIconDecompressionBuffer, gItemIcon4x4Buffer);
     CpuFastCopy(gItemIcon4x4Buffer, vramTiles, 0x200);
     FreeItemIconTemporaryBuffers();
-    LoadPalette(GetItemIconPalette(itemId), sHeldItemPalIndex, PLTT_SIZE_4BPP);
+    LoadPalette(GetItemIconPalette(itemId), gBagMenu->heldItemPalIndex, PLTT_SIZE_4BPP);
 }
 
 static void BagMenu_UpdateHeldItemIcon(u8 slot)
@@ -5750,16 +5734,16 @@ static void BagMenu_UpdateHeldItemIcon(u8 slot)
     struct Sprite *spr;
     u16 heldItem;
 
-    if (sHeldItemIconSpriteId == SPRITE_NONE)
+    if (gBagMenu->heldItemIconSpriteId == SPRITE_NONE)
         return;
 
-    spr = &gSprites[sHeldItemIconSpriteId];
+    spr = &gSprites[gBagMenu->heldItemIconSpriteId];
     heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     if (heldItem != ITEM_NONE && !GetMonData(mon, MON_DATA_IS_EGG))
     {
         if (!spr->invisible && spr->callback == SpriteCallbackDummy
-         && slot == sHeldItemShownSlot && heldItem == sHeldItemShownItem)
+         && slot == gBagMenu->heldItemShownSlot && heldItem == gBagMenu->heldItemShownItem)
             return;
         BagMenu_LoadHeldItemIconGfx(heldItem);
         spr->x = 46;
@@ -5767,8 +5751,8 @@ static void BagMenu_UpdateHeldItemIcon(u8 slot)
         spr->invisible = FALSE;
         spr->callback = SpriteCallbackDummy;
         StartSpriteAffineAnim(spr, 0);
-        sHeldItemShownSlot = slot;
-        sHeldItemShownItem = heldItem;
+        gBagMenu->heldItemShownSlot = slot;
+        gBagMenu->heldItemShownItem = heldItem;
     }
     else
     {
@@ -5777,8 +5761,8 @@ static void BagMenu_UpdateHeldItemIcon(u8 slot)
             StartSpriteAffineAnim(spr, 1);
             spr->callback = SpriteCB_HeldItemIcon_WaitDisappear;
         }
-        sHeldItemShownSlot = -1;
-        sHeldItemShownItem = ITEM_NONE;
+        gBagMenu->heldItemShownSlot = -1;
+        gBagMenu->heldItemShownItem = ITEM_NONE;
     }
 }
 
@@ -5789,13 +5773,13 @@ static void BagMenu_SetPartyIconBlend(bool8 enable)
     {
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(8, 8));
-        sPartyBlendActive = TRUE;
+        gBagMenu->partyBlendActive = TRUE;
     }
     else
     {
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-        sPartyBlendActive = FALSE;
+        gBagMenu->partyBlendActive = FALSE;
     }
 }
 
@@ -5834,7 +5818,7 @@ static void BagMenu_DisableTMHMPartyBlend(void)
 {
     u8 i;
 
-    if (!sPartyBlendActive)
+    if (!gBagMenu->partyBlendActive)
         return;
     BagMenu_SetPartyIconBlend(FALSE);
     for (i = 0; i < PARTY_SIZE; i++)
@@ -5903,7 +5887,7 @@ static void BagMenu_DisablePartyBlend(void)
 {
     u8 i;
 
-    if (!sPartyBlendActive)
+    if (!gBagMenu->partyBlendActive)
         return;
     BagMenu_SetPartyIconBlend(FALSE);
     for (i = 0; i < PARTY_SIZE; i++)
@@ -5988,7 +5972,7 @@ static void BagMenu_ApplyFusionStage2Blend(u8 firstSlot)
 
 static void BagMenu_ApplyItemUseBlend(void)
 {
-    if (sPartyGiveMode)
+    if (gBagMenu->partyGiveMode)
         BagMenu_ApplyPartyBlend(BagMenu_MonHoldsItem);
     else if (gItemUseCB == ItemUseCB_Fusion)
         BagMenu_ApplyPartyBlend(BagMenu_IsMonEligibleFusion1);
@@ -6008,10 +5992,10 @@ static void BagMenu_PartyStartItemIconYAnim(struct Sprite *spr, s16 toY)
     config.to = Q_24_8(toY);
     config.durationFrames = 8;
     config.easingFunc = ComfyAnimEasing_EaseOutCubic;
-    if (sPartyItemIconAnimId == INVALID_COMFY_ANIM)
-        sPartyItemIconAnimId = CreateComfyAnim_Easing(&config);
+    if (gBagMenu->partyItemIconAnimId == INVALID_COMFY_ANIM)
+        gBagMenu->partyItemIconAnimId = CreateComfyAnim_Easing(&config);
     else
-        InitComfyAnim_Easing(&config, &gComfyAnims[sPartyItemIconAnimId]);
+        InitComfyAnim_Easing(&config, &gComfyAnims[gBagMenu->partyItemIconAnimId]);
 }
 
 void BagMenu_OpenPartySelect(u8 taskId)
@@ -6028,15 +6012,15 @@ void BagMenu_OpenPartySelect(u8 taskId)
     tPartySlot = 0;
 
     BagMenu_ApplyItemUseBlend();
-    if (sPartyGiveMode)
+    if (gBagMenu->partyGiveMode)
     {
         u8 si;
         BagMenu_UpdateHeldItemIcon(0);
         for (si = 0; si < PARTY_SIZE; si++)
-            if (sStatusIconSpriteIds[si] != SPRITE_NONE)
-                gSprites[sStatusIconSpriteIds[si]].invisible = TRUE;
+            if (gBagMenu->statusIconSpriteIds[si] != SPRITE_NONE)
+                gSprites[gBagMenu->statusIconSpriteIds[si]].invisible = TRUE;
     }
-    gSprites[sCursorSpriteId].invisible = TRUE;
+    gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
     BagMenu_SetPartySlotPalette(0, PARTY_SLOT_HOVER_PAL);
     BagMenu_UpdateStatusIconPos(0);
 
@@ -6053,7 +6037,7 @@ void BagMenu_OpenPartySelect(u8 taskId)
     gTasks[taskId].func = Task_BagMenu_PartyInput;
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 void BagMenu_OpenPartySelectBattle(u8 taskId)
 {
     BagMenu_OpenPartySelect(taskId);
@@ -6066,13 +6050,13 @@ static void Task_BagMenu_PartyInput(u8 taskId)
     u8 slotLimit = BagMenu_PanelSlotLimit();
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
 
-    if (iconSpriteId != SPRITE_NONE && sPartyItemIconAnimId != INVALID_COMFY_ANIM)
-        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sPartyItemIconAnimId]);
+    if (iconSpriteId != SPRITE_NONE && gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM)
+        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[gBagMenu->partyItemIconAnimId]);
 
-    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
+    if (gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[gBagMenu->partyItemIconAnimId].completed)
         return;
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (BagMenu_IsMultiFull() && GetLRKeysPressed())
     {
         BagMenu_ClosePartySelect(taskId);
@@ -6090,7 +6074,7 @@ static void Task_BagMenu_PartyInput(u8 taskId)
         PlaySE(SE_SELECT);
         if (iconSpriteId != SPRITE_NONE)
             BagMenu_PartyStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_ITEM_ICON_Y(tPartySlot));
-        if (sPartyGiveMode)
+        if (gBagMenu->partyGiveMode)
             BagMenu_UpdateHeldItemIcon(tPartySlot);
         if (BagMenu_ShouldShowHPBar())
             BagMenu_DrawPartyHPBar(tPartySlot);
@@ -6104,7 +6088,7 @@ static void Task_BagMenu_PartyInput(u8 taskId)
         PlaySE(SE_SELECT);
         if (iconSpriteId != SPRITE_NONE)
             BagMenu_PartyStartItemIconYAnim(&gSprites[iconSpriteId], PARTY_ITEM_ICON_Y(tPartySlot));
-        if (sPartyGiveMode)
+        if (gBagMenu->partyGiveMode)
             BagMenu_UpdateHeldItemIcon(tPartySlot);
         if (BagMenu_ShouldShowHPBar())
             BagMenu_DrawPartyHPBar(tPartySlot);
@@ -6114,7 +6098,7 @@ static void Task_BagMenu_PartyInput(u8 taskId)
         if (gBagPosition.pocket == POCKET_TM_HM)
         {
             PlaySE(SE_SELECT);
-            SwitchMoveInfoMode(sHoveredItemIndex);
+            SwitchMoveInfoMode(gBagMenu->hoveredItemIndex);
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -6129,9 +6113,9 @@ static void Task_BagMenu_PartyInput(u8 taskId)
             PlaySE(SE_FAILURE);
             return;
         }
-        if (sPartyGiveMode)
+        if (gBagMenu->partyGiveMode)
             BagMenu_GiveItem(taskId);
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
         else if (BagMenu_InBattleSelect())
             BagMenu_UseBattleItem(taskId);
 #endif
@@ -6144,33 +6128,33 @@ static void BagMenu_ClosePartySelect(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
-    sPartyGiveMode = FALSE;
+    gBagMenu->partyGiveMode = FALSE;
     BagMenu_DisablePartyBlend();
     BagMenu_UpdateStatusIcons();
     BagMenu_UpdateStatusIconPos(PARTY_SIZE);
     BagMenu_DrawPartyHPBar(-1);
 
-    if (sHeldItemIconSpriteId != SPRITE_NONE)
+    if (gBagMenu->heldItemIconSpriteId != SPRITE_NONE)
     {
-        struct Sprite *heldItemSpr = &gSprites[sHeldItemIconSpriteId];
+        struct Sprite *heldItemSpr = &gSprites[gBagMenu->heldItemIconSpriteId];
         if (!heldItemSpr->invisible && heldItemSpr->callback != SpriteCB_HeldItemIcon_WaitDisappear)
         {
             StartSpriteAffineAnim(heldItemSpr, 1);
             heldItemSpr->callback = SpriteCB_HeldItemIcon_WaitDisappear;
         }
-        sHeldItemShownSlot = -1;
-        sHeldItemShownItem = ITEM_NONE;
+        gBagMenu->heldItemShownSlot = -1;
+        gBagMenu->heldItemShownItem = ITEM_NONE;
     }
     if (gBagPosition.pocket == POCKET_TM_HM)
-        BagMenu_UpdateTMHMPartyBlend(sHoveredItemIndex);
+        BagMenu_UpdateTMHMPartyBlend(gBagMenu->hoveredItemIndex);
 
-    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM)
+    if (gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM)
     {
-        ReleaseComfyAnim(sPartyItemIconAnimId);
-        sPartyItemIconAnimId = INVALID_COMFY_ANIM;
+        ReleaseComfyAnim(gBagMenu->partyItemIconAnimId);
+        gBagMenu->partyItemIconAnimId = INVALID_COMFY_ANIM;
     }
 
-    gSprites[sCursorSpriteId].invisible = FALSE;
+    gSprites[gBagMenu->cursorSpriteId].invisible = FALSE;
 
     if (iconSpriteId != SPRITE_NONE)
     {
@@ -6235,13 +6219,13 @@ static void Task_BagMenu_PartyAfterItemUse(u8 taskId)
     if (keepSpriteId != SPRITE_NONE)
         gSprites[keepSpriteId].invisible = FALSE;
 
-    if (!SWSH_ITEM_MENU_PARTY_ITEM_REUSE)
+    if (!SWSH_ITEM_MENU_IN_BAG_REUSE)
     {
         BagMenu_ClosePartySelect(taskId);
         return;
     }
 
-    if (sPartyGiveMode)
+    if (gBagMenu->partyGiveMode)
     {
         BagMenu_ApplyPartyBlend(BagMenu_MonHoldsItem);
         BagMenu_SetPartySlotPalette(gTasks[taskId].data[4], PARTY_SLOT_HOVER_PAL);
@@ -6602,7 +6586,7 @@ static void Task_BagMenu_PartyYesNo(u8 taskId)
     switch (tPartyTemp)
     {
     case 0:
-        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, sPartyYesNoFuncs);
+        BagMenu_YesNo(taskId, ITEMWIN_YESNO_HIGH, gBagMenu->partyYesNoFuncs);
         tPartyTemp++;
         break;
     case 1:
@@ -6660,7 +6644,7 @@ static void BagMenu_UseAbilityCapsule(u8 taskId)
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, abilityNum)].name);
     StringExpandPlaceholders(gStringVar4, sText_PartyAbilityAsk);
     tPartyTemp = 0;
-    sPartyYesNoFuncs = &sPartyAbilityChangeYesNo;
+    gBagMenu->partyYesNoFuncs = &sPartyAbilityChangeYesNo;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
 }
 
@@ -6683,7 +6667,7 @@ static void BagMenu_UseAbilityPatch(u8 taskId)
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, abilityNum)].name);
     StringExpandPlaceholders(gStringVar4, sText_PartyAbilityAsk);
     tPartyTemp = 0;
-    sPartyYesNoFuncs = &sPartyAbilityChangeYesNo;
+    gBagMenu->partyYesNoFuncs = &sPartyAbilityChangeYesNo;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
 }
 
@@ -6729,7 +6713,7 @@ static void BagMenu_UseMint(u8 taskId)
     CopyItemName(item, gStringVar2);
     StringExpandPlaceholders(gStringVar4, sText_PartyMintAsk);
     tPartyTemp = 0;
-    sPartyYesNoFuncs = &sPartyMintYesNo;
+    gBagMenu->partyYesNoFuncs = &sPartyMintYesNo;
     DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
 }
 
@@ -6808,7 +6792,7 @@ static void Task_BagMenu_PPMoveSelectInput(u8 taskId)
 
     if (input == MENU_B_PRESSED)
         gTasks[taskId].func = Task_BagMenu_PartyInput;
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     else if (BagMenu_InBattleSelect())
         BagMenu_BattleUsePPOnMove(taskId, (u8)input);
 #endif
@@ -6989,7 +6973,7 @@ static void BagMenu_RareCandyDoLearnMoveStep(u8 taskId)
             StringCopy(gStringVar2, GetMoveName(gMoveToLearn));
             StringExpandPlaceholders(gStringVar4, gText_PkmnNeedsToReplaceMove);
             gTasks[taskId].tPartyTemp = 0;
-            sPartyYesNoFuncs = &sPartyRareCandyReplaceYesNo;
+            gBagMenu->partyYesNoFuncs = &sPartyRareCandyReplaceYesNo;
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
             return;
         default:
@@ -7075,7 +7059,7 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     case BAG_REENTRY_MOVE_FORGET:
     {
         tPartySlot = sBagItemUseState->slot;
-        gSprites[sCursorSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
         sBagItemUseState->reentryPhase = BAG_REENTRY_NONE;
         gTasks[taskId].func = Task_BagMenu_MoveLearnAfterForget;
         break;
@@ -7084,7 +7068,7 @@ static void Task_BagMenu_RareCandyReentry(u8 taskId)
     {
         u8 slot = sBagItemUseState->slot;
         tPartySlot = slot;
-        gSprites[sCursorSpriteId].invisible = TRUE;
+        gSprites[gBagMenu->cursorSpriteId].invisible = TRUE;
         if (BagMenu_ShouldShowHPBar())
             BagMenu_DrawPartyHPBar(slot);
         BagMenu_FreeItemUseState();
@@ -7098,7 +7082,7 @@ static void Task_BagMenu_MoveLearnAfterForget(u8 taskId)
 {
     u8 moveSlot;
 
-    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
+    if (gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[gBagMenu->partyItemIconAnimId].completed)
         return;
 
     moveSlot = GetMoveSlotToReplace();
@@ -7308,11 +7292,11 @@ static void BagMenu_GiveItem(u8 taskId)
     }
     else
     {
-        sPartyGiveSwapItem = heldItem;
+        gBagMenu->partyGiveSwapItem = heldItem;
         CopyItemName(heldItem, gStringVar2);
         StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyHoldingItemSwitch);
         tPartyTemp = 0;
-        sPartyYesNoFuncs = &sPartyGiveSwapYesNo;
+        gBagMenu->partyYesNoFuncs = &sPartyGiveSwapYesNo;
         DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
     }
 }
@@ -7325,7 +7309,7 @@ static void BagMenu_GiveSwapYes(u8 taskId)
     u8 itemBytes[2];
 
     RemoveBagItem(item, 1);
-    if (!AddBagItem(sPartyGiveSwapItem, 1))
+    if (!AddBagItem(gBagMenu->partyGiveSwapItem, 1))
     {
         AddBagItem(item, 1);
         StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
@@ -7340,7 +7324,7 @@ static void BagMenu_GiveSwapYes(u8 taskId)
         TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
         BagMenu_UpdateHeldItemIcon(tPartySlot);
         CopyItemName(item, gStringVar1);
-        CopyItemName(sPartyGiveSwapItem, gStringVar2);
+        CopyItemName(gBagMenu->partyGiveSwapItem, gStringVar2);
         StringExpandPlaceholders(gStringVar4, gText_SwitchedPkmnItem);
         if (GetMonData(mon, MON_DATA_SPECIES) != speciesBefore)
         {
@@ -7716,7 +7700,7 @@ static void Task_BagMenu_RotomAfterTransform(u8 taskId)
     {
         StringExpandPlaceholders(gStringVar4, gText_PkmnNeedsToReplaceMove);
         tPartyTemp = 0;
-        sPartyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
+        gBagMenu->partyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
         DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
     }
     else
@@ -7972,7 +7956,7 @@ static void Task_BagMenu_FusionAfterAnim(u8 taskId)
         {
             StringExpandPlaceholders(gStringVar4, gText_PkmnNeedsToReplaceMove);
             tPartyTemp = 0;
-            sPartyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
+            gBagMenu->partyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
         }
         else
@@ -8063,10 +8047,10 @@ static void Task_BagMenu_FusionAwaitSecond(u8 taskId)
     u8 partyCount = CalculatePlayerPartyCount();
     u8 iconSpriteId = gBagMenu->spriteIds[ITEMMENUSPRITE_ITEM + (gBagMenu->itemIconSlot ^ 1)];
 
-    if (iconSpriteId != SPRITE_NONE && sPartyItemIconAnimId != INVALID_COMFY_ANIM)
-        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[sPartyItemIconAnimId]);
+    if (iconSpriteId != SPRITE_NONE && gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM)
+        gSprites[iconSpriteId].y2 = ReadComfyAnimValueSmooth(&gComfyAnims[gBagMenu->partyItemIconAnimId]);
 
-    if (sPartyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[sPartyItemIconAnimId].completed)
+    if (gBagMenu->partyItemIconAnimId != INVALID_COMFY_ANIM && !gComfyAnims[gBagMenu->partyItemIconAnimId].completed)
         return;
 
     if (JOY_NEW(DPAD_DOWN))
@@ -8200,7 +8184,7 @@ static void BagMenu_UseTMHM(u8 taskId)
     {
         StringExpandPlaceholders(gStringVar4, gText_PkmnNeedsToReplaceMove);
         tPartyTemp = 0;
-        sPartyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
+        gBagMenu->partyYesNoFuncs = &sPartyRotomMoveReplaceYesNo;
         DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_BagMenu_PartyYesNo);
     }
 }
@@ -8343,7 +8327,7 @@ static void Task_BagMenu_MultiUseInput(u8 taskId)
     }
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static bool8 BagMenu_IsItemFlute(enum Item item)
 {
     return item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE;
@@ -8352,7 +8336,7 @@ static bool8 BagMenu_IsItemFlute(enum Item item)
 
 static bool8 BagMenu_InBattleSelect(void)
 {
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     return gBagPosition.location == ITEMMENULOCATION_BATTLE
         || gBagPosition.location == ITEMMENULOCATION_WALLY;
 #else
@@ -8360,7 +8344,7 @@ static bool8 BagMenu_InBattleSelect(void)
 #endif
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static bool8 BagMenu_IsMultiFull(void)
 {
     return BagMenu_InBattleSelect() && IsMultiBattle() && AreMultiPartiesFullTeams();
@@ -8368,19 +8352,19 @@ static bool8 BagMenu_IsMultiFull(void)
 
 static u8 BagMenu_FullMultiPartyId(u8 slot)
 {
-    enum BattlerId battler = (sMultiFullPage != 0) ? B_BATTLER_2 : gBattlerInMenuId;
+    enum BattlerId battler = (gBagMenu->multiFullPage != 0) ? B_BATTLER_2 : gBattlerInMenuId;
     const u8 *order = gBattleStruct->battlerPartyOrders[battler];
     u8 packed = order[slot / 2];
     return (slot & 1) ? (packed & 0xF) : (packed >> 4);
 }
-#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#endif // SWSH_ITEM_MENU_IN_BATTLE_USE
 
 static bool8 BagMenu_SlotIsPartner(u8 slot)
 {
     if (!BagMenu_InBattleSelect() || !IsMultiBattle())
         return FALSE;
     if (AreMultiPartiesFullTeams())
-        return sMultiFullPage != 0;
+        return gBagMenu->multiFullPage != 0;
     return slot >= MULTI_PARTY_SIZE;
 }
 
@@ -8412,7 +8396,7 @@ static u8 BagMenu_PartyIdFromSlot(u8 slot)
 
     if (IsMultiBattle())
     {
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
         if (AreMultiPartiesFullTeams())
             return BagMenu_FullMultiPartyId(slot);
 #endif
@@ -8437,7 +8421,7 @@ static u8 BagMenu_PanelSlotLimit(void)
     if (BagMenu_InBattleSelect() && IsMultiBattle())
     {
         if (AreMultiPartiesFullTeams())
-            return (sMultiFullPage != 0) ? CalculatePartnerPartyCount() : CalculatePartyCount(B_TRAINER_PLAYER);
+            return (gBagMenu->multiFullPage != 0) ? CalculatePartnerPartyCount() : CalculatePartyCount(B_TRAINER_PLAYER);
         return PARTY_SIZE;
     }
     return CalculatePlayerPartyCount();
@@ -8464,7 +8448,7 @@ static u8 BagMenu_StepSlot(u8 cur, s8 dir, u8 limit)
     return cur;
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 #define MULTI_FULL_SWAP_TILES 12
 #define tSwapPhase  tPartyTemp  // data[6]: 0 = sliding out, 1 = sliding in
 #define tSwapFrame  data[7]
@@ -8473,22 +8457,22 @@ static void ShowMultiBattleSwapPrompt(bool8 show)
 {
     u8 i;
 
-    if (sMultiSwapPromptSpriteIds[0] == SPRITE_NONE)
+    if (gBagMenu->multiSwapPromptSpriteIds[0] == SPRITE_NONE)
     {
         for (i = 0; i < 2; i++)
         {
-            sMultiSwapPromptSpriteIds[i] = CreateSprite(&sSpriteTemplate_MultiSwapPrompt, 56 + i * 32, 8, 0);
-            StartSpriteAnim(&gSprites[sMultiSwapPromptSpriteIds[i]], i);
+            gBagMenu->multiSwapPromptSpriteIds[i] = CreateSprite(&sSpriteTemplate_MultiSwapPrompt, 56 + i * 32, 8, 0);
+            StartSpriteAnim(&gSprites[gBagMenu->multiSwapPromptSpriteIds[i]], i);
         }
     }
     for (i = 0; i < 2; i++)
-        gSprites[sMultiSwapPromptSpriteIds[i]].invisible = !show;
+        gSprites[gBagMenu->multiSwapPromptSpriteIds[i]].invisible = !show;
 }
 
 static void BagMenu_MoveMultiFullSlotSprites(u8 slot, s16 x2)
 {
     u8 iconId = gBagMenu->partyMonIconSpriteIds[slot];
-    u8 statusId = sStatusIconSpriteIds[slot];
+    u8 statusId = gBagMenu->statusIconSpriteIds[slot];
 
     if (iconId != SPRITE_NONE)
         gSprites[iconId].x2 = x2;
@@ -8511,7 +8495,7 @@ static void BagMenu_MultiFullFlipPage(void)
 {
     u8 i;
 
-    sMultiFullPage ^= 1;
+    gBagMenu->multiFullPage ^= 1;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -8585,9 +8569,9 @@ static void Task_BagMenu_MultiFullSwap(u8 taskId)
 
 #undef tSwapPhase
 #undef tSwapFrame
-#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#endif // SWSH_ITEM_MENU_IN_BATTLE_USE
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static u8 BagMenu_BattleTargetSlotId(bool8 partner, u8 partyIndex)
 {
     if (IsMultiBattle())
@@ -8648,7 +8632,7 @@ static void BagMenu_BattleApplyItem(u8 taskId, u8 moveSlot, bool8 chooseMove)
 
     Task_FadeAndCloseBagMenu(taskId);
 }
-#endif // SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#endif // SWSH_ITEM_MENU_IN_BATTLE_USE
 
 static void BagMenu_UseItem(u8 taskId)
 {
@@ -8694,9 +8678,9 @@ static void BagMenu_UseItem(u8 taskId)
         BagMenu_ClosePartySelect(taskId);
 }
 
-#endif // SWSH_ITEM_MENU_ACTION_IN_BAG
+#endif // SWSH_ITEM_MENU_IN_BAG_USE
 
-#if SWSH_ITEM_MENU_PYRAMID_BAG
+#if SWSH_ITEM_MENU_PYRAMID
 
 EWRAM_DATA struct PyramidBagMenu *gPyramidBagMenu = NULL;
 EWRAM_DATA struct PyramidBagMenuState gPyramidBagMenuState = {0};
@@ -8842,6 +8826,6 @@ void ChooseItemsToTossFromPyramidBag(void)
     CreateTask(Task_ChooseItemsToTossFromPyramidBag, 10);
 }
 
-#endif // SWSH_ITEM_MENU_PYRAMID_BAG
+#endif // SWSH_ITEM_MENU_PYRAMID
 
 #endif // SWSH_ITEM_MENU

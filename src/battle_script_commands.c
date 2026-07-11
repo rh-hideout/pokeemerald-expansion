@@ -11226,7 +11226,7 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
     }
 }
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
 static bool32 ItemUseTargetsPartnerParty(enum BattlerId battler)
 {
     return (gBattleTypeFlags & BATTLE_TYPE_MULTI)
@@ -11242,7 +11242,7 @@ void BS_ItemRestoreHP(void)
     enum BattlerId battler = MAX_BATTLERS_COUNT;
     u32 healParam = GetItemEffect(gLastUsedItem)[6];
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
         party = gParties[B_TRAINER_PARTNER];
 #endif
@@ -11261,7 +11261,7 @@ void BS_ItemRestoreHP(void)
             gBattleResults.numRevivesUsed++;
 
         // Check if the recipient is an active battler.
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
         if (ItemUseTargetsPartnerParty(gBattlerAttacker))
         {
             if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)])
@@ -11329,13 +11329,13 @@ void BS_ItemCureStatus(void)
     u32 targetBattler = MAX_BATTLERS_COUNT;
     bool32 statusChanged = FALSE;
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
         party = gParties[B_TRAINER_PARTNER];
 #endif
 
     // Heal volatile conditions if battler is active.
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
     {
         if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)])
@@ -11388,7 +11388,7 @@ void BS_ItemIncreaseStat(void)
 {
     NATIVE_ARGS();
 
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
         gBattlerAttacker = BATTLE_PARTNER(gBattlerAttacker);
     else
@@ -11421,7 +11421,7 @@ void BS_ItemRestorePP(void)
     enum BattlerId battler = MAX_BATTLERS_COUNT;
     struct Pokemon *mon = &gParties[GetBattlerTrainer(gBattlerAttacker)][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
     enum Move moveId = MOVE_NONE;
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
         mon = &gParties[B_TRAINER_PARTNER][gBattleStruct->itemPartyIndex[gBattlerAttacker]];
 #endif
@@ -11439,7 +11439,7 @@ void BS_ItemRestorePP(void)
     }
 
     // Check if the recipient is an active battler.
-#if SWSH_ITEM_MENU_ACTION_IN_BATTLE
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
     if (ItemUseTargetsPartnerParty(gBattlerAttacker))
     {
         if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)])
