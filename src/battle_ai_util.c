@@ -3324,8 +3324,10 @@ bool32 BattlerWillFaintFromWeather(enum BattlerId battler, enum Ability ability)
 
 bool32 BattlerWillFaintFromSecondaryDamage(enum BattlerId battler, enum Ability ability)
 {
-    if (GetBattlerSecondaryDamage(battler) != 0
-      && gBattleMons[battler].hp <= max(1, gBattleMons[battler].maxHP / 16))
+    u32 secondaryDamage = GetBattlerSecondaryDamage(battler);
+
+    if (secondaryDamage != 0
+      && gBattleMons[battler].hp <= secondaryDamage)
         return TRUE;
     return FALSE;
 }
