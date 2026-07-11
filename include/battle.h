@@ -79,14 +79,14 @@ struct ProtectStruct
     u32 quash:1;
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
-    u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
+    u32 activateOpportunist:1;
     u32 usedAllySwitch:1;
     u32 lashOutAffected:1;
     u32 assuranceDoubled:1;
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:2;
+    u32 padding1:3;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -110,21 +110,22 @@ struct StatStages
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
     u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
     u8 mindBlownRecoil:1;
     u8 updateStallMons:1;
     u8 poisonPuppeteer:1;
-    // End of byte
-    u8 statLowered:1;
+    u8 attackerInParty:1; // Fututre Sight / Doom Desire
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
+    // End of byte
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
+    u8 shellBellEmergencyExit:1;
+    u8 padding:2;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -572,6 +573,7 @@ struct BattleStruct
     struct FutureSight futureSight[MAX_BATTLERS_COUNT];
     struct Wish wish[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
+    u8 faintCounter[MAX_BATTLE_TRAINERS]; // Supreme Overload / Last Respects
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;

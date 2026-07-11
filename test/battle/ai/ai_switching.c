@@ -71,8 +71,45 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_REVIVAL_BLESSING); }
     } SCENE {
-        MESSAGE("The opposing Audino used Revival Blessing!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponent);
         MESSAGE("Pidgey was revived and is ready to fight again!");
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival Blessing")
+{
+    struct BattlePokemon *user = NULL;
+    enum Move move1, move2, move3;
+    PARAMETRIZE { user = opponentLeft, move1 = MOVE_REVIVAL_BLESSING, move2 = MOVE_CELEBRATE, move3 = MOVE_CELEBRATE; }
+    PARAMETRIZE { user = playerRight, move1 = MOVE_CELEBRATE, move2 = MOVE_REVIVAL_BLESSING, move3 = MOVE_CELEBRATE; }
+    PARAMETRIZE { user = opponentRight, move1 = MOVE_CELEBRATE, move2 = MOVE_CELEBRATE, move3 = MOVE_REVIVAL_BLESSING; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_REVIVAL_BLESSING) == EFFECT_REVIVAL_BLESSING);
+        PLAYER(SPECIES_CLEFABLE);
+        PLAYER(SPECIES_CLEFABLE) { HP(0); }
+        PLAYER(SPECIES_CLEFABLE);
+        PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
+        PARTNER(SPECIES_CLEFAIRY);
+        PARTNER(SPECIES_CLEFAIRY);
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); }
+        OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
+        OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
+    } SCENE {
+        if (user == opponentLeft) {
+            MESSAGE("The opposing Wobbuffet used Revival Blessing!");
+            MESSAGE("But it failed!");
+        } else if (user == playerRight) {
+            MESSAGE("Clefairy used Revival Blessing!");
+            MESSAGE("But it failed!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponentRight);
+            MESSAGE("Wynaut was revived and is ready to fight again!");
+        }
     }
 }
 

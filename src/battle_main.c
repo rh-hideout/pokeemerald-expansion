@@ -3217,6 +3217,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3303,6 +3304,7 @@ void FaintClearSetData(enum BattlerId battler)
     gProtectStructs[battler].statRaised = FALSE;
     gProtectStructs[battler].pranksterElevated = FALSE;
     gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 
@@ -4228,6 +4230,7 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_SWITCH:
                     gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+                        || gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE
                         || (!CanBattlerEscape(battler) && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SHED_SHELL))
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, 0, gBattleStruct->battlerPartyOrders[battler]);

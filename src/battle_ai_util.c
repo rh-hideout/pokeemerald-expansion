@@ -120,9 +120,9 @@ u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveI
     }
     else if (calcContext == AI_DEFENDING && BattlerHasAi(battlerDef))
     {
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         return AI_GetDefaultDamageRollForContext(battlerAtk, battlerDef, moveIndex, aiData, AI_ROLL_DEFENDING);
     }
@@ -136,17 +136,17 @@ u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveI
     }
     else if (calcContext == AI_SWITCHIN_DEFENDING && BattlerHasAi(battlerDef))
     {
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         return AI_GetDefaultDamageRollForContext(battlerAtk, battlerDef, moveIndex, aiData, AI_ROLL_SWITCHIN_DEFENDING);
     }
     else if (calcContext == AI_SHOULD_SETUP_DEFENDING && BattlerHasAi(battlerDef))
     {
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE)) // Risky assumes it takes min damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
-        if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
+        if ((gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_RISKY)) // Conservative assumes it takes max damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         return AI_GetDefaultDamageRollForContext(battlerAtk, battlerDef, moveIndex, aiData, AI_ROLL_SHOULD_SETUP_DEFENDING);
     }
@@ -526,7 +526,11 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
 
 bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
 {
-    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move));
+    s32 movePriority = GetBattleMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move);
+    return CanPsychicTerrainProtectTarget(ctx, movePriority)
+        || CanAbilityAbsorbMove(ctx)
+        || CanTargetBlockPranksterMove(ctx, movePriority)
+        || IsPowderMoveBlocked(ctx);
 }
 
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
@@ -891,7 +895,10 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
      && battlerDef == BATTLE_PARTNER(battlerAtk))
+    {
+        gAiLogicData->aiCalcInProgress = FALSE;
         return simDamage;
+    }
 
     if (moveEffect == EFFECT_NATURE_POWER)
         move = GetNaturePowerMove();
@@ -4658,7 +4665,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
         for (u32 monIndex = 0; monIndex < MAX_MON_MOVES; monIndex++)
         {
             if (GetMoveEffect(GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_MOVE1 + monIndex)) == EFFECT_ENCORE
-                && GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_PP1 + monIndex) > 0);
+                && GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_PP1 + monIndex) > 0)
             {
                 if (GetMonData(&playerParty[gAiLogicData->mostSuitableMonId[battlerDef]], MON_DATA_SPEED) > gBattleMons[battlerAtk].speed)
                     return NO_INCREASE;
@@ -5202,11 +5209,6 @@ void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use)
         gAiBattleData->aiUsingGimmick |= (1<<battler);
     else
         gAiBattleData->aiUsingGimmick &= ~(1<<battler);
-}
-
-bool32 IsAIUsingGimmick(enum BattlerId battler)
-{
-    return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
 }
 
 struct AltTeraCalcs
@@ -6235,11 +6237,14 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
     return FALSE;
 }
 
-static u32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage)
+s32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage)
 {
     if (GetMoveEffect(move) == EFFECT_GROWTH
      && GetAttackerWeather(gAiLogicData->holdEffects[battler], gAiLogicData->abilities[battler], AI_GetWeather()) & B_WEATHER_SUN)
         stage = 2;
+
+    if (stage == STAT_CHANGE_FORCE_MAX)
+        stage = 12;
 
     switch (gAiLogicData->abilities[battler])
     {
@@ -6276,7 +6281,7 @@ s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enu
     default:
         if (battlerAtk == BATTLE_PARTNER(battlerDef))
             break; // Handled in AI_DoubleBattle
-        tempScore = GetFoeStatChangeScore(battlerDef, battlerAtk, move);
+        tempScore = GetFoeStatChangeScore(battlerAtk, battlerDef, move);
         break;
     }
 
@@ -6292,9 +6297,9 @@ s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if (!ShouldRaiseAnyStat(battlerAtk, battlerDef))
         return NO_INCREASE;
 
-    for (u32 i = 0; i < numAdditionalEffects; i++)
+    for (u32 effectIndex = 0; effectIndex < numAdditionalEffects; effectIndex++)
     {
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
         if (effect->moveEffect != STAT_CHANGE_EFFECT_PLUS
          && effect->moveEffect != STAT_CHANGE_EFFECT_MINUS)
@@ -6340,13 +6345,13 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
     s32 score = 0;
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
 
-    for (u32 i = 0; i < numAdditionalEffects; i++)
+    for (u32 effectIndex = 0; effectIndex < numAdditionalEffects; effectIndex++)
     {
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, gBattleStruct->additionalEffectsCounter);
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
         for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
         {
-            s32 stage = AI_GetAdjustedStatStage(battlerAtk, move, GetStatStage(stat, effect));
+            s32 stage = AI_GetAdjustedStatStage(battlerDef, move, GetStatStage(stat, effect));
 
             if (stage > 0)
             {
@@ -6356,7 +6361,7 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
             }
             else if (stage < 0)
             {
-                if (gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_WHITE_HERB)
+                if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_WHITE_HERB)
                     return -10; // White Herb resotres stats
                 score += IncreaseStatDownScore(battlerAtk, battlerDef, stat);
             }
@@ -6390,13 +6395,16 @@ s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
 
-    for (u32 i = 0; i < numAdditionalEffects; i++)
+    for (u32 effectIndex = 0; effectIndex < numAdditionalEffects; effectIndex++)
     {
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
         for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
         {
             s32 stage = GetStatStage(stat, effect);
+
+            if (stage == 0)
+                continue;
 
             if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
                 stage = -1 * stage;
@@ -6454,9 +6462,9 @@ s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
     return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore;
 }
 
-static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+static bool32 AI_CanStatChangeBePrevented(struct BattleCalcValues *cv)
 {
-    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
+    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
 
     switch (targetType)
     {
@@ -6466,11 +6474,11 @@ static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum Battle
     case TARGET_ALLY:
         return FALSE;
     case TARGET_ALL_BATTLERS:
-        if (battlerAtk == battlerDef)
+        if (cv->battlerAtk == cv->battlerDef)
             return FALSE;
     default:
-        if (IsSubstituteProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], move)
-         || gAiLogicData->abilities[battlerDef] == ABILITY_GOOD_AS_GOLD)
+        if (IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move)
+         || cv->abilities[cv->battlerDef] == ABILITY_GOOD_AS_GOLD)
             return TRUE;
     }
 
@@ -6480,9 +6488,6 @@ static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum Battle
 // Only checks if a stat can actually change. Doesn't do any other sophisticated decision
 bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
-    if (AI_CanStatChangeBePrevented(battlerAtk, battlerDef, move))
-        return FALSE;
-
     struct BattleCalcValues cv = {
         .battlerAtk = battlerAtk,
         .battlerDef = battlerDef,
@@ -6498,21 +6503,30 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     if (battlerAtk != battlerDef)
     {
-        cv.abilities[battlerDef] = AI_GetMoldBreakerSanitizedAbility(
+        for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+        {
+            if (battler == battlerAtk)
+                continue;
+
+            cv.holdEffects[battler] = gAiLogicData->holdEffects[battler];
+            cv.abilities[battler] = AI_GetMoldBreakerSanitizedAbility(
                                         battlerAtk,
                                         cv.abilities[battlerAtk],
-                                        gAiLogicData->abilities[battlerDef],
-                                        cv.holdEffects[battlerAtk],
+                                        gAiLogicData->abilities[battler],
+                                        cv.holdEffects[battler],
                                         move
                                     );
-        cv.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
+        }
     }
+
+    if (AI_CanStatChangeBePrevented(&cv))
+        return FALSE;
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
 
-    for (u32 i = 0; i < numAdditionalEffects; i++)
+    for (u32 effectIndex = 0; effectIndex < numAdditionalEffects; effectIndex++)
     {
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
         for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
@@ -6525,7 +6539,7 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
                 st.stage = -1 * st.stage;
 
-            st.stage = AI_GetAdjustedStatStage(battlerAtk, move, st.stage);
+            st.stage = AI_GetAdjustedStatStage(battlerDef, move, st.stage);
 
             if (CanStatChange(&cv, &st))
                 return TRUE;
