@@ -1404,7 +1404,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 RETURN_SCORE_MINUS(20);
             break;
         case ABILITY_CONTRARY:
-            if (IsStatLoweringMove(move))
+            if (IsStatLoweringMove(move) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES))
                 RETURN_SCORE_MINUS(20);
             break;
         case ABILITY_COMATOSE:
@@ -1673,16 +1673,19 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_AUTOTOMIZE:
     case EFFECT_STAT_CHANGE:
-        if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_USER)
+        if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES))
         {
-            if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
-                ADJUST_SCORE(-10);
-        }
-        else
-        {
-            if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move))
+            if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_USER)
             {
-                ADJUST_SCORE(-10);
+                if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
+                    ADJUST_SCORE(-10);
+            }
+            else
+            {
+                if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move))
+                {
+                    ADJUST_SCORE(-10);
+                }
             }
         }
         break;
@@ -1717,6 +1720,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_PRESENT:
     case EFFECT_FIXED_HP_DAMAGE:
+        if (aiData->abilities[battlerDef] == ABILITY_WONDER_GUARD && effectiveness < UQ_4_12(2.0))
+            ADJUST_SCORE(-10);
+        break;
     case EFFECT_FOCUS_PUNCH:
         // AI_CBM_HighRiskForDamage
         if (aiData->abilities[battlerDef] == ABILITY_WONDER_GUARD && effectiveness < UQ_4_12(2.0))
@@ -2129,7 +2135,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_STRENGTH_SAP:
-        if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
+        if (aiData->abilities[battlerDef] == ABILITY_CONTRARY && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES))
             ADJUST_SCORE(-10);
         else if (!CanLowerStat(battlerAtk, battlerDef, aiData, STAT_ATK))
             ADJUST_SCORE(-10);
@@ -2423,7 +2429,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
         // evasion check
         if (gBattleMons[battlerDef].statStages[STAT_EVASION] == MIN_STAT_STAGE
-          || ((aiData->abilities[battlerDef] == ABILITY_CONTRARY) && !IsTargetingPartner(battlerAtk, battlerDef))) // don't want to raise target stats unless its your partner
+         || ((aiData->abilities[battlerDef] == ABILITY_CONTRARY && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES))
+         && !IsTargetingPartner(battlerAtk, battlerDef))) // don't want to raise target stats unless its your partner
             ADJUST_SCORE(-10);
         break;
     case EFFECT_PSYCH_UP:   // haze stats check
@@ -3115,12 +3122,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                         ctx.atkMoveIndex = GetBattlerMoveIndexWithEffect(battlerAtkPartner, EFFECT_STORED_POWER);
                         ctx.context = CHANGE_STAT_DMG_DEALT;
 
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
 
                         // Set target partner
                         ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
                     }
                 }
@@ -3143,12 +3150,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                         ctx.atkMoveIndex = MAX_MON_MOVES;
                         ctx.context = CHANGE_STAT_CONTEXT_COUNT;
 
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
 
                         // Set target partner
                         ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
                     }
                 }
@@ -3170,12 +3177,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                         ctx.atkMoveIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
                         ctx.context = CHANGE_STAT_CONTEXT_COUNT;
 
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
 
                         // Set target partner
                         ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
-                        if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                        if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
                             break;
 
                         ADJUST_SCORE(DECENT_EFFECT);
@@ -4441,27 +4448,25 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         {
             struct StatConsiderationContext ctx = {0};
             ctx.battlerMoveUser = battlerAtk;
-            ctx.battlerMoveTarget = battlerAtkPartner;
-            ctx.battlerAtk = battlerAtkPartner;
-            ctx.battlerDef = GetOppositeBattler(battlerAtkPartner);
+            ctx.battlerMoveTarget = battlerDef;
+            ctx.battlerAtk = battlerAtk;
+            ctx.battlerDef = battlerDef;
             ctx.statMove = move;
             ctx.statMoveIndex = GetMoveIndex(battlerAtk, move);
             ctx.atkMoveIndex = MAX_MON_MOVES;
             ctx.context = CHANGE_STAT_CONTEXT_COUNT;
 
-            if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
-                break;
-
-            // Set target partner
-            ctx.battlerDef = GetPartnerBattler(ctx.battlerDef);
-            if (!AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
-                break;
+            if (!AI_AdjustFutureStatChangeScore(&ctx, gAiLogicData, &score))
+                return score;
 
             // Only neutral found
             RETURN_SCORE_PLUS(DECENT_EFFECT); 
             break;
         }
-        ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
+        else
+        {
+            ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
+        }
         break;
     case EFFECT_STOCKPILE:
         if (HasMoveWithEffect(battlerAtk, EFFECT_SWALLOW) || HasMoveWithEffect(battlerAtk, EFFECT_SPIT_UP))
@@ -5750,6 +5755,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_STAT_PLUS:
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+                    return score;
+
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
                     enum Stat stat = sAccurateStatOrder[i];
@@ -5768,6 +5776,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 }
                 break;
             case MOVE_EFFECT_STAT_MINUS:
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+                    return score;
+
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
                     enum Stat stat = sAccurateStatOrder[i];
@@ -5787,6 +5798,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                 break;
             case MOVE_EFFECT_ORDER_UP:
             {
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+                    return score;
+
                 enum Stat stat = STAT_ATK;
                 bool32 commanderAffected = TRUE;
 
@@ -5822,6 +5836,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_STAT_PLUS:
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+                    return score;
+
                 for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {
                     s32 stage = GetStatStage(stat, additionalEffect);
@@ -5838,6 +5855,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
             case MOVE_EFFECT_STAT_MINUS:
+                if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+                    return score;
+
                 for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {
                     s32 stage = -1 * GetStatStage(stat, additionalEffect);

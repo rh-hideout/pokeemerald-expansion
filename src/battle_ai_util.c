@@ -34,6 +34,7 @@ static void AI_SetFutureStatChangeLogicAbilities(struct StatConsiderationContext
 static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsiderationContext *ctx, struct AiLogicData *aiData);
 static void AI_SetBattlerStatChanges(void);
 static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS]);
+static void AI_ClearFutureStatChangeLogic(void);
 
 // Functions
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
@@ -202,6 +203,18 @@ static void AI_SetBattlerStatChanges(void)
     }
 }
 
+static void AI_ClearFutureStatChangeLogic(void)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            s8 *statChangePtr = GetAiLogicStatChangePointer(battler, stat);
+            *statChangePtr = 0;
+        }
+    }
+}
+
 static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS])
 {
     // Restore original stat stages now that calcing is done
@@ -210,6 +223,7 @@ static void AI_RestoreBattlerStatStages(s8 (*savedStatStages)[NUM_BATTLE_STATS])
         for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
             gBattleMons[battler].statStages[stat] = savedStatStages[battler][stat];
     }
+    AI_ClearFutureStatChangeLogic();
 }
 
 u32 AI_GetDamageWithStatChanges(struct StatConsiderationContext *ctx, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
@@ -363,22 +377,29 @@ static void AI_SetFutureStatChangeLogicAdditionalEffect(struct StatConsideration
                     if (stage == 0)
                         continue;
 
+                    if (additionalEffect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                        stage *= -1;
+
                     if (contrary)
-                        stage = -1 * stage;
+                        stage *= -1;
 
                     if (simple)
                         stage *= 2;
 
                     if (!isSelf)
                     {
-                        if (stage < 0 && !CanLowerStat(statChangeBattler, ctx->battlerMoveTarget, aiData, stat))
+                        if (stage < 0 && !CanLowerStat(ctx->battlerMoveUser, statChangeBattler, aiData, stat))
                             continue;
                     }
 
-                    s8 *statChangePtr = GetAiLogicStatChangePointer(ctx->battlerMoveTarget, stat);
-                    statChangePtr += stage;
+                    s8 *statChangePtr = GetAiLogicStatChangePointer(statChangeBattler, stat);
+                    if (stat == STAT_ACC)
+                        DebugPrintf("BEFORE %s user %d target %d move %S acc stage target %d", __func__, ctx->battlerMoveUser, statChangeBattler, GetMoveName(ctx->statMove), *statChangePtr);
+                    *statChangePtr += stage;
+                    if (stat == STAT_ACC)
+                        DebugPrintf("AFTER %s user %d target %d move %S acc stage target %d", __func__, ctx->battlerMoveUser, statChangeBattler, GetMoveName(ctx->statMove), *statChangePtr);
 
-                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, ctx->battlerMoveTarget, stat, stage, ctx->isTargetingPartner, aiData);
+                    AI_SetFutureStatChangeLogicCopied(ctx->battlerMoveUser, statChangeBattler, stat, stage, ctx->isTargetingPartner, aiData);
                 }
             }
             else
@@ -1171,8 +1192,10 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
     switch (ctx->context)
     {
     case CHANGE_STAT_DMG_DEALT:
+        DebugPrintf("Check1");
         if (ctx->atkMoveIndex != MAX_MON_MOVES) // Move index specified
         {
+            DebugPrintf("Check2");
             if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, AI_ATTACKING, aiData) >= defMon->hp)
                 return STAT_CHANGE_BAD;
             else if (AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= defMon->hp)
@@ -1180,16 +1203,16 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
         }
         else // No move index specified; check all
         {
+            DebugPrintf("Check3");
             // No point if can already KO
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
-            {
+            { DebugPrintf("Check3a");
                 if (AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= defMon->hp)
                     return STAT_CHANGE_BAD;
             }
             // Good if makes a move KO where it previously would not
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
-            {
-                ctx->atkMoveIndex = i;
+            { DebugPrintf("Check3b");
                 if ((AI_GetDamageWithStatChanges(ctx, AI_ATTACKING, aiData) >= defMon->hp)
                  && !(AI_GetDamage(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, aiData) >= defMon->hp))
                 {
@@ -1197,9 +1220,11 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 }
             }
         }
+        DebugPrintf("Check4");
         return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_DMG_RECEIVED:
         // Bad if KO's with stat changes
+        DebugPrintf("Check5");
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             // Bad if KO's with stat changes
@@ -1207,9 +1232,9 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 return STAT_CHANGE_BAD;
         }
         // Good if saves from being KO'd
+        DebugPrintf("Check6");
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            ctx->atkMoveIndex = i;
             if (!(AI_GetDamageWithStatChanges(ctx, AI_DEFENDING, aiData) >= atkMon->hp)
              && (AI_GetDamage(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, aiData) >= atkMon->hp))
             {
@@ -1217,8 +1242,10 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             }
         }
         // Neutral if not KO'd either way
+        DebugPrintf("Check7");
         return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_SPEEDS: // Changes that make user move first = good; changes that make user move second = bad; else neutral.
+        DebugPrintf("Check8");
         if (AI_IsSlower(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, predictedMove, CONSIDER_PRIORITY)
          && AI_WouldBeFaster(ctx, predictedMove, CONSIDER_PRIORITY)
          && (GetMoveEffect(aiData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
@@ -1243,29 +1270,65 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
         {
             return STAT_CHANGE_BAD;
         }
+        DebugPrintf("Check9");
         return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_ACC_EVADE:
+        DebugPrintf("Check10");
         s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
-        u32 hitsToKO, expectedTurnsToKOAtk, expectedTurnsToKOModifiedAtk, expectedTurnsToKODef, expectedTurnsToKOModifiedDef;
-        u32 bestTurnsToKOAtk = UINT32_MAX, bestTurnsToKOModifiedAtk = UINT32_MAX, bestTurnsToKODef = UINT32_MAX, bestTurnsToKOModifiedDef = UINT32_MAX;
+        u32 hitsToKO, expectedTurnsToKOAtk = 0xFFFF, expectedTurnsToKOModifiedAtk = 0xFFFF, expectedTurnsToKODef = 0xFFFF, expectedTurnsToKOModifiedDef = 0xFFFF;
+        u32 bestTurnsToKOAtk = 0xFFFF, bestTurnsToKOModifiedAtk = 0xFFFF, bestTurnsToKODef = 0xFFFF, bestTurnsToKOModifiedDef = 0xFFFF;
         u32 totalAccuracy = 100, totalAccuracyModified;
         u32 weather = GetWeather();
         struct BattleCalcValues cv = {
-            .battlerAtk = ctx->battlerAtk,
-            .battlerDef = ctx->battlerDef,
+            .battlerAtk = ctx->battlerDef,
+            .battlerDef = ctx->battlerAtk,
         };
+
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            cv.move = defMon->moves[i];
+
+            if (cv.move == MOVE_NONE)
+                break;
+
+            hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, DONT_CONSIDER_ENDURE);
+            DebugPrintf("def %d atk %d %d hitsToKO %d", ctx->battlerDef, ctx->battlerAtk, i, hitsToKO);
+
+            if (hitsToKO == 0)
+                continue;
+
+            totalAccuracy = GetTotalAccuracy(&cv, weather);
+            expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
+            DebugPrintf("Check21 %S atk %d def %d %d %d", GetMoveName(cv.move), ctx->battlerDef, ctx->battlerAtk, expectedTurnsToKODef, totalAccuracy);
+            
+            if (hitsToKO > 0 && bestTurnsToKODef > expectedTurnsToKODef)
+                bestTurnsToKODef = expectedTurnsToKODef;
+        }
+
+        cv.battlerAtk = ctx->battlerAtk;
+        cv.battlerDef = ctx->battlerDef;  
 
         if (ctx->atkMoveIndex != MAX_MON_MOVES)
         {
+        DebugPrintf("Check11");
             cv.move = ctx->atkMove;
-            hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, ctx->atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
+            hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, ctx->atkMoveIndex, AI_ATTACKING, DONT_CONSIDER_ENDURE);
+
+            DebugPrintf("%d hitsToKO %d", ctx->atkMoveIndex, hitsToKO);
+
+            if (hitsToKO == 0)
+                return STAT_CHANGE_NEUTRAL;
+
             totalAccuracy = GetTotalAccuracy(&cv, weather);
-            
-            // Move already hits, no point
-            if (totalAccuracy >= 100)
-                return STAT_CHANGE_BAD;
                 
             expectedTurnsToKOAtk = (hitsToKO * 100)/totalAccuracy;
+
+                DebugPrintf("expectedTurnsToKOAtk %d", expectedTurnsToKOAtk);
+
+                DebugPrintf("bestTurnsToKODef %d", bestTurnsToKODef);            
+            // Already have good odds to win
+            if (expectedTurnsToKOAtk < bestTurnsToKODef)
+                return STAT_CHANGE_BAD;
 
             AI_SaveBattlerStatStages(savedStatStages);
             AI_SetFutureStatChangeLogic(ctx, aiData);
@@ -1278,22 +1341,17 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
             expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
 
             // Stat changes mean more turns to KO
-            if (expectedTurnsToKOModifiedAtk > expectedTurnsToKOAtk)
+            if (expectedTurnsToKOModifiedAtk > 0 && expectedTurnsToKOModifiedAtk > expectedTurnsToKOAtk)
                 return STAT_CHANGE_BAD;
-            // Stat changes mean same number of turns to KO (with grace of 1 for this move being used) but reduces likelihood of missing
-            if ((expectedTurnsToKOModifiedAtk == expectedTurnsToKOAtk
-             || (expectedTurnsToKOModifiedAtk == (expectedTurnsToKOAtk - 1))) && (totalAccuracy < 100))
-            {
-                return STAT_CHANGE_NEUTRAL;
-            }
+        DebugPrintf("Check11a");
             // Stat changes reduce expected number of turns to KO
             if (expectedTurnsToKOModifiedAtk <= (expectedTurnsToKOAtk - 2))
                 return STAT_CHANGE_GOOD;
-            // Default to not do it
-            return STAT_CHANGE_BAD;
+        DebugPrintf("Check12");
         }
         else
         {
+        DebugPrintf("Check13");
             // Get fewest expected moves for battlers to KO each other without stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -1302,36 +1360,29 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 if (cv.move == MOVE_NONE)
                     break;
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, atkMon->moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracy = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOAtk = ((hitsToKO * 100) / totalAccuracy);
+                DebugPrintf("Check20 %S atk %d def %d %d %d", GetMoveName(atkMon->moves[i]), ctx->battlerAtk, ctx->battlerDef, expectedTurnsToKOAtk, totalAccuracy);
                 
-                if (bestTurnsToKOAtk > expectedTurnsToKOAtk)
+                if (hitsToKO > 0 && bestTurnsToKOAtk > expectedTurnsToKOAtk)
                     bestTurnsToKOAtk = expectedTurnsToKOAtk;
             }
 
-            for (u32 i = 0; i < MAX_MON_MOVES; i++)
-            {
-                cv.move = defMon->moves[i];
+                DebugPrintf("bestTurnsToKOAtk %d", expectedTurnsToKOAtk);
 
-                if (cv.move == MOVE_NONE)
-                    break;
-
-                cv.battlerAtk = ctx->battlerDef;
-                cv.battlerDef = ctx->battlerAtk;                
-
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, defMon->moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
-                totalAccuracy = GetTotalAccuracy(&cv, weather);
-                expectedTurnsToKODef = ((hitsToKO * 100) / totalAccuracy);
-                
-                if (bestTurnsToKODef > expectedTurnsToKODef)
-                    bestTurnsToKODef = expectedTurnsToKODef;
-            }
+                DebugPrintf("bestTurnsToKODef %d", bestTurnsToKODef);            // Already have good odds to win
+            // Already have good odds to win
+            if (bestTurnsToKOAtk < bestTurnsToKODef)
+                return STAT_CHANGE_BAD;
 
             AI_SaveBattlerStatStages(savedStatStages);
             AI_SetFutureStatChangeLogic(ctx, aiData);
             AI_SetBattlerStatChanges();
 
+            cv.battlerAtk = ctx->battlerAtk;
+            cv.battlerDef = ctx->battlerDef;       
+   
             // Get fewest expected moves for battlers to KO each other with stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -1343,13 +1394,25 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 cv.battlerAtk = ctx->battlerAtk;
                 cv.battlerDef = ctx->battlerDef;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, atkMon->moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerAtk, ctx->battlerDef, i, AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
-                expectedTurnsToKOModifiedAtk = ((hitsToKO * 100) / totalAccuracyModified);
+                expectedTurnsToKOModifiedAtk = (((hitsToKO * 100) / totalAccuracyModified) + 1); // +1 turn to use the move
+                DebugPrintf("Check22 %S atk %d def %d %d %d", GetMoveName(atkMon->moves[i]), ctx->battlerAtk, ctx->battlerDef, expectedTurnsToKOModifiedAtk, totalAccuracyModified);
                 
-                if (bestTurnsToKOModifiedAtk > expectedTurnsToKOModifiedAtk)
+                if (hitsToKO > 0 && bestTurnsToKOModifiedAtk > expectedTurnsToKOModifiedAtk)
                     bestTurnsToKOModifiedAtk = expectedTurnsToKOModifiedAtk;
             }
+                DebugPrintf("bestTurnsToKOModifiedAtk %d", bestTurnsToKOModifiedAtk);
+
+            // Stat changes mean same number of turns to KO (with grace of 1 for this move being used) but reduces likelihood of missing
+            //if ((expectedTurnsToKOModifiedAtk == expectedTurnsToKOAtk
+            // || (expectedTurnsToKOModifiedAtk == (expectedTurnsToKOAtk - 1))) && (totalAccuracy < 100))
+            //{
+            //    return STAT_CHANGE_NEUTRAL;
+            //}
+            cv.battlerAtk = ctx->battlerDef;
+            cv.battlerDef = ctx->battlerAtk;   
+
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
                 cv.move = defMon->moves[i];
@@ -1360,52 +1423,59 @@ enum StatChangeDecision BattlerShouldChangeStats(struct StatConsiderationContext
                 cv.battlerAtk = ctx->battlerDef;
                 cv.battlerDef = ctx->battlerAtk;                
 
-                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, defMon->moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                hitsToKO = GetNoOfHitsToKOBattler(ctx->battlerDef, ctx->battlerAtk, i, AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracyModified = GetTotalAccuracy(&cv, weather);
                 expectedTurnsToKOModifiedDef = ((hitsToKO * 100) / totalAccuracyModified);
+                DebugPrintf("Check23 %S atk %d def %d %d %d", GetMoveName(defMon->moves[i]), ctx->battlerDef, ctx->battlerAtk, expectedTurnsToKOModifiedDef, totalAccuracyModified);
                 
-                if (bestTurnsToKOModifiedDef > expectedTurnsToKOModifiedDef)
+                if (hitsToKO > 0 && bestTurnsToKOModifiedDef > expectedTurnsToKOModifiedDef)
                     bestTurnsToKOModifiedDef = expectedTurnsToKOModifiedDef;
             }
+                DebugPrintf("bestTurnsToKOModifiedDef %d", bestTurnsToKOModifiedDef);
 
             AI_RestoreBattlerStatStages(savedStatStages);
 
             // Good if makes battlerAtk statistically more likely to KO battlerDef first
-            if ((bestTurnsToKOAtk >= bestTurnsToKODef) && (bestTurnsToKOModifiedAtk < (bestTurnsToKOModifiedDef - 1)))
+            if ((bestTurnsToKOAtk >= bestTurnsToKODef) && (bestTurnsToKOModifiedAtk < bestTurnsToKOModifiedDef))
             {
+        DebugPrintf("Check17");
                 return STAT_CHANGE_GOOD;
             }
             // Good if increases expected number of moves battlerDef needs to KO by 2 or more
             else if (bestTurnsToKOModifiedDef >= (bestTurnsToKODef + 2))
             {
+        DebugPrintf("Check18");
                 return STAT_CHANGE_GOOD;
             }
             // Neutral if there's a minor inprovement to odds
             else if ((bestTurnsToKOAtk == bestTurnsToKODef)
-             && (bestTurnsToKOModifiedAtk == bestTurnsToKOModifiedDef || bestTurnsToKOModifiedAtk == (bestTurnsToKOModifiedDef - 1))
+             && (bestTurnsToKOModifiedAtk == bestTurnsToKOModifiedDef || bestTurnsToKOModifiedAtk == bestTurnsToKOModifiedDef)
              && (totalAccuracy < 100))
             {
+        DebugPrintf("Check19");
                 return STAT_CHANGE_NEUTRAL;
             }
             // If opponent KOs in fewer hits even with mods, bad decision
-            else if ((bestTurnsToKOModifiedAtk > (bestTurnsToKOModifiedDef - 1)))
+            else if ((bestTurnsToKOModifiedAtk > bestTurnsToKOModifiedDef))
             {
+         DebugPrintf("Check14 %d", gBattleTurnCounter);
                 return STAT_CHANGE_BAD;
             }
             // No notable benefit but not making things worse
+        DebugPrintf("Check15");
             return STAT_CHANGE_NEUTRAL;
         }
     default:
+        DebugPrintf("Check16");
         // Default to not do it
         return STAT_CHANGE_BAD;
     }
 }
 
 // Return used to inform whether should continue with further checks
-bool32 AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct AiLogicData *aiData, s32 *score)
+bool32 AI_AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct AiLogicData *aiData, s32 *score)
 {
     enum StatChangeDecision decision = STAT_CHANGE_BAD;
-    bool32 shouldKeepChecking = TRUE;
 
 #if TESTING
     enum BattlerId battlerAtk = ctx->battlerMoveUser;
@@ -1416,6 +1486,7 @@ bool32 AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct 
         for (enum ChangeStatContext context = CHANGE_STAT_DMG_DEALT; context < CHANGE_STAT_CONTEXT_COUNT; context++)
         {
             ctx->context = context;
+            DebugPrintf("context %d", context);
 
             if ((decision = BattlerShouldChangeStats(ctx, aiData)))
             {
@@ -1427,6 +1498,9 @@ bool32 AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct 
             }
             else // Bad found, stop
             {
+                DebugPrintf("score %d", *score);
+                ADJUST_SCORE_PTR(NO_DAMAGE_OR_FAILS);
+                DebugPrintf("score %d", *score);
                 return FALSE;
             }
         }
@@ -1440,18 +1514,16 @@ bool32 AdjustFutureStatChangeScore(struct StatConsiderationContext *ctx, struct 
             if (decision == STAT_CHANGE_GOOD)
             {
                 ADJUST_SCORE_PTR(GOOD_EFFECT);
-                shouldKeepChecking = FALSE;
+                return FALSE; // Good found, stop
             }
-
-            if (!shouldKeepChecking) // Good found, else if neutral then keep looking
-                return FALSE;
-            
-            return TRUE; // Neutral found
         }
-        else // Bad found
+        else // Bad found, stop
         {
+            ADJUST_SCORE_PTR(NO_DAMAGE_OR_FAILS);
             return FALSE;
         }
+
+        return TRUE; // Only neutral found, continue
     }
 }
 
