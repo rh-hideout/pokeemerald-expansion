@@ -2255,16 +2255,15 @@ BattleScript_EffectSynthesis::
 BattleScript_EffectMoonlight::
 BattleScript_EffectShoreUp::
 	attackcanceler
-	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_SUN, BattleScript_EffectSunHealContinue
-	jumpifability BS_ATTACKER, ABILITY_MEGA_SOL, BattleScript_MegaSolActivatesHealing
-BattleScript_EffectSunHealContinue::
 	recoverbasedonsunlight BattleScript_AlreadyAtFullHp
 	goto BattleScript_HealTarget
 
 BattleScript_MegaSolActivatesHealing::
+	attackanimation
+	waitanimation
 	call BattleScript_AbilityPopUp
 	pause B_WAIT_TIME_SHORT
-	goto BattleScript_EffectSunHealContinue
+	goto BattleScript_HealTargetContinue
 
 BattleScript_MegaSolActivatesTwoTurnMove::
 	call BattleScript_AbilityPopUpScripting
@@ -2381,6 +2380,7 @@ BattleScript_EffectSoftboiled::
 BattleScript_HealTarget::
 	attackanimation
 	waitanimation
+BattleScript_HealTargetContinue::
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
 	printstring STRINGID_PKMNREGAINEDHEALTH

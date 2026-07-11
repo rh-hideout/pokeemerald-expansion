@@ -1683,7 +1683,7 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
+static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv, bool32 *showAbilityPopUp)
 {
     if (cv->moveEffect == EFFECT_GEOMANCY || gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
         return FALSE;
@@ -1692,8 +1692,18 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
     u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
     enum BattleWeather isMoveWeatherAffected = GetTwoTurnMoveWeather(cv->move);
 
-    return (GetCurrentBattleWeather(attackerWeather) == isMoveWeatherAffected)
-        || (GetCurrentBattleWeather(weather) == isMoveWeatherAffected);
+    if (GetCurrentBattleWeather(weather) == isMoveWeatherAffected)
+    {
+        return TRUE;
+    }
+
+    if (GetCurrentBattleWeather(attackerWeather) == isMoveWeatherAffected)
+    {
+        *showAbilityPopUp = TRUE;
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
@@ -1789,22 +1799,23 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
     }
     else // Try move this turn. Otherwise use next turn
     {
-        if (CanTwoTurnMoveFireThisTurn(cv))
+        bool32 showAbilityPopUp = FALSE;
+        if (CanTwoTurnMoveFireThisTurn(cv, &showAbilityPopUp))
         {
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
             if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
                 gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
-            if (cv->abilities[cv->battlerAtk] == ABILITY_MEGA_SOL
-                && cv->moveEffect == EFFECT_SOLAR_BEAM
-                && !(GetWeather() & B_WEATHER_SUN))
+            if (showAbilityPopUp)
             {
                 BattleScriptCall(BattleScript_MegaSolActivatesTwoTurnMove);
                 result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
             }
             else
+            {
                 result = CANCELER_RESULT_SUCCESS;
+            }
         }
         else if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_POWER_HERB)
         {
