@@ -1,8 +1,11 @@
 #include "global.h"
 #include "battle.h"
+#include "item.h"
+#include "item_menu.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "test/test.h"
+#include "constants/items.h"
 
 #define TEST_MENU_DIR_DOWN     1
 #define TEST_MENU_DIR_UP      -1
@@ -17,6 +20,23 @@ static void SetTestPartySize(enum BattleTrainer trainer, u8 partySize)
         CreateMon(&gParties[trainer][i], SPECIES_WOBBUFFET, 50, 0, OTID_STRUCT_PRESET(0));
 
     gPartiesCount[trainer] = partySize;
+}
+
+TEST("Candy use keeps the party menu open while another candy remains")
+{
+    gPartyMenu.menuType = PARTY_MENU_TYPE_FIELD;
+    gSpecialVar_ItemId = ITEM_RARE_CANDY;
+    EXPECT(AddBagItem(gSpecialVar_ItemId, 1));
+
+    EXPECT(Test_ShouldKeepPartyMenuOpenAfterCandyUse());
+}
+
+TEST("Candy use returns to the bag after the last candy is consumed")
+{
+    gPartyMenu.menuType = PARTY_MENU_TYPE_FIELD;
+    gSpecialVar_ItemId = ITEM_EXP_CANDY_XS;
+
+    EXPECT(!Test_ShouldKeepPartyMenuOpenAfterCandyUse());
 }
 
 TEST("Full multi partner party menu stops down navigation at partner party count")
