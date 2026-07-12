@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Octolock decreases Defense and Sp. Def by at the end of the 
 
 SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BELDUM; ability = ABILITY_CLEAR_BODY; }
@@ -129,29 +129,6 @@ SINGLE_BATTLE_TEST("Octolock will not decrease Defense and Sp. Def further then 
             MESSAGE("The opposing Wobbuffet's Defense fell!");
             MESSAGE("The opposing Wobbuffet's Sp. Def fell!");
         }
-    }
-}
-
-SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_BISHARP) { Ability(ABILITY_DEFIANT); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_OCTOLOCK); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Bisharp can no longer escape because of Octolock!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Defense fell!");
-        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack rose sharply!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Sp. Def fell!");
-        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack rose sharply!");
     }
 }
 

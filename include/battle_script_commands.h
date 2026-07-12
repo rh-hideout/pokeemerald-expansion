@@ -24,6 +24,7 @@ struct PickupItem
 
 bool32 HasBattlerActedThisTurn(enum BattlerId battler);
 u32 GetBattlerTurnOrderNum(enum BattlerId battler);
+u32 GetBattlerRawSpeedOrder(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
@@ -47,7 +48,7 @@ bool32 IsShieldsDownProtected(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityStatusProtected(enum BattlerId battler, enum Ability ability);
 bool32 TryResetBattlerStatChanges(enum BattlerId battler);
 bool32 CanCamouflage(enum BattlerId battler);
-void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId battlerItem);
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId battlerItem, enum Item itemOverride);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum Move move, enum Type moveType);
 u8 GetFirstFaintedPartyIndex(enum BattlerId battler);

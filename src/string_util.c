@@ -160,17 +160,6 @@ s32 StringCompareN(const u8 *str1, const u8 *str2, u32 n)
     return *str1 - *str2;
 }
 
-bool8 IsStringLengthAtLeast(const u8 *str, s32 n)
-{
-    u32 i;
-
-    for (i = 0; i < n; i++)
-        if (str[i] && str[i] != EOS)
-            return TRUE;
-
-    return FALSE;
-}
-
 u8 *ConvertIntToDecimalStringN(u8 *dest, s32 value, enum StringConvertMode mode, u8 n)
 {
     enum { WAITING_FOR_NONZERO_DIGIT, WRITING_DIGITS, WRITING_SPACES } state;
@@ -673,21 +662,6 @@ bool32 IsStringJapanese(u8 *str)
     return FALSE;
 }
 
-bool32 IsStringNJapanese(u8 *str, s32 n)
-{
-    s32 i;
-
-    for (i = 0; *str != EOS && i < n; i++)
-    {
-        if (*str <= JAPANESE_CHAR_END)
-            if (*str != CHAR_SPACE)
-                return TRUE;
-        str++;
-    }
-
-    return FALSE;
-}
-
 u8 GetExtCtrlCodeLength(u8 code)
 {
     static const u8 lengths[] =
@@ -845,7 +819,7 @@ bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
     return FALSE;
 }
 
-u8 *GetStringVar(u8 index)
+u8* const GetStringVar(u8 index)
 {
     switch (index)
     {
@@ -856,7 +830,7 @@ u8 *GetStringVar(u8 index)
     case 2:
         return gStringVar3;
     default:
-        errorf("Incorrect stringvar index");
+        errorf("Incorrect StringVar index: %d", index);
         return gStringVar1;
     }
 }

@@ -70,16 +70,19 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Raichu!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
+
+
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -104,12 +107,12 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
@@ -129,17 +132,19 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); }
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_ZAPDOS)
+        OPPONENT(SPECIES_ZAPDOS);
         OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE); // SE on rayquaza
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -262,11 +267,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 
@@ -284,13 +289,15 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
+        MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
+
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It doesn't affect Misdreavus…");
+
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 
@@ -327,7 +334,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
         TURN { MOVE(playerLeft, MOVE_WIDE_GUARD); MOVE(opponentLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, playerLeft);
-        MESSAGE("Wide Guard protected your team!");
+        MESSAGE("Wide Guard now protects your side!");
         MESSAGE("The opposing Wobbuffet used Hyper Voice!");
         MESSAGE("Wobbuffet protected itself!");
         MESSAGE("Wynaut protected itself!");
@@ -364,6 +371,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both opposing mons"
         TURN { MOVE(playerLeft, MOVE_PRECIPICE_BLADES); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         MESSAGE("It's super effective on the opposing Golem and Onix!");
@@ -402,7 +410,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective Message on both opposing mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It's not very effective on the opposing Chikorita and Treecko!");
+        MESSAGE("It's not very effective on the opposing Chikorita and Treecko.");
     }
 }
 
@@ -420,23 +428,25 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        MESSAGE("It's not very effective on Chikorita and Treecko!");
+        MESSAGE("It's not very effective on Chikorita and Treecko.");
     }
 }
 
-DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect message on both opposing mons")
+DOUBLE_BATTLE_TEST("Spread Moves: Doesn't affect any target")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_PRECIPICE_BLADES) == TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_PIDGEY);
         OPPONENT(SPECIES_PIDGEY);
         OPPONENT(SPECIES_HOOTHOOT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_PRECIPICE_BLADES); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
-        MESSAGE("It doesn't affect the opposing Pidgey and Hoothoot…");
+        MESSAGE("It doesn't affect Pidgey…");
+        MESSAGE("It doesn't affect the opposing Pidgey…");
+        MESSAGE("It doesn't affect the opposing Hoothoot…");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
     }
 }
 
@@ -452,10 +462,12 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         TURN { MOVE(opponentRight, MOVE_ICY_WIND); MOVE(playerLeft, MOVE_ROCK_SLIDE); SEND_OUT(playerRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponentRight);
+        EFFECTIVENESS_SE(playerRight, SE_SUPER_EFFECTIVE); // SE against sandslash
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE); // se against torkoal
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         MESSAGE("It's super effective on the opposing Torkoal and Torkoal!");

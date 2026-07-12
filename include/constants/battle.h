@@ -27,30 +27,29 @@
 
 /*
  * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
- * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_0] is always the player's party.
- * gParties[B_TRAINER_1] is always the first opponent trainer's party, or holds the first
- * wild mon during an encounter. gParties[B_TRAINER_2] is only used in multibattles where
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_PLAYER] is always the player's party.
+ * gParties[B_TRAINER_OPPONENT_A] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_PARTNER] is only used in multibattles where
  * the player's side has a second trainer such as Mossdeep Space Center tag battle with
- * trainer Steven. gParties[B_TRAINER_3] is only used in battles with two opponent trainers,
- * or for the second wild mon in a doubles wild encounter. In a double battle where the
- * battle side only has a single trainer, both battlers on that battle side will reside in
- * the same party (gParties[B_TRAINER_0] for player side and gParties[B_TRAINER_1] for
- * opponent side).
+ * trainer Steven. gParties[B_TRAINER_OPPONENT_B] is only used in battles with two opponent trainers.
+ * In a double battle where the battle side only has a single trainer, both battlers on that battle
+ * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and
+ * gParties[B_TRAINER_OPPONENT_A] for opponent side).
  * Note in link multi battles, parties are set locally on each player's device, meaning
  * even if a player is in the right position, on their device they will still occupy
- * gParties[B_TRAINER_0], with their link partner using gParties[B_TRAINER_2].
+ * gParties[B_TRAINER_PLAYER], with their link partner using gParties[B_TRAINER_PARTNER].
  *
  *          Regular battles              Link multi (player on left)         Link multi (player on right)
  *   + ------------------------- +      + ------------------------- +       + ------------------------- +
  *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
  *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
- *   | (1 trainer)  1       1    |      |              3       1    |       |              3       1    |
- *   | (2 trainers) 3       1    |      |                           |       |                           |
+ *   | (1 trainer) opA     opA   |      |             opB     opA   |       |             opB     opA   |
+ *   | (2 trainers)opB     opA   |      |                           |       |                           |
  *   |                           |      |                           |       |                           |
  *   | Player's side             |      |                           |       |                           |
  *   |  Left   Right             |      | Player's side             |       | Player's side             |
- *   |   0       0 (double)      |      |  Left   Right             |       |  Left   Right             |
- *   |   0       2 (multi)       |      |   0       2               |       |   2       0               |
+ *   |  pla     pla(double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |  pla     par(multi)       |      |  pla     par              |       |  par     pla              |
  *   +---------------------------+      +---------------------------+       +---------------------------+
  *   |                           |      |                           |       |                           |
  *   |                           |      |                           |       |                           |
@@ -78,10 +77,10 @@ enum __attribute__((packed)) BattlerId
 
 enum __attribute__((packed)) BattleTrainer
 {
-    B_TRAINER_0,
-    B_TRAINER_1,
-    B_TRAINER_2,
-    B_TRAINER_3,
+    B_TRAINER_PLAYER,
+    B_TRAINER_OPPONENT_A,
+    B_TRAINER_PARTNER,
+    B_TRAINER_OPPONENT_B,
     MAX_BATTLE_TRAINERS,
 };
 
@@ -93,6 +92,9 @@ enum __attribute__((packed)) BattleTrainer
 // Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
 #define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
 #define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
+
+#define LEFT_ALLY(battler) (battler & BIT_SIDE)
+#define RIGHT_ALLY(battler) ((battler & BIT_SIDE) | BIT_FLANK)
 
 enum BattleSide
 {
@@ -258,10 +260,8 @@ enum VolatileFlags
     F(VOLATILE_SMACK_DOWN,                  smackDown,                     (u32, 1)) \
     F(VOLATILE_TELEKINESIS,                 telekinesis,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MIRACLE_EYE,                 miracleEye,                    (u32, 1)) \
-    F(VOLATILE_MAGNET_RISE,                 magnetRise,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_HEAL_BLOCK,                  healBlock,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
     F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_NO_RETREAT,                  noRetreat,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_VESSEL_OF_RUIN,              vesselOfRuin,                  (u32, 1)) \
@@ -294,7 +294,7 @@ enum VolatileFlags
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
     F(VOLATILE_SLOW_START_TIMER,            slowStartTimer,                (u32, B_SLOW_START_TIMER)) \
     F(VOLATILE_EMBARGO_TIMER,               embargoTimer,                  (u32, B_EMBARGO_TIMER)) \
-    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER)) \
+    F(VOLATILE_MAGNET_RISE_TIMER,           magnetRiseTimer,               (u32, B_MAGNET_RISE_TIMER), V_BATON_PASSABLE) \
     F(VOLATILE_TELEKINESIS_TIMER,           telekinesisTimer,              (u32, B_TELEKINESIS_TIMER)) \
     F(VOLATILE_HEAL_BLOCK_TIMER,            healBlockTimer,                (u32, B_HEAL_BLOCK_TIMER)) \
     F(VOLATILE_TAUNT_TIMER,                 tauntTimer,                    (u32, B_TAUNT_TIMER)) \
@@ -324,9 +324,12 @@ enum VolatileFlags
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_SUPREME_OVERLORD_COUNTER,    supremeOverlordCounter,        (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
-    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
+    F(VOLATILE_TRACE_ACTIVATED,             traceActivated,                (u32, 1)) \
+    F(VOLATILE_SPEED_SWAP,                  speedSwapped,                  (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -432,6 +435,16 @@ enum TypeSideHazard
     TYPE_SIDE_HAZARD_SHARP_STEEL    = TYPE_STEEL,
 };
 
+enum BattleTerrain
+{
+    B_TERRAIN_NONE,
+    B_TERRAIN_GRASSY,
+    B_TERRAIN_MISTY,
+    B_TERRAIN_ELECTRIC,
+    B_TERRAIN_PSYCHIC,
+    B_TERRAIN_COUNT,
+};
+
 // Field affecting statuses.
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
 #define STATUS_FIELD_TRICK_ROOM                     (1 << 1)
@@ -439,14 +452,8 @@ enum TypeSideHazard
 #define STATUS_FIELD_MUDSPORT                       (1 << 3)
 #define STATUS_FIELD_WATERSPORT                     (1 << 4)
 #define STATUS_FIELD_GRAVITY                        (1 << 5)
-#define STATUS_FIELD_GRASSY_TERRAIN                 (1 << 6)
-#define STATUS_FIELD_MISTY_TERRAIN                  (1 << 7)
-#define STATUS_FIELD_ELECTRIC_TERRAIN               (1 << 8)
-#define STATUS_FIELD_PSYCHIC_TERRAIN                (1 << 9)
-#define STATUS_FIELD_ION_DELUGE                     (1 << 10)
-#define STATUS_FIELD_FAIRY_LOCK                     (1 << 11)
-
-#define STATUS_FIELD_TERRAIN_ANY        (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN)
+#define STATUS_FIELD_ION_DELUGE                     (1 << 6)
+#define STATUS_FIELD_FAIRY_LOCK                     (1 << 7)
 
 // Flags describing move's result
 #define MOVE_RESULT_MISSED                 (1 << 0)
@@ -466,8 +473,12 @@ enum TypeSideHazard
 #define MOVE_RESULT_MIRROR_ARMOR_PENDING   (1 << 14)
 #define MOVE_RESULT_STAT_CHANGED           (1 << 15)
 #define MOVE_RESULT_PROTECTED              (1 << 16)
+#define MOVE_RESULT_EXTREMELY_EFFECTIVE    (1 << 17)
+#define MOVE_RESULT_MOSTLY_INEFFECTIVE     (1 << 18)
 #define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
 #define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
+#define MOVE_RESULT_HIGH_EFFECTIVENESS     (MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE)
+#define MOVE_RESULT_LOW_EFFECTIVENESS      (MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE)
 
 enum BattleWeather
 {
@@ -518,7 +529,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FROSTBITE = 7,
     MOVE_EFFECT_CONFUSION,
     MOVE_EFFECT_FLINCH,
-    MOVE_EFFECT_TRI_ATTACK,
+    MOVE_EFFECT_RANDOM_FROM_LIST, // Uses randomMoveEffects to determine what to select
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
     MOVE_EFFECT_WRAP,
@@ -544,7 +555,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_RECOIL_HP_25,
     MOVE_EFFECT_TRAP_BOTH,
     MOVE_EFFECT_ROUND,
-    MOVE_EFFECT_DIRE_CLAW,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_FLORAL_HEALING,
     MOVE_EFFECT_SECRET_POWER,
@@ -718,6 +728,7 @@ enum BattleEnvironments
 #define B_WIN_VS_OUTCOME_RIGHT   23
 #define B_WIN_MOVE_DESCRIPTION   24
 #define B_WIN_OAK_OLD_MAN        25
+#define B_CATCH_OR_NOT           26
 
 // The following are duplicate id values for windows that Battle Arena uses differently.
 #define ARENA_WIN_PLAYER_NAME      15
@@ -773,8 +784,9 @@ enum FaintedActions
     FAINTED_ACTIONS_MAX_CASE,
 };
 
-//  Enum,                                         fieldName,           Type, max value
+//  Enum,                                             fieldName,               Type, max value
 #define STARTING_STATUS_DEFINITIONS(F) \
+    /* Terrains */                                                                                                                         \
     F(STARTING_STATUS_ELECTRIC_TERRAIN,               electricTerrain,            (u32, 1)) /* Electric Terrain (Permanent) */             \
     F(STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY,     electricTerrainTemporary,   (u32, 1)) /* Electric Terrain Temporary (5 turns) */     \
     F(STARTING_STATUS_MISTY_TERRAIN,                  mistyTerrain,               (u32, 1)) /* Misty Terrain (Permanent) */                \
@@ -783,16 +795,19 @@ enum FaintedActions
     F(STARTING_STATUS_GRASSY_TERRAIN_TEMPORARY,       grassyTerrainTemporary,     (u32, 1)) /* Grassy Terrain Temporary (5 turns) */       \
     F(STARTING_STATUS_PSYCHIC_TERRAIN,                psychicTerrain,             (u32, 1)) /* Psychic Terrain (Permanent) */              \
     F(STARTING_STATUS_PSYCHIC_TERRAIN_TEMPORARY,      psychicTerrainTemporary,    (u32, 1)) /* Psychic Terrain Temporary (5 turns) */      \
+    /* Rooms */                                                                                                                            \
     F(STARTING_STATUS_TRICK_ROOM,                     trickRoom,                  (u32, 1)) /* Trick Room (Permanent) */                   \
     F(STARTING_STATUS_TRICK_ROOM_TEMPORARY,           trickRoomTemporary,         (u32, 1)) /* Trick Room Temporary (5 turns) */           \
     F(STARTING_STATUS_MAGIC_ROOM,                     magicRoom,                  (u32, 1)) /* Magic Room (Permanent) */                   \
     F(STARTING_STATUS_MAGIC_ROOM_TEMPORARY,           magicRoomTemporary,         (u32, 1)) /* Magic Room Temporary (5 turns) */           \
     F(STARTING_STATUS_WONDER_ROOM,                    wonderRoom,                 (u32, 1)) /* Wonder Room (Permanent) */                  \
     F(STARTING_STATUS_WONDER_ROOM_TEMPORARY,          wonderRoomTemporary,        (u32, 1)) /* Wonder Room Temporary (5 turns) */          \
+    /* Tailwind */                                                                                                                         \
     F(STARTING_STATUS_TAILWIND_PLAYER,                tailwindPlayer,             (u32, 1)) /* Tailwind Player (Permanent) */              \
     F(STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY,      tailwindPlayerTemporary,    (u32, 1)) /* Tailwind Player Temporary (4/3 turns) */    \
     F(STARTING_STATUS_TAILWIND_OPPONENT,              tailwindOpponent,           (u32, 1)) /* Tailwind Opponent (Permanent) */            \
     F(STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY,    tailwindOpponentTemporary,  (u32, 1)) /* Tailwind Opponent Temporary (4/3 turns) */  \
+    /* Pledge */                                                                                                                           \
     F(STARTING_STATUS_RAINBOW_PLAYER,                 rainbowPlayer,              (u32, 1)) /* Rainbow Player (Permanent) */               \
     F(STARTING_STATUS_RAINBOW_PLAYER_TEMPORARY,       rainbowPlayerTemporary,     (u32, 1)) /* Rainbow Player Temporary (4 turns) */       \
     F(STARTING_STATUS_RAINBOW_OPPONENT,               rainbowOpponent,            (u32, 1)) /* Rainbow Opponent (Permanent) */             \
@@ -822,6 +837,19 @@ enum FaintedActions
     F(STARTING_STATUS_STEALTH_ROCK_OPPONENT,          stealthRockOpponent,        (u32, 1)) /* Stealth Rock Opponent */                    \
     F(STARTING_STATUS_SHARP_STEEL_PLAYER,             sharpSteelPlayer,           (u32, 1)) /* Sharp Steel Player */                       \
     F(STARTING_STATUS_SHARP_STEEL_OPPONENT,           sharpSteelOpponent,         (u32, 1)) /* Sharp Steel Opponent */                     \
+    /* Weathers */                                                                                                                         \
+    F(STARTING_STATUS_WEATHER_SUN,                    weatherSun,                 (u32, 1)) /* Permanent Sun */                            \
+    F(STARTING_STATUS_WEATHER_SUN_TEMPORARY,          weatherSunTemporary,        (u32, 1)) /* Temporary Sun */                            \
+    F(STARTING_STATUS_WEATHER_RAIN,                   weatherRain,                (u32, 1)) /* Permanent Rain */                           \
+    F(STARTING_STATUS_WEATHER_RAIN_TEMPORARY,         weatherRainTemporary,       (u32, 1)) /* Temporary Rain */                           \
+    F(STARTING_STATUS_WEATHER_SANDSTORM,              weatherSandstorm,           (u32, 1)) /* Permanent Sandstorm */                      \
+    F(STARTING_STATUS_WEATHER_SANDSTORM_TEMPORARY,    weatherSandstormTemporary,  (u32, 1)) /* Temporary Sandstorm */                      \
+    F(STARTING_STATUS_WEATHER_HAIL,                   weatherHail,                (u32, 1)) /* Permanent Hail */                           \
+    F(STARTING_STATUS_WEATHER_HAIL_TEMPORARY,         weatherHailTemporary,       (u32, 1)) /* Temporary Hail */                           \
+    F(STARTING_STATUS_WEATHER_SNOW,                   weatherSnow,                (u32, 1)) /* Permanent Snow */                           \
+    F(STARTING_STATUS_WEATHER_SNOW_TEMPORARY,         weatherSnowTemporary,       (u32, 1)) /* Temporary Snow */                           \
+    F(STARTING_STATUS_WEATHER_FOG,                    weatherFog,                 (u32, 1)) /* Permanent Fog */                            \
+    F(STARTING_STATUS_WEATHER_FOG_TEMPORARY,          weatherFogTemporary,        (u32, 1)) /* Temporary Fog */                            \
 
 #define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
 
@@ -855,6 +883,13 @@ enum SubmoveState
     SUBMOVE_NO_EFFECT,
     SUBMOVE_SUCCESS,
     SUBMOVE_FAILURE,
+};
+
+enum VictoryCatch
+{
+    VICTORY_CATCH_START,
+    VICTORY_CATCH_OPEN_BAG,
+    VICTORY_CATCH_FAINTED,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H

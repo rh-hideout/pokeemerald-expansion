@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Cheek Pouch restores HP after the berry's effect")
 
 SINGLE_BATTLE_TEST("Cheek Pouch activates via Bug Bite/Pluck if it would trigger an effect")
 {
-    u16 move;
+    enum Move move;
     s16 berryHeal, cheekPouchHeal;
 
     PARAMETRIZE { move = MOVE_BUG_BITE; }
@@ -179,9 +179,10 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_KARATE_CHOP); }
+        HP_BAR(player, captureDamage: &damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
         HP_BAR(player, captureDamage: &healing);
-        HP_BAR(player, captureDamage: &damage);
     } THEN {
         EXPECT_LT(healing, 0);
         EXPECT_GT(damage, 0);

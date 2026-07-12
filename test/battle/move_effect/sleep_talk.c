@@ -152,7 +152,7 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
 
 SINGLE_BATTLE_TEST("Sleep Talk calls move and that move correctly ignores ability if it should")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }

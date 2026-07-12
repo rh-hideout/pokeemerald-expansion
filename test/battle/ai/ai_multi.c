@@ -259,3 +259,56 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         }
     }
 }
+
+AI_MULTI_BATTLE_TEST("Battler 2 has AI flags set correctly (multi)")
+{
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+
+    u32 aiFlags;
+
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(playerRight, aiFlags);
+        PLAYER(SPECIES_VOLTORB) { Moves(MOVE_CELEBRATE); HP(1); }
+        PARTNER(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        if (aiFlags == 0)
+            TURN { EXPECT_MOVE(playerRight, MOVE_ELECTRO_BALL); }
+        else
+            TURN { EXPECT_MOVE(playerRight, MOVE_EXPLOSION); }
+    }
+}
+
+AI_TWO_VS_ONE_BATTLE_TEST("Battler 2 has AI flags set correctly (2v1)")
+{
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+
+    u32 aiFlags;
+
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(playerRight, aiFlags);
+        PLAYER(SPECIES_VOLTORB) { Moves(MOVE_CELEBRATE); HP(1); }
+        PARTNER(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        if (aiFlags == 0)
+            TURN { EXPECT_MOVE(playerRight, MOVE_ELECTRO_BALL, target: opponentLeft); }
+        else
+            TURN { EXPECT_MOVE(playerRight, MOVE_EXPLOSION, target: opponentLeft); }
+    }
+}
+

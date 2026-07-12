@@ -116,7 +116,7 @@ static u32 ExitMatchCall(s32);
 
 static const u16 sMatchCallUI_Pal[] = INCGFX_U16("graphics/pokenav/match_call/ui.png", ".gbapal");
 static const u32 sMatchCallUI_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/ui.png", ".4bpp.smol", "-num_tiles 13 -Wnum_tiles");
-static const u32 sMatchCallUI_Tilemap[] = INCBIN_U32("graphics/pokenav/match_call/ui.bin.smolTM");
+static const u32 sMatchCallUI_Tilemap[] = INCGFX_U32("graphics/pokenav/match_call/ui.bin", ".smolTM");
 static const u16 sOptionsCursor_Pal[] = INCGFX_U16("graphics/pokenav/match_call/options_cursor.png", ".gbapal");
 static const u32 sOptionsCursor_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/options_cursor.png", ".4bpp.smol");
 static const u16 sCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/call_window.pal", ".gbapal");

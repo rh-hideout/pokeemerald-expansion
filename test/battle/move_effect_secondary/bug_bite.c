@@ -52,20 +52,7 @@ SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its e
         MESSAGE("Wobbuffet used Bug Bite!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
-        if (effect == HOLD_EFFECT_RESTORE_HP || effect == HOLD_EFFECT_ENIGMA_BERRY) {
-            if (item == ITEM_ORAN_BERRY) {
-                MESSAGE("Wobbuffet restored its health using its Oran Berry!");
-            } else if (item == ITEM_SITRUS_BERRY) {
-                MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
-            } else {
-                MESSAGE("Wobbuffet restored its health using its Enigma Berry!");
-            }
-            HP_BAR(player);
-        }
-        else if (effect == HOLD_EFFECT_RESTORE_PP) {
-            MESSAGE("Wobbuffet restored PP to its move Bug Bite using its Leppa Berry!");
-        }
-        else if (status1 != STATUS1_NONE) {
+        if (status1 != STATUS1_NONE) {
             if (status1 == STATUS1_BURN) {
                 MESSAGE("Wobbuffet's Rawst Berry cured its burn!");
             } else if (status1 == STATUS1_SLEEP) {
@@ -127,10 +114,10 @@ SINGLE_BATTLE_TEST("Tanga Berry activates before Bug Bite")
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
         MESSAGE("Wobbuffet used Bug Bite!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
-        MESSAGE("The Tanga Berry weakened the damage to the opposing Wobbuffet!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        MESSAGE("The opposing Wobbuffet's Tanga Berry lessened the damage it took!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
     }

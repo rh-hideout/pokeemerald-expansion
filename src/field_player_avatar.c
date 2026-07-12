@@ -1525,12 +1525,6 @@ u8 PlayerGetElevation(void)
     return gObjectEvents[gPlayerAvatar.objectEventId].previousElevation;
 }
 
-// unused
-void MovePlayerToMapCoords(s16 x, s16 y)
-{
-    MoveObjectEventToMapCoords(&gObjectEvents[gPlayerAvatar.objectEventId], x, y);
-}
-
 u8 TestPlayerAvatarFlags(u8 flag)
 {
     return gPlayerAvatar.flags & flag;
@@ -1625,9 +1619,9 @@ bool8 PartyHasMonWithSurf(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) == SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
-            if (MonKnowsMove(&gParties[B_TRAINER_0][i], MOVE_SURF))
+            if (MonKnowsMove(&gParties[B_TRAINER_PLAYER][i], MOVE_SURF))
                 return TRUE;
         }
     }

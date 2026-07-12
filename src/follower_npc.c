@@ -21,6 +21,7 @@
 #include "frontier_util.h"
 #include "item.h"
 #include "load_save.h"
+#include "map_name_popup.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "party_menu.h"
@@ -65,7 +66,6 @@ static void SetSurfDismount(void);
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId);
 static void Task_FinishSurfDismount(u8 taskId);
 static void Task_ReallowPlayerMovement(u8 taskId);
-static void Task_FollowerNPCOutOfDoor(u8 taskId);
 static void Task_FollowerNPCHandleEscalator(u8 taskId);
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId);
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task);
@@ -628,7 +628,7 @@ static void Task_ReallowPlayerMovement(u8 taskId)
 // Task data.
 #define tDoorTask           data[1]
 
-static void Task_FollowerNPCOutOfDoor(u8 taskId)
+void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -685,11 +685,24 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         }
         break;
     case REALLOW_MOVEMENT:
+    {
+        struct MapPosition position;
+        enum Direction playerDirection;
+
         FollowerNPC_HandleSprite();
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
         gPlayerAvatar.preventStep = FALSE;
+
+        playerDirection = GetPlayerFacingDirection();
+        GetPlayerPosition(&position);
+        if (TryStartStepBasedScript(&position, player->currentMetatileBehavior, playerDirection) == TRUE)
+        {
+            LockPlayerFieldControls();
+            HideMapNamePopUpWindow();
+        }
         DestroyTask(taskId);
         break;
+    }
     }
 }
 
@@ -1162,9 +1175,9 @@ static void ChooseFirstThreeEligibleMons(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP) != 0
-         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG) == FALSE
-         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) != 0
+         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG) == FALSE
+         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
             gSelectedOrderFromParty[count] = (i + 1);
             count++;
@@ -1365,6 +1378,10 @@ void FollowerNPC_HandleSprite(void)
 
 enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
+    if (player->currentCoords.x == follower->currentCoords.x
+     && player->currentCoords.y == follower->currentCoords.y)
+        return DIR_NONE;
+        
     return DetermineObjectEventDirectionFromObject(player, follower);
 }
 
@@ -1500,12 +1517,6 @@ void FollowerNPC_FollowerToWater(void)
     // Prepare for making the follower do the jump and spawn the surf blob right in front of the follower's location.
     NPCFollow(&gObjectEvents[gPlayerAvatar.objectEventId], MOVEMENT_ACTION_JUMP_DOWN, TRUE);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NEW);
-}
-
-void FollowerNPC_SetIndicatorToRecreateSurfBlob(void)
-{
-    if (PlayerHasFollowerNPC())
-        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_RECREATE);
 }
 
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void)
@@ -1657,11 +1668,6 @@ bool32 FollowerNPCIsBattlePartner(void)
         return TRUE;
 
     return FALSE;
-}
-
-u32 GetFollowerNPCBattlePartner(void)
-{
-    return GetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER);
 }
 
 bool32 IsNPCFollowerWildBattle(void)

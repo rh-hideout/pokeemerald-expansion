@@ -19,7 +19,7 @@ DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (d
         HP_BAR(opponentRight, captureDamage: &damage);
         MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
-        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("Ekans is healed by the grassy terrain!");
         MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
@@ -72,7 +72,7 @@ MULTI_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (mu
         HP_BAR(opponentRight, captureDamage: &damage);
         MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
-        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("Ekans is healed by the grassy terrain!");
         MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
@@ -101,7 +101,7 @@ TWO_VS_ONE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
         HP_BAR(opponentRight, captureDamage: &damage);
         MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
-        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("Ekans is healed by the grassy terrain!");
         MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
@@ -130,7 +130,7 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
         HP_BAR(opponentRight, captureDamage: &damage);
         MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
-        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("Ekans is healed by the grassy terrain!");
         MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");

@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns and correctly con
 // Visual test to make sure Zoroark appears as Wobbuffet/Zigzagoon until illusion breaks
 SINGLE_BATTLE_TEST("Dynamax: Illusion doesn't break upon Dynamaxing when illusioned")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_ZIGZAGOON; }
     GIVEN {
@@ -239,8 +239,8 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are affected by Grudge")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Grudge!");
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wobbuffet lost all of Scratch's PP due to the grudge!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
 
@@ -444,7 +444,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain 
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain HP unless the new form gains Max HP")
 {
     u32 hp = 1, maxHP = 200;
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
     PARAMETRIZE { species = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
     GIVEN {
@@ -644,7 +644,7 @@ SINGLE_BATTLE_TEST("Dynamax: Sitrus Berries heal based on a Pokemon's non-Dynama
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLING); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
     } SCENE {
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -930,7 +930,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Stonesurge sets up Stealth Rocks")
     } SCENE {
         // turn 1
         MESSAGE("Drednaw used G-Max Stonesurge!");
-        MESSAGE("Pointed stones float in the air around the opposing team!");
+        MESSAGE("Pointed stones float in the air on the opposing side!");
         // turn 2
         MESSAGE("Pointed stones dug into the opposing Wobbuffet!");
     }
@@ -1403,7 +1403,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Sweetness cures allies' status conditions")
         STATUS_ICON(playerRight, none: TRUE);
     } THEN {
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -1484,7 +1484,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Depletion takes away 2 PP from the target's l
     } SCENE {
         MESSAGE("The opposing Sableye used Celebrate!");
         MESSAGE("Duraludon used G-Max Depletion!");
-        MESSAGE("The opposing Sableye's PP was reduced!");
+        MESSAGE("The opposing Sableye lost 2 PP from Celebrate!");
     } THEN {
         EXPECT_EQ(opponentLeft->pp[0], GetMovePP(MOVE_CELEBRATE) - 3); // 1 from regular use + 2 from G-Max Depletion
     }
@@ -1584,7 +1584,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
 SINGLE_BATTLE_TEST("Dynamax: Max Moves don't bypass absorbing abilities")
 {
     enum Move move;
-    u32 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { move = MOVE_SPARK;     ability = ABILITY_VOLT_ABSORB;     species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_WATER_ABSORB;    species = SPECIES_LANTURN; }
@@ -1655,7 +1655,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 4; j++)
     {
         PARAMETRIZE { move = MOVE_SCRATCH; stat = STAT_SPEED; ability = abilityList[j]; }
@@ -1695,7 +1695,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 2; j++)
     {
         PARAMETRIZE { move = MOVE_PECK; stat = STAT_SPEED; ability = abilityList[j]; }

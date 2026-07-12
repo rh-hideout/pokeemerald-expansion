@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Battle Armor and Shell Armor block critical hits")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }
@@ -23,7 +23,8 @@ SINGLE_BATTLE_TEST("Battle Armor and Shell Armor block critical hits")
 SINGLE_BATTLE_TEST("Mold Breaker, Teravolt and Turboblaze ignore Battle Armor and Shell Armor")
 {
     u32 j;
-    u32 species1, species2, ability1, ability2;
+    enum Species species1, species2;
+    enum Ability ability1, ability2;
     static const u32 breakerData[][2] =
     {
         {SPECIES_PINSIR,   ABILITY_MOLD_BREAKER},

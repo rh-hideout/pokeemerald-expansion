@@ -385,7 +385,7 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
-u16 AddSpriteTextPrinterParametrerized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
+u16 AddSpriteTextPrinterParameterized(u8 spriteId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
 {
     struct TextPrinterTemplate printerTemplate;
 
@@ -2146,19 +2146,9 @@ u8 DrawKeypadIcon(u8 windowId, u8 keypadIconId, u16 x, u16 y)
     return sKeypadIcons[keypadIconId].width;
 }
 
-u8 GetKeypadIconTileOffset(u8 keypadIconId)
-{
-    return sKeypadIcons[keypadIconId].tileOffset;
-}
-
 u8 GetKeypadIconWidth(u8 keypadIconId)
 {
     return sKeypadIcons[keypadIconId].width;
-}
-
-u8 GetKeypadIconHeight(u8 keypadIconId)
-{
-    return sKeypadIcons[keypadIconId].height;
 }
 
 void SetDefaultFontsPointer(void)

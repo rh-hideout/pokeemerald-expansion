@@ -6,9 +6,10 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_LAST_RESORT) == EFFECT_LAST_RESORT);
 }
 
-SINGLE_BATTLE_TEST("Last Resort always fails if it's the only known move")
+SINGLE_BATTLE_TEST("Last Resort always fails if it's the only known move (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -20,6 +21,21 @@ SINGLE_BATTLE_TEST("Last Resort always fails if it's the only known move")
         MESSAGE("Wobbuffet used Last Resort!");
         MESSAGE("But it failed!");
         NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Last Resort as the only known move results in Struggle (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_LAST_RESORT); }
+    } WHEN {
+        TURN {
+            MOVE(opponent, MOVE_LAST_RESORT, allowed: FALSE);
+        }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Struggle!");
     }
 }
 
@@ -186,4 +202,3 @@ AI_SINGLE_BATTLE_TEST("AI uses Last Resort - 4 moves")
         TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT); }
     }
 }
-

@@ -100,3 +100,42 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
         MESSAGE("Terapagos used Celebrate!");
     }
 }
+
+SINGLE_BATTLE_TEST("Teraform Zero doesn't activate if there is no weather or terrain")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        NOT ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+    }
+}
+
+SINGLE_BATTLE_TEST("Teraform Zero doesn't reactivate when Terapagos-Stellar switches back in")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) { Ability(ABILITY_DRIZZLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_RAIN_DANCE); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+        MESSAGE("The rain stopped.");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+            MESSAGE("The rain stopped.");
+        }
+    }
+}

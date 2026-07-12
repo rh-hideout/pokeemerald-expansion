@@ -156,7 +156,8 @@ DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
 
 DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field")
 {
-    u32 battlerOne, battlerTwo, abilityBattlerOne, abilityBattlerTwo;
+    enum Species battlerOne, battlerTwo;
+    enum Ability abilityBattlerOne, abilityBattlerTwo;
 
     PARAMETRIZE { battlerOne = SPECIES_NATU; abilityBattlerOne = ABILITY_MAGIC_BOUNCE;
                   battlerTwo = SPECIES_ESPEON; abilityBattlerTwo = ABILITY_SYNCHRONIZE; }
@@ -219,7 +220,7 @@ SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-inv
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
-        MESSAGE("Pointed stones float in the air around the opposing team!");
+        MESSAGE("Pointed stones float in the air on the opposing side!");
     }
 }
 

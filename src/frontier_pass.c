@@ -182,11 +182,11 @@ static const u32 sMapScreen_Gfx[]                = INCGFX_U32("graphics/frontier
 static const u32 sCursor_Gfx[]                   = INCGFX_U32("graphics/frontier_pass/cursor.png", ".4bpp.smol");
 static const u32 sHeads_Gfx[]                    = INCGFX_U32("graphics/frontier_pass/map_heads.png", ".4bpp.smol");
 static const u32 sMapCursor_Gfx[]                = INCGFX_U32("graphics/frontier_pass/map_cursor.png", ".4bpp.smol");
-static const u32 sMapScreen_Tilemap[]            = INCBIN_U32("graphics/frontier_pass/map_screen.bin.smolTM");
-static const u32 sMapAndCard_ZoomedOut_Tilemap[] = INCBIN_U32("graphics/frontier_pass/small_map_and_card.bin.smolTM");
+static const u32 sMapScreen_Tilemap[]            = INCGFX_U32("graphics/frontier_pass/map_screen.bin", ".smolTM");
+static const u32 sMapAndCard_ZoomedOut_Tilemap[] = INCGFX_U32("graphics/frontier_pass/small_map_and_card.bin", ".smolTM");
 static const u32 sCardBall_Filled_Tilemap[]      = INCBIN_U32("graphics/frontier_pass/card_ball_filled.bin"); // Unused
-static const u32 sBattleRecord_Tilemap[]         = INCBIN_U32("graphics/frontier_pass/record_frame.bin.smolTM");
-static const u32 sMapAndCard_Zooming_Tilemap[]   = INCBIN_U32("graphics/frontier_pass/small_map_and_card_affine.bin.smolTM");
+static const u32 sBattleRecord_Tilemap[]         = INCGFX_U32("graphics/frontier_pass/record_frame.bin", ".smolTM");
+static const u32 sMapAndCard_Zooming_Tilemap[]   = INCGFX_U32("graphics/frontier_pass/small_map_and_card_affine.bin", ".smolTM");
 
 static const s16 sBgAffineCoords[][2] =
 {

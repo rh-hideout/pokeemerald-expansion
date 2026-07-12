@@ -57,15 +57,15 @@ static void CB2_SetUpPartiesAndStartBattle(void)
     StartUnionRoomBattle(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER);
     for (i = 0; i < UNION_ROOM_PARTY_SIZE; i++)
     {
-        gParties[B_TRAINER_1][i] = gParties[B_TRAINER_0][gSelectedOrderFromParty[i] - 1];
+        gParties[B_TRAINER_OPPONENT_A][i] = gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[i] - 1];
     }
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        ZeroMonData(&gParties[B_TRAINER_0][i]);
+        ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     }
     for (i = 0; i < UNION_ROOM_PARTY_SIZE; i++)
     {
-        gParties[B_TRAINER_0][i] = gParties[B_TRAINER_1][i];
+        gParties[B_TRAINER_PLAYER][i] = gParties[B_TRAINER_OPPONENT_A][i];
     }
     IncrementGameStat(GAME_STAT_NUM_UNION_ROOM_BATTLES);
     CalculatePlayerPartyCount();

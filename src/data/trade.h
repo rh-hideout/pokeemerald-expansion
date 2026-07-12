@@ -636,12 +636,12 @@ static const u8 sGbaAffineMapCable[] = INCBIN_U8("graphics/trade/gba_affine_map_
 static const u8 sGbaAffineMapWireless[] = INCBIN_U8("graphics/trade/gba_affine_map_wireless.bin");
 static const u16 sGbaMapWireless[] = INCBIN_U16("graphics/trade/gba_map_wireless.bin");
 static const u16 sGbaMapCable[] = INCBIN_U16("graphics/trade/gba_map_cable.bin");
-static const u32 sWirelessCloseup_Map[] = INCBIN_U32("graphics/trade/crossing_highlight_wireless.bin.smolTM");
+static const u32 sWirelessCloseup_Map[] = INCGFX_U32("graphics/trade/crossing_highlight_wireless.bin", ".smolTM");
 static const u16 sWirelessSignalSend_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_send.pal", ".gbapal");
 static const u16 sWirelessSignalRecv_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_receive.pal", ".gbapal");
 static const u16 sWirelessSignalNone_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_none.pal", ".gbapal");
 static const u32 sWirelessSignal_Gfx[] = INCGFX_U32("graphics/trade/wireless_signal.png", ".4bpp.smol");
-static const u32 sWirelessSignal_Tilemap[] = INCBIN_U32("graphics/trade/wireless_signal.bin.smolTM");
+static const u32 sWirelessSignal_Tilemap[] = INCGFX_U32("graphics/trade/wireless_signal.bin", ".smolTM");
 
 static const struct OamData sOamData_Pokeball =
 {

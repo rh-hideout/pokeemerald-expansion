@@ -23,7 +23,7 @@ ASSUMPTIONS
     ASSUME(gTypesInfo[TYPE_DRAGON].isHiddenPowerType == TRUE);
     ASSUME(gTypesInfo[TYPE_DARK].isHiddenPowerType == TRUE);
     // Any type after Dark shouldn't be part of Hidden Power officially.
-    for (u32 j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
+    for (enum Type j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
         ASSUME(gTypesInfo[j].isHiddenPowerType == FALSE);
     }
 }
@@ -32,7 +32,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 {
     enum Type type, foeType, j;
-    u32 foeSpecies, foeItem;
+    enum Species foeSpecies;
+    enum Item foeItem;
     u32 hp, atk, def, spAtk, spDef, speed;
     bool32 hidden;
 
@@ -126,9 +127,9 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     } SCENE {
         // Only test valid Hidden Power types
         if (hidden) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the item is triggered
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
             HP_BAR(opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the item is triggered
             MESSAGE("It's super effective!");
         }
     }
@@ -156,7 +157,7 @@ SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat 
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 30; } // TYPE_ICE
     PARAMETRIZE { hp = 31; atk = 31; def = 30; spa = 31; spd = 31; spe = 31; } // TYPE_DRAGON
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 31; } // TYPE_DARK
- 
+
     GIVEN {
         WITH_CONFIG(B_HIDDEN_POWER_COUNTER, GEN_3);
         ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE );

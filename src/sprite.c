@@ -15,8 +15,8 @@
 
 #define SET_SPRITE_TILE_RANGE(index, start, count) \
 {                                                  \
-    sSpriteTileRanges[index * 2] = start;          \
-    (sSpriteTileRanges + 1)[index * 2] = count;    \
+    sSpriteTileRanges[index][0] = start;           \
+    sSpriteTileRanges[index][1] = count;           \
 }
 
 #define ALLOC_SPRITE_TILE(n)                             \
@@ -89,6 +89,7 @@ static void ApplyAffineAnimFrame(u8 matrixNum, struct AffineAnimFrameCmd *frameC
 static void AllocSpriteTileRange(u16 tag, u16 start, u16 count);
 static void DoLoadSpritePalette(const u16 *src, u16 paletteOffset);
 static void UpdateSpriteMatrixAnchorPos(struct Sprite *, s32, s32);
+static bool32 AddToOamBuffer(u8 *oamIndex, const struct OamData *oam, bool32 copyToObjWin);
 
 typedef void (*AnimFunc)(struct Sprite *);
 typedef void (*AnimCmdFunc)(struct Sprite *);
@@ -250,7 +251,7 @@ const struct OamDimensions gOamDimensions[3][4] =
 
 // iwram bss
 static u16 sSpriteTileRangeTags[MAX_SPRITES];
-static u16 sSpriteTileRanges[MAX_SPRITES * 2];
+static u16 sSpriteTileRanges[MAX_SPRITES][2];
 static struct AffineAnimState sAffineAnimStates[OAM_MATRIX_COUNT];
 static u16 sSpritePaletteTags[16];
 
@@ -433,8 +434,7 @@ static void SortSprites(u32 *spritePriorities, s32 n)
 u32 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
     u32 spriteId = CreateSpriteUnchecked(template, x, y, subpriority);
-
-    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    fatal_assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
     return spriteId;
 }
 
@@ -450,8 +450,7 @@ u32 CreateSpriteUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u
 u32 CreateSpriteAtEnd(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
     u32 spriteId = CreateSpriteAtEndUnchecked(template, x, y, subpriority);
-
-    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    fatal_assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
     return spriteId;
 }
 
@@ -1512,9 +1511,9 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
 
     if (tileStart < 0)
     {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
         gLoadFail = TRUE;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
         return 0;
     }
     else
@@ -1563,14 +1562,10 @@ void FreeSpriteTilesByTag(u16 tag)
             gSpriteAllocs--;
 #endif
         u16 i;
-        u16 *rangeStarts;
-        u16 *rangeCounts;
         u16 start;
         u16 count;
-        rangeStarts = sSpriteTileRanges;
-        start = rangeStarts[index * 2];
-        rangeCounts = sSpriteTileRanges + 1;
-        count = rangeCounts[index * 2];
+        start = sSpriteTileRanges[index][0];
+        count = sSpriteTileRanges[index][1];
 
         for (i = start; i < start + count; i++)
             FREE_SPRITE_TILE(i);
@@ -1595,7 +1590,7 @@ u16 GetSpriteTileStartByTag(u16 tag)
     u8 index = IndexOfSpriteTileTag(tag);
     if (index == 0xFF)
         return 0xFFFF;
-    return sSpriteTileRanges[index * 2];
+    return sSpriteTileRanges[index][0];
 }
 
 u8 IndexOfSpriteTileTag(u16 tag)
@@ -1615,7 +1610,7 @@ u16 GetSpriteTileTagByTileStart(u16 start)
 
     for (i = 0; i < MAX_SPRITES; i++)
     {
-        if (sSpriteTileRangeTags[i] != TAG_NONE && sSpriteTileRanges[i * 2] == start)
+        if (sSpriteTileRangeTags[i] != TAG_NONE && sSpriteTileRanges[i][0] == start)
             return sSpriteTileRangeTags[i];
     }
 
@@ -1748,37 +1743,23 @@ void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subs
 
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
-    if (*oamIndex >= gOamLimit)
-        return 1;
-
     if (!sprite->subspriteTables || sprite->subspriteMode == SUBSPRITES_OFF)
-    {
-        gMain.oamBuffer[*oamIndex] = sprite->oam;
-        (*oamIndex)++;
-        return 0;
-    }
+        return AddToOamBuffer(oamIndex, &sprite->oam, sprite->copyToObjWin);
     else
-    {
-        return AddSubspritesToOamBuffer(sprite, &gMain.oamBuffer[*oamIndex], oamIndex);
-    }
+        return AddSubspritesToOamBuffer(sprite, oamIndex);
 }
 
-bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex)
+bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     const struct SubspriteTable *subspriteTable;
     struct OamData *oam;
-
-    if (*oamIndex >= gOamLimit)
-        return 1;
 
     subspriteTable = &sprite->subspriteTables[sprite->subspriteTableNum];
     oam = &sprite->oam;
 
     if (!subspriteTable || !subspriteTable->subsprites)
     {
-        *destOam = *oam;
-        (*oamIndex)++;
-        return 0;
+        return AddToOamBuffer(oamIndex, oam, sprite->copyToObjWin);
     }
     else
     {
@@ -1788,8 +1769,6 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         u8 subspriteCount;
         u8 hFlip;
         u8 vFlip;
-        u32 i;
-
         tileNum = oam->tileNum;
         subspriteCount = subspriteTable->subspriteCount;
         hFlip = ((s32)oam->matrixNum >> 3) & 1;
@@ -1797,13 +1776,10 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         baseX = oam->x - sprite->centerToCornerVecX;
         baseY = oam->y - sprite->centerToCornerVecY;
 
-        for (i = 0; i < subspriteCount; i++, (*oamIndex)++)
+        for (u32 i = 0; i < subspriteCount; i++)
         {
             u16 x;
             u16 y;
-
-            if (*oamIndex >= gOamLimit)
-                return 1;
 
             x = subspriteTable->subsprites[i].x;
             y = subspriteTable->subsprites[i].y;
@@ -1826,19 +1802,43 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
                 y = ~y + 1;
             }
 
-            destOam[i] = *oam;
-            destOam[i].shape = subspriteTable->subsprites[i].shape;
-            destOam[i].size = subspriteTable->subsprites[i].size;
-            destOam[i].x = (s16)baseX + (s16)x;
-            destOam[i].y = baseY + y;
-            destOam[i].tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
+            struct OamData subspriteOam = *oam;
+            subspriteOam.shape = subspriteTable->subsprites[i].shape;
+            subspriteOam.size = subspriteTable->subsprites[i].size;
+            subspriteOam.x = (s16)baseX + (s16)x;
+            subspriteOam.y = baseY + y;
+            subspriteOam.tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
 
             if (sprite->subspriteMode < SUBSPRITES_IGNORE_PRIORITY)
-                destOam[i].priority = subspriteTable->subsprites[i].priority;
+                subspriteOam.priority = subspriteTable->subsprites[i].priority;
+
+            if (AddToOamBuffer(oamIndex, &subspriteOam, sprite->copyToObjWin))
+                return TRUE;
         }
+
     }
 
-    return 0;
+    return FALSE;
+}
+
+static bool32 AddToOamBuffer(u8 *oamIndex, const struct OamData *oam, bool32 copyToObjWin)
+{
+    if (*oamIndex >= gOamLimit)
+        return TRUE;
+
+    gMain.oamBuffer[*oamIndex] = *oam;
+    (*oamIndex)++;
+
+    if (copyToObjWin)
+    {
+        if (*oamIndex >= gOamLimit)
+            return TRUE;
+        gMain.oamBuffer[*oamIndex] = *oam;
+        gMain.oamBuffer[*oamIndex].objMode = ST_OAM_OBJ_WINDOW;
+        (*oamIndex)++;
+    }
+
+    return FALSE;
 }
 
 static const u8 sSpanPerImage[4][4] =
@@ -1993,6 +1993,16 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
         u32 srcMask;
         u32 dstMask;
         u32 currSpriteId = spriteId;
+
+        //  Handle switching sprites along X-axis
+        if (currStart > 0 && (currStart & widthMask) == 0)
+        {
+            spriteId = gSprites[spriteId].nextX;
+            tiles = (u32 *)((OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP);
+            if (!isColor)
+                src = GetSrcPtrFromSprite(&gSprites[spriteId]);
+        }
+
         if (currStart % PIXELS_PER_TILE == 0 && remainingWidth >= PIXELS_PER_TILE)
         {
             //  Full tile width, nothing special
@@ -2086,14 +2096,6 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
 
         remainingWidth -= currWidth;
         currStart += currWidth;
-        //  Handle switching sprites along X-axis
-        if (currStart > 0 && (currStart & widthMask) == 0)
-        {
-            spriteId = gSprites[spriteId].nextX;
-            tiles = (u32 *)((OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP);
-            if (!isColor)
-                src = GetSrcPtrFromSprite(&gSprites[spriteId]);
-        }
     }
     return;
 }

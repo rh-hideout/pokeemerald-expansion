@@ -236,9 +236,9 @@
 
 struct BattleMsgData
 {
-    u16 currentMove;
-    u16 originallyUsedMove;
-    u16 lastItem;
+    enum Move currentMove;
+    enum Move originallyUsedMove;
+    enum Item lastItem;
     enum Ability lastAbility;
     u8 scrActive;
     u8 bakScriptPartyIdx;
@@ -282,6 +282,7 @@ extern const u8 gText_MoveInterfacePpType[];
 extern const u8 gText_MoveInterfaceDynamicColors[];
 extern const u8 gText_WhichMoveToForget4[];
 extern const u8 gText_BattleYesNoChoice[];
+extern const u8 gText_BattleCatchOrNot[];
 extern const u8 gText_BattleSwitchWhich[];
 extern const u8 gText_BattleSwitchWhich2[];
 extern const u8 gText_BattleSwitchWhich3[];

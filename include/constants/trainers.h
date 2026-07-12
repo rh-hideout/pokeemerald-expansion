@@ -7,10 +7,10 @@
 // Special Trainer Ids.
 //      0-299 are frontier trainers
 #define TRAINER_RECORD_MIXING_FRIEND        FRONTIER_TRAINERS_COUNT
-#define TRAINER_RECORD_MIXING_APPRENTICE    FRONTIER_TRAINERS_COUNT + 1
-#define TRAINER_EREADER                     TRAINER_RECORD_MIXING_APPRENTICE + APPRENTICE_COUNT
-#define TRAINER_FRONTIER_BRAIN              TRAINER_EREADER + 1
-#define TRAINER_PLAYER                      TRAINER_EREADER + 2
+#define TRAINER_RECORD_MIXING_APPRENTICE    (TRAINER_RECORD_MIXING_FRIEND + BATTLE_TOWER_RECORD_COUNT)
+#define TRAINER_EREADER                     (TRAINER_RECORD_MIXING_APPRENTICE + APPRENTICE_COUNT)
+#define TRAINER_FRONTIER_BRAIN              (TRAINER_EREADER + 1)
+#define TRAINER_PLAYER                      (TRAINER_EREADER + 2)
 //Above are used only in Battle Frontier and shouldn't interfere with regular trainers
 //Below could interfere with regular trainer if the trainer count get that high
 #define TRAINER_SECRET_BASE                 0xFF00

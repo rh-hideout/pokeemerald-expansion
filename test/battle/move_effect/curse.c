@@ -26,6 +26,7 @@ SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when u
 SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 {
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
         PLAYER(SPECIES_MISDREAVUS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -40,7 +41,7 @@ SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
 {
     enum Ability ability;
-    u32 species;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
@@ -97,4 +98,21 @@ SINGLE_BATTLE_TEST("Curse lowering stats is not prevented by Mist")
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Cursed status");
+SINGLE_BATTLE_TEST("Baton Pass passes Cursed status")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_MISDREAVUS);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CURSE); MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        s32 playerMaxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+        HP_BAR(player, damage: playerMaxHP / 4);
+    }
+}

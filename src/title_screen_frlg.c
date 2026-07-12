@@ -362,12 +362,12 @@ static const u16 sStreakYPositions[] = {
 };
 #endif
 
-static const u32 sUnused_Tilemap1[] = INCBIN_U32("graphics/title_screen_frlg/unused1.bin.smolTM");
-static const u32 sUnused_Tilemap2[] = INCBIN_U32("graphics/title_screen_frlg/unused2.bin.smolTM");
-static const u32 sUnused_Tilemap3[] = INCBIN_U32("graphics/title_screen_frlg/unused3.bin.smolTM");
-static const u32 sUnused_Tilemap4[] = INCBIN_U32("graphics/title_screen_frlg/unused4.bin.smolTM");
-static const u32 sUnused_Tilemap5[] = INCBIN_U32("graphics/title_screen_frlg/unused5.bin.smolTM");
-static const u32 sUnused_Tilemap6[] = INCBIN_U32("graphics/title_screen_frlg/unused6.bin.smolTM");
+static const u32 sUnused_Tilemap1[] = INCGFX_U32("graphics/title_screen_frlg/unused1.bin", ".smolTM");
+static const u32 sUnused_Tilemap2[] = INCGFX_U32("graphics/title_screen_frlg/unused2.bin", ".smolTM");
+static const u32 sUnused_Tilemap3[] = INCGFX_U32("graphics/title_screen_frlg/unused3.bin", ".smolTM");
+static const u32 sUnused_Tilemap4[] = INCGFX_U32("graphics/title_screen_frlg/unused4.bin", ".smolTM");
+static const u32 sUnused_Tilemap5[] = INCGFX_U32("graphics/title_screen_frlg/unused5.bin", ".smolTM");
+static const u32 sUnused_Tilemap6[] = INCGFX_U32("graphics/title_screen_frlg/unused6.bin", ".smolTM");
 
 static const u32 *const sUnused_Tilemaps[] = {
     sUnused_Tilemap1,

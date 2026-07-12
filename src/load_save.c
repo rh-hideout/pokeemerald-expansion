@@ -170,29 +170,29 @@ void ClearContinueGameWarpStatus2(void)
 void SavePlayerParty(void)
 {
     int i;
-    *GetSavedPlayerPartyCount() = gPartiesCount[B_TRAINER_0];
+    *GetSavedPlayerPartyCount() = gPartiesCount[B_TRAINER_PLAYER];
 
     for (i = 0; i < PARTY_SIZE; i++)
-        SavePlayerPartyMon(i, &gParties[B_TRAINER_0][i]);
+        SavePlayerPartyMon(i, &gParties[B_TRAINER_PLAYER][i]);
 }
 
 void LoadPlayerParty(void)
 {
     int i;
 
-    gPartiesCount[B_TRAINER_0] = *GetSavedPlayerPartyCount();
+    gPartiesCount[B_TRAINER_PLAYER] = *GetSavedPlayerPartyCount();
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u32 data;
-        gParties[B_TRAINER_0][i] = *GetSavedPlayerPartyMon(i);
+        gParties[B_TRAINER_PLAYER][i] = *GetSavedPlayerPartyMon(i);
 
         // TODO: Turn this into a save migration once those are available.
         // At which point we can remove hp and status from Pokemon entirely.
-        data = gParties[B_TRAINER_0][i].maxHP - gParties[B_TRAINER_0][i].hp;
-        SetBoxMonData(&gParties[B_TRAINER_0][i].box, MON_DATA_HP_LOST, &data);
-        data = gParties[B_TRAINER_0][i].status;
-        SetBoxMonData(&gParties[B_TRAINER_0][i].box, MON_DATA_STATUS, &data);
+        data = gParties[B_TRAINER_PLAYER][i].maxHP - gParties[B_TRAINER_PLAYER][i].hp;
+        SetBoxMonData(&gParties[B_TRAINER_PLAYER][i].box, MON_DATA_HP_LOST, &data);
+        data = gParties[B_TRAINER_PLAYER][i].status;
+        SetBoxMonData(&gParties[B_TRAINER_PLAYER][i].box, MON_DATA_STATUS, &data);
     }
 }
 

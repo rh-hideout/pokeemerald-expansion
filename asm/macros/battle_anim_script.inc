@@ -488,7 +488,7 @@
 	createsprite gHyperBeamOrbSpriteTemplate, \anim_battler, \subpriority_offset
 	.endm
 
-	.macro createleechseedsprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
+	.macro create_leech_seed_sprite anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
 	createsprite gLeechSeedSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration, \wave_amplitude
 	.endm
 
@@ -600,8 +600,12 @@
 	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \initPosition, 1
 	.endm
 
-	.macro create_tall_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, initPosition=ANIM_TARGET
+	.macro create_narrow_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, initPosition=ANIM_TARGET
 	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \initPosition, 2
+	.endm
+
+	.macro create_electric_puff_sprite anim_battler:req, subpriority_offset:req, relative_to:req, x:req, y:req
+	createsprite gElectricPuffSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to, \x, \y
 	.endm
 
 @ createvisualtask wrappers
@@ -671,4 +675,119 @@
 
 	.macro create_surf_wave priority=2, palette:req
 	createvisualtask AnimTask_CreateSurfWave, \priority, \palette
+	.endm
+
+@ Common Steps
+	.macro create_powder_particles sound_effect=SE_M_POISON_POWDER, anim_battler:req, sprite:req
+	loopsewithpan \sound_effect, SOUND_PAN_TARGET, 10, 6
+	\sprite \anim_battler, 2, x=-30, y=-22, duration=117, y_velocity=80/256, wave_amplitude=5, wave_speed=1
+	\sprite \anim_battler, 2, x=10, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	\sprite \anim_battler, 2, x=-25, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=3
+	delay 15
+	\sprite \anim_battler, 2, x=-5, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	\sprite \anim_battler, 2, x=5, y=-22, duration=117, y_velocity=96/256, wave_amplitude=5, wave_speed=1
+	\sprite \anim_battler, 2, x=0, y=-22, duration=117, y_velocity=69/256, wave_amplitude=-5, wave_speed=1
+	\sprite \anim_battler, 2, x=-15, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=2
+	delay 30
+	\sprite \anim_battler, 2, x=-15, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=2
+	\sprite \anim_battler, 2, x=15, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	\sprite \anim_battler, 2, x=-10, y=-22, duration=117, y_velocity=96/256, wave_amplitude=7, wave_speed=2
+	\sprite \anim_battler, 2, x=-5, y=-22, duration=117, y_velocity=90/256, wave_amplitude=-8, wave_speed=0
+	delay 20
+	\sprite \anim_battler, 2, x=-10, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
+	\sprite \anim_battler, 2, x=0, y=-22, duration=117, y_velocity=89/256, wave_amplitude=5, wave_speed=2
+	\sprite \anim_battler, 2, x=20, y=-22, duration=117, y_velocity=112/256, wave_amplitude=-8, wave_speed=2
+	\sprite \anim_battler, 2, x=5, y=-22, duration=117, y_velocity=80/256, wave_amplitude=5, wave_speed=1
+	waitforvisualfinish
+	.endm
+
+	.macro create_particle_ring sprite:req, anim_battler:req
+	createsprite \sprite, \anim_battler, 2, 26, 0
+	createsprite \sprite, \anim_battler, 2, 26, 42
+	createsprite \sprite, \anim_battler, 2, 26, 84
+	createsprite \sprite, \anim_battler, 2, 26, 126
+	createsprite \sprite, \anim_battler, 2, 26, 168
+	createsprite \sprite, \anim_battler, 2, 26, 210
+	.endm
+
+	.macro create_scattered_particle_ring sprite:req, anim_battler:req
+	createsprite \sprite, \anim_battler, 2, 0
+	createsprite \sprite, \anim_battler, 2, 32
+	createsprite \sprite, \anim_battler, 2, 64
+	createsprite \sprite, \anim_battler, 2, 96
+	createsprite \sprite, \anim_battler, 2, 128
+	createsprite \sprite, \anim_battler, 2, 160
+	createsprite \sprite, \anim_battler, 2, 192
+	createsprite \sprite, \anim_battler, 2, 224
+	.endm
+
+	.macro create_flying_sand_crescents anim_battler:req, unknown:req
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 10, 2304, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 90, 2048, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 50, 2560, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 20, 2304, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 70, 1984, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 0, 2816, 96, \unknown
+	delay 10
+	createsprite gFlyingSandCrescentSpriteTemplate, \anim_battler, 40, 60, 2560, 96, \unknown
+	.endm
+
+	.macro create_overheat_flames anim_battler:req, y:req
+	create_overheat_flame_sprite \anim_battler, 2, speed=1, unk1=0, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 2, speed=1, unk1=32, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 2, speed=1, unk1=64, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 2, speed=1, unk1=96, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 2, speed=1, unk1=128, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 66, speed=1, unk1=160, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 66, speed=1, unk1=192, unk2=30, duration=25, y=\y
+	create_overheat_flame_sprite \anim_battler, 66, speed=1, unk1=224, unk2=30, duration=25, y=\y
+	.endm
+
+	.macro create_syrup_bomb_projectile anim_battler:req, sprite:req
+	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
+	createsprite \sprite, \anim_battler, 2, 20, 0, 40, 0
+	delay 3
+	.endm
+
+	.macro create_syrup_bomb anim_battler:req, projectile_sprite:req, blend_color:req, shell_sprite:req, particle_sprite:req
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	create_syrup_bomb_projectile anim_battler=\anim_battler, sprite=\projectile_sprite
+	createvisualtask AnimTask_ShakeMon2, 5, \anim_battler, 3, 0, 15, 1
+	blend_color_cycle selector=F_PAL_TARGET, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=12, color=\blend_color
+	createsprite \particle_sprite, \anim_battler, 2, 42, 27, 20
+	createsprite \particle_sprite, \anim_battler, 2, -27, 44, 20
+	createsprite \particle_sprite, \anim_battler, 2, 39, -28, 20
+	createsprite \particle_sprite, \anim_battler, 2, -42, -42, 20
+	playsewithpan SE_M_DIG, SOUND_PAN_TARGET
+	delay 5
+	createsprite \shell_sprite, \anim_battler, 1, \anim_battler, 100
+	createsprite \particle_sprite, \anim_battler, 2, 0, 40, 20
+	createsprite \particle_sprite, \anim_battler, 2, -8, -44, 20
+	createsprite \particle_sprite, \anim_battler, 2, -46, -28, 20
+	createsprite \particle_sprite, \anim_battler, 2, 46, 9, 20
+	playsewithpan SE_M_DIG, SOUND_PAN_TARGET
+	delay 5
+	waitsound
+	waitforvisualfinish
+	.endm
+
+	.macro create_syrup_bomb_speed_drop anim_battler:req, blend_color:req, sprite:req
+	loopsewithpan SE_M_TOXIC, SOUND_PAN_TARGET, 13, 6
+	createvisualtask AnimTask_ShakeMon2, 5, \anim_battler, 3, 0, 15, 1
+	blend_color_cycle selector=F_PAL_TARGET, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=12, color=\blend_color
+	createsprite \sprite, \anim_battler, 1, \anim_battler, 60
+	waitforvisualfinish
 	.endm

@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Hail damage does not affect Ice-type Pokémon")
 
 SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active")
 {
-    u32 species;
+    enum Species species;
     enum Item item;
 
     PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }

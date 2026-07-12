@@ -11,7 +11,6 @@ extern const s32 gPowersOfTen[];
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *));
 void StoreWordInTwoHalfwords(u16 *h, u32 w);
 void LoadWordFromTwoHalfwords(u16 *h, u32 *w);
-int CountTrailingZeroBits(u32 value);
 u16 CalcCRC16(const u8 *data, s32 length);
 u16 CalcCRC16WithTable(const u8 *data, u32 length);
 u32 CalcByteArraySum(const u8 *data, u32 length);

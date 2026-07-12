@@ -106,7 +106,7 @@ TO_DO_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect");
 
 AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_DRATINI; }
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
 

@@ -18,6 +18,7 @@
 #include "constants/apricorn_tree.h"
 #include "constants/berry.h"
 #include "constants/maps.h"
+#include "constants/mass_outbreak.h"
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"

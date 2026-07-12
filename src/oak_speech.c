@@ -123,9 +123,9 @@ extern const struct OamData gOamData_AffineOff_ObjNormal_16x8;
 
 static const u16 sOakSpeech_Background_Pals[] = INCGFX_U16("graphics/oak_speech/bg_tiles.png", ".gbapal"); // Shared by the Controls Guide, Pikachu Intro and Oak Speech scenes
 static const u32 sControlsGuide_PikachuIntro_Background_Tiles[] = INCGFX_U32("graphics/oak_speech/bg_tiles.png", ".4bpp.smol");
-static const u32 sPikachuIntro_Background_Tilemap[] = INCBIN_U32("graphics/oak_speech/pikachu_intro/tilemap.bin.smolTM");
+static const u32 sPikachuIntro_Background_Tilemap[] = INCGFX_U32("graphics/oak_speech/pikachu_intro/tilemap.bin", ".smolTM");
 static const u32 sOakSpeech_Background_Tiles[] = INCGFX_U32("graphics/oak_speech/oak_speech_bg.png", ".4bpp.smol");
-static const u32 sOakSpeech_Background_Tilemap[] = INCBIN_U32("graphics/oak_speech/oak_speech_bg.bin.smolTM");
+static const u32 sOakSpeech_Background_Tilemap[] = INCGFX_U32("graphics/oak_speech/oak_speech_bg.bin", ".smolTM");
 static const u16 sControlsGuide_Tilemap_Page2[] = INCBIN_U16("graphics/oak_speech/controls_guide_page_2.bin");
 static const u16 sControlsGuide_Tilemap_Page3[] = INCBIN_U16("graphics/oak_speech/controls_guide_page_3.bin");
 static const u16 sOakSpeech_Leaf_Pal[] = INCGFX_U16("graphics/oak_speech/leaf/pal.pal", ".gbapal");

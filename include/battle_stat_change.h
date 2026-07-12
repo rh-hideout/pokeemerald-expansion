@@ -30,7 +30,7 @@ struct StatChange
     u32 padding:19;
 };
 
-extern u32 const sAccurateStatOrder[NUM_BATTLE_STATS];
+extern enum Stat const sAccurateStatOrder[NUM_BATTLE_STATS];
 
 bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
 bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st);
@@ -39,11 +39,9 @@ void SetStatChange(enum BattlerId battler, enum Stat stat, s32 stage);
 void SetStatChange2(enum BattlerId battler, enum Stat stat, s32 stage);
 void ClearStatChangeValues(void);
 void ClearOtherStatChangeValues(enum BattlerId battler);
-enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct StatChange *st);
+void ClearBothStatChangeQueues(void);
 
-u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect);
-
-enum MoveResult DoStatChangeResolution(struct BattleCalcValues *cv);
+u32 GetStatStage(enum Stat stat, const struct AdditionalEffect *additionalEffect);
 
 bool32 CanStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 bool32 IsStatChangeStatusMove(enum Move move, bool32 (*isStatChange)(const struct AdditionalEffect *effect));

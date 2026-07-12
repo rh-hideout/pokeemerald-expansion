@@ -28,6 +28,7 @@
 #include "intro_frlg.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
+#include "pokemon.h"
 
 /*
     The intro is grouped into the following scenes
@@ -186,17 +187,17 @@ static const u16 sIntroDrops_Pal[]            = INCGFX_U16("graphics/intro/scene
 static const u16 sIntroLogo_Pal[]             = INCGFX_U16("graphics/intro/scene_1/logo.pal", ".gbapal");
 static const u32 sIntroDropsLogo_Gfx[]        = INCGFX_U32("graphics/intro/scene_1/drops_logo.png", ".4bpp.smol");
 static const u16 sIntro1Bg_Pal[]              = INCGFX_U16("graphics/intro/scene_1/bg.png", ".gbapal"); // 16 x 16
-static const u32 sIntro1Bg0_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg0_map.bin.smolTM");
-static const u32 sIntro1Bg1_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg1_map.bin.smolTM");
-static const u32 sIntro1Bg2_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg2_map.bin.smolTM");
-static const u32 sIntro1Bg3_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg3_map.bin.smolTM");
+static const u32 sIntro1Bg0_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg0_map.bin", ".smolTM");
+static const u32 sIntro1Bg1_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg1_map.bin", ".smolTM");
+static const u32 sIntro1Bg2_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg2_map.bin", ".smolTM");
+static const u32 sIntro1Bg3_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg3_map.bin", ".smolTM");
 static const u32 sIntro1Bg_Gfx[]              = INCGFX_U32("graphics/intro/scene_1/bg.png", ".4bpp.smol");
 static const u16 sIntroPokeball_Pal[]         = INCGFX_U16("graphics/intro/scene_3/pokeball.png", ".gbapal");
-static const u32 sIntroPokeball_Tilemap[]     = INCBIN_U32("graphics/intro/scene_3/pokeball_map.bin.smolTM");
+static const u32 sIntroPokeball_Tilemap[]     = INCGFX_U32("graphics/intro/scene_3/pokeball_map.bin", ".smolTM");
 static const u32 sIntroPokeball_Gfx[]         = INCGFX_U32("graphics/intro/scene_3/pokeball.png", ".8bpp.smol");
 static const u16 sIntroStreaks_Pal[]          = INCGFX_U16("graphics/intro/scene_3/streaks.png", ".gbapal"); // Unused
 static const u32 sIntroStreaks_Gfx[]          = INCGFX_U32("graphics/intro/scene_3/streaks.png", ".4bpp.smol"); // Unused
-static const u32 sIntroStreaks_Tilemap[]      = INCBIN_U32("graphics/intro/scene_3/streaks_map.bin.smolTM"); // Unused
+static const u32 sIntroStreaks_Tilemap[]      = INCGFX_U32("graphics/intro/scene_3/streaks_map.bin", ".smolTM"); // Unused
 static const u16 sIntroRayquzaOrb_Pal[]       = INCGFX_U16("graphics/intro/scene_3/rayquaza_orb.pal", ".gbapal");
 static const u16 sIntroMisc_Pal[]             = INCGFX_U16("graphics/intro/scene_3/misc.pal", ".gbapal"); // Unused
 static const u32 sIntroMisc_Gfx[]             = INCGFX_U32("graphics/intro/scene_3/misc.png", ".4bpp.smol"); // Rayquza orb, and misc unused gfx
@@ -1925,7 +1926,8 @@ static void Task_Scene3_Groudon(u8 taskId)
             tScreenX = 80;
             tScreenY = 41;
             tDelay = 16;
-            PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+            if (IsSpeciesEnabled(SPECIES_GROUDON))
+                PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             tState++;
         }
         break;
@@ -2127,7 +2129,8 @@ static void Task_Scene3_Kyogre(u8 taskId)
             {
                 tDelay = 1;
                 tState++;
-                PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+                if (IsSpeciesEnabled(SPECIES_KYOGRE))
+                    PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             }
         }
         break;

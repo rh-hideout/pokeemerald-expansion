@@ -672,7 +672,7 @@ void StartDodrioBerryPicking(u16 partyId, MainCallback exitCallback)
         sGame->exitCallback = exitCallback;
         sGame->multiplayerId = GetMultiplayerId();
         sGame->player = sGame->players[sGame->multiplayerId];
-        InitMonInfo(&sGame->monInfo[sGame->multiplayerId], &gParties[B_TRAINER_0][partyId]);
+        InitMonInfo(&sGame->monInfo[sGame->multiplayerId], &gParties[B_TRAINER_PLAYER][partyId]);
         CreateTask(Task_StartDodrioGame, 1);
         SetMainCallback2(CB2_DodrioGame);
         SetRandomPrize();
@@ -2911,8 +2911,8 @@ void IsDodrioInParty(void)
     int i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_HAS_SPECIES)
-            && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_DODRIO)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_HAS_SPECIES)
+            && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_DODRIO)
         {
             gSpecialVar_Result = TRUE;
             return;
@@ -3608,9 +3608,9 @@ static const u32 sTreeBorder_Gfx[]          = INCGFX_U32("graphics/dodrio_berry_
 static const u32 sStatus_Gfx[]              = INCGFX_U32("graphics/dodrio_berry_picking/status.png", ".4bpp.smol");
 static const u32 sCloud_Gfx[]               = INCGFX_U32("graphics/dodrio_berry_picking/cloud.png", ".4bpp.smol");
 static const u32 sDodrio_Gfx[]              = INCGFX_U32("graphics/dodrio_berry_picking/dodrio.png", ".4bpp.smol");
-static const u32 sBg_Tilemap[]              = INCBIN_U32("graphics/dodrio_berry_picking/bg.bin.smolTM");
-static const u32 sTreeBorderRight_Tilemap[] = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_right.bin.smolTM");
-static const u32 sTreeBorderLeft_Tilemap[]  = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_left.bin.smolTM");
+static const u32 sBg_Tilemap[]              = INCGFX_U32("graphics/dodrio_berry_picking/bg.bin", ".smolTM");
+static const u32 sTreeBorderRight_Tilemap[] = INCGFX_U32("graphics/dodrio_berry_picking/tree_border_right.bin", ".smolTM");
+static const u32 sTreeBorderLeft_Tilemap[]  = INCGFX_U32("graphics/dodrio_berry_picking/tree_border_left.bin", ".smolTM");
 
 static const struct OamData sOamData_Dodrio =
 {
@@ -4480,11 +4480,6 @@ static void InitGameGfx(struct DodrioGame_Gfx *ptr)
     sGfx->playAgainState = PLAY_AGAIN_NONE;
     sGfx->taskId = CreateTask(Task_TryRunGfxFunc, 3);
     SetGfxFunc(LoadGfx);
-}
-
-static void UNUSED FreeAllWindowBuffers_(void)
-{
-    FreeAllWindowBuffers();
 }
 
 // Data used by functions below.

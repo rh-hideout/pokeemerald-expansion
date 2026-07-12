@@ -95,7 +95,6 @@
 	.macro choose_mons
 	fadescreen 1
 	special ChooseHalfPartyForBattle @ choose 3 mons for battle
-	waitstate
 	.endm
 
 	.macro multi_do type:req
@@ -106,14 +105,13 @@
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
 	special CallFrontierUtilFunc @ saves the mon order, so the non-selected mons get restored afterwards
-	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	goto_if_eq VAR_RESULT, TRUE, 2f
 	setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
 	goto 3f
 	2:
 	setvar VAR_0x8005, \type 
 	3:
-	special DoSpecialTrainerBattle
+	callnative BattleSetup_StartMultiBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
 	special CallFrontierUtilFunc
@@ -140,9 +138,8 @@
 	.endm
 
 	.macro multi_do_fixed type:req
-	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	setvar VAR_0x8005, \type
-	special DoSpecialTrainerBattle
+	callnative BattleSetup_StartMultiBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
 	special CallFrontierUtilFunc

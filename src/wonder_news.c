@@ -13,7 +13,7 @@
 // must take 500 steps before any more rewards can be received.
 #define MAX_REWARD 5
 
-static u32 GetRewardItem(struct WonderNewsMetadata *);
+static enum Item GetRewardItem(struct WonderNewsMetadata *);
 static u32 GetRewardType(struct WonderNewsMetadata *);
 static void IncrementRewardCounter(struct WonderNewsMetadata *);
 static void IncrementSentRewardCounter(struct WonderNewsMetadata *);
@@ -52,22 +52,6 @@ void WonderNews_Reset(void)
 }
 
 // Only used in FRLG
-void WonderNews_IncrementStepCounter(void)
-{
-    u16 *stepCounter = GetVarPointer(VAR_WONDER_NEWS_STEP_COUNTER);
-    struct WonderNewsMetadata *data = GetSavedWonderNewsMetadata();
-
-    // If the player has reached the reward limit, start counting steps.
-    // When they reach 500 steps reset the reward counter to allow them to
-    // receive rewards again.
-    if (data->rewardCounter >= MAX_REWARD && ++(*stepCounter) >= 500)
-    {
-        data->rewardCounter = 0;
-        *stepCounter = 0;
-    }
-}
-
-// Only used in FRLG
 u16 WonderNews_GetRewardInfo(void)
 {
     u16 *result = &gSpecialVar_Result;
@@ -103,7 +87,7 @@ u16 WonderNews_GetRewardInfo(void)
     return rewardType;
 }
 
-static u32 GetRewardItem(struct WonderNewsMetadata *data)
+static enum Item GetRewardItem(struct WonderNewsMetadata *data)
 {
     enum Item itemId;
     data->newsType = WONDER_NEWS_NONE;

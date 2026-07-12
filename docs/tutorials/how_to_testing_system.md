@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_0]`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_PLAYER]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 
@@ -288,7 +288,7 @@ For example to create a level 42 Wobbuffet that is poisoned:
 ### `PARTNER`, `OPPONENT_A`, and `OPPONENT_B`
 For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used.
 `PLAYER(species)`, `PARTNER(species)`, `OPPONENT_A(species)`, and `OPPONENT_B(species)`
-Adds the species to the player's (`B_TRAINER_0`), player partner's (`B_TRAINER_2`), opponent A's (`B_TRAINER_1`), or opponent B's (`B_TRAINER_3`), party, respectively.
+Adds the species to the player's (`B_TRAINER_PLAYER`), player partner's (`B_TRAINER_PARTNER`), opponent A's (`B_TRAINER_OPPONENT_A`), or opponent B's (`B_TRAINER_OPPONENT_B`), party, respectively.
 Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
 The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
 For `ONE_VS_TWO` tests, `PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `OPPONENT_A(species)` must be used for all opponent-side Pokémon.

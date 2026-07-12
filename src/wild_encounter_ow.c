@@ -10,6 +10,7 @@
 #include "field_effect.h"
 #include "field_player_avatar.h"
 #include "follower_npc.h"
+#include "mass_outbreak.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
@@ -144,12 +145,12 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y);
 static bool32 OWE_DoesOWERoamerExist(void);
 static bool32 StartWildBattleWithOWE_CheckRoamer(enum CategoryOWE category);
 static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId);
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId);
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level);
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId);
 static bool32 CheckCurrentWildMonHeaderForOWE(bool32 shouldSpawnWaterMons);
 static u32 GetOldestActiveOWESlot(bool32 forceRemove);
 static u32 GetNextOWESpawnSlot(void);
-static u32 GetSpeciesByOWESpawnSlot(u32 spawnSlot);
+static enum Species GetSpeciesByOWESpawnSlot(u32 spawnSlot);
 static bool32 TrySelectTileForOWE(s32* outX, s32* outY);
 static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y);
 static u32 GetGraphicsIdForOWE(const struct InfoOWE *info);
@@ -393,14 +394,14 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
 
     ZeroEnemyPartyMons();
     personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_1][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gParties[B_TRAINER_1][0]);
-    SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_IS_SHINY, &shiny);
+    CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY, &shiny);
     
     if (StartWildBattleWithOWE_CheckBattleFrontier(headerId))
         return;
     
-    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId))
+    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId, level))
         return;
 
     if (StartWildBattleWithOWE_CheckDoubleBattle(owe, headerId))
@@ -419,387 +420,8 @@ void SetOverworldObjectSpecies(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1);
     Script_RequestWriteVar(varId);
 
-    switch (object->graphicsId)
-    {
-    case OBJ_EVENT_GFX_RAYQUAZA_STILL:
-    case OBJ_EVENT_GFX_RAYQUAZA:
-        speciesId = SPECIES_RAYQUAZA;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_NATU_DOLL:
-        speciesId = SPECIES_NATU;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_SQUIRTLE_DOLL:
-        speciesId = SPECIES_SQUIRTLE;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_WOOPER_DOLL:
-        speciesId = SPECIES_WOOPER;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_PIKACHU_DOLL:
-    case OBJ_EVENT_GFX_PIKACHU_DOLL:
-    case OBJ_EVENT_GFX_PIKACHU:
-    case OBJ_EVENT_GFX_PIKACHU_FRLG:
-        speciesId = SPECIES_PIKACHU;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_MAGNEMITE_DOLL:
-        speciesId = SPECIES_MAGNEMITE;
-        break;
-
-    case OBJ_EVENT_GFX_UNUSED_PORYGON2_DOLL:
-        speciesId = SPECIES_PORYGON2;
-        break;
-
-    case OBJ_EVENT_GFX_VIGOROTH_CARRYING_BOX:
-    case OBJ_EVENT_GFX_VIGOROTH_FACING_AWAY:
-        speciesId = SPECIES_VIGOROTH;
-        break;
-
-    case OBJ_EVENT_GFX_ZIGZAGOON_1:
-    case OBJ_EVENT_GFX_ZIGZAGOON_2:
-        speciesId = SPECIES_ZIGZAGOON;
-        break;
-
-    case OBJ_EVENT_GFX_PICHU_DOLL:
-        speciesId = SPECIES_PICHU;
-        break;
-
-    case OBJ_EVENT_GFX_MARILL_DOLL:
-        speciesId = SPECIES_MARILL;
-        break;
-
-    case OBJ_EVENT_GFX_TOGEPI_DOLL:
-        speciesId = SPECIES_TOGEPI;
-        break;
-
-    case OBJ_EVENT_GFX_CYNDAQUIL_DOLL:
-        speciesId = SPECIES_CYNDAQUIL;
-        break;
-
-    case OBJ_EVENT_GFX_CHIKORITA_DOLL:
-        speciesId = SPECIES_CHIKORITA;
-        break;
-
-    case OBJ_EVENT_GFX_TOTODILE_DOLL:
-        speciesId = SPECIES_TOTODILE;
-        break;
-
-    case OBJ_EVENT_GFX_JIGGLYPUFF_DOLL:
-    case OBJ_EVENT_GFX_JIGGLYPUFF:
-        speciesId = SPECIES_JIGGLYPUFF;
-        break;
-
-    case OBJ_EVENT_GFX_MEOWTH_DOLL:
-    case OBJ_EVENT_GFX_MEOWTH:
-        speciesId = SPECIES_MEOWTH;
-        break;
-
-    case OBJ_EVENT_GFX_CLEFAIRY_DOLL:
-    case OBJ_EVENT_GFX_CLEFAIRY:
-        speciesId = SPECIES_CLEFAIRY;
-        break;
-
-    case OBJ_EVENT_GFX_DITTO_DOLL:
-        speciesId = SPECIES_DITTO;
-        break;
-
-    case OBJ_EVENT_GFX_SMOOCHUM_DOLL:
-        speciesId = SPECIES_SMOOCHUM;
-        break;
-
-    case OBJ_EVENT_GFX_TREECKO_DOLL:
-        speciesId = SPECIES_TREECKO;
-        break;
-
-    case OBJ_EVENT_GFX_TORCHIC_DOLL:
-        speciesId = SPECIES_TORCHIC;
-        break;
-
-    case OBJ_EVENT_GFX_MUDKIP_DOLL:
-        speciesId = SPECIES_MUDKIP;
-        break;
-
-    case OBJ_EVENT_GFX_DUSKULL_DOLL:
-        speciesId = SPECIES_DUSKULL;
-        break;
-
-    case OBJ_EVENT_GFX_WYNAUT_DOLL:
-        speciesId = SPECIES_WYNAUT;
-        break;
-
-    case OBJ_EVENT_GFX_BALTOY_DOLL:
-        speciesId = SPECIES_BALTOY;
-        break;
-
-    case OBJ_EVENT_GFX_KECLEON_DOLL:
-    case OBJ_EVENT_GFX_KECLEON:
-    case OBJ_EVENT_GFX_KECLEON_BRIDGE_SHADOW:
-        speciesId = SPECIES_KECLEON;
-        break;
-
-    case OBJ_EVENT_GFX_AZURILL_DOLL:
-    case OBJ_EVENT_GFX_AZURILL:
-        speciesId = SPECIES_AZURILL;
-        break;
-
-    case OBJ_EVENT_GFX_SKITTY_DOLL:
-    case OBJ_EVENT_GFX_SKITTY:
-        speciesId = SPECIES_SKITTY;
-        break;
-
-    case OBJ_EVENT_GFX_SWABLU_DOLL:
-        speciesId = SPECIES_SWABLU;
-        break;
-
-    case OBJ_EVENT_GFX_GULPIN_DOLL:
-        speciesId = SPECIES_GULPIN;
-        break;
-
-    case OBJ_EVENT_GFX_LOTAD_DOLL:
-        speciesId = SPECIES_LOTAD;
-        break;
-
-    case OBJ_EVENT_GFX_SEEDOT_DOLL:
-        speciesId = SPECIES_SEEDOT;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_SNORLAX_DOLL:
-    case OBJ_EVENT_GFX_SNORLAX:
-        speciesId = SPECIES_SNORLAX;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_RHYDON_DOLL:
-        speciesId = SPECIES_RHYDON;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_LAPRAS_DOLL:
-    case OBJ_EVENT_GFX_LAPRAS_DOLL:
-    case OBJ_EVENT_GFX_LAPRAS:
-        speciesId = SPECIES_LAPRAS;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_VENUSAUR_DOLL:
-        speciesId = SPECIES_VENUSAUR;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_CHARIZARD_DOLL:
-        speciesId = SPECIES_CHARIZARD;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_BLASTOISE_DOLL:
-        speciesId = SPECIES_BLASTOISE;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_WAILMER_DOLL:
-        speciesId = SPECIES_WAILMER;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_REGIROCK_DOLL:
-    case OBJ_EVENT_GFX_REGIROCK:
-        speciesId = SPECIES_REGIROCK;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_REGICE_DOLL:
-    case OBJ_EVENT_GFX_REGICE:
-        speciesId = SPECIES_REGICE;
-        break;
-
-    case OBJ_EVENT_GFX_BIG_REGISTEEL_DOLL:
-    case OBJ_EVENT_GFX_REGISTEEL:
-        speciesId = SPECIES_REGISTEEL;
-        break;
-
-    case OBJ_EVENT_GFX_LATIAS:
-        speciesId = SPECIES_LATIAS;
-        break;
-
-    case OBJ_EVENT_GFX_LATIOS:
-        speciesId = SPECIES_LATIOS;
-        break;
-
-    case OBJ_EVENT_GFX_KYOGRE_FRONT:
-    case OBJ_EVENT_GFX_KYOGRE_ASLEEP:
-    case OBJ_EVENT_GFX_KYOGRE_SIDE:
-        speciesId = SPECIES_KYOGRE;
-        break;
-
-    case OBJ_EVENT_GFX_GROUDON_FRONT:
-    case OBJ_EVENT_GFX_GROUDON_ASLEEP:
-    case OBJ_EVENT_GFX_GROUDON_SIDE:
-        speciesId = SPECIES_GROUDON;
-        break;
-
-    case OBJ_EVENT_GFX_AZUMARILL:
-        speciesId = SPECIES_AZUMARILL;
-        break;
-
-    case OBJ_EVENT_GFX_WINGULL:
-        speciesId = SPECIES_WINGULL;
-        break;
-
-    case OBJ_EVENT_GFX_POOCHYENA:
-        speciesId = SPECIES_POOCHYENA;
-        break;
-
-    case OBJ_EVENT_GFX_KIRLIA:
-        speciesId = SPECIES_KIRLIA;
-        break;
-
-    case OBJ_EVENT_GFX_DUSCLOPS:
-        speciesId = SPECIES_DUSCLOPS;
-        break;
-
-    case OBJ_EVENT_GFX_SUDOWOODO:
-        speciesId = SPECIES_SUDOWOODO;
-        break;
-
-    case OBJ_EVENT_GFX_MEW:
-        speciesId = SPECIES_MEW;
-        break;
-
-    case OBJ_EVENT_GFX_DEOXYS:
-    case OBJ_EVENT_GFX_DEOXYS_D:
-    case OBJ_EVENT_GFX_DEOXYS_A:
-    case OBJ_EVENT_GFX_DEOXYS_N:
-        speciesId = SPECIES_DEOXYS;
-        break;
-
-    case OBJ_EVENT_GFX_LUGIA:
-        speciesId = SPECIES_LUGIA;
-        break;
-
-    case OBJ_EVENT_GFX_HOOH:
-        speciesId = SPECIES_HO_OH;
-        break;
-
-    case OBJ_EVENT_GFX_SPEAROW:
-        speciesId = SPECIES_SPEAROW;
-        break;
-
-    case OBJ_EVENT_GFX_FEAROW:
-        speciesId = SPECIES_FEAROW;
-        break;
-
-    case OBJ_EVENT_GFX_PIDGEY:
-        speciesId = SPECIES_PIDGEY;
-        break;
-
-    case OBJ_EVENT_GFX_PIDGEOT:
-        speciesId = SPECIES_PIDGEOT;
-        break;
-
-    case OBJ_EVENT_GFX_NIDORAN_F:
-        speciesId = SPECIES_NIDORAN_F;
-        break;
-
-    case OBJ_EVENT_GFX_NIDORAN_M:
-        speciesId = SPECIES_NIDORAN_M;
-        break;
-
-    case OBJ_EVENT_GFX_NIDORINO:
-        speciesId = SPECIES_NIDORINO;
-        break;
-
-    case OBJ_EVENT_GFX_WIGGLYTUFF:
-        speciesId = SPECIES_WIGGLYTUFF;
-        break;
-
-    case OBJ_EVENT_GFX_PSYDUCK:
-        speciesId = SPECIES_PSYDUCK;
-        break;
-
-    case OBJ_EVENT_GFX_MACHOP:
-        speciesId = SPECIES_MACHOP;
-        break;
-
-    case OBJ_EVENT_GFX_MACHOKE:
-        speciesId = SPECIES_MACHOKE;
-        break;
-
-    case OBJ_EVENT_GFX_DODUO:
-        speciesId = SPECIES_DODUO;
-        break;
-
-    case OBJ_EVENT_GFX_SEEL:
-        speciesId = SPECIES_SEEL;
-        break;
-
-    case OBJ_EVENT_GFX_SLOWPOKE:
-        speciesId = SPECIES_SLOWPOKE;
-        break;
-
-    case OBJ_EVENT_GFX_SLOWBRO:
-        speciesId = SPECIES_SLOWBRO;
-        break;
-
-    case OBJ_EVENT_GFX_VOLTORB:
-        speciesId = SPECIES_VOLTORB;
-        break;
-
-    case OBJ_EVENT_GFX_CUBONE:
-        speciesId = SPECIES_CUBONE;
-        break;
-
-    case OBJ_EVENT_GFX_CHANSEY:
-        speciesId = SPECIES_CHANSEY;
-        break;
-
-    case OBJ_EVENT_GFX_KANGASKHAN:
-        speciesId = SPECIES_KANGASKHAN;
-        break;
-
-    case OBJ_EVENT_GFX_POLIWRATH:
-        speciesId = SPECIES_POLIWRATH;
-        break;
-
-    case OBJ_EVENT_GFX_OMANYTE:
-        speciesId = SPECIES_OMANYTE;
-        break;
-
-    case OBJ_EVENT_GFX_KABUTO:
-        speciesId = SPECIES_KABUTO;
-        break;
-
-    case OBJ_EVENT_GFX_ZAPDOS:
-        speciesId = SPECIES_ZAPDOS;
-        break;
-
-    case OBJ_EVENT_GFX_MOLTRES:
-        speciesId = SPECIES_MOLTRES;
-        break;
-
-    case OBJ_EVENT_GFX_ARTICUNO:
-        speciesId = SPECIES_ARTICUNO;
-        break;
-
-    case OBJ_EVENT_GFX_MEWTWO:
-        speciesId = SPECIES_MEWTWO;
-        break;
-
-    case OBJ_EVENT_GFX_RAIKOU:
-        speciesId = SPECIES_RAIKOU;
-        break;
-
-    case OBJ_EVENT_GFX_ENTEI:
-        speciesId = SPECIES_ENTEI;
-        break;
-
-    case OBJ_EVENT_GFX_SUICUNE:
-        speciesId = SPECIES_SUICUNE;
-        break;
-
-    case OBJ_EVENT_GFX_CELEBI:
-        speciesId = SPECIES_CELEBI;
-        break;
-
-    default:
-        if (IS_OW_MON_OBJ(object))
-            speciesId = OW_SPECIES(object);
-        break;
-    }
+    if (IS_OW_MON_OBJ(object))
+        speciesId = OW_SPECIES(object);
 
     assertf(speciesId != SPECIES_NONE, "species was not found for specified object. localid: %d", localId);
     VarSet(varId, speciesId);
@@ -833,9 +455,9 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
                 return FALSE;
 
-            u32 id = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
+            enum Species id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
             GenerateBattlePyramidWildMon(SPECIES_NONE);
-            SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL, &id);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL, &id);
             return TRUE;
         }
 
@@ -866,7 +488,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
         4. Attempt to generate a Standard Wild Encounter
     
     The structure of this statement ensures that only one of these encounter types can succeed per call,
-    with the resultant wild mon being created in gParties[B_TRAINER_1][0].
+    with the resultant wild mon being created in gParties[B_TRAINER_OPPONENT_A][0].
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
@@ -939,9 +561,9 @@ static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId)
         }
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
-            u32 id = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
-            enum Species species = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
-            SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES, &id);
+            u32 id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+            enum Species species = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES, &id);
             if (!BATTLE_PYRAMID_RANDOM_ENCOUNTERS)
                 species = SPECIES_NONE;
             GenerateBattlePyramidWildMon(species);
@@ -953,18 +575,19 @@ static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId)
     return FALSE;
 }
 
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId)
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level)
 {
-    if (category == OWE_CATEGORY_MASS_OUTBREAK
-     && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId)
-    {
-        ZeroEnemyPartyMons();
-        SetUpMassOutbreakEncounter(0);
-        BattleSetup_StartWildBattle();
-        return TRUE;
-    }
+    if (category != OWE_CATEGORY_MASS_OUTBREAK)
+        return FALSE;
 
-    return FALSE;
+    assertf(gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId && gSaveBlock1Ptr->outbreakPokemonLevel == level, "Outbreak OW encounter is not matching last active outbreak")
+    {
+        return FALSE;
+    }
+    ZeroEnemyPartyMons();
+    SetUpMassOutbreakEncounter(0);
+    BattleSetup_StartWildBattle();
+    return TRUE;
 }
 
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId)
@@ -976,7 +599,7 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
 
     if (TryDoDoubleWildBattle())
     {
-        struct Pokemon mon1 = gParties[B_TRAINER_1][0];
+        struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
 
         if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
         {
@@ -993,21 +616,13 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
 
         if (TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
         {
-            gParties[B_TRAINER_1][1] = mon1;
+            gParties[B_TRAINER_OPPONENT_A][1] = mon1;
             BattleSetup_StartDoubleWildBattle();
             return TRUE;
         }
     }
 
     return FALSE;
-}
-
-void SetInstantOWESpawnTimer(void)
-{
-    if (!WE_OW_ENCOUNTERS)
-        return;
-
-    sOWESpawnCountdown = 0;
 }
 
 void SetMinimumOWESpawnTimer(void)
@@ -1054,8 +669,9 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
 
 const u8 *GetOverworlWildEncounterScript(u32 objectEventId)
 {
-    const u8 *script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
-    if (script)
+    const u8 *script;
+    if (GetOverworldWildEncounterType(&gObjectEvents[objectEventId]) == OWE_MANUAL
+     && (script = GetObjectEventScriptPointerByObjectEventId(objectEventId)) != NULL)
         return script;
     
     return InteractWithOverworldWildEncounter;
@@ -1147,7 +763,7 @@ static u32 GetNextOWESpawnSlot(void)
     return spawnSlot;
 }
 
-static u32 GetSpeciesByOWESpawnSlot(u32 spawnSlot)
+static enum Species GetSpeciesByOWESpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOWESpawnSlot(spawnSlot));
     struct ObjectEvent *owe = &gObjectEvents[objEventId];
@@ -1234,9 +850,9 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
         return;
     }
  
-    info->speciesId = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
-    info->level = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
-    personality = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_PERSONALITY);
+    info->speciesId = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+    info->level = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+    personality = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_PERSONALITY);
 
     if (info->speciesId == SPECIES_UNOWN)
         info->speciesId = GetUnownSpeciesId(personality);
@@ -2164,6 +1780,14 @@ static bool32 CheckValidOWESpecies(enum Species speciesId)
         return FALSE;
 
     if (!IsSpeciesEnabled(speciesId))
+        return FALSE;
+
+    return TRUE;
+}
+
+bool32 CanRemoveObjectForOWEMovement(struct ObjectEvent *objectEvent)
+{
+    if (WE_OWE_PREVENT_SPECIAL_MOVEMENT_DESPAWN && IsObjectActiveOWE(objectEvent) && HasOWENoDespawnFlag(objectEvent))
         return FALSE;
 
     return TRUE;

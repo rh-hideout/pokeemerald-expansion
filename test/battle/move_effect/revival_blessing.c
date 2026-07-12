@@ -118,17 +118,17 @@ DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags")
     } SCENE {
         // Turn 1
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("The opposing Starly used Revival Blessing!");
         MESSAGE("Geodude was revived and is ready to fight again!"); // Should have prefix but it doesn't currently.
         // Turn 2
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
     }
 }

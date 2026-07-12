@@ -256,3 +256,18 @@ SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
         EXPECT_EQ(lostHp, atkStat);
     }
 }
+
+SINGLE_BATTLE_TEST("Strength Sap fails if move missed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); };
+    } WHEN {
+        TURN {  MOVE(player, MOVE_STRENGTH_SAP, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+            HP_BAR(player);
+        }
+    }
+}
