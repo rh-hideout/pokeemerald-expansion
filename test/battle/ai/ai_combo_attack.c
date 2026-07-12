@@ -4,6 +4,7 @@
 
 AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round")
 {
+    // PASSES_RANDOMLY(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 50, 100);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_POWERFUL_STATUS);
@@ -17,9 +18,9 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
             EXPECT_MOVE(opponentLeft, MOVE_TRI_ATTACK, target:playerLeft);
             EXPECT_MOVE(opponentRight, MOVE_TAILWIND);
             SCORE_EQ_VAL(opponentLeft, MOVE_TRI_ATTACK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
-            SCORE_EQ_VAL(opponentRight, MOVE_TAILWIND, AI_SCORE_DEFAULT + POWERFUL_STATUS_MOVE + 2, target:playerLeft); // + 2 from "regular" Tailwind AI
+            SCORE_EQ_VAL(opponentRight, MOVE_TAILWIND, AI_SCORE_DEFAULT + POWERFUL_STATUS_MOVE + 4, target:playerLeft); // + 4 from "regular" Tailwind AI
             SCORE_EQ_VAL(opponentLeft, MOVE_ROUND, AI_SCORE_DEFAULT, target:playerLeft);
-            SCORE_EQ_VAL(opponentRight, MOVE_ROUND, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_ROUND, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + BEST_EFFECT, target:playerLeft);
         }
     }
 }

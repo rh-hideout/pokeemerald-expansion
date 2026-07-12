@@ -721,7 +721,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
     }
     else if (IsMultiHitMove(ctx->move))
     {
-        if (GetMoveEffect(ctx->move) == EFFECT_SPECIES_POWER_OVERRIDE && gBattleMons[ctx->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(ctx->move))
+        if (effect == EFFECT_SPECIES_POWER_OVERRIDE && gBattleMons[ctx->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(ctx->move))
         {
             u32 basePowerOverride = GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
             median *= basePowerOverride;
@@ -848,7 +848,10 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         return simDamage;
 
     if (moveEffect == EFFECT_NATURE_POWER)
+    {
         move = GetNaturePowerMove();
+        moveEffect = GetMoveEffect(move);
+    }
 
     // Temporarily enable gimmicks for damage calcs if planned
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
@@ -897,7 +900,6 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
 
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
-
 
     u32 movePower = GetMovePower(move);
 
@@ -966,12 +968,12 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     // convert multiper to AI_EFFECTIVENESS_xX
     *typeEffectiveness = ctx.typeEffectivenessModifier;
 
+    // Undo temporary settings
     if (toggledGimmickAtk)
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
     if (toggledGimmickDef)
         SetActiveGimmick(battlerDef, GIMMICK_NONE);
 
-    // Undo temporary settings
     gBattleStruct->dynamicMoveType = TYPE_NONE;
     gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
     gBattleStruct->battlerState[battlerAtk].ateBoost = FALSE;

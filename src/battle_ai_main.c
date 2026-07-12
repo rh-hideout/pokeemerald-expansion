@@ -440,32 +440,47 @@ void ReconsiderGimmick(enum BattlerId battlerAtk, enum BattlerId battlerDef, enu
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
-u32 GetAllyMove(u32 battler)
+static bool32 IsThinkingBeforePartner(enum BattlerId battler, enum BattlerId battlerPartner)
 {
-    u32 partnerBattler = BATTLE_PARTNER(battler);
+    if (!BattlerHasAi(battlerPartner))
+        return TRUE;
+
+    if (gAiLogicData->reverseBattlerLogicOrder)
+        return (battlerPartner < battler);
+
+    return (battlerPartner > battler);
+}
+
+static void SetAllyMove(u32 battler)
+{
+    enum BattlerId partnerBattler = BATTLE_PARTNER(battler);
     gAiLogicData->partnerMove = MOVE_NONE; // Make sure no garbage is stored for simulation
 
     if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
-        return MOVE_NONE;
-
-    if (partnerBattler > battler) // Battler with the lower id chooses the move first.
     {
+        gAiLogicData->partnerMove = MOVE_NONE;
+    }
+    else if (IsThinkingBeforePartner(battler, partnerBattler))
+    {
+        // DebugPrintf("partnerBattler %d", partnerBattler );
         gAiLogicData->partnerMoveSimulation = TRUE;
         u32 simulatedMoveIndex = ChooseMoveOrAction_Doubles(partnerBattler);
         gAiLogicData->partnerMoveSimulation = FALSE;
-        return gBattleMons[partnerBattler].moves[simulatedMoveIndex];
+        gAiLogicData->partnerMove = gBattleMons[partnerBattler].moves[simulatedMoveIndex];
     }
-
-    // Move for battler has already been calculated so set as partner move
-    u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
-    return gBattleMons[partnerBattler].moves[moveIndex];
+    else
+    {
+        // Move for battler has already been calculated so set as partner move
+        u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
+        gAiLogicData->partnerMove = gBattleMons[partnerBattler].moves[moveIndex];
+    }
 }
 
 static u32 ChooseMoveOrAction(enum BattlerId battler)
 {
     if (IsDoubleBattle())
     {
-        gAiLogicData->partnerMove = GetAllyMove(battler);
+        SetAllyMove(battler);
         return ChooseMoveOrAction_Doubles(battler);
     }
     return ChooseMoveOrAction_Singles(battler);

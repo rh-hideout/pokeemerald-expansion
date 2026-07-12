@@ -113,7 +113,11 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, move); }
+        if (move == MOVE_SUPERSONIC) {
+            TURN { EXPECT_MOVE(opponentRight, move); }
+        } else {
+            TURN { EXPECT_MOVE(opponentLeft, move); }
+        }
     }
 }
 
@@ -190,7 +194,11 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, move); }
+        if (move == MOVE_CONFUSE_RAY || move == MOVE_SWEET_KISS) {
+            TURN { EXPECT_MOVE(opponentRight, move); }
+        } else {
+            TURN { EXPECT_MOVE(opponentLeft, move); }
+        }
     }
 }
 
