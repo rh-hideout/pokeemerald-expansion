@@ -1063,7 +1063,7 @@ SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Fein
     }
 }
 
-SINGLE_BATTLE_TEST("Contact effects from certain protect moves do not apply if the attacker's contact move fails")
+SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not apply if the attacker's contact move fails")
 {
     enum Move move;
 

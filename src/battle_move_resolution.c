@@ -3149,59 +3149,62 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
         return result;
     }
 
-    if (gBattleStruct->moveResultFlags[cv->battlerDef] == MOVE_RESULT_PROTECTED)
+    if (gBattleStruct->moveResultFlags[cv->battlerDef] == MOVE_RESULT_FAILED)
     {
-        switch (method)
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
+    switch (method)
+    {
+    case PROTECT_SPIKY_SHIELD:
+        if (!IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
         {
-        case PROTECT_SPIKY_SHIELD:
-            if (!IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
-            {
-                SetPassiveDamageAmount(cv->battlerAtk, GetNonDynamaxMaxHP(cv->battlerAtk) / 8);
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
-                BattleScriptCall(BattleScript_SpikyShieldEffect);
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-            }
-            break;
-        case PROTECT_KINGS_SHIELD:
+            SetPassiveDamageAmount(cv->battlerAtk, GetNonDynamaxMaxHP(cv->battlerAtk) / 8);
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
+            BattleScriptCall(BattleScript_SpikyShieldEffect);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
+    case PROTECT_KINGS_SHIELD:
+    {
+        s32 stage = (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? -1 : -2;
+        gEffectBattler = gBattlerAttacker;
+        SetStatChange(gEffectBattler, STAT_ATK, stage);
+        BattleScriptCall(BattleScript_KingsShieldEffect);
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        break;
+    }
+    case PROTECT_BANEFUL_BUNKER:
+        if (CanBePoisoned(cv->battlerDef, cv->battlerAtk, cv->abilities[cv->battlerDef], cv->abilities[cv->battlerAtk]))
         {
-            s32 stage = (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? -1 : -2;
-            gEffectBattler = gBattlerAttacker;
-            SetStatChange(gEffectBattler, STAT_ATK, stage);
-            BattleScriptCall(BattleScript_KingsShieldEffect);
+            gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
+            BattleScriptCall(BattleScript_BanefulBunkerEffect);
             result = MOVEEND_RESULT_RUN_SCRIPT;
-            break;
         }
-        case PROTECT_BANEFUL_BUNKER:
-            if (CanBePoisoned(cv->battlerDef, cv->battlerAtk, cv->abilities[cv->battlerDef], cv->abilities[cv->battlerAtk]))
-            {
-                gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                BattleScriptCall(BattleScript_BanefulBunkerEffect);
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-            }
-            break;
-        case PROTECT_BURNING_BULWARK:
-            if (CanBeBurned(cv->battlerDef, cv->battlerAtk, cv->abilities[cv->battlerAtk]))
-            {
-                gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
-                BattleScriptCall(BattleScript_BanefulBunkerEffect);
-                result = MOVEEND_RESULT_RUN_SCRIPT;
-            }
-            break;
-        case PROTECT_OBSTRUCT:
-            gEffectBattler = gBattlerAttacker;
-            SetStatChange(gEffectBattler, STAT_DEF, -2);
-            BattleScriptCall(BattleScript_KingsShieldEffect);
+        break;
+    case PROTECT_BURNING_BULWARK:
+        if (CanBeBurned(cv->battlerDef, cv->battlerAtk, cv->abilities[cv->battlerAtk]))
+        {
+            gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
+            BattleScriptCall(BattleScript_BanefulBunkerEffect);
             result = MOVEEND_RESULT_RUN_SCRIPT;
-            break;
-        case PROTECT_SILK_TRAP:
-            gEffectBattler = gBattlerAttacker;
-            SetStatChange(gEffectBattler, STAT_SPEED, -1);
-            BattleScriptCall(BattleScript_KingsShieldEffect);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-            break;
-        default:
-            break;
         }
+        break;
+    case PROTECT_OBSTRUCT:
+        gEffectBattler = gBattlerAttacker;
+        SetStatChange(gEffectBattler, STAT_DEF, -2);
+        BattleScriptCall(BattleScript_KingsShieldEffect);
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        break;
+    case PROTECT_SILK_TRAP:
+        gEffectBattler = gBattlerAttacker;
+        SetStatChange(gEffectBattler, STAT_SPEED, -1);
+        BattleScriptCall(BattleScript_KingsShieldEffect);
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        break;
+    default:
+        break;
     }
 
     // Not strictly a protect effect, but works the same way
