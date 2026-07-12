@@ -124,7 +124,6 @@ static const struct UniquePurchaseItem sUniquePurchaseTable[] = {
     {ITEM_CHOICE_SCARF,  30000, 1,  200},
     {ITEM_MUSCLE_BAND,   40000, 1,  200},
     {ITEM_FOCUS_SASH,    50000, 1,  200},
-    {ITEM_NONE}
 };
 
 static const struct RepeatPurchaseItem sRepeatPurchaseTable[] = {
@@ -511,19 +510,21 @@ u32 PurchaseRepeatItem(void)
 
 u32 PurchaseUniqueItem()
 {
-    struct Banking* banking = GetBankingPtr();
+    struct Banking *banking = GetBankingPtr();
     u32 idx = banking->lastBought;
+
+    if (idx == NELEMS(sUniquePurchaseTable) - 1)
+        return 0;
+    if (banking->isPending)
+        return 0;
+
     u32 savings = GetMoneyInBank();
     struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
 
     if (savings < next.thresholdMoney)
         return 0;
-    if (banking->isPending)
-        return 0;
 
-    if(sUniquePurchaseTable[++idx].itemId == ITEM_NONE)
-        idx = 0;
-    banking->lastBought = idx;
+    banking->lastBought = ++idx;
     banking->isPending = TRUE;
     return next.price;
 }
