@@ -14,6 +14,8 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 5 turns")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        MESSAGE("The sunlight turned harsh!");
+        MESSAGE("Koraidon turned the sunlight harsh, sending its ancient pulse into a frenzy!");
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight is strong.");
@@ -39,6 +41,8 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 8 turns with Heat Rock")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        MESSAGE("The sunlight turned harsh!");
+        MESSAGE("Koraidon turned the sunlight harsh, sending its ancient pulse into a frenzy!");
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight is strong.");
@@ -47,6 +51,38 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 8 turns with Heat Rock")
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight is strong.");
         MESSAGE("The sunlight faded.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Orichalcum Pulse activates when entering battle in sun")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); }
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
+        ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        MESSAGE("Koraidon basked in the sunlight, sending its ancient pulse into a frenzy!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Orichalcum Pulse triggers Protosynthesis before announcing its attack boost")
+{
+    GIVEN {
+        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); }
+        OPPONENT(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        MESSAGE("The sunlight turned harsh!");
+        ABILITY_POPUP(opponent, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated the opposing Walking Wake's Protosynthesis!");
+        MESSAGE("The opposing Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("Koraidon turned the sunlight harsh, sending its ancient pulse into a frenzy!");
     }
 }
 
