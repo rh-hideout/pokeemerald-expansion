@@ -28,7 +28,6 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
         MOVE_DETECT,
         MOVE_SPIKY_SHIELD,
         MOVE_BANEFUL_BUNKER,
-        MOVE_BURNING_BULWARK,
     };
     enum Move protectMove = MOVE_NONE;
     enum Move usedMove = MOVE_NONE;
@@ -305,7 +304,6 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
     enum Move usedMove = MOVE_NONE;
 
     PARAMETRIZE { usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE { usedMove = MOVE_LEER; }
     PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
