@@ -1348,30 +1348,35 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
-    {
-        // TODO: simplify
-        enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_FLAME_ORB:
-        case HOLD_EFFECT_STICKY_BARB:
-        case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsOrbsActivation))
-                effect = TRUE;
-            break;
-        case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbEndTurnActivation))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsEndTurnActivation))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
     }
-    }
 
+    return effect;
+}
+
+static bool32 HandleEndTurnOpportunist(enum BattlerId battler)
+{
+    bool32 effect = FALSE;
+
+    if (IsBattlerPresent(battler) && AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
+        effect = TRUE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+    return effect;
+}
+
+static bool32 HandleEndTurnMirrorHerb(enum BattlerId battler)
+{
+    bool32 effect = FALSE;
+
+    if (IsBattlerPresent(battler) && ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
+        effect = TRUE;
+
+    gBattleStruct->eventState.endTurnBattler++;
     return effect;
 }
 
@@ -1587,6 +1592,8 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
     [ENDTURN_MAGIC_ROOM] = HandleEndTurnMagicRoom,
     [ENDTURN_TERRAIN] = HandleEndTurnTerrain,
     [ENDTURN_THIRD_EVENT_BLOCK] = HandleEndTurnThirdEventBlock,
+    [ENDTURN_OPPORTUNIST] = HandleEndTurnOpportunist,
+    [ENDTURN_MIRROR_HERB] = HandleEndTurnMirrorHerb,
     [ENDTURN_SEND_OUT_REPLACEMENTS_4] = HandleEndTurnSendOutReplacements,
     [ENDTURN_FORM_CHANGE] = HandleEndTurnFormChange,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
