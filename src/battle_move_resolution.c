@@ -3344,7 +3344,7 @@ static enum MoveEndResult MoveEndResistBerryMessage(struct BattleCalcValues *cv)
         gBattleScripting.battler = cv->battlerDef;
         gLastUsedItem = gBattleMons[cv->battlerDef].item;
         GetBattlerPartyState(cv->battlerDef)->ateBerry = TRUE;
-        gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted = FALSE;
+        gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted = TRUE;
         BattleScriptCall(BattleScript_BerryReduceDmg);
         result = MOVEEND_RESULT_RUN_SCRIPT;
     }

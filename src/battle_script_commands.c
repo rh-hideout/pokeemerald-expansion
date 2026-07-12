@@ -2237,9 +2237,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_BUG_BITE:
-        if (GetBattlerHoldEffect(effectBattler) == HOLD_EFFECT_JABOCA_BERRY)
+        if (GetBattlerHoldEffect(effectBattler) == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[effectBattler].berryReduced)
         {
-            // jaboca berry triggers instead of being stolen
+            // jaboca berry / resist berries trigger instead of being stolen
             gBattlescriptCurrInstr = battleScript;
         }
         else if (GetItemPocket(gBattleMons[effectBattler].item) == POCKET_BERRIES
