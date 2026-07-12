@@ -338,6 +338,8 @@ static void BagMenu_CreatePartyIcons(void);
 static void BagMenu_FreePartyIcons(void);
 static void BagMenu_UpdateTMHMPartyBlend(s32 itemIndex);
 static void BagMenu_DisableTMHMPartyBlend(void);
+static void BagMenu_ApplyPartyBlend(bool8 (*isEligible)(u8 partySlot));
+static bool8 BagMenu_MonHoldsItem(u8 partySlot);
 static void BagMenu_UseSacredAsh(u8);
 static void BagMenu_GetEVStatName(enum ItemEffectType effectType, u8 *dest);
 static void BagMenu_UsePPOnMove(u8, u8);
@@ -1876,6 +1878,15 @@ static bool8 SetupBagMenu(void)
             BagMenu_SetPartySlotPalette(sBagItemUseState->slot, PARTY_SLOT_HOVER_PAL);
             BagMenu_UpdateStatusIconPos(sBagItemUseState->slot);
         }
+        else if (gBagPosition.location == ITEMMENULOCATION_PARTY)
+        {
+            BagMenu_ApplyPartyBlend(BagMenu_MonHoldsItem);
+            BagMenu_SetPartySlotPalette(gPartyMenu.slotId, PARTY_SLOT_HOVER_PAL);
+            BagMenu_UpdateHeldItemIcon(gPartyMenu.slotId);
+            if (gBagMenu->heldItemShownSlot == gPartyMenu.slotId
+             && gBagMenu->statusIconSpriteIds[gPartyMenu.slotId] != SPRITE_NONE)
+                gSprites[gBagMenu->statusIconSpriteIds[gPartyMenu.slotId]].invisible = TRUE;
+        }
         else if (gBagPosition.pocket == POCKET_TM_HM
          && gBagMenu->numItemStacks[gBagPosition.pocket] != (u8)(!gBagMenu->hideCloseBagText))
             BagMenu_UpdateTMHMPartyBlend(gBagPosition.cursorPosition[gBagPosition.pocket]);
@@ -2444,7 +2455,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
         }
     }
 #if SWSH_ITEM_MENU_IN_BAG_USE
-    if (gBagPosition.pocket == POCKET_TM_HM)
+    if (gBagPosition.pocket == POCKET_TM_HM && gBagPosition.location != ITEMMENULOCATION_PARTY)
         BagMenu_UpdateTMHMPartyBlend(itemIndex);
 #endif
 
@@ -3206,7 +3217,7 @@ static void Task_SwitchBagPocket(u8 taskId)
         break;
     case 1:
 #if SWSH_ITEM_MENU_IN_BAG_USE
-        if (gBagPosition.pocket == POCKET_TM_HM)
+        if (gBagPosition.pocket == POCKET_TM_HM && gBagPosition.location != ITEMMENULOCATION_PARTY)
             BagMenu_DisableTMHMPartyBlend();
 #endif
         ChangeBagPocketId(&gBagPosition.pocket, tPocketSwitchDir);
