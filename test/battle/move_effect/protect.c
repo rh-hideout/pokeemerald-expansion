@@ -1062,3 +1062,36 @@ SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Fein
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Contact effects from certain protect moves do not apply if the attacker's contact move fails")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }
+    PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
+    PARAMETRIZE { move = MOVE_OBSTRUCT; }
+    PARAMETRIZE { move = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_SUCKER_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        switch (move)
+        {
+            case MOVE_SPIKY_SHIELD:
+                NOT HP_BAR(opponent);
+            default:
+                break;
+        }
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
