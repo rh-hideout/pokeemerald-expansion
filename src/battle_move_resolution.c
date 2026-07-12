@@ -2638,9 +2638,37 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+    case PRE_ANIM_RESIST_BERRY:
+        while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+        {
+            enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+
+            gBattleStruct->eventState.moveEndBattler++;
+
+            if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
+                continue;
+
+            if (!gSpecialStatuses[battlerDef].berryReduced
+             || gBattleMons[battlerDef].item == ITEM_NONE)
+                continue;
+
+            if (DoesDisguiseBlockMove(battlerDef, cv->move))
+            {
+                gSpecialStatuses[battlerDef].berryReduced = FALSE;
+                continue;
+            }
+
+            gBattleScripting.battler = battler;
+            BattleScriptCall(BattleScript_BerryReduceAnimation);
+            return CANCELER_RESULT_RUN_SCRIPT;
+        }
+        gBattleStruct->eventState.moveEndBlock++;
+    default:
+        break;
     }
 
     gBattleStruct->eventState.moveEndBlock = 0;
+    gBattleStruct->eventState.moveEndBattler = 0;
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -2949,36 +2977,6 @@ static enum CancelerResult CancelerMoveDamageUpdate(struct BattleCalcValues *cv)
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
 }
 
-static enum CancelerResult CancelerMoveWeaknessBerry(struct BattleCalcValues *cv)
-{
-    for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
-    {
-        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
-
-        if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
-            continue;
-
-        if (!gSpecialStatuses[battlerDef].berryReduced
-         || gBattleMons[battlerDef].item == ITEM_NONE)
-            continue;
-
-        if (DoesDisguiseBlockMove(battlerDef, cv->move))
-        {
-            gSpecialStatuses[battlerDef].berryReduced = FALSE;
-            continue;
-        }
-
-        gBattleScripting.battler = battlerDef;
-        gLastUsedItem = gBattleMons[battlerDef].item;
-        GetBattlerPartyState(battlerDef)->ateBerry = TRUE;
-        BattleScriptCall(BattleScript_BerryReduceDmg);
-        return CANCELER_RESULT_RUN_SCRIPT;
-    }
-
-    return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT; // Update hp
-}
-
-
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCalcValues *cv) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,
@@ -3038,7 +3036,6 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_SKIP_FRAME] = CancelerSkipFrame,
     [CANCELER_HEALTH_BAR_UPDATE] = CancelerHealthBarUpdate,
     [CANCELER_MOVE_DAMAGE_UPDATE] = CancelerMoveDamageUpdate,
-    [CANCELER_WEAKNESS_BERRY] = CancelerMoveWeaknessBerry,
 };
 
 enum CancelerResult DoAttackCanceler(void)
@@ -3335,6 +3332,23 @@ static enum MoveEndResult MoveEndAbilities(struct BattleCalcValues *cv)
 
     gBattleScripting.moveendState++;
     return result;
+}
+
+static enum MoveEndResult MoveEndResistBerryMessage(struct BattleCalcValues *cv)
+{
+    if (gSpecialStatuses[cv->battlerDef].berryReduced
+     && !gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted)
+    {
+        gBattleScripting.battler = cv->battlerDef;
+        gLastUsedItem = gBattleMons[cv->battlerDef].item;
+        GetBattlerPartyState(cv->battlerDef)->ateBerry = TRUE;
+        gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted = TRUE;
+        BattleScriptCall(BattleScript_BerryReduceDmg);
+        return MOVEEND_RESULT_RUN_SCRIPT;
+    }
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndFormChangeOnHit(struct BattleCalcValues *cv)
@@ -5063,6 +5077,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ABSORB] = MoveEndAbsorb,
     [MOVEEND_RAGE] = MoveEndRage,
     [MOVEEND_ABILITIES] = MoveEndAbilities,
+    [MOVEEND_RESIST_BERRY_MESSAGE] = MoveEndResistBerryMessage,
     [MOVEEND_FORM_CHANGE_ON_HIT] = MoveEndFormChangeOnHit,
     [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
     [MOVEEND_QUEUE_DANCER] = MoveEndQueueDancer,

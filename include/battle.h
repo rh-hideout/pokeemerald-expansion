@@ -119,14 +119,15 @@ struct SpecialStatus
     u8 poisonPuppeteer:1;
     u8 attackerInParty:1; // Fututre Sight / Doom Desire
     u8 abilityRedirected:1;
-    u8 restoredBattlerSprite: 1;
+    u8 restoredBattlerSprite:1;
     // End of byte
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
-    u8 padding:3;
+    u8 berryReducedMessagePrinted:1;
+    u8 padding:2;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;

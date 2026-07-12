@@ -315,6 +315,7 @@ extern const u8 BattleScript_MoveUsedIsThroatChopPrevented[];
 extern const u8 BattleScript_SelectingNotAllowedMoveThroatChopInPalace[];
 extern const u8 BattleScript_ThroatChopEndTurn[];
 extern const u8 BattleScript_GemActivates[];
+extern const u8 BattleScript_BerryReduceAnimation[];
 extern const u8 BattleScript_BerryReduceDmg[];
 extern const u8 BattleScript_ItemStatChange[];
 extern const u8 BattleScript_RockyHelmetActivates[];
