@@ -1095,3 +1095,24 @@ SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not a
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+
+SINGLE_BATTLE_TEST("Protect: King's Shield, Obstruct, Burning Bulwark and Silk Trap do not protect the user from status moves")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BURNING_BULWARK; }
+    PARAMETRIZE { move = MOVE_OBSTRUCT; }
+    PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_SILK_TRAP; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_LEER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponent);
+        NOT MESSAGE("Wobbuffet protected itself!");
+    }
+}
