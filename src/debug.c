@@ -3437,7 +3437,7 @@ static bool32 DebugSelection_GiveComplexPokemon_OnComplete(u8 taskId)
     }
 
     u8 evs[NUM_STATS];
-    ResolveEVs(rawEvs, evs);
+    ResolveEVs(rawEvs, evs, FALSE);
     for (u32 i = 0; i < NUM_STATS; i++)
     {
         SetMonData(&mon, MON_DATA_HP_EV + i, &evs[i]);

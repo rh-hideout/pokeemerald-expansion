@@ -543,11 +543,12 @@ struct PokemonTemplate
     u16 dmaxLevel;
     bool16 isEgg;
     enum GeneratedMonOrigin origin;
+    u8 ignoreTotalEvCheck:1;
     u8 doNotUseDefaultShinyness:1;
     u8 doNotUseDefaultBall:1;
     u8 doNotUseDefaultAbility:1;
     u8 doNotUseDefaultTeraType:1;
-    u8 padding:4;
+    u8 padding:3;
 };
 
 struct EggData
@@ -981,7 +982,7 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
-void ResolveEVs(const u16 *evsTemplate, u8 *evs);
+void ResolveEVs(const u16 *evsTemplate, u8 *evs, bool32 ignoreTotalEvCheck);
 void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *monTemplate);
 
 static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)

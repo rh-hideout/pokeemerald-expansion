@@ -59,7 +59,7 @@ enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
         return ITEM_NO_EFFECT;
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !(GetWeather() & B_WEATHER_SUN))
-     || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
+     || ((ability == ABILITY_QUARK_DRIVE) && gFieldTimers.terrain != B_TERRAIN_ELECTRIC))
     {
         gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
         PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
@@ -87,46 +87,26 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrainFlag, enum Stat statId)
+static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
 {
-    if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
+    struct TerrainInfo battleTerrain = gBattleTerrainInfo[gFieldTimers.terrain];
+    if (gFieldTimers.terrain != B_TERRAIN_NONE
+     && GetItemHoldEffectParam(item) == battleTerrain.seedHoldEffect
+     && CompareStat(battler, battleTerrain.seedStat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        SetStatChange(battler, statId, 1);
+        SetStatChange(battler, battleTerrain.seedStat, 1);
         BattleScriptCall(BattleScript_ConsumableItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
-{
-    enum ItemEffect effect = ITEM_NO_EFFECT;
-
-    switch (GetItemHoldEffectParam(item))
-    {
-    case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF);
-        break;
-    case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF);
-        break;
-    case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF);
-        break;
-    case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF);
-        break;
-    }
-
-    return effect;
-}
-
 static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
-      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
+      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldTimers.terrain)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;
@@ -873,6 +853,7 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
         if (override && missingMove == MAX_MON_MOVES)
         {
             u32 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+
             if (currentPP < maxPP)
                 missingMove = i;
         }
