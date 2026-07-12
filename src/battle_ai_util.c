@@ -770,9 +770,9 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, struct Simul
         if (IsDoubleBattle() && AI_GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_SMART)
         {
             u32 originalTarget = ctx->battlerDef;
-            ctx->battlerDef = BATTLE_PARTNER(ctx->battlerAtk);
+            ctx->battlerDef = BATTLE_PARTNER(ctx->battlerDef);
 
-            if (!IsDamageMoveUnusable(ctx) || CalculateMoveDamageVars(ctx) == 0) // Checks if any damage can be done
+            if (!IsBattlerAlive(ctx->battlerDef) || IsDamageMoveUnusable(ctx) || CalculateMoveDamageVars(ctx) == 0) // Checks if any damage can be done
                 multiplyDamage = TRUE;
             else
                 gAiLogicData->dragonDartsHitsBothTarget |= 1u << ctx->battlerAtk;

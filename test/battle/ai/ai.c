@@ -1445,3 +1445,33 @@ AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (
         NOT HP_BAR(opponentRight);
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage correctly depending on the number of present targets")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAGON_DARTS) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_DRATINI) { Speed(4); Moves(MOVE_PROTECT, MOVE_CELEBRATE); Level(60); }
+        PLAYER(SPECIES_DRATINI) { Speed(3); Moves(MOVE_MEMENTO, MOVE_CELEBRATE); Level(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DRAGON_DARTS, MOVE_DRAGON_CLAW); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight);
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CLAW);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT, target: playerRight);
+        }
+        TURN {
+            EXPECT_MOVES(opponentLeft, MOVE_DRAGON_DARTS);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+        }
+    }
+}
