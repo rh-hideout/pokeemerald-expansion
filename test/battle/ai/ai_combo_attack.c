@@ -4,7 +4,6 @@
 
 AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round")
 {
-    // PASSES_RANDOMLY(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 50, 100);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_POWERFUL_STATUS);
