@@ -1096,7 +1096,7 @@ SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not a
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: King's Shield, Obstruct, Burning Bulwark and Silk Trap do not protect the user from status moves")
+SINGLE_BATTLE_TEST("Protect: Mat Block, King's Shield, Obstruct, Burning Bulwark and Silk Trap do not protect the user from status moves")
 {
     enum Move move;
 
@@ -1104,6 +1104,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Obstruct, Burning Bulwark and Silk T
     PARAMETRIZE { move = MOVE_OBSTRUCT; }
     PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
     PARAMETRIZE { move = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_MAT_BLOCK; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
