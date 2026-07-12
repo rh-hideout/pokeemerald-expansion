@@ -2658,7 +2658,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
                 continue;
             }
 
-            gBattleScripting.battler = battler;
+            gBattleScripting.battler = battlerDef;
             BattleScriptCall(BattleScript_BerryReduceAnimation);
             return CANCELER_RESULT_RUN_SCRIPT;
         }
@@ -3336,19 +3336,21 @@ static enum MoveEndResult MoveEndAbilities(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndResistBerryMessage(struct BattleCalcValues *cv)
 {
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+
     if (gSpecialStatuses[cv->battlerDef].berryReduced
      && !gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted)
     {
         gBattleScripting.battler = cv->battlerDef;
         gLastUsedItem = gBattleMons[cv->battlerDef].item;
         GetBattlerPartyState(cv->battlerDef)->ateBerry = TRUE;
-        gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted = TRUE;
+        gSpecialStatuses[cv->battlerDef].berryReducedMessagePrinted = FALSE;
         BattleScriptCall(BattleScript_BerryReduceDmg);
-        return MOVEEND_RESULT_RUN_SCRIPT;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
+    return result;
 }
 
 static enum MoveEndResult MoveEndFormChangeOnHit(struct BattleCalcValues *cv)
