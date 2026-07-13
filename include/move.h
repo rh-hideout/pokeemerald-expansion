@@ -232,11 +232,11 @@ extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
 
-// The argument field in MovesInfo is on purpose limited to 4 bytes to not waste sapce unnecessary.
+// The argument field in MovesInfo is limited to 4 bytes on purpose to not waste space unnecessarily.
 // Downstream projects are free to remove this limitation.
 _Static_assert(sizeof(gMovesInfo[0].argument) == 4, "MovesInfo argument does not fit into 4 bytes");
 
-// The additional effect argument field is on purpose limited to 6 bytes to not waste sapce unnecessary.
+// The additional effect argument field is limited to 6 bytes on purpose to not waste space unnecessarily.
 // Downstream projects are free to remove this limitation.
 _Static_assert(sizeof(gMovesInfo[0].additionalEffects[0].argument) == 3, "AdditionalEffect argument does not fit into 6 bytes");
 

@@ -1915,7 +1915,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
     s32 i;
     bool32 affectsUser = (battlerAtk == effectBattler);
 
-    if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
+    if (gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_1ST_HIT
      && IsBattlerAlive(effectBattler)
      && IsFinalStrikeEffect(moveEffect))
     {
@@ -2098,7 +2098,6 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
         break;
     case MOVE_EFFECT_RANDOM_FROM_LIST:
     {
-        // Better to pass the additional effect as an argument but for now that works
         const enum MoveEffect *sRandomFromListEffects = se->additionalEffect->argument.randomMoveEffects;
         u32 validEffectCount = 0;
 
@@ -3111,7 +3110,7 @@ static void Cmd_setadditionaleffects(void)
                     se.additionalEffect = additionalEffect;
                     se.moveEffect = additionalEffect->moveEffect;
                     se.script = gBattlescriptCurrInstr;
-                    se.effectBattler = additionalEffect->self ? gBattlerAttacker : gBattlerTarget;
+                    se.effectBattler = additionalEffect->self ? cv->battlerAtk : cv->battlerDef;
                     se.primary = percentChance == 0;
                     se.certain = percentChance >= 100;
                     se.onSide = additionalEffect->onSide; // TODO
