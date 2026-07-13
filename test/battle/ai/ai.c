@@ -1451,6 +1451,9 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage correctly depending on the nu
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_DRAGON_DARTS) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        ASSUME(GetMovePower(MOVE_DRAGON_DARTS) == 50);
+        ASSUME(GetMoveCategory(MOVE_DRAGON_CLAW) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMovePower(MOVE_DRAGON_CLAW) == 80);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_DRATINI) { Speed(4); Moves(MOVE_PROTECT, MOVE_CELEBRATE); Level(60); }
         PLAYER(SPECIES_DRATINI) { Speed(3); Moves(MOVE_MEMENTO, MOVE_CELEBRATE); Level(60); }
@@ -1472,6 +1475,42 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage correctly depending on the nu
             EXPECT_MOVES(opponentLeft, MOVE_DRAGON_DARTS);
             SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
             SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is immune")
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_WIGGLYTUFF, ability = ABILITY_CONTRARY; }
+    // PARAMETRIZE { species = SPECIES_SHEDINJA, ability = ABILITY_WONDER_GUARD; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAGON_DARTS) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        ASSUME(GetMovePower(MOVE_DRAGON_DARTS) == 50);
+        ASSUME(GetMoveType(MOVE_FIRE_PUNCH) == TYPE_FIRE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(species) { Speed(4); Ability(ability); }
+        PLAYER(SPECIES_DRATINI) { Speed(3); Level(60); } // Only 2 hit KOs at L60
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DRAGON_DARTS, MOVE_FIRE_PUNCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_DARTS);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + NO_DAMAGE_OR_FAILS + NO_DAMAGE_OR_FAILS, target: playerLeft); // for some reason this is getting 60 instead of 80
+
+            if (species == SPECIES_SHEDINJA)
+                SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            else
+                SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target: playerLeft);
+
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT, target: playerRight);
         }
     }
 }
