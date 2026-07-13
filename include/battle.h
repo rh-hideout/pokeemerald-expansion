@@ -759,6 +759,22 @@ struct TerrainInfo
 
 extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
 
+struct BattleWeatherInfo
+{
+    u16 flag;
+    u8 rock;
+    u8 padding;
+
+    u32 abilityStartMessage:5;
+    u32 moveStartMessage:5;
+    u32 endMessage:5;
+    u32 continuesMessage:5;
+    u32 animation:8;
+    u32 type:4; // used when weather is similar (e.g. Desolate Land and Drought)
+};
+
+extern const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT];
+
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).
 // The assert below is to ensure palaceFlags is large enough to store these flags without overlap.
