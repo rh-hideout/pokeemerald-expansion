@@ -222,6 +222,56 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick 
     }
 }
 
+SINGLE_BATTLE_TEST("Beak Blast doesn't burn even if the target fails to connect its contact move")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_URSHIFU) {};
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        NONE_OF {
+            MESSAGE("Urshifu was burned!");
+            STATUS_ICON(player, STATUS1_BURN);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast burns even if the target has Unseen Fist")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) {};
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_SURGING_STRIKES); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("Urshifu was burned!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast takes effect after HP drain effects and before abilities")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { HP(1); }
+        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_DRAIN_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Garchomp started heating up its beak!");
+        MESSAGE("The opposing Garchomp had its energy drained!");
+        MESSAGE("Urshifu was burned!");
+        ABILITY_POPUP(opponent);
+    }
+}
+
 TO_DO_BATTLE_TEST("Beak Blast's charging message is shown regardless if it would've missed");
 TO_DO_BATTLE_TEST("Beak Blast fails if it's forced by Encore after choosing a different move");
 TO_DO_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it causes");
