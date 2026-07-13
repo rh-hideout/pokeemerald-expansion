@@ -3088,6 +3088,8 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 
 static bool32 GetProtectBypassMethod(enum BattlerId battlerDef, enum Ability abilityAtk)
 {
+    if (IsBattlerUnaffectedByMove(battlerDef))
+        return PROTECT_BYPASS_NONE;
     if (MoveIgnoresProtect(gCurrentMove))
         return PROTECT_BYPASS_MOVE_IGNORES;
     if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
@@ -3149,7 +3151,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
         return result;
     }
 
-    if (gBattleStruct->moveResultFlags[cv->battlerDef] == MOVE_RESULT_FAILED)
+    if (IsBattlerUnaffectedByMove(cv->battlerDef) && !(gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_PROTECTED))
     {
         gBattleScripting.moveendState++;
         return result;
