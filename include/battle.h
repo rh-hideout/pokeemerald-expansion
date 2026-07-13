@@ -29,7 +29,7 @@
 #include "move.h"
 #include "random.h" // for rng_value_t
 #include "trainer_slide.h"
-#include "config/swsh_item_menu.h"
+#include "swsh_item_menu.h"
 
 // Used to exclude moves learned temporarily by Transform or Mimic
 #define MOVE_IS_PERMANENT(battler, moveSlot)                        \
