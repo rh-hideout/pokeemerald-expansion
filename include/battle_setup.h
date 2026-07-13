@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_SETUP_H
 
 #include "battle_transition.h"
+#include "data.h"
 #include "gym_leader_rematch.h"
 #include "script.h"
 #include "trainer_see.h"
@@ -33,7 +34,7 @@ typedef union PACKED TrainerBattleParameter
         u8 continueScript:1;
         u8 facePlayer:1;
         u8 earlyRival:1;
-        u8 padding:1;
+        u8 skipFlagCheck:1;
         u8 objEventLocalIdA;
         u16 opponentA;
         u8 *introTextA;
@@ -96,7 +97,6 @@ enum BattleTransition GetWildBattleTransition(void);
 enum BattleTransition GetTrainerBattleTransition(void);
 enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id);
 void ChooseStarter(void);
-void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);
 void ConfigureTrainerBattle(struct ScriptContext *ctx);
@@ -124,8 +124,6 @@ void UpdateRematchIfDefeated(s32 rematchTableId);
 void ClearCurrentTrainerWantRematchVsSeeker(void);
 void IncrementRematchStepCounter(void);
 void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum);
-bool32 DoesSomeoneWantRematchIn(u16 mapGroup, u16 mapNum);
-bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum);
 u16 GetLastBeatenRematchTrainerId(u16 trainerId);
 bool8 ShouldTryRematchBattle(void);
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId);
@@ -134,8 +132,6 @@ void ShouldTryGetTrainerScript(void);
 u16 CountMaxPossibleRematch(u16 trainerId);
 u16 CountBattledRematchTeams(u16 trainerId);
 void TrainerBattleLoadArgs(const u8 *data);
-void TrainerBattleLoadArgsTrainerA(const u8 *data);
-void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
 void InitTrainerBattleParameter(void);
 
@@ -145,5 +141,7 @@ s32 TrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId)
 s32 FirstBattleTrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId);
 u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBattleTrainerId);
 u8 GetRivalBattleFlags(void);
+
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer);
 
 #endif // GUARD_BATTLE_SETUP_H

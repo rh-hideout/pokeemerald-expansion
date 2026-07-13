@@ -28,6 +28,8 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define MAX_RANDOM_ADDITIONAL_EFFECTS   3
+
 struct AdditionalEffect
 {
     enum MoveEffect moveEffect;
@@ -41,8 +43,11 @@ struct AdditionalEffect
     u8 padding:1;
 
     union PACKED {
-        enum WrappedStringID wrapped;
-    } multistring;
+        enum MoveEffect randomMoveEffects[MAX_RANDOM_ADDITIONAL_EFFECTS]; // Used by MOVE_EFFECT_RANDOM_FROM_LIST
+        enum WrappedStringID wrapped:8;
+        enum BrokeProtectionStringID brokeProtect:8;
+        u8 absorbPercentage;
+    } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect
     u8 stats;
@@ -174,10 +179,8 @@ struct MoveInfo
     union {
         struct {
             u16 stringId;
-            union {
-                u16 status;
-                u16 weather;
-            };
+            enum SemiInvulnerableState state:8;
+            enum BattleWeather weather:8;
         } twoTurnAttack;
         struct {
             enum Species species;
@@ -189,10 +192,11 @@ struct MoveInfo
             u16 damageCategories:4; // bit field
         } reflectDamage;
         struct {
-            u16 terrain;
-            u16 percent:13;
+            enum BattleTerrain terrain:8;
+            u32 percent:13;
             enum TerrainGroundCheck groundCheck:2;
-            u16 hitsBothFoes:1;
+            u32 hitsBothFoes:1;
+            u32 padding:8;
         } terrainBoost;
         struct {
             u16 comboMove;
@@ -205,12 +209,12 @@ struct MoveInfo
         u32 type;
         u32 fixedDamage;
         u32 damagePercentage;
-        u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
         u32 overwriteAbility;
         u32 weatherType;
-    } argument;
+        u32 terrainType;
+    } argument; // argument field for EFFECTS
 
     // primary/secondary effects
     const struct AdditionalEffect *additionalEffects;
@@ -226,6 +230,14 @@ struct MoveInfo
 extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
+
+// The argument field in MovesInfo is limited to 4 bytes on purpose to not waste space unnecessarily.
+// Downstream projects are free to remove this limitation.
+_Static_assert(sizeof(gMovesInfo[0].argument) == 4, "MovesInfo argument does not fit into 4 bytes");
+
+// The additional effect argument field is limited to 6 bytes on purpose to not waste space unnecessarily.
+// Downstream projects are free to remove this limitation.
+_Static_assert(sizeof(gMovesInfo[0].additionalEffects[0].argument) == 3, "AdditionalEffect argument does not fit into 6 bytes");
 
 static inline enum Move SanitizeMoveId(enum Move moveId)
 {
@@ -593,15 +605,15 @@ static inline u32 GetMoveTwoTurnAttackStringId(enum Move moveId)
     return gMovesInfo[moveId].argument.twoTurnAttack.stringId;
 }
 
-static inline u32 GetMoveTwoTurnAttackStatus(enum Move moveId)
+static inline u32 GetTwoTurnMoveSemiInvulnerability(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
     assertf(effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP, "not a two-turn move with status: %S", gMovesInfo[moveId].name);
-    return gMovesInfo[moveId].argument.twoTurnAttack.status;
+    return gMovesInfo[moveId].argument.twoTurnAttack.state;
 }
 
-static inline u32 GetMoveTwoTurnAttackWeather(enum Move moveId)
+static inline u32 GetTwoTurnMoveWeather(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
@@ -644,7 +656,7 @@ static inline u32 GetMoveReflectDamage_DamageCategories(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.reflectDamage.damageCategories;
 }
 
-static inline u32 GetMoveTerrainBoost_Terrain(enum Move moveId)
+static inline enum BattleTerrain GetMoveTerrainBoost_Terrain(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
@@ -750,16 +762,6 @@ static inline u32 GetMoveFixedHPDamage(enum Move moveId)
     return gMovesInfo[moveId].argument.fixedDamage;
 }
 
-static inline u32 GetMoveAbsorbPercentage(enum Move moveId)
-{
-    moveId = SanitizeMoveId(moveId);
-    enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_ABSORB || effect == EFFECT_DREAM_EATER, "not an absorbing move: %S", gMovesInfo[moveId].name);
-    if (gMovesInfo[moveId].argument.absorbPercentage == 0)
-        return 50;
-    return gMovesInfo[moveId].argument.absorbPercentage;
-}
-
 static inline u32 GetMoveRecoil(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
@@ -799,6 +801,12 @@ static inline enum BattleWeather GetMoveWeatherType(enum Move move)
 {
     assertf(gMovesInfo[move].effect == EFFECT_WEATHER || gMovesInfo[move].effect == EFFECT_WEATHER_AND_SWITCH, "not a move that sets weather: %S", gMovesInfo[move].name);
     return gMovesInfo[SanitizeMoveId(move)].argument.weatherType;
+}
+
+static inline enum BattleTerrain GetMoveTerrainType(enum Move move)
+{
+    assertf(gMovesInfo[move].effect == EFFECT_TERRAIN, "not a move that sets terrain: %S", gMovesInfo[move].name);
+    return gMovesInfo[SanitizeMoveId(move)].argument.terrainType;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(enum Move moveId, u32 effect)

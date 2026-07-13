@@ -8,6 +8,7 @@
 #include "constants/battle_anim.h"
 #include "constants/moves.h"
 #include "battle_message.h"
+#include "battle_anim_scripts.h"
 #include "tv.h"
 #include "constants/battle_move_effects.h"
 
@@ -156,7 +157,10 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && stringId != STRINGID_ITDOESNTAFFECT && stringId != STRINGID_NOTVERYEFFECTIVE)
+    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK)
+     && stringId != STRINGID_ITDOESNTAFFECT
+     && stringId != STRINGID_NOTVERYEFFECTIVE
+     && stringId != STRINGID_MOSTLYINEFFECTIVE)
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -192,12 +196,16 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         break;
     case STRINGID_NOTVERYEFFECTIVE:
     case STRINGID_NOTVERYEFFECTIVETWOFOES:
+    case STRINGID_MOSTLYINEFFECTIVE:
+    case STRINGID_MOSTLYINEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
     case STRINGID_SUPEREFFECTIVETWOFOES:
+    case STRINGID_EXTREMELYEFFECTIVE:
+    case STRINGID_EXTREMELYEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 0, 0);
         break;
     case STRINGID_PKMNFORESAWATTACK:
@@ -265,6 +273,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         gBattleStruct->anyMonHasTransformed = TRUE;
         break;
     case STRINGID_CRITICALHIT:
+    case STRINGID_CRITICALHITONDEF:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
     case STRINGID_STATROSE:
@@ -630,24 +639,23 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
 
     tvPtr = &gBattleStruct->tv;
     atkSide = GetBattlerSide(gBattlerAttacker);
-    switch (animationId)
+    if (GetMoveAnimationScript(gCurrentMove) == gBattleAnimMove_FutureSight)
     {
-    case B_ANIM_FUTURE_SIGHT_HIT:
-        if (tvPtr->side[atkSide].futureSightMonId != 0)
+        if (tvPtr->side[atkSide].futureSightMonId != 0 && gBattleScripting.animTurn > 0)
         {
             AddMovePoints(PTS_SET_UP, 0, atkSide,
                         (tvPtr->side[atkSide].futureSightMonId - 1) * 4 + tvPtr->side[atkSide].futureSightMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_FUTURE_SIGHT;
         }
-        break;
-    case B_ANIM_DOOM_DESIRE_HIT:
-        if (tvPtr->side[atkSide].doomDesireMonId != 0)
+    }
+    else if (GetMoveAnimationScript(gCurrentMove) == gBattleAnimMove_DoomDesire)
+    {
+        if (tvPtr->side[atkSide].doomDesireMonId != 0 && gBattleScripting.animTurn > 0)
         {
             AddMovePoints(PTS_SET_UP, 1, atkSide,
                         (tvPtr->side[atkSide].doomDesireMonId - 1) * 4 + tvPtr->side[atkSide].doomDesireMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_DOOM_DESIRE;
         }
-        break;
     }
 }
 
@@ -854,6 +862,9 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
+            case MOVE_EFFECT_ABSORB:
+                baseFromEffect += 4;
+                break;
             case MOVE_EFFECT_BREAK_SCREEN:
                 baseFromEffect += 1;
                 break;

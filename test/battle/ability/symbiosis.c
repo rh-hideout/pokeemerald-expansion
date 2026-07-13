@@ -120,10 +120,10 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {

@@ -175,13 +175,17 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
     s16 damage, healing;
 
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHOPLE_BERRY) == HOLD_EFFECT_RESIST_BERRY);
         PLAYER(SPECIES_GREEDENT) { Ability(ABILITY_CHEEK_POUCH); Item(ITEM_CHOPLE_BERRY); HP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_KARATE_CHOP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KARATE_CHOP, opponent);
+        HP_BAR(player, captureDamage: &damage);
         ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
         HP_BAR(player, captureDamage: &healing);
-        HP_BAR(player, captureDamage: &damage);
     } THEN {
         EXPECT_LT(healing, 0);
         EXPECT_GT(damage, 0);
