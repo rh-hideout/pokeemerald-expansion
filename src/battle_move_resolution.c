@@ -3151,7 +3151,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
         return result;
     }
 
-    if (IsBattlerUnaffectedByMove(cv->battlerDef) && !(gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_PROTECTED))
+    if (gBattleStruct->unableToUseMove)
     {
         gBattleScripting.moveendState++;
         return result;

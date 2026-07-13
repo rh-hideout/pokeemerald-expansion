@@ -1088,6 +1088,30 @@ SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not a
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not apply if the attacker fails to attack")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_OBSTRUCT; }
+    PARAMETRIZE { move = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(3)); }
+    } WHEN {
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Contact effects from certain protect moves do not apply if the attacker's contact move fails (Unseen Fist)")
 {
     enum Move move;
