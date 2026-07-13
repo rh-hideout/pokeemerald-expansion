@@ -131,10 +131,10 @@ enum MonData {
 
 struct PokemonSubstruct0
 {
-    enum Species species:11; // 2047 species.
+    u16 heldItem:11; // 1023 items.
     enum Type teraType:5; // 30 types.
-    enum Item heldItem:10; // 1023 items.
-    u16 unused_02:6;
+    u16 species:12; // 4095 species.
+    u16 unused_02:4;
     u32 experience:21;
     u32 nickname11:8; // 11th character of nickname.
     u32 unused_04:3;

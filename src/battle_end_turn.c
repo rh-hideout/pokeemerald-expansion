@@ -1410,6 +1410,8 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
             if (gBattleMons[battler].species == SPECIES_DARMANITAN_ZEN
             || gBattleMons[battler].species == SPECIES_DARMANITAN_GALAR_ZEN)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_TRIGGERED;
+            else if(gBattleMons[battler].species == SPECIES_DRAGONMAID_NUDYARL)
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_TRIGGERED;
             else
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_ENDED;
             BattleScriptCall(BattleScript_ZenMode);

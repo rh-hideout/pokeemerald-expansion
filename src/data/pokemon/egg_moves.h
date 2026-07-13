@@ -7698,6 +7698,18 @@ static const u16 sHarpieLadySistersEggMoveLearnset[] =
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sCyberHarpieLadyEggMoveLearnset[] = 
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sCyberHarpieLadySistersEggMoveLearnset[] =
+{
+    MOVE_ENDURE,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sHarpieQueenEggMoveLearnset[] =
 {
     MOVE_ENDURE,

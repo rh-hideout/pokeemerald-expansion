@@ -2120,8 +2120,10 @@ s16 GetBattlerSpriteCoordAttr(enum BattlerId battler, u8 attr)
         }
 
         species = SanitizeSpeciesId(species);
+        #ifdef P_FAMILY_UNOWN
         if (species == SPECIES_UNOWN)
             species = GetUnownSpeciesId(personality);
+        #endif
 
         if (IsOnPlayerSide(battler))
         {

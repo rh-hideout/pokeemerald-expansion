@@ -2568,3 +2568,10 @@ static const u16 sTerapagosFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_TERAPAGOS
+
+
+static const u16 sLaundryDragonmaidFormSpeciesIdTable[] = {
+    SPECIES_LAUNDRY_DRAGONMAID,
+    SPECIES_DRAGONMAID_NUDYARL,
+    FORM_SPECIES_END,
+};

@@ -15878,11 +15878,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 1,
         .category = B_UPDATED_MOVE_DATA >= GEN_7 ? DAMAGE_CATEGORY_SPECIAL : DAMAGE_CATEGORY_PHYSICAL,
-        .argument = {
+        /*.argument = {
             .speciesPowerOverride.species = SPECIES_GRENINJA_ASH,
             .speciesPowerOverride.power = 20,
             .speciesPowerOverride.numOfHits = 3
-        },
+        },*/
         .multiHit = TRUE,
         .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
         .contestCategory = CONTEST_CATEGORY_COOL,

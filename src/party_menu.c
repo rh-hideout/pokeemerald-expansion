@@ -6458,7 +6458,7 @@ static void DeleteInvalidFusionMoves(struct Pokemon *mon, enum Species species)
 }
 
 #if P_FUSION_FORMS
-static void SwapFusionMonMoves(struct Pokemon *mon, const u16 moveTable[][2], u32 mode)
+static void UNUSED SwapFusionMonMoves(struct Pokemon *mon, const u16 moveTable[][2], u32 mode)
 {
     u32 oldMoveIndex, newMoveIndex;
     if (mode == FUSE_MON)

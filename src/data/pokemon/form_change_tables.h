@@ -1063,6 +1063,18 @@ static const struct FormChange sScolipedeFormChangeTable[] =
 };
 #endif //P_FAMILY_VENIPEDE
 
+#if POKEDUEL
+static const struct FormChange sLaundryDragonmaidFormChangeTable[] =
+{
+    {FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, SPECIES_LAUNDRY_DRAGONMAID,     ABILITY_ZEN_MODE, HP_HIGHER_THAN,   50},
+    {FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, SPECIES_DRAGONMAID_NUDYARL,     ABILITY_ZEN_MODE, HP_LOWER_EQ_THAN, 50},
+    {FORM_CHANGE_BATTLE_SWITCH_OUT,          SPECIES_LAUNDRY_DRAGONMAID,     ABILITY_ZEN_MODE},
+    {FORM_CHANGE_FAINT,                      SPECIES_LAUNDRY_DRAGONMAID},
+    {FORM_CHANGE_END_BATTLE,                 SPECIES_LAUNDRY_DRAGONMAID},
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif
+
 #if P_FAMILY_DARUMAKA
 static const struct FormChange sDarmanitanFormChangeTable[] =
 {

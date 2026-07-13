@@ -19,7 +19,8 @@
 #include "constants/species.h"
 
 #define OBJ_EVENT_PAL_TAG_NONE 0x11FF // duplicate of define in event_object_movement.c
-#define PAL_TAG_REFLECTION_OFFSET 0x0800 // reflection tag value is paletteTag + 0x0800
+//#define PAL_TAG_REFLECTION_OFFSET 0x0800 // reflection tag value is paletteTag + 0x0800
+#define PAL_TAG_REFLECTION_OFFSET 0x0B00 // reflection tag value is paletteTag + 0x0800
 #define PAL_RAW_REFLECTION_OFFSET 0x3000 // raw reflection tag is paletteNum + 0x3000
 #define HIGH_BRIDGE_PAL_TAG (PAL_RAW_REFLECTION_OFFSET + 0x10)
 STATIC_ASSERT(NUM_SPECIES <= PAL_TAG_REFLECTION_OFFSET, TooManySpeciesForReflectionPaletteTags);

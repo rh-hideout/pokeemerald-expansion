@@ -1197,7 +1197,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
     case EFFECT_DARK_VOID:
         if (gBattleStruct->bouncedMoveIsUsed)
             break;
-        if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[cv->battlerAtk].species != SPECIES_DARKRAI)
+        if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[cv->battlerAtk].species != SPECIES_YUBEL &&
+            gBattleMons[cv->battlerAtk].species != SPECIES_YUBEL_TERROR_INCARNATE &&
+            gBattleMons[cv->battlerAtk].species != SPECIES_YUBEL_ULTIMATE_KNIGHTMARE)
             battleScript = BattleScript_PokemonCantUseTheMove;
         break;
     case EFFECT_AURA_WHEEL:

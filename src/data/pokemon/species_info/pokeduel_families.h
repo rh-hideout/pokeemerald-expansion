@@ -974,7 +974,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHEDSKIN,
+        ABILITY_SHED_SKIN,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -1047,7 +1047,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -1121,7 +1121,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -1194,8 +1194,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHIELDDUST,
-        ABILITY_TINTEDLENS,
+        ABILITY_SHIELD_DUST,
+        ABILITY_TINTED_LENS,
         ABILITY_ADAPTABILITY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -1267,8 +1267,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_POISONPOINT,
-        ABILITY_TINTEDLENS,
+        ABILITY_POISON_POINT,
+        ABILITY_TINTED_LENS,
         ABILITY_ADAPTABILITY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -1343,7 +1343,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_PICKUP,
         ABILITY_NONE,
-        ABILITY_BEASTBOOST
+        ABILITY_BEAST_BOOST
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Beaver W"),
@@ -1414,7 +1414,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_GUTS,
         ABILITY_NONE
 },
@@ -1486,7 +1486,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_GUTS,
         ABILITY_NONE
 },
@@ -1559,7 +1559,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_GUTS,
         ABILITY_NONE
 },
@@ -1634,7 +1634,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
         ABILITY_INSOMNIA,
-        ABILITY_ANGERPOINT,
+        ABILITY_ANGER_POINT,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -1779,7 +1779,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_NATURALCURE,
+        ABILITY_NATURAL_CURE,
         ABILITY_HEALER,
         ABILITY_NONE
 },
@@ -1926,8 +1926,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_MAGICGUARD,
-        ABILITY_WEAKARMOR,
+        ABILITY_MAGIC_GUARD,
+        ABILITY_WEAK_ARMOR,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -1999,7 +1999,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_BATTLEARMOR,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_FRISK,
         ABILITY_NONE
 },
@@ -2071,8 +2071,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_SPEEDBOOST,
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -2216,8 +2216,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_ROCKHEAD,
-        ABILITY_VOLTABSORB,
+        ABILITY_ROCK_HEAD,
+        ABILITY_VOLT_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -2288,9 +2288,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_FRIENDGUARD,
-        ABILITY_CUTECHARM,
-        ABILITY_SWEETVEIL
+        ABILITY_FRIEND_GUARD,
+        ABILITY_CUTE_CHARM,
+        ABILITY_SWEET_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("HappyLover"),
@@ -2361,9 +2361,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_FRIENDGUARD,
+        ABILITY_FRIEND_GUARD,
         ABILITY_ADAPTABILITY,
-        ABILITY_SWEETVEIL
+        ABILITY_SWEET_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("SH Friend"),
@@ -2433,7 +2433,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_STEADFAST,
-        ABILITY_QUICKFEET,
+        ABILITY_QUICK_FEET,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -2506,7 +2506,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_STEADFAST,
-        ABILITY_QUICKFEET,
+        ABILITY_QUICK_FEET,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -2578,9 +2578,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_FLAMEBODY,
+        ABILITY_FLAME_BODY,
         ABILITY_NONE,
-        ABILITY_MAGICGUARD
+        ABILITY_MAGIC_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Flame M"),
@@ -2653,7 +2653,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_BLAZE,
         ABILITY_NONE,
-        ABILITY_MAGICGUARD
+        ABILITY_MAGIC_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Flame Swrd"),
@@ -2725,7 +2725,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_BLAZE,
         ABILITY_NONE,
-        ABILITY_MAGICGUARD
+        ABILITY_MAGIC_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("D Flare K"),
@@ -3016,7 +3016,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_UNAWARE,
         ABILITY_NONE
 },
@@ -3091,7 +3091,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_DRAGONSMAW,
+        ABILITY_DRAGONS_MAW,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -3235,9 +3235,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SERENEGRACE,
-        ABILITY_NATURALCURE,
-        ABILITY_GRASSYSURGE
+        ABILITY_SERENE_GRACE,
+        ABILITY_NATURAL_CURE,
+        ABILITY_GRASSY_SURGE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Witch OTBF"),
@@ -3309,8 +3309,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
-        ABILITY_FURCOAT,
+        ABILITY_COMPOUND_EYES,
+        ABILITY_FUR_COAT,
         ABILITY_OVERCOAT
 },
     .bodyColor = BODY_COLOR_RED,
@@ -3381,7 +3381,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_SYNCHRONIZE,
         ABILITY_OVERCOAT
 },
@@ -3455,7 +3455,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_REGENERATOR,
-        ABILITY_HUGEPOWER,
+        ABILITY_HUGE_POWER,
         ABILITY_HEALER
 },
     .bodyColor = BODY_COLOR_RED,
@@ -3527,7 +3527,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MAGNETPULL,
+       ABILITY_MAGNET_PULL,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -3599,7 +3599,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_CLEARBODY,
+       ABILITY_CLEAR_BODY,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -3672,7 +3672,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MAGNETPULL,
+       ABILITY_MAGNET_PULL,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -3889,7 +3889,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SKILLLINK,
+       ABILITY_SKILL_LINK,
         ABILITY_RATTLED,
         ABILITY_SWARM
 },
@@ -3962,7 +3962,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_VITALSPIRIT,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_DEFIANT,
         ABILITY_NONE
 },
@@ -4034,7 +4034,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_VITALSPIRIT,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_DEFIANT,
         ABILITY_NONE
 },
@@ -4106,7 +4106,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_VITALSPIRIT,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_DEFIANT,
         ABILITY_NONE
 },
@@ -4178,8 +4178,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_WATERABSORB,
+       ABILITY_SAND_VEIL,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4250,8 +4250,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_FLASHFIRE,
+       ABILITY_SAND_VEIL,
+        ABILITY_FLASH_FIRE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4326,7 +4326,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SWARM,
         ABILITY_SNIPER,
-        ABILITY_WEAKARMOR
+        ABILITY_WEAK_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Killer Ndl"),
@@ -4401,7 +4401,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SWARM,
         ABILITY_SNIPER,
-        ABILITY_WEAKARMOR
+        ABILITY_WEAK_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Armord Bee"),
@@ -4473,7 +4473,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_RATTLED,
-        ABILITY_THICKFAT,
+        ABILITY_THICK_FAT,
         ABILITY_RIPEN
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4545,8 +4545,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_PARENTALBOND,
-        ABILITY_THICKFAT,
+        ABILITY_PARENTAL_BOND,
+        ABILITY_THICK_FAT,
         ABILITY_RIPEN
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4617,9 +4617,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_ANGERPOINT,
+        ABILITY_ANGER_POINT,
         ABILITY_DEFIANT,
-        ABILITY_WHITESMOKE
+        ABILITY_WHITE_SMOKE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Muka Muka"),
@@ -4691,9 +4691,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_ANGERPOINT,
+        ABILITY_ANGER_POINT,
         ABILITY_DEFIANT,
-        ABILITY_WHITESMOKE
+        ABILITY_WHITE_SMOKE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Raged Muka"),
@@ -4764,8 +4764,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_CHEEKPOUCH,
-        ABILITY_IRONBARBS,
+        ABILITY_CHEEK_POUCH,
+        ABILITY_IRON_BARBS,
         ABILITY_RUN_AWAY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4838,8 +4838,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_CHEEKPOUCH,
-        ABILITY_IRONBARBS,
+        ABILITY_CHEEK_POUCH,
+        ABILITY_IRON_BARBS,
         ABILITY_LEVITATE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -4910,7 +4910,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_RAINDISH,
+        ABILITY_RAIN_DISH,
         ABILITY_GOOEY,
         ABILITY_DAMP
 },
@@ -4982,8 +4982,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_RAINDISH,
-        ABILITY_PARENTALBOND,
+        ABILITY_RAIN_DISH,
+        ABILITY_PARENTAL_BOND,
         ABILITY_DAMP
 },
     .bodyColor = BODY_COLOR_RED,
@@ -5128,7 +5128,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_WATERABSORB,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE,
         ABILITY_HYDRATION
 },
@@ -5200,7 +5200,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_WATERABSORB,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE,
         ABILITY_HYDRATION
 },
@@ -5273,9 +5273,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_POISONTOUCH,
+        ABILITY_POISON_TOUCH,
         ABILITY_GLUTTONY,
-        ABILITY_DRYSKIN
+        ABILITY_DRY_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Des Frog"),
@@ -5346,9 +5346,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_THICKFAT,
+        ABILITY_THICK_FAT,
         ABILITY_GLUTTONY,
-        ABILITY_DRYSKIN
+        ABILITY_DRY_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("D.3.S Frog"),
@@ -5419,7 +5419,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_COMPETITIVE,
         ABILITY_DAMP
 },
@@ -5492,7 +5492,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_COMPETITIVE,
         ABILITY_SUPREME_OVERLORD
 },
@@ -5568,7 +5568,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_DRIZZLE,
         ABILITY_REGENERATOR,
-        ABILITY_STICKYHOLD
+        ABILITY_STICKY_HOLD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Swap Frog"),
@@ -5640,9 +5640,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_TOXICBOOST,
-        ABILITY_HYPERCUTTER,
-        ABILITY_LEAFGUARD
+        ABILITY_TOXIC_BOOST,
+        ABILITY_HYPER_CUTTER,
+        ABILITY_LEAF_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Ronintoadn"),
@@ -5714,9 +5714,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_WONDERSKIN,
+        ABILITY_WONDER_SKIN,
         ABILITY_ANALYTIC,
-        ABILITY_CLEARBODY
+        ABILITY_CLEAR_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Dupe Frog"),
@@ -5787,9 +5787,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_DAZZLING,
-        ABILITY_ROUGHSKIN
+        ABILITY_ROUGH_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Luster D"),
@@ -5860,9 +5860,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_DAZZLING,
-        ABILITY_ROUGHSKIN
+        ABILITY_ROUGH_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Luster D2"),
@@ -5934,9 +5934,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_DAZZLING,
-        ABILITY_ROUGHSKIN
+        ABILITY_ROUGH_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Diamond HD"),
@@ -6007,7 +6007,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SANDVEIL,
+       ABILITY_SAND_VEIL,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -6079,7 +6079,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SANDVEIL,
+       ABILITY_SAND_VEIL,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -6152,7 +6152,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SANDSTREAM,
+        ABILITY_SAND_STREAM,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -6225,7 +6225,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
         ABILITY_SWARM,
-        ABILITY_LONGREACH,
+        ABILITY_LONG_REACH,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -6298,7 +6298,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_BATTLEARMOR,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_BULLETPROOF,
         ABILITY_NONE
 },
@@ -6374,7 +6374,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SWARM,
         ABILITY_HARVEST,
-        ABILITY_QUEENLYMAJESTY
+        ABILITY_QUEENLY_MAJESTY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("I Princess"),
@@ -6449,7 +6449,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SWARM,
         ABILITY_HARVEST,
-        ABILITY_QUEENLYMAJESTY
+        ABILITY_QUEENLY_MAJESTY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Inst Queen"),
@@ -6521,9 +6521,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_TOUGHCLAWS,
-        ABILITY_STRONGJAW
+       ABILITY_SAND_VEIL,
+        ABILITY_TOUGH_CLAWS,
+        ABILITY_STRONG_JAW
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("2H KingRex"),
@@ -6594,8 +6594,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_HYPERCUTTER,
-        ABILITY_INNERFOCUS,
+        ABILITY_HYPER_CUTTER,
+        ABILITY_INNER_FOCUS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -6668,7 +6668,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_HYPERCUTTER,
+        ABILITY_HYPER_CUTTER,
         ABILITY_TECHNICIAN,
         ABILITY_NONE
 },
@@ -6742,7 +6742,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_HYPERCUTTER,
+        ABILITY_HYPER_CUTTER,
         ABILITY_TECHNICIAN,
         ABILITY_NONE
 },
@@ -6814,8 +6814,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_ROUGHSKIN,
+       ABILITY_SAND_VEIL,
+        ABILITY_ROUGH_SKIN,
         ABILITY_UNNERVE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -6886,8 +6886,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_SANDSTREAM,
-        ABILITY_ROUGHSKIN,
+        ABILITY_SAND_STREAM,
+        ABILITY_ROUGH_SKIN,
         ABILITY_UNNERVE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -6959,8 +6959,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_OWNTEMPO,
-        ABILITY_FURCOAT,
+        ABILITY_OWN_TEMPO,
+        ABILITY_FUR_COAT,
         ABILITY_GLUTTONY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7031,7 +7031,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_OWNTEMPO,
+        ABILITY_OWN_TEMPO,
         ABILITY_COMPETITIVE,
         ABILITY_GLUTTONY
 },
@@ -7103,8 +7103,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_EFFECTSPORE,
-        ABILITY_NATURALCURE,
+        ABILITY_EFFECT_SPORE,
+        ABILITY_NATURAL_CURE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7175,8 +7175,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_EFFECTSPORE,
-        ABILITY_NATURALCURE,
+        ABILITY_EFFECT_SPORE,
+        ABILITY_NATURAL_CURE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7467,8 +7467,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_WATERVEIL,
-        ABILITY_WATERABSORB,
+        ABILITY_WATER_VEIL,
+        ABILITY_WATER_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7540,8 +7540,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_FLAMEBODY,
-        ABILITY_VITALSPIRIT,
+        ABILITY_FLAME_BODY,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_HUSTLE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7613,8 +7613,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_SWIFTSWIM,
-        ABILITY_WATERABSORB,
+        ABILITY_SWIFT_SWIM,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7686,8 +7686,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_SWIFTSWIM,
-        ABILITY_WATERABSORB,
+        ABILITY_SWIFT_SWIM,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -7760,7 +7760,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_LEVITATE,
-        ABILITY_AS_ONE,
+        ABILITY_AS_ONE_ICE_RIDER,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -8124,7 +8124,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_STAKEOUT,
         ABILITY_BLAZE
 },
@@ -8272,7 +8272,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_TRACE,
         ABILITY_NONE
 },
@@ -8346,7 +8346,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_DRIZZLE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -8419,7 +8419,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_DRIZZLE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -8491,8 +8491,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_EARLYBIRD,
-        ABILITY_GALEWINGS,
+        ABILITY_EARLY_BIRD,
+         ABILITY_GALE_WINGS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -8565,8 +8565,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_FULLMETALBODY,
-        ABILITY_BATTLEARMOR,
+        ABILITY_FULL_METAL_BODY,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -8784,7 +8784,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_NONE,
         ABILITY_STAMINA
 },
@@ -8858,8 +8858,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SHARPNESS,
-        ABILITY_EARLYBIRD,
-        ABILITY_GALEWINGS
+        ABILITY_EARLY_BIRD,
+         ABILITY_GALE_WINGS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Harpie LDY"),
@@ -8931,8 +8931,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SHARPNESS,
-        ABILITY_EARLYBIRD,
-        ABILITY_GALEWINGS
+        ABILITY_EARLY_BIRD,
+         ABILITY_GALE_WINGS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Harpie SIS"),
@@ -9005,8 +9005,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SHARPNESS,
-        ABILITY_MAGICBOUNCE,
-        ABILITY_BATTLEARMOR
+        ABILITY_MAGIC_BOUNCE,
+        ABILITY_BATTLE_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Cyber HL"),
@@ -9080,8 +9080,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SHARPNESS,
-        ABILITY_MAGICBOUNCE,
-        ABILITY_BATTLEARMOR
+        ABILITY_MAGIC_BOUNCE,
+        ABILITY_BATTLE_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("C Slash HL"),
@@ -9153,8 +9153,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_HARPIE_SURGE,
-        ABILITY_GALEWINGS,
+        //ABILITY_HARPIE_SURGE,
+        ABILITY_GALE_WINGS,
         ABILITY_OBLIVIOUS
 },
     .bodyColor = BODY_COLOR_RED,
@@ -9300,7 +9300,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_RIVALRY,
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -9371,7 +9371,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_CUTECHARM,
+        ABILITY_CUTE_CHARM,
         ABILITY_GUTS,
         ABILITY_STAKEOUT
 },
@@ -9517,8 +9517,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_QUICKFEET,
+        ABILITY_CUTE_CHARM,
+        ABILITY_QUICK_FEET,
         ABILITY_RIVALRY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -9591,7 +9591,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_QUEENLYMAJESTY,
+        ABILITY_QUEENLY_MAJESTY,
         ABILITY_RIVALRY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -9663,7 +9663,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_LEAFGUARD,
+        ABILITY_LEAF_GUARD,
         ABILITY_HYDRATION,
         ABILITY_NONE
 },
@@ -9811,7 +9811,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_SAPSIPPER,
+        ABILITY_SAP_SIPPER,
         ABILITY_CHLOROPHYLL,
         ABILITY_NONE
 },
@@ -9885,7 +9885,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_TRACE,
-        ABILITY_LIGHTNINGROD,
+        ABILITY_LIGHTNING_ROD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -9958,7 +9958,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_TRACE,
-        ABILITY_LIGHTNINGROD,
+        ABILITY_LIGHTNING_ROD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -10031,7 +10031,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -10104,7 +10104,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -10177,7 +10177,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -10249,7 +10249,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_LIGHTNINGROD,
+        ABILITY_LIGHTNING_ROD,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -10394,7 +10394,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_INNARDSOUT,
+        ABILITY_INNARDS_OUT,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -10467,9 +10467,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_AIRLOCK,
-        ABILITY_FLASHFIRE,
-        ABILITY_CURSEDBODY
+        ABILITY_AIR_LOCK,
+        ABILITY_FLASH_FIRE,
+        ABILITY_CURSED_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Curse of D"),
@@ -10539,8 +10539,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_AIRLOCK,
-        ABILITY_AS_ONE_MOXIE,
+        ABILITY_AIR_LOCK,
+        ABILITY_AS_ONE_SHADOW_RIDER,
         ABILITY_DEFIANT
 },
     .bodyColor = BODY_COLOR_RED,
@@ -10611,9 +10611,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_ROYALFLUSH,
+        //ABILITY_ROYALFLUSH,
         ABILITY_NONE,
-        ABILITY_QUEENLYMAJESTY
+        ABILITY_QUEENLY_MAJESTY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Queens K"),
@@ -10684,7 +10684,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_ROYALFLUSH,
+        //ABILITY_ROYALFLUSH,
         ABILITY_NONE,
         ABILITY_STEADFAST
 },
@@ -10757,7 +10757,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_ROYALFLUSH,
+        //ABILITY_ROYALFLUSH,
         ABILITY_NONE,
         ABILITY_JUSTIFIED
 },
@@ -11199,7 +11199,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_AFTERMATH,
         ABILITY_TELEPATHY,
-        ABILITY_MAGICGUARD
+        ABILITY_MAGIC_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Agido"),
@@ -11273,7 +11273,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_AFTERMATH,
         ABILITY_TELEPATHY,
-        ABILITY_MAGICGUARD
+        ABILITY_MAGIC_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Agido TAS"),
@@ -11345,7 +11345,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
         ABILITY_BULLETPROOF,
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_REGENERATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -11418,7 +11418,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
         ABILITY_BULLETPROOF,
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_REGENERATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -11490,9 +11490,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SANDRUSH,
-        ABILITY_EARLYBIRD,
-        ABILITY_SANDSPIT
+        ABILITY_SAND_RUSH,
+        ABILITY_EARLY_BIRD,
+        ABILITY_SAND_SPIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("BlackPtera"),
@@ -11563,9 +11563,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SANDRUSH,
-        ABILITY_EARLYBIRD,
-        ABILITY_SANDSPIT
+        ABILITY_SAND_RUSH,
+        ABILITY_EARLY_BIRD,
+        ABILITY_SAND_SPIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("OV Qoatlus"),
@@ -11708,9 +11708,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_PUNKROCK,
+        ABILITY_PUNK_ROCK,
         ABILITY_GALVANIZE,
-        ABILITY_POWERSPOT
+        ABILITY_POWER_SPOT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("King Of D"),
@@ -11782,7 +11782,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_KLUTZ,
-        ABILITY_SHEERFORCE,
+        ABILITY_SHEER_FORCE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -11854,7 +11854,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_GUTS,
-        ABILITY_SHEERFORCE,
+        ABILITY_SHEER_FORCE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -11927,8 +11927,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_SOLIDROCK,
+        ABILITY_SAND_VEIL,
+        ABILITY_SOLID_ROCK,
         ABILITY_STURDY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -12000,8 +12000,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SANDVEIL,
-        ABILITY_SOLIDROCK,
+       ABILITY_SAND_VEIL,
+        ABILITY_SOLID_ROCK,
         ABILITY_STURDY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -12075,7 +12075,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SHELL_ARMOR,
         ABILITY_ADAPTABILITY,
-        ABILITY_DRYSKIN
+        ABILITY_DRY_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CrabTurtle"),
@@ -12145,7 +12145,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -12218,7 +12218,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -12291,8 +12291,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_KEENEYE,
-        ABILITY_WINDRIDER,
+        ABILITY_KEEN_EYE,
+        ABILITY_WIND_RIDER,
         ABILITY_INFILTRATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -12366,7 +12366,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_AERILATE,
-        ABILITY_WINDRIDER,
+        ABILITY_WIND_RIDER,
         ABILITY_INFILTRATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -12437,7 +12437,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MOTORDRIVE,
+        ABILITY_MOTOR_DRIVE,
         ABILITY_SCRAPPY,
         ABILITY_NONE
 },
@@ -12510,7 +12510,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MOTORDRIVE,
+        ABILITY_MOTOR_DRIVE,
         ABILITY_SCRAPPY,
         ABILITY_NONE
 },
@@ -12583,7 +12583,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MOTORDRIVE,
+        ABILITY_MOTOR_DRIVE,
         ABILITY_SCRAPPY,
         ABILITY_NONE
 },
@@ -12656,8 +12656,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_LONGREACH,
-        ABILITY_KEENEYE,
+        ABILITY_LONG_REACH,
+        ABILITY_KEEN_EYE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -12729,7 +12729,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_STEAMENGINE,
+        ABILITY_STEAM_ENGINE,
         ABILITY_NONE,
         ABILITY_MOXIE
 },
@@ -12802,7 +12802,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_STEAMENGINE,
+        ABILITY_STEAM_ENGINE,
         ABILITY_NONE,
         ABILITY_MOXIE
 },
@@ -12875,9 +12875,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_OWNTEMPO,
+        ABILITY_OWN_TEMPO,
         ABILITY_NONE,
-        ABILITY_SANDRUSH
+        ABILITY_SAND_RUSH
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Turbo Sync"),
@@ -12949,9 +12949,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_TOUGHCLAWS,
+        ABILITY_TOUGH_CLAWS,
         ABILITY_NONE,
-        ABILITY_SANDRUSH
+        ABILITY_SAND_RUSH
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Turbo Wrir"),
@@ -13023,7 +13023,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_OVERCOAT,
-        ABILITY_SANDVEIL,
+       ABILITY_SAND_VEIL,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -13096,7 +13096,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_OVERCOAT,
-        ABILITY_MOTORDRIVE,
+        ABILITY_MOTOR_DRIVE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -13169,7 +13169,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_QUICKDRAW,
+        ABILITY_QUICK_DRAW,
         ABILITY_NONE,
         ABILITY_SNIPER
 },
@@ -13317,7 +13317,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SIMPLE,
         ABILITY_FLUFFY,
-        ABILITY_FRIENDGUARD
+        ABILITY_FRIEND_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("OD Marron"),
@@ -13391,7 +13391,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SIMPLE,
         ABILITY_SCRAPPY,
-        ABILITY_FRIENDGUARD
+        ABILITY_FRIEND_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("SD Marron"),
@@ -13463,7 +13463,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_BEASTBOOST,
+        ABILITY_BEAST_BOOST,
         ABILITY_UNNERVE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -13537,7 +13537,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_BEASTBOOST,
+        ABILITY_BEAST_BOOST,
         ABILITY_UNNERVE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -13609,9 +13609,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_STEAMENGINE,
-        ABILITY_CURSEDBODY,
-        ABILITY_WEAKARMOR
+        ABILITY_STEAM_ENGINE,
+        ABILITY_CURSED_BODY,
+        ABILITY_WEAK_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Inpachi"),
@@ -13682,9 +13682,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_STEAMENGINE,
-        ABILITY_FLAMEBODY,
-        ABILITY_WEAKARMOR
+        ABILITY_STEAM_ENGINE,
+        ABILITY_FLAME_BODY,
+        ABILITY_WEAK_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Blazin Inp"),
@@ -13755,9 +13755,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_STEAMENGINE,
+        ABILITY_STEAM_ENGINE,
         ABILITY_WELL_BAKED_BODY,
-        ABILITY_WEAKARMOR
+        ABILITY_WEAK_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Charcoal I"),
@@ -13829,7 +13829,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_HUSTLE
 },
@@ -13903,7 +13903,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_MOXIE
 },
@@ -13976,7 +13976,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_GRIM_NEIGH
 },
@@ -14049,7 +14049,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -14272,7 +14272,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_LEVITATE,
         ABILITY_NONE,
-        ABILITY_SERENEGRACE
+        ABILITY_SERENE_GRACE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CP Angel"),
@@ -14344,7 +14344,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_TECHNICIAN,
         ABILITY_NONE,
-        ABILITY_SERENEGRACE
+        ABILITY_SERENE_GRACE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CA Benten"),
@@ -14416,7 +14416,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_TECHNICIAN,
         ABILITY_NONE,
-        ABILITY_SERENEGRACE
+        ABILITY_SERENE_GRACE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CA Dakini"),
@@ -14488,7 +14488,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_STEADFAST,
         ABILITY_WANDERING_SPIRIT
 },
@@ -14562,8 +14562,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_TOUGHCLAWS,
-        ABILITY_HYPERCUTTER,
+        ABILITY_TOUGH_CLAWS,
+        ABILITY_HYPER_CUTTER,
         ABILITY_WANDERING_SPIRIT
 },
     .bodyColor = BODY_COLOR_RED,
@@ -14635,8 +14635,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_IRONBARBS,
-        ABILITY_SANDFORCE,
+        ABILITY_IRON_BARBS,
+        ABILITY_SAND_FORCE,
         ABILITY_STURDY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -14707,7 +14707,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_TELEPATHY,
         ABILITY_ILLUSION
 },
@@ -14779,7 +14779,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_TELEPATHY,
         ABILITY_ILLUSION
 },
@@ -14851,8 +14851,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
-        ABILITY_SAPSIPPER,
+        ABILITY_KEEN_EYE,
+         ABILITY_SAP_SIPPER,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -14925,9 +14925,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ROUGHSKIN,
+        ABILITY_ROUGH_SKIN,
         ABILITY_SHARPNESS,
-        ABILITY_ANGERPOINT
+        ABILITY_ANGER_POINT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Tri-Horn D"),
@@ -15143,9 +15143,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_LIGHTNINGROD,
-        ABILITY_BIGPECKS,
-        ABILITY_ELECTRICSURGE
+        ABILITY_LIGHTNING_ROD,
+        ABILITY_BIG_PECKS,
+        ABILITY_ELECTRIC_SURGE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Thundr Drg"),
@@ -15215,9 +15215,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_VOLTABSORB,
-        ABILITY_BIGPECKS,
-        ABILITY_ELECTRICSURGE
+        ABILITY_VOLT_ABSORB,
+        ABILITY_BIG_PECKS,
+        ABILITY_ELECTRIC_SURGE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Twin Thndr"),
@@ -15289,9 +15289,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STATIC,
-        ABILITY_ELECTRICSURGE
+        ABILITY_ELECTRIC_SURGE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("TD Titan"),
@@ -15362,9 +15362,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_LIGHTNINGROD,
+        ABILITY_LIGHTNING_ROD,
         ABILITY_INTIMIDATE,
-        ABILITY_ELECTRICSURGE
+        ABILITY_ELECTRIC_SURGE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Colossus"),
@@ -15435,7 +15435,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SLOWSTART_2,
+        ABILITY_SLOW_START, ///slowstart2
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -15581,7 +15581,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_EVERY_TYPE,
+        ABILITY_MULTITYPE,
         ABILITY_NONE,
         ABILITY_SYNCHRONIZE
 },
@@ -15634,1189 +15634,6 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
 },
 
-
-[SPECIES_FORTUNE_LADY_EVERY_BUG] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_BUG),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_DARK] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_DARK),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED), 
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_DRAGON] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_DRAGON),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_ELECTRIC] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_ELECTRIC),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_FIGHT] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_FIGHTING),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_FIRE] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_FIRE),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_FLYING] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_FLYING),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_GHOST] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_GHOST),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_GRASS] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_GRASS),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_GROUND] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_GROUND),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_ICE] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_ICE),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_POISON] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_POISON),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_PSYCHIC] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_PSYCHIC),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_ROCK] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_ROCK),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_STEEL] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_STEEL),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
-
-[SPECIES_FORTUNE_LADY_EVERY_WATER] =
-{
-    .baseHP        = 70,
-    .baseAttack    = 70,
-    .baseDefense   = 65,
-    .baseSpAttack  = 105,
-    .baseSpDefense = 105,
-    .baseSpeed     = 90,
-    .types = MON_TYPES(TYPE_FAIRY, TYPE_WATER),
-    .catchRate = 90,
-    .expYield = 168,
-    .evYield_SpAttack = 1,
-    .evYield_SpDefense = 1,
-    .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_NONE,
-    .genderRatio = PERCENT_FEMALE(100),
-    .eggCycles = 8,
-    .friendship = STANDARD_FRIENDSHIP,
-    .growthRate = GROWTH_MEDIUM_SLOW,
-    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
-    .abilities = {
-        ABILITY_EVERY_TYPE,
-        ABILITY_NONE,
-        ABILITY_SYNCHRONIZE
-},
-    .bodyColor = BODY_COLOR_RED,
-    .speciesName = _("FLadyEvery"),
-    .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
-    .categoryName = _("Fortune"),
-    .height = 19,
-    .weight = 450,
-    .description = COMPOUND_STRING(
-        "Fortune Lady Every has the power to\n"
-        "become any type it wants. It must hold\n"
-        "a special plate to unlock this power."
-    ),
-    .pokemonScale = 256,
-    .pokemonOffset = 0,
-    .trainerScale = 290,
-    .trainerOffset = 2,
-    .frontPic = gMonFrontPic_Togekiss,
-    .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
-    .frontAnimFrames = ANIM_FRAMES(
-        ANIMCMD_FRAME(0, 1),
-    ),
-    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 7,
-    .backPic = gMonBackPic_Togekiss,
-    .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 0,
-    .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_Togekiss,
-    .shinyPalette = gMonShinyPalette_Togekiss,
-    .iconSprite = gMonIcon_Togekiss,
-    .iconPalIndex = 0,
-    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
-    SHADOW(1, 1, SHADOW_SIZE_S)
-    FOOTPRINT(Mudkip)
-    OVERWORLD(
-        sPicTable_Mudkip,
-        SIZE_32x32,
-        SHADOW_SIZE_M,
-        TRACKS_FOOT,
-        sAnimTable_Following,
-        gOverworldPalette_Mudkip,
-        gShinyOverworldPalette_Mudkip
-    )
-    .levelUpLearnset = sFortuneLadyEveryLearnset,
-    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
-    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
-},
 
 [SPECIES_MUSICIAN_KING] =
 {
@@ -16839,8 +15656,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SOUNDPROOF,
-        ABILITY_PUNKROCK,
-        ABILITY_HEAVYMETAL
+        ABILITY_PUNK_ROCK,
+        ABILITY_HEAVY_METAL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Music King"),
@@ -16911,8 +15728,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_SOUNDPROOF,
-        ABILITY_PUNKROCK,
-        ABILITY_HEAVYMETAL
+        ABILITY_PUNK_ROCK,
+        ABILITY_HEAVY_METAL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("HM King"),
@@ -16983,7 +15800,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SUPERLUCK,
+        ABILITY_SUPER_LUCK,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -17048,7 +15865,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .catchRate = 190,
     .expYield = 85,
     .evYield_Speed = 2,
-    .itemCommon = ITEM_AXE_DESPAIR,
+    //.itemCommon = ITEM_AXE_DESPAIR,
     .itemRare = ITEM_NONE,
     .genderRatio = PERCENT_FEMALE(50),
     .eggCycles = 4,
@@ -17056,9 +15873,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_RECKLESS,
-        ABILITY_SANDVEIL
+       ABILITY_SAND_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Battle Ox"),
@@ -17130,9 +15947,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_RECKLESS,
-        ABILITY_SANDVEIL
+       ABILITY_SAND_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("R Horseman"),
@@ -17204,7 +16021,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
         ABILITY_SWARM,
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_HEATPROOF
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17276,8 +16093,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_FLAMEBODY,
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_FLAME_BODY,
         ABILITY_HEATPROOF
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17349,7 +16166,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_LEVITATE,
-        ABILITY_POISONHEAL,
+        ABILITY_POISON_HEAL,
         ABILITY_UNAWARE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17421,8 +16238,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SHEERFORCE,
-        ABILITY_POISONHEAL,
+        ABILITY_SHEER_FORCE,
+        ABILITY_POISON_HEAL,
         ABILITY_UNAWARE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17494,8 +16311,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SHEERFORCE,
-        ABILITY_POISONHEAL,
+        ABILITY_SHEER_FORCE,
+        ABILITY_POISON_HEAL,
         ABILITY_UNAWARE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17567,9 +16384,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SERENEGRACE,
-        ABILITY_QUEENLYMAJESTY,
-        ABILITY_NATURALCURE
+        ABILITY_SERENE_GRACE,
+        ABILITY_QUEENLY_MAJESTY,
+        ABILITY_NATURAL_CURE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("V Lady"),
@@ -17640,9 +16457,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SERENEGRACE,
-        ABILITY_QUEENLYMAJESTY,
-        ABILITY_NATURALCURE
+        ABILITY_SERENE_GRACE,
+        ABILITY_QUEENLY_MAJESTY,
+        ABILITY_NATURAL_CURE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("V Grace"),
@@ -17786,7 +16603,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_WATERCOMPACTION,
+        ABILITY_WATER_COMPACTION,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -17860,7 +16677,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_PLUS,
         ABILITY_MOODY,
-        ABILITY_SKILLLINK
+       ABILITY_SKILL_LINK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Grace Dice"),
@@ -17933,7 +16750,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_MINUS,
         ABILITY_OBLIVIOUS,
-        ABILITY_SKILLLINK
+       ABILITY_SKILL_LINK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Skull Dice"),
@@ -18003,7 +16820,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_DEFIANT,
         ABILITY_MOODY
 },
@@ -18078,7 +16895,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_LEVITATE,
         ABILITY_NONE,
-        ABILITY_WHITESMOKE
+        ABILITY_WHITE_SMOKE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("La Jinn"),
@@ -18222,7 +17039,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_FLAMEBODY,
+        ABILITY_FLAME_BODY,
         ABILITY_NONE,
         ABILITY_STALL
 },
@@ -18515,8 +17332,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
         ABILITY_GOOEY,
-        ABILITY_MOLDBREAKER,
-        ABILITY_STICKYHOLD
+        ABILITY_MOLD_BREAKER,
+        ABILITY_STICKY_HOLD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("God Slime"),
@@ -18588,7 +17405,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_FULLMETALBODY,
+        ABILITY_FULL_METAL_BODY,
         ABILITY_STEELWORKER,
         ABILITY_AFTERMATH
 },
@@ -18661,9 +17478,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_HYPERCUTTER,
-        ABILITY_KEENEYE,
-        ABILITY_LIGHTNINGROD
+        ABILITY_HYPER_CUTTER,
+        ABILITY_KEEN_EYE,
+        ABILITY_LIGHTNING_ROD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Spear Drg"),
@@ -18734,8 +17551,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_NATURALCURE,
-        ABILITY_SERENEGRACE,
+        ABILITY_NATURAL_CURE,
+        ABILITY_SERENE_GRACE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -18807,8 +17624,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_NATURALCURE,
-        ABILITY_SERENEGRACE,
+        ABILITY_NATURAL_CURE,
+        ABILITY_SERENE_GRACE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -19026,7 +17843,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_MOXIE,
-        ABILITY_SHEERFORCE,
+        ABILITY_SHEER_FORCE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -19173,7 +17990,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_ROUGHSKIN,
+        ABILITY_ROUGH_SKIN,
         ABILITY_SCRAPPY,
         ABILITY_UNNERVE
 },
@@ -19245,9 +18062,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_CHEEKPOUCH,
-        ABILITY_EMERGENCYEXIT,
-        ABILITY_TINTEDLENS
+        ABILITY_CHEEK_POUCH,
+        ABILITY_EMERGENCY_EXIT,
+        ABILITY_TINTED_LENS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Rescue R"),
@@ -19319,7 +18136,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_QUICKFEET,
+        ABILITY_QUICK_FEET,
         ABILITY_TECHNICIAN,
         ABILITY_FLUFFY
 },
@@ -19465,9 +18282,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHEDSKIN,
-        ABILITY_IRONBARBS,
-        ABILITY_SANDSPIT
+        ABILITY_SHED_SKIN,
+        ABILITY_IRON_BARBS,
+        ABILITY_SAND_SPIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Needle W"),
@@ -19538,9 +18355,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_SHEDSKIN,
-        ABILITY_IRONBARBS,
-        ABILITY_SANDSPIT
+        ABILITY_SHED_SKIN,
+        ABILITY_IRON_BARBS,
+        ABILITY_SAND_SPIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Dungeon W"),
@@ -19685,8 +18502,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_UNSEEN_FIST,
-        ABILITY_IRONFIST,
-        ABILITY_QUICKFEET
+        ABILITY_IRON_FIST,
+        ABILITY_QUICK_FEET
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("D Kangaroo"),
@@ -19757,8 +18574,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_UNSEEN_FIST,
-        ABILITY_IRONFIST,
-        ABILITY_QUICKFEET
+        ABILITY_IRON_FIST,
+        ABILITY_QUICK_FEET
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Master Oz"),
@@ -19828,9 +18645,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_NOGUARD,
-        ABILITY_ANGERPOINT,
-        ABILITY_GORILLATACTICS
+        ABILITY_NO_GUARD,
+        ABILITY_ANGER_POINT,
+        ABILITY_GORILLA_TACTICS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Berserk G"),
@@ -19902,8 +18719,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_REGENERATOR,
-        ABILITY_EMERGENCYEXIT,
-        ABILITY_SHEDSKIN
+        ABILITY_EMERGENCY_EXIT,
+        ABILITY_SHED_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Sinister S"),
@@ -19974,8 +18791,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_INTREPIDSWORD,
-        ABILITY_SHADOWSHIELD,
+        ABILITY_INTREPID_SWORD,
+        ABILITY_SHADOW_SHIELD,
         ABILITY_MUMMY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -20194,8 +19011,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_ROUGHSKIN,
-        ABILITY_MEGALAUNCHER,
+        ABILITY_ROUGH_SKIN,
+        ABILITY_MEGA_LAUNCHER,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -20266,8 +19083,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_MAGNETPULL,
-        ABILITY_VOLTABSORB,
+       ABILITY_MAGNET_PULL,
+        ABILITY_VOLT_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -20339,7 +19156,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_PRISMARMOR,
+        ABILITY_PRISM_ARMOR,
         ABILITY_DOWNLOAD,
         ABILITY_NONE
 },
@@ -20777,7 +19594,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_INFILTRATOR,
-        ABILITY_TINTEDLENS,
+        ABILITY_TINTED_LENS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -20849,8 +19666,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_LIGHTNINGROD,
-        ABILITY_TINTEDLENS,
+        ABILITY_LIGHTNING_ROD,
+        ABILITY_TINTED_LENS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21067,7 +19884,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
+        ABILITY_CUTE_CHARM,
         ABILITY_RATTLED,
         ABILITY_NONE
 },
@@ -21131,16 +19948,16 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .catchRate = 190,
     .expYield = 90,
     .evYield_Speed = 2,
-    .itemCommon = ITEM_TOON_STONE,
-    .itemRare = ITEM_TOON_STONE,
+    //.itemCommon = ITEM_TOON_STONE,
+    //.itemRare = ITEM_TOON_STONE,
     .genderRatio = PERCENT_FEMALE(0),
     .eggCycles = 8,
     .friendship = STANDARD_FRIENDSHIP,
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_SHEERFORCE,
+        ABILITY_CUTE_CHARM,
+        ABILITY_SHEER_FORCE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21211,8 +20028,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_PARENTALBOND,
+        ABILITY_CUTE_CHARM,
+        ABILITY_PARENTAL_BOND,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21284,8 +20101,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_MISTYSURGE,
+        ABILITY_CUTE_CHARM,
+        ABILITY_MISTY_SURGE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21357,8 +20174,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_LONGREACH,
+        ABILITY_CUTE_CHARM,
+        ABILITY_LONG_REACH,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21430,9 +20247,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_ROCKHEAD,
-        ABILITY_LIGHTMETAL
+        ABILITY_CUTE_CHARM,
+        ABILITY_ROCK_HEAD,
+        ABILITY_LIGHT_METAL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Toon AGG"),
@@ -21503,8 +20320,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_FLASHFIRE,
+        ABILITY_CUTE_CHARM,
+        ABILITY_FLASH_FIRE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21576,8 +20393,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_CUTECHARM,
-        ABILITY_MAGICGUARD,
+        ABILITY_CUTE_CHARM,
+        ABILITY_MAGIC_GUARD,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21650,7 +20467,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_IMMUNITY,
-        ABILITY_THICKFAT,
+        ABILITY_THICK_FAT,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -21723,7 +20540,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_PICKUP,
         ABILITY_NONE,
-        ABILITY_MAGICBOUNCE
+        ABILITY_MAGIC_BOUNCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("PO Greed"),
@@ -21792,7 +20609,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_ROCKHEAD,
+        ABILITY_ROCK_HEAD,
         ABILITY_NONE,
         ABILITY_SCRAPPY
 },
@@ -21865,7 +20682,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_SUCTIONCUPS,
+        ABILITY_SUCTION_CUPS,
         ABILITY_OVERGROW,
         ABILITY_CHLOROPHYLL
 },
@@ -22008,8 +20825,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_ICEBODY,
-        ABILITY_CLEARBODY,
+        ABILITY_ICE_BODY,
+       ABILITY_CLEAR_BODY,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -22081,7 +20898,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_BADDREAMS,
+        ABILITY_BAD_DREAMS,
         ABILITY_NONE,
         ABILITY_INSOMNIA
 },
@@ -22154,9 +20971,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_NONE,
-        ABILITY_SANDVEIL
+       ABILITY_SAND_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Meteor D"),
@@ -22226,9 +21043,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_DESOLATELAND,
+        ABILITY_DESOLATE_LAND,
         ABILITY_NONE,
-        ABILITY_SANDVEIL
+       ABILITY_SAND_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Meteor BD"),
@@ -22373,7 +21190,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_BATTLEARMOR,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_STEADFAST,
         ABILITY_NONE
 },
@@ -22448,7 +21265,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_PRESSURE,
         ABILITY_NONE,
-        ABILITY_CURSEDBODY
+        ABILITY_CURSED_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Chaos ED"),
@@ -22813,7 +21630,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_OVERGROW,
-        ABILITY_GRASSYSURGE,
+        ABILITY_GRASSY_SURGE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -22886,8 +21703,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
         ABILITY_AERILATE,
-        ABILITY_GALEWINGS,
-        ABILITY_AIRLOCK
+         ABILITY_GALE_WINGS,
+        ABILITY_AIR_LOCK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Air Neos"),
@@ -22958,8 +21775,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SANDFORCE,
-        ABILITY_SANDSTREAM,
+        ABILITY_SAND_FORCE,
+        ABILITY_SAND_STREAM,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -23032,8 +21849,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_DARKAURA,
-        ABILITY_YAMI_SURGE,
+        ABILITY_DARK_AURA,
+      //  ABILITY_YAMI_SURGE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -23105,8 +21922,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_HONEST_POWER,
-        ABILITY_MISTYSURGE,
+        //ABILITY_HONEST_POWER,
+        ABILITY_MISTY_SURGE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -23179,7 +21996,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_INSOMNIA,
-        ABILITY_SHADOWTAG,
+        ABILITY_SHADOW_TAG,
         ABILITY_ILLUSION
 },
     .bodyColor = BODY_COLOR_RED,
@@ -23252,7 +22069,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_AFTERMATH,
-        ABILITY_SHADOWTAG,
+        ABILITY_SHADOW_TAG,
         ABILITY_ILLUSION
 },
     .bodyColor = BODY_COLOR_RED,
@@ -23325,8 +22142,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_PRESSURE,
-        ABILITY_SHADOWTAG,
-        ABILITY_COMPOUNDEYES
+        ABILITY_SHADOW_TAG,
+        ABILITY_COMPOUND_EYES
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Restrict"),
@@ -23398,9 +22215,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_PRIMORDIALSEA,
+        ABILITY_PRIMORDIAL_SEA,
         ABILITY_NONE,
-        ABILITY_SOULHEART
+        ABILITY_SOUL_HEART
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Leviathan"),
@@ -23473,7 +22290,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_SERENEGRACE,
+        ABILITY_SERENE_GRACE,
         ABILITY_PROTEAN,
         ABILITY_NONE
 },
@@ -23545,7 +22362,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_LIGHTNINGROD,
+        ABILITY_LIGHTNING_ROD,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -23691,7 +22508,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -23764,7 +22581,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_MOLDBREAKER,
+        ABILITY_MOLD_BREAKER,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -23982,9 +22799,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_FLAME_MAW,
-        ABILITY_CLEARBODY,
-        ABILITY_FLASHFIRE
+        //ABILITY_FLAME_MAW,
+       ABILITY_CLEAR_BODY,
+        ABILITY_FLASH_FIRE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Horus Lv4"),
@@ -24056,9 +22873,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_FLAME_MAW,
-        ABILITY_CLEARBODY,
-        ABILITY_FLASHFIRE
+        //ABILITY_FLAME_MAW,
+       ABILITY_CLEAR_BODY,
+        ABILITY_FLASH_FIRE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Horus Lv6"),
@@ -24130,9 +22947,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_FLAME_MAW,
-        ABILITY_CLEARBODY,
-        ABILITY_FLASHFIRE
+        //ABILITY_FLAME_MAW,
+       ABILITY_CLEAR_BODY,
+        ABILITY_FLASH_FIRE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Horus Lv8"),
@@ -24205,7 +23022,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_LEVITATE,
         ABILITY_NONE,
-        ABILITY_DRAGONSMAW
+        ABILITY_DRAGONS_MAW
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CD Horn"),
@@ -24278,7 +23095,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_LEVITATE,
         ABILITY_NONE,
-        ABILITY_DRAGONSMAW
+        ABILITY_DRAGONS_MAW
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CD Dragon"),
@@ -24349,7 +23166,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STURDY,
         ABILITY_NONE
 },
@@ -24423,7 +23240,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STURDY,
         ABILITY_NONE
 },
@@ -24496,7 +23313,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STURDY,
         ABILITY_NONE
 },
@@ -24569,8 +23386,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SKILLLINK,
-        ABILITY_FULLMETALBODY,
+       ABILITY_SKILL_LINK,
+        ABILITY_FULL_METAL_BODY,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -24786,9 +23603,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_STRONGJAW,
-        ABILITY_TOUGHCLAWS
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_STRONG_JAW,
+        ABILITY_TOUGH_CLAWS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Arm D Lv3"),
@@ -24859,9 +23676,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_STRONGJAW,
-        ABILITY_TOUGHCLAWS
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_STRONG_JAW,
+        ABILITY_TOUGH_CLAWS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Arm D Lv5"),
@@ -24932,9 +23749,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_STRONGJAW,
-        ABILITY_TOUGHCLAWS
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_STRONG_JAW,
+        ABILITY_TOUGH_CLAWS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Arm D Lv7"),
@@ -25005,9 +23822,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_BATTLEARMOR,
-        ABILITY_STRONGJAW,
-        ABILITY_TOUGHCLAWS
+        ABILITY_BATTLE_ARMOR,
+        ABILITY_STRONG_JAW,
+        ABILITY_TOUGH_CLAWS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Arm D Lv10"),
@@ -25079,9 +23896,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_BATTLEARMOR,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_NONE,
-        ABILITY_SNOWCLOAK
+        ABILITY_SNOW_CLOAK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Mobius"),
@@ -25152,7 +23969,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CLOUDNINE,
+        ABILITY_CLOUD_NINE,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -25299,7 +24116,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_FLAMEBODY,
+        ABILITY_FLAME_BODY,
         ABILITY_SHELL_ARMOR,
         ABILITY_NONE
 },
@@ -25445,7 +24262,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_FLAMEBODY,
+        ABILITY_FLAME_BODY,
         ABILITY_SHELL_ARMOR,
         ABILITY_NONE
 },
@@ -25518,7 +24335,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_RIVALRY,
         ABILITY_BLAZE
 },
@@ -25592,8 +24409,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_FLASHFIRE,
-        ABILITY_MOLDBREAKER,
+        ABILITY_FLASH_FIRE,
+        ABILITY_MOLD_BREAKER,
         ABILITY_BLAZE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -25666,7 +24483,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_LEVITATE,
         ABILITY_BLAZE
 },
@@ -25739,7 +24556,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SHADOWTAG,
+        ABILITY_SHADOW_TAG,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -25811,9 +24628,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_KEENEYE,
-        ABILITY_THICKFAT,
-        ABILITY_SNOWWARNING
+        ABILITY_KEEN_EYE,
+        ABILITY_THICK_FAT,
+        ABILITY_SNOW_WARNING
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("SnowDragon"),
@@ -25885,8 +24702,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_ICEBODY,
-        ABILITY_SNOWWARNING
+        ABILITY_ICE_BODY,
+       ABILITY_SNOW_WARNING
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Snowdust D"),
@@ -25958,8 +24775,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
         ABILITY_STURDY,
-        ABILITY_CLEARBODY,
-        ABILITY_SNOWWARNING
+       ABILITY_CLEAR_BODY,
+       ABILITY_SNOW_WARNING
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("White ND"),
@@ -26030,9 +24847,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_STEAMENGINE,
-        ABILITY_WHITESMOKE,
-        ABILITY_HEAVYMETAL
+        ABILITY_STEAM_ENGINE,
+        ABILITY_WHITE_SMOKE,
+        ABILITY_HEAVY_METAL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Steamroid"),
@@ -26103,9 +24920,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_STEAMENGINE,
-        ABILITY_WHITESMOKE,
-        ABILITY_HEAVYMETAL
+        ABILITY_STEAM_ENGINE,
+        ABILITY_WHITE_SMOKE,
+        ABILITY_HEAVY_METAL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("S Gyroid"),
@@ -26174,8 +24991,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SANDRUSH,
-        ABILITY_SANDFORCE,
+        ABILITY_SAND_RUSH,
+        ABILITY_SAND_FORCE,
         ABILITY_STURDY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -26245,8 +25062,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SANDRUSH,
-        ABILITY_SANDFORCE,
+        ABILITY_SAND_RUSH,
+        ABILITY_SAND_FORCE,
         ABILITY_STURDY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -26318,7 +25135,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_HEALER
 },
@@ -26392,7 +25209,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_HEALER
 },
@@ -26465,7 +25282,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_VITALSPIRIT,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_FOREWARN,
         ABILITY_NONE
 },
@@ -26539,7 +25356,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_VITALSPIRIT,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_WANDERING_SPIRIT,
         ABILITY_NONE
 },
@@ -26688,7 +25505,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_STATIC,
         ABILITY_NONE,
-        ABILITY_WINDRIDER
+        ABILITY_WIND_RIDER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("GGThundr W"),
@@ -26759,7 +25576,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_NONE,
         ABILITY_AERILATE
 },
@@ -26833,7 +25650,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_COLORCHANGE,
+        ABILITY_COLOR_CHANGE,
         ABILITY_MULTISCALE,
         ABILITY_NONE
 },
@@ -26906,7 +25723,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_BLAZE,
-        ABILITY_TANGLEDFEET,
+        ABILITY_TANGLED_FEET,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -26980,7 +25797,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_BULLETPROOF,
-        ABILITY_SOLIDROCK,
+        ABILITY_SOLID_ROCK,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -27052,7 +25869,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_FLASHFIRE,
+        ABILITY_FLASH_FIRE,
         ABILITY_UNBURDEN,
         ABILITY_NONE
 },
@@ -27125,9 +25942,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_THICKFAT,
-        ABILITY_DRYSKIN,
-        ABILITY_MEGALAUNCHER
+        ABILITY_THICK_FAT,
+        ABILITY_DRY_SKIN,
+        ABILITY_MEGA_LAUNCHER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("F Whale"),
@@ -27198,9 +26015,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_EARLYBIRD,
-        ABILITY_FRIENDGUARD,
-        ABILITY_PASTELVEIL
+        ABILITY_EARLY_BIRD,
+        ABILITY_FRIEND_GUARD,
+        ABILITY_PASTEL_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Seiyaryu"),
@@ -27272,8 +26089,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
         ABILITY_PIXILATE,
-        ABILITY_FRIENDGUARD,
-        ABILITY_PASTELVEIL
+        ABILITY_FRIEND_GUARD,
+        ABILITY_PASTEL_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Starry NSD"),
@@ -27346,8 +26163,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_TECHNICIAN,
-        ABILITY_MAGICGUARD,
-        ABILITY_SKILLLINK
+        ABILITY_MAGIC_GUARD,
+       ABILITY_SKILL_LINK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Breaker MW"),
@@ -27418,8 +26235,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_WATERCOMPACTION,
-        ABILITY_SNOWCLOAK,
+        ABILITY_WATER_COMPACTION,
+        ABILITY_SNOW_CLOAK,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -27491,8 +26308,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_WATERCOMPACTION,
-        ABILITY_SNOWCLOAK,
+        ABILITY_WATER_COMPACTION,
+        ABILITY_SNOW_CLOAK,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -27565,8 +26382,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_UNSEEN_FIST,
-        ABILITY_IRONFIST,
-        ABILITY_MOLDBREAKER
+        ABILITY_IRON_FIST,
+        ABILITY_MOLD_BREAKER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("AG Soldier"),
@@ -27638,8 +26455,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_UNSEEN_FIST,
-        ABILITY_IRONFIST,
-        ABILITY_MOLDBREAKER
+        ABILITY_IRON_FIST,
+        ABILITY_MOLD_BREAKER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("AG Golem"),
@@ -27711,8 +26528,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_UNSEEN_FIST,
-        ABILITY_IRONFIST,
-        ABILITY_MOLDBREAKER
+        ABILITY_IRON_FIST,
+        ABILITY_MOLD_BREAKER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("UAG Golem"),
@@ -27783,9 +26600,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
-        ABILITY_TOUGHCLAWS,
-        ABILITY_ARENATRAP,
-        ABILITY_EMERGENCYEXIT
+        ABILITY_TOUGH_CLAWS,
+        ABILITY_ARENA_TRAP,
+        ABILITY_EMERGENCY_EXIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("WallShadow"),
@@ -27859,7 +26676,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_DOWNLOAD,
         ABILITY_STAMINA,
-        ABILITY_SURGESURFER
+        ABILITY_SURGE_SURFER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Firewall D"),
@@ -27932,7 +26749,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
         ABILITY_ADAPTABILITY,
-        ABILITY_GRASSPELT,
+        ABILITY_GRASS_PELT,
         ABILITY_CONTRARY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -28004,9 +26821,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_OWNTEMPO,
+        ABILITY_OWN_TEMPO,
         ABILITY_SNIPER,
-        ABILITY_MEGALAUNCHER
+        ABILITY_MEGA_LAUNCHER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Blowback D"),
@@ -28079,9 +26896,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_OWNTEMPO,
+        ABILITY_OWN_TEMPO,
         ABILITY_SNIPER,
-        ABILITY_MEGALAUNCHER
+        ABILITY_MEGA_LAUNCHER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Barrel D"),
@@ -28298,9 +27115,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_LEVITATE,
-        ABILITY_POWEROFALCHEMY
+        ABILITY_POWER_OF_ALCHEMY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Helios TPS"),
@@ -28372,9 +27189,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_LEVITATE,
-        ABILITY_POWEROFALCHEMY
+        ABILITY_POWER_OF_ALCHEMY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Helios Duo"),
@@ -28447,9 +27264,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_LEVITATE,
-        ABILITY_POWEROFALCHEMY
+        ABILITY_POWER_OF_ALCHEMY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Helios Tri"),
@@ -28521,7 +27338,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
         ABILITY_ILLUMINATE,
-        ABILITY_NATURALCURE,
+        ABILITY_NATURAL_CURE,
         ABILITY_ANALYTIC
 },
     .bodyColor = BODY_COLOR_RED,
@@ -28592,7 +27409,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_1),
     .abilities = {
         ABILITY_ILLUMINATE,
-        ABILITY_NATURALCURE,
+        ABILITY_NATURAL_CURE,
         ABILITY_ANALYTIC
 },
     .bodyColor = BODY_COLOR_RED,
@@ -28664,7 +27481,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_DARKAURA,
+        ABILITY_DARK_AURA,
         ABILITY_OVERCOAT,
         ABILITY_PRESSURE
 },
@@ -28738,7 +27555,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_AURABREAK,
+        ABILITY_AURA_BREAK,
         ABILITY_NONE,
         ABILITY_JUSTIFIED
 },
@@ -28805,16 +27622,16 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Speed = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_HORN_OF_THE_UNICORN,
+    //.itemRare = ITEM_HORN_OF_THE_UNICORN,
     .genderRatio = PERCENT_FEMALE(75),
     .eggCycles = 5,
     .friendship = STANDARD_FRIENDSHIP,
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_ANTICIPATION,
-        ABILITY_AROMAVEIL
+        ABILITY_AROMA_VEIL
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Sunlight U"),
@@ -28885,9 +27702,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SUCTIONCUPS,
-        ABILITY_SWIFTSWIM,
-        ABILITY_STICKYHOLD
+        ABILITY_SUCTION_CUPS,
+        ABILITY_SWIFT_SWIM,
+        ABILITY_STICKY_HOLD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("F Kraken"),
@@ -28958,9 +27775,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SUCTIONCUPS,
-        ABILITY_SWIFTSWIM,
-        ABILITY_STICKYHOLD
+        ABILITY_SUCTION_CUPS,
+        ABILITY_SWIFT_SWIM,
+        ABILITY_STICKY_HOLD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("DoomKraken"),
@@ -29031,7 +27848,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -29105,7 +27922,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_SHARPNESS,
-        ABILITY_HYPERCUTTER,
+        ABILITY_HYPER_CUTTER,
         ABILITY_INFILTRATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -29178,7 +27995,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STATIC,
         ABILITY_HEATPROOF
 },
@@ -29252,9 +28069,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_ARENATRAP,
-        ABILITY_SANDSTREAM,
-        ABILITY_SANDFORCE
+        ABILITY_ARENA_TRAP,
+        ABILITY_SAND_STREAM,
+        ABILITY_SAND_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Apophis"),
@@ -29325,7 +28142,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
         ABILITY_TECHNICIAN,
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -29397,8 +28214,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_SANDFORCE,
-        ABILITY_SANDVEIL,
+        ABILITY_SAND_FORCE,
+       ABILITY_SAND_VEIL,
         ABILITY_INSOMNIA
 },
     .bodyColor = BODY_COLOR_RED,
@@ -29470,8 +28287,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_SANDFORCE,
-        ABILITY_SANDVEIL,
+        ABILITY_SAND_FORCE,
+       ABILITY_SAND_VEIL,
         ABILITY_INSOMNIA
 },
     .bodyColor = BODY_COLOR_RED,
@@ -29544,9 +28361,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SCREENCLEANER,
+        ABILITY_SCREEN_CLEANER,
         ABILITY_NONE,
-        ABILITY_ZENMODE
+        ABILITY_ZEN_MODE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Laundry DM"),
@@ -29595,6 +28412,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLaundryDragonmaidLearnset,
     .teachableLearnset = sLaundryDragonmaidTeachableLearnset,
     .eggMoveLearnset = sLaundryDragonmaidEggMoveLearnset,
+    .formChangeTable = sLaundryDragonmaidFormChangeTable,
 },
 
 [SPECIES_DRAGONMAID_NUDYARL] =
@@ -29618,14 +28436,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SCREENCLEANER,
+        ABILITY_SCREEN_CLEANER,
         ABILITY_NONE,
-        ABILITY_ZENMODE
+        ABILITY_ZEN_MODE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("DM Nudyarl"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_DRAGONMAID_NUDYARL,
+    .natDexNum = NATIONAL_DEX_LAUNDRY_DRAGONMAID,
     .categoryName = _("Dragon Maid"),
     .height = 22,
     .weight = 760,
@@ -29669,6 +28487,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLaundryDragonmaidLearnset,
     .teachableLearnset = sDragonmaidNudyarlTeachableLearnset,
     .eggMoveLearnset = sDragonmaidNudyarlEggMoveLearnset,
+    .formSpeciesIdTable = sLaundryDragonmaidFormSpeciesIdTable,
+    .formChangeTable = sLaundryDragonmaidFormChangeTable,
 },
 
 [SPECIES_HITOTSU_ME_GIANT] =
@@ -29692,8 +28512,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_IRONFIST,
-        ABILITY_SHEERFORCE
+        ABILITY_IRON_FIST,
+        ABILITY_SHEER_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Hitotsu MG"),
@@ -29766,8 +28586,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_INTIMIDATE,
-        ABILITY_IRONFIST,
-        ABILITY_SHEERFORCE
+        ABILITY_IRON_FIST,
+        ABILITY_SHEER_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Cyclopean"),
@@ -29839,7 +28659,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_KEENEYE,
+        ABILITY_KEEN_EYE,
         ABILITY_REFRIGERATE,
         ABILITY_SOUNDPROOF
 },
@@ -29911,7 +28731,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_EARLYBIRD,
+        ABILITY_EARLY_BIRD,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -30049,7 +28869,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .expYield = 75,
     .evYield_Attack = 1,
     .evYield_Speed = 1,
-    .itemCommon = ITEM_HORN_OF_THE_UNICORN,
+    //.itemCommon = ITEM_HORN_OF_THE_UNICORN,
     .itemRare = ITEM_NONE,
     .genderRatio = PERCENT_FEMALE(50),
     .eggCycles = 15,
@@ -30058,7 +28878,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
         ABILITY_RUN_AWAY,
-        ABILITY_PASTELVEIL,
+        ABILITY_PASTEL_VEIL,
         ABILITY_ROCKY_PAYLOAD
 },
     .bodyColor = BODY_COLOR_RED,
@@ -30129,8 +28949,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SNOWWARNING,
-        ABILITY_THICKFAT,
+       ABILITY_SNOW_WARNING,
+        ABILITY_THICK_FAT,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -30202,8 +29022,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SNOWWARNING,
-        ABILITY_THICKFAT,
+       ABILITY_SNOW_WARNING,
+        ABILITY_THICK_FAT,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -30274,8 +29094,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SLUSHRUSH,
-        ABILITY_THICKFAT,
+        ABILITY_SLUSH_RUSH,
+        ABILITY_THICK_FAT,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -30420,7 +29240,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_CUTECHARM,
+        ABILITY_CUTE_CHARM,
         ABILITY_HYDRATION,
         ABILITY_NONE
 },
@@ -30494,7 +29314,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_RIVALRY,
-        ABILITY_PARENTALBOND,
+        ABILITY_PARENTAL_BOND,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -30564,9 +29384,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_LIQUIDOOZE,
-        ABILITY_POISONTOUCH,
-        ABILITY_SAPSIPPER
+        ABILITY_LIQUID_OOZE,
+        ABILITY_POISON_TOUCH,
+        ABILITY_SAP_SIPPER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Drk Jeroid"),
@@ -30787,7 +29607,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_SYNCHRONIZE,
         ABILITY_CONTRARY,
-        ABILITY_SOULHEART
+        ABILITY_SOUL_HEART
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("CO Heart"),
@@ -30930,8 +29750,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
     .abilities = {
-        ABILITY_MAGICBOUNCE,
-        ABILITY_MIRRORARMOR,
+        ABILITY_MAGIC_BOUNCE,
+        ABILITY_MIRROR_ARMOR,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -31003,7 +29823,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_HUGEPOWER,
+        ABILITY_HUGE_POWER,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -31075,7 +29895,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_VOLTABSORB,
+        ABILITY_VOLT_ABSORB,
         ABILITY_STATIC,
         ABILITY_NONE
 },
@@ -31221,8 +30041,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_POISONHEAL,
-        ABILITY_EFFECTSPORE,
+        ABILITY_POISON_HEAL,
+        ABILITY_EFFECT_SPORE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -31294,7 +30114,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_ERRATIC,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
-        ABILITY_SPEEDBOOST,
+        ABILITY_SPEED_BOOST,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -31369,7 +30189,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_TORRENT,
-        ABILITY_WATERBUBBLE,
+        ABILITY_WATER_BUBBLE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -31441,8 +30261,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_STEAMENGINE,
-        ABILITY_WATERABSORB,
+        ABILITY_STEAM_ENGINE,
+       ABILITY_WATER_ABSORB,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -31513,7 +30333,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_STURDY,
         ABILITY_MOODY
 },
@@ -31585,7 +30405,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_STURDY,
         ABILITY_MOODY
 },
@@ -31659,7 +30479,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_FOREWARN,
         ABILITY_ANTICIPATION,
-        ABILITY_CURSEDBODY
+        ABILITY_CURSED_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Tiki Elder"),
@@ -31730,9 +30550,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MONSTER),
     .abilities = {
-        ABILITY_SANDRUSH,
+        ABILITY_SAND_RUSH,
         ABILITY_ANTICIPATION,
-        ABILITY_CURSEDBODY
+        ABILITY_CURSED_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Mask Beast"),
@@ -31803,9 +30623,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_RAINDISH,
-        ABILITY_CLOUDNINE,
-        ABILITY_WINDRIDER
+        ABILITY_RAIN_DISH,
+        ABILITY_CLOUD_NINE,
+        ABILITY_WIND_RIDER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Nimbusman"),
@@ -31877,9 +30697,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_STORMDRAIN,
-        ABILITY_CLOUDNINE,
-        ABILITY_WINDRIDER
+        ABILITY_STORM_DRAIN,
+        ABILITY_CLOUD_NINE,
+        ABILITY_WIND_RIDER
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("EyeTyphoon"),
@@ -31951,7 +30771,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_CLEARBODY,
+       ABILITY_CLEAR_BODY,
         ABILITY_NONE,
         ABILITY_PROTEAN
 },
@@ -32024,8 +30844,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FAIRY),
     .abilities = {
-        ABILITY_HONEST_POWER,
-        ABILITY_AROMAVEIL,
+       // ABILITY_HONEST_POWER,
+        ABILITY_AROMA_VEIL,
         ABILITY_HEALER
 },
     .bodyColor = BODY_COLOR_RED,
@@ -32096,7 +30916,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_INNERFOCUS,
+        ABILITY_INNER_FOCUS,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -32169,7 +30989,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_AIRLOCK,
+        ABILITY_AIR_LOCK,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -32390,9 +31210,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_2),
     .abilities = {
-        ABILITY_SWIFTSWIM,
+        ABILITY_SWIFT_SWIM,
         ABILITY_SHELL_ARMOR,
-        ABILITY_STORMDRAIN
+        ABILITY_STORM_DRAIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Gameciel"),
@@ -32465,7 +31285,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_MOXIE,
         ABILITY_SHELL_ARMOR,
-        ABILITY_POISONPOINT
+        ABILITY_POISON_POINT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("MB Serket"),
@@ -32608,7 +31428,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_EARLYBIRD,
+        ABILITY_EARLY_BIRD,
         ABILITY_JUSTIFIED,
         ABILITY_NONE
 },
@@ -32755,7 +31575,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_MAGMAARMOR,
+        ABILITY_MAGMA_ARMOR,
         ABILITY_STAKEOUT,
         ABILITY_NONE
 },
@@ -32828,7 +31648,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_SHEERFORCE,
+        ABILITY_SHEER_FORCE,
         ABILITY_INTIMIDATE,
         ABILITY_RECEIVER
 },
@@ -32900,7 +31720,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SHEDSKIN,
+        ABILITY_SHED_SKIN,
         ABILITY_MERCILESS,
         ABILITY_NONE
 },
@@ -32973,9 +31793,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_ICEBODY,
-        ABILITY_FLASHFIRE,
-        ABILITY_FLAMEBODY
+        ABILITY_ICE_BODY,
+        ABILITY_FLASH_FIRE,
+        ABILITY_FLAME_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("F&F Dragon"),
@@ -33046,7 +31866,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_SHADOWTAG,
+        ABILITY_SHADOW_TAG,
         ABILITY_STAKEOUT,
         ABILITY_PRANKSTER
 },
@@ -33192,8 +32012,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_TOUGHCLAWS,
-        ABILITY_INNERFOCUS,
+        ABILITY_TOUGH_CLAWS,
+        ABILITY_INNER_FOCUS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -33265,8 +32085,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_TOUGHCLAWS,
-        ABILITY_INNERFOCUS,
+        ABILITY_TOUGH_CLAWS,
+        ABILITY_INNER_FOCUS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -33338,9 +32158,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_IRONBARBS,
-        ABILITY_ROUGHSKIN,
-        ABILITY_NOGUARD
+        ABILITY_IRON_BARBS,
+        ABILITY_ROUGH_SKIN,
+        ABILITY_NO_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Kyutora"),
@@ -33411,9 +32231,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_MIRRORARMOR,
-        ABILITY_WEAKARMOR,
-        ABILITY_NOGUARD
+        ABILITY_MIRROR_ARMOR,
+        ABILITY_WEAK_ARMOR,
+        ABILITY_NO_GUARD
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Shunoros"),
@@ -33634,7 +32454,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS, EGG_GROUP_GRASS),
     .abilities = {
         ABILITY_DROUGHT,
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_CHLOROPHYLL
 },
     .bodyColor = BODY_COLOR_RED,
@@ -33706,9 +32526,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_ANGERPOINT,
-        ABILITY_STRONGJAW,
-        ABILITY_EMERGENCYEXIT
+        ABILITY_ANGER_POINT,
+        ABILITY_STRONG_JAW,
+        ABILITY_EMERGENCY_EXIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Giant Rex"),
@@ -33779,9 +32599,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SLUSHRUSH,
+        ABILITY_SLUSH_RUSH,
         ABILITY_DISGUISE,
-        ABILITY_SNOWWARNING
+       ABILITY_SNOW_WARNING
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Snowman E"),
@@ -33852,14 +32672,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_WATER_3),
     .abilities = {
-        ABILITY_SLUSHRUSH,
+        ABILITY_SLUSH_RUSH,
         ABILITY_DISGUISE,
-        ABILITY_SNOWWARNING
+       ABILITY_SNOW_WARNING
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Snowman E"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_SNOWMAN_EATER_BUSTED,
+    .natDexNum = NATIONAL_DEX_SNOWMAN_EATER,
     .categoryName = _("Snowman"),
     .height = 22,
     .weight = 800,
@@ -33925,9 +32745,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_POISONTOUCH,
-        ABILITY_POISONPOINT,
-        ABILITY_SHEDSKIN
+        ABILITY_POISON_TOUCH,
+        ABILITY_POISON_POINT,
+        ABILITY_SHED_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Venom Boa"),
@@ -33998,7 +32818,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_POISONTOUCH,
+        ABILITY_POISON_TOUCH,
         ABILITY_CORROSION,
         ABILITY_INFILTRATOR
 },
@@ -34072,9 +32892,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FIELD),
     .abilities = {
-        ABILITY_MARVELSCALE,
+        ABILITY_MARVEL_SCALE,
         ABILITY_MERCILESS,
-        ABILITY_TANGLINGHAIR
+        ABILITY_TANGLING_HAIR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Venominaga"),
@@ -34220,7 +33040,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_FOREWARN,
-        ABILITY_FULLMETALBODY,
+        ABILITY_FULL_METAL_BODY,
         ABILITY_TELEPATHY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -34293,7 +33113,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_FOREWARN,
-        ABILITY_MAGICGUARD,
+        ABILITY_MAGIC_GUARD,
         ABILITY_TELEPATHY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -34366,7 +33186,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_AMORPHOUS),
     .abilities = {
         ABILITY_FOREWARN,
-        ABILITY_PRISMARMOR,
+        ABILITY_PRISM_ARMOR,
         ABILITY_TELEPATHY
 },
     .bodyColor = BODY_COLOR_RED,
@@ -34437,8 +33257,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_FAST,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS, EGG_GROUP_WATER_1),
     .abilities = {
-        ABILITY_SWIFTSWIM,
-        ABILITY_LEAFGUARD,
+        ABILITY_SWIFT_SWIM,
+        ABILITY_LEAF_GUARD,
         ABILITY_REGENERATOR
 },
     .bodyColor = BODY_COLOR_RED,
@@ -34510,7 +33330,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_DARKAURA,
+        ABILITY_DARK_AURA,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -34583,7 +33403,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_DARKAURA,
+        ABILITY_DARK_AURA,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -34656,7 +33476,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
-        ABILITY_DARKAURA,
+        ABILITY_DARK_AURA,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -34803,7 +33623,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_BUG),
     .abilities = {
         ABILITY_INSOMNIA,
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -34875,9 +33695,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_ICEBODY,
+        ABILITY_ICE_BODY,
         ABILITY_NONE,
-        ABILITY_CLEARBODY
+       ABILITY_CLEAR_BODY
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Fitzgerald"),
@@ -34949,7 +33769,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_HUMAN_LIKE),
     .abilities = {
         ABILITY_WANDERING_SPIRIT,
-        ABILITY_CURSEDBODY,
+        ABILITY_CURSED_BODY,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -35021,7 +33841,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_BATTLEARMOR,
+        ABILITY_BATTLE_ARMOR,
         ABILITY_STATIC,
         ABILITY_NONE
 },
@@ -35094,7 +33914,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -35166,8 +33986,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_ROCKHEAD,
-        ABILITY_VITALSPIRIT,
+        ABILITY_ROCK_HEAD,
+       ABILITY_VITAL_SPIRIT,
         ABILITY_ROCKY_PAYLOAD
 },
     .bodyColor = BODY_COLOR_RED,
@@ -35238,7 +34058,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_DRYSKIN,
+        ABILITY_DRY_SKIN,
         ABILITY_LEVITATE,
         ABILITY_ROCKY_PAYLOAD
 },
@@ -35312,7 +34132,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SOLARPOWER,
+        ABILITY_SOLAR_POWER,
         ABILITY_LEVITATE,
         ABILITY_ROCKY_PAYLOAD
 },
@@ -35378,14 +34198,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .expYield = 221,
     .evYield_HP = 3,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    ////.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_MOLDBREAKER,
+        ABILITY_MOLD_BREAKER,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -35452,7 +34272,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 2,
     .evYield_SpDefense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -35526,14 +34346,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -35600,14 +34420,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 1,
     .evYield_Defense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_TINTEDLENS,
+        ABILITY_TINTED_LENS,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -35674,7 +34494,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_HP = 1,
     .evYield_SpDefense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -35748,14 +34568,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Speed = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_SAPSIPPER,
+         ABILITY_SAP_SIPPER,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -35823,7 +34643,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Speed = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -35903,14 +34723,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_MOLDBREAKER,
+        ABILITY_MOLD_BREAKER,
         ABILITY_NONE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Ccapac Apu"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CCAPAC_APU_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CCAPAC_APU,
     .categoryName = _("Dark Signer"),
     .height = 250,
     .weight = 8065,
@@ -35970,7 +34790,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 2,
     .evYield_SpDefense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -35984,7 +34804,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Cusillu"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CUSILLU_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CUSILLU,
     .categoryName = _("Dark Signer"),
     .height = 200,
     .weight = 5065,
@@ -36044,21 +34864,21 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
+        ABILITY_COMPOUND_EYES,
         ABILITY_NONE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Ccarayhua"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CCARAYHUA_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CCARAYHUA,
     .categoryName = _("Dark Signer"),
     .height = 210,
     .weight = 5165,
@@ -36118,21 +34938,21 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Attack = 1,
     .evYield_Defense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_TINTEDLENS,
+        ABILITY_TINTED_LENS,
         ABILITY_NONE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Uru"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_URU_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_URU,
     .categoryName = _("Dark Signer"),
     .height = 185,
     .weight = 4565,
@@ -36192,7 +35012,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_HP = 1,
     .evYield_SpDefense = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -36206,7 +35026,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("C Challhua"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CHACU_CHALLHUA_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_CHACU_CHALLHUA,
     .categoryName = _("Dark Signer"),
     .height = 145,
     .weight = 4765,
@@ -36266,21 +35086,21 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Speed = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_SAPSIPPER,
+         ABILITY_SAP_SIPPER,
         ABILITY_NONE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("AsllaPiscu"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_ASLLA_PISCU_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_ASLLA_PISCU,
     .categoryName = _("Dark Signer"),
     .height = 155,
     .weight = 2765,
@@ -36341,7 +35161,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .evYield_Speed = 1,
     .evYield_SpAttack = 1,
     .itemCommon = ITEM_NONE,
-    .itemRare = ITEM_DARK_ORB,
+    //.itemRare = ITEM_DARK_ORB,
     .genderRatio = MON_GENDERLESS,
     .eggCycles = 8,
     .friendship = 0,
@@ -36355,7 +35175,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("WiraqochaR"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_WIRAQOCHA_RASCA_AWAKENED,
+    .natDexNum = NATIONAL_DEX_EARTHBOUND_IMMORTAL_WIRAQOCHA_RASCA,
     .categoryName = _("Dark Signer"),
     .height = 190,
     .weight = 3265,
@@ -36421,9 +35241,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_NONE,
-        ABILITY_SPEEDBOOST
+        ABILITY_SPEED_BOOST
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Debris D"),
@@ -36494,9 +35314,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_NONE,
-        ABILITY_SPEEDBOOST
+        ABILITY_SPEED_BOOST
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Stardust D"),
@@ -36567,9 +35387,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_SHIELDDUST,
+        ABILITY_SHIELD_DUST,
         ABILITY_NONE,
-        ABILITY_SPEEDBOOST
+        ABILITY_SPEED_BOOST
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("ShootingSD"),
@@ -36642,7 +35462,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_INTIMIDATE,
         ABILITY_NONE,
-        ABILITY_SHEERFORCE
+        ABILITY_SHEER_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Red Rise D"),
@@ -36714,7 +35534,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_INTIMIDATE,
         ABILITY_NONE,
-        ABILITY_SHEERFORCE
+        ABILITY_SHEER_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Red D Arch"),
@@ -36787,7 +35607,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_INTIMIDATE,
         ABILITY_NONE,
-        ABILITY_SHEERFORCE
+        ABILITY_SHEER_FORCE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Red Nova D"),
@@ -36858,7 +35678,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_IRONBARBS,
+        ABILITY_IRON_BARBS,
         ABILITY_NONE,
         ABILITY_CHLOROPHYLL
 },
@@ -36932,7 +35752,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_IRONBARBS,
+        ABILITY_IRON_BARBS,
         ABILITY_NONE,
         ABILITY_CHLOROPHYLL
 },
@@ -37007,7 +35827,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_IRONBARBS,
+        ABILITY_IRON_BARBS,
         ABILITY_NONE,
         ABILITY_CHLOROPHYLL
 },
@@ -37080,9 +35900,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_MAGICGUARD,
+        ABILITY_MAGIC_GUARD,
         ABILITY_NONE,
-        ABILITY_GALEWINGS
+         ABILITY_GALE_WINGS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("BW Ghibli"),
@@ -37153,9 +35973,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_MAGICGUARD,
+        ABILITY_MAGIC_GUARD,
         ABILITY_NONE,
-        ABILITY_GALEWINGS
+         ABILITY_GALE_WINGS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("BlackwingD"),
@@ -37227,9 +36047,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_MEDIUM_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_FLYING),
     .abilities = {
-        ABILITY_MAGICGUARD,
+        ABILITY_MAGIC_GUARD,
         ABILITY_NONE,
-        ABILITY_GALEWINGS
+         ABILITY_GALE_WINGS
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("BW Assault"),
@@ -37302,7 +36122,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_TRIAGE,
         ABILITY_NONE,
-        ABILITY_MARVELSCALE
+        ABILITY_MARVEL_SCALE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Fairy Drg"),
@@ -37375,7 +36195,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_TRIAGE,
         ABILITY_NONE,
-        ABILITY_MARVELSCALE
+        ABILITY_MARVEL_SCALE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Ancient FD"),
@@ -37449,7 +36269,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_TRIAGE,
         ABILITY_NONE,
-        ABILITY_MARVELSCALE
+        ABILITY_MARVEL_SCALE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("A Pixie D"),
@@ -37522,7 +36342,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_REGENERATOR,
         ABILITY_NONE,
-        ABILITY_BATTLEARMOR
+        ABILITY_BATTLE_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Revolution"),
@@ -37595,7 +36415,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_REGENERATOR,
         ABILITY_NONE,
-        ABILITY_BATTLEARMOR
+        ABILITY_BATTLE_ARMOR
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Power Tool"),
@@ -37669,7 +36489,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_REGENERATOR,
         ABILITY_NONE,
-        ABILITY_SHEDSKIN
+        ABILITY_SHED_SKIN
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("LifeStream"),
@@ -37742,7 +36562,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_ILLUMINATE,
         ABILITY_NONE,
-        ABILITY_EMERGENCYEXIT
+        ABILITY_EMERGENCY_EXIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Majestic D"),
@@ -37816,7 +36636,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_COMPETITIVE,
         ABILITY_NONE,
-        ABILITY_EMERGENCYEXIT
+        ABILITY_EMERGENCY_EXIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Maj Star D"),
@@ -37890,7 +36710,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .abilities = {
         ABILITY_DEFIANT,
         ABILITY_NONE,
-        ABILITY_EMERGENCYEXIT
+        ABILITY_EMERGENCY_EXIT
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Maj Red D"),
@@ -37963,7 +36783,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_CLEARBODY,
+       ABILITY_CLEAR_BODY,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -38038,7 +36858,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_FLAMEBODY,
+        ABILITY_FLAME_BODY,
         ABILITY_NONE,
         ABILITY_NONE
 },
@@ -38111,9 +36931,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SHIELDSDOWN,
+        ABILITY_SHIELDS_DOWN,
         ABILITY_NONE,
-        ABILITY_SOLIDROCK
+        ABILITY_SOLID_ROCK
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Nibiru"),
@@ -38184,14 +37004,14 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_MINERAL),
     .abilities = {
-        ABILITY_SHIELDSDOWN,
+        ABILITY_SHIELDS_DOWN,
         ABILITY_NONE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Nibiru"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_NIBIRU_MONSTER_FORM,
+    .natDexNum = NATIONAL_DEX_NIBIRU,
     .categoryName = _("Rock"),
     .height = 55,
     .weight = 5555,
@@ -38257,7 +37077,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_VICTORYSTAR,
+        ABILITY_VICTORY_STAR,
         ABILITY_NONE,
         ABILITY_GOOD_AS_GOLD
 },
@@ -38329,8 +37149,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_STRONGJAW,
-        ABILITY_TOXICBOOST,
+        ABILITY_STRONG_JAW,
+        ABILITY_TOXIC_BOOST,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -38402,8 +37222,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_COMPOUNDEYES,
-        ABILITY_KEENEYE,
+        ABILITY_COMPOUND_EYES,
+        ABILITY_KEEN_EYE,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,
@@ -38475,8 +37295,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .growthRate = GROWTH_SLOW,
     .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
     .abilities = {
-        ABILITY_IRONBARBS,
-        ABILITY_TOUGHCLAWS,
+        ABILITY_IRON_BARBS,
+        ABILITY_TOUGH_CLAWS,
         ABILITY_NONE
 },
     .bodyColor = BODY_COLOR_RED,

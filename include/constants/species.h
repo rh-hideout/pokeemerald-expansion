@@ -1688,7 +1688,7 @@ enum __attribute__((packed)) Species
     SPECIES_TATSUGIRI_CURLY_MEGA = 1569,
     SPECIES_TATSUGIRI_DROOPY_MEGA = 1570,
     SPECIES_TATSUGIRI_STRETCHY_MEGA = 1571,
-    SPECIES_GLIMMORA_MEGA = 1572,
+    SPECIES_GLIMMORA_MEGA = 1572, 
 
     SPECIES_CUSTOM_START = SPECIES_GLIMMORA_MEGA,
     // Add any custom species between here and SPECIES_CUSTOM_END
@@ -2221,6 +2221,9 @@ enum __attribute__((packed)) Species
     SPECIES_CRITIAS = 2097,
     SPECIES_TIMAEUS = 2098,
     SPECIES_HERMOS = 2099,
+
+
+
 
 
     //////////////////////////////End//////////////////////////////
