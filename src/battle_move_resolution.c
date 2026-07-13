@@ -1690,8 +1690,11 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
 
     u32 weather = GetWeather();
     u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
-    enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(cv->move);
 
+    if (attackerWeather == B_WEATHER_NONE)
+        return FALSE;
+
+    enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(cv->move);
     enum BattleWeather weatherType = sBattleWeatherInfo[GetCurrentBattleWeather(weather)].type;
     enum BattleWeather attackerWeatherType = sBattleWeatherInfo[GetCurrentBattleWeather(attackerWeather)].type;
 

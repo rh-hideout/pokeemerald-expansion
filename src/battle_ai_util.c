@@ -3134,14 +3134,27 @@ bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag)
     return FALSE;
 }
 
+// TODO: this and the function in moves resolution can be merged by changing some code a bit
+// Is two turn move but not semi semi-invulnerable
 bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move move)
 {
     switch (GetMoveEffect(move))
     {
     case EFFECT_SOLAR_BEAM:
     case EFFECT_TWO_TURNS_ATTACK:
-        return !(gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_POWER_HERB
-              || (GetCurrentBattleWeather(AI_GetWeather()) == GetTwoTurnMoveWeather(move)));
+    {
+        u32 weather = AI_GetWeather();
+        u32 attackerWeather = GetAttackerWeather(gAiLogicData->holdEffects[battlerAtk], gAiLogicData->abilities[battlerAtk], weather);
+
+        enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(move);
+        enum BattleWeather weatherType = sBattleWeatherInfo[GetCurrentBattleWeather(weather)].type;
+        enum BattleWeather attackerWeatherType = sBattleWeatherInfo[GetCurrentBattleWeather(attackerWeather)].type;
+
+        bool32 isAffectedByWeather = ((attackerWeather != B_WEATHER_NONE)
+                                   && ((weatherType == moveAffectedByWeather) || (attackerWeatherType == moveAffectedByWeather)));
+
+        return !(isAffectedByWeather || gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_POWER_HERB);
+    }
     default:
         return FALSE;
     }
