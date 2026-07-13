@@ -209,7 +209,6 @@ struct MoveInfo
         u32 type;
         u32 fixedDamage;
         u32 damagePercentage;
-        u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
         u32 overwriteAbility;

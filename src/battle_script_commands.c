@@ -1891,8 +1891,12 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     cv.battlerAtk = battlerAtk;
     cv.battlerDef = gBattlerTarget;
     cv.move = gCurrentMove; // Should be set to None eventually. When Cmd_seteffectprimary is gone
-    cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
-    cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
 
     struct SetEffect se = {0};
     se.moveEffect = moveEffect;
