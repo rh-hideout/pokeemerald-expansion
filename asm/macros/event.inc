@@ -371,7 +371,6 @@
 	.endm
 
 	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
-	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
 	.macro gettimeofday
 	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
@@ -2891,7 +2890,7 @@
 	.2byte \localIdTwo
 	.endm
 
-	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found. 
+	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found.
 	.macro getoverworldwildencounterspecies var:req, localId=VAR_LAST_TALKED
 	callnative SetOverworldObjectSpecies, requests_effects=1
 	.2byte \var
