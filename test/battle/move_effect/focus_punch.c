@@ -279,7 +279,7 @@ TO_DO_BATTLE_TEST("Focus Punch losing focus is not considered as the last move u
 TO_DO_BATTLE_TEST("Focus Punch's initial message is not considered as using the move for Zoom Lens");
 TO_DO_BATTLE_TEST("Focus Punch will use the selected move's priority when being Encored into Focus Punch");
 
-SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch")
+SINGLE_BATTLE_TEST("Focus Punch's initial message is shown if the user selected a different move and was Encored into using Focus Punch")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
@@ -298,10 +298,8 @@ SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selec
             MESSAGE("Wobbuffet is tightening its focus!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-            MESSAGE("Wobbuffet is tightening its focus!");
-        }
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
     }
 }
 

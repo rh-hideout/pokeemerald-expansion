@@ -14137,3 +14137,20 @@ static void Cmd_jumpifterrain(void)
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_TryDoMoveEffectsBeforeMoves(void)
+{
+    NATIVE_ARGS(u8 battler);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
+    gBattleScripting.battler = battler;
+
+    const u8 *script = GetChargingSetUpScript(GetMoveEffect(encoredMove), TRUE);
+    if (script)
+    {
+        gBattlescriptCurrInstr = script;
+    } else {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}

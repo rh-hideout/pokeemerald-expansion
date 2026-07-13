@@ -2125,3 +2125,8 @@
 	.byte \terrain
 	.4byte \jumpInstr
 	.endm
+
+	.macro trydomoveeffectsbeforemoves battler:req
+	callnative BS_TryDoMoveEffectsBeforeMoves
+	.byte \battler
+	.endm
