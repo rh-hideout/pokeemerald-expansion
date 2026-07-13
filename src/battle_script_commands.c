@@ -3862,10 +3862,10 @@ static void Cmd_getexp(void)
     enum Species faintedSpecies;
     if (!gBattleMons[gBattlerFainted].volatiles.transformed)
         faintedSpecies = gBattleMons[gBattlerFainted].species;
-    else if (GetConfig(B_TRANSFORM_BATTLE_REWARDS) < GEN_3)
-        faintedSpecies = gBattleMons[gBattlerFainted].volatiles.transformedMonSpecies;
-    else
+    else if (GetConfig(B_TRANSFORM_BATTLE_REWARDS) == GEN_3 || GetConfig(B_TRANSFORM_BATTLE_REWARDS) == GEN_4)
         faintedSpecies = gBattleMons[gBattlerFainted].species;
+    else
+        faintedSpecies = gBattleMons[gBattlerFainted].volatiles.transformedMonSpecies;
 
     switch (gBattleScripting.getexpState)
     {

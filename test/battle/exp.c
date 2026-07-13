@@ -120,7 +120,7 @@ WILD_BATTLE_TEST("Large exp gains are supported", s32 exp) // #1455
     }
 }
 
-WILD_BATTLE_TEST("Transformed Pokemon gives the experience points of the copied species in Gen 3+")
+WILD_BATTLE_TEST("Transformed Pokemon gives the experience points of the copied species in Gen 3 and 4")
 {
     u32 speciesExp = 0;
     u32 gen = 0;
@@ -128,13 +128,13 @@ WILD_BATTLE_TEST("Transformed Pokemon gives the experience points of the copied 
 
     for (u32 j = GEN_1; j <= GEN_LATEST; j++)
     {
-        if (j < GEN_3)
+        if (j == GEN_3 || j == GEN_4)
         {
-            PARAMETRIZE(speciesExp = SPECIES_DITTO, gen = j);
+            PARAMETRIZE(speciesExp = SPECIES_BLISSEY, gen = j);
         }
         else
         {
-            PARAMETRIZE(speciesExp = SPECIES_BLISSEY, gen = j);
+            PARAMETRIZE(speciesExp = SPECIES_DITTO, gen = j);
         }
     }
 
