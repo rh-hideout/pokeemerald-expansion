@@ -73,3 +73,40 @@ SINGLE_BATTLE_TEST("Struggle does not receive normal-type STAB")
         EXPECT_MUL_EQ(struggleDamage, Q_4_12(1.5), cutDamage);
     }
 }
+
+SINGLE_BATTLE_TEST("Struggle recoil is subject to standard rounding (Gen 5+)")
+{
+    ASSUME(GetMoveEffect(MOVE_STRUGGLE) == EFFECT_STRUGGLE);
+
+    s16 recoil;
+    u32 hpStat = 0;
+
+    PARAMETRIZE { hpStat = 200; }
+    PARAMETRIZE { hpStat = 201; }
+    PARAMETRIZE { hpStat = 202; }
+    PARAMETRIZE { hpStat = 203; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(hpStat); HP(hpStat); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRUGGLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        HP_BAR(player, captureDamage: &recoil);
+    } THEN {
+        switch (hpStat)
+        {
+            case 200:
+                EXPECT_EQ(player->hp, 150);
+                break;
+            case 201:
+            case 202:
+                EXPECT_EQ(player->hp, 151);
+                break;
+            case 203:
+                EXPECT_EQ(player->hp, 152);
+                break;
+        }
+    }
+}

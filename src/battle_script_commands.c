@@ -2534,6 +2534,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_RECOIL_HP_25: // Struggle
     {
         s32 recoil = (gBattleMons[effectBattler].maxHP) / 4;
+        if (B_UPDATED_MOVE_DATA >= GEN_5 && (gBattleMons[effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
+            recoil++;
         if (recoil == 0)
             recoil = 1;
         SetPassiveDamageAmount(effectBattler, recoil);
