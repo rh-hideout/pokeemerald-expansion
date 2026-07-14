@@ -1362,32 +1362,35 @@ static u32 CreateNumericInputWindow(struct Coords16 pos, u8 width)
 static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
 {
     u8 numberBuffer[32];
-    u8 formattedBuffer[256];
+    gStringVar1[0] = EOS;
 
-    ConvertIntToDecimalStringN(numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, CountDigits(input.max));
+    u8 *strVarEnd = gStringVar1;
+    u8 *numberBufferEnd = numberBuffer;
 
-    formattedBuffer[0] = EOS;
+    numberBufferEnd =
+        ConvertIntToDecimalStringN(numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, CountDigits(input.max));
+    u32 numDigits = numberBufferEnd - numberBuffer;
 
-    u32 numDigits = StringLength(numberBuffer);
-    u32 highlightIdx = numDigits - input.digit - 1;
+    u32 highlightIdx = numDigits - (input.digit + 1);
 
     for (u32 i = 0; i < numDigits; i++)
     {
         if (i == highlightIdx)
-            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
-
-        StringAppend(formattedBuffer, (u8[]){ numberBuffer[i], EOS });
-
-        if (i == highlightIdx)
-            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+        {
+            strVarEnd = StringAppend(strVarEnd, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
+            strVarEnd = StringAppend(strVarEnd, (u8[]){numberBuffer[i], EOS});
+            strVarEnd = StringAppend(gStringVar1, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+        }
+        else
+        {
+            strVarEnd = StringAppend(strVarEnd, (u8[]){numberBuffer[i], EOS});
+        }
     }
-
-    StringCopy(gStringVar1, formattedBuffer);
 
     StringExpandPlaceholders(gStringVar4, input.templ);
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    u32 fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 16*8);
+    u32 fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 16 * 8);
     AddTextPrinterParameterized(windowId, fontId, gStringVar4, 1, 2, 0, NULL);
 }
 
