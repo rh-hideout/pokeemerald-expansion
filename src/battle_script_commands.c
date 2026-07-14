@@ -30,6 +30,7 @@
 #include "money.h"
 #include "malloc.h"
 #include "bg.h"
+#include "safari_zone.h"
 #include "string_util.h"
 #include "pokemon_icon.h"
 #include "caps.h"
@@ -9266,16 +9267,6 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         if (B_DREAM_BALL_MODIFIER >= GEN_8 && (battleMon->status1 & STATUS1_SLEEP || (GetBattlerAbilityIgnoreMoldBreaker(wildMonBattler) == ABILITY_COMATOSE)))
             ball->multiplier = 400;
         break;
-    case BALL_SAFARI:
-        if (B_SAFARI_BALL_MODIFIER == GEN_1)
-            ball->multiplier = 200;
-        else if (B_SAFARI_BALL_MODIFIER <= GEN_7)
-            ball->multiplier = 150;
-        break;
-    case BALL_SPORT:
-        if (B_SPORT_BALL_MODIFIER <= GEN_7)
-            ball->multiplier = 150;
-        break;
     case BALL_BEAST:
         ball->multiplier = 410;
         ball->divider = 4096;
@@ -9320,6 +9311,8 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
 
     odds = odds * catchRate / (battleMon->maxHP * 3);
     odds = odds * ball.multiplier / ball.divider;
+    if (GetSafariZoneFlag())
+        odds = odds * GetSafariZoneBallMultiplier() / 100;
 
     u8 badgeCount = 0;
     for (u32 i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
@@ -14053,6 +14046,16 @@ void BS_MultiHitPlurality(void)
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_JumpIfNotEndOfSafari(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+
+    if (!IsSafariEnding())
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_jumpifterrain(void)

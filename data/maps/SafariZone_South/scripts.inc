@@ -4,7 +4,7 @@ SafariZone_South_MapScripts::
 	.byte 0
 
 SafariZone_South_OnFrame:
-	map_script_2 VAR_SAFARI_ZONE_STATE, 2, SafariZone_South_EventScript_EnterSafariZone
+	map_script_2 VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE, SafariZone_South_EventScript_EnterSafariZone
 	.2byte 0
 
 SafariZone_South_EventScript_EnterSafariZone::
@@ -19,7 +19,7 @@ SafariZone_South_EventScript_EnterSafariZone::
 	end
 
 SafariZone_South_OnTransition:
-	call_if_eq VAR_SAFARI_ZONE_STATE, 2, SafariZone_South_EventScript_SetExitAttendantAside
+	call_if_eq VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE, SafariZone_South_EventScript_SetExitAttendantAside
 	end
 
 SafariZone_South_EventScript_SetExitAttendantAside::

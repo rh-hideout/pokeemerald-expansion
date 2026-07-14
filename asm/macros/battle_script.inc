@@ -2128,6 +2128,11 @@
 	callnative BS_MultiHitPlurality
 	.endm
 
+	.macro jumpifnotendofsafari jumpInstr:req
+	callnative BS_JumpIfNotEndOfSafari
+	.4byte \jumpInstr
+	.endm
+
 	.macro jumpifterrain comparison:req, terrain:req, jumpInstr:req
 	.byte B_SCR_OP_JUMPIFTERRAIN
 	.byte \comparison

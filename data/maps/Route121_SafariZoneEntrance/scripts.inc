@@ -3,7 +3,10 @@ Route121_SafariZoneEntrance_MapScripts::
 	.byte 0
 
 Route121_SafariZoneEntrance_OnFrame:
-	map_script_2 VAR_SAFARI_ZONE_STATE, 1, Route121_SafariZoneEntrance_EventScript_ExitSafariZone
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_STEP_LEFT, Route121_SafariZoneEntrance_EventScript_ExitSafariZone
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_LEFT, Route121_SafariZoneEntrance_EventScript_ExitSafariZone
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_MID_BATTLE, Route121_SafariZoneEntrance_EventScript_ExitSafariZone
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_RETIRING, Route121_SafariZoneEntrance_EventScript_ExitSafariZone
 	.2byte 0
 
 Route121_SafariZoneEntrance_EventScript_ExitSafariZone::
@@ -73,8 +76,7 @@ Route121_SafariZoneEntrance_EventScript_TryEnterSafariZone::
 	hidemoneybox
 	applymovement LOCALID_PLAYER, Route121_SafariZoneEntrance_Movement_EnterSafariZone
 	waitmovement 0
-	special EnterSafariMode
-	setvar VAR_SAFARI_ZONE_STATE, 2
+	entersafari ROUTE_121_HOENN_SAFARI
 	clearflag FLAG_GOOD_LUCK_SAFARI_ZONE
 	warp MAP_SAFARI_ZONE_SOUTH, 32, 33
 	waitstate

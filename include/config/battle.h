@@ -255,8 +255,6 @@
 #define B_LURE_BALL_MODIFIER        GEN_LATEST // In Gen8+, Lure Ball's catch multiplier is 4x. In Gen7, it's 5x. In Gen6 and earlier, it's 3x.
 #define B_HEAVY_BALL_MODIFIER       GEN_LATEST // Heavy Ball's ranges. See Cmd_handleballthrow.
 #define B_DREAM_BALL_MODIFIER       GEN_LATEST // In Gen8+, Dream Ball's catch multiplier is 4x when the target is asleep or has the Ability Comatose.
-#define B_SPORT_BALL_MODIFIER       GEN_LATEST // In Gen8+, Sport Ball's catch multiplier was reduced from 1.5x to 1x.
-#define B_SAFARI_BALL_MODIFIER      GEN_LATEST // In Gen8+, Safari Ball's catch multiplier is 1x. In Gens2-6, it's 1.5x. In Gen1, it's 2x.
 #define B_FRIEND_BALL_MODIFIER      GEN_LATEST // In Gen8+, the initial friendship of Pokémon caught in a Friend Ball friendship was reduced from 200 to 150.
 #define B_SERENE_GRACE_BOOST        GEN_LATEST // In Gen5+, Serene Grace boosts the added flinch chance of King's Rock and Razor Fang.
 #define B_IRON_BALL                 GEN_LATEST // In Gen5+, Flying-type Pokémon holding an Iron Ball take neutral damage from Ground-type moves regardless of their other types, except during Inverse Battles or if the Pokémon is grounded by any other effect.

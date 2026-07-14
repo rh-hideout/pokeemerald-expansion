@@ -403,8 +403,6 @@ void Overworld_ResetStateAfterFly(void)
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
     FlagClear(FLAG_SYS_CRUISE_MODE);
-    FlagClear(FLAG_SYS_SAFARI_MODE);
-    VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
 }
@@ -414,8 +412,6 @@ void Overworld_ResetStateAfterTeleport(void)
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
     FlagClear(FLAG_SYS_CRUISE_MODE);
-    FlagClear(FLAG_SYS_SAFARI_MODE);
-    VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
     RunScriptImmediately(EventScript_ResetMrBriney);
@@ -426,8 +422,6 @@ void Overworld_ResetStateAfterDigEscRope(void)
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
     FlagClear(FLAG_SYS_CRUISE_MODE);
-    FlagClear(FLAG_SYS_SAFARI_MODE);
-    VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
 }
@@ -461,8 +455,7 @@ static void Overworld_ResetStateAfterWhiteOut(void)
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
     FlagClear(FLAG_SYS_CRUISE_MODE);
-    FlagClear(FLAG_SYS_SAFARI_MODE);
-    VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
+    VarSet(VAR_SAFARI_ZONE_STATE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
     if (B_RESET_FLAGS_VARS_AFTER_WHITEOUT == TRUE)
@@ -479,8 +472,6 @@ static void Overworld_ResetStateAfterWhiteOut(void)
 
 static void UpdateMiscOverworldStates(void)
 {
-    FlagClear(FLAG_SYS_SAFARI_MODE);
-    VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
     ChooseAmbientCrySpecies();
     ResetCyclingRoadChallengeData();
     UpdateLocationHistoryForRoamer();
@@ -638,7 +629,7 @@ static void SetWarpData(struct WarpData *warp, s8 mapGroup, s8 mapNum, s8 warpId
     warp->y = y;
 }
 
-static bool32 IsDummyWarp(struct WarpData *warp)
+bool32 IsDummyWarp(struct WarpData *warp)
 {
     if (warp->mapGroup != (s8)MAP_GROUP(MAP_UNDEFINED))
         return FALSE;
@@ -711,6 +702,11 @@ void WarpIntoMap(void)
 void SetWarpDestination(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
 {
     SetWarpData(&sWarpDestination, mapGroup, mapNum, warpId, x, y);
+}
+
+void SetWarpDestinationFromWarpData(struct WarpData warp)
+{
+    sWarpDestination = warp;
 }
 
 void SetWarpDestinationToMapWarp(s8 mapGroup, s8 mapNum, s8 warpId)
@@ -1638,11 +1634,6 @@ void CleanupOverworldWindowsAndTilemaps(void)
     TRY_FREE_AND_SET_NULL(gOverworldTilemapBuffer_Bg1);
 }
 
-static void ResetSafariZoneFlag_(void)
-{
-    ResetSafariZoneFlag();
-}
-
 bool32 IsOverworldLinkActive(void)
 {
     if (gMain.callback1 == CB1_OverworldLink)
@@ -1913,7 +1904,6 @@ void CB2_NewGame(void)
 {
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
-    ResetSafariZoneFlag_();
     NewGameInitData();
     ResetInitialPlayerAvatarState();
     PlayTimeCounter_Start();
@@ -1942,7 +1932,7 @@ void CB2_WhiteOut(void)
     {
         FieldClearVBlankHBlankCallbacks();
         StopMapMusic();
-        ResetSafariZoneFlag_();
+        ResetSafariZoneFlag();
         DoWhiteOut();
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
@@ -2099,7 +2089,6 @@ void CB2_ContinueSavedGame(void)
 
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
-    ResetSafariZoneFlag_();
     if (gSaveFileStatus == SAVE_STATUS_ERROR)
         ResetWinStreaks();
 

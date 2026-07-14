@@ -57,6 +57,7 @@
 #include "constants/random_mon_generation.h"
 #include "constants/rtc.h"
 #include "constants/roulette.h"
+#include "constants/safaris.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
 #include "constants/secret_bases.h"
