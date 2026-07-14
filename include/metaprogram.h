@@ -217,4 +217,5 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
  * outside macros. */
 #define if_comptime(cond) if (__builtin_constant_p((cond) ? 0 : *(int *)0))
 
+#define DISCARD(x) ((void)(x))
 #endif
