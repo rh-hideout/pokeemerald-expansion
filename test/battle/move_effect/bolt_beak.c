@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Bolt Beak's base power is doubled if it attacks before the t
     PARAMETRIZE { speed = 1; }
     PARAMETRIZE { speed = 3; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BOLT_BEAK) == EFFECT_BOLT_BEAK);
+        ASSUME(GetMoveEffect(MOVE_BOLT_BEAK) == EFFECT_POWER_DOUBLE_IF_FASTER);
         PLAYER(SPECIES_DRACOZOLT) { Speed(speed); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Bolt Beak's base power is doubled the target switches out", 
     PARAMETRIZE { switchOut = FALSE; }
     PARAMETRIZE { switchOut = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BOLT_BEAK) == EFFECT_BOLT_BEAK);
+        ASSUME(GetMoveEffect(MOVE_BOLT_BEAK) == EFFECT_POWER_DOUBLE_IF_FASTER);
         PLAYER(SPECIES_DRACOZOLT) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
+    ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_GROUNDS_TARGET);
 }
 
 SINGLE_BATTLE_TEST("Smack Down doesn't affect pokemon behind Substitute")

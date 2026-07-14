@@ -1813,7 +1813,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .chance = 30,
         }),
     #endif
-        .effect = B_UPDATED_MOVE_DATA >= GEN_3 ? EFFECT_LOW_KICK : EFFECT_HIT,
+        .effect = B_UPDATED_MOVE_DATA >= GEN_3 ? EFFECT_POWER_TARGET_WEIGHT : EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 50,
         .type = TYPE_FIGHTING,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 100 : 90,
@@ -4642,7 +4642,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Ensnares the foe to stop it\n"
             "from fleeing or switching."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_BUG,
         .accuracy = 0,
@@ -4805,7 +4805,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts more damage when\n"
             "the user's HP is down."),
-        .effect = EFFECT_FLAIL,
+        .effect = EFFECT_POWER_LOWER_HP,
         .power = 1,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -4911,7 +4911,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Inflicts more damage when\n"
             "the user's HP is down."),
-        .effect = EFFECT_FLAIL,
+        .effect = EFFECT_POWER_LOWER_HP,
         .power = 1,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -5818,7 +5818,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Fixes the foe with a mean\n"
             "look that prevents escape."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -6268,7 +6268,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Spins the body at high\n"
             "speed to remove traps."),
     #endif
-        .effect = EFFECT_RAPID_SPIN,
+        .effect = EFFECT_REMOVE_HAZARDS,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 50 : 20,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -7678,7 +7678,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that gains power\n"
             "if injured by the foe."),
-        .effect = EFFECT_REVENGE,
+        .effect = EFFECT_POWER_DOUBLE_IF_DAMAGED,
         .power = 60,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -9187,7 +9187,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Blocks the foe's way to\n"
             "prevent escape."),
-        .effect = EFFECT_MEAN_LOOK,
+        .effect = EFFECT_PREVENT_ESCAPE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
@@ -11344,7 +11344,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that gains power\n"
             "if injured by the foe."),
-        .effect = EFFECT_REVENGE,
+        .effect = EFFECT_POWER_DOUBLE_IF_DAMAGED,
         .power = 60,
         .type = TYPE_ICE,
         .accuracy = 100,
@@ -12066,7 +12066,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A snare attack that does\n"
             "more damage to a heavier foe."),
-        .effect = EFFECT_LOW_KICK,
+        .effect = EFFECT_POWER_TARGET_WEIGHT,
         .power = 1,
         .type = TYPE_GRASS,
         .accuracy = 100,
@@ -12886,7 +12886,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Throws a rock to knock the\n"
             "foe down to the ground."),
-        .effect = EFFECT_SMACK_DOWN,
+        .effect = EFFECT_GROUNDS_TARGET,
         .power = 50,
         .type = TYPE_ROCK,
         .accuracy = 100,
@@ -13013,7 +13013,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user outweighs the foe."),
-        .effect = EFFECT_HEAT_CRASH,
+        .effect = EFFECT_POWER_USER_WEIGHT,
         .power = 1,
         .type = TYPE_STEEL,
         .accuracy = 100,
@@ -13080,7 +13080,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Sprays water at the foe,\n"
             "changing it to a Water-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_CHANGE_TARGET_TYPE,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -13408,7 +13408,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user's stats are raised."),
-        .effect = EFFECT_STORED_POWER,
+        .effect = EFFECT_POWER_USER_STAT_BUFFS,
         .power = 20,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -14308,7 +14308,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user outweighs the foe."),
-        .effect = EFFECT_HEAT_CRASH,
+        .effect = EFFECT_POWER_USER_WEIGHT,
         .power = 1,
         .type = TYPE_FIRE,
         .accuracy = 100,
@@ -16409,7 +16409,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Can hit a Flying foe, then\n"
             "knocks it to the ground."),
-        .effect = EFFECT_SMACK_DOWN,
+        .effect = EFFECT_GROUNDS_TARGET,
         .power = 90,
         .type = TYPE_GROUND,
         .accuracy = 100,
@@ -17182,7 +17182,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Greater power the more the\n"
             "user's stats are raised."),
-        .effect = EFFECT_STORED_POWER,
+        .effect = EFFECT_POWER_USER_STAT_BUFFS,
         .power = 20,
         .type = TYPE_DARK,
         .accuracy = 100,
@@ -18487,7 +18487,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Magic powder changes the\n"
             "target into a Psychic-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_CHANGE_TARGET_TYPE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -18579,7 +18579,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power is doubled if the\n"
             "user moves before the foe."),
-        .effect = EFFECT_BOLT_BEAK,
+        .effect = EFFECT_POWER_DOUBLE_IF_FASTER,
         .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 80 : 85,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -18601,7 +18601,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Power is doubled if the\n"
             "user moves before the foe."),
-        .effect = EFFECT_BOLT_BEAK,
+        .effect = EFFECT_POWER_DOUBLE_IF_FASTER,
         .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 80 : 85,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -20869,7 +20869,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Erases trap moves and Leech\n"
             "Seed. Poisons all foes."),
-        .effect = EFFECT_RAPID_SPIN,
+        .effect = EFFECT_REMOVE_HAZARDS,
         .power = 30,
         .type = TYPE_POISON,
         .accuracy = 100,
