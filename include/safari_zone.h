@@ -3,12 +3,7 @@
 
 #include "constants/safaris.h"
 
-//extern u8 gNumSafariBalls;
-//extern u16 gSafariZoneStepCounter;
-
-
 bool32 GetSafariZoneFlag(void);
-//void SetSafariZoneFlag(void);
 void ResetSafariZoneFlag(void);
 
 void EnterSafariMode(enum SafariIds safariId);
