@@ -256,7 +256,8 @@ struct AiLogicData
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
     u32 dragonDartsHitsBothTarget:4;
-    u32 padding2:15;
+    u32 revertBattlerMega:4;
+    u32 padding2:11;
 };
 
 struct AiThinkingStruct

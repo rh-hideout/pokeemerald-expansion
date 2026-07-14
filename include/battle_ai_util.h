@@ -156,6 +156,9 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(enum BattlerId battler);
 void DecideTerastal(enum BattlerId battler);
+void DecideMega(enum BattlerId battler, bool32 *revertMegaForms);
+bool32 InitializeMegaForm(enum BattlerId battler);
+void RevertFormAfterDamageCalc(enum BattlerId battler, enum Gimmick gimmick);
 bool32 CanEndureHit(enum BattlerId battler, enum BattlerId battlerTarget, enum Move move);
 bool32 ShouldFinalGambit(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 aiIsFaster);
 bool32 ShouldConsiderSelfSacrificeDamageEffect(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster);

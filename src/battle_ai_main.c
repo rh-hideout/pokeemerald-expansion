@@ -103,7 +103,7 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
     [24] = NULL,                     // AI_FLAG_PREDICT_INCOMING_MON
     [25] = AI_CheckPpStall,          // AI_FLAG_PP_STALL_PREVENTION
     [26] = NULL,                     // AI_FLAG_PREDICT_MOVE
-    [27] = NULL,                     // AI_FLAG_SMART_TERA
+    [27] = NULL,                     // AI_FLAG_SMART_GIMMICK
     [28] = NULL,                     // AI_FLAG_ASSUME_STAB
     [29] = NULL,                     // AI_FLAG_ASSUME_STATUS_MOVES
     [30] = AI_AttacksPartner,        // AI_FLAG_ATTACKS_PARTNER
@@ -424,6 +424,18 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     BattlerChooseNonMoveAction();
     ModifySwitchAfterMoveScoring(battler);
 
+    for (enum BattlerId battlerId = B_BATTLER_0; battlerId < MAX_BATTLERS_COUNT; battlerId++)
+    {
+        if (!IsBattlerAlive(battlerId))
+            continue;
+
+        if (gAiLogicData->revertBattlerMega & (1u << battlerId))
+        {
+            SetActiveGimmick(battlerId, GIMMICK_NONE);
+            RevertFormAfterDamageCalc(battlerId, GIMMICK_MEGA);
+        }
+    }
+
         AIDebugTimerEnd();
 
     gAiLogicData->aiCalcInProgress = FALSE;
@@ -508,12 +520,18 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
 u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
 {
     u32 chosenMoveIndex;
+    //bool32 revertMegaForms[MAX_BATTLERS_COUNT] = {FALSE};
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
-        DecideTerastal(battler);
+     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_GIMMICK)
+    {
+        /*if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_MEGA)
+            DecideMega(battler, revertMegaForms);
+        else*/ if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA)
+            DecideTerastal(battler);
+    }
 
     chosenMoveIndex = ChooseMoveOrAction(battler);
 
@@ -755,7 +773,7 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
             continue;
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, terrain);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, BattlerHasAi(battlerDef) ? USE_GIMMICK : NO_GIMMICK, weather, gFieldStatuses);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
@@ -800,6 +818,15 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     {
         if (!IsBattlerAlive(battler))
             continue;
+
+        if (BattlerHasAi(battler))
+        {
+            if (InitializeMegaForm(battler))
+            {
+                SetActiveGimmick(battler, GIMMICK_MEGA);
+                gAiLogicData->revertBattlerMega |= (1u << battler);
+            }
+        }
 
         SetBattlerAiData(battler, aiData);
     }

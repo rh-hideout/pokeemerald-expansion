@@ -26,6 +26,8 @@
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
+static enum Gimmick GetViableGimmick(enum BattlerId battler);
+static enum Gimmick GetPossibleGimmickForDamageCalc(enum BattlerId battler, enum Move move, bool32 considerGimmick);
 
 // Functions
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
@@ -859,10 +861,12 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
 {
     struct SimulatedDamage simDamage = {0};
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    bool32 toggledGimmickAtk = FALSE;
-    bool32 toggledGimmickDef = FALSE;
+    enum Gimmick toggledGimmickAtk = GetPossibleGimmickForDamageCalc(battlerAtk, move, considerGimmickAtk);
+    enum Gimmick toggledGimmickDef = GetPossibleGimmickForDamageCalc(battlerDef, move, considerGimmickDef);
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
+    bool32 shouldRevertAtk = FALSE;
+    bool32 shouldRevertDef = FALSE;
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
      && battlerDef == BATTLE_PARTNER(battlerAtk))
@@ -875,14 +879,16 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
         && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
     {
-        toggledGimmickAtk = TRUE;
+        toggledGimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk];
+        shouldRevertAtk = TRUE;
         SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
     }
 
     if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
         && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
     {
-        toggledGimmickDef = TRUE;
+        toggledGimmickDef = gBattleStruct->gimmick.usableGimmick[battlerDef];
+        shouldRevertDef = TRUE;
         SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
     }
 
@@ -987,10 +993,16 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     // convert multiper to AI_EFFECTIVENESS_xX
     *typeEffectiveness = ctx.typeEffectivenessModifier;
 
-    if (toggledGimmickAtk)
+    if (shouldRevertAtk)
+    {
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
-    if (toggledGimmickDef)
+        RevertFormAfterDamageCalc(battlerAtk, toggledGimmickAtk);
+    }
+    if (shouldRevertDef)
+    {
         SetActiveGimmick(battlerDef, GIMMICK_NONE);
+        RevertFormAfterDamageCalc(battlerDef, toggledGimmickDef);
+    }    
 
     // Undo temporary settings
     gBattleStruct->dynamicMoveType = TYPE_NONE;
@@ -5204,6 +5216,384 @@ bool32 IsAIUsingGimmick(enum BattlerId battler)
     return (gAiBattleData->aiUsingGimmick & (1<<battler)) != 0;
 }
 
+bool32 InitializeMegaForm(enum BattlerId battler)
+{
+    switch (GetViableGimmick(battler))
+    {
+    case GIMMICK_MEGA:
+        //DebugPrintf("%d Can Mega Evolve", battler);
+        return TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, gBattleMons[battler].ability);
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
+struct AltMegaCalcs
+{
+    struct SimulatedDamage takenWithMega[MAX_MON_MOVES];
+    struct SimulatedDamage dealtWithoutMega[MAX_MON_MOVES];
+};
+
+// macros are not expanded recursively
+#define dealtWithMega gAiLogicData->simulatedDmg[battler][opposingBattler]
+#define dealtWithoutMega altCalcs->dealtWithoutMega
+#define takenWithMega altCalcs->takenWithMega
+#define takenWithoutMega gAiLogicData->simulatedDmg[opposingBattler][battler]
+
+enum AIConsiderGimmick ShouldMegaFromCalcs(enum BattlerId battler, enum BattlerId opposingBattler, struct AltMegaCalcs *altCalcs, bool32 megaMakesUnderspeed, bool32 megaMakesOutspeed)
+{
+    u32 aiHp = gBattleMons[battler].hp;
+    u32 oppHp = gBattleMons[opposingBattler].hp;
+
+    enum Move *aiMoves = GetMovesArray(battler);
+    enum Move *oppMoves = GetMovesArray(opposingBattler);
+
+    // Check whether mega enables a KO
+    bool32 hasKoWithout = FALSE;
+    enum Move killingMove = MOVE_NONE;
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (dealtWithMega[moveIndex].random >= oppHp)
+        {
+            enum Move move = aiMoves[moveIndex];
+            if (killingMove == MOVE_NONE || GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove))
+                killingMove = move;
+        }
+        if (dealtWithoutMega[moveIndex].random >= oppHp)
+            hasKoWithout = TRUE;
+    }
+
+    bool32 enablesKo = (killingMove != MOVE_NONE) && !hasKoWithout;
+
+    // Check whether mega saves us from a KO
+    bool32 savedFromKo = FALSE;
+    bool32 getsKodRegardlessBySingleMove = FALSE;
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (takenWithoutMega[moveIndex].maximum >= aiHp && takenWithMega[moveIndex].maximum >= aiHp)
+            getsKodRegardlessBySingleMove = TRUE;
+
+        if (takenWithoutMega[moveIndex].maximum >= aiHp && takenWithMega[moveIndex].maximum < aiHp)
+            savedFromKo = TRUE;
+    }
+
+    if (getsKodRegardlessBySingleMove)
+        savedFromKo = FALSE;
+
+    // Check whether opponent can punish mega by ko'ing
+    enum Move hardPunishingMove = MOVE_NONE;
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (takenWithMega[moveIndex].maximum >= aiHp)
+        {
+            enum Move move = oppMoves[moveIndex];
+            // If using mega makes us fast KO, it's not punishing
+            if (!((dealtWithMega[moveIndex].random >= oppHp) && megaMakesOutspeed)
+             && (hardPunishingMove == MOVE_NONE || (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], move) > GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
+             || (megaMakesUnderspeed && (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], move) == GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove)))))
+                hardPunishingMove = move;
+        }
+    }
+
+    // Check whether there is a move that deals over half hp, and all such moves are reduced to under 1/4 hp by mega
+    // (e.g. a weakness becomes a resistance, a 4x weakness becomes neutral, etc)
+    bool32 takesBigHit = FALSE;
+    bool32 savedFromAllBigHits = TRUE;
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (takenWithoutMega[moveIndex].median > aiHp/2)
+        {
+            takesBigHit = TRUE;
+            if (takenWithMega[moveIndex].median > aiHp/4)
+                savedFromAllBigHits = FALSE;
+        }
+    }
+
+    // Check for any benefit whatsoever. Only used for the last possible mon that could mega.
+    bool32 anyOffensiveBenefit = FALSE;
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (dealtWithMega[moveIndex].median > dealtWithoutMega[moveIndex].median)
+            anyOffensiveBenefit = TRUE;
+    }
+
+    bool32 anyDefensiveBenefit = FALSE;
+    bool32 anyDefensiveDrawback = FALSE;
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (takenWithMega[moveIndex].median < takenWithoutMega[moveIndex].median)
+            anyDefensiveBenefit = TRUE;
+
+        if (takenWithMega[moveIndex].median > takenWithoutMega[moveIndex].median)
+            anyDefensiveDrawback = TRUE;
+    }
+
+    // Make decisions
+    // This is done after all loops to minimize the possibility of a timing attack in which the player could
+    // determine whether the AI will mega based on the time taken to select a move.
+
+    if (enablesKo)
+    {
+        if (hardPunishingMove == MOVE_NONE)
+        {
+            return USE_GIMMICK;
+        }
+        else
+        {
+            enum Move predictedMove = GetPredictedMove(battler, opposingBattler, gAiLogicData);
+            // will we go first?
+            if (AI_WhoStrikesFirst(battler, opposingBattler, killingMove, predictedMove, CONSIDER_PRIORITY) == AI_IS_FASTER
+             && ((GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) >= GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))
+             || (megaMakesOutspeed && GetBattleMovePriority(battler, gAiLogicData->abilities[battler], killingMove) == GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], hardPunishingMove))))
+                return USE_GIMMICK;
+        }
+    }
+
+    // Decide to conserve mega based on number of possible later oppotunities
+    //u32 conserveMegaChance = AI_CONSERVE_TERA_CHANCE_PER_MON * (numPossibleMega-1);
+    //if (RandomPercentage(RNG_AI_CONSERVE_TERA, conserveMegaChance))
+    //    return NO_GIMMICK;
+
+    if (savedFromKo)
+    {
+        if (hardPunishingMove == MOVE_NONE)
+        {
+            return USE_GIMMICK;
+        }
+        else
+        {
+            // If mega saves us from a ko from one move, but enables a ko otherwise, randomly predict
+            // savesFromKo being true ensures opponent doesn't have a ko if we don't mega
+            //if (Random() % 100 < AI_TERA_PREDICT_CHANCE)
+            //    return USE_GIMMICK;
+        }
+    }
+
+    if (hardPunishingMove != MOVE_NONE)
+        return NO_GIMMICK;
+
+    if (takesBigHit && savedFromAllBigHits)
+        return USE_GIMMICK;
+
+    // No strongly compelling reason to mega. Conserve it if possible.
+    //if (numPossibleMega > 1)
+    //    return NO_GIMMICK;
+
+    if (anyOffensiveBenefit || (anyDefensiveBenefit && !anyDefensiveDrawback))
+        return USE_GIMMICK;
+
+    // TODO: Effects other than direct damage are not yet considered. For example, may want to mega poison to avoid a Toxic.
+
+
+    return NO_GIMMICK;
+}
+#undef dealtWithMega
+#undef dealtWithoutMega
+#undef takenWithMega
+#undef takenWithoutMega
+
+void DecideMega(enum BattlerId battler, bool32 *revertMegaForms)
+{
+    /*if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_MEGA)
+        return;
+
+    //if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_GIMMICK))
+    //    return;
+
+    // TODO: Currently only single battles are considered.
+    //if (!IsBattle1v1())
+    //    return;
+
+    // TODO: A lot of these checks are most effective for an omnicient ai.
+    // If we don't have enough information about the opponent's moves, consider simpler checks based on type effectivness.
+
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingPartner = GetPartnerBattler(opposingBattler);
+    enum BattlerId partnerBattler = GetPartnerBattler(battler);
+
+    // Default calculations automatically assume gimmicks for the attacker, but not the defender.
+    // Consider calcs for the other possibilities.
+    struct AltMegaCalcs altCalcs;
+
+    struct SimulatedDamage noDmg = {0};
+
+    uq4_12_t effectivenessTakenWithMega[MAX_MON_MOVES];
+
+    enum Move *aiMoves = GetMovesArray(battler);
+    enum Move *oppMoves = GetMovesArray(opposingBattler);
+
+    enum AIConsiderGimmick aiShouldGimmick = BattlerHasAi(battler) ? USE_GIMMICK : NO_GIMMICK;
+    enum AIConsiderGimmick oppShouldGimmick = BattlerHasAi(opposingBattler) ? USE_GIMMICK : NO_GIMMICK;
+    enum AIConsiderGimmick oppPartnerShouldGimmick = BattlerHasAi(opposingPartner) ? USE_GIMMICK : NO_GIMMICK;
+    enum AIConsiderGimmick partnerShouldGimmick = BattlerHasAi(partnerBattler) ? USE_GIMMICK : NO_GIMMICK;
+
+    uq4_12_t effectiveness;
+
+    if (oppShouldGimmick == USE_GIMMICK)
+        revertMegaForms[opposingBattler] = InitializeMegaForm(opposingBattler);
+
+    if (oppPartnerShouldGimmick == USE_GIMMICK)
+        revertMegaForms[opposingPartner] = InitializeMegaForm(opposingPartner);
+
+    if (partnerShouldGimmick == USE_GIMMICK)
+        revertMegaForms[partnerBattler] = InitializeMegaForm(partnerBattler);
+
+    bool32 aiOutspeedWithout = AI_IsFaster(battler, opposingBattler, MOVE_TACKLE, MOVE_TACKLE, DONT_CONSIDER_PRIORITY);
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (!IsMoveUnusable(moveIndex, aiMoves[moveIndex], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[moveIndex]))
+            altCalcs.dealtWithoutMega[moveIndex] = AI_CalcDamage(aiMoves[moveIndex], battler, opposingBattler, &effectiveness, NO_GIMMICK, oppShouldGimmick, AI_GetWeather(), gFieldStatuses);
+        else
+            altCalcs.dealtWithoutMega[moveIndex] = noDmg;
+    }
+
+    if (aiShouldGimmick == USE_GIMMICK)
+        revertMegaForms[battler] = InitializeMegaForm(battler);
+
+    bool32 aiOutspeedWith = AI_IsFaster(battler, opposingBattler, MOVE_TACKLE, MOVE_TACKLE, DONT_CONSIDER_PRIORITY);
+    bool32 megaMakesUnderspeed = (aiOutspeedWithout && !aiOutspeedWith);
+    bool32 megaMakesOutspeed = (!aiOutspeedWithout && aiOutspeedWith);
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (!IsMoveUnusable(moveIndex, oppMoves[moveIndex], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[moveIndex]))
+        {
+            altCalcs.takenWithMega[moveIndex] = AI_CalcDamage(oppMoves[moveIndex], opposingBattler, battler, &effectiveness, aiShouldGimmick, oppShouldGimmick, AI_GetWeather(), gFieldStatuses);
+            effectivenessTakenWithMega[moveIndex] = effectiveness;
+        }
+        else
+        {
+            altCalcs.takenWithMega[moveIndex] = noDmg;
+            effectivenessTakenWithMega[moveIndex] = Q_4_12(0.0);
+        }
+    }
+
+    enum AIConsiderGimmick res = ShouldMegaFromCalcs(battler, opposingBattler, &altCalcs, megaMakesUnderspeed, megaMakesOutspeed);
+
+    //if (res == USE_GIMMICK)
+    //{
+        DebugPrintf("USE MEGA battler %d", battler);
+        // Damage calcs for damage received assumed we wouldn't mega. Adjust that so that further AI decisions are more accurate.
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        {
+            gAiLogicData->simulatedDmg[opposingBattler][battler][moveIndex] = altCalcs.takenWithMega[moveIndex];
+            gAiLogicData->effectiveness[opposingBattler][battler][moveIndex] = effectivenessTakenWithMega[moveIndex];
+        }
+    /*}
+    else
+    {
+        DebugPrintf("DONT USE MEGA battler %d", battler);
+        RevertFormAfterDamageCalc(battler, GIMMICK_MEGA);
+        revertMegaForms[battler] = FALSE;
+        // Damage calcs for damage dealt assumed we would mega. Adjust that so that further AI decisions are more accurate.
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+            gAiLogicData->simulatedDmg[battler][opposingBattler][moveIndex] = altCalcs.dealtWithoutMega[moveIndex];
+    }*/
+
+    SetAIUsingGimmick(battler, USE_GIMMICK);
+    return;
+}
+
+static enum Gimmick GetViableGimmick(enum BattlerId battler)
+{
+    for (enum Gimmick gimmick = 0; gimmick < GIMMICKS_COUNT; gimmick++)
+    {
+        if (CanActivateGimmick(battler, gimmick))
+            return gimmick;
+    }
+    return GIMMICK_NONE;
+}
+
+// Temporarily enable gimmicks for damage calcs if planned
+static enum Gimmick GetPossibleGimmickForDamageCalc(enum BattlerId battler, enum Move move, bool32 considerGimmick)
+{
+    if (!considerGimmick)
+        return GIMMICK_NONE;
+
+    enum Gimmick gimmick = GIMMICK_NONE;
+
+    if (GetActiveGimmick(battler) != GIMMICK_NONE)
+        return GIMMICK_NONE;
+
+    /*switch (GetViableGimmick(battler))
+    {
+    case GIMMICK_MEGA:*/
+        if (BattlerIsPlayer(battler))
+            return GIMMICK_NONE;
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, gBattleMons[battler].ability))
+            gimmick = GIMMICK_MEGA;
+        /*break;
+    case GIMMICK_ULTRA_BURST:
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, gBattleMons[battler].ability);
+        gimmick = GIMMICK_ULTRA_BURST;
+        break;
+    case GIMMICK_TERA:
+        // Integrate into the ai tera pr
+        gimmick = GIMMICK_TERA;
+        break;
+    case GIMMICK_DYNAMAX:
+        gimmick = GIMMICK_DYNAMAX;
+        break;
+    case GIMMICK_Z_MOVE:
+        if (IsViableZMove(battler, move))
+        {
+            gBattleStruct->zmove.baseMoves[battler] = move;
+            gimmick = GIMMICK_Z_MOVE;
+        }
+        break;
+    default:
+        break;
+    }*/
+
+    if (gimmick != GIMMICK_NONE)
+    {
+        gBattleStruct->gimmick.usableGimmick[battler] = gimmick;
+        return gimmick;
+    }
+
+    return GIMMICK_NONE;
+}
+
+void RevertFormAfterDamageCalc(enum BattlerId battler, enum Gimmick gimmick)
+{
+    u32 monId = gBattlerPartyIndexes[battler];
+    struct Pokemon *party = GetBattlerParty(battler);
+    struct PartyState *state = GetBattlerPartyState(battler);
+    enum Species changedSpecies = state->changedSpecies;
+
+    if (changedSpecies == SPECIES_NONE)
+        return;
+
+    if (!BattlerHasAi(battler))
+        return;
+
+    enum FormChanges method;
+    switch (gimmick)
+    {
+    case GIMMICK_MEGA:
+        method = FORM_CHANGE_END_BATTLE;
+        break;
+    default:
+        return;
+    }
+
+    // TODO do all other for change methods
+    TryBattleFormChange(battler, method, gBattleMons[battler].ability);
+    TryToSetBattleFormChangeMoves(&party[monId], method);
+    SetMonData(&party[monId], MON_DATA_SPECIES, &changedSpecies);
+    gBattleMons[battler].species = changedSpecies;
+    gBattleMons[battler].types[0] = gSpeciesInfo[changedSpecies].types[0];
+    gBattleMons[battler].types[1] = gSpeciesInfo[changedSpecies].types[1];
+    gBattleMons[battler].ability = gSpeciesInfo[changedSpecies].abilities[GetMonData(&party[monId], MON_DATA_ABILITY_NUM)];
+    RecalcBattlerStats(battler, &party[monId], GetActiveGimmick(battler) == GIMMICK_DYNAMAX);
+    state->changedSpecies = SPECIES_NONE;
+}
+
 struct AltTeraCalcs
 {
     struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
@@ -5217,7 +5607,7 @@ void DecideTerastal(enum BattlerId battler)
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
         return;
 
-    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_GIMMICK))
         return;
 
     // TODO: Currently only single battles are considered.
