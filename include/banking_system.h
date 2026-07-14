@@ -2,6 +2,7 @@
 #define GUARD_SAVINGS_SYSTEM_H
 
 #include "script.h"
+#include "constants/banking_system.h"
 
  struct __attribute__((packed)) Banking
 {
@@ -10,13 +11,6 @@
     u8 lastBought:6;
     bool8 isPending:1;
     bool8 isRepeat:1;
-};
-
-
-enum BankingMode
-{
-    MODE_DEPOSIT,
-    MODE_WITHDRAW
 };
 
 bool32 IsBankingEnabled(void);
