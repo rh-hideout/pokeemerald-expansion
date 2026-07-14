@@ -1320,6 +1320,10 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!GetBattlerPartyState(cv->battlerAtk)->ateBerry)
             battleScript = BattleScript_BelchFails;
         break;
+    case EFFECT_BEAK_BLAST:
+        if (!gBattleStruct->battlerState[cv->battlerAtk].focusPunchBattlers && GetConfig(B_ENCORE_PRIORITY) <= GEN_9)
+            battleScript = BattleScript_ButItFailed;
+        break;
     default:
         break;
     }

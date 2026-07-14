@@ -11101,18 +11101,3 @@ bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
 {
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
 }
-
-const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn)
-{
-    switch (moveEffect)
-    {
-    case EFFECT_FOCUS_PUNCH:
-        return inMiddleOfTurn ? BattleScript_FocusPunchSetUpEncored : BattleScript_FocusPunchSetUp;
-    case EFFECT_BEAK_BLAST:
-        return inMiddleOfTurn ? BattleScript_BeakBlastSetUpEncored : BattleScript_BeakBlastSetUp;
-    case EFFECT_SHELL_TRAP:
-        return inMiddleOfTurn ? BattleScript_ShellTrapSetUpEncored : BattleScript_ShellTrapSetUp;
-    default:
-        return NULL;
-    }
-}

@@ -4829,6 +4829,21 @@ static bool32 TryDoGimmicksBeforeMoves(void)
     return FALSE;
 }
 
+const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn)
+{
+    switch (moveEffect)
+    {
+    case EFFECT_FOCUS_PUNCH:
+        return inMiddleOfTurn ? BattleScript_FocusPunchSetUpEncored : BattleScript_FocusPunchSetUp;
+    case EFFECT_BEAK_BLAST:
+        return inMiddleOfTurn ? BattleScript_BeakBlastSetUpEncored : BattleScript_BeakBlastSetUp;
+    case EFFECT_SHELL_TRAP:
+        return inMiddleOfTurn ? BattleScript_ShellTrapSetUpEncored : BattleScript_ShellTrapSetUp;
+    default:
+        return NULL;
+    }
+}
+
 static bool32 TryDoMoveEffectsBeforeMoves(void)
 {
     if (!(gHitMarker & HITMARKER_RUN))
@@ -4842,12 +4857,12 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             enum BattlerId battler = battlers[i];
             if (!gBattleStruct->battlerState[battler].focusPunchBattlers)
             {
-                gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                 gBattlerAttacker = battler;
                 gBattleScripting.battler = battler;
                 const u8 *script = GetChargingSetUpScript(GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]), FALSE);
                 if (script)
                 {
+                    gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                     BattleScriptExecute(script);
                     return TRUE;
                 }

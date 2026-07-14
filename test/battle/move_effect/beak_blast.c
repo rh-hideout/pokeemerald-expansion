@@ -295,6 +295,7 @@ SINGLE_BATTLE_TEST("Beak Blast's charging message is shown regardless if it woul
 SINGLE_BATTLE_TEST("Beak Blast still shows its charged state when Encored into a different move")
 {
     GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_TOUCANNON) { Speed(1); }
@@ -309,9 +310,32 @@ SINGLE_BATTLE_TEST("Beak Blast still shows its charged state when Encored into a
     }
 }
 
-DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it")
+DOUBLE_BATTLE_TEST("Beak Blast fails when Encored into it from a different move (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_9);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft); MOVE(opponentLeft, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+            MESSAGE("The opposing Toucannon started heating up its beak!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
@@ -324,6 +348,28 @@ DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
         MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("The opposing Toucannon used Beak Blast!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast doesn't repeat its charging animation when Encored into it")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft); MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
         MESSAGE("The opposing Toucannon used Beak Blast!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
     }

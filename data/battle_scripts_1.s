@@ -1982,7 +1982,7 @@ BattleScript_EffectEncore::
 	waitanimation
 	printstring STRINGID_PKMNGOTENCORE
 	waitmessage B_WAIT_TIME_LONG
-	trydomoveeffectsbeforemoves BS_TARGET
+	trydomoveeffectsbeforemoves
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectPainSplit::

@@ -14140,17 +14140,37 @@ static void Cmd_jumpifterrain(void)
 
 void BS_TryDoMoveEffectsBeforeMoves(void)
 {
-    NATIVE_ARGS(u8 battler);
+    NATIVE_ARGS();
 
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
-    gBattleScripting.battler = battler;
-
-    const u8 *script = GetChargingSetUpScript(GetMoveEffect(encoredMove), TRUE);
-    if (script)
+    if (GetConfig(B_ENCORE_PRIORITY) <= GEN_9)
     {
-        gBattlescriptCurrInstr = script;
-    } else {
         gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
     }
+
+    enum BattlerId battlers[MAX_BATTLERS_COUNT];
+
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        battlers[i] = i;
+    SortBattlersBySpeed(battlers, FALSE);
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = battlers[i];
+        enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
+
+        if (!gBattleStruct->battlerState[battler].focusPunchBattlers)
+        {
+            gBattleScripting.battler = battler;
+            const u8 *script = GetChargingSetUpScript(GetMoveEffect(encoredMove), TRUE);
+            if (script)
+            {
+                gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
+                gBattlescriptCurrInstr = script;
+                return;
+            }
+        }
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
