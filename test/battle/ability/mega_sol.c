@@ -346,7 +346,6 @@ SINGLE_BATTLE_TEST("Mega Sol: Growth increases Attack and Sp. Atk by 2 stages un
     }
 }
 
-// Not clear if this is a bug or not
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Electro Shot)")
 {
     GIVEN {
@@ -362,7 +361,6 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (El
     }
 }
 
-// Not clear if this is a bug or not
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Aurora Veil)")
 {
     GIVEN {
