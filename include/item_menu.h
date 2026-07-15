@@ -131,6 +131,7 @@ struct BagMenu
     u32 partyItemIconAnimId;
     s32 hoveredItemIndex;
     u16 *moveTypeIconTilesPtr;
+    u8 *moveTypeIconsCache;
 #if SWSH_ITEM_MENU_BERRY_STAT
     u8 berryInfoMode;
 #endif

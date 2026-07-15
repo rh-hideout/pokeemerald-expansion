@@ -1511,7 +1511,6 @@ static EWRAM_DATA struct ListBuffer1 *sListBuffer1 = 0;
 static EWRAM_DATA struct ListBuffer2 *sListBuffer2 = 0;
 EWRAM_DATA u16 gSpecialVar_ItemId = 0;
 static EWRAM_DATA struct TempWallyBag *sTempWallyBag = 0;
-static EWRAM_DATA u8 *sMoveTypeIconsCache = NULL;
 #if SWSH_ITEM_MENU_IN_BAG_USE
 static EWRAM_DATA struct BagItemUseState *sBagItemUseState = NULL;
 static EWRAM_DATA struct BagMailGiveState *sBagMailGiveState = NULL;
@@ -2015,8 +2014,8 @@ static bool8 LoadBagMenu_Graphics(void)
         gBagMenu->graphicsLoadState++;
         break;
     case 10:
-        sMoveTypeIconsCache = Alloc(32 * 416 / 2);
-        DecompressDataWithHeaderWram(sMoveTypeIcons_Gfx, sMoveTypeIconsCache);
+        gBagMenu->moveTypeIconsCache = Alloc(32 * 416 / 2);
+        DecompressDataWithHeaderWram(sMoveTypeIcons_Gfx, gBagMenu->moveTypeIconsCache);
         gBagMenu->graphicsLoadState++;
         break;
     case 11:
@@ -2724,8 +2723,7 @@ static void FreeBagMenu(void)
     if (BagMenu_ShouldLoadPartyPanel())
         BagMenu_FreePartyIcons();
 #endif
-    Free(sMoveTypeIconsCache);
-    sMoveTypeIconsCache = NULL;
+    Free(gBagMenu->moveTypeIconsCache);
     Free(sListBuffer2);
     Free(sListBuffer1);
     FreeAllWindowBuffers();
@@ -4510,7 +4508,7 @@ static void SpriteCB_MoveTypeIcon(struct Sprite *sprite)
     {
         u32 offset = sprite->data[0] * 0x100;
         if (gBagMenu->moveTypeIconTilesPtr != NULL)
-            RequestDma3Copy(&sMoveTypeIconsCache[offset], gBagMenu->moveTypeIconTilesPtr, 0x100, 0x10);
+            RequestDma3Copy(&gBagMenu->moveTypeIconsCache[offset], gBagMenu->moveTypeIconTilesPtr, 0x100, 0x10);
         sprite->data[0] = 0xFF;
     }
 }
@@ -4617,7 +4615,7 @@ static void SwitchMoveInfoMode(s32 itemIndex)
 
         LoadPalette(sMoveTypeIcons_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
         {
-            struct SpriteSheet sheet = { .data = sMoveTypeIconsCache, .size = 0x100, .tag = TAG_MOVE_TYPE_ICON };
+            struct SpriteSheet sheet = { .data = gBagMenu->moveTypeIconsCache, .size = 0x100, .tag = TAG_MOVE_TYPE_ICON };
             LoadSpriteSheet(&sheet);
         }
         LoadCompressedSpriteSheet(&sSpriteSheet_CategoryIcon);
