@@ -60,7 +60,16 @@ struct BXPYState
 {
     void* savedCallback;
     u8 position;
-    u8 spriteId[BXPY_SPRITEID_COUNT];
+
+    u8 monSpriteId[NUM_BATTLE_SIDES][PARTY_SIZE];
+    u8 playerHpSpriteId[PARTY_SIZE];
+    u8 genderSpriteId[NUM_BATTLE_SIDES][PARTY_SIZE];
+    u8 playerSelectedSpriteId[PARTY_SIZE];
+    u8 playerSelectedTailSpriteId[PARTY_SIZE];
+    u8 enemyTypeSpriteId[PARTY_SIZE][2];
+    u8 cursorSpriteId;
+    u8 highlightSpriteId[3];
+
     u8 selectedMons[PARTY_SIZE];
     u32 battleFlags;
     u8 bringSize;
