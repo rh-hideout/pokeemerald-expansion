@@ -4996,6 +4996,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFrogTJamLevelUpLearnset,
     .teachableLearnset = sFrogTheJamTeachableLearnset,
     .eggMoveLearnset = sFrogTheJamEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_TOADALLY_AWESOME}),
 },
 
 [SPECIES_TOADALLY_AWESOME] =
@@ -6093,6 +6094,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLittleDLevelUpLearnset,
     .teachableLearnset = sLittleDTeachableLearnset,
     .eggMoveLearnset = sLittleDEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 14, SPECIES_URABY}),
 },
 
 [SPECIES_URABY] =
@@ -6166,6 +6168,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sUrabyLevelUpLearnset,
     .teachableLearnset = sUrabyTeachableLearnset,
     .eggMoveLearnset = sUrabyEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_BLACK_TYRANNO}),
 },
 
 [SPECIES_BLACK_TYRANNO] =
@@ -7339,6 +7342,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sOjamaYLevelUpLearnset,
     .teachableLearnset = sOjamaYellowTeachableLearnset,
     .eggMoveLearnset = sOjamaYellowEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_OJAMA_KNIGHT}),
 },
 
 [SPECIES_OJAMA_KNIGHT] =
@@ -7411,6 +7415,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sOjamaKnightLevelUpLearnset,
     .teachableLearnset = sOjamaKnightTeachableLearnset,
     .eggMoveLearnset = sOjamaKnightEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_OJAMA_KING}),
 },
 
 [SPECIES_OJAMA_KING] =
@@ -8073,6 +8078,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sWildheartLevelUpLearnset,
     .teachableLearnset = sWildheartTeachableLearnset,
     .eggMoveLearnset = sWildheartEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_WILD_WINGMAN}),
 },
 
 [SPECIES_WILD_WINGMAN] =
@@ -14166,6 +14172,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAvianLevelUpLearnset,
     .teachableLearnset = sAvianTeachableLearnset,
     .eggMoveLearnset = sAvianEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_FLAME_WINGMAN}),
 },
 
 [SPECIES_FLAME_WINGMAN] =
@@ -14241,6 +14248,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFLWingmanLevelUpLearnset,
     .teachableLearnset = sFlameWingmanTeachableLearnset,
     .eggMoveLearnset = sFlameWingmanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_SHINING_FLARE_WINGMAN}),
 },
 
 [SPECIES_SHINING_FLARE_WINGMAN] =
@@ -14386,6 +14394,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCyberPetitAngelLevelUpLearnset,
     .teachableLearnset = sCyberPetitAngelTeachableLearnset,
     .eggMoveLearnset = sCyberPetitAngelEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_CYBER_ANGEL_BENTEN}),
 },
 
 [SPECIES_CYBER_ANGEL_BENTEN] =
@@ -14458,6 +14467,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCABentenLevelUpLearnset,
     .teachableLearnset = sCyberAngelBentenTeachableLearnset,
     .eggMoveLearnset = sCyberAngelBentenEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_CYBER_ANGEL_DAKINI}),
 },
 
 [SPECIES_CYBER_ANGEL_DAKINI] =
@@ -14823,6 +14833,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sIllusionistLevelUpLearnset,
     .teachableLearnset = sIllusionistFacelessMageTeachableLearnset,
     .eggMoveLearnset = sIllusionistFacelessMageEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 26, SPECIES_ILLUSIONIST_FACELESS_MAGICIAN}),
 },
 
 [SPECIES_ILLUSIONIST_FACELESS_MAGICIAN] =
@@ -17212,6 +17223,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBattleOxLevelUpLearnset,
     .teachableLearnset = sBattleOxTeachableLearnset,
     .eggMoveLearnset = sBattleOxEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_RABID_HORSEMAN}),
 },
 
 [SPECIES_RABID_HORSEMAN] =
@@ -17869,6 +17881,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sClaymanLevelUpLearnset,
     .teachableLearnset = sClaymanTeachableLearnset,
     .eggMoveLearnset = sClaymanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_MUDBALLMAN}),
 },
 
 [SPECIES_MUDBALLMAN] =
@@ -19042,6 +19055,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSilentSw3LevelUpLearnset,
     .teachableLearnset = sSilentSwordsmanLevel3TeachableLearnset,
     .eggMoveLearnset = sSilentSwordsmanLevel3EggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_SILENT_SWORDSMAN_LEVEL7}),
 },
 
 [SPECIES_SILENT_SWORDSMAN_LEVEL7] =
@@ -19845,6 +19859,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sDKangarooLevelUpLearnset,
     .teachableLearnset = sDesKangarooTeachableLearnset,
     .eggMoveLearnset = sDesKangarooEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 42, SPECIES_MASTER_OF_OZ}),
 },
 
 [SPECIES_MASTER_OF_OZ] =
@@ -20721,6 +20736,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sXCannonLevelUpLearnset,
     .teachableLearnset = sXCannonTeachableLearnset,
     .eggMoveLearnset = sXCannonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_XY_DRAGON}),
 },
 
 [SPECIES_XY_DRAGON] =
@@ -20794,6 +20810,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sXYDragonLevelUpLearnset,
     .teachableLearnset = sXyDragonTeachableLearnset,
     .eggMoveLearnset = sXyDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 45, SPECIES_XYZ_DRAGON_CANNON}),
 },
 
 [SPECIES_XYZ_DRAGON_CANNON] =
@@ -22318,6 +22335,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sMeteorDLevelUpLearnset,
     .teachableLearnset = sMeteorDragonTeachableLearnset,
     .eggMoveLearnset = sMeteorDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 45, SPECIES_METEOR_BLACK_DRAGON}),
 },
 
 [SPECIES_METEOR_BLACK_DRAGON] =
@@ -22757,6 +22775,13 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sNeosLevelUpLearnset,
     .teachableLearnset = sNeosTeachableLearnset,
     .eggMoveLearnset = sNeosEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_FIRE_STONE, SPECIES_FLARE_NEOS},
+                            {EVO_ITEM, ITEM_WATER_STONE, SPECIES_AQUA_NEOS},
+                            {EVO_ITEM, ITEM_LEAF_STONE, SPECIES_GLOW_NEOS},
+                            {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_DARK_NEOS},
+                            {EVO_LEVEL, 0, SPECIES_GRAND_NEOS, CONDITIONS({IF_HOLD_ITEM, ITEM_SOFT_SAND})},
+                            {EVO_LEVEL, 0, SPECIES_AIR_NEOS, CONDITIONS({IF_HOLD_ITEM, ITEM_SHARP_BEAK})}
+    ),
 },
 
 [SPECIES_AQUA_NEOS] =
@@ -24955,6 +24980,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sArmDLv3LevelUpLearnset,
     .teachableLearnset = sArmedDragonLevel3TeachableLearnset,
     .eggMoveLearnset = sArmedDragonLevel3EggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 25, SPECIES_ARMED_DRAGON_LEVEL5}),
 },
 
 [SPECIES_ARMED_DRAGON_LEVEL5] =
@@ -25028,6 +25054,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sArmDLv5LevelUpLearnset,
     .teachableLearnset = sArmedDragonLevel5TeachableLearnset,
     .eggMoveLearnset = sArmedDragonLevel5EggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_ARMED_DRAGON_LEVEL7}),
 },
 
 [SPECIES_ARMED_DRAGON_LEVEL7] =
@@ -25101,6 +25128,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sArmDLv7LevelUpLearnset,
     .teachableLearnset = sArmedDragonLevel7TeachableLearnset,
     .eggMoveLearnset = sArmedDragonLevel7EggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_ARMED_DRAGON_LEVEL10}),
 },
 
 [SPECIES_ARMED_DRAGON_LEVEL10] =
@@ -25321,6 +25349,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sMokeyMLevelUpLearnset,
     .teachableLearnset = sMokeyMokeyTeachableLearnset,
     .eggMoveLearnset = sMokeyMokeyEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_MOKEY_KING}),
 },
 
 [SPECIES_MOKEY_KING] =
@@ -27077,6 +27106,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBurstinatxLevelUpLearnset,
     .teachableLearnset = sBurstinatrixTeachableLearnset,
     .eggMoveLearnset = sBurstinatrixEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_FIRE_STONE, SPECIES_RAMPART_BLASTER},
+                            {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_INFERNO_WING}
+    ),
 },
 
 [SPECIES_RAMPART_BLASTER] =
@@ -27590,6 +27622,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAquaMadorLevelUpLearnset,
     .teachableLearnset = sAquaMadorTeachableLearnset,
     .eggMoveLearnset = sAquaMadorEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_NEO_AQUA_MADOR}),
 },
 
 [SPECIES_NEO_AQUA_MADOR] =
@@ -27736,6 +27769,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAGSoldierLevelUpLearnset,
     .teachableLearnset = sAncientGearSoldierTeachableLearnset,
     .eggMoveLearnset = sAncientGearSoldierEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_ANCIENT_GEAR_GOLEM}),
 },
 
 [SPECIES_ANCIENT_GEAR_GOLEM] =
@@ -27809,6 +27843,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAGGolemLevelUpLearnset,
     .teachableLearnset = sAncientGearGolemTeachableLearnset,
     .eggMoveLearnset = sAncientGearGolemEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_ULTIMATE_ANCIENT_GEAR_GOLEM},
+                            {EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_ANCIENT_GEAR_GOLEM}
+    ),
 },
 
 [SPECIES_ULTIMATE_ANCIENT_GEAR_GOLEM] =
@@ -28176,6 +28213,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBlowbackDLevelUpLearnset,
     .teachableLearnset = sBlowbackDragonTeachableLearnset,
     .eggMoveLearnset = sBlowbackDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_BARREL_DRAGON}),
 },
 
 [SPECIES_BARREL_DRAGON] =
@@ -28324,6 +28362,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBladeSLevelUpLearnset,
     .teachableLearnset = sBladeSkaterTeachableLearnset,
     .eggMoveLearnset = sBladeSkaterEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_CYBER_BLADER}),
 },
 
 [SPECIES_CYBER_BLADER] =
@@ -30673,6 +30712,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sGeminiElfLevelUpLearnset,
     .teachableLearnset = sGeminiElfTeachableLearnset,
     .eggMoveLearnset = sGeminiElfEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_GEMINI_ELF}),
 },
 
 [SPECIES_DARK_JEROID] =
@@ -30819,6 +30859,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSparkmanLevelUpLearnset,
     .teachableLearnset = sSparkmanTeachableLearnset,
     .eggMoveLearnset = sSparkmanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_THUNDERGIANT}),
 },
 
 [SPECIES_THUNDERGIANT] =
@@ -31549,6 +31590,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBubblemanLevelUpLearnset,
     .teachableLearnset = sBubblemanTeachableLearnset,
     .eggMoveLearnset = sBubblemanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_STEAM_HEALER}),
 },
 
 [SPECIES_STEAM_HEALER] =
@@ -31839,6 +31881,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sTikiElderLevelUpLearnset,
     .teachableLearnset = sGrandTikiElderTeachableLearnset,
     .eggMoveLearnset = sGrandTikiElderEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_MASKED_BEAST}),
 },
 
 [SPECIES_MASKED_BEAST] =
@@ -33375,6 +33418,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sZoaLevelUpLearnset,
     .teachableLearnset = sZoaTeachableLearnset,
     .eggMoveLearnset = sZoaEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_METALZOA}),
 },
 
 [SPECIES_METALZOA] =
@@ -33521,6 +33565,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sKyutoraLevelUpLearnset,
     .teachableLearnset = sKyuotoraTeachableLearnset,
     .eggMoveLearnset = sKyuotoraEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_SHUNOROS}),
 },
 
 [SPECIES_SHUNOROS] =
@@ -34693,6 +34738,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sYubelLevelUpLearnset,
     .teachableLearnset = sYubelTeachableLearnset,
     .eggMoveLearnset = sYubelEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_YUBEL_TERROR_INCARNATE}),
 },
 
 [SPECIES_YUBEL_TERROR_INCARNATE] =
@@ -34766,6 +34812,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sYubelTiLevelUpLearnset,
     .teachableLearnset = sYubelTerrorIncarnateTeachableLearnset,
     .eggMoveLearnset = sYubelTerrorIncarnateEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_YUBEL_ULTIMATE_KNIGHTMARE}),
 },
 
 [SPECIES_YUBEL_ULTIMATE_KNIGHTMARE] =
