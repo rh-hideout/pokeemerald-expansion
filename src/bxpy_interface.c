@@ -114,14 +114,8 @@ static bool8 BXPY_ShouldHandleMonsWithFullMenu(void);
 static void BXPY_CreateMonMenu(void);
 static enum BattleTrainer BXPY_DetermineTrainer(enum BattleSide side, enum BXPYPages page);
 static void BXPY_DrawPage(void);
-static void BXPY_RemoveSprite(enum BXPYSpriteIds first, enum BXPYSpriteIds last);
-static void BXPY_RemovePlayerMonSprites(void);
 static void BXPY_RemovePlayerHPSprites(void);
-static void BXPY_RemovePlayerGenderSprites(void);
-static void BXPY_RemoveEnemyMonSprites(void);
-static void BXPY_RemoveEnemyGenderSprites(void);
 static void BXPY_RemoveAllSprites(void);
-static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex);
 static void SpriteCB_BXPYType(struct Sprite *sprite);
 static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_RefreshSelectedSprites(void);
@@ -213,6 +207,8 @@ static void Task_BXPY_PartySelection(u8 taskId)
         PlaySE(SE_BXPY_SWITCH_PAGE);
         BXPY_TogglePage();
         BXPY_DrawPage();
+        BXPY_CreateCursorSprite();
+        BXPY_CreateHighlightSprite();
     }
 }
 
@@ -955,6 +951,7 @@ void BXPY_SetupCallback(void)
             break;
         case 1:
             ScanlineEffect_Stop();
+            BXPY_CreateCursorSprite();
             ResetPaletteFade();
             ResetTasks();
             FreeSpritePalettesResetSpriteData();
@@ -966,9 +963,9 @@ void BXPY_SetupCallback(void)
             gMain.state++;
             break;
         case 3:
-            BXPY_CreateCursorSprite();
             BXPY_InitWindows();
             BXPY_DrawPage();
+            BXPY_CreateCursorSprite();
             BXPY_CreateHighlightSprite();
             gMain.state++;
             break;
@@ -1123,8 +1120,6 @@ static void BXPY_CreateSelectionSpriteTail(u32 partyMonIndex, enum BattleSide si
 {
     if (side == B_SIDE_OPPONENT)
         return;
-
-    u32 spriteIndex = (BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0 + partyMonIndex);
 
     if (BXPY_GetPlayerSelectedTailSpriteId(partyMonIndex) != SPRITE_NONE)
         return;
@@ -1374,7 +1369,6 @@ static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, en
     species = BXPY_TeamPreview_TransformSpeciesId(species, side);
 
     u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
-    u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_MON_0 : BXPY_SPRITEID_ENEMY_MON_0;
     gSprites[spriteId].subpriority = 1;
     BXPY_SetMonSpriteId(side,partyMonIndex,spriteId);
 }
@@ -1733,15 +1727,45 @@ bool8 BXPY_BattleGreaterThanTwoTrainers(void)
     return ((gPartnerTrainerId != TRAINER_NONE) && (gPartnerTrainerId != 0xFFFF));
 }
 
-static void BXPY_ResetAllSpriteIds(void)
+static void BXPY_ResetMonSprites(enum BattleSide sideIndex)
 {
-    for (u32 highlightIndex = 0; highlightIndex < BXPY_SPRITEID_HIGHLIGHT_COUNT; highlightIndex++)
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        BXPY_SetMonSpriteId(sideIndex,partyIndex,SPRITE_NONE);
+    }
+}
+
+static void BXPY_ResetPlayerHPSprites(void)
+{
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        BXPY_SetPlayerHpSpriteId(partyIndex,SPRITE_NONE);
+    }
+}
+
+static void BXPY_ResetGenderSprites(enum BattleSide sideIndex)
+{
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        BXPY_SetGenderSpriteId(sideIndex,partyIndex,SPRITE_NONE);
+    }
+}
+
+static void BXPY_ResetHighlightSprites(void)
+{
+    for (u32 highlightIndex = 0; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
     {
         BXPY_SetHighlightSpriteId(highlightIndex,SPRITE_NONE);
     }
+}
 
+static void BXPY_ResetCursorSprite(void)
+{
     BXPY_SetCursorSpriteId(SPRITE_NONE);
+}
 
+static void BXPY_ResetEnemyTypeSprites(void)
+{
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
@@ -1749,37 +1773,36 @@ static void BXPY_ResetAllSpriteIds(void)
             BXPY_SetEnemyTypeSpriteId(partyIndex,typeIndex,SPRITE_NONE);
         }
     }
+}
 
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetPlayerHpSpriteId(partyIndex,SPRITE_NONE);
-    }
-
+static void BXPY_ResetPlayerSelectedSprites(void)
+{
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         BXPY_SetPlayerSelectedSpriteId(partyIndex,SPRITE_NONE);
     }
+}
 
+static void BXPY_ResetPlayerSelectedTailSprites(void)
+{
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         BXPY_SetPlayerSelectedTailSpriteId(partyIndex,SPRITE_NONE);
     }
+}
 
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        for (u32 sideIndex = 0; sideIndex < NUM_BATTLE_SIDES; sideIndex++)
-        {
-            BXPY_SetGenderSpriteId(sideIndex,partyIndex,SPRITE_NONE);
-        }
-    }
-
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        for (u32 sideIndex = 0; sideIndex < NUM_BATTLE_SIDES; sideIndex++)
-        {
-            BXPY_SetMonSpriteId(sideIndex,partyIndex,SPRITE_NONE);
-        }
-    }
+static void BXPY_ResetAllSpriteIds(void)
+{
+    BXPY_ResetCursorSprite();
+    BXPY_ResetMonSprites(B_SIDE_PLAYER);
+    BXPY_ResetMonSprites(B_SIDE_OPPONENT);
+    BXPY_ResetGenderSprites(B_SIDE_PLAYER);
+    BXPY_ResetGenderSprites(B_SIDE_OPPONENT);
+    BXPY_ResetPlayerHPSprites();
+    BXPY_ResetEnemyTypeSprites();
+    BXPY_ResetHighlightSprites();
+    BXPY_ResetPlayerSelectedSprites();
+    BXPY_ResetPlayerSelectedTailSprites();
 }
 
 static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void)
@@ -1832,7 +1855,7 @@ static const union AnimCmd * const sSpriteAnimTable_Highlight[] =
 
 static void BXPY_CreateHighlightSprite(void)
 {
-    for (enum BXPYHighlight highlightIndex = BXPY_HIGHLIGHT_LEFT; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
+    for (u32 highlightIndex = 0; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
     {
         struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
@@ -2042,72 +2065,6 @@ static void BXPY_DrawPage(void)
     BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
 }
 
-static void BXPY_RemoveSprite(enum BXPYSpriteIds first, enum BXPYSpriteIds last)
-{
-    for (u32 highlightIndex = 0; highlightIndex < BXPY_SPRITEID_HIGHLIGHT_COUNT; highlightIndex++)
-    {
-        u32 highlightSpriteId = BXPY_GetHighlightSpriteId(highlightIndex);
-        if (highlightSpriteId == SPRITE_NONE)
-            continue;
-
-        DestroySpriteAndFreeResources(&gSprites[highlightSpriteId]);
-        BXPY_SetHighlightSpriteId(highlightIndex,SPRITE_NONE);
-    }
-
-    u32 cursorSpriteId = BXPY_GetCursorSpriteId(partyIndex);
-    if (cursorSpriteId != SPRITE_NONE)
-    {
-        DestroySpriteAndFreeResources(&gSprites[cursorSpriteId]);
-        BXPY_SetCursorSpriteId(SPRITE_NONE);
-    }
-
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
-        {
-            u32 spriteId = BXPY_GetEnemyTypeSpriteId(partyIndex,typeIndex);
-            if (spriteId == SPRITE_NONE)
-                continue;
-
-            DestroySpriteAndFreeResources(&gSprites[spriteId]);
-            BXPY_SetEnemyTypeSpriteId(partyIndex,typeIndex,spriteId);
-        }
-    }
-
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        u32 spriteId = BXPY_GetPlayerSelectedSpriteId(partyIndex);
-        if (spriteId == SPRITE_NONE)
-            continue;
-
-        DestroySpriteAndFreeResources(&gSprites[spriteId]);
-        BXPY_SetPlayerSelectedSpriteId(partyIndex,spriteId);
-    }
-
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        u32 spriteId = BXPY_GetPlayerSelectedTailSpriteId(partyIndex);
-        if (spriteId == SPRITE_NONE)
-            continue;
-
-        DestroySpriteAndFreeResources(&gSprites[spriteId]);
-        BXPY_SetPlayerSelectedTailSpriteId(partyIndex,spriteId);
-    }
-
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        for (u32 sideIndex = 0; sideIndex < NUM_BATTLE_SIDES; sideIndex++)
-        {
-            u32 spriteId = BXPY_GetGenderSpriteId(sideIndex,partyIndex);
-            if (spriteId == SPRITE_NONE)
-                continue;
-
-            DestroySpriteAndFreeResources(&gSprites[spriteId]);
-            BXPY_SetGenderSpriteId(sideIndex,partyIndex,spriteId);
-        }
-    }
-}
-
 static void BXPY_RemoveMonSprites(enum BattleSide sideIndex)
 {
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
@@ -2117,23 +2074,10 @@ static void BXPY_RemoveMonSprites(enum BattleSide sideIndex)
             continue;
 
         FreeAndDestroyMonIconSprite(&gSprites[spriteId]);
-        BXPY_SetMonSpriteId(sideIndex,partyIndex,spriteId);
+        BXPY_SetMonSpriteId(sideIndex,partyIndex,SPRITE_NONE);
     }
 }
 
-static void BXPY_RemovePlayerMonSprites(void)
-{
-    u32 sideIndex = B_SIDE_PLAYER;
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        u32 spriteId = BXPY_GetMonSpriteId(sideIndex,partyIndex);
-        if (spriteId == SPRITE_NONE)
-            continue;
-
-        FreeAndDestroyMonIconSprite(&gSprites[spriteId]);
-        BXPY_SetMonSpriteId(sideIndex,partyIndex,spriteId);
-    }
-}
 
 static void BXPY_RemovePlayerHPSprites(void)
 {
@@ -2144,57 +2088,100 @@ static void BXPY_RemovePlayerHPSprites(void)
             continue;
 
         DestroySpriteAndFreeResources(&gSprites[spriteId]);
-        BXPY_SetPlayerHpSpriteId(partyIndex,spriteId);
+        BXPY_SetPlayerHpSpriteId(partyIndex,SPRITE_NONE);
     }
 }
-static void BXPY_RemoveGenderSprites(void)
+
+static void BXPY_RemoveGenderSprites(enum BattleSide sideIndex)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_GENDER_0,BXPY_SPRITEID_PLAYER_GENDER_5);
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        u32 spriteId = BXPY_GetGenderSpriteId(sideIndex, partyIndex);
+        if (spriteId == SPRITE_NONE)
+            continue;
+
+        DestroySpriteAndFreeResources(&gSprites[spriteId]);
+        BXPY_SetGenderSpriteId(sideIndex,partyIndex,SPRITE_NONE);
+    }
 }
 
-static void BXPY_RemoveEnemyMonSprites(void)
+static void BXPY_RemoveHighlightSprites(void)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_MON_0,BXPY_SPRITEID_ENEMY_MON_5);
+    for (enum BXPYHighlight highlightIndex = BXPY_HIGHLIGHT_LEFT; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
+    {
+        u32 highlightSpriteId = BXPY_GetHighlightSpriteId(highlightIndex);
+        if (highlightSpriteId == SPRITE_NONE)
+            continue;
+
+        DestroySpriteAndFreeResources(&gSprites[highlightSpriteId]);
+        BXPY_SetHighlightSpriteId(highlightIndex,SPRITE_NONE);
+    }
 }
 
-static void BXPY_RemoveEnemyGenderSprites(void)
+static void BXPY_RemoveCursorSprite(void)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_GENDER_0,BXPY_SPRITEID_ENEMY_GENDER_5);
+    u32 cursorSpriteId = BXPY_GetCursorSpriteId();
+    if (cursorSpriteId == SPRITE_NONE)
+        return;
+
+    DestroySpriteAndFreeResources(&gSprites[cursorSpriteId]);
+    BXPY_SetCursorSpriteId(SPRITE_NONE);
+}
+
+static void BXPY_RemoveEnemyTypeSprites(void)
+{
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
+        {
+            u32 spriteId = BXPY_GetEnemyTypeSpriteId(partyIndex,typeIndex);
+            if (spriteId == SPRITE_NONE)
+                continue;
+
+            DestroySpriteAndFreeResources(&gSprites[spriteId]);
+            BXPY_SetEnemyTypeSpriteId(partyIndex,typeIndex,SPRITE_NONE);
+        }
+    }
+}
+
+static void BXPY_RemovePlayerSelectedSprites(void)
+{
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        u32 spriteId = BXPY_GetPlayerSelectedSpriteId(partyIndex);
+        if (spriteId == SPRITE_NONE)
+            continue;
+
+        DestroySpriteAndFreeResources(&gSprites[spriteId]);
+        BXPY_SetPlayerSelectedSpriteId(partyIndex,SPRITE_NONE);
+    }
+}
+
+static void BXPY_RemovePlayerSelectedTailSprites(void)
+{
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    {
+        u32 spriteId = BXPY_GetPlayerSelectedTailSpriteId(partyIndex);
+        if (spriteId == SPRITE_NONE)
+            continue;
+
+        DestroySpriteAndFreeResources(&gSprites[spriteId]);
+        BXPY_SetPlayerSelectedTailSpriteId(partyIndex,SPRITE_NONE);
+    }
 }
 
 static void BXPY_RemoveAllSprites(void)
 {
+    BXPY_RemoveCursorSprite();
     BXPY_RemoveMonSprites(B_SIDE_PLAYER);
     BXPY_RemoveMonSprites(B_SIDE_OPPONENT);
+    BXPY_RemoveGenderSprites(B_SIDE_PLAYER);
+    BXPY_RemoveGenderSprites(B_SIDE_OPPONENT);
     BXPY_RemovePlayerHPSprites();
-
-    BXPY_RemovePlayerGenderSprites();
-    BXPY_RemoveEnemyGenderSprites();
-}
-
-static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex)
-{
-    u32 monSpriteIds[] =
-    {
-        BXPY_SPRITEID_PLAYER_MON_0,
-        BXPY_SPRITEID_PLAYER_MON_1,
-        BXPY_SPRITEID_PLAYER_MON_2,
-        BXPY_SPRITEID_PLAYER_MON_3,
-        BXPY_SPRITEID_PLAYER_MON_4,
-        BXPY_SPRITEID_PLAYER_MON_5,
-        BXPY_SPRITEID_ENEMY_MON_0,
-        BXPY_SPRITEID_ENEMY_MON_1,
-        BXPY_SPRITEID_ENEMY_MON_2,
-        BXPY_SPRITEID_ENEMY_MON_3,
-        BXPY_SPRITEID_ENEMY_MON_4,
-        BXPY_SPRITEID_ENEMY_MON_5,
-    };
-
-    for (u32 index = 0; index < ARRAY_COUNT(monSpriteIds); index++)
-        if (spriteIndex == monSpriteIds[index])
-            return TRUE;
-
-    return FALSE;
+    BXPY_RemoveEnemyTypeSprites();
+    BXPY_RemoveHighlightSprites();
+    BXPY_RemovePlayerSelectedSprites();
+    BXPY_RemovePlayerSelectedTailSprites();
 }
 
 static const union AnimCmd sAnim_MonTypeNone[] =
@@ -2380,14 +2367,14 @@ static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum
 
 static void BXPY_RefreshSelectedSprites(void)
 {
-    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_SELECTED_0,BXPY_SPRITEID_PLAYER_SELECTED_5);
+    BXPY_RemovePlayerSelectedSprites();
 
     for (u32 partyMonIndex = 0; partyMonIndex < NUM_BXPY_MAX_MONS_SHOWED; partyMonIndex++)
     {
         FreeSpriteTilesByTag(BXPY_SPRITETAG_SELECTED_0 + partyMonIndex);
         LoadSpriteSheet(&sBXPYSpriteSheets[BXPY_SPRITEID_PLAYER_SELECTED_0 + partyMonIndex].spriteSheet);
         BXPY_CreateSelectionSprite(partyMonIndex,B_SIDE_PLAYER);
-        u32 spriteId = BXPY_GetSpriteId(BXPY_SPRITEID_PLAYER_SELECTED_0+partyMonIndex);
+        u32 spriteId = BXPY_GetPlayerSelectedSpriteId(partyMonIndex);
         BXPY_DrawOrderOnSelectionSprite(spriteId, BXPY_GetOrderForMon(partyMonIndex));
     }
 }
