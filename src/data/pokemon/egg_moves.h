@@ -8694,7 +8694,7 @@ static const u16 sRescureRabbitEggMoveLearnset[] =
     MOVE_UNAVAILABLE,
 };
 
-static const u16 sRevivalHamEggMoveLearnset[] =
+static const u16 sRevivalJamEggMoveLearnset[] =
 {
     MOVE_ENDURE,
     MOVE_UNAVAILABLE,

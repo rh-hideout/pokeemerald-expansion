@@ -33,7 +33,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Illusion M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ILLUSION_MAGICIAN,
-    .categoryName = _("Magician M"),
+    .categoryName = _("Magician"),
     .height = 7,
     .weight = 85,
     .description = COMPOUND_STRING(
@@ -75,6 +75,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sIllusionMagicianLearnset,
     .teachableLearnset = sIllusionMagicianTeachableLearnset,
     .eggMoveLearnset = sIllusionMagicianEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_DARK_MAGICIAN}), 
 },
 
 
@@ -106,7 +107,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("D Magician"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_DARK_MAGICIAN,
-    .categoryName = _("Magician D"),
+    .categoryName = _("Magician"),
     .height = 18,
     .weight = 800,
     .description = COMPOUND_STRING(
@@ -148,6 +149,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sDarkMagicianLearnset,
     .teachableLearnset = sDarkMagicianTeachableLearnset,
     .eggMoveLearnset = sDarkMagicianEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_DARK_SAGE},
+                            {EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_DARK_MAGICIAN}
+    ),          
 },
 
 [SPECIES_DARK_SAGE] =
@@ -251,7 +255,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("B Chick"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLACK_DRAGONS_CHICK,
-    .categoryName = _("Chick B"),
+    .categoryName = _("Chick"),
     .height = 8,
     .weight = 35,
     .description = COMPOUND_STRING(
@@ -294,6 +298,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBlackDragonsChickLearnset,
     .teachableLearnset = sBlackDragonsChickTeachableLearnset,
     .eggMoveLearnset = sBlackDragonsChickEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_RED_EYES_BLACK_DRAGON}), 
 },
 
 [SPECIES_RED_EYES_BLACK_DRAGON] =
@@ -367,6 +372,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sRedEyesBlackDragonLearnset,
     .teachableLearnset = sRedEyesBlackDragonTeachableLearnset,
     .eggMoveLearnset = sRedEyesBlackDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_RED_EYES_BLACK_METAL_DRAGON},
+                            {EVO_ITEM, ITEM_TOON_STONE, SPECIES_RED_EYES_TOON_DRAGON}
+    ), 
 },
 
 [SPECIES_RED_EYES_BLACK_METAL_DRAGON] =
@@ -398,7 +406,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Red Eyes M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RED_EYES_BLACK_METAL_DRAGON,
-    .categoryName = _("Dragon M"),
+    .categoryName = _("Dragon"),
     .height = 44,
     .weight = 4000,
     .description = COMPOUND_STRING(
@@ -514,6 +522,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sPaladinOfWhiteDragonLearnset,
     .teachableLearnset = sPaladinOfWhiteDragonTeachableLearnset,
     .eggMoveLearnset = sPaladinOfWhiteDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_BLUE_EYES_WHITE_DRAGON}
+    ), 
 },
 
 [SPECIES_BLUE_EYES_WHITE_DRAGON] =
@@ -587,6 +597,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBlueEyesWhiteDragonLearnset,
     .teachableLearnset = sBlueEyesWhiteDragonTeachableLearnset,
     .eggMoveLearnset = sBlueEyesWhiteDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_BLUE_EYES_ULTIMATE_DRAGON},
+                            {EVO_ITEM, ITEM_TOON_STONE, SPECIES_BLUE_EYES_TOON_DRAGON}
+    ), 
 },
 
 [SPECIES_BLUE_EYES_ULTIMATE_DRAGON] =
@@ -735,6 +748,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sManEaterLevelUpLearnset,
     .teachableLearnset = sManEaterBugTeachableLearnset,
     .eggMoveLearnset = sManEaterBugEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 23, SPECIES_NOBLEMAN_EATER_BUG}), 
 },
 
 [SPECIES_NOBLEMAN_EATER_BUG] =
@@ -765,7 +779,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("N Eater B"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_NOBLEMAN_EATER_BUG,
-    .categoryName = _("Flip NB"),
+    .categoryName = _("Flip"),
     .height = 19,
     .weight = 1200,
     .description = COMPOUND_STRING(
@@ -880,6 +894,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sPetitMothLevelUpLearnset,
     .teachableLearnset = sPetitMothTeachableLearnset,
     .eggMoveLearnset = sPetitMothEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 7, SPECIES_LARVAE_MOTH}),
 },
 
 [SPECIES_LARVAE_MOTH] =
@@ -910,7 +925,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Larvae M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_LARVAE_MOTH,
-    .categoryName = _("Moth M"),
+    .categoryName = _("Moth"),
     .height = 4,
     .weight = 10,
     .description = COMPOUND_STRING(
@@ -952,6 +967,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLarvaeMLevelUpLearnset,
     .teachableLearnset = sLarvaeMothTeachableLearnset,
     .eggMoveLearnset = sLarvaeMothEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 10, SPECIES_COCOON_OF_EVOLUTION}),
 },
 
 [SPECIES_COCOON_OF_EVOLUTION] =
@@ -1024,6 +1040,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCocoonOELevelUpLearnset,
     .teachableLearnset = sCocoonOfEvolutionTeachableLearnset,
     .eggMoveLearnset = sCocoonOfEvolutionEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 13, SPECIES_GREAT_MOTH}),
 },
 
 [SPECIES_GREAT_MOTH] =
@@ -1098,6 +1115,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sGreatMothLevelUpLearnset,
     .teachableLearnset = sGreatMothTeachableLearnset,
     .eggMoveLearnset = sGreatMothEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_PERFECTLY_ULTIMATE_GREAT_MOTH}),
 },
 
 [SPECIES_PERFECTLY_ULTIMATE_GREAT_MOTH] =
@@ -1202,7 +1220,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Parasite C"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_PARASITE_CATERPILLAR,
-    .categoryName = _("Bug C"),
+    .categoryName = _("Bug"),
     .height = 5,
     .weight = 10,
     .description = COMPOUND_STRING(
@@ -1349,7 +1367,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Beaver W"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BEAVER_WARRIOR,
-    .categoryName = _("Beaver W"),
+    .categoryName = _("Beaver"),
     .height = 13,
     .weight = 100,
     .description = COMPOUND_STRING(
@@ -1464,6 +1482,13 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sKuribohLevelUpLearnset,
     .teachableLearnset = sKuribohTeachableLearnset,
     .eggMoveLearnset = sKuribohEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_WINGED_KURIBOH},
+                            {EVO_LEVEL, 0, SPECIES_KURIBON, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD})},
+                            {EVO_LEVEL, 0, SPECIES_SPHERE_KURIBOH, CONDITIONS({IF_HOLD_ITEM, ITEM_METAL_COAT})},
+                            {EVO_LEVEL, 20, SPECIES_JUNKURIBOH, CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_JUNK_SYNCHRON})},
+                            {EVO_ITEM, ITEM_MOON_STONE, SPECIES_KURIBABYLON},
+                            {EVO_ITEM, ITEM_LINK_STONE, SPECIES_LINKURIBOH}
+    ),
 },
 
 [SPECIES_WINGED_KURIBOH] =
@@ -1567,7 +1592,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("W Kur LV10"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_WINGED_KURIBOH_LEVEL10,
-    .categoryName = _("Fluff W"),
+    .categoryName = _("Fluff"),
     .height = 15,
     .weight = 50,
     .description = COMPOUND_STRING(
@@ -2007,7 +2032,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("L Winguard"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_LITTLE_WINGUARD,
-    .categoryName = _("Soldier L"),
+    .categoryName = _("Soldier"),
     .height = 10,
     .weight = 70,
     .description = COMPOUND_STRING(
@@ -2049,6 +2074,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLWinguardLevelUpLearnset,
     .teachableLearnset = sLittleWinguardTeachableLearnset,
     .eggMoveLearnset = sLittleWinguardEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 19, SPECIES_ROCKET_WARRIOR}), 
 },
 
 [SPECIES_ROCKET_WARRIOR] =
@@ -2194,6 +2220,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLandstarLevelUpLearnset,
     .teachableLearnset = sSwordsmanOfLandstarTeachableLearnset,
     .eggMoveLearnset = sSwordsmanOfLandstarEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_GILFORD_THE_LIGHTNING}), 
 },
 
 [SPECIES_GILFORD_THE_LIGHTNING] =
@@ -2586,7 +2613,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Flame M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_FLAME_MANIPULATOR,
-    .categoryName = _("Fire Boy M"),
+    .categoryName = _("Fire Boy"),
     .height = 16,
     .weight = 300,
     .description = COMPOUND_STRING(
@@ -2629,6 +2656,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFlameMLevelUpLearnset,
     .teachableLearnset = sFlameManipulatorTeachableLearnset,
     .eggMoveLearnset = sFlameManipulatorEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 18, SPECIES_FLAME_SWORDSMAN}), 
 },
 
 [SPECIES_FLAME_SWORDSMAN] =
@@ -2701,6 +2729,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFlameSwrdLevelUpLearnset,
     .teachableLearnset = sFlameSwordsmanTeachableLearnset,
     .eggMoveLearnset = sFlameSwordsmanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_DARK_FLARE_KNIGHT}), 
 },
 
 [SPECIES_DARK_FLARE_KNIGHT] =
@@ -2731,7 +2760,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("D Flare K"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_DARK_FLARE_KNIGHT,
-    .categoryName = _("Knight DK"),
+    .categoryName = _("Knight"),
     .height = 21,
     .weight = 800,
     .description = COMPOUND_STRING(
@@ -2847,6 +2876,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFeralImpSLevelUpLearnset,
     .teachableLearnset = sFeralImpTeachableLearnset,
     .eggMoveLearnset = sFeralImpEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 21, SPECIES_DES_FERAL_IMP}), 
 },
 
 [SPECIES_DES_FERAL_IMP] =
@@ -2877,7 +2907,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Des F Imp"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_DES_FERAL_IMP,
-    .categoryName = _("Imp F"),
+    .categoryName = _("Imp"),
     .height = 16,
     .weight = 500,
     .description = COMPOUND_STRING(
@@ -2920,6 +2950,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sDesFImpLevelUpLearnset,
     .teachableLearnset = sDesFeralImpTeachableLearnset,
     .eggMoveLearnset = sDesFeralImpEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_KING_OF_THE_FERAL_IMPS}), 
 },
 
 [SPECIES_KING_OF_THE_FERAL_IMPS] =
@@ -3024,7 +3055,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Baby D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BABY_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 9,
     .weight = 80,
     .description = COMPOUND_STRING(
@@ -3067,6 +3098,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBabyDLevelUpLearnset,
     .teachableLearnset = sBabyDragonTeachableLearnset,
     .eggMoveLearnset = sBabyDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_THOUSAND_DRAGON}),
 },
 
 [SPECIES_THOUSAND_DRAGON] =
@@ -3098,7 +3130,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Thousand D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_THOUSAND_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 28,
     .weight = 1200,
     .description = COMPOUND_STRING(
@@ -3462,7 +3494,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Inj F Lily"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_INJECTION_FAIRY_LILY,
-    .categoryName = _("Fairy F"),
+    .categoryName = _("Fairy"),
     .height = 15,
     .weight = 400,
     .description = COMPOUND_STRING(
@@ -3577,6 +3609,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBetaTMWLevelUpLearnset,
     .teachableLearnset = sBetaTheMagnetWarriorTeachableLearnset,
     .eggMoveLearnset = sBetaTheMagnetWarriorEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_VALKYRION}), 
 },
 
 [SPECIES_VALKYRION] =
@@ -3722,6 +3755,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAlphaTMWLevelUpLearnset,
     .teachableLearnset = sAlphaTheMagnetWarriorTeachableLearnset,
     .eggMoveLearnset = sAlphaTheMagnetWarriorEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_BERSERKION}), 
 },
 
 [SPECIES_BERSERKION] =
@@ -4012,6 +4046,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBerfometLevelUpLearnset,
     .teachableLearnset = sBerformetTeachableLearnset,
     .eggMoveLearnset = sBerformetEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_CHIMERA_THE_FLYING_MYTHICAL_BEAST}), 
 },
 
 [SPECIES_CHIMERA_THE_FLYING_MYTHICAL_BEAST] =
@@ -4084,6 +4119,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sChimeraLevelUpLearnset,
     .teachableLearnset = sChimeraTheFlyingMythicalBeastTeachableLearnset,
     .eggMoveLearnset = sChimeraTheFlyingMythicalBeastEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 38, SPECIES_CHIMAERA_THE_MASTER_OF_BEASTS}), 
 },
 
 [SPECIES_CHIMAERA_THE_MASTER_OF_BEASTS] =
@@ -4918,7 +4954,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Frog T Jam"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_FROG_THE_JAM,
-    .categoryName = _("Frog T"),
+    .categoryName = _("Frog"),
     .height = 7,
     .weight = 65,
     .description = COMPOUND_STRING(
@@ -4990,7 +5026,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Toadally A"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_TOADALLY_AWESOME,
-    .categoryName = _("Toad A"),
+    .categoryName = _("Toad"),
     .height = 9,
     .weight = 185,
     .description = COMPOUND_STRING(
@@ -5354,7 +5390,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("D.3.S Frog"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_D3S_FROG,
-    .categoryName = _("Toxic Frog D"),
+    .categoryName = _("Toxic Frog"),
     .height = 26,
     .weight = 2185,
     .description = COMPOUND_STRING(
@@ -6015,7 +6051,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Little D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_LITTLE_D,
-    .categoryName = _("Dino D"),
+    .categoryName = _("Dino"),
     .height = 13,
     .weight = 400,
     .description = COMPOUND_STRING(
@@ -6232,7 +6268,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("B Insect"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BASIC_INSECT,
-    .categoryName = _("Mantis B"),
+    .categoryName = _("Mantis"),
     .height = 7,
     .weight = 70,
     .description = COMPOUND_STRING(
@@ -6275,6 +6311,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBInsectRLevelUpLearnset,
     .teachableLearnset = sBasicInsectTeachableLearnset,
     .eggMoveLearnset = sBasicInsectEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_ARMOURED_BASIC_INSECT}), 
 },
 
 [SPECIES_ARMOURED_BASIC_INSECT] =
@@ -6602,7 +6639,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Celtic G"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_CELTIC_GUARDIAN,
-    .categoryName = _("Elf G"),
+    .categoryName = _("Elf"),
     .height = 19,
     .weight = 800,
     .description = COMPOUND_STRING(
@@ -6645,6 +6682,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCelticGLevelUpLearnset,
     .teachableLearnset = sCelticGuardianTeachableLearnset,
     .eggMoveLearnset = sCelticGuardianEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 19, SPECIES_OBNOXIOUS_CELTIC_GUARDIAN}), 
 },
 
 [SPECIES_OBNOXIOUS_CELTIC_GUARDIAN] =
@@ -6719,6 +6757,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sObnoxiousCelticGuardianLearnset,
     .teachableLearnset = sObnoxiousCelticGuardianTeachableLearnset,
     .eggMoveLearnset = sObnoxiousCelticGuardianEggMoveLearnset,
+    evolutions = EVOLUTION({EVO_LEVEL, 19, SPECIES_CELTIC_GUARDIAN_OF_NOBLE_ARMS}), 
 },
 
 [SPECIES_CELTIC_GUARDIAN_OF_NOBLE_ARMS] =
@@ -7009,6 +7048,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sWataponLevelUpLearnset,
     .teachableLearnset = sWataponTeachableLearnset,
     .eggMoveLearnset = sWataponEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_MARSHMALLON}), 
 },
 
 [SPECIES_MARSHMALLON] =
@@ -7256,7 +7296,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Ojama Y"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_OJAMA_YELLOW,
-    .categoryName = _("Ojama Y"),
+    .categoryName = _("Ojama"),
     .height = 9,
     .weight = 300,
     .description = COMPOUND_STRING(
@@ -7329,7 +7369,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Ojama K"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_OJAMA_KNIGHT,
-    .categoryName = _("Ojama K"),
+    .categoryName = _("Ojama"),
     .height = 13,
     .weight = 600,
     .description = COMPOUND_STRING(
@@ -7621,7 +7661,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Aligator S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ALLIGATOR_SWORD,
-    .categoryName = _("Aligator S"),
+    .categoryName = _("Aligator"),
     .height = 18,
     .weight = 600,
     .description = COMPOUND_STRING(
@@ -7664,6 +7704,10 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAlligatorSLevelUpLearnset,
     .teachableLearnset = sAlligatorSwordTeachableLearnset,
     .eggMoveLearnset = sAlligatorSwordEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_ALLIGATOR},
+                            {EVO_LEVEL, 26, SPECIES_CYBERTECH_ALLIGATOR},
+                            {EVO_LEVEL, 0, SPECIES_ALLIGATOR_SWORD_DRAGON, CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_BABY_DRAGON})}
+    ),
 },
 
 [SPECIES_CYBERTECH_ALLIGATOR] =
@@ -7882,6 +7926,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sAxeRaiderLevelUpLearnset,
     .teachableLearnset = sAxeRaiderTeachableLearnset,
     .eggMoveLearnset = sAxeRaiderEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_VORSE_RAIDER}),
 },
 
 [SPECIES_VORSE_RAIDER] =
@@ -8248,6 +8293,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sDMGirlLevelUpLearnset,
     .teachableLearnset = sDarkMagicianGirlTeachableLearnset,
     .eggMoveLearnset = sDarkMagicianGirlEggMoveLearnset,
+    EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_DARK_MAGICIAN_GIRL},
+              {EVO_LEVEL, 0, SPECIES_DARK_MAGICIAN_GIRL_THE_DRAGON_KNIGHT, CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_TIMAEUS})}
+    )
 },
 
 [SPECIES_DARK_MAGICIAN_GIRL_THE_DRAGON_KNIGHT] =
@@ -8908,6 +8956,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sHarpieLDYLevelUpLearnset,
     .teachableLearnset = sHarpieLadyTeachableLearnset,
     .eggMoveLearnset = sHarpieLadyEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_HARPIE_LADY_SISYERS},
+                            {EVO_LEVEL, 0, SPECIES_CYBER_HARPIE_LADY, CONDITIONS({IF_HOLD_ITEM, ITEM_METAL_COAT})},
+    ), 
 },
 
 [SPECIES_HARPIE_LADY_SISTERS] =
@@ -9055,6 +9106,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCyberHarpieLadyLevelUpLearnset,
     .teachableLearnset = sCyberHarpieLadyTeachableLearnset,
     .eggMoveLearnset = sCyberHarpieLadyEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_CYBER_SLASH_HARPIE_LADY}), 
 },
 
 [SPECIES_CYBER_SLASH_HARPIE_LADY] =
@@ -9307,7 +9359,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("H Pet Drg"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_HARPIES_PET_DRAGON,
-    .categoryName = _("Dragon H"),
+    .categoryName = _("Dragon"),
     .height = 27,
     .weight = 1600,
     .description = COMPOUND_STRING(
@@ -10300,6 +10352,10 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSumSkullLevelUpLearnset,
     .teachableLearnset = sSummonedSkullTeachableLearnset,
     .eggMoveLearnset = sSummonedSkullEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_SUMMONED_SKULL},
+                            {EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_BLACK_SKULL_DRAGON},
+                            {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_ARCHFIENDS_ZOMBIE_SKULL}
+    ),
 },
 
 [SPECIES_BLACK_SKULL_DRAGON] =
@@ -10330,7 +10386,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("B Skull DR"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLACK_SKULL_DRAGON,
-    .categoryName = _("Archfiend B"),
+    .categoryName = _("Archfiend"),
     .height = 31,
     .weight = 2800,
     .description = COMPOUND_STRING(
@@ -10475,7 +10531,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Curse of D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_CURSE_OF_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 18,
     .weight = 1000,
     .description = COMPOUND_STRING(
@@ -10517,6 +10573,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCurseOfDLevelUpLearnset,
     .teachableLearnset = sCurseOfDragonTeachableLearnset,
     .eggMoveLearnset = sCurseOfDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_GAIA_THE_DRAGON_CHAMPION}), 
 },
 
 [SPECIES_GAIA_THE_DRAGON_CHAMPION] =
@@ -10619,7 +10676,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Queens K"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_QUEENS_KNIGHT,
-    .categoryName = _("Queen K"),
+    .categoryName = _("Queen"),
     .height = 17,
     .weight = 500,
     .description = COMPOUND_STRING(
@@ -10985,7 +11042,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Archery G"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RED_ARCHERY_GIRL,
-    .categoryName = _("Mermaid G"),
+    .categoryName = _("Mermaid"),
     .height = 14,
     .weight = 300,
     .description = COMPOUND_STRING(
@@ -11028,6 +11085,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sArcheryGLevelUpLearnset,
     .teachableLearnset = sRedArcheryGirlTeachableLearnset,
     .eggMoveLearnset = sRedArcheryGirlEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_TOON_MERMAID}),
 },
 
 [SPECIES_SAGGI] =
@@ -11101,6 +11159,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSaggiLevelUpLearnset,
     .teachableLearnset = sSaggiTeachableLearnset,
     .eggMoveLearnset = sSaggiEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_PETEN}),
 },
 
 [SPECIES_PETEN] =
@@ -11644,7 +11703,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Lord Of D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_LORD_OF_D,
-    .categoryName = _("D D"),
+    .categoryName = _("D"),
     .height = 19,
     .weight = 469,
     .description = COMPOUND_STRING(
@@ -11716,7 +11775,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("King Of D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_KING_OF_D,
-    .categoryName = _("KING D D"),
+    .categoryName = _("D"),
     .height = 25,
     .weight = 669,
     .description = COMPOUND_STRING(
@@ -11831,6 +11890,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sGearfriedLevelUpLearnset,
     .teachableLearnset = sGearfriedTheIronKnightTeachableLearnset,
     .eggMoveLearnset = sGearfriedTheIronKnightEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_GEARFRIED_THE_SWORDMASTER}), 
 },
 
 [SPECIES_GEARFRIED_THE_SWORDMASTER] =
@@ -11935,7 +11995,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("G Soldier"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_GIANT_SOLDIER_OF_STONE,
-    .categoryName = _("Stone G"),
+    .categoryName = _("Stone"),
     .height = 40,
     .weight = 8000,
     .description = COMPOUND_STRING(
@@ -12196,6 +12256,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLGDRFishLevelUpLearnset,
     .teachableLearnset = sLegendaryFishermanTeachableLearnset,
     .eggMoveLearnset = sLegendaryFishermanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_LEGENDARY_FISHERMAN_TWO}),
 },
 
 [SPECIES_LEGENDARY_FISHERMAN_TWO] =
@@ -12488,6 +12549,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sJunkSynchLevelUpLearnset,
     .teachableLearnset = sJunkSynchronTeachableLearnset,
     .eggMoveLearnset = sJunkSynchronEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 22, SPECIES_JUNK_WARRIOR}), 
 },
 
 [SPECIES_JUNK_WARRIOR] =
@@ -12560,6 +12622,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sJunkWriorLevelUpLearnset,
     .teachableLearnset = sJunkWarriorTeachableLearnset,
     .eggMoveLearnset = sJunkWarriorEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_JUNK_DESTROYER}), 
 },
 
 [SPECIES_JUNK_DESTROYER] =
@@ -13880,6 +13943,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sGaiTFKLevelUpLearnset,
     .teachableLearnset = sGaiaTheFierceKnightTeachableLearnset,
     .eggMoveLearnset = sGaiaTheFierceKnightEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_GAIA_KNIGHT_THE_FORCE_OF_EARTH, CONDITIONS({IF_TIME, TIME_DAY})},
+                            {EVO_LEVEL, 28, SPECIES_DARK_CAVALRY, CONDITIONS({IF_TIME, TIME_NIGHT})}
+    ),
 },
 
 [SPECIES_GAIA_KNIGHT_THE_FORCE_OF_EARTH] =
@@ -14859,7 +14925,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Parrot D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_PARROT_DRAGON,
-    .categoryName = _("Bird D"),
+    .categoryName = _("Bird"),
     .height = 11,
     .weight = 100,
     .description = COMPOUND_STRING(
@@ -14933,7 +14999,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Tri-Horn D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_TRI_HORNED_DRAGON,
-    .categoryName = _("Triple D"),
+    .categoryName = _("Triple"),
     .height = 39,
     .weight = 340,
     .description = COMPOUND_STRING(
@@ -15047,6 +15113,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sMysTomatoLevelUpLearnset,
     .teachableLearnset = sMysticTomatoTeachableLearnset,
     .eggMoveLearnset = sMysticTomatoEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_HUNGRY_BURGER}), 
 },
 
 [SPECIES_HUNGRY_BURGER] =
@@ -15078,7 +15145,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("H Burger"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_HUNGRY_BURGER,
-    .categoryName = _("Burger H"),
+    .categoryName = _("Burger"),
     .height = 8,
     .weight = 90,
     .description = COMPOUND_STRING(
@@ -15193,6 +15260,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sThundrDrgLevelUpLearnset,
     .teachableLearnset = sThunderDragonTeachableLearnset,
     .eggMoveLearnset = sThunderDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_THUNDER_DRAGON_COLOSSUS},
+                            {EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_TWIN_HEADED_THUNDER_DRAGON}
+    ),
 },
 
 [SPECIES_TWIN_HEADED_THUNDER_DRAGON] =
@@ -15266,6 +15336,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sTwinThndrLevelUpLearnset,
     .teachableLearnset = sTwinHeadedThunderDragonTeachableLearnset,
     .eggMoveLearnset = sTwinHeadedThunderDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_THUNDER_DRAGON_TITAN}),
 },
 
 [SPECIES_THUNDER_DRAGON_TITAN] =
@@ -15632,8 +15703,1225 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sFortuneLadyEveryLearnset,
     .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
     .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
 },
 
+[SPECIES_FORTUNE_LADY_EVERY_BUG] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_BUG),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_DARK] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_DARK),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_DRAGON] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_DRAGON),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_ELECTRIC] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_ELECTRIC),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_FIGHTING] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_FIGHTING),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_FIRE] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_FIRE),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_FLYING] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_FLYING),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_GHOST] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_GHOST),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_GRASS] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_GRASS),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_GROUND] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_GROUND),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_ICE] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_ICE),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_POISON] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_POISON),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_PSYCHIC] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_PSYCHIC),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_ROCK] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_ROCK),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_STEEL] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_STEEL),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
+
+[SPECIES_FORTUNE_LADY_EVERY_WATER] =
+{
+    .baseHP        = 70,
+    .baseAttack    = 75,
+    .baseDefense   = 65,
+    .baseSpAttack  = 105,
+    .baseSpDefense = 105,
+    .baseSpeed     = 90,
+    .types = MON_TYPES(TYPE_FAIRY, TYPE_WATER),
+    .catchRate = 90,
+    .expYield = 168,
+    .evYield_SpAttack = 1,
+    .evYield_SpDefense = 1,
+    .itemCommon = ITEM_NONE,
+    .itemRare = ITEM_NONE,
+    .genderRatio = PERCENT_FEMALE(100),
+    .eggCycles = 8,
+    .friendship = STANDARD_FRIENDSHIP,
+    .growthRate = GROWTH_MEDIUM_SLOW,
+    .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED, EGG_GROUP_NO_EGGS_DISCOVERED),
+    .abilities = {
+        ABILITY_MULTITYPE,
+        ABILITY_NONE,
+        ABILITY_SYNCHRONIZE
+},
+    .bodyColor = BODY_COLOR_RED,
+    .speciesName = _("FLadyEvery"),
+    .cryId = CRY_BULBASAUR,
+    .natDexNum = NATIONAL_DEX_FORTUNE_LADY_EVERY,
+    .categoryName = _("Fortune"),
+    .height = 19,
+    .weight = 450,
+    .description = COMPOUND_STRING(
+        "Fortune Lady Every has the power to\n"
+        "become any type it wants. It must hold\n"
+        "a special plate to unlock this power."
+    ),
+    .pokemonScale = 256,
+    .pokemonOffset = 0,
+    .trainerScale = 290,
+    .trainerOffset = 2,
+    .frontPic = gMonFrontPic_Togekiss,
+    .frontPicSize = MON_COORDS_SIZE(64, 64),
+    .frontPicYOffset = 0,
+    .frontAnimFrames = ANIM_FRAMES(
+        ANIMCMD_FRAME(0, 1),
+    ),
+    .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+    .enemyMonElevation = 7,
+    .backPic = gMonBackPic_Togekiss,
+    .backPicSize = MON_COORDS_SIZE(64, 64),
+    .backPicYOffset = 0,
+    .backAnimId = BACK_ANIM_H_SLIDE,
+    .palette = gMonPalette_Togekiss,
+    .shinyPalette = gMonShinyPalette_Togekiss,
+    .iconSprite = gMonIcon_Togekiss,
+    .iconPalIndex = 0,
+    .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
+    SHADOW(1, 1, SHADOW_SIZE_S)
+    FOOTPRINT(Mudkip)
+    OVERWORLD(
+        sPicTable_Mudkip,
+        SIZE_32x32,
+        SHADOW_SIZE_M,
+        TRACKS_FOOT,
+        sAnimTable_Following,
+        gOverworldPalette_Mudkip,
+        gShinyOverworldPalette_Mudkip
+    )
+    .levelUpLearnset = sFortuneLadyEveryLearnset,
+    .teachableLearnset = sFortuneLadyEveryTeachableLearnset,
+    .eggMoveLearnset = sFortuneLadyEveryEggMoveLearnset,
+    .formChangeTable = sFortuneLadyEveryFormChangeTable,
+    .formSpeciesIdTable = sFortuneLadyEveryFormSpeciesIdTable,
+},
 
 [SPECIES_MUSICIAN_KING] =
 {
@@ -15955,7 +17243,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("R Horseman"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RABID_HORSEMAN,
-    .categoryName = _("Ox R"),
+    .categoryName = _("Ox"),
     .height = 24,
     .weight = 1700,
     .description = COMPOUND_STRING(
@@ -16070,6 +17358,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sJiraiGumoLevelUpLearnset,
     .teachableLearnset = sJiraiGumoTeachableLearnset,
     .eggMoveLearnset = sJiraiGumoEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_LAUNCHER_SPIDER}), 
 },
 
 [SPECIES_LAUNCHER_SPIDER] =
@@ -16101,7 +17390,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Launcher S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_LAUNCHER_SPIDER,
-    .categoryName = _("Spider S"),
+    .categoryName = _("Spider"),
     .height = 14,
     .weight = 895,
     .description = COMPOUND_STRING(
@@ -17091,7 +18380,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .eggMoveLearnset = sLavaGolemEggMoveLearnset,
 },
 
-[SPECIES_REVIVAL_HAM] =
+[SPECIES_REVIVAL_JAM] =
 {
     .baseHP        = 65,
     .baseAttack    = 35,
@@ -17118,7 +18407,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .bodyColor = BODY_COLOR_RED,
     .speciesName = _("Revl Jam"),
     .cryId = CRY_BULBASAUR,
-    .natDexNum = NATIONAL_DEX_REVIVAL_HAM,
+    .natDexNum = NATIONAL_DEX_REVIVAL_JAM,
     .categoryName = _("Slime"),
     .height = 8,
     .weight = 75,
@@ -17159,8 +18448,11 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         gShinyOverworldPalette_Mudkip
     )
     .levelUpLearnset = sREVLJamLevelUpLearnset,
-    .teachableLearnset = sRevivalHamTeachableLearnset,
-    .eggMoveLearnset = sRevivalHamEggMoveLearnset,
+    .teachableLearnset = sRevivalJamTeachableLearnset,
+    .eggMoveLearnset = sRevivalJamEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 26, SPECIES_HUMANOID_SLIME},
+                            {EVO_LEVEL, 0, SPECIES_EGYPTIAN_GOD_SLIME, CONDITIONS({IF_SPECIES_IN_PARTY, SPECIES_OBELISK_THE_TORMENTOR})}
+    ), 
 },
 
 [SPECIES_HUMANOID_SLIME] =
@@ -17234,6 +18526,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sHumSlimeLevelUpLearnset,
     .teachableLearnset = sHumanoidSlimeTeachableLearnset,
     .eggMoveLearnset = sHumanoidSlimeEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 42, SPECIES_HUMANOID_WORM_DRAKE}), 
 },
 
 [SPECIES_HUMANOID_WORM_DRAKE] =
@@ -17601,6 +18894,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSilentMG4LevelUpLearnset,
     .teachableLearnset = sSilentMagicianLevel4TeachableLearnset,
     .eggMoveLearnset = sSilentMagicianLevel4EggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_SILENT_MAGICIAN_LEVEL8}),
 },
 
 [SPECIES_SILENT_MAGICIAN_LEVEL8] =
@@ -18290,7 +19584,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Needle W"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_NEEDLE_WORM,
-    .categoryName = _("Worm W"),
+    .categoryName = _("Worm"),
     .height = 2,
     .weight = 10,
     .description = COMPOUND_STRING(
@@ -18363,7 +19657,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Dungeon W"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_DUNGEON_WORM,
-    .categoryName = _("Worm W"),
+    .categoryName = _("Worm"),
     .height = 22,
     .weight = 900,
     .description = COMPOUND_STRING(
@@ -18509,7 +19803,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("D Kangaroo"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_DES_KANGAROO,
-    .categoryName = _("Kangaroo D"),
+    .categoryName = _("Kangaroo"),
     .height = 21,
     .weight = 1000,
     .description = COMPOUND_STRING(
@@ -18914,6 +20208,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSkullSRVLevelUpLearnset,
     .teachableLearnset = sSkullServantTeachableLearnset,
     .eggMoveLearnset = sSkullServantEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_KING_OF_THE_SKULL_SERVANTS}),
 },
 
 [SPECIES_KING_OF_THE_SKULL_SERVANTS] =
@@ -19019,7 +20314,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Catapult T"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_CATAPULT_TURTLE,
-    .categoryName = _("Turtle T"),
+    .categoryName = _("Turtle"),
     .height = 11,
     .weight = 2500,
     .description = COMPOUND_STRING(
@@ -19279,6 +20574,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sBusterBLDLevelUpLearnset,
     .teachableLearnset = sBusterBladerTeachableLearnset,
     .eggMoveLearnset = sBusterBladerEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_DARK_PALADIN}),
 },
 
 [SPECIES_DARK_PALADIN] =
@@ -19382,7 +20678,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("X Cannon"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_X_CANNON,
-    .categoryName = _("Cannon X"),
+    .categoryName = _("Cannon"),
     .height = 11,
     .weight = 345,
     .description = COMPOUND_STRING(
@@ -19601,7 +20897,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Jinzo Rtr"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_JINZO_RETURNER,
-    .categoryName = _("Jinzo"),
+    .categoryName = _("Android"),
     .height = 14,
     .weight = 800,
     .description = COMPOUND_STRING(
@@ -19674,7 +20970,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Jinzo"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_JINZO,
-    .categoryName = _("Jinzo"),
+    .categoryName = _("Android"),
     .height = 19,
     .weight = 1000,
     .description = COMPOUND_STRING(
@@ -19790,6 +21086,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sRyuRanLevelUpLearnset,
     .teachableLearnset = sRyuRanTeachableLearnset,
     .eggMoveLearnset = sRyuRanEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_TOON_STONE, SPECIES_MANGA_RYU_RAN}),
 },
 
 [SPECIES_MANGA_RYU_RAN] =
@@ -19892,7 +21189,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Toon Blu E"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLUE_EYES_TOON_DRAGON,
-    .categoryName = _("Toon E"),
+    .categoryName = _("Toon"),
     .height = 14,
     .weight = 875,
     .description = COMPOUND_STRING(
@@ -19948,8 +21245,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .catchRate = 190,
     .expYield = 90,
     .evYield_Speed = 2,
-    //.itemCommon = ITEM_TOON_STONE,
-    //.itemRare = ITEM_TOON_STONE,
+    .itemCommon = ITEM_TOON_STONE,
+    .itemRare = ITEM_TOON_STONE,
     .genderRatio = PERCENT_FEMALE(0),
     .eggCycles = 8,
     .friendship = STANDARD_FRIENDSHIP,
@@ -20328,7 +21625,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Toon Red E"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RED_EYES_TOON_DRAGON,
-    .categoryName = _("Toon E"),
+    .categoryName = _("Toon"),
     .height = 14,
     .weight = 600,
     .description = COMPOUND_STRING(
@@ -20979,7 +22276,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Meteor D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_METEOR_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 25,
     .weight = 5000,
     .description = COMPOUND_STRING(
@@ -21198,7 +22495,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("B Luster S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLACK_LUSTER_SOLDIER,
-    .categoryName = _("Soldier BS"),
+    .categoryName = _("Soldier"),
     .height = 19,
     .weight = 850,
     .description = COMPOUND_STRING(
@@ -22003,7 +23300,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("T Eye Idol"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_THOUSAND_EYES_IDOL,
-    .categoryName = _("Fiend T"),
+    .categoryName = _("Fiend"),
     .height = 10,
     .weight = 150,
     .description = COMPOUND_STRING(
@@ -22045,6 +23342,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sTEyeIdolLevelUpLearnset,
     .teachableLearnset = sThousandEyesIdolTeachableLearnset,
     .eggMoveLearnset = sThousandEyesIdolEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_RELINQUISHED}), 
 },
 
 [SPECIES_RELINQUISHED] =
@@ -22119,6 +23417,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sRelinquishLevelUpLearnset,
     .teachableLearnset = sRelinquishedTeachableLearnset,
     .eggMoveLearnset = sRelinquishedEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_MOON_STONE, SPECIES_THOUSAND_EYES_RESTRICT}),
 },
 
 [SPECIES_THOUSAND_EYES_RESTRICT] =
@@ -22298,7 +23597,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Five God D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_FIVE_GOD_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 110,
     .weight = 5000,
     .description = COMPOUND_STRING(
@@ -23217,6 +24516,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCyberDRGLevelUpLearnset,
     .teachableLearnset = sCyberDragonTeachableLearnset,
     .eggMoveLearnset = sCyberDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_CYBER_TWIN_DRAGON}),
 },
 
 [SPECIES_CYBER_TWIN_DRAGON] =
@@ -23290,6 +24590,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sCyberTwinLevelUpLearnset,
     .teachableLearnset = sCyberTwinDragonTeachableLearnset,
     .eggMoveLearnset = sCyberTwinDragonEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 45, SPECIES_CYBER_END_DRAGON}),
 },
 
 [SPECIES_CYBER_END_DRAGON] =
@@ -23611,7 +24912,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Arm D Lv3"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ARMED_DRAGON_LEVEL3,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 10,
     .weight = 900,
     .description = COMPOUND_STRING(
@@ -23684,7 +24985,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Arm D Lv5"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ARMED_DRAGON_LEVEL5,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 15,
     .weight = 2000,
     .description = COMPOUND_STRING(
@@ -23757,7 +25058,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Arm D Lv7"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ARMED_DRAGON_LEVEL7,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 30,
     .weight = 4000,
     .description = COMPOUND_STRING(
@@ -23830,7 +25131,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Arm D Lv10"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_ARMED_DRAGON_LEVEL10,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 50,
     .weight = 7000,
     .description = COMPOUND_STRING(
@@ -23977,7 +25278,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Mokey M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_MOKEY_MOKEY,
-    .categoryName = _("Cloud M"),
+    .categoryName = _("Cloud"),
     .height = 10,
     .weight = 80,
     .description = COMPOUND_STRING(
@@ -24124,7 +25425,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Volcanic S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_VOLCANIC_SHELL,
-    .categoryName = _("Shell S"),
+    .categoryName = _("Shell"),
     .height = 10,
     .weight = 195,
     .description = COMPOUND_STRING(
@@ -24564,7 +25865,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("T Wizard"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_TIME_WIZARD,
-    .categoryName = _("Wizard T"),
+    .categoryName = _("Wizard"),
     .height = 9,
     .weight = 400,
     .description = COMPOUND_STRING(
@@ -24636,7 +25937,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("SnowDragon"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_SNOW_DRAGON,
-    .categoryName = _("Ice D"),
+    .categoryName = _("Ice"),
     .height = 12,
     .weight = 700,
     .description = COMPOUND_STRING(
@@ -24709,7 +26010,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Snowdust D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_SNOWDUST_DRAGON,
-    .categoryName = _("Ice D"),
+    .categoryName = _("Ice"),
     .height = 19,
     .weight = 900,
     .description = COMPOUND_STRING(
@@ -24928,7 +26229,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("S Gyroid"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_STEAM_GYROID,
-    .categoryName = _("Roid S"),
+    .categoryName = _("Roid"),
     .height = 12,
     .weight = 1200,
     .description = COMPOUND_STRING(
@@ -25070,7 +26371,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("SV Jumbo D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_SUPER_VEHICROID_JUMBO_DRAGON,
-    .categoryName = _("Drill D"),
+    .categoryName = _("Drill"),
     .height = 15,
     .weight = 1400,
     .description = COMPOUND_STRING(
@@ -25333,6 +26634,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sNecroshadeLevelUpLearnset,
     .teachableLearnset = sNecroshadeTeachableLearnset,
     .eggMoveLearnset = sNecroshadeEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_NECROID_SHAMAN}),
 },
 
 [SPECIES_NECROID_SHAMAN] =
@@ -25480,6 +26782,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sSangaLevelUpLearnset,
     .teachableLearnset = sSangaOfTheThunderTeachableLearnset,
     .eggMoveLearnset = sSangaOfTheThunderEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_GATE_GUARDIAN_THUNDER_WIND}),
 },
 
 [SPECIES_GATE_GUARDIAN_THUNDER_WIND] =
@@ -25554,6 +26857,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sGateGuardianThunderWindLearnset,
     .teachableLearnset = sGateGuardianThunderWindTeachableLearnset,
     .eggMoveLearnset = sGateGuardianThunderWindEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_GATE_GUARDIAN}),
 },
 
 [SPECIES_GATE_GUARDIAN] =
@@ -25804,7 +27108,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Rampart B"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RAMPART_BLASTER,
-    .categoryName = _("Hero B"),
+    .categoryName = _("Hero"),
     .height = 22,
     .weight = 4000,
     .description = COMPOUND_STRING(
@@ -25950,7 +27254,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("F Whale"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_FORTRESS_WHALE,
-    .categoryName = _("Whale F"),
+    .categoryName = _("Whale"),
     .height = 100,
     .weight = 5000,
     .description = COMPOUND_STRING(
@@ -26316,7 +27620,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Neo Aqua M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_NEO_AQUA_MADOR,
-    .categoryName = _("Aqua M"),
+    .categoryName = _("Aqua"),
     .height = 16,
     .weight = 600,
     .description = COMPOUND_STRING(
@@ -26829,7 +28133,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Blowback D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLOWBACK_DRAGON,
-    .categoryName = _("Machine D"),
+    .categoryName = _("Machine"),
     .height = 45,
     .weight = 1250,
     .description = COMPOUND_STRING(
@@ -26904,7 +28208,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Barrel D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BARREL_DRAGON,
-    .categoryName = _("Machine D"),
+    .categoryName = _("Machine"),
     .height = 50,
     .weight = 1600,
     .description = COMPOUND_STRING(
@@ -26977,7 +28281,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Blade S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_BLADE_SKATER,
-    .categoryName = _("Skater S"),
+    .categoryName = _("Skater"),
     .height = 17,
     .weight = 450,
     .description = COMPOUND_STRING(
@@ -27386,6 +28690,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sStarBoyLevelUpLearnset,
     .teachableLearnset = sStarBoyTeachableLearnset,
     .eggMoveLearnset = sStarBoyEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_ITEM, ITEM_LINK_STONE, SPECIES_MISTAR_BOY}),
 },
 
 [SPECIES_MISTAR_BOY] =
@@ -27710,7 +29015,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("F Kraken"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_FIEND_KRAKEN,
-    .categoryName = _("Kraken F"),
+    .categoryName = _("Kraken"),
     .height = 12,
     .weight = 700,
     .description = COMPOUND_STRING(
@@ -28222,7 +29527,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Mammoth G"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_MAMMOTH_GRAVEYARD,
-    .categoryName = _("Mammoth G"),
+    .categoryName = _("Mammoth"),
     .height = 100,
     .weight = 3000,
     .description = COMPOUND_STRING(
@@ -28265,6 +29570,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sMammothGLevelUpLearnset,
     .teachableLearnset = sMammothGraveyardTeachableLearnset,
     .eggMoveLearnset = sMammothGraveyardEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 32, SPECIES_GREAT_MAMMOTH_OF_GOLDFINE}), 
 },
 
 [SPECIES_GREAT_MAMMOTH_OF_GOLDFINE] =
@@ -28412,6 +29718,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sLaundryDragonmaidLearnset,
     .teachableLearnset = sLaundryDragonmaidTeachableLearnset,
     .eggMoveLearnset = sLaundryDragonmaidEggMoveLearnset,
+    .formSpeciesIdTable = sLaundryDragonmaidFormSpeciesIdTable,
     .formChangeTable = sLaundryDragonmaidFormChangeTable,
 },
 
@@ -28562,6 +29869,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sHitotsuMGLevelUpLearnset,
     .teachableLearnset = sHitotsuMeGiantTeachableLearnset,
     .eggMoveLearnset = sHitotsuMeGiantEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_CYBERNETIC_CYCLOPEAN}),
 },
 
 [SPECIES_CYBERNETIC_CYCLOPEAN] =
@@ -28811,7 +30119,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Ruby C"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RUBY_CARBUNCLE,
-    .categoryName = _("Crystal C"),
+    .categoryName = _("Crystal"),
     .height = 5,
     .weight = 80,
     .description = COMPOUND_STRING(
@@ -28885,7 +30193,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("S Pegasus"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_CRYSTAL_BEAST_SAPHIRE_PEGASUS,
-    .categoryName = _("Crystal S"),
+    .categoryName = _("Crystal"),
     .height = 17,
     .weight = 600,
     .description = COMPOUND_STRING(
@@ -28957,7 +30265,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Penguin S"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_PENGUIN_SOLDIER,
-    .categoryName = _("Penguin S"),
+    .categoryName = _("Penguin"),
     .height = 10,
     .weight = 200,
     .description = COMPOUND_STRING(
@@ -28999,6 +30307,9 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sPenguinSLevelUpLearnset,
     .teachableLearnset = sPenguinSoldierTeachableLearnset,
     .eggMoveLearnset = sPenguinSoldierEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_EMPEROR_PENGUIN},
+                            {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_NIGHTMARE_PENGUIN}
+    ),
 },
 
 [SPECIES_EMPEROR_PENGUIN] =
@@ -29030,7 +30341,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Emperor P"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_EMPEROR_PENGUIN,
-    .categoryName = _("Penguin P"),
+    .categoryName = _("Penguin"),
     .height = 21,
     .weight = 850,
     .description = COMPOUND_STRING(
@@ -29976,7 +31287,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("S Mambo"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_SPACE_MAMBO,
-    .categoryName = _("Fish S"),
+    .categoryName = _("Fish"),
     .height = 22,
     .weight = 700,
     .description = COMPOUND_STRING(
@@ -30049,7 +31360,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Mushroom M"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_MUSHROOM_MAN,
-    .categoryName = _("Mushroom M"),
+    .categoryName = _("Mushroom"),
     .height = 8,
     .weight = 50,
     .description = COMPOUND_STRING(
@@ -30269,7 +31580,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Steam H"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_STEAM_HEALER,
-    .categoryName = _("Hero H"),
+    .categoryName = _("Hero"),
     .height = 24,
     .weight = 4000,
     .description = COMPOUND_STRING(
@@ -30383,6 +31694,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sMelchid4LevelUpLearnset,
     .teachableLearnset = sMelchidTheFourFaceBeastTeachableLearnset,
     .eggMoveLearnset = sMelchidTheFourFaceBeastEggMoveLearnset,
+    .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_MASKED_BEAST_DES_GARDIUS}),
 },
 
 [SPECIES_MASKED_BEAST_DES_GARDIUS] =
@@ -30413,7 +31725,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("D Gardius"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_MASKED_BEAST_DES_GARDIUS,
-    .categoryName = _("Fiend D"),
+    .categoryName = _("Fiend"),
     .height = 60,
     .weight = 3000,
     .description = COMPOUND_STRING(
@@ -30997,7 +32309,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Rainbow D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RAINBOW_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 300,
     .weight = 6000,
     .description = COMPOUND_STRING(
@@ -31072,7 +32384,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Rainbow N"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_RAINBOW_NEOS,
-    .categoryName = _("Hero N"),
+    .categoryName = _("Hero"),
     .height = 35,
     .weight = 1200,
     .description = COMPOUND_STRING(
@@ -31436,7 +32748,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Judgment D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_JUDGMENT_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 35,
     .weight = 2000,
     .description = COMPOUND_STRING(
@@ -32313,7 +33625,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Tyrant D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_TYRANT_DRAGON,
-    .categoryName = _("Dragon D"),
+    .categoryName = _("Dragon"),
     .height = 25,
     .weight = 1400,
     .description = COMPOUND_STRING(
@@ -33265,7 +34577,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Samsara L"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_SAMSARAS_LOTUS,
-    .categoryName = _("Lotus L"),
+    .categoryName = _("Lotus"),
     .height = 7,
     .weight = 30,
     .description = COMPOUND_STRING(
@@ -35322,7 +36634,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .speciesName = _("Stardust D"),
     .cryId = CRY_BULBASAUR,
     .natDexNum = NATIONAL_DEX_STARDUST_DRAGON,
-    .categoryName = _("Signer D"),
+    .categoryName = _("Signer"),
     .height = 30,
     .weight = 1500,
     .description = COMPOUND_STRING(
@@ -36982,6 +38294,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sNibiruLearnset,
     .teachableLearnset = sNibiruTeachableLearnset,
     .eggMoveLearnset = sNibiruEggMoveLearnset,
+    .formSpeciesIdTable = sNibiruFormSpeciesIdTable,
+    .formChangeTable = sNibiruFormChangeTable,
 },
 
 [SPECIES_NIBIRU_MONSTER_FORM] =
@@ -37055,6 +38369,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .levelUpLearnset = sNibiruLearnset,
     .teachableLearnset = sNibiruMonsterFormTeachableLearnset,
     .eggMoveLearnset = sNibiruMonsterFormEggMoveLearnset,
+    .formSpeciesIdTable = sNibiruFormSpeciesIdTable,
+    .formChangeTable = sNibiruFormChangeTable,
 },
 
 [SPECIES_VICTORY_DRAGON] =
