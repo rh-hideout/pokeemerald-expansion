@@ -1122,6 +1122,18 @@ static const struct MenuAction sMultichoiceList_HOF_Eggs_Victories_Quit[] = {
     {gText_ShopQuit}
 };
 
+static const struct MenuAction MultichoiceList_ParentChoice[] =
+{
+    {COMPOUND_STRING("TIA...")},
+    {COMPOUND_STRING("ELIAS...")},
+};
+
+static const struct MenuAction MultichoiceList_HelpOrAdult[] =
+{
+    {COMPOUND_STRING("HELP")},
+    {COMPOUND_STRING("GET AN ADULT")},
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1153,6 +1165,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_UNUSED_15]                  = MULTICHOICE(MultichoiceList_Exit),
     [MULTI_VIEWED_PAINTINGS]           = MULTICHOICE(MultichoiceList_ViewedPaintings),
     [MULTI_YESNOINFO]                  = MULTICHOICE(MultichoiceList_YesNoInfo),
+    [MULTI_PARENT_CHOICE]              = MULTICHOICE(MultichoiceList_ParentChoice),
+    [MULTI_HELP_OR_ADULT]              = MULTICHOICE(MultichoiceList_HelpOrAdult),
     [MULTI_BATTLE_MODE]                = MULTICHOICE(MultichoiceList_BattleMode),
     [MULTI_UNUSED_19]                  = MULTICHOICE(MultichoiceList_Exit),
     [MULTI_YESNOINFO_2]                = MULTICHOICE(MultichoiceList_YesNoInfo2),

@@ -1399,13 +1399,48 @@ static void NamingScreen_NoIcon(void)
 
 }
 
+
 static void NamingScreen_CreatePlayerIcon(void)
 {
-    u16 rivalGfxId;
+    u16 playerGfxId;
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, (enum Gender)sNamingScreen->monSpecies);
-    spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
+    switch (gSaveBlock2Ptr->playerAppearance)
+    {
+    case 1:
+        playerGfxId = OBJ_EVENT_GFX_JUSTIN_NORMAL;
+        break;
+
+    case 2:
+        playerGfxId = OBJ_EVENT_GFX_MAY_NORMAL;
+        break;
+
+    case 0:
+    default:
+        playerGfxId = OBJ_EVENT_GFX_BRENDAN_NORMAL;
+        break;
+
+    case 3:
+        playerGfxId = OBJ_EVENT_GFX_MAAM_NORMAL;
+        break;
+
+    case 4:
+        playerGfxId = OBJ_EVENT_GFX_SIR_NORMAL;
+        break;
+
+    case 5:
+        playerGfxId = OBJ_EVENT_GFX_LEXY_NORMAL;
+        break;
+    }
+
+    spriteId = CreateObjectGraphicsSprite(
+        playerGfxId,
+        SpriteCallbackDummy,
+        56,
+        37,
+        0
+    );
+
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
 }

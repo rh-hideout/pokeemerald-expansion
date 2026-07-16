@@ -320,6 +320,7 @@ void FieldCB_WarpExitFadeFromBlack(void)
     LockPlayerFieldControls();
 }
 
+
 static void FieldCB_SpinEnterWarp(void)
 {
     Overworld_PlaySpecialMapMusic();

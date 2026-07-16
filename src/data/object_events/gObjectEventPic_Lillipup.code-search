@@ -1,0 +1,32 @@
+# Query: gObjectEventPic_Lillipup
+# ContextLines: 1
+
+12 results - 4 files
+
+src/data/graphics/pokemon.h:
+  16439  #if OW_POKEMON_OBJECT_EVENTS
+  16440:     const u32 gObjectEventPic_Lillipup[] = INCGFX_COMP("graphics/pokemon/lillipup/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+  16441  #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+
+src/data/object_events/object_event_graphics.h:
+  410  const u32 gObjectEventPic_WingullOld[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/wingull.png", ".4bpp", "-mwidth 2 -mheight 2");
+  411: const u32 gObjectEventPic_Lillipup[] = INCGFX_U32("graphics/pokemon/lillipup/overworld.png", ".4bpp", "-mwidth 2 -mheight 2");
+  412  const u32 gObjectEventPic_AzumarillOld[] = INCGFX_U32("graphics/object_events/pics/pokemon_old/azumarill.png", ".4bpp", "-mwidth 2 -mheight 2");
+
+src/data/object_events/object_event_pic_tables_followers.h:
+  3747  static const struct SpriteFrameImage sPicTable_Lillipup[] = {
+  3748:     overworld_ascending_frames(gObjectEventPic_Lillipup, 4, 4),
+  3749  };
+
+src/data/object_events/object_event_pic_tables.h:
+  1523  static const struct SpriteFrameImage sPicTable_Lillipup[] = {
+  1524:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 0),
+  1525:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 2),
+  1526:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 4),
+  1527:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 1),
+  1528:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 1),
+  1529:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 3),
+  1530:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 3),
+  1531:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 5),
+  1532:     overworld_frame(gObjectEventPic_Lillipup, 2, 2, 5),
+  1533  };
