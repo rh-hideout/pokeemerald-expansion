@@ -877,7 +877,7 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
             if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.ability.ability == ABILITY_NONE)
                 Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
             else
-                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
+                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%U)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
         }
         break;
     case QUEUE_GROUP_NONE_OF:
@@ -967,11 +967,11 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
                 if (animId == MOVE_CELEBRATE)
                     ; // TODO: Only if implicit. Difficult to know if it's an action or, e.g. Mirror Move.
                 else if (checkAttacker && checkTarget)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
                 else if (checkAttacker)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
                 else
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
             }
             else if (animType < ARRAY_COUNT(sAnimTypeNames))
             {

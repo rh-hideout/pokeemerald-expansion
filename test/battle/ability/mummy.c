@@ -86,17 +86,16 @@ SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed")
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; }
     PARAMETRIZE { species = SPECIES_CALYREX_SHADOW; ability = ABILITY_AS_ONE_SHADOW_RIDER; }
     PARAMETRIZE { species = SPECIES_PALAFIN_ZERO; ability = ABILITY_ZERO_TO_HERO; }
-    PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
 
     GIVEN {
-        PLAYER(SPECIES_YAMASK);
+        PLAYER(SPECIES_YAMASK) { Ability(ABILITY_MUMMY); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_AQUA_JET); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, opponent);
-        NONE_OF {
-            ABILITY_POPUP(opponent, ABILITY_MUMMY);
-        }
+        NOT ABILITY_POPUP(player, ABILITY_MUMMY);
+    } THEN {
+        EXPECT(opponent->ability == ability);
     }
 }

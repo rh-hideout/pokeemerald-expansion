@@ -794,7 +794,7 @@ void FadeSelectedPals(u8 mode, s8 delay, u32 selectedPalettes)
     else
     {
         gWeatherPtr->fadeDestColor = fadeColor;
-        UpdateTimeOfDay();
+        UpdateTimeOfDay(TRUE);
         if (useWeatherPal)
         {
             gWeatherPtr->fadeScreenCounter = 0; // Triggers gamma-shift-based fade-in

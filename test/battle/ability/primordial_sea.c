@@ -35,10 +35,10 @@ DOUBLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves and prints th
         ASSUME(GetMoveCategory(MOVE_ERUPTION) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveType(MOVE_ERUPTION) == TYPE_FIRE);
         ASSUME(GetMoveTarget(MOVE_ERUPTION) == TARGET_BOTH);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(5); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_ERUPTION); }
     } SCENE {
