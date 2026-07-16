@@ -43,7 +43,7 @@ static void (*const sBXPYErrorCheckFuncs[])(void) =
     [BXPY_ERROR_CLAUSE_SPECIAL_POKEMON] = BXPY_ErrorCheck_ClauseSpecialPokemon,
 };
 
-_Static_assert((B_VAR_BXPY != 0 && B_VAR_BXPY <= VARS_END) || BXPY_RETAIN_CHANGES == FALSE, "If BXPY_RETAIN_CHANGES is TRUE, B_VAR_SKY_BATTLE must be set");
+_Static_assert((B_VAR_BXPY != 0 && B_VAR_BXPY <= VARS_END) || !BXPY_RETAIN_CHANGES, "If BXPY_RETAIN_CHANGES is TRUE, B_VAR_SKY_BATTLE must be set");
 
 void BXPY_OverworldRun_ErrorCheck_BringSizeTooLarge(void)
 {
@@ -214,7 +214,7 @@ static void BXPY_ErrorCheck_ClauseSpecies(void)
 static void BXPY_ErrorCheck_ClauseItem(void)
 {
     gSpecialVar_Result = FALSE;
-    if (BXPY_CLAUSE_ITEMS == FALSE)
+    if (!BXPY_CLAUSE_ITEMS)
         return;
 
     u32 itemList[PARTY_SIZE] = {0};
@@ -240,7 +240,7 @@ static void BXPY_ErrorCheck_ClauseItem(void)
 static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
 {
     gSpecialVar_Result = FALSE;
-    if (BXPY_CLAUSE_SPECIAL_POKEMON == FALSE)
+    if (!BXPY_CLAUSE_SPECIAL_POKEMON)
         return;
 
     u32 bannedMons[PARTY_SIZE];
@@ -283,7 +283,6 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
         playerEnteredMons[monsIndex] = BXPY_EMPTY_MON;
 
     BXPY_PreparePartiesAndInit(bringSize, pickSize, battleFlags, playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A,TRUE);
-
 }
 
 void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime)
@@ -426,7 +425,7 @@ bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_ShouldHideEnemyAbility(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY;
@@ -434,7 +433,7 @@ bool8 BXPY_ShouldHideEnemyAbility(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_ShouldHideEnemyNature(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE;
@@ -442,7 +441,7 @@ bool8 BXPY_ShouldHideEnemyNature(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_ShouldHideEnemyIndividualValues(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     if (stats != SUMMARY_SKILLS_MODE_IVS)
@@ -453,7 +452,7 @@ bool8 BXPY_ShouldHideEnemyIndividualValues(enum PokemonSummaryScreenMode mode, e
 
 bool8 BXPY_ShouldHideEnemyEffortValues(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     if (stats != SUMMARY_SKILLS_MODE_EVS)
@@ -527,7 +526,7 @@ enum Type BXPY_TransformTypeIfHidden(enum PokemonSummaryScreenMode mode, enum Ty
 
 bool8 BXPY_ShouldHideEnemyMoves(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return !BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE;
@@ -540,7 +539,7 @@ enum BXPYTeamPreviewItemModes BXPY_GetEnemyItemVisibilityLevel(void)
 
 bool8 BXPY_SummaryScreen_ItemVisibility(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return BXPY_ITEM_SHOW_ITEM;
 
     return BXPY_GetEnemyItemVisibilityLevel();
@@ -594,7 +593,7 @@ enum BXPYTeamPreviewSpeciesModes BXPY_GetEnemySpeciesVisibilityLevel(void)
 
 enum BXPYTeamPreviewSpeciesModes BXPY_SummaryScreen_SpeciesVisibility(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return BXPY_SPECIES_SHOW_TRUE;
 
     return BXPY_GetEnemySpeciesVisibilityLevel();
@@ -602,7 +601,7 @@ enum BXPYTeamPreviewSpeciesModes BXPY_SummaryScreen_SpeciesVisibility(enum Pokem
 
 bool8 BXPY_SummaryScreen_ShowBaseSpecies(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return (BXPY_GetEnemySpeciesVisibilityLevel() == BXPY_SPECIES_SHOW_BASE);
@@ -610,7 +609,7 @@ bool8 BXPY_SummaryScreen_ShowBaseSpecies(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_SummaryScreen_HideSpecies(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return (BXPY_GetEnemySpeciesVisibilityLevel() == BXPY_SPECIES_HIDE);
@@ -618,7 +617,7 @@ bool8 BXPY_SummaryScreen_HideSpecies(enum PokemonSummaryScreenMode mode)
 
 bool8 BXPY_SummaryScreen_ShowTrueSpecies(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return TRUE;
 
     return (BXPY_GetEnemySpeciesVisibilityLevel() == BXPY_SPECIES_SHOW_TRUE);
@@ -639,7 +638,7 @@ bool8 BXPY_TeamPreview_ShouldHideEnemyGender(enum BattleSide side)
 
 bool8 BXPY_SummaryScreen_ShouldHideEnemyGender(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return BXPY_ShouldHideEnemyGender();
@@ -647,7 +646,7 @@ bool8 BXPY_SummaryScreen_ShouldHideEnemyGender(enum PokemonSummaryScreenMode mod
 
 u32 BXPY_SummaryScreen_TransformSpeciesId(enum PokemonSummaryScreenMode mode, u32 originalSpeciesId)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return originalSpeciesId;
 
     return BXPY_TransformSpeciesId(originalSpeciesId);
@@ -690,7 +689,7 @@ bool8 BXPY_TeamPreview_ShouldHideEnemyLevel(enum BattleSide side)
 
 bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode)
 {
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     return BXPY_ShouldHideEnemyLevel();
@@ -701,7 +700,7 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
     if (stats != SUMMARY_SKILLS_MODE_STATS)
         return FALSE;
 
-    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
+    if (!BXPY_IsSummaryScreenForEnemy(mode))
         return FALSE;
 
     if (BXPY_SummaryScreen_ShouldHideEnemyLevel(mode))

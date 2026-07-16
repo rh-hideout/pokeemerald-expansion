@@ -98,7 +98,6 @@ static bool8 BXPY_IsCursorOnEmpty(void);
 static bool8 BXPY_IsCursorOnEnemy(void);
 static bool8 BXPY_IsCursorOnPartner(void);
 static void BXPY_ResetAllSpriteIds(void);
-static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void);
 static u32 BXPY_CountNumberSelected(void);
 static void SpriteCB_HighlightSprite(struct Sprite *sprite);
 static void BXPY_CreateHighlightSprite(void);
@@ -736,7 +735,7 @@ static void BXPY_VBlankCB(void)
     if (BXPY_SKIN != GEN_CHAMPIONS)
         return;
 
-    if (BXPY_SCROLLING_BACKGROUND == FALSE)
+    if (!BXPY_SCROLLING_BACKGROUND)
         return;
 
     ChangeBgX(BG3_BXPY_WALLPAPER, 64, BG_COORD_ADD);
@@ -941,40 +940,43 @@ void BXPY_SetupCallback(void)
 {
     switch (gMain.state)
     {
-        case 0:
-            DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
-            SetVBlankHBlankCallbacksToNull();
-            ClearScheduledBgCopiesToVram();
-            if (BXPY_GetMusicFlag())
-                PlayBGM(MUS_BXPY_BACKGROUND);
-            gMain.state++;
-            break;
-        case 1:
-            ScanlineEffect_Stop();
-            BXPY_CreateCursorSprite();
-            ResetPaletteFade();
-            ResetTasks();
-            FreeSpritePalettesResetSpriteData();
-            BXPY_ResetAllSpriteIds();
-            gMain.state++;
-            break;
-        case 2:
-            BXPY_InitializeBackgroundsAndLoadBackgroundGraphics();
-            gMain.state++;
-            break;
-        case 3:
-            BXPY_InitWindows();
-            BXPY_DrawPage();
-            BXPY_CreateCursorSprite();
-            BXPY_CreateHighlightSprite();
-            gMain.state++;
-            break;
-        case 4:
-            CreateTask(Task_BXPY_PartySelection,0);
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-            SetVBlankCallback(BXPY_VBlankCB);
-            SetMainCallback2(BXPY_MainCB);
-            break;
+    case 0:
+        DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
+        SetVBlankHBlankCallbacksToNull();
+        ClearScheduledBgCopiesToVram();
+        if (BXPY_GetMusicFlag())
+            PlayBGM(MUS_BXPY_BACKGROUND);
+        gMain.state++;
+        break;
+    case 1:
+        ScanlineEffect_Stop();
+        BXPY_CreateCursorSprite();
+        ResetPaletteFade();
+        ResetTasks();
+        FreeSpritePalettesResetSpriteData();
+        BXPY_ResetAllSpriteIds();
+        gMain.state++;
+        break;
+    case 2:
+        if (BXPY_InitalizeBackgrounds())
+            LoadGraphics();
+        else
+            BXPY_FadescreenAndExitGracefully();
+        gMain.state++;
+        break;
+    case 3:
+        BXPY_InitWindows();
+        BXPY_DrawPage();
+        BXPY_CreateCursorSprite();
+        BXPY_CreateHighlightSprite();
+        gMain.state++;
+        break;
+    case 4:
+        CreateTask(Task_BXPY_PartySelection,0);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        SetVBlankCallback(BXPY_VBlankCB);
+        SetMainCallback2(BXPY_MainCB);
+        break;
     }
 }
 
@@ -1155,7 +1157,7 @@ static void SpriteCB_SelectionSprite(struct Sprite *sprite)
 
     u32 mon = sprite->data[2];
     bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(mon);
-    sprite->invisible = (isAlreadySelected == FALSE);
+    sprite->invisible = (!isAlreadySelected);
 
     u32 anim = (BXPY_GetPosition() != mon) ? BXPY_SELECTED : BXPY_SELECTED_HIGHLIGHT;
         StartSpriteAnimIfDifferent(sprite,anim);
@@ -1662,12 +1664,12 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
         StringAppend(gStringVar4, COMPOUND_STRING("Select {STR_VAR_1} Pokemon."));
     }
 
-    if ((onEnemy == FALSE) && (isPartnerPage == FALSE))
+    if ((!onEnemy) && (!isPartnerPage))
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
     else if (isOTSOn == TRUE)
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
 
-    if ((isMultiBattle == TRUE) && (isPartnerPage == FALSE))
+    if ((isMultiBattle == TRUE) && (!isPartnerPage))
         StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See Partners"));
     else if ((isMultiBattle == TRUE) && (isPartnerPage == TRUE))
         StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See {PLAYER}"));
@@ -1713,10 +1715,10 @@ static bool8 BXPY_IsCursorOnEnemy(void)
 
 static bool8 BXPY_IsCursorOnPartner(void)
 {
-    if (BXPY_IsOnPartnerPage() == FALSE)
+    if (!BXPY_IsOnPartnerPage())
         return FALSE;
 
-    return (BXPY_IsCursorOnEnemy() == FALSE);
+    return (!BXPY_IsCursorOnEnemy());
 }
 
 bool8 BXPY_BattleGreaterThanTwoTrainers(void)
@@ -1803,14 +1805,6 @@ static void BXPY_ResetAllSpriteIds(void)
     BXPY_ResetHighlightSprites();
     BXPY_ResetPlayerSelectedSprites();
     BXPY_ResetPlayerSelectedTailSprites();
-}
-
-static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void)
-{
-    if (BXPY_InitalizeBackgrounds())
-        LoadGraphics();
-    else
-        BXPY_FadescreenAndExitGracefully();
 }
 
 static u32 BXPY_CountNumberSelected(void)
@@ -1996,7 +1990,7 @@ static void Task_HandleMonMenu(u8 taskId)
 
 static bool8 BXPY_ShouldHandleMonsWithFullMenu(void)
 {
-    return ((BXPY_IsCursorOnSelectedMon() == FALSE) && (BXPY_HasSelectedEnough()));
+    return ((!BXPY_IsCursorOnSelectedMon()) && (BXPY_HasSelectedEnough()));
 }
 
 static void BXPY_CreateMonMenu(void)
