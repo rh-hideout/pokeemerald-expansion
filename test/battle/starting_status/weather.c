@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("StartingStatus weather activates weather-reliant abilities")
     }
 }
 
-SINGLE_BATTLE_TEST("Overworld weather cannot be overridden using abilities (Gen9)")
+SINGLE_BATTLE_TEST("Overworld weather cannot be overridden (Gen9)")
 {
     bool32 viaMove;
 
@@ -148,9 +148,7 @@ SINGLE_BATTLE_TEST("Overworld weather cannot be overridden using abilities (Gen9
         // More than 5 turns
         TURN { MOVE(player, viaMove == TRUE ? MOVE_RAIN_DANCE : MOVE_CELEBRATE); }
     } SCENE {
-        // Harsh Sunlight at battle's start
         MESSAGE("The sunlight turned harsh!");
-        // Player uses Rain Dance
         if (viaMove) {
             MESSAGE("Politoed used Rain Dance!");
             NONE_OF {
