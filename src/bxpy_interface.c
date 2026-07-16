@@ -950,7 +950,6 @@ void BXPY_SetupCallback(void)
         break;
     case 1:
         ScanlineEffect_Stop();
-        BXPY_CreateCursorSprite();
         ResetPaletteFade();
         ResetTasks();
         FreeSpritePalettesResetSpriteData();
