@@ -27,8 +27,6 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
 bool32 ShouldUseItem(enum BattlerId battler)
 {
-    struct Pokemon *party;
-    u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
 
@@ -45,14 +43,6 @@ bool32 ShouldUseItem(enum BattlerId battler)
 
     if (AiExpectsToFaintPlayer(battler))
         return FALSE;
-
-    party = GetBattlerParty(battler);
-
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
-    {
-        if (IsValidForBattle(&party[monIndex]))
-            validMons++;
-    }
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {

@@ -19,5 +19,7 @@ enum StatChangeResult
 #define STAT_CHANGE_ITEM                (1 << 7)
 #define STAT_CHANGE_DEFOG               (1 << 8)
 #define STAT_CHANGE_STICKY_WEB          (1 << 9)
+#define STAT_CHANGE_MIRROR_HERB         (1 << 10)
+#define STAT_CHANGE_OPPORTUNIST         (1 << 11)
 
 #endif // GUARD_BATTLE_MOVE_STAT_CHANGE_H

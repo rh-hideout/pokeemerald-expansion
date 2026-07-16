@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
+    ASSUME(GetMoveDamagePercentage(MOVE_SUPER_FANG) == 50);
+}
+
 SINGLE_BATTLE_TEST("Emergency Exit switches out when taking 50% max-hp damage")
 {
     GIVEN {
@@ -19,6 +25,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when taking 50% max-hp damage")
 SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-HP but healed via held item back above the threshold")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
         PLAYER(SPECIES_WOBBUFFET)
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -35,6 +42,7 @@ SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-
 SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but healing via held item is not enough to go back above the threshold")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffect == HOLD_EFFECT_RESTORE_HP);
         PLAYER(SPECIES_WOBBUFFET)
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -51,6 +59,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but 
 DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out")
 {
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_ZAPDOS) { Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_WIMPOD) { Speed(1); Ability(ABILITY_WIMP_OUT); Item(ITEM_FOCUS_SASH); }
@@ -101,6 +110,8 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
 SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Weather")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -115,7 +126,9 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
 SINGLE_BATTLE_TEST("Emergency Exit doesn't activate when taking residual damage to under 50% max-hp then healing above 50% max-hp - Weather")
 {
     GIVEN {
-        ASSUME(GetItemHoldEffect(ITEM_SITRUS_BERRY) == HOLD_EFFECT_RESTORE_PCT_HP);
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -277,6 +290,8 @@ WILD_BATTLE_TEST("Emergency Exit makes the player ran during wild battle")
 WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle player side)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
         PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -375,5 +390,24 @@ SINGLE_BATTLE_TEST("Emergency Exit activates and attacker's Throat Spray activat
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Emergency Exit will trigger even if Shell Bell heals user back above half HP")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MIND_BLOWN) == EFFECT_MAX_HP_50_RECOIL);
+        ASSUME(GetItemHoldEffect(ITEM_SHELL_BELL) == HOLD_EFFECT_SHELL_BELL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); Item(ITEM_SHELL_BELL); MaxHP(263); HP(262); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MIND_BLOWN); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, opponent);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
