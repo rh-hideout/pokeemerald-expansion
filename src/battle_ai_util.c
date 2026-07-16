@@ -530,17 +530,25 @@ bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
 }
 
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
+struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum Gimmick gimmickAtk, enum Gimmick gimmickDef)
 {
     struct SimulatedDamage dmg;
+    struct AiCalcValues aiCalc = {
+        .move = move,
+        .gimmickAtk = gimmickAtk,
+        .gimmickDef = gimmickDef,
+        .weather = AI_GetWeather(),
+        .terrain = gFieldTimers.terrain,
+    };
 
     SaveBattlerData(battlerAtk);
     SaveBattlerData(battlerDef);
     SetBattlerData(battlerAtk);
     SetBattlerData(battlerDef);
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather(), gFieldTimers.terrain);
+    dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
     RestoreBattlerData(battlerAtk);
     RestoreBattlerData(battlerDef);
+    *typeEffectiveness = aiCalc.typeEffectiveness;
     return dmg;
 }
 
@@ -855,9 +863,10 @@ static s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     return dmg;
 }
 
-struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, enum BattleTerrain terrain)
+struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct SimulatedDamage simDamage = {0};
+    enum Move move = aiCalc->move;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     bool32 toggledGimmickAtk = FALSE;
     bool32 toggledGimmickDef = FALSE;
@@ -872,21 +881,22 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     }
 
     if (moveEffect == EFFECT_NATURE_POWER)
-        move = GetNaturePowerMove();
-
-    // Temporarily enable gimmicks for damage calcs if planned
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
     {
-        toggledGimmickAtk = TRUE;
-        SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
+        move = GetNaturePowerMove();
+        moveEffect = GetMoveEffect(move);
     }
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
+    // Temporarily enable gimmicks for damage calcs if planned
+    if (aiCalc->gimmickAtk != GIMMICK_NONE && GetActiveGimmick(battlerAtk) == GIMMICK_NONE)
+    {
+        toggledGimmickAtk = TRUE;
+        SetActiveGimmick(battlerAtk, aiCalc->gimmickAtk);
+    }
+
+    if (aiCalc->gimmickDef != GIMMICK_NONE && GetActiveGimmick(battlerDef) == GIMMICK_NONE)
     {
         toggledGimmickDef = TRUE;
-        SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
+        SetActiveGimmick(battlerDef, aiCalc->gimmickDef);
     }
 
     SetTypeBeforeUsingMove(move, battlerAtk);
@@ -905,8 +915,8 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.moveType = GetBattleMoveType(move);
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
-    ctx.terrain = terrain;
-    ctx.weather = weather;
+    ctx.terrain = aiCalc->terrain;
+    ctx.weather = aiCalc->weather;
     ctx.fixedBasePower = 0;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -920,8 +930,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     }
 
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
-    ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
-
+    ctx.typeEffectivenessModifier = aiCalc->typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     u32 movePower = GetMovePower(move);
 
@@ -986,9 +995,6 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         simDamage.maximum = 0;
         simDamage.random = 0;
     }
-
-    // convert multiper to AI_EFFECTIVENESS_xX
-    *typeEffectiveness = ctx.typeEffectivenessModifier;
 
     if (toggledGimmickAtk)
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
@@ -5171,7 +5177,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
             return FALSE; // Don't waste a Z-Move busting Ice Face
 
-        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
+        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, GIMMICK_NONE, GIMMICK_NONE);
 
         // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
@@ -5237,21 +5243,35 @@ void DecideTerastal(enum BattlerId battler)
 
     enum Move *aiMoves = GetMovesArray(battler);
     enum Move *oppMoves = GetMovesArray(opposingBattler);
+    u32 weather = AI_GetWeather();
 
-    uq4_12_t effectiveness;
+    struct AiCalcValues aiCalcNoTera = {
+        .gimmickAtk = GIMMICK_NONE,
+        .gimmickDef = GIMMICK_NONE,
+        .weather = weather,
+        .terrain = gFieldTimers.terrain,
+    };
+
+    struct AiCalcValues aiCalcWithTera = {
+        .gimmickAtk = gBattleStruct->gimmick.usableGimmick[opposingBattler],
+        .gimmickDef = gBattleStruct->gimmick.usableGimmick[battler],
+        .weather = weather,
+        .terrain = gFieldTimers.terrain,
+    };
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (!IsMoveUnusable(moveIndex, aiMoves[moveIndex], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[moveIndex]))
-            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(aiMoves[moveIndex], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather(), gFieldTimers.terrain);
+        aiCalcNoTera.move = aiMoves[moveIndex];
+        if (!IsMoveUnusable(moveIndex, aiCalcNoTera.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalcNoTera.move))
+            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalcNoTera, battler, opposingBattler);
         else
             altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
-
-        if (!IsMoveUnusable(moveIndex, oppMoves[moveIndex], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[moveIndex]))
+        aiCalcWithTera.move = oppMoves[moveIndex];
+        if (!IsMoveUnusable(moveIndex, aiCalcWithTera.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalcWithTera.move))
         {
-            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(oppMoves[moveIndex], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather(), gFieldTimers.terrain);
-            effectivenessTakenWithTera[moveIndex] = effectiveness;
+            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalcWithTera, opposingBattler, battler);
+            effectivenessTakenWithTera[moveIndex] = aiCalcWithTera.typeEffectiveness;
         }
         else
         {
