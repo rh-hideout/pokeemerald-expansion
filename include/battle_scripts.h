@@ -355,6 +355,7 @@ extern const u8 BattleScript_CheekPouchActivates[];
 extern const u8 BattleScript_TotemBoost[];
 extern const u8 BattleScript_AnnounceAirLockCloudNine[];
 extern const u8 BattleScript_ActivateTeraformZero[];
+extern const u8 BattleScript_ActivateTeraformZeroRemovesOnlyTerrain[];
 extern const u8 BattleScript_BallFetch[];
 extern const u8 BattleScript_PerishBodyActivates[];
 extern const u8 BattleScript_ActivateAsOne[];
