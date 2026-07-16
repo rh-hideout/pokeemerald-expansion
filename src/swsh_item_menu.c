@@ -1879,12 +1879,10 @@ static bool8 SetupBagMenu(void)
         }
         else if (gBagPosition.location == ITEMMENULOCATION_PARTY)
         {
-            BagMenu_ApplyPartyBlend(BagMenu_MonHoldsItem);
-            BagMenu_SetPartySlotPalette(gPartyMenu.slotId, PARTY_SLOT_HOVER_PAL);
-            BagMenu_UpdateHeldItemIcon(gPartyMenu.slotId);
-            if (gBagMenu->heldItemShownSlot == gPartyMenu.slotId
-             && gBagMenu->statusIconSpriteIds[gPartyMenu.slotId] != SPRITE_NONE)
-                gSprites[gBagMenu->statusIconSpriteIds[gPartyMenu.slotId]].invisible = TRUE;
+            BagMenu_UpdateHeldItemIcon(0);
+            if (gBagMenu->heldItemShownSlot == 0
+                && gBagMenu->statusIconSpriteIds[0] != SPRITE_NONE)
+                    gSprites[gBagMenu->statusIconSpriteIds[0]].invisible = TRUE;
         }
         else if (gBagPosition.pocket == POCKET_TM_HM
          && gBagMenu->numItemStacks[gBagPosition.pocket] != (u8)(!gBagMenu->hideCloseBagText))
@@ -5401,6 +5399,15 @@ static void SwitchBerryInfoMode(s32 itemIndex)
 #define PARTY_PANEL_SLOT_HEIGHT 3
 #define PARTY_HP_BAR_Y_OFFSET   4   // pixel offset of the HP bar
 
+// coming from the party menu, only show the target mon
+// drawn with slot 0's graphics shifted this many tile rows down
+#define PARTY_PANEL_TARGET_ROW_OFFSET 2
+
+static u8 BagMenu_PanelRowOffset(void)
+{
+    return gBagPosition.location == ITEMMENULOCATION_PARTY ? PARTY_PANEL_TARGET_ROW_OFFSET : 0;
+}
+
 static bool8 BagMenu_ShouldLoadPartyPanel(void)
 {
     switch (gBagPosition.location)
@@ -5431,7 +5438,7 @@ static void BagMenu_DrawPartySlots(void)
         u16 palBits = (BagMenu_SlotIsPartner(slot) ? PARTY_SLOT_NORMAL_PARTNER_PAL : PARTY_SLOT_NORMAL_PAL) << 12;
         for (row = 0; row < PARTY_PANEL_SLOT_HEIGHT; row++)
         {
-            u8 panelRow = PARTY_PANEL_START_ROW + slot * PARTY_PANEL_SLOT_HEIGHT + row;
+            u8 panelRow = PARTY_PANEL_START_ROW + BagMenu_PanelRowOffset() + slot * PARTY_PANEL_SLOT_HEIGHT + row;
             u8 binRow = slot * PARTY_PANEL_SLOT_HEIGHT + row;
             for (col = 0; col < PARTY_PANEL_SLOT_WIDTH; col++)
                 buf[panelRow * 32 + (PARTY_PANEL_START_COL + col)]
@@ -5471,7 +5478,7 @@ static void BagMenu_CreatePanelMonIcon(u8 slot, s16 x2)
         return;
 
     isEgg = GetMonData(mon, MON_DATA_IS_EGG);
-    spriteId = CreateMonIconIsEgg(species, SpriteCB_MonIcon, 30, 24 * slot + 16, 6, GetMonData(mon, MON_DATA_PERSONALITY), isEgg);
+    spriteId = CreateMonIconIsEgg(species, SpriteCB_MonIcon, 30, 24 * slot + 16 + 8 * BagMenu_PanelRowOffset(), 6, GetMonData(mon, MON_DATA_PERSONALITY), isEgg);
 
     if (spriteId == MAX_SPRITES)
         return;
@@ -5498,7 +5505,7 @@ static void BagMenu_CreatePanelMonIcon(u8 slot, s16 x2)
 static void BagMenu_CreatePartyIcons(void)
 {
     u8 i;
-    u8 count = IsWallysBag() ? 1 : PARTY_SIZE;
+    u8 count = (IsWallysBag() || gBagPosition.location == ITEMMENULOCATION_PARTY) ? 1 : PARTY_SIZE;
 
     memset(gBagMenu->partyMonIconSpriteIds, SPRITE_NONE, sizeof(gBagMenu->partyMonIconSpriteIds));
     LoadMonIconPalettes();
@@ -5523,7 +5530,7 @@ static void BagMenu_CreatePartyIcons(void)
 
     for (i = 0; i < count; i++)
     {
-        u8 sid = CreateSprite(&sSpriteTemplate_StatusIcon, 44, 23 + i * 24, 2);
+        u8 sid = CreateSprite(&sSpriteTemplate_StatusIcon, 44, 23 + i * 24 + 8 * BagMenu_PanelRowOffset(), 2);
         gBagMenu->statusIconSpriteIds[i] = (sid == MAX_SPRITES) ? SPRITE_NONE : sid;
     }
     BagMenu_UpdateStatusIcons();
@@ -5602,7 +5609,7 @@ static void BagMenu_UpdateStatusIconPos(u8 hoveredSlot)
     {
         if (gBagMenu->statusIconSpriteIds[i] == SPRITE_NONE)
             continue;
-        gSprites[gBagMenu->statusIconSpriteIds[i]].y = 23 + i * 24
+        gSprites[gBagMenu->statusIconSpriteIds[i]].y = 23 + i * 24 + 8 * BagMenu_PanelRowOffset()
             + (BagMenu_ShouldShowHPBar() && i == hoveredSlot ? 0 : 4);
     }
 }
@@ -5739,7 +5746,7 @@ static void BagMenu_LoadHeldItemIconGfx(enum Item itemId)
 
 static void BagMenu_UpdateHeldItemIcon(u8 slot)
 {
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][slot];
+    struct Pokemon *mon = BagMenu_GetPanelMon(slot);
     struct Sprite *spr;
     u16 heldItem;
 
@@ -5756,7 +5763,7 @@ static void BagMenu_UpdateHeldItemIcon(u8 slot)
             return;
         BagMenu_LoadHeldItemIconGfx(heldItem);
         spr->x = 46;
-        spr->y = 24 * slot + 28;
+        spr->y = 24 * slot + 28 + 8 * BagMenu_PanelRowOffset();
         spr->invisible = FALSE;
         spr->callback = SpriteCallbackDummy;
         StartSpriteAffineAnim(spr, 0);
@@ -8400,6 +8407,10 @@ static u8 BagMenu_PartyIdFromSlot(u8 slot)
 {
     u8 packed;
 
+    // coming from the party menu, only shows the target mon
+    if (gBagPosition.location == ITEMMENULOCATION_PARTY)
+        return gPartyMenu.slotId;
+
     if (!BagMenu_InBattleSelect())
         return slot;
 
@@ -8427,6 +8438,8 @@ static struct Pokemon *BagMenu_GetPanelMon(u8 slot)
 
 static u8 BagMenu_PanelSlotLimit(void)
 {
+    if (gBagPosition.location == ITEMMENULOCATION_PARTY)
+        return 1;
     if (BagMenu_InBattleSelect() && IsMultiBattle())
     {
         if (AreMultiPartiesFullTeams())
