@@ -145,7 +145,6 @@ SINGLE_BATTLE_TEST("Overworld weather cannot be overridden (Gen9)")
         PLAYER(SPECIES_POLITOED) { Ability(viaMove == TRUE ? ABILITY_DAMP : ABILITY_DRIZZLE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        // More than 5 turns
         TURN { MOVE(player, viaMove == TRUE ? MOVE_RAIN_DANCE : MOVE_CELEBRATE); }
     } SCENE {
         MESSAGE("The sunlight turned harsh!");
