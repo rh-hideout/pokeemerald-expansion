@@ -928,14 +928,6 @@ void FillHillTrainersParties(void)
     CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B);
 }
 
-// This function is unused, but my best guess is
-// it was supposed to return AI scripts for trainer
-// hill trainers.
-u64 GetTrainerHillAIFlags(void)
-{
-    return (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-}
-
 u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 {
     s32 i;

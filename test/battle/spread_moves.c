@@ -71,14 +71,15 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
-        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
+
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
@@ -107,11 +108,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
@@ -266,11 +267,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
-        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 
@@ -290,11 +293,15 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     } SCENE {
         MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
-        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 

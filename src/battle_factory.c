@@ -595,7 +595,7 @@ static enum FactoryStyle GetMoveBattleStyle(enum Move move)
         return FACTORY_STYLE_SLOW_STEADY;
 
     if (IsExplosionMove(move))
-        return FACTORY_STYLE_SLOW_STEADY;
+        return FACTORY_STYLE_HIGH_RISK;
 
     return FACTORY_STYLE_NONE;
 }
@@ -792,14 +792,6 @@ u64 GetAiScriptsInBattleFactory(void)
         else
             return AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY;
     }
-}
-
-void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
-{
-    enum Move move = moveArg;
-    if (moveArg == MOVE_RETURN)
-        move = MOVE_FRUSTRATION;
-    SetMonMoveSlot(mon, move, moveSlot);
 }
 
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)

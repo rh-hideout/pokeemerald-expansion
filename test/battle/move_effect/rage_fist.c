@@ -151,11 +151,12 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased if a substitute was hi
     }
 }
 
-SINGLE_BATTLE_TEST("Rage Fist base power is not lost if user switches out")
+SINGLE_BATTLE_TEST("Rage Fist base power is not lost if user switches out (Gen9)")
 {
     s16 timesGotHit[2];
 
     GIVEN {
+        WITH_CONFIG(B_RAGE_FIST, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_REGIROCK);
@@ -174,6 +175,33 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not lost if user switches out")
         HP_BAR(opponent, captureDamage: &timesGotHit[1]);
     } THEN {
         EXPECT_MUL_EQ(timesGotHit[0], Q_4_12(2.0), timesGotHit[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rage Fist base power is lost if user switches out (Champions)")
+{
+    s16 timesGotHit[2];
+
+    GIVEN {
+        WITH_CONFIG(B_RAGE_FIST, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_REGIROCK);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAGE_FIST); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 0); }
+        TURN { MOVE(player, MOVE_RAGE_FIST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, player);
+        HP_BAR(opponent, captureDamage: &timesGotHit[0]);
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        SWITCH_OUT_MESSAGE("Wynaut");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, player);
+        HP_BAR(opponent, captureDamage: &timesGotHit[1]);
+    } THEN {
+        EXPECT_MUL_EQ(timesGotHit[0], Q_4_12(1.0), timesGotHit[0]);
     }
 }
 
@@ -376,7 +404,7 @@ SINGLE_BATTLE_TEST("Rage Fist counter will be updated correctly after absorb mov
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GIGA_DRAIN) == EFFECT_ABSORB);
+        ASSUME(MoveHasAdditionalEffect(MOVE_GIGA_DRAIN, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -1012,22 +1012,15 @@ void AnimTask_CreateSurfWave(u8 taskId)
         AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_SurfContest, TRUE);
     }
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Surf, animBg.tilesOffset);
-    switch (cmd->palette)
-    {
-    case ANIM_SURF_PAL_SURF:
-    default:
-        if (B_NEW_SURF_PARTICLE_PALETTE == TRUE)
-            LoadPalette(gBattleAnimSpritePal_NewSurf, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        else
-            LoadPalette(gBattleAnimBgPalette_Surf, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    case ANIM_SURF_PAL_MUDDY_WATER:
-        LoadPalette(gBattleAnimBackgroundImageMuddyWater_Pal, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    case ANIM_SURF_PAL_SLUDGE_WAVE:
-        LoadPalette(gBattleAnimBgPalette_SludgeWave, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
-        break;
-    }
+
+    const u16 *const wavePalettes[] = {
+        [ANIM_SURF_PAL_SURF_ORIGINAL] = gBattleAnimBgPalette_Surf,
+        [ANIM_SURF_PAL_MUDDY_WATER]   = gBattleAnimBackgroundImageMuddyWater_Pal,
+        [ANIM_SURF_PAL_SLUDGE_WAVE]   = gBattleAnimBgPalette_SludgeWave,
+        [ANIM_SURF_PAL_SURF_NEW]      = gBattleAnimSpritePal_NewSurf,
+    };
+
+    LoadPalette(wavePalettes[cmd->palette], BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
     taskId2 = CreateTask(AnimTask_SurfWaveScanlineEffect, gTasks[taskId].priority + 1);
     gTasks[taskId].data[15] = taskId2;
@@ -1852,7 +1845,6 @@ static void CreateWaterPulseRingBubbles(struct Sprite *sprite, int xDiff, int yD
     s16 combinedY;
     s16 i;
     s16 something;
-    s16 unusedVar = 1; //unusedVar is needed to match
     s16 randomSomethingY;
     s16 randomSomethingX;
     u8 spriteId;
@@ -1860,8 +1852,6 @@ static void CreateWaterPulseRingBubbles(struct Sprite *sprite, int xDiff, int yD
     something = sprite->data[0] / 2;
     combinedX = sprite->x + sprite->x2;
     combinedY = sprite->y + sprite->y2;
-    if (yDiff < 0)
-        unusedVar *= -1; //Needed to match
     randomSomethingY = yDiff + (Random2() % 10) - 5;
     randomSomethingX = -xDiff + (Random2() % 10) - 5;
 

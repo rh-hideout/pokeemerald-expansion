@@ -48,6 +48,28 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if She
     }
 }
 
+SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Weather Ball when it becomes Fire-type")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+        TURN { MOVE(opponent, MOVE_WEATHER_BALL); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, opponent);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet thawed out!");
+        STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can burn (Gen 1-2)")
 {
     GIVEN {
@@ -67,10 +89,10 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's attack that can burn (Gen 1-2
 
 SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Tri Attack 1/3 of the time (Gen 1-2)")
 {
-    PASSES_RANDOMLY(1, 3, RNG_TRI_ATTACK);
+    PASSES_RANDOMLY(1, 3, RNG_RANDOM_FROM_LIST);
     GIVEN {
         WITH_CONFIG(B_HIT_THAW, GEN_2);
-        ASSUME(MoveHasAdditionalEffect(MOVE_TRI_ATTACK, MOVE_EFFECT_TRI_ATTACK));
+        ASSUME(MoveHasAdditionalEffect(MOVE_TRI_ATTACK, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

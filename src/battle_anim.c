@@ -221,8 +221,6 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_MON_HIT]                = gBattleAnimGeneral_MonHit,
     [B_ANIM_ITEM_STEAL]             = gBattleAnimGeneral_ItemSteal,
     [B_ANIM_SNATCH_MOVE]            = gBattleAnimGeneral_SnatchMove,
-    [B_ANIM_FUTURE_SIGHT_HIT]       = gBattleAnimGeneral_FutureSightHit,
-    [B_ANIM_DOOM_DESIRE_HIT]        = gBattleAnimGeneral_DoomDesireHit,
     [B_ANIM_FOCUS_PUNCH_SETUP]      = gBattleAnimGeneral_FocusPunchSetUp,
     [B_ANIM_INGRAIN_HEAL]           = gBattleAnimGeneral_IngrainHeal,
     [B_ANIM_WISH_HEAL]              = gBattleAnimGeneral_WishHeal,
@@ -384,8 +382,6 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         case B_ANIM_LEECH_SEED_DRAIN:
         case B_ANIM_MON_HIT:
         case B_ANIM_SNATCH_MOVE:
-        case B_ANIM_FUTURE_SIGHT_HIT:
-        case B_ANIM_DOOM_DESIRE_HIT:
         case B_ANIM_WISH_HEAL:
         case B_ANIM_MEGA_EVOLUTION:
         case B_ANIM_PRIMAL_REVERSION:
@@ -439,28 +435,10 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
 
         if (sBattleAnimScriptPtr == gBattleAnimMove_SecretPower)
         {
-            if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-            {
-                switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-                {
-                case STATUS_FIELD_MISTY_TERRAIN:
-                    sBattleAnimScriptPtr = gBattleAnimMove_FairyWind;
-                    break;
-                case STATUS_FIELD_GRASSY_TERRAIN:
-                    sBattleAnimScriptPtr = gBattleAnimMove_NeedleArm;
-                    break;
-                case STATUS_FIELD_ELECTRIC_TERRAIN:
-                    sBattleAnimScriptPtr = gBattleAnimMove_ThunderShock;
-                    break;
-                case STATUS_FIELD_PSYCHIC_TERRAIN:
-                    sBattleAnimScriptPtr = gBattleAnimMove_Confusion;
-                    break;
-                }
-            }
+            if (gFieldTimers.terrain != B_TERRAIN_NONE)
+                sBattleAnimScriptPtr = gBattleTerrainInfo[gFieldTimers.terrain].secretPowerAnimation;
             else
-            {
                 sBattleAnimScriptPtr = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerAnimation;
-            }
         }
         break;
     case ANIM_TYPE_STATUS:
@@ -1807,7 +1785,7 @@ static void LoadDefaultBg(void)
 {
     if (IsContest())
         LoadContestBgAfterMoveAnim();
-    else if (B_TERRAIN_BG_CHANGE == TRUE && gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+    else if (B_TERRAIN_BG_CHANGE == TRUE && gFieldTimers.terrain != B_TERRAIN_NONE)
         DrawTerrainTypeBattleBackground();
     else
         DrawMainBattleBackground();
