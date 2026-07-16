@@ -330,7 +330,7 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
 
 enum TimeOfDay GetTimeOfDay(void)
 {
-    UpdateTimeOfDay();
+    UpdateTimeOfDay(FALSE);
     return gTimeOfDay;
 }
 

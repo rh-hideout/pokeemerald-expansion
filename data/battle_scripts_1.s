@@ -256,6 +256,7 @@ BattleScript_EffectShedTail::
 	waitstate
 	jumpifvolatile BS_ATTACKER, VOLATILE_SUBSTITUTE, BattleScript_AlreadyHasSubstitute
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
+	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
 	setsubstitute
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_SUBSTITUTE_FAILED, BattleScript_SubstituteString
@@ -324,6 +325,7 @@ BattleScript_MoveSwitchPursuitEnd:
 
 BattleScript_MoveSwitchPursuitRet:
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
+	jumpifcommanderactive BS_ATTACKER, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
@@ -332,6 +334,7 @@ BattleScript_MoveSwitchPursuitRet:
 
 BattleScript_MoveSwitch::
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
+	jumpifcommanderactive BS_ATTACKER, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
@@ -379,7 +382,7 @@ BattleScript_TheRainbowActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_ARAINBOWAPPEAREDONSIDE
 	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_RAINBOW
+	playanimation BS_EFFECT_BATTLER, B_ANIM_RAINBOW
 	waitanimation
 	return
 
@@ -392,7 +395,7 @@ BattleScript_SeaOfFireActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SEAOFFIREENVELOPEDSIDE
 	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_TARGET, B_ANIM_SEA_OF_FIRE
+	playanimation BS_EFFECT_BATTLER, B_ANIM_SEA_OF_FIRE
 	waitanimation
 	return
 
@@ -410,7 +413,7 @@ BattleScript_TheSwampActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SWAMPENVELOPEDSIDE
 	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_TARGET, B_ANIM_SWAMP
+	playanimation BS_EFFECT_BATTLER, B_ANIM_SWAMP
 	waitanimation
 	return
 
@@ -910,6 +913,7 @@ BattleScript_EffectPsychoShift::
 	jumpifstatus BS_ATTACKER, STATUS1_ANY, BattleScript_EffectPsychoShiftCanWork
 	goto BattleScript_ButItFailed
 BattleScript_EffectPsychoShiftCanWork:
+	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_ButItFailed
 	jumpifsafeguard BattleScript_SafeguardProtected
 	trypsychoshift BattleScript_ButItFailed, BattleScript_SleepClauseBlocked
@@ -920,6 +924,8 @@ BattleScript_EffectPsychoShiftCanWork:
 	waitmessage B_WAIT_TIME_LONG
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
+	waitstate
+	trysynchronize
 	curestatus BS_ATTACKER
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -1569,16 +1575,16 @@ BattleScript_CantMakeAsleep::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectAbsorbLiquidOoze::
-	call BattleScript_AbilityPopUpTarget
-	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_EffectAbsorbRet
+	call BattleScript_AbilityPopUp
+	jumpifability BS_EFFECT_BATTLER, ABILITY_MAGIC_GUARD, BattleScript_EffectAbsorbRet
 	goto BattleScript_EffectAbsorb
 
 BattleScript_EffectAbsorb::
-	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER
 	printfromtable gAbsorbDrainStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_ATTACKER
+	tryfaintmon BS_EFFECT_BATTLER
 BattleScript_EffectAbsorbRet:
 	return
 
@@ -1624,7 +1630,7 @@ BattleScript_SetUpBide::
 BattleScript_EffectRoar::
 	attackcanceler
 	jumpifroarfails BattleScript_ButItFailed
-	jumpifcommanderactive BattleScript_ButItFailed
+	jumpifcommanderactive BS_TARGET, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_GUARD_DOG, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
 	jumpifvolatile BS_TARGET, VOLATILE_ROOT, BattleScript_PrintMonIsRooted
@@ -2039,7 +2045,6 @@ BattleScript_EffectSpite::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-@ TODO: Simplfy script
 BattleScript_EffectHealBell::
 	attackcanceler
 	attackanimation
@@ -2230,6 +2235,7 @@ BattleScript_EffectSafeguard::
 BattleScript_EffectBatonPass::
 	attackcanceler
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
+	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -2257,6 +2263,18 @@ BattleScript_EffectShoreUp::
 	attackcanceler
 	recoverbasedonsunlight BattleScript_AlreadyAtFullHp
 	goto BattleScript_HealTarget
+
+BattleScript_MegaSolActivatesHealing::
+	attackanimation
+	waitanimation
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	goto BattleScript_HealTargetContinue
+
+BattleScript_MegaSolActivatesTwoTurnMove::
+	call BattleScript_AbilityPopUpScripting
+	pause B_WAIT_TIME_SHORT
+	return
 
 BattleScript_EffectWeather::
 	attackcanceler
@@ -2368,6 +2386,8 @@ BattleScript_EffectSoftboiled::
 BattleScript_HealTarget::
 	attackanimation
 	waitanimation
+BattleScript_HealTargetContinue::
+	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
 	printstring STRINGID_PKMNREGAINEDHEALTH
@@ -3141,6 +3161,26 @@ BattleScript_SandSpitActivates::
 	printstring STRINGID_ASANDSTORMKICKEDUP
 	goto BattleScript_WeatherAbilityActivatesContinue
 
+BattleScript_OrichalcumPulseActivates::
+	pause B_WAIT_TIME_SHORT
+	copybyte sSAVED_BATTLER, sBATTLER
+	call BattleScript_AbilityPopUp
+	printfromtable gAbilityWeatherChangeStringId
+	waitstate
+	playanimation_var BS_BATTLER_0, sB_ANIM_ARG1
+	call BattleScript_ActivateWeatherAbilities
+	copybyte sBATTLER, sSAVED_BATTLER
+	printstring STRINGID_ORICHALCUMPULSEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_OrichalcumPulseActivatesInSun::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_ORICHALCUMPULSEACTIVATESINSUN
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_WeatherContinues::
 	printfromtable gWeatherTurnStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -3289,15 +3329,11 @@ BattleScript_SafeguardEnds::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-@ Leech Seed end turn effect
-@ attacker is the victim
-@ target is the leech seeder (recieving HP)
 BattleScript_LeechSeedTurnDrainLiquidOoze::
 	call BattleScript_LeechSeedTurnDrain
-	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
-	copybyte gBattlerAttacker, gBattlerTarget   @ needed to get liquid ooze message correct
-	jumpifability BS_TARGET, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockRet
+	copybyte gEffectBattler, gBattlerAttacker @gEffectBattler is overwritten so general usage not possible
+	jumpifability BS_EFFECT_BATTLER, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockRet
 	goto BattleScript_LeechSeedTurnDrainGainHp
 
 BattleScript_LeechSeedTurnDrainHealBlock::
@@ -3308,19 +3344,20 @@ BattleScript_LeechSeedTurnDrainHealBlockRet:
 BattleScript_LeechSeedTurnDrainRecovery::
 	call BattleScript_LeechSeedTurnDrain
 BattleScript_LeechSeedTurnDrainGainHp:
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
+	copybyte gEffectBattler, gBattlerAttacker @gEffectBattler is overwritten so general usage not possible
 	printfromtable gLeechSeedStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
+	tryfaintmon BS_ATTACKER
 	return
 
 BattleScript_LeechSeedTurnDrain:
-	playanimation BS_ATTACKER, B_ANIM_LEECH_SEED_DRAIN, sB_ANIM_ARG1
-	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER
-	tryfaintmon BS_ATTACKER
-	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
+	playanimation BS_SCRIPTING, B_ANIM_LEECH_SEED_DRAIN, sB_ANIM_ARG1
+	healthbarupdate BS_SCRIPTING
+	datahpupdate BS_SCRIPTING
+	tryfaintmon BS_SCRIPTING
+	tryactivateitem BS_SCRIPTING, ACTIVATION_ON_HP_THRESHOLD
 	return
 
 BattleScript_BideStoringEnergy::
@@ -3785,7 +3822,7 @@ BattleScript_PrintMonIsRootedRet::
 	return
 
 BattleScript_KnockedOff::
-	playanimation BS_TARGET, B_ANIM_ITEM_KNOCKOFF
+	playanimation BS_EFFECT_BATTLER, B_ANIM_ITEM_KNOCKOFF
 	printstring STRINGID_PKMNKNOCKEDOFF
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -4757,6 +4794,22 @@ BattleScript_ElectricSurgeActivates::
 	call BattleScript_ActivateTerrainEffects
 	return
 
+BattleScript_HadronEngineActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_HADRONENGINEACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_SCRIPTING, B_ANIM_RESTORE_BG
+	call BattleScript_ActivateTerrainEffects
+	return
+
+BattleScript_HadronEngineActivatesInTerrain::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_HADRONENGINEACTIVATESINTERRAIN
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MistySurgeActivates::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
@@ -4869,7 +4922,7 @@ BattleScript_AbilityPreventsPhasingOut::
 
 BattleScript_AbilityPreventsPhasingOutRet::
 	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUpTarget
+	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNANCHORSITSELFWITH
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -5225,14 +5278,17 @@ BattleScript_GemActivates::
 	removeitem BS_ATTACKER
 	return
 
-BattleScript_BerryReduceDmg::
+BattleScript_BerryReduceAnimation::
 	call BattleScript_ItemPopUp_ScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
 	waitanimation
+	waitabilitypopup
+	return
+
+BattleScript_BerryReduceDmg::
 	printstring STRINGID_BERRYDMGREDUCES
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
-	waitabilitypopup
 	return
 
 BattleScript_BerryCureConfusionRet::
@@ -5610,12 +5666,12 @@ BattleScript_MirrorHerbCopyStatChange::
 	printstring STRINGID_MIRRORHERBCOPIED
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_SCRIPTING
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM | STAT_CHANGE_MIRROR_HERB
 	return
 
 BattleScript_OpportunistCopyStatChange::
 	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_NO_FLAGS
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_OPPORTUNIST
 	return
 
 BattleScript_TotemBoost::
@@ -5915,7 +5971,7 @@ BattleScript_MagicianActivates::
 	return
 
 BattleScript_SymbiosisActivates::
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_SYMBIOSISITEMPASS
 	waitmessage B_WAIT_TIME_LONG
 	tryactivateabilitywithabilityshield BS_EFFECT_BATTLER, FALSE

@@ -155,7 +155,7 @@ static bool32 Putp(u32 *x, u32 *y, const void *p)
 
 static bool32 Puts(u32 *x, u32 *y, s32 n, const char *s)
 {
-    while (*s != '\0' && n-- > 0)
+    while (n-- > 0 && *s != '\0')
     {
         if (!Putc(x, y, *s++))
             return FALSE;
@@ -165,7 +165,7 @@ static bool32 Puts(u32 *x, u32 *y, s32 n, const char *s)
 
 static bool32 PutS(u32 *x, u32 *y, s32 n, const u8 *s)
 {
-    while (*s != EOS && n-- > 0)
+    while (n-- > 0 && *s != EOS)
     {
         char c;
         if (CHAR_a <= *s && *s <= CHAR_z)
@@ -260,6 +260,14 @@ static void Vprintf(enum Mode mode, const void *return1, const void *return0, co
             {
             case '%':
                 if (!Putc(&x, &y, '%'))
+                    return;
+                break;
+            case 'c':
+                if (!Putc(&x, &y, va_arg(va, int)))
+                    return;
+                break;
+            case 'C':
+                if (!PutS(&x, &y, 1, &(u8) { va_arg(va, unsigned) }))
                     return;
                 break;
             case 'd':

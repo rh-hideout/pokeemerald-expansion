@@ -370,8 +370,7 @@
 	.byte SCR_OP_GETTIME
 	.endm
 
-	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
-	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
+	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in include/constants/rtc.h.
 	.macro gettimeofday
 	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
@@ -1066,7 +1065,7 @@
 
 	@ Gives the player a Pokémon of the specified species and level, and allows to customize extra parameters.
 	@ VAR_RESULT will be set to MON_GIVEN_TO_PARTY, MON_GIVEN_TO_PC, or MON_CANT_GIVE depending on the outcome.
-	.macro givemon species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg
+	.macro givemon species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg, ignoreTotalEvCheck = FALSE
 	callnative ScrCmd_createmon, requests_effects=1
 	.byte 0
 	.byte PARTY_SIZE @ assign to first empty slot
@@ -1099,6 +1098,7 @@
 	.ifnb \teraType; .set givemon_flags, givemon_flags | (1 << 23); .endif
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
 	.ifnb \isEgg; .set givemon_flags, givemon_flags | (1 << 25); .endif
+	.if \ignoreTotalEvCheck; .set givemon_flags, givemon_flags | (1 << 26); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
@@ -1130,7 +1130,7 @@
 
 	@ creates a mon for a given party and slot
 	@ otherwise
-	.macro createmon side:req, slot:req, species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg
+	.macro createmon side:req, slot:req, species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg, ignoreTotalEvCheck = FALSE
 	callnative ScrCmd_createmon, requests_effects=1
 	.byte \side	 @ 0 - player, 1 - opponent
 	.byte \slot	 @ 0-5
@@ -1163,6 +1163,7 @@
 	.ifnb \teraType; .set givemon_flags, givemon_flags | (1 << 23); .endif
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
 	.ifnb \isEgg; .set givemon_flags, givemon_flags | (1 << 25); .endif
+	.if \ignoreTotalEvCheck; .set givemon_flags, givemon_flags | (1 << 26); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
@@ -1962,23 +1963,27 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, FALSE, \initialSelected, \callbacks, \argv
 	.endm
 
+	@ Creates an option to be collected with dynmultistack.
 	.macro dynmultipush name:req, id:req
 	.byte SCR_OP_DYNMULTIPUSH
 	.4byte \name
 	.2byte \id
 	.endm
 
-	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
-	.macro getbraillestringwidth msg:req
-	.byte SCR_OP_GETBRAILLESTRINGWIDTH
-	.4byte \msg
-	.endm
-
+	@ Displays a multichoice box using the dynmultipush options before it in the script, from which the user can choose a selection, and blocks script execution until a selection is made.
+	@ If ignoreBPress is set to a non-zero value, then the user will not be allowed to back out of the multichoice with the B button.
+	@ For a simple menu supply DYN_MULTICHOICE_CB_NONE in callbacks.
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
 @ Supplementary
+
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
 
 	.macro goto_if_unset flag:req, dest:req
 	checkflag \flag
@@ -2010,28 +2015,28 @@
 	.endif
 	.endm
 
-	.macro goto_if_lt a:req, b, c @ LESS THAN
-	trycompare goto_if, 0, \a, \b, \c
+	.macro goto_if_lt a:req, b, c
+	trycompare goto_if, LESS_THAN, \a, \b, \c
 	.endm
 
-	.macro goto_if_eq a:req, b, c @ EQUAL
-	trycompare goto_if, 1, \a, \b, \c
+	.macro goto_if_eq a:req, b, c
+	trycompare goto_if, EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_gt a:req, b, c @ GREATER THAN
-	trycompare goto_if, 2, \a, \b, \c
+	.macro goto_if_gt a:req, b, c
+	trycompare goto_if, GREATER_THAN, \a, \b, \c
 	.endm
 
-	.macro goto_if_le a:req, b, c @ LESS THAN OR EQUAL
-	trycompare goto_if, 3, \a, \b, \c
+	.macro goto_if_le a:req, b, c
+	trycompare goto_if, LESS_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_ge a:req, b, c @ GREATER THAN OR EQUAL
-	trycompare goto_if, 4, \a, \b, \c
+	.macro goto_if_ge a:req, b, c
+	trycompare goto_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_ne a:req, b, c @ NOT EQUAL
-	trycompare goto_if, 5, \a, \b, \c
+	.macro goto_if_ne a:req, b, c
+	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
 	.macro call_if_unset flag:req, dest:req
@@ -2044,28 +2049,28 @@
 	call_if TRUE, \dest
 	.endm
 
-	.macro call_if_lt a:req, b, c @ LESS THAN
-	trycompare call_if, 0, \a, \b, \c
+	.macro call_if_lt a:req, b, c
+	trycompare call_if, LESS_THAN, \a, \b, \c
 	.endm
 
-	.macro call_if_eq a:req, b, c @ EQUAL
-	trycompare call_if, 1, \a, \b, \c
+	.macro call_if_eq a:req, b, c
+	trycompare call_if, EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_gt a:req, b, c @ GREATER THAN
-	trycompare call_if, 2, \a, \b, \c
+	.macro call_if_gt a:req, b, c
+	trycompare call_if, GREATER_THAN, \a, \b, \c
 	.endm
 
-	.macro call_if_le a:req, b, c @ LESS THAN OR EQUAL
-	trycompare call_if, 3, \a, \b, \c
+	.macro call_if_le a:req, b, c
+	trycompare call_if, LESS_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_ge a:req, b, c @ GREATER THAN OR EQUAL
-	trycompare call_if, 4, \a, \b, \c
+	.macro call_if_ge a:req, b, c
+	trycompare call_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_ne a:req, b, c @ NOT EQUAL
-	trycompare call_if, 5, \a, \b, \c
+	.macro call_if_ne a:req, b, c
+	trycompare call_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c

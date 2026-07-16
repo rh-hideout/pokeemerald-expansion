@@ -535,7 +535,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNFLEWHIGH, .status = STATE_ON_AIR },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNFLEWHIGH, .state = STATE_ON_AIR },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AVOID_STARTLE_ONCE : CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -562,7 +562,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_BIND,
+            .argument.wrapped = B_MSG_WRAPPED_BIND,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -956,7 +956,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_WRAP,
+            .argument.wrapped = B_MSG_WRAPPED_WRAP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -1917,7 +1917,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that absorbs\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 20,
         .type = TYPE_GRASS,
         .accuracy = 100,
@@ -1925,13 +1925,16 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_HIGHLY_APPEALING : CONTEST_EFFECT_STARTLE_PREV_MON,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_Absorb,
     },
 
@@ -1941,7 +1944,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that absorbs\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 40,
         .type = TYPE_GRASS,
         .accuracy = 100,
@@ -1949,7 +1952,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .zMove = { .powerOverride = 120 },
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
@@ -1957,6 +1959,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_MegaDrain,
     },
 
@@ -2060,7 +2066,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKSUNLIGHT, .weather = B_WEATHER_SUN },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKSUNLIGHT, .weather = BATTLE_WEATHER_SUN },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AFFECTED_BY_PREV_APPEAL : CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -2254,7 +2260,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_FIRE_SPIN,
+            .argument.wrapped = B_MSG_WRAPPED_FIRE_SPIN,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -2464,7 +2470,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .skyBattleBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNDUGHOLE, .status = STATE_UNDERGROUND },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNDUGHOLE, .state = STATE_UNDERGROUND },
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AVOID_STARTLE_ONCE : CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_TOUGH : CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -3485,7 +3491,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresKingsRock = B_UPDATED_MOVE_FLAGS < GEN_3,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_CLAMP,
+            .argument.wrapped = B_MSG_WRAPPED_CLAMP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -3763,12 +3769,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = CONTEST_EFFECT_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_CALM_MIND, COMBO_STARTER_HYPNOSIS, COMBO_STARTER_LOVELY_KISS, COMBO_STARTER_SPORE, COMBO_STARTER_SING, COMBO_STARTER_YAWN, COMBO_STARTER_DARK_VOID, COMBO_STARTER_GRASS_WHISTLE, COMBO_STARTER_SLEEP_POWDER},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_DreamEater,
         .validApprenticeMove = TRUE,
     },
@@ -3836,7 +3845,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that steals half\n"
             "the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_7 ? 80 : 20,
         .type = TYPE_BUG,
         .accuracy = 100,
@@ -3844,7 +3853,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .absorbPercentage = 50 },
         .makesContact = TRUE,
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
@@ -3852,6 +3860,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_LeechLife,
     },
 
@@ -4398,7 +4410,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = 20,
-            .randomMoveEffects = { MOVE_EFFECT_BURN, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_FREEZE_OR_FROSTBITE },
+            .argument.randomMoveEffects = { MOVE_EFFECT_BURN, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_FREEZE_OR_FROSTBITE },
         }),
     #else
             "A triangular field of energy\n"
@@ -5525,7 +5537,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack that steals half\n"
             "the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 75 : 60,
         .type = TYPE_GRASS,
         .accuracy = 100,
@@ -5533,7 +5545,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON : CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
@@ -5541,6 +5552,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
         .battleAnimScript = gBattleAnimMove_GigaDrain,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .validApprenticeMove = TRUE,
     },
 
@@ -5890,7 +5905,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = 5,
-        .target = TARGET_USER,
+        .target = TARGET_USER_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RECOVER_HP },
@@ -6844,7 +6859,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .damagesUnderwater = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_WHIRLPOOL,
+            .argument.wrapped = B_MSG_WRAPPED_WHIRLPOOL,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -7985,7 +8000,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .skyBattleBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNHIDUNDERWATER, .status = STATE_UNDERWATER },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNHIDUNDERWATER, .state = STATE_UNDERWATER },
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE_ONCE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_DIVE,
@@ -8560,7 +8575,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_GRASS,
         .accuracy = 0,
         .pp = 5,
-        .target = TARGET_USER,
+        .target = TARGET_USER_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RECOVER_HP },
@@ -9000,7 +9015,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_SAND_TOMB,
+            .argument.wrapped = B_MSG_WRAPPED_SAND_TOMB,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -9333,7 +9348,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNSPRANGUP, .status = STATE_ON_AIR },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNSPRANGUP, .state = STATE_ON_AIR },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PARALYSIS,
             .chance = 30,
@@ -9964,7 +9979,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .assistBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT,
-            .multistring.brokeProtect = B_MSG_FEINT,
+            .argument.brokeProtect = B_MSG_FEINT,
         }),
         .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_BEAUTY,
@@ -11068,7 +11083,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A punch that drains\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 75 : 60,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -11076,7 +11091,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .absorbPercentage = 50 },
         .makesContact = TRUE,
         .punchingMove = TRUE,
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
@@ -11084,6 +11098,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_TOUGH : CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_DrainPunch,
     },
 
@@ -12465,7 +12483,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_MAGMA_STORM,
+            .argument.wrapped = B_MSG_WRAPPED_MAGMA_STORM,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -12577,10 +12595,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
-        .argument.twoTurnAttack = { .stringId = STRINGID_VANISHEDINSTANTLY, .status = STATE_PHANTOM_FORCE },
+        .argument.twoTurnAttack = { .stringId = STRINGID_VANISHEDINSTANTLY, .state = STATE_PHANTOM_FORCE },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT,
-            .multistring.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
+            .argument.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
         }),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_COOL : CONTEST_CATEGORY_SMART,
@@ -13586,7 +13604,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKTARGETHIGH, .status = STATE_ON_AIR },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKTARGETHIGH, .state = STATE_ON_AIR },
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
@@ -14211,7 +14229,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Uses horns to drain\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 75,
         .type = TYPE_GRASS,
         .accuracy = 100,
@@ -14219,13 +14237,16 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .absorbPercentage = 50 },
         .makesContact = TRUE,
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_HornLeech,
     },
 
@@ -15113,10 +15134,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
         .assistBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_VANISHEDINSTANTLY, .status = STATE_PHANTOM_FORCE },
+        .argument.twoTurnAttack = { .stringId = STRINGID_VANISHEDINSTANTLY, .state = STATE_PHANTOM_FORCE },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT,
-            .multistring.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
+            .argument.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
         }),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -15209,7 +15230,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Damages all others and\n"
             "restores by half of it."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_7 ? 65 : 50,
         .type = TYPE_ELECTRIC,
         .accuracy = 100,
@@ -15217,12 +15238,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_FOES_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = COMBO_STARTER_PARABOLIC_CHARGE,
         .contestComboMoves = {COMBO_STARTER_CHARGE},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_ParabolicCharge,
     },
 
@@ -15391,7 +15415,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A kiss that steals over\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_FAIRY,
         .accuracy = 100,
@@ -15399,13 +15423,16 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 75 },
         .makesContact = TRUE,
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES,
         .contestCategory = CONTEST_CATEGORY_CUTE,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 75,
+        }),
         .battleAnimScript = gBattleAnimMove_DrainingKiss,
     },
 
@@ -15826,7 +15853,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT,
-            .multistring.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
+            .argument.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE, //CONTEST_EFFECT_EXCITES_AUDIENCE_MORE_IF_FIRST
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -15987,7 +16014,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
-        .argument = { .status = STATUS1_POISON },
+        .argument = { .status = STATUS1_PSN_ANY },
         .magicCoatAffected = TRUE,
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -16312,7 +16339,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_INFESTATION,
+            .argument.wrapped = B_MSG_WRAPPED_INFESTATION,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -16356,7 +16383,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A wave that absorbs over\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_FLYING,
         .accuracy = 100,
@@ -16364,12 +16391,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 75 },
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
         .contestEffect = CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 75,
+        }),
         .battleAnimScript = gBattleAnimMove_OblivionWing,
     },
 
@@ -16564,7 +16594,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .sketchBanned = (B_SKETCH_BANS >= GEN_9),
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FEINT,
-            .multistring.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
+            .argument.brokeProtect = B_MSG_BROKE_THROUGH_PROTECT,
         },
         {
             .moveEffect = MOVE_EFFECT_STAT_MINUS,
@@ -16853,7 +16883,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .slicingMove = TRUE,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKSUNLIGHT, .weather = B_WEATHER_SUN },
+        .argument.twoTurnAttack = { .stringId = STRINGID_PKMNTOOKSUNLIGHT, .weather = BATTLE_WEATHER_SUN },
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
@@ -17298,7 +17328,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_DRAGON,
         .accuracy = 100,
         .pp = 10,
-        .target = TARGET_SELECTED,
+        .target = TARGET_BOTH,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .zMove = { .powerOverride = 140 },
@@ -17957,8 +17987,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Zippy Zap"),
         .description = COMPOUND_STRING(
+        #if B_UPDATED_MOVE_DATA >= GEN_8
+            "Electric bursts always go\n"
+            "first and raise evasion."),
+        #else
             "Electric bursts always go\n"
             "first and land a critical hit."),
+        #endif
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 80 : 50,
         .type = TYPE_ELECTRIC,
@@ -17969,7 +18004,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS < GEN_8,
-        .alwaysCriticalHit = TRUE,
+        .alwaysCriticalHit = B_UPDATED_MOVE_DATA < GEN_8,
         .metronomeBanned = TRUE,
         #if B_UPDATED_MOVE_DATA >= GEN_8
         .additionalEffects = ADDITIONAL_EFFECTS({
@@ -18059,7 +18094,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             "half the damage inflicted."),
         #endif
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 60 : 90,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -18067,10 +18102,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = B_UPDATED_MOVE_DATA >= GEN_8 ? 100 : 50 },
         .mirrorMoveBanned = B_UPDATED_MOVE_FLAGS < GEN_8,
         .metronomeBanned = TRUE,
         .healingMove = B_HEAL_BLOCKING >= GEN_6,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = B_UPDATED_MOVE_DATA >= GEN_8 ? 100 : 50,
+        }),
         .battleAnimScript = gBattleAnimMove_BouncyBubble,
     },
 
@@ -18741,7 +18779,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .skyBattleBanned = B_EXTRAPOLATED_MOVE_FLAGS,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_SNAP_TRAP,
+            .argument.wrapped = B_MSG_WRAPPED_SNAP_TRAP,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -19758,7 +19796,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_WRAP,
-            .multistring.wrapped = B_MSG_WRAPPED_THUNDER_CAGE,
+            .argument.wrapped = B_MSG_WRAPPED_THUNDER_CAGE,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = CONTEST_CATEGORY_COOL,
@@ -19963,7 +20001,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
             .chance = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 30 : 50,
-            .randomMoveEffects = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP },
+            .argument.randomMoveEffects = { MOVE_EFFECT_POISON, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_SLEEP },
         }),
         .battleAnimScript = gBattleAnimMove_DireClaw,
     },
@@ -20090,7 +20128,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_9 ? 120 : 90,
         .type = TYPE_FIRE,
-        .accuracy = 100,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_9 ? 100 : 85,
         .pp = 10,
         .target = TARGET_RANDOM,
         .priority = 0,
@@ -20467,7 +20505,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
-        .pp = 10,
+        .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 5 : 10,
         .target = TARGET_USER,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
@@ -20488,7 +20526,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 0,
-        .pp = 10,
+        .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 15 : 10,
         .target = TARGET_USER,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
@@ -20497,8 +20535,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = STAT_CHANGE_EFFECT_PLUS,
-            .attack = 1,
             .spAtk = 1,
+            .spDef = 1,
         }),
         .battleAnimScript = gBattleAnimMove_TakeHeart,
     },
@@ -21370,7 +21408,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "A slash that absorbs\n"
             "half the damage inflicted."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_FIRE,
         .accuracy = 100,
@@ -21378,10 +21416,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .absorbPercentage = 50 },
         .makesContact = TRUE,
         .slicingMove = TRUE,
         .healingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        }),
         .battleAnimScript = gBattleAnimMove_BitterBlade,
     },
 
@@ -21684,7 +21725,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Absorbs half the damage\n"
             "inflicted. May cause a burn."),
-        .effect = EFFECT_ABSORB,
+        .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_GRASS,
         .accuracy = 90,
@@ -21692,10 +21733,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_BOTH,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
-        .argument = { .absorbPercentage = 50 },
         .thawsUser = TRUE,
         .healingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ABSORB,
+            .argument.absorbPercentage = 50,
+        },
+        {
             .moveEffect = MOVE_EFFECT_BURN,
             .chance = 20,
         }),
@@ -21758,7 +21802,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = STRINGID_ELECTROSHOTCHARGING, .weather = B_WEATHER_RAIN },
+        .argument.twoTurnAttack = { .stringId = STRINGID_ELECTROSHOTCHARGING, .weather = BATTLE_WEATHER_RAIN },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_PLUS,
             .spAtk = 1,

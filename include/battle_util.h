@@ -138,6 +138,19 @@ struct BattleCalcValues
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };
 
+struct SetEffect
+{
+    const u8 *script;
+    const struct AdditionalEffect *additionalEffect;
+
+    enum MoveEffect moveEffect:8;
+    enum BattlerId effectBattler:3;
+
+    u16 primary:1;
+    u16 certain:1;
+    u16 onSide:1;
+};
+
 enum SleepClauseBlock
 {
     NOT_BLOCKED_BY_SLEEP_CLAUSE,
@@ -158,7 +171,7 @@ enum SubCheck
 };
 
 void HandleAction_ThrowBall(void);
-u32 GetCurrentBattleWeather(void);
+enum BattleWeather GetCurrentBattleWeather(u32 weather);
 bool32 EndOrContinueWeather(void);
 enum DamageCategory GetReflectDamageMoveDamageCategory(enum BattlerId battler, enum Move move);
 bool32 ShouldTeraShellDistortTypeMatchups(struct DamageContext *ctx);
@@ -184,7 +197,6 @@ void MarkBattlerForControllerExec(enum BattlerId battler);
 void MarkBattlerReceivedLinkData(enum BattlerId battler);
 void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
-bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(enum BattlerId battler);
@@ -367,7 +379,7 @@ bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability);
 bool32 TryTriggerSymbiosis(enum BattlerId battler, u32 ally);
-bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, bool32 moveEnd);
+bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, const u8 *nextInstr);
 void BestowItem(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 ARM_FUNC u32 GetBattlerVolatile(enum BattlerId battler, enum Volatile _volatile);
 void SetMonVolatile(enum BattlerId battler, enum Volatile _volatile, u32 newValue);

@@ -10,7 +10,6 @@ enum  BattleMoveEffects
     EFFECT_MINIMIZE,
     EFFECT_AUTOTOMIZE,
     EFFECT_NON_VOLATILE_STATUS,
-    EFFECT_ABSORB,
     EFFECT_TERRAIN_BOOST,
     EFFECT_DREAM_EATER, // Same as EFFECT_ABSORB but it can only be used on sleeping targets
     EFFECT_MIRROR_MOVE,

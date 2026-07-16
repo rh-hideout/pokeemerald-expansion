@@ -52,13 +52,13 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-        if (1 == i % 2) {
+        if (item != ITEM_NONE) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         }
+        HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
-            EXPECT_MUL_EQ(results[j*2].damage, Q_4_12(0.5), results[(j*2)+1].damage);
+            EXPECT_MUL_EQ(results[j*2].damage, Q_4_12(0.5), results[(j*2)+1].damage); // no resist berry damage * 0.5 = resist berry damage
         }
     }
 }
