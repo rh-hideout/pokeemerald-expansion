@@ -561,6 +561,12 @@ static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollecti
         .OnInit = MultichoiceDynamicEventShowItem_OnInit,
         .OnSelectionChanged = MultichoiceDynamicEventShowItem_OnSelectionChanged,
         .OnDestroy = MultichoiceDynamicEventShowItem_OnDestroy
+    },
+    [DYN_MULTICHOICE_CB_SHOW_PKMN] =
+    {
+        .OnInit = MultichoiceDynamicEventShowPkmn_OnInit,
+        .OnSelectionChanged = MultichoiceDynamicEventShowPkmn_OnSelectionChanged,
+        .OnDestroy = MultichoiceDynamicEventShowPkmn_OnDestroy
     }
 };
 ```
@@ -570,9 +576,11 @@ This is where each callback's set of functions are collated. Each one has three 
 - `.OnSelectionChanged`: whenever a player chooses an option (is also called right after `.OnInit`),
 - `.OnDestroy`: whenever the menu is exited.
 
-For `DYN_MULTICHOICE_CB_SHOW_ITEM`, the breakdown is as follows:
+For `DYN_MULTICHOICE_CB_SHOW_ITEM`/`PKMN`, the breakdown is as follows:
 - `.OnInit`: Prepares for a sprite to be drawn on screen.
 - `.OnSelectionChanged`: Destroys the previous sprite, then draws the new sprite on screen.
 - `.OnDestroy`: Destroys the current sprite on screen.
 
 `DYN_MULTICHOICE_CB_SHOW_ITEM` shows the item whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/items.h`](../../include/constants/items.h). An item with the ID 0 will show nothing, an item with the ID 1 will show a PokéBall, an item with the ID 2 will show a Great Ball, and so on.
+
+`DYN_MULTICHOICE_CB_SHOW_ITEM` shows the pokemon's icon whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/species.h`](../../include/constants/species.h). A Pokemon with the ID 0 will show the decamark, a Pokemon with the ID 1 will show a Bulbasaur, an item with the ID 2 will show an Ivysaur, and so on.

@@ -17,6 +17,7 @@
 #include "malloc.h"
 #include "util.h"
 #include "item_icon.h"
+#include "pokemon_icon.h"
 #include "constants/field_specials.h"
 #include "constants/items.h"
 #include "constants/script_menu.h"
@@ -68,6 +69,9 @@ static void MultichoiceDynamicEventDebug_OnDestroy(struct DynamicListMenuEventAr
 static void MultichoiceDynamicEventShowItem_OnInit(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventShowItem_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
+static void MultichoiceDynamicEventShowPkmn_OnInit(struct DynamicListMenuEventArgs *eventArgs);
+static void MultichoiceDynamicEventShowPkmn_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs);
+static void MultichoiceDynamicEventShowPkmn_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
 
 static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollections[] =
 {
@@ -82,6 +86,12 @@ static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollecti
         .OnInit = MultichoiceDynamicEventShowItem_OnInit,
         .OnSelectionChanged = MultichoiceDynamicEventShowItem_OnSelectionChanged,
         .OnDestroy = MultichoiceDynamicEventShowItem_OnDestroy
+    },
+    [DYN_MULTICHOICE_CB_SHOW_PKMN] =
+    {
+        .OnInit = MultichoiceDynamicEventShowPkmn_OnInit,
+        .OnSelectionChanged = MultichoiceDynamicEventShowPkmn_OnSelectionChanged,
+        .OnDestroy = MultichoiceDynamicEventShowPkmn_OnDestroy
     }
 };
 
@@ -204,8 +214,47 @@ static void MultichoiceDynamicEventShowItem_OnDestroy(struct DynamicListMenuEven
     }
 }
 
+#define sPkmnSpriteId sDynamicMenuEventScratchPad[1]
+
+static void MultichoiceDynamicEventShowPkmn_OnInit(struct DynamicListMenuEventArgs *eventArgs)
+{
+    struct WindowTemplate *template = &gWindows[eventArgs->windowId].window;
+    u32 baseBlock = template->baseBlock + template->width * template->height;
+    struct WindowTemplate auxTemplate = CreateWindowTemplate(0, template->tilemapLeft + template->width + 2, template->tilemapTop, 4, 4, 15, baseBlock);
+    u32 auxWindowId = AddWindow(&auxTemplate);
+    LoadMonIconPalettes();
+    SetStandardWindowBorderStyle(auxWindowId, FALSE);
+    FillWindowPixelBuffer(auxWindowId, 0x11);
+    CopyWindowToVram(auxWindowId, COPYWIN_FULL);
+    sAuxWindowId = auxWindowId;
+    sPkmnSpriteId = MAX_SPRITES;
+}
+
+static void MultichoiceDynamicEventShowPkmn_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs)
+{
+    struct WindowTemplate *template = &gWindows[eventArgs->windowId].window;
+    u32 x = template->tilemapLeft * 8 + template->width * 8 + 32;
+    u32 y = template->tilemapTop * 8 + 14;
+
+    if (sPkmnSpriteId != MAX_SPRITES)
+        FreeAndDestroyMonIconSprite(&gSprites[sPkmnSpriteId]);
+
+    sPkmnSpriteId = CreateMonIcon(eventArgs->selectedItem, SpriteCallbackDummy, x, y, 0, 0);
+    gSprites[sPkmnSpriteId].oam.priority = 0;
+}
+
+static void MultichoiceDynamicEventShowPkmn_OnDestroy(struct DynamicListMenuEventArgs *eventArgs)
+{
+    ClearStdWindowAndFrame(sAuxWindowId, TRUE);
+    RemoveWindow(sAuxWindowId);
+
+    if (sPkmnSpriteId != MAX_SPRITES)
+        FreeAndDestroyMonIconSprite(&gSprites[sPkmnSpriteId]);
+}
+
 #undef sAuxWindowId
 #undef sItemSpriteId
+#undef sPkmnSpriteId
 #undef TAG_CB_ITEM_ICON
 
 static void FreeListMenuItems(struct ListMenuItem *items, u32 count)
