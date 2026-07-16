@@ -749,22 +749,6 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 }
 #undef BYPASSES_ACCURACY_CALC
 
-static void SetBattlerTurnOrder(u8 *aiTurnOrder)
-{
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        for (u32 j = 0; j < gBattlersCount; j++)
-        {
-            if (AI_WhoStrikesFirst(aiTurnOrder[i], aiTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
-            {
-                u32 temp = aiTurnOrder[i];
-                aiTurnOrder[i] = aiTurnOrder[j];
-                aiTurnOrder[j] = temp;
-            }
-        }
-    }
-}
-
 void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
@@ -841,10 +825,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
         SetBattlerAiData(battler, aiData);
     }
-
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
-        aiData->turnOrder[battler] = battler;
-    SetBattlerTurnOrder(aiData->turnOrder);
 
     u32 weather = AI_GetWeather(); // Needs SetBattlerAiData
 

@@ -1165,11 +1165,32 @@ bool32 IsLastMonToMove(enum BattlerId battler)
     return TRUE;
 }
 
-static u32 GetAiTurnOrder(enum BattlerId battler)
+static void SetBattlerTurnOrder(u8 *aiTurnOrder)
+{
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        aiTurnOrder[battler] = battler;
+    }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (AI_WhoStrikesFirst(aiTurnOrder[i], aiTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+            {
+                u32 temp = aiTurnOrder[i];
+                aiTurnOrder[i] = aiTurnOrder[j];
+                aiTurnOrder[j] = temp;
+            }
+        }
+    }
+}
+
+static u32 GetAiTurnOrder(u8 *aiTurnOrder, enum BattlerId battler)
 {
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (gAiLogicData->turnOrder[i] == battler)
+        if (aiTurnOrder[i] == battler)
             return i;
     }
     return 0;
@@ -1177,13 +1198,18 @@ static u32 GetAiTurnOrder(enum BattlerId battler)
 
 static bool32 Ai_AttackerMovesAfterTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return GetAiTurnOrder(battlerAtk) > GetAiTurnOrder(battlerDef);
+    u8 aiTurnOrder[4] = {0};
+    SetBattlerTurnOrder(aiTurnOrder);
+
+    return GetAiTurnOrder(aiTurnOrder, battlerAtk) > GetAiTurnOrder(aiTurnOrder, battlerDef);
 }
 
 static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
 {
+    u8 aiTurnOrder[4] = {0};
+    SetBattlerTurnOrder(aiTurnOrder);
     u32 numAliveBattlers = 0;
-    u32 battlerTurnOrder = GetAiTurnOrder(battlerAtk);
+    u32 battlerTurnOrder = GetAiTurnOrder(aiTurnOrder, battlerAtk);
 
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
