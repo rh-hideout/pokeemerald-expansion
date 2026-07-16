@@ -390,6 +390,7 @@ extern const u8 BattleScript_PlayMoveAnimAndMoveSwitch[];
 extern const u8 BattleScript_MysteriousAirCurrentBlowsOn[];
 extern const u8 BattleScript_AttackWeakenedByStrongWinds[];
 extern const u8 BattleScript_BlockedByPrimalWeather[];
+extern const u8 BattleScript_BlockedByOverworldWeather[];
 extern const u8 BattleScript_PrimalReversion[];
 extern const u8 BattleScript_SelectingNotAllowedMoveGorillaTactics[];
 extern const u8 BattleScript_SelectingNotAllowedMoveGorillaTacticsInPalace[];

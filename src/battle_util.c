@@ -1957,7 +1957,8 @@ bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum 
 {
     if (gBattleWeather & sBattleWeatherInfo[battleWeatherId].flag)
         return FALSE;
-
+    else if (gBattleStruct->overworldWeatherPresent)
+        return FALSE;
     else if (gBattleWeather & B_WEATHER_PRIMAL_ANY
           && ability != ABILITY_DESOLATE_LAND
           && ability != ABILITY_PRIMORDIAL_SEA
@@ -2470,6 +2471,8 @@ static bool32 SetStartingWeatherStatus(enum BattleWeather weather, bool32 isPerm
     gBattleWeather = sBattleWeatherInfo[weather].flag;
     gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[weather].moveStartMessage;
     gBattleScripting.animArg1 = sBattleWeatherInfo[weather].animation;
+    if (GetConfig(B_OVERWORLD_WEATHER_OVERRIDE) >= GEN_9)
+        gBattleStruct->overworldWeatherPresent = TRUE;
 
     if (isPermanent)
         gBattleStruct->weatherDuration = 0;
@@ -2857,6 +2860,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         }
         if (effect)
         {
+            if (GetConfig(B_OVERWORLD_WEATHER_OVERRIDE) >= GEN_9)
+                gBattleStruct->overworldWeatherPresent = TRUE;
             gBattleCommunication[MULTISTRING_CHOOSER] = GetCurrentWeather();
             BattleScriptPushCursorAndCallback(BattleScript_OverworldWeatherStarts);
         }
@@ -3230,6 +3235,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
             else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
             {
                 BattleScriptCall(BattleScript_BlockedByPrimalWeather);
@@ -3244,6 +3254,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
             else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
             {
                 BattleScriptCall(BattleScript_BlockedByPrimalWeather);
@@ -3256,6 +3271,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SUN, gLastUsedAbility))
             {
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
+                effect++;
+            }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
                 effect++;
             }
             else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
@@ -3277,6 +3297,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 BattleScriptCall(BattleScript_OrichalcumPulseActivates);
                 effect++;
             }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
             else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
             {
                 BattleScriptCall(BattleScript_BlockedByPrimalWeather);
@@ -3291,6 +3316,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (TryChangeBattleWeather(battler, weather, gLastUsedAbility))
                 {
                     BattleScriptCall(BattleScript_WeatherAbilityActivates);
+                    effect++;
+                }
+                else if (gBattleStruct->overworldWeatherPresent)
+                {
+                    BattleScriptCall(BattleScript_BlockedByOverworldWeather);
                     effect++;
                 }
                 else if (GetWeather() & B_WEATHER_PRIMAL_ANY)
@@ -3439,6 +3469,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
             break;
         case ABILITY_PRIMORDIAL_SEA:
             if (!shouldAbilityTrigger)
@@ -3448,6 +3483,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
             break;
         case ABILITY_DELTA_STREAM:
             if (!shouldAbilityTrigger)
@@ -3455,6 +3495,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_STRONG_WINDS, gLastUsedAbility))
             {
                 BattleScriptCall(BattleScript_WeatherAbilityActivates);
+                effect++;
+            }
+            else if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
                 effect++;
             }
             break;
@@ -4234,6 +4279,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     gBattleScripting.battler = battler;
                     BattleScriptCall(BattleScript_WeatherAbilityActivates);
+                    effect++;
+                }
+                else if (gBattleStruct->overworldWeatherPresent)
+                {
+                    BattleScriptCall(BattleScript_BlockedByOverworldWeather);
                     effect++;
                 }
             }
