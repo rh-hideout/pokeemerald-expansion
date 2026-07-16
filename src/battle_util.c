@@ -2964,7 +2964,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         switch (gLastUsedAbility)
         {
         case ABILITY_TERAFORM_ZERO:
-            if (gBattleWeather != WEATHER_NONE || gFieldTimers.terrain != B_TERRAIN_NONE)
+            if (gBattleStruct->overworldWeatherPresent)
+            {
+                BattleScriptCall(BattleScript_BlockedByOverworldWeather);
+                effect++;
+            }
+            else if (gBattleWeather != WEATHER_NONE || gFieldTimers.terrain != B_TERRAIN_NONE)
             {
                 BattleScriptCall(BattleScript_ActivateTeraformZero);
                 effect++;
