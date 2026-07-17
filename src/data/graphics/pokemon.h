@@ -16136,24 +16136,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u8 gMonIcon_ArceusFairy[] = INCGFX_U8("graphics/pokemon/arceus/fairy/icon.png", ".4bpp");
 #endif //P_ARCEUS_UNIQUE_FORM_ICONS
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_ArceusNormal[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusFighting[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusFlying[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusPoison[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusGround[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusRock[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusBug[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusGhost[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusSteel[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusFire[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusWater[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusGrass[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusElectric[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusPsychic[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusIce[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusDragon[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusDark[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
-    const u32 gObjectEventPic_ArceusFairy[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
+    const u32 gObjectEventPic_Arceus[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_ArceusNormal[] = INCGFX_U16("graphics/pokemon/arceus/overworld_normal.pal", ".gbapal");
     const u16 gOverworldPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/overworld_normal.pal", ".gbapal");
