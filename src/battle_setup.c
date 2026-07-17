@@ -343,6 +343,40 @@ void BattleSetup_StartWildBattle(void)
         DoStandardWildBattle();
 }
 
+void BattleSetup_StartMultiBattle(void)
+{
+    if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD) // Player + AI against wild mon
+    {
+        gBattleTypeFlags = BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+    }
+    else if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_1) // Player + AI against one trainer
+    {
+        TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
+        gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+    }
+    else // MULTI_BATTLE_2_VS_2
+    {
+        gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
+    }
+
+    FillPartnerParty(gPartnerTrainerId);
+    if (gSpecialVar_0x8005 & MULTI_BATTLE_CHOOSE_MONS) // Skip mons restoring(done in the script)
+        gBattleScripting.specialTrainerBattleType = 0xFF;
+
+    if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD)
+    {
+        CreateBattleStartTask(GetWildBattleTransition(), 0);
+        IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+        IncrementGameStat(GAME_STAT_WILD_BATTLES);
+        IncrementDailyWildBattles();
+        TryUpdateGymLeaderRematchFromWild();
+    }
+    else
+    {
+        DoTrainerBattle();
+    }
+}
+
 static void DoStandardWildBattle()
 {
     LockPlayerFieldControls();
