@@ -623,7 +623,7 @@ static bool32 StandardWildEncounterCheck(const struct WildPokemonInfo *wildPokem
     return WildEncounterCheck(encounterRate, FALSE);
 }
 
-bool8 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
+bool32 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
 {
     u32 minLevel;
     ZeroEnemyPartyMons();

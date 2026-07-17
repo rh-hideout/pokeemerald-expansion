@@ -1,5 +1,5 @@
-#ifndef GUARD_OW_SYNCHRONIZE_H
-#define GUARD_OW_SYNCHRONIZE_H
+#ifndef GUARD_OW_ABILITIES_H
+#define GUARD_OW_ABILITIES_H
 
 extern const enum Ability gForceNatureAbilities[];
 extern const enum Ability gForceOppositeGenderAbilities[];
@@ -24,4 +24,4 @@ bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray);
 bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray);
 bool32 DoesPartyHaveIncubatorMon(void);
 
-#endif // GUARD_OW_SYNCHRONIZE_H
+#endif // GUARD_OW_ABILITIES_H

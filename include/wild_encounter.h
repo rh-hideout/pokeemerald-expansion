@@ -38,8 +38,7 @@ extern u8 gChainFishingDexNavStreak;
 
 u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildEncounterType encounterType);
 u32 ChooseWildMonIndex(enum WildEncounterType encounterType);
-void DisableWildEncounters(bool8 disabled);
-bool8 StandardWildEncounter();
+bool32 StandardWildEncounter(u32 metatileBehavior, bool32 isForced);
 bool32 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(void);
 void FishingWildEncounter(u8 rod);
