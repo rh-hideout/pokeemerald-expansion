@@ -21216,8 +21216,8 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_XerneasActive[] = INCGFX_COMP("graphics/pokemon/xerneas/active/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    //const u16 gOverworldPalette_XerneasActive[] = INCGFX_U16("graphics/pokemon/xerneas/active/overworld_normal.pal", ".gbapal");
-    //const u16 gShinyOverworldPalette_XerneasActive[] = INCGFX_U16("graphics/pokemon/xerneas/active/overworld_shiny.pal", ".gbapal");
+    // const u16 gOverworldPalette_XerneasActive[] = INCGFX_U16("graphics/pokemon/xerneas/active/overworld_normal.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_XerneasActive[] = INCGFX_U16("graphics/pokemon/xerneas/active/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_XERNEAS
@@ -24482,14 +24482,14 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Alcremie[] = INCGFX_U16("graphics/pokemon/alcremie/shiny.pal", ".gbapal");
 
     const u8 gMonIcon_AlcremieStrawberryVanillaCream[] = INCGFX_U8("graphics/pokemon/alcremie/icon.png", ".4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryRubyCream[] = INCBIN_U8("graphics/pokemon/alcremie/ruby_cream/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryMatchaCream[] = INCBIN_U8("graphics/pokemon/alcremie/matcha_cream/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryMintCream[] = INCBIN_U8("graphics/pokemon/alcremie/mint_cream/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryLemonCream[] = INCBIN_U8("graphics/pokemon/alcremie/lemon_cream/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberrySaltedCream[] = INCBIN_U8("graphics/pokemon/alcremie/salted_cream/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryRubySwirl[] = INCBIN_U8("graphics/pokemon/alcremie/ruby_swirl/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryCaramelSwirl[] = INCBIN_U8("graphics/pokemon/alcremie/caramel_swirl/icon.4bpp");
-    //const u8 gMonIcon_AlcremieStrawberryRainbowSwirl[] = INCBIN_U8("graphics/pokemon/alcremie/rainbow_swirl/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryRubyCream[] = INCBIN_U8("graphics/pokemon/alcremie/ruby_cream/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryMatchaCream[] = INCBIN_U8("graphics/pokemon/alcremie/matcha_cream/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryMintCream[] = INCBIN_U8("graphics/pokemon/alcremie/mint_cream/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryLemonCream[] = INCBIN_U8("graphics/pokemon/alcremie/lemon_cream/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberrySaltedCream[] = INCBIN_U8("graphics/pokemon/alcremie/salted_cream/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryRubySwirl[] = INCBIN_U8("graphics/pokemon/alcremie/ruby_swirl/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryCaramelSwirl[] = INCBIN_U8("graphics/pokemon/alcremie/caramel_swirl/icon.4bpp");
+    // const u8 gMonIcon_AlcremieStrawberryRainbowSwirl[] = INCBIN_U8("graphics/pokemon/alcremie/rainbow_swirl/icon.4bpp");
 
     const u32 gMonFrontPic_AlcremieStrawberry[] = INCGFX_U32("graphics/pokemon/alcremie/strawberry/front.png", ".4bpp.smol");
     const u16 gMonPalette_AlcremieStrawberryVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/strawberry_default.pal", ".gbapal");
@@ -24587,9 +24587,90 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_AlcremieStrawberry[] = INCGFX_COMP("graphics/pokemon/alcremie/strawberry/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieBerry[] = INCGFX_COMP("graphics/pokemon/alcremie/berry/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieLove[] = INCGFX_COMP("graphics/pokemon/alcremie/love/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieStar[] = INCGFX_COMP("graphics/pokemon/alcremie/star/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieClover[] = INCGFX_COMP("graphics/pokemon/alcremie/clover/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieFlower[] = INCGFX_COMP("graphics/pokemon/alcremie/flower/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_AlcremieRibbon[] = INCGFX_COMP("graphics/pokemon/alcremie/ribbon/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u16 gOverworldPalette_AlcremieStrawberryVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_normal.pal", ".gbapal");
-    const u16 gShinyOverworldPalette_AlcremieStrawberryVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_shiny.pal", ".gbapal");
+    const u16 gOverworldPalette_AlcremieStrawberryVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberrySaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStrawberryRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_rainbow_swirl.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_AlcremieStrawberry[] = INCGFX_U16("graphics/pokemon/alcremie/strawberry/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieBerryVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerrySaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieBerryRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieBerry[] = INCGFX_U16("graphics/pokemon/alcremie/berry/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieLoveVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveSaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieLoveRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieLove[] = INCGFX_U16("graphics/pokemon/alcremie/love/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieStarVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarSaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieStarRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieStar[] = INCGFX_U16("graphics/pokemon/alcremie/star/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieCloverVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverSaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieCloverRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieClover[] = INCGFX_U16("graphics/pokemon/alcremie/clover/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieFlowerVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerSaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieFlowerRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieFlower[] = INCGFX_U16("graphics/pokemon/alcremie/flower/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_AlcremieRibbonVanillaCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_default.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonRubyCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_ruby_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonMatchaCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_matcha_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonMintCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_mint_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonLemonCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_lemon_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonSaltedCream[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_salted_cream.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonRubySwirl[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_ruby_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonCaramelSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_caramel_swirl.pal", ".gbapal");
+    // const u16 gOverworldPalette_AlcremieRibbonRainbowSwirl[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_rainbow_swirl.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_AlcremieRibbon[] = INCGFX_U16("graphics/pokemon/alcremie/ribbon/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 

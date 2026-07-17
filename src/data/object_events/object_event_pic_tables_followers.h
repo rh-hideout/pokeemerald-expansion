@@ -5836,6 +5836,24 @@ static const struct SpriteFrameImage sPicTable_Milcery[] = {
 static const struct SpriteFrameImage sPicTable_AlcremieStrawberry[] = {
     overworld_ascending_frames(gObjectEventPic_AlcremieStrawberry, 4, 4),
 };
+/*static const struct SpriteFrameImage sPicTable_AlcremieBerry[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieBerry, 4, 4),
+};
+static const struct SpriteFrameImage sPicTable_AlcremieLove[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieLove, 4, 4),
+};
+static const struct SpriteFrameImage sPicTable_AlcremieStar[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieStar, 4, 4),
+};
+static const struct SpriteFrameImage sPicTable_AlcremieClover[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieClover, 4, 4),
+};
+static const struct SpriteFrameImage sPicTable_AlcremieFlower[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieFlower, 4, 4),
+};
+static const struct SpriteFrameImage sPicTable_AlcremieRibbon[] = {
+    overworld_ascending_frames(gObjectEventPic_AlcremieRibbon, 4, 4),
+};*/
 #if P_GIGANTAMAX_FORMS
 /*static const struct SpriteFrameImage sPicTable_AlcremieGmax[] = {
     overworld_ascending_frames(gObjectEventPic_AlcremieGmax, 4, 4),

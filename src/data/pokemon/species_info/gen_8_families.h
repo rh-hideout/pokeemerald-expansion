@@ -5087,7 +5087,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             TRACKS_FOOT,                                                                        \
             sAnimTable_Following,                                                               \
             gOverworldPalette_AlcremieStrawberryVanillaCream, /*Alcremie ##sweet##cream*/       \
-            gShinyOverworldPalette_AlcremieStrawberryVanillaCream /*Alcremie ##sweet##cream*/   \
+            gShinyOverworldPalette_AlcremieStrawberry /*Alcremie ##sweet*/                      \
         )                                                                                       \
         .levelUpLearnset = sAlcremieLevelUpLearnset,                                            \
         .teachableLearnset = sAlcremieTeachableLearnset,                                        \
