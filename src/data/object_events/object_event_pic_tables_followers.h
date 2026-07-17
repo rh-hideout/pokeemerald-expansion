@@ -3952,9 +3952,11 @@ static const struct SpriteFrameImage sPicTable_DarumakaGalar[] = {
 static const struct SpriteFrameImage sPicTable_DarmanitanGalarStandard[] = {
     overworld_ascending_frames(gObjectEventPic_DarmanitanGalarStandard, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_DarmanitanGalarZen[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_DarmanitanGalarZen[] = {
     overworld_ascending_frames(gObjectEventPic_DarmanitanGalarZen, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_GALARIAN_FORMS
 #endif //P_FAMILY_DARUMAKA
 

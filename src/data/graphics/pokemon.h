@@ -17442,13 +17442,13 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_DarmanitanGalarZen[] = INCGFX_U32("graphics/pokemon/darmanitan/galar_zen/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_DarmanitanGalarZen[] = INCGFX_U16("graphics/pokemon/darmanitan/galar_zen/shiny.pal", ".gbapal");
     const u8 gMonIcon_DarmanitanGalarZen[] = INCGFX_U8("graphics/pokemon/darmanitan/galar_zen/icon.png", ".4bpp");
-#if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_DarmanitanGalarZen[] = INCGFX_COMP("graphics/pokemon/darmanitan/galar_zen/overworld.png", ".4bpp");
+#if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
+    const u32 gObjectEventPic_DarmanitanGalarZen[] = INCGFX_COMP("graphics/pokemon/darmanitan/galar_zen/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u16 gOverworldPalette_DarmanitanGalarZen[] = INCGFX_U16("graphics/pokemon/darmanitan/galar_zen/overworld_normal.pal", ".gbapal");
-    // const u16 gShinyOverworldPalette_DarmanitanGalarZen[] = INCGFX_U16("graphics/pokemon/darmanitan/galar_zen/overworld_shiny.pal", ".gbapal");
+    const u16 gOverworldPalette_DarmanitanGalarZen[] = INCGFX_U16("graphics/pokemon/darmanitan/galar_zen/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_DarmanitanGalarZen[] = INCGFX_U16("graphics/pokemon/darmanitan/galar_zen/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 #endif //P_GALARIAN_FORMS
 #endif //P_FAMILY_DARUMAKA
 
