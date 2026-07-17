@@ -754,7 +754,6 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
-    // Also get effectiveness of status moves
     struct AiCalcValues aiCalc = {
         .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
         .gimmickDef = GIMMICK_NONE,
@@ -777,6 +776,7 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
         if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
             continue;
 
+        // Also get effectiveness of status moves
         dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc.move);
 

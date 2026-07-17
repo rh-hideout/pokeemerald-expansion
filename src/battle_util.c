@@ -1168,9 +1168,7 @@ bool32 IsLastMonToMove(enum BattlerId battler)
 static void SetBattlerTurnOrder(u8 *aiTurnOrder)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
         aiTurnOrder[battler] = battler;
-    }
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {

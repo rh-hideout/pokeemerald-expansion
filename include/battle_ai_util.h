@@ -83,7 +83,7 @@ struct AiCalcValues
 {
     enum Move move;
     uq4_12_t typeEffectiveness;
-    u8 weather;
+    u32 weather:8;
     enum BattleTerrain terrain:8;
     enum Gimmick gimmickAtk:8;
     enum Gimmick gimmickDef:8;
