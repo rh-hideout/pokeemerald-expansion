@@ -22450,7 +22450,13 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Minior[] = INCGFX_U8("graphics/pokemon/minior/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
-
+#if OW_POKEMON_OBJECT_EVENTS
+    const u32 gObjectEventPic_MiniorMeteor[] = INCGFX_COMP("graphics/pokemon/minior/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    const u16 gOverworldPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/overworld_shiny.pal", ".gbapal");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
     const u32 gMonFrontPic_MiniorCore[] = INCGFX_U32("graphics/pokemon/minior/core/anim_front.png", ".4bpp.smol");
     const u32 gMonBackPic_MiniorCore[] = INCGFX_U32("graphics/pokemon/minior/core/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_MiniorCore[] = INCGFX_U16("graphics/pokemon/minior/core/shiny.pal", ".gbapal");
@@ -22475,12 +22481,18 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 
     const u16 gMonPalette_MiniorCoreViolet[] = INCGFX_U16("graphics/pokemon/minior/core/violet/normal.pal", ".gbapal");
     const u8 gMonIcon_MiniorCoreViolet[] = INCGFX_U8("graphics/pokemon/minior/core/violet/icon.png", ".4bpp");
-
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_MiniorMeteor[] = INCGFX_COMP("graphics/pokemon/minior/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_MiniorCore[] = INCGFX_COMP("graphics/pokemon/minior/core/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u16 gOverworldPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/overworld_normal.pal", ".gbapal");
-    const u16 gShinyOverworldPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/overworld_shiny.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_MiniorCore[] = INCGFX_U16("graphics/pokemon/minior/core/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_MiniorCoreRed[] = INCGFX_U16("graphics/pokemon/minior/core/red/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreOrange[] = INCGFX_U16("graphics/pokemon/minior/core/orange/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreYellow[] = INCGFX_U16("graphics/pokemon/minior/core/yellow/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreGreen[] = INCGFX_U16("graphics/pokemon/minior/core/green/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreBlue[] = INCGFX_U16("graphics/pokemon/minior/core/blue/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreIndigo[] = INCGFX_U16("graphics/pokemon/minior/core/indigo/overworld_normal.pal", ".gbapal");
+    const u16 gOverworldPalette_MiniorCoreViolet[] = INCGFX_U16("graphics/pokemon/minior/core/violet/overworld_normal.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_MINIOR

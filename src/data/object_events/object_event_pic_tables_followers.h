@@ -5294,27 +5294,9 @@ static const struct SpriteFrameImage sPicTable_Silvally[] = {
 static const struct SpriteFrameImage sPicTable_MiniorMeteor[] = {
     overworld_ascending_frames(gObjectEventPic_MiniorMeteor, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_MiniorCoreRed[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreRed, 4, 4),
+static const struct SpriteFrameImage sPicTable_MiniorCore[] = {
+    overworld_ascending_frames(gObjectEventPic_MiniorCore, 4, 4),
 };
-static const struct SpriteFrameImage sPicTable_MiniorCoreOrange[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreOrange, 4, 4),
-};
-static const struct SpriteFrameImage sPicTable_MiniorCoreYellow[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreYellow, 4, 4),
-};
-static const struct SpriteFrameImage sPicTable_MiniorCoreGreen[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreGreen, 4, 4),
-};
-static const struct SpriteFrameImage sPicTable_MiniorCoreBlue[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreBlue, 4, 4),
-};
-static const struct SpriteFrameImage sPicTable_MiniorCoreIndigo[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreIndigo, 4, 4),
-};
-static const struct SpriteFrameImage sPicTable_MiniorCoreViolet[] = {
-    overworld_ascending_frames(gObjectEventPic_MiniorCoreViolet, 4, 4),
-};*/
 #endif //P_FAMILY_MINIOR
 
 #if P_FAMILY_KOMALA
