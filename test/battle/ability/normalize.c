@@ -35,6 +35,7 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
     }
 }
 
+#define FAILURE_MESSAGE MESSAGE("It doesn't affect Drilbur…")
 SINGLE_BATTLE_TEST("Normalize affects status moves")
 {
     enum Ability ability;
@@ -51,15 +52,16 @@ SINGLE_BATTLE_TEST("Normalize affects status moves")
         if (ability == ABILITY_CUTE_CHARM)
         {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent); }
-            MESSAGE("But it failed!");
+            FAILURE_MESSAGE;
         }
         else
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent);
-            NOT { MESSAGE("But it failed!"); }
+            NOT FAILURE_MESSAGE;
         }
     }
 }
+#undef FAILURE_MESSAGE
 
 SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage to Water-type Pokémon", s16 damage)
 {
@@ -305,9 +307,9 @@ SINGLE_BATTLE_TEST("Normalize makes Flying Press do Normal/Flying damage")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLYING_PRESS, player);
         if (ability == ABILITY_NORMALIZE)
-            MESSAGE("It's not very effective…");
+            MESSAGE("It's mostly ineffective…");
         else
-            NOT { MESSAGE("It's not very effective…"); }
+            NOT { MESSAGE("It's mostly ineffective…"); }
     }
 }
 
@@ -341,6 +343,6 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect damaging Z-Move types")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYDRO_VORTEX, player);
-        MESSAGE("It's super effective!");
+        MESSAGE("It's extremely effective!");
     }
 }

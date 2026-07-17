@@ -23,6 +23,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Magnitude", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Eruption", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -40,6 +41,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Eruption", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Water Spout", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -57,6 +59,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Water Spout", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Present", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -76,6 +79,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Present", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Psywave", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -93,6 +97,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Psywave", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Round", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -110,6 +115,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Round", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Gyro Ball", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -127,6 +133,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Gyro Ball", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Electro Ball", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -144,6 +151,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Electro Ball", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Dragon Energy", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -161,6 +169,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Dragon Energy", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -178,6 +187,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Shell Trap", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -195,6 +205,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Shell Trap", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Burn Up", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -212,6 +223,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Burn Up", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Double Shock", s16 damage)
 {
     enum Move move = MOVE_NONE;
@@ -229,6 +241,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Double Shock", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Steel Roller", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -246,6 +259,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Steel Roller", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Synchronoise", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -263,6 +277,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Synchronoise", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Aura Wheel", s16 damage)
 {
     enum Move move = MOVE_NONE;
@@ -280,6 +295,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Aura Wheel", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Hyperspace Fury", s16 damage)
 {
     enum Move move = MOVE_NONE;
@@ -297,6 +313,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Hyperspace Fury", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Bolt Beak", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -314,6 +331,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Bolt Beak", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Fishious Rend", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -331,6 +349,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Fishious Rend", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Comeuppance", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -348,6 +367,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Comeuppance", s16 damage)
         EXPECT_NE(results[0].damage, 0);
     }
 }
+
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Payback", s16 damage)
 {
     enum Ability ability = ABILITY_NONE;
@@ -1423,5 +1443,19 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
         OPPONENT(SPECIES_DRUDDIGON) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, move); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
+    }
+}
+
+SINGLE_BATTLE_TEST("Sheer Force doesn't activate Shell Bell")
+{
+    GIVEN {
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_SHELL_BELL); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTH_POWER); }
+    } SCENE {
+        NONE_OF {
+            HP_BAR(player);
+        }
     }
 }

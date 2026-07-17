@@ -29,8 +29,8 @@ DOUBLE_BATTLE_TEST("Water and Fire Pledge create a rainbow on the user's side of
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A rainbow appeared in the sky on your team's side!");
-        MESSAGE("The rainbow on your team's side disappeared!");
+        MESSAGE("A rainbow appeared in the sky on your side!");
+        MESSAGE("The rainbow on your side disappeared!");
     }
 }
 
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns tha
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A sea of fire enveloped the opposing team!");
+        MESSAGE("A sea of fire enveloped the opposing side!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SEA_OF_FIRE, opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
@@ -111,7 +111,7 @@ DOUBLE_BATTLE_TEST("Fire and Grass Pledge summons Sea Of Fire for four turns tha
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
         MESSAGE("The opposing Wynaut was hurt by the sea of fire!");
-        MESSAGE("The sea of fire around the opposing team disappeared!");
+        MESSAGE("The sea of fire around the opposing side disappeared!");
     }
 }
 
@@ -131,6 +131,37 @@ DOUBLE_BATTLE_TEST("Sea Of Fire deals 1/8th damage per turn")
         s32 maxHPopponentRight = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(opponentLeft, damage: maxHPopponentLeft / 8);
         HP_BAR(opponentRight, damage: maxHPopponentRight / 8);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sea Of Fire does not damage Fire-types or Magic Guard Pokemon")
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_VICTINI;  ability = ABILITY_VICTORY_STAR; }
+    PARAMETRIZE { species = SPECIES_CLEFABLE; ability = ABILITY_MAGIC_GUARD; }
+
+    GIVEN {
+        ASSUME(IsSpeciesOfType(SPECIES_VICTINI, TYPE_FIRE));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(species) { Speed(2); Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight);
+               MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
+        HP_BAR(opponentRight);
+        MESSAGE("A sea of fire enveloped the opposing side!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
+            HP_BAR(opponentLeft);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
     }
 }
 
@@ -155,8 +186,8 @@ DOUBLE_BATTLE_TEST("Grass and Water Pledge create a swamp on the user's side of 
         MESSAGE("The two moves have become one! It's a combined move!{PAUSE 16}");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
         HP_BAR(opponentRight);
-        MESSAGE("A swamp enveloped the opposing team!");
-        MESSAGE("The swamp around the opposing team disappeared!");
+        MESSAGE("A swamp enveloped the opposing side!");
+        MESSAGE("The swamp around the opposing side disappeared!");
     }
 }
 
@@ -252,18 +283,18 @@ DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used 
         ANIMATION(ANIM_TYPE_MOVE, pledgeMove1, playerRight);
         if (pledgeMove1 == MOVE_WATER_PLEDGE && pledgeMove2 == MOVE_FIRE_PLEDGE)
         {
-            NOT MESSAGE("A rainbow appeared in the sky on your team's side!");
-            MESSAGE("The rainbow on your team's side disappeared!");
+            NOT MESSAGE("A rainbow appeared in the sky on your side!");
+            MESSAGE("The rainbow on your side disappeared!");
         }
         if (pledgeMove1 == MOVE_FIRE_PLEDGE && pledgeMove2 == MOVE_GRASS_PLEDGE)
         {
-            NOT MESSAGE("A sea of fire enveloped the opposing team!");
-            MESSAGE("The sea of fire around the opposing team disappeared!");
+            NOT MESSAGE("A sea of fire enveloped the opposing side!");
+            MESSAGE("The sea of fire around the opposing side disappeared!");
         }
         if (pledgeMove1 == MOVE_GRASS_PLEDGE && pledgeMove2 == MOVE_WATER_PLEDGE)
         {
-            NOT MESSAGE("A swamp enveloped the opposing team!");
-            MESSAGE("The swamp around the opposing team disappeared!");
+            NOT MESSAGE("A swamp enveloped the opposing side!");
+            MESSAGE("The swamp around the opposing side disappeared!");
         }
     }
 }

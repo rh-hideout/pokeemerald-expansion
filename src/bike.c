@@ -1204,14 +1204,6 @@ static enum Collision GetBikeCollisionAt(struct ObjectEvent *objectEvent, s16 x,
     return collision;
 }
 
-bool8 RS_IsRunningDisallowed(u8 tile)
-{
-    if (IsRunningDisallowedByMetatile(tile) != FALSE || gMapHeader.mapType == MAP_TYPE_INDOOR)
-        return TRUE;
-    else
-        return FALSE;
-}
-
 static bool8 IsRunningDisallowedByMetatile(u8 tile)
 {
     if (MetatileBehavior_IsRunningDisallowed(tile))

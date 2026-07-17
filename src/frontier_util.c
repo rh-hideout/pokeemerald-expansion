@@ -55,17 +55,6 @@ struct FrontierBrainMon
     enum Move moves[MAX_MON_MOVES];
 };
 
-struct FrontierBrain
-{
-    u16 trainerId;
-    u8 objEventGfx;
-    u8 isFemale;
-    const u8 *lostTexts[2];
-    const u8 *wonTexts[2];
-    u16 battledBit[2];
-    u8 streakAppearances[4];
-};
-
 // This file's functions.
 static void GetChallengeStatus(void);
 static void GetFrontierData(void);
@@ -122,6 +111,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 0, 1 << 1},
         .streakAppearances = {35, 70, 35, 1},
+        .goldSymbolFlag = FLAG_SYS_TOWER_GOLD,
+        .silverSymbolFlag = FLAG_SYS_TOWER_SILVER,
     },
     [FRONTIER_FACILITY_DOME] =
     {
@@ -144,6 +135,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 2, 1 << 3},
         .streakAppearances = {4, 9, 5, 0},
+        .goldSymbolFlag = FLAG_SYS_DOME_GOLD,
+        .silverSymbolFlag = FLAG_SYS_DOME_SILVER,
     },
     [FRONTIER_FACILITY_PALACE] =
     {
@@ -168,6 +161,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 4, 1 << 5},
         .streakAppearances = {21, 42, 21, 1},
+        .goldSymbolFlag = FLAG_SYS_PALACE_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PALACE_SILVER,
     },
     [FRONTIER_FACILITY_ARENA] =
     {
@@ -192,6 +187,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 6, 1 << 7},
         .streakAppearances = {28, 56, 28, 1},
+        .goldSymbolFlag = FLAG_SYS_ARENA_GOLD,
+        .silverSymbolFlag = FLAG_SYS_ARENA_SILVER,
     },
     [FRONTIER_FACILITY_FACTORY] =
     {
@@ -214,6 +211,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 8, 1 << 9},
         .streakAppearances = {21, 42, 21, 1},
+        .goldSymbolFlag = FLAG_SYS_FACTORY_GOLD,
+        .silverSymbolFlag = FLAG_SYS_FACTORY_SILVER,
     },
     [FRONTIER_FACILITY_PIKE] =
     {
@@ -230,6 +229,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 10, 1 << 11},
         .streakAppearances = {28, 140, 56, 1},
+        .goldSymbolFlag = FLAG_SYS_PIKE_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PIKE_SILVER,
     },
     [FRONTIER_FACILITY_PYRAMID] =
     {
@@ -254,6 +255,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 12, 1 << 13},
         .streakAppearances = {21, 70, 35, 0},
+        .goldSymbolFlag = FLAG_SYS_PYRAMID_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PYRAMID_SILVER,
     },
 };
 

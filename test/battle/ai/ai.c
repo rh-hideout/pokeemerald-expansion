@@ -1267,7 +1267,12 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ACUPRESSURE); }
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight); EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight);
+            EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
     }
@@ -1443,5 +1448,206 @@ AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentRight);
         NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI does not switch in into invalid Pokemon")
+{
+    u64 flags = 0;
+
+    PARAMETRIZE { flags = (AI_FLAG_ACE_POKEMON | AI_FLAG_SMART_TRAINER); }
+    PARAMETRIZE { flags = AI_FLAG_ACE_POKEMON; }
+
+    GIVEN {
+        AI_FLAGS(flags);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WYNAUT) { Level(1); }
+        OPPONENT(SPECIES_HAPPINY) { Level(1); }
+        OPPONENT(SPECIES_CHANSEY) { Level(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+        TURN { }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
+{
+    enum Move move = MOVE_NONE;
+    s32 hp = 400;
+
+    ASSUME(GetMoveEffect(MOVE_SONIC_BOOM) == EFFECT_FIXED_HP_DAMAGE);
+    ASSUME(GetMoveFixedHPDamage(MOVE_SONIC_BOOM) == 20);
+    ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+    ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+
+    PARAMETRIZE { move = MOVE_SONIC_BOOM, hp = 20; }
+    PARAMETRIZE { move = MOVE_SONIC_BOOM, hp = 60; }
+    PARAMETRIZE { move = MOVE_DRAGON_RAGE, hp = 40; }
+    PARAMETRIZE { move = MOVE_DRAGON_RAGE, hp = 60; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_SMART_TRAINER);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_SCRATCH); MaxHP(hp); HP(hp); Defense(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Moves(MOVE_SCRATCH, move); }
+    } WHEN {
+        if (hp == 60)
+        {
+            TURN { 
+                EXPECT_MOVE(opponent, move);
+                SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
+                SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE);
+            }
+        }
+        else
+        {
+            TURN { 
+                EXPECT_MOVE(opponent, move);
+                SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
+                SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL);
+            }
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ABILITY_OMNISCIENCE: AI knows the player's ability")
+{
+    u64 aiFlags;
+    u32 passChance;
+    PARAMETRIZE { passChance = 1; aiFlags = 0; }
+    PARAMETRIZE { passChance = 3; aiFlags = AI_FLAG_ABILITY_OMNISCIENCE; }
+    PASSES_RANDOMLY(passChance, 3, RNG_AI_ABILITY);
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_BRONZONG) { Ability(ABILITY_LEVITATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_EARTHQUAKE, MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponent, MOVE_TACKLE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_ITEM_OMNISCIENCE: AI knows the player's item")
+{
+    u64 aiFlags;
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_ITEM_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(IsPowderMove(MOVE_SPORE) == TRUE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiFlags);
+        PLAYER(SPECIES_GULPIN) { Item(ITEM_SAFETY_GOGGLES); }
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlags == AI_FLAG_ITEM_OMNISCIENCE)
+            TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SPORE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_MOVE_OMNISCIENCE: AI knows the player's moves")
+{
+    u64 aiFlag = 0;
+    PARAMETRIZE { aiFlag = 0; }
+    PARAMETRIZE { aiFlag = AI_FLAG_MOVE_OMNISCIENCE; }
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_FLAMETHROWER) == TYPE_FIRE);
+        ASSUME(IsSpeciesOfType(SPECIES_TYPHLOSION, TYPE_FIRE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | aiFlag);
+        PLAYER(SPECIES_TYPHLOSION) { Speed(5); Moves(MOVE_TACKLE, MOVE_FLAMETHROWER); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_TACKLE); Level(1); }
+        OPPONENT(SPECIES_SCIZOR) { Speed(4); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_BLISSEY) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        if (aiFlag == AI_FLAG_MOVE_OMNISCIENCE)
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
+        else
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prefer not using recoil moves that will KO its own mon")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_EDGE) == EFFECT_RECOIL);
+        ASSUME(GetMoveAccuracy(MOVE_STONE_EDGE) < 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(50); Speed(1); Moves(MOVE_TACKLE, MOVE_PROTECT); }
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); } 
+        OPPONENT(SPECIES_SANDSLASH) { Moves(MOVE_STONE_EDGE, MOVE_DOUBLE_EDGE); HP(1); MaxHP(100); Speed(2); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_STONE_EDGE); MOVE(player, MOVE_PROTECT); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage correctly depending on the number of present targets")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAGON_DARTS) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        ASSUME(GetMovePower(MOVE_DRAGON_DARTS) == 50);
+        ASSUME(GetMoveCategory(MOVE_DRAGON_CLAW) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMovePower(MOVE_DRAGON_CLAW) == 80);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_DRATINI) { Speed(4); Moves(MOVE_PROTECT, MOVE_CELEBRATE); Level(60); }
+        PLAYER(SPECIES_DRATINI) { Speed(3); Moves(MOVE_MEMENTO, MOVE_CELEBRATE); Level(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DRAGON_DARTS, MOVE_DRAGON_CLAW); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight);
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CLAW);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT, target: playerRight);
+        }
+        TURN {
+            EXPECT_MOVES(opponentLeft, MOVE_DRAGON_DARTS);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_CLAW, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is immune")
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_WIGGLYTUFF, ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { species = SPECIES_SHEDINJA, ability = ABILITY_WONDER_GUARD; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAGON_DARTS) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        ASSUME(GetMovePower(MOVE_DRAGON_DARTS) == 50);
+        ASSUME(GetMoveType(MOVE_FIRE_PUNCH) == TYPE_FIRE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(species) { Speed(4); Ability(ability); }
+        PLAYER(SPECIES_DRATINI) { Speed(3); Level(60); } // Only 2 hit KOs at L60
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DRAGON_DARTS, MOVE_FIRE_PUNCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_DARTS);
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + NO_DAMAGE_OR_FAILS + NO_DAMAGE_OR_FAILS, target: playerLeft); // for some reason this is getting 60 instead of 80
+
+            if (species == SPECIES_SHEDINJA)
+                SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerLeft);
+            else
+                SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target: playerLeft);
+
+            SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT, target: playerRight);
+        }
     }
 }

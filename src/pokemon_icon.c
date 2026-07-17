@@ -251,15 +251,6 @@ void LoadMonIconPalettes(void)
         LoadSpritePalette(&gMonIconPaletteTable[i]);
 }
 
-// unused
-void SafeLoadMonIconPalette(enum Species species)
-{
-    u8 palIndex;
-    palIndex = gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex;
-    if (IndexOfSpritePaletteTag(gMonIconPaletteTable[palIndex].tag) == 0xFF)
-        LoadSpritePalette(&gMonIconPaletteTable[palIndex]);
-}
-
 void LoadMonIconPalette(enum Species species)
 {
     u8 palIndex = gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex;
@@ -341,6 +332,15 @@ const u8 *GetMonIconTilesIsEgg(enum Species species, u32 personality, bool32 isE
     }
 
     return iconSprite;
+}
+
+const u8 *GetMonIconTilesByIconType(enum Species species, enum SpeciesIconType iconType)
+{
+    if (iconType == EGG_ICON)
+        return gEggDatas[gSpeciesInfo[species].eggId].eggIcon;
+    if (iconType == FEMALE_ICON)
+        return gSpeciesInfo[species].iconSpriteFemale;
+    return gSpeciesInfo[species].iconSprite;
 }
 
 void TryLoadAllMonIconPalettesAtOffset(u16 offset)

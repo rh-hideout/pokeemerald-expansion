@@ -118,7 +118,6 @@ bool32 FollowerNPCCanBike(void);
 void FollowerNPC_HandleBike(void);
 
 void FollowerNPC_FollowerToWater(void);
-void FollowerNPC_SetIndicatorToRecreateSurfBlob(void);
 void FollowerNPC_BindToSurfBlobOnReloadScreen(void);
 void PrepareFollowerNPCDismountSurf(void);
 
