@@ -4532,9 +4532,9 @@ static const struct SpriteFrameImage sPicTable_KyuremBlack[] = {
 static const struct SpriteFrameImage sPicTable_KeldeoOrdinary[] = {
     overworld_ascending_frames(gObjectEventPic_KeldeoOrdinary, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_KeldeoResolute[] = {
+static const struct SpriteFrameImage sPicTable_KeldeoResolute[] = {
     overworld_ascending_frames(gObjectEventPic_KeldeoResolute, 4, 4),
-};*/
+};
 #endif //P_FAMILY_KELDEO
 
 #if P_FAMILY_MELOETTA
