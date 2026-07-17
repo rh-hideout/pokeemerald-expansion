@@ -48,7 +48,6 @@ bool8 UpdateRepelCounter(void);
 enum WildEncounterType GetStandardWildEncounterType(u32 metatileBehavior);
 u32 GetMinLevelEncounter(void);
 bool32 CheckForDoubleWildBattle(void);
-bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
 void CreateWildMon(enum Species species, u8 level);
 void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncounterType encounterType, u32 minLevel, u32 slot);

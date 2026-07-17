@@ -859,16 +859,6 @@ bool32 CheckForDoubleWildBattle(void)
     return FALSE;
 }
 
-bool8 StandardWildEncounter_Debug(void)
-{
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_LAND_MONS);
-
-    GenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay][WILD_LAND_MONS], WILD_LAND_MONS, MIN_LEVEL, 0);
-    DoStandardWildBattle_Debug();
-    return TRUE;
-}
-
 u32 ChooseHiddenMonIndex(void)
 {
     #ifdef ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL
