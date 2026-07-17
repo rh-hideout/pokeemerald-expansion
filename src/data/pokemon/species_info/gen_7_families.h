@@ -4672,8 +4672,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SHADOW_SIZE_M,                                                          \
             TRACKS_FOOT,                                                            \
             sAnimTable_Following,                                                   \
-            gOverworldPalette_Silvally,                                             \
-            gShinyOverworldPalette_Silvally                                         \
+            gOverworldPalette_Silvally##_palette,                                   \
+            gShinyOverworldPalette_Silvally##_palette                               \
         )                                                                           \
         .isSubLegendary = TRUE,                                                     \
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,                               \

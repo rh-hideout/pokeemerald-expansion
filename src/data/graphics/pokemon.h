@@ -22378,14 +22378,6 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Silvally[] = INCGFX_U8("graphics/pokemon/silvally/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
-#if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_Silvally[] = INCGFX_COMP("graphics/pokemon/silvally/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
-#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u16 gOverworldPalette_Silvally[] = INCGFX_U16("graphics/pokemon/silvally/overworld_normal.pal", ".gbapal");
-    const u16 gShinyOverworldPalette_Silvally[] = INCGFX_U16("graphics/pokemon/silvally/overworld_shiny.pal", ".gbapal");
-#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
-
     const u16 gMonPalette_SilvallyNormal[] = INCGFX_U16("graphics/pokemon/silvally/normal.pal", ".gbapal");
     const u16 gMonShinyPalette_SilvallyNormal[] = INCGFX_U16("graphics/pokemon/silvally/shiny.pal", ".gbapal");
 
@@ -22439,6 +22431,64 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 
     const u16 gMonPalette_SilvallyFairy[] = INCGFX_U16("graphics/pokemon/silvally/fairy/normal.pal", ".gbapal");
     const u16 gMonShinyPalette_SilvallyFairy[] = INCGFX_U16("graphics/pokemon/silvally/fairy/shiny.pal", ".gbapal");
+#if OW_POKEMON_OBJECT_EVENTS
+    const u32 gObjectEventPic_Silvally[] = INCGFX_COMP("graphics/pokemon/silvally/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    const u16 gOverworldPalette_SilvallyNormal[] = INCGFX_U16("graphics/pokemon/silvally/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyNormal[] = INCGFX_U16("graphics/pokemon/silvally/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyFighting[] = INCGFX_U16("graphics/pokemon/silvally/fighting/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyFighting[] = INCGFX_U16("graphics/pokemon/silvally/fighting/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyFlying[] = INCGFX_U16("graphics/pokemon/silvally/flying/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyFlying[] = INCGFX_U16("graphics/pokemon/silvally/flying/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyPoison[] = INCGFX_U16("graphics/pokemon/silvally/poison/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyPoison[] = INCGFX_U16("graphics/pokemon/silvally/poison/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyGround[] = INCGFX_U16("graphics/pokemon/silvally/ground/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyGround[] = INCGFX_U16("graphics/pokemon/silvally/ground/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyRock[] = INCGFX_U16("graphics/pokemon/silvally/rock/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyRock[] = INCGFX_U16("graphics/pokemon/silvally/rock/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyBug[] = INCGFX_U16("graphics/pokemon/silvally/bug/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyBug[] = INCGFX_U16("graphics/pokemon/silvally/bug/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyGhost[] = INCGFX_U16("graphics/pokemon/silvally/ghost/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyGhost[] = INCGFX_U16("graphics/pokemon/silvally/ghost/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallySteel[] = INCGFX_U16("graphics/pokemon/silvally/steel/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallySteel[] = INCGFX_U16("graphics/pokemon/silvally/steel/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyFire[] = INCGFX_U16("graphics/pokemon/silvally/fire/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyFire[] = INCGFX_U16("graphics/pokemon/silvally/fire/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyWater[] = INCGFX_U16("graphics/pokemon/silvally/water/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyWater[] = INCGFX_U16("graphics/pokemon/silvally/water/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyGrass[] = INCGFX_U16("graphics/pokemon/silvally/grass/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyGrass[] = INCGFX_U16("graphics/pokemon/silvally/grass/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyElectric[] = INCGFX_U16("graphics/pokemon/silvally/electric/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyElectric[] = INCGFX_U16("graphics/pokemon/silvally/electric/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyPsychic[] = INCGFX_U16("graphics/pokemon/silvally/psychic/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyPsychic[] = INCGFX_U16("graphics/pokemon/silvally/psychic/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyIce[] = INCGFX_U16("graphics/pokemon/silvally/ice/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyIce[] = INCGFX_U16("graphics/pokemon/silvally/ice/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyDragon[] = INCGFX_U16("graphics/pokemon/silvally/dragon/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyDragon[] = INCGFX_U16("graphics/pokemon/silvally/dragon/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyDark[] = INCGFX_U16("graphics/pokemon/silvally/dark/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyDark[] = INCGFX_U16("graphics/pokemon/silvally/dark/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_SilvallyFairy[] = INCGFX_U16("graphics/pokemon/silvally/fairy/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_SilvallyFairy[] = INCGFX_U16("graphics/pokemon/silvally/fairy/overworld_shiny.pal", ".gbapal");
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
+#endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_TYPE_NULL
 
 #if P_FAMILY_MINIOR
