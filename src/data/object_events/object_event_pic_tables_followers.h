@@ -5321,9 +5321,11 @@ static const struct SpriteFrameImage sPicTable_Togedemaru[] = {
 static const struct SpriteFrameImage sPicTable_MimikyuDisguised[] = {
     overworld_ascending_frames(gObjectEventPic_MimikyuDisguised, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_MimikyuBusted[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_MimikyuBusted[] = {
     overworld_ascending_frames(gObjectEventPic_MimikyuBusted, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_MIMIKYU
 
 #if P_FAMILY_BRUXISH

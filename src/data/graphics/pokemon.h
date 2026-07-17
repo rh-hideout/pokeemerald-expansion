@@ -22613,8 +22613,8 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_MimikyuDisguised[] = INCGFX_COMP("graphics/pokemon/mimikyu/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u16 gOverworldPalette_MimikyuDisguised[] = INCGFX_U16("graphics/pokemon/mimikyu/overworld_normal.pal", ".gbapal");
-    const u16 gShinyOverworldPalette_MimikyuDisguised[] = INCGFX_U16("graphics/pokemon/mimikyu/overworld_shiny.pal", ".gbapal");
+    const u16 gOverworldPalette_Mimikyu[] = INCGFX_U16("graphics/pokemon/mimikyu/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Mimikyu[] = INCGFX_U16("graphics/pokemon/mimikyu/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 
@@ -22623,13 +22623,9 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_MimikyuBusted[] = INCGFX_U32("graphics/pokemon/mimikyu/busted/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_MimikyuBusted[] = INCGFX_U16("graphics/pokemon/mimikyu/busted/shiny.pal", ".gbapal");
     const u8 gMonIcon_MimikyuBusted[] = INCGFX_U8("graphics/pokemon/mimikyu/busted/icon.png", ".4bpp");
-#if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_MimikyuBusted[] = INCGFX_COMP("graphics/pokemon/mimikyu/busted/overworld.png", ".4bpp");
-#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u16 gOverworldPalette_MimikyuBusted[] = INCGFX_U16("graphics/pokemon/mimikyu/busted/overworld_normal.pal", ".gbapal");
-    // const u16 gShinyOverworldPalette_MimikyuBusted[] = INCGFX_U16("graphics/pokemon/mimikyu/busted/overworld_shiny.pal", ".gbapal");
-#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
+    const u32 gObjectEventPic_MimikyuBusted[] = INCGFX_COMP("graphics/pokemon/mimikyu/busted/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+#endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_MIMIKYU
 
 #if P_FAMILY_BRUXISH
