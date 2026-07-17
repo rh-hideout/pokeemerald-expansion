@@ -8,5 +8,4 @@ void GenerateBattlePikeWildMonFromId(u32 pikeMonId, u32 level);
 u32 GenerateBattlePikeWildMon(u32 minLevel);
 bool8 InBattlePike(void);
 
-
 #endif // GUARD_BATTLE_PIKE_H

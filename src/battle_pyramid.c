@@ -49,7 +49,7 @@ extern const struct MapLayout *const gMapLayouts[];
 struct PyramidWildMon
 {
     enum Species species;
-    union {
+    union __attribute__((packed)) {
         u8 level;
         s8 levelDelta;
     };

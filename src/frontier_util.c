@@ -3273,14 +3273,18 @@ u8 SetFacilityPtrsGetLevel(void)
 
 u32 GetFrontierEnemyMonLevel(enum FrontierLevelMode lvlMode)
 {
-    if (lvlMode == FRONTIER_LVL_50)
+    switch(lvlMode)
+    {
+    case FRONTIER_LVL_50:
         return FRONTIER_MAX_LEVEL_50;
-    else if (lvlMode == FRONTIER_LVL_TENT)
+    case FRONTIER_LVL_TENT:
         return TENT_MIN_LEVEL;
-    else if (lvlMode == FRONTIER_LVL_OPEN)
-        return max(GetHighestLevelInPlayerParty(), FRONTIER_MIN_LEVEL_OPEN);
-    errorf("Unkown FrontierLevelMode %d", lvlMode);
-    return MIN_LEVEL;
+    case FRONTIER_LVL_OPEN:
+         return max(GetHighestLevelInPlayerParty(), FRONTIER_MIN_LEVEL_OPEN);
+    default:
+        errorf("Unkown FrontierLevelMode %d", lvlMode);
+        return MIN_LEVEL;
+    }
 }
 
 s32 GetHighestLevelInPlayerParty(void)
