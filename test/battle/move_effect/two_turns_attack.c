@@ -441,7 +441,7 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
     }
 }
 
-SINGLE_BATTLE_TEST("Electro Shot does not need a charging turn in Desolate")
+SINGLE_BATTLE_TEST("Electro Shot does not need a charging turn in Primal Rain")
 {
     GIVEN {
         PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }

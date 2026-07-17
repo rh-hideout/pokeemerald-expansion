@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Solar Beam does half damage if Sandstorm is up (Gen3+)", s16
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn in Desolate")
+SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn in Primal Sun")
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
