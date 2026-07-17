@@ -20485,13 +20485,13 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_AegislashBlade[] = INCGFX_U32("graphics/pokemon/aegislash/blade/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_AegislashBlade[] = INCGFX_U16("graphics/pokemon/aegislash/blade/shiny.pal", ".gbapal");
     const u8 gMonIcon_AegislashBlade[] = INCGFX_U8("graphics/pokemon/aegislash/blade/icon.png", ".4bpp");
-#if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_AegislashBlade[] = INCGFX_COMP("graphics/pokemon/aegislash/blade/overworld.png", ".4bpp");
+#if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
+    const u32 gObjectEventPic_AegislashBlade[] = INCGFX_COMP("graphics/pokemon/aegislash/blade/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u16 gOverworldPalette_AegislashBlade[] = INCGFX_U16("graphics/pokemon/aegislash/blade/overworld_normal.pal", ".gbapal");
-    // const u16 gShinyOverworldPalette_AegislashBlade[] = INCGFX_U16("graphics/pokemon/aegislash/blade/overworld_shiny.pal", ".gbapal");
+    const u16 gOverworldPalette_AegislashBlade[] = INCGFX_U16("graphics/pokemon/aegislash/blade/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_AegislashBlade[] = INCGFX_U16("graphics/pokemon/aegislash/blade/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_HONEDGE
 
 #if P_FAMILY_SPRITZEE

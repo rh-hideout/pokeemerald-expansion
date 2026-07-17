@@ -4827,9 +4827,11 @@ static const struct SpriteFrameImage sPicTable_Doublade[] = {
 static const struct SpriteFrameImage sPicTable_AegislashShield[] = {
     overworld_ascending_frames(gObjectEventPic_AegislashShield, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_AegislashBlade[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_AegislashBlade[] = {
     overworld_ascending_frames(gObjectEventPic_AegislashBlade, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_HONEDGE
 
 #if P_FAMILY_SPRITZEE
