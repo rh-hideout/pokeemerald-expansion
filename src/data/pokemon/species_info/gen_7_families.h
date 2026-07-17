@@ -2539,6 +2539,17 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 7, SHADOW_SIZE_L)
         FOOTPRINT(Wishiwashi)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_WishiwashiSchool,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_WishiwashiSchool,
+            gShinyOverworldPalette_WishiwashiSchool
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sWishiwashiLevelUpLearnset,
         .teachableLearnset = sWishiwashiTeachableLearnset,
         .eggMoveLearnset = sWishiwashiEggMoveLearnset,

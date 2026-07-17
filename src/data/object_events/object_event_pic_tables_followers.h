@@ -5209,9 +5209,11 @@ static const struct SpriteFrameImage sPicTable_LycanrocDusk[] = {
 static const struct SpriteFrameImage sPicTable_WishiwashiSolo[] = {
     overworld_ascending_frames(gObjectEventPic_WishiwashiSolo, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_WishiwashiSchool[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_WishiwashiSchool[] = {
     overworld_ascending_frames(gObjectEventPic_WishiwashiSchool, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_WISHIWASHI
 
 #if P_FAMILY_MAREANIE
