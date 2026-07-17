@@ -3940,9 +3940,11 @@ static const struct SpriteFrameImage sPicTable_Darumaka[] = {
 static const struct SpriteFrameImage sPicTable_DarmanitanStandard[] = {
     overworld_ascending_frames(gObjectEventPic_DarmanitanStandard, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_DarmanitanZen[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_DarmanitanZen[] = {
     overworld_ascending_frames(gObjectEventPic_DarmanitanZen, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #if P_GALARIAN_FORMS
 static const struct SpriteFrameImage sPicTable_DarumakaGalar[] = {
     overworld_ascending_frames(gObjectEventPic_DarumakaGalar, 4, 4),

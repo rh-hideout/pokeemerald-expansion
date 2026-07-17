@@ -5240,6 +5240,17 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, -1, SHADOW_SIZE_S)
         FOOTPRINT(Darmanitan)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_DarmanitanZen,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_DarmanitanZen,
+            gShinyOverworldPalette_DarmanitanZen
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sDarmanitanLevelUpLearnset,
         .teachableLearnset = sDarmanitanTeachableLearnset,
         .formSpeciesIdTable = sDarmanitanFormSpeciesIdTable,
