@@ -914,10 +914,7 @@ static bool32 ShouldDisableRandomEncounters(void)
 // skips the wild encounter check entirely.
 static bool8 SkipWildCheckOnNewMetatile(void)
 {
-    if (RandomPercentage(RNG_NONE, WE_SKIP_ENCOUNTER_ON_NEW_METATILE_CHANCE))
-        return FALSE;
-    else
-        return TRUE;
+    return !RandomPercentage(RNG_NONE, WE_SKIP_ENCOUNTER_ON_NEW_METATILE_CHANCE);
 }
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
