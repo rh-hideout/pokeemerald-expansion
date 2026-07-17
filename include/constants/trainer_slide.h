@@ -1,16 +1,6 @@
 #ifndef GUARD_CONSTANTS_TRAINER_SLIDE_H
 #define GUARD_CONSTANTS_TRAINER_SLIDE_H
 
-enum ComparisonOperators
-{
-    LESS_THAN,
-    EQUAL,
-    GREATER_THAN,
-    LESS_THAN_OR_EQUAL,
-    GREATER_THAN_OR_EQUAL,
-    NOT_EQUAL,
-};
-
 enum TrainerSlideType
 {
     TRAINER_SLIDE_NONE,

@@ -73,6 +73,12 @@ enum ConsiderPriority
     CONSIDER_PRIORITY,
 };
 
+enum AIConsiderWrapDamage
+{
+    DONT_CONSIDER_WRAP_DAMAGE,
+    CONSIDER_WRAP_DAMAGE,
+};
+
 static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)
 {
     return move == MOVE_NONE
@@ -121,7 +127,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(enum BattlerId battlerAtk, enum Ability atkAbility, enum Move move);
 u32 AI_GetWeather(void);
 u32 AI_GetSwitchinWeather(enum BattlerId battler);
-u32 AI_GetSwitchinFieldStatus(enum BattlerId battler);
+u32 AI_GetSwitchinTerrain(enum BattlerId battler);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 index, enum DamageCalcContext calcContext);
@@ -131,7 +137,7 @@ u32 GetBattlerSecondaryDamage(enum BattlerId battlerId);
 bool32 BattlerWillFaintFromWeather(enum BattlerId battler, enum Ability ability);
 bool32 BattlerWillFaintFromSecondaryDamage(enum BattlerId battler, enum Ability ability);
 bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move);
-bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 absorbPercentage);
 bool32 ShouldRecover(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 healPercent);
 bool32 ShouldSetScreen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect);
 bool32 ShouldCureStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData);
@@ -148,7 +154,6 @@ bool32 AI_CanContactBypassProtect(enum BattlerId battlerAtk, enum BattlerId batt
 bool32 IsConsideringZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move chosenMove);
 void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use);
-bool32 IsAIUsingGimmick(enum BattlerId battler);
 void DecideTerastal(enum BattlerId battler);
 bool32 CanEndureHit(enum BattlerId battler, enum BattlerId battlerTarget, enum Move move);
 bool32 ShouldFinalGambit(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 aiIsFaster);
@@ -169,7 +174,7 @@ bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx);
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);
 bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, enum Ability abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef, enum Move move);
-struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses);
+struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, enum BattleTerrain terrain);
 bool32 AI_IsDamagedByRecoil(enum BattlerId battler);
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp);
 u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef);
@@ -211,6 +216,8 @@ s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Mov
 bool32 ShouldRaiseAnyStat(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 ShouldSetWeather(enum BattlerId battler, u32 weather);
 bool32 ShouldClearWeather(enum BattlerId battler, u32 weather);
+bool32 ShouldSetTerrain(enum BattlerId battler, enum BattleTerrain terrain);
+bool32 ShouldClearTerrain(enum BattlerId battler, enum BattleTerrain terrain);
 bool32 ShouldSetFieldStatus(enum BattlerId battler, u32 fieldStatus);
 bool32 ShouldClearFieldStatus(enum BattlerId battler, u32 fieldStatus);
 bool32 HasSleepMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef);
@@ -247,7 +254,7 @@ bool32 AI_CanGiveFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 bool32 AI_CanBeInfatuated(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility);
 bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof);
 bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move);
-bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+bool32 ShouldTrap(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum AIConsiderWrapDamage considerWrapDamage);
 bool32 IsWakeupTurn(enum BattlerId battler);
 
 // ability logic
@@ -295,6 +302,7 @@ s32 GetAILastPartyIndex(enum BattlerId battler);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
 bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
 bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler);
+s32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage);
 s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);

@@ -822,6 +822,7 @@ static const union AnimCmd sSpriteAnim_CategoryIcon2[] =
 
 static const union AnimCmd *const sSpriteAnimTable_CategoryIcons[] =
 {
+    NULL,
     sSpriteAnim_CategoryIcon0,
     sSpriteAnim_CategoryIcon1,
     sSpriteAnim_CategoryIcon2,

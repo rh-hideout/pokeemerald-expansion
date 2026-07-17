@@ -543,11 +543,12 @@ struct PokemonTemplate
     u16 dmaxLevel;
     bool16 isEgg;
     enum GeneratedMonOrigin origin;
+    u8 ignoreTotalEvCheck:1;
     u8 doNotUseDefaultShinyness:1;
     u8 doNotUseDefaultBall:1;
     u8 doNotUseDefaultAbility:1;
     u8 doNotUseDefaultTeraType:1;
-    u8 padding:4;
+    u8 padding:3;
 };
 
 struct EggData
