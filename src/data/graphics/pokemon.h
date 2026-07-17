@@ -16057,13 +16057,31 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if P_FAMILY_ARCEUS
     const u32 gMonFrontPic_Arceus[] = INCGFX_U32("graphics/pokemon/arceus/anim_front.png", ".4bpp.smol");
     const u32 gMonBackPic_Arceus[] = INCGFX_U32("graphics/pokemon/arceus/back.png", ".4bpp.smol");
+    const u8 gMonIcon_ArceusNormal[] = INCGFX_U8("graphics/pokemon/arceus/icon.png", ".4bpp");
+#if P_ARCEUS_UNIQUE_FORM_ICONS >= GEN_9
+    const u8 gMonIcon_ArceusFighting[] = INCGFX_U8("graphics/pokemon/arceus/fighting/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusFlying[] = INCGFX_U8("graphics/pokemon/arceus/flying/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusPoison[] = INCGFX_U8("graphics/pokemon/arceus/poison/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusGround[] = INCGFX_U8("graphics/pokemon/arceus/ground/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusRock[] = INCGFX_U8("graphics/pokemon/arceus/rock/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusBug[] = INCGFX_U8("graphics/pokemon/arceus/bug/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusGhost[] = INCGFX_U8("graphics/pokemon/arceus/ghost/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusSteel[] = INCGFX_U8("graphics/pokemon/arceus/steel/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusFire[] = INCGFX_U8("graphics/pokemon/arceus/fire/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusWater[] = INCGFX_U8("graphics/pokemon/arceus/water/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusGrass[] = INCGFX_U8("graphics/pokemon/arceus/grass/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusElectric[] = INCGFX_U8("graphics/pokemon/arceus/electric/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusPsychic[] = INCGFX_U8("graphics/pokemon/arceus/psychic/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusIce[] = INCGFX_U8("graphics/pokemon/arceus/ice/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusDragon[] = INCGFX_U8("graphics/pokemon/arceus/dragon/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusDark[] = INCGFX_U8("graphics/pokemon/arceus/dark/icon.png", ".4bpp");
+    const u8 gMonIcon_ArceusFairy[] = INCGFX_U8("graphics/pokemon/arceus/fairy/icon.png", ".4bpp");
+#endif //P_ARCEUS_UNIQUE_FORM_ICONS
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Arceus[] = INCGFX_U8("graphics/pokemon/arceus/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
-
     const u16 gMonPalette_ArceusNormal[] = INCGFX_U16("graphics/pokemon/arceus/normal.pal", ".gbapal");
     const u16 gMonShinyPalette_ArceusNormal[] = INCGFX_U16("graphics/pokemon/arceus/shiny.pal", ".gbapal");
-    const u8 gMonIcon_ArceusNormal[] = INCGFX_U8("graphics/pokemon/arceus/icon.png", ".4bpp");
 
     const u16 gMonPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/normal.pal", ".gbapal");
     const u16 gMonShinyPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/shiny.pal", ".gbapal");
@@ -16115,64 +16133,61 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 
     const u16 gMonPalette_ArceusFairy[] = INCGFX_U16("graphics/pokemon/arceus/fairy/normal.pal", ".gbapal");
     const u16 gMonShinyPalette_ArceusFairy[] = INCGFX_U16("graphics/pokemon/arceus/fairy/shiny.pal", ".gbapal");
-
-#if P_ARCEUS_UNIQUE_FORM_ICONS >= GEN_9
-    const u8 gMonIcon_ArceusFighting[] = INCGFX_U8("graphics/pokemon/arceus/fighting/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusFlying[] = INCGFX_U8("graphics/pokemon/arceus/flying/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusPoison[] = INCGFX_U8("graphics/pokemon/arceus/poison/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusGround[] = INCGFX_U8("graphics/pokemon/arceus/ground/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusRock[] = INCGFX_U8("graphics/pokemon/arceus/rock/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusBug[] = INCGFX_U8("graphics/pokemon/arceus/bug/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusGhost[] = INCGFX_U8("graphics/pokemon/arceus/ghost/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusSteel[] = INCGFX_U8("graphics/pokemon/arceus/steel/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusFire[] = INCGFX_U8("graphics/pokemon/arceus/fire/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusWater[] = INCGFX_U8("graphics/pokemon/arceus/water/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusGrass[] = INCGFX_U8("graphics/pokemon/arceus/grass/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusElectric[] = INCGFX_U8("graphics/pokemon/arceus/electric/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusPsychic[] = INCGFX_U8("graphics/pokemon/arceus/psychic/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusIce[] = INCGFX_U8("graphics/pokemon/arceus/ice/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusDragon[] = INCGFX_U8("graphics/pokemon/arceus/dragon/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusDark[] = INCGFX_U8("graphics/pokemon/arceus/dark/icon.png", ".4bpp");
-    const u8 gMonIcon_ArceusFairy[] = INCGFX_U8("graphics/pokemon/arceus/fairy/icon.png", ".4bpp");
-#endif //P_ARCEUS_UNIQUE_FORM_ICONS
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_Arceus[] = INCGFX_COMP("graphics/pokemon/arceus/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_ArceusNormal[] = INCGFX_U16("graphics/pokemon/arceus/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusFlying[] = INCGFX_U16("graphics/pokemon/arceus/flying/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusPoison[] = INCGFX_U16("graphics/pokemon/arceus/poison/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusGround[] = INCGFX_U16("graphics/pokemon/arceus/ground/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusRock[] = INCGFX_U16("graphics/pokemon/arceus/rock/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusBug[] = INCGFX_U16("graphics/pokemon/arceus/bug/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusGhost[] = INCGFX_U16("graphics/pokemon/arceus/ghost/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusSteel[] = INCGFX_U16("graphics/pokemon/arceus/steel/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusFire[] = INCGFX_U16("graphics/pokemon/arceus/fire/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusWater[] = INCGFX_U16("graphics/pokemon/arceus/water/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusGrass[] = INCGFX_U16("graphics/pokemon/arceus/grass/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusElectric[] = INCGFX_U16("graphics/pokemon/arceus/electric/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusPsychic[] = INCGFX_U16("graphics/pokemon/arceus/psychic/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusIce[] = INCGFX_U16("graphics/pokemon/arceus/ice/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusDragon[] = INCGFX_U16("graphics/pokemon/arceus/dragon/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusDark[] = INCGFX_U16("graphics/pokemon/arceus/dark/overworld_normal.pal", ".gbapal");
-    const u16 gOverworldPalette_ArceusFairy[] = INCGFX_U16("graphics/pokemon/arceus/fairy/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusNormal[] = INCGFX_U16("graphics/pokemon/arceus/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusFighting[] = INCGFX_U16("graphics/pokemon/arceus/fighting/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusFlying[] = INCGFX_U16("graphics/pokemon/arceus/flying/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusFlying[] = INCGFX_U16("graphics/pokemon/arceus/flying/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusPoison[] = INCGFX_U16("graphics/pokemon/arceus/poison/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusPoison[] = INCGFX_U16("graphics/pokemon/arceus/poison/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusGround[] = INCGFX_U16("graphics/pokemon/arceus/ground/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusGround[] = INCGFX_U16("graphics/pokemon/arceus/ground/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusRock[] = INCGFX_U16("graphics/pokemon/arceus/rock/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusRock[] = INCGFX_U16("graphics/pokemon/arceus/rock/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusBug[] = INCGFX_U16("graphics/pokemon/arceus/bug/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusBug[] = INCGFX_U16("graphics/pokemon/arceus/bug/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusGhost[] = INCGFX_U16("graphics/pokemon/arceus/ghost/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusGhost[] = INCGFX_U16("graphics/pokemon/arceus/ghost/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusSteel[] = INCGFX_U16("graphics/pokemon/arceus/steel/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusSteel[] = INCGFX_U16("graphics/pokemon/arceus/steel/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusFire[] = INCGFX_U16("graphics/pokemon/arceus/fire/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusFire[] = INCGFX_U16("graphics/pokemon/arceus/fire/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusWater[] = INCGFX_U16("graphics/pokemon/arceus/water/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusWater[] = INCGFX_U16("graphics/pokemon/arceus/water/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusGrass[] = INCGFX_U16("graphics/pokemon/arceus/grass/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusGrass[] = INCGFX_U16("graphics/pokemon/arceus/grass/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusElectric[] = INCGFX_U16("graphics/pokemon/arceus/electric/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusElectric[] = INCGFX_U16("graphics/pokemon/arceus/electric/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusPsychic[] = INCGFX_U16("graphics/pokemon/arceus/psychic/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusPsychic[] = INCGFX_U16("graphics/pokemon/arceus/psychic/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusIce[] = INCGFX_U16("graphics/pokemon/arceus/ice/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusIce[] = INCGFX_U16("graphics/pokemon/arceus/ice/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusDragon[] = INCGFX_U16("graphics/pokemon/arceus/dragon/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusDragon[] = INCGFX_U16("graphics/pokemon/arceus/dragon/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusDark[] = INCGFX_U16("graphics/pokemon/arceus/dark/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusDark[] = INCGFX_U16("graphics/pokemon/arceus/dark/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_ArceusFairy[] = INCGFX_U16("graphics/pokemon/arceus/fairy/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_ArceusFairy[] = INCGFX_U16("graphics/pokemon/arceus/fairy/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
