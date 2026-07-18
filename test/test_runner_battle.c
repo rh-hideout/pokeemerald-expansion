@@ -3111,13 +3111,6 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.currentMonIndexes[battlerId] = partyIndex;
 }
 
-void GivePlayerItem(u32 sourceLine, enum Item itemId, u32 quantity)
-{
-    INVALID_IF(!CheckBagHasSpace(itemId, quantity), "Not enough space in bag");
-    DATA.explicitInventory = TRUE;
-    AddBagItem(itemId, quantity);
-}
-
 void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext ctx)
 {
     s32 i;
@@ -3150,8 +3143,6 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
         i = 0;
     }
 
-    if (!DATA.explicitInventory && (battlerId & BIT_SIDE) == B_SIDE_PLAYER)
-        AddBagItem(ctx.itemId, 1);
     if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_ITEM);

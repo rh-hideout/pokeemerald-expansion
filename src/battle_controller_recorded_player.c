@@ -377,14 +377,6 @@ static void RecordedPlayerHandleChooseItem(enum BattlerId battler)
     u8 byte1 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     u8 byte2 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     gBattleStruct->chosenItem[battler] = (byte1 << 8) | byte2;
-
-    if (TESTING)
-    {
-        assertf(CheckBagHasItem(gBattleStruct->chosenItem[battler], 1), "Tried to used an item not present in bag");
-        if (!GetItemImportance(gBattleStruct->chosenItem[battler]))
-            RemoveBagItem(gBattleStruct->chosenItem[battler], 1);
-    }
-
     gBattleStruct->itemPartyIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
     gBattleStruct->itemMoveIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
     BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);

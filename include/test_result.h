@@ -12,7 +12,6 @@ enum TestResult
     TEST_RESULT_CRASH,
     TEST_RESULT_TODO,
     TEST_RESULT_KNOWN_FAIL,
-    TEST_RESULT_ASSERT_FAIL,
 };
 
 void Test_ExitWithResult_(enum TestResult, u32 stopLine, const void *return0, const char *fmt, ...);

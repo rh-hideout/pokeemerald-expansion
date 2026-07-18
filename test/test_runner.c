@@ -454,9 +454,6 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
-            case TEST_RESULT_ASSERT_FAIL:
-                result = "EXPECTED_ASSERT_FAIL";
-                break;
             default:
                 result = "UNKNOWN";
                 break;
@@ -483,9 +480,6 @@ top:
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
-            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
-                 && gTestRunnerState.result == TEST_RESULT_ASSERT_FAIL)
-                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
             else if (gTestRunnerState.expectedResult == gTestRunnerState.result
                  && gTestRunnerState.result == TEST_RESULT_CRASH)
                 Test_MgbaPrintf(":E%s%s\e[0m", color, result);
@@ -766,7 +760,7 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
          gTestRunnerState.test->filename, stopLine,
          gTestRunnerState.expectedFailLine, stopLine);
     }
-
+    
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
