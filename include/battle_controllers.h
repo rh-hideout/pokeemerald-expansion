@@ -93,46 +93,55 @@ enum BattleController
 
 static inline void MarkBattleControllerActiveOnLocal(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags |= (1u << battler);
 }
 
 static inline void MarkBattleControllerIdleOnLocal(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags &= ~(1u << battler);
 }
 
 static inline bool32 IsBattleControllerActiveOnLocal(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     return gBattleControllerExecFlags & (1u << battler);
 }
 
 static inline void MarkBattleControllerMessageOutboundOverLink(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags |= ((1u << battler) << (32 - MAX_BATTLERS_COUNT));
 }
 
 static inline void MarkBattleControllerMessageSynchronizedOverLink(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags &= ~((1 << 28) << (battler));
 }
 
 static inline bool32 IsBattleControllerMessageSynchronizedOverLink(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     return gBattleControllerExecFlags & (1u << (battler + 28));
 }
 
 static inline void MarkBattleControllerActiveForPlayer(enum BattlerId battler, u32 playerId)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags |= ((1u << battler) << ((playerId) << 2));
 }
 
 static inline void MarkBattleControllerIdleForPlayer(enum BattlerId battler, u32 playerId)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     gBattleControllerExecFlags &= ~((1u << battler) << ((playerId) * 4));
 }
 
 static inline bool32 IsBattleControllerActiveForPlayer(enum BattlerId battler, u32 playerId)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
     return gBattleControllerExecFlags & ((1u << battler) << ((playerId) * 4));
 }
 
@@ -141,6 +150,7 @@ static inline bool32 IsBattleControllerActiveForPlayer(enum BattlerId battler, u
 // can only be so specific before it just gets ridiculous.
 static inline bool32 IsBattleControllerActiveOrPendingSyncAnywhere(enum BattlerId battler)
 {
+    assertf(battler < MAX_BATTLERS_COUNT, "illegal battle controller: %d", battler);
    return gBattleControllerExecFlags & (
                   (1u << battler)
                 | (0xF << 28)
@@ -325,7 +335,7 @@ void BtlController_EmitChooseAction(enum BattlerId battler, u32 bufferId, u8 act
 void BtlController_EmitYesNoBox(enum BattlerId battler, u32 bufferId);
 void BtlController_EmitChooseMove(enum BattlerId battler, u32 bufferId, bool8 isDoubleBattle, bool8 NoPpNumber, struct ChooseMoveStruct *movePpData);
 void BtlController_EmitChooseItem(enum BattlerId battler, u32 bufferId, u8 *battlePartyOrder);
-void BtlController_EmitChoosePokemon(enum BattlerId battler, u32 bufferId, u8 caseId, u8 slotId, u16 abilityId, enum BattlerId battlerPreventingSwitchout, u8 *data);
+void BtlController_EmitChoosePokemon(enum BattlerId battler, u32 bufferId, u8 caseId, u8 slotId, enum Ability abilityId, enum BattlerId battlerPreventingSwitchout, u8 *data);
 void BtlController_EmitHealthBarUpdate(enum BattlerId battler, u32 bufferId, u16 hpValue);
 void BtlController_EmitExpUpdate(enum BattlerId battler, u32 bufferId, u8 partyId, s32 expPoints);
 void BtlController_EmitStatusIconUpdate(enum BattlerId battler, u32 bufferId, u32 status);
@@ -385,8 +395,8 @@ void BtlController_HandlePlayFanfareOrBGM(enum BattlerId battler);
 void BtlController_HandleFaintingCry(enum BattlerId battler);
 void BtlController_HandleIntroSlide(enum BattlerId battler);
 void BtlController_HandleSpriteInvisibility(enum BattlerId battler);
-bool32 TwoPlayerIntroMons(enum BattlerId battlerId); // Double battle with both player pokemon active.
-bool32 TwoOpponentIntroMons(enum BattlerId battlerId); // Double battle with both opponent pokemon active.
+bool32 TwoPlayerIntroMons(enum BattlerId battlerId); // Double battle with both player Pokémon active.
+bool32 TwoOpponentIntroMons(enum BattlerId battlerId); // Double battle with both opponent Pokémon active.
 void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(enum BattlerId battler));
 void BtlController_HandleDrawPartyStatusSummary(enum BattlerId battler, enum BattleSide side, bool32 considerDelay);
 void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler);
@@ -492,6 +502,11 @@ void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 bool32 ShouldBattleRestrictionsApply(enum BattlerId battler);
 void FreeShinyStars(void);
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler);
+enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position);
+bool32 BattleSideHasTwoTrainers(enum BattleSide side);
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2);
+bool32 TrainerHasParty(enum BattleTrainer trainer);
+void SetFinalChosenTarget(enum BattlerId battler, bool32 partner);
 
 
 // oak and old man controller

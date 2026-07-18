@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the target faints")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
+SINGLE_BATTLE_TEST("Illusion does not break if the attacker faints without taking damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
@@ -51,8 +51,10 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
-        MESSAGE("Zoroark's illusion wore off!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+            MESSAGE("Zoroark's illusion wore off!");
+        }
     }
 }
 
@@ -67,6 +69,22 @@ SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot")
     } THEN {
         EXPECT_EQ(player->species, SPECIES_ZOROARK);
         EXPECT_EQ(gBattleStruct->illusion[0].state, ILLUSION_OFF); // Battler is Zoroark and not Illusioned
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a battle with two opponent trainers")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WYNAUT);
+        OPPONENT_B(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {}
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_OPPONENT_B][1] == gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].mon);
     }
 }
 
@@ -114,7 +132,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if user loses Illusion due to Worry Seed")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
+SINGLE_BATTLE_TEST("Illusion breaks when hit through a substitute")
 {
     GIVEN {
         WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, GEN_6);
@@ -129,5 +147,22 @@ SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SWAP_TO_SUBSTITUTE, opponent);
         MESSAGE("The opposing Zoroark's illusion wore off!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Illusion does not break if indirect damage causes the user to faint")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { HP(1); Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SEND_OUT(player, 1); }
+    } SCENE {
+        HP_BAR(player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+            MESSAGE("Zoroark's illusion wore off!");
+        }
     }
 }

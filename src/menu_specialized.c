@@ -704,7 +704,7 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
 // Move relearner
 //----------------
 
-void InitMoveRelearnerWindows(bool8 useContestWindow)
+void InitMoveRelearnerWindows(bool32 useContestWindow)
 {
     u8 i;
 
@@ -716,16 +716,11 @@ void InitMoveRelearnerWindows(bool8 useContestWindow)
     for (i = 0; i < ARRAY_COUNT(sMoveRelearnerWindowTemplates) - 1; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(1));
 
-    if (!useContestWindow)
-    {
-        PutWindowTilemap(RELEARNERWIN_DESC_BATTLE);
+    if (C_HIDE_CONTEST_DATA || !useContestWindow)
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_BATTLE, FALSE, 0x1, 0xE);
-    }
     else
-    {
-        PutWindowTilemap(RELEARNERWIN_DESC_CONTEST);
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_CONTEST, FALSE, 1, 0xE);
-    }
+
     PutWindowTilemap(RELEARNERWIN_MOVE_LIST);
     PutWindowTilemap(RELEARNERWIN_MSG);
     DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_MOVE_LIST, FALSE, 1, 0xE);
@@ -866,12 +861,6 @@ void MoveRelearnerPrintMessage(u8 *str)
     AddTextPrinterParameterized2(RELEARNERWIN_MSG, FONT_NORMAL, str, speed, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, 3);
 }
 
-bool16 MoveRelearnerRunTextPrinters(void)
-{
-    RunTextPrinters();
-    return IsTextPrinterActiveOnWindow(RELEARNERWIN_MSG);
-}
-
 void MoveRelearnerCreateYesNoMenu(void)
 {
     CreateYesNoMenu(&sMoveRelearnerYesNoMenuTemplate, 1, 0xE, 0);
@@ -888,9 +877,9 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
     if (boxId == TOTAL_BOXES_COUNT) // Party mon.
     {
         if (request == MON_DATA_NICKNAME || request == MON_DATA_OT_NAME)
-            ret = GetMonData(&gPlayerParty[monId], request, dst);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request, dst);
         else
-            ret = GetMonData(&gPlayerParty[monId], request);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request);
     }
     else
     {
@@ -906,7 +895,8 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
 // Gets the name/gender/level string for the condition menu
 static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
 {
-    u16 box, mon, species, level, gender;
+    u16 box, mon, level, gender;
+    enum Species species;
     struct BoxPokemon *boxMon;
     u8 *str;
 
@@ -927,8 +917,8 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     species = GetBoxOrPartyMonData(box, mon, MON_DATA_SPECIES, NULL);
     if (box == TOTAL_BOXES_COUNT) // Party mon.
     {
-        level = GetMonData(&gPlayerParty[mon], MON_DATA_LEVEL);
-        gender = GetMonGender(&gPlayerParty[mon]);
+        level = GetMonData(&gParties[B_TRAINER_PLAYER][mon], MON_DATA_LEVEL);
+        gender = GetMonGender(&gParties[B_TRAINER_PLAYER][mon]);
     }
     else
     {
@@ -1120,10 +1110,10 @@ bool8 ConditionMenu_UpdateMonExit(struct ConditionGraph *graph, s16 *x)
     return (graphUpdating || monUpdating);
 }
 
-static const u32 sConditionPokeball_Gfx[] = INCBIN_U32("graphics/pokenav/condition/pokeball.4bpp");
-static const u32 sConditionPokeballPlaceholder_Gfx[] = INCBIN_U32("graphics/pokenav/condition/pokeball_placeholder.4bpp");
-static const u16 sConditionSparkle_Gfx[] = INCBIN_U16("graphics/pokenav/condition/sparkle.gbapal");
-static const u32 sConditionSparkle_Pal[] = INCBIN_U32("graphics/pokenav/condition/sparkle.4bpp");
+static const u32 sConditionPokeball_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball.png", ".4bpp");
+static const u32 sConditionPokeballPlaceholder_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball_placeholder.png", ".4bpp");
+static const u16 sConditionSparkle_Gfx[] = INCGFX_U16("graphics/pokenav/condition/sparkle.png", ".gbapal");
+static const u32 sConditionSparkle_Pal[] = INCGFX_U32("graphics/pokenav/condition/sparkle.png", ".4bpp");
 
 static const struct OamData sOam_ConditionMonPic =
 {

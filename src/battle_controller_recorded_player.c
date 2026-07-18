@@ -22,13 +22,13 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "constants/battle_anim.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler);
 static void RecordedPlayerHandleTrainerSlideBack(enum BattlerId battler);
@@ -274,28 +274,29 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
 
-    // Sets Multibattle test player sprites to not be Hiker
-    if (IsMultibattleTest())
+    if (TESTING)
     {
-        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = TRAINER_PIC_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
             xPos = 80;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
     }
     else
     {
+        enum Gender gender;
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BACK_BRENDAN;
+                gender = GetBattlerLinkPlayerGender(battler);
             else
-                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BACK_BRENDAN;
+                gender = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
         }
         else
-            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BACK_BRENDAN;
+            gender = gLinkPlayers[0].gender;
 
+        trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
@@ -311,13 +312,13 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
             }
             else
             {
-                yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+                yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
             }
         }
         else
         {
             xPos = 80;
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+            yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
         }
     }
 
@@ -377,6 +378,14 @@ static void RecordedPlayerHandleChooseItem(enum BattlerId battler)
     u8 byte1 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     u8 byte2 = RecordedBattle_GetBattlerAction(RECORDED_ITEM_ID, battler);
     gBattleStruct->chosenItem[battler] = (byte1 << 8) | byte2;
+
+    if (TESTING)
+    {
+        assertf(CheckBagHasItem(gBattleStruct->chosenItem[battler], 1), "Tried to used an item not present in bag");
+        if (!GetItemImportance(gBattleStruct->chosenItem[battler]))
+            RemoveBagItem(gBattleStruct->chosenItem[battler], 1);
+    }
+
     gBattleStruct->itemPartyIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_TARGET, battler);
     gBattleStruct->itemMoveIndex[battler] = RecordedBattle_GetBattlerAction(RECORDED_ITEM_MOVE, battler);
     BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
@@ -400,13 +409,15 @@ static void RecordedPlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicId;
     const u16 *trainerPal;
+    enum Gender gender;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        gender = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        gender = gSaveBlock2Ptr->playerGender;
 
-    trainerPal = gTrainerBacksprites[trainerPicId].palette.data;
+    trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
+    trainerPal = GetTrainerBackPicPalette(trainerPicId);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Intro_TryShinyAnimShowHealthbox);
 }
 

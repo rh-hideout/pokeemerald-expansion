@@ -14,9 +14,27 @@ enum Obedience
 enum CancelerResult
 {
     CANCELER_RESULT_SUCCESS,
-    CANCELER_RESULT_BREAK, // Runs script. Increments state
-    CANCELER_RESULT_PAUSE, // Runs script. Does not increment state
+    CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT, // Runs script. Increments state
+    CANCELER_RESULT_RUN_SCRIPT, // Runs script. Does not increment state
     CANCELER_RESULT_FAILURE, // Move failed, jump to script that handles the failure
+    CANCELER_RESULT_END, // prevents going into canceler again
+};
+
+enum TargetFailure
+{
+    TARGET_FAILURE_SEMI_INVULNERABILITY,
+    TARGET_FAILURE_PSYCHIC_TERRAIN,
+    TARGET_FAILURE_PROTECT,
+    TARGET_FAILURE_BOUNCE,
+    TARGET_FAILURE_TARGET_BLOCKED,
+    TARGET_FAILURE_EFFECTIVENESS,
+};
+
+enum PreAnimActivations
+{
+    PRE_ANIM_STRONG_WINDS,
+    PRE_ANIM_TERA_SHELL,
+    PRE_ANIM_RESIST_BERRY,
 };
 
 enum CancelerState
@@ -46,6 +64,7 @@ enum CancelerState
     CANCELER_THAW,
     CANCELER_STANCE_CHANGE_2,
     CANCELER_ATTACKSTRING,
+    CANCELER_PLEDGE_ATTACK,
     CANCELER_SET_TARGETS,
     CANCELER_PPDEDUCTION,
     CANCELER_MOVE_SPECIFIC_MESSAGE,
@@ -57,16 +76,40 @@ enum CancelerState
     CANCELER_MOVE_EFFECT_FAILURE_TARGET,
     CANCELER_POWDER_STATUS,
     CANCELER_PRIORITY_BLOCK,
-    CANCELER_PROTEAN,
     CANCELER_EXPLODING_DAMP,
-    CANCELER_EXPLOSION,
+    CANCELER_INTERRUPTIBLE_MOVES,
+    CANCELER_PROTEAN,
     CANCELER_CHARGING,
+    CANCELER_SNATCH,
+    CANCELER_EXPLOSION,
     CANCELER_NO_TARGET,
     CANCELER_TOOK_ATTACK,
     CANCELER_TARGET_FAILURE,
-    CANCELER_NOT_FULLY_PROTECTED,
     CANCELER_MULTIHIT_MOVES,
+    CANCELER_ACCURACY_CHECK,
+    CANCELER_PRE_ATTACK_MOVE_EFFECT,
+    CANCELER_DAMAGE_CALC,
+    CANCELER_PRE_ANIM_ACTIVATIONS,
+    CANCELER_MOVE_ANIMATION,
+    CANCELER_EFFECTIVENESS_SOUND,
+    CANCELER_HIT_ANIMATION,
+    CANCELER_SKIP_FRAME,
+    CANCELER_HEALTH_BAR_UPDATE,
+    CANCELER_MOVE_DAMAGE_UPDATE,
     CANCELER_END,
+};
+
+enum FaintBlockStates
+{
+    FAINT_BLOCK_FINAL_GAMBIT,
+    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
+    FAINT_BLOCK_VICTORY_CATCH,
+    FAINT_BLOCK_END_NEUTRALIZING_GAS,
+    FAINT_BLOCK_DO_GRUDGE,
+    // Destiny Bond is tested and called first, but Faint Target's script plays first
+    FAINT_BLOCK_TRY_DESTINY_BOND,
+    FAINT_BLOCK_FAINT_TARGET,
+    FAINT_BLOCK_COUNT,
 };
 
 enum MoveEndResult
@@ -80,10 +123,12 @@ enum MoveEndResult
 enum MoveEndState
 {
     MOVEEND_SET_VALUES,
+    MOVEEND_PROTECT_BYPASS_EFFECTS,
     MOVEEND_PROTECT_LIKE_EFFECT,
     MOVEEND_ABSORB,
     MOVEEND_RAGE,
     MOVEEND_ABILITIES,
+    MOVEEND_RESIST_BERRY_MESSAGE,
     MOVEEND_FORM_CHANGE_ON_HIT, // Disguise / Gulp Missile
     MOVEEND_ABILITIES_ATTACKER,
     MOVEEND_QUEUE_DANCER,
@@ -99,10 +144,12 @@ enum MoveEndState
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
+    MOVEEND_BOUNCED_MOVE,
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
+    MOVEEND_MOVE_BLOCK_RECOIL, // Recoil effects should still happen even if Sheer Force applies
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, jump to effects that are not suppressed
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
     MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
@@ -116,14 +163,12 @@ enum MoveEndState
     MOVEEND_HIT_ESCAPE,
     MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
-    MOVEEND_WHITE_HERB,
     MOVEEND_OPPORTUNIST,
-    MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
     MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
-    MOVEEND_EJECT_PACK,
+    MOVEEND_ITEM_ON_STAT_CHANGE,
     MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
@@ -132,6 +177,34 @@ enum MoveEndState
 
     // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
+};
+
+enum MoveResult
+{
+    MOVE_RESULT_CONTINUE,
+    MOVE_RESULT_RUN_SCRIPT_INCREMENT,
+    MOVE_RESULT_RUN_SCRIPT,
+    MOVE_RESULT_FAILURE,
+    MOVE_RESULT_DONE,
+};
+
+enum StatChangeResolution
+{
+    STAT_CHANGE_SUBSTITUTE,
+    STAT_CHANGE_CAN_ANY_CHANGE,
+    STAT_CHANGE_ACCURACY,
+    STAT_CHANGE_MIRROR_ARMOR,
+    STAT_CHANGE_BEFORE_CHANGE,
+    STAT_CHANGE_TRY_CHANGE,
+    STAT_CHANGE_COUNT,
+};
+
+enum ProtectBypass
+{
+    PROTECT_BYPASS_NONE,
+    PROTECT_BYPASS_MOVE_IGNORES,
+    PROTECT_BYPASS_ABILITY_IGNORES,
+    PROTECT_BYPASS_OTHER,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_MOVE_RESOLUTION_H

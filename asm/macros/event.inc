@@ -1,6 +1,11 @@
 	.set ALLOCATE_SCRIPT_CMD_TABLE, 0
 	.include "data/script_cmd_table.inc"
 
+	.set ALLOCATE_SPECIAL_TABLE, 0
+	.include "data/specials.inc"
+
+	.set _last_implicit_waitstate, -1
+
 	@ Does nothing.
 	.macro nop
 	.byte SCR_OP_NOP
@@ -265,12 +270,15 @@
 	@ 'callnative's should set 'requests_effects=1' if the native
 	@ contains a call to 'Script_RequestEffects', which allows them
 	@ to be analyzed by 'RunScriptImmediatelyUntilEffect'.
-	.macro callnative func:req, requests_effects=0
+	.macro callnative func:req, requests_effects=0, waitstate=0
 	.byte SCR_OP_CALLNATIVE
 	.if \requests_effects == 0
 	.4byte \func
 	.else
 	.4byte \func + ROM_SIZE
+	.endif
+	.if \waitstate
+	waitstate implicit=1
 	.endif
 	.endm
 
@@ -288,6 +296,9 @@
 	.macro special function:req
 	.byte SCR_OP_SPECIAL
 	.2byte SPECIAL_\function
+	.if SPECIAL_WAITSTATE_\function
+	waitstate implicit=1
+	.endif
 	.endm
 
 	@ Calls a function listed in the table in data/specials.inc.
@@ -296,12 +307,25 @@
 	.byte SCR_OP_SPECIALVAR
 	.2byte \output
 	.2byte SPECIAL_\function
+	.if SPECIAL_WAITSTATE_\function
+	waitstate implicit=1
+	.endif
 	.endm
 
 	@ Blocks script execution until a command or C code manually unblocks it. Generally used with specific
 	@ commands and specials. Calling ScriptContext_Enable for instance will allow execution to continue.
-	.macro waitstate
+	@
+	@ implicit is set when a waitstate is generated as part of another command (e.g. special)
+	@ if an implicit waitstate is immediately followed by another waitstate, a warning is raised
+	.macro waitstate, implicit=0
+	.if _last_implicit_waitstate == .
+	.warning "explicit waitstate follows implicit waitstate, ignoring"
+	.else
 	.byte SCR_OP_WAITSTATE
+	.endif
+	.if \implicit
+	.set _last_implicit_waitstate, .
+	.endif
 	.endm
 
 	@ Blocks script execution for frames. (Pokemon Emerald runs at just shy of 60 frames per second.)
@@ -346,8 +370,7 @@
 	.byte SCR_OP_GETTIME
 	.endm
 
-	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
-	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
+	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in include/constants/rtc.h.
 	.macro gettimeofday
 	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
@@ -732,14 +755,17 @@
 	OBJ_ID_NONE = 0
 
 	@ Configures the arguments for a trainer battle, then jumps to the appropriate script in scripts/trainer_battle.inc
-	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req, rival_battle_flags=0
+	.macro trainerbattle localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req, continueScript:req, facePlayer: req, earlyRival: req, skipFlagCheck:req, rival_battle_flags=0
 	.byte SCR_OP_TRAINERBATTLE
 	.set trainerbattle_flags, 0
 	.ifgt \isDouble; .set trainerbattle_flags, trainerbattle_flags | (1 << 0); .endif
 	.ifgt \isRematch; .set trainerbattle_flags, trainerbattle_flags | (1 << 1); .endif
 	.ifgt \playMusicA; .set trainerbattle_flags, trainerbattle_flags | (1 << 2); .endif
-	.ifgt \playMusicB; .set trainerBattle_flags, trainerbattle_flags | (1 << 3); .endif
-	.ifgt \type; .set trainerbattle_flags, trainerbattle_flags | (\type << 4); .endif
+	.ifgt \playMusicB; .set trainerbattle_flags, trainerbattle_flags | (1 << 3); .endif
+	.ifgt \continueScript; .set trainerbattle_flags, trainerbattle_flags | (1 << 4); .endif
+	.ifgt \facePlayer; .set trainerbattle_flags, trainerbattle_flags | (1 << 5); .endif
+	.ifgt \earlyRival; .set trainerbattle_flags, trainerbattle_flags | (1 << 6); .endif
+	.ifgt \skipFlagCheck; .set trainerbattle_flags, trainerbattle_flags | (1 << 7); .endif
 	.byte trainerbattle_flags
 	.byte \localIdA             @ objEventLocalIdA
 	.2byte \trainer_a           @ opponentA
@@ -762,11 +788,11 @@
 	@ When used with an event script, you can also pass in an optional flag to disable music
 	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
 	.if \event_script == FALSE
-	trainerbattle TRAINER_BATTLE_SINGLE, LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.elseif \music == TRUE
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.else
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_NO_MUSIC, LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endif
 	.endm
 
@@ -774,38 +800,43 @@
 	@ and an optional event script. When used with an event script you can pass in an optional flag to disable music
 	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=FALSE, music=TRUE
 	.if \event_script == FALSE
-	trainerbattle TRAINER_BATTLE_DOUBLE, LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.elseif \music == TRUE
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE, LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.else
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC, LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, FALSE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endif
 	.endm
 
 	@ Starts a rematch battle. Takes a trainer, intro text and loss text
 	.macro trainerbattle_rematch trainer:req, intro_text:req, lose_text:req
-	trainerbattle TRAINER_BATTLE_REMATCH, LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a rematch double battle. Takes a trainer, intro text, loss text, and text for when you have too few pokemon
 	.macro trainerbattle_rematch_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req
-	trainerbattle TRAINER_BATTLE_REMATCH_DOUBLE, LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, FALSE, TRUE, FALSE, TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle, skipping intro text. Takes a trainer and loss text
 	.macro trainerbattle_no_intro trainer:req, lose_text:req
-	trainerbattle TRAINER_BATTLE_SINGLE_NO_INTRO_TEXT, LOCALID_NONE, \trainer, NULL, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	trainerbattle LOCALID_NONE, \trainer, NULL, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE
 	.endm
 
 	@ Starts a double battle with the player against two trainers
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
-	trainerbattle TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO, OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	trainerbattle OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle with victory text if the player loses. If flags is nonzero, the player will be healed after battle (and its assumed to be the tutorial battle)
 	.macro trainerbattle_earlyrival trainer:req, flags:req, lose_text:req, victory_text:req
-	trainerbattle TRAINER_BATTLE_EARLY_RIVAL, OBJ_ID_NONE, \trainer, NULL, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, \victory_text, NULL, FALSE, TRUE, FALSE, FALSE, \flags
+	trainerbattle OBJ_ID_NONE, \trainer, NULL, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, \victory_text, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, \flags
+	.endm
+
+	@ Starts a lavaridge gym battle
+	.macro trainerbattle_lavaridge localId: req, trainer: req, intro_text: req, lose_text: req, event_script: req
+	trainerbattle \localId, \trainer, \intro_text, \lose_text, \event_script, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle using the battle information stored in RAM (usually by the scripts in trainer_battle.inc, which
@@ -1015,9 +1046,26 @@
 	.byte \textTop
 	.endm
 
+	@ Sets dest to a species generated by one of the RandomSpeciesGeneratorOptions entries.
+	@ arg1 and arg2 are optional values forwarded to the option's filterFunc.
+	.macro getrandomspecies dest:req, option:req, arg1=0xFFFF, arg2=0xFFFF
+	callnative ScrCmd_getrandomspecies, requests_effects=1
+	.2byte \dest
+	.2byte \option
+	.2byte \arg1
+	.2byte \arg2
+	.endm
+
+	@ Sets dest to an item generated by one of the RandomItemGeneratorOptions entries.
+	.macro getrandomitem dest:req, option:req
+	callnative ScrCmd_getrandomitem, requests_effects=1
+	.2byte \dest
+	.2byte \option
+	.endm
+
 	@ Gives the player a Pokémon of the specified species and level, and allows to customize extra parameters.
 	@ VAR_RESULT will be set to MON_GIVEN_TO_PARTY, MON_GIVEN_TO_PC, or MON_CANT_GIVE depending on the outcome.
-	.macro givemon species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel
+	.macro givemon species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg, ignoreTotalEvCheck = FALSE
 	callnative ScrCmd_createmon, requests_effects=1
 	.byte 0
 	.byte PARTY_SIZE @ assign to first empty slot
@@ -1049,6 +1097,8 @@
 	.ifnb \gmaxFactor; .set givemon_flags, givemon_flags | (1 << 22); .endif
 	.ifnb \teraType; .set givemon_flags, givemon_flags | (1 << 23); .endif
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
+	.ifnb \isEgg; .set givemon_flags, givemon_flags | (1 << 25); .endif
+	.if \ignoreTotalEvCheck; .set givemon_flags, givemon_flags | (1 << 26); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
@@ -1075,11 +1125,12 @@
 	.ifnb \gmaxFactor; .2byte \gmaxFactor; .endif
 	.ifnb \teraType; .2byte \teraType; .endif
 	.ifnb \dmaxLevel; .2byte \dmaxLevel; .endif
+	.ifnb \isEgg; .2byte \isEgg; .endif
 	.endm
 
 	@ creates a mon for a given party and slot
 	@ otherwise
-	.macro createmon side:req, slot:req, species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel
+	.macro createmon side:req, slot:req, species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel, isEgg, ignoreTotalEvCheck = FALSE
 	callnative ScrCmd_createmon, requests_effects=1
 	.byte \side	 @ 0 - player, 1 - opponent
 	.byte \slot	 @ 0-5
@@ -1111,6 +1162,8 @@
 	.ifnb \gmaxFactor; .set givemon_flags, givemon_flags | (1 << 22); .endif
 	.ifnb \teraType; .set givemon_flags, givemon_flags | (1 << 23); .endif
 	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
+	.ifnb \isEgg; .set givemon_flags, givemon_flags | (1 << 25); .endif
+	.if \ignoreTotalEvCheck; .set givemon_flags, givemon_flags | (1 << 26); .endif
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
@@ -1137,6 +1190,7 @@
 	.ifnb \gmaxFactor; .2byte \gmaxFactor; .endif
 	.ifnb \teraType; .2byte \teraType; .endif
 	.ifnb \dmaxLevel; .2byte \dmaxLevel; .endif
+	.ifnb \isEgg; .2byte \isEgg; .endif
 	.endm
 
 	@ Gives the player an Egg of the specified species.
@@ -1247,7 +1301,7 @@
 
 	@ Opens the Pokemart system, offering the specified products for sale.
 	@ Products should be a list of .2byte item values preceded by an .align 2
-	.macro pokemart products:req
+	.macro pokemart products=Pokemart_DefaultItemList
 	.byte SCR_OP_POKEMART
 	.4byte \products
 	.endm
@@ -1317,52 +1371,38 @@
 	.endm
 
 	@ Adds value to the player's money. If adding 'value' money would exceed MAX_MONEY, the player's money is set to MAX_MONEY.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro addmoney value:req, disable=0
+	.macro addmoney value:req
 	.byte SCR_OP_ADDMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Subtracts value from the player's money. If the player has less than 'value' money, their money is set to 0.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro removemoney value:req, disable=0
+	.macro removemoney value:req
 	.byte SCR_OP_REMOVEMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Checks if the player has money >= value. VAR_RESULT is set to TRUE if the player has enough money, or FALSE if they do not.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro checkmoney value:req, disable=0
+	.macro checkmoney value:req
 	.byte SCR_OP_CHECKMONEY
 	.4byte \value
-	.byte \disable
 	.endm
 
 	@ Creates a window showing how much money the player has.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro showmoneybox x:req, y:req, disable=0
+	.macro showmoneybox x:req, y:req
 	.byte SCR_OP_SHOWMONEYBOX
 	.byte \x
 	.byte \y
-	.byte \disable
 	.endm
 
-	@ Destroys the window created by showmoneybox. Consumption of the x and y arguments was dummied out.
+	@ Destroys the window created by showmoneybox.
 	.macro hidemoneybox
 	.byte SCR_OP_HIDEMONEYBOX
-	.byte 0  @ \x
-	.byte 0  @ \y
 	.endm
 
-	@ Updates the window created by showmoneybox. Consumption of the x and y arguments was dummied out.
-	@ If 'disable' is set to anything but 0 then this command does nothing.
-	.macro updatemoneybox disable=0
+	@ Updates the window created by showmoneybox.
+	.macro updatemoneybox
 	.byte SCR_OP_UPDATEMONEYBOX
-	.byte 0  @ \x
-	.byte 0  @ \y
-	.byte \disable
 	.endm
 
 	@ Gets whether the effects of the specified PokeNews program are active. newsKind is a POKENEWS_* constant.
@@ -1449,6 +1489,18 @@
 	.2byte \y
 	.2byte \metatileId
 	.2byte \impassable
+	.endm
+
+	@ Set a metatile at all tiles within the bounds [xmin,ymin] to [xmax,ymax] inclusive with desired elevation
+	.macro setmetatileinrange xmin:req, ymin:req, xmax:req, ymax:req, metatileId:req, collision=FALSE, elevation=0xFF
+	callnative NativeFunc_SetMetatileInRange
+	.byte \xmin
+	.byte \ymin
+	.byte \xmax
+	.byte \ymax
+	.2byte \metatileId
+	.byte \collision
+	.byte \elevation
 	.endm
 
 	@ Queues a weather change to the default weather for the map.
@@ -1662,18 +1714,14 @@
 	.byte \y
 	.endm
 
-	@ Destroys the window created by showcoins. It consumes its arguments but doesn't use them.
-	.macro hidecoinsbox x:req, y:req
+	@ Destroys the window created by showcoins.
+	.macro hidecoinsbox
 	.byte SCR_OP_HIDECOINSBOX
-	.byte \x
-	.byte \y
 	.endm
 
-	@ Updates the window created by showcoins. It consumes its arguments but doesn't use them.
-	.macro updatecoinsbox x:req, y:req
+	@ Updates the window created by showcoins.
+	.macro updatecoinsbox
 	.byte SCR_OP_UPDATECOINSBOX
-	.byte \x
-	.byte \y
 	.endm
 
 	@ Increases the value of the specified game stat by 1. The maximum value of a stat is 0xFFFFFF. See include/constants/game_stat.h
@@ -1915,23 +1963,27 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, FALSE, \initialSelected, \callbacks, \argv
 	.endm
 
+	@ Creates an option to be collected with dynmultistack.
 	.macro dynmultipush name:req, id:req
 	.byte SCR_OP_DYNMULTIPUSH
 	.4byte \name
 	.2byte \id
 	.endm
 
-	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
-	.macro getbraillestringwidth msg:req
-	.byte SCR_OP_GETBRAILLESTRINGWIDTH
-	.4byte \msg
-	.endm
-
+	@ Displays a multichoice box using the dynmultipush options before it in the script, from which the user can choose a selection, and blocks script execution until a selection is made.
+	@ If ignoreBPress is set to a non-zero value, then the user will not be allowed to back out of the multichoice with the B button.
+	@ For a simple menu supply DYN_MULTICHOICE_CB_NONE in callbacks.
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
 @ Supplementary
+
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
 
 	.macro goto_if_unset flag:req, dest:req
 	checkflag \flag
@@ -1963,28 +2015,28 @@
 	.endif
 	.endm
 
-	.macro goto_if_lt a:req, b, c @ LESS THAN
-	trycompare goto_if, 0, \a, \b, \c
+	.macro goto_if_lt a:req, b, c
+	trycompare goto_if, LESS_THAN, \a, \b, \c
 	.endm
 
-	.macro goto_if_eq a:req, b, c @ EQUAL
-	trycompare goto_if, 1, \a, \b, \c
+	.macro goto_if_eq a:req, b, c
+	trycompare goto_if, EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_gt a:req, b, c @ GREATER THAN
-	trycompare goto_if, 2, \a, \b, \c
+	.macro goto_if_gt a:req, b, c
+	trycompare goto_if, GREATER_THAN, \a, \b, \c
 	.endm
 
-	.macro goto_if_le a:req, b, c @ LESS THAN OR EQUAL
-	trycompare goto_if, 3, \a, \b, \c
+	.macro goto_if_le a:req, b, c
+	trycompare goto_if, LESS_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_ge a:req, b, c @ GREATER THAN OR EQUAL
-	trycompare goto_if, 4, \a, \b, \c
+	.macro goto_if_ge a:req, b, c
+	trycompare goto_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro goto_if_ne a:req, b, c @ NOT EQUAL
-	trycompare goto_if, 5, \a, \b, \c
+	.macro goto_if_ne a:req, b, c
+	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
 	.macro call_if_unset flag:req, dest:req
@@ -1997,28 +2049,28 @@
 	call_if TRUE, \dest
 	.endm
 
-	.macro call_if_lt a:req, b, c @ LESS THAN
-	trycompare call_if, 0, \a, \b, \c
+	.macro call_if_lt a:req, b, c
+	trycompare call_if, LESS_THAN, \a, \b, \c
 	.endm
 
-	.macro call_if_eq a:req, b, c @ EQUAL
-	trycompare call_if, 1, \a, \b, \c
+	.macro call_if_eq a:req, b, c
+	trycompare call_if, EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_gt a:req, b, c @ GREATER THAN
-	trycompare call_if, 2, \a, \b, \c
+	.macro call_if_gt a:req, b, c
+	trycompare call_if, GREATER_THAN, \a, \b, \c
 	.endm
 
-	.macro call_if_le a:req, b, c @ LESS THAN OR EQUAL
-	trycompare call_if, 3, \a, \b, \c
+	.macro call_if_le a:req, b, c
+	trycompare call_if, LESS_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_ge a:req, b, c @ GREATER THAN OR EQUAL
-	trycompare call_if, 4, \a, \b, \c
+	.macro call_if_ge a:req, b, c
+	trycompare call_if, GREATER_THAN_OR_EQUAL, \a, \b, \c
 	.endm
 
-	.macro call_if_ne a:req, b, c @ NOT EQUAL
-	trycompare call_if, 5, \a, \b, \c
+	.macro call_if_ne a:req, b, c
+	trycompare call_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c
@@ -2219,18 +2271,6 @@
 	settotemboost \battler, 0, 0, 0, 0, 0, 0, 2
 	.endm
 
-	@ Attempts to trigger a special evolution method in the overworld.
-	@ There may be other conditions required which are coded for in GetEvolutionTargetSpecies.
-	@ EX: tryspecialevo EVO_WATER_SCROLL, FALSE, FALSE triggers Kubfu's EVO_WATER_SCROLL evolution
-	@ 	  method, cannot be cancelled in the evolution scene, and will only evolve one Kubfu if there
-	@	  are multiple in the player's party.
-	.macro tryspecialevo evoMethod:req, canStopEvo=TRUE, tryMultiple=TRUE
-	setvar VAR_0x8000, \evoMethod
-	setvar VAR_0x8001, \canStopEvo
-	setvar VAR_0x8002, \tryMultiple
-	special TrySpecialScriptEvolution
-	.endm
-
 	.macro ai_vs_ai_battle trainer1:req, trainer2:req
 	setflag B_FLAG_AI_VS_AI_BATTLE
 	setvar VAR_0x8004, \trainer1
@@ -2341,9 +2381,9 @@
 	.endm
 
 	@ Buffers the nickname of the first alive party member.
-	.macro bufferlivemonnickname out:req
+	.macro bufferlivemonnickname stringVarId:req
 	callnative BufferFirstLiveMonNickname, requests_effects=1
-	.byte \out
+	stringvar \stringVarId
 	.endm
 
 	@ Executes Follower actions
@@ -2523,7 +2563,6 @@
 	.macro checkspecies speciesId:req, mode=NO_PARTY_SCREEN
 	.if \mode == OPEN_PARTY_SCREEN
 		special ChoosePartyMon
-		waitstate
 		callnative Scrcmd_checkspecies_choose, requests_effects=1
 		.2byte \speciesId
 	.else
@@ -2652,7 +2691,7 @@
 	callnative DoFacilityTrainerBattle
 	.byte \facility
 	.endm
-	
+
 	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req
 	setvar VAR_0x8005, \tradeId
 	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
@@ -2665,7 +2704,7 @@
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
-	waitstate
+	bufferspeciesname STR_VAR_1, VAR_0x8009
 	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
 	.endm
 
@@ -2694,9 +2733,28 @@
 	.byte \selectionType
 	.endm
 
+	@ picks the first mon in party matching the given selectionType (enum PcMonSelectionType)
+	.macro pickpartymon selectionType:req
+	callnative PickPartyMon
+	.byte \selectionType
+	.endm
+
 	.macro mappreview duration:req
 	callnative MapPreviewScript
 	.2byte \duration
+	.endm
+
+	.macro tryspecialevo evoArg:req, canStopEvo=TRUE, tryMultiple=FALSE
+	setvar VAR_0x8000, \canStopEvo
+	setvar VAR_0x8005, \evoArg
+	.if \tryMultiple
+		setvar VAR_RESULT, 0
+		setvar VAR_0x8006, 0
+		callnative Script_TriggerMultipleEvolutions
+	.else
+		pickpartymon SELECT_PC_MON_EVOLUTION
+		callnative Script_TriggerUniqueEvolution
+	.endif
 	.endm
 
 @ Follower NPCs
@@ -2819,22 +2877,99 @@
 	.2byte \state
 	.endm
 
-	@ Retrieves the move relearner state and stores it in the specified var
-	.macro getmoverelearnerstate varId:req
-	callnative ScrCmd_getmoverelearnerstate, requests_effects=1
-	.4byte \varId
-	.endm
-
-	@ Execute script if bag has TMs and/or HMs
-	.macro istmrelearneractive destination:req
-	callnative ScrCmd_istmrelearneractive, requests_effects=1
-	.4byte \destination
-	.endm
-
 	@ Sets a starting status for the next battle. Can be stacked.
 	.macro setstartingstatus status:req
 	callnative ScrCmd_setstartingstatus
 	.byte \status
+	.endm
+
+	@ Makes the player and specified (localId) object face one another.
+	.macro facetogether localIdOne=LOCALID_PLAYER, localIdTwo=VAR_LAST_TALKED
+	callnative ScriptFaceEachOther, requests_effects=1
+	.2byte \localIdOne
+	.2byte \localIdTwo
+	.endm
+
+	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found.
+	.macro getoverworldwildencounterspecies var:req, localId=VAR_LAST_TALKED
+	callnative SetOverworldObjectSpecies, requests_effects=1
+	.2byte \var
+	.2byte \localId
+	.endm
+
+	@ Starts an Overworld Wild Encounter with a specified (localId) object, if possible.
+	.macro tryoverworldwildencounter localId=VAR_LAST_TALKED
+	callnative StartWildBattleWithOWE, requests_effects=1
+	.2byte \localId
+	.endm
+
+	@ Start a scripted approach for a specified (localId) overworld wild encounter towards the player.
+	.macro overworldwildencounterapproach localId=VAR_LAST_TALKED
+	callnative OWEApproachForBattle, requests_effects=1
+	.2byte \localId
+	.endm
+
+@ Mass Outbreaks
+
+	.macro setstaticoutbreak outbreakIndex:req, noReplacement=TRUE
+	callnative ScrCmd_setstaticoutbreak
+	.2byte \outbreakIndex
+	.byte \noReplacement
+	.endm
+
+	.macro setdynamicoutbreak species:req, level:req, move1:req, move2:req, move3:req, move4:req, probability:req, daysLeft:req, map:req, noReplacement=TRUE
+	callnative ScrCmd_setdynamicoutbreak
+	.2byte \species
+	.2byte \level
+	.2byte \move1
+	.2byte \move2
+	.2byte \move3
+	.2byte \move4
+	.2byte \probability
+	.2byte \daysLeft
+	.2byte \map
+	.byte \noReplacement
+	.endm
+
+	.macro editoutbreak species=SPECIES_NONE, level=0, move1=MOVES_COUNT, move2=MOVES_COUNT, move3=MOVES_COUNT, move4=MOVES_COUNT, probability=0xFF, daysLeft=0x3FFF, map=MAP_UNDEFINED
+	callnative ScrCmd_editoutbreak
+	.2byte \species
+	.2byte \level
+	.2byte \move1
+	.2byte \move2
+	.2byte \move3
+	.2byte \move4
+	.2byte \probability
+	.2byte \daysLeft
+	.2byte \map
+	.endm
+
+	@ Ends the current active outbreak
+	.macro clearactiveoutbreak
+	editoutbreak daysLeft=0
+	.endm
+
+	@ Starts a new outbreak. Unless `noReplacement` is False, it will fail if an outbreak is already active
+	@ If `outbreakIndex` is set, it will use the static outbreak data as a base them modify it with the other set values
+	.macro startoutbreak outbreakIndex=OUTBREAK_COUNT, noReplacement=TRUE, species=SPECIES_NONE, level=0, move1=MOVES_COUNT, move2=MOVES_COUNT, move3=MOVES_COUNT, move4=MOVES_COUNT, probability=0xFF, daysLeft=0x3FFF, map=MAP_UNDEFINED
+	.if \outbreakIndex == OUTBREAK_COUNT
+		setdynamicoutbreak \species, \level, \move1, \move2, \move3, \move4, \probability, \daysLeft, \map, \noReplacement
+	.else
+		setstaticoutbreak \outbreakIndex, \noReplacement
+		editoutbreak \species, \level, \move1, \move2, \move3, \move4, \probability, \daysLeft, \map
+	.endif
+	.endm
+
+	@ Stores TRUE or FALSE in VAR_RESULT to indicate if a mass outbreak is active
+	.macro checkhasactiveoutbreak
+	callnative ScrCmd_checkhasactiveoutbreak
+	.endm
+
+	@ Sets outbreak data from the save file (`dataField` should be a `enum MassOutbreakData` value) into the variable `var`
+	.macro getmassoutbreakdata var:req, dataField:req
+	callnative ScrCmd_getmassoutbreakdata
+	.2byte \var
+	.byte \dataField
 	.endm
 
 @ FRLG

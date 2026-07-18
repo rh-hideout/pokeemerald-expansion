@@ -169,7 +169,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/35115312?v=4",
       "profile": "https://github.com/LinathanZel",
       "contributions": [
-        "code"
+        "code",
+        "userTesting"
       ]
     },
     {
@@ -227,7 +228,9 @@
       "profile": "https://github.com/RubyRaven6",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "tool",
+        "tutorial"
       ]
     },
     {
@@ -310,7 +313,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/118256341?v=4",
       "profile": "https://github.com/fakuzatsu",
       "contributions": [
-        "code"
+        "code",
+        "design"
       ]
     },
     {
@@ -581,10 +585,10 @@
       ]
     },
     {
-      "login": "izrofid",
-      "name": "Kildemal",
+      "login": "miriamlefae",
+      "name": "Miriam",
       "avatar_url": "https://avatars.githubusercontent.com/u/206095739?v=4",
-      "profile": "https://github.com/izrofid",
+      "profile": "https://github.com/miriamlefae",
       "contributions": [
         "code"
       ]
@@ -678,7 +682,7 @@
       "contributions": [
         "bug"
       ]
-    }
+    },
     {
       "login": "gammel2013",
       "name": "gammel2013",
@@ -687,14 +691,51 @@
       "contributions": [
         "bug"
       ]
-    }
+    },
     {
       "login": "blusunrize",
       "name": "blusunrize",
       "avatar_url": "https://avatars.githubusercontent.com/u/4106382?v=4",
       "profile": "https://github.com/BluSunrize",
       "contributions": [
-        "bug"
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "jtebbe",
+      "name": "jtebbe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15947257?v=4",
+      "profile": "https://github.com/jtebbe",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Liamjd14",
+      "name": "Liam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/175732139?v=4",
+      "profile": "https://github.com/Liamjd14",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Gastly92",
+      "name": "Gastly92",
+      "avatar_url": "https://avatars.githubusercontent.com/u/262681076?v=4",
+      "profile": "https://github.com/Gastly92",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "montmoguri",
+      "name": "Montblanc",
+      "avatar_url": "https://avatars.githubusercontent.com/u/202215938?v=4",
+      "profile": "https://github.com/montmoguri",
+      "contributions": [
+        "design"
       ]
     }
   ],

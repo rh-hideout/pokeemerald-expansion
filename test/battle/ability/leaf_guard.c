@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun")
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if Cloud Nine/Air Lock is on the field")
 {
     enum Move move;
-    u32 species;
+    enum Species species;
     enum Ability ability;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP;  status = STATUS1_BURN;         species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Tox
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field")
 {
     enum Item item;
-    u32 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
@@ -149,7 +149,8 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+)")
 
 SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on the field")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }

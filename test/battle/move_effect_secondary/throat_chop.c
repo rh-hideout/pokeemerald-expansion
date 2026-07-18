@@ -65,3 +65,19 @@ SINGLE_BATTLE_TEST("Throat Chop usage when target is already prevented from usin
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Throat Chop usage causes Uproar to end at the end of the turn")
+{
+    GIVEN {
+        ASSUME(IsSoundMove(MOVE_UPROAR));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_UPROAR, MOVE_EFFECT_UPROAR));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_UPROAR); MOVE(opponent, MOVE_THROAT_CHOP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, opponent);
+        MESSAGE("Wobbuffet calmed down.");
+    }
+}

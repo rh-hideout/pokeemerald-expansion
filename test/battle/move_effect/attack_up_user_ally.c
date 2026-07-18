@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Howl raises user's Attack by 1 stage", s16 damage)
     PARAMETRIZE { raiseAttack = FALSE; }
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP);
+        ASSUME_STAT_CHANGE(MOVE_HOWL, attack: +1);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
         HP_BAR(opponentLeft, captureDamage: &damage[0]);
 
         ABILITY_POPUP(playerRight, ABILITY_SOUNDPROOF);
-        MESSAGE("Voltorb's Soundproof blocks Howl!");
+        MESSAGE("It doesn't affect Voltorb…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Wobbuffet's Attack rose!");

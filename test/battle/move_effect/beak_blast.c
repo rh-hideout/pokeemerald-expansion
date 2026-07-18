@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
 
 SINGLE_BATTLE_TEST("Beak Blast doesn't burn when charging a two turn move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 

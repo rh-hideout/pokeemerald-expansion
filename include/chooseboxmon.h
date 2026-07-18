@@ -14,6 +14,7 @@ u32 IsBoxMonExcluded(struct BoxPokemon *boxmon);
 bool32 CanBoxMonBeSelected(struct BoxPokemon *boxmon);
 s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId);
 s32 GetLearnMoveStartState(void);
+s32 GetLearnMoveStartAfterPromptState(void);
 s32 GetLearnMoveResumeAfterSummaryScreenState(void);
 
 #endif // GUARD_CHOOSEBOXMON_H

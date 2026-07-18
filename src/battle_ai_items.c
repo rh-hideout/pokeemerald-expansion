@@ -27,8 +27,6 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
 bool32 ShouldUseItem(enum BattlerId battler)
 {
-    struct Pokemon *party;
-    u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
 
@@ -45,14 +43,6 @@ bool32 ShouldUseItem(enum BattlerId battler)
 
     if (AiExpectsToFaintPlayer(battler))
         return FALSE;
-
-    party = GetBattlerParty(battler);
-
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
-    {
-        if (IsValidForBattle(&party[monIndex]))
-            validMons++;
-    }
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
@@ -87,7 +77,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
                 shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:
-            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (IsBattlersFirstTurn(battler) || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -95,17 +85,18 @@ bool32 ShouldUseItem(enum BattlerId battler)
                     break;
                 }
 
-                enum StatChange statChange = STAT_CHANGE_ATK;
+                enum Stat stat = STAT_ATK;
+                u32 stage = 1;
 
                 if (B_X_ITEMS_BUFF >= GEN_7)
-                    statChange = STAT_CHANGE_ATK_2;
+                    stage = 2;
 
-                statChange = statChange + itemEffects[1] - STAT_ATK;
+                stat = stat + itemEffects[1] - STAT_ATK;
 
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
                 break;
@@ -114,7 +105,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
         case EFFECT_ITEM_INCREASE_ALL_STATS:
             if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
                 break;
-            if (gBattleStruct->battlerState[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (IsBattlersFirstTurn(battler) || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
                 {
@@ -140,7 +131,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
             }
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
-            if (!gBattleStruct->battlerState[battler].isFirstTurn
+            if (!IsBattlersFirstTurn(battler)
                 || gBattleMons[battler].volatiles.dragonCheer
                 || gBattleMons[battler].volatiles.focusEnergy
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
@@ -164,7 +155,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
             break;
         case EFFECT_ITEM_SET_MIST:
             battlerSide = GetBattlerSide(battler);
-            if (gBattleStruct->battlerState[battler].isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
+            if (IsBattlersFirstTurn(battler) && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_REVIVE:

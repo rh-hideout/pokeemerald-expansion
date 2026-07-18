@@ -29,6 +29,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -47,7 +48,6 @@
 #include "type_icons.h"
 #include "pokedex.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void PlayerHandleLoadMonSprite(enum BattlerId battler);
 static void PlayerHandleDrawTrainerPic(enum BattlerId battler);
@@ -195,12 +195,13 @@ static void CompleteOnBattlerSpritePosX_0(enum BattlerId battler)
         BtlController_Complete(battler);
 }
 
-static u16 GetPrevBall(u16 ballId)
+static enum Item GetPrevBall(enum Item ballId)
 {
     s32 i;
-    s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
-     for (i = 0; i < POKEBALL_COUNT; i++)
+    enum PokeBall index = ItemIdToBallId(ballId);
+    enum Item newBall = ITEM_NONE;
+
+    for (i = 0; i < POKEBALL_COUNT; i++)
     {
         index--;
         if (index == -1)
@@ -212,11 +213,12 @@ static u16 GetPrevBall(u16 ballId)
     return ballId;
 }
 
-static u32 GetNextBall(u32 ballId)
+static enum Item GetNextBall(enum Item ballId)
 {
     s32 i;
-    s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
+    enum PokeBall index = ItemIdToBallId(ballId);
+    enum Item newBall = ITEM_NONE;
+
     for (i = 0; i < POKEBALL_COUNT; i++)
     {
         index++;
@@ -511,7 +513,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
                  || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
                     validTarget = FALSE;
-                
+
                 if (B_SHOW_EFFECTIVENESS && validTarget)
                     MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
 
@@ -1100,7 +1102,7 @@ void HandleMoveSwitching(enum BattlerId battler)
             }
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+        if (IS_FRLG && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
             gBattlerControllerFuncs[battler] = OakOldManHandleInputChooseMove;
         else
             gBattlerControllerFuncs[battler] = HandleInputChooseMove;
@@ -1423,7 +1425,7 @@ static void Task_GiveExpToMon(u8 taskId)
 
     if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES || monId != gBattlerPartyIndexes[battler]) // Give exp without moving the expbar.
     {
-        struct Pokemon *mon = &gPlayerParty[monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monId];
         enum Species species = GetMonData(mon, MON_DATA_SPECIES);
         u8 level = GetMonData(mon, MON_DATA_LEVEL);
         u32 currExp = GetMonData(mon, MON_DATA_EXP);
@@ -1469,7 +1471,7 @@ static void Task_PrepareToGiveExpWithExpBar(u8 taskId)
     u8 monIndex = gTasks[taskId].tExpTask_monId;
     s32 gainedExp = GetTaskExpValue(taskId);
     enum BattlerId battler = gTasks[taskId].tExpTask_battler;
-    struct Pokemon *mon = &gPlayerParty[monIndex];
+    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monIndex];
     u8 level = GetMonData(mon, MON_DATA_LEVEL);
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = GetMonData(mon, MON_DATA_EXP);
@@ -1500,7 +1502,7 @@ static void Task_GiveExpWithExpBar(u8 taskId)
         u8 monId = gTasks[taskId].tExpTask_monId;
         s32 gainedExp = GetTaskExpValue(taskId);
         enum BattlerId battler = gTasks[taskId].tExpTask_battler;
-        struct Pokemon *mon = &gPlayerParty[monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monId];
 
         newExpPoints = MoveBattleBar(battler, gHealthboxSpriteIds[battler], EXP_BAR, 0);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
@@ -1563,9 +1565,9 @@ static void Task_UpdateLvlInHealthbox(u8 taskId)
         u8 monIndex = gTasks[taskId].tExpTask_monId;
 
         if (IsDoubleBattle() == TRUE && monIndex == gBattlerPartyIndexes[BATTLE_PARTNER(battler)])
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], &gPlayerParty[monIndex], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], &gParties[B_TRAINER_PLAYER][monIndex], HEALTHBOX_ALL);
         else
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gPlayerParty[monIndex], HEALTHBOX_ALL);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gParties[B_TRAINER_PLAYER][monIndex], HEALTHBOX_ALL);
 
         gTasks[taskId].func = Task_SetControllerToWaitForString;
     }
@@ -1587,7 +1589,7 @@ static void OpenPartyMenuToChooseMon(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = WaitForMonSelection;
         caseId = gTasks[gBattleControllerData[battler]].data[0];
         DestroyTask(gBattleControllerData[battler]);
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPartyMenuInBattle(caseId);
     }
 }
@@ -1614,8 +1616,12 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
     {
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         CB2_BagMenuFromBattle();
+        if (gBattleStruct->victoryCatchState == VICTORY_CATCH_OPEN_BAG)
+            CB2_ChooseBall();
+        else
+            CB2_BagMenuFromBattle();
     }
 }
 
@@ -1779,9 +1785,9 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     u8 cat_desc[7] = _("CAT: ");
     u8 pwr_desc[7] = _("PWR: ");
     u8 acc_desc[7] = _("ACC: ");
-    u8 cat_start[] = _("{CLEAR_TO 0x03}");
-    u8 pwr_start[] = _("{CLEAR_TO 0x38}");
-    u8 acc_start[] = _("{CLEAR_TO 0x6C}");
+    u8 cat_start[] = _("{CLEAR_TO 3}");
+    u8 pwr_start[] = _("{CLEAR_TO 56}");
+    u8 acc_start[] = _("{CLEAR_TO 108}");
     LoadMessageBoxAndBorderGfx();
     DrawStdWindowFrame(B_WIN_MOVE_DESCRIPTION, FALSE);
     if (pwr < 2)
@@ -1881,19 +1887,10 @@ static void PlayerHandleLoadMonSprite(enum BattlerId battler)
 
 enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
 {
-    enum TrainerPicID trainerPicId;
-
     u8 gender = gLinkPlayers[multiplayerId].gender;
     enum GameVersion version = gLinkPlayers[multiplayerId].version & 0xFF;
 
-    if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
-        trainerPicId = gender + TRAINER_PIC_BACK_RED;
-    else if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
-        trainerPicId = gender + TRAINER_PIC_BACK_RUBY_SAPPHIRE_BRENDAN;
-    else
-        trainerPicId = gender + TRAINER_PIC_BACK_BRENDAN;
-
-    return trainerPicId;
+    return GetPlayerTrainerPic(gender, version);
 }
 
 static enum TrainerPicID PlayerGetTrainerBackPicId(void)
@@ -1903,7 +1900,7 @@ static enum TrainerPicID PlayerGetTrainerBackPicId(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     return trainerPicId;
 }
@@ -1917,14 +1914,14 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
 
-    if (IsMultibattleTest())
+    if (TESTING)
     {
-        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = TRAINER_PIC_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
             xPos = 80;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
     }
     else
     {
@@ -1944,13 +1941,13 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
             }
             else
             {
-                yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+                yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
             }
         }
         else
         {
             xPos = 80;
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+            yPos = (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80;
         }
     }
 
@@ -2180,6 +2177,8 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
     for (i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
+    memcpy(gBattleStruct->battlerPartyOrders[battler], gBattlePartyCurrentOrder, sizeof(gBattlePartyCurrentOrder));
+
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CANT_SWITCH
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CHOOSE_FAINTED_MON
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_SEND_MON_TO_BOX)
@@ -2212,7 +2211,7 @@ void PlayerHandleExpUpdate(enum BattlerId battler)
     u8 monId = gBattleResources->bufferA[battler][1];
     s32 taskId, expPointsToGive;
 
-    if (GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL) >= MAX_LEVEL)
+    if (GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL) >= MAX_LEVEL)
     {
         BtlController_Complete(battler);
     }
@@ -2302,8 +2301,8 @@ static void PlayerHandleOneReturnValue_Duplicate(enum BattlerId battler)
 
 static void PlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    const u32 paletteIndex = PlayerGetTrainerBackPicId() - TRAINER_PIC_FRONT_COUNT;
-    const u16 *trainerPal = gTrainerBacksprites[paletteIndex].palette.data;
+    enum TrainerPicID trainerPicID = PlayerGetTrainerBackPicId();
+    const u16 *trainerPal = GetTrainerBackPicPalette(trainerPicID);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
 
@@ -2387,9 +2386,11 @@ enum
 {
     EFFECTIVENESS_CANNOT_VIEW,
     EFFECTIVENESS_NO_EFFECT,
+    EFFECTIVENESS_MOSTLY_INEFFECTIVE,
     EFFECTIVENESS_NOT_VERY_EFFECTIVE,
     EFFECTIVENESS_NORMAL,
     EFFECTIVENESS_SUPER_EFFECTIVE,
+    EFFECTIVENESS_EXTREMELY_EFFECTIVE,
 };
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
@@ -2409,16 +2410,18 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battlerAtk][4]);
-    struct BattleContext ctx = {0};
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];
     ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battlerAtk), ctx.move, battlerAtk, MON_IN_BATTLE);
     ctx.updateFlags = FALSE;
-    ctx.abilityAtk = GetBattlerAbility(battlerAtk);
-    ctx.abilityDef = GetBattlerAbility(battlerDef);
-    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk);
-    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef);
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain;
+    ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
+    ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);
+    ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
+    ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(battlerDef);
 
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(&ctx);
 
@@ -2427,6 +2430,8 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
 
     if (modifier == UQ_4_12(0.0))
         return EFFECTIVENESS_NO_EFFECT; // No effect
+    else if (modifier <= UQ_4_12(0.25))
+        return EFFECTIVENESS_MOSTLY_INEFFECTIVE; // Mostly ineffective
     else if (modifier <= UQ_4_12(0.5))
         return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
     else if (modifier >= UQ_4_12(2.0))
@@ -2469,9 +2474,11 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum Bat
         switch (foeEffectiveness)
         {
         case EFFECTIVENESS_SUPER_EFFECTIVE:
+        case EFFECTIVENESS_EXTREMELY_EFFECTIVE:
             StringCopy(txtPtr, superEffectiveIcon);
             break;
         case EFFECTIVENESS_NOT_VERY_EFFECTIVE:
+        case EFFECTIVENESS_MOSTLY_INEFFECTIVE:
             StringCopy(txtPtr, notVeryEffectiveIcon);
             break;
         case EFFECTIVENESS_NO_EFFECT:

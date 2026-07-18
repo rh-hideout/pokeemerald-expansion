@@ -2,6 +2,7 @@
 #include "item_use.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_stat_change.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "berry.h"
@@ -234,6 +235,7 @@ static void CB2_CheckMail(void)
 {
     struct Mail mail;
     mail.itemId = gSpecialVar_ItemId;
+    mail.species = SPECIES_NONE;
     ReadMail(&mail, CB2_ReturnToBagMenuPocket, FALSE);
 }
 
@@ -1009,12 +1011,6 @@ static void Task_UseRepel(u8 taskId)
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
     }
 }
-void HandleUseExpiredRepel(struct ScriptContext *ctx)
-{
-#if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)));
-#endif
-}
 
 void ItemUseOutOfBattle_Lure(u8 taskId)
 {
@@ -1052,13 +1048,6 @@ static void Task_UseLure(u8 taskId)
         else
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
     }
-}
-
-void HandleUseExpiredLure(struct ScriptContext *ctx)
-{
-#if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)) | REPEL_LURE_MASK);
-#endif
 }
 
 static void Task_UsedBlackWhiteFlute(u8 taskId)
@@ -1150,7 +1139,7 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_NO_ROOM;
     else if (GetConfig(B_SEMI_INVULNERABLE_CATCH) >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
-    else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
+    else if (FlagGet(WE_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
 
     return BALL_THROW_ABLE;
@@ -1164,44 +1153,6 @@ bool32 CanThrowBall(void)
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
-void ItemUseInBattle_PokeBall(u8 taskId)
-{
-    switch (GetBallThrowableState())
-    {
-    case BALL_THROW_ABLE:
-    default:
-        RemoveBagItem(gSpecialVar_ItemId, 1);
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            Task_FadeAndCloseBagMenu(taskId);
-        else
-            CloseBattlePyramidBag(taskId);
-        break;
-    case BALL_THROW_UNABLE_TWO_MONS:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_TwoMons, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_TwoMons, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_NO_ROOM:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, gText_BoxFull, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, gText_BoxFull, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_SEMI_INVULNERABLE:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_SemiInvulnerable, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_SemiInvulnerable, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_DISABLED_FLAG:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_Disabled, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_Disabled, Task_CloseBattlePyramidBagMessage);
-        break;
-    }
-}
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
@@ -1254,7 +1205,7 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
 // Returns whether an item can be selected in battle and sets the fail text.
 bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
-    u16 battleUsage = GetItemBattleUsage(itemId);
+    enum EffectItem battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
     u32 battlerTarget;
@@ -1275,6 +1226,24 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
 
     switch (battleUsage)
     {
+    case EFFECT_ITEM_INCREASE_STAT:
+        if (hp == 0 || gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
+            cannotUse = TRUE;
+        else
+            SetStatChange(battlerTarget, GetItemEffect(itemId)[1], 1);
+        break;
+    case EFFECT_ITEM_SET_FOCUS_ENERGY:
+        if (hp == 0 ||gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
+            cannotUse = TRUE;
+        break;
+    case EFFECT_ITEM_SET_MIST:
+        if (gSideStatuses[GetBattlerSide(gBattlerInMenuId)] & SIDE_STATUS_MIST)
+            cannotUse = TRUE;
+        break;
     case EFFECT_ITEM_ESCAPE:
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             cannotUse = TRUE;
@@ -1349,6 +1318,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon, u32 slotId)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
+    // Never called
     {
         if (hp == 0 || slotId > 1)
         {
@@ -1401,6 +1371,9 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon, u32 slotId)
         {
             cannotUse = TRUE;
         }
+        break;
+    case EFFECT_ITEM_USE_POKE_FLUTE:
+        // ISSUE #10182
         break;
     }
 
@@ -1625,7 +1598,7 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 
     for (i = 0; i < CalculatePlayerPartyCount(); i++)
     {
-        if (!ExecuteTableBasedItemEffect(&gPlayerParty[i], ITEM_AWAKENING, i, 0))
+        if (!ExecuteTableBasedItemEffect(&gParties[B_TRAINER_PLAYER][i], ITEM_AWAKENING, i, 0))
             wokeSomeoneUp = TRUE;
     }
 

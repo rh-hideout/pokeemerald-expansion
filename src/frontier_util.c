@@ -51,18 +51,7 @@ struct FrontierBrainMon
     u8 fixedIV;
     u8 nature;
     u8 evs[NUM_STATS];
-    u16 moves[MAX_MON_MOVES];
-};
-
-struct FrontierBrain
-{
-    u16 trainerId;
-    u8 objEventGfx;
-    u8 isFemale;
-    const u8 *lostTexts[2];
-    const u8 *wonTexts[2];
-    u16 battledBit[2];
-    u8 streakAppearances[4];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 // This file's functions.
@@ -98,7 +87,7 @@ static void ShowArenaResultsWindow(void);
 static void ShowPyramidResultsWindow(void);
 static void ShowLinkContestResultsWindow(void);
 static void CopyFrontierBrainText(bool8 playerWonText);
-static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies);
+static u16 *MakeCaughtBannedSpeciesList(u32 totalBannedSpecies);
 static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
 static void Task_BannedSpeciesWindowInput(u8 taskId);
 
@@ -121,6 +110,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 0, 1 << 1},
         .streakAppearances = {35, 70, 35, 1},
+        .goldSymbolFlag = FLAG_SYS_TOWER_GOLD,
+        .silverSymbolFlag = FLAG_SYS_TOWER_SILVER,
     },
     [FRONTIER_FACILITY_DOME] =
     {
@@ -143,6 +134,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 2, 1 << 3},
         .streakAppearances = {4, 9, 5, 0},
+        .goldSymbolFlag = FLAG_SYS_DOME_GOLD,
+        .silverSymbolFlag = FLAG_SYS_DOME_SILVER,
     },
     [FRONTIER_FACILITY_PALACE] =
     {
@@ -167,6 +160,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 4, 1 << 5},
         .streakAppearances = {21, 42, 21, 1},
+        .goldSymbolFlag = FLAG_SYS_PALACE_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PALACE_SILVER,
     },
     [FRONTIER_FACILITY_ARENA] =
     {
@@ -191,6 +186,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 6, 1 << 7},
         .streakAppearances = {28, 56, 28, 1},
+        .goldSymbolFlag = FLAG_SYS_ARENA_GOLD,
+        .silverSymbolFlag = FLAG_SYS_ARENA_SILVER,
     },
     [FRONTIER_FACILITY_FACTORY] =
     {
@@ -213,6 +210,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 8, 1 << 9},
         .streakAppearances = {21, 42, 21, 1},
+        .goldSymbolFlag = FLAG_SYS_FACTORY_GOLD,
+        .silverSymbolFlag = FLAG_SYS_FACTORY_SILVER,
     },
     [FRONTIER_FACILITY_PIKE] =
     {
@@ -229,6 +228,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 10, 1 << 11},
         .streakAppearances = {28, 140, 56, 1},
+        .goldSymbolFlag = FLAG_SYS_PIKE_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PIKE_SILVER,
     },
     [FRONTIER_FACILITY_PYRAMID] =
     {
@@ -253,6 +254,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .battledBit = {1 << 12, 1 << 13},
         .streakAppearances = {21, 70, 35, 0},
+        .goldSymbolFlag = FLAG_SYS_PYRAMID_GOLD,
+        .silverSymbolFlag = FLAG_SYS_PYRAMID_SILVER,
     },
 };
 
@@ -998,7 +1001,7 @@ static void SaveSelectedParty(void)
     {
         u16 monId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         if (monId < PARTY_SIZE)
-            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gParties[B_TRAINER_PLAYER][i]);
     }
 }
 
@@ -2043,7 +2046,7 @@ static void AppendCaughtBannedMonSpeciesName(enum Species species, u8 count, s32
     StringAppend(gStringVar1, GetSpeciesName(species));
 }
 
-static void AppendIfValid(enum Species species, u16 heldItem, u16 hp, enum FrontierLevelMode lvlMode, u8 monLevel, u16 *speciesArray, u16 *itemsArray, u8 *count)
+static void AppendIfValid(enum Species species, enum Item heldItem, u16 hp, enum FrontierLevelMode lvlMode, u8 monLevel, enum Species *speciesArray, enum Item *itemsArray, u8 *count)
 {
     s32 i = 0;
 
@@ -2077,7 +2080,7 @@ static void AppendIfValid(enum Species species, u16 heldItem, u16 hp, enum Front
 // The names of ineligible Pokémon that have been caught are also buffered to print
 static void CheckPartyIneligibility(void)
 {
-    u16 speciesArray[PARTY_SIZE];
+    enum Species speciesArray[PARTY_SIZE];
     enum Item itemArray[PARTY_SIZE];
     s32 monId = 0;
     s32 toChoose = 0;
@@ -2112,10 +2115,10 @@ static void CheckPartyIneligibility(void)
         numEligibleMons = 0;
         do
         {
-            enum Species species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-            enum Item heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
-            u8 level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
-            u16 hp = GetMonData(&gPlayerParty[monId], MON_DATA_HP);
+            enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_SPECIES_OR_EGG);
+            enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HELD_ITEM);
+            u8 level = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_LEVEL);
+            u16 hp = GetMonData(&gParties[B_TRAINER_PLAYER][monId], MON_DATA_HP);
             if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
             {
                 if (heldItem == ITEM_NONE)
@@ -2155,7 +2158,7 @@ static void CheckPartyIneligibility(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
             if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
@@ -2262,7 +2265,7 @@ static void RestoreHeldItems(void)
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
             enum Item item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &item);
         }
     }
 }
@@ -2300,13 +2303,13 @@ static void ResetSketchedMoves(void)
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k)
-                        == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j))
+                        == GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_MOVE1 + j))
                         break;
                 }
                 if (k == MAX_MON_MOVES)
-                    SetMonMoveSlot(&gPlayerParty[i], MOVE_SKETCH, j);
+                    SetMonMoveSlot(&gParties[B_TRAINER_PLAYER][i], MOVE_SKETCH, j);
             }
-            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gParties[B_TRAINER_PLAYER][i]);
         }
     }
 }
@@ -2527,17 +2530,17 @@ void SaveGameFrontier(void)
     struct Pokemon *monsParty = AllocZeroed(sizeof(struct Pokemon) * PARTY_SIZE);
 
     for (i = 0; i < PARTY_SIZE; i++)
-        monsParty[i] = gPlayerParty[i];
+        monsParty[i] = gParties[B_TRAINER_PLAYER][i];
 
-    i = gPlayerPartyCount;
+    i = gPartiesCount[B_TRAINER_PLAYER];
     LoadPlayerParty();
     SetContinueGameWarpStatusToDynamicWarp();
     TrySavingData(SAVE_LINK);
     ClearContinueGameWarpStatus2();
-    gPlayerPartyCount = i;
+    gPartiesCount[B_TRAINER_PLAYER] = i;
 
     for (i = 0; i < PARTY_SIZE; i++)
-        gPlayerParty[i] = monsParty[i];
+        gParties[B_TRAINER_PLAYER][i] = monsParty[i];
 
     Free(monsParty);
 }
@@ -2626,24 +2629,24 @@ void CreateFrontierBrainPokemon(void)
                                             MON_GENDER_RANDOM,
                                             sFrontierBrainsMons[facility][symbol][i].nature,
                                             RANDOM_UNOWN_LETTER);
-        CreateMonWithIVs(&gEnemyParty[monPartyId],
+        CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
                   personality,
                   OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID),
                   sFrontierBrainsMons[facility][symbol][i].fixedIV);
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
-            SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
         friendship = MAX_FRIENDSHIP;
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            SetMonMoveSlot(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
+            SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
             if (GetMoveEffect(sFrontierBrainsMons[facility][symbol][i].moves[j]) == EFFECT_FRUSTRATION)
                 friendship = 0;
         }
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
-        CalculateMonStats(&gEnemyParty[monPartyId]);
+        SetMonData(&gParties[B_TRAINER_OPPONENT_A][monPartyId], MON_DATA_FRIENDSHIP, &friendship);
+        CalculateMonStats(&gParties[B_TRAINER_OPPONENT_A][monPartyId]);
         monPartyId++;
     }
 }
@@ -3294,10 +3297,10 @@ s32 GetHighestLevelInPlayerParty(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES)
-            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES)
+            && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
         {
-            s32 level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            s32 level = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
             if (level > highestLevel)
                 highestLevel = level;
         }
@@ -3346,11 +3349,11 @@ u16 FacilityClassToGraphicsId(u8 facilityClass)
 #define tScrollOffset data[3]
 #define tListPointerElemId 4
 
-static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
+static u16 *MakeCaughtBannedSpeciesList(u32 totalBannedSpecies)
 {
     u32 count = 0;
     u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = 0; i < NUM_SPECIES; i++)
     {
         if (!IsSpeciesEnabled(i))
             continue;
@@ -3396,7 +3399,7 @@ void ShowBattleFrontierCaughtBannedSpecies(void)
     DrawStdWindowFrame(windowId, FALSE);
     listTemplate.windowId = windowId;
 
-    u16 *listItems = MakeCaughtBannesSpeciesList(totalCaughtBanned);
+    u16 *listItems = MakeCaughtBannedSpeciesList(totalCaughtBanned);
     u32 inputTaskId = CreateTask(Task_BannedSpeciesWindowInput, 3);
     gTasks[inputTaskId].tWindowId = windowId;
     gSpecialVar_0x8006 = inputTaskId;

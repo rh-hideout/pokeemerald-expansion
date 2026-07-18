@@ -97,6 +97,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
 * `flagId` is just the name of the flag you want to set when visiting this map for the first time. The flag state determines how long the map preview will last on screen; it gets a shorter duration if the player has been to that map before. A lot of Emerald maps already have associated flags, but Petalburg Woods does not have one by default, so I repurposed one of the unused flags for use in this example. If you don't want to use a flag, you can enter `MPS_FLAG_NULL` here and the duration will have its own custom value (this can be adjusted in the configs in ***include/map_preview_screen.h***).
 * `tilesptr`, `tilemapptr`, and `palptr` are the image, tiles, and palette that you want to use for this preview. I'm just using the existing image from Viridian Forest here.
 * If the image will load more than 3 16-color palettes, you should add `.usesAllPalettes = TRUE` to the entry. Otherwise the palettes won't be loaded properly. (None of the vanilla FRLG images need this.)
+* If you don't want the map preview to display the map name, you should add `.nameDisabled = TRUE` to the entry.
 
 That's all there is to it!
 

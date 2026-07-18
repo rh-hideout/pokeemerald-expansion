@@ -13,11 +13,13 @@
 #include "region_map.h"
 #include "rtc.h"
 #include "start_menu.h"
+#include "strings.h"
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "constants/battle_frontier.h"
 #include "constants/layouts.h"
+#include "constants/map_types.h"
 #include "constants/region_map_sections.h"
 #include "constants/weather.h"
 #include "config/general.h"
@@ -51,35 +53,35 @@ EWRAM_DATA u8 gPopupTaskId = 0;
 // .rodata
 static const u8 sMapPopUp_Table[][960] =
 {
-    [MAPPOPUP_THEME_WOOD]       = INCBIN_U8("graphics/map_popup/wood.4bpp"),
-    [MAPPOPUP_THEME_MARBLE]     = INCBIN_U8("graphics/map_popup/marble.4bpp"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone.4bpp"),
-    [MAPPOPUP_THEME_BRICK]      = INCBIN_U8("graphics/map_popup/brick.4bpp"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/underwater.4bpp"),
-    [MAPPOPUP_THEME_STONE2]     = INCBIN_U8("graphics/map_popup/stone2.4bpp"),
+    [MAPPOPUP_THEME_WOOD]       = INCGFX_U8("graphics/map_popup/wood.png", ".4bpp"),
+    [MAPPOPUP_THEME_MARBLE]     = INCGFX_U8("graphics/map_popup/marble.png", ".4bpp"),
+    [MAPPOPUP_THEME_STONE]      = INCGFX_U8("graphics/map_popup/stone.png", ".4bpp"),
+    [MAPPOPUP_THEME_BRICK]      = INCGFX_U8("graphics/map_popup/brick.png", ".4bpp"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCGFX_U8("graphics/map_popup/underwater.png", ".4bpp"),
+    [MAPPOPUP_THEME_STONE2]     = INCGFX_U8("graphics/map_popup/stone2.png", ".4bpp"),
 };
 
 static const u8 sMapPopUp_OutlineTable[][960] =
 {
-    [MAPPOPUP_THEME_WOOD]       = INCBIN_U8("graphics/map_popup/wood_outline.4bpp"),
-    [MAPPOPUP_THEME_MARBLE]     = INCBIN_U8("graphics/map_popup/marble_outline.4bpp"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U8("graphics/map_popup/stone_outline.4bpp"),
-    [MAPPOPUP_THEME_BRICK]      = INCBIN_U8("graphics/map_popup/brick_outline.4bpp"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U8("graphics/map_popup/underwater_outline.4bpp"),
-    [MAPPOPUP_THEME_STONE2]     = INCBIN_U8("graphics/map_popup/stone2_outline.4bpp"),
+    [MAPPOPUP_THEME_WOOD]       = INCGFX_U8("graphics/map_popup/wood_outline.png", ".4bpp"),
+    [MAPPOPUP_THEME_MARBLE]     = INCGFX_U8("graphics/map_popup/marble_outline.png", ".4bpp"),
+    [MAPPOPUP_THEME_STONE]      = INCGFX_U8("graphics/map_popup/stone_outline.png", ".4bpp"),
+    [MAPPOPUP_THEME_BRICK]      = INCGFX_U8("graphics/map_popup/brick_outline.png", ".4bpp"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCGFX_U8("graphics/map_popup/underwater_outline.png", ".4bpp"),
+    [MAPPOPUP_THEME_STONE2]     = INCGFX_U8("graphics/map_popup/stone2_outline.png", ".4bpp"),
 };
 
 static const u16 sMapPopUp_PaletteTable[][16] =
 {
-    [MAPPOPUP_THEME_WOOD]       = INCBIN_U16("graphics/map_popup/wood.gbapal"),
-    [MAPPOPUP_THEME_MARBLE]     = INCBIN_U16("graphics/map_popup/marble_outline.gbapal"),
-    [MAPPOPUP_THEME_STONE]      = INCBIN_U16("graphics/map_popup/stone_outline.gbapal"),
-    [MAPPOPUP_THEME_BRICK]      = INCBIN_U16("graphics/map_popup/brick_outline.gbapal"),
-    [MAPPOPUP_THEME_UNDERWATER] = INCBIN_U16("graphics/map_popup/underwater_outline.gbapal"),
-    [MAPPOPUP_THEME_STONE2]     = INCBIN_U16("graphics/map_popup/stone2_outline.gbapal"),
+    [MAPPOPUP_THEME_WOOD]       = INCGFX_U16("graphics/map_popup/wood.png", ".gbapal"),
+    [MAPPOPUP_THEME_MARBLE]     = INCGFX_U16("graphics/map_popup/marble_outline.png", ".gbapal"),
+    [MAPPOPUP_THEME_STONE]      = INCGFX_U16("graphics/map_popup/stone_outline.png", ".gbapal"),
+    [MAPPOPUP_THEME_BRICK]      = INCGFX_U16("graphics/map_popup/brick_outline.png", ".gbapal"),
+    [MAPPOPUP_THEME_UNDERWATER] = INCGFX_U16("graphics/map_popup/underwater_outline.png", ".gbapal"),
+    [MAPPOPUP_THEME_STONE2]     = INCGFX_U16("graphics/map_popup/stone2_outline.png", ".gbapal"),
 };
 
-static const u16 sMapPopUp_Palette_Underwater[16] = INCBIN_U16("graphics/map_popup/underwater.gbapal");
+static const u16 sMapPopUp_Palette_Underwater[16] = INCGFX_U16("graphics/map_popup/underwater.pal", ".gbapal");
 
 // -1 in the size excludes MAPSEC_NONE.
 // The MAPSEC values for Kanto (between MAPSEC_DYNAMIC and MAPSEC_AQUA_HIDEOUT) are also excluded,
@@ -194,10 +196,10 @@ static const u8 sMapSectionToThemeId[MAPSEC_COUNT - KANTO_MAPSEC_COUNT - 1] =
 
 #if OW_POPUP_GENERATION == GEN_5
 // Gen5 assets
-static const u8 sMapPopUpTilesPrimary_BW[] = INCBIN_U8("graphics/map_popup/bw/bw_primary.4bpp");
-static const u8 sMapPopUpTilesSecondary_BW[] = INCBIN_U8("graphics/map_popup/bw/bw_secondary.4bpp");
-static const u16 sMapPopUpTilesPalette_BW_Black[16] = INCBIN_U16("graphics/map_popup/bw/black.gbapal");
-static const u16 sMapPopUpTilesPalette_BW_White[16] = INCBIN_U16("graphics/map_popup/bw/white.gbapal");
+static const u8 sMapPopUpTilesPrimary_BW[] = INCGFX_U8("graphics/map_popup/bw/bw_primary.png", ".4bpp");
+static const u8 sMapPopUpTilesSecondary_BW[] = INCGFX_U8("graphics/map_popup/bw/bw_secondary.png", ".4bpp");
+static const u16 sMapPopUpTilesPalette_BW_Black[16] = INCGFX_U16("graphics/map_popup/bw/black.pal", ".gbapal");
+static const u16 sMapPopUpTilesPalette_BW_White[16] = INCGFX_U16("graphics/map_popup/bw/white.pal", ".gbapal");
 #else
 static const u8 sMapPopUpTilesPrimary_BW[] = {0};
 static const u8 sMapPopUpTilesSecondary_BW[] = {0};
@@ -518,9 +520,61 @@ static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
     CopyWindowToVram(secondaryPopUpWindowId, COPYWIN_FULL);
 }
 
+static void MapNamePopupAppendFloorNum(u8 *map_name, s8 floorNum)
+{
+    if (floorNum == 0)
+        return;
+    u8 *dest = map_name;
+    while (*dest != EOS)
+        dest++;
+    *dest++ = CHAR_SPACE;
+    if (floorNum == FLOOR_ROOFTOP)
+    {
+        StringCopy(dest, gText_Rooftop);
+        return;
+    }
+    if (floorNum < 0)
+    {
+        *dest++ = CHAR_B;
+        floorNum *= -1;
+    }
+    dest = ConvertIntToDecimalStringN(dest, floorNum, STR_CONV_MODE_LEFT_ALIGN, 2);
+    *dest++ = CHAR_F;
+    *dest = EOS;
+}
+
+static bool32 IsCeladonDeptStore(const struct MapHeader *mapHeader)
+{
+    if (mapHeader->regionMapSectionId != MAPSEC_CELADON_CITY)
+        return FALSE;
+    if (mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_1F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_2F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_3F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_4F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_5F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ELEVATOR)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+u8 *GetPopUpMapName(u8 *dest, const struct MapHeader *mapHeader)
+{
+    if (IsCeladonDeptStore(mapHeader))
+        StringCopy(dest, COMPOUND_STRING("CELADON DEPT."));
+    else
+        GetMapName(dest, mapHeader->regionMapSectionId, 0);
+    if (mapHeader->floorNumber == 0)
+        return dest;
+    MapNamePopupAppendFloorNum(dest, mapHeader->floorNumber);
+    return dest;
+}
+
 static void ShowMapNamePopUpWindow(void)
 {
-    u8 mapDisplayHeader[27];
+    u8 mapDisplayHeader[MAP_POPUP_STRING_BUFFER_LENGTH];
     u8 *withoutPrefixPtr;
     u8 x;
     const u8 *mapDisplayHeaderSource;
@@ -530,20 +584,20 @@ static void ShowMapNamePopUpWindow(void)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[FRONTIER_STAGES_PER_CHALLENGE];
         }
         else
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[gSaveBlock2Ptr->frontier.curChallengeBattleNum];
         }
         StringCopy(withoutPrefixPtr, mapDisplayHeaderSource);
     }
     else
     {
-        withoutPrefixPtr = &(mapDisplayHeader[6]);
-        GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
+        withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
+        GetPopUpMapName(withoutPrefixPtr, &gMapHeader);
     }
 
     if (OW_POPUP_GENERATION == GEN_5)
@@ -576,8 +630,9 @@ static void ShowMapNamePopUpWindow(void)
     }
     else
     {
-        x = GetStringCenterAlignXOffset(FONT_NARROW, withoutPrefixPtr, 80);
-        AddTextPrinterParameterized(GetMapNamePopUpWindowId(), FONT_NARROW, mapDisplayHeader, x, 3, TEXT_SKIP_DRAW, NULL);
+        u32 fontId = GetFontIdToFit(withoutPrefixPtr, FONT_NORMAL, -1, 80);
+        x = GetStringCenterAlignXOffset(fontId, withoutPrefixPtr, 80);
+        AddTextPrinterParameterized(GetMapNamePopUpWindowId(), fontId, mapDisplayHeader, x, 3, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(GetMapNamePopUpWindowId(), COPYWIN_FULL);
     }
 }

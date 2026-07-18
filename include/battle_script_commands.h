@@ -22,30 +22,14 @@ struct PickupItem
     u8 percentage[10];
 };
 
-union TRANSPARENT StatChangeFlags
-{
-    int raw;
-    u32 raw_u32;
-    u16 raw_u16;
-    u8 raw_u8;
-    struct {
-        bool32 allowPtr:1; // STAT_CHANGE_ALLOW_PTR
-        bool32 mirrorArmored:1; // STAT_CHANGE_MIRROR_ARMOR
-        bool32 onlyChecking:1; // STAT_CHANGE_ONLY_CHECKING
-        bool32 notProtectAffected:1; // STAT_CHANGE_NOT_PROTECT_AFFECTED
-        bool32 updateMoveEffect:1; // STAT_CHANGE_UPDATE_MOVE_EFFECT
-        bool32 statDropPrevention:1; // STAT_CHANGE_CHECK_PREVENTION
-        bool32 certain:1; // STAT_CHANGE_CERTAIN
-        bool32 padding:25;
-    };
-};
-
 bool32 HasBattlerActedThisTurn(enum BattlerId battler);
 u32 GetBattlerTurnOrderNum(enum BattlerId battler);
+u32 GetBattlerRawSpeedOrder(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
-void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
+void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
+void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
@@ -53,24 +37,29 @@ void BufferMoveToLearnIntoBattleTextBuff2(void);
 void HandleBattleWindow(u8 xStart, u8 yStart, u8 xEnd, u8 yEnd, u8 flags);
 bool8 UproarWakeUpCheck(enum BattlerId battler);
 bool32 DoesSubstituteBlockMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move);
 bool32 DoesDisguiseBlockMove(enum BattlerId battler, enum Move move);
 bool32 DoesIceFaceBlockMove(enum BattlerId battler, enum Move move);
 bool32 CanUseLastResort(enum BattlerId battlerId);
+bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear);
+bool32 TryTidyUpClear(bool32 clear);
 u32 IsFlowerVeilProtected(enum BattlerId battler);
 u32 IsLeafGuardProtected(enum BattlerId battler, enum Ability ability);
 bool32 IsShieldsDownProtected(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityStatusProtected(enum BattlerId battler, enum Ability ability);
 bool32 TryResetBattlerStatChanges(enum BattlerId battler);
 bool32 CanCamouflage(enum BattlerId battler);
-void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId battlerItem);
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId battlerItem, enum Item itemOverride);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum Move move, enum Type moveType);
 u8 GetFirstFaintedPartyIndex(enum BattlerId battler);
 void SaveBattlerTarget(enum BattlerId battler);
 void SaveBattlerAttacker(enum BattlerId battler);
+void RestoreAttacker(void);
+void RestoreTarget(void);
 bool32 CanBurnHitThaw(enum Move move);
 bool32 CanMoveThawTarget(enum Ability abilityAtk, enum Move move);
-bool32 CanFireMoveThawTarget(enum Move move);
+bool32 CanFireMoveThawTarget(enum Move move, enum Type moveType);
 
 extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];

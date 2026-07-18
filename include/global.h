@@ -18,6 +18,7 @@
 #include "constants/apricorn_tree.h"
 #include "constants/berry.h"
 #include "constants/maps.h"
+#include "constants/mass_outbreak.h"
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
@@ -47,10 +48,12 @@
 #define INCBIN_U8   INCBIN
 #define INCBIN_U16  INCBIN
 #define INCBIN_U32  INCBIN
-#define INCBIN_S8   INCBIN
-#define INCBIN_S16  INCBIN
-#define INCBIN_S32  INCBIN
 #define INCBIN_COMP INCBIN
+#define INCGFX(...) {0}
+#define INCGFX_U8   INCGFX
+#define INCGFX_U16  INCGFX
+#define INCGFX_U32  INCGFX
+#define INCGFX_COMP INCGFX
 #endif // IDE support
 
 #define ARRAY_COUNT(array) (size_t)(sizeof(array) / sizeof((array)[0]))
@@ -1118,7 +1121,8 @@ struct SaveBlock1
     /*0x988*/ u8 filler1[0x34]; // Previously Dex Flags, feel free to remove.
 #endif //FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1
     /*0x9BC*/ u16 berryBlenderRecords[3];
-    /*0x9C2*/ u8 unused_9C2[6];
+    /*0x9C2*/ u8 unused_9C2[2];
+              u32 dailySeed;
 #if FREE_MATCH_CALL == FALSE
     /*0x9C8*/ u16 trainerRematchStepCounter;
     /*0x9CA*/ u8 trainerRematches[MAX_REMATCH_ENTRIES];

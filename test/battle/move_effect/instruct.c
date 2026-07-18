@@ -56,7 +56,8 @@ TO_DO_BATTLE_TEST("Instruct fails if target is in the middle of Bide");
 
 DOUBLE_BATTLE_TEST("Instruct fails if target is preparing Focus Punch, Beak Blast or Shell Trap")
 {
-    u32 move, Anim;
+    enum Move move;
+    u32 Anim;
     PARAMETRIZE { move = MOVE_FOCUS_PUNCH; Anim = B_ANIM_FOCUS_PUNCH_SETUP; }
     PARAMETRIZE { move = MOVE_BEAK_BLAST; Anim = B_ANIM_BEAK_BLAST_SETUP; }
     PARAMETRIZE { move = MOVE_SHELL_TRAP; Anim = B_ANIM_SHELL_TRAP_SETUP; }
@@ -252,8 +253,8 @@ DOUBLE_BATTLE_TEST("Instruct-called status move fails if taunted")
         TURN { MOVE(playerRight, MOVE_GROWL); MOVE(opponentLeft, MOVE_TAUNT, target: playerRight); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, playerRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         NONE_OF {
@@ -290,7 +291,8 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_QUICK_ATTACK); }
         OPPONENT(SPECIES_WOBBUFFET);

@@ -2,7 +2,7 @@
   "id": "MAP_CINNABAR_ISLAND_GYM",
   "name": "CinnabarIsland_Gym_Frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND_GYM",
-  "music": "MUS_GYM",
+  "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CINNABAR_ISLAND",
   "requires_flash": false,

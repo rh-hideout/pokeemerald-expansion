@@ -93,7 +93,7 @@ static const struct BgTemplate sBackgroundTemplates[] =
   }
 };
 
-static const u16 sFontPalette[] = INCBIN_U16("graphics/bag/berry_tag_screen.gbapal");
+static const u16 sFontPalette[] = INCGFX_U16("graphics/bag/berry_tag_screen.pal", ".gbapal");
 
 static const u8 sTextColors[2][3] =
 {

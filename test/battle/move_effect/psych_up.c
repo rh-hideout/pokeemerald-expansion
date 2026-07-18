@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the player")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_TORNADUS) { Speed(66); }
         OPPONENT(SPECIES_LANDORUS) { Speed(99); }
     } WHEN {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the play
 SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the opponent")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_TORNADUS) { Speed(66); }
         OPPONENT(SPECIES_LANDORUS) { Speed(99); }
     } WHEN {
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Psych Up ignores Spiky Shield and Baneful Bunker but fails a
     PARAMETRIZE { protectMove = MOVE_CRAFTY_SHIELD; shouldFail = TRUE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         ASSUME(GetMoveEffect(MOVE_SPIKY_SHIELD) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
         ASSUME(GetMoveEffect(MOVE_CRAFTY_SHIELD) == EFFECT_PROTECT);

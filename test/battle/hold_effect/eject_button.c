@@ -131,9 +131,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picke
     }
 }
 
-// When run in same thread as "AI will not choose to switch out Dondozo with Commander Tatsugiri", 
-// dragon tail switch does not proc. commanderSpecies and commandingDondozo appear to be reset correctly?
-/*SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
+SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
 {
     GIVEN {
         PLAYER(SPECIES_KOMMO_O);
@@ -152,7 +150,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picke
             MESSAGE("The opposing Chansey is switched out with the Eject Button!");
         }
     }
-}*/
+}
 
 SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
 {
@@ -211,30 +209,6 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
     }
 }
 
-DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the incoming mon")
-{
-    GIVEN {
-        PLAYER(SPECIES_TATSUGIRI) { Speed(10); Ability(ABILITY_COMMANDER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_DONDOZO) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Item(ITEM_EJECT_PACK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
-    } WHEN {
-        TURN { MOVE(opponentRight, MOVE_MAKE_IT_RAIN); SEND_OUT(playerRight, 2); SEND_OUT(opponentRight, 2); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAKE_IT_RAIN, opponentRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Wobbuffet is switched out with the Eject Button!");
-        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-            MESSAGE("Wobbuffet is switched out with the Eject Pack!");
-        }
-    }
-}
-
 SINGLE_BATTLE_TEST("Eject Button activates after Wandering Spirit")
 {
     GIVEN {
@@ -255,10 +229,10 @@ SINGLE_BATTLE_TEST("Eject Button activates after Wandering Spirit")
 
 DOUBLE_BATTLE_TEST("Eject Button will activate before Red Card if holder is faster")
 {
-    KNOWN_FAILING; // #9499
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); };
         OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WYNAUT) { Speed(25); Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }

@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Haze resets stat changes", s16 damage)
     PARAMETRIZE { haze = FALSE; }
     PARAMETRIZE { haze = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MEDITATE) == EFFECT_ATTACK_UP);
+        ASSUME_STAT_CHANGE(MOVE_MEDITATE, attack: +1);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

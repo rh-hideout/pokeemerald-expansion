@@ -74,7 +74,7 @@ static const u16 sCrc16Table[] =
     0x7BC7, 0x6A4E, 0x58D5, 0x495C, 0x3DE3, 0x2C6A, 0x1EF1, 0x0F78,
 };
 
-const u8 gMiscBlank_Gfx[] = INCBIN_U8("graphics/interface/blank.4bpp");
+const u8 gMiscBlank_Gfx[] = INCGFX_U8("graphics/interface/blank.png", ".4bpp");
 
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *))
 {
@@ -163,20 +163,6 @@ void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output)
         }
         tilemap += (32 - w);
     }
-}
-
-int CountTrailingZeroBits(u32 value)
-{
-    u8 i;
-
-    for (i = 0; i < 32; i++)
-    {
-        if ((value & 1) == 0)
-            value >>= 1;
-        else
-            return i;
-    }
-    return 0;
 }
 
 u16 CalcCRC16(const u8 *data, s32 length)

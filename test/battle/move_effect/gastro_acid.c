@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Gastro Acid fails if target has a banned ability")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
@@ -23,7 +23,6 @@ SINGLE_BATTLE_TEST("Gastro Acid fails if target has a banned ability")
     PARAMETRIZE { species = SPECIES_EISCUE; ability = ABILITY_ICE_FACE; }
     PARAMETRIZE { species = SPECIES_CRAMORANT; ability = ABILITY_GULP_MISSILE; }
     PARAMETRIZE { species = SPECIES_PALAFIN_ZERO; ability = ABILITY_ZERO_TO_HERO; }
-    PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
     // Needs confirmation since those abilities can be suppressed by Neutralizing Gas
     // PARAMETRIZE { species = SPECIES_IRON_MOTH; ability = ABILITY_QUARK_DRIVE; }
     // PARAMETRIZE { species = SPECIES_WALKING_WAKE; ability = ABILITY_PROTOSYNTHESIS; }
@@ -41,5 +40,57 @@ SINGLE_BATTLE_TEST("Gastro Acid fails if target has a banned ability")
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Gastro Acid's effect");
-TO_DO_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surpressed");
+SINGLE_BATTLE_TEST("Gastro Acid immediately ends Neutralizing Gas and reactivates suppressed abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GASTRO_ACID); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, player);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass passes Gastro Acid's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CHIMECHO) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surpressed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        ABILITY_POPUP(player, ABILITY_DISGUISE);
+    }
+}

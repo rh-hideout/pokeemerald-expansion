@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(MoveHasAdditionalEffectWithChance(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_PAYDAY, 0) == TRUE);
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_SP_ATK_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
 }
 
 SINGLE_BATTLE_TEST("Make It Rain lowers special attack by one stage")

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_TAIL_WHIP) == EFFECT_DEFENSE_DOWN);
+    ASSUME_STAT_CHANGE(MOVE_TAIL_WHIP, defense: -1);
 }
 
 SINGLE_BATTLE_TEST("Tail Whip lowers Defense by 1 stage", s16 damage)

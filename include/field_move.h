@@ -24,7 +24,7 @@ static inline bool32 IsFieldMoveUnlocked(enum FieldMove fieldMove)
     return gFieldMoveInfo[fieldMove].isUnlockedFunc();
 }
 
-static inline u32 FieldMove_GetMoveId(enum FieldMove fieldMove)
+static inline enum Move FieldMove_GetMoveId(enum FieldMove fieldMove)
 {
     return gFieldMoveInfo[fieldMove].moveID;
 }

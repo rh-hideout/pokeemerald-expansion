@@ -180,7 +180,6 @@ SINGLE_BATTLE_TEST("Throat Spray does not activate if user flinches with status 
     }
 }
 
-
 SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
 {
     GIVEN {
@@ -192,5 +191,48 @@ SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Throat Spray will not activate if the mon just switched in")
+{
+    GIVEN {
+        ASSUME(IsSoundMove(MOVE_HYPER_VOICE) == TRUE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_THROAT_SPRAY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HYPER_VOICE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // red card
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player); // throat spray
+    }
+}
+
+DOUBLE_BATTLE_TEST("Throat Spray activates on user and bouncer if at least one target if affected by sound move")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF; }
+    PARAMETRIZE { ability = ABILITY_RATTLED; }
+
+    GIVEN {
+        ASSUME(IsSoundMove(MOVE_GROWL));
+        ASSUME(MoveCanBeBouncedBack(MOVE_GROWL));
+        ASSUME(GetMoveTarget(MOVE_GROWL) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_THROAT_SPRAY); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_HATTERENE) { Ability(ABILITY_MAGIC_BOUNCE); Item(ITEM_THROAT_SPRAY); }
+        OPPONENT(SPECIES_WHISMUR) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GROWL); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        if (ability == ABILITY_SOUNDPROOF)
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        else
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     }
 }

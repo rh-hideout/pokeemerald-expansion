@@ -100,9 +100,9 @@ enum
     MULTI_FRONTIER_GAMBLER_BET,
     MULTI_TENT,
     MULTI_UNUSED_SSTIDAL_1,             // These 4 were replaced by CreateLilycoveSSTidalMultichoice
-    MULTI_UNUSED_SSTIDAL_2,             //
-    MULTI_UNUSED_SSTIDAL_3,             //
-    MULTI_UNUSED_SSTIDAL_4,             //
+    MULTI_UNUSED_SSTIDAL_2,
+    MULTI_UNUSED_SSTIDAL_3,
+    MULTI_UNUSED_SSTIDAL_4,
     MULTI_FOSSIL,
     MULTI_YESNO,
     MULTI_FRONTIER_RULES,
@@ -226,8 +226,14 @@ enum
 
 // Dynamic Multichoice Callbacks
 
-#define DYN_MULTICHOICE_CB_DEBUG      0
-#define DYN_MULTICHOICE_CB_SHOW_ITEM  1
-#define DYN_MULTICHOICE_CB_NONE       255
+enum 
+{
+    DYN_MULTICHOICE_CB_DEBUG,
+    DYN_MULTICHOICE_CB_SHOW_ITEM,
+    //add new callback choices after this comment!
+    
+    DYN_MULTICHOICE_CB_NONE,
+};
+
 
 #endif //GUARD_SCRIPT_MENU_CONSTANTS_H

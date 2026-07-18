@@ -121,7 +121,7 @@ static void BuildAreaGlowTilemap(void);
 static void SetAreaHasMon(u16, u16);
 static void SetSpecialMapHasMon(u16, u16);
 static mapsec_u16_t GetRegionMapSectionId(u8, u8);
-static bool8 MapHasSpecies(const struct WildEncounterTypes *, enum Species);
+static bool8 MapHasSpecies(const struct WildEncounterTypes *, u32, enum Species);
 static bool8 MonListHasSpecies(const struct WildPokemonInfo *, enum Species, u16);
 static void DoAreaGlow(void);
 static void Task_ShowPokedexAreaScreen(u8 taskId);
@@ -140,13 +140,13 @@ static void ClearAreaWindowLabel(enum PokedexAreaLabels labelId);
 
 bool32 ShouldShowAreaUnknownLabel(void);
 
-static const u32 sAreaGlow_Pal[] = INCBIN_U32("graphics/pokedex/area_glow.gbapal");
-static const u32 sAreaGlow_Gfx[] = INCBIN_U32("graphics/pokedex/area_glow.4bpp.smol");
+static const u32 sAreaGlow_Pal[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".gbapal");
+static const u32 sAreaGlow_Gfx[] = INCGFX_U32("graphics/pokedex/area_glow.png", ".4bpp.smol");
 
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
 static void LoadHGSSScreenSelectBarSubmenu(void);
 
-static const u16 sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
+static const enum Species sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
 
 static const mapsec_u16_t sMovingRegionMapSections[3] =
 {
@@ -174,14 +174,6 @@ static const mapsec_u16_t sLandmarkData[][2] =
 
 #include "data/pokedex_area_glow.h"
 
-static const struct PokedexAreaMapTemplate sPokedexAreaMapTemplate =
-{
-    .bg = 3,
-    .offset = 0,
-    .mode = 0,
-    .unk = 2,
-};
-
 static const u8 sAreaMarkerTiles[];
 static const struct SpriteSheet sAreaMarkerSpriteSheet =
 {
@@ -208,8 +200,8 @@ static const struct SpriteTemplate sAreaMarkerSpriteTemplate =
     .oam = &sAreaMarkerOamData,
 };
 
-static const u16 sAreaMarkerPalette[] = INCBIN_U16("graphics/pokedex/area_marker.gbapal");
-static const u8 sAreaMarkerTiles[] = INCBIN_U8("graphics/pokedex/area_marker.4bpp");
+static const u16 sAreaMarkerPalette[] = INCGFX_U16("graphics/pokedex/area_marker.png", ".gbapal");
+static const u8 sAreaMarkerTiles[] = INCGFX_U8("graphics/pokedex/area_marker.png", ".4bpp");
 
 static const struct SpritePalette sAreaUnknownSpritePalette =
 {
@@ -348,7 +340,7 @@ static void FindMapsWithMon(enum Species species)
         if (GetRegionMapType(headerSectionId) != currentRegionMapType)
             continue;
 
-        if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], species))
+        if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
         {
             switch (gWildMonHeaders[i].mapGroup)
             {
@@ -437,13 +429,10 @@ static mapsec_u16_t GetRegionMapSectionId(u8 mapGroup, u8 mapNum)
     return Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
 }
 
-static bool8 MapHasSpecies(const struct WildEncounterTypes *info, enum Species species)
+static bool8 MapHasSpecies(const struct WildEncounterTypes *info, u32 headerSectionId, enum Species species)
 {
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    u8 currentMapGroup = gWildMonHeaders[headerId].mapGroup;
-    u8 currentMapNum = gWildMonHeaders[headerId].mapNum;
     // If this is a header for Altering Cave, skip it if it's not the current Altering Cave encounter set
-    if (GetRegionMapSectionId(currentMapGroup, currentMapNum) == MAPSEC_ALTERING_CAVE)
+    if (headerSectionId == MAPSEC_ALTERING_CAVE)
     {
         sPokedexAreaScreen->alteringCaveCounter++;
         if (sPokedexAreaScreen->alteringCaveCounter != sPokedexAreaScreen->alteringCaveId + 1)
@@ -751,7 +740,7 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
         break;
     case 1:
         SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
-        LoadPokedexAreaMapGfx(&sPokedexAreaMapTemplate);
+        LoadPokedexAreaMapGfx();
         StringFill(sPokedexAreaScreen->charBuffer, CHAR_SPACE, 16);
         break;
     case 2:
@@ -826,7 +815,7 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
         break;
     case 1:
         SetBgAttribute(3, BG_ATTR_CHARBASEINDEX, 3);
-        LoadPokedexAreaMapGfx(&sPokedexAreaMapTemplate);
+        LoadPokedexAreaMapGfx();
         PokedexAreaMapChangeBgY(-8);
         StringFill(sPokedexAreaScreen->charBuffer, CHAR_SPACE, 16);
         break;
@@ -935,7 +924,6 @@ static void Task_HandlePokedexAreaScreenInput(u8 taskId)
         sPokedexAreaScreen->screenSwitchState[0] = gTasks[taskId].data[1];
         ResetPokedexAreaMapBg();
         DestroyTask(taskId);
-        FreePokedexAreaMapBgNum();
         FREE_AND_SET_NULL(sPokedexAreaScreen);
         return;
     }

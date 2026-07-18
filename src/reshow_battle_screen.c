@@ -11,6 +11,7 @@
 #include "battle_controllers.h"
 #include "link.h"
 #include "sprite.h"
+#include "trainer.h"
 #include "constants/trainers.h"
 #include "battle_interface.h"
 #include "battle_anim.h"
@@ -24,7 +25,7 @@ static void CreateHealthboxSprite(enum BattlerId battler);
 static void ClearBattleBgCntBaseBlocks(void);
 static void CreateCaughtMonSprite(void);
 
-#define CATCH_TUTORIAL_TRAINER_PIC_BACK (IS_FRLG ? TRAINER_PIC_BACK_OLD_MAN : TRAINER_PIC_BACK_WALLY)
+#define CATCH_TUTORIAL_TRAINER_PIC (IS_FRLG ? TRAINER_PIC_OLD_MAN : TRAINER_PIC_WALLY)
 
 void ReshowBattleScreenDummy(void)
 {
@@ -49,6 +50,7 @@ static void CB2_ReshowBattleScreenAfterMenu(void)
     case 0:
         ScanlineEffect_Clear();
         BattleInitBgsAndWindows();
+        AllocateBattleGfxResources();
         SetBgAttribute(1, BG_ATTR_CHARBASEINDEX, 0);
         SetBgAttribute(2, BG_ATTR_CHARBASEINDEX, 0);
         ShowBg(0);
@@ -282,9 +284,12 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
-            LoadSpritePalette(&gTrainerBacksprites[(gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE].palette);
+        {
+            enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
+            LoadSpritePaletteWithTag(GetTrainerBackPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, FALSE));
+        }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
-            LoadSpritePalette(&gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].palette);
+            LoadSpritePaletteWithTag(GetTrainerBackPicPalette(CATCH_TUTORIAL_TRAINER_PIC), GetTrainerPicTag(CATCH_TUTORIAL_TRAINER_PIC, FALSE));
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
         else
@@ -318,6 +323,8 @@ void CreateBattlerSprite(enum BattlerId battler)
                 return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
+            if (gBattleStruct->victoryCatchState == VICTORY_CATCH_FAINTED) // Don't create opponent sprite if it has faux-fainted during a victory catch sequence.
+                return;
             enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
@@ -331,22 +338,22 @@ void CreateBattlerSprite(enum BattlerId battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
         {
-            enum TrainerPicID trainerPicId = (gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+            enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
             SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
-                                                (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80,
+                                                (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[trainerPicId].palette.tag);
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(GetTrainerPicTag(trainerPicId, FALSE));
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(CATCH_TUTORIAL_TRAINER_PIC_BACK, position);
+            SetMultiuseSpriteTemplateToTrainerBack(CATCH_TUTORIAL_TRAINER_PIC, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
-                                                (8 - gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].coordinates.size) * 4 + 80,
+                                                (8 - GetTrainerBackPicCoords(CATCH_TUTORIAL_TRAINER_PIC)->size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].palette.tag);
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(GetTrainerPicTag(CATCH_TUTORIAL_TRAINER_PIC, FALSE));
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
@@ -404,14 +411,19 @@ static void CreateHealthboxSprite(enum BattlerId battler)
         else
             DummyBattleInterfaceFunc(gHealthboxSpriteIds[battler], FALSE);
 
-        if (!IsOnPlayerSide(battler))
+        if (gBattleStruct->victoryCatchState != VICTORY_CATCH_START)
         {
-            if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
+            // Hide HP boxes to stop the player from seeing the 1 HP hack and for cinematic purposes
+            SetHealthboxSpriteInvisible(healthboxSpriteId);
+        }
+        else if (!IsOnPlayerSide(battler))
+        {
+            if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0 || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
         else if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {
-            if (!IsValidForBattle(GetBattlerMon(battler)))
+            if (!IsValidForBattle(GetBattlerMon(battler)) || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
     }

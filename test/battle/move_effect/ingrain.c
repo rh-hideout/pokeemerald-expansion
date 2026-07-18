@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Ingrain restores 1/16th HP at the end of turn")
 
 SINGLE_BATTLE_TEST("Ingrain restores 30% more HP when holding Big Root")
 {
-    u32 item;
+    enum Item item;
     u16 expectedHp;
     PARAMETRIZE { item = ITEM_NONE; expectedHp = 58; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; expectedHp = 60; }

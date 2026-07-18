@@ -17,13 +17,13 @@ SINGLE_BATTLE_TEST("Static inflicts paralysis on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_STATIC);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-            MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+            MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
             STATUS_ICON(player, paralysis: TRUE);
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_STATIC);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-                MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
                 STATUS_ICON(player, paralysis: TRUE);
             }
         }
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Static triggers 1/3 times (Gen3) or 30% (Gen4+) of the time"
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }

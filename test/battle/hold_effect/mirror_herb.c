@@ -88,3 +88,90 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
+
+DOUBLE_BATTLE_TEST("Mirror Herb activates after a Mega Evolution")
+{
+    GIVEN {
+        PLAYER(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Herb does not activate or get consumed if no copied stat can be raised")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(opponent, MOVE_SWORDS_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_MIRROR_HERB);
+        EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Herb does not copy stat increases gained via Mirror Herb")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->item, ITEM_MIRROR_HERB);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Herb activates with Contrary if stat is at +6")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SKILL_SWAP); MOVE(opponent, MOVE_SWORDS_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 4);
+    }
+}
+

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SPICY_EXTRACT) == EFFECT_SPICY_EXTRACT);
+    ASSUME_STAT_CHANGE(MOVE_SPICY_EXTRACT, attack: +2, defense: -2);
 }
 
 SINGLE_BATTLE_TEST("Spicy Extract raises target's Attack by 2 stages and lowers target's Defense by 2 stages")
@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Spicy Extract raises target's Attack by 2 stages and lowers 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Attack sharply rose!");
+        MESSAGE("The opposing Wobbuffet's Attack rose sharply!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
     } THEN {
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
     PARAMETRIZE { ability = ABILITY_LIGHT_METAL; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BELDUM) { Ability(ability); }
     } WHEN {
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
         MESSAGE("Wobbuffet used Spicy Extract!");
         if (ability == ABILITY_CLEAR_BODY) {
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+            MESSAGE("The opposing Beldum's stats were not lowered!");
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -73,13 +73,13 @@ SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks")
         MESSAGE("Wobbuffet used Spicy Extract!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Pidgey's Attack sharply rose!");
+        MESSAGE("The opposing Pidgey's Attack rose sharply!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
         }
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
-        MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
+        MESSAGE("The opposing Pidgey's Defense was not lowered!");
     }
 }
 
@@ -93,10 +93,10 @@ SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks")
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
     } SCENE {
         MESSAGE("Wobbuffet used Spicy Extract!");
-        NOT MESSAGE("Wobbuffet's attack missed!");
+        NOT MESSAGE("The opposing Wobbuffet avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Attack sharply rose!");
+        MESSAGE("The opposing Wobbuffet's Attack rose sharply!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
     }
@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary")
         MESSAGE("The opposing Snivy's Attack harshly fell!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Snivy's Defense sharply rose!");
+        MESSAGE("The opposing Snivy's Defense rose sharply!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
@@ -156,7 +156,7 @@ SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defen
         }
         MESSAGE("The effects of the Clear Amulet held by the opposing Snivy prevents its stats from being lowered!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Snivy's Defense sharply rose!");
+        MESSAGE("The opposing Snivy's Defense rose sharply!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
@@ -188,7 +188,7 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amu
 
 AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does not benefit partner")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GHOLDENGO; ability = ABILITY_GOOD_AS_GOLD; }

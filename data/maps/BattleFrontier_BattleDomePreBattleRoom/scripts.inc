@@ -18,7 +18,6 @@ BattleFrontier_BattleDomePreBattleRoom_OnFrame:
 
 BattleFrontier_BattleDomePreBattleRoom_EventScript_EnterRoom::
 	goto_if_eq VAR_0x8006, 1, BattleFrontier_BattleDomePreBattleRoom_EventScript_ReturnFromBattle
-	delay 1
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, TRUE
 	setvar VAR_TEMP_0, 1
 	applymovement LOCALID_PLAYER, BattleFrontier_BattleDomePreBattleRoom_Movement_PlayerEnter
@@ -141,7 +140,6 @@ BattleFrontier_BattleDomePreBattleRoom_EventScript_ContinueChallenge::
 	copyvar VAR_0x8004, VAR_RESULT
 	setvar VAR_0x8005, DOME_BATTLE_PARTY_SIZE  @ 2 of the 3 party mons are selected for battle
 	special ChoosePartyForBattleFrontier
-	waitstate
 	frontier_resetsketch
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleDomePreBattleRoom_EventScript_AskReadyForNextRound
 	dome_set DOME_DATA_SELECTED_MONS

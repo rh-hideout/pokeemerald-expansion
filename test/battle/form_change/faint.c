@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Shi
         SWITCH_OUT_MESSAGE("Wobbuffet")
         SEND_IN_MESSAGE("Aegislash");
     } THEN {
-        // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
+        // We do not check gParties[B_TRAINER_PLAYER] data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
     }
 }
@@ -42,14 +42,14 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Bla
         SWITCH_OUT_MESSAGE("Wobbuffet")
         SEND_IN_MESSAGE("Aegislash");
     } THEN {
-        // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
+        // We do not check gParties[B_TRAINER_PLAYER] data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
     }
 }
 
 DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should not cause a message") // issue 7795
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_CASTFORM; }
     PARAMETRIZE { species = SPECIES_CHERRIM; }
     GIVEN {
@@ -72,7 +72,8 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
 
 SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after terastallizing")
 {
-    u32 species, item;
+    enum Species species;
+    enum Item item;
     PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
     PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
