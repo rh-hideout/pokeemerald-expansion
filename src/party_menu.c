@@ -4830,13 +4830,6 @@ static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
     return TRUE;
 }
 
-static bool32 IsItemFlute(enum Item item)
-{
-    if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
-        return TRUE;
-    return FALSE;
-}
-
 // Battle scripts called in HandleAction_UseItem
 void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
 {
@@ -4854,8 +4847,7 @@ void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
         gBattleStruct->itemPartyIndex[gBattlerInMenuId] = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
         gPartyMenuUseExitCallback = TRUE;
         PlaySE(SE_SELECT);
-        if (!IsItemFlute(gSpecialVar_ItemId))
-            ConsumeBagItem(gSpecialVar_ItemId, 1);
+        ConsumeBagItem(gSpecialVar_ItemId, 1);
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = task;
     }
@@ -4911,7 +4903,7 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     else
     {
         gPartyMenuUseExitCallback = TRUE;
-        if (!IsItemFlute(item))
+        if (GetItemConsumability(item))
         {
             PlaySE(SE_USE_ITEM);
             ConsumeBagItem(item, 1);
@@ -5604,8 +5596,7 @@ static void Task_LearnedMove(u8 taskId)
     if (gPartyMenu.learnMoveState == 0)
     {
         AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
-        if (!GetItemImportance(item))
-            ConsumeBagItem(item, 1);
+        ConsumeBagItem(item, 1);
     }
     GetMonNickname(mon, gStringVar1);
     StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
