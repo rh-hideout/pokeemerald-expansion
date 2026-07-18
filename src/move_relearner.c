@@ -531,7 +531,7 @@ static void UIEndTask(u8 taskId)
     if (gSpecialVar_Result == TRUE && ShouldConsumeTmItem(gTasks[taskId].tMove))
     {
         enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
-        if (!GetItemImportance(item))
+        if (GetItemConsumability(item))
             RemoveBagItem(item, 1);
     }
     if (gRelearnMode == RELEARN_MODE_SCRIPT && gSpecialVar_Result == TRUE)
@@ -710,7 +710,7 @@ static void Task_MoveRelearner_HandleInput(u8 taskId)
         {
             enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
             StringCopy(gStringVar3, GetItemName(item));
-            if (!GetItemImportance(item))
+            if (GetItemConsumability(item))
                 message = gText_MoveRelearnerTeachMoveConfirmUseTm;
         }
         UIPrintMessage(message);
