@@ -1744,3 +1744,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/IntroFall/scripts.inc"
 
 	.include "data/maps/IntroDarkness/scripts.inc"
+
+	.include "data/maps/LittlerootTown_PlayersHouse_1F/scripts.inc"
+
+	.include "data/maps/LittlerootTown_Players_House_2F/scripts.inc"

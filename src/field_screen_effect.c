@@ -106,6 +106,21 @@ void WarpFadeInScreen(void)
     }
 }
 
+void Special_ApplyGardenTint(void)
+{
+    BlendPalettes(PALETTES_ALL, 3, RGB(31, 27, 12));
+}
+
+void Special_ApplyFallTint(void)
+{
+    BlendPalettes(PALETTES_ALL, 5, RGB(10, 14, 20));
+}
+
+void Special_ClearIntroTint(void)
+{
+    BlendPalettes(PALETTES_ALL, 0, RGB_BLACK);
+}
+
 void FadeInFromWhite(void)
 {
     FillPalBufferWhite();

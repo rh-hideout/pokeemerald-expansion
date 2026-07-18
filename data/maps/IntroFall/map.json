@@ -5,12 +5,12 @@
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_SPECIAL_AREA",
   "requires_flash": false,
-  "weather": "WEATHER_FOG",
+  "weather": "WEATHER_SANDSTORM",
   "map_type": "MAP_TYPE_ROUTE",
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": false,
-  "show_map_name": false,
+  "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [
@@ -85,6 +85,13 @@
       "var": "VAR_TEMP_0",
       "var_value": "0",
       "script": "IntroFall_EventScript_DiscoverPoochyenaFront"
+    },
+    {
+      "type": "weather",
+      "x": 12,
+      "y": 18,
+      "elevation": 0,
+      "weather": "COORD_EVENT_WEATHER_SANDSTORM"
     }
   ],
   "bg_events": []

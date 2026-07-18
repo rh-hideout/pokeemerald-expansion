@@ -9,15 +9,17 @@ IntroFall_OnFrame:
 
 IntroFall_EventScript_Begin:
     setvar VAR_TEMP_2, 1
-
     call IntroFall_Setup
 
     end
 
 IntroFall_Setup:
+    special Special_ApplyFallTint
+
     applymovement OBJ_EVENT_ID_PLAYER, IntroFall_PlayerFaceUp
     waitmovement 0
     return
+    
 
 IntroFall_EventScript_DiscoverPoochyenaFront::
     lockall
@@ -71,7 +73,7 @@ IntroFall_Movement_MomRushesOver:
     walk_right
     walk_right
     walk_right
-    walk_up
+    face_up
     step_end
 
 IntroFall_Movement_DadRushesOver:
@@ -85,7 +87,7 @@ IntroFall_Movement_DadRushesOver:
     walk_up
     walk_up
     walk_right
-    walk_up
+    face_up
     step_end
 
 IntroFall_Movement_PlayerCallParent:
@@ -120,6 +122,22 @@ IntroFall_Movement_DadComesToHelp:
     walk_up
     step_end
 
+
+IntroFall_Movement_PlayerApproachNorth:
+    walk_up
+    step_end
+
+IntroFall_Movement_PlayerApproachSouth:
+    walk_down
+    step_end
+
+IntroFall_Movement_PlayerApproachWest:
+    walk_left
+    step_end
+
+IntroFall_Movement_PlayerApproachEast:
+    walk_right
+    step_end
 
 IntroFall_EventScript_DiscoverPoochyena::
     lockall
@@ -171,9 +189,40 @@ IntroFall_EventScript_ChooseHelp:
     msgbox IntroFall_Text_ChooseHelp, MSGBOX_DEFAULT
     closemessage
 
-    applymovement OBJ_EVENT_ID_PLAYER, IntroFall_Movement_PlayerApproachPoochyena
-    waitmovement 0
+    special GetPlayerFacingDirection
+    switch VAR_RESULT
+    case DIR_NORTH, IntroFall_EventScript_HelpApproachNorth
+    case DIR_SOUTH, IntroFall_EventScript_HelpApproachSouth
+    case DIR_WEST, IntroFall_EventScript_HelpApproachWest
+    case DIR_EAST, IntroFall_EventScript_HelpApproachEast
 
+    goto_if_eq VAR_PARENT_CHOICE, 1, IntroFall_EventScript_Help_MomComes
+    goto_if_eq VAR_PARENT_CHOICE, 2, IntroFall_EventScript_Help_DadComes
+
+    releaseall
+    end
+
+IntroFall_EventScript_HelpApproachNorth::
+    applymovement OBJ_EVENT_ID_PLAYER, IntroFall_Movement_PlayerApproachNorth
+    waitmovement 0
+    goto IntroFall_EventScript_AfterHelpApproach
+
+IntroFall_EventScript_HelpApproachSouth::
+    applymovement OBJ_EVENT_ID_PLAYER, IntroFall_Movement_PlayerApproachSouth
+    waitmovement 0
+    goto IntroFall_EventScript_AfterHelpApproach
+
+IntroFall_EventScript_HelpApproachWest::
+    applymovement OBJ_EVENT_ID_PLAYER, IntroFall_Movement_PlayerApproachWest
+    waitmovement 0
+    goto IntroFall_EventScript_AfterHelpApproach
+
+IntroFall_EventScript_HelpApproachEast::
+    applymovement OBJ_EVENT_ID_PLAYER, IntroFall_Movement_PlayerApproachEast
+    waitmovement 0
+    goto IntroFall_EventScript_AfterHelpApproach
+
+IntroFall_EventScript_AfterHelpApproach::
     playmoncry SPECIES_POOCHYENA, 0
     waitmoncry
 
@@ -234,7 +283,7 @@ IntroFall_EventScript_Adult_DadComes:
     closemessage
 
     goto IntroFall_EventScript_SetHomeDad
-    
+
 
 
 
@@ -282,17 +331,19 @@ IntroFall_EventScript_EndFall:
 
 
 IntroFall_EventScript_SetHomeMom:
-    clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_MOM
-    setflag FLAG_HIDE_PLAYERS_HOUSE_DAD
+    clearflag FLAG_HIDE_HOME_MOM
+    setflag FLAG_HIDE_HOME_DAD
     goto IntroFall_EventScript_WakeUp
 
 IntroFall_EventScript_SetHomeDad:
-    setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_MOM
-    clearflag FLAG_HIDE_PLAYERS_HOUSE_DAD
+    setflag FLAG_HIDE_HOME_MOM
+    clearflag FLAG_HIDE_HOME_DAD
     goto IntroFall_EventScript_WakeUp
 
+    special Special_ClearIntroTint
+
 IntroFall_EventScript_WakeUp:
-    warp MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F, 4, 2
+    warp MAP_LITTLEROOT_TOWN_PLAYERS_HOUSE_1F, 4, 2
     waitstate
     end
     

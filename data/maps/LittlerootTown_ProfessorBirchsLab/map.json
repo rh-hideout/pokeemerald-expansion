@@ -2,8 +2,7 @@
   "id": "MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
   "name": "LittlerootTown_ProfessorBirchsLab",
   "layout": "LAYOUT_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
-  "music": "MUS_BIRCH_LAB",
-  "region": "REGION_HOENN",
+  "music": "MUS_RG_SLOW_PALLET",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -238,5 +237,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_ProfessorBirchsLab_EventScript_PC"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

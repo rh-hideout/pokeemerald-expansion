@@ -2,8 +2,7 @@
   "id": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F",
   "name": "LittlerootTown_BrendansHouse_1F",
   "layout": "LAYOUT_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F",
-  "music": "MUS_LITTLEROOT",
-  "region": "REGION_HOENN",
+  "music": "MUS_RG_SLOW_PALLET",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -172,5 +171,6 @@
       "script": "LittlerootTown_BrendansHouse_1F_EventScript_MeetRival2"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "region": "REGION_HOENN"
 }

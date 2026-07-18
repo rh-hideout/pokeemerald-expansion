@@ -639,3 +639,6 @@ gSpecials::
 	def_special UpdateTrainerCardPhotoIcons
 	def_special StickerManGetBragFlags
 	def_special CheckAddCoins
+	def_special Special_ApplyGardenTint
+    def_special Special_ApplyFallTint
+    def_special Special_ClearIntroTint

@@ -3,7 +3,6 @@
   "name": "RocketHideout_B2F_Frlg",
   "layout": "LAYOUT_ROCKET_HIDEOUT_B2F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROCKET_HIDEOUT",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,12 +11,10 @@
   "allow_escaping": true,
   "allow_running": true,
   "show_map_name": true,
-  "floor_number": -2,
   "battle_scene": "MAP_BATTLE_SCENE_INDOOR_2",
   "connections": null,
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
       "x": 20,
       "y": 6,
@@ -31,7 +28,6 @@
       "flag": "FLAG_HIDE_MISC_KANTO_ROCKETS"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 15,
       "y": 3,
@@ -45,7 +41,6 @@
       "flag": "FLAG_HIDE_ROCKET_HIDEOUT_B2F_X_SPEED"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 2,
       "y": 5,
@@ -59,7 +54,6 @@
       "flag": "FLAG_HIDE_ROCKET_HIDEOUT_B2F_MOON_STONE"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 5,
       "y": 7,
@@ -73,7 +67,6 @@
       "flag": "FLAG_HIDE_ROCKET_HIDEOUT_B2F_TM12"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 0,
       "y": 14,
@@ -125,5 +118,7 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "floor_number": -2,
+  "region": "REGION_KANTO"
 }

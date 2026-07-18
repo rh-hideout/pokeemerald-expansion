@@ -7,10 +7,10 @@ const struct Tileset gTileset_SecretBase =
 {
     .isCompressed = FALSE,
     .isSecondary = FALSE,
-    .tiles = gTilesetTiles_SecretBase,
-    .palettes = gTilesetPalettes_SecretBase,
-    .metatiles = gMetatiles_SecretBasePrimary,
-    .metatileAttributes = gMetatileAttributes_SecretBasePrimary,
+    .tiles = gTilesetTiles_PorytilesManaged_SecretBase,
+    .palettes = gTilesetPalettes_PorytilesManaged_SecretBase,
+    .metatiles = gMetatiles_PorytilesManaged_SecretBase,
+    .metatileAttributes = gMetatileAttributes_PorytilesManaged_SecretBase,
     .callback = NULL,
 };
 

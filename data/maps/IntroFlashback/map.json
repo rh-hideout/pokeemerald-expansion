@@ -10,7 +10,7 @@
   "allow_cycling": false,
   "allow_escaping": false,
   "allow_running": false,
-  "show_map_name": false,
+  "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [
@@ -73,7 +73,7 @@
       "x": 17,
       "y": 13,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -92,6 +92,13 @@
       "var": "VAR_TEMP_3",
       "var_value": "0",
       "script": "IntroFlashback_EventScript_EnterFall"
+    },
+    {
+      "type": "weather",
+      "x": 14,
+      "y": 19,
+      "elevation": 0,
+      "weather": "COORD_EVENT_WEATHER_SUNNY"
     }
   ],
   "bg_events": []

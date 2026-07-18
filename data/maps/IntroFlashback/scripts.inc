@@ -10,14 +10,9 @@ IntroFlashback_OnFrame:
 IntroFlashback_EventScript_Begin:
     setvar VAR_TEMP_1, 1
 
-    setweather WEATHER_SUNNY
-    doweather
-    delay 30
-
     special SpawnCameraObject
     applymovement LOCALID_CAMERA, IntroFlashback_Movement_CameraPanUp
     waitmovement 0
-
     delay 30
 
     msgbox IntroFlashback_Text_MomOpening, MSGBOX_DEFAULT

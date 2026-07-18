@@ -2,8 +2,7 @@
   "id": "MAP_LITTLEROOT_TOWN",
   "name": "LittlerootTown",
   "layout": "LAYOUT_LITTLEROOT_TOWN",
-  "music": "MUS_LITTLEROOT",
-  "region": "REGION_HOENN",
+  "music": "MUS_RG_SLOW_PALLET",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -37,8 +36,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
-      "x": 12,
-      "y": 13,
+      "x": 1,
+      "y": 11,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 2,
@@ -50,8 +49,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2",
-      "x": 14,
-      "y": 17,
+      "x": 8,
+      "y": 3,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 2,
@@ -77,20 +76,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TRUCK",
-      "x": 2,
-      "y": 10,
-      "elevation": 4,
-      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK"
-    },
-    {
-      "graphics_id": "OBJ_EVENT_GFX_TRUCK",
-      "x": 11,
+      "x": 10,
       "y": 10,
       "elevation": 4,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
@@ -132,10 +118,11 @@
   ],
   "warp_events": [
     {
+      "warp_id": "Players_House_Front_Door",
       "x": 14,
       "y": 8,
       "elevation": 0,
-      "dest_map": "MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F",
+      "dest_map": "MAP_LITTLEROOT_TOWN_PLAYERS_HOUSE_2F",
       "dest_warp_id": "1"
     },
     {
@@ -239,14 +226,6 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 15,
-      "y": 13,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LittlerootTown_EventScript_TownSign"
-    },
-    {
-      "type": "sign",
       "x": 6,
       "y": 17,
       "elevation": 0,
@@ -269,5 +248,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_MaysHouseSign"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }
