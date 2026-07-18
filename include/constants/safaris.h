@@ -1,0 +1,18 @@
+#ifndef GUARD_CONSTANTS_SAFARIS_H
+#define GUARD_CONSTANTS_SAFARIS_H
+
+enum SafariIds {
+    NONE_SAFARI,
+    ROUTE_121_HOENN_SAFARI,
+    FUSCHIA_CITY_SAFARI,
+    SAFARI_COUNT
+};
+
+// VAR_SAFARI_ZONE_STATE
+#define ENTERING_SAFARI_ZONE                    1
+#define SAFARI_ZONE_NO_STEP_LEFT                2
+#define SAFARI_ZONE_NO_BALLS_LEFT               3
+#define SAFARI_ZONE_NO_BALLS_MID_BATTLE         4
+#define SAFARI_ZONE_RETIRING                    5
+
+#endif // GUARD_CONSTANTS_SAFARIS_H

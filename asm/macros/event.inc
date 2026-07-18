@@ -2972,6 +2972,24 @@
 	.byte \dataField
 	.endm
 
+@ Safaris
+
+	.macro entersafari safariId:req
+	callnative ScrCmd_entersafari
+	.byte \safariId
+	.endm
+
+	.macro exitsafari_nowarp
+	callnative ScrCmd_exitsafari
+	.byte FALSE
+	.endm
+
+	.macro exitsafari
+	callnative ScrCmd_exitsafari
+	.byte TRUE
+	waitstate
+	.endm
+
 @ FRLG
 
 
