@@ -91,15 +91,6 @@
 	.byte \effectBattler
 	.endm
 
-	.macro seteffectsecondary battler:req, effectBattler:req, moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
-	.byte B_SCR_OP_SETEFFECTSECONDARY
-	.byte \battler
-	.byte \effectBattler
-	.endm
-
 	.macro clearvolatile battler:req, volatile:req
 	.byte B_SCR_OP_CLEARVOLATILE
 	.byte \battler
@@ -1438,8 +1429,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcommanderactive jumpInstr:req
+	.macro jumpifcommanderactive battler:req, jumpInstr:req
 	callnative BS_JumpIfCommanderActive
+	.byte \battler
 	.4byte \jumpInstr
 	.endm
 

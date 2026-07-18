@@ -272,7 +272,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
         else
-            SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
+            SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker));
 
         gBattleScripting.animTurn = 1; // to play correct anim
         BattleScriptCall(BattleScript_MonTookFutureAttack);
@@ -359,7 +359,10 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE:
-        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
+        side = GetBattlerSide(battler);
+        if ((gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
+         && !IS_BATTLER_OF_TYPE(battler, TYPE_FIRE)
+         && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
         {
             gBattlerAttacker = battler;
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -385,7 +388,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
                 gBattleMons[battler].volatiles.multipleTurns = FALSE;
                 if (!gBattleMons[battler].volatiles.confusionTurns)
                 {
-                    SetMoveEffect(battler, battler, MOVE_EFFECT_CONFUSION, gBattlescriptCurrInstr, EFFECT_PRIMARY);
+                    SetMoveEffectHelper(battler, battler, MOVE_EFFECT_CONFUSION, gBattlescriptCurrInstr, EFFECT_PRIMARY);
                     if (gBattleMons[battler].volatiles.confusionTurns)
                         BattleScriptCall(BattleScript_ThrashConfuses);
                     effect = TRUE;
@@ -476,35 +479,43 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
 static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
 {
     bool32 effect = FALSE;
-    enum BattlerId drainedBattler = gBattleMons[battler].volatiles.leechSeed;
+    enum BattlerId drainedBattler = battler;
+    enum BattlerId receiverBattler = gBattleMons[drainedBattler].volatiles.leechSeed;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (drainedBattler
-     && IsBattlerPresent(drainedBattler - 1)
-     && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+    if (receiverBattler == 0)
+        return effect;
+
+    receiverBattler = receiverBattler - 1;
+
+    if (IsBattlerPresent(drainedBattler)
+     && IsBattlerPresent(receiverBattler)
+     && !IsAbilityAndRecord(drainedBattler, GetBattlerAbility(drainedBattler), ABILITY_MAGIC_GUARD))
     {
-        gBattlerTarget = drainedBattler - 1; // leech seed receiver
-        gBattleScripting.animArg1 = gBattlerTarget;
-        gBattleScripting.animArg2 = gBattlerAttacker;
-        s32 drainAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-        s32 healAmount = GetDrainedBigRootHp(gBattlerTarget, drainAmount);
-        if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
+        gBattlerAttacker = receiverBattler;
+        gBattlerAbility = gBattleScripting.battler = drainedBattler;
+        gBattleScripting.animArg1 = receiverBattler;
+        gBattleScripting.animArg2 = drainedBattler;
+
+        s32 drainAmount = GetNonDynamaxMaxHP(drainedBattler) / 8;
+        s32 healAmount = GetDrainedBigRootHp(receiverBattler, drainAmount);
+
+        if (GetBattlerAbility(drainedBattler) == ABILITY_LIQUID_OOZE)
         {
-            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
-            SetPassiveDamageAmount(gBattlerTarget, healAmount);
+            SetPassiveDamageAmount(drainedBattler, drainAmount);
+            SetPassiveDamageAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
-        else if (gBattleMons[gBattlerTarget].volatiles.healBlock)
+        else if (gBattleMons[receiverBattler].volatiles.healBlock)
         {
             BattleScriptCall(BattleScript_LeechSeedTurnDrainHealBlock);
         }
         else
         {
-            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
-            SetHealAmount(gBattlerTarget, healAmount);
+            SetPassiveDamageAmount(drainedBattler, drainAmount);
+            SetHealAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_DRAIN;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainRecovery);
         }
@@ -670,7 +681,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptCall(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
+            if (gBattleMons[battler].volatiles.wrappedBindingBand)
                 bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 6 : 8);
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (GetConfig(B_BINDING_DAMAGE) >= GEN_6 ? 8 : 16);
