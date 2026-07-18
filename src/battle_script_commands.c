@@ -10840,7 +10840,7 @@ void BS_ItemIncreaseStat(void)
         for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
             SetStatChange(gBattlerAttacker, i, 1);
 
-    } // else EFFECT_ITEM_INCREASE_ALL_STATS or EFFECT_ITEM_SET_FOCUS_ENERGY
+    } // else EFFECT_ITEM_INCREASE_ALL_STATS
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

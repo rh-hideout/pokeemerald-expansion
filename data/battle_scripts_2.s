@@ -157,7 +157,6 @@ BattleScript_ItemSetMist::
 
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
-	itemincreasestat
 	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ItemNoEffect
 	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ItemNoEffect
