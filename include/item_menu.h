@@ -56,6 +56,27 @@ enum BagSortOptions
     SORT_BY_INDEX,
 };
 
+#if SWSH_ITEM_MENU_BATTLE_POCKETS
+// battle pocket ids start at POCKETS_COUNT so that during battle
+// gBagPosition.pocket never collides with a field POCKET_* value
+// (e.g. POCKET_TM_HM checks for move-info mode)
+enum BattlePocket
+{
+    BATTLE_POCKET_NONE = 0, // item does not appear in the battle bag
+    BATTLE_POCKET_MEDICINE = POCKETS_COUNT,
+    BATTLE_POCKET_POKE_BALLS,
+    BATTLE_POCKET_BATTLE_ITEMS,
+    BATTLE_POCKET_BERRIES,
+    BATTLE_POCKETS_END,
+};
+#define BATTLE_POCKETS_COUNT (BATTLE_POCKETS_END - POCKETS_COUNT)
+// take the largest pocket count possible (about 124 bytes wasteful)
+#define BATTLE_POCKET_CAPACITY max(BAG_ITEMS_COUNT, max(BAG_POKEBALLS_COUNT, BAG_BERRIES_COUNT))
+#define BAG_POCKET_IDS_COUNT BATTLE_POCKETS_END
+#else
+#define BAG_POCKET_IDS_COUNT POCKETS_COUNT
+#endif
+
 #define ITEMMENU_SWAP_LINE_LENGTH 8  // Swap line is 8 sprites long
 #if SWSH_ITEM_MENU
 #define HOVER_SLOT_SPRITES_COUNT     5
@@ -79,8 +100,8 @@ struct BagPosition
     bool8 isPyramid; // Battle Pyramid bag from frontier.pyramidBag
 #endif
     u16 pocketSwitchArrowPos;
-    u16 cursorPosition[POCKETS_COUNT];
-    u16 scrollPosition[POCKETS_COUNT];
+    u16 cursorPosition[BAG_POCKET_IDS_COUNT];
+    u16 scrollPosition[BAG_POCKET_IDS_COUNT];
 };
 
 extern struct BagPosition gBagPosition;
@@ -108,8 +129,8 @@ struct BagMenu
     const u8 *contextMenuItemsPtr;
     u8 contextMenuItemsBuffer[4];
     u8 contextMenuNumItems;
-    u8 numItemStacks[POCKETS_COUNT];
-    u8 numShownItems[POCKETS_COUNT];
+    u8 numItemStacks[BAG_POCKET_IDS_COUNT];
+    u8 numShownItems[BAG_POCKET_IDS_COUNT];
     s16 graphicsLoadState;
     u8 unused2[14];
     u8 ALIGNED(4) pocketNameBuffer[32][32];
@@ -155,6 +176,10 @@ struct BagMenu
 #if SWSH_ITEM_MENU_PYRAMID
     struct ItemSlot pyramidScratch[PYRAMID_BAG_ITEMS_COUNT];
     struct BagPocket pyramidScratchPocket;
+#endif
+#if SWSH_ITEM_MENU_BATTLE_POCKETS
+    // (srcPocket << 8) | srcSlot for each entry of each battle pocket
+    u16 battlePocketRefs[BATTLE_POCKETS_COUNT][BATTLE_POCKET_CAPACITY];
 #endif
 #endif
 };

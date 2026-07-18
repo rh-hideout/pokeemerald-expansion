@@ -16,6 +16,8 @@
 #define SWSH_ITEM_MENU_PYRAMID          (SWSH_ITEM_MENU && TRUE)                // Use SwSh bag menu for the Battle Pyramid
 #define SWSH_ITEM_MENU_PYRAMID_ACTION   (SWSH_ITEM_MENU_PYRAMID && SWSH_ITEM_MENU_IN_BAG_USE)   // Perform inline Use/Give in the pyramid bag
 
+#define SWSH_ITEM_MENU_BATTLE_POCKETS   (SWSH_ITEM_MENU && TRUE)                // In battle, show battle pockets (Medicine/Poké Balls/Battle Items/Berries) instead of the field pockets
+
 #if SWSH_ITEM_MENU_IN_BAG_USE
 void BagMenu_OpenPartySelect(u8 taskId);
 #if SWSH_ITEM_MENU_IN_BATTLE_USE
