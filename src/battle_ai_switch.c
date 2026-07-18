@@ -569,7 +569,18 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchCont
     u8 numAbsorbingAbilities = 0;
     enum Ability absorbingTypeAbilities[8]; // Max needed for type + move property absorbers
     enum Ability partyMonAbility;
-    enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(switchContext->opposingBattler), switchContext->incomingMove, switchContext->opposingBattler, MON_IN_BATTLE);
+
+    enum Type incomingType  = GetDynamicMoveType(
+                                    GetBattlerMon(switchContext->opposingBattler),
+                                    switchContext->incomingMove,
+                                    switchContext->opposingBattler,
+                                    gAiLogicData->abilities[switchContext->opposingBattler],
+                                    gAiLogicData->holdEffects[switchContext->opposingBattler],
+                                    MON_IN_BATTLE
+                                );
+
+    if (incomingType == TYPE_NONE)
+        incomingType = GetMoveType(switchContext->incomingMove);
 
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
