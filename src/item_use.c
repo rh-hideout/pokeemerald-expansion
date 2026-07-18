@@ -1227,7 +1227,7 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
     switch (battleUsage)
     {
     case EFFECT_ITEM_INCREASE_STAT:
-        if (hp == 0 || gPartyMenu.slotId > 1)
+        if (mon->hp == 0 || gPartyMenu.slotId > 1)
             cannotUse = TRUE;
         else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
             cannotUse = TRUE;
@@ -1235,7 +1235,7 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
             SetStatChange(battlerTarget, GetItemEffect(itemId)[1], 1);
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (hp == 0 ||gPartyMenu.slotId > 1)
+        if (mon->hp == 0 ||gPartyMenu.slotId > 1)
             cannotUse = TRUE;
         else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
             cannotUse = TRUE;
@@ -1268,6 +1268,8 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
             cannotUse = TRUE;
             break;
         }
+        break;
+    default:
         break;
     }
 

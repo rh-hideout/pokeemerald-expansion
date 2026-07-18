@@ -122,16 +122,9 @@ BattleScript_ItemHealAndCureStatusEnd::
 
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
-<<<<<<< HEAD
 	itemincreasestat
 	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
-	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemNoEffect
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
-=======
-    itemincreasestat
 	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
->>>>>>> 2f7029e1243b66e24efa7967d390b61a3cf059e0
 	end
 
 BattleScript_UsePokeFlute::
