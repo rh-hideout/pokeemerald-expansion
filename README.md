@@ -1,3 +1,23 @@
+# Hoenn Habitat
+
+A non-commercial fan project transforming Pokémon Emerald into a habitat/befriending
+game — no wild battles, no capture. Pokémon appear at habitat spots when scripted
+conditions are met, become residents when befriended, and work berry plots at the
+Grove. Built on [pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion),
+**pinned to tag `expansion/1.16.2`**.
+
+- Design contract: [`docs/superpowers/specs/2026-07-18-hoenn-habitat-design-spec-v0.1.md`](docs/superpowers/specs/2026-07-18-hoenn-habitat-design-spec-v0.1.md)
+- Changelog: [`CHANGELOG.md`](CHANGELOG.md)
+- Headless verification: `make verify` (build → boot in mGBA → screenshot; see `tools/habitat/`)
+- **Legal stance:** this repository distributes **source and patches only** — never
+  ROMs, never Nintendo-owned binaries — and is never monetized. The game builds
+  entirely from this source tree; play it by building it yourself or by applying a
+  released patch to your own legally dumped Pokémon Emerald cartridge image.
+
+Upstream's original README follows.
+
+---
+
 # About `pokeemerald-expansion`
 
 ![Gif that shows debugging functionality that is unique to pokeemerald-expansion such as rerolling Trainer ID, Cheat Start, PC from Debug Menu, Debug PC Fill, Pokémon Sprite Visualizer, Debug Warp to Map, and Battle Debug Menu](https://github.com/user-attachments/assets/cf9dfbee-4c6b-4bca-8e0a-07f116ef891c) ![Gif that shows overworld functionality that is unique to pokeemerald-expansion such as indoor running, BW2 style map popups, overworld followers, DNA Splicers, Gen 1 style fishing, OW Item descriptions, Quick Run from Battle, Use Last Ball, Wild Double Battles, and Catch from EXP](https://github.com/user-attachments/assets/383af243-0904-4d41-bced-721492fbc48e) ![Gif that shows off a number of modern Pokémon battle mechanics happening in the pokeemerald-expansion engine: 2 vs 1 battles, modern Pokémon, items, moves, abilities, fully customizable opponents and partners, Trainer Slides, and generational gimmicks](https://github.com/user-attachments/assets/50c576bc-415e-4d66-a38f-ad712f3316be)

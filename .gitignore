@@ -66,3 +66,8 @@ tools/aif2pcm/aif2pcm
 *.smolTM
 __pycache__
 .map_version
+
+# Hoenn Habitat
+verify-out/
+*.sav
+.DS_Store
