@@ -1,7 +1,6 @@
 #ifndef GUARD_BATTLE_AI_MAIN_H
 #define GUARD_BATTLE_AI_MAIN_H
 
-
 typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
 
 #define UNKNOWN_NO_OF_HITS UINT32_MAX
@@ -111,7 +110,8 @@ void Ai_UpdateFaintData(enum BattlerId battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunctions(void);
 void AI_TrySwitchOrUseItem(enum BattlerId battler);
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain);
+struct AiCalcValues;
+void CalcBattlerAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 void AIDebugTimerStart(void);
 void AIDebugTimerEnd(void);
 

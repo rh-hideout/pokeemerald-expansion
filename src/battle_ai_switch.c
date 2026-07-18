@@ -53,6 +53,8 @@ static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum Battler
 static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
+static enum Gimmick GetPossibleGimmickForSwitchIn(enum BattlerId battler);
+static bool32 TryPrimalReversionForSwitchIn(enum BattlerId battler);
 
 static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 monIndex, struct Pokemon *mon)
 {
@@ -76,26 +78,48 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[switchinBattler]; // Rage Fist fix
     PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
-    CopyMonAbilityAndTypesToBattleMon(switchinBattler, mon);
+    gBattleMons[switchinBattler].ability = GetPartyMonAbilityForSwitchCalc(switchinBattler, monIndex, mon);
+
+    u32 considerZMove = 0;
+    bool32 primalReversion = FALSE;
+    enum Gimmick gimmickSwitchIn = AI_TryGimmick(switchinBattler, gBattleMons[switchinBattler].ability, GetPossibleGimmickForSwitchIn(switchinBattler));
+
+    if (gimmickSwitchIn == GIMMICK_Z_MOVE)
+        considerZMove |= 1u << switchinBattler;
+    else if (gimmickSwitchIn == GIMMICK_NONE)
+        primalReversion = TryPrimalReversionForSwitchIn(switchinBattler);
+
     // Setup switchin battler data
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
-    u32 switchinWeather = AI_GetSwitchinWeather(switchinBattler);
-    u32 switchinTerrain = AI_GetSwitchinTerrain(switchinBattler);
-    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinTerrain);
 
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetSwitchinWeather(switchinBattler),
+        .terrain = AI_GetSwitchinTerrain(switchinBattler),
+        .considerZMove = considerZMove,
+    };
+
+    SetBattlerVolatilesForSwitchin(switchinBattler, aiCalc.weather, aiCalc.terrain);
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     gAiLogicData->switchInCalc = TRUE;
 
-    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
+        if (switchinBattler == battler || !IsBattlerAlive(battler))
             continue;
-        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinTerrain);
-        SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinTerrain);
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinTerrain);
+
+        SetBattlerStatStagesForSwitchin(switchinBattler, battler, aiCalc.terrain);
+        SetBattlerHPChangeForSwitch(switchinBattler, battler);
+        CalcBattlerAiMovesData(&aiCalc, gAiLogicData, switchinBattler, battler);
+        CalcBattlerAiMovesData(&aiCalc, gAiLogicData, battler, switchinBattler);
+    }
+
+    if (gimmickSwitchIn != GIMMICK_NONE || primalReversion)
+    {
+        if (!primalReversion)
+            SetActiveGimmick(switchinBattler, GIMMICK_NONE);
+        TryBattleFormChange(switchinBattler, FORM_CHANGE_END_BATTLE, gBattleMons[switchinBattler].ability);
     }
 
     gAiLogicData->switchInCalc = FALSE;
@@ -2913,4 +2937,39 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
     default:
         break;
     }
+}
+
+static enum Gimmick GetPossibleGimmickForSwitchIn(enum BattlerId battler)
+{
+    bool32 canUseTera = gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler];
+    bool32 canUseDynamax = gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler];
+
+    for (enum Gimmick gimmick = GIMMICK_NONE; gimmick < GIMMICKS_COUNT; gimmick++)
+    {
+        if (!canUseTera && gimmick == GIMMICK_TERA)
+            continue;
+        if (!canUseDynamax && gimmick == GIMMICK_DYNAMAX)
+            continue;
+
+        if (CanActivateGimmick(battler, gimmick))
+            return gimmick;
+    }
+
+    return GIMMICK_NONE;
+}
+
+static bool32 TryPrimalReversionForSwitchIn(enum BattlerId battler)
+{
+    switch (gBattleMons[battler].species)
+    {
+    case SPECIES_GROUDON:
+    case SPECIES_KYOGRE:
+        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION, ABILITY_NONE))
+            return TRUE;
+        break;
+    default:
+        break;
+    }
+
+    return FALSE;
 }
