@@ -40,7 +40,7 @@ TEST("Habitat manager: offer-less befriend completes on recompute after battle w
     Habitat_RecomputeSpot(machop);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_BEFRIENDED);
     EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MACHOP), FLAG_GET_CAUGHT));
-    EXPECT(FlagGet(machop->hideFlag));  // no STAY_AMBIENT: sprite hides
+    EXPECT(!FlagGet(machop->hideFlag));  // home-by-default: it stays (§3)
 }
 
 TEST("Habitat manager: offer-driven spots do not auto-befriend")
@@ -61,11 +61,10 @@ TEST("Habitat manager: offer-driven spots do not auto-befriend")
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);
 }
 
-TEST("Habitat manager: befriended STAY_AMBIENT spot keeps its sprite")
+TEST("Habitat manager: befriended spots render at home (home-by-default)")
 {
     const struct HabitatSpot *skitty = Habitat_GetSpot(SPOT_SKITTY);
     ASSUME(skitty != NULL);
-    ASSUME(skitty->engineFlags & HABITAT_SPOTDEF_STAY_AMBIENT);
 
     Habitat_AddPlacedCount(SPOT_SKITTY, 1);
     Habitat_RecomputeSpot(skitty);
@@ -74,7 +73,7 @@ TEST("Habitat manager: befriended STAY_AMBIENT spot keeps its sprite")
     Habitat_CompleteBefriendById(SPOT_SKITTY);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_BEFRIENDED);
     EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_SKITTY), FLAG_GET_CAUGHT));
-    EXPECT(!FlagGet(skitty->hideFlag));  // ambient sprite remains
+    EXPECT(!FlagGet(skitty->hideFlag));  // home-by-default: sprite remains
 }
 
 TEST("Habitat manager: partial appear conditions stir the spot")
@@ -87,8 +86,8 @@ TEST("Habitat manager: partial appear conditions stir the spot")
     EXPECT_EQ(Habitat_GetSpotState(SPOT_LOTAD), HABITAT_STATE_STIRRING);
     EXPECT(FlagGet(lotad->hideFlag));            // stirring is still hidden
 
-    ZeroPlayerPartyMons();
-    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10;);
+    // §7 recast: resident Treecko (dex-backed) + mature zone-1 Cheri.
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_TREECKO), FLAG_SET_CAUGHT);
     gSaveBlock1Ptr->berryTrees[5].berry = ItemIdToBerryType(ITEM_CHERI_BERRY);
     gSaveBlock1Ptr->berryTrees[5].stage = BERRY_STAGE_BERRIES;
     Habitat_RecomputeSpot(lotad);
@@ -172,7 +171,7 @@ TEST("Habitat verbs: OFFER consumes the right item and befriends; wrong item is 
     gSpecialVar_LastTalked = skitty->localId;
 
     AddBagItem(ITEM_POKE_DOLL, 1);
-    AddBagItem(ITEM_ORAN_BERRY, 1);
+    AddBagItem(ITEM_PERSIM_BERRY, 1);
     AddBagItem(ITEM_PECHA_BERRY, 1);
     Habitat_OnInspectSpot();
     ASSUME(Habitat_TryPlaceItem() == TRUE);            // Skitty is now ACTIVE
@@ -182,9 +181,9 @@ TEST("Habitat verbs: OFFER consumes the right item and befriends; wrong item is 
     EXPECT(CheckBagHasItem(ITEM_PECHA_BERRY, 1));      // kept
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);
 
-    gSpecialVar_ItemId = ITEM_ORAN_BERRY;
+    gSpecialVar_ItemId = ITEM_PERSIM_BERRY;            // Normal type-want (§4)
     EXPECT(Habitat_TryOffer() == TRUE);
-    EXPECT(!CheckBagHasItem(ITEM_ORAN_BERRY, 1));      // consumed
+    EXPECT(!CheckBagHasItem(ITEM_PERSIM_BERRY, 1));    // consumed
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_BEFRIENDED);
     EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_SKITTY), FLAG_GET_CAUGHT));
 

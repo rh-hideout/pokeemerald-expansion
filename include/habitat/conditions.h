@@ -44,6 +44,9 @@ enum HabitatComparator
 // flags: bit 0 = NEGATE (spite mechanics — inverts the whole condition);
 // bits 4–7 = OR-group id (0 = standalone/ANDed; same nonzero id = any-of group).
 #define HABITAT_COND_NEGATE       (1 << 0)
+#define HABITAT_COND_EXACT_STAGE  (1 << 1)  // §9 anti-regret: reserved; species
+                                            // conds match line-at-stage-or-above
+                                            // by default once rituals land
 #define HABITAT_COND_OR_GROUP(n)  ((n) << 4)
 #define HABITAT_COND_GROUP_OF(c)  (((c)->flags >> 4) & 0xF)
 

@@ -54,6 +54,21 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
   `make verify` inspects Machop, `--scenario skitty` proves the full
   place→manifest→offer→befriend loop with screenshot evidence.
 
+## [Unreleased] — Milestone 1 phase 3.5: Spec v0.1-rev Recast (2026-07-19)
+
+- Recast slice data to the §4 type-berry economy (Sleep mapping, verified
+  against references): Vulpix wants Leppa, Skitty Persim, Lotad Oran,
+  Heracross/Pinsir Lum. No new items needed.
+- Lotad appear now keys on resident Treecko (party layer deferred; engine
+  keeps PARTY_SPECIES for the future).
+- Add the sixth slice spot: Pinsir (sap-log stated want, ITEM_HONEY
+  placeholder) — feeds Heracross's chain in-slice.
+- Home-by-default rendering (§3): befriended spots keep their sprite,
+  STAY_AMBIENT flag dissolved; "out at the Grove" subtraction lands phase 4.
+- Reserve HABITAT_COND_EXACT_STAGE (§9 anti-regret); add per-map spot
+  density check (§3 budget law); trim dev kit (pouch auto-sorts by id —
+  first-slot determinism needs a single kit berry kind).
+
 ## [Unreleased] — Milestone 1 phase 3: Resident Registry
 
 - Add the spec §5 resident registry: 96 individualized residents (species,

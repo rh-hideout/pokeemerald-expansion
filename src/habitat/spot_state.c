@@ -14,7 +14,7 @@
 // Counter slot maps (§5: only listed spots get a real counter).
 // Terminated by 0xFFFF. Slot index == position in the list.
 static const u16 sTalkCounterSpots[] = { 0xFFFF };
-static const u16 sPlacedCounterSpots[] = { 1 /* Skitty: doll placement */, 0xFFFF };
+static const u16 sPlacedCounterSpots[] = { 1 /* Skitty: doll */, 6 /* Pinsir: sap log */, 0xFFFF };
 
 static s32 SlotFor(const u16 *list, u16 spotId)
 {

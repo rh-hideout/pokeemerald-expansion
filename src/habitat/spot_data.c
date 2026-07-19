@@ -12,9 +12,9 @@
 // ============================================================================
 // Vertical-slice spot data (spec §7). ALL prose here is engine placeholder —
 // hint/story text is authored by Jay and replaces these strings wholesale.
-// Placeholder currencies too: Vulpix's Spicy Berry does not exist until the
-// Grove pairing system (phase 4) mints flavor berries, so it costs a plain
-// Oran for now — swap when ITEM_SPICY_* lands. LOUD placeholders, on purpose.
+// Befriend wants follow spec §4's type-berry rule (Sleep mapping, verified
+// 2026-07-19): a Pokémon's default want is its own type's berry. Characterful
+// exceptions are Jay's to author.
 // ============================================================================
 
 // Object-visibility flags: claimed from the vanilla unused range. 0x020/0x021
@@ -24,6 +24,7 @@
 #define FLAG_HABITAT_SPOT_MACHOP    FLAG_UNUSED_0x032
 #define FLAG_HABITAT_SPOT_VULPIX    FLAG_UNUSED_0x033
 #define FLAG_HABITAT_SPOT_HERACROSS FLAG_UNUSED_0x034
+#define FLAG_HABITAT_SPOT_PINSIR    FLAG_UNUSED_0x035
 
 // Slice spot object events live on Route 103 (the slice zone) — see
 // data/maps/Route103/map.json (LOCALID_HABITAT_SPOT_*, generated).
@@ -37,6 +38,7 @@ enum
     SPOT_MACHOP,
     SPOT_VULPIX,
     SPOT_HERACROSS,
+    SPOT_PINSIR,
 };
 
 // --- Skitty: Tier 1, teaches the PLACE verb -------------------------------
@@ -44,19 +46,20 @@ static const struct HabitatCondition sSkittyAppear[] = {
     HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
-static const struct HabitatCondition sSkittyBefriend[] = {  // PLACEHOLDER befriend cost
-    HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
+static const struct HabitatCondition sSkittyBefriend[] = {  // Normal type-want default (§4)
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_PERSIM_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
 
-// --- Lotad: Tier 2, compound appear conditions ----------------------------
+// --- Lotad: Tier 2, compound appear conditions (§7 recast 2026-07-19:
+// resident Treecko, not party Bulbasaur — party layer deliberately deferred) -
 static const struct HabitatCondition sLotadAppear[] = {
-    HABITAT_COND(COND_PARTY_SPECIES, SPECIES_BULBASAUR, 1, 0, 0),
+    HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 0, 0, 0),
     HABITAT_COND(COND_WEATHER, WEATHER_RAIN, 0, 0, 0),
     HABITAT_COND(COND_BERRY_MATURE, ITEM_CHERI_BERRY, 1, 0, 0),  // zone 1 tree
     HABITAT_CONDITIONS_END,
 };
-static const struct HabitatCondition sLotadBefriend[] = {
+static const struct HabitatCondition sLotadBefriend[] = {  // Water type-want default (§4)
     HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
@@ -75,9 +78,9 @@ static const struct HabitatCondition sVulpixAppear[] = {
     HABITAT_CONDITIONS_END,  // PLACEHOLDER: Jay authors real appear conditions
 };
 static const struct HabitatCondition sVulpixBefriend[] = {
-    // PLACEHOLDER CURRENCY: wants a SPICY berry (Grass+Fire co-op product).
-    // Swap ITEM_ORAN_BERRY -> the Spicy flavor berry when phase 4 mints it.
-    HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
+    // §7: offer a Leppa (Fire type-want) — proves the grow-then-spend circuit
+    // once Torchic works a plot (phase 4).
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_LEPPA_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
 
@@ -88,8 +91,20 @@ static const struct HabitatCondition sHeracrossAppear[] = {
     HABITAT_COND(COND_BERRY_MATURE, ITEM_LEPPA_BERRY, 1, 0, 0),    // "sap trees" placeholder
     HABITAT_CONDITIONS_END,
 };
-static const struct HabitatCondition sHeracrossBefriend[] = {  // PLACEHOLDER befriend cost
-    HABITAT_COND(COND_ITEM_OFFERED, ITEM_SITRUS_BERRY, 1, 0, 0),
+static const struct HabitatCondition sHeracrossBefriend[] = {  // Bug type-want default (§4)
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_LUM_BERRY, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+
+// --- Pinsir: Tier 2, stated want (§7 recast; feeds Heracross's chain) -----
+static const struct HabitatCondition sPinsirAppear[] = {
+    // "a sap-slathered log" [placeholder want]: ITEM_HONEY stands in for sap
+    // until Jay authors the real want.
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HONEY, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+static const struct HabitatCondition sPinsirBefriend[] = {  // Bug type-want default (§4)
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_LUM_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
 
@@ -106,6 +121,7 @@ PLACEHOLDER_HINTS(Lotad);
 PLACEHOLDER_HINTS(Machop);
 PLACEHOLDER_HINTS(Vulpix);
 PLACEHOLDER_HINTS(Heracross);
+PLACEHOLDER_HINTS(Pinsir);
 
 #define SPOT_HINTS(name) sHintDormant_##name, sHintStirring_##name, sHintActive_##name
 
@@ -117,7 +133,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_NONE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_SKITTY,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_SKITTY,
-        .engineFlags = HABITAT_SPOTDEF_STAY_AMBIENT,
+        .engineFlags = 0,
     },
     {
         .spotId = SPOT_LOTAD, .species = SPECIES_LOTAD, .tier = 2, .zoneId = 1,
@@ -153,6 +169,15 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_POLLINATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_HERACROSS,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_HERACROSS,
+        .engineFlags = 0,
+    },
+    {
+        .spotId = SPOT_PINSIR, .species = SPECIES_PINSIR, .tier = 2, .zoneId = 1,
+        .appearConditions = sPinsirAppear, .befriendConditions = sPinsirBefriend,
+        .hintDormant = sHintDormant_Pinsir, .hintStirring = sHintStirring_Pinsir, .hintActive = sHintActive_Pinsir,
+        .workerRole = ROLE_POLLINATE, .personalityId = NULL,
+        .hideFlag = FLAG_HABITAT_SPOT_PINSIR,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_PINSIR,
         .engineFlags = 0,
     },
     { .spotId = 0xFFFF },

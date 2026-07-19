@@ -375,3 +375,7 @@ Route103_EventScript_HabitatSignVulpix::
 Route103_EventScript_HabitatSignHeracross::
 	setvar VAR_0x8004, 5
 	goto HabitatSpot_EventScript_InspectById
+
+Route103_EventScript_HabitatSignPinsir::
+	setvar VAR_0x8004, 6
+	goto HabitatSpot_EventScript_InspectById

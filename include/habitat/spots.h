@@ -16,7 +16,8 @@
 // bits 1–3 reserved
 
 // Engine flags on the spot definition (not designer-authored semantics).
-#define HABITAT_SPOTDEF_STAY_AMBIENT (1 << 0)  // sprite remains visible after befriending
+// (bit 0 was STAY_AMBIENT; dissolved by §3 home-by-default, 2026-07-19 —
+// befriended residents render at their spot unless out at the Grove.)
 
 struct HabitatZone
 {

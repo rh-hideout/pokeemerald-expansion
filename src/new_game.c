@@ -271,11 +271,12 @@ static void ResetHabitatSave(void)
 {
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
 #if HABITAT_SLICE_SPAWN
-    // PLACEHOLDER slice starting kit (real economy is authored content):
-    // enough to teach PLACE (doll -> Skitty) and OFFER (Oran berries).
-    // Oran only in the berry pocket keeps headless bag selection
-    // deterministic (first slot).
-    AddBagItem(ITEM_ORAN_BERRY, 5);
+    // DEV slice kit (the real opening is the lab, §10; this is behind the
+    // dev spawn config). One berry kind only: the pouch auto-sorts by item
+    // id, and headless runs pick the first slot — Persim must be it. Other
+    // wants come from their own fixtures or the Grove circuit, as designed.
+    AddBagItem(ITEM_PERSIM_BERRY, 2);
     AddBagItem(ITEM_POKE_DOLL, 1);
+    AddBagItem(ITEM_HONEY, 1);
 #endif
 }

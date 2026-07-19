@@ -35,8 +35,8 @@ never any-met) — a spot with no appear conditions is born ACTIVE-eligible.
 | `COND_PARTY_FRIENDSHIP` | comparator, value, — | ✅ | Shuppet spite: `(COND_PARTY_FRIENDSHIP, HABITAT_CMP_LE, 30, 0, 0)` |
 | `COND_PARTY_MOVE` | moveId, —, — | ✅ | `(COND_PARTY_MOVE, MOVE_FLASH, 0, 0, 0)` |
 | `COND_PARTY_NATURE` | natureId, —, — | ✅ | `(COND_PARTY_NATURE, NATURE_JOLLY, 0, 0, 0)` |
-| `COND_RESIDENT_SPECIES` | species, zoneId (0=any), — | phase 3 | resident Pinsir in this zone |
-| `COND_RESIDENT_COUNT` | typeFilter, count, — | phase 3 | 5 Ghost/Dark residents |
+| `COND_RESIDENT_SPECIES` | species, zoneId (0=any), — | ✅ (dex-backed; zone filter awaits resident zones) | `(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 0, 0, 0)` |
+| `COND_RESIDENT_COUNT` | typeFilter (TYPE_* or HABITAT_TYPE_ANY), count, — | ✅ (dex-backed) | 5 of a type befriended |
 | `COND_TIME_OF_DAY` | startHour, endHour, — | ✅ | night: `(COND_TIME_OF_DAY, 20, 4, 0, 0)` — end-exclusive, wraps midnight; start==end means "always" |
 | `COND_WEATHER` | weatherId, —, — | ✅ | raining: `(COND_WEATHER, WEATHER_RAIN, 0, 0, 0)`; not-sunny spite: add `HABITAT_COND_NEGATE` |
 | `COND_STORY_FLAG` | flagId, —, — | ✅ | `(COND_STORY_FLAG, FLAG_..., 0, 0, 0)` |
@@ -52,6 +52,19 @@ never any-met) — a spot with no appear conditions is born ACTIVE-eligible.
 
 "Phase N" types are **safe to author today** — they evaluate as unmet until
 their backing state lands, and the enum/params will not change under you.
+
+**§9 anti-regret (pending rituals):** species-naming conditions will match the
+evolutionary line at that stage or above by default; `HABITAT_COND_EXACT_STAGE`
+(flag bit 1) is reserved now for the rare stage-exact case. Until rituals land
+there is no evolution, so exact matching is temporarily equivalent.
+
+**§4 type-wants:** the default befriend want is the species' own type berry
+(Sleep mapping, verified). Duals currently default to the primary type —
+flag exceptions in authored data.
+
+**gStringVar4 rule (engine law):** any text the engine routes through
+gStringVar4 arrives pre-expanded; authored hint prose may use {STR_VAR_1}
+freely — never hand a raw placeholder string to msgbox yourself.
 
 ## Worked example (slice's Lotad spot, spec §7)
 

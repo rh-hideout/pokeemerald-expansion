@@ -18,7 +18,25 @@ TEST("Habitat spots: table ids are unique and species are real")
         for (j = i + 1; gHabitatSpots[j].spotId != 0xFFFF; j++)
             EXPECT(gHabitatSpots[i].spotId != gHabitatSpots[j].spotId);
     }
-    EXPECT(i >= 5);  // the five slice spots exist
+    EXPECT(i >= 6);  // the six slice spots exist (§7 recast)
+}
+
+TEST("Habitat spots: per-map spot density respects the object budget law")
+{
+    // §3 map budget law: NPCs + spots <= ~13 per map. The NPC half is an
+    // authoring checklist; the spot half is checkable here.
+    u32 i, j;
+    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+    {
+        u32 n = 0;
+        for (j = 0; gHabitatSpots[j].spotId != 0xFFFF; j++)
+        {
+            if (gHabitatSpots[j].mapGroup == gHabitatSpots[i].mapGroup
+             && gHabitatSpots[j].mapNum == gHabitatSpots[i].mapNum)
+                n++;
+        }
+        EXPECT(n <= 13);
+    }
 }
 
 TEST("Habitat spots: condition lists terminate within the mask width")
