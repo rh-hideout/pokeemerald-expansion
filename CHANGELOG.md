@@ -54,6 +54,19 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
   `make verify` inspects Machop, `--scenario skitty` proves the full
   place→manifest→offer→befriend loop with screenshot evidence.
 
+## [Unreleased] — Milestone 1 phase 4: The Grove (2026-07-19)
+
+- Grove core on the Littleroot placeholder map: 12-plot save array (slice
+  renders 3), §4 type-berry table as engine data, event-driven growth with
+  offline RTC reconcile, harvest to bag, six-out cap, home/out sprite sync
+  completing §3's home-by-default law.
+- Diegetic flows: recruit at the home spot ("come tend the Grove?"), worker
+  status/rest dialogue at the Grove, plot inspect/harvest. Worker sprites use
+  var-gfx template objects (slots A–F); placeholder prose in the §7 register.
+- In-game Grove click-through lands with phase 5's spawn move to Littleroot
+  (the lab); all Grove logic is native-tested now and Route 103 scenarios
+  stay green.
+
 ## [Unreleased] — Milestone 1 phase 3.5: Spec v0.1-rev Recast (2026-07-19)
 
 - Recast slice data to the §4 type-berry economy (Sleep mapping, verified

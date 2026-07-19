@@ -71,6 +71,23 @@ HabitatSpot_EventScript_Leave::
 
 HabitatSpot_EventScript_Ambient::
 	msgbox HabitatSpot_Text_Ambient, MSGBOX_DEFAULT
+	msgbox HabitatSpot_Text_RecruitPrompt, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, HabitatSpot_EventScript_Leave
+	specialvar VAR_RESULT, Habitat_TryRecruitToGrove
+	switch VAR_RESULT
+	case 1, HabitatSpot_EventScript_Recruited
+	case 2, HabitatSpot_EventScript_GroveFull
+	msgbox HabitatSpot_Text_CannotCome, MSGBOX_DEFAULT
+	release
+	end
+
+HabitatSpot_EventScript_Recruited::
+	msgbox HabitatSpot_Text_Recruited, MSGBOX_DEFAULT
+	release
+	end
+
+HabitatSpot_EventScript_GroveFull::
+	msgbox HabitatSpot_Text_GroveFull, MSGBOX_DEFAULT
 	release
 	end
 
@@ -102,6 +119,22 @@ HabitatSpot_Text_NothingToPlace:
 HabitatSpot_Text_Placed:
 	.string "SET DOWN! PLACEHOLDER: it is\n"
 	.string "arranged just so.$"
+
+HabitatSpot_Text_RecruitPrompt:
+	.string "Ask it to come tend the Grove?\n"
+	.string "(PLACEHOLDER)$"
+
+HabitatSpot_Text_Recruited:
+	.string "GROVE-BOUND! {STR_VAR_1} pads off\n"
+	.string "toward the Grove. (PLACEHOLDER)$"
+
+HabitatSpot_Text_GroveFull:
+	.string "The Grove feels full today.\n"
+	.string "(PLACEHOLDER: six-out cap)$"
+
+HabitatSpot_Text_CannotCome:
+	.string "It settles deeper where it is.\n"
+	.string "(PLACEHOLDER: cannot come)$"
 
 HabitatSpot_Text_Ambient:
 	.string "PLACEHOLDER: it seems content near\n"

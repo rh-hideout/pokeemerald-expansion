@@ -35,6 +35,7 @@ LittlerootTown_MapScripts::
 
 
 LittlerootTown_OnTransition:
+	special Habitat_PrepareGroveWorkers
 	setflag FLAG_VISITED_LITTLEROOT_TOWN
 	call Common_EventScript_SetupRivalGfxId
 	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 2, LittlerootTown_EventScript_MoveMomToMaysDoor

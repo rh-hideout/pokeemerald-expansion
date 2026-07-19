@@ -12,6 +12,7 @@
 #define HABITAT_PLOT_HOURS_PER_STAGE 4    // growth pacing (dev-tunable)
 #define HABITAT_PLOT_STAGE_MATURE    4    // stages 0..4; 4 = harvestable
 #define HABITAT_PLOT_YIELD           3    // berries per harvest
+#define HABITAT_GROVE_WORKER_SLOTS   6    // rendered worker objects on the Grove map
 
 // Slice-only: new games spawn in the slice zone (Route 103) instead of the
 // vanilla truck intro. Revert to FALSE when the real Zorua intro lands.

@@ -20,6 +20,11 @@ static const u8 sText_NotASpot[] = _("PLACEHOLDER: nothing here.$");
 // LastTalked is not trustworthy across a CB2 change).
 static u16 sInteractionSpotId;
 
+u16 Habitat_GetInteractionSpotId(void)
+{
+    return sInteractionSpotId;
+}
+
 static void InspectSpot(const struct HabitatSpot *spot);
 
 // special Habitat_OnInspectSpot — resolves the talked object to a spot,

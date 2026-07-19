@@ -643,3 +643,9 @@ gSpecials::
 	def_special Habitat_TryOffer
 	def_special Habitat_TryPlaceItem
 	def_special Habitat_OnInspectSpotById
+	def_special Habitat_PrepareGroveWorkers
+	def_special Habitat_OnTalkWorker
+	def_special Habitat_SendTalkedWorkerHome
+	def_special Habitat_OnInspectPlot
+	def_special Habitat_TryHarvestPlot
+	def_special Habitat_TryRecruitToGrove

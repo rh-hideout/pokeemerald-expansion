@@ -78,8 +78,11 @@ void Habitat_NotifyEvent(enum HabitatEvent event)
     case HABITAT_EVENT_WEATHER_CHANGE:
     case HABITAT_EVENT_PARTY_CHANGE:
     case HABITAT_EVENT_INVENTORY_CHANGE:
+        RecomputeAndSync();
+        break;
     case HABITAT_EVENT_RESIDENT_CHANGE:
         RecomputeAndSync();
+        Habitat_SyncGroveWorkersLive();
         break;
     case HABITAT_EVENT_SPOT_STATE_CHANGE:
         break;  // reserved; state changes already happen inside recompute

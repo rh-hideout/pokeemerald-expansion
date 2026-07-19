@@ -58,10 +58,18 @@ void Habitat_RecomputeCurrentMapSpots(void);
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
 void Habitat_CompleteBefriendById(u16 spotId);
 
-// Script specials (data/scripts/habitat_spot.inc).
+// Script specials (data/scripts/habitat_spot.inc, habitat_grove.inc).
 void Habitat_OnInspectSpot(void);
 void Habitat_OnInspectSpotById(void);
+u16 Habitat_GetInteractionSpotId(void);
 u16 Habitat_TryOffer(void);
 u16 Habitat_TryPlaceItem(void);
+void Habitat_PrepareGroveWorkers(void);
+void Habitat_SyncGroveWorkersLive(void);
+u16 Habitat_OnTalkWorker(void);
+u16 Habitat_SendTalkedWorkerHome(void);
+u16 Habitat_OnInspectPlot(void);
+u16 Habitat_TryHarvestPlot(void);
+u16 Habitat_TryRecruitToGrove(void);
 
 #endif // GUARD_HABITAT_SPOTS_H

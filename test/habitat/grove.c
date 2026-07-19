@@ -3,7 +3,9 @@
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "item.h"
+#include "pokemon.h"
 #include "rtc.h"
+#include "string_util.h"
 #include "constants/items.h"
 #include "test/test.h"
 
@@ -17,7 +19,7 @@ static void InitPlotsForTest(void)
     }
 }
 
-TEST("Grove: type-berry table follows the Sleep mapping")
+TEST("Habitat Grove: type-berry table follows the Sleep mapping")
 {
     EXPECT_EQ(Habitat_BerryForSpecies(SPECIES_TORCHIC), ITEM_LEPPA_BERRY);   // Fire
     EXPECT_EQ(Habitat_BerryForSpecies(SPECIES_TREECKO), ITEM_DURIN_BERRY);   // Grass
@@ -27,7 +29,7 @@ TEST("Grove: type-berry table follows the Sleep mapping")
     EXPECT_EQ(Habitat_BerryForSpecies(SPECIES_HERACROSS), ITEM_LUM_BERRY);   // Bug/Fighting -> primary
 }
 
-TEST("Grove: assignment honors slots and the six-out cap")
+TEST("Habitat Grove: assignment honors slots and the six-out cap")
 {
     u32 i;
     InitPlotsForTest();
@@ -54,7 +56,7 @@ TEST("Grove: assignment honors slots and the six-out cap")
     EXPECT(Habitat_AssignResidentToPlot(6, 3));    // freed
 }
 
-TEST("Grove: tended plots grow by hours and harvest yields the crop")
+TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
 {
     InitPlotsForTest();
     ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
@@ -80,7 +82,7 @@ TEST("Grove: tended plots grow by hours and harvest yields the crop")
     EXPECT_EQ(Habitat_GetPlot(0)->growthStage, 0);
 }
 
-TEST("Grove: RTC reconcile credits offline hours exactly once")
+TEST("Habitat Grove: RTC reconcile credits offline hours exactly once")
 {
     InitPlotsForTest();
     ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
@@ -97,7 +99,7 @@ TEST("Grove: RTC reconcile credits offline hours exactly once")
     EXPECT_EQ(Habitat_GetPlot(0)->hoursProgress, anchored + 8);
 }
 
-TEST("Grove: out residents leave their home spot invisible")
+TEST("Habitat Grove: out residents leave their home spot invisible")
 {
     const struct HabitatSpot *skitty = Habitat_GetSpot(1);
     ASSUME(skitty != NULL);
@@ -117,4 +119,45 @@ TEST("Grove: out residents leave their home spot invisible")
     Habitat_SendResidentHome(idx);
     Habitat_SyncSpotObjectFlag(skitty);
     EXPECT(!FlagGet(skitty->hideFlag));  // came home
+}
+
+TEST("Habitat Grove: recruit flow assigns from the home spot dialogue")
+{
+    const struct HabitatSpot *skitty = Habitat_GetSpot(1);
+    ASSUME(skitty != NULL);
+    InitPlotsForTest();
+
+    gSaveBlock1Ptr->location.mapGroup = skitty->mapGroup;
+    gSaveBlock1Ptr->location.mapNum = skitty->mapNum;
+    gSpecialVar_LastTalked = skitty->localId;
+
+    Habitat_AddPlacedCount(1, 1);
+    Habitat_RecomputeSpot(skitty);
+    Habitat_CompleteBefriendById(1);
+    Habitat_OnInspectSpot();  // binds the interaction spot
+
+    EXPECT_EQ(Habitat_TryRecruitToGrove(), 1);
+    EXPECT_EQ(Habitat_GetPlot(0)->berryItem, ITEM_PERSIM_BERRY);  // Normal-type crop
+    EXPECT(Habitat_ResidentIsOut(Habitat_FindResidentBySpecies(SPECIES_SKITTY)));
+
+    EXPECT_EQ(Habitat_TryRecruitToGrove(), 0);  // already out
+}
+
+TEST("Habitat Grove: worker talk resolves display slots to residents")
+{
+    u32 i;
+    InitPlotsForTest();
+    for (i = 0; i < 3; i++)
+        ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC + i) == (s32) i);
+    ASSUME(Habitat_AssignResidentToPlot(0, 0));  // Torchic -> slot 0
+    ASSUME(Habitat_AssignResidentToPlot(2, 1));  // idx2 -> slot 1 (idx1 stays home)
+
+    gSelectedObjectEvent = 0;
+    gObjectEvents[0].trainerRange_berryTreeId = 1;  // display slot 1
+    EXPECT(Habitat_OnTalkWorker() == TRUE);
+    EXPECT(StringCompare(gStringVar1, GetSpeciesName(SPECIES_TORCHIC + 2)) == 0);
+
+    Habitat_SendTalkedWorkerHome();
+    EXPECT(!Habitat_ResidentIsOut(2));
+    EXPECT(Habitat_ResidentIsOut(0));  // slot mapping recomputes; Torchic unaffected
 }
