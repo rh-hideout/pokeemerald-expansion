@@ -156,9 +156,13 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         return FALSE;
     }
 
+    case COND_ITEM_OFFERED:
+        return offer != NULL
+            && offer->itemId == c->paramA
+            && offer->count >= max(1, c->paramB);
+
     // Not yet backed by state; each returns FALSE until its phase lands.
     case COND_ITEM_PLACED:        // [phase 2: spot placement state]
-    case COND_ITEM_OFFERED:       // [this phase, Task 5]
     case COND_RESIDENT_SPECIES:   // [phase 3: resident registry]
     case COND_RESIDENT_COUNT:     // [phase 3]
     case COND_SPOT_STATE:         // [phase 2]

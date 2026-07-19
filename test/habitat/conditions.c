@@ -341,3 +341,38 @@ TEST("Habitat conditions: BERRY_MATURE finds a mature tree anywhere")
     Habitat_EvaluateConditions(sPecha, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);  // wrong berry
 }
+
+// ---- Offer context (Task 5) ----
+
+TEST("Habitat conditions: ITEM_OFFERED matches the offer context")
+{
+    static const struct HabitatCondition sSpicy[] = {
+        HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sThreeOran[] = {
+        HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 3, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+    struct HabitatOfferContext offer;
+
+    Habitat_EvaluateConditions(sSpicy, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // no offer in progress
+
+    offer.itemId = ITEM_PECHA_BERRY;
+    offer.count = 1;
+    Habitat_EvaluateConditions(sSpicy, HABITAT_SPOT_NONE, &offer, &r);
+    EXPECT(!r.allMet);  // wrong item
+
+    offer.itemId = ITEM_ORAN_BERRY;
+    offer.count = 1;
+    Habitat_EvaluateConditions(sSpicy, HABITAT_SPOT_NONE, &offer, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sThreeOran, HABITAT_SPOT_NONE, &offer, &r);
+    EXPECT(!r.allMet);  // not enough
+
+    offer.count = 3;
+    Habitat_EvaluateConditions(sThreeOran, HABITAT_SPOT_NONE, &offer, &r);
+    EXPECT(r.allMet);
+}
