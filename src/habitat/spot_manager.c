@@ -11,13 +11,22 @@
 static void CompleteBefriend(const struct HabitatSpot *spot);
 
 // The hide flag is the single source of truth the object-event system reads:
-// set = hidden. Home-by-default (§3): visible iff ACTIVE, or BEFRIENDED —
-// phase 4 subtracts residents currently "out" at the Grove.
+// set = hidden. Home-by-default (§3): visible iff ACTIVE, or BEFRIENDED and
+// its resident is not out at the Grove. Spot→resident is the first registry
+// match on species — sufficient while spots are unique per species (slice);
+// revisit when duplicate-species spots exist.
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
 {
     u8 state = Habitat_GetSpotState(spot->spotId);
+    bool32 home = TRUE;
+    if (state == HABITAT_STATE_BEFRIENDED)
+    {
+        s32 residentIdx = Habitat_FindResidentBySpecies(spot->species);
+        if (residentIdx >= 0 && Habitat_ResidentIsOut(residentIdx))
+            home = FALSE;
+    }
     bool32 visible = (state == HABITAT_STATE_ACTIVE)
-                  || (state == HABITAT_STATE_BEFRIENDED);
+                  || (state == HABITAT_STATE_BEFRIENDED && home);
     if (visible)
         FlagClear(spot->hideFlag);
     else

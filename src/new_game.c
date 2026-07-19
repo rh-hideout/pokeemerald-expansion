@@ -269,7 +269,13 @@ static void ResetDexNav(void)
 
 static void ResetHabitatSave(void)
 {
+    u32 i;
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    for (i = 0; i < HABITAT_PLOT_COUNT; i++)
+    {
+        gSaveBlock3Ptr->habitat.plots[i].worker1 = 0xFF;  // 0 is a valid resident idx
+        gSaveBlock3Ptr->habitat.plots[i].worker2 = 0xFF;
+    }
 #if HABITAT_SLICE_SPAWN
     // DEV slice kit (the real opening is the lab, §10; this is behind the
     // dev spawn config). One berry kind only: the pouch auto-sorts by item

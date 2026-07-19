@@ -9,6 +9,7 @@
 //   RESIDENT_CHANGE spot_manager.c befriend resolution (registry consumes phase 3)
 #include "global.h"
 #include "habitat/events.h"
+#include "habitat/save.h"
 #include "habitat/spots.h"
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -67,9 +68,13 @@ void Habitat_NotifyEvent(enum HabitatEvent event)
     {
     case HABITAT_EVENT_MAP_LOAD:
         // Objects spawn right after this; correct flags are all that's needed.
+        Habitat_ReconcileGrowthFromRtc();
         RecomputeAndSync();
         break;
     case HABITAT_EVENT_TIME_TICK:
+        Habitat_ReconcileGrowthFromRtc();  // single growth path: no double credit
+        RecomputeAndSync();
+        break;
     case HABITAT_EVENT_WEATHER_CHANGE:
     case HABITAT_EVENT_PARTY_CHANGE:
     case HABITAT_EVENT_INVENTORY_CHANGE:

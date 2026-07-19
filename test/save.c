@@ -6,7 +6,7 @@
 // Please note that this simple check is not 100% foolproof, but should be able to catch most unintended shifts.
 #define T_SAVEBLOCK1_SIZE 15568
 #define T_SAVEBLOCK2_SIZE 3884
-#define T_SAVEBLOCK3_SIZE 724 // 4 upstream + 720 HabitatSave (spot states, counters, 96 residents)
+#define T_SAVEBLOCK3_SIZE 824 // 4 upstream + 820 HabitatSave (+12 plots, growth stamp)
 #define T_POKEMONSTORAGE_SIZE 34144
 
 TEST("SaveBlock1 is backwards compatible")
