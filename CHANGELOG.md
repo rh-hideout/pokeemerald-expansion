@@ -54,6 +54,20 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
   `make verify` inspects Machop, `--scenario skitty` proves the full
   place→manifest→offer→befriend loop with screenshot evidence.
 
+## [Unreleased] — Milestone 1 phase 5 (in progress): Lab Opening & Slice Wiring (2026-07-19)
+
+- Six §10 furnishing items (campfire/plant/basin + PC/bookshelf/ball holder).
+- Placement counters are per-(spot, condition) — multi-furnishing frames.
+- Lab frame spots (Torchic/Treecko/Mudkip) with auto-befriend on completion;
+  spawn moved into the abandoned lab; vanilla story cast hidden in-slice.
+- Machop's friendly bout: borrowed-resident battler, win sets BATTLE_WIN,
+  recompute auto-befriends (native-tested).
+- Scavenge finds (bookshelf/PC/ball holder) on Route 103.
+- Runner: walk/until-map ops, Y-first goto (face-tap stepping fix).
+- OPEN: headless recruit-dialogue dismissal hang under investigation; the
+  lab place→manifest circuit is screenshot-verified, recruit logic is
+  native-tested.
+
 ## [Unreleased] — Milestone 1 phase 4: The Grove (2026-07-19)
 
 - Grove core on the Littleroot placeholder map: 12-plot save array (slice
