@@ -53,3 +53,12 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
 - hh-runner: scenario DSL driven by gStringVar4 text identity;
   `make verify` inspects Machop, `--scenario skitty` proves the full
   place→manifest→offer→befriend loop with screenshot evidence.
+
+## [Unreleased] — Milestone 1 phase 3: Resident Registry
+
+- Add the spec §5 resident registry: 96 individualized residents (species,
+  personality seed, Grove assignment byte) created on befriend; SaveBlock3
+  now 720 of 1,624 B.
+- Implement RESIDENT_SPECIES and RESIDENT_COUNT (type-filtered) — dex-backed
+  so past-cap residents still count for conditions per spec §5. Heracross's
+  chain (resident Pinsir + night + mature sap tree) proven in native tests.
