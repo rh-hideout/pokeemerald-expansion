@@ -1,6 +1,14 @@
 #include "global.h"
 #include "event_data.h"
+#include "field_weather.h"
 #include "habitat/conditions.h"
+#include "item.h"
+#include "overworld.h"
+#include "pokedex.h"
+#include "rtc.h"
+#include "constants/berry.h"
+#include "constants/game_stat.h"
+#include "constants/weather.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 
@@ -202,4 +210,134 @@ TEST("Habitat conditions: PARTY_FRIENDSHIP compares against any member")
     EXPECT(r.allMet);
     Habitat_EvaluateConditions(sSpite, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);
+}
+
+// ---- World conditions (Task 4) ----
+
+TEST("Habitat conditions: TIME_OF_DAY hour windows with midnight wrap")
+{
+    static const struct HabitatCondition sNight[] = {  // 20:00–03:59, wraps
+        HABITAT_COND(COND_TIME_OF_DAY, 20, 4, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sDay[] = {    // 08:00–16:59
+        HABITAT_COND(COND_TIME_OF_DAY, 8, 17, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sEndsAt22[] = { // end-exclusive check
+        HABITAT_COND(COND_TIME_OF_DAY, 20, 22, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    RtcInitLocalTimeOffset(22, 0);
+    RtcCalcLocalTime();
+    ASSUME(gLocalTime.hours == 22);
+
+    Habitat_EvaluateConditions(sNight, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sDay, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+    Habitat_EvaluateConditions(sEndsAt22, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    RtcInitLocalTimeOffset(2, 30);
+    RtcCalcLocalTime();
+    ASSUME(gLocalTime.hours == 2);
+    Habitat_EvaluateConditions(sNight, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: WEATHER matches current weather")
+{
+    static const struct HabitatCondition sRain[] = {
+        HABITAT_COND(COND_WEATHER, WEATHER_RAIN, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sNotSunny[] = {  // spite: must NOT be sunny
+        HABITAT_COND(COND_WEATHER, WEATHER_SUNNY, 0, 0, HABITAT_COND_NEGATE),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    SetCurrentAndNextWeather(WEATHER_RAIN);  // same setter worker-generated weather uses
+    ASSUME(GetCurrentWeather() == WEATHER_RAIN);
+    Habitat_EvaluateConditions(sRain, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sNotSunny, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+
+    SetCurrentAndNextWeather(WEATHER_SUNNY);
+    ASSUME(GetCurrentWeather() == WEATHER_SUNNY);
+    Habitat_EvaluateConditions(sRain, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+    Habitat_EvaluateConditions(sNotSunny, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+}
+
+TEST("Habitat conditions: DEX_COUNT compares caught count")
+{
+    static const struct HabitatCondition sTwo[] = {
+        HABITAT_COND(COND_DEX_COUNT, HABITAT_CMP_GE, 2, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sThree[] = {
+        HABITAT_COND(COND_DEX_COUNT, HABITAT_CMP_GE, 3, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10; givemon SPECIES_ZIGZAGOON, 10;);
+    ASSUME(GetNationalPokedexCount(FLAG_GET_CAUGHT) == 2);
+
+    Habitat_EvaluateConditions(sTwo, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sThree, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+}
+
+TEST("Habitat conditions: LIFETIME_STAT compares game stats")
+{
+    static const struct HabitatCondition sHundred[] = {
+        HABITAT_COND(COND_LIFETIME_STAT, GAME_STAT_STEPS, HABITAT_CMP_GE, 100, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    SetGameStat(GAME_STAT_STEPS, 99);
+    Habitat_EvaluateConditions(sHundred, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    SetGameStat(GAME_STAT_STEPS, 100);
+    Habitat_EvaluateConditions(sHundred, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: BERRY_MATURE finds a mature tree anywhere")
+{
+    static const struct HabitatCondition sOran[] = {
+        HABITAT_COND(COND_BERRY_MATURE, ITEM_ORAN_BERRY, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sPecha[] = {
+        HABITAT_COND(COND_BERRY_MATURE, ITEM_PECHA_BERRY, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    memset(gSaveBlock1Ptr->berryTrees, 0, sizeof(gSaveBlock1Ptr->berryTrees));
+    Habitat_EvaluateConditions(sOran, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    gSaveBlock1Ptr->berryTrees[2].berry = ItemIdToBerryType(ITEM_ORAN_BERRY);
+    gSaveBlock1Ptr->berryTrees[2].stage = BERRY_STAGE_PLANTED;
+    Habitat_EvaluateConditions(sOran, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // planted is not mature
+
+    gSaveBlock1Ptr->berryTrees[2].stage = BERRY_STAGE_BERRIES;
+    Habitat_EvaluateConditions(sOran, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sPecha, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // wrong berry
 }

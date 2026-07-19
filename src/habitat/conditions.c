@@ -1,7 +1,13 @@
 #include "global.h"
 #include "habitat/conditions.h"
 #include "event_data.h"
+#include "field_weather.h"
+#include "item.h"
+#include "overworld.h"
+#include "pokedex.h"
 #include "pokemon.h"
+#include "rtc.h"
+#include "constants/berry.h"
 
 static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
                       const struct HabitatOfferContext *offer);
@@ -120,16 +126,41 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         return FALSE;
     }
 
+    case COND_TIME_OF_DAY:
+    {
+        u32 start = c->paramA, end = c->paramB, h;
+        RtcCalcLocalTime();
+        h = gLocalTime.hours;
+        if (start == end)
+            return TRUE;                       // degenerate window: whole day
+        if (start < end)
+            return h >= start && h < end;
+        return h >= start || h < end;          // wraps midnight
+    }
+    case COND_WEATHER:
+        return GetCurrentWeather() == c->paramA;
+    case COND_DEX_COUNT:
+        return Cmp(GetNationalPokedexCount(FLAG_GET_CAUGHT), c->paramA, c->paramB);
+    case COND_LIFETIME_STAT:
+        return Cmp(GetGameStat(c->paramA), c->paramB, c->paramC);
+    case COND_BERRY_MATURE:
+    {
+        // paramB (zoneId) filter lands with phase 2's zone table; 0 = anywhere.
+        u32 i, berry = ItemIdToBerryType(c->paramA);
+        for (i = 0; i < BERRY_TREES_COUNT; i++)
+        {
+            if (gSaveBlock1Ptr->berryTrees[i].berry == berry
+             && gSaveBlock1Ptr->berryTrees[i].stage == BERRY_STAGE_BERRIES)
+                return TRUE;
+        }
+        return FALSE;
+    }
+
     // Not yet backed by state; each returns FALSE until its phase lands.
     case COND_ITEM_PLACED:        // [phase 2: spot placement state]
     case COND_ITEM_OFFERED:       // [this phase, Task 5]
     case COND_RESIDENT_SPECIES:   // [phase 3: resident registry]
     case COND_RESIDENT_COUNT:     // [phase 3]
-    case COND_TIME_OF_DAY:        // [this phase, Task 4]
-    case COND_WEATHER:            // [this phase, Task 4]
-    case COND_DEX_COUNT:          // [this phase, Task 4]
-    case COND_BERRY_MATURE:       // [this phase, Task 4]
-    case COND_LIFETIME_STAT:      // [this phase, Task 4]
     case COND_SPOT_STATE:         // [phase 2]
     case COND_ZONE_COMPLETE:      // [phase 2]
     case COND_BATTLE_WIN:         // [phase 2]
