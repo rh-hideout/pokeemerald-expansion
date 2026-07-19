@@ -785,13 +785,10 @@ static void SetUpTargetForDamageCalc(struct AiCalcValues *aiCalc, struct AiLogic
         if (battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
             continue;
 
-        // This doesn't do anything anymore besides taking Illusion into account.
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-
         // Simulate dmg for both ai controlled mons and for player controlled mons.
         CalcBattlerAiMovesData(aiCalc, aiData, battlerAtk, battlerDef);
-
         RestoreBattlerData(battlerDef);
     }
 }
@@ -803,12 +800,9 @@ static void SetUpAttackerForDamageCalc(struct AiCalcValues *aiCalc, struct AiLog
         if (!IsBattlerAlive(battlerAtk))
             continue;
 
-        // This doesn't do anything anymore besides taking Illusion into account.
         SaveBattlerData(battlerAtk);
         SetBattlerData(battlerAtk);
-
         SetUpTargetForDamageCalc(aiCalc, aiData, battlerAtk, battlersCount);
-
         RestoreBattlerData(battlerAtk);
     }
 }
@@ -820,7 +814,7 @@ static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersC
         .terrain = gFieldTimers.terrain,
     };
 
-    // Form Change changes species and might overwrite the abilities
+    // Form Change might overwrite abilities
     enum Ability storedAbilities[MAX_BATTLERS_COUNT] = { ABILITY_NONE };
     enum Species currSpecies[MAX_BATTLERS_COUNT] = { SPECIES_NONE };
     enum Gimmick gimmick[MAX_BATTLERS_COUNT] = { GIMMICK_NONE };
@@ -835,13 +829,9 @@ static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersC
         gimmick[battler] = AI_TryGimmick(battler, storedAbilities[battler], gBattleStruct->gimmick.usableGimmick[battler]);
 
         if (gimmick[battler] == GIMMICK_Z_MOVE)
-        {
             aiCalc.considerZMove |= 1u << battler;
-        }
         else if (gimmick[battler] != GIMMICK_NONE)
-        {
             SetActiveGimmick(battler, gimmick[battler]);
-        }
 
         if (currSpecies[battler] != gBattleMons[battler].species)
         {

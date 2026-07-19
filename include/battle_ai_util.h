@@ -81,11 +81,12 @@ enum AIConsiderWrapDamage
 
 struct AiCalcValues
 {
-    enum Move move;
     uq4_12_t typeEffectiveness;
+    enum Move move:16;
     u32 weather:8;
     enum BattleTerrain terrain:8;
     u32 considerZMove:4;
+    u32 padding:28;
 };
 
 static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)

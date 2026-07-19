@@ -54,7 +54,6 @@ static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchCont
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
 static enum Gimmick GetPossibleGimmickForSwitchIn(enum BattlerId battler);
-static bool32 TryPrimalReversionForSwitchIn(enum BattlerId battler);
 
 static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 monIndex, struct Pokemon *mon)
 {
@@ -87,7 +86,7 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     if (gimmickSwitchIn == GIMMICK_Z_MOVE)
         considerZMove |= 1u << switchinBattler;
     else if (gimmickSwitchIn == GIMMICK_NONE)
-        primalReversion = TryPrimalReversionForSwitchIn(switchinBattler);
+        primalReversion = TryBattleFormChange(switchinBattler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION, ABILITY_NONE);
 
     // Setup switchin battler data
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
@@ -2958,18 +2957,3 @@ static enum Gimmick GetPossibleGimmickForSwitchIn(enum BattlerId battler)
     return GIMMICK_NONE;
 }
 
-static bool32 TryPrimalReversionForSwitchIn(enum BattlerId battler)
-{
-    switch (gBattleMons[battler].species)
-    {
-    case SPECIES_GROUDON:
-    case SPECIES_KYOGRE:
-        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_PRIMAL_REVERSION, ABILITY_NONE))
-            return TRUE;
-        break;
-    default:
-        break;
-    }
-
-    return FALSE;
-}

@@ -5305,7 +5305,6 @@ void DecideTerastal(enum BattlerId battler)
         if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
         {
             altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalc, opposingBattler, battler);
-            // DebugPrintf("with tera %d", altCalcs.takenWithTera[moveIndex].median);
             effectivenessTakenWithTera[moveIndex] = aiCalc.typeEffectiveness;
         }
         else

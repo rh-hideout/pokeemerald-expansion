@@ -737,36 +737,6 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Move data does not spill over 
     }
 }
 
-#if 0
-AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switchin move data is reset before recalculation")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_DRAGON_RAGE); }
-    } THEN {
-        enum BattlerId battlerAtk = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        enum BattlerId battlerDef = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-        u32 moveIndex = 0;
-        EXPECT_GT(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
-        EXPECT_GT(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
-        EXPECT_GT(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
-
-        gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = TRUE;
-        gAiLogicData->moveLimitations[battlerAtk] |= 1u << moveIndex;
-        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
-
-        EXPECT_EQ(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
-        EXPECT_EQ(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
-        EXPECT_EQ(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
-        EXPECT(!gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex]);
-    }
-}
-#endif
-
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculation checks whether incoming damage is less than recurring healing to avoid an infinite loop")
 {
     GIVEN {
