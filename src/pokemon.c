@@ -1742,37 +1742,37 @@ void DeleteFirstMoveAndGiveMoveToMon(struct Pokemon *mon, enum Move move)
     SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
-u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
+u32 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 {
     enum BattlerId i;
-    u32 retVal = 0;
+    u32 aliveMonCount = 0;
 
     switch (caseId)
     {
     case BATTLE_ALIVE_EXCEPT_BATTLER:
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != battler && !(gAbsentBattlerFlags & (1u << i)))
-                retVal++;
+            if (i != battler && IsBattlerAlive(i))
+                aliveMonCount++;
         }
         break;
     case BATTLE_ALIVE_EXCEPT_BATTLER_SIDE:
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != battler && i != BATTLE_PARTNER(battler) && !(gAbsentBattlerFlags & (1u << i)))
-                retVal++;
+            if (i != battler && i != BATTLE_PARTNER(battler) && IsBattlerAlive(i))
+                aliveMonCount++;
         }
         break;
     case BATTLE_ALIVE_SIDE:
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (IsBattlerAlly(i, battler) && !(gAbsentBattlerFlags & (1u << i)))
-                retVal++;
+            if (IsBattlerAlly(i, battler) && IsBattlerAlive(i))
+                aliveMonCount++;
         }
         break;
     }
 
-    return retVal;
+    return aliveMonCount;
 }
 
 u8 GetDefaultMoveTarget(enum BattlerId battlerId)
@@ -1794,7 +1794,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
     }
     else
     {
-        if ((gAbsentBattlerFlags & (1u << opposing)))
+        if (!IsBattlerAlive(opposing))
             return GetBattlerAtPosition(BATTLE_PARTNER(opposing));
         else
             return GetBattlerAtPosition(opposing);

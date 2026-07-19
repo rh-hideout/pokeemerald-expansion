@@ -2636,7 +2636,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
     if (IsDoubleBattle())
     {
         opposingBattler = BATTLE_OPPOSITE(battler);
-        if (gAbsentBattlerFlags & (1u << opposingBattler))
+        if (!IsBattlerAlive(opposingBattler))
             opposingBattler ^= BIT_FLANK;
     }
     else

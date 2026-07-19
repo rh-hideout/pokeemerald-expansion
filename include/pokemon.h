@@ -804,7 +804,7 @@ void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot);
 enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u32 level);
 enum Move MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove);
 void DeleteFirstMoveAndGiveMoveToMon(struct Pokemon *mon, enum Move move);
-u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler);
+u32 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler);
 u8 GetDefaultMoveTarget(enum BattlerId battler);
 u8 GetMonGender(struct Pokemon *mon);
 u8 GetBoxMonGender(struct BoxPokemon *boxMon);
