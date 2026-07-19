@@ -13,3 +13,19 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
   map.json → event script → msgbox pipeline. Remove when the real spot framework lands.
 - Add save-region measurement probes (`tools/habitat/save_probe.c`) — measurement
   only; no save layout changes in M0.
+
+## [Unreleased] — Milestone 1 phase 1: Condition Engine
+
+- Record M0-review design decisions (docs/design-notes.md); pin quickstart to
+  Brendan as the slice placeholder body.
+- Reserve `HabitatSave` (320 spot states + 8 talk counters, 328 B) in the
+  expansion's SaveBlock3 region per the approved layout decision.
+- Add the spec §2 condition engine: full 20-type vocabulary as const data,
+  NEGATE + OR-group semantics, met-mask/anyMet outputs for staged hints.
+  Implemented and native-tested this phase: ITEM_OFFERED, PARTY_SPECIES,
+  PARTY_FRIENDSHIP, PARTY_MOVE, PARTY_NATURE, TIME_OF_DAY, WEATHER,
+  STORY_FLAG, DEX_COUNT, BERRY_MATURE (any-zone), LIFETIME_STAT. Types
+  backed by later-phase state evaluate unmet until then.
+- Add `Habitat_NotifyEvent` interface (event-driven recomputation contract;
+  spot manager subscribes in phase 2).
+- Add designer-facing schema reference: docs/habitat/authoring-conditions.md.
