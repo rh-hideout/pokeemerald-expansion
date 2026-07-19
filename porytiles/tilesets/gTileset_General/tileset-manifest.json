@@ -1,0 +1,9 @@
+{
+  ".callback": "InitTilesetAnim_General",
+  ".metatileAttributes": "gMetatileAttributes_General",
+  ".metatiles": "gMetatiles_General",
+  ".palettes": "gTilesetPalettes_General",
+  ".tiles": "gTilesetTiles_General",
+  "imported": true,
+  "version": 1
+}

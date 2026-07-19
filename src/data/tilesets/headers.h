@@ -34,11 +34,11 @@ const struct Tileset gTileset_General =
 {
     .isCompressed = TRUE,
     .isSecondary = FALSE,
-    .tiles = gTilesetTiles_General,
-    .palettes = gTilesetPalettes_General,
-    .metatiles = gMetatiles_General,
-    .metatileAttributes = gMetatileAttributes_General,
-    .callback = InitTilesetAnim_General,
+    .tiles = gTilesetTiles_PorytilesManaged_General,
+    .palettes = gTilesetPalettes_PorytilesManaged_General,
+    .metatiles = gMetatiles_PorytilesManaged_General,
+    .metatileAttributes = gMetatileAttributes_PorytilesManaged_General,
+    .callback = InitTilesetAnim_PorytilesManaged_General,
 };
 
 const struct Tileset gTileset_Petalburg =
