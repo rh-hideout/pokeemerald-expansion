@@ -73,11 +73,11 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
         return TRUE;
 
-    // Check the trainer party data to see if a gimmick is intended.
-
-    if (gimmick == GIMMICK_TERA && gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler])
+    // When reading trainer party data, we load invalid values in struct Pokemon to indicate the gimmick should not be used
+    struct Pokemon *mon = GetBattlerMon(battler);
+    if (gimmick == GIMMICK_TERA && GetMonData(mon, MON_DATA_TERA_TYPE) != TYPE_NONE)
         return TRUE;
-    if (gimmick == GIMMICK_DYNAMAX && gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler])
+    if (gimmick == GIMMICK_DYNAMAX && GetMonData(mon, MON_DATA_DYNAMAX_LEVEL) != 15)
         return TRUE;
     #endif
 

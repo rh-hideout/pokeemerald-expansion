@@ -190,11 +190,15 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
 
     data = trainerMon->isShiny;
     SetMonData(mon, MON_DATA_IS_SHINY, &data);
-    if (trainerMon->dynamaxLevel > 0)
+    if (trainerMon->shouldUseDynamax)
     {
         data = trainerMon->dynamaxLevel;
-        SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &data);
     }
+    else
+    {
+        data = 15;
+    }
+    SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &data);
     if (trainerMon->gigantamaxFactor)
     {
         data = trainerMon->gigantamaxFactor;
@@ -203,8 +207,12 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     if (trainerMon->teraType)
     {
         data = trainerMon->teraType;
-        SetMonData(mon, MON_DATA_TERA_TYPE, &data);
     }
+    else
+    {
+        data = TYPE_NONE;
+    }
+    SetMonData(mon, MON_DATA_TERA_TYPE, &data);
 
     CalculateMonStats(mon);
     SetMonData(mon, MON_DATA_OT_NAME, trainer->name);
