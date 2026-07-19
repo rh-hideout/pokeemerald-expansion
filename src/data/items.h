@@ -15884,8 +15884,8 @@ const struct ItemInfo gItemsInfo[] =
         .pluralName = ITEM_PLURAL_NAME("Lab PCs"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Someone's computer.\n"
-            "The screen is dark\n"
+            "An old computer.\n"
+            "Screen's dark,\n"
             "but not dead."),
         .pocket = POCKET_ITEMS,
         .type = ITEM_USE_BAG_MENU,

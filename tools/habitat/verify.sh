@@ -26,7 +26,7 @@ ROM=pokeemerald.gba
 # Default: the §10 -> Grove circuit. Place the campfire at the furnished
 # frame -> Torchic comes home (auto-befriend) -> recruit it -> walk out to
 # the Grove -> its worker sprite is there.
-SCRIPT_LAB='goto:4,7;face:U;dismiss-until:ca;wait:40;shot:lab_frame_dormant;dismiss-until:d1;dismiss-until:cd;wait:40;shot:lab_torchic_home;clear-sv4;dismiss-until:ca;dismiss-until:bb;clear-sv4;dismiss-until:c1;wait:100;tap:B;wait:30;tap:B;wait:30;tap:B;wait:30;tap:B;wait:30;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:3,13;face:U;clear-sv4;dismiss-until:ce;wait:40;shot:grove_worker;pass:lab choice + recruit + grove worker'
+SCRIPT_LAB='goto:4,7;face:U;dismiss-until:ca;wait:40;shot:lab_frame_dormant;dismiss-until:d1;dismiss-until:cd;wait:40;shot:lab_torchic_home;clear-sv4;dismiss-until:ca;dismiss-until:bb;clear-sv4;dismiss-until:c1;wait:120;tap:A;wait:90;tap:A;wait:90;tap:A;wait:90;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:11,17;goto:11,13;face:U;clear-sv4;dismiss-until:ce;wait:40;shot:grove_worker;pass:lab choice + recruit + grove worker'
 # Route 103 scenarios (skitty/machop) are PENDING re-route from the lab
 # spawn — restored with phase 6's acceptance circuit.
 

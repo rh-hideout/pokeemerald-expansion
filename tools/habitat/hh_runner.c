@@ -334,7 +334,7 @@ int main(int argc, char** argv) {
             break;
         }
         if (rc < 0 && op->kind != OP_WAIT && frame >= opDeadline) {
-            char msg[160];
+            char msg[360];
             int16_t x, y;
             playerPos(&x, &y);
             snprintf(msg, sizeof(msg),
@@ -342,6 +342,23 @@ int main(int argc, char** argv) {
                      opIndex, (int) op->kind, x, y, sCore->busRead8(sCore, sStrVar4),
                      sCore->busRead8(sCore, 0x030016cc + 1),
                      sCore->busRead32(sCore, 0x030016cc + 8));
+            {
+                // Best-effort debug reads pinned to the current build's map:
+                // 0x030016cc = sGlobalScriptContext (script_context.c static),
+                // 0x020350e0/e1 = gMsgBoxIsCancelable/gMsgIsSignPost. Fail-path
+                // only — a relayout makes these print garbage, never misfire.
+                char extra[200];
+                snprintf(extra, sizeof(extra),
+                         " cancelable=%d signpost=%d status=%d ctx=[%08x %08x %08x %08x]",
+                         sCore->busRead8(sCore, 0x020350e0),
+                         sCore->busRead8(sCore, 0x020350e1),
+                         sCore->busRead8(sCore, 0x030016d1),
+                         sCore->busRead32(sCore, 0x030016cc),
+                         sCore->busRead32(sCore, 0x030016cc + 8),
+                         sCore->busRead32(sCore, 0x030016cc + 12),
+                         sCore->busRead32(sCore, 0x030016cc + 16));
+                strncat(msg, extra, sizeof(msg) - strlen(msg) - 1);
+            }
             shot("timeout");
             rc = finish("FAIL", msg, frame);
         }
