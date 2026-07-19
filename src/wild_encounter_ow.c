@@ -124,12 +124,10 @@ static u32 GetOWELevel(const struct ObjectEvent *owe)
     {
         case OWE_CATEGORY_ROAMER:
             return gSaveBlock1Ptr->roamer[tmp].level;
-#if WE_OW_ENCOUNTERS
-#if WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID
+#if WE_OW_ENCOUNTERS && (WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID)
         case OWE_CATEGORY_BATTLE_PYRAMID:
         case OWE_CATEGORY_BATTLE_PIKE:
              return gSaveBlock3Ptr->frontierOweLevels[GetSpawnSlotByOWELocalId(owe->localId)];
-#endif
 #endif
         default:
             return tmp;
@@ -484,10 +482,8 @@ void SetOverworldObjectSpecies(struct ScriptContext *ctx)
 
 static void SetFrontierWildMonLevel(u32 slot)
 {
-#if WE_OW_ENCOUNTERS
-#if WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID
+#if WE_OW_ENCOUNTERS && (WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID)
     gSaveBlock3Ptr->frontierOweLevels[slot] = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
-#endif
 #endif
 }
 static void CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)

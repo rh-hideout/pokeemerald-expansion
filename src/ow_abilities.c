@@ -138,7 +138,7 @@ u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
         return MON_FEMALE;
 }
 
-enum Type GetWeightedTypeForWildmonEncounter(void)
+enum Type GetWeightedTypeForWildMonEncounter(void)
 {
     if (RandomPercentage(RNG_NONE, WILDMON_AFFECTING_ABILITY_PERCENT_CHANCE))
         return TYPE_NONE;

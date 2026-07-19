@@ -273,10 +273,8 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
-#if WE_OW_ENCOUNTERS
-#if WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID
+#if WE_OW_ENCOUNTERS && (WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID)
     u8 frontierOweLevels[OWE_SPAWNS_MAX];
-#endif
 #endif
 }; /* max size 1624 bytes */
 

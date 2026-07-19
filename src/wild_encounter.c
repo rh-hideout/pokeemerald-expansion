@@ -470,7 +470,7 @@ void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncount
     u8 wildMonIndex = UNKNOWN_WILDMON_INDEX;
     u8 level;
 
-    enum Type type = GetWeightedTypeForWildmonEncounter();
+    enum Type type = GetWeightedTypeForWildMonEncounter();
     if (type != TYPE_NONE)
         wildMonIndex = TryGetRandomWildMonIndexByType(wildMonInfo->wildPokemon, type, gEncounterTableSizes[encounterType]);
 

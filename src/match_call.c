@@ -1753,8 +1753,8 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
-            enum WildEncounterType tmp[2] = {WILD_LAND_MONS, WILD_WATER_MONS};
-            for (u32 j = 0; j < 2; j++)
+            enum WildEncounterType tmp[] = {WILD_LAND_MONS, WILD_WATER_MONS};
+            for (u32 j = 0; j < ARRAY_COUNT(tmp); j++)
             {
                 enum WildEncounterType encounterType = tmp[j];
                 timeOfDay = GetTimeOfDayForEncounters(i, encounterType);
