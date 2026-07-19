@@ -14,7 +14,7 @@ static void CompleteBefriend(const struct HabitatSpot *spot);
 // set = hidden. Visible iff ACTIVE, or BEFRIENDED with STAY_AMBIENT.
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
 {
-    enum HabitatSpotState state = Habitat_GetSpotState(spot->spotId);
+    u8 state = Habitat_GetSpotState(spot->spotId);
     bool32 visible = (state == HABITAT_STATE_ACTIVE)
                   || (state == HABITAT_STATE_BEFRIENDED
                    && (spot->engineFlags & HABITAT_SPOTDEF_STAY_AMBIENT));
@@ -26,7 +26,7 @@ void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
 
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
 {
-    enum HabitatSpotState state = Habitat_GetSpotState(spot->spotId);
+    u8 state = Habitat_GetSpotState(spot->spotId);
     struct HabitatConditionResult r;
 
     if (state < HABITAT_STATE_ACTIVE)

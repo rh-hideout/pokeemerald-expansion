@@ -3,6 +3,7 @@
 #include "constants/berry.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/map_event_ids.h"
 #include "constants/map_groups.h"
 #include "constants/moves.h"
 #include "constants/species.h"
@@ -25,7 +26,7 @@
 #define FLAG_HABITAT_SPOT_HERACROSS FLAG_UNUSED_0x034
 
 // Slice spot object events live on Route 103 (the slice zone) — see
-// data/maps/Route103/map.json local ids 100–104 (added in phase 2b).
+// data/maps/Route103/map.json (LOCALID_HABITAT_SPOT_*, generated).
 #define SLICE_MAP_GROUP  MAP_GROUP(MAP_ROUTE103)
 #define SLICE_MAP_NUM    MAP_NUM(MAP_ROUTE103)
 
@@ -115,7 +116,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hintDormant = sHintDormant_Skitty, .hintStirring = sHintStirring_Skitty, .hintActive = sHintActive_Skitty,
         .workerRole = ROLE_NONE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_SKITTY,
-        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = 100,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_SKITTY,
         .engineFlags = HABITAT_SPOTDEF_STAY_AMBIENT,
     },
     {
@@ -124,7 +125,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hintDormant = sHintDormant_Lotad, .hintStirring = sHintStirring_Lotad, .hintActive = sHintActive_Lotad,
         .workerRole = ROLE_IRRIGATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_LOTAD,
-        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = 101,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_LOTAD,
         .engineFlags = 0,
     },
     {
@@ -133,7 +134,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hintDormant = sHintDormant_Machop, .hintStirring = sHintStirring_Machop, .hintActive = sHintActive_Machop,
         .workerRole = ROLE_DIG, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_MACHOP,
-        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = 102,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_MACHOP,
         .engineFlags = 0,
     },
     {
@@ -142,7 +143,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hintDormant = sHintDormant_Vulpix, .hintStirring = sHintStirring_Vulpix, .hintActive = sHintActive_Vulpix,
         .workerRole = ROLE_WARM, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_VULPIX,
-        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = 103,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_VULPIX,
         .engineFlags = 0,
     },
     {
@@ -151,7 +152,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hintDormant = sHintDormant_Heracross, .hintStirring = sHintStirring_Heracross, .hintActive = sHintActive_Heracross,
         .workerRole = ROLE_POLLINATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_HERACROSS,
-        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = 104,
+        .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_HERACROSS,
         .engineFlags = 0,
     },
     { .spotId = 0xFFFF },

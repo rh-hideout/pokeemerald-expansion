@@ -38,11 +38,17 @@ enum {
 #define TAP_FRAMES 2      // held long enough to register, short enough to turn-not-walk
 #define STEP_GAP 22       // frames to let a one-tile step finish
 
-static void nullLog(struct mLogger* log, int category, enum mLogLevel level,
-                    const char* format, va_list args) {
-    UNUSED(log); UNUSED(category); UNUSED(level); UNUSED(format); UNUSED(args);
+static void stderrLog(struct mLogger* log, int category, enum mLogLevel level,
+                      const char* format, va_list args) {
+    UNUSED(log);
+    // Surface crashes and game-emitted errors; drop the chatty levels.
+    if (level & (mLOG_FATAL | mLOG_ERROR | mLOG_WARN)) {
+        fprintf(stderr, "HH_MGBA[%s] ", mLogCategoryName(category));
+        vfprintf(stderr, format, args);
+        fputc('\n', stderr);
+    }
 }
-static struct mLogger sLogger = { .log = nullLog };
+static struct mLogger sLogger = { .log = stderrLog };
 
 static struct mCore* sCore;
 static const char* sOutDir;
@@ -81,9 +87,10 @@ static int finish(const char* status, const char* msg, unsigned frame) {
 
 int main(int argc, char** argv) {
     const char* rom = NULL;
-    uint32_t gMain = 0, cb2Overworld = 0, sb1Ptr = 0;
+    uint32_t gMain = 0, cb2Overworld = 0, sb1Ptr = 0, strVar4 = 0;
     int targetX = 1, targetY = 1;
     int interact = 1;
+    int pressesLeft = 5;
     unsigned maxFrames = 30000;
     sOutDir = "verify-out";
 
@@ -93,6 +100,7 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--gmain")) gMain = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--cb2-overworld")) cb2Overworld = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--sb1ptr")) sb1Ptr = strtoul(argv[++i], NULL, 16);
+        else if (!strcmp(argv[i], "--strvar4")) strVar4 = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--target")) sscanf(argv[++i], "%d,%d", &targetX, &targetY);
         else if (!strcmp(argv[i], "--interact")) interact = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--max-frames")) maxFrames = strtoul(argv[++i], NULL, 10);
@@ -132,8 +140,19 @@ int main(int argc, char** argv) {
     unsigned keys = 0, holdUntil = 0, nextAct = 240, settled = 0;
     int rc = -1;
 
+    int sawSv4 = 0;
     unsigned frame;
     for (frame = 0; frame < maxFrames && rc < 0; frame++) {
+        if (strVar4 && !sawSv4 && sCore->busRead8(sCore, strVar4) == 0xCA) {
+            sawSv4 = 1;
+            fprintf(stderr, "HH_TRACE sv4 written at frame %u (phase %d)\n", frame, (int) phase);
+        }
+        if (frame % 120 == 0 && phase >= WALK) {
+            uint32_t sb1dbg = sCore->busRead32(sCore, sb1Ptr);
+            fprintf(stderr, "HH_TRACE f=%u phase=%d sb1=%08x pos=%d,%d\n", frame, (int) phase,
+                    sb1dbg, (int16_t) sCore->busRead16(sCore, sb1dbg),
+                    (int16_t) sCore->busRead16(sCore, sb1dbg + 2));
+        }
         if (keys && frame >= holdUntil) {
             keys = 0;
         }
@@ -202,15 +221,38 @@ int main(int argc, char** argv) {
         case PRESS:
             if (frame >= nextAct && !keys) {
                 keys = 1u << KEY_A;
-                holdUntil = frame + TAP_FRAMES;
+                holdUntil = frame + 4;  // field input wants a slightly longer tap
                 phase = TEXTBOX;
-                nextAct = frame + 150;  // let the msgbox finish drawing
+                nextAct = frame + 90;
             }
             break;
         case TEXTBOX:
+            if (frame == nextAct - 60) shot("interact_t30");
+            if (frame == nextAct - 30) shot("interact_t60");
             if (frame >= nextAct) {
-                shot("interact");
-                rc = finish("PASS", "interacted with test spot", frame);
+                // Truth check: the inspect special buffers hint text into
+                // gStringVar4 ("PLACEHOLDER..." => charmap 'P' = 0xCA). A
+                // completed input sequence without that byte is a FAIL.
+                char msg[160];
+                uint32_t sb1 = sCore->busRead32(sCore, sb1Ptr);
+                snprintf(msg, sizeof(msg),
+                         "pos=%d,%d sv4=%02x %02x %02x %02x %02x %02x %02x %02x",
+                         (int16_t) sCore->busRead16(sCore, sb1),
+                         (int16_t) sCore->busRead16(sCore, sb1 + 2),
+                         sCore->busRead8(sCore, strVar4 + 0), sCore->busRead8(sCore, strVar4 + 1),
+                         sCore->busRead8(sCore, strVar4 + 2), sCore->busRead8(sCore, strVar4 + 3),
+                         sCore->busRead8(sCore, strVar4 + 4), sCore->busRead8(sCore, strVar4 + 5),
+                         sCore->busRead8(sCore, strVar4 + 6), sCore->busRead8(sCore, strVar4 + 7));
+                if (strVar4 == 0 || sCore->busRead8(sCore, strVar4) == 0xCA) {
+                    shot("interact");
+                    rc = finish("PASS", msg, frame);
+                } else if (--pressesLeft > 0) {
+                    phase = PRESS;   // tap may have been eaten; try again
+                    nextAct = frame + 10;
+                } else {
+                    shot("interact");
+                    rc = finish("FAIL", msg, frame);
+                }
             }
             break;
         }

@@ -57,11 +57,3 @@ InsideOfTruck_Text_BoxPrintedWithMonLogo:
 	.string "delivery service.$"
 
 
-@ --- Hoenn Habitat: throwaway M0 pipeline test. Delete when the real spot framework lands. ---
-InsideOfTruck_EventScript_HabitatTestSpot::
-	msgbox InsideOfTruck_Text_HabitatTestSpot, MSGBOX_SIGN
-	end
-
-InsideOfTruck_Text_HabitatTestSpot:
-	.string "HABITAT TEST SPOT: something is\n"
-	.string "listening under the floorboards.$"

@@ -7,14 +7,9 @@
 
 // Spot state machine per spec §2 — transitions are MONOTONIC (ACTIVE
 // "persists indefinitely"; lapsed appear conditions never regress a spot).
-// Values are the 2-bit encoding stored in HabitatSave.spotStates.
-enum HabitatSpotState
-{
-    HABITAT_STATE_DORMANT = 0,
-    HABITAT_STATE_STIRRING,
-    HABITAT_STATE_ACTIVE,
-    HABITAT_STATE_BEFRIENDED,
-};
+// State values live in constants/habitat.h so event scripts can switch on
+// them; they are the 2-bit encoding stored in HabitatSave.spotStates.
+#include "constants/habitat.h"
 
 // Spot-local flag bits (the 4-bit field in spotStates).
 #define HABITAT_SPOT_LOCAL_BATTLE_WON (1 << 0)
@@ -61,5 +56,8 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
 void Habitat_RecomputeCurrentMapSpots(void);
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
 void Habitat_CompleteBefriendById(u16 spotId);
+
+// Script specials (data/scripts/habitat_spot.inc).
+void Habitat_OnInspectSpot(void);
 
 #endif // GUARD_HABITAT_SPOTS_H

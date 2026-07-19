@@ -5,6 +5,7 @@
 #include "habitat/spots.h"
 #include "item.h"
 #include "pokedex.h"
+#include "string_util.h"
 #include "constants/berry.h"
 #include "constants/weather.h"
 #include "test/overworld_script.h"
@@ -110,4 +111,33 @@ TEST("Habitat manager: current-map recompute only touches this map's spots")
     gSaveBlock1Ptr->location.mapGroup = machop->mapGroup + 1;
     Habitat_RecomputeCurrentMapSpots();
     EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_DORMANT);
+}
+
+TEST("Habitat interaction: inspect buffers the staged hint and returns state")
+{
+    const struct HabitatSpot *machop = Habitat_GetSpot(SPOT_MACHOP);
+    ASSUME(machop != NULL);
+
+    gSaveBlock1Ptr->location.mapGroup = machop->mapGroup;
+    gSaveBlock1Ptr->location.mapNum = machop->mapNum;
+    gSpecialVar_LastTalked = machop->localId;
+
+    // Dormant: nothing recomputed yet. gStringVar4 must arrive fully
+    // expanded (display re-expands it in place; see spot_interaction.c).
+    u8 expected[256];
+    Habitat_OnInspectSpot();
+    EXPECT_EQ(gSpecialVar_Result, HABITAT_STATE_DORMANT);
+    StringExpandPlaceholders(expected, machop->hintDormant);
+    EXPECT(StringCompare(gStringVar4, expected) == 0);
+
+    Habitat_RecomputeSpot(machop);
+    Habitat_OnInspectSpot();
+    EXPECT_EQ(gSpecialVar_Result, HABITAT_STATE_ACTIVE);
+    StringExpandPlaceholders(expected, machop->hintActive);
+    EXPECT(StringCompare(gStringVar4, expected) == 0);
+
+    // Unbound object id resolves to the not-a-spot sentinel.
+    gSpecialVar_LastTalked = 99;
+    Habitat_OnInspectSpot();
+    EXPECT_EQ(gSpecialVar_Result, HABITAT_INSPECT_NOT_A_SPOT);
 }

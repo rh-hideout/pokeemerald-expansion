@@ -17,9 +17,8 @@ struct HabitatSave
     u8 placedCounters[HABITAT_PLACED_COUNTER_COUNT];
 };
 
-enum HabitatSpotState;
-enum HabitatSpotState Habitat_GetSpotState(u16 spotId);
-void Habitat_SetSpotState(u16 spotId, enum HabitatSpotState state);  // ratchet: never lowers
+u8 Habitat_GetSpotState(u16 spotId);
+void Habitat_SetSpotState(u16 spotId, u8 state);  // ratchet: never lowers
 u8   Habitat_GetSpotLocalFlags(u16 spotId);
 void Habitat_AddSpotLocalFlags(u16 spotId, u8 flags);  // OR-in, 4-bit masked
 u8   Habitat_GetTalkCount(u16 spotId);                 // 0 if spot has no slot

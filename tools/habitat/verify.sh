@@ -14,10 +14,11 @@ cd "$(dirname "$0")/../.."
 
 OUT=verify-out
 ROM=pokeemerald.gba
-# Interact scenario is being rebuilt for the Route 103 slice spawn (M1 phase
-# 2b); boot verification is the default until it lands.
-INTERACT=0
-[ "$1" = "--interact" ] && INTERACT=1
+# Interact scenario: walk from the slice spawn (48,12) to (47,11) and press A
+# facing UP at the always-ACTIVE Machop spot (47,10) — proves object spawn,
+# species overworld sprite, interact dispatch, and staged-hint text.
+INTERACT=1
+TARGET=47,11
 [ "$1" = "--no-interact" ] && INTERACT=0
 
 rm -rf "$OUT"
@@ -29,7 +30,7 @@ make -j"$(sysctl -n hw.ncpu)" >"$OUT/build.log" 2>&1 || {
     echo "hh-verify: BUILD FAILED"; tail -30 "$OUT/build.log"; exit 1; }
 
 sym() { awk -v s="$1" '$2 == s { print $1; exit }' pokeemerald.map; }
-GMAIN=$(sym gMain); CB2=$(sym CB2_Overworld); SB1=$(sym gSaveBlock1Ptr)
+GMAIN=$(sym gMain); CB2=$(sym CB2_Overworld); SB1=$(sym gSaveBlock1Ptr); SV4=$(sym gStringVar4)
 [ -n "$GMAIN" ] && [ -n "$CB2" ] && [ -n "$SB1" ] || {
     echo "hh-verify: symbol extraction failed (gMain=$GMAIN CB2_Overworld=$CB2 gSaveBlock1Ptr=$SB1)"; exit 1; }
 
@@ -42,8 +43,8 @@ cc -O2 -I"$HOME/tools/mgba-src/include" -I"$HOME/tools/mgba-build/include" \
 
 echo "hh-verify: booting ROM headlessly (gMain=$GMAIN CB2_Overworld=$CB2 gSaveBlock1Ptr=$SB1)..."
 if "$OUT/hh-runner" --rom "$ROM" --out "$OUT" \
-    --gmain "$GMAIN" --cb2-overworld "$CB2" --sb1ptr "$SB1" \
-    --target 1,1 --interact "$INTERACT"; then
+    --gmain "$GMAIN" --cb2-overworld "$CB2" --sb1ptr "$SB1" --strvar4 "$SV4" \
+    --target "$TARGET" --interact "$INTERACT"; then
     echo "hh-verify: PASS"
     ls "$OUT"/*.png 2>/dev/null
     exit 0

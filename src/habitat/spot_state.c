@@ -27,14 +27,14 @@ static s32 SlotFor(const u16 *list, u16 spotId)
     return -1;
 }
 
-enum HabitatSpotState Habitat_GetSpotState(u16 spotId)
+u8 Habitat_GetSpotState(u16 spotId)
 {
     if (spotId >= HABITAT_SPOT_COUNT)
         return HABITAT_STATE_DORMANT;
     return gSaveBlock3Ptr->habitat.spotStates[spotId] & STATE_MASK;
 }
 
-void Habitat_SetSpotState(u16 spotId, enum HabitatSpotState state)
+void Habitat_SetSpotState(u16 spotId, u8 state)
 {
     u8 *slot;
     if (spotId >= HABITAT_SPOT_COUNT)
