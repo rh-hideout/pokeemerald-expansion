@@ -2,7 +2,7 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_SINGLE_BATTLE_TEST("Form Change: AI will see it's own new weather after form change")
+AI_SINGLE_BATTLE_TEST("Damage Calc Form Change: AI will see it's own new weather after form change")
 {
     enum Item item = ITEM_NONE;
 
@@ -10,6 +10,7 @@ AI_SINGLE_BATTLE_TEST("Form Change: AI will see it's own new weather after form 
     PARAMETRIZE { item = ITEM_CHARIZARDITE_Y; }
 
     GIVEN {
+        WITH_CONFIG(SHOULD_CALC_DMG_WITH_FORM_CHANGE, 1);
         ASSUME(GetMovePower(MOVE_SOLAR_BEAM) == 120);
         ASSUME(GetMovePower(MOVE_ENERGY_BALL) == 90);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -24,7 +25,7 @@ AI_SINGLE_BATTLE_TEST("Form Change: AI will see it's own new weather after form 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Form Change: AI sees its own weather setting ability after Mega evolution when considering switchin candidates")
+AI_SINGLE_BATTLE_TEST("Damage Calc Form Change: AI sees its own weather setting ability after Mega evolution when considering switchin candidates")
 {
     enum Item item = ITEM_NONE;
 
@@ -32,6 +33,7 @@ AI_SINGLE_BATTLE_TEST("Form Change: AI sees its own weather setting ability afte
     PARAMETRIZE { item = ITEM_CHARIZARDITE_Y; }
 
     GIVEN {
+        WITH_CONFIG(SHOULD_CALC_DMG_WITH_FORM_CHANGE, 1);
         ASSUME(GetMovePower(MOVE_FIRE_BLAST) == 110);
         ASSUME(GetMoveType(MOVE_FIRE_BLAST) == TYPE_FIRE);
         ASSUME(GetMovePower(MOVE_SUPERPOWER) == 120);
@@ -49,9 +51,10 @@ AI_SINGLE_BATTLE_TEST("Form Change: AI sees its own weather setting ability afte
     }
 }
 
-AI_MULTI_BATTLE_TEST("Form Change: AI sees its own Mega form on turn 1 (Multi)")
+AI_MULTI_BATTLE_TEST("Damage Calc Form Change: AI sees its own Mega form on turn 1 (Multi)")
 {
     GIVEN {
+        WITH_CONFIG(SHOULD_CALC_DMG_WITH_FORM_CHANGE, 1);
         AI_FLAGS(AI_FLAG_SMART_TRAINER);
         PLAYER(SPECIES_GENGAR) { Speed(4); Moves(MOVE_DRAGON_RAGE, MOVE_CELEBRATE); HP(3); Defense(999); }
         PARTNER(SPECIES_LOPUNNY) { Speed(1); Moves(MOVE_FAKE_OUT, MOVE_DRAGON_RAGE); HP(40); Attack(1); Item(ITEM_LOPUNNITE); }
@@ -67,11 +70,12 @@ AI_MULTI_BATTLE_TEST("Form Change: AI sees its own Mega form on turn 1 (Multi)")
     }
 }
 
-AI_ONE_VS_TWO_BATTLE_TEST("Form Change: AI sees its own Mega form for switch-in calcs (1v2)")
+AI_ONE_VS_TWO_BATTLE_TEST("Damage Calc Form Change: AI sees its own Mega form for switch-in calcs (1v2)")
 {
     // The first Lopunny in each AI party should see itself outspeed but unable to damage
     // The second Lopunny should see it has scrappy and can therefore KO the Gengars
     GIVEN {
+        WITH_CONFIG(SHOULD_CALC_DMG_WITH_FORM_CHANGE, 1);
         AI_FLAGS(AI_FLAG_SMART_TRAINER);
         TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
 

@@ -111,7 +111,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunctions(void);
 void AI_TrySwitchOrUseItem(enum BattlerId battler);
 struct AiCalcValues;
-void CalcBattlerAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
+void SimulateAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 void AIDebugTimerStart(void);
 void AIDebugTimerEnd(void);
 

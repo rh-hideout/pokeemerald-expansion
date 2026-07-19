@@ -110,8 +110,8 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
 
         SetBattlerStatStagesForSwitchin(switchinBattler, battler, aiCalc.terrain);
         SetBattlerHPChangeForSwitch(switchinBattler, battler);
-        CalcBattlerAiMovesData(&aiCalc, gAiLogicData, switchinBattler, battler);
-        CalcBattlerAiMovesData(&aiCalc, gAiLogicData, battler, switchinBattler);
+        SimulateAiMovesData(&aiCalc, gAiLogicData, switchinBattler, battler);
+        SimulateAiMovesData(&aiCalc, gAiLogicData, battler, switchinBattler);
     }
 
     if (gimmickSwitchIn != GIMMICK_NONE || primalReversion)

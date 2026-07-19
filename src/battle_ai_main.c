@@ -749,7 +749,7 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 }
 #undef BYPASSES_ACCURACY_CALC
 
-void CalcBattlerAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
+void SimulateAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
@@ -760,14 +760,15 @@ void CalcBattlerAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiD
         aiCalc->typeEffectiveness = Q_4_12(0.0);
         aiCalc->move = moves[moveIndex];
 
-        // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
-        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc->typeEffectiveness;
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
-        aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
-
         if (IsMoveUnusable(moveIndex, aiCalc->move, moveLimitations))
+        {
+            // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
+            aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+            aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = Q_4_12(0.0);
+            aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
+            aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
             continue;
+        }
 
         // Also get effectiveness of status moves
         dmg = AI_CalcDamage(aiCalc, battlerAtk, battlerDef);
@@ -787,8 +788,7 @@ static void SetUpTargetForDamageCalc(struct AiCalcValues *aiCalc, struct AiLogic
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        // Simulate dmg for both ai controlled mons and for player controlled mons.
-        CalcBattlerAiMovesData(aiCalc, aiData, battlerAtk, battlerDef);
+        SimulateAiMovesData(aiCalc, aiData, battlerAtk, battlerDef);
         RestoreBattlerData(battlerDef);
     }
 }
@@ -821,6 +821,9 @@ static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersC
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
+        if (!GetConfig(SHOULD_CALC_DMG_WITH_FORM_CHANGE))
+            break;
+
         if (!IsBattlerAlive(battler))
             continue;
 
@@ -1203,7 +1206,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
         .terrain = gFieldTimers.terrain,
     };
 
-    CalcBattlerAiMovesData(&aiCalc, aiData, battlerAtk, battlerDef);
+    SimulateAiMovesData(&aiCalc, aiData, battlerAtk, battlerDef);
 
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
