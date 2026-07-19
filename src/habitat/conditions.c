@@ -200,9 +200,29 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         return spotId != HABITAT_SPOT_NONE
             && Habitat_GetTalkCount(spotId) >= max(1, c->paramA);
 
+    case COND_RESIDENT_SPECIES:
+        // Dex caught == befriended (spec §5); zone filter (paramB) awaits
+        // residents carrying zones — 0 (any) is the supported form.
+        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(c->paramA), FLAG_GET_CAUGHT);
+    case COND_RESIDENT_COUNT:
+    {
+        u32 species, n = 0;
+        for (species = 1; species < NUM_SPECIES; species++)
+        {
+            if (!IsSpeciesEnabled(species))
+                continue;  // config-disabled families assert in dex-num lookup
+            if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
+                continue;
+            if (c->paramA != HABITAT_TYPE_ANY
+             && gSpeciesInfo[species].types[0] != c->paramA
+             && gSpeciesInfo[species].types[1] != c->paramA)
+                continue;
+            n++;
+        }
+        return n >= max(1, c->paramB);
+    }
+
     // Not yet backed by state; each returns FALSE until its phase lands.
-    case COND_RESIDENT_SPECIES:   // [phase 3: resident registry]
-    case COND_RESIDENT_COUNT:     // [phase 3]
     case COND_ILLUSION:           // [phase 4+]
     case COND_GROVE_RECIPE_DONE:  // [phase 4]
     default:

@@ -6,6 +6,7 @@
 #define HABITAT_SPOT_COUNT           320  // spot-state bytes reserved in SaveBlock3
 #define HABITAT_TALK_COUNTER_COUNT   8    // spots needing >15 talk counts (Spiritomb-class)
 #define HABITAT_PLACED_COUNTER_COUNT 8    // spots with COND_ITEM_PLACED persistence
+#define HABITAT_RESIDENT_COUNT       96   // individualized residents (spec §5 cap)
 
 // Slice-only: new games spawn in the slice zone (Route 103) instead of the
 // vanilla truck intro. Revert to FALSE when the real Zorua intro lands.

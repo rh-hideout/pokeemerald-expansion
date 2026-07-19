@@ -60,6 +60,7 @@ struct HabitatCondition
 #define HABITAT_CONDITIONS_END      { .type = COND_NONE }
 
 #define HABITAT_SPOT_NONE        0xFFFF
+#define HABITAT_TYPE_ANY         0xFF  // COND_RESIDENT_COUNT: no type filter
 #define HABITAT_MAX_CONDITIONS   32  // met-mask width; evaluator stops here
 
 // Befriend-verb input: what the player is offering right now (NULL outside
