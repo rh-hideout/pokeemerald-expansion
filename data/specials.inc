@@ -640,3 +640,6 @@ gSpecials::
 	def_special StickerManGetBragFlags
 	def_special CheckAddCoins
 	def_special Habitat_OnInspectSpot
+	def_special Habitat_TryOffer
+	def_special Habitat_TryPlaceItem
+	def_special Habitat_OnInspectSpotById

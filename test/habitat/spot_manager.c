@@ -4,6 +4,7 @@
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "item.h"
+#include "item_menu.h"
 #include "pokedex.h"
 #include "string_util.h"
 #include "constants/berry.h"
@@ -140,4 +141,53 @@ TEST("Habitat interaction: inspect buffers the staged hint and returns state")
     gSpecialVar_LastTalked = 99;
     Habitat_OnInspectSpot();
     EXPECT_EQ(gSpecialVar_Result, HABITAT_INSPECT_NOT_A_SPOT);
+}
+
+TEST("Habitat verbs: PLACE moves the wanted item from bag to spot and manifests it")
+{
+    const struct HabitatSpot *skitty = Habitat_GetSpot(SPOT_SKITTY);
+    ASSUME(skitty != NULL);
+    gSaveBlock1Ptr->location.mapGroup = skitty->mapGroup;
+    gSaveBlock1Ptr->location.mapNum = skitty->mapNum;
+    gSpecialVar_LastTalked = skitty->localId;
+    Habitat_OnInspectSpot();  // binds the interaction spot
+
+    EXPECT(Habitat_TryPlaceItem() == FALSE);  // nothing in the bag
+
+    AddBagItem(ITEM_POKE_DOLL, 1);
+    EXPECT(Habitat_TryPlaceItem() == TRUE);
+    EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));       // consumed
+    EXPECT_EQ(Habitat_GetPlacedCount(SPOT_SKITTY), 1);
+    EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);  // recompute fired
+
+    EXPECT(Habitat_TryPlaceItem() == FALSE);  // doll is gone
+}
+
+TEST("Habitat verbs: OFFER consumes the right item and befriends; wrong item is kept")
+{
+    const struct HabitatSpot *skitty = Habitat_GetSpot(SPOT_SKITTY);
+    ASSUME(skitty != NULL);
+    gSaveBlock1Ptr->location.mapGroup = skitty->mapGroup;
+    gSaveBlock1Ptr->location.mapNum = skitty->mapNum;
+    gSpecialVar_LastTalked = skitty->localId;
+
+    AddBagItem(ITEM_POKE_DOLL, 1);
+    AddBagItem(ITEM_ORAN_BERRY, 1);
+    AddBagItem(ITEM_PECHA_BERRY, 1);
+    Habitat_OnInspectSpot();
+    ASSUME(Habitat_TryPlaceItem() == TRUE);            // Skitty is now ACTIVE
+
+    gSpecialVar_ItemId = ITEM_PECHA_BERRY;             // wrong offering
+    EXPECT(Habitat_TryOffer() == FALSE);
+    EXPECT(CheckBagHasItem(ITEM_PECHA_BERRY, 1));      // kept
+    EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);
+
+    gSpecialVar_ItemId = ITEM_ORAN_BERRY;
+    EXPECT(Habitat_TryOffer() == TRUE);
+    EXPECT(!CheckBagHasItem(ITEM_ORAN_BERRY, 1));      // consumed
+    EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_BEFRIENDED);
+    EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_SKITTY), FLAG_GET_CAUGHT));
+
+    gSpecialVar_ItemId = ITEM_ORAN_BERRY;              // already befriended
+    EXPECT(Habitat_TryOffer() == FALSE);
 }

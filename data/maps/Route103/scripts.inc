@@ -351,3 +351,27 @@ Route103_Text_RouteSign:
 	.string "ROUTE 103\n"
 	.string "{DOWN_ARROW} OLDALE TOWN$"
 
+
+@ --- Hoenn Habitat: per-spot sign wrappers (bg events cannot carry a spot id;
+@ these bind tile -> spotId, then share the common dispatch). The sign fires
+@ only while no object stands on the tile — once the Pokémon manifests, the
+@ object event takes interaction priority and the talk flow runs instead.
+Route103_EventScript_HabitatSignSkitty::
+	setvar VAR_0x8004, 1
+	goto HabitatSpot_EventScript_InspectById
+
+Route103_EventScript_HabitatSignLotad::
+	setvar VAR_0x8004, 2
+	goto HabitatSpot_EventScript_InspectById
+
+Route103_EventScript_HabitatSignMachop::
+	setvar VAR_0x8004, 3
+	goto HabitatSpot_EventScript_InspectById
+
+Route103_EventScript_HabitatSignVulpix::
+	setvar VAR_0x8004, 4
+	goto HabitatSpot_EventScript_InspectById
+
+Route103_EventScript_HabitatSignHeracross::
+	setvar VAR_0x8004, 5
+	goto HabitatSpot_EventScript_InspectById

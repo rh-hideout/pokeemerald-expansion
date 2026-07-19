@@ -376,6 +376,46 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route103_EventScript_RouteSign"
+    },
+    {
+      "type": "sign",
+      "x": 46,
+      "y": 12,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Route103_EventScript_HabitatSignSkitty"
+    },
+    {
+      "type": "sign",
+      "x": 44,
+      "y": 10,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Route103_EventScript_HabitatSignLotad"
+    },
+    {
+      "type": "sign",
+      "x": 47,
+      "y": 10,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Route103_EventScript_HabitatSignMachop"
+    },
+    {
+      "type": "sign",
+      "x": 52,
+      "y": 11,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Route103_EventScript_HabitatSignVulpix"
+    },
+    {
+      "type": "sign",
+      "x": 55,
+      "y": 7,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Route103_EventScript_HabitatSignHeracross"
     }
   ]
 }

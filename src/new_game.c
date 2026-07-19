@@ -270,4 +270,12 @@ static void ResetDexNav(void)
 static void ResetHabitatSave(void)
 {
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+#if HABITAT_SLICE_SPAWN
+    // PLACEHOLDER slice starting kit (real economy is authored content):
+    // enough to teach PLACE (doll -> Skitty) and OFFER (Oran berries).
+    // Oran only in the berry pocket keeps headless bag selection
+    // deterministic (first slot).
+    AddBagItem(ITEM_ORAN_BERRY, 5);
+    AddBagItem(ITEM_POKE_DOLL, 1);
+#endif
 }

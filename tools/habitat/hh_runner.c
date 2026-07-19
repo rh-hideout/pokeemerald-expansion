@@ -1,21 +1,23 @@
-// hh-runner — headless boot/interaction verifier for Hoenn Habitat.
+// hh-runner — headless scenario driver for Hoenn Habitat.
 //
-// Drives the built ROM in libmgba (no window, unthrottled), using the same
-// core-init sequence as mGBA's own perf runner. The game is observed through
-// bus reads of symbols supplied on the command line (extracted from
-// pokeemerald.map by verify.sh), never by pixel-guessing:
+// Drives the built ROM in libmgba (no window, unthrottled), mirroring mGBA's
+// own perf-runner init. Game state is observed through bus reads of symbols
+// supplied on the command line (extracted from pokeemerald.map by verify.sh),
+// never by pixel-guessing.
 //
-//   boot    - tap SELECT until title quickstart fires (expansion feature:
-//             SELECT on the title starts a new game immediately)
-//   settle  - wait for gMain.callback2 == CB2_Overworld for 120 straight frames
-//   walk    - step the player toward --target using live position reads from
-//             *gSaveBlock1Ptr (pos.x at +0, pos.y at +2)
-//   face/press/textbox - face the tile above, press A, let the msgbox draw
-//
-// Screenshots (title/overworld/interact) and result.txt land in --out.
-// Exit 0 iff the requested phase chain completed.
-//
-// Build (see verify.sh): cc against ~/tools/mgba-src headers + libmgba.dylib.
+// Boot: taps SELECT until the expansion's quickstart starts a new game, then
+// waits for gMain.callback2 == CB2_Overworld to hold. After that a scenario
+// script runs — a semicolon-separated op list:
+//   goto:X,Y      closed-loop walk using live *gSaveBlock1Ptr position reads
+//   face:U|D|L|R  tap to turn without stepping
+//   tap:K         4-frame key tap (A,B,START,SELECT,U,D,L,R)
+//   wait:N        idle N frames
+//   until-sv4:HH  wait (max 900 frames) until gStringVar4[0] == 0xHH — the
+//                 field-message pipeline expands every shown message into
+//                 gStringVar4, so first bytes identify which text is up
+//   shot:NAME     screenshot to <out>/NAME.png
+//   pass:MSG      finish PASS
+// Any op timeout fails the run with position/sv4 diagnostics.
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -27,21 +29,21 @@
 #include <mgba/core/log.h>
 #include <mgba-util/vfs.h>
 
-// GBA KEYINPUT bit order.
 enum {
     KEY_A = 0, KEY_B, KEY_SELECT, KEY_START,
     KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN,
 };
 
 #define THUMB_BIT 1u
-#define SETTLE_FRAMES 480
-#define TAP_FRAMES 2      // held long enough to register, short enough to turn-not-walk
-#define STEP_GAP 22       // frames to let a one-tile step finish
+#define SETTLE_FRAMES 480   // truck-era fade margin; harmless at Route 103
+#define TAP_FRAMES 4
+#define STEP_HOLD 12
+#define STEP_GAP 22
+#define UNTIL_MAX 900
 
 static void stderrLog(struct mLogger* log, int category, enum mLogLevel level,
                       const char* format, va_list args) {
     UNUSED(log);
-    // Surface crashes and game-emitted errors; drop the chatty levels.
     if (level & (mLOG_FATAL | mLOG_ERROR | mLOG_WARN)) {
         fprintf(stderr, "HH_MGBA[%s] ", mLogCategoryName(category));
         vfprintf(stderr, format, args);
@@ -52,16 +54,7 @@ static struct mLogger sLogger = { .log = stderrLog };
 
 static struct mCore* sCore;
 static const char* sOutDir;
-static const uint32_t* sVideoBuffer;
-
-static int frameIsLit(void) {
-    // Sample the buffer sparsely; "lit" = any sampled pixel meaningfully non-black.
-    for (unsigned i = 0; i < 256 * 160; i += 61) {
-        if ((sVideoBuffer[i] & 0x00F0F0F0) != 0)
-            return 1;
-    }
-    return 0;
-}
+static uint32_t sSb1Ptr, sStrVar4;
 
 static void shot(const char* name) {
     char path[1024];
@@ -73,25 +66,81 @@ static void shot(const char* name) {
     }
 }
 
+static void playerPos(int16_t* x, int16_t* y) {
+    uint32_t sb1 = sCore->busRead32(sCore, sSb1Ptr);
+    *x = (int16_t) sCore->busRead16(sCore, sb1);
+    *y = (int16_t) sCore->busRead16(sCore, sb1 + 2);
+}
+
 static int finish(const char* status, const char* msg, unsigned frame) {
     char path[1024];
+    int16_t x = -1, y = -1;
+    if (sSb1Ptr)
+        playerPos(&x, &y);
     snprintf(path, sizeof(path), "%s/result.txt", sOutDir);
     FILE* f = fopen(path, "w");
     if (f) {
-        fprintf(f, "%s %s (frame %u)\n", status, msg, frame);
+        fprintf(f, "%s %s (frame %u, pos %d,%d)\n", status, msg, frame, x, y);
         fclose(f);
     }
-    printf("HH_RESULT %s %s (frame %u)\n", status, msg, frame);
+    printf("HH_RESULT %s %s (frame %u, pos %d,%d)\n", status, msg, frame, x, y);
     return strcmp(status, "PASS") == 0 ? 0 : 1;
+}
+
+// ---- scenario script ----
+
+enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_SV4, OP_DISMISS_UNTIL, OP_CLEAR_SV4, OP_SHOT, OP_PASS };
+struct Op {
+    enum OpKind kind;
+    int a, b;
+    char text[48];
+};
+
+static int keyByName(const char* s) {
+    if (!strcmp(s, "A")) return KEY_A;
+    if (!strcmp(s, "B")) return KEY_B;
+    if (!strcmp(s, "START")) return KEY_START;
+    if (!strcmp(s, "SELECT")) return KEY_SELECT;
+    if (!strcmp(s, "U")) return KEY_UP;
+    if (!strcmp(s, "D")) return KEY_DOWN;
+    if (!strcmp(s, "L")) return KEY_LEFT;
+    if (!strcmp(s, "R")) return KEY_RIGHT;
+    return -1;
+}
+
+static int parseScript(char* spec, struct Op* ops, int maxOps) {
+    int n = 0;
+    char* save = NULL;
+    for (char* tok = strtok_r(spec, ";", &save); tok && n < maxOps;
+         tok = strtok_r(NULL, ";", &save)) {
+        struct Op* op = &ops[n];
+        memset(op, 0, sizeof(*op));
+        if (sscanf(tok, "goto:%d,%d", &op->a, &op->b) == 2) op->kind = OP_GOTO;
+        else if (!strncmp(tok, "face:", 5)) { op->kind = OP_FACE; op->a = keyByName(tok + 5); }
+        else if (!strncmp(tok, "tap:", 4)) { op->kind = OP_TAP; op->a = keyByName(tok + 4); }
+        else if (sscanf(tok, "wait:%d", &op->a) == 1) op->kind = OP_WAIT;
+        else if (sscanf(tok, "until-sv4:%x", &op->a) == 1) op->kind = OP_UNTIL_SV4;
+        else if (sscanf(tok, "dismiss-until:%x", &op->a) == 1) op->kind = OP_DISMISS_UNTIL;
+        else if (!strcmp(tok, "clear-sv4")) op->kind = OP_CLEAR_SV4;
+        else if (!strncmp(tok, "shot:", 5)) { op->kind = OP_SHOT; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
+        else if (!strncmp(tok, "pass:", 5)) { op->kind = OP_PASS; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
+        else { fprintf(stderr, "hh-runner: bad op '%s'\n", tok); return -1; }
+        if ((op->kind == OP_FACE || op->kind == OP_TAP) && op->a < 0) {
+            fprintf(stderr, "hh-runner: bad key in '%s'\n", tok);
+            return -1;
+        }
+        n++;
+    }
+    return n;
 }
 
 int main(int argc, char** argv) {
     const char* rom = NULL;
-    uint32_t gMain = 0, cb2Overworld = 0, sb1Ptr = 0, strVar4 = 0;
-    int targetX = 1, targetY = 1;
-    int interact = 1;
-    int pressesLeft = 5;
-    unsigned maxFrames = 30000;
+    char* scriptSpec = NULL;
+    uint32_t gMain = 0, cb2Overworld = 0;
+    unsigned maxFrames = 60000;
+    struct Op ops[64];
+    int nOps = 0;
     sOutDir = "verify-out";
 
     for (int i = 1; i < argc - 1; i++) {
@@ -99,174 +148,169 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--out")) sOutDir = argv[++i];
         else if (!strcmp(argv[i], "--gmain")) gMain = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--cb2-overworld")) cb2Overworld = strtoul(argv[++i], NULL, 16);
-        else if (!strcmp(argv[i], "--sb1ptr")) sb1Ptr = strtoul(argv[++i], NULL, 16);
-        else if (!strcmp(argv[i], "--strvar4")) strVar4 = strtoul(argv[++i], NULL, 16);
-        else if (!strcmp(argv[i], "--target")) sscanf(argv[++i], "%d,%d", &targetX, &targetY);
-        else if (!strcmp(argv[i], "--interact")) interact = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--sb1ptr")) sSb1Ptr = strtoul(argv[++i], NULL, 16);
+        else if (!strcmp(argv[i], "--strvar4")) sStrVar4 = strtoul(argv[++i], NULL, 16);
+        else if (!strcmp(argv[i], "--script")) scriptSpec = argv[++i];
         else if (!strcmp(argv[i], "--max-frames")) maxFrames = strtoul(argv[++i], NULL, 10);
     }
-    if (!rom || !gMain || !cb2Overworld || !sb1Ptr) {
+    if (!rom || !gMain || !cb2Overworld || !sSb1Ptr || !scriptSpec) {
         fprintf(stderr, "usage: hh-runner --rom ROM --gmain HEX --cb2-overworld HEX "
-                        "--sb1ptr HEX [--out DIR] [--target X,Y] [--interact 0|1] "
-                        "[--max-frames N]\n");
+                        "--sb1ptr HEX --strvar4 HEX --script 'op;op;...' [--out DIR]\n");
         return 2;
     }
+    nOps = parseScript(scriptSpec, ops, 64);
+    if (nOps < 0)
+        return 2;
 
     mLogSetDefaultLogger(&sLogger);
-
     sCore = mCoreFind(rom);
     if (!sCore) {
         fprintf(stderr, "hh-runner: no core for %s\n", rom);
         return 2;
     }
     sCore->init(sCore);
-    unsigned w, h;
-    sCore->desiredVideoDimensions(sCore, &w, &h);
     void* videoBuffer = malloc(256 * 256 * 4);
-    sVideoBuffer = videoBuffer;
     sCore->setVideoBuffer(sCore, videoBuffer, 256);
     if (!mCoreLoadFile(sCore, rom)) {
         fprintf(stderr, "hh-runner: failed to load %s\n", rom);
         return 2;
     }
-    mCoreConfigInit(&sCore->config, "hh-runner");  // hermetic: no mCoreConfigLoad
+    mCoreConfigInit(&sCore->config, "hh-runner");  // hermetic: no user config load
     struct mCoreOptions opts = { .audioSync = false, .videoSync = false };
     mCoreConfigLoadDefaults(&sCore->config, &opts);
     mCoreConfigSetDefaultValue(&sCore->config, "idleOptimization", "detect");
     mCoreLoadConfig(sCore);
     sCore->reset(sCore);
 
-    enum { BOOT, SETTLE, WALK, FACE, PRESS, TEXTBOX } phase = BOOT;
-    unsigned keys = 0, holdUntil = 0, nextAct = 240, settled = 0;
+    enum { BOOT, SETTLE, SCRIPT } phase = BOOT;
+    unsigned keys = 0, holdUntil = 0, nextAct = 240, settled = 0, opDeadline = 0;
+    int opIndex = 0, opArmed = 0;
     int rc = -1;
 
-    int sawSv4 = 0;
-    unsigned frame;
-    for (frame = 0; frame < maxFrames && rc < 0; frame++) {
-        if (strVar4 && !sawSv4 && sCore->busRead8(sCore, strVar4) == 0xCA) {
-            sawSv4 = 1;
-            fprintf(stderr, "HH_TRACE sv4 written at frame %u (phase %d)\n", frame, (int) phase);
-        }
-        if (frame % 120 == 0 && phase >= WALK) {
-            uint32_t sb1dbg = sCore->busRead32(sCore, sb1Ptr);
-            fprintf(stderr, "HH_TRACE f=%u phase=%d sb1=%08x pos=%d,%d\n", frame, (int) phase,
-                    sb1dbg, (int16_t) sCore->busRead16(sCore, sb1dbg),
-                    (int16_t) sCore->busRead16(sCore, sb1dbg + 2));
-        }
-        if (keys && frame >= holdUntil) {
+    for (unsigned frame = 0; frame < maxFrames && rc < 0; frame++) {
+        if (keys && frame >= holdUntil)
             keys = 0;
-        }
         sCore->setKeys(sCore, keys);
         sCore->runFrame(sCore);
 
         uint32_t cb2 = sCore->busRead32(sCore, gMain + 4);
         int inOverworld = cb2 == (cb2Overworld | THUMB_BIT);
 
-        switch (phase) {
-        case BOOT:
+        if (phase == BOOT) {
             if (inOverworld) {
                 phase = SETTLE;
                 settled = 0;
-                break;
-            }
-            if (frame >= nextAct && !keys) {
-                if (frameIsLit())
-                    shot("title");  // last lit pre-overworld screen = title (or intro)
+            } else if (frame >= nextAct && !keys) {
                 keys = 1u << KEY_SELECT;
-                holdUntil = frame + TAP_FRAMES;
+                holdUntil = frame + 2;
                 nextAct = frame + 20;
+                if (frame > 18000)
+                    rc = finish("FAIL", "never reached overworld", frame);
             }
-            break;
-        case SETTLE:
+            continue;
+        }
+        if (phase == SETTLE) {
             settled = inOverworld ? settled + 1 : 0;
             if (settled >= SETTLE_FRAMES) {
                 shot("overworld");
-                if (interact) {
-                    phase = WALK;
-                    nextAct = frame + 30;
-                } else {
-                    rc = finish("PASS", "overworld reached", frame);
-                }
+                phase = SCRIPT;
+                nextAct = frame + 1;
             }
-            break;
-        case WALK: {
-            uint32_t sb1 = sCore->busRead32(sCore, sb1Ptr);
-            int16_t x = (int16_t) sCore->busRead16(sCore, sb1);
-            int16_t y = (int16_t) sCore->busRead16(sCore, sb1 + 2);
-            if (frame >= nextAct && !keys) {
-                int key = -1;
-                if (x > targetX) key = KEY_LEFT;
-                else if (x < targetX) key = KEY_RIGHT;
-                else if (y > targetY) key = KEY_UP;
-                else if (y < targetY) key = KEY_DOWN;
-                if (key < 0) {
-                    phase = FACE;
-                    nextAct = frame + 10;
-                } else {
-                    keys = 1u << key;
-                    holdUntil = frame + 12;  // long enough to step, not just turn
-                    nextAct = frame + 12 + STEP_GAP;
-                }
-            }
-            break;
+            continue;
         }
-        case FACE:
-            if (frame >= nextAct && !keys) {
-                keys = 1u << KEY_UP;  // sign sits one tile above target
-                holdUntil = frame + TAP_FRAMES;
-                phase = PRESS;
-                nextAct = frame + 20;
-            }
-            break;
-        case PRESS:
-            if (frame >= nextAct && !keys) {
-                keys = 1u << KEY_A;
-                holdUntil = frame + 4;  // field input wants a slightly longer tap
-                phase = TEXTBOX;
-                nextAct = frame + 90;
-            }
-            break;
-        case TEXTBOX:
-            if (frame == nextAct - 60) shot("interact_t30");
-            if (frame == nextAct - 30) shot("interact_t60");
-            if (frame >= nextAct) {
-                // Truth check: the inspect special buffers hint text into
-                // gStringVar4 ("PLACEHOLDER..." => charmap 'P' = 0xCA). A
-                // completed input sequence without that byte is a FAIL.
-                char msg[160];
-                uint32_t sb1 = sCore->busRead32(sCore, sb1Ptr);
-                snprintf(msg, sizeof(msg),
-                         "pos=%d,%d sv4=%02x %02x %02x %02x %02x %02x %02x %02x",
-                         (int16_t) sCore->busRead16(sCore, sb1),
-                         (int16_t) sCore->busRead16(sCore, sb1 + 2),
-                         sCore->busRead8(sCore, strVar4 + 0), sCore->busRead8(sCore, strVar4 + 1),
-                         sCore->busRead8(sCore, strVar4 + 2), sCore->busRead8(sCore, strVar4 + 3),
-                         sCore->busRead8(sCore, strVar4 + 4), sCore->busRead8(sCore, strVar4 + 5),
-                         sCore->busRead8(sCore, strVar4 + 6), sCore->busRead8(sCore, strVar4 + 7));
-                if (strVar4 == 0 || sCore->busRead8(sCore, strVar4) == 0xCA) {
-                    shot("interact");
-                    rc = finish("PASS", msg, frame);
-                } else if (--pressesLeft > 0) {
-                    phase = PRESS;   // tap may have been eaten; try again
-                    nextAct = frame + 10;
-                } else {
-                    shot("interact");
-                    rc = finish("FAIL", msg, frame);
-                }
-            }
-            break;
-        }
-    }
 
-    if (rc < 0) {
-        char msg[128];
-        uint32_t sb1 = sCore->busRead32(sCore, sb1Ptr);
-        snprintf(msg, sizeof(msg), "timeout in phase %d at pos %d,%d", (int) phase,
-                 (int16_t) sCore->busRead16(sCore, sb1),
-                 (int16_t) sCore->busRead16(sCore, sb1 + 2));
-        shot("timeout");
-        rc = finish("FAIL", msg, frame);
+        // SCRIPT phase: execute ops in order.
+        if (opIndex >= nOps) {
+            rc = finish("FAIL", "script ended without pass op", frame);
+            break;
+        }
+        struct Op* op = &ops[opIndex];
+        if (!opArmed) {
+            opArmed = 1;
+            opDeadline = frame + ((op->kind == OP_GOTO) ? 6000 : (op->kind == OP_DISMISS_UNTIL) ? 1500 : UNTIL_MAX);
+            if (op->kind == OP_WAIT)
+                opDeadline = frame + op->a;
+        }
+        int done = 0;
+        switch (op->kind) {
+        case OP_GOTO: {
+            int16_t x, y;
+            playerPos(&x, &y);
+            if (x == op->a && y == op->b)
+                done = 1;
+            else if (frame >= nextAct && !keys) {
+                int key = (x > op->a) ? KEY_LEFT : (x < op->a) ? KEY_RIGHT
+                        : (y > op->b) ? KEY_UP : KEY_DOWN;
+                keys = 1u << key;
+                holdUntil = frame + STEP_HOLD;
+                nextAct = frame + STEP_HOLD + STEP_GAP;
+            }
+            break;
+        }
+        case OP_FACE:
+            if (frame >= nextAct && !keys) {
+                keys = 1u << op->a;
+                holdUntil = frame + 2;  // short tap: turn, don't step
+                nextAct = frame + 16;
+                done = 1;
+            }
+            break;
+        case OP_TAP:
+            if (frame >= nextAct && !keys) {
+                keys = 1u << op->a;
+                holdUntil = frame + TAP_FRAMES;
+                nextAct = frame + TAP_FRAMES + 4;
+                done = 1;
+            }
+            break;
+        case OP_WAIT:
+            if (frame >= opDeadline)
+                done = 1;
+            break;
+        case OP_UNTIL_SV4:
+            if (sCore->busRead8(sCore, sStrVar4) == (uint32_t) op->a)
+                done = 1;
+            break;
+        case OP_DISMISS_UNTIL:
+            // Advance any message/prompt flow by tapping A on a cadence until
+            // the identified text is up. All slice answers are YES/first-item,
+            // which A selects.
+            if (sCore->busRead8(sCore, sStrVar4) == (uint32_t) op->a) {
+                done = 1;
+            } else if (frame >= nextAct && !keys) {
+                keys = 1u << KEY_A;
+                holdUntil = frame + TAP_FRAMES;
+                nextAct = frame + 24;
+            }
+            break;
+        case OP_CLEAR_SV4:
+            sCore->busWrite8(sCore, sStrVar4, 0);
+            done = 1;
+            break;
+        case OP_SHOT:
+            shot(op->text);
+            done = 1;
+            break;
+        case OP_PASS:
+            rc = finish("PASS", op->text, frame);
+            break;
+        }
+        if (rc < 0 && op->kind != OP_WAIT && frame >= opDeadline) {
+            char msg[160];
+            int16_t x, y;
+            playerPos(&x, &y);
+            snprintf(msg, sizeof(msg), "op %d timed out (kind %d) pos=%d,%d sv4=%02x",
+                     opIndex, (int) op->kind, x, y, sCore->busRead8(sCore, sStrVar4));
+            shot("timeout");
+            rc = finish("FAIL", msg, frame);
+        }
+        if (done) {
+            opIndex++;
+            opArmed = 0;
+        }
     }
+    if (rc < 0)
+        rc = finish("FAIL", "frame budget exhausted", maxFrames);
 
     mCoreConfigDeinit(&sCore->config);
     sCore->deinit(sCore);

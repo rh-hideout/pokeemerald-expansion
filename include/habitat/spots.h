@@ -59,5 +59,8 @@ void Habitat_CompleteBefriendById(u16 spotId);
 
 // Script specials (data/scripts/habitat_spot.inc).
 void Habitat_OnInspectSpot(void);
+void Habitat_OnInspectSpotById(void);
+u16 Habitat_TryOffer(void);
+u16 Habitat_TryPlaceItem(void);
 
 #endif // GUARD_HABITAT_SPOTS_H
