@@ -54,6 +54,30 @@ All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.1
   `make verify` inspects Machop, `--scenario skitty` proves the full
   place→manifest→offer→befriend loop with screenshot evidence.
 
+## [Unreleased] — Milestone 1 phase 5: Lab Opening & Slice Wiring (2026-07-19)
+
+- Six §10 furnishing items (campfire/plant/basin + PC/bookshelf/ball holder).
+- Placement counters are per-(spot, condition) — multi-furnishing frames.
+- Lab frame spots (Torchic/Treecko/Mudkip) with auto-befriend on completion;
+  spawn moved into the abandoned lab; vanilla story cast hidden in-slice.
+- Machop's friendly bout: borrowed-resident battler, win sets BATTLE_WIN,
+  recompute auto-befriends (native-tested).
+- Scavenge finds (bookshelf/PC/ball holder) on Route 103.
+- Runner: walk/until-map ops, Y-first goto (face-tap stepping fix).
+- Resolved the headless recruit-dialogue "hang": the game was never at fault —
+  the runner's dismissal taps stopped too early for the final waitbuttonpress.
+  Human-cadence A-taps after dismiss-until fix it; richer fail-path
+  diagnostics kept in the runner. Hardened along the way (kept on purpose):
+  recruit dialogue completes before any state mutation
+  (Habitat_CanRecruitToGrove pre-check + post-release Habitat_TryRecruitToGrove),
+  and live-object sync never removes the locked talked-to object mid-script.
+- Relocate Grove plots/workers out of Littleroot's southern tree wall
+  (plots (12,13)–(14,13), workers (11,12)–(16,12)) — found via manual play.
+- `make verify` now runs the full §10→Grove circuit headlessly: place
+  campfire → Torchic manifests + auto-befriends → recruit → walk to the
+  Grove → Torchic's worker status confirms at the row (screenshot evidence).
+  Route 103 scenarios re-route with phase 6's acceptance circuit.
+
 ## [Unreleased] — Milestone 1 phase 4: The Grove (2026-07-19)
 
 - Grove core on the Littleroot placeholder map: 12-plot save array (slice

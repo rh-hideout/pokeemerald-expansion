@@ -30,6 +30,8 @@ HabitatSpot_EventScript_Dispatch::
 
 HabitatSpot_EventScript_Active::
 	msgbox gStringVar4, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, Habitat_SpotWantsBout
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_ActiveBout
 	msgbox HabitatSpot_Text_OfferPrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Offer
 	msgbox HabitatSpot_Text_PlacePrompt, MSGBOX_YESNO
@@ -45,6 +47,26 @@ HabitatSpot_EventScript_Offer::
 	specialvar VAR_RESULT, Habitat_TryOffer
 	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_Befriended
 	msgbox HabitatSpot_Text_OfferRejected, MSGBOX_DEFAULT
+	release
+	end
+
+HabitatSpot_EventScript_ActiveBout::
+	msgbox HabitatSpot_Text_BoutPrompt, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, HabitatSpot_EventScript_Leave
+	specialvar VAR_RESULT, Habitat_PrepareBout
+	goto_if_eq VAR_RESULT, FALSE, HabitatSpot_EventScript_NoBattler
+	msgbox HabitatSpot_Text_BoutStart, MSGBOX_DEFAULT
+	closemessage
+	setwildbattle SPECIES_MACHOP, 15
+	dowildbattle
+	specialvar VAR_RESULT, Habitat_ResolveBout
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_Befriended
+	msgbox HabitatSpot_Text_BoutLost, MSGBOX_DEFAULT
+	release
+	end
+
+HabitatSpot_EventScript_NoBattler::
+	msgbox HabitatSpot_Text_NoBattler, MSGBOX_DEFAULT
 	release
 	end
 
@@ -73,17 +95,18 @@ HabitatSpot_EventScript_Ambient::
 	msgbox HabitatSpot_Text_Ambient, MSGBOX_DEFAULT
 	msgbox HabitatSpot_Text_RecruitPrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, HabitatSpot_EventScript_Leave
-	specialvar VAR_RESULT, Habitat_TryRecruitToGrove
-	switch VAR_RESULT
-	case 1, HabitatSpot_EventScript_Recruited
-	case 2, HabitatSpot_EventScript_GroveFull
+	specialvar VAR_RESULT, Habitat_CanRecruitToGrove
+	goto_if_eq VAR_RESULT, 1, HabitatSpot_EventScript_Recruited
+	goto_if_eq VAR_RESULT, 2, HabitatSpot_EventScript_GroveFull
 	msgbox HabitatSpot_Text_CannotCome, MSGBOX_DEFAULT
 	release
 	end
 
 HabitatSpot_EventScript_Recruited::
 	msgbox HabitatSpot_Text_Recruited, MSGBOX_DEFAULT
+	closemessage
 	release
+	special Habitat_TryRecruitToGrove
 	end
 
 HabitatSpot_EventScript_GroveFull::
@@ -95,6 +118,22 @@ HabitatSpot_EventScript_NotASpot::
 	msgbox HabitatSpot_Text_NotASpot, MSGBOX_DEFAULT
 	release
 	end
+
+HabitatSpot_Text_BoutPrompt:
+	.string "Fists up? It wants a friendly\n"
+	.string "bout. (PLACEHOLDER)$"
+
+HabitatSpot_Text_BoutStart:
+	.string "READY: {STR_VAR_2} steps up beside\n"
+	.string "you. (PLACEHOLDER)$"
+
+HabitatSpot_Text_BoutLost:
+	.string "Undefeated, it settles back,\n"
+	.string "pleased. (PLACEHOLDER: try again)$"
+
+HabitatSpot_Text_NoBattler:
+	.string "No one to stand with you yet.\n"
+	.string "(PLACEHOLDER: befriend someone first)$"
 
 HabitatSpot_Text_OfferPrompt:
 	.string "Offer something from your\n"

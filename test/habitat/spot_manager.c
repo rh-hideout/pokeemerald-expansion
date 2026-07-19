@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "event_data.h"
 #include "field_weather.h"
 #include "habitat/save.h"
@@ -7,6 +8,7 @@
 #include "item_menu.h"
 #include "pokedex.h"
 #include "string_util.h"
+#include "constants/battle.h"
 #include "constants/berry.h"
 #include "constants/weather.h"
 #include "test/overworld_script.h"
@@ -52,7 +54,7 @@ TEST("Habitat manager: offer-driven spots do not auto-befriend")
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_DORMANT);
     EXPECT(FlagGet(skitty->hideFlag));  // hidden while dormant
 
-    Habitat_AddPlacedCount(SPOT_SKITTY, 1);   // the doll is set down
+    Habitat_AddPlacedCount(SPOT_SKITTY, 0, 1);   // the doll is set down
     Habitat_RecomputeSpot(skitty);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);
     EXPECT(!FlagGet(skitty->hideFlag));
@@ -66,7 +68,7 @@ TEST("Habitat manager: befriended spots render at home (home-by-default)")
     const struct HabitatSpot *skitty = Habitat_GetSpot(SPOT_SKITTY);
     ASSUME(skitty != NULL);
 
-    Habitat_AddPlacedCount(SPOT_SKITTY, 1);
+    Habitat_AddPlacedCount(SPOT_SKITTY, 0, 1);
     Habitat_RecomputeSpot(skitty);
     ASSUME(Habitat_GetSpotState(SPOT_SKITTY) == HABITAT_STATE_ACTIVE);
 
@@ -156,7 +158,7 @@ TEST("Habitat verbs: PLACE moves the wanted item from bag to spot and manifests 
     AddBagItem(ITEM_POKE_DOLL, 1);
     EXPECT(Habitat_TryPlaceItem() == TRUE);
     EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));       // consumed
-    EXPECT_EQ(Habitat_GetPlacedCount(SPOT_SKITTY), 1);
+    EXPECT_EQ(Habitat_GetPlacedCount(SPOT_SKITTY, 0), 1);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_SKITTY), HABITAT_STATE_ACTIVE);  // recompute fired
 
     EXPECT(Habitat_TryPlaceItem() == FALSE);  // doll is gone
@@ -189,4 +191,27 @@ TEST("Habitat verbs: OFFER consumes the right item and befriends; wrong item is 
 
     gSpecialVar_ItemId = ITEM_ORAN_BERRY;              // already befriended
     EXPECT(Habitat_TryOffer() == FALSE);
+}
+
+TEST("Habitat bout: borrow-a-resident staging and victory resolution")
+{
+    const struct HabitatSpot *machop = Habitat_GetSpot(SPOT_MACHOP);
+    ASSUME(machop != NULL);
+    gSaveBlock1Ptr->location.mapGroup = machop->mapGroup;
+    gSaveBlock1Ptr->location.mapNum = machop->mapNum;
+    gSpecialVar_LastTalked = machop->localId;
+
+    Habitat_RecomputeSpot(machop);
+    Habitat_OnInspectSpot();
+    EXPECT(Habitat_SpotWantsBout() == TRUE);
+    EXPECT(Habitat_PrepareBout() == FALSE);   // no residents yet
+
+    ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
+    EXPECT(Habitat_PrepareBout() == TRUE);
+    EXPECT_EQ(gPlayerPartyCount, 1);          // the borrowed battler
+
+    gBattleOutcome = B_OUTCOME_WON;
+    EXPECT(Habitat_ResolveBout() == TRUE);
+    EXPECT_EQ(gPlayerPartyCount, 0);          // party restored to empty
+    EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_BEFRIENDED);
 }

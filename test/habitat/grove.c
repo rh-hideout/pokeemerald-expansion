@@ -105,7 +105,7 @@ TEST("Habitat Grove: out residents leave their home spot invisible")
     ASSUME(skitty != NULL);
     InitPlotsForTest();
 
-    Habitat_AddPlacedCount(1, 1);
+    Habitat_AddPlacedCount(1, 0, 1);
     Habitat_RecomputeSpot(skitty);
     Habitat_CompleteBefriendById(1);
     EXPECT(!FlagGet(skitty->hideFlag));  // home by default
@@ -131,16 +131,20 @@ TEST("Habitat Grove: recruit flow assigns from the home spot dialogue")
     gSaveBlock1Ptr->location.mapNum = skitty->mapNum;
     gSpecialVar_LastTalked = skitty->localId;
 
-    Habitat_AddPlacedCount(1, 1);
+    Habitat_AddPlacedCount(1, 0, 1);
     Habitat_RecomputeSpot(skitty);
     Habitat_CompleteBefriendById(1);
     Habitat_OnInspectSpot();  // binds the interaction spot
 
-    EXPECT_EQ(Habitat_TryRecruitToGrove(), 1);
+    // Split flow: dialogue pre-checks, mutation runs after script release.
+    EXPECT_EQ(Habitat_CanRecruitToGrove(), 1);
+    Habitat_TryRecruitToGrove();
     EXPECT_EQ(Habitat_GetPlot(0)->berryItem, ITEM_PERSIM_BERRY);  // Normal-type crop
     EXPECT(Habitat_ResidentIsOut(Habitat_FindResidentBySpecies(SPECIES_SKITTY)));
 
-    EXPECT_EQ(Habitat_TryRecruitToGrove(), 0);  // already out
+    EXPECT_EQ(Habitat_CanRecruitToGrove(), 0);  // already out
+    Habitat_TryRecruitToGrove();                // guarded no-op when out
+    EXPECT_EQ(Habitat_GetPlot(0)->worker2, 0xFF);  // no double assignment
 }
 
 TEST("Habitat Grove: worker talk resolves display slots to residents")

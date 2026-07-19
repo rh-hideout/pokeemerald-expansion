@@ -70,6 +70,10 @@ u16 Habitat_OnTalkWorker(void);
 u16 Habitat_SendTalkedWorkerHome(void);
 u16 Habitat_OnInspectPlot(void);
 u16 Habitat_TryHarvestPlot(void);
-u16 Habitat_TryRecruitToGrove(void);
+u16 Habitat_CanRecruitToGrove(void);
+void Habitat_TryRecruitToGrove(void);
+u16 Habitat_SpotWantsBout(void);
+u16 Habitat_PrepareBout(void);
+u16 Habitat_ResolveBout(void);
 
 #endif // GUARD_HABITAT_SPOTS_H

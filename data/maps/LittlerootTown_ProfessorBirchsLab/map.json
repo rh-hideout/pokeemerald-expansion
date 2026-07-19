@@ -27,7 +27,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_ProfessorBirchsLab_EventScript_Aide",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x03C"
     },
     {
       "local_id": "LOCALID_BIRCHS_LAB_BIRCH",
@@ -98,6 +98,48 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_ProfessorBirchsLab_EventScript_Chikorita",
       "flag": "FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA"
+    },
+    {
+      "local_id": "LOCALID_HABITAT_FRAME_TORCHIC",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(TORCHIC)",
+      "x": 4,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "HabitatSpot_EventScript_Interact",
+      "flag": "FLAG_UNUSED_0x040"
+    },
+    {
+      "local_id": "LOCALID_HABITAT_FRAME_TREECKO",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(TREECKO)",
+      "x": 6,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "HabitatSpot_EventScript_Interact",
+      "flag": "FLAG_UNUSED_0x041"
+    },
+    {
+      "local_id": "LOCALID_HABITAT_FRAME_MUDKIP",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(MUDKIP)",
+      "x": 8,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "HabitatSpot_EventScript_Interact",
+      "flag": "FLAG_UNUSED_0x042"
     }
   ],
   "warp_events": [
@@ -237,6 +279,30 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_ProfessorBirchsLab_EventScript_PC"
+    },
+    {
+      "type": "sign",
+      "x": 4,
+      "y": 6,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "BirchsLab_EventScript_HabitatFrameTorchic"
+    },
+    {
+      "type": "sign",
+      "x": 6,
+      "y": 6,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "BirchsLab_EventScript_HabitatFrameTreecko"
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 6,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "BirchsLab_EventScript_HabitatFrameMudkip"
     }
   ]
 }

@@ -12,6 +12,7 @@
 #include "main.h"
 #include "overworld.h"
 #include "pokemon.h"
+#include "script.h"
 #include "string_util.h"
 #include "constants/event_objects.h"
 #include "constants/flags.h"
@@ -91,7 +92,11 @@ void Habitat_SyncGroveWorkersLive(void)
         if (!hidden && !spawned)
             TrySpawnObjectEvent(localId, GROVE_MAP_NUM, GROVE_MAP_GROUP);
         else if (hidden && spawned)
+        {
+            if (ScriptContext_IsEnabled() && objectEventId == gSelectedObjectEvent)
+                continue;
             RemoveObjectEventByLocalIdAndMap(localId, GROVE_MAP_NUM, GROVE_MAP_GROUP);
+        }
     }
 }
 
@@ -165,10 +170,10 @@ u16 Habitat_TryHarvestPlot(void)
 
 // ---- recruiting from the home spot ----
 
-// special: recruit the current interaction spot's resident to the first
-// plot with a free slot. VAR_RESULT: 0 no resident/none free, 1 recruited,
-// 2 grove full (six-out). Buffers species name into STR_VAR_1.
-u16 Habitat_TryRecruitToGrove(void)
+// special: pre-check only — no state changes during dialogue (mutating the
+// locked, talked-to object's visibility mid-script kills the script engine;
+// found the hard way). VAR_RESULT: 0 cannot, 1 can, 2 grove full.
+u16 Habitat_CanRecruitToGrove(void)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(Habitat_GetInteractionSpotId());
     s32 residentIdx;
@@ -186,10 +191,30 @@ u16 Habitat_TryRecruitToGrove(void)
     {
         const struct HabitatPlot *plot = Habitat_GetPlot(plotIdx);
         if (plot->worker1 == WORKER_NONE || plot->worker2 == WORKER_NONE)
-        {
-            if (Habitat_AssignResidentToPlot(residentIdx, plotIdx))
-                return 1;
-        }
+            return 1;
     }
     return 0;
+}
+
+// special: the actual assignment — runs after dialogue closed and released.
+void Habitat_TryRecruitToGrove(void)
+{
+    const struct HabitatSpot *spot = Habitat_GetSpot(Habitat_GetInteractionSpotId());
+    s32 residentIdx;
+    u32 plotIdx;
+
+    if (spot == NULL)
+        return;
+    residentIdx = Habitat_FindResidentBySpecies(spot->species);
+    if (residentIdx < 0 || Habitat_ResidentIsOut(residentIdx))
+        return;
+    for (plotIdx = 0; plotIdx < HABITAT_PLOT_COUNT; plotIdx++)
+    {
+        const struct HabitatPlot *plot = Habitat_GetPlot(plotIdx);
+        if (plot->worker1 == WORKER_NONE || plot->worker2 == WORKER_NONE)
+        {
+            if (Habitat_AssignResidentToPlot(residentIdx, plotIdx))
+                return;
+        }
+    }
 }

@@ -14,7 +14,18 @@
 // Counter slot maps (§5: only listed spots get a real counter).
 // Terminated by 0xFFFF. Slot index == position in the list.
 static const u16 sTalkCounterSpots[] = { 0xFFFF };
-static const u16 sPlacedCounterSpots[] = { 1 /* Skitty: doll */, 6 /* Pinsir: sap log */, 0xFFFF };
+
+// Placed counters are per-(spot, ITEM_PLACED-condition-index) — bare lab
+// frames (§10) need several distinct furnishings. 8 slots budgeted (§5).
+struct PlacedSlot { u16 spotId; u8 condIndex; };
+static const struct PlacedSlot sPlacedSlots[] = {
+    { 1, 0 },  // Skitty: doll
+    { 6, 0 },  // Pinsir: sap log
+    { 7, 0 },  // Lab frame, furnished: element item
+    { 8, 0 }, { 8, 1 },            // Lab frame 2: element + furnishing
+    { 9, 0 }, { 9, 1 }, { 9, 2 },  // Lab frame 3: element + 2 furnishings
+    { 0xFFFF, 0 },
+};
 
 static s32 SlotFor(const u16 *list, u16 spotId)
 {
@@ -74,15 +85,26 @@ void Habitat_IncrementTalkCount(u16 spotId)
         gSaveBlock3Ptr->habitat.talkCounters[slot]++;
 }
 
-u8 Habitat_GetPlacedCount(u16 spotId)
+static s32 PlacedSlotFor(u16 spotId, u8 condIndex)
 {
-    s32 slot = SlotFor(sPlacedCounterSpots, spotId);
+    s32 i;
+    for (i = 0; sPlacedSlots[i].spotId != 0xFFFF; i++)
+    {
+        if (sPlacedSlots[i].spotId == spotId && sPlacedSlots[i].condIndex == condIndex)
+            return i;
+    }
+    return -1;
+}
+
+u8 Habitat_GetPlacedCount(u16 spotId, u8 condIndex)
+{
+    s32 slot = PlacedSlotFor(spotId, condIndex);
     return slot < 0 ? 0 : gSaveBlock3Ptr->habitat.placedCounters[slot];
 }
 
-void Habitat_AddPlacedCount(u16 spotId, u8 n)
+void Habitat_AddPlacedCount(u16 spotId, u8 condIndex, u8 n)
 {
-    s32 slot = SlotFor(sPlacedCounterSpots, spotId);
+    s32 slot = PlacedSlotFor(spotId, condIndex);
     if (slot < 0)
         return;
     if (gSaveBlock3Ptr->habitat.placedCounters[slot] > 0xFF - n)

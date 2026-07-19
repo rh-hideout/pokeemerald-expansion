@@ -33,7 +33,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_EventScript_Twin",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x03D"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
@@ -59,7 +59,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_EventScript_Boy",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x03E"
     },
     {
       "local_id": "LOCALID_LITTLEROOT_MOM",
@@ -132,8 +132,8 @@
     {
       "local_id": "LOCALID_HABITAT_PLOT_0",
       "graphics_id": "OBJ_EVENT_GFX_MOVING_BOX",
-      "x": 4,
-      "y": 14,
+      "x": 12,
+      "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
@@ -146,8 +146,8 @@
     {
       "local_id": "LOCALID_HABITAT_PLOT_1",
       "graphics_id": "OBJ_EVENT_GFX_MOVING_BOX",
-      "x": 6,
-      "y": 14,
+      "x": 13,
+      "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
@@ -160,8 +160,8 @@
     {
       "local_id": "LOCALID_HABITAT_PLOT_2",
       "graphics_id": "OBJ_EVENT_GFX_MOVING_BOX",
-      "x": 8,
-      "y": 14,
+      "x": 14,
+      "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
@@ -174,7 +174,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_0",
       "graphics_id": "OBJ_EVENT_GFX_VAR_A",
-      "x": 3,
+      "x": 11,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -188,7 +188,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_1",
       "graphics_id": "OBJ_EVENT_GFX_VAR_B",
-      "x": 4,
+      "x": 12,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -202,7 +202,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_2",
       "graphics_id": "OBJ_EVENT_GFX_VAR_C",
-      "x": 5,
+      "x": 13,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -216,7 +216,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_3",
       "graphics_id": "OBJ_EVENT_GFX_VAR_D",
-      "x": 6,
+      "x": 14,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -230,7 +230,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_4",
       "graphics_id": "OBJ_EVENT_GFX_VAR_E",
-      "x": 7,
+      "x": 15,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
@@ -244,7 +244,7 @@
     {
       "local_id": "LOCALID_HABITAT_WORKER_5",
       "graphics_id": "OBJ_EVENT_GFX_VAR_F",
-      "x": 8,
+      "x": 16,
       "y": 12,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",

@@ -11,7 +11,7 @@
 #include "rtc.h"
 #include "constants/berry.h"
 
-static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
+static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotId,
                       const struct HabitatOfferContext *offer);
 static bool32 Cmp(u32 lhs, u32 comparator, u32 rhs);
 
@@ -35,7 +35,7 @@ void Habitat_EvaluateConditions(const struct HabitatCondition *list, u16 spotId,
     {
         const struct HabitatCondition *c = &list[i];
         u32 group = HABITAT_COND_GROUP_OF(c);
-        bool32 met = EvalOne(c, spotId, offer);
+        bool32 met = EvalOne(c, i, spotId, offer);
 
         if (c->flags & HABITAT_COND_NEGATE)
             met = !met;
@@ -73,7 +73,7 @@ static bool32 Cmp(u32 lhs, u32 comparator, u32 rhs)
     return FALSE;
 }
 
-static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
+static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotId,
                       const struct HabitatOfferContext *offer)
 {
     switch (c->type)
@@ -172,10 +172,10 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         return spotId != HABITAT_SPOT_NONE
             && (Habitat_GetSpotLocalFlags(spotId) & HABITAT_SPOT_LOCAL_BATTLE_WON) != 0;
     case COND_ITEM_PLACED:
-        // paramA (itemId) is enforced by the PLACE verb; the counter tracks
-        // how many of that spot's placeable item have been set down.
+        // paramA (itemId) is enforced by the PLACE verb; each ITEM_PLACED
+        // condition tracks its own counter (multi-furnishing frames, §10).
         return spotId != HABITAT_SPOT_NONE
-            && Habitat_GetPlacedCount(spotId) >= max(1, c->paramB);
+            && Habitat_GetPlacedCount(spotId, condIndex) >= max(1, c->paramB);
     case COND_ZONE_COMPLETE:
     {
         u32 i;

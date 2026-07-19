@@ -992,3 +992,16 @@ LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 	.string "we meet. I'll be waiting!\p"
 	.string "… … … … … …\n"
 	.string "… … … … … Click!$"
+
+@ --- Hoenn Habitat: lab frame sign wrappers (§10) ---
+BirchsLab_EventScript_HabitatFrameTorchic::
+	setvar VAR_0x8004, 7
+	goto HabitatSpot_EventScript_InspectById
+
+BirchsLab_EventScript_HabitatFrameTreecko::
+	setvar VAR_0x8004, 8
+	goto HabitatSpot_EventScript_InspectById
+
+BirchsLab_EventScript_HabitatFrameMudkip::
+	setvar VAR_0x8004, 9
+	goto HabitatSpot_EventScript_InspectById

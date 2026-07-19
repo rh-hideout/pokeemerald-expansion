@@ -137,9 +137,10 @@ static void ClearFrontierRecord(void)
 static void WarpToTruck(void)
 {
 #if HABITAT_SLICE_SPAWN
-    // Vertical slice: skip the vanilla intro and start in the slice zone.
-    // Revert via config/habitat.h when the real intro lands.
-    SetWarpDestination(MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), WARP_ID_NONE, 48, 12);
+    // Vertical slice: begin in the professor's lab (§10) — the frames are
+    // visible from minute one. Revert via config/habitat.h for the real intro.
+    SetWarpDestination(MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                       MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB), WARP_ID_NONE, 6, 10);
 #else
     if (IS_FRLG)
         SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
@@ -284,5 +285,24 @@ static void ResetHabitatSave(void)
     AddBagItem(ITEM_PERSIM_BERRY, 2);
     AddBagItem(ITEM_POKE_DOLL, 1);
     AddBagItem(ITEM_HONEY, 1);
+    // §10: the player is GIVEN the three element items ("the choice is a verb").
+    AddBagItem(ITEM_HH_CAMPFIRE, 1);
+    AddBagItem(ITEM_HH_POTTED_PLANT, 1);
+    AddBagItem(ITEM_HH_WATER_BASIN, 1);
+    // Slice fiction: the region is abandoned — hide the vanilla story cast.
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_MOM_OUTSIDE);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_RIVAL);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCH);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_RIVAL);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CYNDAQUIL);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_TOTODILE);
+    FlagSet(FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_POKEBALL_CHIKORITA);
+    FlagSet(FLAG_UNUSED_0x03C);  // lab aide
+    FlagSet(FLAG_UNUSED_0x03D);  // town twin
+    FlagSet(FLAG_UNUSED_0x03E);  // town boy
 #endif
 }
