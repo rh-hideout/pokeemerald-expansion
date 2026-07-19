@@ -15,8 +15,7 @@ enum HabitatEvent
     HABITAT_EVENT_SPOT_STATE_CHANGE,
 };
 
-// No-op until the spot framework subscribes, so call sites can be wired
-// incrementally without ifdef noise.
 void Habitat_NotifyEvent(enum HabitatEvent event);
+void Habitat_CheckTimeTick(s32 hours);  // fires TIME_TICK on hour flips
 
 #endif // GUARD_HABITAT_EVENTS_H

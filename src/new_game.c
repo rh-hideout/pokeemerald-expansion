@@ -136,10 +136,16 @@ static void ClearFrontierRecord(void)
 
 static void WarpToTruck(void)
 {
+#if HABITAT_SLICE_SPAWN
+    // Vertical slice: skip the vanilla intro and start in the slice zone.
+    // Revert via config/habitat.h when the real intro lands.
+    SetWarpDestination(MAP_GROUP(MAP_ROUTE103), MAP_NUM(MAP_ROUTE103), WARP_ID_NONE, 48, 12);
+#else
     if (IS_FRLG)
         SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
     else
         SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+#endif
     WarpIntoMap();
 }
 

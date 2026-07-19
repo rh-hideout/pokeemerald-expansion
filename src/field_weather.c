@@ -20,6 +20,7 @@
 #include "gpu_regs.h"
 #include "field_camera.h"
 #include "overworld.h"
+#include "habitat/events.h"
 
 #define DROUGHT_COLOR_INDEX(color) ((((color) >> 1) & 0xF) | (((color) >> 2) & 0xF0) | (((color) >> 3) & 0xF00))
 
@@ -264,6 +265,7 @@ void SetCurrentAndNextWeather(u8 weather)
     gWeatherPtr->currWeather = weather;
     gWeatherPtr->nextWeather = weather;
     UpdateWeatherForms();
+    Habitat_NotifyEvent(HABITAT_EVENT_WEATHER_CHANGE);
 }
 
 void SetCurrentAndNextWeatherNoDelay(u8 weather)
@@ -302,6 +304,7 @@ static void Task_WeatherMain(u8 taskId)
             gWeatherPtr->currWeather = gWeatherPtr->nextWeather;
             gWeatherPtr->weatherChangeComplete = TRUE;
             UpdateWeatherForms();
+            Habitat_NotifyEvent(HABITAT_EVENT_WEATHER_CHANGE);
         }
     }
     else

@@ -30,6 +30,7 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
+#include "habitat/events.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
@@ -466,7 +467,11 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
     TryFormChange(&mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
 
     if (side == B_SIDE_PLAYER)
-        return GiveScriptedMonToPlayer(&mon, slot);
+    {
+        u32 result = GiveScriptedMonToPlayer(&mon, slot);
+        Habitat_NotifyEvent(HABITAT_EVENT_PARTY_CHANGE);
+        return result;
+    }
 
     assertf(slot < PARTY_SIZE, "invalid slot: %d", slot)
     {

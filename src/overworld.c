@@ -70,6 +70,7 @@
 #include "tv.h"
 #include "scanline_effect.h"
 #include "wild_encounter.h"
+#include "habitat/events.h"
 #include "wild_encounter_ow.h"
 #include "vs_seeker.h"
 #include "frontier_util.h"
@@ -1693,6 +1694,7 @@ void UpdateTimeOfDay(void)
     RtcCalcLocalTime();
     hours = sHoursOverride ? sHoursOverride : gLocalTime.hours;
     minutes = sHoursOverride ? 0 : gLocalTime.minutes;
+    Habitat_CheckTimeTick(hours);
 
     if (IsBetweenHours(hours, MORNING_HOUR_BEGIN, MORNING_HOUR_MIDDLE)) // night->morning
     {
@@ -2585,6 +2587,7 @@ static void InitObjectEventsLink(void)
     gTotalCameraPixelOffsetX = 0;
     gTotalCameraPixelOffsetY = 0;
     ResetObjectEvents();
+    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
     TrySpawnObjectEvents(0, 0);
     TryRunOnWarpIntoMapScript();
 }
@@ -2602,6 +2605,7 @@ static void InitObjectEventsLocal(void)
     InitPlayerAvatar(x, y, player->direction, gSaveBlock2Ptr->playerGender);
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
+    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
     TrySpawnObjectEvents(0, 0);
     FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();

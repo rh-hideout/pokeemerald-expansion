@@ -14,7 +14,10 @@ cd "$(dirname "$0")/../.."
 
 OUT=verify-out
 ROM=pokeemerald.gba
-INTERACT=1
+# Interact scenario is being rebuilt for the Route 103 slice spawn (M1 phase
+# 2b); boot verification is the default until it lands.
+INTERACT=0
+[ "$1" = "--interact" ] && INTERACT=1
 [ "$1" = "--no-interact" ] && INTERACT=0
 
 rm -rf "$OUT"
