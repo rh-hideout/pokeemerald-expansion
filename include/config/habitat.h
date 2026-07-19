@@ -18,4 +18,10 @@
 // vanilla truck intro. Revert to FALSE when the real Zorua intro lands.
 #define HABITAT_SLICE_SPAWN          TRUE
 
+// Spec §2 law: "No wild battles exist anywhere else." Kills every wild
+// encounter roll engine-wide (grass/surf, sweet scent, rock smash, fishing
+// bites). Scripted battles — Machop's bout, the Deoxys finale — are
+// setwildbattle/dowildbattle and don't pass through these gates.
+#define HABITAT_NO_WILD_ENCOUNTERS   TRUE
+
 #endif // GUARD_CONFIG_HABITAT_H

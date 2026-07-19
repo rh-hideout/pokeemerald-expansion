@@ -2,6 +2,44 @@
 
 All notable changes to Hoenn Habitat. Base: pokeemerald-expansion `expansion/1.16.2`.
 
+## [Unreleased] — Milestone 1 phase 6: Encounter Cut & Slice Acceptance (2026-07-19)
+
+- Spec §2 law enforced engine-wide: `HABITAT_NO_WILD_ENCOUNTERS` kills every
+  wild roll (grass/surf, sweet scent, rock smash, fishing answers "not even
+  a nibble"). Scripted battles (Machop's bout, the Deoxys finale) are
+  unaffected. Native-tested; the Route 101 grass crossing in the overland
+  scenarios proves it in play.
+- DISCOVERY: the phase-2 slice cluster sat on Route 103's EAST bank — open
+  ocean and Surf-only land (the old spawn warped the player straight onto
+  water, which is why it ever worked). All slice content relocated to the
+  west bank on decoded-walkable tiles: 6 spots + signs, the 3 vanilla berry
+  trees (ids 5–7 unchanged — zone 1 conditions intact), 3 scavenge finds.
+- Slice init now neutralizes the overland story: Route 101 Birch rescue
+  (post-rescue var + hidden cast), Route 103 rival/Birch/wandering boy,
+  Oldale rival object.
+- ENGINE FIX: map-connection crossings never fired the habitat map-load
+  recompute (`LoadMapFromCameraTransition` skips the InitObjectEvents paths)
+  — spots on a walked-into map spawned with stale visibility (a dormant
+  Skitty stood visible). Warp-based scenarios could never catch this; the
+  overland walk did. Notify added before object streaming.
+- Slice init neutralizes vanilla overland gates found by walking the route:
+  Littleroot's "can't leave without a Pokémon" force-walk triggers
+  (VAR_LITTLEROOT_TOWN_STATE=4), Route 101's Birch rescue
+  (VAR_ROUTE101_STATE=3 + hidden cast) and its passage-blocking youngster,
+  Route 103's rival/Birch/wandering boy, Oldale's rival object.
+- Scenario re-route: shared overland leg (lab → Littleroot x=10 column →
+  Route 101 → Oldale → Route 103 west bank) with waypoints charted from
+  decoded layout collision/behaviors; skitty (full place/offer/befriend
+  loop, screenshot evidence) and machop (staged hint + bout offer declined +
+  scavenge-find pickup, proven positionally) scenarios restored; lab
+  scenario extended with a Grove plot-inspect beat. All three pass headlessly.
+- Runner hardening: script parser errors loudly on op overflow instead of
+  silently truncating (cap raised 64→256); obtain flows (fanfare pause) and
+  YES/NO chains need the long B-tap dismissal cadence — B doubles as
+  "answer NO", which keeps scenario walks side-effect-free.
+- Gates: Habitat 49/49 (encounter-law test added); full suite 4,901+1/0;
+  EWRAM 86.75% (227,400/262,144 B); all three scenarios deterministic.
+
 ## [Unreleased] — Milestone 0: Toolchain & Foundations
 
 - Pin project base to pokeemerald-expansion tag `expansion/1.16.2`; add project README banner and legal stance.

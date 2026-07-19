@@ -111,8 +111,14 @@ static int keyByName(const char* s) {
 static int parseScript(char* spec, struct Op* ops, int maxOps) {
     int n = 0;
     char* save = NULL;
-    for (char* tok = strtok_r(spec, ";", &save); tok && n < maxOps;
+    for (char* tok = strtok_r(spec, ";", &save); tok;
          tok = strtok_r(NULL, ";", &save)) {
+        if (n >= maxOps) {
+            // A silently truncated script "passes" every op it kept and then
+            // dies confusingly ("ended without pass op") — fail loudly instead.
+            fprintf(stderr, "hh-runner: script exceeds %d ops\n", maxOps);
+            return -1;
+        }
         struct Op* op = &ops[n];
         memset(op, 0, sizeof(*op));
         if (sscanf(tok, "goto:%d,%d", &op->a, &op->b) == 2) op->kind = OP_GOTO;
@@ -143,7 +149,7 @@ int main(int argc, char** argv) {
     char* scriptSpec = NULL;
     uint32_t gMain = 0, cb2Overworld = 0;
     unsigned maxFrames = 60000;
-    struct Op ops[64];
+    struct Op ops[256];
     int nOps = 0;
     sOutDir = "verify-out";
 
@@ -162,7 +168,7 @@ int main(int argc, char** argv) {
                         "--sb1ptr HEX --strvar4 HEX --script 'op;op;...' [--out DIR]\n");
         return 2;
     }
-    nOps = parseScript(scriptSpec, ops, 64);
+    nOps = parseScript(scriptSpec, ops, 256);
     if (nOps < 0)
         return 2;
 
