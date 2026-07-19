@@ -105,3 +105,101 @@ TEST("Habitat conditions: standalone and OR-group combine correctly")
     Habitat_EvaluateConditions(sList, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(r.allMet);
 }
+
+// ---- Party conditions (Task 3) ----
+
+TEST("Habitat conditions: PARTY_SPECIES counts matching party members")
+{
+    static const struct HabitatCondition sOne[] = {
+        HABITAT_COND(COND_PARTY_SPECIES, SPECIES_BULBASAUR, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sTwo[] = {
+        HABITAT_COND(COND_PARTY_SPECIES, SPECIES_BULBASAUR, 2, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    ZeroPlayerPartyMons();
+    Habitat_EvaluateConditions(sOne, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10;);
+    ASSUME(gPlayerPartyCount == 1);
+    Habitat_EvaluateConditions(sOne, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sTwo, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10;);
+    Habitat_EvaluateConditions(sTwo, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: PARTY_MOVE finds a known move")
+{
+    static const struct HabitatCondition sList[] = {
+        HABITAT_COND(COND_PARTY_MOVE, MOVE_FLASH, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10, move1=MOVE_TACKLE;);
+    Habitat_EvaluateConditions(sList, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_ZIGZAGOON, 10, move1=MOVE_FLASH;);
+    Habitat_EvaluateConditions(sList, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: PARTY_NATURE finds a matching nature")
+{
+    static const struct HabitatCondition sList[] = {
+        HABITAT_COND(COND_PARTY_NATURE, NATURE_JOLLY, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10, nature=NATURE_ADAMANT;);
+    Habitat_EvaluateConditions(sList, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10, nature=NATURE_JOLLY;);
+    Habitat_EvaluateConditions(sList, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: PARTY_FRIENDSHIP compares against any member")
+{
+    static const struct HabitatCondition sHigh[] = {
+        HABITAT_COND(COND_PARTY_FRIENDSHIP, HABITAT_CMP_GE, 200, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sSpite[] = {  // Shuppet-style: LOW friendship
+        HABITAT_COND(COND_PARTY_FRIENDSHIP, HABITAT_CMP_LE, 30, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+    u32 fr;
+
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_BULBASAUR, 10;);
+    ASSUME(gPlayerPartyCount == 1);
+
+    fr = 10;
+    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &fr);
+    Habitat_EvaluateConditions(sHigh, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+    Habitat_EvaluateConditions(sSpite, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+
+    fr = 255;
+    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &fr);
+    Habitat_EvaluateConditions(sHigh, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sSpite, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+}
