@@ -2,6 +2,8 @@
 #include "event_data.h"
 #include "field_weather.h"
 #include "habitat/conditions.h"
+#include "habitat/save.h"
+#include "habitat/spots.h"
 #include "item.h"
 #include "overworld.h"
 #include "pokedex.h"
@@ -374,5 +376,91 @@ TEST("Habitat conditions: ITEM_OFFERED matches the offer context")
 
     offer.count = 3;
     Habitat_EvaluateConditions(sThreeOran, HABITAT_SPOT_NONE, &offer, &r);
+    EXPECT(r.allMet);
+}
+
+// ---- Spot-local conditions (phase 2) ----
+
+TEST("Habitat conditions: SPOT_STATE reads another spot's saved state")
+{
+    static const struct HabitatCondition sChain[] = {
+        HABITAT_COND(COND_SPOT_STATE, 2, HABITAT_STATE_BEFRIENDED, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    Habitat_EvaluateConditions(sChain, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    Habitat_SetSpotState(2, HABITAT_STATE_BEFRIENDED);
+    Habitat_EvaluateConditions(sChain, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: BATTLE_WIN and ITEM_PLACED read the evaluated spot")
+{
+    static const struct HabitatCondition sWin[] = {
+        HABITAT_COND(COND_BATTLE_WIN, 0, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sDoll[] = {
+        HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    Habitat_EvaluateConditions(sWin, 3, NULL, &r);
+    EXPECT(!r.allMet);
+    Habitat_AddSpotLocalFlags(3, HABITAT_SPOT_LOCAL_BATTLE_WON);
+    Habitat_EvaluateConditions(sWin, 3, NULL, &r);
+    EXPECT(r.allMet);
+
+    Habitat_EvaluateConditions(sDoll, 1, NULL, &r);   // spot 1 = Skitty, has a slot
+    EXPECT(!r.allMet);
+    Habitat_AddPlacedCount(1, 1);
+    Habitat_EvaluateConditions(sDoll, 1, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sDoll, HABITAT_SPOT_NONE, NULL, &r);  // no spot context
+    EXPECT(!r.allMet);
+}
+
+TEST("Habitat conditions: ZONE_COMPLETE requires every zone spot befriended")
+{
+    static const struct HabitatCondition sZone[] = {
+        HABITAT_COND(COND_ZONE_COMPLETE, 1, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+    u32 i;
+
+    Habitat_EvaluateConditions(sZone, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+        if (gHabitatSpots[i].zoneId == 1)
+            Habitat_SetSpotState(gHabitatSpots[i].spotId, HABITAT_STATE_BEFRIENDED);
+    Habitat_EvaluateConditions(sZone, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+}
+
+TEST("Habitat conditions: BERRY_MATURE zone filter uses the zone's tree range")
+{
+    static const struct HabitatCondition sZone1Cheri[] = {
+        HABITAT_COND(COND_BERRY_MATURE, ITEM_CHERI_BERRY, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    memset(gSaveBlock1Ptr->berryTrees, 0, sizeof(gSaveBlock1Ptr->berryTrees));
+    // Mature Cheri OUTSIDE zone 1's range (trees 5–7): tree 20.
+    gSaveBlock1Ptr->berryTrees[20].berry = ItemIdToBerryType(ITEM_CHERI_BERRY);
+    gSaveBlock1Ptr->berryTrees[20].stage = BERRY_STAGE_BERRIES;
+    Habitat_EvaluateConditions(sZone1Cheri, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);
+
+    // Mature Cheri INSIDE the range: tree 5 (BERRY_TREE_ROUTE_103_CHERI_1).
+    gSaveBlock1Ptr->berryTrees[5].berry = ItemIdToBerryType(ITEM_CHERI_BERRY);
+    gSaveBlock1Ptr->berryTrees[5].stage = BERRY_STAGE_BERRIES;
+    Habitat_EvaluateConditions(sZone1Cheri, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(r.allMet);
 }

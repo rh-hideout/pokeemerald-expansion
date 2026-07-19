@@ -1,5 +1,7 @@
 #include "global.h"
 #include "habitat/conditions.h"
+#include "habitat/save.h"
+#include "habitat/spots.h"
 #include "event_data.h"
 #include "field_weather.h"
 #include "item.h"
@@ -145,9 +147,18 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         return Cmp(GetGameStat(c->paramA), c->paramB, c->paramC);
     case COND_BERRY_MATURE:
     {
-        // paramB (zoneId) filter lands with phase 2's zone table; 0 = anywhere.
+        // paramB = zoneId filter (0 = anywhere); zones map to berry-tree id ranges.
         u32 i, berry = ItemIdToBerryType(c->paramA);
-        for (i = 0; i < BERRY_TREES_COUNT; i++)
+        u32 first = 0, last = BERRY_TREES_COUNT - 1;
+        if (c->paramB != 0)
+        {
+            const struct HabitatZone *zone = Habitat_GetZone(c->paramB);
+            if (zone == NULL || (zone->berryTreeIdFirst == 0 && zone->berryTreeIdLast == 0))
+                return FALSE;  // zone has no trees
+            first = zone->berryTreeIdFirst;
+            last = zone->berryTreeIdLast;
+        }
+        for (i = first; i <= last && i < BERRY_TREES_COUNT; i++)
         {
             if (gSaveBlock1Ptr->berryTrees[i].berry == berry
              && gSaveBlock1Ptr->berryTrees[i].stage == BERRY_STAGE_BERRIES)
@@ -155,21 +166,44 @@ static bool32 EvalOne(const struct HabitatCondition *c, u16 spotId,
         }
         return FALSE;
     }
+    case COND_SPOT_STATE:
+        return Habitat_GetSpotState(c->paramA) == c->paramB;
+    case COND_BATTLE_WIN:
+        return spotId != HABITAT_SPOT_NONE
+            && (Habitat_GetSpotLocalFlags(spotId) & HABITAT_SPOT_LOCAL_BATTLE_WON) != 0;
+    case COND_ITEM_PLACED:
+        // paramA (itemId) is enforced by the PLACE verb; the counter tracks
+        // how many of that spot's placeable item have been set down.
+        return spotId != HABITAT_SPOT_NONE
+            && Habitat_GetPlacedCount(spotId) >= max(1, c->paramB);
+    case COND_ZONE_COMPLETE:
+    {
+        u32 i;
+        bool32 any = FALSE;
+        for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+        {
+            if (gHabitatSpots[i].zoneId != c->paramA)
+                continue;
+            any = TRUE;
+            if (Habitat_GetSpotState(gHabitatSpots[i].spotId) != HABITAT_STATE_BEFRIENDED)
+                return FALSE;
+        }
+        return any;
+    }
 
     case COND_ITEM_OFFERED:
         return offer != NULL
             && offer->itemId == c->paramA
             && offer->count >= max(1, c->paramB);
 
+    case COND_TALK_COUNT:
+        return spotId != HABITAT_SPOT_NONE
+            && Habitat_GetTalkCount(spotId) >= max(1, c->paramA);
+
     // Not yet backed by state; each returns FALSE until its phase lands.
-    case COND_ITEM_PLACED:        // [phase 2: spot placement state]
     case COND_RESIDENT_SPECIES:   // [phase 3: resident registry]
     case COND_RESIDENT_COUNT:     // [phase 3]
-    case COND_SPOT_STATE:         // [phase 2]
-    case COND_ZONE_COMPLETE:      // [phase 2]
-    case COND_BATTLE_WIN:         // [phase 2]
     case COND_ILLUSION:           // [phase 4+]
-    case COND_TALK_COUNT:         // [phase 2]
     case COND_GROVE_RECIPE_DONE:  // [phase 4]
     default:
         return FALSE;
