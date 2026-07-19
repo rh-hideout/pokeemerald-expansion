@@ -267,8 +267,8 @@ void GenerateRoamerMon(u32 roamerIndex, u32 minLevel)
 bool32 CheckForRoamerEncounter(void)
 {
     u32 i;
-
     gEncounteredRoamerIndex = ROAMER_COUNT;
+
     for (i = 0; i < ROAMER_COUNT; i++)
     {
         if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == TRUE && (Random() % 4) == 0)

@@ -445,9 +445,9 @@ static bool8 MapHasSpecies(const struct WildPokemonInfo * const* info, u32 heade
 
         if (MonListHasSpecies(info[i], species, gEncounterTableSizes[i]))
             return TRUE;
-
     }
-    return FALSE;
+
+return FALSE;
 }
 
 static bool8 MonListHasSpecies(const struct WildPokemonInfo *info, enum Species species, u16 size)

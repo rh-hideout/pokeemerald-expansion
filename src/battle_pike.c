@@ -90,7 +90,6 @@ static bool8 StatusInflictionFadeIn(struct Task *task);
 
 // Const rom data.
 #define BATTLE_PIKE_ENCOUNTER_RATE 10
-
 #define BATTLE_PIKE_ENCOUNTER_TABLE_SIZE  3
 
 static const u8 sPikeWildMonWeights[BATTLE_PIKE_ENCOUNTER_TABLE_SIZE] = {26, 26, 48};

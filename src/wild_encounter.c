@@ -504,7 +504,7 @@ static bool8 EncounterOddsCheck(u16 encounterRate)
 static bool32 HasRepellingHeldItem()
 {
     enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM);
-    if (gItemsInfo[heldItem].holdEffect == HOLD_EFFECT_REPEL)
+    if (GetItemHoldEffect(heldItem) == HOLD_EFFECT_REPEL)
         return TRUE;
     return FALSE;
 }

@@ -70,7 +70,7 @@ enum TransitionType
 // this file's functions
 static void DoSafariBattle(void);
 static void DoGhostBattle(void);
-static void DoStandardWildBattle();
+static void DoStandardWildBattle(void);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
 static void CB2_EndMarowakBattle(void);
@@ -377,7 +377,7 @@ void BattleSetup_StartMultiBattle(void)
     }
 }
 
-static void DoStandardWildBattle()
+static void DoStandardWildBattle(void)
 {
     LockPlayerFieldControls();
     FreezeObjectEvents();
