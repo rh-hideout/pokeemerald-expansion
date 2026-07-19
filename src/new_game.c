@@ -304,5 +304,24 @@ static void ResetHabitatSave(void)
     FlagSet(FLAG_UNUSED_0x03C);  // lab aide
     FlagSet(FLAG_UNUSED_0x03D);  // town twin
     FlagSet(FLAG_UNUSED_0x03E);  // town boy
+    // Littleroot: state 0 arms the "can't leave without a Pokémon" triggers
+    // at the north exit (they force-walk the player back). 4 = all vanilla
+    // intro beats done.
+    VarSet(VAR_LITTLEROOT_TOWN_STATE, 4);
+    // Route 101: the Birch rescue would intercept the walk north. 3 is the
+    // vanilla post-rescue value; the hidden cast matches the abandoned fiction.
+    VarSet(VAR_ROUTE101_STATE, 3);
+    FlagSet(FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE);
+    FlagSet(FLAG_HIDE_ROUTE_101_ZIGZAGOON);
+    FlagSet(FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG);
+    FlagSet(FLAG_HIDE_ROUTE_101_BIRCH);
+    FlagSet(FLAG_UNUSED_0x046);  // route youngster (stands in the only
+                                 // northbound passage on 101's east side)
+    // Route 103 west bank (the slice zone): story cast + the one wandering
+    // ambient NPC (would shove scripted walk paths off course).
+    FlagSet(FLAG_HIDE_ROUTE_103_RIVAL);
+    FlagSet(FLAG_HIDE_ROUTE_103_BIRCH);
+    FlagSet(FLAG_UNUSED_0x03F);  // route boy
+    FlagSet(FLAG_HIDE_OLDALE_TOWN_RIVAL);
 #endif
 }

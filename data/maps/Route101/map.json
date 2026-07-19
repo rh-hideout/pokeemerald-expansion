@@ -37,7 +37,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route101_EventScript_Youngster",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x046"
     },
     {
       "local_id": "LOCALID_ROUTE101_BIRCH",

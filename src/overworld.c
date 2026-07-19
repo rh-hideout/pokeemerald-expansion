@@ -903,6 +903,9 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     ChooseAmbientCrySpecies();
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
+    // Connection crossings skip the InitObjectEvents* paths, but spot hide
+    // flags must be current before this map's objects stream in.
+    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
     RunOnTransitionMapScript();
     InitMap();
     CopySecondaryTilesetToVramUsingHeap(gMapHeader.mapLayout);

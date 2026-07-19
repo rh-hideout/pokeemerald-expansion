@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/habitat.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -647,6 +648,9 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     enum TimeOfDay timeOfDay;
     struct Roamer *roamer;
 
+    if (HABITAT_NO_WILD_ENCOUNTERS)
+        return FALSE;
+
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 
@@ -789,8 +793,16 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 
 void RockSmashWildEncounter(void)
 {
-    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 headerId;
     enum TimeOfDay timeOfDay;
+
+    if (HABITAT_NO_WILD_ENCOUNTERS)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+
+    headerId = GetCurrentMapWildMonHeaderId();
 
     if (headerId != HEADER_NONE)
     {
@@ -834,6 +846,9 @@ bool8 SweetScentWildEncounter(void)
     s16 x, y;
     u32 headerId;
     enum TimeOfDay timeOfDay;
+
+    if (HABITAT_NO_WILD_ENCOUNTERS)
+        return FALSE;
 
     PlayerGetDestCoords(&x, &y);
     headerId = GetCurrentMapWildMonHeaderId();
@@ -913,8 +928,16 @@ bool8 SweetScentWildEncounter(void)
 
 bool8 DoesCurrentMapHaveFishingMons(void)
 {
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_FISHING);
+    u32 headerId;
+    enum TimeOfDay timeOfDay;
+
+    // Gated here rather than at FishingWildEncounter so rods answer
+    // "not even a nibble" instead of reaching a battle they can't start.
+    if (HABITAT_NO_WILD_ENCOUNTERS)
+        return FALSE;
+
+    headerId = GetCurrentMapWildMonHeaderId();
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_FISHING);
 
     if (headerId != HEADER_NONE && gWildMonHeaders[headerId].encounterTypes[timeOfDay].fishingMonsInfo != NULL)
         return TRUE;
