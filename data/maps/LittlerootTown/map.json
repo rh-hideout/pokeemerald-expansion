@@ -33,7 +33,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_EventScript_Twin",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x03D"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
@@ -59,7 +59,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LittlerootTown_EventScript_Boy",
-      "flag": "0"
+      "flag": "FLAG_UNUSED_0x03E"
     },
     {
       "local_id": "LOCALID_LITTLEROOT_MOM",

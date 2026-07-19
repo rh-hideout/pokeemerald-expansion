@@ -48,8 +48,8 @@ u8   Habitat_GetSpotLocalFlags(u16 spotId);
 void Habitat_AddSpotLocalFlags(u16 spotId, u8 flags);  // OR-in, 4-bit masked
 u8   Habitat_GetTalkCount(u16 spotId);                 // 0 if spot has no slot
 void Habitat_IncrementTalkCount(u16 spotId);           // saturating; no-op without slot
-u8   Habitat_GetPlacedCount(u16 spotId);
-void Habitat_AddPlacedCount(u16 spotId, u8 n);         // saturating; no-op without slot
+u8   Habitat_GetPlacedCount(u16 spotId, u8 condIndex); // per ITEM_PLACED condition
+void Habitat_AddPlacedCount(u16 spotId, u8 condIndex, u8 n);  // saturating; no-op without slot
 
 // Resident registry (src/habitat/residents.c).
 u32 Habitat_ResidentCount(void);

@@ -370,6 +370,45 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "HabitatSpot_EventScript_Interact",
       "flag": "FLAG_UNUSED_0x035"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 54,
+      "y": 12,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_HH_BOOKSHELF",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_UNUSED_0x043"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 43,
+      "y": 8,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_HH_LAB_PC",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_UNUSED_0x044"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 60,
+      "y": 10,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_HH_POKEBALL_HOLDER",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_UNUSED_0x045"
     }
   ],
   "warp_events": [

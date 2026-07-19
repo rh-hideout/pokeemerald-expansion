@@ -25,6 +25,9 @@
 #define FLAG_HABITAT_SPOT_VULPIX    FLAG_UNUSED_0x033
 #define FLAG_HABITAT_SPOT_HERACROSS FLAG_UNUSED_0x034
 #define FLAG_HABITAT_SPOT_PINSIR    FLAG_UNUSED_0x035
+#define FLAG_HABITAT_FRAME_TORCHIC  FLAG_UNUSED_0x040
+#define FLAG_HABITAT_FRAME_TREECKO  FLAG_UNUSED_0x041
+#define FLAG_HABITAT_FRAME_MUDKIP   FLAG_UNUSED_0x042
 
 // Slice spot object events live on Route 103 (the slice zone) — see
 // data/maps/Route103/map.json (LOCALID_HABITAT_SPOT_*, generated).
@@ -39,6 +42,9 @@ enum
     SPOT_VULPIX,
     SPOT_HERACROSS,
     SPOT_PINSIR,
+    SPOT_FRAME_TORCHIC,   // 7 — §10 lab frames
+    SPOT_FRAME_TREECKO,   // 8
+    SPOT_FRAME_MUDKIP,    // 9
 };
 
 // --- Skitty: Tier 1, teaches the PLACE verb -------------------------------
@@ -108,6 +114,30 @@ static const struct HabitatCondition sPinsirBefriend[] = {  // Bug type-want def
     HABITAT_CONDITIONS_END,
 };
 
+// ---- §10 lab frames. BEST-GUESS BINDING (question batched for Jay): each
+// frame is pre-bound to a species+element; the furnished frame (Torchic)
+// needs only its element, bare frames also need scavenged furnishings.
+// Befriend lists are EMPTY: completing the frame auto-befriends — the
+// starter "comes home" (offer-less rule). Dev config pins Torchic anyway.
+static const struct HabitatCondition sFrameTorchicAppear[] = {
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+static const struct HabitatCondition sFrameTreeckoAppear[] = {
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_BOOKSHELF, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+static const struct HabitatCondition sFrameMudkipAppear[] = {
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_LAB_PC, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POKEBALL_HOLDER, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+static const struct HabitatCondition sFrameAutoBefriend[] = {
+    HABITAT_CONDITIONS_END,  // empty: comes home on completion (§10)
+};
+
 #define PLACEHOLDER_HINTS(name)                                                  \
     static const u8 sHintDormant_##name[]  =                                     \
         _("PLACEHOLDER {STR_VAR_1}: the air here\nremembers something. (dormant)");       \
@@ -122,6 +152,12 @@ PLACEHOLDER_HINTS(Machop);
 PLACEHOLDER_HINTS(Vulpix);
 PLACEHOLDER_HINTS(Heracross);
 PLACEHOLDER_HINTS(Pinsir);
+PLACEHOLDER_HINTS(FrameTorchic);
+PLACEHOLDER_HINTS(FrameTreecko);
+PLACEHOLDER_HINTS(FrameMudkip);
+
+#define LAB_MAP_GROUP MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB)
+#define LAB_MAP_NUM   MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB)
 
 #define SPOT_HINTS(name) sHintDormant_##name, sHintStirring_##name, sHintActive_##name
 
@@ -180,11 +216,39 @@ const struct HabitatSpot gHabitatSpots[] = {
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_PINSIR,
         .engineFlags = 0,
     },
+    {
+        .spotId = SPOT_FRAME_TORCHIC, .species = SPECIES_TORCHIC, .tier = 1, .zoneId = 2,
+        .appearConditions = sFrameTorchicAppear, .befriendConditions = sFrameAutoBefriend,
+        .hintDormant = sHintDormant_FrameTorchic, .hintStirring = sHintStirring_FrameTorchic, .hintActive = sHintActive_FrameTorchic,
+        .workerRole = ROLE_WARM, .personalityId = NULL,
+        .hideFlag = FLAG_HABITAT_FRAME_TORCHIC,
+        .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TORCHIC,
+        .engineFlags = 0,
+    },
+    {
+        .spotId = SPOT_FRAME_TREECKO, .species = SPECIES_TREECKO, .tier = 1, .zoneId = 2,
+        .appearConditions = sFrameTreeckoAppear, .befriendConditions = sFrameAutoBefriend,
+        .hintDormant = sHintDormant_FrameTreecko, .hintStirring = sHintStirring_FrameTreecko, .hintActive = sHintActive_FrameTreecko,
+        .workerRole = ROLE_TEND, .personalityId = NULL,
+        .hideFlag = FLAG_HABITAT_FRAME_TREECKO,
+        .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TREECKO,
+        .engineFlags = 0,
+    },
+    {
+        .spotId = SPOT_FRAME_MUDKIP, .species = SPECIES_MUDKIP, .tier = 1, .zoneId = 2,
+        .appearConditions = sFrameMudkipAppear, .befriendConditions = sFrameAutoBefriend,
+        .hintDormant = sHintDormant_FrameMudkip, .hintStirring = sHintStirring_FrameMudkip, .hintActive = sHintActive_FrameMudkip,
+        .workerRole = ROLE_IRRIGATE, .personalityId = NULL,
+        .hideFlag = FLAG_HABITAT_FRAME_MUDKIP,
+        .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_MUDKIP,
+        .engineFlags = 0,
+    },
     { .spotId = 0xFFFF },
 };
 
 const struct HabitatZone gHabitatZones[] = {
     { .zoneId = 1, .berryTreeIdFirst = BERRY_TREE_ROUTE_103_CHERI_1, .berryTreeIdLast = BERRY_TREE_ROUTE_103_CHERI_2 },
+    { .zoneId = 2 },  // the lab (§10); no berry trees
     { .zoneId = 0 },
 };
 

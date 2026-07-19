@@ -417,7 +417,7 @@ TEST("Habitat conditions: BATTLE_WIN and ITEM_PLACED read the evaluated spot")
 
     Habitat_EvaluateConditions(sDoll, 1, NULL, &r);   // spot 1 = Skitty, has a slot
     EXPECT(!r.allMet);
-    Habitat_AddPlacedCount(1, 1);
+    Habitat_AddPlacedCount(1, 0, 1);
     Habitat_EvaluateConditions(sDoll, 1, NULL, &r);
     EXPECT(r.allMet);
     Habitat_EvaluateConditions(sDoll, HABITAT_SPOT_NONE, NULL, &r);  // no spot context

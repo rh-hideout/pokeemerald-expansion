@@ -9,8 +9,11 @@
 #include "habitat/events.h"
 #include "item.h"
 #include "item_menu.h"
+#include "battle.h"
+#include "random.h"
 #include "pokemon.h"
 #include "string_util.h"
+#include "constants/battle.h"
 #include "constants/habitat.h"
 
 static const u8 sText_NotASpot[] = _("PLACEHOLDER: nothing here.$");
@@ -112,12 +115,62 @@ u16 Habitat_TryPlaceItem(void)
         c = &spot->appearConditions[i];
         if (c->type != COND_ITEM_PLACED)
             continue;
+        if (Habitat_GetPlacedCount(spot->spotId, i) >= max(1, c->paramB))
+            continue;  // this furnishing is already set down
         if (!CheckBagHasItem(c->paramA, 1))
-            return FALSE;
+            continue;  // don't have this one; maybe the next
         RemoveBagItem(c->paramA, 1);
-        Habitat_AddPlacedCount(spot->spotId, 1);
+        Habitat_AddPlacedCount(spot->spotId, i, 1);
         Habitat_NotifyEvent(HABITAT_EVENT_INVENTORY_CHANGE);
         return TRUE;
     }
     return FALSE;
+}
+
+// ---- the friendly bout (§7 battle-as-condition; Machop) ----
+
+// special: TRUE if the interaction spot befriends through a bout.
+u16 Habitat_SpotWantsBout(void)
+{
+    const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    u32 i;
+    if (spot == NULL)
+        return FALSE;
+    for (i = 0; spot->befriendConditions[i].type != COND_NONE; i++)
+    {
+        if (spot->befriendConditions[i].type == COND_BATTLE_WIN)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+// special: stage the bout. PLACEHOLDER BATTLER (question batched for Jay):
+// the party layer is deferred, so the first resident steps up as a temp
+// party member; no residents -> the bout is declined. Level 50 keeps dev
+// losses (and the ugly empty-party whiteout path) unlikely.
+u16 Habitat_PrepareBout(void)
+{
+    const struct HabitatResident *r = Habitat_GetResident(0);
+    if (r == NULL)
+        return FALSE;
+    ZeroPlayerPartyMons();
+    CreateMon(&gPlayerParty[0], r->species, 50, Random32(), OTID_STRUCT_PLAYER_ID);
+    CalculatePlayerPartyCount();
+    StringCopy(gStringVar2, GetSpeciesName(r->species));
+    return TRUE;
+}
+
+// special: settle the bout — restore the empty party, set the spot-local
+// win flag on victory, and let recompute auto-befriend (BATTLE_WIN list).
+u16 Habitat_ResolveBout(void)
+{
+    const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    bool32 won = gBattleOutcome == B_OUTCOME_WON;
+    ZeroPlayerPartyMons();
+    if (spot != NULL && won)
+    {
+        Habitat_AddSpotLocalFlags(spot->spotId, HABITAT_SPOT_LOCAL_BATTLE_WON);
+        Habitat_RecomputeSpot(spot);
+    }
+    return won;
 }

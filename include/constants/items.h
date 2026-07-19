@@ -1052,6 +1052,14 @@ enum __attribute__((packed)) Item
     ITEM_TATSUGIRINITE = 872,
     ITEM_GLIMMORANITE = 873,
 
+    // Hoenn Habitat furnishings (§10 lab opening + scavenge loop).
+    ITEM_HH_CAMPFIRE = 874,
+    ITEM_HH_POTTED_PLANT = 875,
+    ITEM_HH_WATER_BASIN = 876,
+    ITEM_HH_LAB_PC = 877,
+    ITEM_HH_BOOKSHELF = 878,
+    ITEM_HH_POKEBALL_HOLDER = 879,
+
     ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,
 };

@@ -13,6 +13,8 @@
 #include "habitat/spots.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "script.h"
+#include "event_data.h"
 #include "main.h"
 #include "overworld.h"
 
@@ -38,9 +40,18 @@ static void SyncLiveSpotObjects(void)
         hidden = FlagGet(spot->hideFlag);
         spawned = !TryGetObjectEventIdByLocalIdAndMap(spot->localId, mapNum, mapGroup, &objectEventId);
         if (!hidden && !spawned)
+        {
             TrySpawnObjectEvent(spot->localId, mapNum, mapGroup);
+        }
         else if (hidden && spawned)
+        {
+            // Never remove the object a running script is locked onto (the
+            // recruit flow hides the very Pokémon being talked to) — its
+            // flag is set, so the next map load settles it.
+            if (ScriptContext_IsEnabled() && objectEventId == gSelectedObjectEvent)
+                continue;
             RemoveObjectEventByLocalIdAndMap(spot->localId, mapNum, mapGroup);
+        }
     }
 }
 

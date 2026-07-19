@@ -18,22 +18,25 @@ cd "$(dirname "$0")/../.."
 OUT=verify-out
 ROM=pokeemerald.gba
 
-# Scenario scripts. Slice spawn is (48,12) on Route 103.
-# Machop spot: (47,10), stand below at (47,11).
-SCRIPT_DEFAULT='goto:47,11;face:U;tap:A;until-sv4:ca;wait:40;shot:interact;pass:machop hint shown'
-# Skitty spot: (46,12), stand below at (46,13). Message identity by first
-# byte: ca=hint(P), d1=place prompt(W), cd=SET DOWN!(S), c9=offer prompt(O),
-# bc=BEFRIENDED!(B). Each msgbox needs one A to fast-forward the typewriter
-# and one to answer/dismiss.
-SCRIPT_SKITTY='goto:46,13;face:U;dismiss-until:ca;wait:40;shot:skitty_dormant;dismiss-until:d1;dismiss-until:cd;wait:40;shot:skitty_placed;clear-sv4;dismiss-until:ca;wait:40;shot:skitty_manifested;dismiss-until:c9;clear-sv4;dismiss-until:bc;wait:40;shot:skitty_befriended;pass:skitty placed+offered+befriended'
+# Scenario scripts. Slice spawn is (6,10) inside the professor's lab (§10).
+# Message identity by gStringVar4 first byte: ca=hint/ambient(P), d1=place
+# prompt(W), cd=SET DOWN!(S), bb=recruit prompt(A), c1=GROVE-BOUND!(G),
+# ce=worker status (Torchic...=T).
+#
+# Default: the §10 -> Grove circuit. Place the campfire at the furnished
+# frame -> Torchic comes home (auto-befriend) -> recruit it -> walk out to
+# the Grove -> its worker sprite is there.
+SCRIPT_LAB='goto:4,7;face:U;dismiss-until:ca;wait:40;shot:lab_frame_dormant;dismiss-until:d1;dismiss-until:cd;wait:40;shot:lab_torchic_home;clear-sv4;dismiss-until:ca;dismiss-until:bb;clear-sv4;dismiss-until:c1;wait:100;tap:B;wait:30;tap:B;wait:30;tap:B;wait:30;tap:B;wait:30;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:3,13;face:U;clear-sv4;dismiss-until:ce;wait:40;shot:grove_worker;pass:lab choice + recruit + grove worker'
+# Route 103 scenarios (skitty/machop) are PENDING re-route from the lab
+# spawn — restored with phase 6's acceptance circuit.
 
-SCRIPT="$SCRIPT_DEFAULT"
+SCRIPT="$SCRIPT_LAB"
 case "$1" in
   --no-interact) SCRIPT='wait:1;shot:boot;pass:overworld reached' ;;
   --scenario)
     case "$2" in
-      skitty) SCRIPT="$SCRIPT_SKITTY" ;;
-      *) echo "unknown scenario: $2"; exit 2 ;;
+      lab) SCRIPT="$SCRIPT_LAB" ;;
+      *) echo "scenario '$2' pending phase-6 re-route"; exit 2 ;;
     esac ;;
 esac
 

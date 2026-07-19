@@ -35,12 +35,13 @@ TEST("Habitat spot state: local flags are independent of state bits")
 TEST("Habitat spot state: counters exist only for mapped spots")
 {
     // Spot 1 (Skitty) has a placed slot; spot 2 does not; nobody has talk slots yet.
-    EXPECT_EQ(Habitat_GetPlacedCount(1), 0);
-    Habitat_AddPlacedCount(1, 3);
-    EXPECT_EQ(Habitat_GetPlacedCount(1), 3);
+    EXPECT_EQ(Habitat_GetPlacedCount(1, 0), 0);
+    Habitat_AddPlacedCount(1, 0, 3);
+    EXPECT_EQ(Habitat_GetPlacedCount(1, 0), 3);
 
-    Habitat_AddPlacedCount(2, 3);
-    EXPECT_EQ(Habitat_GetPlacedCount(2), 0);
+    Habitat_AddPlacedCount(2, 0, 3);          // spot 2 has no placed slot
+    EXPECT_EQ(Habitat_GetPlacedCount(2, 0), 0);
+    EXPECT_EQ(Habitat_GetPlacedCount(1, 1), 0);  // unmapped cond index inert
 
     Habitat_IncrementTalkCount(1);
     EXPECT_EQ(Habitat_GetTalkCount(1), 0);

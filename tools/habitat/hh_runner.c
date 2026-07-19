@@ -89,7 +89,7 @@ static int finish(const char* status, const char* msg, unsigned frame) {
 
 // ---- scenario script ----
 
-enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_SV4, OP_DISMISS_UNTIL, OP_CLEAR_SV4, OP_SHOT, OP_PASS };
+enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_SV4, OP_DISMISS_UNTIL, OP_CLEAR_SV4, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
 struct Op {
     enum OpKind kind;
     int a, b;
@@ -122,6 +122,10 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
         else if (sscanf(tok, "until-sv4:%x", &op->a) == 1) op->kind = OP_UNTIL_SV4;
         else if (sscanf(tok, "dismiss-until:%x", &op->a) == 1) op->kind = OP_DISMISS_UNTIL;
         else if (!strcmp(tok, "clear-sv4")) op->kind = OP_CLEAR_SV4;
+        else if (tok == strstr(tok, "walk:") && sscanf(tok + 7, "%d", &op->b) == 1) {
+            op->kind = OP_WALK; op->a = keyByName((char[]){tok[5], 0});
+        }
+        else if (sscanf(tok, "until-map:%d,%d", &op->a, &op->b) == 2) op->kind = OP_UNTIL_MAP;
         else if (!strncmp(tok, "shot:", 5)) { op->kind = OP_SHOT; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
         else if (!strncmp(tok, "pass:", 5)) { op->kind = OP_PASS; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
         else { fprintf(stderr, "hh-runner: bad op '%s'\n", tok); return -1; }
@@ -192,6 +196,16 @@ int main(int argc, char** argv) {
             keys = 0;
         sCore->setKeys(sCore, keys);
         sCore->runFrame(sCore);
+        if (keys && sStrVar4) {
+            static unsigned lastKeyLog;
+            if (frame - lastKeyLog > 8) {
+                lastKeyLog = frame;
+                fprintf(stderr, "HH_TRACE f=%u keys=%02x gMain.newKeys=%04x heldKeys=%04x\n",
+                        frame, keys,
+                        sCore->busRead16(sCore, gMain + 0x2E),
+                        sCore->busRead16(sCore, gMain + 0x2C));
+            }
+        }
 
         uint32_t cb2 = sCore->busRead32(sCore, gMain + 4);
         int inOverworld = cb2 == (cb2Overworld | THUMB_BIT);
@@ -239,8 +253,10 @@ int main(int argc, char** argv) {
             if (x == op->a && y == op->b)
                 done = 1;
             else if (frame >= nextAct && !keys) {
-                int key = (x > op->a) ? KEY_LEFT : (x < op->a) ? KEY_RIGHT
-                        : (y > op->b) ? KEY_UP : KEY_DOWN;
+                // Y first, X last: arrivals are horizontal, so a follow-up
+                // face:U is a turn — a same-direction tap would step instead.
+                int key = (y > op->b) ? KEY_UP : (y < op->b) ? KEY_DOWN
+                        : (x > op->a) ? KEY_LEFT : KEY_RIGHT;
                 keys = 1u << key;
                 holdUntil = frame + STEP_HOLD;
                 nextAct = frame + STEP_HOLD + STEP_GAP;
@@ -261,6 +277,7 @@ int main(int argc, char** argv) {
                 holdUntil = frame + TAP_FRAMES;
                 nextAct = frame + TAP_FRAMES + 4;
                 done = 1;
+                fprintf(stderr, "HH_TRACE tap key=%d at f=%u\n", op->a, frame);
             }
             break;
         case OP_WAIT:
@@ -287,6 +304,27 @@ int main(int argc, char** argv) {
             sCore->busWrite8(sCore, sStrVar4, 0);
             done = 1;
             break;
+        case OP_WALK:
+            // b step-holds of direction a — blind edge-crossing for map
+            // connections where greedy goto has no target coordinates.
+            if (frame >= nextAct && !keys) {
+                if (op->b <= 0) {
+                    done = 1;
+                } else {
+                    op->b--;
+                    keys = 1u << op->a;
+                    holdUntil = frame + STEP_HOLD;
+                    nextAct = frame + STEP_HOLD + STEP_GAP;
+                }
+            }
+            break;
+        case OP_UNTIL_MAP: {
+            uint32_t sb1m = sCore->busRead32(sCore, sSb1Ptr);
+            if ((int8_t) sCore->busRead8(sCore, sb1m + 4) == op->a
+             && (int8_t) sCore->busRead8(sCore, sb1m + 5) == op->b)
+                done = 1;
+            break;
+        }
         case OP_SHOT:
             shot(op->text);
             done = 1;
@@ -299,8 +337,11 @@ int main(int argc, char** argv) {
             char msg[160];
             int16_t x, y;
             playerPos(&x, &y);
-            snprintf(msg, sizeof(msg), "op %d timed out (kind %d) pos=%d,%d sv4=%02x",
-                     opIndex, (int) op->kind, x, y, sCore->busRead8(sCore, sStrVar4));
+            snprintf(msg, sizeof(msg),
+                     "op %d timed out (kind %d) pos=%d,%d sv4=%02x scriptMode=%d scriptPtr=%08x",
+                     opIndex, (int) op->kind, x, y, sCore->busRead8(sCore, sStrVar4),
+                     sCore->busRead8(sCore, 0x030016cc + 1),
+                     sCore->busRead32(sCore, 0x030016cc + 8));
             shot("timeout");
             rc = finish("FAIL", msg, frame);
         }

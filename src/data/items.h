@@ -15832,6 +15832,97 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    [ITEM_HH_CAMPFIRE] =
+    {
+        .name = ITEM_NAME("Campfire"),
+        .pluralName = ITEM_PLURAL_NAME("Campfires"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A ring of stones\n"
+            "and patient wood.\n"
+            "Warmth, waiting."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_HH_POTTED_PLANT] =
+    {
+        .name = ITEM_NAME("Potted Plant"),
+        .pluralName = ITEM_PLURAL_NAME("Potted Plants"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A young green thing\n"
+            "in a clay pot.\n"
+            "It wants a window."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_HH_WATER_BASIN] =
+    {
+        .name = ITEM_NAME("Water Basin"),
+        .pluralName = ITEM_PLURAL_NAME("Water Basins"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A wide stone basin.\n"
+            "Fill it, and the\n"
+            "water remembers."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_HH_LAB_PC] =
+    {
+        .name = ITEM_NAME("Lab PC"),
+        .pluralName = ITEM_PLURAL_NAME("Lab PCs"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Someone's computer.\n"
+            "The screen is dark\n"
+            "but not dead."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_HH_BOOKSHELF] =
+    {
+        .name = ITEM_NAME("Bookshelf"),
+        .pluralName = ITEM_PLURAL_NAME("Bookshelves"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Field guides and\n"
+            "notebooks, spines\n"
+            "soft with reading."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_HH_POKEBALL_HOLDER] =
+    {
+        .name = ITEM_NAME("Ball Holder"),
+        .pluralName = ITEM_PLURAL_NAME("Ball Holders"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A rack of six empty\n"
+            "cradles. It misses\n"
+            "its weight."),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
 };
 
 #undef ITEM_NAME
