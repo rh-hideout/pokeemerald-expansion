@@ -3,7 +3,12 @@
 
 // Hoenn Habitat engine configuration. Scale constants are full-game values
 // from spec §5 — content grows into them; the layout never moves under saves.
-#define HABITAT_SPOT_COUNT          320  // spot-state bytes reserved in SaveBlock3
-#define HABITAT_TALK_COUNTER_COUNT  8    // spots needing >15 talk counts (Spiritomb-class)
+#define HABITAT_SPOT_COUNT           320  // spot-state bytes reserved in SaveBlock3
+#define HABITAT_TALK_COUNTER_COUNT   8    // spots needing >15 talk counts (Spiritomb-class)
+#define HABITAT_PLACED_COUNTER_COUNT 8    // spots with COND_ITEM_PLACED persistence
+
+// Slice-only: new games spawn in the slice zone (Route 103) instead of the
+// vanilla truck intro. Revert to FALSE when the real Zorua intro lands.
+#define HABITAT_SLICE_SPAWN          TRUE
 
 #endif // GUARD_CONFIG_HABITAT_H
