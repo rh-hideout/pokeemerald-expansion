@@ -56,4 +56,10 @@ const struct HabitatSpot *Habitat_GetSpot(u16 spotId);
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId);
 const struct HabitatZone *Habitat_GetZone(u8 zoneId);
 
+// Spot manager (state machine + object visibility).
+void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
+void Habitat_RecomputeCurrentMapSpots(void);
+void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
+void Habitat_CompleteBefriendById(u16 spotId);
+
 #endif // GUARD_HABITAT_SPOTS_H
