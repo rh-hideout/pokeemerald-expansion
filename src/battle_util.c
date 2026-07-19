@@ -10321,7 +10321,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
         break;
     }
 
-    if (MoveHasIncreasedAccByTenOnSameType(move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move)))
+    if (MoveHasIncreasedAccByTenOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetBattleMoveType(move)))
         calc = (calc * 110) / 100;
 
     // Attacker's hold effect
@@ -10413,7 +10413,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
     if (lands == CALC_ACC)
     {
         u32 odds = GetMoveAccuracy(cv->move) + (gBattleMons[cv->battlerAtk].level - gBattleMons[cv->battlerDef].level);
-        if (MoveHasIncreasedAccByTenOnSameType(cv->move) && !IS_BATTLER_OF_TYPE(cv->battlerAtk, GetMoveType(cv->move)))
+        if (MoveHasIncreasedAccByTenOnSameType(cv->move) && IS_BATTLER_OF_TYPE(cv->battlerAtk, GetBattleMoveType(cv->move)))
             odds -= 10;
         if (RandomPercentage(RNG_ACCURACY, odds) && gBattleMons[cv->battlerAtk].level >= gBattleMons[cv->battlerDef].level)
             lands = SURE_HIT;
