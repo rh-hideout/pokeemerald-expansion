@@ -800,8 +800,8 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon)
 void ZeroMonData(struct Pokemon *mon)
 {
     u32 arg;
-    bool32 notify = IsPlayerPartyMon(mon)
-                 && GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE;
+    bool32 playerPartyMon = IsPlayerPartyMon(mon)
+                          && GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE;
     ZeroBoxMonData(&mon->box);
     arg = 0;
     SetMonData(mon, MON_DATA_STATUS, &arg);
@@ -815,8 +815,8 @@ void ZeroMonData(struct Pokemon *mon)
     SetMonData(mon, MON_DATA_SPDEF, &arg);
     arg = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &arg);
-    if (notify)
-        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    if (playerPartyMon)
+        CalculatePlayerPartyCount();
 }
 
 void ZeroPartyMons(struct Pokemon *party)
@@ -857,13 +857,21 @@ void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level,
 void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
 {
     u32 mail;
+    u8 partyCountBefore = gPartiesCount[B_TRAINER_PLAYER];
     ZeroMonData(mon);
     CreateBoxMon(&mon->box, species, level, personality, trainerId);
     SetMonData(mon, MON_DATA_LEVEL, &level);
     mail = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &mail);
     if (IsPlayerPartyMon(mon))
-        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    {
+        // A new party mon must be visible to condition evaluation before the
+        // notification drains; replacements retain the count, so publish
+        // explicitly in that case.
+        CalculatePlayerPartyCount();
+        if (gPartiesCount[B_TRAINER_PLAYER] == partyCountBefore)
+            Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    }
 }
 
 void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV)

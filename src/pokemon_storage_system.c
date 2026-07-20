@@ -6453,6 +6453,8 @@ static void SetMovingMonData(u8 boxId, u8 position)
 
 static void SetPlacedMonData(u8 boxId, u8 position)
 {
+    u8 partyCountBefore = gPartiesCount[B_TRAINER_PLAYER];
+
     if (OW_PC_HEAL <= GEN_7)
         HealPokemon(&sStorage->movingMon);
 
@@ -6463,7 +6465,9 @@ static void SetPlacedMonData(u8 boxId, u8 position)
         if (mon == GetFirstLiveMon())
             gFollowerSteps = 0;
         SetMonFormPSS(&mon->box, FORM_CHANGE_WITHDRAW);
-        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+        CalculatePlayerPartyCount();
+        if (gPartiesCount[B_TRAINER_PLAYER] == partyCountBefore)
+            Habitat_NotifyDependency(HABITAT_DEP_PARTY);
     }
     else
     {
@@ -6476,10 +6480,7 @@ static void PurgeMonOrBoxMon(u8 boxId, u8 position)
 {
     if (boxId == TOTAL_BOXES_COUNT)
     {
-        bool32 changed = GetMonData(&gParties[B_TRAINER_PLAYER][position], MON_DATA_SPECIES) != SPECIES_NONE;
         ZeroMonData(&gParties[B_TRAINER_PLAYER][position]);
-        if (changed)
-            Habitat_NotifyDependency(HABITAT_DEP_PARTY);
     }
     else
         ZeroBoxMonAt(boxId, position);
@@ -6848,6 +6849,7 @@ s16 CompactPartySlots(void)
 {
     s16 retVal = -1;
     u16 i, last;
+    u8 partyCountBefore = gPartiesCount[B_TRAINER_PLAYER];
 
     for (i = 0, last = 0; i < PARTY_SIZE; i++)
     {
@@ -6867,7 +6869,11 @@ s16 CompactPartySlots(void)
         ZeroMonData(&gParties[B_TRAINER_PLAYER][last]);
 
     if (retVal != -1)
-        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    {
+        CalculatePlayerPartyCount();
+        if (gPartiesCount[B_TRAINER_PLAYER] == partyCountBefore)
+            Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    }
 
     return retVal;
 }

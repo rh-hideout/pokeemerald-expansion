@@ -250,6 +250,14 @@ u8 FlagSet(u16 id)
     return 0;
 }
 
+u8 FlagSetNoNotify(u16 id)
+{
+    u8 *ptr = GetFlagPointer(id);
+    if (ptr)
+        *ptr |= 1 << (id & 7);
+    return 0;
+}
+
 u8 FlagToggle(u16 id)
 {
     u8 *ptr = GetFlagPointer(id);
@@ -269,6 +277,14 @@ u8 FlagClear(u16 id)
         *ptr &= ~(1 << (id & 7));
         Habitat_NotifyDependency(HABITAT_DEP_STORY_FLAG);
     }
+    return 0;
+}
+
+u8 FlagClearNoNotify(u16 id)
+{
+    u8 *ptr = GetFlagPointer(id);
+    if (ptr)
+        *ptr &= ~(1 << (id & 7));
     return 0;
 }
 

@@ -15,10 +15,21 @@ static const struct HabitatSpot *FindSpot(u16 spotId);
 
 #if TESTING
 static const struct HabitatMapSpan *sTestMapSpans;
+static u32 sRecomputeCount;
 
 void Habitat_SetMapSpansForTest(const struct HabitatMapSpan *spans)
 {
     sTestMapSpans = spans;
+}
+
+void Habitat_ResetRecomputeCountForTest(void)
+{
+    sRecomputeCount = 0;
+}
+
+u32 Habitat_GetRecomputeCountForTest(void)
+{
+    return sRecomputeCount;
 }
 #endif
 
@@ -40,9 +51,9 @@ void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
     bool32 visible = (state == HABITAT_STATE_ACTIVE)
                   || (state == HABITAT_STATE_BEFRIENDED && home);
     if (visible)
-        FlagClear(spot->hideFlag);
+        FlagClearNoNotify(spot->hideFlag);
     else
-        FlagSet(spot->hideFlag);
+        FlagSetNoNotify(spot->hideFlag);
 }
 
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
@@ -50,6 +61,10 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
     u8 state = Habitat_GetSpotState(spot->spotId);
     u8 stateBefore = state;
     struct HabitatConditionResult r;
+
+#if TESTING
+    sRecomputeCount++;
+#endif
 
     if (state < HABITAT_STATE_ACTIVE)
     {

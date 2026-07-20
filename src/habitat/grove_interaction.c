@@ -63,11 +63,11 @@ void Habitat_PrepareGroveWorkers(void)
         {
             VarSet(sWorkerGfxVars[slot],
                    OBJ_EVENT_MON + Habitat_GetResidentSpecies(residentIdx));
-            FlagClear(sWorkerHideFlags[slot]);
+            FlagClearNoNotify(sWorkerHideFlags[slot]);
         }
         else
         {
-            FlagSet(sWorkerHideFlags[slot]);
+            FlagSetNoNotify(sWorkerHideFlags[slot]);
         }
     }
 }

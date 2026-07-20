@@ -127,6 +127,7 @@ void Habitat_SendResidentHome(u32 residentIdx)
 void Habitat_TickPlots(u32 hours)
 {
     u32 i;
+    bool32 changed = FALSE;
     for (i = 0; i < HABITAT_PLOT_COUNT; i++)
     {
         struct HabitatPlot *plot = &gSaveBlock3Ptr->habitat.plots[i];
@@ -138,10 +139,17 @@ void Habitat_TickPlots(u32 hours)
         progress = plot->hoursProgress + hours;
         if (progress > 0xFFFF)
             progress = 0xFFFF;
-        plot->hoursProgress = progress;
-        plot->growthStage = min(HABITAT_PLOT_STAGE_MATURE,
-                                plot->hoursProgress / HABITAT_PLOT_HOURS_PER_STAGE);
+        if (plot->hoursProgress != progress)
+        {
+            u8 stage = min(HABITAT_PLOT_STAGE_MATURE,
+                           progress / HABITAT_PLOT_HOURS_PER_STAGE);
+            plot->hoursProgress = progress;
+            changed = TRUE;
+            plot->growthStage = stage;
+        }
     }
+    if (changed)
+        Habitat_NotifyDependency(HABITAT_DEP_GROVE);
 }
 
 // Offline catch-up: credit whole hours elapsed since the last stamp. Called

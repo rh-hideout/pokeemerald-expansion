@@ -54,6 +54,9 @@ u8   Habitat_GetSpotLocalFlags(u16 spotId);
 void Habitat_AddSpotLocalFlags(u16 spotId, u8 flags);  // OR-in, 4-bit masked
 u8   Habitat_GetTalkCount(u16 spotId);                 // 0 if spot has no slot
 void Habitat_IncrementTalkCount(u16 spotId);           // saturating; no-op without slot
+#if TESTING
+void Habitat_SetTalkCounterSpotsForTest(const u16 *spots);
+#endif
 u8 Habitat_GetPlacedCount(u16 counterId);
 void Habitat_SetPlacedCount(u16 counterId, u8 count);
 void Habitat_AddPlacedCount(u16 counterId, u8 count);

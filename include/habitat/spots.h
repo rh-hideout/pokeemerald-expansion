@@ -95,6 +95,8 @@ const struct HabitatSpot *Habitat_GetSpotTable(void);
 #if TESTING
 void Habitat_SetSpotTableForTest(const struct HabitatSpot *spots);
 void Habitat_SetMapSpansForTest(const struct HabitatMapSpan *spans);
+void Habitat_ResetRecomputeCountForTest(void);
+u32 Habitat_GetRecomputeCountForTest(void);
 #endif
 
 // Spot manager (state machine + object visibility).

@@ -1,12 +1,18 @@
 #include "global.h"
 #include "event_data.h"
+#include "event_object_movement.h"
+#include "fieldmap.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "item.h"
+#include "main.h"
+#include "overworld.h"
 #include "pokemon.h"
 #include "rtc.h"
 #include "string_util.h"
 #include "constants/items.h"
+#include "constants/event_objects.h"
+#include "constants/map_groups.h"
 #include "test/test.h"
 
 static void InitPlotsForTest(void)
@@ -171,4 +177,52 @@ TEST("Habitat Grove: worker talk resolves display slots to residents")
     Habitat_SendTalkedWorkerHome();
     EXPECT(!Habitat_ResidentIsOut(2));
     EXPECT(Habitat_ResidentIsOut(0));  // slot mapping recomputes; Torchic unaffected
+}
+
+TEST("Habitat Grove: live Grove assignment spawns and send-home removes its worker")
+{
+    const struct MapHeader *groveHeader;
+    struct MapHeader previousMapHeader;
+    MainCallback previousCallback;
+    u8 previousMapGroup, previousMapNum;
+    u8 objectEventId;
+
+    InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
+    ASSUME(Habitat_TryAddResident(7) == 0);
+    groveHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(MAP_LITTLEROOT_TOWN),
+                                                      MAP_NUM(MAP_LITTLEROOT_TOWN));
+    ASSUME(groveHeader != NULL);
+
+    previousMapHeader = gMapHeader;
+    previousCallback = gMain.callback2;
+    previousMapGroup = gSaveBlock1Ptr->location.mapGroup;
+    previousMapNum = gSaveBlock1Ptr->location.mapNum;
+    gMapHeader = *groveHeader;
+    memcpy(gSaveBlock1Ptr->objectEventTemplates, groveHeader->events->objectEvents,
+           sizeof(struct ObjectEventTemplate) * groveHeader->events->objectEventCount);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN);
+    gMain.callback2 = CB2_Overworld;
+    memset(gObjectEvents, 0, sizeof(gObjectEvents));
+
+    Habitat_PrepareGroveWorkers();
+    EXPECT(TryGetObjectEventIdByLocalIdAndMap(LOCALID_HABITAT_WORKER_0,
+                                               MAP_NUM(MAP_LITTLEROOT_TOWN),
+                                               MAP_GROUP(MAP_LITTLEROOT_TOWN), &objectEventId));
+    EXPECT(Habitat_AssignResidentToPlot(0, 0));
+    EXPECT(!TryGetObjectEventIdByLocalIdAndMap(LOCALID_HABITAT_WORKER_0,
+                                                MAP_NUM(MAP_LITTLEROOT_TOWN),
+                                                MAP_GROUP(MAP_LITTLEROOT_TOWN), &objectEventId));
+    gSelectedObjectEvent = OBJECT_EVENTS_COUNT;
+    Habitat_SendResidentHome(0);
+    EXPECT(TryGetObjectEventIdByLocalIdAndMap(LOCALID_HABITAT_WORKER_0,
+                                               MAP_NUM(MAP_LITTLEROOT_TOWN),
+                                               MAP_GROUP(MAP_LITTLEROOT_TOWN), &objectEventId));
+
+    memset(gObjectEvents, 0, sizeof(gObjectEvents));
+    gSaveBlock1Ptr->location.mapGroup = previousMapGroup;
+    gSaveBlock1Ptr->location.mapNum = previousMapNum;
+    gMapHeader = previousMapHeader;
+    gMain.callback2 = previousCallback;
 }

@@ -16,7 +16,25 @@
 
 // Counter slot maps (§5: only listed spots get a real counter).
 // Terminated by 0xFFFF. Slot index == position in the list.
-static const u16 sTalkCounterSpots[] = { 0xFFFF };
+static const u16 sDefaultTalkCounterSpots[] = { 0xFFFF };
+
+#if TESTING
+static const u16 *sTestTalkCounterSpots;
+
+void Habitat_SetTalkCounterSpotsForTest(const u16 *spots)
+{
+    sTestTalkCounterSpots = spots;
+}
+#endif
+
+static const u16 *GetTalkCounterSpots(void)
+{
+#if TESTING
+    if (sTestTalkCounterSpots != NULL)
+        return sTestTalkCounterSpots;
+#endif
+    return sDefaultTalkCounterSpots;
+}
 
 static s32 SlotFor(const u16 *list, u16 spotId)
 {
@@ -65,13 +83,13 @@ void Habitat_AddSpotLocalFlags(u16 spotId, u8 flags)
 
 u8 Habitat_GetTalkCount(u16 spotId)
 {
-    s32 slot = SlotFor(sTalkCounterSpots, spotId);
+    s32 slot = SlotFor(GetTalkCounterSpots(), spotId);
     return slot < 0 ? 0 : gSaveBlock3Ptr->habitat.talkCounters[slot];
 }
 
 void Habitat_IncrementTalkCount(u16 spotId)
 {
-    s32 slot = SlotFor(sTalkCounterSpots, spotId);
+    s32 slot = SlotFor(GetTalkCounterSpots(), spotId);
     if (slot >= 0 && gSaveBlock3Ptr->habitat.talkCounters[slot] < 0xFF)
         gSaveBlock3Ptr->habitat.talkCounters[slot]++;
 }
