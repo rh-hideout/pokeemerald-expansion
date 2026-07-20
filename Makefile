@@ -64,6 +64,12 @@ endif
 
 include config.mk
 
+ifeq ($(RELEASE),1)
+  ifeq ($(HABITAT_TEST_PROBE),1)
+    $(error HABITAT_TEST_PROBE is development-only and cannot be enabled in a release build)
+  endif
+endif
+
 # Default make rule
 all: rom
 

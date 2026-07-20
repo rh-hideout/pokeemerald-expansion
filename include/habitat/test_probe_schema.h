@@ -5,7 +5,7 @@
 // Keep offsets explicit: host tooling must never infer fields from gMain,
 // script internals, or text buffers.
 #define HABITAT_TEST_PROBE_VERSION 1
-#define HABITAT_TEST_PROBE_SIZE 14
+#define HABITAT_TEST_PROBE_SIZE 16 // 14 documented bytes plus ARM ABI tail padding
 #define HABITAT_TEST_PROBE_OFFSET_VERSION             0
 #define HABITAT_TEST_PROBE_OFFSET_SPOT_ID             2
 #define HABITAT_TEST_PROBE_OFFSET_SPOT_STATE          4
@@ -16,5 +16,17 @@
 #define HABITAT_TEST_PROBE_OFFSET_BOUT_OUTCOME        11
 #define HABITAT_TEST_PROBE_OFFSET_MAP_GROUP           12
 #define HABITAT_TEST_PROBE_OFFSET_MAP_NUM             13
+
+// A separate development-only command word lets the runner invoke explicit
+// engine transitions. It is not part of the read-only probe structure.
+#define HABITAT_TEST_COMMAND_NONE                 0
+#define HABITAT_TEST_COMMAND_STARTER_CAMPFIRE     1
+#define HABITAT_TEST_COMMAND_STARTER_PLANT        2
+#define HABITAT_TEST_COMMAND_STARTER_BASIN        3
+#define HABITAT_TEST_COMMAND_SELECT_FRAME_TREECKO 4
+#define HABITAT_TEST_COMMAND_SELECT_FRAME_MUDKIP  5
+#define HABITAT_TEST_COMMAND_SKITTY_PLACE         6
+#define HABITAT_TEST_COMMAND_SKITTY_OFFER         7
+#define HABITAT_TEST_COMMAND_MACHOP_OFFER         8
 
 #endif // GUARD_HABITAT_TEST_PROBE_SCHEMA_H

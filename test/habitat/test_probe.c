@@ -1,5 +1,6 @@
 #include "global.h"
 #include "constants/habitat.h"
+#include "constants/items.h"
 #include "constants/maps.h"
 #include "constants/species.h"
 #include "habitat/save.h"
@@ -33,4 +34,28 @@ TEST("Habitat verification probe: snapshots documented interaction and resident 
     EXPECT_EQ(gHabitatTestProbe.spotState, HABITAT_STATE_BEFRIENDED);
     EXPECT_EQ(gHabitatTestProbe.residentSpotId, 1);
     EXPECT_EQ(gHabitatTestProbe.residentAssignment, 2);
+}
+
+TEST("Habitat verification probe: development commands exercise approved item transitions")
+{
+    memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    gHabitatTestCommand = HABITAT_TEST_COMMAND_STARTER_PLANT;
+    Habitat_TestProbeRefresh();
+
+    EXPECT_EQ(gHabitatTestCommand, HABITAT_TEST_COMMAND_NONE);
+    EXPECT_EQ(gHabitatTestProbe.spotId, 7);
+    EXPECT_EQ(gHabitatTestProbe.resolvedSpecies, SPECIES_TREECKO);
+    EXPECT_EQ(gHabitatTestProbe.spotState, HABITAT_STATE_BEFRIENDED);
+    EXPECT_EQ(gHabitatTestProbe.residentSpotId, 7);
+
+    gHabitatTestCommand = HABITAT_TEST_COMMAND_SKITTY_PLACE;
+    Habitat_TestProbeRefresh();
+    EXPECT_EQ(gHabitatTestProbe.spotId, 1);
+    EXPECT_EQ(gHabitatTestProbe.spotState, HABITAT_STATE_ACTIVE);
+    EXPECT(gHabitatTestProbe.availableVerbs & HABITAT_VERB_OFFER);
+
+    gHabitatTestCommand = HABITAT_TEST_COMMAND_SKITTY_OFFER;
+    Habitat_TestProbeRefresh();
+    EXPECT_EQ(gHabitatTestProbe.spotState, HABITAT_STATE_BEFRIENDED);
+    EXPECT_EQ(gHabitatTestProbe.resolvedSpecies, SPECIES_SKITTY);
 }

@@ -13,6 +13,7 @@
 //   wait:N        idle N frames
 //   until-probe:FIELD,VALUE  wait for a documented probe field to equal VALUE
 //   expect-probe:FIELD,VALUE fail unless a documented probe field equals VALUE
+//   command:NAME  invoke a documented development-only engine transition
 //   shot:NAME     screenshot to <out>/NAME.png
 //   pass:MSG      finish PASS
 // Any op timeout fails the run with documented probe diagnostics.
@@ -53,7 +54,26 @@ static struct mLogger sLogger = { .log = stderrLog };
 
 static struct mCore* sCore;
 static const char* sOutDir;
-static uint32_t sSb1Ptr, sProbe;
+static uint32_t sSb1Ptr, sProbe, sCommand;
+
+static int commandByName(const char *name)
+{
+    struct Command { const char *name; int value; };
+    static const struct Command commands[] = {
+        { "starter-campfire", HABITAT_TEST_COMMAND_STARTER_CAMPFIRE },
+        { "starter-plant", HABITAT_TEST_COMMAND_STARTER_PLANT },
+        { "starter-basin", HABITAT_TEST_COMMAND_STARTER_BASIN },
+        { "select-frame-treecko", HABITAT_TEST_COMMAND_SELECT_FRAME_TREECKO },
+        { "select-frame-mudkip", HABITAT_TEST_COMMAND_SELECT_FRAME_MUDKIP },
+        { "skitty-place", HABITAT_TEST_COMMAND_SKITTY_PLACE },
+        { "skitty-offer", HABITAT_TEST_COMMAND_SKITTY_OFFER },
+        { "machop-offer", HABITAT_TEST_COMMAND_MACHOP_OFFER },
+    };
+    for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
+        if (!strcmp(name, commands[i].name))
+            return commands[i].value;
+    return -1;
+}
 
 static int probeField(const char *name, int *offset, int *width)
 {
@@ -126,7 +146,7 @@ static int finish(const char* status, const char* msg, unsigned frame) {
 
 // ---- scenario script ----
 
-enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_PROBE, OP_EXPECT_PROBE, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
+enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_PROBE, OP_EXPECT_PROBE, OP_COMMAND, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
 struct Op {
     enum OpKind kind;
     int a, b;
@@ -179,6 +199,8 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
               && parseProbeOp(tok + 12, op) == 0) op->kind = OP_UNTIL_PROBE;
         else if (!strncmp(tok, "expect-probe:", 13)
               && parseProbeOp(tok + 13, op) == 0) op->kind = OP_EXPECT_PROBE;
+        else if (!strncmp(tok, "command:", 8)
+              && (op->a = commandByName(tok + 8)) >= 0) op->kind = OP_COMMAND;
         else if (tok == strstr(tok, "walk:") && sscanf(tok + 7, "%d", &op->b) == 1) {
             op->kind = OP_WALK; op->a = keyByName((char[]){tok[5], 0});
         }
@@ -198,6 +220,7 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
 int main(int argc, char** argv) {
     const char* rom = NULL;
     char* scriptSpec = NULL;
+    int validateScript = 0;
     unsigned maxFrames = 60000;
     struct Op ops[256];
     int nOps = 0;
@@ -208,11 +231,23 @@ int main(int argc, char** argv) {
         else if (!strcmp(argv[i], "--out")) sOutDir = argv[++i];
         else if (!strcmp(argv[i], "--sb1ptr")) sSb1Ptr = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--probe")) sProbe = strtoul(argv[++i], NULL, 16);
+        else if (!strcmp(argv[i], "--command")) sCommand = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--script")) scriptSpec = argv[++i];
         else if (!strcmp(argv[i], "--max-frames")) maxFrames = strtoul(argv[++i], NULL, 10);
+        else if (!strcmp(argv[i], "--validate-script")) {
+            scriptSpec = argv[++i];
+            validateScript = 1;
+        }
     }
-    if (!rom || !sSb1Ptr || !sProbe || !scriptSpec) {
-        fprintf(stderr, "usage: hh-runner --rom ROM --sb1ptr HEX --probe HEX "
+    if (validateScript) {
+        nOps = parseScript(scriptSpec, ops, 256);
+        if (nOps < 0)
+            return 2;
+        printf("hh-runner: valid script (%d operations)\n", nOps);
+        return 0;
+    }
+    if (!rom || !sSb1Ptr || !sProbe || !sCommand || !scriptSpec) {
+        fprintf(stderr, "usage: hh-runner --rom ROM --sb1ptr HEX --probe HEX --command HEX "
                         "--script 'op;op;...' [--out DIR]\n");
         return 2;
     }
@@ -337,6 +372,14 @@ int main(int argc, char** argv) {
                 snprintf(msg, sizeof(msg), "probe %s expected %d got %u", op->text, op->b,
                          probeRead(op->a, probeWidthForOffset(op->a)));
                 rc = finish("FAIL", msg, frame);
+            }
+            break;
+        case OP_COMMAND:
+            if (op->b == 0) {
+                sCore->busWrite16(sCore, sCommand, op->a);
+                op->b = 1;
+            } else if (sCore->busRead16(sCore, sCommand) == HABITAT_TEST_COMMAND_NONE) {
+                done = 1;
             }
             break;
         case OP_WALK:

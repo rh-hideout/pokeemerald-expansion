@@ -1,5 +1,6 @@
 #include "global.h"
 #include "pokemon_storage_system.h"
+#include "config/habitat.h"
 #include "test/test.h"
 
 // If you would like to ensure save compatibility, update the values below with those for your hack. You can find these through the debug menu.
@@ -22,6 +23,11 @@ TEST("SaveBlock2 is backwards compatible")
 TEST("SaveBlock3 is backwards compatible")
 {
     EXPECT_EQ(sizeof(struct SaveBlock3), T_SAVEBLOCK3_SIZE);
+}
+
+TEST("SaveBlock3 stays within the approved Habitat budget")
+{
+    EXPECT(sizeof(struct SaveBlock3) <= HABITAT_SAVEBLOCK3_BUDGET);
 }
 
 TEST("PokemonStorage is backwards compatible")

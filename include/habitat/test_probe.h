@@ -27,6 +27,7 @@ struct HabitatTestProbe
 };
 
 extern struct HabitatTestProbe gHabitatTestProbe;
+extern u16 gHabitatTestCommand;
 void Habitat_TestProbeRefresh(void);
 #endif
 

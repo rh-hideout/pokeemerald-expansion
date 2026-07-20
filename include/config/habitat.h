@@ -14,6 +14,7 @@
 #define HABITAT_PLOT_STAGE_MATURE    4    // stages 0..4; 4 = harvestable
 #define HABITAT_PLOT_YIELD           3    // berries per harvest
 #define HABITAT_GROVE_WORKER_SLOTS   6    // rendered worker objects on the Grove map
+#define HABITAT_SAVEBLOCK3_BUDGET    1624 // approved Task 13 ceiling
 
 // Slice-only: new games start at the approved lab development position instead
 // of the vanilla truck/bedroom opening. The presentation is deliberately

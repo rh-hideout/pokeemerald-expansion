@@ -15,7 +15,8 @@ Grove. Built on [pokeemerald-expansion](https://github.com/rh-hideout/pokeemeral
 - Status: **built** and **focused-tested** through the habitat native suite.
   The portable headless verifier is ready for a fresh Zorua Lab boot run;
   release acceptance remains intentionally blocked until the Task 12
-  provenance gate is green.
+  provenance gate is green. The dated evidence ledger and status definitions
+  are in [`docs/reports/2026-07-20-habitat-task-13-acceptance.md`](docs/reports/2026-07-20-habitat-task-13-acceptance.md).
 - **Legal stance:** this repository distributes **source and patches only** — never
   ROMs, never Nintendo-owned binaries — and is never monetized. The game builds
   entirely from this source tree; play it by building it yourself or by applying a

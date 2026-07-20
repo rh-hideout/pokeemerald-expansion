@@ -11,19 +11,22 @@ cd "$ROOT"
 . tools/habitat/env.sh
 
 usage() {
-    echo "usage: tools/habitat/verify.sh [--no-interact | --scenario lab]" >&2
+    echo "usage: tools/habitat/verify.sh [--no-interact | --scenario NAME]" >&2
+    echo "scenarios: lab-campfire lab-plant lab-basin starter-recovery skitty machop route103" >&2
 }
 
 SCENARIO=boot
 case "${1:-}" in
     ""|--no-interact) ;;
     --scenario)
-        [ "${2:-}" = lab ] || {
+        case "${2:-}" in
+            lab-campfire|lab-plant|lab-basin|starter-recovery|skitty|machop|route103) SCENARIO=$2 ;;
+            *)
             echo "hh-verify: scenario '${2:-}' is not available in the current approved slice" >&2
-            echo "hh-verify: use --no-interact or --scenario lab" >&2
+            echo "hh-verify: use --no-interact or one of the documented scenarios" >&2
             exit 2
-        }
-        SCENARIO=lab
+            ;;
+        esac
         ;;
     --help|-h) usage; exit 0 ;;
     *) usage; exit 2 ;;
@@ -37,10 +40,18 @@ else
 fi
 echo "hh-verify: output directory: $OUT"
 
+# A caller can tune parallelism; avoid host-specific sysctl probes so this is
+# also usable under restricted CI sandboxes.
+HH_VERIFY_JOBS=${HH_VERIFY_JOBS:-4}
+case "$HH_VERIFY_JOBS" in
+    *[!0-9]*|'') echo "hh-verify: HH_VERIFY_JOBS must be a positive integer" >&2; exit 2 ;;
+esac
+[ "$HH_VERIFY_JOBS" -gt 0 ] || { echo "hh-verify: HH_VERIFY_JOBS must be positive" >&2; exit 2; }
+
 # -B makes this invocation's map and ROM derive from current sources. The
 # subsequent symbol lookup is therefore unable to validate stale link output.
 echo "hh-verify: building fresh verification ROM..."
-if ! make -B HABITAT_TEST_PROBE=1 >"$OUT/build.log" 2>&1; then
+if ! make -B -j"$HH_VERIFY_JOBS" HABITAT_TEST_PROBE=1 >"$OUT/build.log" 2>&1; then
     echo "hh-verify: BUILD FAILED" >&2
     tail -30 "$OUT/build.log" >&2
     exit 1
@@ -49,7 +60,8 @@ fi
 sym() { awk -v s="$1" '$2 == s { print $1; exit }' pokeemerald.map; }
 SB1=$(sym gSaveBlock1Ptr)
 PROBE=$(sym gHabitatTestProbe)
-if [ -z "$SB1" ] || [ -z "$PROBE" ]; then
+COMMAND=$(sym gHabitatTestCommand)
+if [ -z "$SB1" ] || [ -z "$PROBE" ] || [ -z "$COMMAND" ]; then
     echo "hh-verify: fresh map is missing required verification symbols" >&2
     exit 1
 fi
@@ -67,13 +79,31 @@ case "$SCENARIO" in
     boot)
         SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;shot:zorua_lab_boot;pass:Zorua Lab overworld reached'
         ;;
-    lab)
-        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;expect-probe:spot_id,0;shot:lab;pass:Lab probe baseline reached'
+    lab-campfire)
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-campfire;expect-probe:spot_id,7;expect-probe:resolved_species,255;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_campfire;pass:Campfire starter transition reached'
+        ;;
+    lab-plant)
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-plant;expect-probe:spot_id,7;expect-probe:resolved_species,252;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_plant;pass:Plant starter transition reached'
+        ;;
+    lab-basin)
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-basin;expect-probe:spot_id,7;expect-probe:resolved_species,258;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_basin;pass:Basin starter transition reached'
+        ;;
+    starter-recovery)
+        SCRIPT='command:starter-campfire;expect-probe:resolved_species,255;command:select-frame-treecko;expect-probe:spot_id,8;expect-probe:spot_state,0;expect-probe:resolved_species,0;command:select-frame-mudkip;expect-probe:spot_id,9;expect-probe:spot_state,0;expect-probe:resolved_species,0;shot:starter_recovery;pass:Unchosen starter frames remain recoverable'
+        ;;
+    skitty)
+        SCRIPT='command:skitty-place;expect-probe:spot_id,1;expect-probe:spot_state,2;expect-probe:available_verbs,5;shot:skitty_active;command:skitty-offer;expect-probe:spot_state,3;expect-probe:resolved_species,300;expect-probe:resident_spot_id,1;shot:skitty_befriended;pass:Skitty place offer befriend transition reached'
+        ;;
+    machop)
+        SCRIPT='command:machop-offer;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resolved_species,66;expect-probe:resident_spot_id,3;expect-probe:bout_outcome,0;shot:machop_befriended;pass:Machop Cheri transition has no battle'
+        ;;
+    route103)
+        SCRIPT='goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;expect-probe:map_group,0;expect-probe:map_num,18;shot:route103;pass:Route 103 reached without a random battle'
         ;;
 esac
 
 echo "hh-verify: running $SCENARIO scenario..."
-if "$RUNNER" --rom "$ROM" --out "$OUT" --sb1ptr "$SB1" --probe "$PROBE" --script "$SCRIPT" 2>"$OUT/runner.log"; then
+if "$RUNNER" --rom "$ROM" --out "$OUT" --sb1ptr "$SB1" --probe "$PROBE" --command "$COMMAND" --script "$SCRIPT" 2>"$OUT/runner.log"; then
     echo "hh-verify: PASS"
     find "$OUT" -maxdepth 1 -name '*.png' -print
     exit 0
