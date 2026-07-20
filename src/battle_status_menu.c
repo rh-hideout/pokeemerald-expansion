@@ -1,4 +1,4 @@
-﻿#include "global.h"
+#include "global.h"
 #include "battle_status_menu.h"
 #include "battle.h"
 #include "battle_controllers.h"
@@ -171,11 +171,6 @@ enum
 #define B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS   64
 #define B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS 6
 
-#define B_STATUS_EFFECT_FLAG_HAS_DURATION    (1 << 0)
-#define B_STATUS_EFFECT_FLAG_EXTENDABLE      (1 << 1)
-#define B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN  (1 << 2)
-#define B_STATUS_EFFECT_FLAG_TOTAL_KNOWN     (1 << 3)
-
 #define B_STATUS_DETAIL_TEXT_BUFFER_SIZE 512
 
 #define TAG_STATUS_ICONS                1202
@@ -194,19 +189,20 @@ enum
     WIN_DETAIL_COUNT,
 };
 
-struct BattleStatusEffectEntry
+struct BattleStatusEntry
 {
     u8 effectId;
-    u16 durationRemaining;
-    u16 baseTotalDuration;
-    u8 setterSide;
-    u8 flags;
-    u8 stackCount;
+    u8 durationRemaining;
+    u8 baseTotalDuration;
+    u8 stackCount:4;
+    u8 setterSide:2;
+    u8 hasDuration:1;
+    u8 totalKnown:1;
 };
 
 struct BattleStatusCard
 {
-    enum BattlerId battlerId;
+    enum BattlerId battler;
     s16 x;
     s16 y;
     u16 hpBarTileTag;
@@ -223,24 +219,24 @@ struct BattleStatusCard
 struct BattleStatusMenuState
 {
     u8 page;
-    u8 selectedCardIndex;
+    u8 selectedCard ;
     u8 cursorSpriteId;
-    u8 detailIconSpriteId;
-    u8 detailHpBarSpriteId;
-    u8 detailHpBarLeftEndcapSpriteId;
-    u8 detailHpBarRightEndcapSpriteId;
-    u8 detailStatusSpriteId;
-    u8 detailTeraTypeSpriteId;
-    u8 detailGimmickSpriteId;
-    u8 detailTypeIconSpriteIds[2];
-    u8 detailStatPipSpriteIds[B_STATUS_DETAIL_STAT_ROW_COUNT][B_STATUS_DETAIL_STAT_PIPS_PER_ROW];
+    u8 iconSpriteId;
+    u8 hpBarSpriteId;
+    u8 hpBarLeftEndcapSpriteId;
+    u8 hpBarRightEndcapSpriteId;
+    u8 statusSpriteId;
+    u8 teraTypeSpriteId;
+    u8 gimmickSpriteId;
+    u8 typeIconSpriteIds[2];
+    u8 statPipSpriteIds[B_STATUS_DETAIL_STAT_ROW_COUNT][B_STATUS_DETAIL_STAT_PIPS_PER_ROW];
     struct BattleStatusCard cards[MAX_BATTLERS_COUNT];
-    struct BattleStatusEffectEntry detailActiveEffects[B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS];
-    u8 detailActiveEffectsCount;
-    u8 detailEffectsCursor;
-    u8 detailEffectsScrollbarSpriteId;
-    u16 detailEffectsScroll;
-    u8 detailWindowIds[WIN_DETAIL_COUNT];
+    struct BattleStatusEntry activeEffects[B_STATUS_DETAIL_MAX_ACTIVE_EFFECTS];
+    u8 activeEffectsCount;
+    u8 effectsCursor;
+    u8 effectsScrollbarSpriteId;
+    u16 effectsScroll;
+    u8 windowIds[WIN_DETAIL_COUNT];
 };
 
 enum BattleStatusEffectId
@@ -356,6 +352,8 @@ struct BattleStatusEffectData
 static void CB2_BattleStatusMenu(void);
 static void BattleStatusMenu_VBlankCB(void);
 static void BattleStatusMenu_MainCB(void);
+static void BattleStatusMenu_ResetSpriteIds(void);
+static void BattleStatusMenu_InitBgs(void);
 static void BattleStatusMenu_Init(void);
 static void OverviewEnter(void);
 static void OverviewExit(void);
@@ -415,16 +413,15 @@ static void DetailCycleBattler(s8 direction);
 static void DetailInitEffectsList(void);
 static void DetailBuildActiveEffectsForBattler(void);
 static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide side, enum BattleStatusEffectId effectId,
-                                     struct BattleStatusEffectEntry *entries);
-static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
-                                           enum BattleSide setterSide, bool8 isExtendable);
-static void DetailSetDurationUnknownTotal(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
-                                                       enum BattleSide setterSide, bool8 isExtendable);
-static bool8 DetailGetDisplayedDuration(const struct BattleStatusEffectEntry *entry, enum BattleSide viewerSide,
-                                                     u16 *outRemaining, u16 *outTotal);
+                                     struct BattleStatusEntry *entries);
+static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal);
+
+static void DetailSetDuration(struct BattleStatusEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal, enum BattleSide setterSide);
+static void DetailSetDurationUnknownTotal(struct BattleStatusEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal, enum BattleSide setterSide);
+static bool8 DetailGetDisplayedDuration(const struct BattleStatusEntry *entry, enum BattleSide viewerSide, u16 *outRemaining, u16 *outTotal);
+
 static void DetailBuildTurnFractionText(u8 *dst, u16 remaining, u16 total);
 static void DetailCopyTextToFit(u8 *dst, const u8 *src, u8 fontId, s16 maxWidth);
-static const struct BattleStatusEffectData *GetEffectData(enum BattleStatusEffectId effectId);
 static bool8 DetailTryMoveEffectCursor(s8 direction);
 static void DetailRefreshEffectsWindow(void);
 static void DetailRefreshDescriptionWindow(void);
@@ -455,6 +452,8 @@ static void UpdateHpBarTiles(u8 spriteId, s16 hp, s16 maxHp);
 static void DrawHpBarSprite(struct BattleStatusCard *card);
 static u8 GetBarGfxId(s16 hp, s16 maxHp);
 static u8 GetAilmentFromBattler(enum BattlerId battler);
+
+static u32 GetCardCount(void);
 static enum BattlerId GetSelectedBattler(void);
 static enum BattlerId GetBattlerFromEnemySlot(u32 slot);
 static enum BattlerId GetBattlerFromPlayerSlot(u32 slot);
@@ -466,7 +465,6 @@ struct BattleStatusMenuData
     u16 bg0Tilemap[BG_SCREEN_SIZE];
     u16 bg1Tilemap[BG_SCREEN_SIZE];
     u8 detailTextBuffer[B_STATUS_DETAIL_TEXT_BUFFER_SIZE];
-    bool8 unreadUpdates[MAX_BATTLERS_COUNT];
     u8 pendingPage;
     bool8 transitionUnloaded;
 };
@@ -1460,56 +1458,23 @@ static void CB2_BattleStatusMenu(void)
         break;
     case 1:
         ScanlineEffect_Stop();
-        gMain.state++;
-        break;
-    case 2:
         FreeAllSpritePalettes();
-        gMain.state++;
-        break;
-    case 3:
         ResetPaletteFade();
+        ResetSpriteData();
+        if (!MenuHelpers_IsLinkActive())
+            ResetTasks();
+        BattleStatusMenu_ResetSpriteIds();
         gPaletteFade.bufferTransferDisabled = TRUE;
         gMain.state++;
         break;
+    case 2:
+        BattleStatusMenu_InitBgs();
+        gMain.state++;
+        break;
+    case 3:
+        gMain.state++;
+        break;
     case 4:
-        ResetSpriteData();
-        gMain.state++;
-        break;
-    case 5:
-        if (!MenuHelpers_IsLinkActive())
-            ResetTasks();
-        gMain.state++;
-        break;
-    case 6:
-        ResetVramOamAndBgCntRegs();
-        ResetBgsAndClearDma3BusyFlags(0);
-        CpuFill16(0, (void *)BG_CHAR_ADDR(0), BG_CHAR_SIZE);
-        CpuFill16(0, (void *)BG_CHAR_ADDR(2), BG_CHAR_SIZE);
-        CpuFill16(0, (void *)BG_CHAR_ADDR(3), BG_CHAR_SIZE);
-        gMain.state++;
-        break;
-    case 7:
-        InitBgsFromTemplates(0, sBattleStatusMenuBgTemplates, ARRAY_COUNT(sBattleStatusMenuBgTemplates));
-        SetBgTilemapBuffer(B_STATUS_TEXT_BG, sData->bg0Tilemap);
-        SetBgTilemapBuffer(B_STATUS_BACKDROP_BG, sData->bg1Tilemap);
-        FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
-        FillBgTilemapBufferRect(B_STATUS_BACKDROP_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
-        CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
-        CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
-        gMain.state++;
-        break;
-    case 8:
-        ResetAllBgsCoordinates();
-        LoadBgTiles(B_STATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
-        LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
-        LoadPalette(gBattleStatusTextPalette, BG_PLTT_ID(B_STATUS_TEXT_PAL), PLTT_SIZE_4BPP);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
-        ShowBg(B_STATUS_BACKDROP_BG);
-        ShowBg(B_STATUS_TEXT_BG);
-        SetGpuReg(REG_OFFSET_BLDCNT, 0);
-        gMain.state++;
-        break;
-    case 9:
         InitWindows((const struct WindowTemplate[]){DUMMY_WIN_TEMPLATE});
         DeactivateAllTextPrinters();
         BattleStatusMenu_Init();
@@ -1519,7 +1484,7 @@ static void CB2_BattleStatusMenu(void)
         sData->menuState = BATTLE_STATUS_MENU_STATE_FADE_IN;
         gMain.state++;
         break;
-    case 10:
+    case 5:
         SetVBlankCallback(BattleStatusMenu_VBlankCB);
         SetMainCallback2(BattleStatusMenu_MainCB);
         gMain.state++;
@@ -1589,27 +1554,28 @@ static void BattleStatusMenu_MainCB(void)
     UpdatePaletteFade();
 }
 
-static void BattleStatusMenu_Init(void)
+static void BattleStatusMenu_ResetSpriteIds(void)
 {
     memset(&sData->menu, 0, sizeof(sData->menu));
-    sData->menu.page = BATTLE_STATUS_PAGE_OVERVIEW;
-    sData->menu.selectedCardIndex = 0;
+    sData->menu.selectedCard  = 0;
     sData->menu.cursorSpriteId = SPRITE_NONE;
-    sData->menu.detailIconSpriteId = SPRITE_NONE;
-    sData->menu.detailHpBarSpriteId = SPRITE_NONE;
-    sData->menu.detailHpBarLeftEndcapSpriteId = SPRITE_NONE;
-    sData->menu.detailHpBarRightEndcapSpriteId = SPRITE_NONE;
-    sData->menu.detailStatusSpriteId = SPRITE_NONE;
-    sData->menu.detailTeraTypeSpriteId = SPRITE_NONE;
-    sData->menu.detailGimmickSpriteId = SPRITE_NONE;
-    sData->menu.detailEffectsScrollbarSpriteId = SPRITE_NONE;
-    sData->menu.detailTypeIconSpriteIds[0] = SPRITE_NONE;
-    sData->menu.detailTypeIconSpriteIds[1] = SPRITE_NONE;
+    sData->menu.iconSpriteId = SPRITE_NONE;
+    sData->menu.hpBarSpriteId = SPRITE_NONE;
+    sData->menu.hpBarLeftEndcapSpriteId = SPRITE_NONE;
+    sData->menu.hpBarRightEndcapSpriteId = SPRITE_NONE;
+    sData->menu.statusSpriteId = SPRITE_NONE;
+    sData->menu.teraTypeSpriteId = SPRITE_NONE;
+    sData->menu.gimmickSpriteId = SPRITE_NONE;
+    sData->menu.effectsScrollbarSpriteId = SPRITE_NONE;
+    sData->menu.typeIconSpriteIds[0] = SPRITE_NONE;
+    sData->menu.typeIconSpriteIds[1] = SPRITE_NONE;
+
     for (u32 i = 0; i < B_STATUS_DETAIL_STAT_ROW_COUNT; i++)
     {
         for (u32 j = 0; j < B_STATUS_DETAIL_STAT_PIPS_PER_ROW; j++)
-            sData->menu.detailStatPipSpriteIds[i][j] = SPRITE_NONE;
+            sData->menu.statPipSpriteIds[i][j] = SPRITE_NONE;
     }
+
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         sData->menu.cards[i].gimmickTileTag = 0;
@@ -1621,9 +1587,41 @@ static void BattleStatusMenu_Init(void)
         sData->menu.cards[i].hpBarLeftEndcapSpriteId = SPRITE_NONE;
         sData->menu.cards[i].hpBarRightEndcapSpriteId = SPRITE_NONE;
     }
-    for (u32 i = 0; i < ARRAY_COUNT(sData->menu.detailWindowIds); i++)
-        sData->menu.detailWindowIds[i] = WINDOW_NONE;
 
+    for (u32 i = 0; i < ARRAY_COUNT(sData->menu.windowIds); i++)
+        sData->menu.windowIds[i] = WINDOW_NONE;
+}
+
+static void BattleStatusMenu_InitBgs(void)
+{
+    ResetVramOamAndBgCntRegs();
+    ResetBgsAndClearDma3BusyFlags(0);
+    CpuFill16(0, (void *)BG_CHAR_ADDR(0), BG_CHAR_SIZE);
+    CpuFill16(0, (void *)BG_CHAR_ADDR(2), BG_CHAR_SIZE);
+    CpuFill16(0, (void *)BG_CHAR_ADDR(3), BG_CHAR_SIZE);
+
+    InitBgsFromTemplates(0, sBattleStatusMenuBgTemplates, ARRAY_COUNT(sBattleStatusMenuBgTemplates));
+    SetBgTilemapBuffer(B_STATUS_TEXT_BG, sData->bg0Tilemap);
+    SetBgTilemapBuffer(B_STATUS_BACKDROP_BG, sData->bg1Tilemap);
+    FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
+    FillBgTilemapBufferRect(B_STATUS_BACKDROP_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
+    CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
+    CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
+
+    ResetAllBgsCoordinates();
+    LoadBgTiles(B_STATUS_BACKDROP_BG, sBattleStatusMenuBgTiles, sizeof(sBattleStatusMenuBgTiles), 0);
+    LoadPalette(sBattleStatusMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleStatusMenuBgPalette));
+    LoadPalette(gBattleStatusTextPalette, BG_PLTT_ID(B_STATUS_TEXT_PAL), PLTT_SIZE_4BPP);
+
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+    ShowBg(B_STATUS_BACKDROP_BG);
+    ShowBg(B_STATUS_TEXT_BG);
+    SetGpuReg(REG_OFFSET_BLDCNT, 0);
+}
+
+static void BattleStatusMenu_Init(void)
+{
+    sData->menu.page = BATTLE_STATUS_PAGE_OVERVIEW;
     sData->pendingPage = BATTLE_STATUS_PAGE_NONE;
     sData->transitionUnloaded = FALSE;
 
@@ -1667,7 +1665,7 @@ static void OverviewExit(void)
         DestroySprite(&gSprites[sData->menu.cursorSpriteId]);
     sData->menu.cursorSpriteId = SPRITE_NONE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < GetCardCount(); i++)
         DestroyOverviewCardSprites(&sData->menu.cards[i], FALSE);
 
     OverviewClearWindows();
@@ -1690,11 +1688,11 @@ static void DetailEnter(void)
     DetailDestroyEffectsCursor();
 
     sData->menu.page = BATTLE_STATUS_PAGE_DETAIL;
-    sData->menu.detailIconSpriteId = SPRITE_NONE;
-    sData->menu.detailHpBarSpriteId = SPRITE_NONE;
-    sData->menu.detailStatusSpriteId = SPRITE_NONE;
-    sData->menu.detailTeraTypeSpriteId = SPRITE_NONE;
-    sData->menu.detailGimmickSpriteId = SPRITE_NONE;
+    sData->menu.iconSpriteId = SPRITE_NONE;
+    sData->menu.hpBarSpriteId = SPRITE_NONE;
+    sData->menu.statusSpriteId = SPRITE_NONE;
+    sData->menu.teraTypeSpriteId = SPRITE_NONE;
+    sData->menu.gimmickSpriteId = SPRITE_NONE;
     LoadBackdropAssets();
     BackdropLoadBaseTilemap(sBattleStatusMenuDetailsBaseTilemap);
     FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
@@ -1726,13 +1724,13 @@ static void DetailExit(void)
     DetailDestroyStatPips();
     DetailDestroyEffectsScrollbar();
     DetailDestroyEffectsCursor();
-    sData->menu.detailActiveEffectsCount = 0;
-    sData->menu.detailEffectsCursor = 0;
-    sData->menu.detailEffectsScroll = 0;
+    sData->menu.activeEffectsCount = 0;
+    sData->menu.effectsCursor = 0;
+    sData->menu.effectsScroll = 0;
 
-    if (sData->menu.detailIconSpriteId != SPRITE_NONE)
-        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.detailIconSpriteId]);
-    sData->menu.detailIconSpriteId = SPRITE_NONE;
+    if (sData->menu.iconSpriteId != SPRITE_NONE)
+        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.iconSpriteId]);
+    sData->menu.iconSpriteId = SPRITE_NONE;
 
     FillBgTilemapBufferRect(B_STATUS_TEXT_BG, 0, 0, 0, B_STATUS_TILEMAP_WIDTH, B_STATUS_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
@@ -1778,28 +1776,28 @@ static void DetailHandleInput(void)
 static void DetailCreateWindows(void)
 {
     for (u32 i = 0; i < WIN_DETAIL_COUNT; i++)
-        sData->menu.detailWindowIds[i] = WINDOW_NONE;
+        sData->menu.windowIds[i] = WINDOW_NONE;
 
     for (u32 i = 0; i < WIN_DETAIL_COUNT; i++)
     {
         if (i == WIN_DETAIL_ITEM_ABILITY)
             continue;
 
-        sData->menu.detailWindowIds[i] = AddWindow(&sBattleStatusDetailWindowTemplates[i]);
-        if (sData->menu.detailWindowIds[i] != WINDOW_NONE)
-            DetailDrawWindowFrame(sData->menu.detailWindowIds[i]);
+        sData->menu.windowIds[i] = AddWindow(&sBattleStatusDetailWindowTemplates[i]);
+        if (sData->menu.windowIds[i] != WINDOW_NONE)
+            DetailDrawWindowFrame(sData->menu.windowIds[i]);
     }
 
-    sData->menu.detailWindowIds[WIN_DETAIL_ITEM_ABILITY] = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
+    sData->menu.windowIds[WIN_DETAIL_ITEM_ABILITY] = sData->menu.windowIds[WIN_DETAIL_HEADER];
 }
 
 static void DetailDestroyWindows(void)
 {
-    u32 mergedInfoWindowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
+    u32 mergedInfoWindowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
 
     for (u32 i = 0; i < WIN_DETAIL_COUNT; i++)
     {
-        u8 windowId = sData->menu.detailWindowIds[i];
+        u8 windowId = sData->menu.windowIds[i];
 
         if (windowId == WINDOW_NONE)
             continue;
@@ -1807,7 +1805,7 @@ static void DetailDestroyWindows(void)
         if (i == WIN_DETAIL_ITEM_ABILITY
          && windowId == mergedInfoWindowId)
         {
-            sData->menu.detailWindowIds[i] = WINDOW_NONE;
+            sData->menu.windowIds[i] = WINDOW_NONE;
             continue;
         }
 
@@ -1815,7 +1813,7 @@ static void DetailDestroyWindows(void)
         ClearWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_GFX);
         RemoveWindow(windowId);
-        sData->menu.detailWindowIds[i] = WINDOW_NONE;
+        sData->menu.windowIds[i] = WINDOW_NONE;
     }
 
     CopyBgTilemapBufferToVram(B_STATUS_TEXT_BG);
@@ -1825,7 +1823,7 @@ static void DetailDrawStaticWindows(void)
 {
     u8 windowId;
 
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_ITEM_ABILITY];
+    windowId = sData->menu.windowIds[WIN_DETAIL_ITEM_ABILITY];
     if (windowId != WINDOW_NONE)
     {
         DetailDrawWindowFrame(windowId);
@@ -1833,7 +1831,7 @@ static void DetailDrawStaticWindows(void)
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
 
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
+    windowId = sData->menu.windowIds[WIN_DETAIL_STATS];
     if (windowId != WINDOW_NONE)
     {
         DetailDrawWindowFrame(windowId);
@@ -1849,20 +1847,20 @@ static void DetailDrawStaticWindows(void)
     }
 
     DetailDrawLRButtonGlyphs();
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_ITEM_ABILITY];
+    windowId = sData->menu.windowIds[WIN_DETAIL_ITEM_ABILITY];
     if (windowId != WINDOW_NONE)
     {
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
+    windowId = sData->menu.windowIds[WIN_DETAIL_STATS];
     if (windowId != WINDOW_NONE)
     {
         PutWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
 
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_EFFECTS];
+    windowId = sData->menu.windowIds[WIN_DETAIL_EFFECTS];
     if (windowId != WINDOW_NONE)
     {
         DetailDrawWindowFrame(windowId);
@@ -1870,7 +1868,7 @@ static void DetailDrawStaticWindows(void)
         CopyWindowToVram(windowId, COPYWIN_FULL);
     }
 
-    windowId = sData->menu.detailWindowIds[WIN_DETAIL_DESCRIPTION];
+    windowId = sData->menu.windowIds[WIN_DETAIL_DESCRIPTION];
     if (windowId != WINDOW_NONE)
     {
         DetailDrawWindowFrame(windowId);
@@ -1890,11 +1888,11 @@ static u8 DetailGetBestFitSmallFont(const u8 *text, s16 maxWidth)
 
 static void DetailDestroyHpBar(void)
 {
-    if (sData->menu.detailHpBarSpriteId != SPRITE_NONE)
-        DestroySprite(&gSprites[sData->menu.detailHpBarSpriteId]);
-    sData->menu.detailHpBarSpriteId = SPRITE_NONE;
-    DestroyHpBarEndcaps(&sData->menu.detailHpBarLeftEndcapSpriteId,
-                                     &sData->menu.detailHpBarRightEndcapSpriteId);
+    if (sData->menu.hpBarSpriteId != SPRITE_NONE)
+        DestroySprite(&gSprites[sData->menu.hpBarSpriteId]);
+    sData->menu.hpBarSpriteId = SPRITE_NONE;
+    DestroyHpBarEndcaps(&sData->menu.hpBarLeftEndcapSpriteId,
+                                     &sData->menu.hpBarRightEndcapSpriteId);
 
     FreeSpriteTilesByTag(B_STATUS_DETAIL_HP_BAR_TILE_TAG);
 }
@@ -1906,44 +1904,46 @@ static void DetailRefreshHpBar(void)
     s16 maxHp = gBattleMons[battler].maxHP;
     struct Sprite *sprite;
 
-    if (sData->menu.detailHpBarSpriteId == SPRITE_NONE)
+    if (sData->menu.hpBarSpriteId == SPRITE_NONE)
     {
-        sData->menu.detailHpBarSpriteId = CreateHpBarSprite(B_STATUS_DETAIL_HP_BAR_TILE_TAG,
+        sData->menu.hpBarSpriteId = CreateHpBarSprite(B_STATUS_DETAIL_HP_BAR_TILE_TAG,
                                                                                 21,
                                                                                 70);
-        if (sData->menu.detailHpBarSpriteId == SPRITE_NONE)
+        if (sData->menu.hpBarSpriteId == SPRITE_NONE)
             return;
-        CreateHpBarEndcaps(&sData->menu.detailHpBarLeftEndcapSpriteId,
-                                        &sData->menu.detailHpBarRightEndcapSpriteId);
+        CreateHpBarEndcaps(&sData->menu.hpBarLeftEndcapSpriteId,
+                                        &sData->menu.hpBarRightEndcapSpriteId);
     }
 
-    sprite = &gSprites[sData->menu.detailHpBarSpriteId];
+    sprite = &gSprites[sData->menu.hpBarSpriteId];
     sprite->x = 21;
     sprite->y = 70;
     if (maxHp <= 0)
     {
         sprite->invisible = TRUE;
-        if (sData->menu.detailHpBarLeftEndcapSpriteId != SPRITE_NONE)
-            gSprites[sData->menu.detailHpBarLeftEndcapSpriteId].invisible = TRUE;
-        if (sData->menu.detailHpBarRightEndcapSpriteId != SPRITE_NONE)
-            gSprites[sData->menu.detailHpBarRightEndcapSpriteId].invisible = TRUE;
+        if (sData->menu.hpBarLeftEndcapSpriteId != SPRITE_NONE)
+            gSprites[sData->menu.hpBarLeftEndcapSpriteId].invisible = TRUE;
+        if (sData->menu.hpBarRightEndcapSpriteId != SPRITE_NONE)
+            gSprites[sData->menu.hpBarRightEndcapSpriteId].invisible = TRUE;
         return;
     }
 
-    UpdateHpBarTilesWithWidth(sData->menu.detailHpBarSpriteId, hp, maxHp,
+    UpdateHpBarTilesWithWidth(sData->menu.hpBarSpriteId, hp, maxHp,
                                            B_STATUS_DETAIL_HEALTHBAR_PIXELS, B_STATUS_DETAIL_HP_BAR_SEGMENTS);
     sprite->invisible = FALSE;
-    UpdateHpBarEndcaps(sData->menu.detailHpBarLeftEndcapSpriteId,
-                                    sData->menu.detailHpBarRightEndcapSpriteId,
+    UpdateHpBarEndcaps(sData->menu.hpBarLeftEndcapSpriteId,
+                                    sData->menu.hpBarRightEndcapSpriteId,
                                     21, 70,
                                     B_STATUS_DETAIL_HP_BAR_SEGMENTS);
 }
 
 static void DetailDestroyStatusIcon(void)
 {
-    if (sData->menu.detailStatusSpriteId != SPRITE_NONE)
-        DestroySprite(&gSprites[sData->menu.detailStatusSpriteId]);
-    sData->menu.detailStatusSpriteId = SPRITE_NONE;
+    if (sData->menu.statusSpriteId != SPRITE_NONE)
+    {
+        DestroySprite(&gSprites[sData->menu.statusSpriteId]);
+        sData->menu.statusSpriteId = SPRITE_NONE;
+    }
 }
 
 static void DetailRefreshStatusIcon(void)
@@ -1954,63 +1954,52 @@ static void DetailRefreshStatusIcon(void)
     if (ailment == AILMENT_NONE || ailment == AILMENT_PKRS)
         return;
 
-    sData->menu.detailStatusSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons,
-                                                          46,
-                                                          66, 0);
-    if (sData->menu.detailStatusSpriteId != SPRITE_NONE)
+    sData->menu.statusSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons, 46, 66, 0);
+
+    if (sData->menu.statusSpriteId != SPRITE_NONE)
     {
-        StartSpriteAnim(&gSprites[sData->menu.detailStatusSpriteId], ailment - 1);
-        gSprites[sData->menu.detailStatusSpriteId].oam.priority = 0;
+        StartSpriteAnim(&gSprites[sData->menu.statusSpriteId], ailment - 1);
+        gSprites[sData->menu.statusSpriteId].oam.priority = 0;
     }
 }
 
 static void DetailDrawLRButtonGlyphs(void)
 {
-    u8 itemWindowId = sData->menu.detailWindowIds[WIN_DETAIL_ITEM_ABILITY];
-    u8 statsWindowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
+    u8 itemWindowId = sData->menu.windowIds[WIN_DETAIL_ITEM_ABILITY];
+    u8 statsWindowId = sData->menu.windowIds[WIN_DETAIL_STATS];
     u8 font = FONT_SHORT_NARROW;
-    s16 glyphHeight;
-    s16 statsAbsTop;
-    s16 itemAbsTop;
-    s16 itemY;
-    s16 alignedAbsY;
-    s16 statsY;
-    s16 statsX;
-    s16 itemX;
-    s16 itemWindowWidth;
-    s16 itemWindowHeight;
-    s16 rGlyphWidth;
 
     if (itemWindowId == WINDOW_NONE || statsWindowId == WINDOW_NONE)
         return;
 
-    glyphHeight = 12;//GetKeypadIconHeight(CHAR_L_BUTTON);
+    s32 glyphHeight = 12;//GetKeypadIconHeight(CHAR_L_BUTTON);
     if (glyphHeight == 0)
         glyphHeight = GetFontAttribute(font, FONTATTR_MAX_LETTER_HEIGHT);
     if (glyphHeight <= 0)
         glyphHeight = 8;
 
-    itemWindowWidth = WindowWidthPx(itemWindowId);
-    itemWindowHeight = GetWindowAttribute(itemWindowId, WINDOW_HEIGHT) * 8;
-    rGlyphWidth = GetKeypadIconWidth(CHAR_R_BUTTON);
+    s32 itemWindowWidth = WindowWidthPx(itemWindowId);
+    s32 itemWindowHeight = GetWindowAttribute(itemWindowId, WINDOW_HEIGHT) * 8;
+    s32 rGlyphWidth = GetKeypadIconWidth(CHAR_R_BUTTON);
     if (rGlyphWidth == 0)
         rGlyphWidth = GetStringWidth(font, sText_BattleStatus_DetailRButtonGlyph, 0);
 
-    itemAbsTop = GetWindowAttribute(itemWindowId, WINDOW_TILEMAP_TOP) * 8;
-    statsAbsTop = GetWindowAttribute(statsWindowId, WINDOW_TILEMAP_TOP) * 8;
+    s32 itemAbsTop = GetWindowAttribute(itemWindowId, WINDOW_TILEMAP_TOP) * 8;
+    s32 statsAbsTop = GetWindowAttribute(statsWindowId, WINDOW_TILEMAP_TOP) * 8;
 
-    itemY = itemWindowHeight - glyphHeight - 1;
+    s32 itemY = itemWindowHeight - glyphHeight - 1;
     itemY -= 5;
     if (itemY < 1)
         itemY = 1;
-    alignedAbsY = itemAbsTop + itemY;
-    statsY = alignedAbsY - statsAbsTop;
+
+    s32 alignedAbsY = itemAbsTop + itemY;
+    s32 statsY = alignedAbsY - statsAbsTop;
     statsY -= 1;
     if (statsY < 0)
         statsY = 0;
 
-    statsX = 1;
-    itemX = itemWindowWidth - rGlyphWidth - 2;
+    s32 statsX = 1;
+    s32 itemX = itemWindowWidth - rGlyphWidth - 2;
     if (itemX < 1)
         itemX = 1;
     itemY -= 1;
@@ -2025,29 +2014,28 @@ static void DetailDrawLRButtonGlyphs(void)
 
 static void DetailDestroyTeraTypeIndicator(void)
 {
-    if (sData->menu.detailTeraTypeSpriteId != SPRITE_NONE)
-        DestroySprite(&gSprites[sData->menu.detailTeraTypeSpriteId]);
-    sData->menu.detailTeraTypeSpriteId = SPRITE_NONE;
+    if (sData->menu.teraTypeSpriteId != SPRITE_NONE)
+    {
+        DestroySprite(&gSprites[sData->menu.teraTypeSpriteId]);
+        sData->menu.teraTypeSpriteId = SPRITE_NONE;
+    }
 
     FreeSpriteTilesByTag(B_STATUS_DETAIL_TERA_TYPE_TILE_TAG);
 }
 
 static void DetailRefreshTeraTypeIndicator(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
     struct SpriteSheet sheet;
     struct SpriteTemplate template = sSpriteTemplate_BattleStatusDetailGimmick;
-    enum Type teraType;
-    const u32 *indicatorData;
-    s16 windowLeftPx;
-    s16 windowTopPx;
 
     DetailDestroyTeraTypeIndicator();
-    if (windowId == WINDOW_NONE || B_FLAG_TERA_ORB_CHARGED == 0 || !FlagGet(B_FLAG_TERA_ORB_CHARGED))
+
+    if (!FlagGet(B_FLAG_TERA_ORB_CHARGED))
         return;
 
-    teraType = GetBattlerTeraType(GetSelectedBattler());
-    indicatorData = GetTeraIndicatorSpriteSrc(teraType);
+    enum Type teraType = GetBattlerTeraType(GetSelectedBattler());
+    const u32 *indicatorData = GetTeraIndicatorSpriteSrc(teraType);
     if (indicatorData == NULL)
         return;
 
@@ -2059,13 +2047,12 @@ static void DetailRefreshTeraTypeIndicator(void)
     template.tileTag = B_STATUS_DETAIL_TERA_TYPE_TILE_TAG;
     template.paletteTag = TAG_TERA_INDICATOR_PAL;
 
-    windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
-    windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    sData->menu.detailTeraTypeSpriteId = CreateSprite(&template,
-                                                            windowLeftPx + 24 + (B_STATUS_DETAIL_GIMMICK_W / 2),
-                                                            windowTopPx + 23, 0);
-    if (sData->menu.detailTeraTypeSpriteId != SPRITE_NONE)
-        gSprites[sData->menu.detailTeraTypeSpriteId].oam.priority = 0;
+    s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
+    s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
+    sData->menu.teraTypeSpriteId = CreateSprite(&template, windowLeftPx + 24 + (B_STATUS_DETAIL_GIMMICK_W / 2), windowTopPx + 23, 0);
+
+    if (sData->menu.teraTypeSpriteId != SPRITE_NONE)
+        gSprites[sData->menu.teraTypeSpriteId].oam.priority = 0;
 }
 
 static const u8 *GetGimmickIndicatorData(enum BattlerId battler, u32 *palTag)
@@ -2081,16 +2068,18 @@ static const u8 *GetGimmickIndicatorData(enum BattlerId battler, u32 *palTag)
 
 static void DetailDestroyGimmickIndicator(void)
 {
-    if (sData->menu.detailGimmickSpriteId != SPRITE_NONE)
-        DestroySprite(&gSprites[sData->menu.detailGimmickSpriteId]);
-    sData->menu.detailGimmickSpriteId = SPRITE_NONE;
+    if (sData->menu.gimmickSpriteId != SPRITE_NONE)
+    {
+        DestroySprite(&gSprites[sData->menu.gimmickSpriteId]);
+        sData->menu.gimmickSpriteId = SPRITE_NONE;
+    }
 
     FreeSpriteTilesByTag(B_STATUS_DETAIL_GIMMICK_TILE_TAG);
 }
 
 static void DetailRefreshGimmickIndicator(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
     const u8 *indicatorData;
     u32 palTag;
     struct SpriteTemplate template = sSpriteTemplate_BattleStatusDetailGimmick;
@@ -2101,8 +2090,6 @@ static void DetailRefreshGimmickIndicator(void)
     s16 indicatorTopPx;
 
     DetailDestroyGimmickIndicator();
-    if (windowId == WINDOW_NONE)
-        return;
 
     indicatorData = GetGimmickIndicatorData(GetSelectedBattler(), &palTag);
     if (indicatorData == NULL || palTag == 0)
@@ -2119,26 +2106,22 @@ static void DetailRefreshGimmickIndicator(void)
     indicatorLeftPx = windowLeftPx + 2;
     indicatorTopPx = windowTopPx + 33;
 
-    sData->menu.detailGimmickSpriteId = CreateSprite(&template,
-                                                           indicatorLeftPx + (B_STATUS_DETAIL_GIMMICK_W / 2),
-                                                           indicatorTopPx + (B_STATUS_DETAIL_GIMMICK_H / 2), 0);
-    if (sData->menu.detailGimmickSpriteId != SPRITE_NONE)
-        gSprites[sData->menu.detailGimmickSpriteId].oam.priority = 0;
+    sData->menu.gimmickSpriteId = CreateSprite(&template, indicatorLeftPx + (B_STATUS_DETAIL_GIMMICK_W / 2), indicatorTopPx + (B_STATUS_DETAIL_GIMMICK_H / 2), 0);
+
+    if (sData->menu.gimmickSpriteId != SPRITE_NONE)
+        gSprites[sData->menu.gimmickSpriteId].oam.priority = 0;
 }
 
 static void DetailRefreshItemAbilityWindow(void)
 {
     enum BattlerId battler = GetSelectedBattler();
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
-    u8 statsWindowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
+    u8 statsWindowId = sData->menu.windowIds[WIN_DETAIL_STATS];
     const u8 *itemText = sText_BattleStatus_DetailHeldItemValue;
     const u8 *abilityText = sText_BattleStatus_DetailAbilityValue;
     u8 itemFont;
     u8 abilityFont;
     s16 maxValueWidth;
-
-    if (windowId == WINDOW_NONE)
-        return;
 
     if (IsOnPlayerSide(battler))
     {
@@ -2167,58 +2150,41 @@ static void DetailRefreshItemAbilityWindow(void)
     DetailDrawLRButtonGlyphs();
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
-    if (statsWindowId != WINDOW_NONE)
-    {
-        PutWindowTilemap(statsWindowId);
-        CopyWindowToVram(statsWindowId, COPYWIN_FULL);
-    }
+    PutWindowTilemap(statsWindowId);
+    CopyWindowToVram(statsWindowId, COPYWIN_FULL);
 }
 
 static void DetailRefreshHeader(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
-    u8 monName[POKEMON_NAME_LENGTH + 1];
-    u8 genderSymbol[2];
-    u8 levelText[10];
-    u8 maxLevelText[10];
-    u8 nameFont;
-    u8 gender;
-    u8 level;
-    s16 maxNameWidth;
-    s16 levelMaxWidth;
-    s16 levelX;
-    s16 genderX;
-    struct Pokemon *mon;
-
-    if (windowId == WINDOW_NONE)
-        return;
-
-    mon = GetBattlerMon(GetSelectedBattler());
-    gender = GetMonGender(mon);
-    level = GetMonData(mon, MON_DATA_LEVEL);
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
+    struct Pokemon *mon = GetBattlerMon(GetSelectedBattler());
+    enum Gender gender = GetMonGender(mon);
+    u32 level = GetMonData(mon, MON_DATA_LEVEL);
 
     DetailDrawWindowFrame(windowId);
-    genderX = WindowWidthPx(windowId) - 2 - B_STATUS_GENDER_W;
+    s32 genderX = WindowWidthPx(windowId) - 2 - B_STATUS_GENDER_W;
 
-    maxLevelText[0] = CHAR_EXTRA_SYMBOL;
-    maxLevelText[1] = CHAR_LV_2;
+    u8 maxLevelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
+
     ConvertIntToDecimalStringN(maxLevelText + 2, 999, STR_CONV_MODE_LEFT_ALIGN, 3);
-    levelMaxWidth = GetStringWidth(FONT_SMALL, maxLevelText, 0);
-    levelX = genderX - 2 - levelMaxWidth;
+    s32 levelMaxWidth = GetStringWidth(FONT_SMALL, maxLevelText, 0);
+    s32 levelX = genderX - 2 - levelMaxWidth;
+
     if (levelX < 2)
         levelX = 2;
 
+    u8 monName[POKEMON_NAME_LENGTH + 1];
     GetMonData(GetBattlerMon(GetSelectedBattler()), MON_DATA_NICKNAME, monName);
-    maxNameWidth = levelX - 4;
+    s32 maxNameWidth = levelX - 4;
     if (maxNameWidth < 16)
         maxNameWidth = 16;
-    nameFont = GetBestFitNameFont(monName, maxNameWidth);
+
+    u32 nameFont = GetBestFitNameFont(monName, maxNameWidth);
     AddTextPrinterParameterized4(windowId, nameFont, 2, 2, 0, 0, sTextColor_BattleStatus_Default,
                                  TEXT_SKIP_DRAW, monName);
     DetailDestroyGimmickIndicator();
-    if (B_FLAG_TERA_ORB_CHARGED != 0
-     && FlagGet(B_FLAG_TERA_ORB_CHARGED)
-     && IsOnPlayerSide(GetSelectedBattler()))
+
+    if (FlagGet(B_FLAG_TERA_ORB_CHARGED) && IsOnPlayerSide(GetSelectedBattler()))
     {
         AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER,
                                      2,
@@ -2233,8 +2199,7 @@ static void DetailRefreshHeader(void)
     }
     DetailRefreshGimmickIndicator();
 
-    levelText[0] = CHAR_EXTRA_SYMBOL;
-    levelText[1] = CHAR_LV_2;
+    u8 levelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
     ConvertIntToDecimalStringN(levelText + 2, level, STR_CONV_MODE_LEFT_ALIGN, 3);
 
     AddTextPrinterParameterized4(windowId, FONT_SMALL, levelX, 2, 0, 0, sTextColor_BattleStatus_Default,
@@ -2244,6 +2209,7 @@ static void DetailRefreshHeader(void)
     {
         const u8 *colors = (gender == MON_MALE) ? sTextColor_BattleStatus_Male : sTextColor_BattleStatus_Female;
 
+        u8 genderSymbol[2];
         genderSymbol[0] = (gender == MON_MALE) ? CHAR_MALE : CHAR_FEMALE;
         genderSymbol[1] = EOS;
         AddTextPrinterParameterized4(windowId, FONT_SMALL, genderX, 2, 0, 0,
@@ -2260,9 +2226,11 @@ static void DetailRefreshIcon(void)
     u16 species;
     u32 personality;
 
-    if (sData->menu.detailIconSpriteId != SPRITE_NONE)
-        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.detailIconSpriteId]);
-    sData->menu.detailIconSpriteId = SPRITE_NONE;
+    if (sData->menu.iconSpriteId != SPRITE_NONE)
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.iconSpriteId]);
+        sData->menu.iconSpriteId = SPRITE_NONE;
+    }
 
     mon = GetBattlerMon(GetSelectedBattler());
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
@@ -2271,19 +2239,20 @@ static void DetailRefreshIcon(void)
     if (species == SPECIES_NONE)
         return;
 
-    sData->menu.detailIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy,
-                                                         33, 52, 0, personality);
-    if (sData->menu.detailIconSpriteId != SPRITE_NONE)
-        gSprites[sData->menu.detailIconSpriteId].oam.priority = 0;
+    sData->menu.iconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, 33, 52, 0, personality);
+    if (sData->menu.iconSpriteId != SPRITE_NONE)
+        gSprites[sData->menu.iconSpriteId].oam.priority = 0;
 }
 
 static void DetailDestroyTypeIcons(void)
 {
-    for (u32 i = 0; i < ARRAY_COUNT(sData->menu.detailTypeIconSpriteIds); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(sData->menu.typeIconSpriteIds); i++)
     {
-        if (sData->menu.detailTypeIconSpriteIds[i] != SPRITE_NONE)
-            DestroySprite(&gSprites[sData->menu.detailTypeIconSpriteIds[i]]);
-        sData->menu.detailTypeIconSpriteIds[i] = SPRITE_NONE;
+        if (sData->menu.typeIconSpriteIds[i] != SPRITE_NONE)
+        {
+            DestroySprite(&gSprites[sData->menu.typeIconSpriteIds[i]]);
+            sData->menu.typeIconSpriteIds[i] = SPRITE_NONE;
+        }
     }
 }
 
@@ -2292,17 +2261,9 @@ static void DetailRefreshTypeIcons(void)
     enum BattlerId battler = GetSelectedBattler();
     enum Type type1 = gBattleMons[battler].types[0];
     enum Type type2 = gBattleMons[battler].types[1];
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_HEADER];
-    s16 windowLeftPx;
-    s16 windowTopPx;
-    s16 rightAlignedTypeRightPx;
-    s16 type1LeftPx;
-    s16 type2LeftPx;
-    u8 spriteId;
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_HEADER];
 
     DetailDestroyTypeIcons();
-    if (windowId == WINDOW_NONE)
-        return;
 
     if (GetActiveGimmick(battler) == GIMMICK_TERA)
     {
@@ -2315,37 +2276,29 @@ static void DetailRefreshTypeIcons(void)
     if (type2 >= NUMBER_OF_MON_TYPES)
         type2 = TYPE_MYSTERY;
 
-    windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
-    windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
+    s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
+    s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
 
-    rightAlignedTypeRightPx = windowLeftPx + WindowWidthPx(windowId) - 2;
-    type2LeftPx = rightAlignedTypeRightPx - 32;
-    type1LeftPx = type2LeftPx - 33;
+    s32 rightAlignedTypeRightPx = windowLeftPx + WindowWidthPx(windowId) - 2;
+    s32 type2LeftPx = rightAlignedTypeRightPx - 32;
+    s32 type1LeftPx = type2LeftPx - 33;
 
-    spriteId = CreateSprite(&gSpriteTemplate_MoveTypes,
-                            type1LeftPx + 16,
-                            windowTopPx + 25, 0);
-    if (spriteId != SPRITE_NONE)
-    {
-        StartSpriteAnim(&gSprites[spriteId], type1);
-        gSprites[spriteId].oam.paletteNum = gTypesInfo[type1].palette;
-        gSprites[spriteId].oam.priority = 0;
-        sData->menu.detailTypeIconSpriteIds[0] = spriteId;
-    }
+    u8 spriteId = CreateSprite(&gSpriteTemplate_MoveTypes, type1LeftPx + 16, windowTopPx + 25, 0);
+
+    StartSpriteAnim(&gSprites[spriteId], type1);
+    gSprites[spriteId].oam.paletteNum = gTypesInfo[type1].palette;
+    gSprites[spriteId].oam.priority = 0;
+    sData->menu.typeIconSpriteIds[0] = spriteId;
 
     if (type2 == TYPE_MYSTERY || type2 == type1)
         return;
 
-    spriteId = CreateSprite(&gSpriteTemplate_MoveTypes,
-                            type2LeftPx + 16,
-                            windowTopPx + 25, 0);
-    if (spriteId != SPRITE_NONE)
-    {
-        StartSpriteAnim(&gSprites[spriteId], type2);
-        gSprites[spriteId].oam.paletteNum = gTypesInfo[type2].palette;
-        gSprites[spriteId].oam.priority = 0;
-        sData->menu.detailTypeIconSpriteIds[1] = spriteId;
-    }
+    spriteId = CreateSprite(&gSpriteTemplate_MoveTypes, type2LeftPx + 16, windowTopPx + 25, 0);
+
+    StartSpriteAnim(&gSprites[spriteId], type2);
+    gSprites[spriteId].oam.paletteNum = gTypesInfo[type2].palette;
+    gSprites[spriteId].oam.priority = 0;
+    sData->menu.typeIconSpriteIds[1] = spriteId;
 }
 
 static s16 DetailGetStatRowTextY(u8 row)
@@ -2374,14 +2327,12 @@ static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag)
 
 static void DetailCreateStatPips(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_STATS];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_STATS];
     s16 windowLeftPx;
     s16 windowTopPx;
     u8 row, col;
 
     DetailDestroyStatPips();
-    if (windowId == WINDOW_NONE)
-        return;
 
     LoadSpritePaletteInSlot(&(struct SpritePalette){
         .data = gBattleStatusTextPalette,
@@ -2403,7 +2354,7 @@ static void DetailCreateStatPips(void)
             u8 spriteId = CreateSprite(&sSpriteTemplate_BattleStatusDetailStatPip,
                                        windowLeftPx + 56 + col * 8,
                                        rowY, 0);
-            sData->menu.detailStatPipSpriteIds[row][col] = spriteId;
+            sData->menu.statPipSpriteIds[row][col] = spriteId;
             if (spriteId != SPRITE_NONE)
             {
                 gSprites[spriteId].invisible = FALSE;
@@ -2421,11 +2372,11 @@ static void DetailDestroyStatPips(void)
     {
         for (col = 0; col < B_STATUS_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
-            u8 spriteId = sData->menu.detailStatPipSpriteIds[row][col];
+            u8 spriteId = sData->menu.statPipSpriteIds[row][col];
 
             if (spriteId != SPRITE_NONE)
                 DestroySprite(&gSprites[spriteId]);
-            sData->menu.detailStatPipSpriteIds[row][col] = SPRITE_NONE;
+            sData->menu.statPipSpriteIds[row][col] = SPRITE_NONE;
         }
     }
 
@@ -2456,7 +2407,7 @@ static void DetailRefreshStatPips(void)
 
         for (col = 0; col < B_STATUS_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
-            u8 spriteId = sData->menu.detailStatPipSpriteIds[row][col];
+            u8 spriteId = sData->menu.statPipSpriteIds[row][col];
             u16 currentTag = (col < absDelta) ? tileTag : B_STATUS_DETAIL_STAT_PIP_DOT_TILE_TAG;
 
             DetailSetStatPipSpriteGraphic(spriteId, currentTag);
@@ -2469,20 +2420,20 @@ static void DetailCycleBattler(s8 direction)
     DetailDestroyGimmickIndicator();
     DetailDestroyTeraTypeIndicator();
 
-    u32 cardCount = gBattlersCount;
+    u32 cardCount = GetCardCount();
 
     if (direction < 0)
     {
-        if (sData->menu.selectedCardIndex == 0)
-            sData->menu.selectedCardIndex = cardCount - 1;
+        if (sData->menu.selectedCard  == 0)
+            sData->menu.selectedCard  = cardCount - 1;
         else
-            sData->menu.selectedCardIndex--;
+            sData->menu.selectedCard --;
     }
     else
     {
-        sData->menu.selectedCardIndex++;
-        if (sData->menu.selectedCardIndex >= cardCount)
-            sData->menu.selectedCardIndex = 0;
+        sData->menu.selectedCard ++;
+        if (sData->menu.selectedCard  >= cardCount)
+            sData->menu.selectedCard  = 0;
     }
 
     DetailRefreshIcon();
@@ -2498,9 +2449,9 @@ static void DetailCycleBattler(s8 direction)
 static void DetailInitEffectsList(void)
 {
     DetailDestroyEffectsScrollbar();
-    sData->menu.detailActiveEffectsCount = 0;
-    sData->menu.detailEffectsCursor = 0;
-    sData->menu.detailEffectsScroll = 0;
+    sData->menu.activeEffectsCount = 0;
+    sData->menu.effectsCursor = 0;
+    sData->menu.effectsScroll = 0;
     DetailBuildActiveEffectsForBattler();
     DetailRefreshEffectsSection();
 }
@@ -2510,10 +2461,10 @@ static void DetailBuildActiveEffectsForBattler(void)
     enum BattlerId battler = GetSelectedBattler();
     enum BattleSide side = GetBattlerSide(battler);
 
-    u32 status1 = gBattleMons[battler].status1;
+    u32 nonVolatile = gBattleMons[battler].status1;
     u32 sideStatuses = gSideStatuses[side];
 
-    struct BattleStatusEffectEntry *entries = sData->menu.detailActiveEffects;
+    struct BattleStatusEntry *entries = sData->menu.activeEffects;
 
     if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EXTREMELY_HARSH_SUNLIGHT, entries);
@@ -2606,16 +2557,16 @@ static void DetailBuildActiveEffectsForBattler(void)
     if (IsHazardOnSide(side, HAZARDS_STICKY_WEB))
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STICKY_WEB, entries);
 
-    if (status1 & STATUS1_TOXIC_POISON)
+    if (nonVolatile & STATUS1_TOXIC_POISON)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BADLY_POISONED, entries);
-    else if (status1 & STATUS1_POISON)
+    else if (nonVolatile & STATUS1_POISON)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_POISONED, entries);
 
-    if (status1 & STATUS1_PARALYSIS)
+    if (nonVolatile & STATUS1_PARALYSIS)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PARALYZED, entries);
-    if (status1 & STATUS1_BURN)
+    if (nonVolatile & STATUS1_BURN)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BURNED, entries);
-    if (status1 & STATUS1_FROSTBITE)
+    if (nonVolatile & STATUS1_FROSTBITE)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FROSTBITE, entries);
 
     if (gBattleMons[battler].volatiles.focusEnergy
@@ -2701,6 +2652,216 @@ static void DetailBuildActiveEffectsForBattler(void)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAMPAGING, entries);
 }
 
+static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide side, enum BattleStatusEffectId effectId, struct BattleStatusEntry *entries)
+{
+    struct BattleStatusEntry entry = {0};
+    entry.effectId = effectId;
+    u32 timer = 0;
+
+    switch (effectId)
+    {
+    case B_STATUS_EFFECT_HARSH_SUNLIGHT:
+    case B_STATUS_EFFECT_RAIN:
+    case B_STATUS_EFFECT_SANDSTORM:
+    case B_STATUS_EFFECT_SNOW:
+    case B_STATUS_EFFECT_FOG:
+        if (gBattleStruct->weatherDuration > 0)
+        {
+            u32 baseTotal = 5;
+            u32 extendedTotal = gBattleStruct->weatherDurationTotal;
+            if (gBattleStruct->weatherSide == B_SIDE_PLAYER)
+                baseTotal = extendedTotal;
+            u32 remaining = gBattleStruct->weatherDuration;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gBattleStruct->weatherSide);
+        }
+        break;
+    case B_STATUS_EFFECT_ELECTRIC_TERRAIN:
+    case B_STATUS_EFFECT_GRASSY_TERRAIN:
+    case B_STATUS_EFFECT_MISTY_TERRAIN:
+    case B_STATUS_EFFECT_PSYCHIC_TERRAIN:
+        if (gFieldTimers.terrainTimer > 0)
+        {
+            u32 baseTotal = 5;
+            u32 extendedTotal = gFieldTimers.terrainTimerTotal;
+            if (gFieldTimers.terrainSide == B_SIDE_PLAYER)
+                baseTotal = extendedTotal;
+            u32 remaining = gFieldTimers.terrainTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gFieldTimers.terrainSide);
+        }
+        break;
+    case B_STATUS_EFFECT_TRICK_ROOM:
+        DetailSetDuration(&entry, gFieldTimers.trickRoomTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_MAGIC_ROOM:
+        DetailSetDuration(&entry, gFieldTimers.magicRoomTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_WONDER_ROOM:
+        DetailSetDuration(&entry, gFieldTimers.wonderRoomTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_GRAVITY:
+        DetailSetDuration(&entry, gFieldTimers.gravityTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_MUD_SPORT:
+        DetailSetDuration(&entry, gFieldTimers.mudSportTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_WATER_SPORT:
+        DetailSetDuration(&entry, gFieldTimers.waterSportTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_FAIRY_LOCK:
+        DetailSetDuration(&entry, gFieldTimers.fairyLockTimer, 2, 0, side);
+        break;
+    case B_STATUS_EFFECT_MIST:
+        DetailSetDuration(&entry, gSideTimers[side].mistTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_SAFEGUARD:
+        DetailSetDuration(&entry, gSideTimers[side].safeguardTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_LUCKY_CHANT:
+        DetailSetDuration(&entry, gSideTimers[side].luckyChantTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_TAILWIND:
+        DetailSetDuration(&entry, gSideTimers[side].tailwindTimer, (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3), 0, side);
+        break;
+    case B_STATUS_EFFECT_LIGHT_SCREEN:
+        if (gSideTimers[side].lightscreenTimer > 0)
+        {
+            u32 baseTotal = 5;
+            u32 extendedTotal = gSideTimers[side].lightscreenTimerTotal;
+            if (side == B_SIDE_PLAYER)
+                baseTotal = extendedTotal;
+            u32 remaining = gSideTimers[side].lightscreenTimer;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side);
+        }
+        break;
+    case B_STATUS_EFFECT_REFLECT:
+        if (gSideTimers[side].reflectTimer > 0)
+        {
+            u32 baseTotal = 5;
+            u16 extendedTotal  = gSideTimers[side].reflectTimerTotal;
+            u32 remaining = gSideTimers[side].reflectTimer;
+            if (side == B_SIDE_PLAYER)
+                baseTotal = extendedTotal;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side);
+        }
+        break;
+    case B_STATUS_EFFECT_AURORA_VEIL:
+        if (gSideTimers[side].auroraVeilTimer > 0)
+        {
+            u32 baseTotal = 5;
+            u16 extendedTotal = gSideTimers[side].auroraVeilTimerTotal;
+            u32 remaining = gSideTimers[side].auroraVeilTimer;
+            if (side == B_SIDE_PLAYER)
+                baseTotal = extendedTotal;
+            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side);
+        }
+        break;
+    case B_STATUS_EFFECT_RAINBOW:
+        DetailSetDuration(&entry, gSideTimers[side].rainbowTimer, 4, 0, side);
+        break;
+    case B_STATUS_EFFECT_SWAMP:
+        DetailSetDuration(&entry, gSideTimers[side].swampTimer, 4, 0, side);
+        break;
+    case B_STATUS_EFFECT_SEA_OF_FIRE:
+        DetailSetDuration(&entry, gSideTimers[side].seaOfFireTimer, 4, 0, side);
+        break;
+    case B_STATUS_EFFECT_G_MAX_WILDFIRE:
+    case B_STATUS_EFFECT_G_MAX_VOLCALITH:
+    case B_STATUS_EFFECT_G_MAX_VINE_LASH:
+    case B_STATUS_EFFECT_G_MAX_CANNONADE:
+        DetailSetDuration(&entry, gSideTimers[side].damageNonTypesTimer, 5, 0, side);
+        break;
+    case B_STATUS_EFFECT_SPIKES:
+        entry.stackCount = gSideTimers[side].spikesAmount;
+        break;
+    case B_STATUS_EFFECT_TOXIC_SPIKES:
+        entry.stackCount = gSideTimers[side].toxicSpikesAmount;
+        break;
+    case B_STATUS_EFFECT_CONFUSION:
+        timer = gBattleMons[battler].volatiles.confusionTurns;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    case B_STATUS_EFFECT_DROWSY:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.yawn, 2, 0, side);
+        break;
+    case B_STATUS_EFFECT_ENCORE:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.encoreTimer, (B_ENCORE_TIMER > 1 ? B_ENCORE_TIMER - 1 : 1), 0, side);
+        break;
+    case B_STATUS_EFFECT_HEALING_PREVENTED:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.healBlockTimer, B_HEAL_BLOCK_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_MOVE_DISABLED:
+        timer = gBattleMons[battler].volatiles.disableTimer;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    case B_STATUS_EFFECT_EMBARGO:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.embargoTimer, B_EMBARGO_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_CHARGE:
+        timer = gBattleMons[battler].volatiles.chargeTimer;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    case B_STATUS_EFFECT_TAUNT:
+        timer = gBattleMons[battler].volatiles.tauntTimer;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    case B_STATUS_EFFECT_TELEKINESIS:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.telekinesisTimer, B_TELEKINESIS_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_MAGNET_RISE:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.magnetRiseTimer, B_MAGNET_RISE_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_WISH:
+        DetailSetDuration(&entry, gBattleStruct->wish[battler].counter, 2, 0, side);
+        break;
+    case B_STATUS_EFFECT_BOUND:
+        timer = gBattleMons[battler].volatiles.wrapTurns;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    case B_STATUS_EFFECT_BIDE:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.bideTurns, 2, 0, side);
+        break;
+    case B_STATUS_EFFECT_FUTURE_ATTACK:
+        DetailSetDuration(&entry, gBattleStruct->futureSight[battler].counter, 3, 0, side);
+        break;
+    case B_STATUS_EFFECT_UPROAR:
+        if (B_UPROAR_TURNS >= GEN_5)
+        {
+            DetailSetDuration(&entry, gBattleMons[battler].volatiles.uproarTurns, (B_UPROAR_TURN_COUNT >= 2 ? B_UPROAR_TURN_COUNT - 2 : gBattleMons[battler].volatiles.uproarTurns), 0, side);
+        }
+        else
+        {
+            timer = gBattleMons[battler].volatiles.uproarTurns;
+            DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        }
+        break;
+    case B_STATUS_EFFECT_THROAT_CHOP:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.throatChopTimer, B_THROAT_CHOP_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_LASER_FOCUS:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.laserFocusTimer, B_LASER_FOCUS_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_SLOW_START:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.slowStartTimer, B_SLOW_START_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_SYRUPY:
+        DetailSetDuration(&entry, gBattleMons[battler].volatiles.syrupBombTimer, B_SYRUP_BOMB_TIMER, 0, side);
+        break;
+    case B_STATUS_EFFECT_RAMPAGING:
+        timer = gBattleMons[battler].volatiles.rampageTurns;
+        DetailSetDurationUnknownTotal(&entry, timer, timer, 0, side);
+        break;
+    default:
+        break;
+    }
+
+    entries[sData->menu.activeEffectsCount++] = entry;
+}
+
 static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal)
 {
     if (extendedTotal > baseTotal && remaining <= (extendedTotal - baseTotal))
@@ -2719,208 +2880,7 @@ static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal)
     return remaining;
 }
 
-static void DetailTryAddActiveEffect(enum BattlerId battler, enum BattleSide side, enum BattleStatusEffectId effectId,
-                                     struct BattleStatusEffectEntry *entries)
-{
-    struct BattleStatusEffectEntry entry = {0};
-    entry.effectId = effectId;
-
-    switch (effectId)
-    {
-    case B_STATUS_EFFECT_HARSH_SUNLIGHT:
-    case B_STATUS_EFFECT_RAIN:
-    case B_STATUS_EFFECT_SANDSTORM:
-    case B_STATUS_EFFECT_SNOW:
-    case B_STATUS_EFFECT_FOG:
-        if (gBattleStruct->weatherDuration > 0)
-        {
-            u32 baseTotal = 5;
-            u32 extendedTotal = gBattleStruct->weatherDurationTotal;
-            u32 remaining = gBattleStruct->weatherDuration;
-            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
-            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gBattleStruct->weatherSide, TRUE);
-        }
-        break;
-    case B_STATUS_EFFECT_ELECTRIC_TERRAIN:
-    case B_STATUS_EFFECT_GRASSY_TERRAIN:
-    case B_STATUS_EFFECT_MISTY_TERRAIN:
-    case B_STATUS_EFFECT_PSYCHIC_TERRAIN:
-        if (gFieldTimers.terrainTimer > 0)
-        {
-            u32 baseTotal = 5;
-            u32 extendedTotal = gFieldTimers.terrainTimerTotal;
-            u32 remaining = gFieldTimers.terrainTimer;
-            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
-            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, gFieldTimers.terrainSide, TRUE);
-        }
-        break;
-    case B_STATUS_EFFECT_TRICK_ROOM:
-        DetailSetDuration(&entry, gFieldTimers.trickRoomTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_MAGIC_ROOM:
-        DetailSetDuration(&entry, gFieldTimers.magicRoomTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_WONDER_ROOM:
-        DetailSetDuration(&entry, gFieldTimers.wonderRoomTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_GRAVITY:
-        DetailSetDuration(&entry, gFieldTimers.gravityTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_MUD_SPORT:
-        DetailSetDuration(&entry, gFieldTimers.mudSportTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_WATER_SPORT:
-        DetailSetDuration(&entry, gFieldTimers.waterSportTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_FAIRY_LOCK:
-        DetailSetDuration(&entry, gFieldTimers.fairyLockTimer, 2, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_MIST:
-        DetailSetDuration(&entry, gSideTimers[side].mistTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SAFEGUARD:
-        DetailSetDuration(&entry, gSideTimers[side].safeguardTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_LUCKY_CHANT:
-        DetailSetDuration(&entry, gSideTimers[side].luckyChantTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_TAILWIND:
-        DetailSetDuration(&entry, gSideTimers[side].tailwindTimer,
-                                       (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3), 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_LIGHT_SCREEN:
-        if (gSideTimers[side].lightscreenTimer > 0)
-        {
-            u32 baseTotal = 5;
-            u32 extendedTotal = gSideTimers[side].lightscreenTimerTotal;
-            u32 remaining = gSideTimers[side].lightscreenTimer;
-            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
-            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
-        }
-        break;
-    case B_STATUS_EFFECT_REFLECT:
-        if (gSideTimers[side].reflectTimer > 0)
-        {
-            u32 baseTotal = 5;
-            u16 extendedTotal  = gSideTimers[side].reflectTimerTotal;
-            u32 remaining = gSideTimers[side].reflectTimer;
-            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
-            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
-        }
-        break;
-    case B_STATUS_EFFECT_AURORA_VEIL:
-        if (gSideTimers[side].auroraVeilTimer > 0)
-        {
-            u32 baseTotal = 5;
-            u16 extendedTotal = gSideTimers[side].auroraVeilTimerTotal;
-            u32 remaining = gSideTimers[side].auroraVeilTimer;
-            remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
-            DetailSetDuration(&entry, remaining, baseTotal, extendedTotal, side, TRUE);
-        }
-        break;
-    case B_STATUS_EFFECT_RAINBOW:
-        DetailSetDuration(&entry, gSideTimers[side].rainbowTimer, 4, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SWAMP:
-        DetailSetDuration(&entry, gSideTimers[side].swampTimer, 4, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SEA_OF_FIRE:
-        DetailSetDuration(&entry, gSideTimers[side].seaOfFireTimer, 4, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_G_MAX_WILDFIRE:
-    case B_STATUS_EFFECT_G_MAX_VOLCALITH:
-    case B_STATUS_EFFECT_G_MAX_VINE_LASH:
-    case B_STATUS_EFFECT_G_MAX_CANNONADE:
-        DetailSetDuration(&entry, gSideTimers[side].damageNonTypesTimer, 5, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SPIKES:
-        entry.stackCount = gSideTimers[side].spikesAmount;
-        break;
-    case B_STATUS_EFFECT_TOXIC_SPIKES:
-        entry.stackCount = gSideTimers[side].toxicSpikesAmount;
-        break;
-    case B_STATUS_EFFECT_CONFUSION:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.confusionTurns,
-                                                   gBattleMons[battler].volatiles.confusionTurns, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_DROWSY:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.yawn, 2, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_ENCORE:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.encoreTimer,
-                                       (B_ENCORE_TIMER > 1 ? B_ENCORE_TIMER - 1 : 1), 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_HEALING_PREVENTED:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.healBlockTimer, B_HEAL_BLOCK_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_MOVE_DISABLED:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.disableTimer,
-                                                   gBattleMons[battler].volatiles.disableTimer, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_EMBARGO:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.embargoTimer, B_EMBARGO_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_CHARGE:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.chargeTimer,
-                                                   gBattleMons[battler].volatiles.chargeTimer, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_TAUNT:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.tauntTimer,
-                                                   gBattleMons[battler].volatiles.tauntTimer, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_TELEKINESIS:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.telekinesisTimer, B_TELEKINESIS_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_MAGNET_RISE:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.magnetRiseTimer, B_MAGNET_RISE_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_WISH:
-        DetailSetDuration(&entry, gBattleStruct->wish[battler].counter, 2, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_BOUND:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.wrapTurns,
-                                                   gBattleMons[battler].volatiles.wrapTurns, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_BIDE:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.bideTurns, 2, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_FUTURE_ATTACK:
-        DetailSetDuration(&entry, gBattleStruct->futureSight[battler].counter, 3, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_UPROAR:
-        if (B_UPROAR_TURNS >= GEN_5)
-            DetailSetDuration(&entry, gBattleMons[battler].volatiles.uproarTurns,
-                                           (B_UPROAR_TURN_COUNT >= 2 ? B_UPROAR_TURN_COUNT - 2 : gBattleMons[battler].volatiles.uproarTurns),
-                                           0, side, FALSE);
-        else
-            DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.uproarTurns,
-                                                       gBattleMons[battler].volatiles.uproarTurns, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_THROAT_CHOP:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.throatChopTimer, B_THROAT_CHOP_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_LASER_FOCUS:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.laserFocusTimer, B_LASER_FOCUS_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SLOW_START:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.slowStartTimer, B_SLOW_START_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_SYRUPY:
-        DetailSetDuration(&entry, gBattleMons[battler].volatiles.syrupBombTimer, B_SYRUP_BOMB_TIMER, 0, side, FALSE);
-        break;
-    case B_STATUS_EFFECT_RAMPAGING:
-        DetailSetDurationUnknownTotal(&entry, gBattleMons[battler].volatiles.rampageTurns,
-                                                   gBattleMons[battler].volatiles.rampageTurns, 0, side, FALSE);
-        break;
-    default:
-        break;
-    }
-
-    entries[sData->menu.detailActiveEffectsCount++] = entry;
-}
-
-static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
-                              enum BattleSide setterSide, bool8 isExtendable)
+static void DetailSetDuration(struct BattleStatusEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal, enum BattleSide setterSide)
 {
     if (remaining == 0)
         return;
@@ -2931,62 +2891,33 @@ static void DetailSetDuration(struct BattleStatusEffectEntry *entry, u16 remaini
     entry->durationRemaining = remaining;
     entry->baseTotalDuration = baseTotal;
     entry->setterSide = setterSide;
-    entry->flags |= B_STATUS_EFFECT_FLAG_HAS_DURATION;
-    entry->flags |= B_STATUS_EFFECT_FLAG_TOTAL_KNOWN;
-    // if (isExtendable)
-    // {
-    //     entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDABLE;
-    //     if (setterSide == B_SIDE_PLAYER)
-    //         entry->flags |= B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN;
-    // }
+    entry->hasDuration = TRUE;
+    entry->totalKnown = TRUE;
 }
 
-static void DetailSetDurationUnknownTotal(struct BattleStatusEffectEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal,
-                                                       enum BattleSide setterSide, bool8 isExtendable)
+static void DetailSetDurationUnknownTotal(struct BattleStatusEntry *entry, u16 remaining, u16 baseTotal, u16 extendedTotal, enum BattleSide setterSide)
 {
-    DetailSetDuration(entry, remaining, baseTotal, extendedTotal, setterSide, isExtendable);
-    entry->flags &= ~B_STATUS_EFFECT_FLAG_TOTAL_KNOWN;
+    DetailSetDuration(entry, remaining, baseTotal, extendedTotal, setterSide);
+    entry->totalKnown = FALSE;
 }
 
-static bool8 DetailGetDisplayedDuration(const struct BattleStatusEffectEntry *entry, enum BattleSide viewerSide,
-                                                     u16 *outRemaining, u16 *outTotal)
+static bool8 DetailGetDisplayedDuration(const struct BattleStatusEntry *entry, enum BattleSide viewerSide, u16 *outRemaining, u16 *outTotal)
 {
-    u16 actualTotal;
-    u16 displayedTotal;
-    u16 remaining;
-    u16 elapsed;
-
-    if (!(entry->flags & B_STATUS_EFFECT_FLAG_HAS_DURATION))
+    if (!entry->hasDuration)
         return FALSE;
 
-    if (!(entry->flags & B_STATUS_EFFECT_FLAG_TOTAL_KNOWN))
+    if (!entry->totalKnown)
         return FALSE;
 
     if (entry->baseTotalDuration == 0)
         return FALSE;
 
-    actualTotal = entry->baseTotalDuration;
+    u32 actualTotal = entry->baseTotalDuration;
     if (actualTotal == 0)
         return FALSE;
 
-    remaining = entry->durationRemaining;
-    displayedTotal = actualTotal;
-
-    // 1. Extendable flag set -> TRUE
-    // 2. viewerSide = player && setter side = enemy -> TRUE
-    // 3.
-    if ((entry->flags & B_STATUS_EFFECT_FLAG_EXTENDABLE)
-     && entry->setterSide != viewerSide
-     && !(entry->flags & B_STATUS_EFFECT_FLAG_EXTENDER_KNOWN)
-     && actualTotal > entry->baseTotalDuration)
-    {
-        elapsed = (actualTotal > remaining) ? actualTotal - remaining : 0;
-        if (elapsed < entry->baseTotalDuration)
-        {
-            displayedTotal = entry->baseTotalDuration;
-            remaining = (entry->baseTotalDuration > elapsed) ? entry->baseTotalDuration - elapsed : 0;
-        }
-    }
+    u32 remaining = entry->durationRemaining;
+    u32 displayedTotal = actualTotal;
 
     *outRemaining = remaining;
     *outTotal = displayedTotal;
@@ -3029,54 +2960,43 @@ static void DetailCopyTextToFit(u8 *dst, const u8 *src, u8 fontId, s16 maxWidth)
     *out = EOS;
 }
 
-static const struct BattleStatusEffectData *GetEffectData(enum BattleStatusEffectId effectId)
-{
-    if (effectId >= B_STATUS_EFFECT_COUNT)
-        return NULL;
-
-    return &sBattleStatusEffects[effectId];
-}
-
 static bool8 DetailTryMoveEffectCursor(s8 direction)
 {
-    if (sData->menu.detailActiveEffectsCount == 0)
+    if (sData->menu.activeEffectsCount == 0)
         return FALSE;
 
     if (direction < 0)
     {
-        if (sData->menu.detailEffectsCursor == 0)
+        if (sData->menu.effectsCursor == 0)
             return FALSE;
-        sData->menu.detailEffectsCursor--;
+        sData->menu.effectsCursor--;
     }
     else if (direction > 0)
     {
-        if (sData->menu.detailEffectsCursor + 1 >= sData->menu.detailActiveEffectsCount)
+        if (sData->menu.effectsCursor + 1 >= sData->menu.activeEffectsCount)
             return FALSE;
-        sData->menu.detailEffectsCursor++;
+        sData->menu.effectsCursor++;
     }
     else
     {
         return FALSE;
     }
 
-    if (sData->menu.detailEffectsCursor < sData->menu.detailEffectsScroll)
-        sData->menu.detailEffectsScroll = sData->menu.detailEffectsCursor;
-    else if (sData->menu.detailEffectsCursor >= sData->menu.detailEffectsScroll + B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS)
-        sData->menu.detailEffectsScroll = sData->menu.detailEffectsCursor - B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS + 1;
+    if (sData->menu.effectsCursor < sData->menu.effectsScroll)
+        sData->menu.effectsScroll = sData->menu.effectsCursor;
+    else if (sData->menu.effectsCursor >= sData->menu.effectsScroll + B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS)
+        sData->menu.effectsScroll = sData->menu.effectsCursor - B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS + 1;
 
     return TRUE;
 }
 
 static void DetailRefreshEffectsWindow(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_EFFECTS];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_EFFECTS];
     u8 row;
     enum BattleSide viewerSide = B_SIDE_PLAYER;
     u8 fractionFont = FONT_SMALL_NARROWER;
     u8 fractionYOffset = 0;
-
-    if (windowId == WINDOW_NONE)
-        return;
 
     if (GetFontAttribute(fractionFont, FONTATTR_MAX_LETTER_HEIGHT) < 12)
     {
@@ -3087,32 +3007,30 @@ static void DetailRefreshEffectsWindow(void)
     AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, 2, 0, 0, sTextColor_BattleStatus_Default,
                                  TEXT_SKIP_DRAW, sText_BattleStatus_DetailEffectsHeader);
 
-    if (sData->menu.detailActiveEffectsCount != 0)
+    if (sData->menu.activeEffectsCount != 0)
     {
         for (row = 0; row < B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS; row++)
         {
-            u16 index = sData->menu.detailEffectsScroll + row;
-            const struct BattleStatusEffectEntry *entry;
-            const struct BattleStatusEffectData *effectData;
-            u8 y;
-            u16 remaining;
-            u16 total;
+            u16 index = sData->menu.effectsScroll + row;
 
-            if (index >= sData->menu.detailActiveEffectsCount)
+            if (index >= sData->menu.activeEffectsCount)
                 break;
 
-            entry = &sData->menu.detailActiveEffects[index];
-            effectData = GetEffectData(entry->effectId);
-            if (effectData == NULL || effectData->name == NULL)
+            const struct BattleStatusEntry *entry = &sData->menu.activeEffects[index];
+            const struct BattleStatusEffectData *effectData = &sBattleStatusEffects[entry->effectId];
+
+            if (effectData->name == NULL)
                 continue;
 
-            y = 16 + row * 12;
-            if (index == sData->menu.detailEffectsCursor)
+            u32 y = 16 + row * 12;
+            if (index == sData->menu.effectsCursor)
             {
                 AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, 2, y, 0, 0,
                                              sTextColor_BattleStatus_Default, TEXT_SKIP_DRAW, gText_SelectorArrow2);
             }
 
+            u16 remaining;
+            u16 total;
             bool32 hasFraction = DetailGetDisplayedDuration(entry, viewerSide, &remaining, &total);
 
             if (hasFraction)
@@ -3189,16 +3107,7 @@ static void DetailRefreshEffectsWindow(void)
 
 static void DetailRefreshEffectsScrollbar(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_EFFECTS];
-    s16 windowLeftPx;
-    s16 windowTopPx;
-    s16 scrollbarMinY;
-    s16 scrollbarMaxY;
-    s16 scrollbarX;
-    u16 maxScroll;
-    u8 spriteId;
-
-    if (windowId == WINDOW_NONE || sData->menu.detailActiveEffectsCount <= B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS)
+    if (sData->menu.activeEffectsCount <= B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS)
     {
         DetailUpdateScrollbarLane(FALSE);
         DetailDestroyEffectsScrollbar();
@@ -3207,39 +3116,39 @@ static void DetailRefreshEffectsScrollbar(void)
 
     DetailUpdateScrollbarLane(TRUE);
 
-    windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
-    windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
-    scrollbarMinY = windowTopPx + 16 + 7;
-    scrollbarMaxY = scrollbarMinY + 3 + (B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
-    maxScroll = sData->menu.detailActiveEffectsCount - B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS;
-    if (sData->menu.detailEffectsScroll > maxScroll)
-        sData->menu.detailEffectsScroll = maxScroll;
+    u32 windowId = sData->menu.windowIds[WIN_DETAIL_EFFECTS];
+    s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
+    s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
+    s32 scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
+    s32 scrollbarMinY = windowTopPx + 16 + 7;
+    s32 scrollbarMaxY = scrollbarMinY + 3 + (B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
+    s32 maxScroll = sData->menu.activeEffectsCount - B_STATUS_DETAIL_EFFECTS_VISIBLE_ROWS;
 
-    if (sData->menu.detailEffectsScrollbarSpriteId == SPRITE_NONE)
+    if (sData->menu.effectsScroll > maxScroll)
+        sData->menu.effectsScroll = maxScroll;
+
+    u8 spriteId;
+    if (sData->menu.effectsScrollbarSpriteId == SPRITE_NONE)
     {
         spriteId = CreateSprite(&sSpriteTemplate_BattleStatusDetailEffectsScrollbar, scrollbarX, scrollbarMinY, 0);
         if (spriteId == SPRITE_NONE)
             return;
-        sData->menu.detailEffectsScrollbarSpriteId = spriteId;
+        sData->menu.effectsScrollbarSpriteId = spriteId;
         gSprites[spriteId].oam.priority = 0;
     }
 
-    spriteId = sData->menu.detailEffectsScrollbarSpriteId;
+    spriteId = sData->menu.effectsScrollbarSpriteId;
     gSprites[spriteId].x = scrollbarX;
-    gSprites[spriteId].y = scrollbarMinY + (sData->menu.detailEffectsScroll * (scrollbarMaxY - scrollbarMinY) + (maxScroll / 2)) / maxScroll;
+    gSprites[spriteId].y = scrollbarMinY + (sData->menu.effectsScroll * (scrollbarMaxY - scrollbarMinY) + (maxScroll / 2)) / maxScroll;
     gSprites[spriteId].invisible = FALSE;
 }
 
 static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_EFFECTS];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_EFFECTS];
     s16 laneX;
     s16 laneYStart;
     s16 laneTileCount;
-
-    if (windowId == WINDOW_NONE)
-        return;
 
     laneX = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT)
             + (WindowWidthPx(windowId) - 6) / 8;
@@ -3248,6 +3157,7 @@ static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
     laneTileCount++;
     laneYStart++;
     laneTileCount -= 2;
+
     if (laneTileCount <= 0)
         return;
 
@@ -3327,21 +3237,13 @@ static void DetailSetDescriptionPlaceholder(enum BattleStatusEffectId effectId)
 
 static void DetailFormatDescriptionText(enum BattleStatusEffectId effectId, u8 *dst)
 {
-    const struct BattleStatusEffectData *effectData = GetEffectData(effectId);
-
-    if (effectData == NULL || effectData->description == NULL)
-    {
-        dst[0] = EOS;
-        return;
-    }
-
     DetailSetDescriptionPlaceholder(effectId);
-    StringExpandPlaceholders(dst, effectData->description);
+    StringExpandPlaceholders(dst, sBattleStatusEffects[effectId].description);
 }
 
 static void DetailClampTextLines(u8 *text, u8 maxLines)
 {
-    u8 line = 1;
+    u32 line = 1;
 
     while (*text != EOS)
     {
@@ -3360,7 +3262,7 @@ static void DetailClampTextLines(u8 *text, u8 maxLines)
 
 static void DetailRefreshDescriptionWindow(void)
 {
-    u8 windowId = sData->menu.detailWindowIds[WIN_DETAIL_DESCRIPTION];
+    u8 windowId = sData->menu.windowIds[WIN_DETAIL_DESCRIPTION];
     u8 descFont = FONT_SMALL_NARROWER;
     u8 maxLines;
     u8 lineHeight;
@@ -3374,14 +3276,14 @@ static void DetailRefreshDescriptionWindow(void)
 
     DetailDrawWindowFrame(windowId);
 
-    if (sData->menu.detailActiveEffectsCount == 0
-     || sData->menu.detailEffectsCursor >= sData->menu.detailActiveEffectsCount)
+    if (sData->menu.activeEffectsCount == 0
+     || sData->menu.effectsCursor >= sData->menu.activeEffectsCount)
     {
         sData->detailTextBuffer[0] = EOS;
     }
     else
     {
-        enum BattleStatusEffectId effectId = sData->menu.detailActiveEffects[sData->menu.detailEffectsCursor].effectId;
+        enum BattleStatusEffectId effectId = sData->menu.activeEffects[sData->menu.effectsCursor].effectId;
         DetailFormatDescriptionText(effectId, sData->detailTextBuffer);
     }
 
@@ -3429,10 +3331,10 @@ static void DetailDestroyEffectsCursor(void)
 
 static void DetailDestroyEffectsScrollbar(void)
 {
-    if (sData->menu.detailEffectsScrollbarSpriteId != SPRITE_NONE)
+    if (sData->menu.effectsScrollbarSpriteId != SPRITE_NONE)
     {
-        DestroySprite(&gSprites[sData->menu.detailEffectsScrollbarSpriteId]);
-        sData->menu.detailEffectsScrollbarSpriteId = SPRITE_NONE;
+        DestroySprite(&gSprites[sData->menu.effectsScrollbarSpriteId]);
+        sData->menu.effectsScrollbarSpriteId = SPRITE_NONE;
     }
 }
 
@@ -3455,7 +3357,7 @@ static void OverviewComputeRowLayout(s16 *outXs)
     s16 safeRight = B_STATUS_SAFE_RIGHT_TILE;
     s16 safeWidthTiles = safeRight - safeLeft + 1;
     s16 screenWidthTiles = DISPLAY_WIDTH / 8;
-    u32 count = gBattlersCount / 2;
+    u32 count = GetCardCount() / 2;
 
     totalWidthTiles = count * B_STATUS_CARD_TILE_W + (count - 1) * gapTiles;
 
@@ -3482,7 +3384,7 @@ static void OverviewCreateCards(void)
     u32 enemySlots = 0;
     u32 playerSlots = 0;
 
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < GetCardCount(); battler++)
     {
         if (IsOnPlayerSide(battler))
             playerSlots++;
@@ -3499,7 +3401,7 @@ static void OverviewCreateCards(void)
     {
         struct BattleStatusCard *card = &sData->menu.cards[cardCount++];
         card->x = rowXs[i];
-        card->battlerId = GetBattlerFromEnemySlot(i);
+        card->battler = GetBattlerFromEnemySlot(i);
         card->y = B_STATUS_ROW_Y_ENEMY;
     }
 
@@ -3507,15 +3409,17 @@ static void OverviewCreateCards(void)
     {
         struct BattleStatusCard *card = &sData->menu.cards[cardCount++];
         card->x = rowXs[i];
-        card->battlerId = GetBattlerFromPlayerSlot(i);
+        card->battler = GetBattlerFromPlayerSlot(i);
         card->y = B_STATUS_ROW_Y_PLAYER;
     }
 }
 
 static void OverviewDrawCards(void)
 {
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < GetCardCount(); i++)
+    {
         OverviewDrawCard(&sData->menu.cards[i]);
+    }
 }
 
 static void OverviewDrawCard(struct BattleStatusCard *card)
@@ -3533,11 +3437,15 @@ static void OverviewDrawCard(struct BattleStatusCard *card)
     s16 iconCenterX;
     s16 iconCenterY;
 
-    struct Pokemon *mon = GetBattlerMon(card->battlerId);
+    struct Pokemon *mon = GetBattlerMon(card->battler);
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+
+    if (species == SPECIES_NONE)
+        return;
+
     u32 gender = GetMonGender(mon);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
-    u32 ailment = GetAilmentFromBattler(card->battlerId);
+    u32 ailment = GetAilmentFromBattler(card->battler);
     u8 name[POKEMON_NAME_LENGTH + 1];
     GetMonData(mon, MON_DATA_NICKNAME, name);
 
@@ -3575,22 +3483,15 @@ static void OverviewDrawCard(struct BattleStatusCard *card)
     iconCenterX = card->x + (B_STATUS_CARD_W / 2);
     iconCenterY = card->y + 28 + contentYOffset;
 
-    if (species != SPECIES_NONE)
-    {
-        card->monIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy,
-                                              iconCenterX,
-                                              iconCenterY,
-                                              0, personality);
-        if (card->monIconSpriteId != SPRITE_NONE)
-            gSprites[card->monIconSpriteId].oam.priority = 0;
-    }
+    card->monIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, iconCenterX, iconCenterY, 0, personality);
+    gSprites[card->monIconSpriteId].oam.priority = 0;
 
     card->gimmickSpriteId = SPRITE_NONE;
     card->gimmickTileTag = 0;
-    gimmickIndicatorData = GetGimmickIndicatorData(card->battlerId, &gimmickIndicatorPalTag);
+    gimmickIndicatorData = GetGimmickIndicatorData(card->battler, &gimmickIndicatorPalTag);
     if (gimmickIndicatorData != NULL && gimmickIndicatorPalTag != 0)
     {
-        card->gimmickTileTag = B_STATUS_OVERVIEW_GIMMICK_TILE_TAG_BASE + card->battlerId;
+        card->gimmickTileTag = B_STATUS_OVERVIEW_GIMMICK_TILE_TAG_BASE + card->battler;
         gimmickTemplate = sSpriteTemplate_BattleStatusDetailGimmick;
         gimmickTemplate.tileTag = card->gimmickTileTag;
         gimmickTemplate.paletteTag = gimmickIndicatorPalTag;
@@ -3613,34 +3514,14 @@ static void OverviewDrawCard(struct BattleStatusCard *card)
         s16 statusY = iconCenterY + 14;
 
         card->statusSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons, statusX, statusY, 0);
-        if (card->statusSpriteId != SPRITE_NONE)
-        {
-            StartSpriteAnim(&gSprites[card->statusSpriteId], ailment - 1);
-            gSprites[card->statusSpriteId].oam.priority = 0;
-        }
+        StartSpriteAnim(&gSprites[card->statusSpriteId], ailment - 1);
+        gSprites[card->statusSpriteId].oam.priority = 0;
     }
 
-    card->hpBarTileTag = B_STATUS_HP_BAR_TILE_TAG_BASE + card->battlerId;
-    card->hpBarSpriteId = CreateHpBarSprite(card->hpBarTileTag, card->x - 16,
-                                                         card->y + 46 + contentYOffset);
-    if (card->hpBarSpriteId != SPRITE_NONE)
-        CreateHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
-    else
-    {
-        card->hpBarLeftEndcapSpriteId = SPRITE_NONE;
-        card->hpBarRightEndcapSpriteId = SPRITE_NONE;
-    }
+    card->hpBarTileTag = B_STATUS_HP_BAR_TILE_TAG_BASE + card->battler;
+    card->hpBarSpriteId = CreateHpBarSprite(card->hpBarTileTag, card->x - 16, card->y + 46 + contentYOffset);
+    CreateHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
     DrawHpBarSprite(card);
-
-    // if (sData->unreadUpdates[card->battlerId])
-    // {
-    //     s16 updateX = card->x + B_STATUS_CARD_W - 9;
-    //     s16 updateY = iconCenterY - 8;
-    //
-    //     card->updateSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusUpdateIcon, updateX, updateY, 0);
-    //     if (card->updateSpriteId != SPRITE_NONE)
-    //         gSprites[card->updateSpriteId].oam.priority = 0;
-    // }
 }
 
 static u8 GetBestFitNameFont(const u8 *name, s16 maxWidth)
@@ -3678,28 +3559,23 @@ static void BackdropLoadBaseTilemap(const u16 *baseTilemap)
 
 static void OverviewFillBgRect(u16 *tilemap, s16 x, s16 y, s16 width, s16 height, u16 tileNum, u16 attrs)
 {
-    s16 xi;
-    s16 yi;
-
-    for (yi = y; yi < y + height; yi++)
+    for (u32 yi = y; yi < y + height; yi++)
     {
-        for (xi = x; xi < x + width; xi++)
+        for (u32 xi = x; xi < x + width; xi++)
             OverviewSetBgTile(tilemap, xi, yi, tileNum, attrs);
     }
 }
 
 static u32 GetCenterRow(void)
 {
-    s16 gapTiles = 0;
-    s16 totalWidthTiles;
-    s16 startXTile;
-    s16 safeLeft = B_STATUS_SAFE_LEFT_TILE;
-    s16 safeRight = B_STATUS_SAFE_RIGHT_TILE;
-    s16 safeWidthTiles = safeRight - safeLeft + 1;
-    s16 screenWidthTiles = DISPLAY_WIDTH / 8;
-    u32 count = gBattlersCount / 2;
+    s32 gapTiles = 0;
+    s32 safeLeft = B_STATUS_SAFE_LEFT_TILE;
+    s32 safeRight = B_STATUS_SAFE_RIGHT_TILE;
+    s32 safeWidthTiles = safeRight - safeLeft + 1;
+    s32 screenWidthTiles = DISPLAY_WIDTH / 8;
+    u32 count = GetCardCount() / 2;
 
-    totalWidthTiles = count * B_STATUS_CARD_TILE_W + (count - 1) * gapTiles;
+    s32 totalWidthTiles = count * B_STATUS_CARD_TILE_W + (count - 1) * gapTiles;
 
     if (totalWidthTiles > safeWidthTiles)
     {
@@ -3707,7 +3583,7 @@ static u32 GetCenterRow(void)
         totalWidthTiles = count * B_STATUS_CARD_TILE_W + (count - 1) * gapTiles;
     }
 
-    startXTile = (screenWidthTiles - totalWidthTiles) / 2;
+    s32 startXTile = (screenWidthTiles - totalWidthTiles) / 2;
 
     if (startXTile < safeLeft)
         startXTile = safeLeft;
@@ -3728,17 +3604,15 @@ static u32 GetCenterRow(void)
 
 static void OverviewComputeHeaderLayout(s16 labelWidth, u8 *outTextLenTiles, s16 *outHeaderX, s16 *outHeaderWidth)
 {
-    u8 textLenTiles = (labelWidth + 7) / 8;
-    s16 headerWidth;
-    s16 headerX;
+    u32 textLenTiles = (labelWidth + 7) / 8;
 
     if (textLenTiles == 0)
         textLenTiles = 1;
     if (textLenTiles & 1)
         textLenTiles++;
 
-    headerWidth = textLenTiles + 2;
-    headerX = (GetCenterRow() - ((headerWidth * 8) / 2)) / 8;
+    s32 headerWidth = textLenTiles + 2;
+    s32 headerX = (GetCenterRow() - ((headerWidth * 8) / 2)) / 8;
     if (headerX < B_STATUS_SAFE_LEFT_TILE)
         headerX = B_STATUS_SAFE_LEFT_TILE;
     if (headerX + headerWidth - 1 > B_STATUS_SAFE_RIGHT_TILE)
@@ -3752,16 +3626,16 @@ static void OverviewComputeHeaderLayout(s16 labelWidth, u8 *outTextLenTiles, s16
 
 static void OverviewDrawStatusCard(u16 *tilemap, s16 x, s16 y, u8 width, u8 height, bool8 isActive, bool8 isBottomRow)
 {
-    u16 topLeftTile;
-    u16 topEdgeTile;
-    u16 sideEdgeTile;
-    u16 fillTile;
-    u16 bottomLeftTile;
-    u16 bottomEdgeTile;
-    u16 topAttrs = 0;
-    u16 bottomAttrs = 0;
-    s16 xi;
-    s16 yi;
+    u32 topLeftTile;
+    u32 topEdgeTile;
+    u32 sideEdgeTile;
+    u32 fillTile;
+    u32 bottomLeftTile;
+    u32 bottomEdgeTile;
+    u32 topAttrs = 0;
+    u32 bottomAttrs = 0;
+    s32 xi;
+    s32 yi;
 
     if (width < 2 || height < 2)
         return;
@@ -3901,8 +3775,8 @@ static void OverviewDrawBackground(void)
                                     B_STATUS_SAFE_RIGHT_TILE - B_STATUS_SAFE_LEFT_TILE + 1, B_STATUS_LABEL_TILE_H,
                                     B_STATUS_BG_TILE_FILL, 0);
 
-    for (u32 i = 0; i < gBattlersCount; i++)
-        OverviewDrawCardBackground(&sData->menu.cards[i], i == sData->menu.selectedCardIndex);
+    for (u32 i = 0; i < GetCardCount(); i++)
+        OverviewDrawCardBackground(&sData->menu.cards[i], i == sData->menu.selectedCard );
 
     enemyLabelWidth = GetStringWidth(FONT_SMALL, GetPrimaryOpponentTrainerName(), 0);
     playerLabelWidth = GetStringWidth(FONT_SMALL, GetPlayerSideTrainerName(), 0);
@@ -3917,12 +3791,12 @@ static void OverviewDrawBackground(void)
 
 static void OverviewUpdateCardSelectionHighlight(u8 oldSelectedIndex)
 {
-    u32 cardCount = gBattlersCount;
+    u32 cardCount = GetCardCount();
 
     if (oldSelectedIndex < cardCount)
         OverviewDrawCardBackground(&sData->menu.cards[oldSelectedIndex], FALSE);
-    if (sData->menu.selectedCardIndex < cardCount)
-        OverviewDrawCardBackground(&sData->menu.cards[sData->menu.selectedCardIndex], TRUE);
+    if (sData->menu.selectedCard  < cardCount)
+        OverviewDrawCardBackground(&sData->menu.cards[sData->menu.selectedCard ], TRUE);
 
     CopyBgTilemapBufferToVram(B_STATUS_BACKDROP_BG);
 }
@@ -3935,8 +3809,8 @@ static void OverviewDrawLabels(void)
     s16 playerHeaderWidth;
     s32 labelHeight = GetFontAttribute(FONT_SMALL, FONTATTR_MAX_LETTER_HEIGHT);
 
-    const u8 enemyLabel = GetPrimaryOpponentTrainerName();
-    const u8 playerLabel = GetPlayerSideTrainerName();
+    const u8 *enemyLabel = GetPrimaryOpponentTrainerName();
+    const u8 *playerLabel = GetPlayerSideTrainerName();
 
     s32 enemyLabelWidth = GetStringWidth(FONT_SMALL, enemyLabel, 0);
     s32 playerLabelWidth = GetStringWidth(FONT_SMALL, playerLabel, 0);
@@ -3994,7 +3868,7 @@ static u8 GetOpponentTrainerCount(void)
 
 static void OverviewUpdateHpBars(void)
 {
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < GetCardCount(); i++)
         DrawHpBarSprite(&sData->menu.cards[i]);
 }
 
@@ -4040,11 +3914,11 @@ static void BattleStatusMenu_Destroy(void)
     DetailDestroyStatPips();
     DetailDestroyEffectsScrollbar();
 
-    if (sData->menu.detailIconSpriteId != SPRITE_NONE)
-        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.detailIconSpriteId]);
-    sData->menu.detailIconSpriteId = SPRITE_NONE;
+    if (sData->menu.iconSpriteId != SPRITE_NONE)
+        FreeAndDestroyMonIconSprite(&gSprites[sData->menu.iconSpriteId]);
+    sData->menu.iconSpriteId = SPRITE_NONE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
+    for (u32 i = 0; i < GetCardCount(); i++)
         DestroyOverviewCardSprites(&sData->menu.cards[i], TRUE);
 
     RemoveWindow(WIN_LABEL_TOP);
@@ -4211,8 +4085,8 @@ static void UpdateHpBarTiles(u8 spriteId, s16 hp, s16 maxHp)
 static void DrawHpBarSprite(struct BattleStatusCard *card)
 {
     struct Sprite *sprite;
-    s16 hp = gBattleMons[card->battlerId].hp;
-    s16 maxHp = gBattleMons[card->battlerId].maxHP;
+    s16 hp = gBattleMons[card->battler].hp;
+    s16 maxHp = gBattleMons[card->battler].maxHP;
     s16 contentYOffset = (card->y == B_STATUS_ROW_Y_ENEMY) ? -2 : 0;
 
     if (card->hpBarSpriteId == SPRITE_NONE)
@@ -4249,13 +4123,10 @@ static u8 GetBarGfxId(s16 hp, s16 maxHp)
 
 static u8 GetAilmentFromBattler(enum BattlerId battler)
 {
-    u32 status;
-
-    if (gBattleMons[battler].hp == 0)
+    if (!IsBattlerAlive(battler))
         return AILMENT_FNT;
 
-    status = gBattleMons[battler].status1;
-    return GetAilmentFromStatus(status);
+    return GetAilmentFromStatus(gBattleMons[battler].status1);
 }
 
 static void OverviewGetCursorPos(const struct BattleStatusCard *card, s16 *outX, s16 *outY)
@@ -4272,7 +4143,7 @@ static void OverviewInitCursor(void)
     if (sData->menu.cursorSpriteId != SPRITE_NONE)
         DestroySprite(&gSprites[sData->menu.cursorSpriteId]);
 
-    OverviewGetCursorPos(&sData->menu.cards[sData->menu.selectedCardIndex], &cursorX, &cursorY);
+    OverviewGetCursorPos(&sData->menu.cards[sData->menu.selectedCard ], &cursorX, &cursorY);
     sData->menu.cursorSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusCursor, cursorX, cursorY, 0);
     if (sData->menu.cursorSpriteId != SPRITE_NONE)
         gSprites[sData->menu.cursorSpriteId].oam.priority = 0;
@@ -4285,7 +4156,7 @@ static void OverviewUpdateCursorPos(void)
     if (sData->menu.cursorSpriteId == SPRITE_NONE)
         return;
 
-    card = &sData->menu.cards[sData->menu.selectedCardIndex];
+    card = &sData->menu.cards[sData->menu.selectedCard ];
     OverviewGetCursorPos(card, &gSprites[sData->menu.cursorSpriteId].x, &gSprites[sData->menu.cursorSpriteId].y);
 }
 
@@ -4328,7 +4199,7 @@ static void ProcessPageTransition(void)
 static void OverviewHandleInput(void)
 {
     bool8 moved = FALSE;
-    u8 oldSelectedIndex = sData->menu.selectedCardIndex;
+    u8 oldSelectedIndex = sData->menu.selectedCard ;
 
     if (JOY_NEW(DPAD_LEFT))
         moved = OverviewTryMoveCursor(-1, 0);
@@ -4354,18 +4225,18 @@ static void OverviewHandleInput(void)
 
 static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
 {
-    u8 bestIndex = sData->menu.selectedCardIndex;
+    u8 bestIndex = sData->menu.selectedCard ;
     s16 bestMetric = 0x7FFF;
     s16 currX;
     s16 currY;
     s16 targetRowY;
 
-    currX = sData->menu.cards[sData->menu.selectedCardIndex].x;
-    currY = sData->menu.cards[sData->menu.selectedCardIndex].y;
+    currX = sData->menu.cards[sData->menu.selectedCard ].x;
+    currY = sData->menu.cards[sData->menu.selectedCard ].y;
 
     if (dx != 0)
     {
-        for (u32 i = 0; i < gBattlersCount; i++)
+        for (u32 i = 0; i < GetCardCount(); i++)
         {
             const struct BattleStatusCard *card = &sData->menu.cards[i];
             s16 diff = card->x - currX;
@@ -4387,7 +4258,7 @@ static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
     {
         targetRowY = (currY == B_STATUS_ROW_Y_ENEMY) ? B_STATUS_ROW_Y_PLAYER : B_STATUS_ROW_Y_ENEMY;
 
-        for (u32 i = 0; i < gBattlersCount; i++)
+        for (u32 i = 0; i < GetCardCount(); i++)
         {
             const struct BattleStatusCard *card = &sData->menu.cards[i];
             s16 diff;
@@ -4404,9 +4275,9 @@ static bool8 OverviewTryMoveCursor(s8 dx, s8 dy)
         }
     }
 
-    if (bestIndex != sData->menu.selectedCardIndex)
+    if (bestIndex != sData->menu.selectedCard )
     {
-        sData->menu.selectedCardIndex = bestIndex;
+        sData->menu.selectedCard  = bestIndex;
         return TRUE;
     }
 
@@ -4419,9 +4290,14 @@ static void OverviewCreateWindows(void)
     OverviewClearWindows();
 }
 
+static u32 GetCardCount(void)
+{
+    return gBattlersCount;
+}
+
 static enum BattlerId GetSelectedBattler(void)
 {
-    return sData->menu.cards[sData->menu.selectedCardIndex].battlerId;
+    return sData->menu.cards[sData->menu.selectedCard].battler;
 }
 
 static enum BattlerId GetBattlerFromEnemySlot(u32 slot)
