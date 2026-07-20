@@ -1048,6 +1048,15 @@ extern u32 gTransformedPersonalities[MAX_BATTLERS_COUNT];
 extern bool8 gTransformedShininess[MAX_BATTLERS_COUNT];
 extern u8 gPlayerDpadHoldFrames;
 extern struct BattleSpriteData *gBattleSpritesDataPtr;
+
+// Development-only bridge for the Habitat headless verifier. It enters the
+// ordinary battle end-turn state machine; it never invokes an overworld
+// callback directly.
+#if TESTING || HABITAT_TEST_PROBE
+bool32 BattleMain_TestFinishWithOutcome(u8 battleOutcome);
+bool32 BattleMain_TestHasFinishedCleanup(void);
+#endif
+
 extern struct MonSpritesGfx *gMonSpritesGfxPtr;
 extern u16 gBattleMovePower;
 extern u16 gMoveToLearn;

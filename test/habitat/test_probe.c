@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "constants/habitat.h"
 #include "constants/items.h"
 #include "constants/maps.h"
@@ -114,6 +115,15 @@ TEST("Habitat verification probe: non-finale bout commands report every field-re
         UnfreezeObjectEvents();
         UnlockPlayerFieldControls();
     }
+}
+
+TEST("Habitat verification probe: battle terminal seam requires a cleaned-up field state")
+{
+    // The driver is deliberately unavailable until a real battle owns the
+    // engine state. In the field, the same cleanup invariants required before
+    // CB2_EndHabitatBoutBattle are already true.
+    EXPECT(!BattleMain_TestFinishWithOutcome(B_OUTCOME_WON));
+    EXPECT(BattleMain_TestHasFinishedCleanup());
 }
 
 TEST("Habitat verification probe: migration and save round-trip commands preserve a resident")

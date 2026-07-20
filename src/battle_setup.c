@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "gba/isagbprint.h"
 #include "load_save.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
@@ -704,6 +705,11 @@ static void CB2_EndHabitatBoutBattle(void)
 {
     enum HabitatBoutOutcome outcome;
 
+#if TESTING || HABITAT_TEST_PROBE
+    // The verifier reaches this callback only through the normal battle
+    // teardown. Keep that ordering executable instead of trusting the driver.
+    AGB_ASSERT(BattleMain_TestHasFinishedCleanup());
+#endif
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
     outcome = Habitat_BoutOutcomeFromBattleOutcome(gBattleOutcome);

@@ -454,6 +454,31 @@ static void (*const sEndTurnFuncsTable[])(void) =
     [B_OUTCOME_MON_TELEPORTED]    = HandleEndTurn_FinishBattle,
 };
 
+#if TESTING || HABITAT_TEST_PROBE
+bool32 BattleMain_TestFinishWithOutcome(u8 battleOutcome)
+{
+    u8 endTurnFunc = battleOutcome & 0x7F;
+
+    // A live battle must own these resources. Refusing the field-state call
+    // prevents the verifier from skipping the normal battle teardown.
+    if (!gMain.inBattle || gBattleResources == NULL || endTurnFunc >= ARRAY_COUNT(sEndTurnFuncsTable))
+        return FALSE;
+
+    gBattleOutcome = battleOutcome;
+    sEndTurnFuncsTable[endTurnFunc]();
+    return TRUE;
+}
+
+bool32 BattleMain_TestHasFinishedCleanup(void)
+{
+    return !gMain.inBattle
+        && gMain.callback1 == gPreBattleCallback1
+        && gBattleResources == NULL
+        && gBattleStruct == NULL
+        && gBattleSpritesDataPtr == NULL;
+}
+#endif
+
 const u8 gStatusConditionString_PoisonJpn[] = _("どく$$$$$");
 const u8 gStatusConditionString_SleepJpn[] = _("ねむり$$$$");
 const u8 gStatusConditionString_ParalysisJpn[] = _("まひ$$$$$");

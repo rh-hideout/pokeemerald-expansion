@@ -58,14 +58,12 @@ static void SubmitTestItem(u16 spotId, enum HabitatItemAction action, u16 itemId
 
 static void Task_FinishTestBoutFromBattle(u8 taskId)
 {
-    // Let the real battle transition and battle callback own the end of the
-    // transaction. This task runs only in verification builds, after a live
-    // non-capture battle screen has been presented.
+    // Let the production end-turn state machine release battle resources and
+    // invoke ReturnFromBattleToOverworld before the saved habitat callback.
     if (++gTasks[taskId].data[0] >= 360)
     {
-        gBattleOutcome = gTasks[taskId].data[1];
-        DestroyTask(taskId);
-        SetMainCallback2(gMain.savedCallback);
+        if (BattleMain_TestFinishWithOutcome(gTasks[taskId].data[1]))
+            DestroyTask(taskId);
     }
 }
 

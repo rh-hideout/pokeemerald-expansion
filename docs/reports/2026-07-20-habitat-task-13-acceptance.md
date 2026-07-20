@@ -23,8 +23,8 @@ able to run to completion.
 | `sh tools/habitat/test_env.sh` | focused-tested | exit 0: configured paths/defaults and missing-path diagnostics |
 | `sh tools/habitat/test_verify.sh` | focused-tested | exit 0: structured parser, release guard, fresh-build and safe-output contracts; validates `bout-win` field assertion |
 | `python3 tools/habitat/test_check_memory.py` | focused-tested | exit 0: 3 checks passed |
-| focused ARM compile of `test/habitat/test_probe.c` and `src/habitat/test_probe.c` | focused-tested | exit 0 with `TESTING=1` / `HABITAT_TEST_PROBE=1`, respectively |
-| `make check TESTS='Habitat verification probe'` | pending full native invocation | full test runner was not completed by this execution harness |
+| focused ARM compile of the probe plus `src/battle_main.c` and `src/battle_setup.c` | focused-tested | exit 0 with `TESTING=1` / `HABITAT_TEST_PROBE=1`; includes the guarded battle terminal seam and callback assertion |
+| `make check TESTS='Habitat verification probe'` | focused-tested | exit 0 on 2026-07-20; covers the terminal seam's field-state refusal and post-cleanup invariant |
 | `tools/habitat/verify.sh --no-interact` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-campfire` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-plant` | pending headless verification | output directory |
@@ -51,8 +51,11 @@ The development command bridge exercises production item/condition, bout,
 migration, flash-save/load, and Grove APIs and is absent from release builds.
 The bout fixture is expressly non-finale (Treecko versus Zigzagoon). Its
 win/loss/flee commands enter the normal battle scene and finish only through
-the production battle-end callback; the runner captures the live scene before
-waiting for its structured outcome. The reset command saves through the normal
+the production end-turn state machine, resource teardown, and
+`ReturnFromBattleToOverworld` callback. A development-only assertion verifies
+`gMain.inBattle` is false, `callback1` is restored, and battle allocations are
+released before `CB2_EndHabitatBoutBattle` records the structured outcome. The
+runner captures the live scene before waiting for that outcome. The reset command saves through the normal
 flash-sector path, begins the live bout without a finish task, and has the
 runner reset the emulated console before checking the reloaded resident. The
 chooser and icon checkpoints enter the real Route 103 Skitty interaction and
