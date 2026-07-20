@@ -15,9 +15,19 @@
 #define HABITAT_PLOT_YIELD           3    // berries per harvest
 #define HABITAT_GROVE_WORKER_SLOTS   6    // rendered worker objects on the Grove map
 
-// Slice-only: new games spawn in the slice zone (Route 103) instead of the
-// vanilla truck intro. Revert to FALSE when the real Zorua intro lands.
+// Slice-only: new games start at the approved lab development position instead
+// of the vanilla truck/bedroom opening. The presentation is deliberately
+// limited to Zorua's existing follower graphics; unsupported locomotion stays
+// unavailable until its own approved art exists.
+// The Lab start and its stocked slice inventory are development aids. A
+// release build must not silently ship this bypass of the authored opening.
+#ifdef RELEASE
+#define HABITAT_SLICE_SPAWN          FALSE
+#else
 #define HABITAT_SLICE_SPAWN          TRUE
+#endif
+#define HABITAT_ZORUA_PRESENTATION   TRUE
+#define HABITAT_ZORUA_ON_FOOT_ONLY   TRUE
 
 // Spec §2 law: "No wild battles exist anywhere else." Kills every wild
 // encounter roll engine-wide (grass/surf, sweet scent, rock smash, fishing

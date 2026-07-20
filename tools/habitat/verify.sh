@@ -7,7 +7,7 @@
 #   --scenario skitty  overland walk to Route 103 west bank + full loop:
 #                      place doll -> manifests -> offer Persim -> befriended
 #   --scenario machop  overland walk + staged hint at the relocated spot
-#   --no-interact    boot to overworld only
+#   --no-interact    boot to the Zorua Lab overworld only
 #
 # The runner observes the game through pokeemerald.map symbols and the
 # gStringVar4 message buffer (every shown field message is expanded into it;
@@ -53,7 +53,7 @@ SCRIPT_MACHOP="$LEG_TO_R103;goto:10,13;goto:14,13;goto:14,8;goto:12,8;face:U;dis
 
 SCRIPT="$SCRIPT_LAB"
 case "$1" in
-  --no-interact) SCRIPT='wait:1;shot:boot;pass:overworld reached' ;;
+  --no-interact) SCRIPT='wait:1;shot:zorua_lab_boot;pass:Zorua Lab overworld reached' ;;
   --scenario)
     case "$2" in
       lab) SCRIPT="$SCRIPT_LAB" ;;

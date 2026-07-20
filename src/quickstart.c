@@ -1,5 +1,6 @@
 #include "global.h"
 #include "config/general.h"
+#include "config/habitat.h"
 #include "constants/global.h"
 #include "constants/rgb.h"
 #include "decompress.h"
@@ -74,23 +75,15 @@ static inline enum Gender SetQuickstartPlayerGender()
 
 static void CB2_SkipToNewGame(void)
 {
-#if IS_FRLG
-    static const u8 sText_PlayerMale[] = _("RED");
-    static const u8 sText_PlayerFemale[] = _("LEAF");
-    static const u8 sText_Rival[] = _("BLUE");
-#else
-    static const u8 sText_PlayerMale[] = _("BRENDAN");
-    static const u8 sText_PlayerFemale[] = _("MAY");
-#endif  // IS_FRLG
+    static const u8 sText_Habitat[] = _("HABITAT");
 
     if (!UpdatePaletteFade())
     {
-        gSaveBlock2Ptr->playerGender = SetQuickstartPlayerGender();
-        const u8* textPtr = gSaveBlock2Ptr->playerGender == FEMALE ? sText_PlayerFemale : sText_PlayerMale;
-        StringCopy_PlayerName(gSaveBlock2Ptr->playerName, textPtr);
+        gSaveBlock2Ptr->playerGender = HABITAT_ZORUA_PRESENTATION ? MALE : SetQuickstartPlayerGender();
+        StringCopy_PlayerName(gSaveBlock2Ptr->playerName, sText_Habitat);
 
 #if IS_FRLG
-        StringCopy_PlayerName(gSaveBlock1Ptr->rivalName, sText_Rival);
+        StringCopy_PlayerName(gSaveBlock1Ptr->rivalName, sText_Habitat);
 #endif  // IS_FRLG
 
         ResetSpriteData();
@@ -124,4 +117,3 @@ void Quickstart(void)
         SetMainCallback2(CB2_SkipToNewGame);
     }
 }
-

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/habitat.h"
 #include "trainer_pokemon_sprites.h"
 #include "bg.h"
 #include "constants/rgb.h"
@@ -1077,6 +1078,16 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
         {
         case ACTION_NEW_GAME:
         default:
+#if HABITAT_ZORUA_PRESENTATION
+            // The Habitat slice has no human avatar, gender menu, naming
+            // screen, rival identity, or truck/bedroom opening.  Start the
+            // neutral technical save directly; NewGameInitData owns its
+            // definitive name and avatar storage fields.
+            SetMainCallback2(CB2_NewGame);
+            DestroyTask(taskId);
+            FreeAllWindowBuffers();
+            return;
+#endif
             if (IS_FRLG)
             {
                 DestroyTask(taskId);

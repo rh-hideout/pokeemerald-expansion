@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/habitat.h"
 #include "main.h"
 #include "bike.h"
 #include "event_data.h"
@@ -271,6 +272,20 @@ static const u8 sRivalAvatarGfxIds[][GENDER_COUNT] =
 
 static const u16 sPlayerAvatarGfxIds[][GENDER_COUNT] =
 {
+#if HABITAT_ZORUA_PRESENTATION
+    // This slice never falls back to a human avatar.  These all deliberately
+    // use Zorua's existing follower sheet; bike/surf/fishing access is held
+    // closed by the slice, so no unsupported locomotion is presented.
+    [PLAYER_AVATAR_STATE_NORMAL]     = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_MACH_BIKE]  = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_ACRO_BIKE]  = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_SURFING]    = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_UNDERWATER] = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_FIELD_MOVE] = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_FISHING]    = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_WATERING]   = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+    [PLAYER_AVATAR_STATE_VSSEEKER]   = {OBJ_EVENT_GFX_SPECIES(ZORUA), OBJ_EVENT_GFX_SPECIES(ZORUA)},
+#else
     [PLAYER_AVATAR_STATE_NORMAL]     = {PLAYER_AVATAR_GFX_MALE_NORMAL,     PLAYER_AVATAR_GFX_FEMALE_NORMAL},
     [PLAYER_AVATAR_STATE_MACH_BIKE]  = {PLAYER_AVATAR_GFX_MALE_MACH_BIKE,  PLAYER_AVATAR_GFX_FEMALE_MACH_BIKE},
     [PLAYER_AVATAR_STATE_ACRO_BIKE]  = {PLAYER_AVATAR_GFX_MALE_ACRO_BIKE,  PLAYER_AVATAR_GFX_FEMALE_ACRO_BIKE},
@@ -280,6 +295,7 @@ static const u16 sPlayerAvatarGfxIds[][GENDER_COUNT] =
     [PLAYER_AVATAR_STATE_FISHING]    = {PLAYER_AVATAR_GFX_MALE_FISHING,    PLAYER_AVATAR_GFX_FEMALE_FISHING},
     [PLAYER_AVATAR_STATE_WATERING]   = {PLAYER_AVATAR_GFX_MALE_WATERING,   PLAYER_AVATAR_GFX_FEMALE_WATERING},
     [PLAYER_AVATAR_STATE_VSSEEKER]   = {PLAYER_AVATAR_GFX_MALE_VSSEEKER,   PLAYER_AVATAR_GFX_FEMALE_VSSEEKER},
+#endif
 };
 
 static const u8 sFRLGAvatarGfxIds[GENDER_COUNT] =
@@ -300,6 +316,28 @@ static const struct PACKED
     u8 playerFlag;
 } sPlayerAvatarGfxToStateFlag[GENDER_COUNT][5] =
 {
+#if HABITAT_ZORUA_PRESENTATION
+    // Keep the reverse/current-state lookup on the same approved Zorua
+    // presentation as the state-id lookup above. This is intentionally a
+    // duplicate graphics id: on-foot-only mode prevents the unapproved state
+    // transitions, while a defensive lookup can never reveal a human sprite.
+    [MALE] =
+    {
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_ON_FOOT},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_MACH_BIKE},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_ACRO_BIKE},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_SURFING},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_UNDERWATER},
+    },
+    [FEMALE] =
+    {
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_ON_FOOT},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_MACH_BIKE},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_ACRO_BIKE},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_SURFING},
+        {OBJ_EVENT_GFX_SPECIES(ZORUA), PLAYER_AVATAR_FLAG_UNDERWATER},
+    },
+#else
     [MALE] =
     {
         {PLAYER_AVATAR_GFX_MALE_NORMAL,     PLAYER_AVATAR_FLAG_ON_FOOT},
@@ -316,6 +354,7 @@ static const struct PACKED
         {PLAYER_AVATAR_GFX_FEMALE_SURFING,        PLAYER_AVATAR_FLAG_SURFING},
         {PLAYER_AVATAR_GFX_FEMALE_UNDERWATER,     PLAYER_AVATAR_FLAG_UNDERWATER},
     }
+#endif
 };
 
 static bool8 (*const sArrowWarpMetatileBehaviorChecks2[])(u8) =  //Duplicate of sArrowWarpMetatileBehaviorChecks
@@ -1094,6 +1133,15 @@ bool8 IsPlayerCollidingWithFarawayIslandMew(enum Direction direction)
 
 void SetPlayerAvatarTransitionFlags(u16 transitionFlags)
 {
+#if HABITAT_ZORUA_ON_FOOT_ONLY
+    // No supported non-human art exists for these movement modes. Treat any
+    // unexpected transition request as unavailable rather than showing a
+    // human sprite while content is still slice-gated.
+    transitionFlags &= ~(PLAYER_AVATAR_FLAG_MACH_BIKE
+                       | PLAYER_AVATAR_FLAG_ACRO_BIKE
+                       | PLAYER_AVATAR_FLAG_SURFING
+                       | PLAYER_AVATAR_FLAG_UNDERWATER);
+#endif
     gPlayerAvatar.transitionFlags |= transitionFlags;
     DoPlayerAvatarTransition();
 }

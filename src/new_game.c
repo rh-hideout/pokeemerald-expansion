@@ -72,6 +72,8 @@ static const struct ContestWinner sContestWinnerPicDummy =
     .trainerName = _("")
 };
 
+static const u8 sHabitatSaveName[] = _("HABITAT");
+
 void SetTrainerId(u32 trainerId, u8 *dst)
 {
     dst[0] = trainerId;
@@ -179,6 +181,12 @@ void NewGameInitData(void)
     StringCopy(rivalName, gSaveBlock1Ptr->rivalName);
 #endif
     gDifferentSaveFile = TRUE;
+#if HABITAT_ZORUA_PRESENTATION
+    // Gender remains a required engine field, but it must not select a human
+    // presentation or invite a biography in the Habitat slice.
+    gSaveBlock2Ptr->playerGender = MALE;
+    StringCopy_PlayerName(gSaveBlock2Ptr->playerName, sHabitatSaveName);
+#endif
     gSaveBlock2Ptr->encryptionKey = 0;
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
