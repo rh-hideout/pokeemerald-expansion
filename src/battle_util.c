@@ -17,6 +17,7 @@
 #include "pokemon.h"
 #include "international_string_util.h"
 #include "item.h"
+#include "item_use.h"
 #include "util.h"
 #include "battle_scripts.h"
 #include "random.h"
@@ -528,6 +529,12 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
+    if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_THROW_BALL && !CanThrowBall())
+    {
+        gCurrentActionFuncId = B_ACTION_FINISHED;
+        return;
+    }
+
     if (X_ITEM_FRIENDSHIP_INCREASE > 0
         && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
         && !ShouldSkipFriendshipChange())
