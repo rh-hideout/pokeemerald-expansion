@@ -245,7 +245,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns even if the target has Unseen Fist")
     GIVEN {
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         ASSUME(MoveMakesContact(MOVE_SURGING_STRIKES));
-        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) {};
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_TOUCANNON) {};
     } WHEN {
         TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_SURGING_STRIKES); }
@@ -270,7 +270,7 @@ SINGLE_BATTLE_TEST("Beak Blast takes effect after HP drain effects and before ab
         MESSAGE("The opposing Garchomp started heating up its beak!");
         MESSAGE("The opposing Garchomp had its energy drained!");
         MESSAGE("Urshifu was burned!");
-        ABILITY_POPUP(opponent);
+        ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
     }
 }
 
@@ -295,7 +295,7 @@ SINGLE_BATTLE_TEST("Beak Blast's charging message is shown regardless if it woul
 SINGLE_BATTLE_TEST("Beak Blast still shows its charged state when Encored into a different move")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_TOUCANNON) { Speed(1); }
@@ -313,7 +313,7 @@ SINGLE_BATTLE_TEST("Beak Blast still shows its charged state when Encored into a
 DOUBLE_BATTLE_TEST("Beak Blast fails when Encored into it from a different move (Gen9-)")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_9);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_9);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
@@ -335,7 +335,7 @@ DOUBLE_BATTLE_TEST("Beak Blast fails when Encored into it from a different move 
 DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it (Champions)")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
@@ -356,7 +356,7 @@ DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it (Champions)")
 DOUBLE_BATTLE_TEST("Beak Blast doesn't repeat its charging animation when Encored into it")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(2); }
@@ -375,7 +375,7 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't repeat its charging animation when Encore
     }
 }
 
-SINGLE_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it causes")
+SINGLE_BATTLE_TEST("Beak Blast is blocked by Bulletproof but not to the burn it causes")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
@@ -390,7 +390,7 @@ SINGLE_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it c
         MESSAGE("Chesnaught was burned!");
         STATUS_ICON(player, STATUS1_BURN);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
-        ABILITY_POPUP(player);
+        ABILITY_POPUP(player, ABILITY_BULLETPROOF);
         MESSAGE("It doesn't affect Chesnaught…");
     }
 }

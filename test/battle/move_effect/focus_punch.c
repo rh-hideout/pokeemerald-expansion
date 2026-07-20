@@ -282,7 +282,7 @@ TO_DO_BATTLE_TEST("Focus Punch will use the selected move's priority when being 
 SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch (Gen9-)")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_9);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_9);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -309,7 +309,7 @@ SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selec
 SINGLE_BATTLE_TEST("Focus Punch's initial message is shown if the user selected a different move and was Encored into using Focus Punch (Champions)")
 {
     GIVEN {
-        WITH_CONFIG(B_ENCORE_PRIORITY, GEN_CHAMPIONS);
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

@@ -14142,21 +14142,15 @@ void BS_TryDoMoveEffectsBeforeMoves(void)
 {
     NATIVE_ARGS();
 
-    if (GetConfig(B_ENCORE_PRIORITY) <= GEN_9)
+    if (GetConfig(B_MOVE_EFFECTS_BEFORE_MOVES) <= GEN_9)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
 
-    enum BattlerId battlers[MAX_BATTLERS_COUNT];
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        battlers[i] = i;
-    SortBattlersBySpeed(battlers, FALSE);
-
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        enum BattlerId battler = battlers[i];
+        enum BattlerId battler = gBattlersBySpeed[i];
         enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
 
         if (!gBattleStruct->battlerState[battler].focusPunchBattlers)

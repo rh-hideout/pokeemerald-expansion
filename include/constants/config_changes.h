@@ -157,6 +157,7 @@
     F(B_FAINT_MOVE_EFFECT_TIMING,  faintEffectTiming,       (u32, GEN_COUNT - 1)) \
     F(B_ENCORE_PRIORITY,           encorePriority,          (u32, GEN_COUNT - 1)) \
     F(B_RAGE_FIST,                 rageFist,                (u32, GEN_COUNT - 1)) \
+    F(B_MOVE_EFFECTS_BEFORE_MOVES,                beakBlast,               (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(B_STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
