@@ -476,15 +476,15 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
     }
 }
 
-SINGLE_BATTLE_TEST("Two Turn moves do not become one turn moves during weather")
+SINGLE_BATTLE_TEST("Two Turn moves do not become one turn moves during weather if they don't have the property")
 {
     GIVEN {
         PLAYER(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_METEOR_BEAM); }
+        TURN { MOVE(player, MOVE_RAZOR_WIND); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_METEOR_BEAM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         NOT HP_BAR(opponent);
     }
 }
