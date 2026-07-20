@@ -2,11 +2,13 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/species.h"
+#include "constants/battle.h"
 #include "config/habitat.h"
 #include "event_data.h"
 #include "habitat/bouts.h"
 #include "habitat/finale.h"
 #include "habitat/save.h"
+#include "task.h"
 #include "test/test.h"
 
 static const struct HabitatBoutDefinition sTestBout = {
@@ -62,6 +64,13 @@ static void BuildDistinctParty(struct Pokemon *expected)
     memcpy(expected, gParties[B_TRAINER_PLAYER], sizeof(struct Pokemon) * PARTY_SIZE);
 }
 
+// Unit tests finish before the scheduler runs the battle-start task.
+static void FinishTestBout(enum HabitatBoutOutcome outcome)
+{
+    Habitat_BoutFinish(outcome);
+    ResetTasks();
+}
+
 TEST("Habitat bout: a win restores the exact six-member party")
 {
     struct Pokemon expected[PARTY_SIZE];
@@ -72,7 +81,7 @@ TEST("Habitat bout: a win restores the exact six-member party")
     EXPECT(Habitat_BoutIsActive());
 
     SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM, &item);
-    Habitat_BoutFinish(HABITAT_BOUT_WIN);
+    FinishTestBout(HABITAT_BOUT_WIN);
 
     EXPECT(!Habitat_BoutIsActive());
     EXPECT_EQ(Habitat_GetLastBoutOutcome(), HABITAT_BOUT_WIN);
@@ -88,7 +97,7 @@ TEST("Habitat bout: a loss restores the exact six-member party")
     BuildDistinctParty(expected);
     ASSUME(Habitat_BoutBegin(&sTestBout));
     SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM, &item);
-    Habitat_BoutFinish(HABITAT_BOUT_LOSS);
+    FinishTestBout(HABITAT_BOUT_LOSS);
 
     EXPECT_EQ(Habitat_GetLastBoutOutcome(), HABITAT_BOUT_LOSS);
     EXPECT(!Habitat_BoutIsActive());
@@ -103,7 +112,7 @@ TEST("Habitat bout: a flee restores the exact six-member party")
     BuildDistinctParty(expected);
     ASSUME(Habitat_BoutBegin(&sTestBout));
     SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM, &item);
-    Habitat_BoutFinish(HABITAT_BOUT_FLED);
+    FinishTestBout(HABITAT_BOUT_FLED);
 
     EXPECT_EQ(Habitat_GetLastBoutOutcome(), HABITAT_BOUT_FLED);
     EXPECT(!Habitat_BoutIsActive());
@@ -132,8 +141,8 @@ TEST("Habitat bout: cancellation cleanup is idempotent and restores the party")
     BuildDistinctParty(expected);
     ASSUME(Habitat_BoutBegin(&sTestBout));
     SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM, &item);
-    Habitat_BoutFinish(HABITAT_BOUT_ABORTED);
-    Habitat_BoutFinish(HABITAT_BOUT_LOSS);
+    FinishTestBout(HABITAT_BOUT_ABORTED);
+    FinishTestBout(HABITAT_BOUT_LOSS);
 
     EXPECT_EQ(Habitat_GetLastBoutOutcome(), HABITAT_BOUT_ABORTED);
     EXPECT(!Habitat_BoutIsActive());
@@ -157,11 +166,61 @@ TEST("Habitat bout: loss, flee, and abort leave finale state, spots, and residen
         FlagClear(FLAG_HABITAT_DEOXYS_FINALE_WON);
         BuildDistinctParty(expected);
         ASSUME(Habitat_BoutBegin(&sTestBout));
-        Habitat_BoutFinish(sOutcomes[i]);
+        FinishTestBout(sOutcomes[i]);
 
         EXPECT(!FlagGet(FLAG_HABITAT_DEOXYS_FINALE_WON));
         EXPECT(memcmp(&expectedHabitat, &gSaveBlock3Ptr->habitat, sizeof(expectedHabitat)) == 0);
         EXPECT(memcmp(expected, gParties[B_TRAINER_PLAYER], sizeof(expected)) == 0);
     }
-    EXPECT_EQ(gHabitatDeoxysFinale.winFlag, FLAG_HABITAT_DEOXYS_FINALE_WON);
+    EXPECT_EQ(gHabitatDeoxysFinale.bout->winFlag, FLAG_HABITAT_DEOXYS_FINALE_WON);
+}
+
+TEST("Habitat bout: a forged Deoxys finale definition cannot award its completion flag")
+{
+    struct HabitatBoutDefinition forgedFinale = sTestBout;
+
+    forgedFinale.boutId = HABITAT_BOUT_ID_DEOXYS_FINALE;
+    forgedFinale.winFlag = FLAG_HABITAT_DEOXYS_FINALE_WON;
+    FlagClear(FLAG_HABITAT_DEOXYS_FINALE_WON);
+
+    ASSUME(Habitat_BoutBegin(&forgedFinale));
+    FinishTestBout(HABITAT_BOUT_WIN);
+
+    EXPECT(!FlagGet(FLAG_HABITAT_DEOXYS_FINALE_WON));
+}
+
+TEST("Habitat bout: finale authorization requires the canonical definition identity")
+{
+    struct HabitatBoutDefinition forgedFinale = *gHabitatDeoxysFinale.bout;
+
+    EXPECT(Habitat_BoutIsApprovedFinaleDefinition(gHabitatDeoxysFinale.bout));
+    EXPECT(!Habitat_BoutIsApprovedFinaleDefinition(&forgedFinale));
+    EXPECT(!Habitat_BoutBegin(gHabitatDeoxysFinale.bout));
+    EXPECT_EQ(Habitat_GetLastBoutOutcome(), HABITAT_BOUT_ABORTED);
+}
+
+TEST("Habitat bout: caller mutation after begin cannot alter finale authorization")
+{
+    struct HabitatBoutDefinition mutableBout = sTestBout;
+
+    FlagClear(FLAG_HABITAT_DEOXYS_FINALE_WON);
+    ASSUME(Habitat_BoutBegin(&mutableBout));
+    mutableBout.boutId = HABITAT_BOUT_ID_DEOXYS_FINALE;
+    mutableBout.winFlag = FLAG_HABITAT_DEOXYS_FINALE_WON;
+    FinishTestBout(HABITAT_BOUT_WIN);
+
+    EXPECT(!FlagGet(FLAG_HABITAT_DEOXYS_FINALE_WON));
+}
+
+TEST("Habitat bout: battle callback outcome mapping preserves field-return loss behavior")
+{
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_WON), HABITAT_BOUT_WIN);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_LOST), HABITAT_BOUT_LOSS);
+    EXPECT(Habitat_BoutReturnsToField(HABITAT_BOUT_LOSS));
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_DREW), HABITAT_BOUT_LOSS);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_FORFEITED), HABITAT_BOUT_LOSS);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_RAN), HABITAT_BOUT_FLED);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_PLAYER_TELEPORTED), HABITAT_BOUT_FLED);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_MON_FLED), HABITAT_BOUT_FLED);
+    EXPECT_EQ(Habitat_BoutOutcomeFromBattleOutcome(B_OUTCOME_CAUGHT), HABITAT_BOUT_ABORTED);
 }

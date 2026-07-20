@@ -24,5 +24,8 @@ bool32 Habitat_BoutBegin(const struct HabitatBoutDefinition *definition);
 void Habitat_BoutFinish(enum HabitatBoutOutcome outcome);
 bool32 Habitat_BoutIsActive(void);
 enum HabitatBoutOutcome Habitat_GetLastBoutOutcome(void);
+bool32 Habitat_BoutIsApprovedFinaleDefinition(const struct HabitatBoutDefinition *definition);
+enum HabitatBoutOutcome Habitat_BoutOutcomeFromBattleOutcome(u8 battleOutcome);
+bool32 Habitat_BoutReturnsToField(enum HabitatBoutOutcome outcome);
 
 #endif // GUARD_HABITAT_BOUTS_H

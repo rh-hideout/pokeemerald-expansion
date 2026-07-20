@@ -8,8 +8,15 @@ static const struct HabitatCondition sDeoxysFinaleConditions[] = {
     HABITAT_CONDITIONS_END,
 };
 
+// Finale combat data is intentionally incomplete until a separately approved encounter exists.
+static const struct HabitatBoutDefinition sDeoxysFinaleBout = {
+    .boutId = HABITAT_BOUT_ID_DEOXYS_FINALE,
+    .opponentSpecies = SPECIES_DEOXYS,
+    .winFlag = FLAG_HABITAT_DEOXYS_FINALE_WON,
+};
+
 const struct HabitatFinaleGate gHabitatDeoxysFinale = {
     .species = SPECIES_DEOXYS,
     .conditions = sDeoxysFinaleConditions,
-    .winFlag = FLAG_HABITAT_DEOXYS_FINALE_WON,
+    .bout = &sDeoxysFinaleBout,
 };

@@ -3,7 +3,7 @@
 
 WILD_BATTLE_TEST("Habitat: every throw ball is rejected at the battle-item boundary and remains in the Bag")
 {
-    enum Item item;
+    enum Item item = ITEM_NONE;
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
         PARAMETRIZE(item = gPokeBalls[ballId].itemId);
 

@@ -706,29 +706,10 @@ static void CB2_EndHabitatBoutBattle(void)
 
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
-
-    switch (gBattleOutcome)
-    {
-    case B_OUTCOME_WON:
-        outcome = HABITAT_BOUT_WIN;
-        break;
-    case B_OUTCOME_LOST:
-    case B_OUTCOME_DREW:
-    case B_OUTCOME_FORFEITED:
-        outcome = HABITAT_BOUT_LOSS;
-        break;
-    case B_OUTCOME_RAN:
-    case B_OUTCOME_PLAYER_TELEPORTED:
-    case B_OUTCOME_MON_FLED:
-        outcome = HABITAT_BOUT_FLED;
-        break;
-    default:
-        outcome = HABITAT_BOUT_ABORTED;
-        break;
-    }
-
+    outcome = Habitat_BoutOutcomeFromBattleOutcome(gBattleOutcome);
     Habitat_BoutFinish(outcome);
-    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    if (Habitat_BoutReturnsToField(outcome))
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 static void CB2_EndMarowakBattle(void)
