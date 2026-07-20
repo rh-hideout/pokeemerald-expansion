@@ -25,6 +25,7 @@ static const struct LegacyPlacedCounterMap sLegacyPlacedCounterMap[] = {
 };
 
 static const struct HabitatSpot *FindUniqueBefriendedSpot(u16 species, u32 residentSlot);
+static bool32 LegacySpeciesIsRepeated(const struct LegacyResidentData *residents, u32 slot);
 static bool32 OriginIsRegistered(u16 originSpotId, u32 throughSlot);
 static void LogMigrationDiagnostic(const char *reason, u32 slot, u16 value);
 
@@ -89,6 +90,11 @@ void Habitat_MigrateSave(void)
 
         if (legacyResidents[i].species == SPECIES_NONE)
             continue;
+        if (LegacySpeciesIsRepeated(legacyResidents, i))
+        {
+            LogMigrationDiagnostic("resident-duplicate", i, legacyResidents[i].species);
+            continue;
+        }
         spot = FindUniqueBefriendedSpot(legacyResidents[i].species, i);
         if (spot == NULL || OriginIsRegistered(spot->spotId, i))
         {
@@ -103,6 +109,18 @@ void Habitat_MigrateSave(void)
 
     // Version is written last so an interrupted migration always reruns.
     save->saveVersion = HABITAT_SAVE_VERSION_CURRENT;
+}
+
+static bool32 LegacySpeciesIsRepeated(const struct LegacyResidentData *residents, u32 slot)
+{
+    u32 i;
+
+    for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
+    {
+        if (i != slot && residents[i].species == residents[slot].species)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 static const struct HabitatSpot *FindUniqueBefriendedSpot(u16 species, u32 residentSlot)

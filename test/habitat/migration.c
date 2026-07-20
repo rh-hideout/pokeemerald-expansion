@@ -63,8 +63,8 @@ TEST("Habitat migration: version 0 preserves state and deterministically expands
     legacy.residents[2] = (struct LegacyHabitatResident) {
         .species = SPECIES_ZIGZAGOON, .personalitySeed = 91, .assignment = 2,
     };
-    // A duplicate v0 record is corrupt: keep the befriended Machop spot but
-    // do not guess which duplicate should own it.
+    // Duplicate v0 species are ambiguous as a set: neither Machop record may
+    // claim the befriended spot based on registry order.
     legacy.residents[3] = (struct LegacyHabitatResident) {
         .species = SPECIES_MACHOP, .personalitySeed = 44, .assignment = 2,
     };
@@ -89,9 +89,7 @@ TEST("Habitat migration: version 0 preserves state and deterministically expands
     EXPECT_EQ(gSaveBlock3Ptr->habitat.lastGrowthMinutes, legacy.lastGrowthMinutes);
     EXPECT_EQ(gSaveBlock3Ptr->habitat.plots[2].berryItem, legacy.plots[2].berryItem);
     EXPECT_EQ(gSaveBlock3Ptr->habitat.plots[2].hoursProgress, legacy.plots[2].hoursProgress);
-    EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[0].originSpotId, 3);
-    EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[0].personalitySeed, 17);
-    EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[0].assignment, 3);
+    EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[0].originSpotId, HABITAT_SPOT_NONE);
     EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[1].originSpotId, 1);
     EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[1].personalitySeed, 29);
     EXPECT_EQ(gSaveBlock3Ptr->habitat.residents[1].assignment, 1);
