@@ -109,5 +109,5 @@ u16 Habitat_GetResidentSpecies(u32 residentIndex)
     if (originSpotId == HABITAT_SPOT_NONE)
         return SPECIES_NONE;
     spot = FindSpot(originSpotId);
-    return spot == NULL ? SPECIES_NONE : spot->species;
+    return Habitat_GetResolvedSpotSpecies(spot);
 }

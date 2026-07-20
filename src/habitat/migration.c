@@ -130,7 +130,7 @@ static const struct HabitatSpot *FindUniqueBefriendedSpot(u16 species, u32 resid
 
     for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
     {
-        if (gHabitatSpots[i].species != species
+        if (Habitat_GetResolvedSpotSpecies(&gHabitatSpots[i]) != species
          || Habitat_GetSpotState(gHabitatSpots[i].spotId) != HABITAT_STATE_BEFRIENDED)
             continue;
         if (match != NULL)

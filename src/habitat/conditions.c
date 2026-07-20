@@ -211,7 +211,7 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
                 continue;
             if (c->paramB != 0 && spots[i].zoneId != c->paramB)
                 continue;
-            if (ResidentSpeciesMatches(spots[i].species, c))
+            if (ResidentSpeciesMatches(Habitat_GetResolvedSpotSpecies(&spots[i]), c))
                 return TRUE;
         }
         return FALSE;
@@ -222,7 +222,7 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
         u32 i, n = 0;
         for (i = 0; spots[i].spotId != 0xFFFF; i++)
         {
-            u16 species = spots[i].species;
+            u16 species = Habitat_GetResolvedSpotSpecies(&spots[i]);
             if (Habitat_GetSpotState(spots[i].spotId) != HABITAT_STATE_BEFRIENDED)
                 continue;
             if (c->paramA != HABITAT_TYPE_ANY

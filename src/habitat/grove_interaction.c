@@ -184,7 +184,7 @@ u16 Habitat_CanRecruitToGrove(void)
     residentIdx = Habitat_FindResidentBySpot(spot->spotId);
     if (residentIdx < 0 || Habitat_ResidentIsOut(residentIdx))
         return 0;
-    StringCopy(gStringVar1, GetSpeciesName(spot->species));
+    StringCopy(gStringVar1, GetSpeciesName(Habitat_GetResolvedSpotSpecies(spot)));
     if (Habitat_OutCount() >= HABITAT_GROVE_OUT_CAP)
         return 2;
     for (plotIdx = 0; plotIdx < HABITAT_PLOT_COUNT; plotIdx++)

@@ -21,11 +21,21 @@ struct HabitatZone
     u8 berryTreeIdFirst, berryTreeIdLast;   // COND_BERRY_MATURE zone filter (inclusive; 0,0 = none)
 };
 
+// An element furnishing chooses a species for a shared habitat choice group.
+// The table is terminated by { ITEM_NONE, SPECIES_NONE }.
+struct HabitatSpeciesChoice
+{
+    u16 itemId;
+    u16 species;
+};
+
 struct HabitatSpot
 {
     // ---- spec §2 authored fields (designer surface — do not reorder) ----
     u16 spotId;                                     // 0xFFFF terminates the table
-    u16 species;                                    // SPECIES_*
+    u16 species;                                    // SPECIES_* (NONE for a furnishing choice spot)
+    const struct HabitatSpeciesChoice *speciesChoices; // NULL or item -> species table
+    u8 speciesChoiceGroup;                          // 0 = no shared choice group
     u8 tier;                                        // 1–4
     u8 zoneId;
     const struct HabitatCondition *appearConditions;
@@ -38,6 +48,7 @@ struct HabitatSpot
     // ---- engine bindings ----
     u16 hideFlag;                                   // object event flag: set = hidden (not ACTIVE)
     u8 mapGroup, mapNum, localId;                   // bound overworld object event
+    u16 graphicsVar;                                // VAR_OBJ_GFX_ID_* or 0 for static graphics
     u8 engineFlags;                                 // HABITAT_SPOTDEF_*
 };
 
@@ -61,6 +72,8 @@ extern const struct HabitatZone gHabitatZones[];
 const struct HabitatSpot *Habitat_GetSpot(u16 spotId);
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId);
 const struct HabitatZone *Habitat_GetZone(u8 zoneId);
+u16 Habitat_GetResolvedSpotSpecies(const struct HabitatSpot *spot);
+bool32 Habitat_IsSpeciesChoiceAvailable(const struct HabitatSpot *spot, u16 itemId);
 
 // Resident and condition truth read the active authored spot table. Tests can
 // temporarily substitute a small table to exercise identity edge cases while
@@ -74,6 +87,7 @@ void Habitat_SetSpotTableForTest(const struct HabitatSpot *spots);
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
 void Habitat_RecomputeCurrentMapSpots(void);
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
+void Habitat_PrepareLabFrames(void);
 void Habitat_CompleteBefriendById(u16 spotId);
 bool32 Habitat_CanSubmitItem(const struct HabitatSpot *spot,
                              enum HabitatItemAction action,

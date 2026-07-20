@@ -7,6 +7,8 @@
 #include "habitat/spots.h"
 #include "event_data.h"
 #include "pokedex.h"
+#include "constants/event_objects.h"
+#include "constants/vars.h"
 
 static void CompleteBefriend(const struct HabitatSpot *spot);
 static const struct HabitatSpot *FindSpot(u16 spotId);
@@ -76,6 +78,26 @@ void Habitat_RecomputeCurrentMapSpots(void)
     }
 }
 
+// The lab frames use map object graphics variables, so their chosen starter
+// is restored before object events are loaded on every map transition.
+void Habitat_PrepareLabFrames(void)
+{
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
+    u32 i;
+
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
+    {
+        u16 species;
+
+        if (spots[i].graphicsVar == 0)
+            continue;
+        species = Habitat_GetResolvedSpotSpecies(&spots[i]);
+
+        VarSet(spots[i].graphicsVar, species == SPECIES_NONE
+               ? OBJ_EVENT_GFX_ITEM_BALL : OBJ_EVENT_MON + species);
+    }
+}
+
 // Befriend resolution — shared by the offer verb and offer-less recompute.
 // Spec §2 BEFRIENDED: dex "caught" flag set (== resident per §5), sprite
 // becomes ambient or hides per spot flag, residents notified (phase 3).
@@ -88,10 +110,14 @@ void Habitat_CompleteBefriendById(u16 spotId)
 
 static void CompleteBefriend(const struct HabitatSpot *spot)
 {
-    u16 dexNum = SpeciesToNationalPokedexNum(spot->species);
+    u16 species = Habitat_GetResolvedSpotSpecies(spot);
+    u16 dexNum;
 
     if (Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_BEFRIENDED)
         return;
+    if (species == SPECIES_NONE)
+        return;
+    dexNum = SpeciesToNationalPokedexNum(species);
     Habitat_SetSpotState(spot->spotId, HABITAT_STATE_BEFRIENDED);
     GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
     GetSetPokedexFlag(dexNum, FLAG_SET_CAUGHT);

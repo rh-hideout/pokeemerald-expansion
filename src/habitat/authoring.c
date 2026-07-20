@@ -18,6 +18,7 @@ static bool32 IsValidComparator(u16 comparator);
 static bool32 HasOnlyZeroUnusedParams(const struct HabitatCondition *condition, u16 firstUnused);
 static bool32 ValidateConditionParameters(const struct HabitatCondition *condition);
 static bool32 MarkPlacedCounterIds(const struct HabitatCondition *list, u8 *seen);
+static bool32 ValidateSpeciesChoices(const struct HabitatSpot *spot);
 
 bool32 Habitat_ConditionTypeIsSupported(u8 type)
 {
@@ -112,7 +113,7 @@ bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
         if (spot->spotId == 0xFFFF)
             return TRUE;
         if (spot->spotId >= HABITAT_SPOT_COUNT
-         || !IsValidSpecies(spot->species)
+         || !ValidateSpeciesChoices(spot)
          || spot->tier < 1 || spot->tier > 4
          || Habitat_GetZone(spot->zoneId) == NULL
          || spot->hintDormant == NULL || spot->hintStirring == NULL || spot->hintActive == NULL
@@ -126,6 +127,29 @@ bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
                 return FALSE;
     }
     return FALSE;
+}
+
+static bool32 ValidateSpeciesChoices(const struct HabitatSpot *spot)
+{
+    u32 i, j;
+
+    if (spot->speciesChoices == NULL)
+        return spot->speciesChoiceGroup == 0 && IsValidSpecies(spot->species);
+    if (spot->species != SPECIES_NONE || spot->speciesChoiceGroup == 0)
+        return FALSE;
+    for (i = 0; spot->speciesChoices[i].itemId != ITEM_NONE; i++)
+    {
+        if (!IsValidItem(spot->speciesChoices[i].itemId)
+         || !IsValidSpecies(spot->speciesChoices[i].species))
+            return FALSE;
+        for (j = 0; j < i; j++)
+        {
+            if (spot->speciesChoices[j].itemId == spot->speciesChoices[i].itemId
+             || spot->speciesChoices[j].species == spot->speciesChoices[i].species)
+                return FALSE;
+        }
+    }
+    return i != 0 && spot->speciesChoices[i].species == SPECIES_NONE;
 }
 
 static bool32 IsValidSpecies(u16 species)

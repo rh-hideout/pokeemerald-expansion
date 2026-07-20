@@ -1,4 +1,5 @@
 #include "global.h"
+#include "habitat/save.h"
 #include "habitat/spots.h"
 #include "constants/berry.h"
 #include "constants/flags.h"
@@ -7,6 +8,7 @@
 #include "constants/map_groups.h"
 #include "constants/moves.h"
 #include "constants/species.h"
+#include "constants/vars.h"
 #include "constants/weather.h"
 
 // ============================================================================
@@ -115,24 +117,40 @@ static const struct HabitatCondition sPinsirBefriend[] = {  // Bug type-want def
     HABITAT_CONDITIONS_END,
 };
 
-// ---- §10 lab frames. BEST-GUESS BINDING (question batched for Jay): each
-// frame is pre-bound to a species+element; the furnished frame (Torchic)
-// needs only its element, bare frames also need scavenged furnishings.
-// Befriend lists are EMPTY: completing the frame auto-befriends — the
-// starter "comes home" (offer-less rule). Dev config pins Torchic anyway.
+// ---- §10 lab frames. An element furnishing chooses its starter; the same
+// choice table is attached to all three frames. The first (already furnished)
+// frame needs only an element, while the two bare frames retain their
+// scavenged requirements. Counter ids retain the former v2 mappings where
+// they existed so old saves resolve to the same starter.
+static const struct HabitatSpeciesChoice sStarterChoices[] = {
+    { ITEM_HH_CAMPFIRE,    SPECIES_TORCHIC },
+    { ITEM_HH_POTTED_PLANT, SPECIES_TREECKO },
+    { ITEM_HH_WATER_BASIN, SPECIES_MUDKIP },
+    { ITEM_NONE,           SPECIES_NONE },
+};
+
+#define STARTER_CHOICE_GROUP 1
+#define STARTER_ELEMENT_FLAGS HABITAT_COND_OR_GROUP(1)
+
 static const struct HabitatCondition sFrameTorchicAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 3, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE,    1, 3, STARTER_ELEMENT_FLAGS),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 9, STARTER_ELEMENT_FLAGS),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN,  1, 10, STARTER_ELEMENT_FLAGS),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameTreeckoAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 4, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 4, STARTER_ELEMENT_FLAGS),
     HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_BOOKSHELF, 1, 5, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 11, STARTER_ELEMENT_FLAGS),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 12, STARTER_ELEMENT_FLAGS),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameMudkipAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 6, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 6, STARTER_ELEMENT_FLAGS),
     HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_LAB_PC, 1, 7, 0),
     HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POKEBALL_HOLDER, 1, 8, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 13, STARTER_ELEMENT_FLAGS),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 14, STARTER_ELEMENT_FLAGS),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameAutoBefriend[] = {
@@ -218,30 +236,39 @@ const struct HabitatSpot gHabitatSpots[] = {
         .engineFlags = 0,
     },
     {
-        .spotId = SPOT_FRAME_TORCHIC, .species = SPECIES_TORCHIC, .tier = 1, .zoneId = 2,
+        .spotId = SPOT_FRAME_TORCHIC, .species = SPECIES_NONE,
+        .speciesChoices = sStarterChoices, .speciesChoiceGroup = STARTER_CHOICE_GROUP,
+        .tier = 1, .zoneId = 2,
         .appearConditions = sFrameTorchicAppear, .befriendConditions = sFrameAutoBefriend,
         .hintDormant = sHintDormant_FrameTorchic, .hintStirring = sHintStirring_FrameTorchic, .hintActive = sHintActive_FrameTorchic,
         .workerRole = ROLE_WARM, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_FRAME_TORCHIC,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TORCHIC,
+        .graphicsVar = VAR_OBJ_GFX_ID_7,
         .engineFlags = 0,
     },
     {
-        .spotId = SPOT_FRAME_TREECKO, .species = SPECIES_TREECKO, .tier = 1, .zoneId = 2,
+        .spotId = SPOT_FRAME_TREECKO, .species = SPECIES_NONE,
+        .speciesChoices = sStarterChoices, .speciesChoiceGroup = STARTER_CHOICE_GROUP,
+        .tier = 1, .zoneId = 2,
         .appearConditions = sFrameTreeckoAppear, .befriendConditions = sFrameAutoBefriend,
         .hintDormant = sHintDormant_FrameTreecko, .hintStirring = sHintStirring_FrameTreecko, .hintActive = sHintActive_FrameTreecko,
         .workerRole = ROLE_TEND, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_FRAME_TREECKO,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TREECKO,
+        .graphicsVar = VAR_OBJ_GFX_ID_8,
         .engineFlags = 0,
     },
     {
-        .spotId = SPOT_FRAME_MUDKIP, .species = SPECIES_MUDKIP, .tier = 1, .zoneId = 2,
+        .spotId = SPOT_FRAME_MUDKIP, .species = SPECIES_NONE,
+        .speciesChoices = sStarterChoices, .speciesChoiceGroup = STARTER_CHOICE_GROUP,
+        .tier = 1, .zoneId = 2,
         .appearConditions = sFrameMudkipAppear, .befriendConditions = sFrameAutoBefriend,
         .hintDormant = sHintDormant_FrameMudkip, .hintStirring = sHintStirring_FrameMudkip, .hintActive = sHintActive_FrameMudkip,
         .workerRole = ROLE_IRRIGATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_FRAME_MUDKIP,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_MUDKIP,
+        .graphicsVar = VAR_OBJ_GFX_ID_9,
         .engineFlags = 0,
     },
     { .spotId = 0xFFFF },
@@ -263,6 +290,63 @@ const struct HabitatSpot *Habitat_GetSpot(u16 spotId)
             return &spots[i];
     }
     return NULL;
+}
+
+u16 Habitat_GetResolvedSpotSpecies(const struct HabitatSpot *spot)
+{
+    const struct HabitatSpeciesChoice *choice;
+    u32 i, j;
+
+    if (spot == NULL)
+        return SPECIES_NONE;
+    if (spot->speciesChoices == NULL)
+        return spot->species;
+    for (i = 0; spot->speciesChoices[i].itemId != ITEM_NONE; i++)
+    {
+        choice = &spot->speciesChoices[i];
+        for (j = 0; spot->appearConditions[j].type != COND_NONE && j < HABITAT_MAX_CONDITIONS; j++)
+        {
+            const struct HabitatCondition *condition = &spot->appearConditions[j];
+            if (condition->type == COND_ITEM_PLACED
+             && condition->paramA == choice->itemId
+             && Habitat_GetPlacedCount(condition->paramC) >= max(1, condition->paramB))
+                return choice->species;
+        }
+    }
+    return SPECIES_NONE;
+}
+
+bool32 Habitat_IsSpeciesChoiceAvailable(const struct HabitatSpot *spot, u16 itemId)
+{
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
+    u16 requestedSpecies = SPECIES_NONE;
+    u32 i;
+
+    if (spot == NULL || spot->speciesChoices == NULL || spot->speciesChoiceGroup == 0
+     || Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_BEFRIENDED)
+        return FALSE;
+    for (i = 0; spot->speciesChoices[i].itemId != ITEM_NONE; i++)
+    {
+        if (spot->speciesChoices[i].itemId == itemId)
+        {
+            requestedSpecies = spot->speciesChoices[i].species;
+            break;
+        }
+    }
+    if (requestedSpecies == SPECIES_NONE)
+        return FALSE;
+
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
+    {
+        u16 resolved;
+
+        if (spots[i].speciesChoiceGroup != spot->speciesChoiceGroup)
+            continue;
+        resolved = Habitat_GetResolvedSpotSpecies(&spots[i]);
+        if (resolved == requestedSpecies || (&spots[i] == spot && resolved != SPECIES_NONE))
+            return FALSE;
+    }
+    return TRUE;
 }
 
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId)

@@ -648,6 +648,7 @@ gSpecials::
 	def_special Habitat_SelectOfferItem
 	def_special Habitat_SelectPlaceItem
 	def_special Habitat_OnInspectSpotById
+	def_special Habitat_PrepareLabFrames
 	def_special Habitat_PrepareGroveWorkers
 	def_special Habitat_OnTalkWorker
 	def_special Habitat_SendTalkedWorkerHome

@@ -41,6 +41,7 @@ void Habitat_SetInteractionSpotForTest(u16 spotId)
 static void InspectSpot(const struct HabitatSpot *spot);
 static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count);
 static bool32 HasActiveOffer(const struct HabitatSpot *spot, u16 itemId, u16 count);
+static bool32 IsSpeciesChoiceItem(const struct HabitatSpot *spot, u16 itemId);
 
 // special Habitat_OnInspectSpot — resolves the talked object to a spot,
 // counts the talk, buffers {STR_VAR_1}=species name and gStringVar4=staged
@@ -91,7 +92,7 @@ static void InspectSpot(const struct HabitatSpot *spot)
     // an overlapping buffer and corrupts EWRAM (found the hard way in the
     // M1 phase 2 headless runs). Text handed to msgbox from gStringVar4
     // must always arrive here fully expanded.
-    StringCopy(gStringVar1, GetSpeciesName(spot->species));
+    StringCopy(gStringVar1, GetSpeciesName(Habitat_GetResolvedSpotSpecies(spot)));
     StringExpandPlaceholders(gStringVar4, hint);
     gSpecialVar_Result = state;
 }
@@ -230,6 +231,9 @@ static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 
 
     if (spot == NULL)
         return FALSE;
+    if (IsSpeciesChoiceItem(spot, itemId)
+     && !Habitat_IsSpeciesChoiceAvailable(spot, itemId))
+        return FALSE;
     for (i = 0; spot->appearConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
     {
         c = &spot->appearConditions[i];
@@ -239,6 +243,18 @@ static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 
          && Habitat_GetPlacedCount(c->paramC) < count)
             return TRUE;
     }
+    return FALSE;
+}
+
+static bool32 IsSpeciesChoiceItem(const struct HabitatSpot *spot, u16 itemId)
+{
+    u32 i;
+
+    if (spot == NULL || spot->speciesChoices == NULL)
+        return FALSE;
+    for (i = 0; spot->speciesChoices[i].itemId != ITEM_NONE; i++)
+        if (spot->speciesChoices[i].itemId == itemId)
+            return TRUE;
     return FALSE;
 }
 
@@ -405,7 +421,9 @@ u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot)
     {
         const struct HabitatCondition *c = &spot->appearConditions[i];
         if (c->type == COND_ITEM_PLACED
-         && Habitat_GetPlacedCount(c->paramC) < max(1, c->paramB))
+         && Habitat_GetPlacedCount(c->paramC) < max(1, c->paramB)
+         && (!IsSpeciesChoiceItem(spot, c->paramA)
+             || Habitat_IsSpeciesChoiceAvailable(spot, c->paramA)))
             verbs |= HABITAT_VERB_PLACE;
     }
     if (Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_ACTIVE
