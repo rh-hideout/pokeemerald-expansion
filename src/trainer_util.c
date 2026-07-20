@@ -7,6 +7,7 @@
 #include "trainer_util.h"
 #include "text.h"
 
+#include "constants/battle_ai.h"
 #include "constants/pokeball.h"
 
 rng_value_t GeneratePartySeed(const struct Trainer *trainer)
@@ -96,6 +97,7 @@ static bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, en
 void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
 {
     trainerGen->gender = trainer->gender;
+    trainerGen->smartTera = trainer->aiFlags & AI_FLAG_SMART_TERA;
     trainerGen->isFrontier = FALSE;
     StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
     trainerGen->trainerClass = trainer->trainerClass;
@@ -107,6 +109,7 @@ void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trai
 {
     u32 otID;
     trainerGen->gender = partner->gender;
+    trainerGen->smartTera = partner->aiFlags & AI_FLAG_SMART_TERA;
     trainerGen->isFrontier = FALSE;
     StringCopyN(trainerGen->name, partner->trainerName, TRAINER_NAME_LENGTH + 1);
     trainerGen->trainerClass = partner->trainerClass;
@@ -196,7 +199,7 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     }
     else
     {
-        data = 15;
+        data = BLOCK_DYNAMAX;
     }
     SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &data);
     if (trainerMon->gigantamaxFactor)
@@ -210,7 +213,7 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     }
     else
     {
-        data = TYPE_NONE;
+        data = TYPE_MYSTERY;
     }
     SetMonData(mon, MON_DATA_TERA_TYPE, &data);
 
