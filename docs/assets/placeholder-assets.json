@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "required_furnishing_assets": [
+    {
+      "id": "hh-campfire-icon",
+      "item_id": "ITEM_HH_CAMPFIRE",
+      "repository_path": "graphics/items/icons/habitat/campfire.png",
+      "icon_symbol": "gItemIcon_HH_Campfire",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-campfire-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-campfire-icon.md"
+    },
+    {
+      "id": "hh-potted-plant-icon",
+      "item_id": "ITEM_HH_POTTED_PLANT",
+      "repository_path": "graphics/items/icons/habitat/potted_plant.png",
+      "icon_symbol": "gItemIcon_HH_PottedPlant",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-potted-plant-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-potted-plant-icon.md"
+    },
+    {
+      "id": "hh-water-basin-icon",
+      "item_id": "ITEM_HH_WATER_BASIN",
+      "repository_path": "graphics/items/icons/habitat/water_basin.png",
+      "icon_symbol": "gItemIcon_HH_WaterBasin",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-water-basin-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-water-basin-icon.md"
+    },
+    {
+      "id": "hh-lab-pc-icon",
+      "item_id": "ITEM_HH_LAB_PC",
+      "repository_path": "graphics/items/icons/habitat/lab_pc.png",
+      "icon_symbol": "gItemIcon_HH_LabPc",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-lab-pc-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-lab-pc-icon.md"
+    },
+    {
+      "id": "hh-bookshelf-icon",
+      "item_id": "ITEM_HH_BOOKSHELF",
+      "repository_path": "graphics/items/icons/habitat/bookshelf.png",
+      "icon_symbol": "gItemIcon_HH_Bookshelf",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-bookshelf-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-bookshelf-icon.md"
+    },
+    {
+      "id": "hh-ball-holder-icon",
+      "item_id": "ITEM_HH_POKEBALL_HOLDER",
+      "repository_path": "graphics/items/icons/habitat/ball_holder.png",
+      "icon_symbol": "gItemIcon_HH_BallHolder",
+      "accepted_provenance_types": ["commissioned", "hand_made"],
+      "source_record_requirement": "docs/assets/source-records/hh-ball-holder-icon.md",
+      "approval_reference_requirement": "docs/assets/approvals/hh-ball-holder-icon.md"
+    }
+  ],
+  "copy_records": {
+    "src/habitat/spot_data.c:sHintDormant_Skitty": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Skitty": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Skitty": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_Lotad": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Lotad": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Lotad": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_Machop": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Machop": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Machop": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_Vulpix": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Vulpix": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Vulpix": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_Heracross": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Heracross": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Heracross": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_Pinsir": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_Pinsir": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_Pinsir": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_FrameTorchic": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_FrameTorchic": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_FrameTorchic": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_FrameTreecko": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_FrameTreecko": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_FrameTreecko": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintDormant_FrameMudkip": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintStirring_FrameMudkip": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_data.c:sHintActive_FrameMudkip": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_BoutPrompt": {"approval_status": "removed", "approval_reference": "Task 2 removal", "replacement_reference": "Removed"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_BoutStart": {"approval_status": "removed", "approval_reference": "Task 2 removal", "replacement_reference": "Removed"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_BoutLost": {"approval_status": "removed", "approval_reference": "Task 2 removal", "replacement_reference": "Removed"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_NoBattler": {"approval_status": "removed", "approval_reference": "Task 2 removal", "replacement_reference": "Removed"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_OfferRejected": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_Befriended": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_NothingToPlace": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_Placed": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_RecruitPrompt": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_Recruited": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_GroveFull": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_CannotCome": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_Ambient": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "data/scripts/habitat_spot.inc:HabitatSpot_Text_NotASpot": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"},
+    "src/habitat/spot_interaction.c:sText_NotASpot": {"approval_status": "pending", "approval_reference": "Not supplied", "replacement_reference": "docs/content/habitat-copy-inventory.md"}
+  },
+  "temporary_assets": [
+    {
+      "id": "hh-campfire-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_CAMPFIRE",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Campfire icon and source record.",
+      "release_blocking": true
+    },
+    {
+      "id": "hh-potted-plant-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_POTTED_PLANT",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Potted Plant icon and source record.",
+      "release_blocking": true
+    },
+    {
+      "id": "hh-water-basin-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_WATER_BASIN",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Water Basin icon and source record.",
+      "release_blocking": true
+    },
+    {
+      "id": "hh-lab-pc-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_LAB_PC",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Lab PC icon and source record.",
+      "release_blocking": true
+    },
+    {
+      "id": "hh-bookshelf-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_BOOKSHELF",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Bookshelf icon and source record.",
+      "release_blocking": true
+    },
+    {
+      "id": "hh-ball-holder-icon",
+      "repository_path": "graphics/items/icons/question_mark.png",
+      "use_site": "src/data/items.h:ITEM_HH_POKEBALL_HOLDER",
+      "owner": "Hoenn Habitat content approval",
+      "provenance": "Existing repository question-mark icon used only as a temporary development reference.",
+      "recorded_on": "2026-07-20",
+      "replacement_requirement": "Approved commissioned or hand-made Ball Holder icon and source record.",
+      "release_blocking": true
+    }
+  ],
+  "release_assets": []
+}

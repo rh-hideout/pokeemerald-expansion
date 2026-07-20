@@ -71,3 +71,8 @@ __pycache__
 verify-out/
 *.sav
 .DS_Store
+
+# Habitat source icons and their provenance manifest are release deliverables.
+!docs/assets/placeholder-assets.json
+!graphics/items/icons/habitat/
+!graphics/items/icons/habitat/*.png
