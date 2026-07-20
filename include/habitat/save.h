@@ -71,10 +71,10 @@ void Habitat_AddPlacedCountLegacy(u16 spotId, u8 conditionIndex, u8 count);
 // Resident registry (src/habitat/residents.c).
 u32 Habitat_ResidentCount(void);
 const struct HabitatResident *Habitat_GetResident(u32 index);  // NULL if empty slot
-s32 Habitat_TryAddResident(u16 species);   // index, or -1 at the individual cap
-s32 Habitat_TryAddResidentAtSpot(u16 originSpotId); // index, or -1 at the individual cap
-s32 Habitat_FindResidentBySpecies(u16 species);  // first index, or -1
-u16 Habitat_GetResidentSpecies(const struct HabitatResident *resident);
+s32 Habitat_TryAddResident(u16 originSpotId);  // index, or -1 at the individual cap
+s32 Habitat_FindResidentBySpot(u16 originSpotId);  // index, or -1
+u16 Habitat_GetResidentSpotId(u32 residentIndex);  // HABITAT_SPOT_NONE if empty
+u16 Habitat_GetResidentSpecies(u32 residentIndex); // SPECIES_NONE if empty or unknown
 
 // Grove assignment & plots (src/habitat/grove.c). assignment: 0 = home,
 // 1..HABITAT_PLOT_COUNT = working that plot. "Out" == assignment != 0.

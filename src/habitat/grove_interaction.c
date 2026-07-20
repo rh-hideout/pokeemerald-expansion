@@ -62,7 +62,7 @@ void Habitat_PrepareGroveWorkers(void)
         if (residentIdx >= 0)
         {
             VarSet(sWorkerGfxVars[slot],
-                   OBJ_EVENT_MON + Habitat_GetResidentSpecies(Habitat_GetResident(residentIdx)));
+                   OBJ_EVENT_MON + Habitat_GetResidentSpecies(residentIdx));
             FlagClear(sWorkerHideFlags[slot]);
         }
         else
@@ -121,7 +121,7 @@ u16 Habitat_OnTalkWorker(void)
     if (r == NULL || r->assignment == 0)
         return FALSE;
     plot = Habitat_GetPlot(r->assignment - 1);
-    StringCopy(gStringVar1, GetSpeciesName(Habitat_GetResidentSpecies(r)));
+    StringCopy(gStringVar1, GetSpeciesName(Habitat_GetResidentSpecies(residentIdx)));
     CopyItemName(plot != NULL ? plot->berryItem : ITEM_NONE, gStringVar2);
     return TRUE;
 }
@@ -181,7 +181,7 @@ u16 Habitat_CanRecruitToGrove(void)
 
     if (spot == NULL)
         return 0;
-    residentIdx = Habitat_FindResidentBySpecies(spot->species);
+    residentIdx = Habitat_FindResidentBySpot(spot->spotId);
     if (residentIdx < 0 || Habitat_ResidentIsOut(residentIdx))
         return 0;
     StringCopy(gStringVar1, GetSpeciesName(spot->species));
@@ -205,7 +205,7 @@ void Habitat_TryRecruitToGrove(void)
 
     if (spot == NULL)
         return;
-    residentIdx = Habitat_FindResidentBySpecies(spot->species);
+    residentIdx = Habitat_FindResidentBySpot(spot->spotId);
     if (residentIdx < 0 || Habitat_ResidentIsOut(residentIdx))
         return;
     for (plotIdx = 0; plotIdx < HABITAT_PLOT_COUNT; plotIdx++)

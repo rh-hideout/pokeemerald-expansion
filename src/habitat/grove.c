@@ -87,7 +87,7 @@ bool32 Habitat_AssignResidentToPlot(u32 residentIdx, u32 plotIdx)
     slot = (plot->worker1 == WORKER_NONE) ? &plot->worker1 : &plot->worker2;
     *slot = residentIdx;
     if (plot->worker1 != WORKER_NONE && plot->worker2 == WORKER_NONE)
-        plot->berryItem = Habitat_BerryForSpecies(Habitat_GetResidentSpecies(r));  // first worker sets the crop
+        plot->berryItem = Habitat_BerryForSpecies(Habitat_GetResidentSpecies(residentIdx));  // first worker sets the crop
     gSaveBlock3Ptr->habitat.residents[residentIdx].assignment = plotIdx + 1;
     Habitat_NotifyEvent(HABITAT_EVENT_RESIDENT_CHANGE);
     return TRUE;

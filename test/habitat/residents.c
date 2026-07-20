@@ -10,8 +10,48 @@
 #include "test/test.h"
 
 #define SPOT_SKITTY 1
+#define SPOT_LOTAD 2
 #define SPOT_MACHOP 3
 #define SPOT_HERACROSS 5
+#define SPOT_PINSIR 6
+#define SPOT_FRAME_TREECKO 8
+
+#define TEST_SPOT_SKITTY_ROUTE 280
+#define TEST_SPOT_SKITTY_GROVE 281
+#define TEST_SPOT_CASTFORM_NORMAL 282
+#define TEST_SPOT_CASTFORM_SUNNY 283
+
+static const struct HabitatCondition sTestConditions[] = {
+    HABITAT_CONDITIONS_END,
+};
+static const u8 sTestHint[] = _("test$");
+static const struct HabitatSpot sIdentityTestSpots[] = {
+    {
+        .spotId = TEST_SPOT_SKITTY_ROUTE, .species = SPECIES_SKITTY, .tier = 1, .zoneId = 1,
+        .appearConditions = sTestConditions, .befriendConditions = sTestConditions,
+        .hintDormant = sTestHint, .hintStirring = sTestHint, .hintActive = sTestHint,
+        .hideFlag = FLAG_UNUSED_0x022, .mapGroup = 1, .mapNum = 1, .localId = 1,
+    },
+    {
+        .spotId = TEST_SPOT_SKITTY_GROVE, .species = SPECIES_SKITTY, .tier = 1, .zoneId = 2,
+        .appearConditions = sTestConditions, .befriendConditions = sTestConditions,
+        .hintDormant = sTestHint, .hintStirring = sTestHint, .hintActive = sTestHint,
+        .hideFlag = FLAG_UNUSED_0x023, .mapGroup = 2, .mapNum = 1, .localId = 1,
+    },
+    {
+        .spotId = TEST_SPOT_CASTFORM_NORMAL, .species = SPECIES_CASTFORM_NORMAL, .tier = 1, .zoneId = 1,
+        .appearConditions = sTestConditions, .befriendConditions = sTestConditions,
+        .hintDormant = sTestHint, .hintStirring = sTestHint, .hintActive = sTestHint,
+        .hideFlag = FLAG_UNUSED_0x024, .mapGroup = 3, .mapNum = 1, .localId = 1,
+    },
+    {
+        .spotId = TEST_SPOT_CASTFORM_SUNNY, .species = SPECIES_CASTFORM_SUNNY, .tier = 1, .zoneId = 2,
+        .appearConditions = sTestConditions, .befriendConditions = sTestConditions,
+        .hintDormant = sTestHint, .hintStirring = sTestHint, .hintActive = sTestHint,
+        .hideFlag = FLAG_UNUSED_0x025, .mapGroup = 4, .mapNum = 1, .localId = 1,
+    },
+    { .spotId = 0xFFFF },
+};
 
 TEST("Habitat residents: befriending registers an individual")
 {
@@ -20,38 +60,51 @@ TEST("Habitat residents: befriending registers an individual")
     Habitat_CompleteBefriendById(SPOT_MACHOP);
     EXPECT_EQ(Habitat_ResidentCount(), 1);
     ASSUME(Habitat_GetResident(0) != NULL);
-    EXPECT_EQ(Habitat_GetResidentSpecies(Habitat_GetResident(0)), SPECIES_MACHOP);
+    EXPECT_EQ(Habitat_GetResidentSpotId(0), SPOT_MACHOP);
+    EXPECT_EQ(Habitat_GetResidentSpecies(0), SPECIES_MACHOP);
     EXPECT_EQ(Habitat_GetResident(0)->assignment, 0);
-    EXPECT_EQ(Habitat_FindResidentBySpecies(SPECIES_MACHOP), 0);
-    EXPECT_EQ(Habitat_FindResidentBySpecies(SPECIES_SKITTY), -1);
+    EXPECT_EQ(Habitat_FindResidentBySpot(SPOT_MACHOP), 0);
+    EXPECT_EQ(Habitat_FindResidentBySpot(SPOT_SKITTY), -1);
+    EXPECT_EQ(Habitat_TryAddResident(SPOT_MACHOP), 0);
+    EXPECT_EQ(Habitat_ResidentCount(), 1);
 }
 
-TEST("Habitat residents: the individual cap leaves conditions dex-backed")
+TEST("Habitat residents: adding the same origin spot never creates a second individual")
 {
+    static const struct HabitatCondition sMachop[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_MACHOP, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
     u32 i;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
-        ASSUME(Habitat_TryAddResident(SPECIES_ZIGZAGOON) == (s32) i);
+        gSaveBlock3Ptr->habitat.residents[i].originSpotId = SPOT_LOTAD;
     EXPECT_EQ(Habitat_ResidentCount(), HABITAT_RESIDENT_COUNT);
 
-    // 97th befriend: no individual slot, but dex caught (== befriended) sets.
     Habitat_SetSpotState(SPOT_MACHOP, HABITAT_STATE_ACTIVE);
     Habitat_CompleteBefriendById(SPOT_MACHOP);
     EXPECT_EQ(Habitat_ResidentCount(), HABITAT_RESIDENT_COUNT);
-    EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MACHOP), FLAG_GET_CAUGHT));
+    EXPECT_EQ(Habitat_FindResidentBySpot(SPOT_MACHOP), -1);
+    Habitat_EvaluateConditions(sMachop, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);  // overflow stays befriended for condition truth
 }
 
-TEST("Habitat residents: RESIDENT_SPECIES and RESIDENT_COUNT read the dex")
+TEST("Habitat residents: conditions count befriended origin spots, not caught dex flags")
 {
-    static const struct HabitatCondition sPinsir[] = {
-        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_PINSIR, 0, 0, 0),
+    static const struct HabitatCondition sTreecko[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 0, 0, 0),
         HABITAT_CONDITIONS_END,
     };
-    static const struct HabitatCondition sOneFighting[] = {
-        HABITAT_COND(COND_RESIDENT_COUNT, TYPE_FIGHTING, 1, 0, 0),
+    static const struct HabitatCondition sTreeckoZone1[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 1, 0, 0),
         HABITAT_CONDITIONS_END,
     };
-    static const struct HabitatCondition sOneWater[] = {
-        HABITAT_COND(COND_RESIDENT_COUNT, TYPE_WATER, 1, 0, 0),
+    static const struct HabitatCondition sTreeckoZone2[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 2, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sSceptile[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_SCEPTILE, 0, 0, 0),
         HABITAT_CONDITIONS_END,
     };
     static const struct HabitatCondition sAnyTwo[] = {
@@ -60,21 +113,73 @@ TEST("Habitat residents: RESIDENT_SPECIES and RESIDENT_COUNT read the dex")
     };
     struct HabitatConditionResult r;
 
-    Habitat_EvaluateConditions(sPinsir, HABITAT_SPOT_NONE, NULL, &r);
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_TREECKO), FLAG_SET_CAUGHT);
+    Habitat_EvaluateConditions(sTreecko, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);
 
-    Habitat_SetSpotState(SPOT_MACHOP, HABITAT_STATE_ACTIVE);
-    Habitat_CompleteBefriendById(SPOT_MACHOP);   // Fighting
-    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_PINSIR), FLAG_SET_CAUGHT);
+    // Both spots are befriended even when the resident registry is full.
+    Habitat_SetSpotState(SPOT_FRAME_TREECKO, HABITAT_STATE_BEFRIENDED);  // Treecko, zone 2
+    Habitat_SetSpotState(SPOT_LOTAD, HABITAT_STATE_BEFRIENDED);  // Water/Grass, zone 1
 
-    Habitat_EvaluateConditions(sPinsir, HABITAT_SPOT_NONE, NULL, &r);
+    Habitat_EvaluateConditions(sTreecko, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(r.allMet);
-    Habitat_EvaluateConditions(sOneFighting, HABITAT_SPOT_NONE, NULL, &r);
-    EXPECT(r.allMet);
-    Habitat_EvaluateConditions(sOneWater, HABITAT_SPOT_NONE, NULL, &r);
+    Habitat_EvaluateConditions(sTreeckoZone1, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);
+    Habitat_EvaluateConditions(sTreeckoZone2, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sSceptile, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
     Habitat_EvaluateConditions(sAnyTwo, HABITAT_SPOT_NONE, NULL, &r);
-    EXPECT(r.allMet);  // Machop + Pinsir
+    EXPECT(r.allMet);  // Treecko + Lotad; caught Dex alone adds nothing
+}
+
+TEST("Habitat residents: origin spots distinguish duplicate species, zones, and forms")
+{
+    static const struct HabitatCondition sAnyTwo[] = {
+        HABITAT_COND(COND_RESIDENT_COUNT, HABITAT_TYPE_ANY, 2, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sSkittyZone1[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_SKITTY, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sSkittyZone2[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_SKITTY, 2, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    struct HabitatConditionResult r;
+
+    Habitat_SetSpotTableForTest(sIdentityTestSpots);
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CASTFORM_NORMAL), FLAG_SET_CAUGHT);
+    Habitat_EvaluateConditions(sAnyTwo, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // one caught Dex entry cannot expand into its form family
+
+    Habitat_CompleteBefriendById(TEST_SPOT_SKITTY_ROUTE);
+    Habitat_CompleteBefriendById(TEST_SPOT_SKITTY_GROVE);
+    EXPECT_EQ(Habitat_ResidentCount(), 2);
+    EXPECT_EQ(Habitat_FindResidentBySpot(TEST_SPOT_SKITTY_ROUTE), 0);
+    EXPECT_EQ(Habitat_FindResidentBySpot(TEST_SPOT_SKITTY_GROVE), 1);
+    EXPECT_EQ(Habitat_GetResidentSpecies(0), SPECIES_SKITTY);
+    EXPECT_EQ(Habitat_GetResidentSpecies(1), SPECIES_SKITTY);
+    Habitat_EvaluateConditions(sSkittyZone1, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sSkittyZone2, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+
+    gSaveBlock3Ptr->habitat.plots[0].worker1 = 0xFF;
+    gSaveBlock3Ptr->habitat.plots[0].worker2 = 0xFF;
+    gSaveBlock3Ptr->habitat.plots[1].worker1 = 0xFF;
+    gSaveBlock3Ptr->habitat.plots[1].worker2 = 0xFF;
+    EXPECT(Habitat_AssignResidentToPlot(0, 0));
+    Habitat_SyncSpotObjectFlag(&sIdentityTestSpots[0]);
+    Habitat_SyncSpotObjectFlag(&sIdentityTestSpots[1]);
+    EXPECT(FlagGet(sIdentityTestSpots[0].hideFlag));
+    EXPECT(!FlagGet(sIdentityTestSpots[1].hideFlag));
+    EXPECT(Habitat_AssignResidentToPlot(1, 1));
+    EXPECT(Habitat_ResidentIsOut(0));
+    EXPECT(Habitat_ResidentIsOut(1));
+
+    Habitat_SetSpotTableForTest(NULL);
 }
 
 TEST("Habitat residents: Heracross chain closes (resident Pinsir + night + sap tree)")
@@ -89,7 +194,7 @@ TEST("Habitat residents: Heracross chain closes (resident Pinsir + night + sap t
     Habitat_RecomputeSpot(heracross);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_HERACROSS), HABITAT_STATE_STIRRING);  // 2 of 3
 
-    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_PINSIR), FLAG_SET_CAUGHT);
+    Habitat_SetSpotState(SPOT_PINSIR, HABITAT_STATE_BEFRIENDED);
     Habitat_RecomputeSpot(heracross);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_HERACROSS), HABITAT_STATE_ACTIVE);
 }

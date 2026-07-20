@@ -14,6 +14,7 @@
 static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotId,
                       const struct HabitatOfferContext *offer);
 static bool32 Cmp(u32 lhs, u32 comparator, u32 rhs);
+static bool32 ResidentSpeciesMatches(u16 residentSpecies, const struct HabitatCondition *c);
 
 // Evaluates a terminated condition list. Semantics (spec §2): every
 // standalone condition must pass; each OR-group needs at least one passing
@@ -198,17 +199,31 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
             && Habitat_GetTalkCount(spotId) >= max(1, c->paramA);
 
     case COND_RESIDENT_SPECIES:
-        // Dex caught == befriended (spec §5); zone filter (paramB) awaits
-        // residents carrying zones — 0 (any) is the supported form.
-        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(c->paramA), FLAG_GET_CAUGHT);
+    {
+        const struct HabitatSpot *spots = Habitat_GetSpotTable();
+        u32 i;
+
+        if (c->flags & HABITAT_COND_EXACT_STAGE)
+            return FALSE;  // unsupported until evolution stage is persisted
+        for (i = 0; spots[i].spotId != 0xFFFF; i++)
+        {
+            if (Habitat_GetSpotState(spots[i].spotId) != HABITAT_STATE_BEFRIENDED)
+                continue;
+            if (c->paramB != 0 && spots[i].zoneId != c->paramB)
+                continue;
+            if (ResidentSpeciesMatches(spots[i].species, c))
+                return TRUE;
+        }
+        return FALSE;
+    }
     case COND_RESIDENT_COUNT:
     {
-        u32 species, n = 0;
-        for (species = 1; species < NUM_SPECIES; species++)
+        const struct HabitatSpot *spots = Habitat_GetSpotTable();
+        u32 i, n = 0;
+        for (i = 0; spots[i].spotId != 0xFFFF; i++)
         {
-            if (!IsSpeciesEnabled(species))
-                continue;  // config-disabled families assert in dex-num lookup
-            if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
+            u16 species = spots[i].species;
+            if (Habitat_GetSpotState(spots[i].spotId) != HABITAT_STATE_BEFRIENDED)
                 continue;
             if (c->paramA != HABITAT_TYPE_ANY
              && gSpeciesInfo[species].types[0] != c->paramA
@@ -225,4 +240,17 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
     default:
         return FALSE;
     }
+}
+
+static bool32 ResidentSpeciesMatches(u16 residentSpecies, const struct HabitatCondition *c)
+{
+    u16 requested = c->paramA;
+
+    while (requested != SPECIES_NONE)
+    {
+        if (residentSpecies == requested)
+            return TRUE;
+        requested = GetSpeciesPreEvolution(requested);
+    }
+    return FALSE;
 }

@@ -34,7 +34,7 @@ TEST("Habitat Grove: assignment honors slots and the six-out cap")
     u32 i;
     InitPlotsForTest();
     for (i = 0; i < 8; i++)
-        ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == (s32) i);
+        gSaveBlock3Ptr->habitat.residents[i].originSpotId = 7;
 
     EXPECT(Habitat_AssignResidentToPlot(0, 0));
     EXPECT(Habitat_ResidentIsOut(0));
@@ -59,7 +59,7 @@ TEST("Habitat Grove: assignment honors slots and the six-out cap")
 TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
 {
     InitPlotsForTest();
-    ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
+    ASSUME(Habitat_TryAddResident(7) == 0);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));
 
     Habitat_TickPlots(HABITAT_PLOT_HOURS_PER_STAGE - 1);
@@ -85,7 +85,7 @@ TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
 TEST("Habitat Grove: RTC reconcile credits offline hours exactly once")
 {
     InitPlotsForTest();
-    ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
+    ASSUME(Habitat_TryAddResident(7) == 0);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));
 
     RtcInitLocalTimeOffset(1, 0);
@@ -110,7 +110,7 @@ TEST("Habitat Grove: out residents leave their home spot invisible")
     Habitat_CompleteBefriendById(1);
     EXPECT(!FlagGet(skitty->hideFlag));  // home by default
 
-    s32 idx = Habitat_FindResidentBySpecies(SPECIES_SKITTY);
+    s32 idx = Habitat_FindResidentBySpot(1);
     ASSUME(idx >= 0);
     ASSUME(Habitat_AssignResidentToPlot(idx, 0));
     Habitat_SyncSpotObjectFlag(skitty);
@@ -140,7 +140,7 @@ TEST("Habitat Grove: recruit flow assigns from the home spot dialogue")
     EXPECT_EQ(Habitat_CanRecruitToGrove(), 1);
     Habitat_TryRecruitToGrove();
     EXPECT_EQ(Habitat_GetPlot(0)->berryItem, ITEM_PERSIM_BERRY);  // Normal-type crop
-    EXPECT(Habitat_ResidentIsOut(Habitat_FindResidentBySpecies(SPECIES_SKITTY)));
+    EXPECT(Habitat_ResidentIsOut(Habitat_FindResidentBySpot(1)));
 
     EXPECT_EQ(Habitat_CanRecruitToGrove(), 0);  // already out
     Habitat_TryRecruitToGrove();                // guarded no-op when out
@@ -152,14 +152,14 @@ TEST("Habitat Grove: worker talk resolves display slots to residents")
     u32 i;
     InitPlotsForTest();
     for (i = 0; i < 3; i++)
-        ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC + i) == (s32) i);
+        ASSUME(Habitat_TryAddResident(7 + i) == (s32) i);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));  // Torchic -> slot 0
     ASSUME(Habitat_AssignResidentToPlot(2, 1));  // idx2 -> slot 1 (idx1 stays home)
 
     gSelectedObjectEvent = 0;
     gObjectEvents[0].trainerRange_berryTreeId = 1;  // display slot 1
     EXPECT(Habitat_OnTalkWorker() == TRUE);
-    EXPECT(StringCompare(gStringVar1, GetSpeciesName(SPECIES_TORCHIC + 2)) == 0);
+    EXPECT(StringCompare(gStringVar1, GetSpeciesName(SPECIES_MUDKIP)) == 0);
 
     Habitat_SendTalkedWorkerHome();
     EXPECT(!Habitat_ResidentIsOut(2));

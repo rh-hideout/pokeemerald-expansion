@@ -400,7 +400,7 @@ TEST("Habitat conditions: SPOT_STATE reads another spot's saved state")
 TEST("Habitat conditions: ITEM_PLACED reads the evaluated spot")
 {
     static const struct HabitatCondition sDoll[] = {
-        HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 0, 0),
+        HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 1, 0),
         HABITAT_CONDITIONS_END,
     };
     struct HabitatConditionResult r;

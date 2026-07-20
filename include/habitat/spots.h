@@ -48,6 +48,14 @@ const struct HabitatSpot *Habitat_GetSpot(u16 spotId);
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId);
 const struct HabitatZone *Habitat_GetZone(u8 zoneId);
 
+// Resident and condition truth read the active authored spot table. Tests can
+// temporarily substitute a small table to exercise identity edge cases while
+// production always uses gHabitatSpots.
+const struct HabitatSpot *Habitat_GetSpotTable(void);
+#if TESTING
+void Habitat_SetSpotTableForTest(const struct HabitatSpot *spots);
+#endif
+
 // Spot manager (state machine + object visibility).
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
 void Habitat_RecomputeCurrentMapSpots(void);

@@ -9,19 +9,20 @@
 #include "pokedex.h"
 
 static void CompleteBefriend(const struct HabitatSpot *spot);
+static const struct HabitatSpot *FindSpot(u16 spotId);
 
 // The hide flag is the single source of truth the object-event system reads:
 // set = hidden. Home-by-default (§3): visible iff ACTIVE, or BEFRIENDED and
 // its resident is not out at the Grove. Spot→resident is the first registry
-// match on species — sufficient while spots are unique per species (slice);
-// revisit when duplicate-species spots exist.
+// match on their origin spot, so identical species at different locations do
+// not hide or recruit one another.
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
 {
     u8 state = Habitat_GetSpotState(spot->spotId);
     bool32 home = TRUE;
     if (state == HABITAT_STATE_BEFRIENDED)
     {
-        s32 residentIdx = Habitat_FindResidentBySpecies(spot->species);
+        s32 residentIdx = Habitat_FindResidentBySpot(spot->spotId);
         if (residentIdx >= 0 && Habitat_ResidentIsOut(residentIdx))
             home = FALSE;
     }
@@ -80,7 +81,7 @@ void Habitat_RecomputeCurrentMapSpots(void)
 // becomes ambient or hides per spot flag, residents notified (phase 3).
 void Habitat_CompleteBefriendById(u16 spotId)
 {
-    const struct HabitatSpot *spot = Habitat_GetSpot(spotId);
+    const struct HabitatSpot *spot = FindSpot(spotId);
     if (spot != NULL)
         CompleteBefriend(spot);
 }
@@ -94,7 +95,18 @@ static void CompleteBefriend(const struct HabitatSpot *spot)
     Habitat_SetSpotState(spot->spotId, HABITAT_STATE_BEFRIENDED);
     GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
     GetSetPokedexFlag(dexNum, FLAG_SET_CAUGHT);
-    Habitat_TryAddResidentAtSpot(spot->spotId);  // -1 past the cap is fine (spec §5)
+    Habitat_TryAddResident(spot->spotId);  // -1 past the cap is fine (spec §5)
     Habitat_SyncSpotObjectFlag(spot);
     Habitat_NotifyEvent(HABITAT_EVENT_RESIDENT_CHANGE);
+}
+
+static const struct HabitatSpot *FindSpot(u16 spotId)
+{
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
+    u32 i;
+
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
+        if (spots[i].spotId == spotId)
+            return &spots[i];
+    return NULL;
 }

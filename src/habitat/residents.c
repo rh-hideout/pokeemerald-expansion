@@ -1,12 +1,41 @@
 // Resident registry (spec §5): the individualized side of befriending.
-// Conditions do NOT read this — they run off dex caught flags so that
-// beyond-cap residents "still count for conditions". The registry exists
-// for individuals: personality seeds (dialogue, spec §8) and Grove work
-// assignments (phase 4).
+// Conditions use befriended authored spots directly, so overflow residents
+// still count even though only this registry can work in the Grove.
 #include "global.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "random.h"
+
+#if TESTING
+static const struct HabitatSpot *sTestSpotTable;
+#endif
+
+const struct HabitatSpot *Habitat_GetSpotTable(void)
+{
+#if TESTING
+    if (sTestSpotTable != NULL)
+        return sTestSpotTable;
+#endif
+    return gHabitatSpots;
+}
+
+#if TESTING
+void Habitat_SetSpotTableForTest(const struct HabitatSpot *spots)
+{
+    sTestSpotTable = spots;
+}
+#endif
+
+static const struct HabitatSpot *FindSpot(u16 spotId)
+{
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
+    u32 i;
+
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
+        if (spots[i].spotId == spotId)
+            return &spots[i];
+    return NULL;
+}
 
 static bool32 ResidentSlotIsEmpty(const struct HabitatResident *resident)
 {
@@ -32,22 +61,15 @@ const struct HabitatResident *Habitat_GetResident(u32 index)
     return &gSaveBlock3Ptr->habitat.residents[index];
 }
 
-s32 Habitat_TryAddResident(u16 species)
+s32 Habitat_TryAddResident(u16 originSpotId)
 {
     u32 i;
 
-    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
-        if (gHabitatSpots[i].species == species)
-            return Habitat_TryAddResidentAtSpot(gHabitatSpots[i].spotId);
-    return -1;
-}
-
-s32 Habitat_TryAddResidentAtSpot(u16 originSpotId)
-{
-    u32 i;
-
-    if (Habitat_GetSpot(originSpotId) == NULL)
+    if (FindSpot(originSpotId) == NULL)
         return -1;
+    i = Habitat_FindResidentBySpot(originSpotId);
+    if ((s32) i >= 0)
+        return i;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
     {
         struct HabitatResident *r = &gSaveBlock3Ptr->habitat.residents[i];
@@ -62,23 +84,30 @@ s32 Habitat_TryAddResidentAtSpot(u16 originSpotId)
     return -1;  // cap reached: befriended but non-individualized (spec §5)
 }
 
-s32 Habitat_FindResidentBySpecies(u16 species)
+s32 Habitat_FindResidentBySpot(u16 originSpotId)
 {
     u32 i;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
     {
-        if (Habitat_GetResidentSpecies(&gSaveBlock3Ptr->habitat.residents[i]) == species)
+        if (Habitat_GetResidentSpotId(i) == originSpotId)
             return i;
     }
     return -1;
 }
 
-u16 Habitat_GetResidentSpecies(const struct HabitatResident *resident)
+u16 Habitat_GetResidentSpotId(u32 residentIndex)
+{
+    const struct HabitatResident *resident = Habitat_GetResident(residentIndex);
+    return resident == NULL ? HABITAT_SPOT_NONE : resident->originSpotId;
+}
+
+u16 Habitat_GetResidentSpecies(u32 residentIndex)
 {
     const struct HabitatSpot *spot;
+    u16 originSpotId = Habitat_GetResidentSpotId(residentIndex);
 
-    if (resident == NULL || ResidentSlotIsEmpty(resident))
+    if (originSpotId == HABITAT_SPOT_NONE)
         return SPECIES_NONE;
-    spot = Habitat_GetSpot(resident->originSpotId);
+    spot = FindSpot(originSpotId);
     return spot == NULL ? SPECIES_NONE : spot->species;
 }
