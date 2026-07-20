@@ -112,13 +112,19 @@ TEST("Habitat residents: conditions count befriended origin spots, not caught de
         HABITAT_CONDITIONS_END,
     };
     struct HabitatConditionResult r;
+    const struct HabitatSpot *treeckoFrame = Habitat_GetSpot(SPOT_FRAME_TREECKO);
 
+    ASSUME(treeckoFrame != NULL);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_TREECKO), FLAG_SET_CAUGHT);
     Habitat_EvaluateConditions(sTreecko, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);
 
+    // The frame's species comes from its placed element, not its historical
+    // static binding. This is the Treecko selection's stable counter.
+    Habitat_AddPlacedCount(4, 1);
+    EXPECT_EQ(Habitat_GetResolvedSpotSpecies(treeckoFrame), SPECIES_TREECKO);
     // Both spots are befriended even when the resident registry is full.
-    Habitat_SetSpotState(SPOT_FRAME_TREECKO, HABITAT_STATE_BEFRIENDED);  // Treecko, zone 2
+    Habitat_SetSpotState(SPOT_FRAME_TREECKO, HABITAT_STATE_BEFRIENDED);
     Habitat_SetSpotState(SPOT_LOTAD, HABITAT_STATE_BEFRIENDED);  // Water/Grass, zone 1
 
     Habitat_EvaluateConditions(sTreecko, HABITAT_SPOT_NONE, NULL, &r);
