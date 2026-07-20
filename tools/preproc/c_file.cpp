@@ -33,7 +33,7 @@
 #include "string_parser.h"
 #include "io.h"
 
-CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr)
+CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr, bool capitalizeCappable)
 {
     if (isStdin)
         m_location.filename = std::string{"<stdin>/"}.append(filenameCStr);
@@ -49,6 +49,7 @@ CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootC
     m_graphicsRoot = graphicsRootCStr;
     if (m_graphicsRoot.empty()) m_graphicsRoot = "./";
     if (m_graphicsRoot[m_graphicsRoot.length() - 1] != '/') m_graphicsRoot.push_back('/');
+    m_capitalizeCappable = capitalizeCappable;
 }
 
 CFile::CFile(CFile&& other) : m_location(std::move(other.m_location))
@@ -57,6 +58,7 @@ CFile::CFile(CFile&& other) : m_location(std::move(other.m_location))
     m_pos = other.m_pos;
     m_size = other.m_size;
     m_isStdin = other.m_isStdin;
+    m_capitalizeCappable = other.m_capitalizeCappable;
 
     other.m_buffer = NULL;
 }
@@ -276,7 +278,7 @@ std::vector<unsigned char> CFile::ConvertString()
         {
             unsigned char s[kMaxStringLength];
             int length = 0;
-            StringParser stringParser(m_buffer, m_size);
+            StringParser stringParser(m_buffer, m_size, m_capitalizeCappable);
             try
             {
                 m_pos += stringParser.ParseString(m_pos, s, length);

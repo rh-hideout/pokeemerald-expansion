@@ -20,6 +20,7 @@
 
 #include <cstdio>
 #include <cstdarg>
+#include <cstring>
 #include <stdexcept>
 #include "preproc.h"
 #include "string_parser.h"
@@ -165,6 +166,52 @@ std::string StringParser::ReadBracketedConstants()
     return totalSequence;
 }
 
+// Reads a conditionally-capitalized character sequence, i.e. "[Foo]".
+std::string StringParser::ReadCappableChars()
+{
+    std::string sequence;
+    std::string totalSequence;
+
+    m_pos++; // Assume we're on the left square bracket.
+
+    long startPos = m_pos;
+
+    while (m_buffer[m_pos] != ']')
+    {
+        if (m_buffer[m_pos] == '\0')
+        {
+            if (m_pos >= m_size)
+                RaiseError("unexpected EOF after left square bracket");
+            else
+                RaiseError("unexpected null character after left square bracket");
+        }
+
+        UnicodeChar unicodeChar = DecodeUtf8(&m_buffer[m_pos]);
+        std::int32_t code = unicodeChar.code;
+
+        if (code == -1)
+            RaiseError("invalid encoding after left square bracket");
+        else if (code == '|') // HINT: Future extension point.
+            RaiseError("unexpected '|' after left square bracket");
+
+        // Special-case: don't capitalize an 'é' after 'Pok'.
+        if (code == 0x0000E9 && startPos <= m_pos - 3 && !std::strncmp(&m_buffer[m_pos - 3], "Pok", 3))
+            sequence = g_charmap->Char(code, false);
+        else
+            sequence = g_charmap->Char(code, m_capitalize);
+
+        if (sequence.length() == 0)
+            RaiseError("unknown character U+%X\nIf this character is intended to be used, it needs to be implemented", code);
+
+        m_pos += unicodeChar.encodingLength;
+        totalSequence += sequence;
+    }
+
+    m_pos++; // Go past the right square bracket.
+
+    return totalSequence;
+}
+
 // Reads a charmap string.
 int StringParser::ParseString(long srcPos, unsigned char* dest, int& destLength)
 {
@@ -179,9 +226,15 @@ int StringParser::ParseString(long srcPos, unsigned char* dest, int& destLength)
 
     destLength = 0;
 
+    std::string sequence;
     while (m_buffer[m_pos] != '"')
     {
-        std::string sequence = (m_buffer[m_pos] == '{') ? ReadBracketedConstants() : ReadCharOrEscape();
+        if (m_buffer[m_pos] == '{')
+            sequence = ReadBracketedConstants();
+        else if (m_buffer[m_pos] == '[')
+            sequence = ReadCappableChars();
+        else
+            sequence = ReadCharOrEscape();
 
         for (const char& c : sequence)
         {
