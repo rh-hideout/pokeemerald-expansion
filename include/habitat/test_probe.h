@@ -29,6 +29,7 @@ struct HabitatTestProbe
 extern struct HabitatTestProbe gHabitatTestProbe;
 extern u16 gHabitatTestCommand;
 void Habitat_TestProbeRefresh(void);
+void Habitat_TestProbeOnBattleMainFrame(void);
 #endif
 
 #endif // GUARD_HABITAT_TEST_PROBE_H

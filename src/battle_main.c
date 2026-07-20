@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "habitat/test_probe.h"
 #include "battle_anim.h"
 #include "battle_ai_main.h"
 #include "battle_ai_record.h"
@@ -1780,6 +1781,9 @@ void BattleMainCB2(void)
     RunTextPrinters();
     UpdatePaletteFade();
     RunTasks();
+#if TESTING || HABITAT_TEST_PROBE
+    Habitat_TestProbeOnBattleMainFrame();
+#endif
 
     if (JOY_HELD(B_BUTTON) && gBattleTypeFlags & BATTLE_TYPE_RECORDED && RecordedBattle_CanStopPlayback())
     {

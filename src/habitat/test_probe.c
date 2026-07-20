@@ -20,6 +20,8 @@ struct HabitatTestProbe gHabitatTestProbe;
 u16 gHabitatTestCommand;
 static u16 sTestProbeSpotId;
 static bool8 sTestProbeSpotSelected;
+static u8 sPendingBattleOutcome;
+static bool8 sBattleOutcomePending;
 
 // This is an explicit non-finale fixture. It exercises the production bout
 // boundary without implying an unauthored Deoxys scene exists.
@@ -69,14 +71,30 @@ static void Task_FinishTestBoutFromBattle(u8 taskId)
     }
 }
 
-static void RunTestBout(u8 battleOutcome)
+void Habitat_TestProbeOnBattleMainFrame(void)
 {
     u8 taskId;
 
+    if (!sBattleOutcomePending)
+        return;
+
+    taskId = CreateTask(Task_FinishTestBoutFromBattle, 0xFF);
+    if (taskId == TASK_NONE)
+        return;
+
+    gTasks[taskId].data[1] = sPendingBattleOutcome;
+    sBattleOutcomePending = FALSE;
+}
+
+static void RunTestBout(u8 battleOutcome)
+{
     if (!Habitat_BoutBegin(&sTestProbeBout))
         return;
-    taskId = CreateTask(Task_FinishTestBoutFromBattle, 0xFF);
-    gTasks[taskId].data[1] = battleOutcome;
+
+    // CB2_InitBattle clears all tasks. Retain only the outcome here, then
+    // create the finish task from the first real BattleMainCB2 frame.
+    sPendingBattleOutcome = battleOutcome;
+    sBattleOutcomePending = TRUE;
 }
 
 static void RunTestMigration(void)
