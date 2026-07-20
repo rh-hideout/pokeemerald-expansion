@@ -122,10 +122,10 @@ case "$SCENARIO" in
         SCRIPT='command:grove-assign;expect-probe:spot_id,7;expect-probe:resident_assignment,1;goto:6,11;walk:D,2;until-map:0,9;expect-probe:map_group,0;expect-probe:map_num,9;wait:60;shot:grove;pass:Grove worker visual checkpoint reached'
         ;;
     item-chooser)
-        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:18,13;face:R;tap:A;wait:45;tap:A;wait:45;shot:item_chooser;pass:Authored item chooser visual checkpoint reached'
+        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:item_chooser;pass:Authored item chooser visual checkpoint reached'
         ;;
     approved-icons)
-        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:18,13;face:R;tap:A;wait:45;tap:A;wait:45;shot:approved_icons;pass:Icon provenance checkpoint reached'
+        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:approved_icons;pass:Furnishing icon provenance visual checkpoint reached'
         ;;
 esac
 
