@@ -6281,6 +6281,8 @@ BattleScript_TargetAvoidsAttack::
 
 BattleScript_TargetProtected::
 	pause B_WAIT_TIME_SHORT
+	playanimation BS_SCRIPTING, B_ANIM_PROTECTED_ITSELF
+	waitanimation
 	printstring STRINGID_PKMNPROTECTEDITSELF
 	waitmessage B_WAIT_TIME_LONG
 	return

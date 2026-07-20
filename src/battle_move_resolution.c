@@ -2127,7 +2127,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
 
-            if (IsBattlerProtected(cv))
+            if (IsBattlerProtected(cv) && IsBattlerPresent(cv->battlerDef))
             {
                 SetOrClearRageVolatile();
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_PROTECTED;

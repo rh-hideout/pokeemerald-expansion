@@ -5824,7 +5824,8 @@ bool32 IsBattlerProtected(struct BattleCalcValues *cv)
         }
     }
 
-    if (GetBattlerMoveTargetType(cv->battlerAtk, cv->move) == TARGET_ALL_BATTLERS)
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
+    if (moveTarget == TARGET_ALL_BATTLERS)
         return FALSE;
 
     bool32 isProtected = FALSE;
@@ -5833,7 +5834,8 @@ bool32 IsBattlerProtected(struct BattleCalcValues *cv)
         isProtected = TRUE;
     else if (MoveIgnoresProtect(cv->move))
         isProtected = FALSE;
-    else if (IsSideProtected(cv->battlerDef, PROTECT_WIDE_GUARD) && IsSpreadMove(GetBattlerMoveTargetType(cv->battlerAtk, cv->move)))
+    else if (IsSideProtected(cv->battlerDef, PROTECT_WIDE_GUARD)
+         && (moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY))
         isProtected = TRUE;
     else if (gProtectStructs[cv->battlerDef].protected == PROTECT_NORMAL)
         isProtected = TRUE;
