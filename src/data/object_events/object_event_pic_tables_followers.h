@@ -6680,9 +6680,11 @@ static const struct SpriteFrameImage sPicTable_TerapagosNormal[] = {
 static const struct SpriteFrameImage sPicTable_TerapagosTerastal[] = {
     overworld_ascending_frames(gObjectEventPic_TerapagosTerastal, 4, 4),
 };
-//static const struct SpriteFrameImage sPicTable_TerapagosStellar[] = {
-//    overworld_ascending_frames(gObjectEventPic_TerapagosStellar, 4, 4),
-//};
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_TerapagosStellar[] = {
+    overworld_ascending_frames(gObjectEventPic_TerapagosStellar, 8, 8),
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_TERAPAGOS
 
 #if P_FAMILY_PECHARUNT

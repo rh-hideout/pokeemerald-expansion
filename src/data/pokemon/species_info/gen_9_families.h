@@ -8512,6 +8512,17 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 12, SHADOW_SIZE_L)
         FOOTPRINT(TerapagosStellar)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_TerapagosStellar,
+            SIZE_64x64,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_TerapagosStellar,
+            gShinyOverworldPalette_TerapagosStellar
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .isRestrictedLegendary = TRUE,
         .isTeraForm = TRUE,
         .isFrontierBanned = TRUE,
