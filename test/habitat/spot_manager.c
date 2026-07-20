@@ -80,13 +80,19 @@ TEST("Habitat manager: partial appear conditions stir the spot")
     const struct HabitatSpot *lotad = Habitat_GetSpot(SPOT_LOTAD);
     ASSUME(lotad != NULL);
 
+    // The suite shares the save blocks, so establish the exact two unmet
+    // dependencies rather than inheriting a prior test's Treecko or berry.
+    memset(gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
+    memset(gSaveBlock1Ptr->berryTrees, 0, sizeof(gSaveBlock1Ptr->berryTrees));
     SetCurrentAndNextWeather(WEATHER_RAIN);      // 1 of 3 appear conditions
     Habitat_RecomputeSpot(lotad);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_LOTAD), HABITAT_STATE_STIRRING);
     EXPECT(FlagGet(lotad->hideFlag));            // stirring is still hidden
 
-    // §7 recast: resident Treecko (dex-backed) + mature zone-1 Cheri.
-    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_TREECKO), FLAG_SET_CAUGHT);
+    // §7 recast: the selected Treecko frame is befriended, plus a mature
+    // zone-1 Cheri. A caught-Dex flag alone must not satisfy a resident rule.
+    Habitat_AddPlacedCount(4, 1);
+    Habitat_SetSpotState(8, HABITAT_STATE_BEFRIENDED);
     gSaveBlock1Ptr->berryTrees[5].berry = ItemIdToBerryType(ITEM_CHERI_BERRY);
     gSaveBlock1Ptr->berryTrees[5].stage = BERRY_STAGE_BERRIES;
     Habitat_RecomputeSpot(lotad);

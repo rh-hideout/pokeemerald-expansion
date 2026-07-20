@@ -363,8 +363,14 @@ TEST("Habitat event: party add, removal, replacement, and compaction publish imm
 TEST("Habitat event: changed flag and party mutation boundaries update only their dependents")
 {
     u8 friendship = 255;
+    u32 i;
 
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    memset(gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
+    memset(gSaveBlock1Ptr->berryTrees, 0, sizeof(gSaveBlock1Ptr->berryTrees));
+    for (i = 0; i < PARTY_SIZE; i++)
+        ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
+    CalculatePlayerPartyCount();
     UseDependencyTestTable();
     FlagClear(TEST_STORY_FLAG);
     Habitat_NotifyDependency(HABITAT_DEP_MAP);
