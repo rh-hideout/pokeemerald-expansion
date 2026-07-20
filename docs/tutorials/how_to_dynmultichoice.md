@@ -558,15 +558,15 @@ static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollecti
     },
     [DYN_MULTICHOICE_CB_SHOW_ITEM] =
     {
-        .OnInit = MultichoiceDynamicEventShowItem_OnInit,
+        .OnInit = MultichoiceDynamicEventShowSprite_OnInit,
         .OnSelectionChanged = MultichoiceDynamicEventShowItem_OnSelectionChanged,
-        .OnDestroy = MultichoiceDynamicEventShowItem_OnDestroy
+        .OnDestroy = MultichoiceDynamicEventShowSprite_OnDestroy
     },
     [DYN_MULTICHOICE_CB_SHOW_PKMN] =
     {
-        .OnInit = MultichoiceDynamicEventShowPkmn_OnInit,
+        .OnInit = MultichoiceDynamicEventShowSprite_OnInit,
         .OnSelectionChanged = MultichoiceDynamicEventShowPkmn_OnSelectionChanged,
-        .OnDestroy = MultichoiceDynamicEventShowPkmn_OnDestroy
+        .OnDestroy = MultichoiceDynamicEventShowSprite_OnDestroy
     }
 };
 ```
