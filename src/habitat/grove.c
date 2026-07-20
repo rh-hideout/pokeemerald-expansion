@@ -90,6 +90,7 @@ bool32 Habitat_AssignResidentToPlot(u32 residentIdx, u32 plotIdx)
         plot->berryItem = Habitat_BerryForSpecies(Habitat_GetResidentSpecies(residentIdx));  // first worker sets the crop
     gSaveBlock3Ptr->habitat.residents[residentIdx].assignment = plotIdx + 1;
     Habitat_NotifyDependency(HABITAT_DEP_GROVE);
+    Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
     return TRUE;
 }
 
@@ -120,6 +121,7 @@ void Habitat_SendResidentHome(u32 residentIdx)
     }
     r->assignment = 0;
     Habitat_NotifyDependency(HABITAT_DEP_GROVE);
+    Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
 }
 
 void Habitat_TickPlots(u32 hours)

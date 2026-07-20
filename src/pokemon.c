@@ -800,6 +800,8 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon)
 void ZeroMonData(struct Pokemon *mon)
 {
     u32 arg;
+    bool32 notify = IsPlayerPartyMon(mon)
+                 && GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE;
     ZeroBoxMonData(&mon->box);
     arg = 0;
     SetMonData(mon, MON_DATA_STATUS, &arg);
@@ -813,6 +815,8 @@ void ZeroMonData(struct Pokemon *mon)
     SetMonData(mon, MON_DATA_SPDEF, &arg);
     arg = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &arg);
+    if (notify)
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
 }
 
 void ZeroPartyMons(struct Pokemon *party)
@@ -858,6 +862,8 @@ void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personal
     SetMonData(mon, MON_DATA_LEVEL, &level);
     mail = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &mail);
+    if (IsPlayerPartyMon(mon))
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
 }
 
 void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV)
