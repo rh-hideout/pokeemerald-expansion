@@ -1,0 +1,7 @@
+# The currently reachable Habitat slice surface.  Every event/callback needs
+# a disposition in docs/story-readiness/vanilla-surface-inventory.md.
+data/maps/LittlerootTown_ProfessorBirchsLab/map.json
+data/maps/LittlerootTown/map.json
+data/maps/Route101/map.json
+data/maps/OldaleTown/map.json
+data/maps/Route103/map.json

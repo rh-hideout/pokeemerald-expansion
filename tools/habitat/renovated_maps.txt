@@ -1,0 +1,2 @@
+# Maps that have completed an object-template renovation pass.
+data/maps/Route103/map.json

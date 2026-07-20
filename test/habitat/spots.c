@@ -5,6 +5,7 @@
 #include "item.h"
 #include "item_menu.h"
 #include "constants/event_objects.h"
+#include "constants/maps.h"
 #include "constants/vars.h"
 #include "test/test.h"
 
@@ -41,22 +42,19 @@ TEST("Habitat spots: table ids are unique and species are real")
     EXPECT(i >= 6);  // the six slice spots exist (§7 recast)
 }
 
-TEST("Habitat spots: per-map spot density respects the object budget law")
+TEST("Habitat map budget: Route 103 retains exactly the six authored spot bindings")
 {
-    // §3 map budget law: NPCs + spots <= ~13 per map. The NPC half is an
-    // authoring checklist; the spot half is checkable here.
-    u32 i, j;
+    // The total-template law is enforced against generated map JSON by
+    // tools/habitat/validate_maps.py. This native companion catches drift
+    // between the six Route 103 object bindings and the authored spot table.
+    u32 i, count = 0;
     for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
     {
-        u32 n = 0;
-        for (j = 0; gHabitatSpots[j].spotId != 0xFFFF; j++)
-        {
-            if (gHabitatSpots[j].mapGroup == gHabitatSpots[i].mapGroup
-             && gHabitatSpots[j].mapNum == gHabitatSpots[i].mapNum)
-                n++;
-        }
-        EXPECT(n <= 13);
+        if (gHabitatSpots[i].mapGroup == MAP_GROUP(MAP_ROUTE103)
+         && gHabitatSpots[i].mapNum == MAP_NUM(MAP_ROUTE103))
+            count++;
     }
+    EXPECT_EQ(count, 6);
 }
 
 TEST("Habitat spots: condition lists terminate within the mask width")
