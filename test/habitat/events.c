@@ -7,8 +7,10 @@
 #include "pokemon.h"
 #include "pokedex.h"
 #include "pokemon_storage_system.h"
+#include "overworld.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/game_stat.h"
 #include "constants/species.h"
 #include "constants/weather.h"
 #include "test/test.h"
@@ -32,6 +34,10 @@ static const struct HabitatCondition sDexCondition[] = {
     HABITAT_COND(COND_DEX_COUNT, HABITAT_CMP_GE, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
+static const struct HabitatCondition sStatCondition[] = {
+    HABITAT_COND(COND_LIFETIME_STAT, GAME_STAT_STEPS, HABITAT_CMP_GE, 1, 0),
+    HABITAT_CONDITIONS_END,
+};
 static const struct HabitatCondition sOfferBefriendConditions[] = {
     HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
@@ -44,6 +50,13 @@ static const struct HabitatSpot sDependencyTestSpots[] = {
         .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
         .hideFlag = FLAG_UNUSED_0x021, .mapGroup = 1, .mapNum = 1, .localId = 1,
         .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_STORY_FLAG) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
+    },
+    {
+        .spotId = 14, .species = SPECIES_PINSIR, .tier = 1, .zoneId = 1,
+        .appearConditions = sStatCondition, .befriendConditions = sOfferBefriendConditions,
+        .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        .hideFlag = FLAG_UNUSED_0x025, .mapGroup = 1, .mapNum = 1, .localId = 5,
+        .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_LIFETIME_STAT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
     },
     {
         .spotId = 12, .species = SPECIES_MACHOP, .tier = 1, .zoneId = 1,
@@ -69,7 +82,7 @@ static const struct HabitatSpot sDependencyTestSpots[] = {
     { .spotId = 0xFFFF },
 };
 static const struct HabitatMapSpan sDependencyTestSpans[] = {
-    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 4 },
+    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 5 },
     { 0 },
 };
 
@@ -132,6 +145,7 @@ TEST("Habitat event: changed flag and party mutation boundaries update only thei
     EXPECT_EQ(Habitat_GetSpotState(11), HABITAT_STATE_DORMANT);
     EXPECT_EQ(Habitat_GetSpotState(12), HABITAT_STATE_DORMANT);
     EXPECT_EQ(Habitat_GetSpotState(13), HABITAT_STATE_DORMANT);
+    EXPECT_EQ(Habitat_GetSpotState(14), HABITAT_STATE_DORMANT);
 
     FlagSet(TEST_STORY_FLAG);
     EXPECT_EQ(Habitat_GetSpotState(10), HABITAT_STATE_ACTIVE);
@@ -146,6 +160,16 @@ TEST("Habitat event: changed flag and party mutation boundaries update only thei
     memset(gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_VULPIX), FLAG_SET_CAUGHT);
     EXPECT_EQ(Habitat_GetSpotState(13), HABITAT_STATE_ACTIVE);
+
+    SetGameStat(GAME_STAT_STEPS, 0);  // no-op while already zero
+    EXPECT_EQ(Habitat_GetSpotState(14), HABITAT_STATE_DORMANT);
+    IncrementGameStat(GAME_STAT_STEPS);
+    EXPECT_EQ(Habitat_GetSpotState(14), HABITAT_STATE_ACTIVE);
+
+    // Toggle is a changed story-flag boundary too; state is monotonic, so
+    // the flag's second toggle must be safe without recompute churn.
+    FlagToggle(TEST_STORY_FLAG);
+    FlagToggle(TEST_STORY_FLAG);
 
     // Compaction is the public PC-deposit cleanup boundary; it must publish
     // the party change after moving a non-empty party slot.

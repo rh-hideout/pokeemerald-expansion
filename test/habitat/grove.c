@@ -33,6 +33,9 @@ TEST("Habitat Grove: assignment honors slots and the six-out cap")
 {
     u32 i;
     InitPlotsForTest();
+    // Dynamic starter frames have no production default. This fixture chooses
+    // the campfire explicitly before using frame 7 as a Torchic resident.
+    Habitat_SetPlacedCount(3, 1);
     for (i = 0; i < 8; i++)
         gSaveBlock3Ptr->habitat.residents[i].originSpotId = 7;
 
@@ -59,6 +62,7 @@ TEST("Habitat Grove: assignment honors slots and the six-out cap")
 TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
 {
     InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
     ASSUME(Habitat_TryAddResident(7) == 0);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));
 
@@ -85,6 +89,7 @@ TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
 TEST("Habitat Grove: RTC reconcile credits offline hours exactly once")
 {
     InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
     ASSUME(Habitat_TryAddResident(7) == 0);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));
 
@@ -151,6 +156,7 @@ TEST("Habitat Grove: worker talk resolves display slots to residents")
 {
     u32 i;
     InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
     for (i = 0; i < 3; i++)
         ASSUME(Habitat_TryAddResident(7 + i) == (s32) i);
     ASSUME(Habitat_AssignResidentToPlot(0, 0));  // Torchic -> slot 0
@@ -159,7 +165,8 @@ TEST("Habitat Grove: worker talk resolves display slots to residents")
     gSelectedObjectEvent = 0;
     gObjectEvents[0].trainerRange_berryTreeId = 1;  // display slot 1
     EXPECT(Habitat_OnTalkWorker() == TRUE);
-    EXPECT(StringCompare(gStringVar1, GetSpeciesName(SPECIES_MUDKIP)) == 0);
+    EXPECT(StringCompare(gStringVar1,
+                         GetSpeciesName(Habitat_GetResolvedSpotSpecies(Habitat_GetSpot(9)))) == 0);
 
     Habitat_SendTalkedWorkerHome();
     EXPECT(!Habitat_ResidentIsOut(2));
