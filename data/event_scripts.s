@@ -1,6 +1,7 @@
 #include "config/general.h"
 #include "config/battle.h"
 #include "config/item.h"
+#include "config/text.h"
 #include "constants/global.h"
 #include "constants/apprentice.h"
 #include "constants/apricorn_tree.h"
