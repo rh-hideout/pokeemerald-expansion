@@ -520,8 +520,11 @@ u32 GetGameStat(u8 index)
 
 void SetGameStat(u8 index, u32 value)
 {
-    if (index < NUM_USED_GAME_STATS)
+    if (index < NUM_USED_GAME_STATS && GetGameStat(index) != value)
+    {
         gSaveBlock1Ptr->gameStats[index] = value ^ gSaveBlock2Ptr->encryptionKey;
+        Habitat_NotifyDependency(HABITAT_DEP_LIFETIME_STAT);
+    }
 }
 
 void ApplyNewEncryptionKeyToGameStats(u32 newKey)
@@ -905,7 +908,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     Overworld_ClearSavedMusic();
     // Connection crossings skip the InitObjectEvents* paths, but spot hide
     // flags must be current before this map's objects stream in.
-    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
+    Habitat_NotifyDependency(HABITAT_DEP_MAP);
     RunOnTransitionMapScript();
     InitMap();
     CopySecondaryTilesetToVramUsingHeap(gMapHeader.mapLayout);
@@ -2590,7 +2593,7 @@ static void InitObjectEventsLink(void)
     gTotalCameraPixelOffsetX = 0;
     gTotalCameraPixelOffsetY = 0;
     ResetObjectEvents();
-    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
+    Habitat_NotifyDependency(HABITAT_DEP_MAP);
     TrySpawnObjectEvents(0, 0);
     TryRunOnWarpIntoMapScript();
 }
@@ -2608,7 +2611,7 @@ static void InitObjectEventsLocal(void)
     InitPlayerAvatar(x, y, player->direction, gSaveBlock2Ptr->playerGender);
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
-    Habitat_NotifyEvent(HABITAT_EVENT_MAP_LOAD);
+    Habitat_NotifyDependency(HABITAT_DEP_MAP);
     TrySpawnObjectEvents(0, 0);
     FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();

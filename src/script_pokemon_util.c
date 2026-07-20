@@ -469,7 +469,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
     if (side == B_SIDE_PLAYER)
     {
         u32 result = GiveScriptedMonToPlayer(&mon, slot);
-        Habitat_NotifyEvent(HABITAT_EVENT_PARTY_CHANGE);
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
         return result;
     }
 

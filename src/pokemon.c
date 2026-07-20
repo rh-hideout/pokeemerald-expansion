@@ -21,6 +21,7 @@
 #include "field_player_avatar.h"
 #include "field_specials.h"
 #include "field_weather.h"
+#include "habitat/events.h"
 #include "fishing.h"
 #include "follower_npc.h"
 #include "frontier_util.h"
@@ -92,6 +93,9 @@ static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
 void TrySpecialOverworldEvo();
+static bool32 IsHabitatPartyField(s32 field);
+static bool32 IsPlayerPartyMon(struct Pokemon *mon);
+static u32 HabitatPartyConditionSignature(struct Pokemon *mon);
 
 EWRAM_DATA static u8 sLearningMoveTableID = 0;
 EWRAM_DATA u8 gPartiesCount[MAX_BATTLE_TRAINERS] = {0};
@@ -2571,6 +2575,11 @@ u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field)
 void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
 {
     const u8 *data = dataArg;
+    u32 before = 0;
+    bool32 notify = IsPlayerPartyMon(mon) && IsHabitatPartyField(field);
+
+    if (notify)
+        before = GetMonData(mon, field);
 
     switch (field)
     {
@@ -2624,6 +2633,23 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
         SetBoxMonData(&mon->box, field, data);
         break;
     }
+    if (notify && GetMonData(mon, field) != before)
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+}
+
+static bool32 IsPlayerPartyMon(struct Pokemon *mon)
+{
+    return mon >= gParties[B_TRAINER_PLAYER]
+        && mon < gParties[B_TRAINER_PLAYER] + PARTY_SIZE;
+}
+
+static bool32 IsHabitatPartyField(s32 field)
+{
+    return field == MON_DATA_SPECIES
+        || field == MON_DATA_FRIENDSHIP
+        || (field >= MON_DATA_MOVE1 && field <= MON_DATA_MOVE4)
+        || field == MON_DATA_PERSONALITY
+        || field == MON_DATA_HIDDEN_NATURE;
 }
 
 void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
@@ -2978,7 +3004,24 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
 
 void CopyMon(void *dest, void *src, size_t size)
 {
+    bool32 notify = size == sizeof(struct Pokemon) && IsPlayerPartyMon(dest);
+    u32 before = notify ? HabitatPartyConditionSignature(dest) : 0;
+
     memcpy(dest, src, size);
+    if (notify && HabitatPartyConditionSignature(dest) != before)
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+}
+
+static u32 HabitatPartyConditionSignature(struct Pokemon *mon)
+{
+    u32 i;
+    u32 signature = GetMonData(mon, MON_DATA_SPECIES)
+                  ^ (GetMonData(mon, MON_DATA_FRIENDSHIP) << 16)
+                  ^ (GetNature(mon) << 24);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        signature ^= GetMonData(mon, MON_DATA_MOVE1 + i) << ((i & 1) * 8);
+    return signature;
 }
 
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon)
@@ -3000,6 +3043,7 @@ u8 GiveCapturedMonToPlayer(struct Pokemon *mon)
 
     CopyMon(&gParties[B_TRAINER_PLAYER][i], mon, sizeof(*mon));
     gPartiesCount[B_TRAINER_PLAYER] = i + 1;
+    Habitat_NotifyDependency(HABITAT_DEP_PARTY);
     return MON_GIVEN_TO_PARTY;
 }
 
@@ -3057,7 +3101,11 @@ u8 CalculatePartyCountOfSide(enum BattlerId battler)
 
 u8 CalculatePlayerPartyCount(void)
 {
+    u8 before = gPartiesCount[B_TRAINER_PLAYER];
+
     gPartiesCount[B_TRAINER_PLAYER] = CalculatePartyCount(B_TRAINER_PLAYER);
+    if (gPartiesCount[B_TRAINER_PLAYER] != before)
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
     return gPartiesCount[B_TRAINER_PLAYER];
 }
 

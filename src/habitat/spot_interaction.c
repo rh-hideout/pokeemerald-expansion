@@ -63,6 +63,7 @@ void Habitat_OnInspectSpotById(void)
 static void InspectSpot(const struct HabitatSpot *spot)
 {
     u8 state;
+    u8 talksBefore;
     const u8 *hint;
 
     if (spot == NULL)
@@ -78,7 +79,11 @@ static void InspectSpot(const struct HabitatSpot *spot)
     sHasSelectedOffer = FALSE;
     sHasSelectedPlace = FALSE;
 
+    talksBefore = Habitat_GetTalkCount(spot->spotId);
     Habitat_IncrementTalkCount(spot->spotId);
+    // A talk threshold may make this very inspection the transition point.
+    if (Habitat_GetTalkCount(spot->spotId) != talksBefore)
+        Habitat_NotifyDependency(HABITAT_DEP_TALK);
     state = Habitat_GetSpotState(spot->spotId);
     switch (state)
     {
@@ -373,7 +378,7 @@ static bool32 SubmitItemInternal(const struct HabitatSpot *spot,
         if (Habitat_GetPlacedCount(c->paramC) >= placedBefore + count)
         {
             Habitat_RecomputeSpot(spot);
-            Habitat_NotifyEvent(HABITAT_EVENT_INVENTORY_CHANGE);
+            Habitat_NotifyDependency(HABITAT_DEP_PLACEMENT);
             return TRUE;
         }
         Habitat_SetPlacedCount(c->paramC, placedBefore);

@@ -261,21 +261,28 @@ static void UpdateWeatherForms(void)
 
 void SetCurrentAndNextWeather(u8 weather)
 {
+    bool32 changed = gWeatherPtr->currWeather != weather || gWeatherPtr->nextWeather != weather;
+
     PlayRainStoppingSoundEffect();
     gWeatherPtr->currWeather = weather;
     gWeatherPtr->nextWeather = weather;
     UpdateWeatherForms();
-    Habitat_NotifyEvent(HABITAT_EVENT_WEATHER_CHANGE);
+    if (changed)
+        Habitat_NotifyDependency(HABITAT_DEP_WEATHER);
 }
 
 void SetCurrentAndNextWeatherNoDelay(u8 weather)
 {
+    bool32 changed = gWeatherPtr->currWeather != weather || gWeatherPtr->nextWeather != weather;
+
     PlayRainStoppingSoundEffect();
     gWeatherPtr->currWeather = weather;
     gWeatherPtr->nextWeather = weather;
     // Overrides the normal delay during screen fading.
     gWeatherPtr->readyForInit = TRUE;
     UpdateWeatherForms();
+    if (changed)
+        Habitat_NotifyDependency(HABITAT_DEP_WEATHER);
 }
 
 static void Task_WeatherInit(u8 taskId)
@@ -304,7 +311,7 @@ static void Task_WeatherMain(u8 taskId)
             gWeatherPtr->currWeather = gWeatherPtr->nextWeather;
             gWeatherPtr->weatherChangeComplete = TRUE;
             UpdateWeatherForms();
-            Habitat_NotifyEvent(HABITAT_EVENT_WEATHER_CHANGE);
+            Habitat_NotifyDependency(HABITAT_DEP_WEATHER);
         }
     }
     else

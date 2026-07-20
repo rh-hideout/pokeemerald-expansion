@@ -11,6 +11,14 @@
 #include "constants/vars.h"
 #include "constants/weather.h"
 
+#define DEP_SKITTY (HABITAT_DEP_MASK(HABITAT_DEP_PLACEMENT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY))
+#define DEP_LOTAD (HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT) | HABITAT_DEP_MASK(HABITAT_DEP_WEATHER) | HABITAT_DEP_MASK(HABITAT_DEP_TIME) | HABITAT_DEP_MASK(HABITAT_DEP_GROVE) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY))
+#define DEP_MACHOP HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY)
+#define DEP_VULPIX HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY)
+#define DEP_HERACROSS (HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT) | HABITAT_DEP_MASK(HABITAT_DEP_TIME) | HABITAT_DEP_MASK(HABITAT_DEP_GROVE) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY))
+#define DEP_PINSIR (HABITAT_DEP_MASK(HABITAT_DEP_PLACEMENT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY))
+#define DEP_FRAME HABITAT_DEP_MASK(HABITAT_DEP_PLACEMENT)
+
 // ============================================================================
 // Vertical-slice spot data (spec §7). ALL prose here is engine placeholder —
 // hint/story text is authored by Jay and replaces these strings wholesale.
@@ -188,7 +196,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_NONE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_SKITTY,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_SKITTY,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_SKITTY,
     },
     {
         .spotId = SPOT_LOTAD, .species = SPECIES_LOTAD, .tier = 2, .zoneId = 1,
@@ -197,7 +205,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_IRRIGATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_LOTAD,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_LOTAD,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_LOTAD,
     },
     {
         .spotId = SPOT_MACHOP, .species = SPECIES_MACHOP, .tier = 2, .zoneId = 1,
@@ -206,7 +214,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_DIG, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_MACHOP,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_MACHOP,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_MACHOP,
     },
     {
         .spotId = SPOT_VULPIX, .species = SPECIES_VULPIX, .tier = 2, .zoneId = 1,
@@ -215,7 +223,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_WARM, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_VULPIX,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_VULPIX,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_VULPIX,
     },
     {
         .spotId = SPOT_HERACROSS, .species = SPECIES_HERACROSS, .tier = 3, .zoneId = 1,
@@ -224,7 +232,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_POLLINATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_HERACROSS,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_HERACROSS,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_HERACROSS,
     },
     {
         .spotId = SPOT_PINSIR, .species = SPECIES_PINSIR, .tier = 2, .zoneId = 1,
@@ -233,7 +241,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .workerRole = ROLE_POLLINATE, .personalityId = NULL,
         .hideFlag = FLAG_HABITAT_SPOT_PINSIR,
         .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .localId = LOCALID_HABITAT_SPOT_PINSIR,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_PINSIR,
     },
     {
         .spotId = SPOT_FRAME_TORCHIC, .species = SPECIES_NONE,
@@ -245,7 +253,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hideFlag = FLAG_HABITAT_FRAME_TORCHIC,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TORCHIC,
         .graphicsVar = VAR_OBJ_GFX_ID_7,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_FRAME,
     },
     {
         .spotId = SPOT_FRAME_TREECKO, .species = SPECIES_NONE,
@@ -257,7 +265,7 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hideFlag = FLAG_HABITAT_FRAME_TREECKO,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_TREECKO,
         .graphicsVar = VAR_OBJ_GFX_ID_8,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_FRAME,
     },
     {
         .spotId = SPOT_FRAME_MUDKIP, .species = SPECIES_NONE,
@@ -269,9 +277,15 @@ const struct HabitatSpot gHabitatSpots[] = {
         .hideFlag = FLAG_HABITAT_FRAME_MUDKIP,
         .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .localId = LOCALID_HABITAT_FRAME_MUDKIP,
         .graphicsVar = VAR_OBJ_GFX_ID_9,
-        .engineFlags = 0,
+        .engineFlags = 0, .dependencyMask = DEP_FRAME,
     },
     { .spotId = 0xFFFF },
+};
+
+const struct HabitatMapSpan gHabitatMapSpans[] = {
+    { .mapGroup = SLICE_MAP_GROUP, .mapNum = SLICE_MAP_NUM, .firstSpot = 0, .count = 6 },
+    { .mapGroup = LAB_MAP_GROUP, .mapNum = LAB_MAP_NUM, .firstSpot = 6, .count = 3 },
+    { .count = 0 },
 };
 
 const struct HabitatZone gHabitatZones[] = {

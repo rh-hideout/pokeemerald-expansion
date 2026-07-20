@@ -111,7 +111,7 @@ bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
         const struct HabitatSpot *spot = &spots[i];
 
         if (spot->spotId == 0xFFFF)
-            return TRUE;
+            return spots != gHabitatSpots || Habitat_ValidateMapSpans(spots, gHabitatMapSpans);
         if (spot->spotId >= HABITAT_SPOT_COUNT
          || !ValidateSpeciesChoices(spot)
          || spot->tier < 1 || spot->tier > 4
@@ -119,6 +119,8 @@ bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
          || spot->hintDormant == NULL || spot->hintStirring == NULL || spot->hintActive == NULL
          || !Habitat_ValidateConditionList(spot->appearConditions, HABITAT_CONDITION_SPOT_APPEAR)
          || !Habitat_ValidateConditionList(spot->befriendConditions, HABITAT_CONDITION_SPOT_BEFRIEND)
+         || spot->dependencyMask != (Habitat_GetConditionDependencyMask(spot->appearConditions)
+                                  | Habitat_GetConditionDependencyMask(spot->befriendConditions))
          || !MarkPlacedCounterIds(spot->appearConditions, placedCounterIds)
          || !MarkPlacedCounterIds(spot->befriendConditions, placedCounterIds))
             return FALSE;
@@ -255,4 +257,37 @@ static bool32 MarkPlacedCounterIds(const struct HabitatCondition *list, u8 *seen
         seen[counterId / 8] |= mask;
     }
     return TRUE;
+}
+
+bool32 Habitat_ValidateMapSpans(const struct HabitatSpot *spots,
+                                const struct HabitatMapSpan *spans)
+{
+    u32 spanIndex, spotIndex = 0;
+
+    if (spots == NULL || spans == NULL)
+        return FALSE;
+    for (spanIndex = 0; spans[spanIndex].count != 0; spanIndex++)
+    {
+        const struct HabitatMapSpan *span = &spans[spanIndex];
+        u32 i;
+
+        // This simultaneously rejects gaps, unsorted starts, and overlap.
+        if (span->count == 0 || span->firstSpot != spotIndex)
+            return FALSE;
+        for (i = span->firstSpot; i < span->firstSpot + span->count; i++)
+        {
+            if (spots[i].spotId == 0xFFFF
+             || spots[i].mapGroup != span->mapGroup
+             || spots[i].mapNum != span->mapNum)
+                return FALSE;
+        }
+        // A map is represented by exactly one contiguous range.
+        if (spots[span->firstSpot + span->count].spotId != 0xFFFF
+         && spots[span->firstSpot + span->count].mapGroup == span->mapGroup
+         && spots[span->firstSpot + span->count].mapNum == span->mapNum)
+            return FALSE;
+        spotIndex += span->count;
+    }
+    return spans[spanIndex].firstSpot == 0
+        && spots[spotIndex].spotId == 0xFFFF;
 }

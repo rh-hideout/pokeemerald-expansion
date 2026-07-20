@@ -13,6 +13,15 @@
 static void CompleteBefriend(const struct HabitatSpot *spot);
 static const struct HabitatSpot *FindSpot(u16 spotId);
 
+#if TESTING
+static const struct HabitatMapSpan *sTestMapSpans;
+
+void Habitat_SetMapSpansForTest(const struct HabitatMapSpan *spans)
+{
+    sTestMapSpans = spans;
+}
+#endif
+
 // The hide flag is the single source of truth the object-event system reads:
 // set = hidden. Home-by-default (§3): visible iff ACTIVE, or BEFRIENDED and
 // its resident is not out at the Grove. Spot→resident is the first registry
@@ -67,14 +76,41 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
 
 void Habitat_RecomputeCurrentMapSpots(void)
 {
-    u32 i;
-    u8 mapGroup = gSaveBlock1Ptr->location.mapGroup;
-    u8 mapNum = gSaveBlock1Ptr->location.mapNum;
+    Habitat_RecomputeCurrentMapDependencies(HABITAT_DEP_MASK_ALL);
+}
 
-    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+const struct HabitatMapSpan *Habitat_GetMapSpan(u8 mapGroup, u8 mapNum)
+{
+    const struct HabitatMapSpan *spans = gHabitatMapSpans;
+    u32 i;
+
+#if TESTING
+    if (sTestMapSpans != NULL)
+        spans = sTestMapSpans;
+#endif
+
+    for (i = 0; spans[i].count != 0; i++)
     {
-        if (gHabitatSpots[i].mapGroup == mapGroup && gHabitatSpots[i].mapNum == mapNum)
-            Habitat_RecomputeSpot(&gHabitatSpots[i]);
+        if (spans[i].mapGroup == mapGroup && spans[i].mapNum == mapNum)
+            return &spans[i];
+    }
+    return NULL;
+}
+
+void Habitat_RecomputeCurrentMapDependencies(u32 dependencyMask)
+{
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
+    const struct HabitatMapSpan *span = Habitat_GetMapSpan(gSaveBlock1Ptr->location.mapGroup,
+                                                            gSaveBlock1Ptr->location.mapNum);
+    u32 i;
+
+    if (span == NULL)
+        return;
+    for (i = span->firstSpot; i < span->firstSpot + span->count; i++)
+    {
+        if (dependencyMask == HABITAT_DEP_MASK_ALL
+         || (spots[i].dependencyMask & dependencyMask))
+            Habitat_RecomputeSpot(&spots[i]);
     }
 }
 
@@ -123,7 +159,7 @@ static void CompleteBefriend(const struct HabitatSpot *spot)
     GetSetPokedexFlag(dexNum, FLAG_SET_CAUGHT);
     Habitat_TryAddResident(spot->spotId);  // -1 past the cap is fine (spec §5)
     Habitat_SyncSpotObjectFlag(spot);
-    Habitat_NotifyEvent(HABITAT_EVENT_RESIDENT_CHANGE);
+    Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
 }
 
 static const struct HabitatSpot *FindSpot(u16 spotId)

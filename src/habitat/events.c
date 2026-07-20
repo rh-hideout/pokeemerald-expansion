@@ -1,115 +1,129 @@
-// Event-driven recomputation (spec §2: "no polling loops"). Game call sites
-// fire Habitat_NotifyEvent; this routes them into spot recomputation and,
-// when the overworld is live, spawns/despawns spot sprites whose visibility
-// flags changed. Call sites wired:
-//   MAP_LOAD       overworld.c InitObjectEventsLocal/Link (before object spawn)
-//   TIME_TICK      overworld.c UpdateTimeOfDay -> Habitat_CheckTimeTick (hour flips)
-//   WEATHER_CHANGE field_weather.c SetCurrentAndNextWeather + transition completion
-//   PARTY_CHANGE   script_pokemon_util.c ScriptGiveMonParameterized
-//   RESIDENT_CHANGE spot_manager.c befriend resolution (registry consumes phase 3)
+// Event-driven condition invalidation. Shared mutation boundaries publish a
+// dependency after a real write; nested writes are coalesced and drained.
 #include "global.h"
 #include "habitat/events.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "event_data.h"
 #include "event_object_movement.h"
-#include "script.h"
-#include "event_data.h"
 #include "main.h"
 #include "overworld.h"
+#include "script.h"
 
-static bool8 sInRecompute, sPendingRecompute;
+#define HABITAT_MAX_NOTIFY_DRAINS 16
+
+static bool8 sInRecompute;
+static u32 sPendingDependencies;
 
 static void SyncLiveSpotObjects(void)
 {
+    const struct HabitatMapSpan *span;
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
     u32 i;
     u8 objectEventId;
     u8 mapGroup, mapNum;
 
     if (gMain.callback2 != CB2_Overworld)
-        return;  // headless/test/menu contexts: flags alone are enough
+        return;
     mapGroup = gSaveBlock1Ptr->location.mapGroup;
     mapNum = gSaveBlock1Ptr->location.mapNum;
-
-    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+    span = Habitat_GetMapSpan(mapGroup, mapNum);
+    if (span == NULL)
+        return;
+    for (i = span->firstSpot; i < span->firstSpot + span->count; i++)
     {
-        const struct HabitatSpot *spot = &gHabitatSpots[i];
-        bool32 hidden, spawned;
-        if (spot->mapGroup != mapGroup || spot->mapNum != mapNum)
-            continue;
-        hidden = FlagGet(spot->hideFlag);
-        spawned = !TryGetObjectEventIdByLocalIdAndMap(spot->localId, mapNum, mapGroup, &objectEventId);
+        const struct HabitatSpot *spot = &spots[i];
+        bool32 hidden = FlagGet(spot->hideFlag);
+        bool32 spawned = !TryGetObjectEventIdByLocalIdAndMap(spot->localId, mapNum, mapGroup, &objectEventId);
+
         if (!hidden && !spawned)
-        {
             TrySpawnObjectEvent(spot->localId, mapNum, mapGroup);
-        }
         else if (hidden && spawned)
         {
-            // Never remove the object a running script is locked onto (the
-            // recruit flow hides the very Pokémon being talked to) — its
-            // flag is set, so the next map load settles it.
-            if (ScriptContext_IsEnabled() && objectEventId == gSelectedObjectEvent)
-                continue;
-            RemoveObjectEventByLocalIdAndMap(spot->localId, mapNum, mapGroup);
+            // Do not tear down the object currently executing its recruit
+            // script. Its flag settles on the next map load.
+            if (!(ScriptContext_IsEnabled() && objectEventId == gSelectedObjectEvent))
+                RemoveObjectEventByLocalIdAndMap(spot->localId, mapNum, mapGroup);
         }
     }
 }
 
-static void RecomputeAndSync(void)
+void Habitat_NotifyDependency(enum HabitatDependency dependency)
 {
-    if (sInRecompute)
-    {
-        // Befriend resolution notifies from inside a recompute; drain once.
-        sPendingRecompute = TRUE;
+    u32 drains = 0;
+
+    if (dependency >= HABITAT_DEP_COUNT)
         return;
-    }
+    sPendingDependencies |= HABITAT_DEP_MASK(dependency);
+    if (sInRecompute)
+        return;
+
     sInRecompute = TRUE;
-    do
+    while (sPendingDependencies != 0 && drains++ < HABITAT_MAX_NOTIFY_DRAINS)
     {
-        sPendingRecompute = FALSE;
-        Habitat_RecomputeCurrentMapSpots();
-    } while (sPendingRecompute);
+        u32 pending = sPendingDependencies;
+        u32 recomputeMask = pending;
+        sPendingDependencies = 0;
+        if (pending & HABITAT_DEP_MASK(HABITAT_DEP_MAP))
+        {
+            Habitat_ReconcileGrowthFromRtc();
+            recomputeMask = HABITAT_DEP_MASK_ALL;
+        }
+        if (pending & HABITAT_DEP_MASK(HABITAT_DEP_TIME))
+            Habitat_ReconcileGrowthFromRtc();
+        Habitat_RecomputeCurrentMapDependencies(recomputeMask);
+        if (pending & HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT))
+            Habitat_SyncGroveWorkersLive();
+    }
+    // A programming error must not leave future real mutations permanently
+    // queued. The finite guard makes the failure bounded and deterministic.
+    sPendingDependencies = 0;
     sInRecompute = FALSE;
     SyncLiveSpotObjects();
 }
 
-void Habitat_NotifyEvent(enum HabitatEvent event)
-{
-    switch (event)
-    {
-    case HABITAT_EVENT_MAP_LOAD:
-        // Objects spawn right after this; correct flags are all that's needed.
-        Habitat_ReconcileGrowthFromRtc();
-        RecomputeAndSync();
-        break;
-    case HABITAT_EVENT_TIME_TICK:
-        Habitat_ReconcileGrowthFromRtc();  // single growth path: no double credit
-        RecomputeAndSync();
-        break;
-    case HABITAT_EVENT_WEATHER_CHANGE:
-    case HABITAT_EVENT_PARTY_CHANGE:
-    case HABITAT_EVENT_INVENTORY_CHANGE:
-        RecomputeAndSync();
-        break;
-    case HABITAT_EVENT_RESIDENT_CHANGE:
-        RecomputeAndSync();
-        Habitat_SyncGroveWorkersLive();
-        break;
-    case HABITAT_EVENT_SPOT_STATE_CHANGE:
-        break;  // reserved; state changes already happen inside recompute
-    }
-}
-
-// Called every UpdateTimeOfDay with the current local hour; notifies once per
-// flip. (Statics stay zero-initialized — .data is discarded by the test link.)
 void Habitat_CheckTimeTick(s32 hours)
 {
     static s32 sLastHour;
     static bool8 sHaveLastHour;
+
     if (!sHaveLastHour || hours != sLastHour)
     {
         sHaveLastHour = TRUE;
         sLastHour = hours;
-        Habitat_NotifyEvent(HABITAT_EVENT_TIME_TICK);
+        Habitat_NotifyDependency(HABITAT_DEP_TIME);
     }
+}
+
+u32 Habitat_GetConditionDependencyMask(const struct HabitatCondition *list)
+{
+    u32 mask = 0;
+    u32 i;
+
+    if (list == NULL)
+        return 0;
+    for (i = 0; list[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+    {
+        switch (list[i].type)
+        {
+        case COND_ITEM_PLACED: mask |= HABITAT_DEP_MASK(HABITAT_DEP_PLACEMENT); break;
+        case COND_ITEM_OFFERED: mask |= HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY); break;
+        case COND_PARTY_SPECIES:
+        case COND_PARTY_FRIENDSHIP:
+        case COND_PARTY_MOVE:
+        case COND_PARTY_NATURE: mask |= HABITAT_DEP_MASK(HABITAT_DEP_PARTY); break;
+        case COND_RESIDENT_SPECIES:
+        case COND_RESIDENT_COUNT:
+        case COND_SPOT_STATE:
+        case COND_ZONE_COMPLETE: mask |= HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT); break;
+        case COND_TIME_OF_DAY: mask |= HABITAT_DEP_MASK(HABITAT_DEP_TIME); break;
+        case COND_BERRY_MATURE: mask |= HABITAT_DEP_MASK(HABITAT_DEP_TIME) | HABITAT_DEP_MASK(HABITAT_DEP_GROVE); break;
+        case COND_WEATHER: mask |= HABITAT_DEP_MASK(HABITAT_DEP_WEATHER); break;
+        case COND_STORY_FLAG: mask |= HABITAT_DEP_MASK(HABITAT_DEP_STORY_FLAG); break;
+        case COND_LIFETIME_STAT: mask |= HABITAT_DEP_MASK(HABITAT_DEP_LIFETIME_STAT); break;
+        case COND_TALK_COUNT: mask |= HABITAT_DEP_MASK(HABITAT_DEP_TALK); break;
+        default: break;
+        }
+    }
+    return mask;
 }

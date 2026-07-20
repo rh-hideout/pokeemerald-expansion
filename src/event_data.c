@@ -1,5 +1,6 @@
 #include "global.h"
 #include "event_data.h"
+#include "habitat/events.h"
 #include "pokedex.h"
 
 #define SPECIAL_FLAGS_SIZE  (NUM_SPECIAL_FLAGS / 8)  // 8 flags per byte
@@ -241,8 +242,11 @@ u8 *GetFlagPointer(u16 id)
 u8 FlagSet(u16 id)
 {
     u8 *ptr = GetFlagPointer(id);
-    if (ptr)
+    if (ptr && !((*ptr >> (id & 7)) & 1))
+    {
         *ptr |= 1 << (id & 7);
+        Habitat_NotifyDependency(HABITAT_DEP_STORY_FLAG);
+    }
     return 0;
 }
 
@@ -257,8 +261,11 @@ u8 FlagToggle(u16 id)
 u8 FlagClear(u16 id)
 {
     u8 *ptr = GetFlagPointer(id);
-    if (ptr)
+    if (ptr && ((*ptr >> (id & 7)) & 1))
+    {
         *ptr &= ~(1 << (id & 7));
+        Habitat_NotifyDependency(HABITAT_DEP_STORY_FLAG);
+    }
     return 0;
 }
 

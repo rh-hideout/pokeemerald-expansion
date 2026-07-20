@@ -163,3 +163,20 @@ TEST("Habitat authoring: production data is valid and Machop wants one Cheri")
     EXPECT_EQ(machop->befriendConditions[0].paramB, 1);
     EXPECT_EQ(machop->befriendConditions[1].type, COND_NONE);
 }
+
+TEST("Habitat authoring: dependency masks and contiguous map spans are validated")
+{
+    struct HabitatSpot badMask[2];
+    struct HabitatMapSpan overlapping[] = {
+        { .mapGroup = gHabitatSpots[0].mapGroup, .mapNum = gHabitatSpots[0].mapNum, .firstSpot = 0, .count = 1 },
+        { .mapGroup = gHabitatSpots[0].mapGroup, .mapNum = gHabitatSpots[0].mapNum, .firstSpot = 0, .count = 1 },
+        { 0 },
+    };
+
+    memcpy(badMask, gHabitatSpots, sizeof(badMask));
+    badMask[1].spotId = 0xFFFF;
+    badMask[0].dependencyMask ^= HABITAT_DEP_MASK(HABITAT_DEP_TIME);
+    EXPECT(!Habitat_ValidateSpotTable(badMask));
+    EXPECT(!Habitat_ValidateMapSpans(gHabitatSpots, overlapping));
+    EXPECT(Habitat_ValidateMapSpans(gHabitatSpots, gHabitatMapSpans));
+}

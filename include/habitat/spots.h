@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "habitat/conditions.h"
+#include "habitat/events.h"
 #include "habitat/roles.h"
 
 // Spot state machine per spec §2 — transitions are MONOTONIC (ACTIVE
@@ -50,6 +51,17 @@ struct HabitatSpot
     u8 mapGroup, mapNum, localId;                   // bound overworld object event
     u16 graphicsVar;                                // VAR_OBJ_GFX_ID_* or 0 for static graphics
     u8 engineFlags;                                 // HABITAT_SPOTDEF_*
+    u32 dependencyMask;                             // exact union of authored condition dependencies
+};
+
+// Generated/author-maintained index over the contiguous spot table.  Each
+// map appears once; firstSpot/count are indices into gHabitatSpots.
+struct HabitatMapSpan
+{
+    u8 mapGroup;
+    u8 mapNum;
+    u16 firstSpot;
+    u16 count;
 };
 
 enum HabitatItemAction
@@ -68,6 +80,7 @@ enum HabitatVerb
 
 extern const struct HabitatSpot gHabitatSpots[];
 extern const struct HabitatZone gHabitatZones[];
+extern const struct HabitatMapSpan gHabitatMapSpans[];
 
 const struct HabitatSpot *Habitat_GetSpot(u16 spotId);
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId);
@@ -81,11 +94,14 @@ bool32 Habitat_IsSpeciesChoiceAvailable(const struct HabitatSpot *spot, u16 item
 const struct HabitatSpot *Habitat_GetSpotTable(void);
 #if TESTING
 void Habitat_SetSpotTableForTest(const struct HabitatSpot *spots);
+void Habitat_SetMapSpansForTest(const struct HabitatMapSpan *spans);
 #endif
 
 // Spot manager (state machine + object visibility).
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
 void Habitat_RecomputeCurrentMapSpots(void);
+void Habitat_RecomputeCurrentMapDependencies(u32 dependencyMask);
+const struct HabitatMapSpan *Habitat_GetMapSpan(u8 mapGroup, u8 mapNum);
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
 void Habitat_PrepareLabFrames(void);
 void Habitat_CompleteBefriendById(u16 spotId);
