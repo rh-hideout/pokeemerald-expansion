@@ -33,11 +33,19 @@ static void SyncLiveSpotObjects(void)
     for (i = span->firstSpot; i < span->firstSpot + span->count; i++)
     {
         const struct HabitatSpot *spot = &spots[i];
+        u16 graphicsId = 0;
         bool32 hidden = FlagGet(spot->hideFlag);
         bool32 spawned = !TryGetObjectEventIdByLocalIdAndMap(spot->localId, mapNum, mapGroup, &objectEventId);
 
+        if (spot->graphicsVar != 0)
+        {
+            graphicsId = Habitat_GetResolvedSpotGraphicsId(spot);
+            VarSet(spot->graphicsVar, graphicsId);
+        }
         if (!hidden && !spawned)
             TrySpawnObjectEvent(spot->localId, mapNum, mapGroup);
+        else if (!hidden && spot->graphicsVar != 0 && gObjectEvents[objectEventId].graphicsId != graphicsId)
+            ObjectEventSetGraphicsId(&gObjectEvents[objectEventId], graphicsId);
         else if (hidden && spawned)
         {
             // Do not tear down the object currently executing its recruit

@@ -1,9 +1,13 @@
 #include "global.h"
 #include "event_data.h"
+#include "event_object_movement.h"
+#include "fieldmap.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "item.h"
 #include "item_menu.h"
+#include "main.h"
+#include "overworld.h"
 #include "constants/event_objects.h"
 #include "constants/maps.h"
 #include "constants/vars.h"
@@ -162,4 +166,51 @@ TEST("Habitat starter: the chosen furnishing survives save load and map reload")
     EXPECT_EQ(Habitat_GetResidentSpecies(0), SPECIES_MUDKIP);
     EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_7), OBJ_EVENT_MON + SPECIES_MUDKIP);
     EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_8), OBJ_EVENT_GFX_ITEM_BALL);
+}
+
+TEST("Habitat starter: live lab placement spawns the resolved frame graphics")
+{
+    const struct MapHeader *labHeader;
+    const struct HabitatSpot *furnished = Habitat_GetSpot(SPOT_FRAME_FURNISHED);
+    struct MapHeader previousMapHeader;
+    MainCallback previousCallback;
+    u8 previousMapGroup, previousMapNum;
+    u8 objectEventId = OBJECT_EVENTS_COUNT;
+
+    labHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                                                   MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB));
+    ASSUME(furnished != NULL);
+    ASSUME(labHeader != NULL);
+
+    previousMapHeader = gMapHeader;
+    previousCallback = gMain.callback2;
+    previousMapGroup = gSaveBlock1Ptr->location.mapGroup;
+    previousMapNum = gSaveBlock1Ptr->location.mapNum;
+    gMapHeader = *labHeader;
+    memcpy(gSaveBlock1Ptr->objectEventTemplates, labHeader->events->objectEvents,
+           sizeof(struct ObjectEventTemplate) * labHeader->events->objectEventCount);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB);
+    gMain.callback2 = CB2_Overworld;
+    memset(gObjectEvents, 0, sizeof(gObjectEvents));
+
+    memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    Habitat_SyncSpotObjectFlag(furnished);
+    Habitat_PrepareLabFrames();
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_7), OBJ_EVENT_GFX_ITEM_BALL);
+
+    EXPECT(PlaceStarterFurnishing(SPOT_FRAME_FURNISHED, ITEM_HH_WATER_BASIN));
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_7), OBJ_EVENT_MON + SPECIES_MUDKIP);
+    EXPECT(!TryGetObjectEventIdByLocalIdAndMap(furnished->localId,
+                                                MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                                                MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                                                &objectEventId));
+    if (objectEventId < OBJECT_EVENTS_COUNT)
+        EXPECT_EQ(gObjectEvents[objectEventId].graphicsId, OBJ_EVENT_MON + SPECIES_MUDKIP);
+
+    memset(gObjectEvents, 0, sizeof(gObjectEvents));
+    gSaveBlock1Ptr->location.mapGroup = previousMapGroup;
+    gSaveBlock1Ptr->location.mapNum = previousMapNum;
+    gMapHeader = previousMapHeader;
+    gMain.callback2 = previousCallback;
 }

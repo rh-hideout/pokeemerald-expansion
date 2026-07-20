@@ -86,6 +86,7 @@ const struct HabitatSpot *Habitat_GetSpot(u16 spotId);
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId);
 const struct HabitatZone *Habitat_GetZone(u8 zoneId);
 u16 Habitat_GetResolvedSpotSpecies(const struct HabitatSpot *spot);
+u16 Habitat_GetResolvedSpotGraphicsId(const struct HabitatSpot *spot);
 bool32 Habitat_IsSpeciesChoiceAvailable(const struct HabitatSpot *spot, u16 itemId);
 
 // Resident and condition truth read the active authored spot table. Tests can

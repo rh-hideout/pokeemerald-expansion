@@ -132,6 +132,13 @@ void Habitat_RecomputeCurrentMapDependencies(u32 dependencyMask)
     }
 }
 
+u16 Habitat_GetResolvedSpotGraphicsId(const struct HabitatSpot *spot)
+{
+    u16 species = Habitat_GetResolvedSpotSpecies(spot);
+
+    return species == SPECIES_NONE ? OBJ_EVENT_GFX_ITEM_BALL : OBJ_EVENT_MON + species;
+}
+
 // The lab frames use map object graphics variables, so their chosen starter
 // is restored before object events are loaded on every map transition.
 void Habitat_PrepareLabFrames(void)
@@ -141,14 +148,9 @@ void Habitat_PrepareLabFrames(void)
 
     for (i = 0; spots[i].spotId != 0xFFFF; i++)
     {
-        u16 species;
-
         if (spots[i].graphicsVar == 0)
             continue;
-        species = Habitat_GetResolvedSpotSpecies(&spots[i]);
-
-        VarSet(spots[i].graphicsVar, species == SPECIES_NONE
-               ? OBJ_EVENT_GFX_ITEM_BALL : OBJ_EVENT_MON + species);
+        VarSet(spots[i].graphicsVar, Habitat_GetResolvedSpotGraphicsId(&spots[i]));
     }
 }
 
