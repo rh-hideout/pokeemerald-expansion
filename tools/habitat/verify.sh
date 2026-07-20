@@ -40,18 +40,12 @@ else
 fi
 echo "hh-verify: output directory: $OUT"
 
-# A caller can tune parallelism; avoid host-specific sysctl probes so this is
-# also usable under restricted CI sandboxes.
-HH_VERIFY_JOBS=${HH_VERIFY_JOBS:-4}
-case "$HH_VERIFY_JOBS" in
-    *[!0-9]*|'') echo "hh-verify: HH_VERIFY_JOBS must be a positive integer" >&2; exit 2 ;;
-esac
-[ "$HH_VERIFY_JOBS" -gt 0 ] || { echo "hh-verify: HH_VERIFY_JOBS must be positive" >&2; exit 2; }
-
 # -B makes this invocation's map and ROM derive from current sources. The
 # subsequent symbol lookup is therefore unable to validate stale link output.
+# This repository has generated tracked inputs whose rules race under a forced
+# parallel rebuild, so keep this verification-only build serial.
 echo "hh-verify: building fresh verification ROM..."
-if ! make -B -j"$HH_VERIFY_JOBS" HABITAT_TEST_PROBE=1 >"$OUT/build.log" 2>&1; then
+if ! make -B -j1 HABITAT_TEST_PROBE=1 >"$OUT/build.log" 2>&1; then
     echo "hh-verify: BUILD FAILED" >&2
     tail -30 "$OUT/build.log" >&2
     exit 1

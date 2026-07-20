@@ -36,8 +36,14 @@ if grep -Eq 'rm[[:space:]]+-rf' tools/habitat/verify.sh; then
     echo "verify self-test: verifier contains a broad recursive delete" >&2
     exit 1
 fi
-grep -q 'make -B -j' tools/habitat/verify.sh
-grep -q 'HH_VERIFY_JOBS' tools/habitat/verify.sh
+if ! grep -q 'make -B -j1 HABITAT_TEST_PROBE=1' tools/habitat/verify.sh; then
+    echo "verify self-test: forced verification build must be serial to protect generated inputs" >&2
+    exit 1
+fi
+if grep -q 'HH_VERIFY_JOBS' tools/habitat/verify.sh; then
+    echo "verify self-test: forced verification build still accepts unsafe parallelism" >&2
+    exit 1
+fi
 grep -q 'HH_VERIFY_OUT' tools/habitat/verify.sh
 
 echo "verify self-test: parser, release guard, fresh-build, and safe-output contracts pass"
