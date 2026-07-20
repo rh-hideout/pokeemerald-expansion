@@ -24863,13 +24863,13 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_EiscueNoice[] = INCGFX_U32("graphics/pokemon/eiscue/noice_face/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_EiscueNoice[] = INCGFX_U16("graphics/pokemon/eiscue/noice_face/shiny.pal", ".gbapal");
     const u8 gMonIcon_EiscueNoice[] = INCGFX_U8("graphics/pokemon/eiscue/noice_face/icon.png", ".4bpp");
-#if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_EiscueNoice[] = INCGFX_COMP("graphics/pokemon/eiscue/noice_face/overworld.png", ".4bpp");
+#if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
+    const u32 gObjectEventPic_EiscueNoice[] = INCGFX_COMP("graphics/pokemon/eiscue/noice_face/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    // const u16 gOverworldPalette_EiscueNoice[] = INCGFX_U16("graphics/pokemon/eiscue/noice_face/overworld_normal.pal", ".gbapal");
-    // const u16 gShinyOverworldPalette_EiscueNoice[] = INCGFX_U16("graphics/pokemon/eiscue/noice_face/overworld_shiny.pal", ".gbapal");
+    const u16 gOverworldPalette_EiscueNoice[] = INCGFX_U16("graphics/pokemon/eiscue/noice_face/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_EiscueNoice[] = INCGFX_U16("graphics/pokemon/eiscue/noice_face/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_EISCUE
 
 #if P_FAMILY_INDEEDEE
