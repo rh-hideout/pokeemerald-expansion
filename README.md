@@ -12,11 +12,12 @@ Grove. Built on [pokeemerald-expansion](https://github.com/rh-hideout/pokeemeral
   Lab boot → screenshot; see `tools/habitat/`). The checked probe ABI is
   documented in `include/habitat/test_probe_schema.h`; it is absent from
   release builds.
-- Status: **built** and **focused-tested** through the habitat native suite.
-  The portable headless verifier is ready for a fresh Zorua Lab boot run;
-  release acceptance remains intentionally blocked until the Task 12
-  provenance gate is green. The dated evidence ledger and status definitions
-  are in [`docs/reports/2026-07-20-habitat-task-13-acceptance.md`](docs/reports/2026-07-20-habitat-task-13-acceptance.md).
+- Status: **focused-tested** for the portable verifier, its development-only
+  command bridge, and focused ARM compilation. Fresh ROM/headless and visual
+  status are recorded only after their scenario runs finish; release
+  acceptance remains blocked until the Task 12 provenance gate is green. The
+  dated evidence ledger and status definitions are in
+  [`docs/reports/2026-07-20-habitat-task-13-acceptance.md`](docs/reports/2026-07-20-habitat-task-13-acceptance.md).
 - **Legal stance:** this repository distributes **source and patches only** — never
   ROMs, never Nintendo-owned binaries — and is never monetized. The game builds
   entirely from this source tree; play it by building it yourself or by applying a

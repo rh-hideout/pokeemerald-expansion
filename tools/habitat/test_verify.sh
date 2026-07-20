@@ -15,7 +15,8 @@ if "$TEMP/hh-runner" --validate-script 'until-sv4:ca' >"$TEMP/old.out" 2>&1; the
     exit 1
 fi
 
-tools/habitat/verify.sh --help 2>&1 | grep -q 'lab-campfire'
+tools/habitat/verify.sh --help 2>&1 | grep -q 'approved-icons'
+"$TEMP/hh-runner" --validate-script 'command:bout-win;expect-probe:bout_outcome,1;pass:ok'
 if make -n RELEASE=1 HABITAT_TEST_PROBE=1 >"$TEMP/release.out" 2>&1; then
     echo "verify self-test: release build accepted the development probe" >&2
     exit 1

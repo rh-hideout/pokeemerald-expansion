@@ -1,17 +1,31 @@
 #include "global.h"
 #include "habitat/bouts.h"
+#include "habitat/migration.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "habitat/test_probe.h"
 #include "constants/habitat.h"
 #include "constants/items.h"
 #include "constants/species.h"
+#include "event_object_movement.h"
 #include "item.h"
+#include "script.h"
+#include "task.h"
 
 #if TESTING || HABITAT_TEST_PROBE
 struct HabitatTestProbe gHabitatTestProbe;
 u16 gHabitatTestCommand;
 static u16 sTestProbeSpotId = HABITAT_SPOT_NONE;
+
+// This is an explicit non-finale fixture. It exercises the production bout
+// boundary without implying an unauthored Deoxys scene exists.
+static const struct HabitatBoutDefinition sTestProbeBout = {
+    .boutId = 1,
+    .playerSpecies = SPECIES_TREECKO,
+    .playerLevel = 12,
+    .opponentSpecies = SPECIES_ZIGZAGOON,
+    .opponentLevel = 9,
+};
 
 STATIC_ASSERT(sizeof(struct HabitatTestProbe) == HABITAT_TEST_PROBE_SIZE, HabitatTestProbeSize);
 STATIC_ASSERT(offsetof(struct HabitatTestProbe, version) == HABITAT_TEST_PROBE_OFFSET_VERSION, HabitatTestProbeVersionOffset);
@@ -37,6 +51,56 @@ static void SubmitTestItem(u16 spotId, enum HabitatItemAction action, u16 itemId
     SelectTestProbeSpot(spotId);
     AddBagItem(itemId, 1);
     Habitat_SubmitItem(spot, action, itemId, 1);
+}
+
+static void RunTestBout(enum HabitatBoutOutcome outcome)
+{
+    if (Habitat_BoutBegin(&sTestProbeBout))
+    {
+        Habitat_BoutFinish(outcome);
+        // The dev command closes its real transaction before the scheduler
+        // can transfer to battle. The normal battle callback uses the same
+        // finish boundary for win/loss/flee/reset recovery.
+        ResetTasks();
+        UnfreezeObjectEvents();
+        UnlockPlayerFieldControls();
+    }
+}
+
+static void RunTestMigration(void)
+{
+    struct HabitatSave *save = &gSaveBlock3Ptr->habitat;
+
+    memset(save, 0, sizeof(*save));
+    save->spotStates[3] = HABITAT_STATE_BEFRIENDED;
+    // Legacy residents stored species in originSpotId's bytes.
+    save->residents[0].originSpotId = SPECIES_MACHOP;
+    save->residents[0].personalitySeed = 7;
+    save->saveVersion = HABITAT_SAVE_VERSION_LEGACY;
+    Habitat_MigrateSave();
+    SelectTestProbeSpot(3);
+}
+
+static void RunTestPersistence(void)
+{
+    struct HabitatSave saved;
+
+    memcpy(&saved, &gSaveBlock3Ptr->habitat, sizeof(saved));
+    memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    memcpy(&gSaveBlock3Ptr->habitat, &saved, sizeof(saved));
+    Habitat_MigrateSave();
+    SelectTestProbeSpot(3);
+}
+
+static void RunTestGroveAssignment(void)
+{
+    s32 residentIdx;
+
+    SubmitTestItem(7, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_POTTED_PLANT);
+    residentIdx = Habitat_FindResidentBySpot(7);
+    if (residentIdx >= 0)
+        Habitat_AssignResidentToPlot(residentIdx, 0);
+    SelectTestProbeSpot(7);
 }
 
 static void ApplyTestCommand(void)
@@ -71,6 +135,27 @@ static void ApplyTestCommand(void)
         SelectTestProbeSpot(3);
         Habitat_RecomputeSpot(Habitat_GetSpot(3));
         SubmitTestItem(3, HABITAT_ITEM_ACTION_OFFER, ITEM_CHERI_BERRY);
+        break;
+    case HABITAT_TEST_COMMAND_BOUT_WIN:
+        RunTestBout(HABITAT_BOUT_WIN);
+        break;
+    case HABITAT_TEST_COMMAND_BOUT_LOSS:
+        RunTestBout(HABITAT_BOUT_LOSS);
+        break;
+    case HABITAT_TEST_COMMAND_BOUT_FLEE:
+        RunTestBout(HABITAT_BOUT_FLED);
+        break;
+    case HABITAT_TEST_COMMAND_BOUT_RESET:
+        RunTestBout(HABITAT_BOUT_ABORTED);
+        break;
+    case HABITAT_TEST_COMMAND_SAVE_MIGRATION:
+        RunTestMigration();
+        break;
+    case HABITAT_TEST_COMMAND_SAVE_PERSISTENCE:
+        RunTestPersistence();
+        break;
+    case HABITAT_TEST_COMMAND_GROVE_ASSIGN:
+        RunTestGroveAssignment();
         break;
     case HABITAT_TEST_COMMAND_NONE:
     default:

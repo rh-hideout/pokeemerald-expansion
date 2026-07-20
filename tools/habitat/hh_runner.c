@@ -68,6 +68,13 @@ static int commandByName(const char *name)
         { "skitty-place", HABITAT_TEST_COMMAND_SKITTY_PLACE },
         { "skitty-offer", HABITAT_TEST_COMMAND_SKITTY_OFFER },
         { "machop-offer", HABITAT_TEST_COMMAND_MACHOP_OFFER },
+        { "bout-win", HABITAT_TEST_COMMAND_BOUT_WIN },
+        { "bout-loss", HABITAT_TEST_COMMAND_BOUT_LOSS },
+        { "bout-flee", HABITAT_TEST_COMMAND_BOUT_FLEE },
+        { "bout-reset", HABITAT_TEST_COMMAND_BOUT_RESET },
+        { "save-migration", HABITAT_TEST_COMMAND_SAVE_MIGRATION },
+        { "save-persistence", HABITAT_TEST_COMMAND_SAVE_PERSISTENCE },
+        { "grove-assign", HABITAT_TEST_COMMAND_GROVE_ASSIGN },
     };
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
         if (!strcmp(name, commands[i].name))

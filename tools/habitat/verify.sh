@@ -12,7 +12,7 @@ cd "$ROOT"
 
 usage() {
     echo "usage: tools/habitat/verify.sh [--no-interact | --scenario NAME]" >&2
-    echo "scenarios: lab-campfire lab-plant lab-basin starter-recovery skitty machop route103" >&2
+    echo "scenarios: lab-campfire lab-plant lab-basin starter-recovery skitty machop route103 bout-win bout-loss bout-flee bout-reset save-migration save-persistence grove item-chooser approved-icons" >&2
 }
 
 SCENARIO=boot
@@ -20,7 +20,7 @@ case "${1:-}" in
     ""|--no-interact) ;;
     --scenario)
         case "${2:-}" in
-            lab-campfire|lab-plant|lab-basin|starter-recovery|skitty|machop|route103) SCENARIO=$2 ;;
+            lab-campfire|lab-plant|lab-basin|starter-recovery|skitty|machop|route103|bout-win|bout-loss|bout-flee|bout-reset|save-migration|save-persistence|grove|item-chooser|approved-icons) SCENARIO=$2 ;;
             *)
             echo "hh-verify: scenario '${2:-}' is not available in the current approved slice" >&2
             echo "hh-verify: use --no-interact or one of the documented scenarios" >&2
@@ -99,6 +99,33 @@ case "$SCENARIO" in
         ;;
     route103)
         SCRIPT='goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;expect-probe:map_group,0;expect-probe:map_num,18;shot:route103;pass:Route 103 reached without a random battle'
+        ;;
+    bout-win)
+        SCRIPT='command:bout-win;expect-probe:bout_outcome,1;shot:approved_bout_win;pass:Approved non-capture bout win returned to field'
+        ;;
+    bout-loss)
+        SCRIPT='command:bout-loss;expect-probe:bout_outcome,2;shot:approved_bout_loss;pass:Approved non-capture bout loss returned to field'
+        ;;
+    bout-flee)
+        SCRIPT='command:bout-flee;expect-probe:bout_outcome,3;shot:approved_bout_flee;pass:Approved non-capture bout flee returned to field'
+        ;;
+    bout-reset)
+        SCRIPT='command:bout-reset;expect-probe:bout_outcome,4;shot:approved_bout_reset;pass:Approved bout reset recovery returned to field'
+        ;;
+    save-migration)
+        SCRIPT='command:save-migration;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resolved_species,66;expect-probe:resident_spot_id,3;shot:save_migration;pass:Legacy resident migrated to stable origin'
+        ;;
+    save-persistence)
+        SCRIPT='command:save-migration;command:save-persistence;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resident_spot_id,3;shot:save_persistence;pass:Current save round trip preserved resident'
+        ;;
+    grove)
+        SCRIPT='command:grove-assign;expect-probe:spot_id,7;expect-probe:resident_assignment,1;goto:6,11;walk:D,2;until-map:0,9;expect-probe:map_group,0;expect-probe:map_num,9;wait:60;shot:grove;pass:Grove worker visual checkpoint reached'
+        ;;
+    item-chooser)
+        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:item_chooser;pass:Authored item chooser visual checkpoint reached'
+        ;;
+    approved-icons)
+        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:approved_icons;pass:Furnishing icon provenance visual checkpoint reached'
         ;;
 esac
 
