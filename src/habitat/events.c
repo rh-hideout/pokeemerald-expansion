@@ -114,6 +114,7 @@ u32 Habitat_GetConditionDependencyMask(const struct HabitatCondition *list)
         case COND_PARTY_NATURE: mask |= HABITAT_DEP_MASK(HABITAT_DEP_PARTY); break;
         case COND_RESIDENT_SPECIES:
         case COND_RESIDENT_COUNT:
+        case COND_DEX_COUNT:
         case COND_SPOT_STATE:
         case COND_ZONE_COMPLETE: mask |= HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT); break;
         case COND_TIME_OF_DAY: mask |= HABITAT_DEP_MASK(HABITAT_DEP_TIME); break;

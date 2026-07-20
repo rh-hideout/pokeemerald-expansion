@@ -48,6 +48,7 @@ void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot)
 void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
 {
     u8 state = Habitat_GetSpotState(spot->spotId);
+    u8 stateBefore = state;
     struct HabitatConditionResult r;
 
     if (state < HABITAT_STATE_ACTIVE)
@@ -72,6 +73,8 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
     }
 
     Habitat_SyncSpotObjectFlag(spot);
+    if (Habitat_GetSpotState(spot->spotId) != stateBefore)
+        Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
 }
 
 void Habitat_RecomputeCurrentMapSpots(void)

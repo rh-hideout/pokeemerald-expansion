@@ -167,9 +167,25 @@ TEST("Habitat authoring: production data is valid and Machop wants one Cheri")
 TEST("Habitat authoring: dependency masks and contiguous map spans are validated")
 {
     struct HabitatSpot badMask[2];
+    struct HabitatSpot splitMap[] = {
+        { .spotId = 1, .mapGroup = 1, .mapNum = 1 },
+        { .spotId = 2, .mapGroup = 2, .mapNum = 1 },
+        { .spotId = 3, .mapGroup = 1, .mapNum = 1 },
+        { .spotId = 0xFFFF },
+    };
     struct HabitatMapSpan overlapping[] = {
         { .mapGroup = gHabitatSpots[0].mapGroup, .mapNum = gHabitatSpots[0].mapNum, .firstSpot = 0, .count = 1 },
         { .mapGroup = gHabitatSpots[0].mapGroup, .mapNum = gHabitatSpots[0].mapNum, .firstSpot = 0, .count = 1 },
+        { 0 },
+    };
+    struct HabitatMapSpan splitSpans[] = {
+        { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 1 },
+        { .mapGroup = 2, .mapNum = 1, .firstSpot = 1, .count = 1 },
+        { .mapGroup = 1, .mapNum = 1, .firstSpot = 2, .count = 1 },
+        { 0 },
+    };
+    struct HabitatMapSpan outOfBounds[] = {
+        { .mapGroup = gHabitatSpots[0].mapGroup, .mapNum = gHabitatSpots[0].mapNum, .firstSpot = 0, .count = HABITAT_SPOT_COUNT },
         { 0 },
     };
 
@@ -178,5 +194,7 @@ TEST("Habitat authoring: dependency masks and contiguous map spans are validated
     badMask[0].dependencyMask ^= HABITAT_DEP_MASK(HABITAT_DEP_TIME);
     EXPECT(!Habitat_ValidateSpotTable(badMask));
     EXPECT(!Habitat_ValidateMapSpans(gHabitatSpots, overlapping));
+    EXPECT(!Habitat_ValidateMapSpans(splitMap, splitSpans));
+    EXPECT(!Habitat_ValidateMapSpans(gHabitatSpots, outOfBounds));
     EXPECT(Habitat_ValidateMapSpans(gHabitatSpots, gHabitatMapSpans));
 }

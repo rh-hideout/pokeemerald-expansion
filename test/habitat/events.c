@@ -5,6 +5,8 @@
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "pokemon.h"
+#include "pokedex.h"
+#include "pokemon_storage_system.h"
 #include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/species.h"
@@ -22,6 +24,14 @@ static const struct HabitatCondition sFriendshipCondition[] = {
     HABITAT_COND(COND_PARTY_FRIENDSHIP, HABITAT_CMP_GE, 200, 0, 0),
     HABITAT_CONDITIONS_END,
 };
+static const struct HabitatCondition sSpotStateCondition[] = {
+    HABITAT_COND(COND_SPOT_STATE, 10, HABITAT_STATE_ACTIVE, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
+static const struct HabitatCondition sDexCondition[] = {
+    HABITAT_COND(COND_DEX_COUNT, HABITAT_CMP_GE, 1, 0, 0),
+    HABITAT_CONDITIONS_END,
+};
 static const struct HabitatCondition sOfferBefriendConditions[] = {
     HABITAT_COND(COND_ITEM_OFFERED, ITEM_ORAN_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
@@ -36,6 +46,20 @@ static const struct HabitatSpot sDependencyTestSpots[] = {
         .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_STORY_FLAG) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
     },
     {
+        .spotId = 12, .species = SPECIES_MACHOP, .tier = 1, .zoneId = 1,
+        .appearConditions = sSpotStateCondition, .befriendConditions = sOfferBefriendConditions,
+        .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        .hideFlag = FLAG_UNUSED_0x023, .mapGroup = 1, .mapNum = 1, .localId = 3,
+        .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
+    },
+    {
+        .spotId = 13, .species = SPECIES_VULPIX, .tier = 1, .zoneId = 1,
+        .appearConditions = sDexCondition, .befriendConditions = sOfferBefriendConditions,
+        .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        .hideFlag = FLAG_UNUSED_0x024, .mapGroup = 1, .mapNum = 1, .localId = 4,
+        .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
+    },
+    {
         .spotId = 11, .species = SPECIES_LOTAD, .tier = 1, .zoneId = 1,
         .appearConditions = sFriendshipCondition, .befriendConditions = sOfferBefriendConditions,
         .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
@@ -45,7 +69,7 @@ static const struct HabitatSpot sDependencyTestSpots[] = {
     { .spotId = 0xFFFF },
 };
 static const struct HabitatMapSpan sDependencyTestSpans[] = {
-    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 2 },
+    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 4 },
     { 0 },
 };
 
@@ -106,14 +130,27 @@ TEST("Habitat event: changed flag and party mutation boundaries update only thei
     Habitat_NotifyDependency(HABITAT_DEP_MAP);
     EXPECT_EQ(Habitat_GetSpotState(10), HABITAT_STATE_DORMANT);
     EXPECT_EQ(Habitat_GetSpotState(11), HABITAT_STATE_DORMANT);
+    EXPECT_EQ(Habitat_GetSpotState(12), HABITAT_STATE_DORMANT);
+    EXPECT_EQ(Habitat_GetSpotState(13), HABITAT_STATE_DORMANT);
 
     FlagSet(TEST_STORY_FLAG);
     EXPECT_EQ(Habitat_GetSpotState(10), HABITAT_STATE_ACTIVE);
     EXPECT_EQ(Habitat_GetSpotState(11), HABITAT_STATE_DORMANT);
+    EXPECT_EQ(Habitat_GetSpotState(12), HABITAT_STATE_ACTIVE);
 
     CreateMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_SKITTY, 10, 0, OTID_STRUCT_PLAYER_ID);
     CalculatePlayerPartyCount();
     SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_FRIENDSHIP, &friendship);
     EXPECT_EQ(Habitat_GetSpotState(11), HABITAT_STATE_ACTIVE);
+
+    memset(gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_VULPIX), FLAG_SET_CAUGHT);
+    EXPECT_EQ(Habitat_GetSpotState(13), HABITAT_STATE_ACTIVE);
+
+    // Compaction is the public PC-deposit cleanup boundary; it must publish
+    // the party change after moving a non-empty party slot.
+    ZeroMonData(&gParties[B_TRAINER_PLAYER][0]);
+    CreateMon(&gParties[B_TRAINER_PLAYER][1], SPECIES_LOTAD, 10, 0, OTID_STRUCT_PLAYER_ID);
+    EXPECT_EQ(CompactPartySlots(), 0);
     RestoreProductionTable();
 }

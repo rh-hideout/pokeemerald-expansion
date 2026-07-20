@@ -16,6 +16,7 @@
 #include "item.h"
 #include "item_icon.h"
 #include "item_menu.h"
+#include "habitat/events.h"
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
@@ -6462,6 +6463,7 @@ static void SetPlacedMonData(u8 boxId, u8 position)
         if (mon == GetFirstLiveMon())
             gFollowerSteps = 0;
         SetMonFormPSS(&mon->box, FORM_CHANGE_WITHDRAW);
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
     }
     else
     {
@@ -6473,7 +6475,12 @@ static void SetPlacedMonData(u8 boxId, u8 position)
 static void PurgeMonOrBoxMon(u8 boxId, u8 position)
 {
     if (boxId == TOTAL_BOXES_COUNT)
+    {
+        bool32 changed = GetMonData(&gParties[B_TRAINER_PLAYER][position], MON_DATA_SPECIES) != SPECIES_NONE;
         ZeroMonData(&gParties[B_TRAINER_PLAYER][position]);
+        if (changed)
+            Habitat_NotifyDependency(HABITAT_DEP_PARTY);
+    }
     else
         ZeroBoxMonAt(boxId, position);
 }
@@ -6858,6 +6865,9 @@ s16 CompactPartySlots(void)
     }
     for (; last < PARTY_SIZE; last++)
         ZeroMonData(&gParties[B_TRAINER_PLAYER][last]);
+
+    if (retVal != -1)
+        Habitat_NotifyDependency(HABITAT_DEP_PARTY);
 
     return retVal;
 }

@@ -262,18 +262,31 @@ static bool32 MarkPlacedCounterIds(const struct HabitatCondition *list, u8 *seen
 bool32 Habitat_ValidateMapSpans(const struct HabitatSpot *spots,
                                 const struct HabitatMapSpan *spans)
 {
-    u32 spanIndex, spotIndex = 0;
+    u32 spanIndex, spotIndex = 0, spotCount;
 
     if (spots == NULL || spans == NULL)
+        return FALSE;
+    for (spotCount = 0; spotCount < HABITAT_SPOT_COUNT; spotCount++)
+        if (spots[spotCount].spotId == 0xFFFF)
+            break;
+    if (spotCount == HABITAT_SPOT_COUNT)
         return FALSE;
     for (spanIndex = 0; spans[spanIndex].count != 0; spanIndex++)
     {
         const struct HabitatMapSpan *span = &spans[spanIndex];
-        u32 i;
+        u32 i, previous;
 
         // This simultaneously rejects gaps, unsorted starts, and overlap.
-        if (span->count == 0 || span->firstSpot != spotIndex)
+        if (span->firstSpot != spotIndex
+         || span->firstSpot >= spotCount
+         || span->count > spotCount - span->firstSpot)
             return FALSE;
+        for (previous = 0; previous < spanIndex; previous++)
+        {
+            if (spans[previous].mapGroup == span->mapGroup
+             && spans[previous].mapNum == span->mapNum)
+                return FALSE;  // a map may not be split into distant spans
+        }
         for (i = span->firstSpot; i < span->firstSpot + span->count; i++)
         {
             if (spots[i].spotId == 0xFFFF
@@ -282,12 +295,11 @@ bool32 Habitat_ValidateMapSpans(const struct HabitatSpot *spots,
                 return FALSE;
         }
         // A map is represented by exactly one contiguous range.
-        if (spots[span->firstSpot + span->count].spotId != 0xFFFF
+        if (span->firstSpot + span->count < spotCount
          && spots[span->firstSpot + span->count].mapGroup == span->mapGroup
          && spots[span->firstSpot + span->count].mapNum == span->mapNum)
             return FALSE;
         spotIndex += span->count;
     }
-    return spans[spanIndex].firstSpot == 0
-        && spots[spotIndex].spotId == 0xFFFF;
+    return spotIndex == spotCount;
 }

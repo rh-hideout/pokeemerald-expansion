@@ -254,7 +254,10 @@ u8 FlagToggle(u16 id)
 {
     u8 *ptr = GetFlagPointer(id);
     if (ptr)
+    {
         *ptr ^= 1 << (id & 7);
+        Habitat_NotifyDependency(HABITAT_DEP_STORY_FLAG);
+    }
     return 0;
 }
 

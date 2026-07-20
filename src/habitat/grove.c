@@ -175,5 +175,6 @@ u32 Habitat_HarvestPlot(u32 plotIdx)
         return 0;  // bag full: harvest stays on the plant
     plot->growthStage = 0;
     plot->hoursProgress = 0;
+    Habitat_NotifyDependency(HABITAT_DEP_GROVE);
     return HABITAT_PLOT_YIELD;
 }

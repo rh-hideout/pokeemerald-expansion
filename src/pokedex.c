@@ -1,4 +1,5 @@
 #include "global.h"
+#include "habitat/events.h"
 #include "battle_main.h"
 #include "battle_script_commands.h"
 #include "bg.h"
@@ -4532,7 +4533,14 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
         gSaveBlock1Ptr->dexSeen[index] |= mask;
         break;
     case FLAG_SET_CAUGHT:
-        gSaveBlock1Ptr->dexCaught[index] |= mask;
+        if ((gSaveBlock1Ptr->dexCaught[index] & mask) == 0)
+        {
+            gSaveBlock1Ptr->dexCaught[index] |= mask;
+            // DEX_COUNT is sourced from caught entries. Resident dependency
+            // is its existing invalidation lane because befriending writes
+            // the same count and all dependent spots already subscribe here.
+            Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
+        }
         break;
     }
 
