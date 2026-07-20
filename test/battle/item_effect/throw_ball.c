@@ -6,7 +6,7 @@ WILD_BATTLE_TEST("Habitat: every throw ball is rejected at the battle-item bound
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CATERPIE);
-        GIVE_PLAYER_ITEM(ITEM_POKE_BALL, 3);
+        GIVE_PLAYER_ITEM(ITEM_POKE_BALL, 2);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_POKE_BALL); }
     } SCENE {
