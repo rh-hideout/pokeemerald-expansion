@@ -6,6 +6,7 @@
 #include "constants/game_stat.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/pokemon.h"
 #include "constants/species.h"
 #include "constants/weather.h"
 
@@ -83,14 +84,31 @@ bool32 Habitat_ValidateConditionList(const struct HabitatCondition *list,
 
 bool32 Habitat_ValidateAuthoredData(void)
 {
-    u32 i, j, finaleBattleWins = 0;
+    u32 i, finaleBattleWins = 0;
 
+    if (!Habitat_ValidateSpotTable(gHabitatSpots)
+     || gHabitatDeoxysFinale.species != SPECIES_DEOXYS
+     || !Habitat_ValidateConditionList(gHabitatDeoxysFinale.conditions,
+                                       HABITAT_CONDITION_DEOXYS_FINALE))
+        return FALSE;
+    for (i = 0; gHabitatDeoxysFinale.conditions[i].type != COND_NONE; i++)
+        if (gHabitatDeoxysFinale.conditions[i].type == COND_BATTLE_WIN)
+            finaleBattleWins++;
+    return finaleBattleWins == 1;
+}
+
+bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
+{
+    u32 i, j;
+
+    if (spots == NULL)
+        return FALSE;
     for (i = 0; i < HABITAT_SPOT_COUNT; i++)
     {
-        const struct HabitatSpot *spot = &gHabitatSpots[i];
+        const struct HabitatSpot *spot = &spots[i];
 
         if (spot->spotId == 0xFFFF)
-            break;
+            return TRUE;
         if (spot->spotId >= HABITAT_SPOT_COUNT
          || !IsValidSpecies(spot->species)
          || spot->tier < 1 || spot->tier > 4
@@ -100,18 +118,10 @@ bool32 Habitat_ValidateAuthoredData(void)
          || !Habitat_ValidateConditionList(spot->befriendConditions, HABITAT_CONDITION_SPOT_BEFRIEND))
             return FALSE;
         for (j = 0; j < i; j++)
-            if (gHabitatSpots[j].spotId == spot->spotId)
+            if (spots[j].spotId == spot->spotId)
                 return FALSE;
     }
-    if (i == HABITAT_SPOT_COUNT
-     || gHabitatDeoxysFinale.species != SPECIES_DEOXYS
-     || !Habitat_ValidateConditionList(gHabitatDeoxysFinale.conditions,
-                                       HABITAT_CONDITION_DEOXYS_FINALE))
-        return FALSE;
-    for (i = 0; gHabitatDeoxysFinale.conditions[i].type != COND_NONE; i++)
-        if (gHabitatDeoxysFinale.conditions[i].type == COND_BATTLE_WIN)
-            finaleBattleWins++;
-    return finaleBattleWins == 1;
+    return FALSE;
 }
 
 static bool32 IsValidSpecies(u16 species)
@@ -158,10 +168,13 @@ static bool32 ValidateConditionParameters(const struct HabitatCondition *conditi
     case COND_PARTY_NATURE:
         return condition->paramA < NUM_NATURES && HasOnlyZeroUnusedParams(condition, 2);
     case COND_RESIDENT_SPECIES:
-        return IsValidSpecies(condition->paramA) && condition->paramB == 0
+        return IsValidSpecies(condition->paramA)
+            && (condition->paramB == 0 || Habitat_GetZone(condition->paramB) != NULL)
             && HasOnlyZeroUnusedParams(condition, 3);
     case COND_RESIDENT_COUNT:
-        return condition->paramB != 0 && condition->paramB <= NUM_SPECIES
+        return (condition->paramA == HABITAT_TYPE_ANY
+             || (condition->paramA > TYPE_NONE && condition->paramA < NUMBER_OF_MON_TYPES))
+            && condition->paramB != 0 && condition->paramB <= NUM_SPECIES
             && HasOnlyZeroUnusedParams(condition, 3);
     case COND_TIME_OF_DAY:
         return condition->paramA < 24 && condition->paramB < 24

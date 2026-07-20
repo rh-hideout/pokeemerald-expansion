@@ -3,6 +3,7 @@
 #include "habitat/finale.h"
 #include "habitat/spots.h"
 #include "constants/items.h"
+#include "constants/pokemon.h"
 #include "constants/species.h"
 #include "test/test.h"
 
@@ -78,6 +79,26 @@ TEST("Habitat authoring: invalid lists are rejected before runtime")
         HABITAT_COND(COND_RESIDENT_SPECIES, NUM_SPECIES, 0, 0, 0),
         HABITAT_CONDITIONS_END,
     };
+    static const struct HabitatCondition sResidentZone[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sResidentBadZone[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_TREECKO, 0xFF, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sResidentType[] = {
+        HABITAT_COND(COND_RESIDENT_COUNT, TYPE_GRASS, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sResidentAnyType[] = {
+        HABITAT_COND(COND_RESIDENT_COUNT, HABITAT_TYPE_ANY, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sResidentBadType[] = {
+        HABITAT_COND(COND_RESIDENT_COUNT, NUMBER_OF_MON_TYPES, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
     static const struct HabitatCondition sTooLong[HABITAT_MAX_CONDITIONS + 2] = {
         [0 ... HABITAT_MAX_CONDITIONS] = HABITAT_COND(COND_STORY_FLAG, 1, 0, 0, 0),
         [HABITAT_MAX_CONDITIONS + 1] = HABITAT_CONDITIONS_END,
@@ -87,7 +108,48 @@ TEST("Habitat authoring: invalid lists are rejected before runtime")
     EXPECT(!Habitat_ValidateConditionList(sNoQuantity, HABITAT_CONDITION_SPOT_BEFRIEND));
     EXPECT(!Habitat_ValidateConditionList(sBadZone, HABITAT_CONDITION_SPOT_APPEAR));
     EXPECT(!Habitat_ValidateConditionList(sBadParameter, HABITAT_CONDITION_SPOT_APPEAR));
+    EXPECT(Habitat_ValidateConditionList(sResidentZone, HABITAT_CONDITION_SPOT_APPEAR));
+    EXPECT(!Habitat_ValidateConditionList(sResidentBadZone, HABITAT_CONDITION_SPOT_APPEAR));
+    EXPECT(Habitat_ValidateConditionList(sResidentType, HABITAT_CONDITION_SPOT_APPEAR));
+    EXPECT(Habitat_ValidateConditionList(sResidentAnyType, HABITAT_CONDITION_SPOT_APPEAR));
+    EXPECT(!Habitat_ValidateConditionList(sResidentBadType, HABITAT_CONDITION_SPOT_APPEAR));
     EXPECT(!Habitat_ValidateConditionList(sTooLong, HABITAT_CONDITION_SPOT_APPEAR));
+}
+
+TEST("Habitat authoring: duplicate spot ids are rejected")
+{
+    static const u8 sHint[] = _("test$");
+    static const struct HabitatCondition sConditions[] = {
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatSpot sDuplicateIds[] = {
+        {
+            .spotId = 1, .species = SPECIES_SKITTY, .tier = 1, .zoneId = 1,
+            .appearConditions = sConditions, .befriendConditions = sConditions,
+            .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        },
+        {
+            .spotId = 1, .species = SPECIES_LOTAD, .tier = 1, .zoneId = 1,
+            .appearConditions = sConditions, .befriendConditions = sConditions,
+            .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        },
+        { .spotId = 0xFFFF },
+    };
+
+    EXPECT(!Habitat_ValidateSpotTable(sDuplicateIds));
+}
+
+TEST("Habitat authoring: production condition lists are individually valid")
+{
+    u32 i;
+
+    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+    {
+        EXPECT(Habitat_ValidateConditionList(gHabitatSpots[i].appearConditions,
+                                              HABITAT_CONDITION_SPOT_APPEAR));
+        EXPECT(Habitat_ValidateConditionList(gHabitatSpots[i].befriendConditions,
+                                              HABITAT_CONDITION_SPOT_BEFRIEND));
+    }
 }
 
 TEST("Habitat authoring: production data is valid and Machop wants one Cheri")
