@@ -40,9 +40,15 @@
 #define AI_ACTION_WATCH         (1 << 2)
 #define AI_ACTION_DO_NOT_ATTACK (1 << 3)
 
-static u32 ChooseMoveOrAction(enum BattlerId battler);
-static u32 ChooseMoveOrAction_Singles(enum BattlerId battler);
-static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler);
+struct ChosenAction
+{
+    u8 moveIndex;
+    enum BattlerId target;
+};
+
+static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler);
+static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler);
+static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
@@ -187,8 +193,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
         defaultScoreMoves >>= 1;
     }
 
-    gBattlerTarget = SetRandomTarget(battler);
-    gAiBattleData->chosenTarget[battler] = gBattlerTarget;
+    gAiBattleData->chosenTarget[battler] = SetRandomTarget(battler);
 }
 
 void BattleAI_SetupItems(void)
@@ -443,10 +448,49 @@ void ReconsiderGimmick(enum BattlerId battlerAtk, enum BattlerId battlerDef, enu
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
-static u32 ChooseMoveOrAction(enum BattlerId battler)
+static bool32 IsThinkingBeforePartner(enum BattlerId battler, enum BattlerId battlerPartner)
+{
+    if (!BattlerHasAi(battlerPartner))
+        return TRUE;
+
+    if (gAiLogicData->reverseBattlerLogicOrder)
+        return (battlerPartner < battler);
+
+    return (battlerPartner > battler);
+}
+
+static void SetAllyMove(u32 battler)
+{
+    enum BattlerId partnerBattler = BATTLE_PARTNER(battler);
+    gAiLogicData->partnerMove = MOVE_NONE; // Make sure no garbage is stored for simulation
+
+    if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
+    {
+        gAiLogicData->partnerMove = MOVE_NONE;
+    }
+    else if (IsThinkingBeforePartner(battler, partnerBattler))
+    {
+        // DebugPrintf("partnerBattler %d", partnerBattler );
+        gAiLogicData->partnerMoveSimulation = TRUE;
+        struct ChosenAction chosen = ChooseMoveOrAction_Doubles(partnerBattler);
+        gAiLogicData->partnerMoveSimulation = FALSE;
+        gAiLogicData->partnerMove = gBattleMons[partnerBattler].moves[chosen.moveIndex];
+    }
+    else
+    {
+        // Move for battler has already been calculated so set as partner move
+        u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
+        gAiLogicData->partnerMove = gBattleMons[partnerBattler].moves[moveIndex];
+    }
+}
+
+static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler)
 {
     if (IsDoubleBattle())
+    {
+        SetAllyMove(battler);
         return ChooseMoveOrAction_Doubles(battler);
+    }
     return ChooseMoveOrAction_Singles(battler);
 }
 
@@ -533,18 +577,17 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
 
 u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
 {
-    u32 chosenMoveIndex;
-
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
 
-    chosenMoveIndex = ChooseMoveOrAction(battler);
+    struct ChosenAction chosen = ChooseMoveOrAction(battler);
+    gAiBattleData->chosenTarget[battler] = chosen.target;
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
-        ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
+        ReconsiderGimmick(battler, chosen.target, gBattleMons[battler].moves[chosen.moveIndex]);
 
     // Clear protect structures, some flags may be set during AI calcs
     // e.g. pranksterElevated from GetBattleMovePriority
@@ -553,7 +596,7 @@ u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
     TestRunner_Battle_CheckAiMoveScores(battler);
     #endif // TESTING
 
-    return chosenMoveIndex;
+    return chosen.moveIndex;
 }
 
 static void CopyBattlerDataToAIParty(u32 bPosition, enum BattleTrainer trainer)
@@ -699,7 +742,7 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->lastUsedMove[battler] = (gLastMoves[battler] == MOVE_UNAVAILABLE) ? MOVE_NONE : gLastMoves[battler];
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
-    aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, ~(MOVE_LIMITATION_UNUSABLE));
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
     aiData->dragonDartsHitsBothTarget = 0;
 
@@ -749,49 +792,39 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 }
 #undef BYPASSES_ACCURACY_CALC
 
-static void SetBattlerTurnOrder(u8 *aiTurnOrder)
-{
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        for (u32 j = 0; j < gBattlersCount; j++)
-        {
-            if (AI_WhoStrikesFirst(aiTurnOrder[i], aiTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
-            {
-                u32 temp = aiTurnOrder[i];
-                aiTurnOrder[i] = aiTurnOrder[j];
-                aiTurnOrder[j] = temp;
-            }
-        }
-    }
-}
-
 void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain)
 {
-    enum Move move;
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
+
+    struct AiCalcValues aiCalc = {
+        .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
+        .gimmickDef = GIMMICK_NONE,
+        .weather = weather,
+        .terrain = terrain,
+    };
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         struct SimulatedDamage dmg = {0};
-        uq4_12_t effectiveness = Q_4_12(0.0);
-        move = moves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        aiCalc.move = moves[moveIndex];
 
         // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
+        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc.typeEffectiveness;
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
         aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
 
-        if (IsMoveUnusable(moveIndex, move, moveLimitations))
+        if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
             continue;
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, terrain);
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
+        dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
+        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc.move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
+        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc.typeEffectiveness;
     }
 }
 
@@ -835,10 +868,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
         SetBattlerAiData(battler, aiData);
     }
-
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
-        aiData->turnOrder[battler] = battler;
-    SetBattlerTurnOrder(aiData->turnOrder);
 
     u32 weather = AI_GetWeather(); // Needs SetBattlerAiData
 
@@ -909,32 +938,43 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     return returnValue;
 }
 
-static u32 ChooseMoveOrAction_Singles(enum BattlerId battler)
+static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    u8 currentMoveArray[MAX_MON_MOVES];
-    u8 consideredMoveArray[MAX_MON_MOVES];
-    u32 numOfBestMoves;
-    u64 flags = gAiThinkingStruct->aiFlags[battler];
-    enum BattlerId opposingBattler = GetOppositeBattler(battler);
-
+    u64 flags = gAiThinkingStruct->aiFlags[battlerAtk];
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
-    gAiLogicData->partnerMove = MOVE_NONE;   // no ally
+
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battlerAtk);
+    else
+        BattleAI_SetupAIData(0xF, battlerAtk);
 
     while (flags != 0)
     {
         if (flags & 1)
         {
-            if (IsBattlerPredictedToSwitch(opposingBattler) && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_INCOMING_MON))
-                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battler, opposingBattler);
+            if (IsBattlerPredictedToSwitch(battlerDef) && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_INCOMING_MON))
+                BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battlerAtk, battlerDef);
             else
-                BattleAI_DoAIProcessing(gAiThinkingStruct, battler, opposingBattler);
+                BattleAI_DoAIProcessing(gAiThinkingStruct, battlerAtk, battlerDef);
         }
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
-        AI_CompareDamagingMoves(battler, opposingBattler);
+
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CHECK_VIABILITY)
+        AI_CompareDamagingMoves(battlerAtk, battlerDef);
+}
+
+static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
+{
+    u8 currentMoveArray[MAX_MON_MOVES];
+    u8 consideredMoveArray[MAX_MON_MOVES];
+    u32 numOfBestMoves;
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
+    gAiLogicData->partnerMove = MOVE_NONE;   // no ally
+
+    DoAIScoreProcessing(battler, opposingBattler);
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -964,16 +1004,20 @@ static u32 ChooseMoveOrAction_Singles(enum BattlerId battler)
         }
     }
 
-#if TESTING
+    #if TESTING
     gBattleTestRunnerState->data.trial.scoreTieCount = numOfBestMoves;
-#endif
+    #endif
 
-    return consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)];
+    struct ChosenAction chosen = {
+        .moveIndex = consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)],
+        .target = opposingBattler,
+    };
+
+    return chosen;
 }
 
-static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
+static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
 {
-    u64 flags;
     s32 bestMovePointsForTarget[MAX_BATTLERS_COUNT];
     u8 mostViableTargetsArray[MAX_BATTLERS_COUNT];
     u8 actionOrMoveIndex[MAX_BATTLERS_COUNT];
@@ -983,50 +1027,25 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
     u32 mostViableMovesNo;
     s32 mostMovePoints;
 
-    for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+    for (enum BattlerId battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
     {
-        if (gBattleMons[battlerIndex].hp == 0 || battler == battlerIndex)
+        if (gBattleMons[battlerDef].hp == 0 || battlerAtk == battlerDef)
         {
-            actionOrMoveIndex[battlerIndex] = 0xFF;
-            bestMovePointsForTarget[battlerIndex] = -1;
+            actionOrMoveIndex[battlerDef] = 0xFF;
+            bestMovePointsForTarget[battlerDef] = -1;
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-                BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battler);
-            else
-                BattleAI_SetupAIData(0xF, battler);
-
-            gBattlerTarget = battlerIndex;
-
-            gAiLogicData->partnerMove = GetAllyChosenMove(battler);
-            gAiThinkingStruct->aiLogicId = 0;
-            gAiThinkingStruct->movesetIndex = 0;
-            flags = gAiThinkingStruct->aiFlags[battler];
-
-            while (flags != 0)
-            {
-                if (flags & 1)
-                {
-                    if (IsBattlerPredictedToSwitch(gBattlerTarget) && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_INCOMING_MON))
-                        BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battler, gBattlerTarget);
-                    else
-                        BattleAI_DoAIProcessing(gAiThinkingStruct, battler, gBattlerTarget);
-                }
-                flags >>= (u64)1;
-                gAiThinkingStruct->aiLogicId++;
-            }
-            if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
-                AI_CompareDamagingMoves(battler, gBattlerTarget);
+            DoAIScoreProcessing(battlerAtk, battlerDef);
 
             mostViableMovesScores[0] = gAiThinkingStruct->score[0];
             mostViableMovesIndices[0] = 0;
             mostViableMovesNo = 1;
             for (u32 moveIndex = 1; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                if (gBattleMons[battler].moves[moveIndex] != 0)
+                if (gBattleMons[battlerAtk].moves[moveIndex] != 0)
                 {
-                    if (!CanTargetBattler(battler, battlerIndex, gBattleMons[battler].moves[moveIndex]))
+                    if (!CanTargetBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[moveIndex]))
                         continue;
 
                     if (mostViableMovesScores[0] == gAiThinkingStruct->score[moveIndex])
@@ -1044,22 +1063,22 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
                 }
             }
 
-#if TESTING
+            #if TESTING
             gBattleTestRunnerState->data.trial.scoreTieCount = mostViableMovesNo;
-#endif
+            #endif
 
-            actionOrMoveIndex[battlerIndex] = mostViableMovesIndices[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_MOVE, 0, mostViableMovesNo - 1)];
-            bestMovePointsForTarget[battlerIndex] = mostViableMovesScores[0];
+            actionOrMoveIndex[battlerDef] = mostViableMovesIndices[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_MOVE, 0, mostViableMovesNo - 1)];
+            bestMovePointsForTarget[battlerDef] = mostViableMovesScores[0];
 
             // Don't use a move against ally if it has less than 100 points.
-            if (battlerIndex == BATTLE_PARTNER(battler) && bestMovePointsForTarget[battlerIndex] < AI_SCORE_DEFAULT)
+            if (battlerDef == BATTLE_PARTNER(battlerAtk) && bestMovePointsForTarget[battlerDef] < AI_SCORE_DEFAULT)
             {
-                bestMovePointsForTarget[battlerIndex] = -1;
+                bestMovePointsForTarget[battlerDef] = -1;
             }
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                gAiBattleData->finalScore[battler][gBattlerTarget][moveIndex] = gAiThinkingStruct->score[moveIndex];
+                gAiBattleData->finalScore[battlerAtk][battlerDef][moveIndex] = gAiThinkingStruct->score[moveIndex];
             }
         }
     }
@@ -1068,29 +1087,30 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
     mostViableTargetsArray[0] = 0;
     mostViableTargetsNo = 1;
 
-    for (enum BattlerId battlerIndex = 1; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+    for (enum BattlerId battler = 1; battler < MAX_BATTLERS_COUNT; battler++)
     {
-        if (mostMovePoints == bestMovePointsForTarget[battlerIndex])
+        if (mostMovePoints == bestMovePointsForTarget[battler])
         {
-            mostViableTargetsArray[mostViableTargetsNo] = battlerIndex;
+            mostViableTargetsArray[mostViableTargetsNo] = battler;
             mostViableTargetsNo++;
         }
-        if (mostMovePoints < bestMovePointsForTarget[battlerIndex])
+        if (mostMovePoints < bestMovePointsForTarget[battler])
         {
-            mostMovePoints = bestMovePointsForTarget[battlerIndex];
-            mostViableTargetsArray[0] = battlerIndex;
+            mostMovePoints = bestMovePointsForTarget[battler];
+            mostViableTargetsArray[0] = battler;
             mostViableTargetsNo = 1;
         }
     }
 
-#if TESTING
+    #if TESTING
     gBattleTestRunnerState->data.trial.targetTieCount = mostViableTargetsNo;
-#endif
+    #endif
 
-    gBattlerTarget = mostViableTargetsArray[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_TARGET, 0, mostViableTargetsNo - 1)];
-    gAiBattleData->chosenTarget[battler] = gBattlerTarget;
+    struct ChosenAction chosen = {0};
+    chosen.target = mostViableTargetsArray[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_TARGET, 0, mostViableTargetsNo - 1)];
+    chosen.moveIndex = actionOrMoveIndex[chosen.target];
 
-    return actionOrMoveIndex[gBattlerTarget];
+    return chosen;
 }
 
 static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move move)
@@ -1276,7 +1296,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     enum Ability abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
 
-    SetTypeBeforeUsingMove(move, battlerAtk);
+    SetTypeBeforeUsingMove(move, battlerAtk, abilityAtk, aiData->holdEffects[battlerAtk]);
     moveType = GetBattleMoveType(move);
 
     if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
@@ -3103,7 +3123,6 @@ static bool32 ShouldTriggerPartnerAbility(enum BattlerId battlerAtk, enum Move m
 static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
     // move data
-    enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects effect = GetMoveEffect(move);
     enum MoveTarget moveTarget = AI_GetBattlerMoveTargetType(battlerAtk, move);
     // ally data
@@ -3117,8 +3136,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     enum Move incomingMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
 
-    SetTypeBeforeUsingMove(move, battlerAtk);
-    moveType = GetBattleMoveType(move);
+    SetTypeBeforeUsingMove(move, battlerAtk, aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk]);
+    enum Type moveType = GetBattleMoveType(move);
 
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
@@ -3177,6 +3196,23 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     // consider our move effect relative to partner state
     switch (effect)
     {
+    case EFFECT_FUSION_COMBO:
+        if (ShouldUseFusionMove(battlerAtk))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+    case EFFECT_ROUND:
+        if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
+    case EFFECT_PLEDGE:
+        if (ShouldUsePledgeMove(battlerAtk, battlerDef, move))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
     case EFFECT_HELPING_HAND:
         if (!hasPartner
          || !HasDamagingMove(battlerAtkPartner)
@@ -6209,7 +6245,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     enum BattleMoveEffects effect = GetMoveEffect(move);
     enum Type moveType = 0;
 
-    SetTypeBeforeUsingMove(move, battlerAtk);
+    SetTypeBeforeUsingMove(move, battlerAtk, gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerAtk]);
     moveType = GetBattleMoveType(move);
 
     if (IsTargetingPartner(battlerAtk, battlerDef))
@@ -6491,7 +6527,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
             ADJUST_SCORE(GOOD_EFFECT);
         else if (hitsToKO == 1)
             ADJUST_SCORE(BEST_EFFECT);
-        else if (IsSwitchOutEffect(GetMoveEffect(incomingMove)) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER) // Pursuit against fast U-Turn
+        else if (IsSwitchOutEffect(GetMoveEffect(incomingMove)) && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Pursuit against fast U-Turn
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     }
