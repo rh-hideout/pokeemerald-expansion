@@ -6,13 +6,14 @@ WILD_BATTLE_TEST("Habitat: every throw ball is rejected at the battle-item bound
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CATERPIE);
-        GIVE_PLAYER_ITEM(ITEM_POKE_BALL, 2);
+        GIVE_PLAYER_ITEM(ITEM_POKE_BALL, 3);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_POKE_BALL); }
     } SCENE {
+        MESSAGE("Items can't be used now.{PAUSE 64}");
         NOT ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW);
     } THEN {
-        EXPECT(CheckBagHasItem(ITEM_POKE_BALL, 1));
+        EXPECT(CheckBagHasItem(ITEM_POKE_BALL, 2));
     }
 }
 

@@ -531,7 +531,8 @@ void HandleAction_UseItem(void)
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_THROW_BALL && !CanThrowBall())
     {
-        gCurrentActionFuncId = B_ACTION_FINISHED;
+        gBattlescriptCurrInstr = BattleScript_BallThrowUnavailable;
+        gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
         return;
     }
 

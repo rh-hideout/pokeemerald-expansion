@@ -211,6 +211,7 @@ extern const u8 BattleScript_ConsumableBerryStatRaise[];
 extern const u8 BattleScript_ConsumableBerryStatRaiseRipen[];
 extern const u8 BattleScript_BerryFocusEnergy[];
 extern const u8 BattleScript_ActionSelectionItemsCantBeUsed[];
+extern const u8 BattleScript_BallThrowUnavailable[];
 extern const u8 BattleScript_AbilityShieldProtects[];
 extern const u8 BattleScript_ArenaTurnBeginning[];
 extern const u8 BattleScript_ArenaTurnBeginningRet[];
