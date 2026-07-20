@@ -225,7 +225,7 @@ u8 RandomWeightedIndex(u8 *weights, u8 length)
     for (i = 0; i < length; i++)
     {
         weightSum += weights[i];
-        if (randomValue <= weightSum)
+        if (randomValue < weightSum)
             return i;
     }
     return 0;

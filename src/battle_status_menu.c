@@ -2466,31 +2466,56 @@ static void DetailBuildActiveEffectsForBattler(void)
 
     struct BattleStatusEntry *entries = sData->menu.activeEffects;
 
-    if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EXTREMELY_HARSH_SUNLIGHT, entries);
-    else if (gBattleWeather & B_WEATHER_SUN)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HARSH_SUNLIGHT, entries);
-    else if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEAVY_RAIN, entries);
-    else if (gBattleWeather & B_WEATHER_RAIN)
+    switch (GetCurrentBattleWeather(gBattleWeather))
+    {
+    case BATTLE_WEATHER_RAIN:
+    case BATTLE_WEATHER_RAIN_DOWNPOUR:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_RAIN, entries);
-    else if (gBattleWeather & B_WEATHER_SANDSTORM)
+        break;
+    case BATTLE_WEATHER_RAIN_PRIMAL:
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HEAVY_RAIN, entries);
+        break;
+    case BATTLE_WEATHER_SUN:
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_HARSH_SUNLIGHT, entries);
+        break;
+    case BATTLE_WEATHER_SUN_PRIMAL:
+       DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_EXTREMELY_HARSH_SUNLIGHT, entries);
+        break;
+    case BATTLE_WEATHER_SANDSTORM:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SANDSTORM, entries);
-    else if (gBattleWeather & B_WEATHER_SNOW)
+        break;
+    case BATTLE_WEATHER_HAIL:
+    case BATTLE_WEATHER_SNOW:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_SNOW, entries);
-    else if (gBattleWeather & B_WEATHER_STRONG_WINDS)
-        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STRONG_WINDS, entries);
-    else if (gBattleWeather & B_WEATHER_FOG)
+        break;
+    case BATTLE_WEATHER_FOG:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FOG, entries);
+        break;
+    case BATTLE_WEATHER_STRONG_WINDS:
+        DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STRONG_WINDS, entries);
+        break;
+    case BATTLE_WEATHER_COUNT:
+        break;
+    }
 
-    if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+    switch (gFieldTimers.terrain)
+    {
+    case B_TERRAIN_ELECTRIC:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_ELECTRIC_TERRAIN, entries);
-    else if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+        break;
+    case B_TERRAIN_GRASSY:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_GRASSY_TERRAIN, entries);
-    else if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+        break;
+    case B_TERRAIN_MISTY:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_MISTY_TERRAIN, entries);
-    else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+        break;
+    case B_TERRAIN_PSYCHIC:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PSYCHIC_TERRAIN, entries);
+        break;
+    case B_TERRAIN_NONE:
+    case B_TERRAIN_COUNT:
+        break;
+    }
 
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_TRICK_ROOM, entries);
@@ -2557,17 +2582,24 @@ static void DetailBuildActiveEffectsForBattler(void)
     if (IsHazardOnSide(side, HAZARDS_STICKY_WEB))
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_STICKY_WEB, entries);
 
-    if (nonVolatile & STATUS1_TOXIC_POISON)
+    switch (nonVolatile)
+    {
+    case STATUS1_TOXIC_POISON:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BADLY_POISONED, entries);
-    else if (nonVolatile & STATUS1_POISON)
+        break;
+    case STATUS1_POISON:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_POISONED, entries);
-
-    if (nonVolatile & STATUS1_PARALYSIS)
+        break;
+    case STATUS1_PARALYSIS:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_PARALYZED, entries);
-    if (nonVolatile & STATUS1_BURN)
+        break;
+    case STATUS1_BURN:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_BURNED, entries);
-    if (nonVolatile & STATUS1_FROSTBITE)
+        break;
+    case STATUS1_FROSTBITE:
         DetailTryAddActiveEffect(battler, side, B_STATUS_EFFECT_FROSTBITE, entries);
+        break;
+    }
 
     if (gBattleMons[battler].volatiles.focusEnergy
      || gBattleMons[battler].volatiles.dragonCheer

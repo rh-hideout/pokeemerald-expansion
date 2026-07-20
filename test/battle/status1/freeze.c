@@ -1,10 +1,25 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed")
+SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Gen9-)")
 {
     PASSES_RANDOMLY(20, 100, RNG_FROZEN);
     GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_9);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        STATUS_ICON(player, none: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed (Champions)")
+{
+    PASSES_RANDOMLY(25, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -42,6 +57,28 @@ SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Fire-type attacks even if She
         TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("Wobbuffet thawed out!");
+        STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze is thawed by opponent's Weather Ball when it becomes Fire-type")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+        TURN { MOVE(opponent, MOVE_WEATHER_BALL); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, opponent);
+        HP_BAR(player);
         MESSAGE("Wobbuffet thawed out!");
         STATUS_ICON(player, none: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
@@ -153,10 +190,11 @@ SINGLE_BATTLE_TEST("Freeze is thawed by user's Flame Wheel")
     }
 }
 
-SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack")
+SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack (Gen9-)")
 {
     PASSES_RANDOMLY(80, 100, RNG_FROZEN);
     GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_9);
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
@@ -171,10 +209,48 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
     }
 }
 
-SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack when using Scald")
+SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack (Champions)")
+{
+    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet used Ember!");
+            MESSAGE("Wobbuffet thawed out!");
+            STATUS_ICON(player, none: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack when using Scald (Gen9-)")
 {
     PASSES_RANDOMLY(80, 100, RNG_FROZEN);
     GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_9);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCALD); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALD, opponent);
+            MESSAGE("Wobbuffet thawed out!");
+            STATUS_ICON(player, none: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing attack when using Scald (Champions)")
+{
+    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {

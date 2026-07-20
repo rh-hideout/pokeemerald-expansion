@@ -9,7 +9,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_SKY_ATTACK) == EFFECT_TWO_TURNS_ATTACK);
 
     // Electro shot - check for rain
-    ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == B_WEATHER_RAIN);
+    ASSUME(GetTwoTurnMoveWeather(MOVE_ELECTRO_SHOT) == BATTLE_WEATHER_RAIN);
     ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
     ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_ELECTRO_SHOT, self: TRUE, spAtk: 1);
 }
@@ -437,6 +437,19 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
         NONE_OF {
             MESSAGE("Wobbuffet used Electro Shot!");
         }
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Electro Shot does not need a charging turn in Primal Rain")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
         HP_BAR(opponent);
     }
 }

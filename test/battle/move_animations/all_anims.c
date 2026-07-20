@@ -7,7 +7,6 @@
 #define ANIM_TEST_START_MOVE 1              //  First move to test
 #define ANIM_TEST_END_MOVE   MOVES_COUNT-1  //  Last move to test
 
-
 static void ParametrizeMovesAndSpecies(u32 j, enum Move *pMove, enum Species *pSpecies, u32 variation)
 {
     enum BattleMoveEffects effect = GetMoveEffect(j);
@@ -407,6 +406,10 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         TURN { MOVE(attacker, move, target: target); }
         TURN { MOVE(attacker, move, target: target); }
         TURN { MOVE(attacker, MOVE_LAST_RESORT, target: attacker); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_REFRESH || gMovesInfo[move].effect == EFFECT_PSYCHO_SHIFT)
+    {
+        TURN { MOVE(attacker, move, target: target, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     }
 }
 
@@ -2339,6 +2342,12 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
 
 #else // T_SHOULD_RUN_MOVE_ANIM
 
+#define DISABLE_SELECTABLE_PARAMETERS \
+    WITH_CONFIG(B_BELCH_SELECTABLE, GEN_9); \
+    WITH_CONFIG(B_STUFF_CHEEKS_SELECTABLE, GEN_9); \
+    WITH_CONFIG(B_SPIT_UP_SELECTABLE, GEN_9); \
+    WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9); \
+
 DOUBLE_BATTLE_TEST("Move Animations work 1")
 {
     u32 j = ANIM_TEST_START_MOVE;
@@ -2362,6 +2371,7 @@ DOUBLE_BATTLE_TEST("Move Animations work 1")
         }
     }
     GIVEN {
+        DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) {
             Level(GetParametrizedLevel(move, variation));
             HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
@@ -2436,6 +2446,7 @@ DOUBLE_BATTLE_TEST("Move Animations work 2")
         }
     }
     GIVEN {
+        DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) {
             Level(GetParametrizedLevel(move, variation));
             HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
@@ -2510,6 +2521,7 @@ DOUBLE_BATTLE_TEST("Move Animations work 3")
         }
     }
     GIVEN {
+        DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) {
             Level(GetParametrizedLevel(move, variation));
             HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
@@ -2584,6 +2596,7 @@ DOUBLE_BATTLE_TEST("Move Animations work 4")
         }
     }
     GIVEN {
+        DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) {
             Level(GetParametrizedLevel(move, variation));
             HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
@@ -2643,6 +2656,7 @@ SINGLE_BATTLE_TEST("Z-Moves animations work")
     enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
+        DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
     } WHEN {
@@ -2687,6 +2701,31 @@ SINGLE_BATTLE_TEST("Tera Blast animations work")
         FORCE_MOVE_ANIM(FALSE);
         if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Gimmick Form Change animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); Speed(2); }
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(4); }
+        OPPONENT(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(1); };
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(3); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ULTRA_BURST, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
         EXPECT_EQ(gLoadFail, FALSE);
         EXPECT_EQ(gSpriteAllocs, 0);
     }

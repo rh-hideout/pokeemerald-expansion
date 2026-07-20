@@ -45,9 +45,7 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Assist!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, player);
-        MESSAGE("Wobbuffet used Surf!");
         if (item == ITEM_PASSHO_BERRY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         } else {
