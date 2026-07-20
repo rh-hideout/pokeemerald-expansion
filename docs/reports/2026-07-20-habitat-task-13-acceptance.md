@@ -25,6 +25,9 @@ able to run to completion.
 | `python3 tools/habitat/test_check_memory.py` | focused-tested | exit 0: 3 checks passed |
 | focused ARM compile of the probe plus `src/battle_main.c` and `src/battle_setup.c` | focused-tested | exit 0 with `TESTING=1` / `HABITAT_TEST_PROBE=1`; includes the guarded battle terminal seam and callback assertion |
 | `make check TESTS='Habitat verification probe'` | focused-tested | exit 0 on 2026-07-20; seven tests include a real `Habitat_BoutBegin` fixture that drives the production end-turn handler and `BattleMainCB1` through teardown before dispatching the saved habitat callback |
+| `make -j4 check TESTS='Habitat'` | focused-tested | exit 0 on 2026-07-20; 105/105 Habitat tests passed |
+| `make check` | attempted, not green | exit 2 on 2026-07-20: 4,941 passed, 18 unrelated battle/capture failures, 12 known-failing, 593 TODO, and 7 expected-failing tests |
+| `make -j4` | built | exit 0 on 2026-07-20; EWRAM 227,880 B (86.93%), IWRAM 28,464 B (86.87%), ROM 26,483,532 B (78.93%) |
 | `tools/habitat/verify.sh --no-interact` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-campfire` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-plant` | pending headless verification | output directory |
@@ -42,8 +45,8 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
 | future item-chooser checkpoint (disabled) | pending native UI implementation | the Route 103 interaction currently shows placeholder dialogue and a yes/no prompt; it does not render an item-chooser view to capture |
 | future approved-icons checkpoint (disabled) | pending native icon UI / release hold | the interaction does not render furnishing icons; the manifest also records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art, provenance, and an icon-bearing surface |
-| `python3 tools/habitat/check_memory.py --map pokeemerald.map` | pending fresh measurement | JSON/log |
-| `tools/habitat/save_sizes.sh` | pending fresh measurement | terminal log |
+| `python3 tools/habitat/check_memory.py --map pokeemerald.map` | focused-tested | exit 0 on 2026-07-20: EWRAM 227,880, IWRAM 28,460, ROM 26,483,532, SaveBlock3 1,308 bytes; all budgets pass |
+| `tools/habitat/save_sizes.sh` | focused-tested | exit 0 on 2026-07-20: `SaveBlock3_total` 1,308 of 1,624 bytes |
 
 ## Intentional limits
 
@@ -101,3 +104,10 @@ pending.
 `validate_provenance.py --release` is expected to fail while Task 12 has
 unapproved release provenance. Record that exit status as an intentional
 release hold, never as a green acceptance result.
+
+## Fresh terminal provenance
+
+The fresh production-build and memory evidence above came from commit
+`62c6fa1eea1a6499c6e62203814c037ab41900d9`, using Arm GNU Toolchain
+14.2.Rel1 (GCC 14.2.1, 20241119) and mGBA 0.10.5
+(`26b7884bc25a5933960f3cdcd98bac1ae14d42e2`).
