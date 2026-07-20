@@ -397,23 +397,13 @@ TEST("Habitat conditions: SPOT_STATE reads another spot's saved state")
     EXPECT(r.allMet);
 }
 
-TEST("Habitat conditions: BATTLE_WIN and ITEM_PLACED read the evaluated spot")
+TEST("Habitat conditions: ITEM_PLACED reads the evaluated spot")
 {
-    static const struct HabitatCondition sWin[] = {
-        HABITAT_COND(COND_BATTLE_WIN, 0, 0, 0, 0),
-        HABITAT_CONDITIONS_END,
-    };
     static const struct HabitatCondition sDoll[] = {
         HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 0, 0),
         HABITAT_CONDITIONS_END,
     };
     struct HabitatConditionResult r;
-
-    Habitat_EvaluateConditions(sWin, 3, NULL, &r);
-    EXPECT(!r.allMet);
-    Habitat_AddSpotLocalFlags(3, HABITAT_SPOT_LOCAL_BATTLE_WON);
-    Habitat_EvaluateConditions(sWin, 3, NULL, &r);
-    EXPECT(r.allMet);
 
     Habitat_EvaluateConditions(sDoll, 1, NULL, &r);   // spot 1 = Skitty, has a slot
     EXPECT(!r.allMet);

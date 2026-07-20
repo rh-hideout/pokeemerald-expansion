@@ -1,5 +1,4 @@
 #include "global.h"
-#include "battle.h"
 #include "event_data.h"
 #include "field_weather.h"
 #include "habitat/save.h"
@@ -8,7 +7,6 @@
 #include "item_menu.h"
 #include "pokedex.h"
 #include "string_util.h"
-#include "constants/battle.h"
 #include "constants/berry.h"
 #include "constants/weather.h"
 #include "test/overworld_script.h"
@@ -29,7 +27,7 @@ TEST("Habitat manager: empty appear list goes straight to ACTIVE and shows the s
     EXPECT(!FlagGet(machop->hideFlag));  // visible
 }
 
-TEST("Habitat manager: offer-less befriend completes on recompute after battle win")
+TEST("Habitat manager: Machop requires its Cheri offer")
 {
     const struct HabitatSpot *machop = Habitat_GetSpot(SPOT_MACHOP);
     ASSUME(machop != NULL);
@@ -38,10 +36,9 @@ TEST("Habitat manager: offer-less befriend completes on recompute after battle w
     ASSUME(Habitat_GetSpotState(SPOT_MACHOP) == HABITAT_STATE_ACTIVE);
     EXPECT(!GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MACHOP), FLAG_GET_CAUGHT));
 
-    Habitat_AddSpotLocalFlags(SPOT_MACHOP, HABITAT_SPOT_LOCAL_BATTLE_WON);
     Habitat_RecomputeSpot(machop);
-    EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_BEFRIENDED);
-    EXPECT(GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MACHOP), FLAG_GET_CAUGHT));
+    EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_ACTIVE);
+    EXPECT(!GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MACHOP), FLAG_GET_CAUGHT));
     EXPECT(!FlagGet(machop->hideFlag));  // home-by-default: it stays (§3)
 }
 
@@ -191,27 +188,4 @@ TEST("Habitat verbs: OFFER consumes the right item and befriends; wrong item is 
 
     gSpecialVar_ItemId = ITEM_ORAN_BERRY;              // already befriended
     EXPECT(Habitat_TryOffer() == FALSE);
-}
-
-TEST("Habitat bout: borrow-a-resident staging and victory resolution")
-{
-    const struct HabitatSpot *machop = Habitat_GetSpot(SPOT_MACHOP);
-    ASSUME(machop != NULL);
-    gSaveBlock1Ptr->location.mapGroup = machop->mapGroup;
-    gSaveBlock1Ptr->location.mapNum = machop->mapNum;
-    gSpecialVar_LastTalked = machop->localId;
-
-    Habitat_RecomputeSpot(machop);
-    Habitat_OnInspectSpot();
-    EXPECT(Habitat_SpotWantsBout() == TRUE);
-    EXPECT(Habitat_PrepareBout() == FALSE);   // no residents yet
-
-    ASSUME(Habitat_TryAddResident(SPECIES_TORCHIC) == 0);
-    EXPECT(Habitat_PrepareBout() == TRUE);
-    EXPECT_EQ(gPlayerPartyCount, 1);          // the borrowed battler
-
-    gBattleOutcome = B_OUTCOME_WON;
-    EXPECT(Habitat_ResolveBout() == TRUE);
-    EXPECT_EQ(gPlayerPartyCount, 0);          // party restored to empty
-    EXPECT_EQ(Habitat_GetSpotState(SPOT_MACHOP), HABITAT_STATE_BEFRIENDED);
 }

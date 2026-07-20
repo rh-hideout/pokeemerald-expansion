@@ -11,10 +11,6 @@
 // them; they are the 2-bit encoding stored in HabitatSave.spotStates.
 #include "constants/habitat.h"
 
-// Spot-local flag bits (the 4-bit field in spotStates).
-#define HABITAT_SPOT_LOCAL_BATTLE_WON (1 << 0)
-// bits 1–3 reserved
-
 // Engine flags on the spot definition (not designer-authored semantics).
 // (bit 0 was STAY_AMBIENT; dissolved by §3 home-by-default, 2026-07-19 —
 // befriended residents render at their spot unless out at the Grove.)
@@ -72,8 +68,4 @@ u16 Habitat_OnInspectPlot(void);
 u16 Habitat_TryHarvestPlot(void);
 u16 Habitat_CanRecruitToGrove(void);
 void Habitat_TryRecruitToGrove(void);
-u16 Habitat_SpotWantsBout(void);
-u16 Habitat_PrepareBout(void);
-u16 Habitat_ResolveBout(void);
-
 #endif // GUARD_HABITAT_SPOTS_H

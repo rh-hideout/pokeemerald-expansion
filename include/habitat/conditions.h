@@ -4,7 +4,7 @@
 #include "global.h"
 
 // Condition vocabulary — spec §2 table, numbering preserved exactly.
-// Types marked [phase N] return FALSE until that phase lands their state.
+// Enum presence does not grant authoring support; authoring.h is the contract.
 enum HabitatConditionType
 {
     COND_NONE = 0,            // list terminator
@@ -24,10 +24,10 @@ enum HabitatConditionType
     COND_LIFETIME_STAT,       // 14 statId, comparator, value (gGameStats)
     COND_SPOT_STATE,          // 15 spotId, state           [phase 2]
     COND_ZONE_COMPLETE,       // 16 zoneId                  [phase 2]
-    COND_BATTLE_WIN,          // 17 (spot-local won flag)   [phase 2]
-    COND_ILLUSION,            // 18 species                 [phase 4+]
+    COND_BATTLE_WIN,          // 17 Deoxys finale only (never a spot condition)
+    COND_ILLUSION,            // 18 species                 UNSUPPORTED
     COND_TALK_COUNT,          // 19 count                   [phase 2]
-    COND_GROVE_RECIPE_DONE,   // 20 recipeId                [phase 4]
+    COND_GROVE_RECIPE_DONE,   // 20 recipeId                UNSUPPORTED
     HABITAT_COND_TYPES_COUNT,
 };
 
@@ -44,9 +44,9 @@ enum HabitatComparator
 // flags: bit 0 = NEGATE (spite mechanics — inverts the whole condition);
 // bits 4–7 = OR-group id (0 = standalone/ANDed; same nonzero id = any-of group).
 #define HABITAT_COND_NEGATE       (1 << 0)
-#define HABITAT_COND_EXACT_STAGE  (1 << 1)  // §9 anti-regret: reserved; species
-                                            // conds match line-at-stage-or-above
-                                            // by default once rituals land
+#define HABITAT_COND_EXACT_STAGE  (1 << 1)  // reserved; exact-stage resident
+                                            // matching is unsupported until
+                                            // persisted evolution state exists
 #define HABITAT_COND_OR_GROUP(n)  ((n) << 4)
 #define HABITAT_COND_GROUP_OF(c)  (((c)->flags >> 4) & 0xF)
 

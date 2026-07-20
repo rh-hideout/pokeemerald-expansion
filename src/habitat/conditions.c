@@ -168,9 +168,6 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
     }
     case COND_SPOT_STATE:
         return Habitat_GetSpotState(c->paramA) == c->paramB;
-    case COND_BATTLE_WIN:
-        return spotId != HABITAT_SPOT_NONE
-            && (Habitat_GetSpotLocalFlags(spotId) & HABITAT_SPOT_LOCAL_BATTLE_WON) != 0;
     case COND_ITEM_PLACED:
         // paramA (itemId) is enforced by the PLACE verb; each ITEM_PLACED
         // condition tracks its own counter (multi-furnishing frames, §10).

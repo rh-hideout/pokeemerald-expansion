@@ -24,12 +24,12 @@ TEST("Habitat spot state: transitions ratchet forward only")
 TEST("Habitat spot state: local flags are independent of state bits")
 {
     Habitat_SetSpotState(2, HABITAT_STATE_ACTIVE);
-    Habitat_AddSpotLocalFlags(2, HABITAT_SPOT_LOCAL_BATTLE_WON);
-    EXPECT_EQ(Habitat_GetSpotLocalFlags(2), HABITAT_SPOT_LOCAL_BATTLE_WON);
+    Habitat_AddSpotLocalFlags(2, 1);
+    EXPECT_EQ(Habitat_GetSpotLocalFlags(2), 1);
     EXPECT_EQ(Habitat_GetSpotState(2), HABITAT_STATE_ACTIVE);
 
     Habitat_SetSpotState(2, HABITAT_STATE_BEFRIENDED);
-    EXPECT_EQ(Habitat_GetSpotLocalFlags(2), HABITAT_SPOT_LOCAL_BATTLE_WON);
+    EXPECT_EQ(Habitat_GetSpotLocalFlags(2), 1);
 }
 
 TEST("Habitat spot state: counters exist only for mapped spots")

@@ -70,12 +70,13 @@ static const struct HabitatCondition sLotadBefriend[] = {  // Water type-want de
     HABITAT_CONDITIONS_END,
 };
 
-// --- Machop: Tier 2, battle-as-condition (bout trigger lands phase 5) -----
+// --- Machop: Tier 2 ---------------------------------------------------------
 static const struct HabitatCondition sMachopAppear[] = {
     HABITAT_CONDITIONS_END,  // empty = always eligible; Machop is just there
 };
 static const struct HabitatCondition sMachopBefriend[] = {
-    HABITAT_COND(COND_BATTLE_WIN, 0, 0, 0, 0),
+    // Narrative approval: willingness is the want; no bout attaches here.
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_CHERI_BERRY, 1, 0, 0),
     HABITAT_CONDITIONS_END,
 };
 

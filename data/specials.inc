@@ -649,7 +649,4 @@ gSpecials::
 	def_special Habitat_OnInspectPlot
 	def_special Habitat_TryHarvestPlot
 	def_special Habitat_TryRecruitToGrove
-	def_special Habitat_SpotWantsBout
-	def_special Habitat_PrepareBout
-	def_special Habitat_ResolveBout
 	def_special Habitat_CanRecruitToGrove

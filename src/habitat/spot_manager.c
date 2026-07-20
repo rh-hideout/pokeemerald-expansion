@@ -50,8 +50,8 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot)
 
     if (state == HABITAT_STATE_ACTIVE)
     {
-        // Offer-less befriending (e.g. Machop's battle win): a befriend list
-        // that passes with no offer in progress completes on recompute.
+        // Offer-less befriending: a befriend list that passes with no offer
+        // in progress completes on recompute.
         // Lists containing COND_ITEM_OFFERED can never pass here (offer==NULL),
         // so offer-driven spots still resolve only through the offer verb.
         Habitat_EvaluateConditions(spot->befriendConditions, spot->spotId, NULL, &r);
