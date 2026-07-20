@@ -122,8 +122,8 @@ static void RunTestResetBout(void)
     // Persist a durable marker before the actual bout begins. The runner then
     // resets mGBA while this battle is live and reboots through the save.
     RunTestMigration();
-    if (TrySavingData(SAVE_NORMAL) == SAVE_STATUS_OK)
-        Habitat_BoutBegin(&sTestProbeBout);
+    RunTestPersistence();
+    RunTestBout(B_OUTCOME_WON);
 }
 
 static void RunTestGroveAssignment(void)
@@ -223,8 +223,17 @@ void Habitat_TestProbeRefresh(void)
 
     if (gHabitatTestCommand != HABITAT_TEST_COMMAND_NONE)
         ApplyTestCommand();
-    spot = Habitat_GetSpot(sTestProbeSpotSelected
-                           ? sTestProbeSpotId : Habitat_GetInteractionSpotId());
+    if (sTestProbeSpotSelected)
+        spot = Habitat_GetSpot(sTestProbeSpotId);
+    else
+    {
+        spot = Habitat_GetSpot(Habitat_GetInteractionSpotId());
+        // A console reset clears the probe's RAM-only selection. Use the
+        // reset fixture's durable resident checkpoint until another command
+        // or in-world interaction selects a spot.
+        if (spot == NULL)
+            spot = Habitat_GetSpot(3);
+    }
     memset(&gHabitatTestProbe, 0, sizeof(gHabitatTestProbe));
     gHabitatTestProbe.version = HABITAT_TEST_PROBE_VERSION;
     gHabitatTestProbe.residentSpotId = HABITAT_SPOT_NONE;

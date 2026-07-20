@@ -110,7 +110,7 @@ case "$SCENARIO" in
         SCRIPT='command:bout-flee;wait:180;shot:approved_bout_flee_live;until-probe:bout_outcome,3;expect-probe:bout_outcome,3;pass:Live non-capture bout flee returned through callback'
         ;;
     bout-reset)
-        SCRIPT='command:bout-reset;wait:180;shot:approved_bout_reset_live;reset;until-probe:resident_spot_id,3;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resident_spot_id,3;pass:Live bout reset recovered durable save'
+        SCRIPT='command:save-migration;command:save-persistence;wait:360;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resident_spot_id,3;command:bout-win;wait:180;shot:approved_bout_reset_live;reset;until-probe:resident_spot_id,3;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resident_spot_id,3;pass:Live bout reset recovered durable save'
         ;;
     save-migration)
         SCRIPT='command:save-migration;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resolved_species,66;expect-probe:resident_spot_id,3;shot:save_migration;pass:Legacy resident migrated to stable origin'

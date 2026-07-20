@@ -284,10 +284,13 @@ int main(int argc, char** argv) {
     mCoreConfigLoadDefaults(&sCore->config, &opts);
     mCoreConfigSetDefaultValue(&sCore->config, "idleOptimization", "detect");
     mCoreLoadConfig(sCore);
+    char savePath[1024];
+    snprintf(savePath, sizeof(savePath), "%s/pokeemerald.sav", sOutDir);
     sCore->reset(sCore);
 
     enum { BOOT, SETTLE, SCRIPT } phase = BOOT;
     unsigned keys = 0, holdUntil = 0, nextAct = 240, settled = 0, opDeadline = 0;
+    int resumeSavedGame = 0, saveAttached = 0;
     int opIndex = 0, opArmed = 0;
     int rc = -1;
 
@@ -298,14 +301,32 @@ int main(int argc, char** argv) {
         sCore->runFrame(sCore);
         if (phase == BOOT) {
             if (probeRead(HABITAT_TEST_PROBE_OFFSET_VERSION, 2) == HABITAT_TEST_PROBE_VERSION) {
+                // The ROM's own startup probe selects mGBA's flash device.
+                // Attach the on-disk backing only after that probe has run;
+                // attaching earlier leaves savedata AUTODETECT and suppresses
+                // the emulated flash chip.
+                if (!saveAttached) {
+                    if (!mCoreLoadSaveFile(sCore, savePath, false)) {
+                        rc = finish("FAIL", "could not attach emulated save", frame);
+                        continue;
+                    }
+                    saveAttached = 1;
+                }
                 phase = SETTLE;
                 settled = 0;
             } else if (frame >= nextAct && !keys) {
-                keys = 1u << KEY_SELECT;
+                // A normal boot has no durable fixture yet, so SELECT uses
+                // the development quickstart. After an OP_RESET, however,
+                // SELECT would start a new game and overwrite the just-loaded
+                // RAM save. A advances title -> main menu -> default Continue,
+                // exercising the game's actual flash-load path instead.
+                keys = 1u << (resumeSavedGame ? KEY_A : KEY_SELECT);
                 holdUntil = frame + 2;
                 nextAct = frame + 20;
-                if (frame > 18000)
+                if (frame > 18000) {
+                    shot("boot_timeout");
                     rc = finish("FAIL", "never reached overworld", frame);
+                }
             }
             continue;
         }
@@ -414,14 +435,16 @@ int main(int argc, char** argv) {
             break;
         }
         case OP_RESET:
-            // mGBA preserves the emulated flash device across a console reset.
-            // The subsequent BOOT phase exercises the game's real save-load
-            // path instead of reusing process RAM.
+        {
+            // A real console reset preserves mGBA's attached flash device.
+            // The following boot must reload the game's save into fresh RAM.
             sCore->reset(sCore);
             keys = 0;
+            resumeSavedGame = 1;
             phase = BOOT;
             done = 1;
             break;
+        }
         case OP_SHOT:
             shot(op->text);
             done = 1;

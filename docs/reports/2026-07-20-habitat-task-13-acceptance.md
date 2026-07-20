@@ -36,7 +36,7 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario bout-win` | headless-verified | fresh `-B` run on 2026-07-20 exited 0; `/private/tmp/hh-bout-verify-final/result.txt` records outcome 1 at frame 1402, with `approved_bout_win_live.png`, `runner.log`, and `build.log` beside it |
 | `tools/habitat/verify.sh --scenario bout-loss` | pending headless verification | live non-capture battle screenshot, real callback outcome 2 |
 | `tools/habitat/verify.sh --scenario bout-flee` | pending headless verification | live non-capture battle screenshot, real callback outcome 3 |
-| `tools/habitat/verify.sh --scenario bout-reset` | pending headless verification | save to flash before live bout, emulated-console reset, durable resident reload |
+| `tools/habitat/verify.sh --scenario bout-reset` | headless verified: `PASS Live bout reset recovered durable save (frame 2441, pos 6,10)` | save to flash before live bout, emulated-console reset, durable resident reload; `/private/tmp/hh-bout-reset-verify-clean/` |
 | `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
 | `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
