@@ -40,8 +40,8 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
 | `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
-| `tools/habitat/verify.sh --scenario item-chooser` | pending visual review | Route 103 Skitty item chooser screenshot |
-| `tools/habitat/verify.sh --scenario approved-icons` | pending visual review / release hold | furnishing-icon screenshot; manifest currently records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art and provenance |
+| `tools/habitat/verify.sh --scenario item-chooser` | pending native UI implementation | the Route 103 interaction currently shows placeholder dialogue and a yes/no prompt; it does not render an item-chooser view to capture |
+| `tools/habitat/verify.sh --scenario approved-icons` | pending native icon UI / release hold | the interaction does not render furnishing icons; the manifest also records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art, provenance, and an icon-bearing surface |
 | `python3 tools/habitat/check_memory.py --map pokeemerald.map` | pending fresh measurement | JSON/log |
 | `tools/habitat/save_sizes.sh` | pending fresh measurement | terminal log |
 
