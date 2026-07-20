@@ -96,6 +96,7 @@ u16 Habitat_TryPlaceItem(void);
 u16 Habitat_PreviewOfferItem(void);
 u16 Habitat_PreviewPlaceItem(void);
 u16 Habitat_SelectOfferItem(void);
+u16 Habitat_SelectPlaceItem(void);
 void Habitat_PrepareGroveWorkers(void);
 void Habitat_SyncGroveWorkersLive(void);
 u16 Habitat_OnTalkWorker(void);

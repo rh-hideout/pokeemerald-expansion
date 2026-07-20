@@ -10,6 +10,8 @@
 #define TEST_SPOT_ID 10
 #define TEST_PLACE_COUNTER 20
 #define TEST_SATURATED_COUNTER 21
+#define TEST_SECOND_PLACE_COUNTER 22
+#define TEST_THIRD_PLACE_COUNTER 23
 #define TEST_OFFER_FLAG FLAG_UNUSED_0x022
 
 static const struct HabitatCondition sAppear[] = {
@@ -46,6 +48,14 @@ static const struct HabitatCondition sNoOfferBefriend[] = {
 static const struct HabitatCondition sSameItemBefriend[] = {
     HABITAT_COND(COND_ITEM_OFFERED, ITEM_POKE_DOLL, 1, 0, HABITAT_COND_OR_GROUP(1)),
     HABITAT_COND(COND_ITEM_OFFERED, ITEM_POKE_DOLL, 3, 0, HABITAT_COND_OR_GROUP(1)),
+    HABITAT_CONDITIONS_END,
+};
+
+static const struct HabitatCondition sPlaceChoiceAppear[] = {
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, TEST_SECOND_PLACE_COUNTER,
+                 HABITAT_COND_OR_GROUP(1)),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 3, TEST_THIRD_PLACE_COUNTER,
+                 HABITAT_COND_OR_GROUP(1)),
     HABITAT_CONDITIONS_END,
 };
 
@@ -93,6 +103,16 @@ static const struct HabitatSpot sSameItemSpots[] = {
         .species = SPECIES_SKITTY,
         .appearConditions = sEmptyAppear,
         .befriendConditions = sSameItemBefriend,
+    },
+    { .spotId = 0xFFFF },
+};
+
+static const struct HabitatSpot sPlaceChoiceSpots[] = {
+    {
+        .spotId = TEST_SPOT_ID,
+        .species = SPECIES_SKITTY,
+        .appearConditions = sPlaceChoiceAppear,
+        .befriendConditions = sNoOfferBefriend,
     },
     { .spotId = 0xFFFF },
 };
@@ -206,6 +226,24 @@ TEST("Habitat interaction: selector keeps same-item OR offers distinct by author
     EXPECT(Habitat_TryOffer());
     EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));
     EXPECT_EQ(Habitat_GetSpotState(TEST_SPOT_ID), HABITAT_STATE_BEFRIENDED);
+    Habitat_SetSpotTableForTest(NULL);
+}
+
+TEST("Habitat interaction: selector keeps same-item OR placements distinct by authored count")
+{
+    Habitat_SetSpotTableForTest(sPlaceChoiceSpots);
+    Habitat_SetInteractionSpotForTest(TEST_SPOT_ID);
+    AddBagItem(ITEM_POKE_DOLL, 3);
+
+    EXPECT(Habitat_PreviewPlaceItem());
+    EXPECT_EQ(gSpecialVar_ItemId, ITEM_POKE_DOLL);
+    EXPECT(Habitat_SelectPlaceItem());
+    EXPECT_EQ(gSpecialVar_ItemId, ITEM_POKE_DOLL);
+    EXPECT(CheckBagHasItem(ITEM_POKE_DOLL, 3));
+    EXPECT(Habitat_TryPlaceItem());
+    EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));
+    EXPECT_EQ(Habitat_GetPlacedCount(TEST_THIRD_PLACE_COUNTER), 3);
+    EXPECT_EQ(Habitat_GetSpotState(TEST_SPOT_ID), HABITAT_STATE_ACTIVE);
     Habitat_SetSpotTableForTest(NULL);
 }
 

@@ -31,6 +31,8 @@ HabitatSpot_EventScript_Dispatch::
 HabitatSpot_EventScript_PlacePrompt::
 	msgbox HabitatSpot_Text_PlacePrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Place
+	specialvar VAR_RESULT, Habitat_SelectPlaceItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_PlacePrompt
 	release
 	end
 

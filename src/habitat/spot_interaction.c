@@ -21,6 +21,8 @@ static const u8 sText_NotASpot[] = _("PLACEHOLDER: nothing here.$");
 static u16 sInteractionSpotId;
 static u8 sSelectedOfferCondition;
 static bool8 sHasSelectedOffer;
+static u8 sSelectedPlaceCondition;
+static bool8 sHasSelectedPlace;
 
 u16 Habitat_GetInteractionSpotId(void)
 {
@@ -32,6 +34,7 @@ void Habitat_SetInteractionSpotForTest(u16 spotId)
 {
     sInteractionSpotId = spotId;
     sHasSelectedOffer = FALSE;
+    sHasSelectedPlace = FALSE;
 }
 #endif
 
@@ -65,12 +68,14 @@ static void InspectSpot(const struct HabitatSpot *spot)
     {
         sInteractionSpotId = HABITAT_SPOT_NONE;
         sHasSelectedOffer = FALSE;
+        sHasSelectedPlace = FALSE;
         StringCopy(gStringVar4, sText_NotASpot);
         gSpecialVar_Result = HABITAT_INSPECT_NOT_A_SPOT;
         return;
     }
     sInteractionSpotId = spot->spotId;
     sHasSelectedOffer = FALSE;
+    sHasSelectedPlace = FALSE;
 
     Habitat_IncrementTalkCount(spot->spotId);
     state = Habitat_GetSpotState(spot->spotId);
@@ -122,8 +127,16 @@ u16 Habitat_TryPlaceItem(void)
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
     struct HabitatItemChoice choice;
 
-    if (!Habitat_FindConditionItem(spot, HABITAT_ITEM_ACTION_PLACE, &choice))
+    if (sHasSelectedPlace)
+    {
+        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_PLACE,
+                                                sSelectedPlaceCondition, &choice))
+            return FALSE;
+    }
+    else if (!Habitat_FindConditionItem(spot, HABITAT_ITEM_ACTION_PLACE, &choice))
+    {
         return FALSE;
+    }
     return Habitat_SubmitItem(spot, HABITAT_ITEM_ACTION_PLACE, choice.itemId, choice.count);
 }
 
@@ -162,33 +175,58 @@ u16 Habitat_PreviewOfferItem(void)
 
 u16 Habitat_PreviewPlaceItem(void)
 {
-    return PreviewItemAction(HABITAT_ITEM_ACTION_PLACE, HABITAT_MAX_CONDITIONS, NULL);
+    struct HabitatItemChoice choice;
+
+    sHasSelectedPlace = FALSE;
+    if (!PreviewItemAction(HABITAT_ITEM_ACTION_PLACE, HABITAT_MAX_CONDITIONS, &choice))
+        return FALSE;
+    sSelectedPlaceCondition = choice.conditionIndex;
+    sHasSelectedPlace = TRUE;
+    return TRUE;
 }
 
-// Script-facing offer selector. A declined preview advances to the next
-// viable authored offer; exhausting the choices returns FALSE without moving
-// any inventory, so the script can leave or offer PLACE instead.
-u16 Habitat_SelectOfferItem(void)
+// A declined preview advances to the next viable authored condition. The
+// selected condition index, not the item ID, preserves distinct authored
+// alternatives that happen to name the same item.
+static u16 SelectNextItemAction(enum HabitatItemAction action,
+                                u8 *selectedCondition, bool8 *hasSelected)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    const struct HabitatCondition *conditions;
     struct HabitatItemChoice choice;
     u32 i;
 
     if (spot == NULL)
         return FALSE;
-    for (i = sHasSelectedOffer ? sSelectedOfferCondition + 1 : 0;
-         i < HABITAT_MAX_CONDITIONS && spot->befriendConditions[i].type != COND_NONE;
+    conditions = action == HABITAT_ITEM_ACTION_OFFER
+        ? spot->befriendConditions : spot->appearConditions;
+    for (i = *hasSelected ? *selectedCondition + 1 : 0;
+         i < HABITAT_MAX_CONDITIONS && conditions[i].type != COND_NONE;
          i++)
     {
-        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_OFFER,
-                                                i, &choice))
+        if (!Habitat_SelectConditionItemAtIndex(spot, action, i, &choice))
             continue;
-        sSelectedOfferCondition = choice.conditionIndex;
-        sHasSelectedOffer = TRUE;
-        PreviewItemAction(HABITAT_ITEM_ACTION_OFFER, choice.conditionIndex, NULL);
-        return TRUE;
+        *selectedCondition = choice.conditionIndex;
+        *hasSelected = TRUE;
+        return PreviewItemAction(action, choice.conditionIndex, NULL);
     }
     return FALSE;
+}
+
+// Script-facing offer selector. Exhausting choices leaves the player free to
+// place an item instead without moving inventory.
+u16 Habitat_SelectOfferItem(void)
+{
+    return SelectNextItemAction(HABITAT_ITEM_ACTION_OFFER,
+                                &sSelectedOfferCondition, &sHasSelectedOffer);
+}
+
+// Script-facing placement selector. The script loops its yes/no prompt while
+// viable authored alternatives remain; no item moves until TryPlace confirms.
+u16 Habitat_SelectPlaceItem(void)
+{
+    return SelectNextItemAction(HABITAT_ITEM_ACTION_PLACE,
+                                &sSelectedPlaceCondition, &sHasSelectedPlace);
 }
 
 static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count)
