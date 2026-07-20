@@ -40,8 +40,8 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
 | `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
-| `tools/habitat/verify.sh --scenario item-chooser` | pending visual review | Route 103 Skitty item chooser screenshot |
-| `tools/habitat/verify.sh --scenario approved-icons` | pending visual review / release hold | furnishing-icon screenshot; manifest currently records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art and provenance |
+| `tools/habitat/verify.sh --scenario item-chooser` | headless verified: `PASS Authored item chooser visual checkpoint reached (frame 4896, pos 18,13)` | Route 103 Skitty interaction reached from its walkable west-adjacent tile; `/private/tmp/hh-item-chooser-verify-clean/` |
+| `tools/habitat/verify.sh --scenario approved-icons` | headless checkpoint passed: `PASS Icon provenance checkpoint reached (frame 4896, pos 18,13)`; release hold remains | furnishing-icon screenshot at `/private/tmp/hh-approved-icons-verify-clean/`; manifest still records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art and provenance |
 | `python3 tools/habitat/check_memory.py --map pokeemerald.map` | pending fresh measurement | JSON/log |
 | `tools/habitat/save_sizes.sh` | pending fresh measurement | terminal log |
 
