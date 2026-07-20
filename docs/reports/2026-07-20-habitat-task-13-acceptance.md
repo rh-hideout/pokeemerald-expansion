@@ -33,7 +33,7 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario skitty` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario machop` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario route103` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario bout-win` | pending headless verification | live non-capture battle screenshot, real callback outcome 1 |
+| `tools/habitat/verify.sh --scenario bout-win` | headless-verified | fresh `-B` run on 2026-07-20 exited 0; `/private/tmp/hh-bout-verify-final/result.txt` records outcome 1 at frame 1402, with `approved_bout_win_live.png`, `runner.log`, and `build.log` beside it |
 | `tools/habitat/verify.sh --scenario bout-loss` | pending headless verification | live non-capture battle screenshot, real callback outcome 2 |
 | `tools/habitat/verify.sh --scenario bout-flee` | pending headless verification | live non-capture battle screenshot, real callback outcome 3 |
 | `tools/habitat/verify.sh --scenario bout-reset` | pending headless verification | save to flash before live bout, emulated-console reset, durable resident reload |
@@ -87,6 +87,13 @@ until a fresh invocation of the current build reaches the runner, every
 scenario and visual checkpoint above remains **pending**. The focused evidence
 is intentionally not promoted to headless-verified, visually reviewed,
 full-suite-tested, or audit-accepted.
+
+The fresh current-build `bout-win` invocation completed after that interruption:
+`HH_VERIFY_OUT=/private/tmp/hh-bout-verify-final HH_VERIFY_JOBS=12
+tools/habitat/verify.sh --scenario bout-win` exited 0. Its `result.txt` records
+`PASS Live non-capture bout win returned through call (frame 1402, pos 6,10)`.
+This verifies only the win row above; the remaining scenario matrix is still
+pending.
 
 `validate_provenance.py --release` is expected to fail while Task 12 has
 unapproved release provenance. Record that exit status as an intentional

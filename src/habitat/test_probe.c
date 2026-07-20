@@ -21,6 +21,7 @@ u16 gHabitatTestCommand;
 static u16 sTestProbeSpotId;
 static bool8 sTestProbeSpotSelected;
 static u8 sPendingBattleOutcome;
+static u16 sPendingBattleFrames;
 static bool8 sBattleOutcomePending;
 
 // This is an explicit non-finale fixture. It exercises the production bout
@@ -60,30 +61,22 @@ static void SubmitTestItem(u16 spotId, enum HabitatItemAction action, u16 itemId
     Habitat_SubmitItem(spot, action, itemId, 1);
 }
 
-static void Task_FinishTestBoutFromBattle(u8 taskId)
-{
-    // Let the production end-turn state machine release battle resources and
-    // invoke ReturnFromBattleToOverworld before the saved habitat callback.
-    if (++gTasks[taskId].data[0] >= 360)
-    {
-        if (BattleMain_TestFinishWithOutcome(gTasks[taskId].data[1]))
-            DestroyTask(taskId);
-    }
-}
-
 void Habitat_TestProbeOnBattleMainFrame(void)
 {
-    u8 taskId;
-
     if (!sBattleOutcomePending)
         return;
 
-    taskId = CreateTask(Task_FinishTestBoutFromBattle, 0xFF);
-    if (taskId == TASK_NONE)
+    // Battle initialization can consume every task slot. Drive the probe's
+    // deterministic finish from the real battle main callback instead of
+    // competing with battle UI tasks for one more slot.
+    if (++sPendingBattleFrames < 360)
         return;
 
-    gTasks[taskId].data[1] = sPendingBattleOutcome;
-    sBattleOutcomePending = FALSE;
+    if (BattleMain_TestFinishWithOutcome(sPendingBattleOutcome))
+    {
+        sBattleOutcomePending = FALSE;
+        sPendingBattleFrames = 0;
+    }
 }
 
 static void RunTestBout(u8 battleOutcome)
@@ -92,8 +85,9 @@ static void RunTestBout(u8 battleOutcome)
         return;
 
     // CB2_InitBattle clears all tasks. Retain only the outcome here, then
-    // create the finish task from the first real BattleMainCB2 frame.
+    // complete it from the first real BattleMainCB2 frame.
     sPendingBattleOutcome = battleOutcome;
+    sPendingBattleFrames = 0;
     sBattleOutcomePending = TRUE;
 }
 

@@ -470,6 +470,7 @@ bool32 BattleMain_TestFinishWithOutcome(u8 battleOutcome)
 
     gBattleOutcome = battleOutcome;
     sEndTurnFuncsTable[endTurnFunc]();
+    gCurrentActionFuncId = B_ACTION_FINISHED;
     return TRUE;
 }
 
