@@ -7702,6 +7702,15 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 11, SHADOW_SIZE_L)
         FOOTPRINT(Zarude)
+        OVERWORLD(
+            sPicTable_ZarudeDada,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_ZarudeDada,
+            gShinyOverworldPalette_ZarudeDada
+        )
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

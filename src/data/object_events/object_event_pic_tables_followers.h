@@ -6039,9 +6039,9 @@ static const struct SpriteFrameImage sPicTable_UrshifuRapidStrikeGmax[] = {
 static const struct SpriteFrameImage sPicTable_Zarude[] = {
     overworld_ascending_frames(gObjectEventPic_Zarude, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_ZarudeDada[] = {
+static const struct SpriteFrameImage sPicTable_ZarudeDada[] = {
     overworld_ascending_frames(gObjectEventPic_ZarudeDada, 4, 4),
-};*/
+};
 #endif //P_FAMILY_ZARUDE
 
 #if P_FAMILY_REGIELEKI
