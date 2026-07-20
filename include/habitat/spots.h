@@ -41,6 +41,20 @@ struct HabitatSpot
     u8 engineFlags;                                 // HABITAT_SPOTDEF_*
 };
 
+enum HabitatItemAction
+{
+    HABITAT_ITEM_ACTION_PLACE,
+    HABITAT_ITEM_ACTION_OFFER,
+};
+
+enum HabitatVerb
+{
+    HABITAT_VERB_INSPECT = 1 << 0,
+    HABITAT_VERB_PLACE   = 1 << 1,
+    HABITAT_VERB_OFFER   = 1 << 2,
+    HABITAT_VERB_RECRUIT = 1 << 3,
+};
+
 extern const struct HabitatSpot gHabitatSpots[];
 extern const struct HabitatZone gHabitatZones[];
 
@@ -61,6 +75,13 @@ void Habitat_RecomputeSpot(const struct HabitatSpot *spot);
 void Habitat_RecomputeCurrentMapSpots(void);
 void Habitat_SyncSpotObjectFlag(const struct HabitatSpot *spot);
 void Habitat_CompleteBefriendById(u16 spotId);
+bool32 Habitat_CanSubmitItem(const struct HabitatSpot *spot,
+                             enum HabitatItemAction action,
+                             u16 itemId, u16 count);
+bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
+                          enum HabitatItemAction action,
+                          u16 itemId, u16 count);
+u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot);
 
 // Script specials (data/scripts/habitat_spot.inc, habitat_grove.inc).
 void Habitat_OnInspectSpot(void);
@@ -68,6 +89,8 @@ void Habitat_OnInspectSpotById(void);
 u16 Habitat_GetInteractionSpotId(void);
 u16 Habitat_TryOffer(void);
 u16 Habitat_TryPlaceItem(void);
+u16 Habitat_PreviewOfferItem(void);
+u16 Habitat_PreviewPlaceItem(void);
 void Habitat_PrepareGroveWorkers(void);
 void Habitat_SyncGroveWorkersLive(void);
 u16 Habitat_OnTalkWorker(void);

@@ -642,6 +642,9 @@ gSpecials::
 	def_special Habitat_OnInspectSpot
 	def_special Habitat_TryOffer
 	def_special Habitat_TryPlaceItem
+	def_special Habitat_PreviewOfferItem
+	def_special Habitat_PreviewPlaceItem
+	def_special Habitat_GetAvailableVerbs
 	def_special Habitat_OnInspectSpotById
 	def_special Habitat_PrepareGroveWorkers
 	def_special Habitat_OnTalkWorker

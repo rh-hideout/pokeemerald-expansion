@@ -23,6 +23,12 @@ HabitatSpot_EventScript_Dispatch::
 	case HABITAT_STATE_BEFRIENDED, HabitatSpot_EventScript_Ambient
 	case HABITAT_INSPECT_NOT_A_SPOT, HabitatSpot_EventScript_NotASpot
 	msgbox gStringVar4, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, Habitat_PreviewPlaceItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_PlacePrompt
+	release
+	end
+
+HabitatSpot_EventScript_PlacePrompt::
 	msgbox HabitatSpot_Text_PlacePrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Place
 	release
@@ -30,18 +36,22 @@ HabitatSpot_EventScript_Dispatch::
 
 HabitatSpot_EventScript_Active::
 	msgbox gStringVar4, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, Habitat_PreviewOfferItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_OfferPrompt
+	specialvar VAR_RESULT, Habitat_PreviewPlaceItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_PlacePrompt
+	release
+	end
+
+HabitatSpot_EventScript_OfferPrompt::
 	msgbox HabitatSpot_Text_OfferPrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Offer
-	msgbox HabitatSpot_Text_PlacePrompt, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Place
+	specialvar VAR_RESULT, Habitat_PreviewPlaceItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_PlacePrompt
 	release
 	end
 
 HabitatSpot_EventScript_Offer::
-	fadescreen FADE_TO_BLACK
-	closemessage
-	special Bag_ChooseBerry
-	goto_if_eq VAR_ITEM_ID, 0, HabitatSpot_EventScript_Leave
 	specialvar VAR_RESULT, Habitat_TryOffer
 	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_Befriended
 	msgbox HabitatSpot_Text_OfferRejected, MSGBOX_DEFAULT
@@ -71,6 +81,12 @@ HabitatSpot_EventScript_Leave::
 
 HabitatSpot_EventScript_Ambient::
 	msgbox HabitatSpot_Text_Ambient, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, Habitat_GetAvailableVerbs
+	goto_if_eq VAR_RESULT, 9, HabitatSpot_EventScript_RecruitPrompt
+	release
+	end
+
+HabitatSpot_EventScript_RecruitPrompt::
 	msgbox HabitatSpot_Text_RecruitPrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, HabitatSpot_EventScript_Leave
 	specialvar VAR_RESULT, Habitat_CanRecruitToGrove
@@ -98,12 +114,10 @@ HabitatSpot_EventScript_NotASpot::
 	end
 
 HabitatSpot_Text_OfferPrompt:
-	.string "Offer something from your\n"
-	.string "berries? (PLACEHOLDER)$"
+	.string "Offer {STR_VAR_2} {STR_VAR_1}?$"
 
 HabitatSpot_Text_PlacePrompt:
-	.string "Would you set something down\n"
-	.string "here? (PLACEHOLDER)$"
+	.string "Set down {STR_VAR_2} {STR_VAR_1}?$"
 
 HabitatSpot_Text_OfferRejected:
 	.string "It is not moved. (PLACEHOLDER;\n"

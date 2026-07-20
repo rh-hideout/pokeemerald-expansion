@@ -4,6 +4,7 @@
 #include "global.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
+#include "habitat/item_choice.h"
 #include "event_data.h"
 #include "habitat/conditions.h"
 #include "habitat/events.h"
@@ -25,6 +26,8 @@ u16 Habitat_GetInteractionSpotId(void)
 }
 
 static void InspectSpot(const struct HabitatSpot *spot);
+static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count);
+static bool32 HasActiveOffer(const struct HabitatSpot *spot, u16 itemId, u16 count);
 
 // special Habitat_OnInspectSpot — resolves the talked object to a spot,
 // counts the talk, buffers {STR_VAR_1}=species name and gStringVar4=staged
@@ -81,17 +84,12 @@ static void InspectSpot(const struct HabitatSpot *spot)
 u16 Habitat_TryOffer(void)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
-    struct HabitatOfferContext offer = { .itemId = gSpecialVar_ItemId, .count = 1 };
-    struct HabitatConditionResult r;
+    struct HabitatItemChoice choice;
 
-    if (spot == NULL || Habitat_GetSpotState(spot->spotId) != HABITAT_STATE_ACTIVE)
+    if (!Habitat_FindConditionItem(spot, HABITAT_ITEM_ACTION_OFFER, &choice))
         return FALSE;
-    Habitat_EvaluateConditions(spot->befriendConditions, spot->spotId, &offer, &r);
-    if (!r.allMet)
-        return FALSE;
-    RemoveBagItem(gSpecialVar_ItemId, 1);
-    Habitat_CompleteBefriendById(spot->spotId);
-    return TRUE;
+    return Habitat_SubmitItem(spot, HABITAT_ITEM_ACTION_OFFER,
+                              choice.itemId, choice.count);
 }
 
 // specialvar VAR_RESULT, Habitat_TryPlaceItem — the PLACE verb. The spot's
@@ -101,24 +99,152 @@ u16 Habitat_TryOffer(void)
 u16 Habitat_TryPlaceItem(void)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    struct HabitatItemChoice choice;
+
+    if (!Habitat_FindConditionItem(spot, HABITAT_ITEM_ACTION_PLACE, &choice))
+        return FALSE;
+    return Habitat_SubmitItem(spot, HABITAT_ITEM_ACTION_PLACE, choice.itemId, choice.count);
+}
+
+static u16 PreviewItemAction(enum HabitatItemAction action)
+{
+    const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    struct HabitatItemChoice choice;
+
+    if (!Habitat_FindConditionItem(spot, action, &choice))
+        return FALSE;
+    CopyItemName(choice.itemId, gStringVar1);
+    ConvertIntToDecimalStringN(gStringVar2, choice.count, STR_CONV_MODE_LEFT_ALIGN, 2);
+    return TRUE;
+}
+
+u16 Habitat_PreviewOfferItem(void)
+{
+    return PreviewItemAction(HABITAT_ITEM_ACTION_OFFER);
+}
+
+u16 Habitat_PreviewPlaceItem(void)
+{
+    return PreviewItemAction(HABITAT_ITEM_ACTION_PLACE);
+}
+
+static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count)
+{
     const struct HabitatCondition *c;
     u32 i;
 
     if (spot == NULL)
         return FALSE;
-    for (i = 0; spot->appearConditions[i].type != COND_NONE; i++)
+    for (i = 0; spot->appearConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
     {
         c = &spot->appearConditions[i];
-        if (c->type != COND_ITEM_PLACED)
-            continue;
-        if (Habitat_GetPlacedCount(c->paramC) >= max(1, c->paramB))
-            continue;  // this furnishing is already set down
-        if (!CheckBagHasItem(c->paramA, 1))
-            continue;  // don't have this one; maybe the next
-        RemoveBagItem(c->paramA, 1);
-        Habitat_AddPlacedCount(c->paramC, 1);
-        Habitat_NotifyEvent(HABITAT_EVENT_INVENTORY_CHANGE);
-        return TRUE;
+        if (c->type == COND_ITEM_PLACED
+         && c->paramA == itemId
+         && max(1, c->paramB) == count
+         && Habitat_GetPlacedCount(c->paramC) < count)
+            return TRUE;
     }
     return FALSE;
+}
+
+static bool32 HasActiveOffer(const struct HabitatSpot *spot, u16 itemId, u16 count)
+{
+    struct HabitatOfferContext offer = { .itemId = itemId, .count = count };
+    struct HabitatConditionResult result;
+
+    if (spot == NULL || Habitat_GetSpotState(spot->spotId) != HABITAT_STATE_ACTIVE)
+        return FALSE;
+    Habitat_EvaluateConditions(spot->befriendConditions, spot->spotId, &offer, &result);
+    return result.allMet;
+}
+
+bool32 Habitat_CanSubmitItem(const struct HabitatSpot *spot,
+                             enum HabitatItemAction action,
+                             u16 itemId, u16 count)
+{
+    if (itemId == ITEM_NONE || count == 0)
+        return FALSE;
+    switch (action)
+    {
+    case HABITAT_ITEM_ACTION_PLACE:
+        return HasUnmetPlacement(spot, itemId, count);
+    case HABITAT_ITEM_ACTION_OFFER:
+        return HasActiveOffer(spot, itemId, count);
+    default:
+        return FALSE;
+    }
+}
+
+bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
+                          enum HabitatItemAction action,
+                          u16 itemId, u16 count)
+{
+    u8 placedBefore;
+    const struct HabitatCondition *c;
+    u32 i;
+
+    if (!Habitat_CanSubmitItem(spot, action, itemId, count)
+     || !CheckBagHasItem(itemId, count)
+     || !RemoveBagItem(itemId, count))
+        return FALSE;
+
+    if (action == HABITAT_ITEM_ACTION_OFFER)
+    {
+        Habitat_CompleteBefriendById(spot->spotId);
+        if (Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_BEFRIENDED)
+            return TRUE;
+        AddBagItem(itemId, count);
+        return FALSE;
+    }
+
+    for (i = 0; spot->appearConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+    {
+        c = &spot->appearConditions[i];
+        if (c->type != COND_ITEM_PLACED || c->paramA != itemId || max(1, c->paramB) != count
+         || Habitat_GetPlacedCount(c->paramC) >= count)
+            continue;
+        placedBefore = Habitat_GetPlacedCount(c->paramC);
+        Habitat_AddPlacedCount(c->paramC, count);
+        if (Habitat_GetPlacedCount(c->paramC) >= placedBefore + count)
+        {
+            Habitat_RecomputeSpot(spot);
+            Habitat_NotifyEvent(HABITAT_EVENT_INVENTORY_CHANGE);
+            return TRUE;
+        }
+        AddBagItem(itemId, count);
+        return FALSE;
+    }
+    AddBagItem(itemId, count);
+    return FALSE;
+}
+
+u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot)
+{
+    u8 verbs = 0;
+    u32 i;
+    s32 residentIdx;
+
+    if (spot == NULL)
+        return 0;
+    verbs = HABITAT_VERB_INSPECT;
+    for (i = 0; spot->appearConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+    {
+        const struct HabitatCondition *c = &spot->appearConditions[i];
+        if (c->type == COND_ITEM_PLACED
+         && Habitat_GetPlacedCount(c->paramC) < max(1, c->paramB))
+            verbs |= HABITAT_VERB_PLACE;
+    }
+    if (Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_ACTIVE)
+    {
+        for (i = 0; spot->befriendConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+            if (spot->befriendConditions[i].type == COND_ITEM_OFFERED)
+                verbs |= HABITAT_VERB_OFFER;
+    }
+    if (Habitat_GetSpotState(spot->spotId) == HABITAT_STATE_BEFRIENDED)
+    {
+        residentIdx = Habitat_FindResidentBySpot(spot->spotId);
+        if (residentIdx >= 0 && !Habitat_ResidentIsOut(residentIdx))
+            verbs |= HABITAT_VERB_RECRUIT;
+    }
+    return verbs;
 }
