@@ -34,6 +34,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
+#include "config/habitat.h"
 #include "pokeblock.h"
 #include "pokemon.h"
 #include "script.h"
@@ -1145,6 +1146,9 @@ void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 
 static u32 GetBallThrowableState(void)
 {
+#if HABITAT_NO_CAPTURE
+    return BALL_THROW_UNABLE_DISABLED_FLAG;
+#else
     if (IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
      && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
         return BALL_THROW_UNABLE_TWO_MONS;
@@ -1156,6 +1160,7 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_DISABLED_FLAG;
 
     return BALL_THROW_ABLE;
+#endif
 }
 
 bool32 CanThrowBall(void)

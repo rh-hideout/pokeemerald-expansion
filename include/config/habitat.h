@@ -24,4 +24,10 @@
 // setwildbattle/dowildbattle and don't pass through these gates.
 #define HABITAT_NO_WILD_ENCOUNTERS   TRUE
 
+// Habitat bouts never permit capture. The one durable finale completion flag
+// is intentionally reserved for the authored Deoxys finale definition.
+#define HABITAT_NO_CAPTURE                   TRUE
+#define HABITAT_BOUT_ID_DEOXYS_FINALE        1
+#define FLAG_HABITAT_DEOXYS_FINALE_WON       0x047  // audited unused FLAG_UNUSED_0x047
+
 #endif // GUARD_CONFIG_HABITAT_H

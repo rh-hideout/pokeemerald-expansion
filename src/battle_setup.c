@@ -56,6 +56,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "fishing.h"
+#include "habitat/bouts.h"
 
 enum TransitionType
 {
@@ -72,6 +73,7 @@ static void DoGhostBattle(void);
 static void DoStandardWildBattle(bool32 isDouble);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
+static void CB2_EndHabitatBoutBattle(void);
 static void CB2_EndMarowakBattle(void);
 static void TryUpdateGymLeaderRematchFromWild(void);
 static void TryUpdateGymLeaderRematchFromTrainer(void);
@@ -507,6 +509,16 @@ void BattleSetup_StartScriptedDoubleWildBattle(void)
     TryUpdateGymLeaderRematchFromWild();
 }
 
+void BattleSetup_StartHabitatBout(void)
+{
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    StopPlayerAvatar();
+    gMain.savedCallback = CB2_EndHabitatBoutBattle;
+    gBattleTypeFlags = 0;
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+}
+
 void StartMarowakBattle(void)
 {
     LockPlayerFieldControls();
@@ -686,6 +698,37 @@ static void CB2_EndScriptedWildBattle(void)
         DowngradeBadPoison();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
+}
+
+static void CB2_EndHabitatBoutBattle(void)
+{
+    enum HabitatBoutOutcome outcome;
+
+    CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
+    ResetOamRange(0, 128);
+
+    switch (gBattleOutcome)
+    {
+    case B_OUTCOME_WON:
+        outcome = HABITAT_BOUT_WIN;
+        break;
+    case B_OUTCOME_LOST:
+    case B_OUTCOME_DREW:
+    case B_OUTCOME_FORFEITED:
+        outcome = HABITAT_BOUT_LOSS;
+        break;
+    case B_OUTCOME_RAN:
+    case B_OUTCOME_PLAYER_TELEPORTED:
+    case B_OUTCOME_MON_FLED:
+        outcome = HABITAT_BOUT_FLED;
+        break;
+    default:
+        outcome = HABITAT_BOUT_ABORTED;
+        break;
+    }
+
+    Habitat_BoutFinish(outcome);
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 static void CB2_EndMarowakBattle(void)

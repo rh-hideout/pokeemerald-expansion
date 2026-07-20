@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/habitat.h"
 #include "habitat/finale.h"
 #include "constants/species.h"
 
@@ -10,4 +11,5 @@ static const struct HabitatCondition sDeoxysFinaleConditions[] = {
 const struct HabitatFinaleGate gHabitatDeoxysFinale = {
     .species = SPECIES_DEOXYS,
     .conditions = sDeoxysFinaleConditions,
+    .winFlag = FLAG_HABITAT_DEOXYS_FINALE_WON,
 };

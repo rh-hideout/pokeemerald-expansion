@@ -9,6 +9,7 @@ struct HabitatFinaleGate
 {
     u16 species;
     const struct HabitatCondition *conditions;
+    u16 winFlag;
 };
 
 extern const struct HabitatFinaleGate gHabitatDeoxysFinale;
