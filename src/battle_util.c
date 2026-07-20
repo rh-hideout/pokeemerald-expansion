@@ -225,9 +225,9 @@ const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] = {
     },
 };
 
-enum BattleWeather GetCurrentBattleWeather(u32 weather)
+enum BattleWeather GetBattleWeather(u32 weather)
 {
-    u32 currBattleWeather = 0xFF;
+    u32 currBattleWeather = BATTLE_WEATHER_NONE;
 
     for (u32 i = 0; i < ARRAY_COUNT(sBattleWeatherInfo); i++)
     {
@@ -293,9 +293,9 @@ const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT] = {
 
 bool32 EndOrContinueWeather(void)
 {
-    enum BattleWeather currBattleWeather = GetCurrentBattleWeather(gBattleWeather);
+    enum BattleWeather currBattleWeather = GetBattleWeather(gBattleWeather);
 
-    if (currBattleWeather == 0xFF)
+    if (currBattleWeather == BATTLE_WEATHER_NONE)
         return FALSE;
 
     if (gBattleStruct->weatherDuration > 0 && --gBattleStruct->weatherDuration == 0)
@@ -1358,13 +1358,13 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    
+
     // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
     bool32 dynamaxBypassCheck = (!IsGimmickSelected(battler, GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX);
 
     // Z-Moves bypass the effects of disruption moves like Encore, Taunt, Disable
     bool32 zMoveBypassCheck = (!IsGimmickSelected(battler, GIMMICK_Z_MOVE) && GetActiveGimmick(battler) != GIMMICK_Z_MOVE);
-    
+
     if (GetConfig(B_ENCORE_TARGET) >= GEN_5
      && dynamaxBypassCheck && zMoveBypassCheck && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
     {
@@ -1458,7 +1458,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (dynamaxBypassCheck
      && moveEffect == EFFECT_SPIT_UP
      && gBattleMons[battler].volatiles.stockpileCounter == 0
@@ -1467,7 +1467,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (dynamaxBypassCheck
      && zMoveBypassCheck
      && moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE
@@ -1477,7 +1477,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         if (SetCantSelectScript(battler, gCurrentMove, BattleScript_SelectingCantUseMoveInPalace, BattleScript_SelectingCantUseMove))
             limitations++;
     }
-    
+
     if (dynamaxBypassCheck
      && zMoveBypassCheck
      && moveEffect == EFFECT_LAST_RESORT
