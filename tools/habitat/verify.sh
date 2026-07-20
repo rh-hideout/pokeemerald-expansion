@@ -89,7 +89,7 @@ case "$SCENARIO" in
         SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-basin;expect-probe:spot_id,7;expect-probe:resolved_species,258;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_basin;pass:Basin starter transition reached'
         ;;
     starter-recovery)
-        SCRIPT='command:starter-campfire;expect-probe:resolved_species,255;command:select-frame-treecko;expect-probe:spot_id,8;expect-probe:spot_state,0;expect-probe:resolved_species,0;command:select-frame-mudkip;expect-probe:spot_id,9;expect-probe:spot_state,0;expect-probe:resolved_species,0;shot:starter_recovery;pass:Unchosen starter frames remain recoverable'
+        SCRIPT='command:starter-campfire;expect-probe:resolved_species,255;command:recover-treecko;expect-probe:spot_id,8;expect-probe:spot_state,3;expect-probe:resolved_species,252;expect-probe:resident_spot_id,8;command:recover-mudkip;expect-probe:spot_id,9;expect-probe:spot_state,3;expect-probe:resolved_species,258;expect-probe:resident_spot_id,9;shot:starter_recovery;pass:Both unchosen starters recovered through their authored furnishing chains'
         ;;
     skitty)
         SCRIPT='command:skitty-place;expect-probe:spot_id,1;expect-probe:spot_state,2;expect-probe:available_verbs,5;shot:skitty_active;command:skitty-offer;expect-probe:spot_state,3;expect-probe:resolved_species,300;expect-probe:resident_spot_id,1;shot:skitty_befriended;pass:Skitty place offer befriend transition reached'
@@ -101,16 +101,16 @@ case "$SCENARIO" in
         SCRIPT='goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;expect-probe:map_group,0;expect-probe:map_num,18;shot:route103;pass:Route 103 reached without a random battle'
         ;;
     bout-win)
-        SCRIPT='command:bout-win;expect-probe:bout_outcome,1;shot:approved_bout_win;pass:Approved non-capture bout win returned to field'
+        SCRIPT='command:bout-win;wait:180;shot:approved_bout_win_live;until-probe:bout_outcome,1;expect-probe:bout_outcome,1;pass:Live non-capture bout win returned through callback'
         ;;
     bout-loss)
-        SCRIPT='command:bout-loss;expect-probe:bout_outcome,2;shot:approved_bout_loss;pass:Approved non-capture bout loss returned to field'
+        SCRIPT='command:bout-loss;wait:180;shot:approved_bout_loss_live;until-probe:bout_outcome,2;expect-probe:bout_outcome,2;pass:Live non-capture bout loss returned through callback'
         ;;
     bout-flee)
-        SCRIPT='command:bout-flee;expect-probe:bout_outcome,3;shot:approved_bout_flee;pass:Approved non-capture bout flee returned to field'
+        SCRIPT='command:bout-flee;wait:180;shot:approved_bout_flee_live;until-probe:bout_outcome,3;expect-probe:bout_outcome,3;pass:Live non-capture bout flee returned through callback'
         ;;
     bout-reset)
-        SCRIPT='command:bout-reset;expect-probe:bout_outcome,4;shot:approved_bout_reset;pass:Approved bout reset recovery returned to field'
+        SCRIPT='command:bout-reset;wait:180;shot:approved_bout_reset_live;reset;until-probe:resident_spot_id,3;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resident_spot_id,3;pass:Live bout reset recovered durable save'
         ;;
     save-migration)
         SCRIPT='command:save-migration;expect-probe:spot_id,3;expect-probe:spot_state,3;expect-probe:resolved_species,66;expect-probe:resident_spot_id,3;shot:save_migration;pass:Legacy resident migrated to stable origin'

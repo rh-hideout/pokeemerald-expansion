@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "habitat/bouts.h"
 #include "habitat/migration.h"
 #include "habitat/save.h"
@@ -9,7 +10,9 @@
 #include "constants/species.h"
 #include "event_object_movement.h"
 #include "item.h"
+#include "main.h"
 #include "script.h"
+#include "save.h"
 #include "task.h"
 
 #if TESTING || HABITAT_TEST_PROBE
@@ -53,18 +56,27 @@ static void SubmitTestItem(u16 spotId, enum HabitatItemAction action, u16 itemId
     Habitat_SubmitItem(spot, action, itemId, 1);
 }
 
-static void RunTestBout(enum HabitatBoutOutcome outcome)
+static void Task_FinishTestBoutFromBattle(u8 taskId)
 {
-    if (Habitat_BoutBegin(&sTestProbeBout))
+    // Let the real battle transition and battle callback own the end of the
+    // transaction. This task runs only in verification builds, after a live
+    // non-capture battle screen has been presented.
+    if (++gTasks[taskId].data[0] >= 360)
     {
-        Habitat_BoutFinish(outcome);
-        // The dev command closes its real transaction before the scheduler
-        // can transfer to battle. The normal battle callback uses the same
-        // finish boundary for win/loss/flee/reset recovery.
-        ResetTasks();
-        UnfreezeObjectEvents();
-        UnlockPlayerFieldControls();
+        gBattleOutcome = gTasks[taskId].data[1];
+        DestroyTask(taskId);
+        SetMainCallback2(gMain.savedCallback);
     }
+}
+
+static void RunTestBout(u8 battleOutcome)
+{
+    u8 taskId;
+
+    if (!Habitat_BoutBegin(&sTestProbeBout))
+        return;
+    taskId = CreateTask(Task_FinishTestBoutFromBattle, 0xFF);
+    gTasks[taskId].data[1] = battleOutcome;
 }
 
 static void RunTestMigration(void)
@@ -83,13 +95,23 @@ static void RunTestMigration(void)
 
 static void RunTestPersistence(void)
 {
-    struct HabitatSave saved;
-
-    memcpy(&saved, &gSaveBlock3Ptr->habitat, sizeof(saved));
+    // Exercise the save engine's sector serializer and loader. A byte copy
+    // would not detect an incompatible SaveBlock3 layout or migration hook.
+    if (TrySavingData(SAVE_NORMAL) != SAVE_STATUS_OK)
+        return;
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
-    memcpy(&gSaveBlock3Ptr->habitat, &saved, sizeof(saved));
-    Habitat_MigrateSave();
+    if (LoadGameSave(SAVE_NORMAL) != SAVE_STATUS_OK)
+        return;
     SelectTestProbeSpot(3);
+}
+
+static void RunTestResetBout(void)
+{
+    // Persist a durable marker before the actual bout begins. The runner then
+    // resets mGBA while this battle is live and reboots through the save.
+    RunTestMigration();
+    if (TrySavingData(SAVE_NORMAL) == SAVE_STATUS_OK)
+        Habitat_BoutBegin(&sTestProbeBout);
 }
 
 static void RunTestGroveAssignment(void)
@@ -101,6 +123,19 @@ static void RunTestGroveAssignment(void)
     if (residentIdx >= 0)
         Habitat_AssignResidentToPlot(residentIdx, 0);
     SelectTestProbeSpot(7);
+}
+
+static void RecoverTestTreecko(void)
+{
+    SubmitTestItem(8, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_BOOKSHELF);
+    SubmitTestItem(8, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_POTTED_PLANT);
+}
+
+static void RecoverTestMudkip(void)
+{
+    SubmitTestItem(9, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_LAB_PC);
+    SubmitTestItem(9, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_POKEBALL_HOLDER);
+    SubmitTestItem(9, HABITAT_ITEM_ACTION_PLACE, ITEM_HH_WATER_BASIN);
 }
 
 static void ApplyTestCommand(void)
@@ -137,16 +172,16 @@ static void ApplyTestCommand(void)
         SubmitTestItem(3, HABITAT_ITEM_ACTION_OFFER, ITEM_CHERI_BERRY);
         break;
     case HABITAT_TEST_COMMAND_BOUT_WIN:
-        RunTestBout(HABITAT_BOUT_WIN);
+        RunTestBout(B_OUTCOME_WON);
         break;
     case HABITAT_TEST_COMMAND_BOUT_LOSS:
-        RunTestBout(HABITAT_BOUT_LOSS);
+        RunTestBout(B_OUTCOME_LOST);
         break;
     case HABITAT_TEST_COMMAND_BOUT_FLEE:
-        RunTestBout(HABITAT_BOUT_FLED);
+        RunTestBout(B_OUTCOME_RAN);
         break;
     case HABITAT_TEST_COMMAND_BOUT_RESET:
-        RunTestBout(HABITAT_BOUT_ABORTED);
+        RunTestResetBout();
         break;
     case HABITAT_TEST_COMMAND_SAVE_MIGRATION:
         RunTestMigration();
@@ -156,6 +191,12 @@ static void ApplyTestCommand(void)
         break;
     case HABITAT_TEST_COMMAND_GROVE_ASSIGN:
         RunTestGroveAssignment();
+        break;
+    case HABITAT_TEST_COMMAND_RECOVER_TREECKO:
+        RecoverTestTreecko();
+        break;
+    case HABITAT_TEST_COMMAND_RECOVER_MUDKIP:
+        RecoverTestMudkip();
         break;
     case HABITAT_TEST_COMMAND_NONE:
     default:

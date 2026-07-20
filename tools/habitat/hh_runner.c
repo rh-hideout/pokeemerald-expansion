@@ -14,6 +14,7 @@
 //   until-probe:FIELD,VALUE  wait for a documented probe field to equal VALUE
 //   expect-probe:FIELD,VALUE fail unless a documented probe field equals VALUE
 //   command:NAME  invoke a documented development-only engine transition
+//   reset         reset the emulated console; SRAM/flash must survive reload
 //   shot:NAME     screenshot to <out>/NAME.png
 //   pass:MSG      finish PASS
 // Any op timeout fails the run with documented probe diagnostics.
@@ -75,6 +76,8 @@ static int commandByName(const char *name)
         { "save-migration", HABITAT_TEST_COMMAND_SAVE_MIGRATION },
         { "save-persistence", HABITAT_TEST_COMMAND_SAVE_PERSISTENCE },
         { "grove-assign", HABITAT_TEST_COMMAND_GROVE_ASSIGN },
+        { "recover-treecko", HABITAT_TEST_COMMAND_RECOVER_TREECKO },
+        { "recover-mudkip", HABITAT_TEST_COMMAND_RECOVER_MUDKIP },
     };
     for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
         if (!strcmp(name, commands[i].name))
@@ -153,7 +156,7 @@ static int finish(const char* status, const char* msg, unsigned frame) {
 
 // ---- scenario script ----
 
-enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_PROBE, OP_EXPECT_PROBE, OP_COMMAND, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
+enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_PROBE, OP_EXPECT_PROBE, OP_COMMAND, OP_WALK, OP_UNTIL_MAP, OP_RESET, OP_SHOT, OP_PASS };
 struct Op {
     enum OpKind kind;
     int a, b;
@@ -212,6 +215,7 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
             op->kind = OP_WALK; op->a = keyByName((char[]){tok[5], 0});
         }
         else if (sscanf(tok, "until-map:%d,%d", &op->a, &op->b) == 2) op->kind = OP_UNTIL_MAP;
+        else if (!strcmp(tok, "reset")) op->kind = OP_RESET;
         else if (!strncmp(tok, "shot:", 5)) { op->kind = OP_SHOT; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
         else if (!strncmp(tok, "pass:", 5)) { op->kind = OP_PASS; snprintf(op->text, sizeof(op->text), "%s", tok + 5); }
         else { fprintf(stderr, "hh-runner: bad op '%s'\n", tok); return -1; }
@@ -409,6 +413,15 @@ int main(int argc, char** argv) {
                 done = 1;
             break;
         }
+        case OP_RESET:
+            // mGBA preserves the emulated flash device across a console reset.
+            // The subsequent BOOT phase exercises the game's real save-load
+            // path instead of reusing process RAM.
+            sCore->reset(sCore);
+            keys = 0;
+            phase = BOOT;
+            done = 1;
+            break;
         case OP_SHOT:
             shot(op->text);
             done = 1;

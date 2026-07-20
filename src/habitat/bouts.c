@@ -75,6 +75,11 @@ void Habitat_BoutFinish(enum HabitatBoutOutcome outcome)
     sLastBoutOutcome = outcome;
 }
 
+void Habitat_BoutFinishFromBattleOutcome(u8 battleOutcome)
+{
+    Habitat_BoutFinish(Habitat_BoutOutcomeFromBattleOutcome(battleOutcome));
+}
+
 bool32 Habitat_BoutIsActive(void)
 {
     return sBoutActive;

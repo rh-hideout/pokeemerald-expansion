@@ -22,6 +22,7 @@ struct HabitatBoutDefinition {
 
 bool32 Habitat_BoutBegin(const struct HabitatBoutDefinition *definition);
 void Habitat_BoutFinish(enum HabitatBoutOutcome outcome);
+void Habitat_BoutFinishFromBattleOutcome(u8 battleOutcome);
 bool32 Habitat_BoutIsActive(void);
 enum HabitatBoutOutcome Habitat_GetLastBoutOutcome(void);
 bool32 Habitat_BoutIsApprovedFinaleDefinition(const struct HabitatBoutDefinition *definition);

@@ -707,7 +707,7 @@ static void CB2_EndHabitatBoutBattle(void)
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
     outcome = Habitat_BoutOutcomeFromBattleOutcome(gBattleOutcome);
-    Habitat_BoutFinish(outcome);
+    Habitat_BoutFinishFromBattleOutcome(gBattleOutcome);
     if (Habitat_BoutReturnsToField(outcome))
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }

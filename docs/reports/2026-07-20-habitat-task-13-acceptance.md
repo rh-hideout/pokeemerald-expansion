@@ -29,16 +29,16 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario lab-campfire` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-plant` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-basin` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario starter-recovery` | pending headless verification | output directory |
+| `tools/habitat/verify.sh --scenario starter-recovery` | pending headless verification | actual Bookshelf+Plant and PC+Ball Holder+Basin recovery chains; output directory |
 | `tools/habitat/verify.sh --scenario skitty` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario machop` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario route103` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario bout-win` | pending headless verification | non-capture approved fixture, outcome 1, screenshot |
-| `tools/habitat/verify.sh --scenario bout-loss` | pending headless verification | non-capture approved fixture, outcome 2, screenshot |
-| `tools/habitat/verify.sh --scenario bout-flee` | pending headless verification | non-capture approved fixture, outcome 3, screenshot |
-| `tools/habitat/verify.sh --scenario bout-reset` | pending headless verification | reset recovery, outcome 4, screenshot |
+| `tools/habitat/verify.sh --scenario bout-win` | pending headless verification | live non-capture battle screenshot, real callback outcome 1 |
+| `tools/habitat/verify.sh --scenario bout-loss` | pending headless verification | live non-capture battle screenshot, real callback outcome 2 |
+| `tools/habitat/verify.sh --scenario bout-flee` | pending headless verification | live non-capture battle screenshot, real callback outcome 3 |
+| `tools/habitat/verify.sh --scenario bout-reset` | pending headless verification | save to flash before live bout, emulated-console reset, durable resident reload |
 | `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
-| `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | current-save round trip, screenshot |
+| `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
 | `tools/habitat/verify.sh --scenario item-chooser` | pending visual review | Route 103 Skitty item chooser screenshot |
 | `tools/habitat/verify.sh --scenario approved-icons` | pending visual review / release hold | furnishing-icon screenshot; manifest currently records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art and provenance |
@@ -48,12 +48,16 @@ able to run to completion.
 ## Intentional limits
 
 The development command bridge exercises production item/condition, bout,
-migration, persistence, and Grove APIs and is absent from release builds. The
-bout fixture is expressly non-finale (Treecko versus Zigzagoon): it covers
-non-capture win/loss/flee and reset recovery without inventing Deoxys story
-content. The chooser and icon checkpoints enter the real Route 103 Skitty
-interaction and archive screenshots without inspecting message bytes. Only
-the unauthored Deoxys story golden path remains exempt under the plan.
+migration, flash-save/load, and Grove APIs and is absent from release builds.
+The bout fixture is expressly non-finale (Treecko versus Zigzagoon). Its
+win/loss/flee commands enter the normal battle scene and finish only through
+the production battle-end callback; the runner captures the live scene before
+waiting for its structured outcome. The reset command saves through the normal
+flash-sector path, begins the live bout without a finish task, and has the
+runner reset the emulated console before checking the reloaded resident. The
+chooser and icon checkpoints enter the real Route 103 Skitty interaction and
+archive screenshots without inspecting message bytes. Only the unauthored
+Deoxys story golden path remains exempt under the plan.
 
 The icon scenario is a required visual capture, not a claim that artwork is
 already approved: the live manifest still marks all six furnishing icons as
@@ -63,15 +67,16 @@ source records and replacements exist.
 
 ## Fresh-build limitation
 
-The required `make -B` verification build was attempted on this completed
-matrix with `HH_VERIFY_OUT=/private/tmp/hh-task13-final` and
-`--scenario bout-win`. The execution harness stopped it during generated
-asset compilation before the runner began; its partial build log is retained
-at `/private/tmp/hh-task13-final/build.log`. An interruption is not a build
-failure and is not headless evidence; until a fresh invocation reaches the
-runner, every scenario and visual checkpoint above remains **pending**. The
-focused evidence is intentionally not promoted to headless-verified, visually
-reviewed, full-suite-tested, or audit-accepted.
+The prior `make -B` verification attempt (before the live-bout/reload rewrite)
+used `HH_VERIFY_OUT=/private/tmp/hh-task13-final` and `--scenario bout-win`.
+The execution harness stopped it during generated asset compilation before the
+runner began; its partial build log is retained at
+`/private/tmp/hh-task13-final/build.log`. It is not evidence for the current
+matrix. An interruption is not a build failure and is not headless evidence;
+until a fresh invocation of the current build reaches the runner, every
+scenario and visual checkpoint above remains **pending**. The focused evidence
+is intentionally not promoted to headless-verified, visually reviewed,
+full-suite-tested, or audit-accepted.
 
 `validate_provenance.py --release` is expected to fail while Task 12 has
 unapproved release provenance. Record that exit status as an intentional
