@@ -597,9 +597,11 @@ $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
 
 # --- Hoenn Habitat additions (keep this block at end of file; upstream-merge-friendly) ---
-.PHONY: verify verify-boot validate-habitat validate-habitat-maps
+.PHONY: verify verify-boot validate-habitat validate-habitat-maps validate-habitat-story
 validate-habitat-maps:
 	@python3 tools/habitat/validate_maps.py
+validate-habitat-story:
+	@python3 tools/habitat/validate_story_docs.py
 validate-habitat:
 	@$(MAKE) validate-habitat-maps
 	@$(MAKE) check TESTS='Habitat authoring'
