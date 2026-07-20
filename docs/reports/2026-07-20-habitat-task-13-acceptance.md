@@ -28,21 +28,21 @@ able to run to completion.
 | `make -j4 check TESTS='Habitat'` | focused-tested | exit 0 on 2026-07-20; 105/105 Habitat tests passed |
 | `make check` | attempted, not green | exit 2 on 2026-07-20: 4,941 passed, 18 unrelated battle/capture failures, 12 known-failing, 593 TODO, and 7 expected-failing tests |
 | `make -j4` | built | exit 0 on 2026-07-20; EWRAM 227,880 B (86.93%), IWRAM 28,464 B (86.87%), ROM 26,483,532 B (78.93%) |
-| `tools/habitat/verify.sh --no-interact` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario lab-campfire` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario lab-plant` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario lab-basin` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario starter-recovery` | pending headless verification | actual Bookshelf+Plant and PC+Ball Holder+Basin recovery chains; output directory |
-| `tools/habitat/verify.sh --scenario skitty` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario machop` | pending headless verification | output directory |
-| `tools/habitat/verify.sh --scenario route103` | pending headless verification | output directory |
+| `tools/habitat/verify.sh --no-interact` | headless-verified | `/private/tmp/hh-final-boot/`: Zorua lab overworld, frame 877 |
+| `tools/habitat/verify.sh --scenario lab-campfire` | headless-verified | `/private/tmp/hh-final-lab-campfire/`: Torchic, frame 883 |
+| `tools/habitat/verify.sh --scenario lab-plant` | headless-verified | `/private/tmp/hh-final-lab-plant/`: Treecko, frame 883 |
+| `tools/habitat/verify.sh --scenario lab-basin` | headless-verified | `/private/tmp/hh-final-lab-basin/`: Mudkip, frame 883 |
+| `tools/habitat/verify.sh --scenario starter-recovery` | headless-verified | `/private/tmp/hh-final-starter-recovery-serial/`: both unchosen starters through authored furnishings, frame 890 |
+| `tools/habitat/verify.sh --scenario skitty` | headless-verified | `/private/tmp/hh-final-skitty/`: placement/offer/befriend, frame 886 |
+| `tools/habitat/verify.sh --scenario machop` | headless-verified | `/private/tmp/hh-final-machop/`: Cheri transition with `bout_outcome=0`, frame 882 |
+| `tools/habitat/verify.sh --scenario route103` | headless-verified | `/private/tmp/hh-final-route103/`: traversal without random battle, frame 4242 |
 | `tools/habitat/verify.sh --scenario bout-win` | headless-verified | fresh `-B` run on 2026-07-20 exited 0; `/private/tmp/hh-bout-verify-final/result.txt` records outcome 1 at frame 1402, with `approved_bout_win_live.png`, `runner.log`, and `build.log` beside it |
-| `tools/habitat/verify.sh --scenario bout-loss` | pending headless verification | live non-capture battle screenshot, real callback outcome 2 |
-| `tools/habitat/verify.sh --scenario bout-flee` | pending headless verification | live non-capture battle screenshot, real callback outcome 3 |
+| `tools/habitat/verify.sh --scenario bout-loss` | headless-verified | `/private/tmp/hh-final-bout-loss/`: live non-capture callback outcome 2, frame 1402 |
+| `tools/habitat/verify.sh --scenario bout-flee` | headless-verified | `/private/tmp/hh-final-bout-flee/`: live non-capture callback outcome 3, frame 1402 |
 | `tools/habitat/verify.sh --scenario bout-reset` | headless verified: `PASS Live bout reset recovered durable save (frame 2441, pos 6,10)` | save to flash before live bout, emulated-console reset, durable resident reload; `/private/tmp/hh-bout-reset-verify-clean/` |
-| `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
-| `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
-| `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
+| `tools/habitat/verify.sh --scenario save-migration` | headless-verified | `/private/tmp/hh-final-save-migration/`: legacy resident has stable origin, frame 881 |
+| `tools/habitat/verify.sh --scenario save-persistence` | headless-verified | `/private/tmp/hh-final-save-persistence/`: flash round trip preserves resident, frame 882 |
+| `tools/habitat/verify.sh --scenario grove` | headless-verified | `/private/tmp/hh-final-grove/`: worker visual checkpoint, frame 1420 |
 | future item-chooser checkpoint (disabled) | pending native UI implementation | the Route 103 interaction currently shows placeholder dialogue and a yes/no prompt; it does not render an item-chooser view to capture |
 | future approved-icons checkpoint (disabled) | pending native icon UI / release hold | the interaction does not render furnishing icons; the manifest also records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art, provenance, and an icon-bearing surface |
 | `python3 tools/habitat/check_memory.py --map pokeemerald.map` | focused-tested | exit 0 on 2026-07-20: EWRAM 227,880, IWRAM 28,460, ROM 26,483,532, SaveBlock3 1,308 bytes; all budgets pass |
@@ -98,8 +98,10 @@ The fresh current-build `bout-win` invocation completed after that interruption:
 `HH_VERIFY_OUT=/private/tmp/hh-bout-verify-final HH_VERIFY_JOBS=12
 tools/habitat/verify.sh --scenario bout-win` exited 0. Its `result.txt` records
 `PASS Live non-capture bout win returned through call (frame 1402, pos 6,10)`.
-This verifies only the win row above; the remaining scenario matrix is still
-pending.
+The later runs used the serial forced-build safeguard added in `687bee270`;
+the rows above name their exact output directories. All currently implemented
+portable scenarios now have fresh evidence. The two disabled UI checkpoints
+remain pending their native surfaces and Task 12 approvals.
 
 `validate_provenance.py --release` is expected to fail while Task 12 has
 unapproved release provenance. Record that exit status as an intentional
