@@ -8,6 +8,8 @@ ASSUMPTIONS
     ASSUME(gSpeciesInfo[SPECIES_CLEFFA].catchRate == 150);
 }
 
+#if !HABITAT_NO_CAPTURE
+
 WILD_BATTLE_TEST("Capture: Incapacitated catch bonus apply correcly with all gen configs")
 {
     u32 expectedOdds;
@@ -232,3 +234,5 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
     }
 }
+
+#endif // !HABITAT_NO_CAPTURE

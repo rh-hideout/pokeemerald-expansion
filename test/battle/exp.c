@@ -1,6 +1,8 @@
 #include "global.h"
 #include "test/battle.h"
 
+#if !HABITAT_NO_CAPTURE
+
 WILD_BATTLE_TEST("Pokemon gain experience after catching a Pokemon (Gen6+)")
 {
     u8 level = 0;
@@ -26,6 +28,8 @@ WILD_BATTLE_TEST("Pokemon gain experience after catching a Pokemon (Gen6+)")
         }
     }
 }
+
+#endif // !HABITAT_NO_CAPTURE
 
 WILD_BATTLE_TEST("Higher leveled Pokemon give more exp", s32 exp)
 {

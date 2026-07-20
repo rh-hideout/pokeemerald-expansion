@@ -73,6 +73,8 @@ GHOST_BATTLE_TEST("Ghost battle: Intro plays correctly (with Silph Scope)")
     }
 }
 
+#if !HABITAT_NO_CAPTURE
+
 GHOST_BATTLE_TEST("Ghost battle: player cannot capture ghost (no Silph Scope)")
 {
     GIVEN {
@@ -108,3 +110,5 @@ GHOST_BATTLE_TEST("Ghost battle: player cannot capture ghost (Marowak)")
         MESSAGE("It dodged your thrown Poké Ball! This Pokémon can't be caught!");
     }
 }
+
+#endif // !HABITAT_NO_CAPTURE

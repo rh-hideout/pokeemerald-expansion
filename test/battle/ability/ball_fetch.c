@@ -1,6 +1,8 @@
 #include "global.h"
 #include "test/battle.h"
 
+#if !HABITAT_NO_CAPTURE
+
 WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball at the end of the turn")
 {
     enum Item item = ITEM_NONE;
@@ -94,6 +96,8 @@ WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battl
         EXPECT_EQ(player->item, ITEM_NONE);
     }
 }
+
+#endif // !HABITAT_NO_CAPTURE
 
 SINGLE_BATTLE_TEST("Ball Fetch doesn't trigger in Trainer Battles")
 {
