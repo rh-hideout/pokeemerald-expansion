@@ -71,6 +71,7 @@ TEST("Habitat migration: version 0 preserves state and deterministically expands
 
     memset(&gSaveBlock3Ptr->habitat, 0xA5, sizeof(gSaveBlock3Ptr->habitat));
     memcpy(&gSaveBlock3Ptr->habitat, &legacy, sizeof(legacy));
+    gSaveBlock3Ptr->habitat.saveVersion = HABITAT_SAVE_VERSION_LEGACY;
     Habitat_MigrateSave();
 
     EXPECT_EQ(gSaveBlock3Ptr->habitat.saveVersion, HABITAT_SAVE_VERSION_CURRENT);
@@ -130,4 +131,17 @@ TEST("Habitat migration: authored placement ids reject duplicate, out-of-range, 
     EXPECT(!Habitat_ValidateSpotTable(sDuplicateIdSpotTable));
     EXPECT(!Habitat_ValidateConditionList(sOutOfRangeId, HABITAT_CONDITION_SPOT_APPEAR));
     EXPECT(!Habitat_ValidateConditionList(sOversizedCount, HABITAT_CONDITION_SPOT_APPEAR));
+}
+
+TEST("Habitat migration: unknown save versions are diagnosed and left byte-identical")
+{
+    struct HabitatSave before;
+
+    memset(&gSaveBlock3Ptr->habitat, 0x5A, sizeof(gSaveBlock3Ptr->habitat));
+    gSaveBlock3Ptr->habitat.saveVersion = HABITAT_SAVE_VERSION_CURRENT + 1;
+    memcpy(&before, &gSaveBlock3Ptr->habitat, sizeof(before));
+
+    Habitat_MigrateSave();
+
+    EXPECT(memcmp(&before, &gSaveBlock3Ptr->habitat, sizeof(before)) == 0);
 }

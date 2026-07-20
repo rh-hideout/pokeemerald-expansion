@@ -36,6 +36,11 @@ void Habitat_MigrateSave(void)
 
     if (save->saveVersion == HABITAT_SAVE_VERSION_CURRENT)
         return;
+    if (save->saveVersion != HABITAT_SAVE_VERSION_LEGACY)
+    {
+        LogMigrationDiagnostic("save-version-unknown", save->saveVersion, 0);
+        return;
+    }
 
     // Read all v0 records before reusing their first two bytes as origins.
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
