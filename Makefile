@@ -46,6 +46,8 @@ LTO          ?= 0
 # Makes an optimized build for release, also enabling NDEBUG macro and disabling other debugging features
 # Enables LTO by default, but can be changed in the config.mk file
 RELEASE      ?= 0
+# Exposes gHabitatTestProbe for the development-only headless verifier.
+HABITAT_TEST_PROBE ?= 0
 
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
@@ -156,7 +158,7 @@ O_LEVEL ?= g
 else
 O_LEVEL ?= 2
 endif
-CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -DHABITAT_TEST_PROBE=$(HABITAT_TEST_PROBE) -D$(GAME_VERSION) -std=gnu17
 ifeq ($(RELEASE),1)
 	override CPPFLAGS += -DRELEASE
 	ifeq ($(USE_LTO_ON_RELEASE),1)
@@ -597,7 +599,7 @@ $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
 
 # --- Hoenn Habitat additions (keep this block at end of file; upstream-merge-friendly) ---
-.PHONY: verify verify-boot validate-habitat validate-habitat-maps validate-habitat-story validate-habitat-provenance-development validate-habitat-provenance-release
+.PHONY: verify verify-boot validate-habitat validate-habitat-maps validate-habitat-story validate-habitat-memory validate-habitat-provenance-development validate-habitat-provenance-release
 validate-habitat-maps:
 	@python3 tools/habitat/validate_maps.py
 validate-habitat-story:
@@ -606,10 +608,13 @@ validate-habitat-provenance-development:
 	@python3 tools/habitat/validate_provenance.py --development
 validate-habitat-provenance-release:
 	@python3 tools/habitat/validate_provenance.py --release
+validate-habitat-memory:
+	@python3 tools/habitat/check_memory.py
 validate-habitat:
 	@$(MAKE) validate-habitat-maps
 	@$(MAKE) validate-habitat-story
 	@$(MAKE) validate-habitat-provenance-release
+	@$(MAKE) validate-habitat-memory
 	@$(MAKE) check TESTS='Habitat authoring'
 verify:
 	@tools/habitat/verify.sh

@@ -1,0 +1,9 @@
+{
+  "decision": "2026-07-19 stabilization plan approval: initial ceilings require a reviewed budget decision to change.",
+  "metrics": {
+    "ewram": { "used": 227880, "capacity": 262144, "ceiling_percent": 90 },
+    "iwram": { "used": 28432, "capacity": 32768, "ceiling_percent": 90 },
+    "rom": { "used": 26481720, "capacity": 33554432, "ceiling_percent": 85 },
+    "saveblock3": { "used": 1308, "capacity": 1624, "ceiling_bytes": 1624 }
+  }
+}

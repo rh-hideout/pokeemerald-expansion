@@ -1,5 +1,8 @@
 #include "global.h"
 #include "overworld.h"
+#if TESTING || HABITAT_TEST_PROBE
+#include "habitat/test_probe.h"
+#endif
 #include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "battle_util.h"
@@ -1868,6 +1871,9 @@ void CB2_Overworld(void)
     if (fading)
         SetVBlankCallback(NULL);
     OverworldBasic();
+#if TESTING || HABITAT_TEST_PROBE
+    Habitat_TestProbeRefresh();
+#endif
     if (fading)
     {
         SetFieldVBlankCallback();

@@ -1,0 +1,20 @@
+#ifndef GUARD_HABITAT_TEST_PROBE_SCHEMA_H
+#define GUARD_HABITAT_TEST_PROBE_SCHEMA_H
+
+// This ABI is consumed by both the ARM ROM and the host-side mGBA runner.
+// Keep offsets explicit: host tooling must never infer fields from gMain,
+// script internals, or text buffers.
+#define HABITAT_TEST_PROBE_VERSION 1
+#define HABITAT_TEST_PROBE_SIZE 14
+#define HABITAT_TEST_PROBE_OFFSET_VERSION             0
+#define HABITAT_TEST_PROBE_OFFSET_SPOT_ID             2
+#define HABITAT_TEST_PROBE_OFFSET_SPOT_STATE          4
+#define HABITAT_TEST_PROBE_OFFSET_AVAILABLE_VERBS     5
+#define HABITAT_TEST_PROBE_OFFSET_RESOLVED_SPECIES    6
+#define HABITAT_TEST_PROBE_OFFSET_RESIDENT_SPOT_ID    8
+#define HABITAT_TEST_PROBE_OFFSET_RESIDENT_ASSIGNMENT 10
+#define HABITAT_TEST_PROBE_OFFSET_BOUT_OUTCOME        11
+#define HABITAT_TEST_PROBE_OFFSET_MAP_GROUP           12
+#define HABITAT_TEST_PROBE_OFFSET_MAP_NUM             13
+
+#endif // GUARD_HABITAT_TEST_PROBE_SCHEMA_H

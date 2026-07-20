@@ -1,23 +1,21 @@
 // hh-runner — headless scenario driver for Hoenn Habitat.
 //
 // Drives the built ROM in libmgba (no window, unthrottled), mirroring mGBA's
-// own perf-runner init. Game state is observed through bus reads of symbols
-// supplied on the command line (extracted from pokeemerald.map by verify.sh),
-// never by pixel-guessing.
+// own perf-runner init. Habitat assertions read only the documented,
+// versioned HabitatTestProbe ABI supplied by verify.sh from the fresh link
+// map; they never depend on gMain, script internals, or message-buffer bytes.
 //
-// Boot: taps SELECT until the expansion's quickstart starts a new game, then
-// waits for gMain.callback2 == CB2_Overworld to hold. After that a scenario
-// script runs — a semicolon-separated op list:
+// Boot: taps SELECT until the development probe becomes available. After that
+// a scenario script runs — a semicolon-separated op list:
 //   goto:X,Y      closed-loop walk using live *gSaveBlock1Ptr position reads
 //   face:U|D|L|R  tap to turn without stepping
 //   tap:K         4-frame key tap (A,B,START,SELECT,U,D,L,R)
 //   wait:N        idle N frames
-//   until-sv4:HH  wait (max 900 frames) until gStringVar4[0] == 0xHH — the
-//                 field-message pipeline expands every shown message into
-//                 gStringVar4, so first bytes identify which text is up
+//   until-probe:FIELD,VALUE  wait for a documented probe field to equal VALUE
+//   expect-probe:FIELD,VALUE fail unless a documented probe field equals VALUE
 //   shot:NAME     screenshot to <out>/NAME.png
 //   pass:MSG      finish PASS
-// Any op timeout fails the run with position/sv4 diagnostics.
+// Any op timeout fails the run with documented probe diagnostics.
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -29,12 +27,13 @@
 #include <mgba/core/log.h>
 #include <mgba-util/vfs.h>
 
+#include "habitat/test_probe_schema.h"
+
 enum {
     KEY_A = 0, KEY_B, KEY_SELECT, KEY_START,
     KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN,
 };
 
-#define THUMB_BIT 1u
 #define SETTLE_FRAMES 480   // truck-era fade margin; harmless at Route 103
 #define TAP_FRAMES 4
 #define STEP_HOLD 12
@@ -54,7 +53,45 @@ static struct mLogger sLogger = { .log = stderrLog };
 
 static struct mCore* sCore;
 static const char* sOutDir;
-static uint32_t sSb1Ptr, sStrVar4;
+static uint32_t sSb1Ptr, sProbe;
+
+static int probeField(const char *name, int *offset, int *width)
+{
+    struct Field { const char *name; int offset; int width; };
+    static const struct Field fields[] = {
+        { "version", HABITAT_TEST_PROBE_OFFSET_VERSION, 2 },
+        { "spot_id", HABITAT_TEST_PROBE_OFFSET_SPOT_ID, 2 },
+        { "spot_state", HABITAT_TEST_PROBE_OFFSET_SPOT_STATE, 1 },
+        { "available_verbs", HABITAT_TEST_PROBE_OFFSET_AVAILABLE_VERBS, 1 },
+        { "resolved_species", HABITAT_TEST_PROBE_OFFSET_RESOLVED_SPECIES, 2 },
+        { "resident_spot_id", HABITAT_TEST_PROBE_OFFSET_RESIDENT_SPOT_ID, 2 },
+        { "resident_assignment", HABITAT_TEST_PROBE_OFFSET_RESIDENT_ASSIGNMENT, 1 },
+        { "bout_outcome", HABITAT_TEST_PROBE_OFFSET_BOUT_OUTCOME, 1 },
+        { "map_group", HABITAT_TEST_PROBE_OFFSET_MAP_GROUP, 1 },
+        { "map_num", HABITAT_TEST_PROBE_OFFSET_MAP_NUM, 1 },
+    };
+    for (size_t i = 0; i < sizeof(fields) / sizeof(fields[0]); i++)
+        if (!strcmp(name, fields[i].name)) {
+            *offset = fields[i].offset;
+            *width = fields[i].width;
+            return 0;
+        }
+    return -1;
+}
+
+static unsigned probeRead(int offset, int width)
+{
+    return width == 2 ? sCore->busRead16(sCore, sProbe + offset)
+                      : sCore->busRead8(sCore, sProbe + offset);
+}
+
+static int probeWidthForOffset(int offset)
+{
+    return offset == HABITAT_TEST_PROBE_OFFSET_VERSION
+        || offset == HABITAT_TEST_PROBE_OFFSET_SPOT_ID
+        || offset == HABITAT_TEST_PROBE_OFFSET_RESOLVED_SPECIES
+        || offset == HABITAT_TEST_PROBE_OFFSET_RESIDENT_SPOT_ID ? 2 : 1;
+}
 
 static void shot(const char* name) {
     char path[1024];
@@ -89,7 +126,7 @@ static int finish(const char* status, const char* msg, unsigned frame) {
 
 // ---- scenario script ----
 
-enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_SV4, OP_DISMISS_UNTIL, OP_CLEAR_SV4, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
+enum OpKind { OP_GOTO, OP_FACE, OP_TAP, OP_WAIT, OP_UNTIL_PROBE, OP_EXPECT_PROBE, OP_WALK, OP_UNTIL_MAP, OP_SHOT, OP_PASS };
 struct Op {
     enum OpKind kind;
     int a, b;
@@ -106,6 +143,19 @@ static int keyByName(const char* s) {
     if (!strcmp(s, "L")) return KEY_LEFT;
     if (!strcmp(s, "R")) return KEY_RIGHT;
     return -1;
+}
+
+static int parseProbeOp(const char *text, struct Op *op)
+{
+    char field[32];
+    unsigned value;
+    int width;
+    if (sscanf(text, "%31[^,],%u", field, &value) != 2
+     || probeField(field, &op->a, &width) != 0)
+        return -1;
+    op->b = (int)value;
+    snprintf(op->text, sizeof(op->text), "%s", field);
+    return 0;
 }
 
 static int parseScript(char* spec, struct Op* ops, int maxOps) {
@@ -125,9 +175,10 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
         else if (!strncmp(tok, "face:", 5)) { op->kind = OP_FACE; op->a = keyByName(tok + 5); }
         else if (!strncmp(tok, "tap:", 4)) { op->kind = OP_TAP; op->a = keyByName(tok + 4); }
         else if (sscanf(tok, "wait:%d", &op->a) == 1) op->kind = OP_WAIT;
-        else if (sscanf(tok, "until-sv4:%x", &op->a) == 1) op->kind = OP_UNTIL_SV4;
-        else if (sscanf(tok, "dismiss-until:%x", &op->a) == 1) op->kind = OP_DISMISS_UNTIL;
-        else if (!strcmp(tok, "clear-sv4")) op->kind = OP_CLEAR_SV4;
+        else if (!strncmp(tok, "until-probe:", 12)
+              && parseProbeOp(tok + 12, op) == 0) op->kind = OP_UNTIL_PROBE;
+        else if (!strncmp(tok, "expect-probe:", 13)
+              && parseProbeOp(tok + 13, op) == 0) op->kind = OP_EXPECT_PROBE;
         else if (tok == strstr(tok, "walk:") && sscanf(tok + 7, "%d", &op->b) == 1) {
             op->kind = OP_WALK; op->a = keyByName((char[]){tok[5], 0});
         }
@@ -147,7 +198,6 @@ static int parseScript(char* spec, struct Op* ops, int maxOps) {
 int main(int argc, char** argv) {
     const char* rom = NULL;
     char* scriptSpec = NULL;
-    uint32_t gMain = 0, cb2Overworld = 0;
     unsigned maxFrames = 60000;
     struct Op ops[256];
     int nOps = 0;
@@ -156,16 +206,14 @@ int main(int argc, char** argv) {
     for (int i = 1; i < argc - 1; i++) {
         if (!strcmp(argv[i], "--rom")) rom = argv[++i];
         else if (!strcmp(argv[i], "--out")) sOutDir = argv[++i];
-        else if (!strcmp(argv[i], "--gmain")) gMain = strtoul(argv[++i], NULL, 16);
-        else if (!strcmp(argv[i], "--cb2-overworld")) cb2Overworld = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--sb1ptr")) sSb1Ptr = strtoul(argv[++i], NULL, 16);
-        else if (!strcmp(argv[i], "--strvar4")) sStrVar4 = strtoul(argv[++i], NULL, 16);
+        else if (!strcmp(argv[i], "--probe")) sProbe = strtoul(argv[++i], NULL, 16);
         else if (!strcmp(argv[i], "--script")) scriptSpec = argv[++i];
         else if (!strcmp(argv[i], "--max-frames")) maxFrames = strtoul(argv[++i], NULL, 10);
     }
-    if (!rom || !gMain || !cb2Overworld || !sSb1Ptr || !scriptSpec) {
-        fprintf(stderr, "usage: hh-runner --rom ROM --gmain HEX --cb2-overworld HEX "
-                        "--sb1ptr HEX --strvar4 HEX --script 'op;op;...' [--out DIR]\n");
+    if (!rom || !sSb1Ptr || !sProbe || !scriptSpec) {
+        fprintf(stderr, "usage: hh-runner --rom ROM --sb1ptr HEX --probe HEX "
+                        "--script 'op;op;...' [--out DIR]\n");
         return 2;
     }
     nOps = parseScript(scriptSpec, ops, 256);
@@ -202,22 +250,8 @@ int main(int argc, char** argv) {
             keys = 0;
         sCore->setKeys(sCore, keys);
         sCore->runFrame(sCore);
-        if (keys && sStrVar4) {
-            static unsigned lastKeyLog;
-            if (frame - lastKeyLog > 8) {
-                lastKeyLog = frame;
-                fprintf(stderr, "HH_TRACE f=%u keys=%02x gMain.newKeys=%04x heldKeys=%04x\n",
-                        frame, keys,
-                        sCore->busRead16(sCore, gMain + 0x2E),
-                        sCore->busRead16(sCore, gMain + 0x2C));
-            }
-        }
-
-        uint32_t cb2 = sCore->busRead32(sCore, gMain + 4);
-        int inOverworld = cb2 == (cb2Overworld | THUMB_BIT);
-
         if (phase == BOOT) {
-            if (inOverworld) {
+            if (probeRead(HABITAT_TEST_PROBE_OFFSET_VERSION, 2) == HABITAT_TEST_PROBE_VERSION) {
                 phase = SETTLE;
                 settled = 0;
             } else if (frame >= nextAct && !keys) {
@@ -230,7 +264,8 @@ int main(int argc, char** argv) {
             continue;
         }
         if (phase == SETTLE) {
-            settled = inOverworld ? settled + 1 : 0;
+            settled = probeRead(HABITAT_TEST_PROBE_OFFSET_VERSION, 2) == HABITAT_TEST_PROBE_VERSION
+                ? settled + 1 : 0;
             if (settled >= SETTLE_FRAMES) {
                 shot("overworld");
                 phase = SCRIPT;
@@ -247,7 +282,7 @@ int main(int argc, char** argv) {
         struct Op* op = &ops[opIndex];
         if (!opArmed) {
             opArmed = 1;
-            opDeadline = frame + ((op->kind == OP_GOTO) ? 6000 : (op->kind == OP_DISMISS_UNTIL) ? 1500 : UNTIL_MAX);
+            opDeadline = frame + ((op->kind == OP_GOTO) ? 6000 : UNTIL_MAX);
             if (op->kind == OP_WAIT)
                 opDeadline = frame + op->a;
         }
@@ -290,25 +325,19 @@ int main(int argc, char** argv) {
             if (frame >= opDeadline)
                 done = 1;
             break;
-        case OP_UNTIL_SV4:
-            if (sCore->busRead8(sCore, sStrVar4) == (uint32_t) op->a)
+        case OP_UNTIL_PROBE:
+            if (probeRead(op->a, probeWidthForOffset(op->a)) == (unsigned) op->b)
                 done = 1;
             break;
-        case OP_DISMISS_UNTIL:
-            // Advance any message/prompt flow by tapping A on a cadence until
-            // the identified text is up. All slice answers are YES/first-item,
-            // which A selects.
-            if (sCore->busRead8(sCore, sStrVar4) == (uint32_t) op->a) {
+        case OP_EXPECT_PROBE:
+            if (probeRead(op->a, probeWidthForOffset(op->a)) == (unsigned) op->b) {
                 done = 1;
-            } else if (frame >= nextAct && !keys) {
-                keys = 1u << KEY_A;
-                holdUntil = frame + TAP_FRAMES;
-                nextAct = frame + 24;
+            } else {
+                char msg[128];
+                snprintf(msg, sizeof(msg), "probe %s expected %d got %u", op->text, op->b,
+                         probeRead(op->a, probeWidthForOffset(op->a)));
+                rc = finish("FAIL", msg, frame);
             }
-            break;
-        case OP_CLEAR_SV4:
-            sCore->busWrite8(sCore, sStrVar4, 0);
-            done = 1;
             break;
         case OP_WALK:
             // b step-holds of direction a — blind edge-crossing for map
@@ -325,9 +354,8 @@ int main(int argc, char** argv) {
             }
             break;
         case OP_UNTIL_MAP: {
-            uint32_t sb1m = sCore->busRead32(sCore, sSb1Ptr);
-            if ((int8_t) sCore->busRead8(sCore, sb1m + 4) == op->a
-             && (int8_t) sCore->busRead8(sCore, sb1m + 5) == op->b)
+            if (probeRead(HABITAT_TEST_PROBE_OFFSET_MAP_GROUP, 1) == (unsigned) op->a
+             && probeRead(HABITAT_TEST_PROBE_OFFSET_MAP_NUM, 1) == (unsigned) op->b)
                 done = 1;
             break;
         }
@@ -344,27 +372,13 @@ int main(int argc, char** argv) {
             int16_t x, y;
             playerPos(&x, &y);
             snprintf(msg, sizeof(msg),
-                     "op %d timed out (kind %d) pos=%d,%d sv4=%02x scriptMode=%d scriptPtr=%08x",
-                     opIndex, (int) op->kind, x, y, sCore->busRead8(sCore, sStrVar4),
-                     sCore->busRead8(sCore, 0x030016cc + 1),
-                     sCore->busRead32(sCore, 0x030016cc + 8));
-            {
-                // Best-effort debug reads pinned to the current build's map:
-                // 0x030016cc = sGlobalScriptContext (script_context.c static),
-                // 0x020350e0/e1 = gMsgBoxIsCancelable/gMsgIsSignPost. Fail-path
-                // only — a relayout makes these print garbage, never misfire.
-                char extra[200];
-                snprintf(extra, sizeof(extra),
-                         " cancelable=%d signpost=%d status=%d ctx=[%08x %08x %08x %08x]",
-                         sCore->busRead8(sCore, 0x020350e0),
-                         sCore->busRead8(sCore, 0x020350e1),
-                         sCore->busRead8(sCore, 0x030016d1),
-                         sCore->busRead32(sCore, 0x030016cc),
-                         sCore->busRead32(sCore, 0x030016cc + 8),
-                         sCore->busRead32(sCore, 0x030016cc + 12),
-                         sCore->busRead32(sCore, 0x030016cc + 16));
-                strncat(msg, extra, sizeof(msg) - strlen(msg) - 1);
-            }
+                     "op %d timed out (kind %d) pos=%d,%d probe spot=%u state=%u verbs=%u map=%u,%u",
+                     opIndex, (int) op->kind, x, y,
+                     probeRead(HABITAT_TEST_PROBE_OFFSET_SPOT_ID, 2),
+                     probeRead(HABITAT_TEST_PROBE_OFFSET_SPOT_STATE, 1),
+                     probeRead(HABITAT_TEST_PROBE_OFFSET_AVAILABLE_VERBS, 1),
+                     probeRead(HABITAT_TEST_PROBE_OFFSET_MAP_GROUP, 1),
+                     probeRead(HABITAT_TEST_PROBE_OFFSET_MAP_NUM, 1));
             shot("timeout");
             rc = finish("FAIL", msg, frame);
         }

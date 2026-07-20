@@ -8,7 +8,14 @@ Grove. Built on [pokeemerald-expansion](https://github.com/rh-hideout/pokeemeral
 
 - Design contract: [`docs/superpowers/specs/2026-07-18-hoenn-habitat-design-spec-v0.1.md`](docs/superpowers/specs/2026-07-18-hoenn-habitat-design-spec-v0.1.md)
 - Changelog: [`CHANGELOG.md`](CHANGELOG.md)
-- Headless verification: `make verify` (build → boot in mGBA → screenshot; see `tools/habitat/`)
+- Headless verification: `make verify` (fresh development-probe build → Zorua
+  Lab boot → screenshot; see `tools/habitat/`). The checked probe ABI is
+  documented in `include/habitat/test_probe_schema.h`; it is absent from
+  release builds.
+- Status: **built** and **focused-tested** through the habitat native suite.
+  The portable headless verifier is ready for a fresh Zorua Lab boot run;
+  release acceptance remains intentionally blocked until the Task 12
+  provenance gate is green.
 - **Legal stance:** this repository distributes **source and patches only** — never
   ROMs, never Nintendo-owned binaries — and is never monetized. The game builds
   entirely from this source tree; play it by building it yourself or by applying a
