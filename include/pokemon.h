@@ -127,7 +127,7 @@ enum MonData {
     MON_DATA_EVOLUTION_TRACKER,
 };
 
-#define BLOCK_DYNAMAX 15 // Used as dynamax level value by the AI to indicate this mon shouldn't dynamax
+#define BLOCK_AI_DYNAMAX 15 // Used as dynamax level value by the AI to indicate this mon shouldn't dynamax
 
 struct PokemonSubstruct0
 {

@@ -200,7 +200,7 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     }
     else
     {
-        data = BLOCK_DYNAMAX;
+        data = BLOCK_AI_DYNAMAX;
     }
     SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &data);
     if (trainerMon->gigantamaxFactor)

@@ -86,7 +86,7 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
 
     EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_DYNAMAX_LEVEL), 5);
     EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_DYNAMAX_LEVEL), 10);
-    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_DYNAMAX_LEVEL), BLOCK_DYNAMAX);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_DYNAMAX_LEVEL), BLOCK_AI_DYNAMAX);
 
     EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_TERA_TYPE), TYPE_MYSTERY);
     EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_TERA_TYPE), TYPE_WATER);
