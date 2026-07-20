@@ -12,7 +12,7 @@ cd "$ROOT"
 
 usage() {
     echo "usage: tools/habitat/verify.sh [--no-interact | --scenario NAME]" >&2
-    echo "scenarios: lab-campfire lab-plant lab-basin starter-recovery skitty machop route103 bout-win bout-loss bout-flee bout-reset save-migration save-persistence grove item-chooser approved-icons" >&2
+    echo "scenarios: lab-campfire lab-plant lab-basin starter-recovery skitty machop route103 bout-win bout-loss bout-flee bout-reset save-migration save-persistence grove" >&2
 }
 
 SCENARIO=boot
@@ -20,7 +20,7 @@ case "${1:-}" in
     ""|--no-interact) ;;
     --scenario)
         case "${2:-}" in
-            lab-campfire|lab-plant|lab-basin|starter-recovery|skitty|machop|route103|bout-win|bout-loss|bout-flee|bout-reset|save-migration|save-persistence|grove|item-chooser|approved-icons) SCENARIO=$2 ;;
+            lab-campfire|lab-plant|lab-basin|starter-recovery|skitty|machop|route103|bout-win|bout-loss|bout-flee|bout-reset|save-migration|save-persistence|grove) SCENARIO=$2 ;;
             *)
             echo "hh-verify: scenario '${2:-}' is not available in the current approved slice" >&2
             echo "hh-verify: use --no-interact or one of the documented scenarios" >&2
@@ -120,12 +120,6 @@ case "$SCENARIO" in
         ;;
     grove)
         SCRIPT='command:grove-assign;expect-probe:spot_id,7;expect-probe:resident_assignment,1;goto:6,11;walk:D,2;until-map:0,9;expect-probe:map_group,0;expect-probe:map_num,9;wait:60;shot:grove;pass:Grove worker visual checkpoint reached'
-        ;;
-    item-chooser)
-        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:item_chooser;pass:Authored item chooser visual checkpoint reached'
-        ;;
-    approved-icons)
-        SCRIPT='command:skitty-place;goto:6,11;walk:D,2;until-map:0,9;wait:30;goto:10,17;goto:10,1;walk:U,2;until-map:0,16;wait:30;goto:6,15;goto:6,10;goto:16,10;goto:16,4;goto:10,4;goto:10,1;walk:U,2;until-map:0,10;wait:30;goto:10,1;walk:U,2;until-map:0,18;goto:19,14;face:U;tap:A;wait:45;tap:A;wait:45;shot:approved_icons;pass:Furnishing icon provenance visual checkpoint reached'
         ;;
 esac
 

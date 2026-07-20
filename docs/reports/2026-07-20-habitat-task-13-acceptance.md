@@ -40,8 +40,8 @@ able to run to completion.
 | `tools/habitat/verify.sh --scenario save-migration` | pending headless verification | legacy Machop-origin migration, screenshot |
 | `tools/habitat/verify.sh --scenario save-persistence` | pending headless verification | `TrySavingData` sector write and `LoadGameSave` reload, screenshot |
 | `tools/habitat/verify.sh --scenario grove` | pending visual review | Grove worker screenshot |
-| `tools/habitat/verify.sh --scenario item-chooser` | pending native UI implementation | the Route 103 interaction currently shows placeholder dialogue and a yes/no prompt; it does not render an item-chooser view to capture |
-| `tools/habitat/verify.sh --scenario approved-icons` | pending native icon UI / release hold | the interaction does not render furnishing icons; the manifest also records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art, provenance, and an icon-bearing surface |
+| future item-chooser checkpoint (disabled) | pending native UI implementation | the Route 103 interaction currently shows placeholder dialogue and a yes/no prompt; it does not render an item-chooser view to capture |
+| future approved-icons checkpoint (disabled) | pending native icon UI / release hold | the interaction does not render furnishing icons; the manifest also records six temporary question-mark icons, so this cannot be approved until Task 12 supplies art, provenance, and an icon-bearing surface |
 | `python3 tools/habitat/check_memory.py --map pokeemerald.map` | pending fresh measurement | JSON/log |
 | `tools/habitat/save_sizes.sh` | pending fresh measurement | terminal log |
 
@@ -58,9 +58,11 @@ released before `CB2_EndHabitatBoutBattle` records the structured outcome. The
 runner captures the live scene before waiting for that outcome. The reset command saves through the normal
 flash-sector path, begins the live bout without a finish task, and has the
 runner reset the emulated console before checking the reloaded resident. The
-chooser and icon checkpoints enter the real Route 103 Skitty interaction and
-archive screenshots without inspecting message bytes. Only the unauthored
-Deoxys story golden path remains exempt under the plan.
+chooser and icon checkpoints will enter real native Route 103 UI only after
+those surfaces exist, then archive screenshots without inspecting message
+bytes. Until then, they remain disabled rather than passing on placeholder
+dialogue. Only the unauthored Deoxys story golden path remains exempt under
+the plan.
 
 The focused native lifecycle fixture is deliberately narrower than a rendered
 bout: it starts the production Habitat bout boundary and uses the engine's
@@ -69,11 +71,12 @@ return callback sequence. It suppresses only the test runner's unrelated
 "turns specified" bookkeeping for that synthetic fixture; it does not claim a
 headless live-scene capture. That evidence remains pending in the matrix above.
 
-The icon scenario is a required visual capture, not a claim that artwork is
-already approved: the live manifest still marks all six furnishing icons as
-temporary and release-blocking. Its screenshot gives Task 12's future art
-review a stable checkpoint; the provenance gate remains red until approved
-source records and replacements exist.
+The future icon scenario will be a required visual capture, not a claim that
+artwork is already approved: the live manifest still marks all six furnishing
+icons as temporary and release-blocking. Once a native icon-bearing surface
+exists, its screenshot will give Task 12's art review a stable checkpoint;
+the provenance gate will remain red until approved source records and
+replacements exist.
 
 ## Fresh-build limitation
 
