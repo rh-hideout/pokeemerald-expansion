@@ -78,9 +78,15 @@ void Habitat_CompleteBefriendById(u16 spotId);
 bool32 Habitat_CanSubmitItem(const struct HabitatSpot *spot,
                              enum HabitatItemAction action,
                              u16 itemId, u16 count);
+bool32 Habitat_CanSubmitItemAtIndex(const struct HabitatSpot *spot,
+                                    enum HabitatItemAction action,
+                                    u8 conditionIndex);
 bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
                           enum HabitatItemAction action,
                           u16 itemId, u16 count);
+bool32 Habitat_SubmitItemAtIndex(const struct HabitatSpot *spot,
+                                 enum HabitatItemAction action,
+                                 u8 conditionIndex);
 u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot);
 u16 Habitat_GetInteractionAvailableVerbs(void);
 

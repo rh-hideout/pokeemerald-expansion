@@ -104,11 +104,8 @@ u16 Habitat_TryOffer(void)
     struct HabitatItemChoice choice;
 
     if (sHasSelectedOffer)
-    {
-        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_OFFER,
-                                                sSelectedOfferCondition, &choice))
-            return FALSE;
-    }
+        return Habitat_SubmitItemAtIndex(spot, HABITAT_ITEM_ACTION_OFFER,
+                                         sSelectedOfferCondition);
     else if (!Habitat_SelectConditionItem(spot, HABITAT_ITEM_ACTION_OFFER,
                                           gSpecialVar_ItemId, &choice))
     {
@@ -128,11 +125,8 @@ u16 Habitat_TryPlaceItem(void)
     struct HabitatItemChoice choice;
 
     if (sHasSelectedPlace)
-    {
-        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_PLACE,
-                                                sSelectedPlaceCondition, &choice))
-            return FALSE;
-    }
+        return Habitat_SubmitItemAtIndex(spot, HABITAT_ITEM_ACTION_PLACE,
+                                         sSelectedPlaceCondition);
     else if (!Habitat_FindConditionItem(spot, HABITAT_ITEM_ACTION_PLACE, &choice))
     {
         return FALSE;
@@ -248,6 +242,22 @@ static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 
     return FALSE;
 }
 
+static const struct HabitatCondition *GetItemConditions(const struct HabitatSpot *spot,
+                                                         enum HabitatItemAction action)
+{
+    if (spot == NULL)
+        return NULL;
+    switch (action)
+    {
+    case HABITAT_ITEM_ACTION_PLACE:
+        return spot->appearConditions;
+    case HABITAT_ITEM_ACTION_OFFER:
+        return spot->befriendConditions;
+    default:
+        return NULL;
+    }
+}
+
 static bool32 HasActiveOffer(const struct HabitatSpot *spot, u16 itemId, u16 count)
 {
     struct HabitatOfferContext offer = { .itemId = itemId, .count = count };
@@ -288,15 +298,40 @@ bool32 Habitat_CanSubmitItem(const struct HabitatSpot *spot,
     }
 }
 
-bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
-                          enum HabitatItemAction action,
-                          u16 itemId, u16 count)
+bool32 Habitat_CanSubmitItemAtIndex(const struct HabitatSpot *spot,
+                                    enum HabitatItemAction action,
+                                    u8 conditionIndex)
+{
+    const struct HabitatCondition *conditions = GetItemConditions(spot, action);
+    const struct HabitatCondition *condition;
+    u16 count;
+
+    if (conditions == NULL || conditionIndex >= HABITAT_MAX_CONDITIONS)
+        return FALSE;
+    condition = &conditions[conditionIndex];
+    if (condition->type == COND_NONE)
+        return FALSE;
+    if ((action == HABITAT_ITEM_ACTION_PLACE && condition->type != COND_ITEM_PLACED)
+     || (action == HABITAT_ITEM_ACTION_OFFER && condition->type != COND_ITEM_OFFERED))
+        return FALSE;
+    count = max(1, condition->paramB);
+    if (!Habitat_CanSubmitItem(spot, action, condition->paramA, count))
+        return FALSE;
+    return action != HABITAT_ITEM_ACTION_PLACE
+        || Habitat_GetPlacedCount(condition->paramC) < count;
+}
+
+static bool32 SubmitItemInternal(const struct HabitatSpot *spot,
+                                 enum HabitatItemAction action,
+                                 u16 itemId, u16 count, u8 conditionIndex)
 {
     u8 placedBefore;
     const struct HabitatCondition *c;
     u32 i;
 
-    if (!Habitat_CanSubmitItem(spot, action, itemId, count)
+    if ((conditionIndex == HABITAT_MAX_CONDITIONS
+             ? !Habitat_CanSubmitItem(spot, action, itemId, count)
+             : !Habitat_CanSubmitItemAtIndex(spot, action, conditionIndex))
      || !CheckBagHasItem(itemId, count)
      || !RemoveBagItem(itemId, count))
         return FALSE;
@@ -313,7 +348,8 @@ bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
     for (i = 0; spot->appearConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
     {
         c = &spot->appearConditions[i];
-        if (c->type != COND_ITEM_PLACED || c->paramA != itemId || max(1, c->paramB) != count
+        if ((conditionIndex != HABITAT_MAX_CONDITIONS && i != conditionIndex)
+         || c->type != COND_ITEM_PLACED || c->paramA != itemId || max(1, c->paramB) != count
          || Habitat_GetPlacedCount(c->paramC) >= count)
             continue;
         placedBefore = Habitat_GetPlacedCount(c->paramC);
@@ -330,6 +366,29 @@ bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
     }
     AddBagItem(itemId, count);
     return FALSE;
+}
+
+bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
+                          enum HabitatItemAction action,
+                          u16 itemId, u16 count)
+{
+    return SubmitItemInternal(spot, action, itemId, count, HABITAT_MAX_CONDITIONS);
+}
+
+bool32 Habitat_SubmitItemAtIndex(const struct HabitatSpot *spot,
+                                 enum HabitatItemAction action,
+                                 u8 conditionIndex)
+{
+    const struct HabitatCondition *conditions = GetItemConditions(spot, action);
+    const struct HabitatCondition *condition;
+
+    if (conditions == NULL || conditionIndex >= HABITAT_MAX_CONDITIONS)
+        return FALSE;
+    condition = &conditions[conditionIndex];
+    if (condition->type == COND_NONE)
+        return FALSE;
+    return SubmitItemInternal(spot, action, condition->paramA,
+                              max(1, condition->paramB), conditionIndex);
 }
 
 u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot)

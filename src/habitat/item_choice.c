@@ -87,7 +87,7 @@ bool32 Habitat_SelectConditionItemAtIndex(const struct HabitatSpot *spot,
     if (condition->type == COND_NONE || !IsWantedType(condition->type, action))
         return FALSE;
     count = max(1, condition->paramB);
-    if (!Habitat_CanSubmitItem(spot, action, condition->paramA, count)
+    if (!Habitat_CanSubmitItemAtIndex(spot, action, conditionIndex)
      || !BagHasAuthoredCount(condition->paramA, count))
         return FALSE;
     choice->itemId = condition->paramA;
