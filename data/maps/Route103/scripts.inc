@@ -1,3 +1,8 @@
+// The removed Route 103 rival scene remains as unreachable legacy script
+// material for source-history continuity. Its object template is deliberately
+// gone; this inert local id keeps the assembled legacy labels linkable.
+#define LOCALID_ROUTE103_RIVAL 0
+
 Route103_MapScripts::
 	.byte 0
 
