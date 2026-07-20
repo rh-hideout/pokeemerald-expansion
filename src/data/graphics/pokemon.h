@@ -27638,13 +27638,13 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #if P_FOOTPRINTS
     const u8 gMonFootprint_TerapagosTerastal[] = INCGFX_U8("graphics/pokemon/terapagos/terastal/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
-#if OW_POKEMON_OBJECT_EVENTS
+#if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
     const u32 gObjectEventPic_TerapagosTerastal[] = INCGFX_COMP("graphics/pokemon/terapagos/terastal/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_TerapagosTerastal[] = INCGFX_U16("graphics/pokemon/terapagos/terastal/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_TerapagosTerastal[] = INCGFX_U16("graphics/pokemon/terapagos/terastal/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
-#endif //OW_POKEMON_OBJECT_EVENTS
+#endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 
     const u32 gMonFrontPic_TerapagosStellar[] = INCGFX_U32("graphics/pokemon/terapagos/stellar/front.png", ".4bpp.smol");
     const u16 gMonPalette_TerapagosStellar[] = INCGFX_U16("graphics/pokemon/terapagos/stellar/normal.pal", ".gbapal");

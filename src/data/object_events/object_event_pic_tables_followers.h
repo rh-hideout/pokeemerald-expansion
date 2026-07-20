@@ -6677,10 +6677,10 @@ static const struct SpriteFrameImage sPicTable_IronCrown[] = {
 static const struct SpriteFrameImage sPicTable_TerapagosNormal[] = {
     overworld_ascending_frames(gObjectEventPic_TerapagosNormal, 4, 4),
 };
+#if OW_BATTLE_ONLY_FORMS
 static const struct SpriteFrameImage sPicTable_TerapagosTerastal[] = {
     overworld_ascending_frames(gObjectEventPic_TerapagosTerastal, 4, 4),
 };
-#if OW_BATTLE_ONLY_FORMS
 static const struct SpriteFrameImage sPicTable_TerapagosStellar[] = {
     overworld_ascending_frames(gObjectEventPic_TerapagosStellar, 8, 8),
 };
