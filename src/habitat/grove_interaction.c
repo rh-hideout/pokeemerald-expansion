@@ -172,7 +172,7 @@ u16 Habitat_TryHarvestPlot(void)
 
 // special: pre-check only — no state changes during dialogue (mutating the
 // locked, talked-to object's visibility mid-script kills the script engine;
-// found the hard way). VAR_RESULT: 0 cannot, 1 can, 2 grove full.
+// found the hard way). VAR_RESULT: 0 cannot, 1 can, 2 Grove globally full.
 u16 Habitat_CanRecruitToGrove(void)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(Habitat_GetInteractionSpotId());

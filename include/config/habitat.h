@@ -9,7 +9,7 @@
 #define HABITAT_PLACED_CONDITION_CAP 960  // authored COND_ITEM_PLACED.paramC ids (4-bit each)
 #define HABITAT_RESIDENT_COUNT       96   // individualized residents (spec §5 cap)
 #define HABITAT_PLOT_COUNT           12   // Grove berry plots (§5; slice uses 3)
-#define HABITAT_GROVE_OUT_CAP        6    // §3 six-out-per-section rule
+#define HABITAT_GROVE_OUT_CAP        6    // global six-out cap; this Grove is one map
 #define HABITAT_PLOT_HOURS_PER_STAGE 4    // growth pacing (dev-tunable)
 #define HABITAT_PLOT_STAGE_MATURE    4    // stages 0..4; 4 = harvestable
 #define HABITAT_PLOT_YIELD           3    // berries per harvest

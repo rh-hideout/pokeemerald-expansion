@@ -23,8 +23,9 @@ struct HabitatResident
     u8 assignment;        // Grove work assignment (phase 4); 0 = unassigned
 };
 
-// A Grove berry plot (§5: 8 bytes). berryItem is fixed at assignment from
-// the worker's primary type (§4 rule 1); workers are registry indices
+// A Grove berry plot (§5: 8 bytes). berryItem is established by its first
+// worker's primary type (§4 rule 1), retained while untended, and changes
+// only when a different first worker returns; workers are registry indices
 // (0xFF = none). Growth accrues in whole hours, event-driven only.
 struct HabitatPlot
 {
@@ -81,7 +82,8 @@ u16 Habitat_GetResidentSpotId(u32 residentIndex);  // HABITAT_SPOT_NONE if empty
 u16 Habitat_GetResidentSpecies(u32 residentIndex); // SPECIES_NONE if empty or unknown
 
 // Grove assignment & plots (src/habitat/grove.c). assignment: 0 = home,
-// 1..HABITAT_PLOT_COUNT = working that plot. "Out" == assignment != 0.
+// 1..HABITAT_PLOT_COUNT = working that plot. "Out" == assignment != 0;
+// HABITAT_GROVE_OUT_CAP applies globally because this Grove is one map.
 bool32 Habitat_ResidentIsOut(u32 residentIdx);
 u32 Habitat_OutCount(void);
 bool32 Habitat_AssignResidentToPlot(u32 residentIdx, u32 plotIdx);  // six-out + slot checks

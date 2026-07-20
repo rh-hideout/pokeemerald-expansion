@@ -74,6 +74,8 @@ bool32 Habitat_AssignResidentToPlot(u32 residentIdx, u32 plotIdx)
     struct HabitatPlot *plot = Habitat_GetPlot(plotIdx);
     const struct HabitatResident *r = Habitat_GetResident(residentIdx);
     u8 *slot;
+    bool32 isFirstWorker;
+    u16 berryItem;
 
     if (plot == NULL || r == NULL)
         return FALSE;
@@ -84,10 +86,22 @@ bool32 Habitat_AssignResidentToPlot(u32 residentIdx, u32 plotIdx)
     if (plot->worker1 != WORKER_NONE && plot->worker2 != WORKER_NONE)
         return FALSE;  // plot full
 
+    isFirstWorker = (plot->worker1 == WORKER_NONE && plot->worker2 == WORKER_NONE);
     slot = (plot->worker1 == WORKER_NONE) ? &plot->worker1 : &plot->worker2;
     *slot = residentIdx;
-    if (plot->worker1 != WORKER_NONE && plot->worker2 == WORKER_NONE)
-        plot->berryItem = Habitat_BerryForSpecies(Habitat_GetResidentSpecies(residentIdx));  // first worker sets the crop
+    if (isFirstWorker)
+    {
+        berryItem = Habitat_BerryForSpecies(Habitat_GetResidentSpecies(residentIdx));
+        if (plot->berryItem != berryItem)
+        {
+            // An untended plot remembers its crop and progress. Only a
+            // different first worker starts a new crop; a second worker
+            // never gets to rewrite an established identity.
+            plot->berryItem = berryItem;
+            plot->growthStage = 0;
+            plot->hoursProgress = 0;
+        }
+    }
     gSaveBlock3Ptr->habitat.residents[residentIdx].assignment = plotIdx + 1;
     Habitat_NotifyDependency(HABITAT_DEP_GROVE);
     Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);

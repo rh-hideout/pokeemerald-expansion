@@ -59,10 +59,71 @@ TEST("Habitat Grove: assignment honors slots and the six-out cap")
     EXPECT(Habitat_AssignResidentToPlot(4, 2));
     EXPECT(Habitat_AssignResidentToPlot(5, 2));
     EXPECT_EQ(Habitat_OutCount(), 6);
-    EXPECT(!Habitat_AssignResidentToPlot(6, 3));   // §3 six-out cap
+    EXPECT(!Habitat_AssignResidentToPlot(6, 3));   // global six-out cap, even on another plot
     Habitat_SendResidentHome(5);
     EXPECT_EQ(Habitat_OutCount(), 5);
     EXPECT(Habitat_AssignResidentToPlot(6, 3));    // freed
+}
+
+TEST("Habitat Grove: an untended crop pauses and matching first worker resumes it")
+{
+    struct HabitatPlot *plot;
+
+    InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
+    gSaveBlock3Ptr->habitat.residents[0].originSpotId = 7;  // Torchic
+    gSaveBlock3Ptr->habitat.residents[1].originSpotId = 7;  // another Torchic
+
+    ASSUME(Habitat_AssignResidentToPlot(0, 0));
+    Habitat_TickPlots(HABITAT_PLOT_HOURS_PER_STAGE + 2);
+    plot = Habitat_GetPlot(0);
+    EXPECT_EQ(plot->berryItem, ITEM_LEPPA_BERRY);
+    EXPECT_EQ(plot->growthStage, 1);
+    EXPECT_EQ(plot->hoursProgress, HABITAT_PLOT_HOURS_PER_STAGE + 2);
+
+    Habitat_SendResidentHome(0);
+    Habitat_TickPlots(20);
+    EXPECT_EQ(plot->growthStage, 1);  // no worker: pause, do not erase or advance
+    EXPECT_EQ(plot->hoursProgress, HABITAT_PLOT_HOURS_PER_STAGE + 2);
+
+    EXPECT(Habitat_AssignResidentToPlot(1, 0));
+    EXPECT_EQ(plot->berryItem, ITEM_LEPPA_BERRY);
+    EXPECT_EQ(plot->growthStage, 1);  // same crop resumes retained progress
+    EXPECT_EQ(plot->hoursProgress, HABITAT_PLOT_HOURS_PER_STAGE + 2);
+}
+
+TEST("Habitat Grove: only a changed first worker resets a retained crop")
+{
+    struct HabitatPlot *plot;
+
+    InitPlotsForTest();
+    Habitat_SetPlacedCount(3, 1);
+    gSaveBlock3Ptr->habitat.residents[0].originSpotId = 7;  // Torchic / Leppa
+    gSaveBlock3Ptr->habitat.residents[1].originSpotId = 1;  // Skitty / Persim
+    gSaveBlock3Ptr->habitat.residents[2].originSpotId = 7;  // Torchic / Leppa
+    plot = Habitat_GetPlot(0);
+    plot->berryItem = ITEM_LEPPA_BERRY;
+    plot->growthStage = HABITAT_PLOT_STAGE_MATURE - 1;
+    plot->hoursProgress = HABITAT_PLOT_HOURS_PER_STAGE * (HABITAT_PLOT_STAGE_MATURE - 1) + 3;
+
+    ASSUME(Habitat_AssignResidentToPlot(0, 0));
+    EXPECT(Habitat_AssignResidentToPlot(1, 0));
+    EXPECT_EQ(plot->berryItem, ITEM_LEPPA_BERRY);  // second worker cannot convert a near-mature crop
+    EXPECT_EQ(plot->growthStage, HABITAT_PLOT_STAGE_MATURE - 1);
+    EXPECT_EQ(plot->hoursProgress, HABITAT_PLOT_HOURS_PER_STAGE * (HABITAT_PLOT_STAGE_MATURE - 1) + 3);
+
+    Habitat_SendResidentHome(0);
+    Habitat_SendResidentHome(1);
+    EXPECT(Habitat_AssignResidentToPlot(2, 0));
+    EXPECT_EQ(plot->berryItem, ITEM_LEPPA_BERRY);  // matching first worker still resumes
+    EXPECT_EQ(plot->growthStage, HABITAT_PLOT_STAGE_MATURE - 1);
+    EXPECT_EQ(plot->hoursProgress, HABITAT_PLOT_HOURS_PER_STAGE * (HABITAT_PLOT_STAGE_MATURE - 1) + 3);
+
+    Habitat_SendResidentHome(2);
+    EXPECT(Habitat_AssignResidentToPlot(1, 0));
+    EXPECT_EQ(plot->berryItem, ITEM_PERSIM_BERRY);
+    EXPECT_EQ(plot->growthStage, 0);               // changed first worker starts a new crop
+    EXPECT_EQ(plot->hoursProgress, 0);
 }
 
 TEST("Habitat Grove: tended plots grow by hours and harvest yields the crop")
