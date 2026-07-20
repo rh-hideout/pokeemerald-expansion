@@ -24,7 +24,7 @@ able to run to completion.
 | `sh tools/habitat/test_verify.sh` | focused-tested | exit 0: structured parser, release guard, fresh-build and safe-output contracts; validates `bout-win` field assertion |
 | `python3 tools/habitat/test_check_memory.py` | focused-tested | exit 0: 3 checks passed |
 | focused ARM compile of the probe plus `src/battle_main.c` and `src/battle_setup.c` | focused-tested | exit 0 with `TESTING=1` / `HABITAT_TEST_PROBE=1`; includes the guarded battle terminal seam and callback assertion |
-| `make check TESTS='Habitat verification probe'` | focused-tested | exit 0 on 2026-07-20; covers the terminal seam's field-state refusal and post-cleanup invariant |
+| `make check TESTS='Habitat verification probe'` | focused-tested | exit 0 on 2026-07-20; seven tests include a real `Habitat_BoutBegin` fixture that drives the production end-turn handler and `BattleMainCB1` through teardown before dispatching the saved habitat callback |
 | `tools/habitat/verify.sh --no-interact` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-campfire` | pending headless verification | output directory |
 | `tools/habitat/verify.sh --scenario lab-plant` | pending headless verification | output directory |
@@ -61,6 +61,13 @@ runner reset the emulated console before checking the reloaded resident. The
 chooser and icon checkpoints enter the real Route 103 Skitty interaction and
 archive screenshots without inspecting message bytes. Only the unauthored
 Deoxys story golden path remains exempt under the plan.
+
+The focused native lifecycle fixture is deliberately narrower than a rendered
+bout: it starts the production Habitat bout boundary and uses the engine's
+resource allocation, end-turn handler, `BattleMainCB1`, fade, teardown, and
+return callback sequence. It suppresses only the test runner's unrelated
+"turns specified" bookkeeping for that synthetic fixture; it does not claim a
+headless live-scene capture. That evidence remains pending in the matrix above.
 
 The icon scenario is a required visual capture, not a claim that artwork is
 already approved: the live manifest still marks all six furnishing icons as

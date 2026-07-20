@@ -18,7 +18,8 @@
 #if TESTING || HABITAT_TEST_PROBE
 struct HabitatTestProbe gHabitatTestProbe;
 u16 gHabitatTestCommand;
-static u16 sTestProbeSpotId = HABITAT_SPOT_NONE;
+static u16 sTestProbeSpotId;
+static bool8 sTestProbeSpotSelected;
 
 // This is an explicit non-finale fixture. It exercises the production bout
 // boundary without implying an unauthored Deoxys scene exists.
@@ -45,6 +46,7 @@ STATIC_ASSERT(offsetof(struct HabitatTestProbe, mapNum) == HABITAT_TEST_PROBE_OF
 static void SelectTestProbeSpot(u16 spotId)
 {
     sTestProbeSpotId = spotId;
+    sTestProbeSpotSelected = TRUE;
 }
 
 static void SubmitTestItem(u16 spotId, enum HabitatItemAction action, u16 itemId)
@@ -209,7 +211,7 @@ void Habitat_TestProbeRefresh(void)
 
     if (gHabitatTestCommand != HABITAT_TEST_COMMAND_NONE)
         ApplyTestCommand();
-    spot = Habitat_GetSpot(sTestProbeSpotId != HABITAT_SPOT_NONE
+    spot = Habitat_GetSpot(sTestProbeSpotSelected
                            ? sTestProbeSpotId : Habitat_GetInteractionSpotId());
     memset(&gHabitatTestProbe, 0, sizeof(gHabitatTestProbe));
     gHabitatTestProbe.version = HABITAT_TEST_PROBE_VERSION;

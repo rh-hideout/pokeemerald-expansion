@@ -218,6 +218,9 @@ EWRAM_DATA struct AiBattleData *gAiBattleData = NULL;
 EWRAM_DATA u8 *gLinkBattleSendBuffer = NULL;
 EWRAM_DATA u8 *gLinkBattleRecvBuffer = NULL;
 EWRAM_DATA struct BattleResources *gBattleResources = NULL;
+#if TESTING || HABITAT_TEST_PROBE
+static bool8 sBattleMainTestFixtureActive;
+#endif
 EWRAM_DATA u8 gActionSelectionCursor[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gMoveSelectionCursor[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gBattlerStatusSummaryTaskId[MAX_BATTLERS_COUNT] = {0};
@@ -1800,6 +1803,56 @@ static void FreeRestoreBattleData(void)
     FreeBattleResources();
     ResetDynamicAiFunctions();
 }
+
+#if TESTING || HABITAT_TEST_PROBE
+bool32 BattleMain_TestStartLiveBoutFixture(void)
+{
+    if (gMain.inBattle || gBattleResources != NULL || gBattleSpritesDataPtr != NULL)
+        return FALSE;
+
+    // This mirrors the resource ownership established by BattleInit before
+    // BattleMainCB1 drives a real battle. Habitat_BoutBegin has already
+    // installed the production saved callback and temporary parties.
+    gPreBattleCallback1 = gMain.callback1;
+    gMain.inBattle = TRUE;
+    sBattleMainTestFixtureActive = TRUE;
+    AllocateBattleResources();
+    AllocateBattleSpritesData();
+    return TRUE;
+}
+
+bool32 BattleMain_TestFinishLiveBoutFixture(u8 battleOutcome)
+{
+    u8 endTurnFunc = battleOutcome & 0x7F;
+
+    if (!gMain.inBattle
+     || gBattleResources == NULL
+     || gBattleSpritesDataPtr == NULL
+     || endTurnFunc >= ARRAY_COUNT(sEndTurnFuncsTable))
+        return FALSE;
+
+    // Start the ordinary terminal handler. The fixture has no presentation
+    // script/controller work, so it can enter the production finish state;
+    // subsequent fixture frames run BattleMainCB1 until its normal cleanup
+    // and ReturnFromBattleToOverworld transition install the saved callback.
+    gBattleOutcome = battleOutcome;
+    sEndTurnFuncsTable[endTurnFunc]();
+    gCurrentActionFuncId = B_ACTION_FINISHED;
+    return TRUE;
+}
+
+bool32 BattleMain_TestRunLiveBoutFixtureFrame(void)
+{
+    if (!gMain.inBattle)
+        return FALSE;
+
+    BattleMainCB1();
+    UpdatePaletteFade();
+    if (!gMain.inBattle)
+        sBattleMainTestFixtureActive = FALSE;
+    return TRUE;
+}
+#endif
 
 void CB2_QuitRecordedBattle(void)
 {
@@ -5568,7 +5621,11 @@ static void HandleEndTurn_FinishBattle(void)
                 CalculateMonStats(&gParties[B_TRAINER_PLAYER][i]);
         }
         RecordedBattle_SetPlaybackFinished();
-        if (gTestRunnerEnabled)
+        if (gTestRunnerEnabled
+#if TESTING || HABITAT_TEST_PROBE
+         && !sBattleMainTestFixtureActive
+#endif
+           )
             TestRunner_Battle_AfterLastTurn();
         // Clear battle mon species to avoid a bug on the next battle that causes
         // healthboxes loading incorrectly due to it trying to create a Mega Indicator

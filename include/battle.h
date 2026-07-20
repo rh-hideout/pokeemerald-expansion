@@ -1054,6 +1054,9 @@ extern struct BattleSpriteData *gBattleSpritesDataPtr;
 // callback directly.
 #if TESTING || HABITAT_TEST_PROBE
 bool32 BattleMain_TestFinishWithOutcome(u8 battleOutcome);
+bool32 BattleMain_TestStartLiveBoutFixture(void);
+bool32 BattleMain_TestFinishLiveBoutFixture(u8 battleOutcome);
+bool32 BattleMain_TestRunLiveBoutFixtureFrame(void);
 bool32 BattleMain_TestHasFinishedCleanup(void);
 #endif
 
