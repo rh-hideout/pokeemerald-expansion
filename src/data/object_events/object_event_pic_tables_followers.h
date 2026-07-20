@@ -5916,9 +5916,11 @@ static const struct SpriteFrameImage sPicTable_IndeedeeF[] = {
 static const struct SpriteFrameImage sPicTable_MorpekoFullBelly[] = {
     overworld_ascending_frames(gObjectEventPic_MorpekoFullBelly, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_MorpekoHangry[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_MorpekoHangry[] = {
     overworld_ascending_frames(gObjectEventPic_MorpekoHangry, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_MORPEKO
 
 #if P_FAMILY_CUFANT

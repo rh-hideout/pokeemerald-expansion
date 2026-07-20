@@ -5987,6 +5987,17 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 0, SHADOW_SIZE_S)
         FOOTPRINT(Morpeko)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_MorpekoHangry,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_MorpekoHangry,
+            gShinyOverworldPalette_MorpekoHangry
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sMorpekoLevelUpLearnset,
         .teachableLearnset = sMorpekoTeachableLearnset,
         .eggMoveLearnset = sMorpekoEggMoveLearnset,
