@@ -6,6 +6,10 @@ Authorization correction commit: `ee013ccfb` (`fix: harden habitat finale author
 
 Battle-action correction commit: `811e7966a` (`fix: guard habitat ball actions`).
 
+Visible-rejection correction commit: `8c6ce522e` (`fix: show rejected habitat ball actions`).
+
+No-net-consumption correction commit: `87e17ede7` (`fix: restore rejected habitat balls`).
+
 ## Changed files
 
 - `include/habitat/bouts.h`, `src/habitat/bouts.c`, `test/habitat/bouts.c`: generic, non-nestable bout transaction backed by `SavePlayerParty`/`LoadPlayerParty`; byte-exact six-member restoration coverage for win, loss, flee, setup failure, and idempotent abort cleanup.
@@ -31,7 +35,8 @@ Battle-action correction commit: `811e7966a` (`fix: guard habitat ball actions`)
 - Finale authorization now snapshots at `Habitat_BoutBegin`: the generic definition is copied by value, and a separate boolean is computed solely from pointer identity with `gHabitatDeoxysFinale.bout`. No async path retains caller-owned definition memory or trusts matching `boutId`/`winFlag` fields.
 - The canonical Deoxys record has only its stable identity, species, and dedicated flag. Its levels and player-combat data remain unset, so `Habitat_BoutBegin(gHabitatDeoxysFinale.bout)` rejects it until an approved encounter definition exists.
 - The new red-specification forged-definition test initially exposed an unrelated `-Werror=maybe-uninitialized` failure in the throw-ball test; initializing that local lets the full test ROM build. The habitat unit-test seam also explicitly resets the unrun battle-start task after direct lifecycle calls.
-- The recorded-player test seam bypasses the Bag menu and directly selects the ball action. It exposed a real secondary capture path, now blocked in `HandleAction_UseItem` by the same categorical `CanThrowBall()` decision before `BattleScript_BallThrow` is selected. The focused test gives two literal Poké Balls because the recorder consumes one before action execution, then proves no throw animation and one retained ball.
+- The recorded-player test seam bypasses the Bag menu and directly selects the ball action. It exposed a real secondary capture path, now blocked in `HandleAction_UseItem` by the same categorical `CanThrowBall()` decision before `BattleScript_BallThrow` is selected. Its fallback uses a normal battle script with the existing neutral item-unavailable message rather than silently finishing the action.
+- The focused test gives two literal Poké Balls. The recorder consumes one before action execution; this fallback restores exactly that pre-consumed ball before it shows the neutral rejection, so the test proves no net loss (two remain), the unavailable message, and no throw animation.
 - `Habitat_BoutOutcomeFromBattleOutcome` is the helper used by the real battle callback and is covered for win, loss/draw/forfeit, flee/teleport/opponent-flee, and abort; the callback's loss field-return decision is covered through `Habitat_BoutReturnsToField`.
 - GREEN: `. tools/habitat/env.sh && make check TESTS='Habitat bout'` passed 10/10.
 - GREEN: `. tools/habitat/env.sh && make check TESTS='Habitat spot'` passed 8/8.
