@@ -227,7 +227,7 @@ static const struct SpriteFrameImage sPicTable_PikachuLibre[] = {
 #endif //P_COSPLAY_PIKACHU_FORMS
 
 #if P_CAP_PIKACHU_FORMS
-/*static const struct SpriteFrameImage sPicTable_PikachuOriginal[] = {
+static const struct SpriteFrameImage sPicTable_PikachuOriginal[] = {
     overworld_ascending_frames(gObjectEventPic_PikachuOriginal, 4, 4),
 };
 static const struct SpriteFrameImage sPicTable_PikachuHoenn[] = {
@@ -248,7 +248,7 @@ static const struct SpriteFrameImage sPicTable_PikachuAlola[] = {
 static const struct SpriteFrameImage sPicTable_PikachuPartner[] = {
     overworld_ascending_frames(gObjectEventPic_PikachuPartner, 4, 4),
 };
-static const struct SpriteFrameImage sPicTable_PikachuWorld[] = {
+/*static const struct SpriteFrameImage sPicTable_PikachuWorld[] = {
     overworld_ascending_frames(gObjectEventPic_PikachuWorld, 4, 4),
 };*/
 #endif //P_CAP_PIKACHU_FORMS

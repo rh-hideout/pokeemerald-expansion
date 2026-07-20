@@ -1013,6 +1013,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u32 gObjectEventPic_PikachuPopStar[] = INCGFX_COMP("graphics/pokemon/pikachu/pop_star/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
     const u32 gObjectEventPic_PikachuPhD[] = INCGFX_COMP("graphics/pokemon/pikachu/phd/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
     const u32 gObjectEventPic_PikachuLibre[] = INCGFX_COMP("graphics/pokemon/pikachu/libre/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_PikachuCosplay[] = INCGFX_U16("graphics/pokemon/pikachu/cosplay/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_PikachuCosplay[] = INCGFX_U16("graphics/pokemon/pikachu/cosplay/overworld_shiny.pal", ".gbapal");
@@ -1031,6 +1032,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 
     const u16 gOverworldPalette_PikachuLibre[] = INCGFX_U16("graphics/pokemon/pikachu/libre/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_PikachuLibre[] = INCGFX_U16("graphics/pokemon/pikachu/libre/overworld_shiny.pal", ".gbapal");
+
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_COSPLAY_PIKACHU_FORMS
@@ -1085,14 +1087,41 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u8 gMonIcon_PikachuWorld[] = INCGFX_U8("graphics/pokemon/pikachu/world/icon.png", ".4bpp");
 
 #if OW_POKEMON_OBJECT_EVENTS
-    // const u32 gObjectEventPic_PikachuOriginal[] = INCGFX_COMP("graphics/pokemon/pikachu/original/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuHoenn[] = INCGFX_COMP("graphics/pokemon/pikachu/hoenn/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuSinnoh[] = INCGFX_COMP("graphics/pokemon/pikachu/sinnoh/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuUnova[] = INCGFX_COMP("graphics/pokemon/pikachu/unova/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuKalos[] = INCGFX_COMP("graphics/pokemon/pikachu/kalos/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuAlola[] = INCGFX_COMP("graphics/pokemon/pikachu/alola/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuPartner[] = INCGFX_COMP("graphics/pokemon/pikachu/partner/overworld.png", ".4bpp");
-    // const u32 gObjectEventPic_PikachuWorld[] = INCGFX_COMP("graphics/pokemon/pikachu/world/overworld.png", ".4bpp");
+    const u32 gObjectEventPic_PikachuOriginal[] = INCGFX_COMP("graphics/pokemon/pikachu/original/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuHoenn[] = INCGFX_COMP("graphics/pokemon/pikachu/hoenn/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuSinnoh[] = INCGFX_COMP("graphics/pokemon/pikachu/sinnoh/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuUnova[] = INCGFX_COMP("graphics/pokemon/pikachu/unova/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuKalos[] = INCGFX_COMP("graphics/pokemon/pikachu/kalos/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuAlola[] = INCGFX_COMP("graphics/pokemon/pikachu/alola/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_PikachuPartner[] = INCGFX_COMP("graphics/pokemon/pikachu/partner/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    // const u32 gObjectEventPic_PikachuWorld[] = INCGFX_COMP("graphics/pokemon/pikachu/world/overworld.png", ".4bpp", "-mwidth 4 -mheight 4")
+
+#if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
+    const u16 gOverworldPalette_PikachuOriginal[] = INCGFX_U16("graphics/pokemon/pikachu/original/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuOriginal[] = INCGFX_U16("graphics/pokemon/pikachu/original/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuHoenn[] = INCGFX_U16("graphics/pokemon/pikachu/hoenn/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuHoenn[] = INCGFX_U16("graphics/pokemon/pikachu/hoenn/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuSinnoh[] = INCGFX_U16("graphics/pokemon/pikachu/sinnoh/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuSinnoh[] = INCGFX_U16("graphics/pokemon/pikachu/sinnoh/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuUnova[] = INCGFX_U16("graphics/pokemon/pikachu/unova/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuUnova[] = INCGFX_U16("graphics/pokemon/pikachu/unova/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuKalos[] = INCGFX_U16("graphics/pokemon/pikachu/kalos/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuKalos[] = INCGFX_U16("graphics/pokemon/pikachu/kalos/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuAlola[] = INCGFX_U16("graphics/pokemon/pikachu/alola/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuAlola[] = INCGFX_U16("graphics/pokemon/pikachu/alola/overworld_shiny.pal", ".gbapal");
+
+    const u16 gOverworldPalette_PikachuPartner[] = INCGFX_U16("graphics/pokemon/pikachu/partner/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_PikachuPartner[] = INCGFX_U16("graphics/pokemon/pikachu/partner/overworld_shiny.pal", ".gbapal");
+
+    // const u16 gOverworldPalette_PikachuWorld[] = INCGFX_U16("graphics/pokemon/pikachu/world/overworld_normal.pal", ".gbapal");
+    // const u16 gShinyOverworldPalette_PikachuWorld[] = INCGFX_U16("graphics/pokemon/pikachu/world/overworld_shiny.pal", ".gbapal");
+
+#endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_CAP_PIKACHU_FORMS
 
