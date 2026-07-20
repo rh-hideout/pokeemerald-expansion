@@ -322,6 +322,13 @@ static void Task_WeatherMain(u8 taskId)
     gWeatherPalStateFuncs[gWeatherPtr->palProcessingState]();
 }
 
+#if TESTING
+void Weather_RunMainTaskForTest(void)
+{
+    Task_WeatherMain(gWeatherPtr->taskId);
+}
+#endif
+
 static void None_Init(void)
 {
     Weather_SetBlendCoeffs(8, BASE_SHADOW_INTENSITY); // Indoor shadows

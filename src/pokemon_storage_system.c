@@ -6486,6 +6486,49 @@ static void PurgeMonOrBoxMon(u8 boxId, u8 position)
         ZeroBoxMonAt(boxId, position);
 }
 
+#if TESTING
+static bool32 BeginHabitatStorageTest(void)
+{
+    if (sStorage != NULL)
+        return FALSE;
+    sStorage = Alloc(sizeof(*sStorage));
+    if (sStorage == NULL)
+        return FALSE;
+    memset(sStorage, 0, sizeof(*sStorage));
+    return TRUE;
+}
+
+static void EndHabitatStorageTest(void)
+{
+    Free(sStorage);
+    sStorage = NULL;
+}
+
+bool32 Habitat_TestDepositPartyMonToPc(u8 partyPos, u8 boxId, u8 boxPos)
+{
+    if (partyPos >= PARTY_SIZE || boxId >= TOTAL_BOXES_COUNT || boxPos >= IN_BOX_COUNT
+     || !BeginHabitatStorageTest())
+        return FALSE;
+    sCursorPosition = partyPos;
+    SetMovingMonData(TOTAL_BOXES_COUNT, partyPos);
+    SetPlacedMonData(boxId, boxPos);
+    EndHabitatStorageTest();
+    return TRUE;
+}
+
+bool32 Habitat_TestWithdrawPcMonToParty(u8 boxId, u8 boxPos, u8 partyPos)
+{
+    if (partyPos >= PARTY_SIZE || boxId >= TOTAL_BOXES_COUNT || boxPos >= IN_BOX_COUNT
+     || !BeginHabitatStorageTest())
+        return FALSE;
+    SetMovingMonData(boxId, boxPos);
+    sCursorPosition = partyPos;
+    SetPlacedMonData(TOTAL_BOXES_COUNT, partyPos);
+    EndHabitatStorageTest();
+    return TRUE;
+}
+#endif
+
 static void SetShiftedMonData(u8 boxId, u8 position)
 {
     if (boxId == TOTAL_BOXES_COUNT)

@@ -38,6 +38,10 @@ u8 *StringCopyAndFillWithSpaces(u8 *dst, const u8 *src, u16 n);
 void ShowPokemonStorageSystemPC(void);
 void ResetPokemonStorageSystem(void);
 s16 CompactPartySlots(void);
+#if TESTING
+bool32 Habitat_TestDepositPartyMonToPc(u8 partyPos, u8 boxId, u8 boxPos);
+bool32 Habitat_TestWithdrawPcMonToParty(u8 boxId, u8 boxPos, u8 partyPos);
+#endif
 u8 StorageGetCurrentBox(void);
 u32 GetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request);
 void SetBoxMonDataAt(u8 boxId, u8 boxPosition, s32 request, const void *value);

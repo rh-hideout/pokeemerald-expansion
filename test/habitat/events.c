@@ -74,6 +74,10 @@ static const struct HabitatCondition sStatCondition[] = {
     HABITAT_COND(COND_LIFETIME_STAT, GAME_STAT_STEPS, HABITAT_CMP_GE, 1, 0),
     HABITAT_CONDITIONS_END,
 };
+static const struct HabitatCondition sStatSetCondition[] = {
+    HABITAT_COND(COND_LIFETIME_STAT, GAME_STAT_STEPS, HABITAT_CMP_GE, 4, 0),
+    HABITAT_CONDITIONS_END,
+};
 static const struct HabitatCondition sTalkCondition[] = {
     HABITAT_COND(COND_TALK_COUNT, 1, 0, 0, 0),
     HABITAT_CONDITIONS_END,
@@ -183,10 +187,17 @@ static const struct HabitatSpot sDependencyTestSpots[] = {
         .hideFlag = FLAG_UNUSED_0x02E, .mapGroup = 1, .mapNum = 1, .localId = 14,
         .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_RESIDENT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
     },
+    {
+        .spotId = 24, .species = SPECIES_ELECTRIKE, .tier = 1, .zoneId = 1,
+        .appearConditions = sStatSetCondition, .befriendConditions = sOfferBefriendConditions,
+        .hintDormant = sHint, .hintStirring = sHint, .hintActive = sHint,
+        .hideFlag = FLAG_UNUSED_0x02F, .mapGroup = 1, .mapNum = 1, .localId = 15,
+        .dependencyMask = HABITAT_DEP_MASK(HABITAT_DEP_LIFETIME_STAT) | HABITAT_DEP_MASK(HABITAT_DEP_INVENTORY),
+    },
     { .spotId = 0xFFFF },
 };
 static const struct HabitatMapSpan sDependencyTestSpans[] = {
-    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 14 },
+    { .mapGroup = 1, .mapNum = 1, .firstSpot = 0, .count = 15 },
     { 0 },
 };
 
@@ -209,6 +220,7 @@ static void RestoreProductionTable(void)
 TEST("Habitat event: delayed and no-delay weather changes immediately recompute dependent spots")
 {
     const struct HabitatSpot *lotad;
+    u32 i;
     RestoreProductionTable();
     lotad = Habitat_GetSpot(SPOT_LOTAD);
     ASSUME(lotad != NULL);
@@ -216,7 +228,12 @@ TEST("Habitat event: delayed and no-delay weather changes immediately recompute 
     gSaveBlock1Ptr->location.mapGroup = lotad->mapGroup;
     gSaveBlock1Ptr->location.mapNum = lotad->mapNum;
 
-    SetCurrentAndNextWeather(WEATHER_RAIN);
+    memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    SetCurrentAndNextWeather(WEATHER_SUNNY);
+    SetNextWeather(WEATHER_RAIN);
+    for (i = 0; i < 64 && GetCurrentWeather() != WEATHER_RAIN; i++)
+        Weather_RunMainTaskForTest();
+    EXPECT_EQ(GetCurrentWeather(), WEATHER_RAIN);
     EXPECT_EQ(Habitat_GetSpotState(SPOT_LOTAD), HABITAT_STATE_STIRRING);
 
     Habitat_ResetRecomputeCountForTest();
@@ -266,7 +283,7 @@ TEST("Habitat event: time ticks and map-load reconciliation target the current m
     FlagClear(TEST_STORY_FLAG);
     Habitat_ResetRecomputeCountForTest();
     Habitat_NotifyDependency(HABITAT_DEP_MAP);
-    EXPECT_EQ(Habitat_GetRecomputeCountForTest(), 14);
+    EXPECT_EQ(Habitat_GetRecomputeCountForTest(), 15);
     RestoreProductionTable();
 }
 
@@ -325,6 +342,20 @@ TEST("Habitat event: party add, removal, replacement, and compaction publish imm
     Habitat_ResetRecomputeCountForTest();
     EXPECT_EQ(CompactPartySlots(), 0);
     EXPECT_EQ(gPartiesCount[B_TRAINER_PLAYER], 1);
+    EXPECT_EQ(Habitat_GetRecomputeCountForTest(), 5);
+
+    // Exercise the actual storage move helpers: party -> box purges through
+    // SetMovingMonData/PurgeMonOrBoxMon, and box -> party places through
+    // SetPlacedMonData.
+    Habitat_ResetRecomputeCountForTest();
+    EXPECT(Habitat_TestDepositPartyMonToPc(0, 0, 0));
+    EXPECT_EQ(gPartiesCount[B_TRAINER_PLAYER], 0);
+    EXPECT_EQ(GetBoxMonDataAt(0, 0, MON_DATA_SPECIES), SPECIES_SKITTY);
+    EXPECT_EQ(Habitat_GetRecomputeCountForTest(), 5);
+    Habitat_ResetRecomputeCountForTest();
+    EXPECT(Habitat_TestWithdrawPcMonToParty(0, 0, 0));
+    EXPECT_EQ(gPartiesCount[B_TRAINER_PLAYER], 1);
+    EXPECT_EQ(GetBoxMonDataAt(0, 0, MON_DATA_SPECIES), SPECIES_NONE);
     EXPECT_EQ(Habitat_GetRecomputeCountForTest(), 5);
     RestoreProductionTable();
 }
@@ -413,6 +444,8 @@ TEST("Habitat event: changed flag and party mutation boundaries update only thei
     EXPECT_EQ(Habitat_GetSpotState(14), HABITAT_STATE_DORMANT);
     IncrementGameStat(GAME_STAT_STEPS);
     EXPECT_EQ(Habitat_GetSpotState(14), HABITAT_STATE_ACTIVE);
+    SetGameStat(GAME_STAT_STEPS, 4);
+    EXPECT_EQ(Habitat_GetSpotState(24), HABITAT_STATE_ACTIVE);
 
     // Toggle is a changed story-flag boundary too; state is monotonic, so
     // the flag's second toggle must be safe without recompute churn.
