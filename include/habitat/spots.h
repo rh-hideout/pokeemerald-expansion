@@ -82,6 +82,7 @@ bool32 Habitat_SubmitItem(const struct HabitatSpot *spot,
                           enum HabitatItemAction action,
                           u16 itemId, u16 count);
 u8 Habitat_GetAvailableVerbs(const struct HabitatSpot *spot);
+u16 Habitat_GetInteractionAvailableVerbs(void);
 
 // Script specials (data/scripts/habitat_spot.inc, habitat_grove.inc).
 void Habitat_OnInspectSpot(void);
@@ -91,6 +92,7 @@ u16 Habitat_TryOffer(void);
 u16 Habitat_TryPlaceItem(void);
 u16 Habitat_PreviewOfferItem(void);
 u16 Habitat_PreviewPlaceItem(void);
+u16 Habitat_SelectOfferItem(void);
 void Habitat_PrepareGroveWorkers(void);
 void Habitat_SyncGroveWorkersLive(void);
 u16 Habitat_OnTalkWorker(void);

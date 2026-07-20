@@ -81,7 +81,7 @@ HabitatSpot_EventScript_Leave::
 
 HabitatSpot_EventScript_Ambient::
 	msgbox HabitatSpot_Text_Ambient, MSGBOX_DEFAULT
-	specialvar VAR_RESULT, Habitat_GetAvailableVerbs
+	specialvar VAR_RESULT, Habitat_GetInteractionAvailableVerbs
 	goto_if_eq VAR_RESULT, 9, HabitatSpot_EventScript_RecruitPrompt
 	release
 	end

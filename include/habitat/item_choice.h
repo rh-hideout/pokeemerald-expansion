@@ -15,5 +15,9 @@ struct HabitatItemChoice
 bool32 Habitat_FindConditionItem(const struct HabitatSpot *spot,
                                  enum HabitatItemAction action,
                                  struct HabitatItemChoice *choice);
+bool32 Habitat_SelectConditionItem(const struct HabitatSpot *spot,
+                                   enum HabitatItemAction action,
+                                   u16 itemId,
+                                   struct HabitatItemChoice *choice);
 
 #endif // GUARD_HABITAT_ITEM_CHOICE_H

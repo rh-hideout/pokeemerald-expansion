@@ -49,6 +49,14 @@ bool32 Habitat_FindConditionItem(const struct HabitatSpot *spot,
                                  enum HabitatItemAction action,
                                  struct HabitatItemChoice *choice)
 {
+    return Habitat_SelectConditionItem(spot, action, ITEM_NONE, choice);
+}
+
+bool32 Habitat_SelectConditionItem(const struct HabitatSpot *spot,
+                                   enum HabitatItemAction action,
+                                   u16 itemId,
+                                   struct HabitatItemChoice *choice)
+{
     const struct HabitatCondition *conditions = GetConditions(spot, action);
     u32 i;
 
@@ -59,6 +67,8 @@ bool32 Habitat_FindConditionItem(const struct HabitatSpot *spot,
         u16 count = max(1, conditions[i].paramB);
 
         if (!IsWantedType(conditions[i].type, action))
+            continue;
+        if (itemId != ITEM_NONE && conditions[i].paramA != itemId)
             continue;
         if (!Habitat_CanSubmitItem(spot, action, conditions[i].paramA, count))
             continue;

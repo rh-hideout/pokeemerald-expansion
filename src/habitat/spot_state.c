@@ -92,21 +92,28 @@ u8 Habitat_GetPlacedCount(u16 counterId)
     return (counterId & 1) ? (*slot >> 4) : (*slot & 0x0F);
 }
 
-void Habitat_AddPlacedCount(u16 counterId, u8 count)
+void Habitat_SetPlacedCount(u16 counterId, u8 count)
 {
     u8 *slot;
+
+    if (!IsValidPlacedCounterId(counterId) || count > 15)
+        return;
+    counterId--;
+    slot = &gSaveBlock3Ptr->habitat.placedConditionCounters[counterId / 2];
+    if (counterId & 1)
+        *slot = (*slot & 0x0F) | (count << 4);
+    else
+        *slot = (*slot & 0xF0) | count;
+}
+
+void Habitat_AddPlacedCount(u16 counterId, u8 count)
+{
     u8 value;
 
     if (!IsValidPlacedCounterId(counterId) || count > 15)
         return;
-    value = Habitat_GetPlacedCount(counterId);
-    value = min(15, value + count);
-    counterId--;
-    slot = &gSaveBlock3Ptr->habitat.placedConditionCounters[counterId / 2];
-    if (counterId & 1)
-        *slot = (*slot & 0x0F) | (value << 4);
-    else
-        *slot = (*slot & 0xF0) | value;
+    value = min(15, Habitat_GetPlacedCount(counterId) + count);
+    Habitat_SetPlacedCount(counterId, value);
 }
 
 static u16 LegacyPlacedCounterId(u16 spotId, u8 conditionIndex)
