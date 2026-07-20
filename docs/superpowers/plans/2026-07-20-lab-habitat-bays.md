@@ -56,26 +56,26 @@ HEIGHT = 13
 
 OBJECTS = {
     "LOCALID_HABITAT_FRAME_TORCHIC": {
-        "coords": (2, 5),
+        "coords": (2, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_7",
         "flag": "FLAG_UNUSED_0x040",
     },
     "LOCALID_HABITAT_FRAME_TREECKO": {
-        "coords": (6, 5),
+        "coords": (6, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_8",
         "flag": "FLAG_UNUSED_0x041",
     },
     "LOCALID_HABITAT_FRAME_MUDKIP": {
-        "coords": (10, 5),
+        "coords": (10, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_9",
         "flag": "FLAG_UNUSED_0x042",
     },
 }
 
 ENTRANCES = {
-    (2, 6): "BirchsLab_EventScript_HabitatFrameTorchic",
-    (6, 6): "BirchsLab_EventScript_HabitatFrameTreecko",
-    (10, 6): "BirchsLab_EventScript_HabitatFrameMudkip",
+    (2, 8): "BirchsLab_EventScript_HabitatFrameTorchic",
+    (6, 8): "BirchsLab_EventScript_HabitatFrameTreecko",
+    (10, 8): "BirchsLab_EventScript_HabitatFrameMudkip",
 }
 
 FLOOR = 0x3202
@@ -84,18 +84,18 @@ BAY_CELLS = {
     (x, y)
     for start in (1, 5, 9)
     for x in range(start, start + 3)
-    for y in range(3, 7)
+    for y in range(5, 9)
 }
 BAY_OVERRIDES = {
-    (3, 3): 0x060D,  # Poké Ball holder, top
-    (3, 4): 0x3233,  # holder's table base
-    (1, 5): 0x3206,  # open-slot mat, left half
-    (2, 5): 0x3207,  # open-slot mat, right half / first resident
+    (3, 5): 0x060D,  # Poké Ball holder, top
+    (3, 6): 0x3233,  # holder's table base
+    (1, 7): 0x3206,  # open-slot mat, left half
+    (2, 7): 0x3207,  # open-slot mat, right half / first resident
 }
-RESIDENT_CELLS = {(2, 5), (6, 5), (10, 5)}
+RESIDENT_CELLS = {(2, 7), (6, 7), (10, 7)}
 CLEAR_ACCESS_CELLS = (
-    {(x, 7) for x in range(WIDTH)}
-    | {(6, y) for y in range(8, 12)}
+    {(x, 9) for x in range(2, 11)}
+    | {(6, y) for y in range(10, 12)}
 )
 
 
@@ -176,7 +176,7 @@ python3 tools/habitat/check_lab_layout.py
 Expected: exit `1` and output beginning with:
 
 ```text
-lab-layout: LOCALID_HABITAT_FRAME_TORCHIC expected (2, 5), found (4, 6)
+lab-layout: LOCALID_HABITAT_FRAME_TORCHIC expected (2, 7), found (2, 5)
 ```
 
 - [ ] **Step 3: Mechanically rewrite the affected metatile region**
@@ -199,14 +199,14 @@ for y in range(3, 9):
         put(x, y, 0x3202)
 
 for start in (1, 5, 9):
-    for y in range(3, 7):
+    for y in range(5, 9):
         for x in range(start, start + 3):
             put(x, y, 0x3203)
 
-put(3, 3, 0x060D)
-put(3, 4, 0x3233)
-put(1, 5, 0x3206)
-put(2, 5, 0x3207)
+put(3, 5, 0x060D)
+put(3, 6, 0x3233)
+put(1, 7, 0x3206)
+put(2, 7, 0x3207)
 
 path.write_bytes(struct.pack("<169H", *blocks))
 PY
@@ -217,13 +217,13 @@ PY
 Use `apply_patch` on `data/maps/LittlerootTown_ProfessorBirchsLab/map.json` to make these exact coordinate changes while leaving every other object property unchanged:
 
 ```diff
- LOCALID_HABITAT_FRAME_TORCHIC object: x 4 -> 2, y 6 -> 5
- LOCALID_HABITAT_FRAME_TREECKO object: x 6 -> 6, y 6 -> 5
- LOCALID_HABITAT_FRAME_MUDKIP object: x 8 -> 10, y 6 -> 5
+ LOCALID_HABITAT_FRAME_TORCHIC object: x 4 -> 2, y 6 -> 7
+ LOCALID_HABITAT_FRAME_TREECKO object: x 6 -> 6, y 6 -> 7
+ LOCALID_HABITAT_FRAME_MUDKIP object: x 8 -> 10, y 6 -> 7
 
- BirchsLab_EventScript_HabitatFrameTorchic bg event: x 4 -> 2, y 6 -> 6
- BirchsLab_EventScript_HabitatFrameTreecko bg event: x 6 -> 6, y 6 -> 6
- BirchsLab_EventScript_HabitatFrameMudkip bg event: x 8 -> 10, y 6 -> 6
+ BirchsLab_EventScript_HabitatFrameTorchic bg event: x 4 -> 2, y 6 -> 8
+ BirchsLab_EventScript_HabitatFrameTreecko bg event: x 6 -> 6, y 6 -> 8
+ BirchsLab_EventScript_HabitatFrameMudkip bg event: x 8 -> 10, y 6 -> 8
 ```
 
 - [ ] **Step 5: Run the static validator and generated-map checks**

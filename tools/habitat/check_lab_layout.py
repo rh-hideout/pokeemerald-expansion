@@ -12,26 +12,26 @@ HEIGHT = 13
 
 OBJECTS = {
     "LOCALID_HABITAT_FRAME_TORCHIC": {
-        "coords": (2, 5),
+        "coords": (2, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_7",
         "flag": "FLAG_UNUSED_0x040",
     },
     "LOCALID_HABITAT_FRAME_TREECKO": {
-        "coords": (6, 5),
+        "coords": (6, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_8",
         "flag": "FLAG_UNUSED_0x041",
     },
     "LOCALID_HABITAT_FRAME_MUDKIP": {
-        "coords": (10, 5),
+        "coords": (10, 7),
         "graphics_id": "OBJ_EVENT_GFX_VAR_9",
         "flag": "FLAG_UNUSED_0x042",
     },
 }
 
 ENTRANCES = {
-    (2, 6): "BirchsLab_EventScript_HabitatFrameTorchic",
-    (6, 6): "BirchsLab_EventScript_HabitatFrameTreecko",
-    (10, 6): "BirchsLab_EventScript_HabitatFrameMudkip",
+    (2, 8): "BirchsLab_EventScript_HabitatFrameTorchic",
+    (6, 8): "BirchsLab_EventScript_HabitatFrameTreecko",
+    (10, 8): "BirchsLab_EventScript_HabitatFrameMudkip",
 }
 
 FLOOR = 0x3202
@@ -40,18 +40,18 @@ BAY_CELLS = {
     (x, y)
     for start in (1, 5, 9)
     for x in range(start, start + 3)
-    for y in range(3, 7)
+    for y in range(5, 9)
 }
 BAY_OVERRIDES = {
-    (3, 3): 0x060D,  # Poké Ball holder, top
-    (3, 4): 0x3233,  # holder's table base
-    (1, 5): 0x3206,  # open-slot mat, left half
-    (2, 5): 0x3207,  # open-slot mat, right half / first resident
+    (3, 5): 0x060D,  # Poké Ball holder, top
+    (3, 6): 0x3233,  # holder's table base
+    (1, 7): 0x3206,  # open-slot mat, left half
+    (2, 7): 0x3207,  # open-slot mat, right half / first resident
 }
-RESIDENT_CELLS = {(2, 5), (6, 5), (10, 5)}
+RESIDENT_CELLS = {(2, 7), (6, 7), (10, 7)}
 CLEAR_ACCESS_CELLS = (
-    {(x, 7) for x in range(WIDTH)}
-    | {(6, y) for y in range(8, 12)}
+    {(x, 9) for x in range(2, 11)}
+    | {(6, y) for y in range(10, 12)}
 )
 
 
