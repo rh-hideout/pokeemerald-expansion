@@ -97,7 +97,8 @@ static bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, en
 void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
 {
     trainerGen->gender = trainer->gender;
-    trainerGen->smartTera = trainer->aiFlags & AI_FLAG_SMART_TERA;
+    if (trainer->aiFlags & AI_FLAG_SMART_TERA)
+        trainerGen->smartTera = TRUE;
     trainerGen->isFrontier = FALSE;
     StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
     trainerGen->trainerClass = trainer->trainerClass;
@@ -210,12 +211,13 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     if (trainerMon->teraType)
     {
         data = trainerMon->teraType;
+        SetMonData(mon, MON_DATA_TERA_TYPE, &data);
     }
-    else
+    else if (!trainer->smartTera)
     {
         data = TYPE_MYSTERY;
+        SetMonData(mon, MON_DATA_TERA_TYPE, &data);
     }
-    SetMonData(mon, MON_DATA_TERA_TYPE, &data);
 
     CalculateMonStats(mon);
     SetMonData(mon, MON_DATA_OT_NAME, trainer->name);

@@ -94,6 +94,15 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
     Free(testParty);
 }
 
+TEST("CreateNPCTrainerPartyForTrainer doesn't set mystery tera type when Smart Tera AI flag is set")
+{
+    struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
+    u32 currTrainer = 15;
+    CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer));
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_TERA_TYPE), TYPE_PSYCHIC);
+    Free(testParty);
+}
+
 TEST("CreateNPCTrainerPartyForTrainer generates different personalities for different mons")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
