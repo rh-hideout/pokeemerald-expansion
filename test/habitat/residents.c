@@ -135,6 +135,10 @@ TEST("Habitat residents: conditions count befriended origin spots, not caught de
 
 TEST("Habitat residents: origin spots distinguish duplicate species, zones, and forms")
 {
+    static const struct HabitatCondition sAnyOne[] = {
+        HABITAT_COND(COND_RESIDENT_COUNT, HABITAT_TYPE_ANY, 1, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
     static const struct HabitatCondition sAnyTwo[] = {
         HABITAT_COND(COND_RESIDENT_COUNT, HABITAT_TYPE_ANY, 2, 0, 0),
         HABITAT_CONDITIONS_END,
@@ -147,12 +151,34 @@ TEST("Habitat residents: origin spots distinguish duplicate species, zones, and 
         HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_SKITTY, 2, 0, 0),
         HABITAT_CONDITIONS_END,
     };
+    static const struct HabitatCondition sCastformNormal[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_CASTFORM_NORMAL, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
+    static const struct HabitatCondition sCastformSunny[] = {
+        HABITAT_COND(COND_RESIDENT_SPECIES, SPECIES_CASTFORM_SUNNY, 0, 0, 0),
+        HABITAT_CONDITIONS_END,
+    };
     struct HabitatConditionResult r;
 
     Habitat_SetSpotTableForTest(sIdentityTestSpots);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_CASTFORM_NORMAL), FLAG_SET_CAUGHT);
+    Habitat_EvaluateConditions(sAnyOne, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // caught Dex alone is not a resident
     Habitat_EvaluateConditions(sAnyTwo, HABITAT_SPOT_NONE, NULL, &r);
     EXPECT(!r.allMet);  // one caught Dex entry cannot expand into its form family
+
+    Habitat_CompleteBefriendById(TEST_SPOT_CASTFORM_NORMAL);
+    Habitat_EvaluateConditions(sCastformNormal, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sCastformSunny, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // sibling form shares the Dex number, not the origin
+    Habitat_EvaluateConditions(sAnyOne, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(r.allMet);
+    Habitat_EvaluateConditions(sAnyTwo, HABITAT_SPOT_NONE, NULL, &r);
+    EXPECT(!r.allMet);  // one befriended form counts once, never as its sibling
+
+    memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
 
     Habitat_CompleteBefriendById(TEST_SPOT_SKITTY_ROUTE);
     Habitat_CompleteBefriendById(TEST_SPOT_SKITTY_GROVE);
