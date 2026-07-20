@@ -15,7 +15,17 @@ if "$TEMP/hh-runner" --validate-script 'until-sv4:ca' >"$TEMP/old.out" 2>&1; the
     exit 1
 fi
 
-tools/habitat/verify.sh --help 2>&1 | grep -q 'approved-icons'
+if tools/habitat/verify.sh --help 2>&1 | grep -Eq 'item-chooser|approved-icons'; then
+    echo "verify self-test: disabled UI scenarios remain documented" >&2
+    exit 1
+fi
+for disabledScenario in item-chooser approved-icons; do
+    if tools/habitat/verify.sh --scenario "$disabledScenario" >"$TEMP/$disabledScenario.out" 2>&1; then
+        echo "verify self-test: disabled UI scenario '$disabledScenario' was accepted" >&2
+        exit 1
+    fi
+    grep -q "scenario '$disabledScenario' is not available" "$TEMP/$disabledScenario.out"
+done
 "$TEMP/hh-runner" --validate-script 'command:bout-win;expect-probe:bout_outcome,1;pass:ok'
 "$TEMP/hh-runner" --validate-script 'command:bout-reset;wait:360;reset;expect-probe:resident_spot_id,3;pass:ok'
 if make -n RELEASE=1 HABITAT_TEST_PROBE=1 >"$TEMP/release.out" 2>&1; then
