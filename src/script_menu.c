@@ -165,6 +165,9 @@ static void MultichoiceDynamicEventDebug_OnDestroy(struct DynamicListMenuEventAr
 
 #define sAuxWindowId sDynamicMenuEventScratchPad[0]
 #define sSpriteId sDynamicMenuEventScratchPad[1]
+#define sOldSpriteId sDynamicMenuEventScratchPad[2]
+#define sBaseX sDynamicMenuEventScratchPad[3]
+#define sBaseY sDynamicMenuEventScratchPad[4]
 #define TAG_CB_SPRITE_ICON 3000
 
 static void MultichoiceDynamicEventShowSprite_OnInit(struct DynamicListMenuEventArgs *eventArgs)
@@ -180,42 +183,38 @@ static void MultichoiceDynamicEventShowSprite_OnInit(struct DynamicListMenuEvent
     sSpriteId = MAX_SPRITES;
 }
 
-static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs)
+static void ChangeSpriteOnSelection(struct DynamicListMenuEventArgs *eventArgs)
 {
     struct WindowTemplate *template = &gWindows[eventArgs->windowId].window;
-    u32 x = template->tilemapLeft * 8 + template->width * 8 + 36;
-    u32 y = template->tilemapTop * 8 + 20;
+    u32 x = template->tilemapLeft * 8 + template->width * 8 + sBaseX;
+    u32 y = template->tilemapTop * 8 + sBaseY;
 
-    if (sSpriteId != MAX_SPRITES)
+    if (sOldSpriteId != MAX_SPRITES)
     {
         FreeSpriteTilesByTag(TAG_CB_SPRITE_ICON);
         FreeSpritePaletteByTag(TAG_CB_SPRITE_ICON);
-        DestroySprite(&gSprites[sSpriteId]);
+        DestroySprite(&gSprites[sOldSpriteId]);
     }
 
-    sSpriteId = AddItemIconSprite(TAG_CB_SPRITE_ICON, TAG_CB_SPRITE_ICON, eventArgs->selectedItem);
     gSprites[sSpriteId].oam.priority = 0;
     gSprites[sSpriteId].x = x;
     gSprites[sSpriteId].y = y;
 }
 
+static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs)
+{
+    sBaseX = 36, sBaseY = 20;
+    sOldSpriteId = sSpriteId;
+    sSpriteId = AddItemIconSprite(TAG_CB_SPRITE_ICON, TAG_CB_SPRITE_ICON, eventArgs->selectedItem);
+    ChangeSpriteOnSelection(eventArgs);
+}
+
 static void MultichoiceDynamicEventShowPkmn_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs)
 {
-    struct WindowTemplate *template = &gWindows[eventArgs->windowId].window;
-    u32 x = template->tilemapLeft * 8 + template->width * 8 + 32;
-    u32 y = template->tilemapTop * 8 + 14;
-
-    if (sSpriteId != MAX_SPRITES)
-    {
-        FreeSpriteTilesByTag(TAG_CB_SPRITE_ICON);
-        FreeSpritePaletteByTag(TAG_CB_SPRITE_ICON);
-        DestroySprite(&gSprites[sSpriteId]);
-    }
-
+    sBaseX = 32, sBaseY = 14;
+    sOldSpriteId = sSpriteId;
     sSpriteId = CreateTaggedMonIcon(TAG_CB_SPRITE_ICON, TAG_CB_SPRITE_ICON, eventArgs->selectedItem);
-    gSprites[sSpriteId].oam.priority = 0;
-    gSprites[sSpriteId].x = x;
-    gSprites[sSpriteId].y = y;
+    ChangeSpriteOnSelection(eventArgs);
 }
 
 static void MultichoiceDynamicEventShowSprite_OnDestroy(struct DynamicListMenuEventArgs *eventArgs)
