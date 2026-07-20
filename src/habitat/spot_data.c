@@ -49,7 +49,7 @@ enum
 
 // --- Skitty: Tier 1, teaches the PLACE verb -------------------------------
 static const struct HabitatCondition sSkittyAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_POKE_DOLL, 1, 1, 0),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sSkittyBefriend[] = {  // Normal type-want default (§4)
@@ -107,7 +107,7 @@ static const struct HabitatCondition sHeracrossBefriend[] = {  // Bug type-want 
 static const struct HabitatCondition sPinsirAppear[] = {
     // "a sap-slathered log" [placeholder want]: ITEM_HONEY stands in for sap
     // until Jay authors the real want.
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HONEY, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HONEY, 1, 2, 0),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sPinsirBefriend[] = {  // Bug type-want default (§4)
@@ -121,18 +121,18 @@ static const struct HabitatCondition sPinsirBefriend[] = {  // Bug type-want def
 // Befriend lists are EMPTY: completing the frame auto-befriends — the
 // starter "comes home" (offer-less rule). Dev config pins Torchic anyway.
 static const struct HabitatCondition sFrameTorchicAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_CAMPFIRE, 1, 3, 0),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameTreeckoAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 0, 0),
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_BOOKSHELF, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POTTED_PLANT, 1, 4, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_BOOKSHELF, 1, 5, 0),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameMudkipAppear[] = {
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 0, 0),
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_LAB_PC, 1, 0, 0),
-    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POKEBALL_HOLDER, 1, 0, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_WATER_BASIN, 1, 6, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_LAB_PC, 1, 7, 0),
+    HABITAT_COND(COND_ITEM_PLACED, ITEM_HH_POKEBALL_HOLDER, 1, 8, 0),
     HABITAT_CONDITIONS_END,
 };
 static const struct HabitatCondition sFrameAutoBefriend[] = {

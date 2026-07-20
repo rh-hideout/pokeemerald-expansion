@@ -51,6 +51,7 @@
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
+#include "habitat/spots.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
@@ -272,6 +273,9 @@ static void ResetHabitatSave(void)
 {
     u32 i;
     memset(&gSaveBlock3Ptr->habitat, 0, sizeof(gSaveBlock3Ptr->habitat));
+    gSaveBlock3Ptr->habitat.saveVersion = HABITAT_SAVE_VERSION_CURRENT;
+    for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
+        gSaveBlock3Ptr->habitat.residents[i].originSpotId = HABITAT_SPOT_NONE;
     for (i = 0; i < HABITAT_PLOT_COUNT; i++)
     {
         gSaveBlock3Ptr->habitat.plots[i].worker1 = 0xFF;  // 0 is a valid resident idx

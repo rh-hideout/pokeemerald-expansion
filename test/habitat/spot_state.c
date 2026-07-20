@@ -32,16 +32,20 @@ TEST("Habitat spot state: local flags are independent of state bits")
     EXPECT_EQ(Habitat_GetSpotLocalFlags(2), 1);
 }
 
-TEST("Habitat spot state: counters exist only for mapped spots")
+TEST("Habitat placement: authored ids saturate at four bits and reject invalid values")
 {
-    // Spot 1 (Skitty) has a placed slot; spot 2 does not; nobody has talk slots yet.
-    EXPECT_EQ(Habitat_GetPlacedCount(1, 0), 0);
-    Habitat_AddPlacedCount(1, 0, 3);
-    EXPECT_EQ(Habitat_GetPlacedCount(1, 0), 3);
+    EXPECT_EQ(Habitat_GetPlacedCount(1), 0);
+    Habitat_AddPlacedCount(1, 3);
+    EXPECT_EQ(Habitat_GetPlacedCount(1), 3);
+    Habitat_AddPlacedCount(1, 15);
+    EXPECT_EQ(Habitat_GetPlacedCount(1), 15);
 
-    Habitat_AddPlacedCount(2, 0, 3);          // spot 2 has no placed slot
-    EXPECT_EQ(Habitat_GetPlacedCount(2, 0), 0);
-    EXPECT_EQ(Habitat_GetPlacedCount(1, 1), 0);  // unmapped cond index inert
+    Habitat_AddPlacedCount(2, 16);  // a single persisted count cannot exceed four bits
+    EXPECT_EQ(Habitat_GetPlacedCount(2), 0);
+    Habitat_AddPlacedCount(0, 1);
+    Habitat_AddPlacedCount(HABITAT_PLACED_CONDITION_CAP + 1, 1);
+    EXPECT_EQ(Habitat_GetPlacedCount(0), 0);
+    EXPECT_EQ(Habitat_GetPlacedCount(HABITAT_PLACED_CONDITION_CAP + 1), 0);
 
     Habitat_IncrementTalkCount(1);
     EXPECT_EQ(Habitat_GetTalkCount(1), 0);

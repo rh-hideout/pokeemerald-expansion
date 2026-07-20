@@ -111,12 +111,12 @@ u16 Habitat_TryPlaceItem(void)
         c = &spot->appearConditions[i];
         if (c->type != COND_ITEM_PLACED)
             continue;
-        if (Habitat_GetPlacedCount(spot->spotId, i) >= max(1, c->paramB))
+        if (Habitat_GetPlacedCount(c->paramC) >= max(1, c->paramB))
             continue;  // this furnishing is already set down
         if (!CheckBagHasItem(c->paramA, 1))
             continue;  // don't have this one; maybe the next
         RemoveBagItem(c->paramA, 1);
-        Habitat_AddPlacedCount(spot->spotId, i, 1);
+        Habitat_AddPlacedCount(c->paramC, 1);
         Habitat_NotifyEvent(HABITAT_EVENT_INVENTORY_CHANGE);
         return TRUE;
     }

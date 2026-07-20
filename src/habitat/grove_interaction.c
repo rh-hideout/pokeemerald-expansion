@@ -62,7 +62,7 @@ void Habitat_PrepareGroveWorkers(void)
         if (residentIdx >= 0)
         {
             VarSet(sWorkerGfxVars[slot],
-                   OBJ_EVENT_MON + Habitat_GetResident(residentIdx)->species);
+                   OBJ_EVENT_MON + Habitat_GetResidentSpecies(Habitat_GetResident(residentIdx)));
             FlagClear(sWorkerHideFlags[slot]);
         }
         else
@@ -121,7 +121,7 @@ u16 Habitat_OnTalkWorker(void)
     if (r == NULL || r->assignment == 0)
         return FALSE;
     plot = Habitat_GetPlot(r->assignment - 1);
-    StringCopy(gStringVar1, GetSpeciesName(r->species));
+    StringCopy(gStringVar1, GetSpeciesName(Habitat_GetResidentSpecies(r)));
     CopyItemName(plot != NULL ? plot->berryItem : ITEM_NONE, gStringVar2);
     return TRUE;
 }

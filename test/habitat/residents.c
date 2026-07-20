@@ -20,7 +20,7 @@ TEST("Habitat residents: befriending registers an individual")
     Habitat_CompleteBefriendById(SPOT_MACHOP);
     EXPECT_EQ(Habitat_ResidentCount(), 1);
     ASSUME(Habitat_GetResident(0) != NULL);
-    EXPECT_EQ(Habitat_GetResident(0)->species, SPECIES_MACHOP);
+    EXPECT_EQ(Habitat_GetResidentSpecies(Habitat_GetResident(0)), SPECIES_MACHOP);
     EXPECT_EQ(Habitat_GetResident(0)->assignment, 0);
     EXPECT_EQ(Habitat_FindResidentBySpecies(SPECIES_MACHOP), 0);
     EXPECT_EQ(Habitat_FindResidentBySpecies(SPECIES_SKITTY), -1);

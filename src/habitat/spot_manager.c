@@ -94,7 +94,7 @@ static void CompleteBefriend(const struct HabitatSpot *spot)
     Habitat_SetSpotState(spot->spotId, HABITAT_STATE_BEFRIENDED);
     GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
     GetSetPokedexFlag(dexNum, FLAG_SET_CAUGHT);
-    Habitat_TryAddResident(spot->species);  // -1 past the cap is fine (spec §5)
+    Habitat_TryAddResidentAtSpot(spot->spotId);  // -1 past the cap is fine (spec §5)
     Habitat_SyncSpotObjectFlag(spot);
     Habitat_NotifyEvent(HABITAT_EVENT_RESIDENT_CHANGE);
 }

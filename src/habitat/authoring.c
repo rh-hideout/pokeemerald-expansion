@@ -17,6 +17,7 @@ static bool32 IsValidItem(u16 item);
 static bool32 IsValidComparator(u16 comparator);
 static bool32 HasOnlyZeroUnusedParams(const struct HabitatCondition *condition, u16 firstUnused);
 static bool32 ValidateConditionParameters(const struct HabitatCondition *condition);
+static bool32 MarkPlacedCounterIds(const struct HabitatCondition *list, u8 *seen);
 
 bool32 Habitat_ConditionTypeIsSupported(u8 type)
 {
@@ -100,6 +101,7 @@ bool32 Habitat_ValidateAuthoredData(void)
 bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
 {
     u32 i, j;
+    u8 placedCounterIds[(HABITAT_PLACED_CONDITION_CAP + 7) / 8] = {0};
 
     if (spots == NULL)
         return FALSE;
@@ -115,7 +117,9 @@ bool32 Habitat_ValidateSpotTable(const struct HabitatSpot *spots)
          || Habitat_GetZone(spot->zoneId) == NULL
          || spot->hintDormant == NULL || spot->hintStirring == NULL || spot->hintActive == NULL
          || !Habitat_ValidateConditionList(spot->appearConditions, HABITAT_CONDITION_SPOT_APPEAR)
-         || !Habitat_ValidateConditionList(spot->befriendConditions, HABITAT_CONDITION_SPOT_BEFRIEND))
+         || !Habitat_ValidateConditionList(spot->befriendConditions, HABITAT_CONDITION_SPOT_BEFRIEND)
+         || !MarkPlacedCounterIds(spot->appearConditions, placedCounterIds)
+         || !MarkPlacedCounterIds(spot->befriendConditions, placedCounterIds))
             return FALSE;
         for (j = 0; j < i; j++)
             if (spots[j].spotId == spot->spotId)
@@ -153,6 +157,9 @@ static bool32 ValidateConditionParameters(const struct HabitatCondition *conditi
     switch (condition->type)
     {
     case COND_ITEM_PLACED:
+        return IsValidItem(condition->paramA) && condition->paramB != 0
+            && condition->paramB <= 15
+            && condition->paramC != 0 && condition->paramC <= HABITAT_PLACED_CONDITION_CAP;
     case COND_ITEM_OFFERED:
         return IsValidItem(condition->paramA) && condition->paramB != 0
             && condition->paramB <= MAX_BAG_ITEM_CAPACITY && HasOnlyZeroUnusedParams(condition, 3);
@@ -204,4 +211,24 @@ static bool32 ValidateConditionParameters(const struct HabitatCondition *conditi
     default:
         return FALSE;
     }
+}
+
+static bool32 MarkPlacedCounterIds(const struct HabitatCondition *list, u8 *seen)
+{
+    u32 i;
+
+    for (i = 0; list[i].type != COND_NONE; i++)
+    {
+        u16 counterId;
+        u8 mask;
+
+        if (list[i].type != COND_ITEM_PLACED)
+            continue;
+        counterId = list[i].paramC - 1;
+        mask = 1 << (counterId & 7);
+        if (seen[counterId / 8] & mask)
+            return FALSE;
+        seen[counterId / 8] |= mask;
+    }
+    return TRUE;
 }

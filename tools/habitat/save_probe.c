@@ -36,3 +36,12 @@ PROBE(SaveBlock1_budget,    SECTOR_DATA_SIZE * (SECTOR_ID_SAVEBLOCK1_END - SECTO
 PROBE(SaveBlock2_budget,    SECTOR_DATA_SIZE)
 PROBE(SaveBlock3_total,     sizeof(struct SaveBlock3))
 PROBE(SaveBlock3_budget,    SAVE_BLOCK_3_CHUNK_SIZE * 14)
+PROBE(HabitatSave_total,    sizeof(struct HabitatSave))
+PROBE(HabitatSave_legacy,   offsetof(struct HabitatSave, placedConditionCounters))
+PROBE(HabitatSave_placed,   sizeof(((struct HabitatSave *)0)->placedConditionCounters))
+PROBE(HabitatSave_version,  offsetof(struct HabitatSave, saveVersion) + 1)
+PROBE(HabitatResident_one,  sizeof(struct HabitatResident))
+PROBE(HabitatPlot_one,      sizeof(struct HabitatPlot))
+#if USE_DEXNAV_SEARCH_LEVELS == TRUE
+PROBE(DexNavLevels_slab,    sizeof(((struct SaveBlock3 *)0)->dexNavSearchLevels))
+#endif

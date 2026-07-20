@@ -170,9 +170,9 @@ static bool32 EvalOne(const struct HabitatCondition *c, u32 condIndex, u16 spotI
         return Habitat_GetSpotState(c->paramA) == c->paramB;
     case COND_ITEM_PLACED:
         // paramA (itemId) is enforced by the PLACE verb; each ITEM_PLACED
-        // condition tracks its own counter (multi-furnishing frames, §10).
+        // condition carries its stable authored counter id in paramC.
         return spotId != HABITAT_SPOT_NONE
-            && Habitat_GetPlacedCount(spotId, condIndex) >= max(1, c->paramB);
+            && Habitat_GetPlacedCount(c->paramC) >= max(1, c->paramB);
     case COND_ZONE_COMPLETE:
     {
         u32 i;

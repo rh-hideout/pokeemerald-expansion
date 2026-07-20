@@ -5,14 +5,20 @@
 // assignments (phase 4).
 #include "global.h"
 #include "habitat/save.h"
+#include "habitat/spots.h"
 #include "random.h"
+
+static bool32 ResidentSlotIsEmpty(const struct HabitatResident *resident)
+{
+    return resident->originSpotId == 0 || resident->originSpotId == HABITAT_SPOT_NONE;
+}
 
 u32 Habitat_ResidentCount(void)
 {
     u32 i, n = 0;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
     {
-        if (gSaveBlock3Ptr->habitat.residents[i].species != SPECIES_NONE)
+        if (!ResidentSlotIsEmpty(&gSaveBlock3Ptr->habitat.residents[i]))
             n++;
     }
     return n;
@@ -21,7 +27,7 @@ u32 Habitat_ResidentCount(void)
 const struct HabitatResident *Habitat_GetResident(u32 index)
 {
     if (index >= HABITAT_RESIDENT_COUNT
-     || gSaveBlock3Ptr->habitat.residents[index].species == SPECIES_NONE)
+     || ResidentSlotIsEmpty(&gSaveBlock3Ptr->habitat.residents[index]))
         return NULL;
     return &gSaveBlock3Ptr->habitat.residents[index];
 }
@@ -29,12 +35,25 @@ const struct HabitatResident *Habitat_GetResident(u32 index)
 s32 Habitat_TryAddResident(u16 species)
 {
     u32 i;
+
+    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+        if (gHabitatSpots[i].species == species)
+            return Habitat_TryAddResidentAtSpot(gHabitatSpots[i].spotId);
+    return -1;
+}
+
+s32 Habitat_TryAddResidentAtSpot(u16 originSpotId)
+{
+    u32 i;
+
+    if (Habitat_GetSpot(originSpotId) == NULL)
+        return -1;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
     {
         struct HabitatResident *r = &gSaveBlock3Ptr->habitat.residents[i];
-        if (r->species == SPECIES_NONE)
+        if (ResidentSlotIsEmpty(r))
         {
-            r->species = species;
+            r->originSpotId = originSpotId;
             r->personalitySeed = Random() & 0xFF;
             r->assignment = 0;
             return i;
@@ -48,8 +67,18 @@ s32 Habitat_FindResidentBySpecies(u16 species)
     u32 i;
     for (i = 0; i < HABITAT_RESIDENT_COUNT; i++)
     {
-        if (gSaveBlock3Ptr->habitat.residents[i].species == species)
+        if (Habitat_GetResidentSpecies(&gSaveBlock3Ptr->habitat.residents[i]) == species)
             return i;
     }
     return -1;
+}
+
+u16 Habitat_GetResidentSpecies(const struct HabitatResident *resident)
+{
+    const struct HabitatSpot *spot;
+
+    if (resident == NULL || ResidentSlotIsEmpty(resident))
+        return SPECIES_NONE;
+    spot = Habitat_GetSpot(resident->originSpotId);
+    return spot == NULL ? SPECIES_NONE : spot->species;
 }
