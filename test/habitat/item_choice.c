@@ -4,6 +4,7 @@
 #include "habitat/save.h"
 #include "habitat/spots.h"
 #include "item.h"
+#include "item_menu.h"
 #include "test/test.h"
 
 #define TEST_SPOT_ID 10
@@ -156,6 +157,27 @@ TEST("Habitat interaction: zero-argument verbs special resolves the current spot
               Habitat_GetAvailableVerbs(skitty));
 }
 
+TEST("Habitat interaction: selector advances to and submits the chosen second OR offer")
+{
+    Habitat_SetSpotTableForTest(sSpots);
+    Habitat_SetInteractionSpotForTest(TEST_SPOT_ID);
+    Habitat_SetSpotState(TEST_SPOT_ID, HABITAT_STATE_ACTIVE);
+    AddBagItem(ITEM_POKE_DOLL, 2);
+    AddBagItem(ITEM_POTION, 2);
+
+    EXPECT(Habitat_PreviewOfferItem());
+    EXPECT_EQ(gSpecialVar_ItemId, ITEM_POKE_DOLL);
+    EXPECT(Habitat_SelectOfferItem());
+    EXPECT_EQ(gSpecialVar_ItemId, ITEM_POTION);
+    EXPECT(CheckBagHasItem(ITEM_POKE_DOLL, 2));
+    EXPECT(CheckBagHasItem(ITEM_POTION, 2));
+
+    EXPECT(Habitat_TryOffer());
+    EXPECT(CheckBagHasItem(ITEM_POKE_DOLL, 2));
+    EXPECT(!CheckBagHasItem(ITEM_POTION, 1));
+    Habitat_SetSpotTableForTest(NULL);
+}
+
 TEST("Habitat item choice: submission consumes exactly the authored placement quantity")
 {
     Habitat_SetSpotTableForTest(sSpots);
@@ -164,6 +186,7 @@ TEST("Habitat item choice: submission consumes exactly the authored placement qu
     EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));
     EXPECT_EQ(Habitat_GetPlacedCount(TEST_PLACE_COUNTER), 3);
     EXPECT_EQ(Habitat_GetSpotState(TEST_SPOT_ID), HABITAT_STATE_ACTIVE);
+    Habitat_SetSpotTableForTest(NULL);
 }
 
 TEST("Habitat interaction: states expose only the relevant item and recruit actions")
@@ -187,6 +210,7 @@ TEST("Habitat interaction: states expose only the relevant item and recruit acti
     EXPECT(!Habitat_CanSubmitItem(&sSpot, HABITAT_ITEM_ACTION_OFFER, ITEM_POTION, 2));
     EXPECT_EQ(Habitat_GetAvailableVerbs(&sSpot),
               HABITAT_VERB_INSPECT | HABITAT_VERB_RECRUIT);
+    Habitat_SetSpotTableForTest(NULL);
 }
 
 TEST("Habitat item choice: cancelled, wrong, and insufficient offers do not remove items")

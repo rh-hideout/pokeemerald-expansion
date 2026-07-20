@@ -25,6 +25,13 @@ u16 Habitat_GetInteractionSpotId(void)
     return sInteractionSpotId;
 }
 
+#if TESTING
+void Habitat_SetInteractionSpotForTest(u16 spotId)
+{
+    sInteractionSpotId = spotId;
+}
+#endif
+
 static void InspectSpot(const struct HabitatSpot *spot);
 static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count);
 static bool32 HasActiveOffer(const struct HabitatSpot *spot, u16 itemId, u16 count);
@@ -130,11 +137,38 @@ u16 Habitat_PreviewPlaceItem(void)
     return PreviewItemAction(HABITAT_ITEM_ACTION_PLACE, ITEM_NONE);
 }
 
-// Script-facing alternate selector: the caller sets VAR_ITEM_ID, then this
-// validates that exact authored offer and refreshes the preview strings.
+// Script-facing offer selector. A declined preview advances to the next
+// viable authored offer; exhausting the choices returns FALSE without moving
+// any inventory, so the script can leave or offer PLACE instead.
 u16 Habitat_SelectOfferItem(void)
 {
-    return PreviewItemAction(HABITAT_ITEM_ACTION_OFFER, gSpecialVar_ItemId);
+    const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
+    struct HabitatItemChoice choice;
+    u32 i;
+    bool32 afterCurrent = FALSE;
+
+    if (spot == NULL)
+        return FALSE;
+    for (i = 0; spot->befriendConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+    {
+        const struct HabitatCondition *c = &spot->befriendConditions[i];
+        if (c->type != COND_ITEM_OFFERED)
+            continue;
+        if (!afterCurrent)
+        {
+            if (c->paramA == gSpecialVar_ItemId)
+                afterCurrent = TRUE;
+            continue;
+        }
+        if (!Habitat_SelectConditionItem(spot, HABITAT_ITEM_ACTION_OFFER,
+                                         c->paramA, &choice))
+            continue;
+        gSpecialVar_ItemId = choice.itemId;
+        CopyItemName(choice.itemId, gStringVar1);
+        ConvertIntToDecimalStringN(gStringVar2, choice.count, STR_CONV_MODE_LEFT_ALIGN, 2);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static bool32 HasUnmetPlacement(const struct HabitatSpot *spot, u16 itemId, u16 count)

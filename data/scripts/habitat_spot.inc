@@ -46,6 +46,8 @@ HabitatSpot_EventScript_Active::
 HabitatSpot_EventScript_OfferPrompt::
 	msgbox HabitatSpot_Text_OfferPrompt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, HabitatSpot_EventScript_Offer
+	specialvar VAR_RESULT, Habitat_SelectOfferItem
+	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_OfferPrompt
 	specialvar VAR_RESULT, Habitat_PreviewPlaceItem
 	goto_if_eq VAR_RESULT, TRUE, HabitatSpot_EventScript_PlacePrompt
 	release

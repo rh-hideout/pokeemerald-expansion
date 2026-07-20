@@ -88,6 +88,9 @@ u16 Habitat_GetInteractionAvailableVerbs(void);
 void Habitat_OnInspectSpot(void);
 void Habitat_OnInspectSpotById(void);
 u16 Habitat_GetInteractionSpotId(void);
+#if TESTING
+void Habitat_SetInteractionSpotForTest(u16 spotId);
+#endif
 u16 Habitat_TryOffer(void);
 u16 Habitat_TryPlaceItem(void);
 u16 Habitat_PreviewOfferItem(void);

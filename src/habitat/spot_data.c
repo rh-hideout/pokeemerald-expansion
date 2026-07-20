@@ -255,24 +255,26 @@ const struct HabitatZone gHabitatZones[] = {
 
 const struct HabitatSpot *Habitat_GetSpot(u16 spotId)
 {
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
     u32 i;
-    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
     {
-        if (gHabitatSpots[i].spotId == spotId)
-            return &gHabitatSpots[i];
+        if (spots[i].spotId == spotId)
+            return &spots[i];
     }
     return NULL;
 }
 
 const struct HabitatSpot *Habitat_GetSpotByObject(u8 mapGroup, u8 mapNum, u8 localId)
 {
+    const struct HabitatSpot *spots = Habitat_GetSpotTable();
     u32 i;
-    for (i = 0; gHabitatSpots[i].spotId != 0xFFFF; i++)
+    for (i = 0; spots[i].spotId != 0xFFFF; i++)
     {
-        if (gHabitatSpots[i].mapGroup == mapGroup
-         && gHabitatSpots[i].mapNum == mapNum
-         && gHabitatSpots[i].localId == localId)
-            return &gHabitatSpots[i];
+        if (spots[i].mapGroup == mapGroup
+         && spots[i].mapNum == mapNum
+         && spots[i].localId == localId)
+            return &spots[i];
     }
     return NULL;
 }
