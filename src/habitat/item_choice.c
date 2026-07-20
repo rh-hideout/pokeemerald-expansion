@@ -64,19 +64,34 @@ bool32 Habitat_SelectConditionItem(const struct HabitatSpot *spot,
         return FALSE;
     for (i = 0; conditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
     {
-        u16 count = max(1, conditions[i].paramB);
-
-        if (!IsWantedType(conditions[i].type, action))
-            continue;
         if (itemId != ITEM_NONE && conditions[i].paramA != itemId)
             continue;
-        if (!Habitat_CanSubmitItem(spot, action, conditions[i].paramA, count))
-            continue;
-        if (!BagHasAuthoredCount(conditions[i].paramA, count))
-            continue;
-        choice->itemId = conditions[i].paramA;
-        choice->count = count;
-        return TRUE;
+        if (Habitat_SelectConditionItemAtIndex(spot, action, i, choice))
+            return TRUE;
     }
     return FALSE;
+}
+
+bool32 Habitat_SelectConditionItemAtIndex(const struct HabitatSpot *spot,
+                                          enum HabitatItemAction action,
+                                          u8 conditionIndex,
+                                          struct HabitatItemChoice *choice)
+{
+    const struct HabitatCondition *conditions = GetConditions(spot, action);
+    const struct HabitatCondition *condition;
+    u16 count;
+
+    if (choice == NULL || conditions == NULL || conditionIndex >= HABITAT_MAX_CONDITIONS)
+        return FALSE;
+    condition = &conditions[conditionIndex];
+    if (condition->type == COND_NONE || !IsWantedType(condition->type, action))
+        return FALSE;
+    count = max(1, condition->paramB);
+    if (!Habitat_CanSubmitItem(spot, action, condition->paramA, count)
+     || !BagHasAuthoredCount(condition->paramA, count))
+        return FALSE;
+    choice->itemId = condition->paramA;
+    choice->count = count;
+    choice->conditionIndex = conditionIndex;
+    return TRUE;
 }

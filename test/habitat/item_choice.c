@@ -43,6 +43,12 @@ static const struct HabitatCondition sNoOfferBefriend[] = {
     HABITAT_CONDITIONS_END,
 };
 
+static const struct HabitatCondition sSameItemBefriend[] = {
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_POKE_DOLL, 1, 0, HABITAT_COND_OR_GROUP(1)),
+    HABITAT_COND(COND_ITEM_OFFERED, ITEM_POKE_DOLL, 3, 0, HABITAT_COND_OR_GROUP(1)),
+    HABITAT_CONDITIONS_END,
+};
+
 static const struct HabitatSpot sSpot = {
     .spotId = TEST_SPOT_ID,
     .species = SPECIES_SKITTY,
@@ -77,6 +83,16 @@ static const struct HabitatSpot sSpots[] = {
         .species = SPECIES_SKITTY,
         .appearConditions = sAppear,
         .befriendConditions = sBefriend,
+    },
+    { .spotId = 0xFFFF },
+};
+
+static const struct HabitatSpot sSameItemSpots[] = {
+    {
+        .spotId = TEST_SPOT_ID,
+        .species = SPECIES_SKITTY,
+        .appearConditions = sEmptyAppear,
+        .befriendConditions = sSameItemBefriend,
     },
     { .spotId = 0xFFFF },
 };
@@ -175,6 +191,21 @@ TEST("Habitat interaction: selector advances to and submits the chosen second OR
     EXPECT(Habitat_TryOffer());
     EXPECT(CheckBagHasItem(ITEM_POKE_DOLL, 2));
     EXPECT(!CheckBagHasItem(ITEM_POTION, 1));
+    Habitat_SetSpotTableForTest(NULL);
+}
+
+TEST("Habitat interaction: selector keeps same-item OR offers distinct by authored count")
+{
+    Habitat_SetSpotTableForTest(sSameItemSpots);
+    Habitat_SetInteractionSpotForTest(TEST_SPOT_ID);
+    Habitat_SetSpotState(TEST_SPOT_ID, HABITAT_STATE_ACTIVE);
+    AddBagItem(ITEM_POKE_DOLL, 3);
+
+    EXPECT(Habitat_PreviewOfferItem());
+    EXPECT(Habitat_SelectOfferItem());
+    EXPECT(Habitat_TryOffer());
+    EXPECT(!CheckBagHasItem(ITEM_POKE_DOLL, 1));
+    EXPECT_EQ(Habitat_GetSpotState(TEST_SPOT_ID), HABITAT_STATE_BEFRIENDED);
     Habitat_SetSpotTableForTest(NULL);
 }
 

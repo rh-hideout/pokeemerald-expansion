@@ -19,6 +19,8 @@ static const u8 sText_NotASpot[] = _("PLACEHOLDER: nothing here.$");
 // consumed by the verb specials after the bag round-trip (gSpecialVar_
 // LastTalked is not trustworthy across a CB2 change).
 static u16 sInteractionSpotId;
+static u8 sSelectedOfferCondition;
+static bool8 sHasSelectedOffer;
 
 u16 Habitat_GetInteractionSpotId(void)
 {
@@ -29,6 +31,7 @@ u16 Habitat_GetInteractionSpotId(void)
 void Habitat_SetInteractionSpotForTest(u16 spotId)
 {
     sInteractionSpotId = spotId;
+    sHasSelectedOffer = FALSE;
 }
 #endif
 
@@ -61,11 +64,13 @@ static void InspectSpot(const struct HabitatSpot *spot)
     if (spot == NULL)
     {
         sInteractionSpotId = HABITAT_SPOT_NONE;
+        sHasSelectedOffer = FALSE;
         StringCopy(gStringVar4, sText_NotASpot);
         gSpecialVar_Result = HABITAT_INSPECT_NOT_A_SPOT;
         return;
     }
     sInteractionSpotId = spot->spotId;
+    sHasSelectedOffer = FALSE;
 
     Habitat_IncrementTalkCount(spot->spotId);
     state = Habitat_GetSpotState(spot->spotId);
@@ -93,9 +98,17 @@ u16 Habitat_TryOffer(void)
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
     struct HabitatItemChoice choice;
 
-    if (!Habitat_SelectConditionItem(spot, HABITAT_ITEM_ACTION_OFFER,
-                                     gSpecialVar_ItemId, &choice))
+    if (sHasSelectedOffer)
+    {
+        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_OFFER,
+                                                sSelectedOfferCondition, &choice))
+            return FALSE;
+    }
+    else if (!Habitat_SelectConditionItem(spot, HABITAT_ITEM_ACTION_OFFER,
+                                          gSpecialVar_ItemId, &choice))
+    {
         return FALSE;
+    }
     return Habitat_SubmitItem(spot, HABITAT_ITEM_ACTION_OFFER,
                               choice.itemId, choice.count);
 }
@@ -114,27 +127,42 @@ u16 Habitat_TryPlaceItem(void)
     return Habitat_SubmitItem(spot, HABITAT_ITEM_ACTION_PLACE, choice.itemId, choice.count);
 }
 
-static u16 PreviewItemAction(enum HabitatItemAction action, u16 selectedItemId)
+static u16 PreviewItemAction(enum HabitatItemAction action, u8 conditionIndex,
+                             struct HabitatItemChoice *previewedChoice)
 {
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
     struct HabitatItemChoice choice;
 
-    if (!Habitat_SelectConditionItem(spot, action, selectedItemId, &choice))
+    if (conditionIndex == HABITAT_MAX_CONDITIONS)
+    {
+        if (!Habitat_FindConditionItem(spot, action, &choice))
+            return FALSE;
+    }
+    else if (!Habitat_SelectConditionItemAtIndex(spot, action, conditionIndex, &choice))
         return FALSE;
     gSpecialVar_ItemId = choice.itemId;
     CopyItemName(choice.itemId, gStringVar1);
     ConvertIntToDecimalStringN(gStringVar2, choice.count, STR_CONV_MODE_LEFT_ALIGN, 2);
+    if (previewedChoice != NULL)
+        *previewedChoice = choice;
     return TRUE;
 }
 
 u16 Habitat_PreviewOfferItem(void)
 {
-    return PreviewItemAction(HABITAT_ITEM_ACTION_OFFER, ITEM_NONE);
+    struct HabitatItemChoice choice;
+
+    sHasSelectedOffer = FALSE;
+    if (!PreviewItemAction(HABITAT_ITEM_ACTION_OFFER, HABITAT_MAX_CONDITIONS, &choice))
+        return FALSE;
+    sSelectedOfferCondition = choice.conditionIndex;
+    sHasSelectedOffer = TRUE;
+    return TRUE;
 }
 
 u16 Habitat_PreviewPlaceItem(void)
 {
-    return PreviewItemAction(HABITAT_ITEM_ACTION_PLACE, ITEM_NONE);
+    return PreviewItemAction(HABITAT_ITEM_ACTION_PLACE, HABITAT_MAX_CONDITIONS, NULL);
 }
 
 // Script-facing offer selector. A declined preview advances to the next
@@ -145,27 +173,19 @@ u16 Habitat_SelectOfferItem(void)
     const struct HabitatSpot *spot = Habitat_GetSpot(sInteractionSpotId);
     struct HabitatItemChoice choice;
     u32 i;
-    bool32 afterCurrent = FALSE;
 
     if (spot == NULL)
         return FALSE;
-    for (i = 0; spot->befriendConditions[i].type != COND_NONE && i < HABITAT_MAX_CONDITIONS; i++)
+    for (i = sHasSelectedOffer ? sSelectedOfferCondition + 1 : 0;
+         i < HABITAT_MAX_CONDITIONS && spot->befriendConditions[i].type != COND_NONE;
+         i++)
     {
-        const struct HabitatCondition *c = &spot->befriendConditions[i];
-        if (c->type != COND_ITEM_OFFERED)
+        if (!Habitat_SelectConditionItemAtIndex(spot, HABITAT_ITEM_ACTION_OFFER,
+                                                i, &choice))
             continue;
-        if (!afterCurrent)
-        {
-            if (c->paramA == gSpecialVar_ItemId)
-                afterCurrent = TRUE;
-            continue;
-        }
-        if (!Habitat_SelectConditionItem(spot, HABITAT_ITEM_ACTION_OFFER,
-                                         c->paramA, &choice))
-            continue;
-        gSpecialVar_ItemId = choice.itemId;
-        CopyItemName(choice.itemId, gStringVar1);
-        ConvertIntToDecimalStringN(gStringVar2, choice.count, STR_CONV_MODE_LEFT_ALIGN, 2);
+        sSelectedOfferCondition = choice.conditionIndex;
+        sHasSelectedOffer = TRUE;
+        PreviewItemAction(HABITAT_ITEM_ACTION_OFFER, choice.conditionIndex, NULL);
         return TRUE;
     }
     return FALSE;
