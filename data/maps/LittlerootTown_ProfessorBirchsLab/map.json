@@ -18,8 +18,8 @@
     {
       "local_id": "LOCALID_HABITAT_FRAME_TORCHIC",
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
-      "x": 4,
-      "y": 6,
+      "x": 2,
+      "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -33,7 +33,7 @@
       "local_id": "LOCALID_HABITAT_FRAME_TREECKO",
       "graphics_id": "OBJ_EVENT_GFX_VAR_8",
       "x": 6,
-      "y": 6,
+      "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -46,8 +46,8 @@
     {
       "local_id": "LOCALID_HABITAT_FRAME_MUDKIP",
       "graphics_id": "OBJ_EVENT_GFX_VAR_9",
-      "x": 8,
-      "y": 6,
+      "x": 10,
+      "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -78,7 +78,7 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 4,
+      "x": 2,
       "y": 6,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
@@ -94,7 +94,7 @@
     },
     {
       "type": "sign",
-      "x": 8,
+      "x": 10,
       "y": 6,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
