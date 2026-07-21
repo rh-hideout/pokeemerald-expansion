@@ -146,7 +146,7 @@ u16 ChooseMoveAndTargetInBattlePalace(enum BattlerId battler)
     s32 i, var1, var2;
     s32 chosenMoveIndex = -1;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-    u8 unusableMovesBits = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u8 unusableMovesBits = CheckMoveLimitations(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), 0, MOVE_LIMITATIONS_ALL);
     s32 percent = Random() % 100;
 
     // Heavy variable re-use here makes this hard to read without defines
