@@ -4,6 +4,7 @@
 #include "item.h"
 #include "main.h"
 #include "menu_helpers.h"
+#include "swsh_item_menu.h"
 
 enum {
     ITEMMENULOCATION_FIELD,
@@ -34,6 +35,15 @@ enum {
     ITEMWIN_QUANTITY,
     ITEMWIN_QUANTITY_WIDE,
     ITEMWIN_MONEY,
+#if SWSH_ITEM_MENU
+    ITEMWIN_SELL_PRICE,
+#endif
+#if SWSH_ITEM_MENU_IN_BAG_USE
+    ITEMWIN_PP_MOVE_SELECT,
+    ITEMWIN_LEVEL_UP_STATS,
+    ITEMWIN_ROTOM_CATALOG,
+    ITEMWIN_ZYGARDE_CUBE,
+#endif
     ITEMWIN_COUNT
 };
 
@@ -46,7 +56,32 @@ enum BagSortOptions
     SORT_BY_INDEX,
 };
 
+#if SWSH_ITEM_MENU_BATTLE_POCKETS
+// battle pocket ids start at POCKETS_COUNT so that during battle
+// gBagPosition.pocket never collides with a field POCKET_* value
+// (e.g. POCKET_TM_HM checks for move-info mode)
+enum BattlePocket
+{
+    BATTLE_POCKET_NONE = 0, // item does not appear in the battle bag
+    BATTLE_POCKET_MEDICINE = POCKETS_COUNT,
+    BATTLE_POCKET_POKE_BALLS,
+    BATTLE_POCKET_BATTLE_ITEMS,
+    BATTLE_POCKET_BERRIES,
+    BATTLE_POCKETS_END,
+};
+#define BATTLE_POCKETS_COUNT (BATTLE_POCKETS_END - POCKETS_COUNT)
+// take the largest pocket count possible (about 124 bytes wasteful)
+#define BATTLE_POCKET_CAPACITY max(BAG_ITEMS_COUNT, max(BAG_POKEBALLS_COUNT, BAG_BERRIES_COUNT))
+#define BAG_POCKET_IDS_COUNT BATTLE_POCKETS_END
+#else
+#define BAG_POCKET_IDS_COUNT POCKETS_COUNT
+#endif
+
 #define ITEMMENU_SWAP_LINE_LENGTH 8  // Swap line is 8 sprites long
+#if SWSH_ITEM_MENU
+#define HOVER_SLOT_SPRITES_COUNT     5
+#define FRAME_QUANTITY_SPRITES_COUNT 2
+#endif
 enum {
     ITEMMENUSPRITE_BAG,
     ITEMMENUSPRITE_BALL,
@@ -61,9 +96,12 @@ struct BagPosition
     MainCallback exitCallback;
     u8 location;
     u8 pocket;
+#if SWSH_ITEM_MENU_PYRAMID
+    bool8 isPyramid; // Battle Pyramid bag from frontier.pyramidBag
+#endif
     u16 pocketSwitchArrowPos;
-    u16 cursorPosition[POCKETS_COUNT];
-    u16 scrollPosition[POCKETS_COUNT];
+    u16 cursorPosition[BAG_POCKET_IDS_COUNT];
+    u16 scrollPosition[BAG_POCKET_IDS_COUNT];
 };
 
 extern struct BagPosition gBagPosition;
@@ -71,7 +109,13 @@ extern struct BagPosition gBagPosition;
 struct BagMenu
 {
     MainCallback newScreenCallback;
+#if SWSH_ITEM_MENU
+    u8 bg0TilemapBuffer[BG_SCREEN_SIZE];
+    u8 mainTilemapBuffer[BG_SCREEN_SIZE];
+    u8 scrollingBgTilemapBuffer[BG_SCREEN_SIZE];
+#else
     u8 tilemapBuffer[BG_SCREEN_SIZE];
+#endif
     u8 spriteIds[ITEMMENUSPRITE_COUNT];
     u8 windowIds[ITEMWIN_COUNT];
     u8 toSwapPos;
@@ -85,12 +129,59 @@ struct BagMenu
     const u8 *contextMenuItemsPtr;
     u8 contextMenuItemsBuffer[4];
     u8 contextMenuNumItems;
-    u8 numItemStacks[POCKETS_COUNT];
-    u8 numShownItems[POCKETS_COUNT];
+    u8 numItemStacks[BAG_POCKET_IDS_COUNT];
+    u8 numShownItems[BAG_POCKET_IDS_COUNT];
     s16 graphicsLoadState;
     u8 unused2[14];
     u8 ALIGNED(4) pocketNameBuffer[32][32];
     u8 unused3[4];
+#if SWSH_ITEM_MENU
+    u8 partyMonIconSpriteIds[PARTY_SIZE];
+    u8 cursorSpriteId;
+    u8 swapCursorSpriteId;
+    u8 hoverSlotSpriteIds[HOVER_SLOT_SPRITES_COUNT];
+    u8 pocketScrollArrowSpriteIds[2];
+    u8 frameQuantityIds[FRAME_QUANTITY_SPRITES_COUNT];
+    u8 moveInfoMode;
+    u8 moveTypeIconSpriteId;
+    u8 categoryIconSpriteId;
+    u16 showItemIconId;
+    u32 cursorAnimId;
+    u32 scrollThumbAnimId;
+    u32 pocketScrollArrowAnimIds[2];
+    u32 partyItemIconAnimId;
+    s32 hoveredItemIndex;
+    u16 *moveTypeIconTilesPtr;
+    u8 *moveTypeIconsCache;
+#if SWSH_ITEM_MENU_BERRY_STAT
+    u8 berryInfoMode;
+#endif
+#if SWSH_ITEM_MENU_IN_BAG_USE
+    const struct YesNoFuncTable *partyYesNoFuncs;
+    bool8 partyGiveMode;
+    bool8 partyBlendActive;
+    u16 partyGiveSwapItem;
+    u8 heldItemIconSpriteId;
+    u16 heldItemPalIndex;
+    s8 heldItemShownSlot;
+    u16 heldItemShownItem;
+    u8 statusIconSpriteIds[PARTY_SIZE];
+    s8 prevHPBarSlot;
+    bool8 hpBarWindowMapped;
+    u8 multiFullPage; // 0 = player team, 1 = partner team (12v12 multi battle)
+#if SWSH_ITEM_MENU_IN_BATTLE_USE
+    u8 multiSwapPromptSpriteIds[2];
+#endif
+#endif
+#if SWSH_ITEM_MENU_PYRAMID
+    struct ItemSlot pyramidScratch[PYRAMID_BAG_ITEMS_COUNT];
+    struct BagPocket pyramidScratchPocket;
+#endif
+#if SWSH_ITEM_MENU_BATTLE_POCKETS
+    // (srcPocket << 8) | srcSlot for each entry of each battle pocket
+    u16 battlePocketRefs[BATTLE_POCKETS_COUNT][BATTLE_POCKET_CAPACITY];
+#endif
+#endif
 };
 
 extern struct BagMenu *gBagMenu;
