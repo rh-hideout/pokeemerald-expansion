@@ -108,17 +108,16 @@ BAY_CELLS = {
     for y in range(5, 9)
 }
 FURNISHED_BAY = {
-    (0, 3): 0x0610, (1, 3): 0x0611,
-    (0, 4): 0x0618, (1, 4): 0x0619,
-    (0, 5): 0x0620, (1, 5): 0x3221,
-    (2, 3): 0x0612, (3, 3): 0x0613,
-    (2, 4): 0x061A, (3, 4): 0x061B,
-    (2, 5): 0x3222, (3, 5): 0x3223,
-    (3, 6): 0x060D,
-    (3, 7): 0x3233,
+    (0, 5): 0x0618, (1, 5): 0x0619,
+    (0, 6): 0x0620, (1, 6): 0x3221,
+    (2, 5): 0x0612, (3, 5): 0x0613,
+    (2, 6): 0x061A, (3, 6): 0x061B,
+    (4, 5): 0x060D,
+    (4, 6): 0x3233,
     (1, 7): 0x3206,
     (2, 7): 0x3207,
 }
+UPPER_CLEAR_CELLS = {(x, y) for x in range(4) for y in range(3, 5)}
 RESIDENT_CELLS = {(2, 7), (6, 7), (10, 7)}
 CLEAR_ACCESS_CELLS = (
     {(x, 9) for x in range(2, 11)}
@@ -174,6 +173,9 @@ def main():
     for coords, expected in FURNISHED_BAY.items():
         if block_at(coords) != expected:
             fail(f"furnished bay cell {coords} expected 0x{expected:04X}, found 0x{block_at(coords):04X}")
+    for coords in UPPER_CLEAR_CELLS:
+        if block_at(coords) != FLOOR:
+            fail(f"upper cleared cell {coords} expected 0x{FLOOR:04X}, found 0x{block_at(coords):04X}")
     for coords in RESIDENT_CELLS:
         if block_at(coords) not in {DARK_FLOOR, 0x3207}:
             fail(f"resident cell {coords} is not unobstructed bay floor")

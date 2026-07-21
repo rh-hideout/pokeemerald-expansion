@@ -30,14 +30,16 @@
 
 The first bay is the retained Birch furnishing cluster, not an empty dark-floor
 footprint. This amendment supersedes the earlier holder-only recipe while
-preserving every approved resident and entrance coordinate. The static
-contract must require these exact native metatiles:
+preserving every approved resident and entrance coordinate. The cluster uses
+only fully visible camera rows `5–6`; rows `3–4`, columns `0–3` are ordinary
+floor (`0x3202`). The static contract must require these exact native
+metatiles:
 
 | Furnishing | Coordinates and metatiles |
 | --- | --- |
-| Bookshelf | `(0,3)=0x0610`, `(1,3)=0x0611`, `(0,4)=0x0618`, `(1,4)=0x0619`, `(0,5)=0x0620`, `(1,5)=0x3221` |
-| PC | `(2,3)=0x0612`, `(3,3)=0x0613`, `(2,4)=0x061A`, `(3,4)=0x061B`, `(2,5)=0x3222`, `(3,5)=0x3223` |
-| Poké Ball holder | `(3,6)=0x060D`, `(3,7)=0x3233` |
+| Bookshelf | `(0,5)=0x0618`, `(1,5)=0x0619`, `(0,6)=0x0620`, `(1,6)=0x3221` |
+| PC | `(2,5)=0x0612`, `(3,5)=0x0613`, `(2,6)=0x061A`, `(3,6)=0x061B` |
+| Poké Ball holder | `(4,5)=0x060D`, `(4,6)=0x3233` |
 | Open slot and resident | `(1,7)=0x3206`, `(2,7)=0x3207` |
 
 The bookshelf forms the left edge, the PC forms the back edge, and the holder
