@@ -180,11 +180,13 @@ IntroFall_HurtPoochyena::
     case 0, IntroFall_EventScript_ChooseHelp
     case 1, IntroFall_EventScript_ChooseAdult
 
+
     release
     end
 
 IntroFall_EventScript_ChooseHelp:
     setvar VAR_RAISED_BY, 1
+    addvar VAR_COMPASSION, 1
 
     msgbox IntroFall_Text_ChooseHelp, MSGBOX_DEFAULT
     closemessage
@@ -251,6 +253,7 @@ IntroFall_EventScript_ParentReaction:
 
 IntroFall_EventScript_ChooseAdult:
     setvar VAR_RAISED_BY, 2
+    addvar VAR_RESOLVE, 1
 
     msgbox IntroFall_Text_ChooseAdult, MSGBOX_DEFAULT
     closemessage
