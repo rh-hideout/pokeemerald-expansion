@@ -3196,8 +3196,8 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move mov
         u32 attackerWeather = GetAttackerWeather(gAiLogicData->holdEffects[battlerAtk], gAiLogicData->abilities[battlerAtk], weather);
 
         enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(move);
-        enum BattleWeather weatherType = sBattleWeatherInfo[GetCurrentBattleWeather(weather)].type;
-        enum BattleWeather attackerWeatherType = sBattleWeatherInfo[GetCurrentBattleWeather(attackerWeather)].type;
+        enum BattleWeather weatherType = sBattleWeatherInfo[GetBattleWeather(weather)].type;
+        enum BattleWeather attackerWeatherType = sBattleWeatherInfo[GetBattleWeather(attackerWeather)].type;
 
         bool32 isAffectedByWeather = ((attackerWeather != B_WEATHER_NONE)
                                    && ((weatherType == moveAffectedByWeather) || (attackerWeatherType == moveAffectedByWeather)));
