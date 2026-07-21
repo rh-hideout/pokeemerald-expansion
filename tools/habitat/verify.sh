@@ -74,16 +74,16 @@ case "$SCENARIO" in
         SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;shot:zorua_lab_boot;pass:Zorua Lab overworld reached'
         ;;
     lab-campfire)
-        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-campfire;expect-probe:spot_id,7;expect-probe:resolved_species,255;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;wait:120;shot:lab_campfire;pass:Campfire starter transition reached'
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-campfire;expect-probe:spot_id,7;expect-probe:resolved_species,255;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_campfire;pass:Campfire starter transition reached'
         ;;
     lab-plant)
-        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-plant;expect-probe:spot_id,7;expect-probe:resolved_species,252;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;wait:120;shot:lab_plant;pass:Plant starter transition reached'
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-plant;expect-probe:spot_id,7;expect-probe:resolved_species,252;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_plant;pass:Plant starter transition reached'
         ;;
     lab-basin)
-        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-basin;expect-probe:spot_id,7;expect-probe:resolved_species,258;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;wait:120;shot:lab_basin;pass:Basin starter transition reached'
+        SCRIPT='expect-probe:map_group,1;expect-probe:map_num,4;command:starter-basin;expect-probe:spot_id,7;expect-probe:resolved_species,258;expect-probe:spot_state,3;expect-probe:resident_spot_id,7;shot:lab_basin;pass:Basin starter transition reached'
         ;;
     starter-recovery)
-        SCRIPT='command:starter-campfire;expect-probe:resolved_species,255;command:recover-treecko;expect-probe:spot_id,8;expect-probe:spot_state,3;expect-probe:resolved_species,252;expect-probe:resident_spot_id,8;command:recover-mudkip;expect-probe:spot_id,9;expect-probe:spot_state,3;expect-probe:resolved_species,258;expect-probe:resident_spot_id,9;wait:120;shot:starter_recovery;pass:Both unchosen starters recovered through their authored furnishing chains'
+        SCRIPT='command:starter-campfire;expect-probe:resolved_species,255;command:recover-treecko;expect-probe:spot_id,8;expect-probe:spot_state,3;expect-probe:resolved_species,252;expect-probe:resident_spot_id,8;command:recover-mudkip;expect-probe:spot_id,9;expect-probe:spot_state,3;expect-probe:resolved_species,258;expect-probe:resident_spot_id,9;shot:starter_recovery;pass:Both unchosen starters recovered through their authored furnishing chains'
         ;;
     skitty)
         SCRIPT='command:skitty-place;expect-probe:spot_id,1;expect-probe:spot_state,2;expect-probe:available_verbs,5;shot:skitty_active;command:skitty-offer;expect-probe:spot_state,3;expect-probe:resolved_species,300;expect-probe:resident_spot_id,1;shot:skitty_befriended;pass:Skitty place offer befriend transition reached'

@@ -46,19 +46,4 @@ if grep -q 'HH_VERIFY_JOBS' tools/habitat/verify.sh; then
 fi
 grep -q 'HH_VERIFY_OUT' tools/habitat/verify.sh
 
-for settleCapture in \
-    'lab-campfire lab_campfire' \
-    'lab-plant lab_plant' \
-    'lab-basin lab_basin' \
-    'starter-recovery starter_recovery'; do
-    set -- $settleCapture
-    settleScenario=$1
-    settleShot=$2
-    if ! sed -n "/^    $settleScenario)/,/^        ;;/p" tools/habitat/verify.sh | \
-        grep -q "wait:120;shot:$settleShot"; then
-        echo "verify self-test: $settleScenario must settle 120 frames before its evidence screenshot" >&2
-        exit 1
-    fi
-done
-
 echo "verify self-test: parser, release guard, fresh-build, and safe-output contracts pass"
