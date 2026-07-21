@@ -4701,8 +4701,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gBattleMons[battler].volatiles.semiInvulnerable = STATE_COMMANDER;
                 if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
                     gBattleStruct->gimmick.toActivate &= ~(1u << battler);
-                if (gBattleMons[battler].volatiles.confusionTurns > 0 && !gBattleMons[battler].volatiles.infiniteConfusion)
-                    gBattleMons[battler].volatiles.confusionTurns--;
+
+                struct Volatiles *vol = &gBattleMons[battler].volatiles;
+                if (vol->confusionTurns > 0 && vol->confusionTurns != PERMANENT_VOLATILE)
+                    vol->confusionTurns--;
+
                 BtlController_EmitSpriteInvisibility(battler, B_COMM_TO_CONTROLLER, TRUE);
                 MarkBattlerForControllerExec(battler);
                 SetStatChange(partner, STAT_ATK, 2);
@@ -8960,7 +8963,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
         BattleScriptCall(BattleScript_AbilityCuredStatus);
         break;
     case IMMUNITY_CONFUSION_CLEARED:
-        RemoveConfusionStatus(battler);
+        gBattleMons[battler].volatiles.confusionTurns = 0;
         BattleScriptCall(BattleScript_AbilityCuredStatus);
         break;
     case IMMUNITY_INFATUATION_CLEARED:
@@ -9504,12 +9507,6 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
     else
         CopyMonLevelAndBaseStatsToBattleMon(battler, mon, TRUE);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
-}
-
-void RemoveConfusionStatus(enum BattlerId battler)
-{
-    gBattleMons[battler].volatiles.confusionTurns = 0;
-    gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
 }
 
 u32 GetBattlerGender(enum BattlerId battler)
@@ -10146,10 +10143,9 @@ bool32 ItemHealMonVolatile(enum BattlerId battler, enum Item itemId)
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
     {
-        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0 || gBattleMons[battler].volatiles.infiniteConfusion);
+        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
         gBattleMons[battler].volatiles.infatuation = 0;
         gBattleMons[battler].volatiles.confusionTurns = 0;
-        gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_CONFUSION;
     }
     else if (effect[0] & ITEM0_INFATUATION)
@@ -10160,9 +10156,8 @@ bool32 ItemHealMonVolatile(enum BattlerId battler, enum Item itemId)
     }
     else if (effect[3] & ITEM3_CONFUSION)
     {
-        statusChanged = (gBattleMons[battler].volatiles.confusionTurns > 0 || gBattleMons[battler].volatiles.infiniteConfusion);
+        statusChanged = (gBattleMons[battler].volatiles.confusionTurns > 0);
         gBattleMons[battler].volatiles.confusionTurns = 0;
-        gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_CONFUSION;
     }
 

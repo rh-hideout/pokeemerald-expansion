@@ -396,11 +396,14 @@ static enum CancelerResult CancelerImprisoned(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
 {
-    if (gBattleMons[cv->battlerAtk].volatiles.confusionTurns)
+    struct Volatiles *vol = &gBattleMons[cv->battlerAtk].volatiles;
+
+    if (vol->confusionTurns)
     {
-        if (!gBattleMons[cv->battlerAtk].volatiles.infiniteConfusion)
-            gBattleMons[cv->battlerAtk].volatiles.confusionTurns--;
-        if (gBattleMons[cv->battlerAtk].volatiles.confusionTurns)
+        if (vol->confusionTurns != PERMANENT_VOLATILE)
+            vol->confusionTurns--;
+
+        if (vol->confusionTurns)
         {
              // confusion dmg
             if (RandomPercentage(RNG_CONFUSION, (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))

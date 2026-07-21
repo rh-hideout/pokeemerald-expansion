@@ -6293,29 +6293,36 @@ BattleScript_CouldntFullyProtect::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_BerserkGeneRet::
+BattleScript_BerserkGene::
 	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
-	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
-	jumpifsafeguard BattleScript_BerserkGeneRet_SafeguardProtected
+	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGene_OwnTempoPrevents
+	jumpifsafeguard BattleScript_BerserkGene_SafeguardProtected
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
-	goto BattleScript_BerserkGeneRet_End
-BattleScript_BerserkGeneRet_SafeguardProtected::
+	jumpifvolatile BS_SCRIPTING, VOLATILE_CONFUSION, BattleScript_BerserkGene_Confuse
+	goto BattleScript_BerserkGene_End
+BattleScript_BerserkGene_SafeguardProtected::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNUSEDSAFEGUARD
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_BerserkGeneRet_End
-BattleScript_BerserkGeneRet_OwnTempoPrevents:
+	goto BattleScript_BerserkGene_End
+BattleScript_BerserkGene_OwnTempoPrevents:
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_BerserkGeneRet_End:
+BattleScript_BerserkGene_End:
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_BoosterEnergyRet::
+BattleScript_BerserkGene_Confuse::
+	volatileanimation BS_SCRIPTING, VOLATILE_CONFUSION
+	printstring STRINGID_PKMNWASCONFUSED
+	waitmessage B_WAIT_TIME_LONG
+    goto BattleScript_BerserkGene_End
+
+BattleScript_BoosterEnergy::
 	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	call BattleScript_AbilityPopUpScripting

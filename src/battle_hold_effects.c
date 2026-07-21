@@ -66,7 +66,7 @@ enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
         gBattlerAbility = gBattleScripting.battler = battler;
         gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
-        BattleScriptCall(BattleScript_BoosterEnergyRet);
+        BattleScriptCall(BattleScript_BoosterEnergy);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -102,26 +102,16 @@ static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
     return ITEM_NO_EFFECT;
 }
 
-static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
-{
-    enum Ability ability = GetBattlerAbility(battler);
-    if  (ability == ABILITY_OWN_TEMPO
-      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldTimers.terrain)
-      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
-        return FALSE;
-    return TRUE;
-}
-
 static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
     if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
         return ITEM_NO_EFFECT;
 
-    if (CanBeInfinitelyConfused(battler))
-        gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
+    if (CanBeConfused(battler, battler))
+        gBattleMons[battler].volatiles.confusionTurns = PERMANENT_VOLATILE;
 
     SetStatChange(battler, STAT_ATK, 2);
-    BattleScriptCall(BattleScript_BerserkGeneRet);
+    BattleScriptCall(BattleScript_BerserkGene);
     return ITEM_STATS_CHANGE;
 }
 
@@ -733,7 +723,7 @@ static enum ItemEffect TryCureConfusion(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.confusionTurns > 0)
     {
-        RemoveConfusionStatus(battler);
+        gBattleMons[battler].volatiles.confusionTurns = 0;
         BattleScriptCall(BattleScript_BerryCureConfusionRet);
         effect = ITEM_EFFECT_OTHER;
     }
@@ -784,7 +774,7 @@ static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
         if (gBattleMons[battler].volatiles.confusionTurns > 0)
             curedConfusion = TRUE;
         gBattleMons[battler].status1 = 0;
-        RemoveConfusionStatus(battler);
+        gBattleMons[battler].volatiles.confusionTurns = 0;
         if (curedStatus && curedConfusion)
             BattleScriptCall(BattleScript_BerryCureStatusAndConfusionRet);
         else if (curedConfusion)
