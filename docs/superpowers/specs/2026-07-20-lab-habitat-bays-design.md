@@ -1,6 +1,6 @@
 # Lab Habitat Bays Design
 
-**Date:** 2026-07-20  
+**Date:** 2026-07-20
 **Status:** Approved direction; pending written-spec review
 
 ## Problem

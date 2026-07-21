@@ -1,6 +1,7 @@
 #include "global.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "habitat/events.h"
 #include "fieldmap.h"
 #include "habitat/save.h"
 #include "habitat/spots.h"
@@ -176,6 +177,7 @@ TEST("Habitat starter: live lab placement spawns the resolved frame graphics")
     MainCallback previousCallback;
     u8 previousMapGroup, previousMapNum;
     u8 objectEventId = OBJECT_EVENTS_COUNT;
+    u8 originalObjectEventId = OBJECT_EVENTS_COUNT;
 
     labHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
                                                    MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB));
@@ -206,7 +208,22 @@ TEST("Habitat starter: live lab placement spawns the resolved frame graphics")
                                                 MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
                                                 &objectEventId));
     if (objectEventId < OBJECT_EVENTS_COUNT)
+    {
         EXPECT_EQ(gObjectEvents[objectEventId].graphicsId, OBJ_EVENT_MON + SPECIES_MUDKIP);
+        originalObjectEventId = objectEventId;
+        gObjectEvents[objectEventId].graphicsId = OBJ_EVENT_GFX_ITEM_BALL;
+        Habitat_NotifyDependency(HABITAT_DEP_RESIDENT);
+        objectEventId = OBJECT_EVENTS_COUNT;
+        EXPECT(!TryGetObjectEventIdByLocalIdAndMap(furnished->localId,
+                                                    MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                                                    MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB),
+                                                    &objectEventId));
+        if (objectEventId < OBJECT_EVENTS_COUNT)
+        {
+            EXPECT_EQ(objectEventId, originalObjectEventId);
+            EXPECT_EQ(gObjectEvents[objectEventId].graphicsId, OBJ_EVENT_MON + SPECIES_MUDKIP);
+        }
+    }
 
     memset(gObjectEvents, 0, sizeof(gObjectEvents));
     gSaveBlock1Ptr->location.mapGroup = previousMapGroup;

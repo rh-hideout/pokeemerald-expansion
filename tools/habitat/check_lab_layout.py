@@ -12,27 +12,92 @@ HEIGHT = 13
 
 OBJECTS = {
     "LOCALID_HABITAT_FRAME_TORCHIC": {
-        "coords": (2, 7),
+        "local_id": "LOCALID_HABITAT_FRAME_TORCHIC",
         "graphics_id": "OBJ_EVENT_GFX_VAR_7",
+        "x": 2,
+        "y": 7,
+        "elevation": 3,
+        "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+        "movement_range_x": 0,
+        "movement_range_y": 0,
+        "trainer_type": "TRAINER_TYPE_NONE",
+        "trainer_sight_or_berry_tree_id": "0",
+        "script": "HabitatSpot_EventScript_Interact",
         "flag": "FLAG_UNUSED_0x040",
     },
     "LOCALID_HABITAT_FRAME_TREECKO": {
-        "coords": (6, 7),
+        "local_id": "LOCALID_HABITAT_FRAME_TREECKO",
         "graphics_id": "OBJ_EVENT_GFX_VAR_8",
+        "x": 6,
+        "y": 7,
+        "elevation": 3,
+        "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+        "movement_range_x": 0,
+        "movement_range_y": 0,
+        "trainer_type": "TRAINER_TYPE_NONE",
+        "trainer_sight_or_berry_tree_id": "0",
+        "script": "HabitatSpot_EventScript_Interact",
         "flag": "FLAG_UNUSED_0x041",
     },
     "LOCALID_HABITAT_FRAME_MUDKIP": {
-        "coords": (10, 7),
+        "local_id": "LOCALID_HABITAT_FRAME_MUDKIP",
         "graphics_id": "OBJ_EVENT_GFX_VAR_9",
+        "x": 10,
+        "y": 7,
+        "elevation": 3,
+        "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+        "movement_range_x": 0,
+        "movement_range_y": 0,
+        "trainer_type": "TRAINER_TYPE_NONE",
+        "trainer_sight_or_berry_tree_id": "0",
+        "script": "HabitatSpot_EventScript_Interact",
         "flag": "FLAG_UNUSED_0x042",
     },
 }
 
-ENTRANCES = {
-    (2, 8): "BirchsLab_EventScript_HabitatFrameTorchic",
-    (6, 8): "BirchsLab_EventScript_HabitatFrameTreecko",
-    (10, 8): "BirchsLab_EventScript_HabitatFrameMudkip",
-}
+ENTRANCES = [
+    {
+        "type": "sign",
+        "x": 2,
+        "y": 8,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "BirchsLab_EventScript_HabitatFrameTorchic",
+    },
+    {
+        "type": "sign",
+        "x": 6,
+        "y": 8,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "BirchsLab_EventScript_HabitatFrameTreecko",
+    },
+    {
+        "type": "sign",
+        "x": 10,
+        "y": 8,
+        "elevation": 0,
+        "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+        "script": "BirchsLab_EventScript_HabitatFrameMudkip",
+    },
+]
+
+WARPS = [
+    {
+        "x": 6,
+        "y": 12,
+        "elevation": 0,
+        "dest_map": "MAP_LITTLEROOT_TOWN",
+        "dest_warp_id": "2",
+    },
+    {
+        "x": 7,
+        "y": 12,
+        "elevation": 0,
+        "dest_map": "MAP_LITTLEROOT_TOWN",
+        "dest_warp_id": "2",
+    },
+]
 
 FLOOR = 0x3202
 DARK_FLOOR = 0x3203
@@ -42,17 +107,25 @@ BAY_CELLS = {
     for x in range(start, start + 3)
     for y in range(5, 9)
 }
-BAY_OVERRIDES = {
-    (3, 5): 0x060D,  # Poké Ball holder, top
-    (3, 6): 0x3233,  # holder's table base
-    (1, 7): 0x3206,  # open-slot mat, left half
-    (2, 7): 0x3207,  # open-slot mat, right half / first resident
+FURNISHED_BAY = {
+    (0, 3): 0x0610, (1, 3): 0x0611,
+    (0, 4): 0x0618, (1, 4): 0x0619,
+    (0, 5): 0x0620, (1, 5): 0x3221,
+    (2, 3): 0x0612, (3, 3): 0x0613,
+    (2, 4): 0x061A, (3, 4): 0x061B,
+    (2, 5): 0x3222, (3, 5): 0x3223,
+    (3, 6): 0x060D,
+    (3, 7): 0x3233,
+    (1, 7): 0x3206,
+    (2, 7): 0x3207,
 }
 RESIDENT_CELLS = {(2, 7), (6, 7), (10, 7)}
 CLEAR_ACCESS_CELLS = (
     {(x, 9) for x in range(2, 11)}
     | {(6, y) for y in range(10, 12)}
 )
+SPAWN = (6, 10)
+WALKABLE = {FLOOR, DARK_FLOOR, 0x3206, 0x3207, 0x0206, 0x0207}
 
 
 def fail(message):
@@ -63,31 +136,25 @@ def fail(message):
 def main():
     data = json.loads(MAP_JSON.read_text())
     objects = {event["local_id"]: event for event in data["object_events"]}
-    if set(objects) != set(OBJECTS):
+    if len(objects) != len(data["object_events"]) or set(objects) != set(OBJECTS):
         fail(f"unexpected object IDs: {sorted(objects)}")
 
     for local_id, expected in OBJECTS.items():
         event = objects[local_id]
-        actual = (event["x"], event["y"])
-        if actual != expected["coords"]:
-            fail(f"{local_id} expected {expected['coords']}, found {actual}")
-        if event["graphics_id"] != expected["graphics_id"]:
-            fail(f"{local_id} changed graphics variable")
-        if event["flag"] != expected["flag"]:
-            fail(f"{local_id} changed hide flag")
-        if event["script"] != "HabitatSpot_EventScript_Interact":
-            fail(f"{local_id} changed interaction script")
+        if event != expected:
+            fail(f"{local_id} expected {expected}, found {event}")
 
-    entrances = {
-        (event["x"], event["y"]): event["script"]
-        for event in data["bg_events"]
-    }
-    if entrances != ENTRANCES:
-        fail(f"background entrances expected {ENTRANCES}, found {entrances}")
+    if data["bg_events"] != ENTRANCES:
+        fail(f"background entrances expected {ENTRANCES}, found {data['bg_events']}")
+    if data["warp_events"] != WARPS:
+        fail(f"warp events expected {WARPS}, found {data['warp_events']}")
+    if data["coord_events"] != []:
+        fail(f"coordinate events expected [], found {data['coord_events']}")
 
-    warps = {(event["x"], event["y"]) for event in data["warp_events"]}
-    occupied = {expected["coords"] for expected in OBJECTS.values()}
-    if warps & occupied or warps & set(ENTRANCES) or occupied & set(ENTRANCES):
+    entrance_cells = {(event["x"], event["y"]) for event in ENTRANCES}
+    warps = {(event["x"], event["y"]) for event in WARPS}
+    occupied = {(expected["x"], expected["y"]) for expected in OBJECTS.values()}
+    if warps & occupied or warps & entrance_cells or occupied & entrance_cells:
         fail("warp, resident, and entrance coordinates must be distinct")
 
     raw = MAP_BIN.read_bytes()
@@ -101,18 +168,37 @@ def main():
         return blocks[y * WIDTH + x]
 
     for coords in BAY_CELLS:
-        expected = BAY_OVERRIDES.get(coords, DARK_FLOOR)
+        expected = FURNISHED_BAY.get(coords, DARK_FLOOR)
         if block_at(coords) != expected:
             fail(f"bay cell {coords} expected 0x{expected:04X}, found 0x{block_at(coords):04X}")
+    for coords, expected in FURNISHED_BAY.items():
+        if block_at(coords) != expected:
+            fail(f"furnished bay cell {coords} expected 0x{expected:04X}, found 0x{block_at(coords):04X}")
     for coords in RESIDENT_CELLS:
         if block_at(coords) not in {DARK_FLOOR, 0x3207}:
             fail(f"resident cell {coords} is not unobstructed bay floor")
     for coords in CLEAR_ACCESS_CELLS:
         if block_at(coords) != FLOOR:
             fail(f"access aisle cell {coords} is not clear floor")
-    for coords in ENTRANCES:
+    for coords in entrance_cells:
         if block_at(coords) != DARK_FLOOR:
             fail(f"bay entrance {coords} is not walkable dark floor")
+
+    if block_at(SPAWN) not in WALKABLE:
+        fail(f"spawn {SPAWN} is not walkable")
+    reachable = {SPAWN}
+    frontier = [SPAWN]
+    while frontier:
+        x, y = frontier.pop()
+        for neighbor in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            nx, ny = neighbor
+            if (0 <= nx < WIDTH and 0 <= ny < HEIGHT and neighbor not in reachable
+                    and block_at(neighbor) in WALKABLE):
+                reachable.add(neighbor)
+                frontier.append(neighbor)
+    required_reachable = entrance_cells | warps
+    if not required_reachable <= reachable:
+        fail(f"spawn cannot reach {sorted(required_reachable - reachable)}")
 
     print("lab-layout: visible bays, resident positions, entrances, and aisle are valid")
 

@@ -26,6 +26,28 @@
 - Modify `data/maps/LittlerootTown_ProfessorBirchsLab/map.json`: distinct front interaction and resident coordinates.
 - Modify `docs/reports/2026-07-20-habitat-task-13-acceptance.md`: fresh screenshot evidence and the resolved visual defect.
 
+### Final reviewed furnished-bay contract
+
+The first bay is the retained Birch furnishing cluster, not an empty dark-floor
+footprint. This amendment supersedes the earlier holder-only recipe while
+preserving every approved resident and entrance coordinate. The static
+contract must require these exact native metatiles:
+
+| Furnishing | Coordinates and metatiles |
+| --- | --- |
+| Bookshelf | `(0,3)=0x0610`, `(1,3)=0x0611`, `(0,4)=0x0618`, `(1,4)=0x0619`, `(0,5)=0x0620`, `(1,5)=0x3221` |
+| PC | `(2,3)=0x0612`, `(3,3)=0x0613`, `(2,4)=0x061A`, `(3,4)=0x061B`, `(2,5)=0x3222`, `(3,5)=0x3223` |
+| Poké Ball holder | `(3,6)=0x060D`, `(3,7)=0x3233` |
+| Open slot and resident | `(1,7)=0x3206`, `(2,7)=0x3207` |
+
+The bookshelf forms the left edge, the PC forms the back edge, and the holder
+forms the right edge of the first bay. Resident `(2,7)` and entrance `(2,8)`
+remain unobstructed. The Treecko and Mudkip bays remain identical empty 3×4
+dark-floor bays. The validator additionally requires complete object,
+background-event, warp, and coordinate-event schemas, mutually disjoint
+event/resident positions, and a floor/dark-floor/mat/doorway BFS from `(6,10)`
+to all three entrances and both exit warps.
+
 ### Task 1: Define and implement the lab layout contract
 
 **Files:**
