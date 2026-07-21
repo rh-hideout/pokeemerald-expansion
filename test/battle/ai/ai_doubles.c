@@ -498,6 +498,50 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI uses Spicy Extract if its ally holds Clear Amulet and has a physical move")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_SWIFT; }
+
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SPICY_EXTRACT, attack: +2, defense: -2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CLEAR_AMULET); Moves(move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+    } WHEN {
+        TURN {
+            if (move == MOVE_SCRATCH)
+                EXPECT_MOVE(opponentRight, MOVE_SPICY_EXTRACT, target: opponentLeft);
+            else
+                EXPECT_MOVE(opponentRight, MOVE_SCRATCH);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI does not use Spicy Extract if its ally would not benefit")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GHOLDENGO; ability = ABILITY_GOOD_AS_GOLD; }
+    PARAMETRIZE { species = SPECIES_SNIVY;     ability = ABILITY_CONTRARY; }
+
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SPICY_EXTRACT, attack: +2, defense: -2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH); }
+        OPPONENT(species) { Speed(20); Ability(ability); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentRight, MOVE_SCRATCH); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it will benefit the ally")
 {
     ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
