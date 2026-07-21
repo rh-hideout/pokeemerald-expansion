@@ -55,8 +55,8 @@ for settleCapture in \
     settleScenario=$1
     settleShot=$2
     if ! sed -n "/^    $settleScenario)/,/^        ;;/p" tools/habitat/verify.sh | \
-        grep -q "wait:60;shot:$settleShot"; then
-        echo "verify self-test: $settleScenario must settle 60 frames before its evidence screenshot" >&2
+        grep -q "wait:120;shot:$settleShot"; then
+        echo "verify self-test: $settleScenario must settle 120 frames before its evidence screenshot" >&2
         exit 1
     fi
 done
