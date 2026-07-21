@@ -126,34 +126,39 @@ interaction entrances from resident centers.
 - `HH_VERIFY_OUT=/private/tmp/hh-lab-bays-boot tools/habitat/verify.sh --no-interact`:
   passed; `/private/tmp/hh-lab-bays-boot/zorua_lab_boot.png` (frame 877).
 - `HH_VERIFY_OUT=/private/tmp/hh-lab-bays-campfire tools/habitat/verify.sh --scenario lab-campfire`:
-  passed; `/private/tmp/hh-lab-bays-campfire/lab_campfire.png` (frame 944).
+  passed; `/private/tmp/hh-lab-bays-campfire/lab_campfire.png` (frame 883).
 - `HH_VERIFY_OUT=/private/tmp/hh-lab-bays-plant tools/habitat/verify.sh --scenario lab-plant`:
-  passed; `/private/tmp/hh-lab-bays-plant/lab_plant.png` (frame 1004).
+  passed; `/private/tmp/hh-lab-bays-plant/lab_plant.png` (frame 883).
 - `HH_VERIFY_OUT=/private/tmp/hh-lab-bays-basin tools/habitat/verify.sh --scenario lab-basin`:
-  passed; `/private/tmp/hh-lab-bays-basin/lab_basin.png` (frame 1004).
+  passed; `/private/tmp/hh-lab-bays-basin/lab_basin.png` (frame 883).
 - `HH_VERIFY_OUT=/private/tmp/hh-lab-bays-recovery tools/habitat/verify.sh --scenario starter-recovery`:
   passed; `/private/tmp/hh-lab-bays-recovery/starter_recovery.png` (frame 890).
 - `. tools/habitat/env.sh && make -j4 check TESTS='Habitat'`: passed 106/106.
 - `sh tools/habitat/test_verify.sh`: passed; parser, release guard,
   fresh-build, and safe-output contracts pass.
+- `git diff --check 48393a140..HEAD`: passed for the complete correction range.
 - `git diff --check`: passed after restoring verifier-generated
   `src/data/pokemon/all_learnables.json` churn.
 
 All images are native 240 x 160 GBA PNGs. The desktop preview renderer showed
 spurious black tiles for several raw captures; ffmpeg re-encodes with
 `-frames:v 1 -update 1` were reviewed at unique paths and Pillow confirmed
-non-black room pixels at the affected coordinates. Review copies are
-`zorua_lab_boot_review_6b6df219a.png`,
-`lab_campfire_review_6b6df219a.png`, `lab_plant_review_6b6df219a.png`,
-`lab_basin_review_6b6df219a.png`, and
-`starter_recovery_review_6b6df219a.png` alongside their canonical captures.
-The raw PNGs show all three bays before completion, complete Torchic, Treecko,
-and Mudkip sprites in the left bay for their respective first-habitat
-outcomes, and three distinct recovered residents in their three bay centers.
+non-black room pixels at the affected coordinates. Final review copies are
+`zorua_lab_boot_review_81620d347.png`,
+`lab_campfire_review_81620d347.png`, `lab_plant_review_81620d347.png`,
+`lab_basin_review_81620d347.png`, and
+`starter_recovery_review_81620d347.png` alongside their canonical captures.
+At the native camera, the left bay visibly groups the complete compact
+bookshelf (x0-1), PC (x2-3), holder (x4), and open mat. The resident body is
+unobstructed. All three bays and the central aisle remain readable. Torchic,
+Treecko, and Mudkip are the real complete sprites in the left bay for their
+respective first-habitat outcomes, and recovery shows the three distinct
+residents in their three bay centers.
 
 The live resident-graphics correction in `8f45b2da1` is a runtime fix. The
 intermediate capture-settle commits `0f44f63ba1` and `7ad03714f` were reverted
 by `6b6df219a` after the black appearance was proven to be a preview artifact,
-not missing ROM or map graphics. This evidence resolves the reported lab
-layout defect; it does not approve pending narrative copy, furnishing icons,
-or their provenance.
+not missing ROM or map graphics. The furnishing contract was completed in
+`78d8432fc`, and `81620d347` moved that complete grouping into the native
+camera. This evidence resolves the reported lab layout defect; it does not
+approve pending narrative copy, furnishing icons, or their provenance.
