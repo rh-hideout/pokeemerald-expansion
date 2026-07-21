@@ -1571,7 +1571,7 @@ void GenerateBattlePyramidWildMon(enum Species forceSpecies)
 void GenerateBattlePyramidWildMon(enum Species forceSpecies)
 {
     u8 name[POKEMON_NAME_LENGTH + 1];
-    int i;
+    u32 i;
     const struct PyramidWildMon *wildMons;
     u32 id;
     enum FrontierLevelMode lvl = gSaveBlock2Ptr->frontier.lvlMode;
@@ -1588,7 +1588,7 @@ void GenerateBattlePyramidWildMon(enum Species forceSpecies)
     id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES) - 1;
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES, &wildMons[id].species);
     StringCopy(name, GetSpeciesName(wildMons[id].species));
-    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_NICKNAME, &name);
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_NICKNAME, name);
     if (lvl != FRONTIER_LVL_50)
     {
         lvl = SetFacilityPtrsGetLevel();

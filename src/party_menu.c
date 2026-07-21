@@ -2106,16 +2106,12 @@ static void DisplaySwitchedHeldItemMessage(enum Item item, enum Item item2, bool
 
 static void GiveItemToMon(struct Pokemon *mon, enum Item item)
 {
-    u8 itemBytes[2];
-
     if (ItemIsMail(item) == TRUE)
     {
         if (GiveMailToMonByItemId(mon, item) == MAIL_NONE)
             return;
     }
-    itemBytes[0] = item;
-    itemBytes[1] = item >> 8;
-    SetMonData(mon, MON_DATA_HELD_ITEM, itemBytes);
+    SetMonData(mon, MON_DATA_HELD_ITEM, &item);
     TryItemHoldFormChange(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId], gPartyMenu.slotId, B_TRAINER_PLAYER);
 }
 
@@ -2164,7 +2160,7 @@ static void Task_PartyMenuModifyHP(u8 taskId)
     s8 partySlot = 0;
     GetPartyAndSlotFromPartyMenuId(tPartyId, &party, &partySlot);
 
-    SetMonData(&party[partySlot], MON_DATA_HP, &tHP);
+    SetMonData(&party[partySlot], MON_DATA_HP, (u16 *)&tHP);
     DisplayPartyPokemonHPCheck(&party[partySlot], &sPartyMenuBoxes[partySlot], 1);
     DisplayPartyPokemonHPBarCheck(&party[partySlot], &sPartyMenuBoxes[partySlot]);
     if (tHPToAdd == 0 || tHP == 0 || tHP == tMaxHP)
@@ -5024,7 +5020,7 @@ void Task_AbilityCapsule(u8 taskId)
             tState++;
         break;
     case 5:
-        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_ABILITY_NUM, &tAbilityNum);
+        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_ABILITY_NUM, (u16 *)&tAbilityNum);
         RemoveBagItem(gSpecialVar_ItemId, 1);
         gTasks[taskId].func = Task_ClosePartyMenu;
         break;
@@ -5109,7 +5105,7 @@ void Task_AbilityPatch(u8 taskId)
             tState++;
         break;
     case 5:
-        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_ABILITY_NUM, &tAbilityNum);
+        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_ABILITY_NUM, (u16 *)&tAbilityNum);
         RemoveBagItem(gSpecialVar_ItemId, 1);
         gTasks[taskId].func = Task_ClosePartyMenu;
         break;
@@ -5209,7 +5205,7 @@ void Task_Mint(u8 taskId)
             tState++;
         break;
     case 5:
-        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_HIDDEN_NATURE, &tNewNature);
+        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_HIDDEN_NATURE, (u16 *)&tNewNature);
         CalculateMonStats(&gParties[B_TRAINER_PLAYER][tMonId]);
         RemoveBagItem(gSpecialVar_ItemId, 1);
         gTasks[taskId].func = Task_ClosePartyMenu;
@@ -6133,7 +6129,7 @@ void Task_DynamaxCandy(u8 taskId)
         break;
     case 3:
         tDynamaxLevel++;
-        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_DYNAMAX_LEVEL, &tDynamaxLevel);
+        SetMonData(&gParties[B_TRAINER_PLAYER][tMonId], MON_DATA_DYNAMAX_LEVEL, (u16 *)&tDynamaxLevel);
         RemoveBagItem(gSpecialVar_ItemId, 1);
         gTasks[taskId].func = Task_ClosePartyMenu;
         break;

@@ -173,7 +173,7 @@ enum ContestCategories
 
 #define MAX_STAMP_CARD_STAMPS 7
 
-enum Gender
+enum __attribute__((packed)) Gender
 {
     MALE,
     FEMALE,

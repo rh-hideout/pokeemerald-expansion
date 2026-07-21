@@ -1889,7 +1889,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
         for (s32 i = 0; i < monsCount; i++)
         {
             u32 monIndex = monIndices[i];
-            s32 ball = -1;
+            enum PokeBall ball = POKEBALL_COUNT;
             u32 personalityHash = GeneratePartyHash(trainer, i);
             const struct TrainerMon *partyData = trainer->party;
             struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
@@ -1985,7 +1985,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             CalculateMonStats(&party[i]);
 
-            if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == -1)
+            if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == POKEBALL_COUNT)
             {
                 ball = gTrainerClasses[trainer->trainerClass].ball ?: BALL_POKE;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
@@ -5800,7 +5800,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     else
     {
         species = GetMonData(mon, MON_DATA_SPECIES);
-        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
+        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
         holdEffect = GetItemHoldEffect(heldItem);
         ability = GetMonAbility(mon);
         types[0] = GetSpeciesType(species, 0);

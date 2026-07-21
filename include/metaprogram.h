@@ -22,6 +22,10 @@
 #define CAT(a, b) CAT_(a, b)
 #define CAT_(a, b) a ## b
 
+/* Expands 'a', 'b', and 'c' and then concatenates them (left-to-right). */
+#define CAT3(a, b, c) CAT3_(a, b, c)
+#define CAT3_(a, b, c) a ## b ## c
+
 /* Expands '__VA_ARGS__' and then stringizes them. */
 #define STR(...) STR_(__VA_ARGS__)
 #define STR_(...) #__VA_ARGS__
@@ -216,5 +220,11 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
  * Because 'cond' must be known at compile-time, this is rarely useful
  * outside macros. */
 #define if_comptime(cond) if (__builtin_constant_p((cond) ? 0 : *(int *)0))
+
+/* Expands to a no-op but has the side-effect of causing 'cpp' to add a
+ * line-break in its output, which is helpful for limiting the length of
+ * lines seen by 'cc1' as a result of hairy macros, and can avoid the
+ * problem where an error produces a very long line full of whitespace. */
+#define _NEWLINE (void)NULL
 
 #endif

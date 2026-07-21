@@ -1491,7 +1491,8 @@ static void Task_GiveExpWithExpBar(u8 taskId)
     u32 level, expAfterGain;
     enum Species species;
     u32 oldMaxHP;
-    s32 currExp, expOnNextLvl, newExpPoints;
+    u32 currExp, expOnNextLvl;
+    s32 newExpPoints;
 
     if (gTasks[taskId].tExpTask_frames < 13)
     {

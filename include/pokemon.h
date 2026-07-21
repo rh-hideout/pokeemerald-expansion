@@ -11,6 +11,7 @@
 #include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
+#include "constants/pokeball.h"
 #include "constants/regions.h"
 #include "constants/region_map_sections.h"
 #include "constants/map_groups.h"
@@ -21,111 +22,6 @@
 
 #define GET_BASE_SPECIES_ID(speciesId) (GetFormSpeciesId(speciesId, 0))
 #define FORM_SPECIES_END (0xffff)
-
-// Property labels for Get(Box)MonData / Set(Box)MonData
-enum MonData {
-    MON_DATA_PERSONALITY,
-    MON_DATA_STATUS,
-    MON_DATA_OT_ID,
-    MON_DATA_LANGUAGE,
-    MON_DATA_SANITY_IS_BAD_EGG,
-    MON_DATA_SANITY_HAS_SPECIES,
-    MON_DATA_SANITY_IS_EGG,
-    MON_DATA_OT_NAME,
-    MON_DATA_MARKINGS,
-    MON_DATA_CHECKSUM,
-    MON_DATA_HP,
-    MON_DATA_IS_SHINY,
-    MON_DATA_HIDDEN_NATURE,
-    MON_DATA_HP_LOST,
-    MON_DATA_DAYS_SINCE_FORM_CHANGE,
-    MON_DATA_ENCRYPT_SEPARATOR,
-    MON_DATA_NICKNAME,
-    MON_DATA_NICKNAME10,
-    MON_DATA_SPECIES,
-    MON_DATA_HELD_ITEM,
-    MON_DATA_MOVE1,
-    MON_DATA_MOVE2,
-    MON_DATA_MOVE3,
-    MON_DATA_MOVE4,
-    MON_DATA_PP1,
-    MON_DATA_PP2,
-    MON_DATA_PP3,
-    MON_DATA_PP4,
-    MON_DATA_PP_BONUSES,
-    MON_DATA_COOL,
-    MON_DATA_BEAUTY,
-    MON_DATA_CUTE,
-    MON_DATA_EXP,
-    MON_DATA_HP_EV,
-    MON_DATA_ATK_EV,
-    MON_DATA_DEF_EV,
-    MON_DATA_SPEED_EV,
-    MON_DATA_SPATK_EV,
-    MON_DATA_SPDEF_EV,
-    MON_DATA_FRIENDSHIP,
-    MON_DATA_SMART,
-    MON_DATA_POKERUS,
-    MON_DATA_POKERUS_STRAIN,
-    MON_DATA_POKERUS_DAYS_LEFT,
-    MON_DATA_MET_LOCATION,
-    MON_DATA_MET_LEVEL,
-    MON_DATA_MET_GAME,
-    MON_DATA_POKEBALL,
-    MON_DATA_HP_IV,
-    MON_DATA_ATK_IV,
-    MON_DATA_DEF_IV,
-    MON_DATA_SPEED_IV,
-    MON_DATA_SPATK_IV,
-    MON_DATA_SPDEF_IV,
-    MON_DATA_IS_EGG,
-    MON_DATA_ABILITY_NUM,
-    MON_DATA_TOUGH,
-    MON_DATA_SHEEN,
-    MON_DATA_OT_GENDER,
-    MON_DATA_COOL_RIBBON,
-    MON_DATA_BEAUTY_RIBBON,
-    MON_DATA_CUTE_RIBBON,
-    MON_DATA_SMART_RIBBON,
-    MON_DATA_TOUGH_RIBBON,
-    MON_DATA_LEVEL,
-    MON_DATA_MAX_HP,
-    MON_DATA_ATK,
-    MON_DATA_DEF,
-    MON_DATA_SPEED,
-    MON_DATA_SPATK,
-    MON_DATA_SPDEF,
-    MON_DATA_MAIL,
-    MON_DATA_SPECIES_OR_EGG,
-    MON_DATA_IVS,
-    MON_DATA_CHAMPION_RIBBON,
-    MON_DATA_WINNING_RIBBON,
-    MON_DATA_VICTORY_RIBBON,
-    MON_DATA_ARTIST_RIBBON,
-    MON_DATA_EFFORT_RIBBON,
-    MON_DATA_MARINE_RIBBON,
-    MON_DATA_LAND_RIBBON,
-    MON_DATA_SKY_RIBBON,
-    MON_DATA_COUNTRY_RIBBON,
-    MON_DATA_NATIONAL_RIBBON,
-    MON_DATA_EARTH_RIBBON,
-    MON_DATA_WORLD_RIBBON,
-    MON_DATA_MODERN_FATEFUL_ENCOUNTER,
-    MON_DATA_KNOWN_MOVES,
-    MON_DATA_RIBBON_COUNT,
-    MON_DATA_RIBBONS,
-    MON_DATA_HYPER_TRAINED_HP,
-    MON_DATA_HYPER_TRAINED_ATK,
-    MON_DATA_HYPER_TRAINED_DEF,
-    MON_DATA_HYPER_TRAINED_SPEED,
-    MON_DATA_HYPER_TRAINED_SPATK,
-    MON_DATA_HYPER_TRAINED_SPDEF,
-    MON_DATA_IS_SHADOW,
-    MON_DATA_DYNAMAX_LEVEL,
-    MON_DATA_GIGANTAMAX_FACTOR,
-    MON_DATA_TERA_TYPE,
-    MON_DATA_EVOLUTION_TRACKER,
-};
 
 struct PokemonSubstruct0
 {
@@ -184,7 +80,7 @@ struct PokemonSubstruct2
 struct PokemonSubstruct3
 {
     u8 pokerus;
-    u8 metLocation;
+    metloc_u8_t metLocation;
     u16 metLevel:7;
     u16 metGame:4;
     u16 dynamaxLevel:4;
@@ -787,20 +683,6 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
 
-/* GameFreak called Get(Box)MonData with either 2 or 3 arguments, for
- * type safety we have a Get(Box)MonData macro which dispatches to
- * either Get(Box)MonData2 or Get(Box)MonData3 based on the number of
- * arguments. The two functions are aliases of each other, but they
- * differ for matching purposes in the caller's codegen. */
-#define GetMonData(...) CAT(GetMonData, NARG_8(__VA_ARGS__))(__VA_ARGS__)
-#define GetBoxMonData(...) CAT(GetBoxMonData, NARG_8(__VA_ARGS__))(__VA_ARGS__)
-u32 GetMonData3(struct Pokemon *mon, s32 field, u8 *data);
-u32 GetMonData2(struct Pokemon *mon, s32 field);
-u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data);
-u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field);
-
-void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg);
-void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg);
 void CopyMon(void *dest, void *src, size_t size);
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon);
 u8 CopyMonToPC(struct Pokemon *mon);
@@ -1005,5 +887,275 @@ static inline enum ReturnToIdleOWE OWE_GetReturnToIdleFromSpecies(enum Species s
     enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
     return gOWESpeciesBehavior[behavior].returnToIdle;
 }
+
+/* T GetMonData(struct Pokemon *, enum MonData field)
+ * T GetMonData(struct Pokemon *, enum MonData field, U data)
+ *
+ * T GetBoxMonData(struct BoxPokemon *, enum MonData field)
+ * T GetBoxMonData(struct BoxPokemon *, enum MonData field, U data)
+ *
+ * If 'field' is not known at compile-time 'T' is 'u32' and 'U' is
+ * 'void *'.
+ *
+ * If 'field' is known at compile-time then 'T' and 'U' are derived from
+ * the corresponding type defined in 'FOREACH_MON_DATA':
+ * - If that type is an array: 'T' is 'u32', 'U' is that type; and the
+ *   two-argument forms are disabled.
+ * - Otherwise: 'T' is that type, 'U' is undefined; and the
+ *   three-argument forms are disabled. */
+#define GetMonData(mon, field, ...) CAT(_GETMONDATA, __VA_OPT__(3))(mon, field, ##__VA_ARGS__)
+#define GetBoxMonData(boxMon, field, ...) CAT(_GETBOXMONDATA, __VA_OPT__(3))(boxMon, field, ##__VA_ARGS__)
+
+/* void SetMonData(struct Pokemon *, enum MonData field, T data)
+/* void SetMonData(struct Pokemon *, enum MonData field, T *data)
+ * void SetBoxMonData(struct BoxPokemon *, enum MonData field, T data)
+ * void SetBoxMonData(struct BoxPokemon *, enum MonData field, T *data)
+ *
+ * If 'field' is not known at compile-time 'T *' is 'const void *' and
+ * the 'T data' functions are disabled.
+ *
+ * If 'field' is known at compile-time then 'T' is derived from the
+ * corresponding type defined in 'FOREACH_MON_DATA':
+ * - If that type is an array: 'T' is the element type; and the 'T data'
+ *   forms are disabled.
+ * - Otherwise: 'T' is that type. */
+#define SetMonData(mon, field, data) _SETMONDATA(mon, field, data)
+#define SetBoxMonData(boxMon, field, data) _SETBOXMONDATA(boxMon, field, data)
+
+enum MonData_Structs { MD_MON = 0b01, MD_BOX = 0b10, MD_MONBOX = 0b11 };
+enum MonData_ReadWrite { MD_RD = 0b01, MD_WR = 0b10, MD_RDWR = 0b11 };
+
+/* F(name, type, structs, readWrite, ##__VA_ARGS__)
+ *
+ * - 'name' is the name of the enumerator in 'enum MonData'.
+ *
+ * - 'type' is used to derive the types of '*MonData'/'*BoxMonData'.
+ *
+ * - 'structs' is used to enable/disable '*MonData'/'*BoxMonData':
+ *   - If 'MD_MON': Only 'struct Pokemon'.
+ *   - If 'MD_BOX': Only 'struct BoxPokemon'.
+ *   - If 'MD_MONBOX': Both 'struct Pokemon' and 'struct BoxPokemon'.
+ *
+ * - 'readWrite' is used to enable/disable 'Get*'/'Set*':
+ *   - If 'MD_RD': Only 'Get*'.
+ *   - If 'MD_WR': Only 'Set*'.
+ *   - If 'MD_RDWR': Both 'Get*' and 'Set*'.
+ *
+ * The ', ##__VA_ARGS__' is used to forward the '...' from
+ * 'FOREACH_MON_DATA' to all the 'F's. */
+#define FOREACH_MON_DATA(F, ...) \
+    F(MON_DATA_PERSONALITY, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_STATUS, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_OT_ID, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_LANGUAGE, enum Language, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SANITY_IS_BAD_EGG, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SANITY_HAS_SPECIES, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SANITY_IS_EGG, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_OT_NAME, u8[PLAYER_NAME_LENGTH], MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MARKINGS, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_CHECKSUM, u16, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HP, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_IS_SHINY, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HIDDEN_NATURE, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HP_LOST, u16, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_DAYS_SINCE_FORM_CHANGE, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ENCRYPT_SEPARATOR, void *, 0, 0, ##__VA_ARGS__) \
+    F(MON_DATA_NICKNAME, u8[POKEMON_NAME_LENGTH + 1], MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_NICKNAME10, u8[10 + 1], MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPECIES, enum Species, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HELD_ITEM, enum Item, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MOVE1, enum Move, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MOVE2, enum Move, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MOVE3, enum Move, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MOVE4, enum Move, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_PP1, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_PP2, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_PP3, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_PP4, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_PP_BONUSES, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_COOL, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_BEAUTY, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_CUTE, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_EXP, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HP_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ATK_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_DEF_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPEED_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPATK_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPDEF_EV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_FRIENDSHIP, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SMART, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_POKERUS, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_POKERUS_STRAIN, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_POKERUS_DAYS_LEFT, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MET_LOCATION, metloc_u8_t, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MET_LEVEL, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MET_GAME, enum GameVersion, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_POKEBALL, enum PokeBall, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HP_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ATK_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_DEF_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPEED_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPATK_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPDEF_IV, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_IS_EGG, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ABILITY_NUM, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_TOUGH, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SHEEN, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_OT_GENDER, enum Gender, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_COOL_RIBBON, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_BEAUTY_RIBBON, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_CUTE_RIBBON, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SMART_RIBBON, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_TOUGH_RIBBON, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_LEVEL, u8, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MAX_HP, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ATK, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_DEF, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPEED, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPATK, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPDEF, u16, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MAIL, u8, MD_MON, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SPECIES_OR_EGG, enum Species, MD_MONBOX, MD_RD, ##__VA_ARGS__) \
+    F(MON_DATA_IVS, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_CHAMPION_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_WINNING_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_VICTORY_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_ARTIST_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_EFFORT_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MARINE_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_LAND_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_SKY_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_COUNTRY_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_NATIONAL_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_EARTH_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_WORLD_RIBBON, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_MODERN_FATEFUL_ENCOUNTER, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_RIBBON_COUNT, u8, MD_MONBOX, MD_RD, ##__VA_ARGS__) \
+    F(MON_DATA_RIBBONS, u32, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_HP, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_ATK, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_DEF, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_SPEED, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_SPATK, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_HYPER_TRAINED_SPDEF, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_IS_SHADOW, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_DYNAMAX_LEVEL, u8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_GIGANTAMAX_FACTOR, bool8, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_TERA_TYPE, enum Type, MD_MONBOX, MD_RDWR, ##__VA_ARGS__) \
+    F(MON_DATA_EVOLUTION_TRACKER, u16, MD_MONBOX, MD_RDWR, ##__VA_ARGS__)
+
+/* enum MonData
+ *
+ * Constants to use with 'GetMonData', 'GetBoxMonData', 'SetMonData',
+ * and 'SetBoxMonData'. Mostly derived from 'FOREACH_MON_DATA' but
+ * 'MON_DATA_KNOWN_MOVES' is an outlier: its 'Get*' argument is input
+ * not output. */
+enum MonData
+{
+#define MON_DATA_IDENTIFIER(name, type, structs, readWrite) name,
+    FOREACH_MON_DATA(MON_DATA_IDENTIFIER)
+#undef MON_DATA_IDENTIFIER
+    MON_DATA_KNOWN_MOVES,
+};
+
+// 'GetMonData', 'GetBoxMonData', 'SetMonData', and 'SetBoxMonData'
+// implementation details.
+
+u32 GetMonData3(struct Pokemon *mon, enum MonData field, void *data);
+u32 GetMonData2(struct Pokemon *mon, enum MonData field);
+u32 GetBoxMonData3(struct BoxPokemon *boxMon, enum MonData field, void *data);
+u32 GetBoxMonData2(struct BoxPokemon *boxMon, enum MonData field);
+
+void SetMonDataPtr(struct Pokemon *mon, enum MonData field, const void *data);
+void SetBoxMonDataPtr(struct BoxPokemon *boxMon, enum MonData field, const void *data);
+
+// HINT: '__builtin_classify_type(exp)' returns:
+// * 5 for pointer types.
+// * 14 for array types.
+// See: https://github.com/gcc-mirror/gcc/blob/master/gcc/typeclass.h
+#define _MONDATA_GET2_RETURN_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (void)0, (type){0}))
+#define _MONDATA_GET3_PARAMETER_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (type){0}, (void *)0))
+#define _MONDATA_DEFINE_GET(name, type, structs, readWrite, generic, monType, structFlag) \
+    __attribute__((always_inline)) \
+    static inline _MONDATA_GET2_RETURN_TYPE(type) CAT3(generic, 2_, name)(monType *mon, enum MonData field) \
+    { \
+        if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field) unsupported"))) void CAT3(generic, 2_mon_, name)(void); _NEWLINE; CAT3(generic, 2_mon_, name)(); } \
+        if_comptime (__builtin_classify_type(type) == 14) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: " STR(type) " is returned via 'data'"))) void CAT3(generic, 2_type_, name)(void); _NEWLINE; CAT3(generic, 2_type_, name)(); } \
+        if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: not " STR(structFlag)))) void CAT3(generic, 2_struct_, name)(void); _NEWLINE; CAT3(generic, 2_struct_, name)(); } \
+        if_comptime (!(readWrite & MD_RD)) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: not MD_RD or MD_RDWR"))) void CAT3(generic, 2_RD_, name)(void); _NEWLINE; CAT3(generic, 2_RD_, name)(); } \
+        _NEWLINE; \
+        return (_MONDATA_GET2_RETURN_TYPE(type))CAT(generic, 2)(mon, field); \
+    } \
+    __attribute__((always_inline)) \
+    static inline u32 CAT3(generic, 3_, name)(monType *mon, enum MonData field, _MONDATA_GET3_PARAMETER_TYPE(type) data) \
+    { \
+        if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field, data) unsupported"))) void CAT3(generic, 3_mon_, name)(void); _NEWLINE; CAT3(generic, 3_mon_, name)(); } \
+        if_comptime (__builtin_classify_type(type) == 14 && data == NULL) { __attribute__((error(STR(generic) "(mon, field, NULL) unsupported"))) void CAT3(generic, 3_data_, name)(void); _NEWLINE; CAT3(generic, 3_data_, name)(); } \
+        if_comptime (__builtin_classify_type(type) != 14 && data != NULL) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " is returned directly"))) void CAT3(generic, 3_type_, name)(void); _NEWLINE; CAT3(generic, 3_type_, name)(); } \
+        if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not " STR(structFlag)))) void CAT3(generic, 3_struct_, name)(void); _NEWLINE; CAT3(generic, 3_struct_, name)(); } \
+        if_comptime (!(readWrite & MD_RD)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not MD_RD or MD_RDWR"))) void CAT3(generic, 3_RD_, name)(void); _NEWLINE; CAT3(generic, 3_RD_, name)(); } \
+        _NEWLINE; \
+        return CAT(generic, 3)(mon, field, data); \
+    }
+
+// NOTE: On little-endian systems you can read from, e.g. a 'u16 *' as
+// if it was a 'u8 *' and get the correct answer if the pointed-to value
+// fits in a 'u8'. This is bad style, but GF did it a lot.
+union __attribute__((transparent_union)) PtrU8Ish { const u8 *as_u8; const u16 *as_u16; const u32 *as_u32; };
+union __attribute__((transparent_union)) PtrU16Ish { const u16 *as_u16; const u32 *as_u32; };
+
+// NOTE: '(const type){0} + 0' causes the array to decay into a pointer.
+// This is the correct behavior for strings but unlikely to be correct
+// for other types, including other uses of 'u8[]'.
+#define _MONDATA_SETPTR_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (const type){0} + 0, _Generic((type){0}, u8: (union PtrU8Ish) { .as_u8 = 0 }, u16: (union PtrU16Ish) { .as_u16 = 0 }, default: (type[1]){0})))
+#define _MONDATA_SETIMM_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (const type){0} + 0, (const type){0}))
+
+#define _MONDATA_DEFINE_SET(name, type, structs, readWrite, generic, monType, structFlag) \
+    __attribute__((always_inline)) \
+    static inline void CAT3(generic, Ptr_, name)(monType *mon, enum MonData field, _MONDATA_SETPTR_PARAMETER_TYPE(type) data) \
+    { \
+        if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field, data) unsupported"))) void CAT3(generic, Ptr_mon_, name)(void); _NEWLINE; CAT3(generic, Ptr_mon_, name)(); } \
+        if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not" STR(structFlag)))) void CAT3(generic, Ptr_struct_, name)(void); _NEWLINE; CAT3(generic, Ptr_struct_, name)(); } \
+        if_comptime (!(readWrite & MD_WR)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not MD_WR or MD_RDWR"))) void CAT3(generic, Ptr_WR_, name)(void); _NEWLINE; CAT3(generic, Ptr_WR_, name)(); } \
+        const void *data_; \
+        memcpy(&data_, &data, sizeof(data_)); \
+        if_comptime (data_ == NULL) { __attribute__((error(STR(generic) "(mon, field, NULL) unsupported"))) void CAT3(generic, Ptr_data_, name)(void); _NEWLINE; CAT3(generic, Ptr_data_, name)(); } \
+        _NEWLINE; \
+        CAT(generic, Ptr)(mon, field, data_); \
+    } \
+    __attribute__((always_inline)) \
+    static inline void CAT3(generic, Imm_, name)(monType *mon, enum MonData field, _MONDATA_SETIMM_PARAMETER_TYPE(type) data) \
+    { \
+        if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field, data) unsupported"))) void CAT3(generic, Imm_mon_, name)(void); _NEWLINE; CAT3(generic, Imm_mon_, name)(); } \
+        if_comptime (__builtin_classify_type(type) == 14) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " must be passed via a pointer"))) void CAT3(generic, Imm_type_, name)(void); _NEWLINE; CAT3(generic, Imm_type_, name)(); } \
+        if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not " STR(structFlag)))) void CAT3(generic, Imm_struct_, name)(void); _NEWLINE; CAT3(generic, Imm_struct_, name)(); } \
+        if_comptime (!(readWrite & MD_WR)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not MD_WR or MD_RDWR"))) void CAT3(generic, Imm_WR_, name)(void); _NEWLINE; CAT3(generic, Imm_WR_, name)(); } \
+        _NEWLINE; \
+        CAT(generic, Ptr)(mon, field, &data); \
+    }
+
+#define _MONDATA_DEFINE_GETSET(name, type, structs, readWrite) \
+    _MONDATA_DEFINE_GET(name, type, structs, readWrite, GetMonData, struct Pokemon, MD_MON) \
+    _MONDATA_DEFINE_GET(name, type, structs, readWrite, GetBoxMonData, struct BoxPokemon, MD_BOX) \
+    _MONDATA_DEFINE_SET(name, type, structs, readWrite, SetMonData, struct Pokemon, MD_MON) \
+    _MONDATA_DEFINE_SET(name, type, structs, readWrite, SetBoxMonData, struct BoxPokemon, MD_BOX)
+
+FOREACH_MON_DATA(_MONDATA_DEFINE_GETSET)
+
+#define _MONDATA_RPAREN(name, type, structs, readWrite) )
+#define _GETMONDATA_CASE(name, type, structs, readWrite, generic, field) __builtin_choose_expr(__builtin_constant_p(name == (field) ? 0 : *(int *)0), CAT3(generic, _, name),
+#define _GETMONDATA_SWITCH(mon, generic, field) (FOREACH_MON_DATA(_GETMONDATA_CASE, generic, field) generic FOREACH_MON_DATA(_MONDATA_RPAREN))
+
+#define _GETMONDATA(mon, field) _GETMONDATA_SWITCH(mon, GetMonData2, field)(mon, field)
+#define _GETMONDATA3(mon, field, data) _GETMONDATA_SWITCH(mon, GetMonData3, field)(mon, field, data)
+#define _GETBOXMONDATA(boxMon, field) _GETMONDATA_SWITCH(boxMon, GetBoxMonData2, field)(boxMon, field)
+#define _GETBOXMONDATA3(boxMon, field, data) _GETMONDATA_SWITCH(boxMon, GetBoxMonData3, field)(boxMon, field, data)
+
+#define _SETMONDATA_CASE(name, type, structs, readWrite, generic, field, data) __builtin_choose_expr(__builtin_constant_p(name == (field) ? 0 : *(int *)0), __builtin_choose_expr(__builtin_classify_type(type) == 14 || __builtin_classify_type(data) == 5, CAT3(generic, Ptr_, name), CAT3(generic, Imm_, name)),
+#define _SETMONDATA_SWITCH(mon, generic, field, data) (FOREACH_MON_DATA(_SETMONDATA_CASE, generic, field, data) CAT(generic, Ptr) FOREACH_MON_DATA(_MONDATA_RPAREN))
+
+#define _SETMONDATA(mon, field, data) _SETMONDATA_SWITCH(mon, SetMonData, field, data)(mon, field, data)
+#define _SETBOXMONDATA(boxMon, field, data) _SETMONDATA_SWITCH(boxMon, SetBoxMonData, field, data)(boxMon, field, data)
 
 #endif // GUARD_POKEMON_H
