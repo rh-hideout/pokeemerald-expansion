@@ -1071,17 +1071,16 @@ void SetMonDataPtr(struct Pokemon *mon, enum MonData field, const void *data);
 void SetBoxMonDataPtr(struct BoxPokemon *boxMon, enum MonData field, const void *data);
 
 // HINT: '__builtin_classify_type(exp)' returns:
-// * 5 for pointer types.
-// * 14 for array types.
+// * 5 for pointer and array types.
 // See: https://github.com/gcc-mirror/gcc/blob/master/gcc/typeclass.h
-#define _MONDATA_GET2_RETURN_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (void)0, (type){0}))
-#define _MONDATA_GET3_PARAMETER_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (type){0}, (void *)0))
+#define _MONDATA_GET2_RETURN_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type((type){0}) == 5, (void)0, (type){0}))
+#define _MONDATA_GET3_PARAMETER_TYPE(type) typeof(__builtin_choose_expr(__builtin_classify_type((type){0}) == 5, (type){0}, (void *)0))
 #define _MONDATA_DEFINE_GET(name, type, structs, readWrite, generic, monType, structFlag) \
     __attribute__((always_inline)) \
     static inline _MONDATA_GET2_RETURN_TYPE(type) CAT3(generic, 2_, name)(monType *mon, enum MonData field) \
     { \
         if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field) unsupported"))) void CAT3(generic, 2_mon_, name)(void); _NEWLINE; CAT3(generic, 2_mon_, name)(); } \
-        if_comptime (__builtin_classify_type(type) == 14) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: " STR(type) " is returned via 'data'"))) void CAT3(generic, 2_type_, name)(void); _NEWLINE; CAT3(generic, 2_type_, name)(); } \
+        if_comptime (__builtin_classify_type((type){0}) == 5) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: " STR(type) " is returned via 'data'"))) void CAT3(generic, 2_type_, name)(void); _NEWLINE; CAT3(generic, 2_type_, name)(); } \
         if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: not " STR(structFlag)))) void CAT3(generic, 2_struct_, name)(void); _NEWLINE; CAT3(generic, 2_struct_, name)(); } \
         if_comptime (!(readWrite & MD_RD)) { __attribute__((error(STR(generic) "(mon, " STR(name) ") disabled: not MD_RD or MD_RDWR"))) void CAT3(generic, 2_RD_, name)(void); _NEWLINE; CAT3(generic, 2_RD_, name)(); } \
         _NEWLINE; \
@@ -1091,8 +1090,8 @@ void SetBoxMonDataPtr(struct BoxPokemon *boxMon, enum MonData field, const void 
     static inline u32 CAT3(generic, 3_, name)(monType *mon, enum MonData field, _MONDATA_GET3_PARAMETER_TYPE(type) data) \
     { \
         if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field, data) unsupported"))) void CAT3(generic, 3_mon_, name)(void); _NEWLINE; CAT3(generic, 3_mon_, name)(); } \
-        if_comptime (__builtin_classify_type(type) == 14 && data == NULL) { __attribute__((error(STR(generic) "(mon, field, NULL) unsupported"))) void CAT3(generic, 3_data_, name)(void); _NEWLINE; CAT3(generic, 3_data_, name)(); } \
-        if_comptime (__builtin_classify_type(type) != 14 && data != NULL) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " is returned directly"))) void CAT3(generic, 3_type_, name)(void); _NEWLINE; CAT3(generic, 3_type_, name)(); } \
+        if_comptime (__builtin_classify_type((type){0}) == 5 && data == NULL) { __attribute__((error(STR(generic) "(mon, field, NULL) unsupported"))) void CAT3(generic, 3_data_, name)(void); _NEWLINE; CAT3(generic, 3_data_, name)(); } \
+        if_comptime (__builtin_classify_type((type){0}) != 5 && data != NULL) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " is returned directly"))) void CAT3(generic, 3_type_, name)(void); _NEWLINE; CAT3(generic, 3_type_, name)(); } \
         if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not " STR(structFlag)))) void CAT3(generic, 3_struct_, name)(void); _NEWLINE; CAT3(generic, 3_struct_, name)(); } \
         if_comptime (!(readWrite & MD_RD)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not MD_RD or MD_RDWR"))) void CAT3(generic, 3_RD_, name)(void); _NEWLINE; CAT3(generic, 3_RD_, name)(); } \
         _NEWLINE; \
@@ -1108,8 +1107,8 @@ union __attribute__((transparent_union)) PtrU16Ish { const u16 *as_u16; const u3
 // NOTE: '(const type){0} + 0' causes the array to decay into a pointer.
 // This is the correct behavior for strings but unlikely to be correct
 // for other types, including other uses of 'u8[]'.
-#define _MONDATA_SETPTR_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (const type){0} + 0, _Generic((type){0}, u8: (union PtrU8Ish) { .as_u8 = 0 }, u16: (union PtrU16Ish) { .as_u16 = 0 }, default: (type[1]){0})))
-#define _MONDATA_SETIMM_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type(type) == 14, (const type){0} + 0, (const type){0}))
+#define _MONDATA_SETPTR_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type((type){0}) == 5, (const type){0} + 0, _Generic((type){0}, u8: (union PtrU8Ish) { .as_u8 = 0 }, u16: (union PtrU16Ish) { .as_u16 = 0 }, default: (type[1]){0})))
+#define _MONDATA_SETIMM_PARAMETER_TYPE(type) const typeof(__builtin_choose_expr(__builtin_classify_type((type){0}) == 5, (const type){0} + 0, (const type){0}))
 
 #define _MONDATA_DEFINE_SET(name, type, structs, readWrite, generic, monType, structFlag) \
     __attribute__((always_inline)) \
@@ -1128,7 +1127,7 @@ union __attribute__((transparent_union)) PtrU16Ish { const u16 *as_u16; const u3
     static inline void CAT3(generic, Imm_, name)(monType *mon, enum MonData field, _MONDATA_SETIMM_PARAMETER_TYPE(type) data) \
     { \
         if_comptime (mon == NULL) { __attribute__((error(STR(generic) "(NULL, field, data) unsupported"))) void CAT3(generic, Imm_mon_, name)(void); _NEWLINE; CAT3(generic, Imm_mon_, name)(); } \
-        if_comptime (__builtin_classify_type(type) == 14) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " must be passed via a pointer"))) void CAT3(generic, Imm_type_, name)(void); _NEWLINE; CAT3(generic, Imm_type_, name)(); } \
+        if_comptime (__builtin_classify_type((type){0}) == 5) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: " STR(type) " must be passed via a pointer"))) void CAT3(generic, Imm_type_, name)(void); _NEWLINE; CAT3(generic, Imm_type_, name)(); } \
         if_comptime (!(structs & structFlag)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not " STR(structFlag)))) void CAT3(generic, Imm_struct_, name)(void); _NEWLINE; CAT3(generic, Imm_struct_, name)(); } \
         if_comptime (!(readWrite & MD_WR)) { __attribute__((error(STR(generic) "(mon, " STR(name) ", data) disabled: not MD_WR or MD_RDWR"))) void CAT3(generic, Imm_WR_, name)(void); _NEWLINE; CAT3(generic, Imm_WR_, name)(); } \
         _NEWLINE; \
@@ -1152,7 +1151,7 @@ FOREACH_MON_DATA(_MONDATA_DEFINE_GETSET)
 #define _GETBOXMONDATA(boxMon, field) _GETMONDATA_SWITCH(boxMon, GetBoxMonData2, field)(boxMon, field)
 #define _GETBOXMONDATA3(boxMon, field, data) _GETMONDATA_SWITCH(boxMon, GetBoxMonData3, field)(boxMon, field, data)
 
-#define _SETMONDATA_CASE(name, type, structs, readWrite, generic, field, data) __builtin_choose_expr(__builtin_constant_p(name == (field) ? 0 : *(int *)0), __builtin_choose_expr(__builtin_classify_type(type) == 14 || __builtin_classify_type(data) == 5, CAT3(generic, Ptr_, name), CAT3(generic, Imm_, name)),
+#define _SETMONDATA_CASE(name, type, structs, readWrite, generic, field, data) __builtin_choose_expr(__builtin_constant_p(name == (field) ? 0 : *(int *)0), __builtin_choose_expr(__builtin_classify_type((type){0}) == 5 || __builtin_classify_type(data) == 5, CAT3(generic, Ptr_, name), CAT3(generic, Imm_, name)),
 #define _SETMONDATA_SWITCH(mon, generic, field, data) (FOREACH_MON_DATA(_SETMONDATA_CASE, generic, field, data) CAT(generic, Ptr) FOREACH_MON_DATA(_MONDATA_RPAREN))
 
 #define _SETMONDATA(mon, field, data) _SETMONDATA_SWITCH(mon, SetMonData, field, data)(mon, field, data)
