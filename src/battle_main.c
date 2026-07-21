@@ -2985,7 +2985,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         // Transfer Baton Passable volatile statuses
         VOLATILE_DEFINITIONS(UNPACK_VOLATILE_BATON_PASSABLES)
         /* Expands to the following (compiler removes `if` statements):
-         * gBattleMons[battler].volatiles.confusionTurns = volatilesCopy->confusionTurns;
+         * gBattleMons[battler].volatiles.confusionTimer = volatilesCopy->confusionTimer;
          * gBattleMons[battler].volatiles.substitute = volatilesCopy->substitute;
          * gBattleMons[battler].volatiles.escapePrevention = volatilesCopy->escapePrevention;
          * ...etc

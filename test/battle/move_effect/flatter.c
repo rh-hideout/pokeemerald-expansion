@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Flatter increases the target's Sp. Attack by 1 stage and con
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT(opponent->volatiles.confusionTurns > 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
     }
 }
 

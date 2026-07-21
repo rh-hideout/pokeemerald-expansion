@@ -387,10 +387,10 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
             else if (!gBattleMons[battler].volatiles.rampageTurns && gBattleMons[battler].volatiles.multipleTurns)
             {
                 gBattleMons[battler].volatiles.multipleTurns = FALSE;
-                if (!gBattleMons[battler].volatiles.confusionTurns)
+                if (!gBattleMons[battler].volatiles.confusionTimer)
                 {
                     SetMoveEffectHelper(battler, battler, MOVE_EFFECT_CONFUSION, gBattlescriptCurrInstr, EFFECT_PRIMARY);
-                    if (gBattleMons[battler].volatiles.confusionTurns)
+                    if (gBattleMons[battler].volatiles.confusionTimer)
                         BattleScriptCall(BattleScript_ThrashConfuses);
                     effect = TRUE;
                 }

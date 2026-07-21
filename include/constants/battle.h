@@ -212,7 +212,7 @@ enum VolatileFlags
  * These are removed after exiting the battle or switching
  *  Enum,                                   Type                           Type, max value, flags */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION,                   confusionTurns,                (u32, PERMANENT_VOLATILE), V_BATON_PASSABLE) \
+    F(VOLATILE_CONFUSION,                   confusionTimer,                (u32, PERMANENT_VOLATILE), V_BATON_PASSABLE) \
     F(VOLATILE_FLINCHED,                    flinched,                      (u32, 1)) \
     F(VOLATILE_UPROAR,                      uproarTurns,                   (u32, 5)) \
     F(VOLATILE_TORMENT,                     torment,                       (u32, 1)) \

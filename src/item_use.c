@@ -1184,11 +1184,11 @@ static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
-        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTimer > 0);
     else if (effect[0] & ITEM0_INFATUATION)
         return gBattleMons[battler].volatiles.infatuation;
     else if (effect[3] & ITEM3_CONFUSION)
-        return gBattleMons[battler].volatiles.confusionTurns > 0;
+        return gBattleMons[battler].volatiles.confusionTimer > 0;
 
     return FALSE;
 }

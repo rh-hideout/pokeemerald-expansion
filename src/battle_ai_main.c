@@ -1782,7 +1782,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (HasDamagingMove(battlerDef) && !(gBattleMons[battlerAtk].volatiles.substitute
          || IsBattlerIncapacitated(battlerDef, abilityDef)
          || gBattleMons[battlerDef].volatiles.infatuation
-         || gBattleMons[battlerDef].volatiles.confusionTurns))
+         || gBattleMons[battlerDef].volatiles.confusionTimer))
             ADJUST_SCORE(-10);
         if (HasMoveWithEffect(battlerAtk, EFFECT_SUBSTITUTE) && !gBattleMons[battlerAtk].volatiles.substitute)
             ADJUST_SCORE(-10);
@@ -1792,7 +1792,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_REFLECT_DAMAGE:
         if (IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
         || gBattleMons[battlerDef].volatiles.infatuation
-        || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
+        || gBattleMons[battlerDef].volatiles.confusionTimer > 0)
             ADJUST_SCORE(-1);
         if ((incomingMove == MOVE_NONE || GetBattleMoveCategory(incomingMove) == DAMAGE_CATEGORY_STATUS
           || DoesSubstituteBlockMove(battlerAtk, BATTLE_PARTNER(battlerDef), incomingMove))
@@ -4958,7 +4958,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         && BattlerWillFaintFromSecondaryDamage(battlerDef, aiData->abilities[battlerDef]))
             break; // Don't use if the attract won't have a change to activate
         if (gBattleMons[battlerDef].status1 & STATUS1_ANY
-        || gBattleMons[battlerDef].volatiles.confusionTurns > 0
+        || gBattleMons[battlerDef].volatiles.confusionTimer > 0
         || IsBattlerTrapped(battlerAtk, battlerDef))
             ADJUST_SCORE(GOOD_EFFECT);
         else
@@ -6541,7 +6541,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
             if (HasDamagingMove(battlerDef) && !(gBattleMons[battlerAtk].volatiles.substitute
              || IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
              || gBattleMons[battlerDef].volatiles.infatuation
-             || gBattleMons[battlerDef].volatiles.confusionTurns > 0))
+             || gBattleMons[battlerDef].volatiles.confusionTimer > 0))
                 ADJUST_SCORE(10);
         }
         break;

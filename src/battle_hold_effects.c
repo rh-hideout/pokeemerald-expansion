@@ -108,7 +108,7 @@ static enum ItemEffect TryBerserkGene(enum BattlerId battler)
         return ITEM_NO_EFFECT;
 
     if (CanBeConfused(battler, battler))
-        gBattleMons[battler].volatiles.confusionTurns = PERMANENT_VOLATILE;
+        gBattleMons[battler].volatiles.confusionTimer = PERMANENT_VOLATILE;
 
     SetStatChange(battler, STAT_ATK, 2);
     BattleScriptCall(BattleScript_BerserkGene);
@@ -721,9 +721,9 @@ static enum ItemEffect TryCureConfusion(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gBattleMons[battler].volatiles.confusionTurns > 0)
+    if (gBattleMons[battler].volatiles.confusionTimer > 0)
     {
-        gBattleMons[battler].volatiles.confusionTurns = 0;
+        gBattleMons[battler].volatiles.confusionTimer = 0;
         BattleScriptCall(BattleScript_BerryCureConfusionRet);
         effect = ITEM_EFFECT_OTHER;
     }
@@ -737,7 +737,7 @@ static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
     bool32 curedStatus = FALSE;
     bool32 curedConfusion = FALSE;
 
-    if (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0)
+    if (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTimer > 0)
     {
         if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
         {
@@ -771,10 +771,10 @@ static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FROSTBITE;
             curedStatus = TRUE;
         }
-        if (gBattleMons[battler].volatiles.confusionTurns > 0)
+        if (gBattleMons[battler].volatiles.confusionTimer > 0)
             curedConfusion = TRUE;
         gBattleMons[battler].status1 = 0;
-        gBattleMons[battler].volatiles.confusionTurns = 0;
+        gBattleMons[battler].volatiles.confusionTimer = 0;
         if (curedStatus && curedConfusion)
             BattleScriptCall(BattleScript_BerryCureStatusAndConfusionRet);
         else if (curedConfusion)

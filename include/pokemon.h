@@ -329,7 +329,7 @@ struct Volatiles
 {
     VOLATILE_DEFINITIONS(UNPACK_VOLATILE_STRUCT)
     // Expands to:
-    // u32 confusionTurns:3;
+    // u32 confusionTimer:3;
     // u32 flinched:1;
     // u32 uproarTurns:3;
     // etc.

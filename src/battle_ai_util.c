@@ -3636,7 +3636,7 @@ bool32 AI_CanParalyze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 
 bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Ability abilityDef)
 {
-    if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
+    if (gBattleMons[battlerDef].volatiles.confusionTimer > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
      || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], gFieldTimers.terrain)
      || IsSafeguardProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk])
@@ -3707,7 +3707,7 @@ bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
     else if ((atkAbility == ABILITY_SERENE_GRACE
       || gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS
       || gBattleMons[battlerDef].volatiles.infatuation
-      || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
+      || gBattleMons[battlerDef].volatiles.confusionTimer > 0)
       || ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) && CanTargetFaintAi(battlerDef, battlerAtk)))
     {
         return TRUE;   // good idea to flinch
@@ -4872,7 +4872,7 @@ void IncreaseParalyzeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PARALYSIS)
           || (HasMoveWithMoveEffectExcept(battlerAtk, MOVE_EFFECT_FLINCH, EFFECT_FIRST_TURN_ONLY)) // filter out Fake Out
           || gBattleMons[battlerDef].volatiles.infatuation
-          || gBattleMons[battlerDef].volatiles.confusionTurns > 0)
+          || gBattleMons[battlerDef].volatiles.confusionTimer > 0)
             ADJUST_SCORE_PTR(GOOD_EFFECT);
         else
             ADJUST_SCORE_PTR(DECENT_EFFECT);
