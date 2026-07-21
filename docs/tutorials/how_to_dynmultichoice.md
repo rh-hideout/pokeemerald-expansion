@@ -583,4 +583,4 @@ For `DYN_MULTICHOICE_CB_SHOW_ITEM`/`PKMN`, the breakdown is as follows:
 
 `DYN_MULTICHOICE_CB_SHOW_ITEM` shows the item whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/items.h`](../../include/constants/items.h). An item with the ID 0 will show nothing, an item with the ID 1 will show a PokéBall, an item with the ID 2 will show a Great Ball, and so on.
 
-`DYN_MULTICHOICE_CB_SHOW_ITEM` shows the Pokémon's icon whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/species.h`](../../include/constants/species.h). A Pokémon with the ID 0 will show the decamark, a Pokémon with the ID 1 will show a Bulbasaur, an item with the ID 2 will show an Ivysaur, and so on.
+`DYN_MULTICHOICE_CB_SHOW_PKMN` shows the Pokémon's icon whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/species.h`](../../include/constants/species.h). A Pokémon with the ID 0 will show the decamark, a Pokémon with the ID 1 will show a Bulbasaur, an item with the ID 2 will show an Ivysaur, and so on.
