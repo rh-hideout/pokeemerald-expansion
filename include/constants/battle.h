@@ -201,7 +201,7 @@ enum BattleSide
 #define STATUS1_ICY_ANY          (STATUS1_FREEZE | STATUS1_FROSTBITE)
 #define STATUS1_DAMAGING         (STATUS1_PSN_ANY | STATUS1_BURN | STATUS1_FROSTBITE)
 
-#define PERMANENT_VOLATILE 16 // Indicates permanancy for battler volatiles
+#define PERMANENT_VOLATILE 16 // Indicates permanency for battler volatiles
 
 enum VolatileFlags
 {
