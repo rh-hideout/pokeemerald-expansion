@@ -29,10 +29,11 @@
 #include "../../include/constants/characters.h"
 #include "io.h"
 
-AsmFile::AsmFile(std::string filename, bool isStdin, bool doEnum) : m_filename(filename)
+AsmFile::AsmFile(std::string filename, bool isStdin, bool doEnum, bool capitalizeCappable) : m_filename(filename)
 {
     m_buffer = ReadFileToBuffer(filename.c_str(), isStdin, &m_size);
     m_doEnum = doEnum;
+    m_capitalizeCappable = capitalizeCappable;
 
     m_pos = 0;
     m_lineNum = 1;
@@ -45,6 +46,7 @@ AsmFile::AsmFile(AsmFile&& other) : m_filename(std::move(other.m_filename))
 {
     m_buffer = other.m_buffer;
     m_doEnum = other.m_doEnum;
+    m_capitalizeCappable = other.m_capitalizeCappable;
     m_pos = other.m_pos;
     m_size = other.m_size;
     m_lineNum = other.m_lineNum;
@@ -291,7 +293,7 @@ int AsmFile::ReadString(unsigned char* s)
     SkipWhitespace();
 
     int length;
-    StringParser stringParser(m_buffer, m_size);
+    StringParser stringParser(m_buffer, m_size, m_capitalizeCappable);
 
     try
     {

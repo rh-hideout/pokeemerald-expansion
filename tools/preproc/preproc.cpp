@@ -51,13 +51,13 @@ void PrintAsmBytes(unsigned char *s, int length)
     }
 }
 
-void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize)
+void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize, bool capitalizeCappable)
 {
     std::stack<AsmFile> stack;
     Label prevLabel;
     bool inScriptData = false;
 
-    stack.push(AsmFile(filename, isStdin, doEnum));
+    stack.push(AsmFile(filename, isStdin, doEnum, capitalizeCappable));
     std::printf("# 1 \"%s\"\n", filename.c_str());
 
     for (;;)
@@ -82,7 +82,7 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
         switch (directive)
         {
         case Directive::Include:
-            stack.push(AsmFile(stack.top().ReadPath(), false, doEnum));
+            stack.push(AsmFile(stack.top().ReadPath(), false, doEnum, capitalizeCappable));
             stack.top().OutputLocation();
             break;
         case Directive::String:
@@ -155,9 +155,9 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
     }
 }
 
-void PreprocCFile(const char * filename, bool isStdin, const char * graphicsRoot)
+void PreprocCFile(const char * filename, bool isStdin, const char * graphicsRoot, bool capitalizeCappable)
 {
-    CFile cFile(filename, isStdin, graphicsRoot);
+    CFile cFile(filename, isStdin, graphicsRoot, capitalizeCappable);
     cFile.Preproc();
 }
 
@@ -197,9 +197,10 @@ int main(int argc, char **argv)
     bool doEnum = false;
     const char *graphicsRoot = "";
     bool doSize = false;
+    bool capitalizeCappable = false;
 
-    /* preproc [-i] [-e] [-s] SRC_FILE CHARMAP_FILE */
-    while ((opt = getopt(argc, argv, "ieg:s")) != -1)
+    /* preproc [-i] [-e] [-s] [-c] SRC_FILE CHARMAP_FILE */
+    while ((opt = getopt(argc, argv, "ieg:sc")) != -1)
     {
         switch (opt)
         {
@@ -214,6 +215,9 @@ int main(int argc, char **argv)
             break;
         case 'g':
             graphicsRoot = optarg;
+            break;
+        case 'c':
+            capitalizeCappable = true;
             break;
         default:
             UsageAndExit(argv[0]);
@@ -241,13 +245,13 @@ int main(int argc, char **argv)
 
     if ((extension[0] == 's') && extension[1] == 0)
     {
-        PreprocAsmFile(source, isStdin, doEnum, doSize);
+        PreprocAsmFile(source, isStdin, doEnum, doSize, capitalizeCappable);
     }
     else if ((extension[0] == 'c' || extension[0] == 'i') && extension[1] == 0)
     {
         if (doEnum)
             FATAL_ERROR("-e is invalid for C sources\n");
-        PreprocCFile(source, isStdin, graphicsRoot);
+        PreprocCFile(source, isStdin, graphicsRoot, capitalizeCappable);
     }
     else
     {

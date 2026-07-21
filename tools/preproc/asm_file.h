@@ -50,7 +50,7 @@ struct Label
 class AsmFile
 {
 public:
-    AsmFile(std::string filename, bool isStdin, bool doEnum);
+    AsmFile(std::string filename, bool isStdin, bool doEnum, bool capitalizeCappable);
     AsmFile(AsmFile&& other);
     AsmFile(const AsmFile&) = delete;
     ~AsmFile();
@@ -68,6 +68,7 @@ public:
 private:
     char* m_buffer;
     bool m_doEnum;
+    bool m_capitalizeCappable;
     long m_pos;
     long m_size;
     long m_lineNum;

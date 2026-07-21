@@ -1,3 +1,4 @@
+#include "config/text.h"
 #include "constants/global.h"
 #include "constants/layouts.h"
 #include "constants/map_types.h"

@@ -28,7 +28,7 @@
 class StringParser
 {
 public:
-    StringParser(char* buffer, long size) : m_buffer(buffer), m_size(size), m_pos(0) {}
+    StringParser(char* buffer, long size, bool capitalize) : m_buffer(buffer), m_size(size), m_pos(0), m_capitalize(capitalize) {}
     int ParseString(long srcPos, unsigned char* dest, int &destLength);
 
 private:
@@ -41,12 +41,14 @@ private:
     char* m_buffer;
     long m_size;
     long m_pos;
+    bool m_capitalize;
 
     Integer ReadInteger();
     Integer ReadDecimal();
     Integer ReadHex();
     std::string ReadCharOrEscape();
     std::string ReadBracketedConstants();
+    std::string ReadCappableChars();
     void SkipWhitespace();
     void SkipRestOfInteger(int radix);
     void RaiseError(const char* format, ...);

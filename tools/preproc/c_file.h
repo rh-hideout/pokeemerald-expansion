@@ -34,7 +34,7 @@
 class CFile
 {
 public:
-    CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr);
+    CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr, bool capitalizeCappable);
     CFile(CFile&& other);
     CFile(const CFile&) = delete;
     ~CFile();
@@ -51,6 +51,7 @@ private:
     } m_location;
     bool m_isStdin;
     std::string m_graphicsRoot;
+    bool m_capitalizeCappable;
     std::map<std::vector<unsigned char>, std::uint64_t> m_compoundStrings;
     std::string m_output;
 
