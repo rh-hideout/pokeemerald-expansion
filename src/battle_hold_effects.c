@@ -28,7 +28,7 @@ bool32 IsOnEffectActivation(enum HoldEffect holdEffect)            { return gHol
 bool32 IsOnBerryActivation(enum HoldEffect holdEffect)             { return GetItemPocket(gLastUsedItem) == POCKET_BERRIES; }
 bool32 IsOnFlingActivation(enum HoldEffect holdEffect)             { return gHoldEffectsInfo[holdEffect].onFling; }
 bool32 IsBoosterEnergyActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].boosterEnergy; }
-bool32 IsEndTurnActivation(enum HoldEffect holdEffect)             { return gHoldEffectsInfo[holdEffect].endTurn; }
+bool32 IsOrbsWhiteHerbActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].orbsWhiteHerbActivation; }
 
 bool32 IsForceTriggerItemActivation(enum HoldEffect holdEffect)
 {

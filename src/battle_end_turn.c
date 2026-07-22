@@ -1329,7 +1329,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         enum Ability ability = GetBattlerAbility(battler);
         switch (ability)
         {
-        case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Find a better way.
+        case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Implement the correct gen5+ behavior
         case ABILITY_CUD_CHEW:
         case ABILITY_SLOW_START:
         case ABILITY_BAD_DREAMS:
@@ -1348,7 +1348,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsEndTurnActivation))
+        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOrbsWhiteHerbActivation))
             effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;

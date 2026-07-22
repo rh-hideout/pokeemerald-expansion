@@ -140,7 +140,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     {
         .whiteHerb = TRUE,
         .onFling = TRUE,
-        .endTurn = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_MACHO_BRACE] =
@@ -330,20 +330,20 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_FLAME_ORB] =
     {
         .orbs = TRUE,
-        .endTurn = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_TOXIC_ORB] =
     {
         .orbs = TRUE,
-        .endTurn = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_STICKY_BARB] =
     {
         .onTargetAfterHit = TRUE,
         .orbs = TRUE,
-        .endTurn = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_IRON_BALL] =
