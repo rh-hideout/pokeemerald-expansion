@@ -1429,8 +1429,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcommanderactive jumpInstr:req
+	.macro jumpifcommanderactive battler:req, jumpInstr:req
 	callnative BS_JumpIfCommanderActive
+	.byte \battler
 	.4byte \jumpInstr
 	.endm
 

@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Dragon Darts strikes twice")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
-        MESSAGE("The Pokémon was hit 2 times!");
+        NOT MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -39,7 +39,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes each opponent once in a double battle")
         HP_BAR(chosenTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(secondaryTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -62,7 +61,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target protects")
         HP_BAR(secondaryTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(secondaryTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -89,7 +87,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is F
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -115,7 +112,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -141,7 +137,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -165,7 +160,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is i
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -184,7 +178,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts is not effected by Wide Guard")
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -208,7 +201,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is f
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -231,7 +223,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -249,7 +240,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses")
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -267,7 +257,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes will be both redirected to Follow Me us
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 times!");
     }
 }
 
@@ -285,12 +274,11 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike any target if under a Fairy-typ
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-            MESSAGE("The Pokémon was hit 2 times!");
         }
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first target fainted and follow me was active")
+DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first target fainted and Follow Me was active")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -302,10 +290,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-            MESSAGE("The Pokémon was hit 2 times!");
-        }
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
     }
 }
 
@@ -329,3 +314,22 @@ DOUBLE_BATTLE_TEST("Dragon Darts can be absorbed by both opponents and hit neith
     }
 }
 
+DOUBLE_BATTLE_TEST("Dragon Darts always prints effectiveness message after every hit")
+{
+    // The messages are possibly incorrect if they should print the target
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_CUFANT);
+        OPPONENT(SPECIES_DRATINI);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("It's not very effective…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("It's super effective!");
+    }
+}
