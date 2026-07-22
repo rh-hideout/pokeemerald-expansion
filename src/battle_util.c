@@ -10359,8 +10359,9 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
     default:
         break;
     }
+
     if (MoveDecreasesAccIfUserNotSameType(cv->move) && !IS_BATTLER_OF_TYPE(battlerAtk, GetBattleMoveType(cv->move)))
-        calc = (calc * 110) / 100;
+        calc = (calc * 90) / 100;
 
     // Attacker's hold effect
     switch (cv->holdEffects[battlerAtk])
