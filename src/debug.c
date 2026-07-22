@@ -2373,6 +2373,9 @@ static const struct DebugSelectionStep sPartnerSelectionStep = {
     .digits = 2,
 };
 
+// TRAINER_SINGLE_SELECTION creates selection functions that matches trainer battle
+// position (opponent1, opponent 2 or partner) to the index where their trainer id
+// is stored in the trainer menu data
 #define TRAINER_SINGLE_SELECTION(label1, dataIndex)                                 \
 static void DebugSelection_ ## label1 ## _Init(u8 taskId) {                         \
     Debug_CreateInputDisplayWindow(taskId);                                         \
@@ -2549,6 +2552,8 @@ static void DebugSelectionStep_PrintGenericBooleanInput(u8 taskId, const u8 *str
     DebugNativeStep_PrintWindowSelection(taskId);
 }
 
+// UPDATE_GENERIC_INPUT is a macro to create a selection function that only update the selected
+// value without doing anything special
 #define UPDATE_GENERIC_INPUT(label, title)                                                  \
 static void DebugSelectionStep_Update ## label(u8 taskId, u8 digits, u32 min, u32 max) {    \
     DebugSelectionStep_PrintGenericInput(taskId, digits, COMPOUND_STRING("" #title ":")); };
@@ -2648,6 +2653,8 @@ static const struct DebugSelectionStep sOutbreakDaysLeftSelectionStep = {
     .digits = 3
 };
 
+// MASS_OUTRBREAK_SINGLE_COMPLETION creates selection functions that
+// modify the data of the currentlyactive outbreak
 #define MASS_OUTRBREAK_SINGLE_COMPLETION(label1, label2, saveField)                 \
 static void DebugSelection_SetMassOutbreak ## label1 ## _Init(u8 taskId) {          \
     Debug_CreateInputDisplayWindow(taskId);                                         \
