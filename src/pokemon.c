@@ -6862,7 +6862,7 @@ static void ResolveIVs(enum Species species, const u16 *ivsTemplate, u8 *ivs)
     }
 }
 
-static void ResolveEVs(const u16 *evsTemplate, u8 *evs, bool32 ignoreTotalEvCheck)
+void ResolveEVs(const u16 *evsTemplate, u8 *evs, bool32 ignoreTotalEvCheck)
 {
     u32 evTotal = 0;
     for (u32 i = 0; i < NUM_STATS; i++)
