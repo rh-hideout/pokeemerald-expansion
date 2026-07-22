@@ -1814,6 +1814,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         {
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
+            gBattleScripting.battler = cv->battlerAtk;
             gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
             if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
                 gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
