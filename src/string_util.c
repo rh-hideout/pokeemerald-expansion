@@ -1,6 +1,8 @@
 #include "global.h"
+#include "assertf.h"
 #include "string_util.h"
 #include "text.h"
+#include "util.h"
 #include "strings.h"
 #include "union_room_chat.h"
 
@@ -11,20 +13,6 @@ EWRAM_DATA u8 gStringVar4[0x3E8] = {0};
 EWRAM_DATA static u8 sUnknownStringVar[16] = {0};
 
 static const u8 sDigits[] = __("0123456789ABCDEF");
-
-static const s32 sPowersOfTen[] =
-{
-             1,
-            10,
-           100,
-          1000,
-         10000,
-        100000,
-       1000000,
-      10000000,
-     100000000,
-    1000000000,
-};
 
 u8 *StringCopy_Nickname(u8 *dest, const u8 *src)
 {
@@ -175,7 +163,7 @@ u8 *ConvertIntToDecimalStringN(u8 *dest, s32 value, enum StringConvertMode mode,
 {
     enum { WAITING_FOR_NONZERO_DIGIT, WRITING_DIGITS, WRITING_SPACES } state;
     s32 powerOfTen;
-    s32 largestPowerOfTen = sPowersOfTen[n - 1];
+    s32 largestPowerOfTen = gPowersOfTen[n - 1];
 
     state = WAITING_FOR_NONZERO_DIGIT;
 
@@ -231,7 +219,7 @@ u8 *ConvertUIntToDecimalStringN(u8 *dest, u32 value, enum StringConvertMode mode
 {
     enum { WAITING_FOR_NONZERO_DIGIT, WRITING_DIGITS, WRITING_SPACES } state;
     s32 powerOfTen;
-    s32 largestPowerOfTen = sPowersOfTen[n - 1];
+    s32 largestPowerOfTen = gPowersOfTen[n - 1];
 
     state = WAITING_FOR_NONZERO_DIGIT;
 

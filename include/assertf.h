@@ -92,7 +92,8 @@
 #define _FATALASSERTF_FMT(cond, fmt, ...) do { if (!(cond)) _FATALASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__); } while (0)
 
 #if RELEASE
-#define _ASSERTF_HANDLE(...) (void)0
+#define _ASSERTF_HANDLE_HELPER(...) APPEND_COMMA(DISCARD(__VA_ARGS__))
+#define _ASSERTF_HANDLE(fmt,...) RECURSIVELY(R_FOR_EACH(_ASSERTF_HANDLE_HELPER, __VA_ARGS__)) DISCARD(0)
 #define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #elif TESTING
 #include "test_result.h"

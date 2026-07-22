@@ -1,0 +1,572 @@
+#include "global.h"
+#include "banking_system.h"
+#include "battle_message.h"
+#include "config/banking.h"
+#include "constants/flags.h"
+#include "constants/items.h"
+#include "decompress.h"
+#include "event_data.h"
+#include "event_object_movement.h"
+#include "field_player_avatar.h"
+#include "gba/defines.h"
+#include "gba/io_reg.h"
+#include "gba/types.h"
+#include "graphics.h"
+#include "international_string_util.h"
+#include "item.h"
+#include "main.h"
+#include "menu.h"
+#include "money.h"
+#include "overworld.h"
+#include "random.h"
+#include "script.h"
+#include "script_menu.h"
+#include "string_util.h"
+#include "strings.h"
+#include "task.h"
+#include "text.h"
+#include "util.h"
+#include "window.h"
+#include <limits.h>
+#include <stdint.h>
+
+static const char* bankingDisabled = "Banking disabled: SAVINGS_ENABLED is FALSE";
+
+// Macros
+#define RETURN_IF_BANKING_DISABLED() \
+    do \
+    { \
+        assertf(SAVINGS_ENABLED, "%s", bankingDisabled) \
+        { \
+            UnlockPlayerFieldControls(); \
+            return; \
+        } \
+    } while (0)
+
+// Config
+#define MAX_BANK_MONEY UINT16_MAX
+
+#define BALANCE_LABEL_TAG 0x2722
+
+static const struct OamData sOamData_BalanceLabel =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const union AnimCmd sSpriteAnim_BalanceLabel[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_BalanceLabel[] =
+{
+    sSpriteAnim_BalanceLabel,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_BalanceLabel =
+{
+    .tileTag = BALANCE_LABEL_TAG,
+    .paletteTag = BALANCE_LABEL_TAG,
+    .oam = &sOamData_BalanceLabel,
+    .anims = sSpriteAnimTable_BalanceLabel,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_BalanceLabel =
+{
+    .data = gShopMenuBalance_Gfx,
+    .size = 256,
+    .tag = BALANCE_LABEL_TAG,
+};
+
+static const struct SpritePalette sSpritePalette_BalanceLabel =
+{
+    .data = gShopMenu_Pal,
+    .tag = BALANCE_LABEL_TAG
+};
+
+// Structs
+struct UniquePurchaseItem
+{
+    enum Item itemId;
+    u32 thresholdMoney;
+    u16 quantity;
+    s32 price;
+};
+
+struct RepeatPurchaseItem
+{
+    enum Item itemId;
+    s32 quantity;
+    s32 price;
+};
+
+static const struct UniquePurchaseItem sUniquePurchaseTable[] = {
+    {ITEM_NONE},
+    {ITEM_SUPER_POTION,  900,   1,  600},
+    {ITEM_REPEL,         4000,  1,  270},
+    {ITEM_SUPER_POTION,  7000,  1,  600},
+    {ITEM_SILK_SCARF,    10000, 1,  100},
+    {ITEM_MOON_STONE,    15000, 1, 3000},
+    {ITEM_HYPER_POTION,  19000, 1,  900},
+    {ITEM_CHOICE_SCARF,  30000, 1,  200},
+    {ITEM_MUSCLE_BAND,   40000, 1,  200},
+    {ITEM_FOCUS_SASH,    50000, 1,  200},
+};
+
+static const struct RepeatPurchaseItem sRepeatPurchaseTable[] = {
+    {ITEM_OCCA_BERRY,   5, 100},
+    {ITEM_PASSHO_BERRY, 5, 100},
+    {ITEM_WACAN_BERRY,  5, 100},
+    {ITEM_RINDO_BERRY,  5, 100},
+    {ITEM_YACHE_BERRY,  5, 100},
+    {ITEM_CHOPLE_BERRY, 5, 100},
+    {ITEM_KEBIA_BERRY,  5, 100},
+    {ITEM_SHUCA_BERRY,  5, 100},
+    {ITEM_COBA_BERRY,   5, 100},
+    {ITEM_PAYAPA_BERRY, 5, 100},
+    {ITEM_TANGA_BERRY,  5, 100},
+    {ITEM_CHARTI_BERRY, 5, 100},
+    {ITEM_KASIB_BERRY,  5, 100},
+    {ITEM_HABAN_BERRY,  5, 100},
+    {ITEM_COLBUR_BERRY, 5, 100},
+    {ITEM_BABIRI_BERRY, 5, 100},
+    {ITEM_CHILAN_BERRY, 5, 100},
+};
+
+// Strings
+static const u8 sText_Deposit[] = _("Deposit");
+static const u8 sText_Withdraw[] = _("Withdraw");
+
+// Variables
+EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
+EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
+
+// Static Functions
+static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
+static void Banking_AddBalanceLabelObject(u16 x, u16 y);
+static void Banking_HideBalanceBox(void);
+static void Banking_RemoveBalanceLabelObject(void);
+
+// Windows
+static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 15,
+    .tilemapTop = 2,
+    .width = 13,
+    .height = 2,
+    .paletteNum = 15,
+    .baseBlock = 1};
+
+static const struct WindowTemplate sBankingModeWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 2,
+    .tilemapTop = 2,
+    .width = 7,
+    .height = 2,
+    .paletteNum = 15,
+    .baseBlock = 1 + 13 * 2};
+
+bool32 IsSavingMoney(void)
+{
+    return SAVINGS_ENABLED && FlagGet(SAVINGS_FLAG);
+}
+
+struct Banking* GetBankingPtr(void)
+{
+    #if SAVINGS_ENABLED
+        return &gSaveBlock3Ptr->banking;
+    #else
+        return NULL;
+    #endif /* if SAVINGS_ENABLED */
+}
+
+u32 GetMoneyInBank(void)
+{
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
+    {
+        return 0;
+    }
+
+    struct Banking *banking = GetBankingPtr();
+    return banking->savings;
+}
+
+void SetMoneyInBank(u32 amount)
+{
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
+    {
+        return;
+    }
+
+    struct Banking *banking = GetBankingPtr();
+    banking->savings = amount;
+}
+
+void DepositAndTrackMoney(u32 amount)
+{
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
+    {
+        return;
+    }
+
+    struct Banking *banking = GetBankingPtr();
+    banking->deposited += amount;
+    banking->savings += amount;
+}
+
+void NewGameInitBanking(void)
+{
+    if (!SAVINGS_ENABLED)
+        return;
+
+    struct Banking *banking = GetBankingPtr();
+    SetMoneyInBank(0);
+    banking->lastBought = 0;
+    banking->deposited = 0;
+    banking->isPending = FALSE;
+}
+
+void ScrCmd_comparebankbalance(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+
+    u32 value = ScriptReadWord(ctx);
+    u32 balance = GetMoneyInBank();
+
+    if (value > balance)
+        gSpecialVar_Result = FALSE;
+    else if (value <= balance)
+        gSpecialVar_Result = TRUE;
+}
+
+bool32 RemoveFromBank(u32 amount)
+{
+    u32 balance = GetMoneyInBank();
+    bool32 res;
+
+    if (amount > balance)
+    {
+        res = FALSE;
+        amount = balance;
+    }
+    else
+    {
+        res = TRUE;
+    }
+
+    SetMoneyInBank(balance - amount);
+    return res;
+}
+
+void ScrCmd_removefrombank(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    u32 amount = ScriptReadWord(ctx);
+    gSpecialVar_Result = RemoveFromBank(amount);
+}
+
+void ScrCmd_removefrombankvar(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    gSpecialVar_Result = RemoveFromBank(amount);
+}
+
+void ScrCmd_addmoneyvar(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    AddMoney(&gSaveBlock1Ptr->money, amount);
+}
+
+void ScrCmd_removemoneyvar(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    RemoveMoney(&gSaveBlock1Ptr->money, amount);
+}
+
+bool32 AddToBank(u32 amount)
+{
+    u32 balance = GetMoneyInBank();
+    u32 tentativeBalance = balance + amount;
+
+    bool32 res = TRUE;
+
+    if (tentativeBalance > MAX_BANK_MONEY)
+    {
+        amount = MAX_BANK_MONEY - balance;
+        res = FALSE;
+    }
+
+    SetMoneyInBank(balance + amount);
+    return res;
+}
+
+void ScrCmd_addtobank(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    u32 amount = ScriptReadWord(ctx);
+    gSpecialVar_Result = AddToBank(amount);
+}
+
+void ScrCmd_addtobankvar(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    gSpecialVar_Result = AddToBank(amount);
+}
+
+void ScrCmd_showbalancebox(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+
+    u8 x = ScriptReadByte(ctx);
+    u8 y = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    Banking_DrawBalanceBox(GetMoneyInBank(), x, y);
+}
+
+static void Banking_DrawBalanceBox(int amount, u8 x, u8 y)
+{
+    struct WindowTemplate template;
+
+    SetWindowTemplateFields(&template, 0, x + 1, y + 1, 10, 2, 15, 8);
+    sBalanceBoxWindowId = AddWindow(&template);
+    FillWindowPixelBuffer(sBalanceBoxWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(sBalanceBoxWindowId);
+    CopyWindowToVram(sBalanceBoxWindowId, COPYWIN_MAP);
+    PrintMoneyAmountInMoneyBoxWithBorder(sBalanceBoxWindowId, 0x214, 14, amount);
+    Banking_AddBalanceLabelObject((8 * x) + 19, (8 * y) + 11);
+}
+
+static void Banking_AddBalanceLabelObject(u16 x, u16 y)
+{
+    LoadCompressedSpriteSheet(&sSpriteSheet_BalanceLabel);
+    LoadSpritePalette(&sSpritePalette_BalanceLabel);
+    sBalanceLabelSpriteId = CreateSprite(&sSpriteTemplate_BalanceLabel, x, y, 0);
+}
+
+void ScrCmd_hidebalancebox(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    Banking_HideBalanceBox();
+}
+
+static void Banking_HideBalanceBox(void)
+{
+    Banking_RemoveBalanceLabelObject();
+    ClearStdWindowAndFrameToTransparent(sBalanceBoxWindowId, FALSE);
+    CopyWindowToVram(sBalanceBoxWindowId, COPYWIN_GFX);
+    RemoveWindow(sBalanceBoxWindowId);
+}
+
+static void Banking_RemoveBalanceLabelObject(void)
+{
+    DestroySpriteAndFreeResources(&gSprites[sBalanceLabelSpriteId]);
+}
+
+void ScrCmd_updatebalancebox(struct ScriptContext *ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    ChangeAmountInMoneyBox(GetMoneyInBank());
+}
+
+void ScrCmd_bufferbankbalancestring(struct ScriptContext* ctx)
+{
+    u8* strvar = GetStringVar(ScriptReadByte(ctx));
+
+    u32 savings = GetMoneyInBank();
+    u32 digits = CountDigits(savings);
+    ConvertIntToDecimalStringN(strvar, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
+}
+
+u32 CalcAmountToDeposit(u32 money)
+{
+    return (money / 100) * SAVINGS_PERCENT
+         + ((money % 100) * SAVINGS_PERCENT) / 100;
+}
+
+u32 GetTransactionMaxAmount(enum BankingMode mode)
+{
+    u32 money = GetMoney(&gSaveBlock1Ptr->money);
+    u32 savings = GetMoneyInBank();
+    u32 max = 0;
+
+    if (mode == MODE_DEPOSIT)
+    {
+        u32 bankCapacity = MAX_BANK_MONEY - savings;
+        max = Clamp(money, 0, bankCapacity);
+    }
+    else if (mode == MODE_WITHDRAW)
+    {
+        u32 walletCapacity = MAX_MONEY - money;
+        max = Clamp(savings, 0, walletCapacity);
+    }
+
+    return max;
+}
+
+void ScrCmd_checkbankingpurchase()
+{
+    RETURN_IF_BANKING_DISABLED();
+    struct Banking* banking = GetBankingPtr();
+    u32 purchaseIdx = banking->lastBought;
+
+    if (!banking->isPending)
+    {
+        gSpecialVar_Result = ITEM_NONE;
+        return;
+    }
+
+    if (banking->isRepeat)
+    {
+        const struct RepeatPurchaseItem *item = &sRepeatPurchaseTable[purchaseIdx];
+        gSpecialVar_Result = item->itemId;
+    }
+    else
+    {
+        const struct UniquePurchaseItem *item = &sUniquePurchaseTable[purchaseIdx];
+        gSpecialVar_Result = item->itemId;
+    }
+    return;
+}
+
+void UNUSED ScrCmd_checkbankingpurchasequantity()
+{
+    RETURN_IF_BANKING_DISABLED();
+    struct Banking *banking = GetBankingPtr();
+    u32 purchaseIdx = banking->isPending;
+
+    struct UniquePurchaseItem currentPurchase =
+        sUniquePurchaseTable[purchaseIdx];
+
+    gSpecialVar_Result = currentPurchase.quantity;
+}
+
+void ScrCmd_getbankingpurchase()
+{
+    RETURN_IF_BANKING_DISABLED();
+    struct Banking* banking = GetBankingPtr();
+    u32 idx = banking->lastBought;
+
+    assertf(banking->isPending, "No pending purchases to get")
+    {
+        return;
+    }
+
+    if (banking->isRepeat)
+    {
+        const struct RepeatPurchaseItem *item = &sRepeatPurchaseTable[idx];
+        gSpecialVar_Result = item->itemId;
+        gSpecialVar_0x8001 = item->quantity;
+    }
+    else
+    {
+        const struct UniquePurchaseItem *item = &sUniquePurchaseTable[idx];
+        gSpecialVar_Result = item->itemId;
+        gSpecialVar_0x8001 = item->quantity;
+    }
+
+    banking->isPending = FALSE;
+    banking->isRepeat = FALSE;
+}
+
+u32 PurchaseRepeatItem(void)
+{
+    struct Banking* banking = GetBankingPtr();
+
+    if (banking->isPending)
+        return 0;
+
+    u32 idx = RandomUniform(RNG_NONE, 0, ARRAY_COUNT(sRepeatPurchaseTable) - 1);
+
+    banking->lastBought = idx;
+    banking->isPending = TRUE;
+    banking->isRepeat = TRUE;
+
+    return sRepeatPurchaseTable[idx].price;
+}
+
+u32 PurchaseUniqueItem()
+{
+    struct Banking *banking = GetBankingPtr();
+    u32 idx = banking->lastBought;
+
+    if (idx == NELEMS(sUniquePurchaseTable) - 1)
+        return 0;
+    if (banking->isPending)
+        return 0;
+
+    u32 savings = GetMoneyInBank();
+    struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
+
+    if (savings < next.thresholdMoney)
+        return 0;
+
+    banking->lastBought = ++idx;
+    banking->isPending = TRUE;
+    return next.price;
+}
+
+u32 TriggerBankingPurchase(u32 toDeposit)
+{
+    struct Banking *banking = GetBankingPtr();
+    u16 deposited = banking->deposited;
+    u16 tentativeDeposited = deposited + toDeposit;
+
+    bool32 isRepeatEligible = (tentativeDeposited / REPEAT_PURCHASE_MULT)
+                            > (deposited / REPEAT_PURCHASE_MULT);
+
+    u32 price = PurchaseUniqueItem();
+    if (!price && isRepeatEligible)
+        price = PurchaseRepeatItem();
+
+    return price;
+}
+
+void ScrCmd_purchaseuniqueitem(struct ScriptContext* ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    gSpecialVar_Result = PurchaseUniqueItem();
+}
+
+void ScrCmd_purchaserepeatitem(struct ScriptContext* ctx)
+{
+    RETURN_IF_BANKING_DISABLED();
+    gSpecialVar_Result = PurchaseRepeatItem();
+}
+
+void ScrCmd_setupbankinginput(struct ScriptContext *ctx)
+{
+    enum BankingMode mode = ScriptReadByte(ctx);
+    u16 _max = GetTransactionMaxAmount(mode);
+
+    u32 *min = &ctx->data[0];
+    u32 *max = &ctx->data[1];
+    u32 *val = &ctx->data[2];
+
+    *min = 0;
+    *max = _max;
+    *val = _max;
+}

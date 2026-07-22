@@ -21,7 +21,6 @@ void TryPutSpotTheCutiesOnAir(struct Pokemon *pokemon, u8 ribbonMonDataIdx);
 u32 GetPlayerIDAsU32(void);
 bool8 IsPokeNewsActive(u8 newsKind);
 void SanitizeTVShowLocationsForRuby(TVShow *shows);
-size_t CountDigits(int value);
 u8 GetRibbonCount(struct Pokemon *pokemon);
 void AlertTVThatPlayerPlayedSlotMachine(u16 nCoinsSpent);
 void AlertTVThatPlayerPlayedRoulette(u16 nCoinsSpent);

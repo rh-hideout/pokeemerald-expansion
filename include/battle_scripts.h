@@ -739,5 +739,6 @@ extern const u8 BattleScript_TarShotMessage[];
 extern const u8 BattleScript_Stockpile[];
 extern const u8 BattleScript_Memento[];
 extern const u8 BattleScript_TakeHeart[];
+extern const u8 BattleScript_LocalBattleWonRewardContinue[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

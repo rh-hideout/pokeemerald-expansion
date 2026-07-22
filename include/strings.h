@@ -2096,5 +2096,9 @@ extern const u8 gText_OakThisIsListOfPokemon[];
 extern const u8 gText_Boy[];
 extern const u8 gText_Girl[];
 
+extern const u8 gText_DepositMoney[];
+extern const u8 gText_WithdrawMoney[];
+extern const u8 gText_DepositedMoney[];
+extern const u8 gText_WithdrewMoney[];
 
 #endif // GUARD_STRINGS_H

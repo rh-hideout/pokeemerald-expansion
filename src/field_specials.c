@@ -54,6 +54,7 @@
 #include "text_window.h"
 #include "tilesets.h"
 #include "tv.h"
+#include "util.h"
 #include "wallclock.h"
 #include "window.h"
 #include "constants/battle_frontier.h"

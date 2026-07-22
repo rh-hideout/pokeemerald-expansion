@@ -59,6 +59,7 @@
 #include "text_window.h"
 #include "trainer_see.h"
 #include "tv.h"
+#include "util.h"
 #include "window.h"
 #include "list_menu.h"
 #include "malloc.h"

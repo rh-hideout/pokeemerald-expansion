@@ -1,5 +1,6 @@
 #include "global.h"
 #include "clock.h"
+#include "banking_system.h"
 #include "new_game.h"
 #include "random.h"
 #include "clock.h"
@@ -189,6 +190,7 @@ void NewGameInitData(void)
     ClearSecretBases();
     ClearBerryTrees();
     SetMoney(&gSaveBlock1Ptr->money, 3000);
+    NewGameInitBanking();
     SetCoins(0);
     ResetLinkContestBoolean();
     ResetGameStats();

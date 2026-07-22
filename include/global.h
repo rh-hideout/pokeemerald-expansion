@@ -26,6 +26,9 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
+#include "config/banking.h"
+#include "banking_system.h"
+
 
 // Prevent cross-jump optimization.
 #define BLOCK_CROSS_JUMP asm("");
@@ -271,6 +274,9 @@ struct SaveBlock3
     u8 dexNavChain;
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
+#if SAVINGS_ENABLED
+    struct Banking banking;
 #endif
 }; /* max size 1624 bytes */
 

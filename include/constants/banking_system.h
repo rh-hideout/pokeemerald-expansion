@@ -1,0 +1,10 @@
+#ifndef GUARD_CONSTANTS_BANKING_SYSTEM_H
+#define GUARD_CONSTANTS_BANKING_SYSTEM_H
+
+enum BankingMode
+{
+    MODE_DEPOSIT,
+    MODE_WITHDRAW
+};
+
+#endif /* end of include guard: GUARD_CONSTANTS_BANKING_SYSTEM_H */

@@ -14,6 +14,8 @@
 
 extern const u8 *const gStdStrings[];
 
+extern EWRAM_DATA struct NumericInput gNumericInput;
+
 struct DynamicMultichoiceStack
 {
     s32 top;
@@ -46,5 +48,8 @@ int DisplayTextAndGetWidth(const u8 *str, int prevWidth);
 int ScriptMenu_AdjustLeftCoordFromWidth(int left, int width);
 bool16 ScriptMenu_CreatePCMultichoice(void);
 void ScriptMenu_DisplayPCStartupPrompt(void);
+void ScrCmd_buffernumericinputstring(struct ScriptContext* ctx);
+void ScrCmd_getnumericinput(struct ScriptContext* ctx);
+void Task_ShowNumericInput(u8 taskId);
 
 #endif //GUARD_SCRIPT_MENU_H

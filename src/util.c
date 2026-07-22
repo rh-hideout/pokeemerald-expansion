@@ -74,6 +74,19 @@ static const u16 sCrc16Table[] =
     0x7BC7, 0x6A4E, 0x58D5, 0x495C, 0x3DE3, 0x2C6A, 0x1EF1, 0x0F78,
 };
 
+const s32 gPowersOfTen[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+    1000000000,
+};
+
 const u8 gMiscBlank_Gfx[] = INCGFX_U8("graphics/interface/blank.png", ".4bpp");
 
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *))
@@ -234,4 +247,16 @@ s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
         newValue = lowestVal;
 
     return newValue;
+}
+
+u32 CountDigits(s32 value)
+{
+    u32 uvalue = value < 0 ? ~((u32)value) + 1 : (u32)value;
+
+    for (u32 i = 1; i < ARRAY_COUNT(gPowersOfTen); i++)
+    {
+        if (uvalue < gPowersOfTen[i])
+            return i;
+    }
+    return ARRAY_COUNT(gPowersOfTen);
 }
