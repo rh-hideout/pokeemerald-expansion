@@ -27,8 +27,6 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 
 bool32 ShouldUseItem(enum BattlerId battler)
 {
-    struct Pokemon *party;
-    u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
 
@@ -45,14 +43,6 @@ bool32 ShouldUseItem(enum BattlerId battler)
 
     if (AiExpectsToFaintPlayer(battler))
         return FALSE;
-
-    party = GetBattlerParty(battler);
-
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
-    {
-        if (IsValidForBattle(&party[monIndex]))
-            validMons++;
-    }
 
     for (u32 itemIndex = 0; itemIndex < MAX_TRAINER_ITEMS; itemIndex++)
     {
@@ -83,7 +73,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
              || (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
              || (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
              || (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0))
+             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTimer > 0))
                 shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:

@@ -204,7 +204,7 @@ u8 CreateMonIconNoPersonalityIsEgg(enum Species species, void (*callback)(struct
     return spriteId;
 }
 
-u8 CreateTaggedMonIcon(enum Species species, u32 paletteTag, u32 tileTag)
+u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species)
 {
     struct SpritePalette palette;
     palette.data = gMonIconPaletteTable[gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex].data;

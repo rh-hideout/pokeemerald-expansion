@@ -2931,11 +2931,11 @@ static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, s
 {
     struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * pocket->capacity);
 
-    u32 usedCapacity;
-    for (usedCapacity = 0; usedCapacity < pocket->capacity; usedCapacity++)
+    u32 usedCapacity = 0;
+    for (u32 i = 0; i < pocket->capacity; i++)
     {
-        if (BagPocket_GetSlotData(pocket, usedCapacity).itemId == ITEM_NONE)
-            break;
+        if (BagPocket_GetSlotData(pocket, i).itemId != ITEM_NONE)
+            usedCapacity = i + 1;
     }
 
     for (u32 width = 1; width < usedCapacity; width *= 2)

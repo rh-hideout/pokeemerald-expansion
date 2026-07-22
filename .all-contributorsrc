@@ -169,7 +169,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/35115312?v=4",
       "profile": "https://github.com/LinathanZel",
       "contributions": [
-        "code"
+        "code",
+        "userTesting"
       ]
     },
     {
@@ -312,7 +313,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/118256341?v=4",
       "profile": "https://github.com/fakuzatsu",
       "contributions": [
-        "code"
+        "code",
+        "design"
       ]
     },
     {
@@ -725,6 +727,15 @@
       "profile": "https://github.com/Gastly92",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "montmoguri",
+      "name": "Montblanc",
+      "avatar_url": "https://avatars.githubusercontent.com/u/202215938?v=4",
+      "profile": "https://github.com/montmoguri",
+      "contributions": [
+        "design"
       ]
     }
   ],

@@ -1011,7 +1011,7 @@ static void DestroyDebugIcon(u8 taskId)
 static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
 {
     DestroyDebugIcon(taskId);
-    gTasks[taskId].tSpriteId = CreateTaggedMonIcon(species, DEBUG_ICON_TAG, DEBUG_ICON_TAG);
+    gTasks[taskId].tSpriteId = CreateTaggedMonIcon(DEBUG_ICON_TAG, DEBUG_ICON_TAG, species);
     gSprites[gTasks[taskId].tSpriteId].callback = SpriteCB_MonIcon;
     gSprites[gTasks[taskId].tSpriteId].x = DEBUG_NUMBER_ICON_X;
     gSprites[gTasks[taskId].tSpriteId].y = DEBUG_NUMBER_ICON_Y;

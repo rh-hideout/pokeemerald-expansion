@@ -312,3 +312,19 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 2 has AI flags set correctly (2v1)")
     }
 }
 
+AI_MULTI_BATTLE_TEST("AI will not switch thinking all moves are bad when one opponent has fainted (multi)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_SMART_TRAINER);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_AGGRON) { Moves(MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_BODY_PRESS); }
+        PARTNER(SPECIES_AGGRON) { Moves(MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_BODY_PRESS); }
+        OPPONENT_A(SPECIES_GASTLY) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_CAMERUPT) { Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_CAMERUPT) { Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+    } WHEN {
+        TURN { EXPECT_MOVE(playerRight, MOVE_THUNDERBOLT, target:opponentLeft); }
+        TURN { EXPECT_MOVE(playerRight, MOVE_BODY_PRESS, target:opponentRight); }
+    }
+}

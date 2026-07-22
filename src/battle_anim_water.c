@@ -1845,7 +1845,6 @@ static void CreateWaterPulseRingBubbles(struct Sprite *sprite, int xDiff, int yD
     s16 combinedY;
     s16 i;
     s16 something;
-    s16 unusedVar = 1; //unusedVar is needed to match
     s16 randomSomethingY;
     s16 randomSomethingX;
     u8 spriteId;
@@ -1853,8 +1852,6 @@ static void CreateWaterPulseRingBubbles(struct Sprite *sprite, int xDiff, int yD
     something = sprite->data[0] / 2;
     combinedX = sprite->x + sprite->x2;
     combinedY = sprite->y + sprite->y2;
-    if (yDiff < 0)
-        unusedVar *= -1; //Needed to match
     randomSomethingY = yDiff + (Random2() % 10) - 5;
     randomSomethingX = -xDiff + (Random2() % 10) - 5;
 

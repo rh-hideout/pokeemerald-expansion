@@ -852,7 +852,8 @@ int main(int argc, char *argv[])
             fprintf(stdout, "\n  \e[33mKNOWN_FAILING\e[0m tests \e[32mPASSING\e[0m:\n");
             for (int i = 0; i < known_fails_passing_summaries.count; i++)
                 fprintf(stdout, "  - \e[32m%s\e[0m: %s: %s.\n", known_fails_passing_summaries.results[i].filename_line, known_fails_passing_summaries.results[i].test_name, known_fails_passing_summaries.results[i].output_line);
-            fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", known_fails_passing - known_fails_passing_summaries.count);
+            if (known_fails_passing > known_fails_passing_summaries.count)
+                fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", known_fails_passing - known_fails_passing_summaries.count);
         }
 
         fprintf(stdout, "\n");

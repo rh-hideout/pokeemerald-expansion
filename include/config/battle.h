@@ -128,6 +128,8 @@
 #define B_TRANSFORM_USER_FAIL           GEN_LATEST // In Gen5+, Transform fails if the user is already transformed.
 #define B_TRANSFORM_SUBSTITUTE_FAIL     GEN_LATEST // In Gen5+, Transform fails if the target is behind a Substitute.
 #define B_TRANSFORM_SHINY               GEN_LATEST // In Gen4+, Transform will copy the Shininess of the opponent instead of maintaining its own Shininess.
+#define B_TRANSFORM_BATTLE_REWARDS      GEN_LATEST // In Gen3 and Gen 4, a Transform'ed Pokemon will give the xp and ev yield of its copied species whereas it gives the xp and ev yield of the original species in other gens
+#define B_TRANSFORM_CATCH_RATE          GEN_LATEST // In Gen3 and Geb 4, Transform'ed will have the catch rate of the tranformed species but they will keep their original catch rate in other generations
 #define B_TRANSFORM_FORM_CHANGES        GEN_LATEST // In Gen5+, Transformed Pokémon can no longer change forms.
 #define B_WIDE_GUARD                    GEN_LATEST // In Gen5 only, Wide Guard has a chance to fail if used consecutively.
 #define B_QUICK_GUARD                   GEN_LATEST // In Gen5 only, Quick Guard has a chance to fail if used consecutively.
@@ -179,6 +181,8 @@
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 #define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
+#define B_MOVE_EFFECTS_BEFORE_MOVES     GEN_LATEST // In Champions, Beak Blast will work when Encored into from a different move
+                                                   // Additionally, the charging animation will occur 
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
@@ -210,6 +214,7 @@
 #define B_BATTLE_BOND                   GEN_LATEST // In Gen9+, Battle Bond raises Attack, Sp. Atk, and Speed by 1 stage, once per battle. Previously, the Pokémon would change into Ash-Greninja.
 #define B_ATE_MULTIPLIER                GEN_LATEST // In Gen7+, -ate Abilities (Aerilate, Galvanize, Normalize, Pixilate, Refrigerate) increase damage by 1.2x. In Gen6 and earlier, it was 1.3x, except Normalize, which had no multiplier.
 #define B_DEFIANT_STICKY_WEB            GEN_LATEST // In Gen9+, Defiant triggers on Sticky Web regardless of who set it up. In Gen8, it does not trigger on a Sticky Web set up by an ally after Court Change swaps its side.
+#define B_MIRROR_ARMOR_STICKY_WEB       GEN_LATEST // In Gen9+, Mirror Armor does not reflect the Sticky Web stat change even if the original Sticky Web user is still on the field
 #define B_POWDER_OVERCOAT               GEN_LATEST // In Gen6+, Overcoat blocks powder and spore moves.
 #define B_INFILTRATOR_SUBSTITUTE        GEN_LATEST // In Gen6+, Infiltrator bypasses Substitute when using a move, excluding Transform and Sky Drop.
 #define B_DANCER_ORDER                  GEN_LATEST // In Gen8+, Dancer activations are based on Speed order including modifiers. In Gen7, Dancer activates from the slowest to fastest battler based on the battler's unmodified Speed stat.
@@ -324,6 +329,7 @@
 #define B_OVERWORLD_SNOW                GEN_LATEST // In Gen9+, overworld snow will summon snow instead of hail in battle.
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
 #define B_PREFERRED_ICE_WEATHER         B_ICE_WEATHER_BOTH // Toggles hail move effects to snow and vice versa.
+#define B_OVERWORLD_WEATHER_OVERRIDE    GEN_LATEST // In Gen9+, overworld weather cannot be overridden.
 
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
