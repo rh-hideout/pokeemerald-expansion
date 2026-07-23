@@ -3742,12 +3742,12 @@ static void DetailHandleInput(u8 taskId)
         sData->page = B_INFO_PAGE_OVERVIEW;
         gTasks[taskId].func = Task_BattleInfoLoadPage;
     }
-    else if (JOY_NEW(DPAD_LEFT))
+    else if (JOY_NEW(L_BUTTON))
     {
         PlaySE(SE_SELECT);
         DetailCycleBattler(-1);
     }
-    else if (JOY_NEW(DPAD_RIGHT))
+    else if (JOY_NEW(R_BUTTON))
     {
         PlaySE(SE_SELECT);
         DetailCycleBattler(1);
@@ -3843,12 +3843,23 @@ static enum BattlerId GetSelectedBattler(void)
 
 static enum BattlerId GetBattlerFromSlot(u32 slot)
 {
-    switch (slot)
+    if (IsDoubleBattle())
     {
-    case 0: return B_BATTLER_1;
-    case 1: return B_BATTLER_3;
-    case 2: return B_BATTLER_0;
-    case 3: return B_BATTLER_2;
+        switch (slot)
+        {
+        case 0: return B_BATTLER_1;
+        case 1: return B_BATTLER_3;
+        case 2: return B_BATTLER_0;
+        case 3: return B_BATTLER_2;
+        }
+    }
+    else
+    {
+        switch (slot)
+        {
+        case 0: return B_BATTLER_1;
+        case 1: return B_BATTLER_0;
+        }
     }
 
     return B_BATTLER_1;
