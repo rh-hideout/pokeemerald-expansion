@@ -552,10 +552,17 @@ BattleScript_AffectionBasedStatusHeal_Continue:
 
 BattleScript_ShellTrapSetUp::
 	flushtextbox
-	playanimation BS_ATTACKER, B_ANIM_SHELL_TRAP_SETUP, NULL
+	playanimation BS_SCRIPTING, B_ANIM_SHELL_TRAP_SETUP, NULL
 	printstring STRINGID_PREPARESHELLTRAP
 	waitmessage B_WAIT_TIME_LONG
 	end3
+
+BattleScript_ShellTrapSetUpEncored::
+	flushtextbox
+	playanimation BS_SCRIPTING, B_ANIM_SHELL_TRAP_SETUP, NULL
+	printstring STRINGID_PREPARESHELLTRAP
+	waitmessage B_WAIT_TIME_LONG
+	end
 
 BattleScript_ShellTrapFailed::
 	printstring STRINGID_SHELLTRAPDIDNTWORK
@@ -574,10 +581,17 @@ BattleScript_EffectCourtChange::
 
 BattleScript_BeakBlastSetUp::
 	flushtextbox
-	playanimation BS_ATTACKER, B_ANIM_BEAK_BLAST_SETUP, NULL
+	playanimation BS_SCRIPTING, B_ANIM_BEAK_BLAST_SETUP, NULL
 	printstring STRINGID_HEATUPBEAK
 	waitmessage B_WAIT_TIME_LONG
 	end3
+
+BattleScript_BeakBlastSetUpEncored::
+	flushtextbox
+	playanimation BS_SCRIPTING, B_ANIM_BEAK_BLAST_SETUP, NULL
+	printstring STRINGID_HEATUPBEAK
+	waitmessage B_WAIT_TIME_LONG
+	end
 
 BattleScript_BeakBlastBurn::
 	setbyte cMULTISTRING_CHOOSER, 0
@@ -1974,6 +1988,7 @@ BattleScript_EffectEncore::
 	waitanimation
 	printstring STRINGID_PKMNGOTENCORE
 	waitmessage B_WAIT_TIME_LONG
+	trydomoveeffectsbeforemoves
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectPainSplit::
@@ -2337,6 +2352,13 @@ BattleScript_BlockedByPrimalWeather::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_SUN_PRIMAL, BattleScript_ExtremelyHarshSunlightWasNotLessened
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_RAIN_PRIMAL, BattleScript_NoReliefFromHeavyRain
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_STRONG_WINDS, BattleScript_MysteriousAirCurrentBlowsOn
+	return
+
+BattleScript_BlockedByOverworldWeather::
+	call BattleScript_AbilityPopUp
+	waitmessage B_WAIT_TIME_SHORT
+    printstring STRINGID_BUTITFAILED
+	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_EffectPsychUp::
@@ -3898,11 +3920,20 @@ BattleScript_MoveEffectClearSmog::
 BattleScript_FocusPunchSetUp::
 	flushtextbox
 	call BattleScript_SwapFromSubstitute
-	playanimation BS_ATTACKER, B_ANIM_FOCUS_PUNCH_SETUP
+	playanimation BS_SCRIPTING, B_ANIM_FOCUS_PUNCH_SETUP
 	call BattleScript_SwapToSubstitute
 	printstring STRINGID_PKMNTIGHTENINGFOCUS
 	waitmessage B_WAIT_TIME_LONG
 	end3
+
+BattleScript_FocusPunchSetUpEncored::
+	flushtextbox
+	call BattleScript_SwapFromSubstitute
+	playanimation BS_SCRIPTING, B_ANIM_FOCUS_PUNCH_SETUP
+	call BattleScript_SwapToSubstitute
+	printstring STRINGID_PKMNTIGHTENINGFOCUS
+	waitmessage B_WAIT_TIME_LONG
+	end
 
 BattleScript_MegaEvolution::
 	flushtextbox
@@ -5693,6 +5724,11 @@ BattleScript_ActivateTeraformZero::
 	jumpifhalfword CMP_COMMON_BITS, gBattleWeather, B_WEATHER_ANY, BattleScript_ActivateTeraformZero_RemoveWeather
 	jumpifterrain CMP_NOT_EQUAL, B_TERRAIN_NONE, BattleScript_ActivateTeraformZero_RemoveTerrain
 	goto BattleScript_ActivateTeraformZero_Ret
+BattleScript_ActivateTeraformZeroRemovesOnlyTerrain::
+	call BattleScript_AbilityPopUp
+	waitmessage B_WAIT_TIME_LONG
+	jumpifterrain CMP_NOT_EQUAL, B_TERRAIN_NONE, BattleScript_ActivateTeraformZero_RemoveTerrain
+	goto BattleScript_ActivateTeraformZero_Ret
 BattleScript_ActivateTeraformZero_RemoveWeather:
 	removeweather
 	printfromtable gWeatherEndsStringIds
@@ -6293,29 +6329,36 @@ BattleScript_CouldntFullyProtect::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_BerserkGeneRet::
+BattleScript_BerserkGene::
 	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
-	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGeneRet_OwnTempoPrevents
-	jumpifsafeguard BattleScript_BerserkGeneRet_SafeguardProtected
+	jumpifability BS_SCRIPTING, ABILITY_OWN_TEMPO, BattleScript_BerserkGene_OwnTempoPrevents
+	jumpifsafeguard BattleScript_BerserkGene_SafeguardProtected
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
-	goto BattleScript_BerserkGeneRet_End
-BattleScript_BerserkGeneRet_SafeguardProtected::
+	jumpifvolatile BS_SCRIPTING, VOLATILE_CONFUSION, BattleScript_BerserkGene_Confuse
+	goto BattleScript_BerserkGene_End
+BattleScript_BerserkGene_SafeguardProtected::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNUSEDSAFEGUARD
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_BerserkGeneRet_End
-BattleScript_BerserkGeneRet_OwnTempoPrevents:
+	goto BattleScript_BerserkGene_End
+BattleScript_BerserkGene_OwnTempoPrevents:
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_BerserkGeneRet_End:
+BattleScript_BerserkGene_End:
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_BoosterEnergyRet::
+BattleScript_BerserkGene_Confuse::
+	volatileanimation BS_SCRIPTING, VOLATILE_CONFUSION
+	printstring STRINGID_PKMNWASCONFUSED
+	waitmessage B_WAIT_TIME_LONG
+    goto BattleScript_BerserkGene_End
+
+BattleScript_BoosterEnergy::
 	call BattleScript_ItemPopUp_Scripting
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
 	call BattleScript_AbilityPopUpScripting

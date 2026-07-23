@@ -279,9 +279,10 @@ TO_DO_BATTLE_TEST("Focus Punch losing focus is not considered as the last move u
 TO_DO_BATTLE_TEST("Focus Punch's initial message is not considered as using the move for Zoom Lens");
 TO_DO_BATTLE_TEST("Focus Punch will use the selected move's priority when being Encored into Focus Punch");
 
-SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch")
+SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_9);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -302,6 +303,31 @@ SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selec
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
             MESSAGE("Wobbuffet is tightening its focus!");
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Focus Punch's initial message is shown if the user selected a different move and was Encored into using Focus Punch (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_FOCUS_PUNCH); }
+        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+            MESSAGE("Wobbuffet is tightening its focus!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
     }
 }
 
