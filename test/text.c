@@ -4,6 +4,7 @@
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_setup.h"
+#include "field_message_box.h"
 #include "item.h"
 #include "main_menu.h"
 #include "malloc.h"
@@ -19,6 +20,69 @@
 #include "constants/moves.h"
 #include "../src/data/map_group_count.h"
 #include "test/overworld_script.h"
+
+TEST("Field dialogue styles use absolute speed profiles")
+{
+    gTextFlags.forceMidTextSpeed = FALSE;
+    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    ClearFieldMessageDialogueStyle();
+
+    EXPECT_EQ(GetFieldMessageTextSpeedDelay(), GetPlayerTextSpeedDelay());
+    EXPECT_EQ(GetFieldMessageTextSpeedModifier(), GetPlayerTextSpeedModifier());
+    EXPECT_EQ(GetFieldMessageTextScrollSpeed(), GetPlayerTextScrollSpeed());
+    EXPECT_EQ(GetFieldMessageTextScrollDelay(), GetPlayerTextSpeedModifier());
+
+    SetFieldMessageDialogueStyle(DIALOGUE_STYLE_FAST);
+    EXPECT_EQ(GetFieldMessageTextSpeedDelay(), 1);
+    EXPECT_EQ(GetFieldMessageTextSpeedModifier(), 3);
+    EXPECT_EQ(GetFieldMessageTextScrollSpeed(), 6);
+    EXPECT_EQ(GetFieldMessageTextScrollDelay(), 0);
+    EXPECT_EQ(IsFieldMessageTextSpeedInstant(), FALSE);
+
+    SetFieldMessageDialogueStyle(DIALOGUE_STYLE_SLOW);
+    EXPECT_EQ(GetFieldMessageTextSpeedDelay(), 12);
+    EXPECT_EQ(GetFieldMessageTextSpeedModifier(), 1);
+    EXPECT_EQ(GetFieldMessageTextScrollSpeed(), 1);
+    EXPECT_EQ(GetFieldMessageTextScrollDelay(), 0);
+    EXPECT_EQ(IsFieldMessageTextSpeedInstant(), FALSE);
+}
+
+TEST("Field dialogue text-only styles leave scroll speed on player settings")
+{
+    gTextFlags.forceMidTextSpeed = FALSE;
+    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+
+    SetFieldMessageDialogueStyle(DIALOGUE_STYLE_FAST_TEXT);
+    EXPECT_EQ(GetFieldMessageTextSpeedDelay(), 1);
+    EXPECT_EQ(GetFieldMessageTextSpeedModifier(), 3);
+    EXPECT_EQ(GetFieldMessageTextScrollSpeed(), 2);
+    EXPECT_EQ(GetFieldMessageTextScrollDelay(), 1);
+
+    SetFieldMessageDialogueStyle(DIALOGUE_STYLE_SLOW_TEXT);
+    EXPECT_EQ(GetFieldMessageTextSpeedDelay(), 12);
+    EXPECT_EQ(GetFieldMessageTextSpeedModifier(), 1);
+    EXPECT_EQ(GetFieldMessageTextScrollSpeed(), 2);
+    EXPECT_EQ(GetFieldMessageTextScrollDelay(), 1);
+}
+
+TEST("Field dialogue style script commands set and clear the active style")
+{
+    ClearFieldMessageDialogueStyle();
+
+    RUN_OVERWORLD_SCRIPT(setdialoguestyle DIALOGUE_STYLE_FAST_TEXT;);
+    EXPECT_EQ(GetFieldMessageDialogueStyle(), DIALOGUE_STYLE_FAST_TEXT);
+
+    RUN_OVERWORLD_SCRIPT(cleardialoguestyle;);
+    EXPECT_EQ(GetFieldMessageDialogueStyle(), DIALOGUE_STYLE_DEFAULT);
+}
+
+TEST("Initializing field messages clears dialogue style")
+{
+    SetFieldMessageDialogueStyle(DIALOGUE_STYLE_FAST);
+    InitFieldMessageBox();
+
+    EXPECT_EQ(GetFieldMessageDialogueStyle(), DIALOGUE_STYLE_DEFAULT);
+}
 
 TEST("Move names fit on Pokemon Summary Screen")
 {
