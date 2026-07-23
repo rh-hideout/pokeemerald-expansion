@@ -866,7 +866,7 @@ u8 GetItemImportance(enum Item itemId)
 
 u8 GetItemConsumability(enum Item itemId)
 {
-    return !gItemsInfo[SanitizeItemId(itemId)].notConsumed;
+    return !gItemsInfo[SanitizeItemId(itemId)].notConsumed && !gItemsInfo[SanitizeItemId(itemId)].importance;
 }
 
 enum Pocket GetItemPocket(enum Item itemId)
