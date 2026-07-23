@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Potion has no effect if the target is full hp")
         OPPONENT(SPECIES_WOBBUFFET);
         GIVE_PLAYER_ITEM(ITEM_POTION, 1);
     } WHEN {
-        TURN { USE_ITEM(player, ITEM_POTION); }
+        TURN { USE_ITEM(player, ITEM_POTION, partyIndex: 0); }
     } SCENE {
         MESSAGE("But it had no effect!");
     } THEN {
