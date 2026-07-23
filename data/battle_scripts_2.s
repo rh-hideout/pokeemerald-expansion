@@ -170,7 +170,7 @@ BattleScript_ItemSetFocusEnergy::
 
 BattleScript_ItemRestorePP::
 	call BattleScript_UseItemMessage
-	itemrestorepp
+	itemrestorepp BattleScript_ItemNoEffect
 	printstring STRINGID_ITEMRESTOREDSPECIESPP
 	waitmessage B_WAIT_TIME_LONG
 	end

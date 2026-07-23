@@ -1191,8 +1191,9 @@
 	callnative BS_ItemIncreaseStat
 	.endm
 
-	.macro itemrestorepp
+	.macro itemrestorepp failInstr:req
 	callnative BS_ItemRestorePP
+	.4byte \failInstr
 	.endm
 
 	.macro cancelitemusage

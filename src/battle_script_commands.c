@@ -10847,7 +10847,7 @@ void BS_ItemIncreaseStat(void)
 
 void BS_ItemRestorePP(void)
 {
-    NATIVE_ARGS();
+    NATIVE_ARGS(const u8 *failInstr);
     const u8 *effect = GetItemEffect(gLastUsedItem);
     u32 i, pp, maxPP, loopEnd;
     enum BattlerId battler = MAX_BATTLERS_COUNT;
@@ -10874,6 +10874,7 @@ void BS_ItemRestorePP(void)
         battler = BATTLE_PARTNER(gBattlerAttacker);
 
     // Heal PP!
+    bool32 noEffect = TRUE;
     for (; i < loopEnd; i++)
     {
         pp = GetMonData(mon, MON_DATA_PP1 + i);
@@ -10881,6 +10882,7 @@ void BS_ItemRestorePP(void)
         maxPP = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES), i);
         if (pp != maxPP)
         {
+            noEffect = FALSE;
             pp += effect[6];
             if (pp > maxPP)
                 pp = maxPP;
@@ -10894,6 +10896,11 @@ void BS_ItemRestorePP(void)
                 gBattleMons[battler].pp[i] = pp;
             }
         }
+    }
+    if (noEffect)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
     }
     gBattleScripting.battler = battler;
     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(mon, MON_DATA_SPECIES));
