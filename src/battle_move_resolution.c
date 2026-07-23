@@ -3460,8 +3460,6 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
              && !NoAliveMonsForEitherParty())
             {
-                enum BattleSide side = GetBattlerSide(battlerDef);
-
                 if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                 {
                     gBattlerAbility = battlerDef;
@@ -3482,7 +3480,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                     BtlController_EmitSetMonData(battlerDef, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
                     MarkBattlerForControllerExec(battlerDef);
                     // Mark item as stolen so it will be restored after battle
-                    gBattleStruct->itemLost[side][gBattlerPartyIndexes[battlerDef]].stolen = TRUE;
+                    gBattleStruct->itemLost[GetBattlerTrainer(battlerDef)][gBattlerPartyIndexes[battlerDef]].stolen = TRUE;
                 }
                 else
                 {
