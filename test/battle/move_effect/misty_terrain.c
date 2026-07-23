@@ -10,11 +10,11 @@ SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile s
         TURN { MOVE(player, MOVE_MISTY_TERRAIN); MOVE(opponent, MOVE_TOXIC); }
         TURN { MOVE(player, MOVE_TOXIC); }
     } SCENE {
-        MESSAGE("Wobbuffet used Misty Terrain!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, player);
         MESSAGE("The opposing Claydol used Toxic!");
         MESSAGE("Wobbuffet surrounds itself with a protective mist!");
         NOT { STATUS_ICON(opponent, badPoison: TRUE); }
-        MESSAGE("Wobbuffet used Toxic!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
         STATUS_ICON(opponent, badPoison: TRUE);
     }
 }
@@ -24,7 +24,9 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
     bool32 terrain;
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
+
     GIVEN {
+        ASSUME(GetMoveType(MOVE_MOONBLAST) == TYPE_FAIRY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -32,7 +34,9 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
             TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
         TURN { MOVE(player, MOVE_MOONBLAST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Moonblast!");
+        if (terrain)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MOONBLAST, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -44,7 +48,9 @@ SINGLE_BATTLE_TEST("Misty Terrain decreases power of Dragon-type moves by 50 per
     bool32 terrain;
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
+
     GIVEN {
+        ASSUME(GetMoveType(MOVE_DRAGON_CLAW) == TYPE_DRAGON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -52,7 +58,33 @@ SINGLE_BATTLE_TEST("Misty Terrain decreases power of Dragon-type moves by 50 per
             TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
         TURN { MOVE(player, MOVE_DRAGON_CLAW); }
     } SCENE {
-        MESSAGE("Wobbuffet used Dragon Claw!");
+        if (terrain)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CLAW, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Misty Terrain uses the defender's ability when checking if it is grounded", s16 damage)
+{
+    bool32 terrain;
+    PARAMETRIZE { terrain = FALSE; }
+    PARAMETRIZE { terrain = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DRAGON_CLAW) == TYPE_DRAGON);
+        PLAYER(SPECIES_ROTOM) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (terrain)
+            TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
+        TURN { MOVE(player, MOVE_DRAGON_CLAW); }
+    } SCENE {
+        if (terrain)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CLAW, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[1].damage);

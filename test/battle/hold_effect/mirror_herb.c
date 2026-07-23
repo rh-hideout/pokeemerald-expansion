@@ -155,3 +155,18 @@ SINGLE_BATTLE_TEST("Mirror Herb activates with Contrary if stat is at +6")
     }
 }
 
+SINGLE_BATTLE_TEST("Mirror Herb copies the stats boosted by Speed Boost")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_SPEED_BOOST); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SPEED_BOOST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}
