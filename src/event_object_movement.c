@@ -535,6 +535,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
      {gObjectEventPal_Lexy,                OBJ_EVENT_PAL_TAG_LEXY},
      {gObjectEventPal_Sir,                OBJ_EVENT_PAL_TAG_SIR},
      {gObjectEventPal_Maam,                OBJ_EVENT_PAL_TAG_MAAM},
+     {gObjectEventPal_Butterfly,           OBJ_EVENT_PAL_TAG_BUTTERFLY},
 #if IS_FRLG
     {gObjectEventPal_PlayerFrlg,            OBJ_EVENT_PAL_TAG_PLAYER_RED},
     {gObjectEventPal_PlayerReflectionFrlg,  OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION},

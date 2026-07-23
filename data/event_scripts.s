@@ -1748,3 +1748,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/LittlerootTown_PlayersHouse_1F/scripts.inc"
 
 	.include "data/maps/LittlerootTown_Players_House_2F/scripts.inc"
+
+	.include "data/maps/LittlerootRuins/scripts.inc"
+
+	.include "data/maps/Town_Library/scripts.inc"

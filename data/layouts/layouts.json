@@ -103,8 +103,8 @@
     {
       "id": "LAYOUT_LITTLEROOT_TOWN",
       "name": "LittlerootTown_Layout",
-      "width": 20,
-      "height": 20,
+      "width": 43,
+      "height": 31,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/LittlerootTown/border.bin",
@@ -9340,7 +9340,7 @@
       "width": 24,
       "height": 20,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_EverGrande",
+      "secondary_tileset": "gTileset_Fallarbor",
       "border_filepath": "data/layouts/IntroFall/border.bin",
       "blockdata_filepath": "data/layouts/IntroFall/map.bin"
     },
@@ -9375,6 +9375,26 @@
       "border_filepath": "data/layouts/LittlerootTown_Players_House_2F/border.bin",
       "blockdata_filepath": "data/layouts/LittlerootTown_Players_House_2F/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_LITTLEROOT_RUINS",
+      "name": "LittlerootRuins_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/LittlerootRuins/border.bin",
+      "blockdata_filepath": "data/layouts/LittlerootRuins/map.bin"
+    },
+    {
+      "id": "LAYOUT_TOWN_LIBRARY",
+      "name": "Town_Library_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_GenericBuilding",
+      "border_filepath": "data/layouts/Town_Library/border.bin",
+      "blockdata_filepath": "data/layouts/Town_Library/map.bin"
     }
   ]
 }

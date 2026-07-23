@@ -484,6 +484,49 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_NinjaBoy = {
     .images = sPicTable_NinjaBoy,
 };
 
+static const union AnimCmd sAnim_ButterflyFlap[] =
+{
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd *const sAnimTable_Butterfly[] =
+{
+    // Standing/facing animations
+    sAnim_ButterflyFlap, // south
+    sAnim_ButterflyFlap, // north
+    sAnim_ButterflyFlap, // west
+    sAnim_ButterflyFlap, // east
+
+    // Walking/movement animations
+    sAnim_ButterflyFlap, // south
+    sAnim_ButterflyFlap, // north
+    sAnim_ButterflyFlap, // west
+    sAnim_ButterflyFlap, // east
+};
+
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Butterfly =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_BUTTERFLY,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 512,
+    .width = 32,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gObjectEventBaseOam_32x32,
+    .subspriteTables = sOamTables_32x32,
+    .anims = sAnimTable_Butterfly,
+    .images = sPicTable_Butterfly,
+};
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Twin = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_2,

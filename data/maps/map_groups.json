@@ -134,7 +134,8 @@
     "Underwater_Route129",
     "Underwater_Route105",
     "Underwater_Route125",
-    "IntroDarkness"
+    "IntroDarkness",
+    "LittlerootRuins"
   ],
   "gMapGroup_IndoorLittleroot": [
     "LittlerootTown_BrendansHouse_1F",
@@ -143,7 +144,8 @@
     "LittlerootTown_MaysHouse_2F",
     "LittlerootTown_ProfessorBirchsLab",
     "LittlerootTown_Players_House_2F",
-    "LittlerootTown_PlayersHouse_1F"
+    "LittlerootTown_PlayersHouse_1F",
+    "Town_Library"
   ],
   "gMapGroup_IndoorOldale": [
     "OldaleTown_House1",

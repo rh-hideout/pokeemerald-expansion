@@ -53,6 +53,11 @@ IntroFlashback_EventScript_Begin:
 
     releaseall
     end
+    
+IntroFlashback_EventScript_TestWarpToCinnabar::
+    warp MAP_CINNABAR_ISLAND, 14, 11
+    waitstate
+    end
 
 IntroFlashback_Movement_PlayerFaceUp:
     face_up
