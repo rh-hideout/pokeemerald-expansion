@@ -39,7 +39,13 @@ AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep moves while sleep cla
 
 AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep move if partner is already using a sleep move")
 {
+    u32 chance = 0;
+
+    PARAMETRIZE { chance = 0; }
+    PARAMETRIZE { chance = 100; }
+
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, chance);
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -50,7 +56,17 @@ AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep move if partner is al
         OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_MACH_PUNCH); }
         OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_MACH_PUNCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SPORE); EXPECT_MOVE(opponentRight, MOVE_MACH_PUNCH); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            if (chance == 100) {
+                EXPECT_MOVE(opponentLeft, MOVE_SPORE);
+                EXPECT_MOVE(opponentRight, MOVE_MACH_PUNCH);
+            } else {
+                EXPECT_MOVE(opponentLeft, MOVE_MACH_PUNCH);
+                EXPECT_MOVE(opponentRight, MOVE_SPORE);
+            }
+        }
     }
 }
 

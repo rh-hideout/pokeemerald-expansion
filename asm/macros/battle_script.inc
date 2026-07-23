@@ -2126,3 +2126,7 @@
 	.byte \terrain
 	.4byte \jumpInstr
 	.endm
+
+	.macro trydomoveeffectsbeforemoves
+	callnative BS_TryDoMoveEffectsBeforeMoves
+	.endm

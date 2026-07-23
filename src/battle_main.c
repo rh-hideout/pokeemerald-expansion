@@ -2985,7 +2985,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         // Transfer Baton Passable volatile statuses
         VOLATILE_DEFINITIONS(UNPACK_VOLATILE_BATON_PASSABLES)
         /* Expands to the following (compiler removes `if` statements):
-         * gBattleMons[battler].volatiles.confusionTurns = volatilesCopy->confusionTurns;
+         * gBattleMons[battler].volatiles.confusionTimer = volatilesCopy->confusionTimer;
          * gBattleMons[battler].volatiles.substitute = volatilesCopy->substitute;
          * gBattleMons[battler].volatiles.escapePrevention = volatilesCopy->escapePrevention;
          * ...etc
@@ -3796,12 +3796,12 @@ static void HandleTurnActionSelectionState(void)
 {
     s32 i;
 
-    bool32 reverseBattlerLogicOrder = RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, GetConfig(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE)) && IsDoubleBattle();
+    gAiLogicData->reverseBattlerLogicOrder = RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, GetConfig(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE)) && IsDoubleBattle();
 
     gBattleCommunication[ACTIONS_CONFIRMED_COUNT] = 0;
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        enum BattlerId battler = reverseBattlerLogicOrder ? BATTLE_PARTNER(battlerIndex) : battlerIndex;
+        enum BattlerId battler = gAiLogicData->reverseBattlerLogicOrder ? BATTLE_PARTNER(battlerIndex) : battlerIndex;
         enum BattlerPosition position = GetBattlerPosition(battler);
         switch (gBattleCommunication[battler])
         {
@@ -4833,6 +4833,21 @@ static bool32 TryDoGimmicksBeforeMoves(void)
     return FALSE;
 }
 
+const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn)
+{
+    switch (moveEffect)
+    {
+    case EFFECT_FOCUS_PUNCH:
+        return inMiddleOfTurn ? BattleScript_FocusPunchSetUpEncored : BattleScript_FocusPunchSetUp;
+    case EFFECT_BEAK_BLAST:
+        return inMiddleOfTurn ? BattleScript_BeakBlastSetUpEncored : BattleScript_BeakBlastSetUp;
+    case EFFECT_SHELL_TRAP:
+        return inMiddleOfTurn ? BattleScript_ShellTrapSetUpEncored : BattleScript_ShellTrapSetUp;
+    default:
+        return NULL;
+    }
+}
+
 static bool32 TryDoMoveEffectsBeforeMoves(void)
 {
     if (!(gHitMarker & HITMARKER_RUN))
@@ -4844,26 +4859,16 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             enum BattlerId battler = battlers[i];
-            if (!gBattleStruct->battlerState[battler].focusPunchBattlers
-                && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
-                && !(gBattleMons[battler].volatiles.truantCounter)
-                && !(gProtectStructs[battler].noValidMoves))
+            if (!gBattleStruct->battlerState[battler].focusPunchBattlers)
             {
-                gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                 gBattlerAttacker = battler;
-                switch (GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]))
+                gBattleScripting.battler = battler;
+                const u8 *script = GetChargingSetUpScript(GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]), FALSE);
+                if (script)
                 {
-                case EFFECT_FOCUS_PUNCH:
-                    BattleScriptExecute(BattleScript_FocusPunchSetUp);
+                    gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
+                    BattleScriptExecute(script);
                     return TRUE;
-                case EFFECT_BEAK_BLAST:
-                    BattleScriptExecute(BattleScript_BeakBlastSetUp);
-                    return TRUE;
-                case EFFECT_SHELL_TRAP:
-                    BattleScriptExecute(BattleScript_ShellTrapSetUp);
-                    return TRUE;
-                default:
-                    break;
                 }
             }
         }

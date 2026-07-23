@@ -243,7 +243,6 @@ struct AiLogicData
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
-    u8 turnOrder[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
@@ -256,8 +255,10 @@ struct AiLogicData
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
+    u32 partnerMoveSimulation:1;
+    u32 reverseBattlerLogicOrder:1;
     u32 dragonDartsHitsBothTarget:4;
-    u32 padding2:15;
+    u32 padding2:13;
 };
 
 struct AiThinkingStruct
@@ -694,10 +695,8 @@ struct BattleStruct
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     u32 stellarBoostFlags[MAX_BATTLE_TRAINERS]; // bitfield
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
-    u16 opponentMonCanTera:6;
-    u16 opponentMonCanDynamax:6;
-    u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
+    u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
+    u8 pursuitStoredSwitch:4; // Stored id for the Pursuit target's switch (value between 0 and PARTY_SIZE included)
     s32 battlerExpReward;
     enum Species prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
@@ -733,6 +732,7 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
+    u8 overworldWeatherPresent:1;
 };
 
 struct AiBattleData
@@ -761,6 +761,22 @@ struct TerrainInfo
 };
 
 extern const struct TerrainInfo gBattleTerrainInfo[B_TERRAIN_COUNT];
+
+struct BattleWeatherInfo
+{
+    u16 flag;
+    u8 rock;
+    u8 padding;
+
+    u32 abilityStartMessage:5;
+    u32 moveStartMessage:5;
+    u32 endMessage:5;
+    u32 continuesMessage:5;
+    u32 animation:8;
+    u32 type:4; // used when weather is similar (e.g. Desolate Land and Drought)
+};
+
+extern const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT];
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).

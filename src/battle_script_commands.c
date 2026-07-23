@@ -1767,11 +1767,11 @@ static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effec
     switch (effect)
     {
     case MOVE_EFFECT_SLEEP:
-        if (B_SLEEP_TURNS >= GEN_CHAMPIONS)
+        if (GetConfig(B_SLEEP_TURNS) >= GEN_CHAMPIONS)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomWeighted(RNG_SLEEP_TURNS, 0, 0, 1, 2));
-        else if (B_SLEEP_TURNS >= GEN_5)
+        else if (GetConfig(B_SLEEP_TURNS) >= GEN_5)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 4));
-        else if (B_SLEEP_TURNS >= GEN_3)
+        else if (GetConfig(B_SLEEP_TURNS) >= GEN_3)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 5));
         else
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 8));
@@ -1980,7 +1980,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
         }
         else
         {
-            gBattleMons[effectBattler].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
+            gBattleMons[effectBattler].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectConfusion;
         }
@@ -2707,7 +2707,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
         default:
             break;
         }
-        if (TryChangeBattleWeather(battlerAtk, weather, ABILITY_NONE))
+        if (TryChangeBattleWeather(battlerAtk, weather, ABILITY_NONE) == WEATHER_FAILURE_SUCCESS)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = msg;
             BattleScriptPush(battleScript);
@@ -6565,7 +6565,7 @@ static void Cmd_setfieldweather(void)
 {
     CMD_ARGS();
 
-    if (TryChangeBattleWeather(gBattlerAttacker, GetMoveWeatherType(gCurrentMove), ABILITY_NONE))
+    if (TryChangeBattleWeather(gBattlerAttacker, GetMoveWeatherType(gCurrentMove), ABILITY_NONE) == WEATHER_FAILURE_SUCCESS)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -7950,7 +7950,7 @@ static void Cmd_jumpifconfusedandstatmaxed(void)
 {
     CMD_ARGS(u8 stat, const u8 *jumpInstr);
 
-    if (gBattleMons[gBattlerTarget].volatiles.confusionTurns > 0
+    if (gBattleMons[gBattlerTarget].volatiles.confusionTimer > 0
       && !CompareStat(gBattlerTarget, cmd->stat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerTarget)))
         gBattlescriptCurrInstr = cmd->jumpInstr; // Fails if we're confused AND stat cannot be raised
     else
@@ -12014,7 +12014,7 @@ void BS_TrySetConfusion(void)
 
     if (CanBeConfused(gBattlerAttacker, gBattlerTarget))
     {
-        gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
+        gBattleMons[gBattlerTarget].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
         gBattleCommunication[MULTIUSE_STATE] = 1;
         gEffectBattler = gBattlerTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -14200,4 +14200,35 @@ static void Cmd_jumpifterrain(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TryDoMoveEffectsBeforeMoves(void)
+{
+    NATIVE_ARGS();
+
+    if (GetConfig(B_MOVE_EFFECTS_BEFORE_MOVES) <= GEN_9)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = gBattlersBySpeed[i];
+        enum Move encoredMove = gBattleMons[battler].volatiles.encoredMove;
+
+        if (!gBattleStruct->battlerState[battler].focusPunchBattlers)
+        {
+            gBattleScripting.battler = battler;
+            const u8 *script = GetChargingSetUpScript(GetMoveEffect(encoredMove), TRUE);
+            if (script)
+            {
+                gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
+                gBattlescriptCurrInstr = script;
+                return;
+            }
+        }
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }

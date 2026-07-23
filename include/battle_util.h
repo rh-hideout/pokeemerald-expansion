@@ -170,8 +170,16 @@ enum SubCheck
     INCLUDING_SUBSTITUTES
 };
 
+enum WeatherFailure
+{
+    WEATHER_FAILURE_SAME_WEATHER,
+    WEATHER_FAILURE_OVERWORLD,
+    WEATHER_FAILURE_PRIMAL,
+    WEATHER_FAILURE_SUCCESS,
+};
+
 void HandleAction_ThrowBall(void);
-enum BattleWeather GetCurrentBattleWeather(u32 weather);
+enum BattleWeather GetBattleWeather(u32 weather);
 bool32 EndOrContinueWeather(void);
 enum DamageCategory GetReflectDamageMoveDamageCategory(enum BattlerId battler, enum Move move);
 bool32 ShouldTeraShellDistortTypeMatchups(struct DamageContext *ctx);
@@ -206,14 +214,14 @@ void BattleScriptPushCursor(void);
 void BattleScriptCall(const u8 *bsPtr);
 void BattleScriptPop(void);
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler);
-u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check);
+u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u32 check);
 bool32 AreAllMovesUnusable(enum BattlerId battler);
 u8 GetImprisonedMovesCount(enum BattlerId battler, enum Move move);
 s32 GetDrainedBigRootHp(enum BattlerId battler, s32 hp);
 bool32 IsAbilityAndRecord(enum BattlerId battler, enum Ability battlerAbility, enum Ability abilityToCheck);
 bool32 HandleFaintedMonActions(void);
 bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
-bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum Ability ability);
+enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum Ability ability);
 bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain);
 bool32 IsPowderMoveBlocked(struct DamageContext *ctx);
 bool32 CanTargetBlockPranksterMove(struct DamageContext *ctx, s32 movePriority);
@@ -352,7 +360,6 @@ void TryToRevertMimicryAndFlags(void);
 u32 CountBattlerStatIncreases(enum BattlerId battler, bool32 countEvasionAcc);
 bool32 BattlerHasCopyableChanges(enum BattlerId battler);
 bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler);
-void RemoveConfusionStatus(enum BattlerId battler);
 u32 GetBattlerGender(enum BattlerId battler);
 bool32 AreBattlersOfOppositeGender(enum BattlerId battler1, enum BattlerId battler2);
 bool32 AreBattlersOfSameGender(enum BattlerId battler1, enum BattlerId battler2);

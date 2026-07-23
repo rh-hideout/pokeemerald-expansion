@@ -178,3 +178,21 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
         EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
     }
 }
+
+SINGLE_BATTLE_TEST("Desolate Land fails if overworld weather is present (Gen9)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DESOLATE_LAND);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN);
+        ResetStartingStatuses();
+    }
+}
