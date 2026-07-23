@@ -406,7 +406,7 @@ const u16 gSlateportBattleTentTrainerMons_Dwane[] =
     -1
 };
 
-const u16 gSlateportBattleTentTrainerMons_Mckenna[] =
+const u16 gSlateportBattleTentTrainerMons_McKenna[] =
 {
     SLATEPORT_TENT_MON_CACNEA_2,
     SLATEPORT_TENT_MON_SWELLOW,
@@ -703,11 +703,11 @@ const struct BattleFrontierTrainer gSlateportBattleTentTrainers[NUM_BATTLE_TENT_
     },
     [SLATEPORT_TENT_TRAINER_MCKENNA] = {
         .facilityClass = FACILITY_CLASS_PARASOL_LADY,
-        .trainerName = _("[Mckenna]"),
+        .trainerName = _("[McKenna]"),
         .speechBefore = {EC_WORD_I, EC_WORD_DISLIKE, EC_WORD_SMALL, EC_WORD_TALK, EC_WORD_LET_S, EC_WORD_GO},
         .speechWin = {EC_WORD_YUP, EC_WORD_THAT_S, EC_WORD_THAT, -1, -1, -1},
         .speechLose = {EC_WORD_KTHX_BYE, -1, -1, -1, -1, -1},
-        .monSet = gSlateportBattleTentTrainerMons_Mckenna
+        .monSet = gSlateportBattleTentTrainerMons_McKenna
     },
     [SLATEPORT_TENT_TRAINER_CAMRYN] = {
         .facilityClass = FACILITY_CLASS_SWIMMER_F,

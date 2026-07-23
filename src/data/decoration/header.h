@@ -800,7 +800,7 @@ const struct Decoration gDecorations[] =
     [DECOR_C_LOW_NOTE_MAT] =
     {
         .id = DECOR_C_LOW_NOTE_MAT,
-        .name = _("[C Low Note Mat]"),
+        .name = _("C Low [Note Mat]"),
         .permission = DECORPERM_PASS_FLOOR,
         .shape = DECORSHAPE_1x1,
         .category = DECORCAT_MAT,
@@ -912,7 +912,7 @@ const struct Decoration gDecorations[] =
     [DECOR_C_HIGH_NOTE_MAT] =
     {
         .id = DECOR_C_HIGH_NOTE_MAT,
-        .name = _("[C High Note Mat]"),
+        .name = _("C High [Note Mat]"),
         .permission = DECORPERM_PASS_FLOOR,
         .shape = DECORSHAPE_1x1,
         .category = DECORCAT_MAT,
