@@ -2,7 +2,7 @@
 #ifndef GUARD_DATA_REGION_MAP_REGION_MAP_ENTRIES_H
 #define GUARD_DATA_REGION_MAP_REGION_MAP_ENTRIES_H
 
-const struct RegionMapLocation gRegionMapEntries[] = {
+const struct MapSectionInfo gMapSections[] = {
 ## for map_section in map_sections
     [{{ map_section.id }}] = {
 {% if existsIn(map_section, "x") %}
@@ -24,6 +24,16 @@ const struct RegionMapLocation gRegionMapEntries[] = {
         .height = {{ map_section.height }},
 {% else %}
         .height = 1,
+{% endif %}
+{% if existsIn(map_section, "pokemon_region") %}
+        .pokemonRegion = {{ map_section.pokemon_region }},
+{% else %}
+        .pokemonRegion = POKEMON_REGION_NONE,
+{% endif %}
+{% if existsIn(map_section, "map_region") %}
+        .regionMap = {{ map_section.map_region }},
+{% else %}
+        .regionMap = REGION_MAP_UNKNOWN,
 {% endif %}
 {% if existsIn(map_section, "name") %}
         .name = COMPOUND_STRING("{{ map_section.name }}"),

@@ -3,7 +3,6 @@
   "name": "FortreeCity",
   "layout": "LAYOUT_FORTREE_CITY",
   "music": "MUS_FORTREE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_FORTREE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -233,5 +232,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Common_EventScript_ShowPokemartSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

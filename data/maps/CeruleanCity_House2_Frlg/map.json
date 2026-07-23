@@ -3,7 +3,6 @@
   "name": "CeruleanCity_House2_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_HOUSE2",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -85,5 +84,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeruleanCity_House2_EventScript_WallHole"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

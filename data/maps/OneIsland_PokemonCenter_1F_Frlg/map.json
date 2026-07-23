@@ -3,7 +3,6 @@
   "name": "OneIsland_PokemonCenter_1F_Frlg",
   "layout": "LAYOUT_ONE_ISLAND_POKEMON_CENTER_1F",
   "music": "MUS_RG_NET_CENTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ONE_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -231,5 +230,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

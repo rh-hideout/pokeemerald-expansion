@@ -3,7 +3,6 @@
   "name": "SaffronCity_PokemonTrainerFanClub_Frlg",
   "layout": "LAYOUT_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -175,5 +174,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

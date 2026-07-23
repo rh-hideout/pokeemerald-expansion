@@ -3,7 +3,6 @@
   "name": "TrainerTower_Lobby_Frlg",
   "layout": "LAYOUT_TRAINER_TOWER_LOBBY",
   "music": "MUS_RG_TRAINER_TOWER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_TRAINER_TOWER_2",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -135,5 +134,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "TrainerTower_Lobby_EventScript_ShowRecords"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

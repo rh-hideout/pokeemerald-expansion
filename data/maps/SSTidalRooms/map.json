@@ -3,7 +3,6 @@
   "name": "SSTidalRooms",
   "layout": "LAYOUT_SS_TIDAL_ROOMS",
   "music": "MUS_SAILING",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -224,5 +223,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SSTidalRooms_EventScript_Bed"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

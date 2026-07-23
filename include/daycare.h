@@ -34,6 +34,7 @@ bool8 NameHasGenderSymbol(const u8 *name, u8 genderRatio);
 void ShowDaycareLevelMenu(void);
 void ChooseSendDaycareMon(void);
 void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon);
+enum PokemonRegion GetDaycareRegion(struct DayCare *daycare);
 void IncrementDaycareSteps(void);
 bool32 CheckDaycareMonReceivedMail(void);
 enum Species GetEggSpecies(enum Species species);

@@ -3,7 +3,6 @@
   "name": "Route124",
   "layout": "LAYOUT_ROUTE124",
   "music": "MUS_ROUTE120",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_124",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -217,5 +216,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route124_EventScript_HuntersHouseSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

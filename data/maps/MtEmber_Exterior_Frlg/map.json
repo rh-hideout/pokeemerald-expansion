@@ -3,7 +3,6 @@
   "name": "MtEmber_Exterior_Frlg",
   "layout": "LAYOUT_MT_EMBER_EXTERIOR",
   "music": "MUS_RG_SEVII_CAVE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_MT_EMBER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -393,5 +392,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

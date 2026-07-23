@@ -3,7 +3,6 @@
   "name": "DewfordTown",
   "layout": "LAYOUT_DEWFORD_TOWN",
   "music": "MUS_DEWFORD",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DEWFORD_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -173,5 +172,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "DewfordTown_EventScript_HallSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

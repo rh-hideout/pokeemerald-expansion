@@ -3,7 +3,6 @@
   "name": "Route22_NorthEntrance_Frlg",
   "layout": "LAYOUT_ROUTE22_NORTH_ENTRANCE",
   "music": "MUS_RG_VIRIDIAN_FOREST",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_22",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -72,5 +71,9 @@
       "script": "Route22_NorthEntrance_EventScript_BoulderBadgeGuardTrigger"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

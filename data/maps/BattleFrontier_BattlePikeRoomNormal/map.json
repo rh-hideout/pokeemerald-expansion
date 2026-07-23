@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattlePikeRoomNormal",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_NORMAL",
   "music": "MUS_B_PIKE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -110,5 +109,8 @@
       "script": "BattleFrontier_BattlePikeRoomNormal_EventScript_NoTurningBack"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

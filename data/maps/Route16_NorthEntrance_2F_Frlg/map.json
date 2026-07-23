@@ -3,7 +3,6 @@
   "name": "Route16_NorthEntrance_2F_Frlg",
   "layout": "LAYOUT_ENTRANCE_2F",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_16",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -86,5 +85,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route16_NorthEntrance_2F_EventScript_RightBinoculars"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

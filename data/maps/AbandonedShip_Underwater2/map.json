@@ -3,7 +3,6 @@
   "name": "AbandonedShip_Underwater2",
   "layout": "LAYOUT_ABANDONED_SHIP_UNDERWATER2",
   "music": "MUS_UNDERWATER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",
   "requires_flash": false,
   "weather": "WEATHER_UNDERWATER_BUBBLES",
@@ -25,5 +24,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

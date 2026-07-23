@@ -3,7 +3,6 @@
   "name": "CeladonCity_Condominiums_2F_Frlg",
   "layout": "LAYOUT_CELADON_CITY_CONDOMINIUMS_2F",
   "music": "MUS_RG_CELADON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -93,5 +92,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeladonCity_Condominiums_2F_EventScript_MeetingRoomSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }
