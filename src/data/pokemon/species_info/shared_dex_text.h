@@ -1,13 +1,13 @@
 // fallback
 const u8 gFallbackPokedexText[] = _(
-    "This is a newly discovered Pokémon.\n"
+    "This is a newly discovered [Pokémon].\n"
     "It is currently under investigation.\n"
     "No detailed information is available\n"
     "at this time.");
 
 // Gen 1 families
 const u8 gRaticateAlolaPokedexText[] = _(
-    "It forms a group of Rattata, which it \n"
+    "It forms a group of [Rattata], which it \n"
     "assumes command of. Each group\n"
     "has its own territory, and disputes\n"
     "over food happen often.");
@@ -26,19 +26,19 @@ const u8 gPikachuPokedexText[] = _(
 
 const u8 gMarowakAlolaPokedexText[] = _(
     "The cursed flames that light up the bone\n"
-    "carried by this Pokémon are said\n"
+    "carried by this [Pokémon] are said\n"
     "to cause both mental and physical\n"
     "pain that will never fade.");
 
 const u8 gEeveePokedexText[] = _(
-    "An Eevee has an unstable genetic makeup\n"
+    "An [Eevee] has an unstable genetic makeup\n"
     "that suddenly mutates due to its\n"
     "environment. Radiation from various\n"
-    "Stones causes this Pokémon to evolve.");
+    "[Stones] causes this [Pokémon] to evolve.");
 
 // Gen 2 families
 const u8 gUnownPokedexText[] = _(
-    "This Pokémon is shaped like ancient text\n"
+    "This [Pokémon] is shaped like ancient text\n"
     "characters. Although research is ongoing,\n"
     "it is a mystery as to which came first,\n"
     "the ancient writings or the various Unown.");
@@ -48,10 +48,10 @@ const u8 gMothimPokedexText[] = _(
     "It does not keep a nest. While it\n"
     "loves floral honey, it won't gather\n"
     "any itself. Instead, it plots to steal\n"
-    "honey collected by Combee.");
+    "honey collected by [Combee].");
 
 const u8 gArceusPokedexText[] = _(
-    "It is told in mythology that this Pokémon\n"
+    "It is told in mythology that this [Pokémon]\n"
     "emerged from an egg and shaped all there\n"
     "is in this world, before the universe\n"
     "even existed.");
@@ -60,7 +60,7 @@ const u8 gArceusPokedexText[] = _(
 const u8 gGenesectPokedexText[] = _(
     "Over 300 million years ago, it was\n"
     "feared as the strongest of hunters.\n"
-    "Team Plasma altered it and attached\n"
+    "[Team Plasma] altered it and attached\n"
     "a cannon to its back.");
 
 // Gen 6 families
@@ -71,9 +71,9 @@ const u8 gGreninjaPokedexText[] = _(
     "throwing stars made of compressed water.");
 
 const u8 gScatterbugPokedexText[] = _(
-    "When under attack from bird Pokémon,\n"
+    "When under attack from bird [Pokémon],\n"
     "it spews a poisonous black powder that\n"
-    "causes paralysis on contact. Scatterbug\n"
+    "causes paralysis on contact. [Scatterbug]\n"
     "can live in any region or climate.");
 
 const u8 gSpewpaPokedexText[] = _(
@@ -86,13 +86,13 @@ const u8 gFurfrouPokedexText[] = _(
     "Trimming its fluffy fur not only makes\n"
     "it more elegant but also increases the\n"
     "swiftness of its movements. These\n"
-    "Pokémon were the guardians of kings.");
+    "[Pokémon] were the guardians of kings.");
 
 const u8 gXerneasPokedexText[] = _(
     "Legends say that when the horns on\n"
     "its head shine in seven colors, it is\n"
     "sharing everlasting life. It slept for a\n"
-    "thousand years in the form of a tree");
+    "thousand years in the form of a tree.");
 
 const u8 gZygarde50PokedexText[] = _(
     "It's said to be monitoring the ecosystem\n"
@@ -101,7 +101,7 @@ const u8 gZygarde50PokedexText[] = _(
     "lies hidden within its cells.");
 
 const u8 gZygarde10PokedexText[] = _(
-    "This is Zygarde when about 10% of\n"
+    "This is [Zygarde] when about 10% of\n"
     "its pieces have been assembled. It\n"
     "leaps at its opponent's chest and\n"
     "sinks its sharp fangs into them.");
@@ -109,56 +109,56 @@ const u8 gZygarde10PokedexText[] = _(
 // Gen 7 families
 const u8 gGumshoosPokedexText[] = _(
     "When it finds a trace of its prey, it\n"
-    "patiently stakes out the location...\n"
+    "patiently stakes out the location…\n"
     "but as it's diurnal, it's always snoozing\n"
     "by nightfall.");
 
 const u8 gVikavoltPokedexText[] = _(
     "It concentrates electrical energy within\n"
     "its large jaws and uses it to zap its foes.\n"
-    "It overwhelms bird Pokémon with shocking\n"
+    "It overwhelms bird [Pokémon] with shocking\n"
     "beams of electrical energy.");
 
 const u8 gRibombeePokedexText[] = _(
-    "Ribombee rolls up pollen into puffs.\n"
+    "[Ribombee] rolls up pollen into puffs.\n"
     "It makes many different varieties, some\n"
     "used as food and others used in battle.\n"
     "They are sometimes sold as supplements.");
 
 const u8 gRockruffPokedexText[] = _(
-    "This Pokémon has lived with people since\n"
+    "This [Pokémon] has lived with people since\n"
     "times long ago. It can sense when its\n"
-    "Trainer is in the dumps and will stick\n"
-    "close by its Trainer's side.");
+    "[Trainer] is in the dumps and will stick\n"
+    "close by its [Trainer]'s side.");
 
 const u8 gAraquanidPokedexText[] = _(
     "Despite what its appearance suggests,\n"
     "it cares for others. If it finds vulnerable,\n"
-    "weak Pokémon, it protectively brings\n"
+    "weak [Pokémon], it protectively brings\n"
     "them into its water bubble.");
 
 const u8 gLurantisPokedexText[] = _(
     "It requires a lot of effort to maintain\n"
-    "Lurantis's vivid coloring, but some\n"
+    "[Lurantis]'s vivid coloring, but some\n"
     "collectors enjoy this work and treat it\n"
     "as their hobby.");
 
 const u8 gSalazzlePokedexText[] = _(
     "For some reason, only females have\n"
     "been found. It creates a reverse harem of\n"
-    "male Salandit to live with. Its poisonous\n"
+    "male [Salandit] to live with. Its poisonous\n"
     "gas is filled with pheromones.");
 
 const u8 gSilvallyNormalPokedexText[] = _(
     "Its trust in its partner awakens it.\n"
-    "This Pokémon is capable of changing its\n"
+    "This [Pokémon] is capable of changing its\n"
     "type by equipping special memories, a\n"
     "trait that is well displayed in battle.");
 
 const u8 gSilvallyMemoryPokedexText[] = _(
-    "Upon awakening, its RKS System is\n"
+    "Upon awakening, its [RKS System] is\n"
     "activated. By employing specific\n"
-    "memories, this Pokémon can adapt its\n"
+    "memories, this [Pokémon] can adapt its\n"
     "type to confound its enemies.");
 
 const u8 gMiniorMeteorPokedexText[] = _(
@@ -170,7 +170,7 @@ const u8 gMiniorMeteorPokedexText[] = _(
 const u8 gMiniorCorePokedexText[] = _(
     "If its core stays exposed, it will\n"
     "soon die off. It's possible that it\n"
-    "may survive if it's put into a Poké Ball\n"
+    "may survive if it's put into a [Poké Ball]\n"
     "quickly enough.");
 
 const u8 gTogedemaruPokedexText[] = _(
@@ -182,7 +182,7 @@ const u8 gTogedemaruPokedexText[] = _(
 const u8 gMimikyuDisguisedPokedexText[] = _(
     "A lonely Pokémon, it hides its terrifying\n"
     "appearance beneath an old rag so it can\n"
-    "get closer to people and other Pokémon.\n"
+    "get closer to people and other [Pokémon].\n"
     "Its actual appearance is unknown.");
 
 const u8 gMimikyuBustedPokedexText[] = _(
@@ -199,9 +199,9 @@ const u8 gKommoOPokedexText[] = _(
 
 // Gen 8 families
 const u8 gAlcremieVanillaCreamPokedexText[] = _(
-    "If Alcremie is content, the secreted cream\n"
+    "If [Alcremie] is content, the secreted cream\n"
     "from its hands becomes sweeter and richer.\n"
-    "When it trusts a Trainer, it will treat\n"
+    "When it trusts a [Trainer], it will treat\n"
     "them to berries it's decorated with cream.");
 
 const u8 gAlcremieRubyCreamPokedexText[] = _(
@@ -260,7 +260,7 @@ const u8 gToxtricityGigantamaxPokedexText[] = _(
 
 // Gen 9 families
 const u8 gOgerponTealMaskPokedexText[] = _(
-    "This Pokémon's type changes based on\n"
+    "This [Pokémon]'s type changes based on\n"
     "which mask it's wearing. It confounds\n"
     "its enemies with nimble movements\n"
     "and kicks.");
