@@ -371,6 +371,12 @@ void CharmapReader::SkipWhitespace()
 
 Charmap::Charmap(std::string filename)
 {
+    try {
+        m_locale = std::locale("C.UTF-8");
+    } catch (...) {
+        m_locale = std::locale::classic();
+    }
+
     CharmapReader reader(filename);
 
     for (;;)
@@ -389,6 +395,8 @@ Charmap::Charmap(std::string filename)
         case LhsType::Char:
             if (m_chars.find(lhs.code) != m_chars.end())
                 reader.RaiseError("redefining char");
+            if (lhs.code == '\\' || lhs.code == '{' || lhs.code == '}' || lhs.code == '[' || lhs.code == ']')
+                reader.RaiseError("defining metachar");
             m_chars[lhs.code] = sequence;
             break;
         case LhsType::Escape:

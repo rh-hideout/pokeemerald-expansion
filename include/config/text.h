@@ -1,6 +1,8 @@
 #ifndef GUARD_CONFIG_TEXT_H
 #define GUARD_CONFIG_TEXT_H
 
+#define TEXT_CAPITALIZE              FALSE // If TRUE, characters in square brackets will be capitalized at compile-time.
+
 // Text settings:
 #define AUTO_SCROLL_TEXT             FALSE   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.
 #define NUM_FRAMES_AUTO_SCROLL_DELAY 49

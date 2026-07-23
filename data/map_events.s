@@ -1,3 +1,4 @@
+#include "config/text.h"
 #include "constants/global.h"
 #include "constants/event_bg.h"
 #include "constants/event_object_movement.h"

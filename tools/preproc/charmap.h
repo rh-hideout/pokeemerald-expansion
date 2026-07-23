@@ -22,17 +22,29 @@
 #define CHARMAP_H
 
 #include <cstdint>
+#include <locale>
 #include <string>
 #include <map>
 #include <vector>
+#include "char_util.h"
 
 class Charmap
 {
 public:
     Charmap(std::string filename);
 
-    std::string Char(std::int32_t code)
+    std::string Char(std::int32_t code, bool capitalize=false)
     {
+        // Assuming 32-bit wchar_t means UTF-32. Windows' wchar_t is
+        // 16-bit and UTF-16, and therefore unsupported.
+        if (capitalize && (sizeof(wchar_t) == 4 || IsAscii(code)))
+        {
+            std::int32_t capCode = std::toupper<wchar_t>(code, m_locale);
+            auto it = m_chars.find(capCode);
+            if (it != m_chars.end())
+                return it->second;
+        }
+
         auto it = m_chars.find(code);
 
         if (it == m_chars.end())
@@ -59,6 +71,7 @@ private:
     std::map<std::int32_t, std::string> m_chars;
     std::string m_escapes[128];
     std::map<std::string, std::string> m_constants;
+    std::locale m_locale;
 };
 
 #endif // CHARMAP_H
