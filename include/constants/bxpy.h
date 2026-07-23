@@ -1,0 +1,336 @@
+#ifndef GUARD_CONSTANTS_BXPY_H
+#define GUARD_CONSTANTS_BXPY_H
+
+enum BXPYBattleTypes
+{
+    BXPY_BATTLE_SINGLE,
+    BXPY_BATTLE_DOUBLE,
+};
+
+enum BXPYErrorCodes
+{
+    BXPY_ERROR_BRING_SIZE_TOO_LARGE,
+    BXPY_ERROR_BRING_SIZE_NOT_ENOUGH,
+    BXPY_ERROR_CLAUSE_SPECIES,
+    BXPY_ERROR_CLAUSE_ITEM,
+    BXPY_ERROR_CLAUSE_SPECIAL_POKEMON,
+};
+
+enum BXPYHealModes
+{
+    BXPY_HEAL_NEVER,
+    BXPY_HEAL_BEFORE_BATTLE,
+    BXPY_HEAL_AFTER_BATTLE,
+    BXPY_HEAL_ALWAYS,
+    BXPY_HEAL_COUNT,
+};
+
+enum BXPYTeamPreviewItemModes
+{
+    BXPY_ITEM_NO_VISIBILITY,
+    BXPY_ITEM_SHOW_POSSESSION,
+    BXPY_ITEM_SHOW_ITEM,
+};
+
+enum BXPYTeamPreviewSpeciesModes
+{
+    BXPY_SPECIES_HIDE,
+    BXPY_SPECIES_SHOW_BASE,
+    BXPY_SPECIES_SHOW_TRUE,
+};
+
+#define VAR_BXPY_PICK_SIZE                         VAR_0x8008
+#define VAR_BXPY_BRING_SIZE                        VAR_0x800B
+#define VAR_BXPY_PARTNER                           VAR_0x800A
+#define VAR_BXPY_MON_INDEX                         VAR_BXPY_PARTNER
+
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_1            SPRITE_ARR_ID_TYPE
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_2            SPRITE_ARR_ID_TYPE + 1
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_TERA         SPRITE_ARR_ID_TYPE + 2
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_MOVE_1       SPRITE_ARR_ID_TYPE
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_MOVE_2       SPRITE_ARR_ID_TYPE + 1
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_MOVE_3       SPRITE_ARR_ID_TYPE + 2
+#define SUMMARY_SCREEN_SPRITE_ID_TYPE_MOVE_4       SPRITE_ARR_ID_TYPE + 3
+
+enum BXPYBackgrounds
+{
+    BG0_BXPY_TEXT,
+    BG1_BXPY_INFO,
+    BG2_BXPY_PARTY_BG,
+    BG3_BXPY_WALLPAPER,
+    BG_BXPY_COUNT,
+};
+
+enum BXPYWindows
+{
+    WIN_BXPY_PLAYER_INFO,
+    WIN_BXPY_ENEMY_NAME,
+    WIN_BXPY_ENEMY_LEVELS,
+    WIN_BXPY_HELP_BAR,
+    WIN_BXPY_MENU,
+    WIN_BXPY_MENU_FULL,
+    WIN_BXPY_COUNT,
+};
+
+enum BXPYTextPalette
+{
+    BXPY_TEXT_PALETTE_TRANSPERANT,
+    BXPY_TEXT_PALETTE_WHITE,
+    BXPY_TEXT_PALETTE_BLACK,
+    BXPY_TEXT_PALETTE_ENEMY_HIGHLIGHT,
+    BXPY_TEXT_PALETTE_PLAYER_HIGHLIGHT,
+    BXPY_TEXT_PALETTE_PLAYER_SELECTED_HIGHLIGHT,
+};
+
+enum BXPYTextSelected
+{
+    BXPY_TEXT_SELECT_PALETTE_TRANSPERANT,
+    BXPY_TEXT_SELECT_PALETTE_WHITE,
+    BXPY_TEXT_SELECT_PALETTE_GRAY                  = 13,
+    BXPY_TEXT_SELECT_PALETTE_BLACK                 = 14,
+};
+
+enum BXPYBgPalettes
+{
+    BXPY_PALETTE_PARTYBG_A_ID,
+    BXPY_PALETTE_PARTYBG_B_ID,
+    BXPY_PALETTE_WALLPAPER_ID,
+    BXPY_PALETTE_TEXT_ID,
+    BXPY_PALETTE_BORDER_ID                         = 13,
+    BXPY_SPRITE_PALETTE_TYPE_START                 = 13,
+    BXPY_PALETTE_DUMMY,
+    BXPY_PALETTE_MENU_ID,
+};
+
+#define BXPY_PALETTE_PARTYBG_SLOT                  BG_PLTT_ID(BXPY_PALETTE_PARTYBG_A_ID)
+#define BXPY_PALETTE_WALLPAPER_SLOT                BG_PLTT_ID(BXPY_PALETTE_WALLPAPER_ID)
+#define BXPY_PALETTE_TEXT_SLOT                     BG_PLTT_ID(BXPY_PALETTE_TEXT_ID)
+#define BXPY_PALETTE_MENU_SLOT                     BG_PLTT_ID(BXPY_PALETTE_MENU_ID)
+#define BXPY_PALETTE_BORDER_SLOT                   BG_PLTT_ID(BXPY_PALETTE_BORDER_ID)
+#define BXPY_PALETTE_TYPES_SLOT                    OBJ_PLTT_ID(BXPY_SPRITE_PALETTE_TYPE_START)
+
+enum BXPYFontColor
+{
+    BXPY_FONT_COLOR_PLAYER,
+    BXPY_FONT_COLOR_PLAYER_SELECTED,
+    BXPY_FONT_COLOR_ENEMY_NAME,
+    BXPY_FONT_COLOR_ENEMY,
+    BXPY_FONT_COLOR_HELP_BAR,
+    BXPY_FONT_COLOR_SELECT_SPRITE,
+    BXPY_FONT_COLOR_COUNT,
+};
+
+enum BXPYSpriteIds
+{
+    BXPY_SPRITEID_CURSOR,
+    BXPY_SPRITEID_PLAYER_GENDER_0,
+    BXPY_SPRITEID_PLAYER_SELECTED_0,
+    BXPY_SPRITEID_PLAYER_SELECTED_1,
+    BXPY_SPRITEID_PLAYER_SELECTED_2,
+    BXPY_SPRITEID_PLAYER_SELECTED_3,
+    BXPY_SPRITEID_PLAYER_SELECTED_4,
+    BXPY_SPRITEID_PLAYER_SELECTED_5,
+    BXPY_SPRITEID_PLAYER_HP_0,
+    BXPY_SPRITEID_HIGHLIGHT_LEFT,
+    BXPY_SPRITEID_ENEMY_TYPE_0_MON_0,
+    BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0,
+    BXPY_SPRITEID_COUNT,
+};
+
+enum BXPYSpriteTags
+{
+    BXPY_SPRITETAG_CURSOR                          = 6969,
+    BXPY_SPRITETAG_HP,
+    BXPY_SPRITETAG_GENDER,
+    BXPY_SPRITETAG_SELECTED_0,
+    BXPY_SPRITETAG_SELECTED_1,
+    BXPY_SPRITETAG_SELECTED_2,
+    BXPY_SPRITETAG_SELECTED_3,
+    BXPY_SPRITETAG_SELECTED_4,
+    BXPY_SPRITETAG_SELECTED_5,
+    BXPY_SPRITETAG_SELECTED_TAIL,
+    BXPY_SPRITETAG_HIGHLIGHT,
+    BXPY_SPRITETAG_TYPE,
+    BXPY_SPRITETAG_COUNT,
+};
+
+enum BXPYPaletteTags
+{
+    BXPY_PALTAG_SPRITE                             = 42069,
+    BXPY_PALTAG_HIGHLIGHT,
+    BXPY_PALTAG_TYPE,
+};
+
+#define FONT_BXPY_HELPBAR                         FONT_SMALL
+#define NUM_BXPY_MAX_MONS_SHOWED                  6
+
+#define BXPY_SPECIES_NICKNAME_WIDTH               8
+#define BXPY_SPECIES_ITEM_WIDTH                   4
+
+#define FONT_BXPY_SPECIES_NAME                    FONT_SMALL_NARROW
+#define FONT_BXPY_LEVEL                           FONT_SMALL
+
+enum BXPYGenderEnum
+{
+    BXPY_GENDER_FEMALE,
+    BXPY_GENDER_MALE,
+    BXPY_GENDER_HIDDEN,
+};
+
+#define BXPY_GENDER_FRAME_SIZE                       4
+#define BXPY_GENDER_FRAME_FEMALE                     (BXPY_GENDER_FEMALE * BXPY_GENDER_FRAME_SIZE)
+#define BXPY_GENDER_FRAME_MALE                       (BXPY_GENDER_MALE   * BXPY_GENDER_FRAME_SIZE)
+#define BXPY_GENDER_FRAME_HIDDEN                     (BXPY_GENDER_HIDDEN * BXPY_GENDER_FRAME_SIZE)
+
+enum BXPYHPEnum
+{
+    BXPY_HP_STEP_0,
+    BXPY_HP_STEP_1,
+    BXPY_HP_STEP_2,
+    BXPY_HP_STEP_3,
+    BXPY_HP_STEP_4,
+    BXPY_HP_STEP_5,
+    BXPY_HP_STEP_6,
+    BXPY_HP_STEP_7,
+    BXPY_HP_STEP_8,
+    BXPY_HP_STEP_9,
+    BXPY_HP_STEP_10,
+    BXPY_HP_STEP_11,
+    BXPY_HP_STEP_12,
+    BXPY_HP_STEP_13,
+    BXPY_HP_STEP_14,
+    BXPY_HP_STEP_15,
+    BXPY_HP_STEP_16,
+    BXPY_HP_STEP_17,
+    BXPY_HP_STEP_18,
+    BXPY_HP_STEP_19,
+    BXPY_HP_STEP_20,
+    BXPY_HP_STEP_21,
+    BXPY_HP_STEP_22,
+    BXPY_HP_STEP_23,
+    BXPY_HP_STEP_24,
+    BXPY_HP_STEP_25,
+    BXPY_HP_STEP_26,
+    BXPY_HP_STEP_27,
+    BXPY_HP_STEP_28,
+    BXPY_HP_STEP_29,
+    BXPY_HP_STEP_30,
+    BXPY_HP_STEP_31,
+    BXPY_HP_STEP_COUNT,
+};
+
+#define BXPY_HP_FRAME_SIZE                        4
+#define BXPY_HP_FRAME_0                           (BXPY_HP_STEP_0  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_1                           (BXPY_HP_STEP_1  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_2                           (BXPY_HP_STEP_2  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_3                           (BXPY_HP_STEP_3  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_4                           (BXPY_HP_STEP_4  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_5                           (BXPY_HP_STEP_5  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_6                           (BXPY_HP_STEP_6  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_7                           (BXPY_HP_STEP_7  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_8                           (BXPY_HP_STEP_8  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_9                           (BXPY_HP_STEP_9  * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_10                          (BXPY_HP_STEP_10 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_11                          (BXPY_HP_STEP_11 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_12                          (BXPY_HP_STEP_12 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_13                          (BXPY_HP_STEP_13 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_14                          (BXPY_HP_STEP_14 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_15                          (BXPY_HP_STEP_15 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_16                          (BXPY_HP_STEP_16 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_17                          (BXPY_HP_STEP_17 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_18                          (BXPY_HP_STEP_18 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_19                          (BXPY_HP_STEP_19 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_20                          (BXPY_HP_STEP_20 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_21                          (BXPY_HP_STEP_21 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_22                          (BXPY_HP_STEP_22 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_23                          (BXPY_HP_STEP_23 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_24                          (BXPY_HP_STEP_24 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_25                          (BXPY_HP_STEP_25 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_26                          (BXPY_HP_STEP_26 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_27                          (BXPY_HP_STEP_27 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_28                          (BXPY_HP_STEP_28 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_29                          (BXPY_HP_STEP_29 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_30                          (BXPY_HP_STEP_30 * BXPY_HP_FRAME_SIZE)
+#define BXPY_HP_FRAME_31                          (BXPY_HP_STEP_31 * BXPY_HP_FRAME_SIZE)
+
+#define BXPY_EMPTY_MON                            PARTY_SIZE
+#define BXPY_ORDER_STR_LENGTH                     3
+#define BXPY_ORDER_LENGTH_SIZE                    (BXPY_ORDER_STR_LENGTH * sizeof(u8))
+
+enum BXPYMenuChoices
+{
+    BXPY_MENU_ADD_MON,
+    BXPY_MENU_REMOVE_MON                           = BXPY_MENU_ADD_MON,
+    BXPY_MENU_SUMMARY_MON,
+    BXPY_MENU_CANCEL,
+    BXPY_MENU_COUNT,
+};
+
+enum BXPYPages
+{
+    BXPY_PAGE_OPPONENT_A,
+    BXPY_PAGE_OPPONENT_B,
+    BXPY_PAGE_COUNT,
+};
+
+enum BXPYHighlight
+{
+    BXPY_HIGHLIGHT_LEFT,
+    BXPY_HIGHLIGHT_CENTER,
+    BXPY_HIGHLIGHT_RIGHT,
+    BXPY_HIGHLIGHT_COUNT,
+};
+
+#define BXPY_HIGHLIGHT_FRAME_SIZE                 32
+#define BXPY_HIGHLIGHT_FRAME_LEFT                 (BXPY_HIGHLIGHT_LEFT   * BXPY_HIGHLIGHT_FRAME_SIZE)
+#define BXPY_HIGHLIGHT_FRAME_CENTER               (BXPY_HIGHLIGHT_CENTER * BXPY_HIGHLIGHT_FRAME_SIZE)
+#define BXPY_HIGHLIGHT_FRAME_RIGHT                (BXPY_HIGHLIGHT_RIGHT  * BXPY_HIGHLIGHT_FRAME_SIZE)
+
+enum BXPYSelected
+{
+    BXPY_SELECTED,
+    BXPY_SELECTED_HIGHLIGHT,
+    BXPY_SELECTED_COUNT,
+};
+
+#define BXPY_SELECTED_FRAME_SIZE                  4
+#define BXPY_SELECTED_FRAME_0                     (BXPY_SELECTED           * BXPY_SELECTED_FRAME_SIZE)
+#define BXPY_SELECTED_FRAME_1                     (BXPY_SELECTED_HIGHLIGHT * BXPY_SELECTED_FRAME_SIZE)
+
+#define BXPY_TYPE_FRAME_SIZE                      4
+#define BXPY_TYPE_FRAME_NONE                      (TYPE_NONE               * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_NORMAL                    (TYPE_NORMAL             * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_FIGHTING                  (TYPE_FIGHTING           * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_FLYING                    (TYPE_FLYING             * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_POISON                    (TYPE_POISON             * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_GROUND                    (TYPE_GROUND             * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_ROCK                      (TYPE_ROCK               * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_BUG                       (TYPE_BUG                * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_GHOST                     (TYPE_GHOST              * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_STEEL                     (TYPE_STEEL              * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_MYSTERY                   (TYPE_MYSTERY            * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_FIRE                      (TYPE_FIRE               * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_WATER                     (TYPE_WATER              * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_GRASS                     (TYPE_GRASS              * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_ELECTRIC                  (TYPE_ELECTRIC           * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_PSYCHIC                   (TYPE_PSYCHIC            * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_ICE                       (TYPE_ICE                * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_DRAGON                    (TYPE_DRAGON             * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_DARK                      (TYPE_DARK               * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_FAIRY                     (TYPE_FAIRY              * BXPY_TYPE_FRAME_SIZE)
+#define BXPY_TYPE_FRAME_STELLAR                   (TYPE_STELLAR            * BXPY_TYPE_FRAME_SIZE)
+
+#define BXPY_X_POSITION_OFFSET_ENEMY                     144
+#if BXPY_SKIN == GEN_CHAMPIONS
+#define BXPY_Y_POSITION_INITAL_PLAYER                    12
+#define BXPY_Y_POSITION_OFFSET_PLAYER                    24
+#define BXPY_Y_POSITION_INITAL_ENEMY                     19
+#define BXPY_Y_POSITION_OFFSET_ENEMY                     22
+#else
+#define BXPY_Y_POSITION_INITAL_PLAYER                    12
+#define BXPY_Y_POSITION_OFFSET_PLAYER                    24
+#define BXPY_Y_POSITION_INITAL_ENEMY                     20
+#define BXPY_Y_POSITION_OFFSET_ENEMY                     22
+#endif
+
+#endif //GUARD_CONSTANTS_BXPY_H

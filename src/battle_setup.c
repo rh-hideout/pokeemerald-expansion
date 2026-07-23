@@ -58,6 +58,8 @@
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "fishing.h"
+#include "bxpy.h"
 
 enum TransitionType
 {
@@ -1152,7 +1154,7 @@ static void BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBattleP
     PUSH(EventSnippet_TrainerApproach)
     PUSH(EventSnippet_ShowTrainerIntroMsg)
 
-    if (gNoOfApproachingTrainers > 1) 
+    if (gNoOfApproachingTrainers > 1)
     {
         SetMapVarsToTrainerB();
 
@@ -1197,7 +1199,7 @@ static void BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter
     PUSH       (EventSnippet_TrainerApproach)
     PUSH_IF_SET(EventSnippet_ShowTrainerIntroMsg, battleParams->params.introTextA)
 
-    if (gNoOfApproachingTrainers > 1) 
+    if (gNoOfApproachingTrainers > 1)
     {
         SetMapVarsToTrainerB();
 
@@ -1238,14 +1240,14 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
     {
         gNoOfApproachingTrainers = 2;
     }
-    
+
 #if FREE_MATCH_CALL == FALSE
     if (battleParams->params.isRematch)
     {
         battleParams->params.opponentA = GetRematchTrainerId(battleParams->params.opponentA);
     }
 #endif //FREE_MATCH_CALL
-    
+
     PUSH_IF_SET(EventSnippet_PlayTrainerEncounterMusic, battleParams->params.playMusicA)
     PUSH_IF_SET(EventSnippet_SetTrainerFacingDirection, battleParams->params.facePlayer);
     PUSH_IF_SET(EventSnippet_ShowTrainerIntroMsg, battleParams->params.introTextA)
@@ -1304,7 +1306,7 @@ static void SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
             break;
         default:
             errorf("Invalid facility: %d", facility);
-    } 
+    }
 
     if (isTrainerA) {
         TRAINER_BATTLE_PARAM.opponentA = trainerId;
@@ -1313,7 +1315,7 @@ static void SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
         TRAINER_BATTLE_PARAM.opponentB = trainerId;
         TRAINER_BATTLE_PARAM.objEventLocalIdB = localId;
     }
-   
+
 }
 
 void ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
@@ -1344,16 +1346,16 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approa
 
     facility = *(approachingTrainer[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
     localId = gObjectEvents[approachingTrainer[0].objectEventId].localId;
-    scriptEndPtr = approachingTrainer[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
+    scriptEndPtr = approachingTrainer[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1;
 
     SetFacilityOpponent(facility, localId, TRUE);
-    
+
     if (gNoOfApproachingTrainers > 1)
     {
         gApproachingTrainerId++;
         facility = *(approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
         localId = gObjectEvents[approachingTrainer[1].objectEventId].localId;
-        scriptEndPtr = approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
+        scriptEndPtr = approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1;
 
         SetFacilityOpponent(facility, localId, FALSE);
     }
@@ -1544,6 +1546,12 @@ void BattleSetup_StartTrainerBattle_Debug(void)
 
 static void SaveChangesToPlayerParty(void)
 {
+    bool32 isSkyBattle = FlagGet(B_FLAG_SKY_BATTLE);
+    bool32 isBXPY = FlagGet(B_FLAG_BXPY) && BXPY_RETAIN_CHANGES;
+
+    if (!isSkyBattle && !isBXPY)
+        return;
+
     u8 i = 0, j = 0;
     u8 participatedPokemon = VarGet(B_VAR_SKY_BATTLE);
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1558,10 +1566,16 @@ static void SaveChangesToPlayerParty(void)
 
 static void HandleBattleVariantEndParty(void)
 {
-    if (B_FLAG_SKY_BATTLE == 0 || !FlagGet(B_FLAG_SKY_BATTLE))
+    bool32 isNotSkyBattle = !FlagGet(B_FLAG_SKY_BATTLE);
+    bool32 isNotBXPYBattle = !FlagGet(B_FLAG_BXPY);
+
+    if (isNotSkyBattle && isNotBXPYBattle)
         return;
+
     SaveChangesToPlayerParty();
     LoadPlayerParty();
+    BXPY_TryHealAfterBattle();
+    FlagClear(B_FLAG_BXPY);
     FlagClear(B_FLAG_SKY_BATTLE);
 }
 
@@ -1659,7 +1673,7 @@ void BattleSetup_StartRematchBattle(void)
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (GetTrainerBattleType(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_BATTLE_TYPE_DOUBLES)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-    
+
     gMain.savedCallback = CB2_EndRematchBattle;
     DoTrainerBattle();
     ScriptContext_Stop();
@@ -2232,6 +2246,20 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     TRAINER_BATTLE_PARAM.defeatTextB = (u8*)ScriptReadWord(ctx);
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
+
+void BattleSetup_StartBXPYBattle(u32 battleFlags)
+{
+    FlagSet(B_FLAG_BXPY);
+    gBattleTypeFlags = battleFlags;
+    gMain.savedCallback = CB2_EndTrainerBattle;
+
+    CreateBattleStartTask(GetTrainerBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
+    IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
+    TryUpdateGymLeaderRematchFromTrainer();
+
+    ScriptContext_Stop();
+}
 
 void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer)
 {
