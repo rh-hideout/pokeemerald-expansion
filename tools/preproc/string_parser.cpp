@@ -26,6 +26,8 @@
 #include "char_util.h"
 #include "utf8.h"
 
+static const unsigned char TEXT_CONDITION_CHECKGENDER = 0x00;
+
 // Reads a charmap char or escape sequence.
 std::string StringParser::ReadCharOrEscape()
 {
@@ -93,6 +95,81 @@ std::string StringParser::ReadCharOrEscape()
     return sequence;
 }
 
+std::string StringParser::ReadIdentifier()
+{
+    long startPos = m_pos;
+
+    if (!IsIdentifierStartingChar(m_buffer[m_pos]))
+        RaiseError("expected identifier");
+
+    m_pos++;
+
+    while (IsIdentifierChar(m_buffer[m_pos]))
+        m_pos++;
+
+    return std::string(&m_buffer[startPos], m_pos - startPos);
+}
+
+std::string StringParser::ReadConditionalBranch(char delimiter)
+{
+    std::string sequence;
+
+    for (;;)
+    {
+        char c = m_buffer[m_pos];
+
+        if (c == delimiter)
+            return sequence;
+
+        if (c == 0)
+        {
+            if (m_pos >= m_size)
+                RaiseError("unexpected EOF within checkgender expression");
+            else
+                RaiseError("unexpected null character within checkgender expression");
+        }
+
+        if (c == '"')
+            RaiseError("unexpected end of string within checkgender expression");
+
+        if (delimiter == '|' && c == '}')
+            RaiseError("expected '|' before end of checkgender expression");
+
+        if (delimiter == '}' && c == '|')
+            RaiseError("unexpected '|' within checkgender expression");
+
+        sequence += (c == '{') ? ReadBracketedConstants() : ReadCharOrEscape();
+    }
+}
+
+std::string StringParser::ReadCheckgenderExpression()
+{
+    std::string sequence;
+    std::string condition = g_charmap->Constant("CONDITION");
+    std::string conditionElse = g_charmap->Constant("CONDITION_ELSE");
+    std::string conditionEnd = g_charmap->Constant("CONDITION_END");
+
+    if (condition.empty() || conditionElse.empty() || conditionEnd.empty())
+        RaiseError("missing conditional text control constants in charmap");
+
+    m_pos++; // Go past the colon.
+
+    std::string maleBranch = ReadConditionalBranch('|');
+    m_pos++; // Go past the pipe.
+
+    std::string femaleBranch = ReadConditionalBranch('}');
+    m_pos++; // Go past the right curly bracket.
+
+    sequence += condition;
+    sequence += TEXT_CONDITION_CHECKGENDER;
+    sequence += maleBranch;
+    sequence += conditionElse;
+    sequence += femaleBranch;
+    sequence += conditionEnd;
+
+    return sequence;
+}
+
 // Reads a charmap constant, i.e. "{FOO}".
 std::string StringParser::ReadBracketedConstants()
 {
@@ -100,25 +177,39 @@ std::string StringParser::ReadBracketedConstants()
 
     m_pos++; // Assume we're on the left curly bracket.
 
+    long expressionStartPos = m_pos;
+    SkipWhitespace();
+
+    if (IsIdentifierStartingChar(m_buffer[m_pos]))
+    {
+        std::string expressionName = ReadIdentifier();
+        SkipWhitespace();
+
+        if (m_buffer[m_pos] == ':')
+        {
+            if (expressionName == "checkgender")
+                return ReadCheckgenderExpression();
+
+            RaiseError("unsupported text expression '%s'", expressionName.c_str());
+        }
+    }
+
+    m_pos = expressionStartPos;
+
     while (m_buffer[m_pos] != '}')
     {
         SkipWhitespace();
 
         if (IsIdentifierStartingChar(m_buffer[m_pos]))
         {
-            long startPos = m_pos;
+            std::string constantName = ReadIdentifier();
 
-            m_pos++;
-
-            while (IsIdentifierChar(m_buffer[m_pos]))
-                m_pos++;
-
-            std::string sequence = g_charmap->Constant(std::string(&m_buffer[startPos], m_pos - startPos));
+            std::string sequence = g_charmap->Constant(constantName);
 
             if (sequence.length() == 0)
             {
                 m_buffer[m_pos] = 0;
-                RaiseError("unknown constant '%s'", &m_buffer[startPos]);
+                RaiseError("unknown constant '%s'", constantName.c_str());
             }
 
             totalSequence += sequence;

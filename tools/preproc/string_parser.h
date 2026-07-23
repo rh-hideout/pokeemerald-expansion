@@ -46,7 +46,10 @@ private:
     Integer ReadDecimal();
     Integer ReadHex();
     std::string ReadCharOrEscape();
+    std::string ReadIdentifier();
     std::string ReadBracketedConstants();
+    std::string ReadCheckgenderExpression();
+    std::string ReadConditionalBranch(char delimiter);
     void SkipWhitespace();
     void SkipRestOfInteger(int radix);
     void RaiseError(const char* format, ...);
