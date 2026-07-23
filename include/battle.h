@@ -14,6 +14,7 @@
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_util.h"
+#include "battle_setup.h"
 #include "battle_script_commands.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_util2.h"
@@ -997,7 +998,6 @@ extern u8 gDisplayedStringBattle[425];
 extern u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT];
 extern u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13]; //to handle stupidly large z move names
-extern u32 gBattleTypeFlags;
 extern u8 gBattleEnvironment;
 extern u8 *gBattleAnimBgTileBuffer;
 extern u8 *gBattleAnimBgTilemapBuffer;

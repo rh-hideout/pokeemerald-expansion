@@ -1,7 +1,6 @@
 #ifndef GUARD_WILD_ENCOUNTER_OW_H
 #define GUARD_WILD_ENCOUNTER_OW_H
 
-#define OWE_SPAWNS_MAX                  4
 #define OWE_APPROACH_DISTANCE           2
 #define OWE_APPROACH_JUMP_TIMER_MIN     16
 #define OWE_APPROACH_JUMP_TIMER_MAX     64

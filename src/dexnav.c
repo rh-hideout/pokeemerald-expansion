@@ -143,16 +143,16 @@ static void Task_DexNavWaitFadeIn(u8 taskId);
 static void Task_DexNavMain(u8 taskId);
 static void PrintCurrentSpeciesInfo(void);
 // SEARCH
-static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
+static bool8 TryStartHiddenMonFieldEffect(enum WildEncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
 static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16 *moveDst);
 static enum Item DexNavGenerateHeldItem(enum Species species, u8 searchLevel);
 static u8 DexNavGetAbilityNum(enum Species species, u8 searchLevel);
 static u8 DexNavGeneratePotential(u8 searchLevel);
-static u8 DexNavTryGenerateMonLevel(enum Species species, enum EncounterType environment);
-static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType environment);
+static u8 DexNavTryGenerateMonLevel(enum Species species, enum WildEncounterType environment);
+static u8 GetEncounterLevelFromMapData(enum Species species, enum WildEncounterType environment);
 static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move *moves);
 static u8 GetPlayerDistance(s16 x, s16 y);
-static u8 DexNavPickTile(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
+static u8 DexNavPickTile(enum WildEncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
 static void DexNavProximityUpdate(void);
 static void DexNavDrawIcons(void);
 static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel);
@@ -572,7 +572,7 @@ static void DexNavProximityUpdate(void)
 }
 
 //Pick a specific tile based on environment
-static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, bool8 smallScan)
+static bool8 DexNavPickTile(enum WildEncounterType environment, u8 areaX, u8 areaY, bool8 smallScan)
 {
     // area of map to cover starting from camera position {-7, -7}
     s16 topX = gSaveBlock1Ptr->pos.x - SCANSTART_X + (smallScan * 5);
@@ -630,7 +630,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
             weight = 0; // initiliaze weight
             switch (environment)
             {
-            case ENCOUNTER_TYPE_LAND:
+            case WILD_LAND_MONS:
                 if (MetatileBehavior_IsLandWildEncounter(tileBehaviour))
                 {
                     if (currMapType == MAP_TYPE_UNDERGROUND)
@@ -650,7 +650,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
                     }
                 }
                 break;
-            case ENCOUNTER_TYPE_WATER:
+            case WILD_WATER_MONS:
                 if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehaviour))
                 {
                     u8 scale = 320 - (smallScan * 200) - (GetPlayerDistance(topX, topY) / 2);
@@ -693,7 +693,7 @@ static bool8 DexNavPickTile(enum EncounterType environment, u8 areaX, u8 areaY, 
 }
 
 
-static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan)
+static bool8 TryStartHiddenMonFieldEffect(enum WildEncounterType environment, u8 xSize, u8 ySize, bool8 smallScan)
 {
     enum MapType currMapType = GetCurrentMapType();
     u8 fldEffId = 0;
@@ -704,7 +704,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSi
 
         switch (environment)
         {
-        case ENCOUNTER_TYPE_LAND:
+        case WILD_LAND_MONS:
             if (currMapType == MAP_TYPE_UNDERGROUND)
             {
                 fldEffId = FLDEFF_CAVE_DUST;
@@ -734,7 +734,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSi
                     fldEffId = FLDEFF_BERRY_TREE_GROWTH_SPARKLE; //default
             }
             break;
-        case ENCOUNTER_TYPE_WATER:
+        case WILD_WATER_MONS:
             fldEffId = FLDEFF_WATER_SURFACING;
             break;
         default:
@@ -848,7 +848,7 @@ static bool8 InitDexNavSearch(enum Species species, u32 environment)
     // assign non-objects to struct
     sDexNavSearchDataPtr->species = species;
     sDexNavSearchDataPtr->environment = environment;  //updated in DexNavTryGenerateMonLevel if hidden mon
-    sDexNavSearchDataPtr->isHiddenMon = (environment == ENCOUNTER_TYPE_HIDDEN) ? TRUE : FALSE;
+    sDexNavSearchDataPtr->isHiddenMon = (environment == WILD_HIDDEN_MONS) ? TRUE : FALSE;
     sDexNavSearchDataPtr->monLevel = DexNavTryGenerateMonLevel(species, environment);
 
     if (GetFlashLevel() > 0)
@@ -1112,7 +1112,7 @@ bool32 OnStep_DexNavSearch(void)
     }
 
     //Caves and water the Pokémon moves around
-    if ((sDexNavSearchDataPtr->environment == ENCOUNTER_TYPE_WATER || GetCurrentMapType() == MAP_TYPE_UNDERGROUND)
+    if ((sDexNavSearchDataPtr->environment == WILD_WATER_MONS || GetCurrentMapType() == MAP_TYPE_UNDERGROUND)
         && sDexNavSearchDataPtr->proximity < GetMovementProximityBySearchLevel() && sDexNavSearchDataPtr->movementCount < 2
         && !sDexNavSearchDataPtr->hiddenSearch)
     {
@@ -1200,7 +1200,7 @@ static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8
 
 // gets a random level of the species based on map data.
 //if it was a hidden encounter, updates the environment it is to be found from the wildheader encounterRate
-static u8 DexNavTryGenerateMonLevel(enum Species species, enum EncounterType environment)
+static u8 DexNavTryGenerateMonLevel(enum Species species, enum WildEncounterType environment)
 {
     u8 levelBase = GetEncounterLevelFromMapData(species, environment);
     u8 levelBonus = gSaveBlock3Ptr->dexNavChain / 5;
@@ -1467,7 +1467,7 @@ static u8 DexNavGeneratePotential(u8 searchLevel)
     return 0;   // No potential
 }
 
-static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType environment)
+static u8 GetEncounterLevelFromMapData(enum Species species, enum WildEncounterType environment)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
@@ -1478,64 +1478,31 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
     if (headerId == HEADER_NONE)
         return MON_LEVEL_NONEXISTENT;
 
-    switch (environment)
+    if (environment != WILD_LAND_MONS && environment != WILD_WATER_MONS && environment != WILD_HIDDEN_MONS)
     {
-    case ENCOUNTER_TYPE_LAND:    // grass
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-
-        if (landMonsInfo == NULL)
-            return MON_LEVEL_NONEXISTENT; //Hidden Pokémon should only appear on walkable tiles or surf tiles
-
-        for (i = 0; i < LAND_WILD_COUNT; i++)
-        {
-            if (landMonsInfo->wildPokemon[i].species == species)
-            {
-                min = (min < landMonsInfo->wildPokemon[i].minLevel) ? min : landMonsInfo->wildPokemon[i].minLevel;
-                max = (max > landMonsInfo->wildPokemon[i].maxLevel) ? max : landMonsInfo->wildPokemon[i].maxLevel;
-            }
-        }
-        break;
-    case ENCOUNTER_TYPE_WATER:    //water
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-
-        if (waterMonsInfo == NULL)
-            return MON_LEVEL_NONEXISTENT; //Hidden Pokémon should only appear on walkable tiles or surf tiles
-
-        for (i = 0; i < WATER_WILD_COUNT; i++)
-        {
-            if (waterMonsInfo->wildPokemon[i].species == species)
-            {
-                min = (min < waterMonsInfo->wildPokemon[i].minLevel) ? min : waterMonsInfo->wildPokemon[i].minLevel;
-                max = (max > waterMonsInfo->wildPokemon[i].maxLevel) ? max : waterMonsInfo->wildPokemon[i].maxLevel;
-            }
-        }
-        break;
-    case ENCOUNTER_TYPE_HIDDEN:
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
-
-        if (hiddenMonsInfo == NULL)
-            return MON_LEVEL_NONEXISTENT;
-
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
-        {
-            if (hiddenMonsInfo->wildPokemon[i].species == species)
-            {
-                min = (min < hiddenMonsInfo->wildPokemon[i].minLevel) ? min : hiddenMonsInfo->wildPokemon[i].minLevel;
-                max = (max > hiddenMonsInfo->wildPokemon[i].maxLevel) ? max : hiddenMonsInfo->wildPokemon[i].maxLevel;
-            }
-        }
-
-        // use encounter rate to signify is hidden Pokémon are on land or in water
-        if (hiddenMonsInfo->encounterRate == 1)
-            sDexNavSearchDataPtr->environment = ENCOUNTER_TYPE_WATER;
-        else
-            sDexNavSearchDataPtr->environment = ENCOUNTER_TYPE_LAND;
-        break;
-    default:
+        errorf("GetEncounterLevelFromMapData called with invalid environment %d", environment);
         return MON_LEVEL_NONEXISTENT;
+    }
+    timeOfDay = GetTimeOfDayForEncounters(headerId, environment);
+    const struct WildPokemonInfo *wildMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment];
+    if (wildMonsInfo == NULL)
+        return MON_LEVEL_NONEXISTENT; //Hidden Pokémon should only appear on walkable tiles or surf tiles
+
+    for (i = 0; i < gEncounterTableSizes[environment]; i++)
+    {
+        if (wildMonsInfo->wildPokemon[i].species == species)
+        {
+            min = wildMonsInfo->wildPokemon[i].minLevel;
+            max = wildMonsInfo->wildPokemon[i].maxLevel;
+        }
+    }
+    if (environment == WILD_HIDDEN_MONS)
+    {
+        // use encounter rate to signify is hidden Pokémon are on land or in water
+        if (wildMonsInfo->encounterRate == 1)
+            sDexNavSearchDataPtr->environment = WILD_WATER_MONS;
+        else
+            sDexNavSearchDataPtr->environment = WILD_LAND_MONS;
     }
 
     if (max == 0)
@@ -1637,22 +1604,22 @@ static void UpdateCursorPosition(void)
     case ROW_WATER:
         x = ROW_WATER_ICON_X + (24 * sDexNavUiDataPtr->cursorCol);
         y = ROW_WATER_ICON_Y;
-        sDexNavUiDataPtr->environment = ENCOUNTER_TYPE_WATER;
+        sDexNavUiDataPtr->environment = WILD_WATER_MONS;
         break;
     case ROW_LAND_TOP: //land 1
         x = ROW_LAND_ICON_X + (24 * sDexNavUiDataPtr->cursorCol);
         y = ROW_LAND_TOP_ICON_Y;
-        sDexNavUiDataPtr->environment = ENCOUNTER_TYPE_LAND;
+        sDexNavUiDataPtr->environment = WILD_LAND_MONS;
         break;
     case ROW_LAND_BOT: //land 2
         x = ROW_LAND_ICON_X + (24 * sDexNavUiDataPtr->cursorCol);
         y = ROW_LAND_BOT_ICON_Y;
-        sDexNavUiDataPtr->environment = ENCOUNTER_TYPE_LAND;
+        sDexNavUiDataPtr->environment = WILD_LAND_MONS;
         break;
     case ROW_HIDDEN:
         x = ROW_HIDDEN_ICON_X + (24 * sDexNavUiDataPtr->cursorCol);
         y = ROW_HIDDEN_ICON_Y;
-        sDexNavUiDataPtr->environment = ENCOUNTER_TYPE_HIDDEN;
+        sDexNavUiDataPtr->environment = WILD_HIDDEN_MONS;
         break;
     default:
         return;
@@ -1688,99 +1655,27 @@ static void CreateNoDataIcon(s16 x, s16 y)
     CreateSprite(&sNoDataIconTemplate, x, y, 0);
 }
 
-static bool8 CapturedAllLandMons(u32 headerId)
+static bool32 CapturedAllEnvironmentMons(u32 headerId, enum WildEncounterType environment)
 {
-    u16 i;
     enum Species species;
-    int count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, environment);
 
-    const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+    const struct WildPokemonInfo *wildMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment];
 
-    if (landMonsInfo != NULL)
+    if (wildMonsInfo == NULL)
+        return TRUE; //technically, no mon data means you caught them all
+
+    u32 tableSize = gEncounterTableSizes[environment];
+    for (u32 i = 0; i < tableSize; i++)
     {
-        for (i = 0; i < LAND_WILD_COUNT; ++i)
+        species = wildMonsInfo->wildPokemon[i].species;
+        if (species != SPECIES_NONE)
         {
-            species = landMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE)
-            {
-                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
-                    break;
-
-                count++;
-            }
+            if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
+                return FALSE;
         }
-
-        if (i >= LAND_WILD_COUNT && count > 0) //All land mons caught
-            return TRUE;
-        else
-            return FALSE;
     }
-
-    return TRUE;    //technically, no mon data means you caught them all
-}
-
-//Checks if all Pokemon that can be encountered while surfing have been capture
-static bool8 CapturedAllWaterMons(u32 headerId)
-{
-    u32 i;
-    enum Species species;
-    u8 count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-
-    const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-
-    if (waterMonsInfo != NULL)
-    {
-        for (i = 0; i < WATER_WILD_COUNT; ++i)
-        {
-            species = waterMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE)
-            {
-                count++;
-                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
-                    break;
-            }
-        }
-
-        if (i >= WATER_WILD_COUNT && count > 0)
-            return TRUE;
-        else
-            return FALSE;
-    }
-
-    return TRUE;    //technically, no mon data means you caught them all
-}
-
-static bool8 CapturedAllHiddenMons(u32 headerId)
-{
-    u32 i;
-    enum Species species;
-    u8 count = 0;
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
-
-    if (hiddenMonsInfo != NULL)
-    {
-        for (i = 0; i < HIDDEN_WILD_COUNT; ++i)
-        {
-            species = hiddenMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE)
-            {
-                count++;
-                if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
-                    break;
-            }
-        }
-
-        if (i >= HIDDEN_WILD_COUNT && count > 0)
-            return TRUE;
-        else
-            return FALSE;
-    }
-
-    return TRUE;    //technically, no mon data means you caught them all
+    return TRUE; //All mons caught
 }
 
 static void DexNavLoadCapturedAllSymbols(void)
@@ -1791,13 +1686,13 @@ static void DexNavLoadCapturedAllSymbols(void)
 
     LoadCompressedSpriteSheetUsingHeap(&sCapturedAllPokemonSpriteSheet);
 
-    if (CapturedAllLandMons(headerId))
+    if (CapturedAllEnvironmentMons(headerId, WILD_LAND_MONS))
         CreateSprite(&sCaptureAllMonsSpriteTemplate, 152, 58, 0);
 
-    if (CapturedAllWaterMons(headerId))
+    if (CapturedAllEnvironmentMons(headerId, WILD_WATER_MONS))
         CreateSprite(&sCaptureAllMonsSpriteTemplate, 139, 17, 0);
 
-    if (CapturedAllHiddenMons(headerId))
+    if (CapturedAllEnvironmentMons(headerId, WILD_HIDDEN_MONS))
         CreateSprite(&sCaptureAllMonsSpriteTemplate, 114, 123, 0);
 }
 
@@ -1832,7 +1727,7 @@ static void CB1_DexNavSearchCallback(void)
 
 static void Task_DexNavExitAndSearch(u8 taskId)
 {
-    DespawnAllOverworldWildEncounters(OWE_GENERATED, 0);
+    DespawnAllOverworldWildEncounters(OWE_GENERATED, FALSE);
     DexNavGuiFreeResources();
     DestroyTask(taskId);
     SetMainCallback1(CB1_DexNavSearchCallback);
@@ -1895,59 +1790,40 @@ static bool8 SpeciesInArray(enum Species species, u8 section)
 // get unique wild encounters on current map
 static void DexNavLoadEncounterData(void)
 {
-    u8 grassIndex = 0;
-    u8 waterIndex = 0;
-    u8 hiddenIndex = 0;
     enum Species species;
-    u32 i;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
 
     if (headerId == HEADER_NONE)
         return;
 
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-    const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-    const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-    const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+    struct {
+        enum WildEncounterType environment;
+        enum Species *speciesArray;
+    } tmpStruct[3] = {
+        {WILD_LAND_MONS, sDexNavUiDataPtr->landSpecies},
+        {WILD_WATER_MONS, sDexNavUiDataPtr->waterSpecies},
+        {WILD_HIDDEN_MONS, sDexNavUiDataPtr->hiddenSpecies},
+    };
 
-    // nop struct data
-    memset(sDexNavUiDataPtr->landSpecies, 0, sizeof(sDexNavUiDataPtr->landSpecies));
-    memset(sDexNavUiDataPtr->waterSpecies, 0, sizeof(sDexNavUiDataPtr->waterSpecies));
-    memset(sDexNavUiDataPtr->hiddenSpecies, 0, sizeof(sDexNavUiDataPtr->hiddenSpecies));
-
-    // land mons
-    if (landMonsInfo != NULL && landMonsInfo->encounterRate != 0)
+    for (u32 i = 0; i < 3; i++)
     {
-        for (i = 0; i < LAND_WILD_COUNT; i++)
-        {
-            species = landMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE && !SpeciesInArray(species, 0))
-                sDexNavUiDataPtr->landSpecies[grassIndex++] = landMonsInfo->wildPokemon[i].species;
-        }
-    }
+        enum WildEncounterType environment = tmpStruct[i].environment;
+        enum Species *speciesArray = tmpStruct[i].speciesArray;
+        u32 tableSize = gEncounterTableSizes[environment];
 
-    // water mons
-    if (waterMonsInfo != NULL && waterMonsInfo->encounterRate != 0)
-    {
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        timeOfDay = GetTimeOfDayForEncounters(headerId, environment);
+        const struct WildPokemonInfo *wildMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment];
+        memset(speciesArray, 0, sizeof(enum Species) * tableSize);
+        if (wildMonsInfo != NULL && wildMonsInfo->encounterRate != 0)
         {
-            species = waterMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE && !SpeciesInArray(species, 1))
-                sDexNavUiDataPtr->waterSpecies[waterIndex++] = waterMonsInfo->wildPokemon[i].species;
-        }
-    }
-
-    // hidden mons
-    if (hiddenMonsInfo != NULL) // no encounter rate check since 0 means land, 1 means water encounters
-    {
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
-        {
-            species = hiddenMonsInfo->wildPokemon[i].species;
-            if (species != SPECIES_NONE && !SpeciesInArray(species, 2))
-                sDexNavUiDataPtr->hiddenSpecies[hiddenIndex++] = hiddenMonsInfo->wildPokemon[i].species;
+            u32 count = 0;
+            for (u32 j = 0; j < tableSize; j++)
+            {
+                species = wildMonsInfo->wildPokemon[j].species;
+                if (species != SPECIES_NONE && !SpeciesInArray(species, i))
+                    speciesArray[count++] = species;
+            }
         }
     }
 }
@@ -2234,7 +2110,7 @@ static bool8 DexNav_DoGfxSetup(void)
         DexNav_InitWindows();
         sDexNavUiDataPtr->cursorRow = ROW_LAND_TOP;
         sDexNavUiDataPtr->cursorCol = 0;
-        sDexNavUiDataPtr->environment = ENCOUNTER_TYPE_LAND;
+        sDexNavUiDataPtr->environment = WILD_LAND_MONS;
         gMain.state++;
         break;
     case 7:
@@ -2489,13 +2365,13 @@ bool32 TryFindHiddenPokemon(void)
         u32 headerId = GetCurrentMapWildMonHeaderId();
         u8 index;
         enum Species species;
-        enum EncounterType environment;
+        enum WildEncounterType environment;
 
         if (headerId == HEADER_NONE)
             return FALSE;
 
-        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_HIDDEN_MONS);
+        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay][WILD_HIDDEN_MONS];
         bool8 isHiddenMon = FALSE;
 
         // while you can still technically find hidden Pokémon if there are not hidden-only Pokémon on a map,
@@ -2505,52 +2381,28 @@ bool32 TryFindHiddenPokemon(void)
 
         // encounter rate signifies surfing (1) or land mons (0)!
         // again, for simplicity
-        switch (hiddenMonsInfo->encounterRate)
-        {
-        case 0: // land
-            // there are surely better ways to do this, but this allows greatest flexibility
-            if (Random() % 100 < HIDDEN_MON_PROBABILTY)
-            {
-                index = ChooseHiddenMonIndex();
-                if (index == 0xFF)
-                    return FALSE;//no hidden info
-                species = hiddenMonsInfo->wildPokemon[index].species;
-                isHiddenMon = TRUE;
-                environment = ENCOUNTER_TYPE_HIDDEN;
-            }
-            else
-            {
-                species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
-                environment = ENCOUNTER_TYPE_LAND;
-            }
-            break;
-        case 1: // water
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-            {
-                if (Random() % 100 < HIDDEN_MON_PROBABILTY)
-                {
-                    index = ChooseHiddenMonIndex();
-                    if (index == 0xFF)
-                        return FALSE;//no hidden info
-                    species = hiddenMonsInfo->wildPokemon[index].species;
-                    isHiddenMon = TRUE;
-                    environment = ENCOUNTER_TYPE_HIDDEN;
-                }
-                else
-                {
-                    species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
-                    environment = ENCOUNTER_TYPE_WATER;
-
-                }
-            }
-            else
-            {
-                // not surfing -> can't find hidden water mons
-                return FALSE;
-            }
-            break;
-        default:
+        if (hiddenMonsInfo->encounterRate == 0)
+            environment = WILD_LAND_MONS;
+        else if (hiddenMonsInfo->encounterRate == 1)
+            environment = WILD_WATER_MONS;
+        else
             return FALSE;
+
+        if (environment == WILD_WATER_MONS && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+            return FALSE;
+
+        if (RandomPercentage(RNG_NONE, HIDDEN_MON_PROBABILTY))
+        {
+            index = ChooseHiddenMonIndex();
+            if (index == 0xFF)
+                return FALSE;//no hidden info
+            species = hiddenMonsInfo->wildPokemon[index].species;
+            isHiddenMon = TRUE;
+            environment = WILD_HIDDEN_MONS;
+        }
+        else
+        {
+            species = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment]->wildPokemon[ChooseWildMonIndex(environment)].species;
         }
 
         if (species == SPECIES_NONE)

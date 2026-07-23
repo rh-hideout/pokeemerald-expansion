@@ -142,7 +142,6 @@ EWRAM_DATA u8 gDisplayedStringBattle[425] = {0}; // Increased in size to fit Jua
 EWRAM_DATA u8 gBattleTextBuff1[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff2[TEXT_BUFF_ARRAY_COUNT] = {0};
 EWRAM_DATA u8 gBattleTextBuff3[TEXT_BUFF_ARRAY_COUNT + 13] = {0};   // expanded for stupidly long z move names
-EWRAM_DATA u32 gBattleTypeFlags = 0;
 EWRAM_DATA u8 gBattleEnvironment = 0;
 EWRAM_DATA struct MultiPartnerMenuPokemon *gMultiPartnerParty = NULL;
 EWRAM_DATA u8 *gBattleAnimBgTileBuffer = NULL;

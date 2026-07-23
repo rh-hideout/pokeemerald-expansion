@@ -171,6 +171,14 @@ u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights);
 __attribute__((weak, alias("RandomElementArrayDefault")))
 const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count);
 
+s32 RandomSignedUniform(enum RandomTag tag, s32 lo, s32 hi)
+{
+    if (lo < 0)
+        return RandomUniformDefault(tag, 0, hi - lo) + lo;
+    else
+        return RandomUniformDefault(tag, lo, hi);
+}
+
 u32 RandomUniformDefault(enum RandomTag tag, u32 lo, u32 hi)
 {
     assertf(lo <= hi);
@@ -213,7 +221,7 @@ const void *RandomElementArrayDefault(enum RandomTag tag, const void *array, siz
 }
 
 // Returns a random index according to a list of weights
-u8 RandomWeightedIndex(u8 *weights, u8 length)
+u8 RandomWeightedIndex(const u8 *weights, u8 length)
 {
     u32 i;
     u16 randomValue;

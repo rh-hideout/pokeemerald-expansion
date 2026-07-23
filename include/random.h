@@ -304,12 +304,13 @@ u32 RandomUniformExcept(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
 u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArray(enum RandomTag, const void *array, size_t size, size_t count);
 
+s32 RandomSignedUniform(enum RandomTag tag, s32 lo, s32 hi);
 u32 RandomUniformDefault(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExceptDefault(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
 u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u16 *weights);
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
-u8 RandomWeightedIndex(u8 *weights, u8 length);
+u8 RandomWeightedIndex(const u8 *weights, u8 length);
 
 u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
