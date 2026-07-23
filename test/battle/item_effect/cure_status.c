@@ -754,3 +754,21 @@ SINGLE_BATTLE_TEST("Full Heal, Heal Powder and Local Specialties heal a battler 
         EXPECT(player->volatiles.confusionTurns == 0);
     }
 }
+
+SINGLE_BATTLE_TEST("Paralyze Heal has no effect if the target is not paralysed")
+{
+    GIVEN {
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        ASSUME(gItemsInfo[ITEM_PARALYZE_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_PARALYZE_HEAL, 1);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_PARALYZE_HEAL, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_POISON);
+        EXPECT(CheckBagHasItem(ITEM_PARALYZE_HEAL, 1));
+    }
+}

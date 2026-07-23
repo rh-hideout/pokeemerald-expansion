@@ -205,3 +205,20 @@ SINGLE_BATTLE_TEST("Items can restore a battler's HP by a percentage")
         HP_BAR(player, damage: -min(399, 400 * percentage / 100));
     }
 }
+
+SINGLE_BATTLE_TEST("Potion has no effect if the target is full hp")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_POTION, 1);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POTION); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_POTION, 1));
+    }
+}
