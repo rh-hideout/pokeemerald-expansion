@@ -3460,8 +3460,6 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
              && !NoAliveMonsForEitherParty())
             {
-                enum BattleSide side = GetBattlerSide(battlerDef);
-
                 if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                 {
                     gBattlerAbility = battlerDef;
