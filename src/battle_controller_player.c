@@ -432,7 +432,7 @@ static void OpenBattleStatusMenu(enum BattlerId battler)
     {
         gBattlerControllerFuncs[battler] = WaitForBattleStatusMenu;
         CloseMainBattleScreen();
-        CB2_BattleStatusMenuFromBattle();
+        CB2_BattleInfoFromBattle();
     }
 }
 
