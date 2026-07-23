@@ -10,7 +10,7 @@
 #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
-#include "battle_status_menu.h"
+#include "battle_info.h"
 #include "bg.h"
 #include "data.h"
 #include "item.h"
