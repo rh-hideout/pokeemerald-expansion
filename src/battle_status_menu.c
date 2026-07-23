@@ -176,9 +176,9 @@ static void TryAddActiveTerrain(enum BattleStatus status, enum BattleSide side);
 static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal);
 static void TryAddActiveFieldStatus(enum BattleStatus status, u32 fieldStatus, u32 timer, u32 totalTimer, enum BattleSide side);
 static void TryAddActiveSideStatus(enum BattleStatus status, u32 sideStatus, u32 timer, u32 totalTimer, enum BattleSide side);
-static void TryAddActiveStatus(enum BattleStatus status, u32 status, enum BattleSide side);
+static void TryAddActiveStatus(enum BattleStatus status, u32 timerOrFlag, enum BattleSide side);
 static void TryAddActiveStatusTimer(enum BattleStatus status, u32 remaining, u32 baseTotal, enum BattleSide side);
-static void TryAddActiveStatusInternal(enum BattleStatus status, u32 remaining, u32 baseTotal, enum BattleSide side, bool32 isTimer);
+static void TryAddActiveStatusInternal(enum BattleStatus status, u32 timerOrFlag, u32 baseTotal, enum BattleSide side, bool32 isTimer);
 static enum BattleStatus GetStatusEffectFromWeather(void);
 static enum BattleStatus GetStatusEffectFromTerrain(void);
 static enum BattleStatus GetStatusEffectFromNonVolatile(enum BattlerId battler);
@@ -2206,7 +2206,7 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddActiveStatus(M_STATUS_CHARGE, vol->chargeTimer, side);
     TryAddActiveStatus(M_STATUS_BOUND, vol->wrapTurns, side);
     TryAddActiveStatus(M_STATUS_RAMPAGING, vol->rampageTurns, side);
-    TryAddActiveStatus(M_STATUS_CONFUSION, vol->infiniteConfusion, side);
+    TryAddActiveStatus(M_STATUS_CONFUSION, vol->confusionTimer, side);
     TryAddActiveStatus(M_STATUS_CANT_ESCAPE, vol->escapePrevention, side);
     TryAddActiveStatusTimer(M_STATUS_DROWSY, vol->yawn, 2, side);
     TryAddActiveStatusTimer(M_STATUS_HEALING_PREVENTED, vol->healBlockTimer, B_HEAL_BLOCK_TIMER, side);
@@ -2330,10 +2330,10 @@ static void TryAddActiveSideStatus(enum BattleStatus status, u32 sideStatus, u32
     }
 }
 
-static void TryAddActiveStatus(enum BattleStatus status, u32 status, enum BattleSide side)
+static void TryAddActiveStatus(enum BattleStatus status, u32 timerOrFlag, enum BattleSide side)
 {
     bool32 isNotTimer = FALSE;
-    TryAddActiveStatusInternal(status, status, 0, side, isNotTimer);
+    TryAddActiveStatusInternal(status, timerOrFlag, 0, side, isNotTimer);
 }
 
 static void TryAddActiveStatusTimer(enum BattleStatus status, u32 remaining, u32 baseTotal, enum BattleSide side)
@@ -2342,22 +2342,22 @@ static void TryAddActiveStatusTimer(enum BattleStatus status, u32 remaining, u32
     TryAddActiveStatusInternal(status, remaining, baseTotal, side, isTimer);
 }
 
-static void TryAddActiveStatusInternal(enum BattleStatus status, u32 remaining, u32 baseTotal, enum BattleSide side, bool32 isTimer)
+static void TryAddActiveStatusInternal(enum BattleStatus status, u32 timerOrFlag, u32 baseTotal, enum BattleSide side, bool32 isTimer)
 {
     if (status == M_STATUS_NONE)
         return;
 
-    if (remaining == 0) // also acts as a flag check
+    if (timerOrFlag == 0)
         return;
 
     if (baseTotal == 0)
-        baseTotal = remaining;
+        baseTotal = timerOrFlag;
 
     struct BattleStatusEntry entry = {0};
 
     if (isTimer)
     {
-        entry.durationRemaining = remaining;
+        entry.durationRemaining = timerOrFlag;
         entry.baseTotalDuration = baseTotal;
         entry.durationKnown = TRUE;
     }
@@ -2390,8 +2390,9 @@ static bool32 DetailGetDisplayedDuration(const struct BattleStatusEntry *entry, 
 
 static enum BattleStatus GetStatusEffectFromWeather(void)
 {
-    switch (GetCurrentBattleWeather(gBattleWeather))
+    switch (GetBattleWeather(gBattleWeather))
     {
+    case BATTLE_WEATHER_NONE:          return M_STATUS_NONE;
     case BATTLE_WEATHER_RAIN:          return M_STATUS_RAIN;
     case BATTLE_WEATHER_RAIN_DOWNPOUR: return M_STATUS_RAIN;
     case BATTLE_WEATHER_RAIN_PRIMAL:   return M_STATUS_HEAVY_RAIN;
