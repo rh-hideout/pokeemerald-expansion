@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
         TURN { MOVE(player, move); }
     } SCENE {
         if (item != ITEM_NONE) {
+            ITEM_POPUP(opponent, item);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);

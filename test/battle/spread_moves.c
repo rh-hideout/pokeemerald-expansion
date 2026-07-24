@@ -72,6 +72,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
+        ITEM_POPUP(opponentLeft, ITEM_CHILAN_BERRY);
+        ITEM_POPUP(opponentRight, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
