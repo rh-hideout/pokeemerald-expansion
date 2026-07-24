@@ -3,7 +3,7 @@
 The Battle Status Meny is a replica from modern games. 
 It shows the current snapshot of the battle. 
 That includes Pokémon's stat stages, volatile conditions, 
-ability/item for the player side, and field statuses.
+Ability/Item for the player side, and field statuses.
 
 -- TODO: explain the enums and description
 ### How to add new field statuses or volatiles to the menu
