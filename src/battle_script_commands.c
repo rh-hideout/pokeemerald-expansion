@@ -10845,7 +10845,7 @@ void BS_ItemIncreaseStat(void)
         bool32 doStatChange = FALSE;
         for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
         {
-            if (CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
+            if (!CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(gBattlerAttacker)))
             {
                 doStatChange = TRUE;
                 break;
