@@ -3139,10 +3139,9 @@ static void SpriteCB_BattleStatusHint(struct Sprite *sprite)
         if (sprite->x == BATTLE_SPRITE_HINT_X_0)
             DestroyBattleStatusHintGfx(sprite);
     }
-    else
+    else if (sprite->x != BATTLE_SPRITE_HINT_X_F)
     {
-        if (sprite->x != BATTLE_SPRITE_HINT_X_F)
-            sprite->x++;
+        sprite->x++;
     }
 }
 
