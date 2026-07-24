@@ -1,6 +1,6 @@
 ## How to use the battle status menu
 
-The Battle Status Meny is a replica from modern games. 
+The Battle Status Menu is a replica from modern games. 
 It shows the current snapshot of the battle. 
 That includes Pokémon's stat stages, volatile conditions, 
 Ability/Item for the player side, and field statuses.
