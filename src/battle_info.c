@@ -165,9 +165,19 @@ static void DetailCycleBattler(s8 direction);
 static void DetailInitEffectsList(void);
 static void DetailBuildActiveEffectsForBattler(void);
 
+struct DisplayTimer
+{
+    s8 baseTotal;
+    s8 extendedTotal;
+    s8 remaining;
+};
+
 static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide side);
 static void TryAddActiveTerrain(enum BattleInfoLabels label, enum BattleSide side);
-static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal);
+
+static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 remaining, u32 extendedTotal, enum BattleSide side);
+
+static void SetRemainingDuration(struct DisplayTimer *timer);
 static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus, u32 timer, u32 totalTimer, enum BattleSide side);
 static void TryAddActiveSideStatus(enum BattleInfoLabels label, u32 sideStatus, u32 timer, u32 totalTimer, enum BattleSide side);
 static void TryAddActiveStatus(enum BattleInfoLabels label, u32 timerOrFlag, enum BattleSide side);
@@ -2151,10 +2161,20 @@ static void DetailBuildActiveEffectsForBattler(void)
     enum BattlerId battler = GetSelectedBattler();
     enum BattleSide side = GetBattlerSide(battler);
 
+    struct FieldTimer *fieldStatus = &gFieldTimers;
+    struct SideTimer *sideStatus = &gSideTimers[side];
+    struct Volatiles *vol = &gBattleMons[battler].volatiles;
+
+    bool32 critBoost = (vol->focusEnergy || vol->dragonCheer);
+    bool32 foresight = (vol->foresight || vol->miracleEye);
+
+
     TryAddActiveWeather(GetStatusEffectFromWeather(), side);
     TryAddActiveTerrain(GetStatusEffectFromTerrain(), side);
+    TryAddActiveScreen(INFO_LIGHT_SCREEN, SIDE_STATUS_LIGHTSCREEN, sideStatus->lightscreenTimer, sideStatus->lightscreenTimerTotal, side);
+    TryAddActiveScreen(INFO_REFLECT, SIDE_STATUS_REFLECT, sideStatus->reflectTimer, sideStatus->reflectTimerTotal, side);
+    TryAddActiveScreen(INFO_AURORA_VEIL, SIDE_STATUS_AURORA_VEIL, sideStatus->auroraVeilTimer, sideStatus->auroraVeilTimerTotal, side);
 
-    struct FieldTimer *fieldStatus = &gFieldTimers;
     TryAddActiveFieldStatus(INFO_TRICK_ROOM, STATUS_FIELD_TRICK_ROOM, fieldStatus->trickRoomTimer, 5, side);
     TryAddActiveFieldStatus(INFO_MAGIC_ROOM, STATUS_FIELD_MAGIC_ROOM, fieldStatus->magicRoomTimer, 5, side);
     TryAddActiveFieldStatus(INFO_WONDER_ROOM, STATUS_FIELD_WONDER_ROOM, fieldStatus->wonderRoomTimer, 5, side);
@@ -2163,14 +2183,10 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddActiveFieldStatus(INFO_WATER_SPORT, STATUS_FIELD_WATERSPORT, fieldStatus->waterSportTimer, 5, side);
     TryAddActiveFieldStatus(INFO_FAIRY_LOCK, STATUS_FIELD_FAIRY_LOCK, fieldStatus->fairyLockTimer, 2, side);
 
-    struct SideTimer *sideStatus = &gSideTimers[side];
     TryAddActiveSideStatus(INFO_MIST, SIDE_STATUS_MIST, sideStatus->mistTimer, 5, side);
     TryAddActiveSideStatus(INFO_SAFEGUARD, SIDE_STATUS_SAFEGUARD, sideStatus->safeguardTimer, 5, side);
     TryAddActiveSideStatus(INFO_LUCKY_CHANT, SIDE_STATUS_LUCKY_CHANT, sideStatus->luckyChantTimer, 5, side);
     TryAddActiveSideStatus(INFO_TAILWIND, SIDE_STATUS_TAILWIND, sideStatus->tailwindTimer, (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3), side);
-    TryAddActiveSideStatus(INFO_LIGHT_SCREEN, SIDE_STATUS_LIGHTSCREEN, sideStatus->lightscreenTimer, sideStatus->lightscreenTimerTotal, side);
-    TryAddActiveSideStatus(INFO_REFLECT, SIDE_STATUS_REFLECT, sideStatus->reflectTimer, sideStatus->reflectTimerTotal, side);
-    TryAddActiveSideStatus(INFO_AURORA_VEIL, SIDE_STATUS_AURORA_VEIL, sideStatus->auroraVeilTimer, sideStatus->auroraVeilTimerTotal, side);
     TryAddActiveSideStatus(INFO_RAINBOW, SIDE_STATUS_RAINBOW, sideStatus->rainbowTimer, 4, side);
     TryAddActiveSideStatus(INFO_SWAMP, SIDE_STATUS_SWAMP, sideStatus->swampTimer, 4, side);
     TryAddActiveSideStatus(INFO_SEA_OF_FIRE, SIDE_STATUS_SEA_OF_FIRE, sideStatus->seaOfFireTimer, 4, side);
@@ -2182,7 +2198,6 @@ static void DetailBuildActiveEffectsForBattler(void)
 
     TryAddActiveStatus(GetStatusEffectFromNonVolatile(battler), PERMANENT_STATUS, side);
 
-    struct Volatiles *vol = &gBattleMons[battler].volatiles;
     TryAddActiveStatus(INFO_INFATUATION, vol->infatuation, side);
     TryAddActiveStatus(INFO_NIGHTMARE, vol->nightmare, side);
     TryAddActiveStatus(INFO_TORMENT, vol->torment, side);
@@ -2205,6 +2220,8 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddActiveStatus(INFO_RAMPAGING, vol->rampageTurns, side);
     TryAddActiveStatus(INFO_CONFUSION, vol->confusionTimer, side);
     TryAddActiveStatus(INFO_CANT_ESCAPE, vol->escapePrevention, side);
+    TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
+    TryAddActiveStatus(INFO_IDENTIFIED, foresight, side);
     TryAddActiveStatusTimer(INFO_DROWSY, vol->yawn, 2, side);
     TryAddActiveStatusTimer(INFO_HEALING_PREVENTED, vol->healBlockTimer, B_HEAL_BLOCK_TIMER, side);
     TryAddActiveStatusTimer(INFO_EMBARGO, vol->embargoTimer, B_EMBARGO_TIMER, side);
@@ -2217,12 +2234,6 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddActiveStatusTimer(INFO_SLOW_START, vol->slowStartTimer, B_SLOW_START_TIMER, side);
     TryAddActiveStatusTimer(INFO_SYRUPY, vol->syrupBombTimer, B_SYRUP_BOMB_TIMER, side);
     TryAddActiveStatusTimer(INFO_WISH, gBattleStruct->wish[battler].counter, 2, side);
-
-    bool32 critBoost = (vol->focusEnergy || vol->dragonCheer);
-    TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
-
-    bool32 foresight = (vol->foresight || vol->miracleEye);
-    TryAddActiveStatus(INFO_IDENTIFIED, foresight, side);
 
     if (B_DISABLE_TURNS >= GEN_5)
         TryAddActiveStatusTimer(INFO_MOVE_DISABLED, vol->disableTimer, B_DISABLE_TIMER, side);
@@ -2244,14 +2255,21 @@ static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide sid
 {
     if (gBattleStruct->weatherDuration > 0)
     {
-        u32 baseTotal = 5;
-        u32 extendedTotal = gBattleStruct->weatherDurationTotal;
-        if (gBattleStruct->weatherSide == B_SIDE_PLAYER)
-            baseTotal = extendedTotal;
-        u32 remaining = gBattleStruct->weatherDuration;
-        remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+        struct DisplayTimer timer = {
+            .baseTotal = 5,
+            .extendedTotal = gBattleStruct->weatherDurationTotal,
+            .remaining = gBattleStruct->weatherDuration,
+        };
 
-        TryAddActiveStatusTimer(label, remaining, baseTotal, side);
+        if (gBattleStruct->weatherSide == B_SIDE_PLAYER)
+        {
+            TryAddActiveStatusTimer(label, timer.remaining, timer.extendedTotal, side);
+        }
+        else
+        {
+            SetRemainingDuration(&timer);
+            TryAddActiveStatusTimer(label, timer.remaining, timer.baseTotal, side);
+        }
     }
     else
     {
@@ -2263,14 +2281,21 @@ static void TryAddActiveTerrain(enum BattleInfoLabels status, enum BattleSide si
 {
     if (gFieldTimers.terrainTimer > 0)
     {
-        u32 baseTotal = 5;
-        u32 extendedTotal = gFieldTimers.terrainTimerTotal;
-        if (gFieldTimers.terrainSide == B_SIDE_PLAYER)
-            baseTotal = extendedTotal;
-        u32 remaining = gFieldTimers.terrainTimer;
-        remaining = GetRemainingDuration(remaining, baseTotal, extendedTotal);
+        struct DisplayTimer timer = {
+            .baseTotal = 5,
+            .extendedTotal = gFieldTimers.terrainTimerTotal,
+            .remaining = gFieldTimers.terrainTimer,
+        };
 
-        TryAddActiveStatusTimer(status, remaining, baseTotal, side);
+        if (gFieldTimers.terrainSide == B_SIDE_PLAYER)
+        {
+            TryAddActiveStatusTimer(status, timer.remaining, timer.extendedTotal, side);
+        }
+        else
+        {
+            SetRemainingDuration(&timer);
+            TryAddActiveStatusTimer(status, timer.remaining, timer.baseTotal, side);
+        }
     }
     else
     {
@@ -2278,20 +2303,43 @@ static void TryAddActiveTerrain(enum BattleInfoLabels status, enum BattleSide si
     }
 }
 
-// TODO
-static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal)
+static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 remaining, u32 extendedTotal, enum BattleSide side)
 {
-    if (extendedTotal > baseTotal && remaining <= (extendedTotal - baseTotal))
+    if (remaining > 0)
     {
-        baseTotal = extendedTotal;
+        struct DisplayTimer timer = {
+            .baseTotal = 5,
+            .extendedTotal = extendedTotal,
+            .remaining = remaining,
+        };
+
+        if (side == B_SIDE_PLAYER)
+        {
+            TryAddActiveStatusTimer(label, timer.remaining, timer.extendedTotal, side);
+        }
+        else
+        {
+            SetRemainingDuration(&timer);
+            TryAddActiveSideStatus(label, sideStatus, timer.remaining, timer.baseTotal, side);
+        }
     }
     else
     {
-        if (extendedTotal == 8)
-            remaining = remaining - (extendedTotal - baseTotal);
+        TryAddActiveSideStatus(label, sideStatus, PERMANENT_STATUS, 0, side);
     }
+}
 
-    return remaining;
+static void SetRemainingDuration(struct DisplayTimer *timer)
+{
+    if (timer->extendedTotal == timer->baseTotal)
+        return;
+
+    s32 durationDifference = timer->extendedTotal - timer->baseTotal;
+
+    if (timer->remaining == durationDifference)
+        timer->baseTotal = timer->extendedTotal;
+    else
+        timer->remaining = timer->remaining - durationDifference;
 }
 
 static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus, u32 timer, u32 totalTimer, enum BattleSide side)
