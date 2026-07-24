@@ -14178,7 +14178,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_POKEMON_BOX_LINK] =
     {
-        .name = ITEM_NAME("[{PKMN} Box Link]"),
+        .name = ITEM_NAME("{PKMN} [Box Link]"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Allows access to\n"
@@ -14257,7 +14257,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_POKEBLOCK_CASE] =
     {
-        .name = ITEM_NAME("[{POKEBLOCK} Case]"),
+        .name = ITEM_NAME("{POKEBLOCK} [Case]"),
         .price = 0,
         .description = COMPOUND_STRING(
             "A case for holding\n"
