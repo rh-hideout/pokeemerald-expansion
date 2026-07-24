@@ -203,6 +203,8 @@ static void Task_FreeAbilityPopUpGfx(u8);
 static void SpriteCB_LastUsedBall(struct Sprite *);
 static void SpriteCB_LastUsedBallWin(struct Sprite *);
 static void SpriteCB_MoveInfoWin(struct Sprite *sprite);
+static void SpriteCB_BattleStatusHint(struct Sprite *sprite);
+static bool32 ShouldUseDoublesBattleStatusHintPosition(void);
 
 static const struct OamData sOamData_64x32 =
 {
@@ -689,6 +691,7 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     gBattleStruct->ballSpriteIds[0] = MAX_SPRITES;
     gBattleStruct->ballSpriteIds[1] = MAX_SPRITES;
     gBattleStruct->moveInfoSpriteId = MAX_SPRITES;
+    gBattleStruct->battleStatusHintSpriteId = MAX_SPRITES;
 
     return healthboxLeftSpriteId;
 }
@@ -2816,6 +2819,7 @@ static const struct SpriteTemplate sSpriteTemplate_LastUsedBallWindow =
 };
 
 #define MOVE_INFO_WINDOW_TAG 0xE722
+#define BATTLE_STATUS_HINT_WINDOW_TAG 0xE723
 
 static const struct OamData sOamData_MoveInfoWindow =
 {
@@ -2840,6 +2844,25 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_MoveInfoWindow,
     .callback = SpriteCB_MoveInfoWin
+};
+
+#if B_BATTLE_STATUS_MENU_BUTTON == R_BUTTON
+static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_r.4bpp");
+#else
+static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_l.4bpp");
+#endif
+
+static const struct SpriteSheet sSpriteSheet_BattleStatusWindow =
+{
+    sBattleStatusWindowGfx, sizeof(sBattleStatusWindowGfx), BATTLE_STATUS_HINT_WINDOW_TAG
+};
+
+static const struct SpriteTemplate sSpriteTemplate_BattleStatusHint =
+{
+    .tileTag = BATTLE_STATUS_HINT_WINDOW_TAG,
+    .paletteTag = TAG_ABILITY_POP_UP,
+    .oam = &sOamData_MoveInfoWindow,
+    .callback = SpriteCB_BattleStatusHint
 };
 
 #if B_LAST_USED_BALL_BUTTON == R_BUTTON && B_LAST_USED_BALL_CYCLE == TRUE
@@ -2875,6 +2898,10 @@ static const struct SpriteSheet sSpriteSheet_MoveInfoWindow =
 #define LAST_BALL_WIN_X_F       (LAST_USED_BALL_X_F - 0)
 #define LAST_BALL_WIN_X_0       (LAST_USED_BALL_X_0 - 0)
 #define LAST_USED_WIN_Y         (LAST_USED_BALL_Y - 8)
+#define BATTLE_SPRITE_HINT_X_F  LAST_BALL_WIN_X_F
+#define BATTLE_SPRITE_HINT_X_0  LAST_BALL_WIN_X_0
+#define BATTLE_SPRITE_HINT_Y_SINGLE 92
+#define BATTLE_SPRITE_HINT_Y_DOUBLE 102
 
 #define sHide  data[0]
 #define sTimer  data[1]
@@ -2897,6 +2924,17 @@ bool32 CanThrowLastUsedBall(void)
     if (IsVictoryCatch())
         return FALSE;
     return TRUE;
+}
+
+static bool32 ShouldUseDoublesBattleStatusHintPosition(void)
+{
+    if (IsDoubleBattle())
+        return TRUE;
+
+    if (B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+        return FALSE;
+
+    return CanThrowLastUsedBall();
 }
 
 void TryAddLastUsedBallItemSprites(void)
@@ -2952,7 +2990,8 @@ void TryAddLastUsedBallItemSprites(void)
 static void DestroyLastUsedBallWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(TAG_LAST_BALL_WINDOW);
-    if (GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF)
+    if (GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF
+     && GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
         FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
     DestroySprite(sprite);
     gBattleStruct->ballSpriteIds[1] = MAX_SPRITES;
@@ -2990,13 +3029,50 @@ void TryToHideMoveInfoWindow(void)
     gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
 }
 
+void TryToAddBattleStatusHint(void)
+{
+    if (B_BATTLE_STATUS_MENU_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+        return;
+
+    LoadSpritePalette(&sSpritePalette_AbilityPopUp);
+    if (GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
+        LoadSpriteSheet(&sSpriteSheet_BattleStatusWindow);
+
+    if (gBattleStruct->battleStatusHintSpriteId == MAX_SPRITES)
+    {
+        s16 y = ShouldUseDoublesBattleStatusHintPosition() ? BATTLE_SPRITE_HINT_Y_DOUBLE : BATTLE_SPRITE_HINT_Y_SINGLE;
+        gBattleStruct->battleStatusHintSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusHint,
+                                                               BATTLE_SPRITE_HINT_X_0,
+                                                               y,
+                                                               6);
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
+    }
+}
+
+void TryToHideBattleStatusHint(void)
+{
+    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
+}
+
 static void DestroyMoveInfoWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(MOVE_INFO_WINDOW_TAG);
-    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF)
+    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF
+     && GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
         FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
     DestroySprite(sprite);
     gBattleStruct->moveInfoSpriteId = MAX_SPRITES;
+}
+
+static void DestroyBattleStatusHintGfx(struct Sprite *sprite)
+{
+    FreeSpriteTilesByTag(BATTLE_STATUS_HINT_WINDOW_TAG);
+    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF
+     && GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF)
+        FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
+    DestroySprite(sprite);
+    gBattleStruct->battleStatusHintSpriteId = MAX_SPRITES;
 }
 
 static void SpriteCB_LastUsedBallWin(struct Sprite *sprite)
@@ -3050,6 +3126,22 @@ static void SpriteCB_MoveInfoWin(struct Sprite *sprite)
     {
         if (sprite->x != LAST_BALL_WIN_X_F)
             sprite->x++;
+    }
+}
+
+static void SpriteCB_BattleStatusHint(struct Sprite *sprite)
+{
+    if (sprite->sHide)
+    {
+        if (sprite->x != BATTLE_SPRITE_HINT_X_0)
+            sprite->x--;
+
+        if (sprite->x == BATTLE_SPRITE_HINT_X_0)
+            DestroyBattleStatusHintGfx(sprite);
+    }
+    else if (sprite->x != BATTLE_SPRITE_HINT_X_F)
+    {
+        sprite->x++;
     }
 }
 

@@ -301,6 +301,7 @@ bool32 EndOrContinueWeather(void)
     if (gBattleStruct->weatherDuration > 0 && --gBattleStruct->weatherDuration == 0)
     {
         gBattleWeather = B_WEATHER_NONE;
+        gBattleStruct->weatherDurationTotal = 0;
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             gBattleMons[battler].volatiles.weatherAbilityDone = FALSE;
@@ -2007,6 +2008,8 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
     if (GetConfig(B_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
     {
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
+        gBattleStruct->weatherDuration = 0;
+        gBattleStruct->weatherDurationTotal = 0;
     }
     else
     {
@@ -2019,7 +2022,9 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
             gBattleStruct->weatherDuration = 8;
         else
             gBattleStruct->weatherDuration = 5;
+        gBattleStruct->weatherDurationTotal = gBattleStruct->weatherDuration;
     }
+    gBattleStruct->weatherSide = GetBattlerSide(battler);
 
     if (ability != ABILITY_NONE) // Weather started by Ability
     {
@@ -2062,6 +2067,8 @@ bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain
             gFieldTimers.terrainTimer = 8;
         else
             gFieldTimers.terrainTimer = 5;
+        gFieldTimers.terrainTimerTotal = gFieldTimers.terrainTimer;
+        gFieldTimers.terrainSide = GetBattlerSide(battler);
         gBattleScripting.battler = battler;
         return TRUE;
     }
