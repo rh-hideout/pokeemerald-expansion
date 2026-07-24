@@ -1,4 +1,4 @@
-## Hot to use the battle status menu
+## How to use the battle status menu
 
 The Battle Status Meny is a replica from modern games. 
 It shows the current snapshot of the battle. 
