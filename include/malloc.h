@@ -19,8 +19,8 @@ struct MemBlock
 
     u16 unused_00:4;
 
-    // High 11 bits of location pointer.
-    u16 locationHi:11;
+    // High 11 bits of caller pointer.
+    u16 callerHi:11;
 
     // Magic number used for error checking. Should equal MALLOC_SYSTEM_ID.
     u16 magic;
@@ -28,8 +28,8 @@ struct MemBlock
     // Size of the block (not including this header struct).
     u32 size:18;
 
-    // Low 14 bits of location pointer.
-    u32 locationLo:14;
+    // Low 14 bits of caller pointer.
+    u32 callerLo:14;
 
     // Previous block pointer. Equals sHeapStart if this is the first block.
     struct MemBlock *prev;
@@ -44,32 +44,15 @@ struct MemBlock
 #define HEAP_SIZE 0x1C500
 extern u8 gHeap[HEAP_SIZE];
 
-#if TESTING || !defined(NDEBUG)
-
-#define Alloc(size) Alloc_(size, __FILE__ ":" STR(__LINE__))
-#define AllocUnchecked(size) AllocUnchecked_(size, __FILE__ ":" STR(__LINE__))
-
-#define AllocZeroed(size) AllocZeroed_(size, __FILE__ ":" STR(__LINE__))
-#define AllocZeroedUnchecked(size) AllocZeroedUnchecked_(size, __FILE__ ":" STR(__LINE__))
-
-#else
-
-#define Alloc(size) Alloc_(size, NULL)
-#define AllocUnchecked(size) AllocUnchecked_(size, NULL)
-#define AllocZeroed(size) AllocZeroed_(size, NULL)
-#define AllocZeroedUnchecked(size) AllocZeroedUnchecked_(size, NULL)
-
-#endif
-
-void *Alloc_(u32 size, const char *location);
-void *AllocUnchecked_(u32 size, const char *location);
-void *AllocZeroed_(u32 size, const char *location);
-void *AllocZeroedUnchecked_(u32 size, const char *location);
+void *Alloc(u32 size);
+void *AllocUnchecked(u32 size);
+void *AllocZeroed(u32 size);
+void *AllocZeroedUnchecked(u32 size);
 void Free(void *pointer);
 void InitHeap(void *heapStart, u32 heapSize);
 void PrintHeap(void);
 
 const struct MemBlock *HeapHead(void);
-const char *MemBlockLocation(const struct MemBlock *block);
+const void *MemBlockCaller(const struct MemBlock *block);
 
 #endif // GUARD_ALLOC_H
