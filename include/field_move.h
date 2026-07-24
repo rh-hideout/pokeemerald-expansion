@@ -7,7 +7,7 @@
 struct FieldMoveUnlock
 {
    bool32 (*isUnlockedFunc)(enum FieldMove);
-   const u8* lockedMessage;
+   const u8 *lockedMessage;
 };
 
 enum FieldMoveUnlockType
@@ -39,12 +39,12 @@ static inline bool32 SetUpFieldMove(enum FieldMove fieldMove)
 
 static inline bool32 IsFieldMoveUnlocked(enum FieldMove fieldMove)
 {
-    return  gFieldMoveUnlocks[gFieldMoveInfo[fieldMove].unlockType].isUnlockedFunc(fieldMove);
+    return gFieldMoveUnlocks[gFieldMoveInfo[fieldMove].unlockType].isUnlockedFunc(fieldMove);
 }
 
 static inline const u8 *FieldMove_GetLockedMessage(enum FieldMove fieldMove)
 {
-    return  gFieldMoveUnlocks[gFieldMoveInfo[fieldMove].unlockType].lockedMessage;
+    return gFieldMoveUnlocks[gFieldMoveInfo[fieldMove].unlockType].lockedMessage;
 }
 
 static inline enum Move FieldMove_GetMoveId(enum FieldMove fieldMove)
@@ -59,7 +59,7 @@ static inline u32 FieldMove_GetPartyMsgID(enum FieldMove fieldMove)
 
 static inline bool32 FieldMove_IsVisible(enum FieldMove fieldMove)
 {
-    return (!gFieldMoveInfo[fieldMove].hideIfLocked || IsFieldMoveUnlocked(fieldMove));
+    return !gFieldMoveInfo[fieldMove].hideIfLocked || IsFieldMoveUnlocked(fieldMove);
 }
 
 #endif //GUARD_FIELD_MOVE_H
