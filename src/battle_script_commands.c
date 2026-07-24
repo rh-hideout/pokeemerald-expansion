@@ -10823,13 +10823,18 @@ void BS_ItemCureStatus(void)
 
 void BS_ItemIncreaseStat(void)
 {
-    NATIVE_ARGS();
+    NATIVE_ARGS(u8 *failInstr);
 
     if (gBattlerPartyIndexes[gBattlerAttacker] != gBattleStruct->itemPartyIndex[gBattlerAttacker])
         gBattlerAttacker = BATTLE_PARTNER(gBattlerAttacker);
 
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
     {
+        if (CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+            return;
+        }
         if (B_X_ITEMS_BUFF >= GEN_7)
             SetStatChange(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], 2);
         else
@@ -10837,6 +10842,20 @@ void BS_ItemIncreaseStat(void)
     }
     else
     {
+        bool32 doStatChange = FALSE;
+        for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
+        {
+            if (CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
+            {
+                doStatChange = TRUE;
+                break;
+            }
+        }
+        if (!doStatChange)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+            return;
+        }
         for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
             SetStatChange(gBattlerAttacker, i, 1);
 

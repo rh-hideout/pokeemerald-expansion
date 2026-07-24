@@ -1187,8 +1187,9 @@
 	.4byte \restoreBattlerInstr
 	.endm
 
-	.macro itemincreasestat
+	.macro itemincreasestat failInstr:req
 	callnative BS_ItemIncreaseStat
+	.4byte \failInstr
 	.endm
 
 	.macro itemrestorepp failInstr:req

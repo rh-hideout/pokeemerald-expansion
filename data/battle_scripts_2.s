@@ -122,7 +122,7 @@ BattleScript_ItemHealAndCureStatusEnd::
 
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
-	itemincreasestat
+	itemincreasestat BattleScript_ItemNoEffect
 	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
 	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
