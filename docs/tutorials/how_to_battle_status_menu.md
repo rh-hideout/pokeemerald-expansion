@@ -2,7 +2,7 @@
 
 The Battle Status Meny is a replica from modern games. 
 It shows the current snapshot of the battle. 
-That includes pokemon's stat stages, volatile conditions, 
+That includes Pokémon's stat stages, volatile conditions, 
 ability/item for the player side, and field statuses.
 
 -- TODO: explain the enums and description
