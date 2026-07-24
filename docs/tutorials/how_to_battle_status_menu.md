@@ -28,7 +28,7 @@ static void TryAddActiveStatusTimer(
                 enum BattleSide side
             );
 ```
-`TryAddActiveStatusTimer` one is used for volatiles that expire. 
+`TryAddActiveStatusTimer` is used for volatiles that expire. 
 `remaining` is the time until it runs out. 
 `baseTotal` is the maximum amount of turns.
 
