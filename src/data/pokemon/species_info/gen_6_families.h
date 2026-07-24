@@ -651,8 +651,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .description = COMPOUND_STRING(
             "It can throw bubble-covered pebbles with\n"
             "precise control, hitting empty cans up to\n"
-            "a hundred feet away. [Frogadier]'s swiftness\n"
-            "is unparalleled."),
+            "a hundred feet away. [Frogadier]'s\n"
+            "swiftness is unparalleled."),
         .pokemonScale = 422,
         .pokemonOffset = 12,
         .trainerScale = 256,
@@ -4468,7 +4468,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .height = 10,
         .weight = 210,
         .description = COMPOUND_STRING(
-            "A single [Heliolisk] can generate sufficient\n"
+            "A single [Heliolisk] can generate enough\n"
             "electricity to power a skyscraper. It can\n"
             "stimulate its muscles with electricity,\n"
             "boosting the strength in its legs."),

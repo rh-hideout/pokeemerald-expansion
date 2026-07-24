@@ -3061,8 +3061,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .description = COMPOUND_STRING(
             "During the day, it sleeps and soaks up\n"
             "light. They give off a sweet and refreshing\n"
-            "scent. [Cutiefly] often gather near the tall\n"
-            "grass where [Fomantis] are hiding."),
+            "scent. [Cutiefly] often gather near the\n"
+            "tall grass where [Fomantis] are hiding."),
         .pokemonScale = 530,
         .pokemonOffset = 13,
         .trainerScale = 256,

@@ -7321,7 +7321,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             "Starry skies thousands of light-years\n"
             "away are visible in the space distorted by\n"
             "their intense psychic power. When it learns\n"
-            "its [Trainer]'s life span, it cries in sadness."),
+            "its [Trainer]'s lifespan, it cries in sadness."),
         .pokemonScale = 268,
         .pokemonOffset = 2,
         .trainerScale = 271,
@@ -10189,10 +10189,10 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .height = 10,
         .weight = 343,
         .description = COMPOUND_STRING(
-            "Being consumed in [Chandelure]'s flame burns\n"
-            "up the spirit, leaving the body behind.\n"
-            "By waving the flames on its arms, it puts\n"
-            "its foes into a hypnotic trance."),
+            "Being consumed in [Chandelure]'s flame\n"
+            "burns up the spirit, leaving the body\n"
+            "behind. By waving the flames on its arms,\n"
+            "it puts its foes into a hypnotic trance."),
         .pokemonScale = 305,
         .pokemonOffset = 7,
         .trainerScale = 257,

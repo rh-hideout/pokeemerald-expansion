@@ -3337,10 +3337,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across many different regions."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across many different regions."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3393,10 +3393,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the [Hoenn] region together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the [Hoenn] region."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3449,10 +3449,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the [Sinnoh] region together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the [Sinnoh] region."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3505,10 +3505,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the [Unova] region together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the [Unova] region."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3561,10 +3561,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the [Kalos] region together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the [Kalos] region."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3617,10 +3617,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the [Alola] region together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the [Alola] region."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3674,10 +3674,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed as the two overcame\n"
-            "many hardships together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed as\n"
+            "the two overcame many hardships together."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -3730,10 +3730,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 4,
         .weight = 60,
         .description = COMPOUND_STRING(
-            "This [Pikachu] wears its partner's cap, which\n"
-            "is proof of the strong bond [Pikachu] and\n"
-            "its partner formed during adventures\n"
-            "across the world together."),
+            "This [Pikachu] wears its partner's cap,\n"
+            "which is proof of the strong bond\n"
+            "[Pikachu] and its partner formed during\n"
+            "adventures across the world together."),
         .pokemonScale = 479,
         .pokemonOffset = 19,
         .trainerScale = 256,
@@ -10666,10 +10666,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 16,
         .weight = 705,
         .description = COMPOUND_STRING(
-            "A [Shellder] bite set off a chemical reaction\n"
-            "with the spices inside [Slowbro]'s body,\n"
-            "causing [Slowbro] to become a\n"
-            "[Poison]-type [Pokémon]."),
+            "A [Shellder] bite set off a chemical\n"
+            "reaction with the spices inside\n"
+            "[Slowbro]'s body, causing it to\n"
+            "become a [Poison]-type [Pokémon]."),
         .pokemonScale = 256,
         .pokemonOffset = 6,
         .trainerScale = 296,
@@ -11736,7 +11736,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .description = COMPOUND_STRING(
             "There are a hundred or so of them living\n"
             "in [Alola]'s waste-disposal site. They're all\n"
-            "hard workers who eat a lot of trash. [Grimer]\n"
+            "hard workers who eat a lot of trash. It\n"
             "seems to relish any and all kinds of trash."),
         .pokemonScale = 258,
         .pokemonOffset = 10,

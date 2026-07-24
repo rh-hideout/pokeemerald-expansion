@@ -11838,10 +11838,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .height = 18,
         .weight = 1126,
         .description = COMPOUND_STRING(
-            "[Mega Evolution] fuels its brutality, and it\n"
-            "may even turn on the [Trainer] who raised it.\n"
-            "It's been dubbed “the blood-soaked\n"
-            "crescent”."),
+            "[Mega Evolution] fuels its brutality, and\n"
+            "it may even turn on the [Trainer] who\n"
+            "raised it. It's been dubbed\n"
+            "“the blood-soaked crescent”."),
         .pokemonScale = 256,
         .pokemonOffset = 0,
         .trainerScale = 256,

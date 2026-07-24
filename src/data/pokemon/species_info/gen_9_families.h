@@ -5501,10 +5501,10 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .height = 6,
         .weight = 240,
         .description = COMPOUND_STRING(
-            "It solidifies the energy of [Mega Evolution],\n"
-            "building up an overflowing pile to launch\n"
-            "as projectiles. These projectiles explode\n"
-            "on contact."),
+            "It solidifies the energy of [Mega]\n"
+            "[Evolution], building up an overflowing\n"
+            "pile to launch as projectiles. These\n"
+            "projectiles explode on contact."),
         .frontPic = gMonFrontPic_TatsugiriDroopyMega,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 11,

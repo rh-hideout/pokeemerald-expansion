@@ -2872,7 +2872,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             "It's motionless, save for the occasional\n"
             "quiver. A rich array of [Pokémon] can be\n"
             "found gathered around it, drawn by the\n"
-            "scent exuded from [Cherrim]'s folded petals."),
+            "scent exuded from its folded petals."),
         .pokemonScale = 432,
         .pokemonOffset = 13,
         .trainerScale = 256,
@@ -6538,10 +6538,10 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .height = 3,
         .weight = 3,
         .description = COMPOUND_STRING(
+            "It is known as the Being of Willpower.\n"
             "This [Pokémon] is said to have endowed\n"
             "humans with the determination needed to\n"
-            "do things. It is thought that [Uxie], [Mesprit]\n"
-            "and [Azelf] all came from the same egg."),
+            "do things."),
         .pokemonScale = 530,
         .pokemonOffset = 13,
         .trainerScale = 256,

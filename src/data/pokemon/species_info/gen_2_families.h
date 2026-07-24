@@ -6701,8 +6701,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .weight = 5,
         .description = COMPOUND_STRING(
             "Sudden climate change wiped out this\n"
-            "ancient kind of [Corsola]. With its branches,\n"
-            "it absorbs others' life-force. It curses\n"
+            "ancient kind of [Corsola]. Its branches\n"
+            "can absorb others' life-force. It curses\n"
             "those unaware that kick it by accident."),
         .pokemonScale = 410,
         .pokemonOffset = 15,

@@ -199,10 +199,10 @@ const u8 gKommoOPokedexText[] = _(
 
 // Gen 8 families
 const u8 gAlcremieVanillaCreamPokedexText[] = _(
-    "If [Alcremie] is content, the secreted cream\n"
-    "from its hands becomes sweeter and richer.\n"
-    "When it trusts a [Trainer], it will treat\n"
-    "them to berries it's decorated with cream.");
+    "If [Alcremie] is content, the secreted\n"
+    "cream from its hands becomes sweeter and\n"
+    "richer. It will treat a trusted [Trainer]\n"
+    "to berries it's decorated with cream.");
 
 const u8 gAlcremieRubyCreamPokedexText[] = _(
     "The moment it evolved, it took on a\n"
