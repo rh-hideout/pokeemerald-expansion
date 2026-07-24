@@ -2919,6 +2919,8 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
         gBattleStruct->moveDamage[cv->battlerDef] = 0;
         if (cv->moveEffect == EFFECT_OHKO)
             gProtectStructs[cv->battlerDef].survivedOHKO = TRUE;
+        if (DoesIceFaceBlockMove(cv->battlerDef, cv->move))
+            gProtectStructs[cv->battlerDef].assuranceDoubled = TRUE;
     }
     else
     {

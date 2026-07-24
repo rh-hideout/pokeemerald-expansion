@@ -37,9 +37,10 @@
 	.byte \battler
 	.endm
 
-	.macro datahpupdate battler:req
+	.macro datahpupdate battler:req assuranceDouble:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
+    .byte \assuranceDouble
 	.endm
 
 	.macro critmessage
