@@ -59,5 +59,5 @@ As previously, if it's a permanent status, the timer will be ignored so the valu
 
 ### 3. Weather and Terrain
 Weather and Terrain have extra functions, `TryAddActiveWeather` and `TryAddActiveTerrain`.
-If a new weather/terrain are added, the compiler will usually throw an error to add it.
+If a new weather/terrain is added, the compiler will usually throw an error to add it.
 That means that those can be mostly just ignored.
