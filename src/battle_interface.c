@@ -2500,7 +2500,7 @@ static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 
     lastChar = gStringVar1[totalChar - 1];
     StringAppend(gStringVar1, COMPOUND_STRING("'"));
     if (lastChar != CHAR_S && lastChar != CHAR_s)
-        StringAppend(gStringVar1, COMPOUND_STRING("s"));
+        StringAppend(gStringVar1, COMPOUND_STRING("[s]"));
 
     u32 x;
     u32 y = 0;
