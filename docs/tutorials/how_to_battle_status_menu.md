@@ -17,8 +17,8 @@ static void TryAddActiveStatus(
                 enum BattleSide side
             );
 ```
-`TryAddActiveStatus` is used for volatiles without a timer, meaning they persist until the battle is over
-Also used when a timer is unknown
+`TryAddActiveStatus` is used for volatiles without a timer, meaning they persist until the battle is over.
+It is also used when a timer is unknown.
 ```C
 
 static void TryAddActiveStatusTimer(
