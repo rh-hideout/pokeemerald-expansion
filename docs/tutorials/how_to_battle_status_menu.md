@@ -9,7 +9,7 @@ Ability/Item for the player side, and field statuses.
 ### How to add new field statuses or volatiles to the menu
 
 #### 1. Adding new battler volatiles 
-There are 3 options
+There are 3 options:
 ```C
 static void TryAddActiveStatus(
                 enum BattleStatus status, 
