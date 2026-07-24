@@ -1165,6 +1165,8 @@ static void InitRouletteTableData(void)
         case SPECIES_TAILLOW:
             sRoulette->partySpeciesFlags |= HAS_TAILLOW;
             break;
+        default:
+            break;
         }
     }
     RtcCalcLocalTime();

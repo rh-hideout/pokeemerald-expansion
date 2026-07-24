@@ -23,19 +23,21 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 
 void FillPartnerParty(u16 trainerId)
 {
-    s32 i, j, k;
+    u32 i, j, k;
     u32 firstIdPart = 0, secondIdPart = 0, thirdIdPart = 0;
     u32 ivs, level, personality;
     u16 monId;
     u32 otID;
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
+    enum Gender gender;
+
     SetFacilityPtrsGetLevel();
     ZeroPartyMons(gParties[B_TRAINER_PARTNER]);
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
+        u32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
 
         for (i = 0; i < lastIndex && i < gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].partySize; i++)
         {
@@ -114,8 +116,8 @@ void FillPartnerParty(u16 trainerId)
             u16 partnerId = GetPartnerIdFromTrainerId(trainerId);
             StringCopy(trainerName, gBattlePartners[difficulty][partnerId].trainerName);
             SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
-            j = gBattlePartners[difficulty][partnerId].gender;
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &j);
+            gender = gBattlePartners[difficulty][partnerId].gender;
+            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
         }
     }
     else if (trainerId == TRAINER_EREADER)
@@ -134,9 +136,9 @@ void FillPartnerParty(u16 trainerId)
             CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gParties[B_TRAINER_PARTNER][i]);
             for (j = 0; j < PLAYER_NAME_LENGTH + 1; j++)
                 trainerName[j] = gFacilityTrainers[trainerId].trainerName[j];
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, &trainerName);
-            j = IsFrontierTrainerFemale(trainerId);
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &j);
+            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
+            gender = IsFrontierTrainerFemale(trainerId) ? FEMALE : MALE;
+            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
         }
     }
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
@@ -162,8 +164,8 @@ void FillPartnerParty(u16 trainerId)
             }
             CreateBattleTowerMon_HandleLevel(&gParties[B_TRAINER_PARTNER][i], &monData, TRUE);
             SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
-            j = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_FRIEND);
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &j);
+            gender = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_FRIEND) ? FEMALE : MALE;
+            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
         }
     }
     else
@@ -172,8 +174,8 @@ void FillPartnerParty(u16 trainerId)
         for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
         {
             CreateApprenticeMon(&gParties[B_TRAINER_PARTNER][i], &gSaveBlock2Ptr->apprentices[trainerId], gSaveBlock2Ptr->frontier.trainerIds[18 + i]);
-            j = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_APPRENTICE);
-            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &j);
+            gender = IsFrontierTrainerFemale(trainerId + TRAINER_RECORD_MIXING_APPRENTICE) ? FEMALE : MALE;
+            SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
         }
     }
 }
