@@ -43,7 +43,7 @@
 #define PERMANENT_STATUS 1
 
 // Config
-#define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing pokemon
+#define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing Pokémon
 
 struct BattleInfo
 {
@@ -100,12 +100,6 @@ struct BattleInfoMenuData
 };
 
 static EWRAM_DATA struct BattleInfoMenuData *sData = NULL;
-
-struct BattleInfoEffectData
-{
-    const u8 *name;
-    const u8 *description;
-};
 
 static void CB2_BattleInfoMenu(void);
 static void Task_BattleInfoLoadPage(u8 taskId);
@@ -203,7 +197,6 @@ static const u8 *GetPrimaryOpponentTrainerName(void);
 static const u8 *GetPlayerSideTrainerName(void);
 static const u8 *GetPrimaryOpponentTrainerName(void);
 static u32 GetOpponentTrainerCount(void);
-static void OverviewUpdateHpBars(void);
 static void BattleInfoDestroy(void);
 static void DestroyOverviewCardSprites(struct BattleInfoCard *card, bool8 freeHpBarTile);
 
@@ -236,7 +229,6 @@ static const u8 sTextColor_BattleInfo_OverviewDefault[] =
     B_INFO_TEXT_COLOR_BLACK,
     B_INFO_TEXT_COLOR_WHITE
 };
-
 
 static const u8 sTextColor_BattleInfo_Male[] =
 {
@@ -274,7 +266,7 @@ static const u8 *const sBattleInfoDetailStatLabels[B_INFO_DETAIL_STAT_ROW_COUNT]
     COMPOUND_STRING("Evasion"),
 };
 
-static const u8 sBattleInfoDetailStatIds[B_INFO_DETAIL_STAT_ROW_COUNT] =
+static const enum Stat sBattleInfoDetailStatIds[B_INFO_DETAIL_STAT_ROW_COUNT] =
 {
     STAT_ATK,
     STAT_DEF,
@@ -283,6 +275,12 @@ static const u8 sBattleInfoDetailStatIds[B_INFO_DETAIL_STAT_ROW_COUNT] =
     STAT_SPEED,
     STAT_ACC,
     STAT_EVASION,
+};
+
+struct BattleInfoEffectData
+{
+    const u8 *name;
+    const u8 *description;
 };
 
 static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
@@ -300,7 +298,7 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
     [INFO_SANDSTORM] =
     {
         COMPOUND_STRING("Sandstorm"),
-        COMPOUND_STRING("The sandstorm weather condition. At the end of each turn, it damages all Pokemon that are not Rock, Ground, or Steel types. It boosts the Sp. Def of Rock-type Pokemon.")
+        COMPOUND_STRING("The sandstorm weather condition. At the end of each turn, it damages all Pokémon that are not Rock, Ground, or Steel types. It boosts the Sp. Def of Rock-type Pokémon.")
     },
     [INFO_SNOW] =
     {
@@ -783,6 +781,7 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
         COMPOUND_STRING("The Pokemon takes reduced damage from status conditions and move effects such as poisoning and splinters.")
     },
 };
+
 STATIC_ASSERT(ARRAY_COUNT(sBattleInfoEffects) == INFO_COUNT, BattleInfoEffectTableSizeMismatch);
 
 static const u8 sBattleInfoHpBarTiles[8 * TILE_SIZE_4BPP] = {0};
@@ -1402,9 +1401,7 @@ static void OverviewExit(void)
     sData->cursorSpriteId = SPRITE_NONE;
 
     for (u32 i = 0; i < GetCardCount(); i++)
-    {
         DestroyOverviewCardSprites(&sData->cards[i], FALSE);
-    }
 
     OverviewClearWindows();
 }
@@ -1478,7 +1475,6 @@ static void DetailExit(void)
 
     FillBgTilemapBufferRect(B_INFO_TEXT_BG, 0, 0, 0, B_INFO_TILEMAP_WIDTH, B_INFO_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
-
 }
 
 static void DetailCreateWindows(void)
@@ -1597,11 +1593,12 @@ static u32 DetailGetBestFitSmallFont(const u8 *text, s16 maxWidth)
 static void DetailDestroyHpBar(void)
 {
     if (sData->hpBarSpriteId != SPRITE_NONE)
+    {
         DestroySprite(&gSprites[sData->hpBarSpriteId]);
-    sData->hpBarSpriteId = SPRITE_NONE;
-    DestroyHpBarEndcaps(&sData->hpBarLeftEndcapSpriteId,
-                                     &sData->hpBarRightEndcapSpriteId);
+        sData->hpBarSpriteId = SPRITE_NONE;
+    }
 
+    DestroyHpBarEndcaps(&sData->hpBarLeftEndcapSpriteId, &sData->hpBarRightEndcapSpriteId);
     FreeSpriteTilesByTag(B_INFO_DETAIL_HP_BAR_TILE_TAG);
 }
 
@@ -1920,7 +1917,7 @@ static void DetailRefreshHeader(void)
 static void DetailRefreshIcon(void)
 {
     struct Pokemon *mon;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     if (sData->iconSpriteId != SPRITE_NONE)
@@ -2221,7 +2218,6 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddActiveStatusTimer(INFO_SYRUPY, vol->syrupBombTimer, B_SYRUP_BOMB_TIMER, side);
     TryAddActiveStatusTimer(INFO_WISH, gBattleStruct->wish[battler].counter, 2, side);
 
-
     bool32 critBoost = (vol->focusEnergy || vol->dragonCheer);
     TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
 
@@ -2282,19 +2278,17 @@ static void TryAddActiveTerrain(enum BattleInfoLabels status, enum BattleSide si
     }
 }
 
+// TODO
 static u32 GetRemainingDuration(u32 remaining, u32 baseTotal, u32 extendedTotal)
 {
     if (extendedTotal > baseTotal && remaining <= (extendedTotal - baseTotal))
     {
-        remaining = remaining;
         baseTotal = extendedTotal;
     }
     else
     {
         if (extendedTotal == 8)
             remaining = remaining - (extendedTotal - baseTotal);
-        else
-            remaining = remaining;
     }
 
     return remaining;
@@ -2306,13 +2300,9 @@ static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus
         return;
 
     if (timer > 0)
-    {
         TryAddActiveStatusTimer(label, timer, totalTimer, side);
-    }
     else
-    {
         TryAddActiveStatus(label, PERMANENT_STATUS, side);
-    }
 }
 
 static void TryAddActiveSideStatus(enum BattleInfoLabels label, u32 sideStatus, u32 timer, u32 totalTimer, enum BattleSide side)
@@ -2321,13 +2311,9 @@ static void TryAddActiveSideStatus(enum BattleInfoLabels label, u32 sideStatus, 
         return;
 
     if (timer > 0)
-    {
         TryAddActiveStatusTimer(label, timer, totalTimer, side);
-    }
     else
-    {
         TryAddActiveStatus(label, PERMANENT_STATUS, side);
-    }
 }
 
 static void TryAddActiveStatus(enum BattleInfoLabels label, u32 timerOrFlag, enum BattleSide side)
@@ -3401,12 +3387,6 @@ static u32 GetOpponentTrainerCount(void)
     return 1;
 }
 
-static void UNUSED OverviewUpdateHpBars(void)
-{
-    for (u32 i = 0; i < GetCardCount(); i++)
-        DrawHpBarSprite(&sData->cards[i]);
-}
-
 static void DestroyOverviewCardSprites(struct BattleInfoCard *card, bool8 freeHpBarTile)
 {
     if (card->hpBarSpriteId != SPRITE_NONE)
@@ -3687,13 +3667,9 @@ static void OverviewUpdateCursorPos(void)
 static void Task_BattleMenuStatus_HandleInput(u8 taskId)
 {
     if (sData->page == B_INFO_PAGE_OVERVIEW)
-    {
         OverviewHandleInput(taskId);
-    }
     else
-    {
         DetailHandleInput(taskId);
-    }
 }
 
 static void OverviewHandleInput(u8 taskId)

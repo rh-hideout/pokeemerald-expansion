@@ -306,7 +306,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     }
 
     if (JOY_NEW(B_BATTLE_STATUS_MENU_BUTTON)
-        && !(B_BATTLE_STATUS_MENU_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
+     && !(B_BATTLE_STATUS_MENU_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
@@ -438,10 +438,11 @@ static void OpenBattleStatusMenu(enum BattlerId battler)
 
 static void WaitForBattleStatusMenu(enum BattlerId battler)
 {
-    if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
-    {
+    if (gPaletteFade.active)
+        return;
+
+    if (gMain.callback2 == BattleMainCB2)
         PlayerHandleChooseAction(battler);
-    }
 }
 
 void HandleInputChooseTarget(enum BattlerId battler)
