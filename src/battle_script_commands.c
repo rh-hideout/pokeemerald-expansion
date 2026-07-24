@@ -7229,19 +7229,18 @@ static void Cmd_updatestatusicon(void)
 
 static void Cmd_setmist(void)
 {
-    CMD_ARGS();
+    CMD_ARGS(const u8 *failInstr);
 
     if (gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MIST_FAILED;
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
     }
-    else
-    {
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer = 5;
-        gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_MIST;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
-    }
+    gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer = 5;
+    gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_MIST;
+    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -10824,13 +10823,18 @@ void BS_ItemCureStatus(void)
 
 void BS_ItemIncreaseStat(void)
 {
-    NATIVE_ARGS();
+    NATIVE_ARGS(u8 *failInstr);
 
     if (gBattlerPartyIndexes[gBattlerAttacker] != gBattleStruct->itemPartyIndex[gBattlerAttacker])
         gBattlerAttacker = BATTLE_PARTNER(gBattlerAttacker);
 
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
     {
+        if (CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+            return;
+        }
         if (B_X_ITEMS_BUFF >= GEN_7)
             SetStatChange(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], 2);
         else
@@ -10838,17 +10842,31 @@ void BS_ItemIncreaseStat(void)
     }
     else
     {
+        bool32 doStatChange = FALSE;
+        for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
+        {
+            if (!CompareStat(gBattlerAttacker, GetItemEffect(gLastUsedItem)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(gBattlerAttacker)))
+            {
+                doStatChange = TRUE;
+                break;
+            }
+        }
+        if (!doStatChange)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+            return;
+        }
         for (enum Stat i = STAT_ATK; i < NUM_STATS; i++)
             SetStatChange(gBattlerAttacker, i, 1);
 
-    } // else EFFECT_ITEM_INCREASE_ALL_STATS or EFFECT_ITEM_SET_FOCUS_ENERGY
+    } // else EFFECT_ITEM_INCREASE_ALL_STATS
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_ItemRestorePP(void)
 {
-    NATIVE_ARGS();
+    NATIVE_ARGS(const u8 *failInstr);
     const u8 *effect = GetItemEffect(gLastUsedItem);
     u32 i, pp, maxPP, loopEnd;
     enum BattlerId battler = MAX_BATTLERS_COUNT;
@@ -10875,6 +10893,7 @@ void BS_ItemRestorePP(void)
         battler = BATTLE_PARTNER(gBattlerAttacker);
 
     // Heal PP!
+    bool32 noEffect = TRUE;
     for (; i < loopEnd; i++)
     {
         pp = GetMonData(mon, MON_DATA_PP1 + i);
@@ -10882,6 +10901,7 @@ void BS_ItemRestorePP(void)
         maxPP = CalculatePPWithBonus(moveId, GetMonData(mon, MON_DATA_PP_BONUSES), i);
         if (pp != maxPP)
         {
+            noEffect = FALSE;
             pp += effect[6];
             if (pp > maxPP)
                 pp = maxPP;
@@ -10896,9 +10916,22 @@ void BS_ItemRestorePP(void)
             }
         }
     }
+    if (noEffect)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
+    }
     gBattleScripting.battler = battler;
     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(mon, MON_DATA_SPECIES));
     PREPARE_MOVE_BUFFER(gBattleTextBuff2, moveId);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_CancelItemUsage(void)
+{
+    NATIVE_ARGS();
+    if (GetConfig(B_SELECT_NO_EFFECT_ITEMS) >= GEN_5)
+        AddBagItem(gLastUsedItem, 1);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

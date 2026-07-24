@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Elixir restores the PP of all of a battler's moves by 10")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ELIXIR].battleUsage == EFFECT_ITEM_RESTORE_PP);
         ASSUME(gItemsInfo[ITEM_ELIXIR].type == ITEM_USE_PARTY_MENU);
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 0}, {MOVE_CONFUSION, 0}, {MOVE_SCRATCH, 0}, {MOVE_GROWL, 0}); }
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 0}, {MOVE_CONFUSION, 0}, {MOVE_TACKLE, 0}, {MOVE_GROWL, 0}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_ELIXIR, partyIndex: 0); }
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Max Elixir restores the PP of all of a battler's moves fully
     GIVEN {
         ASSUME(gItemsInfo[ITEM_MAX_ELIXIR].battleUsage == EFFECT_ITEM_RESTORE_PP);
         ASSUME(gItemsInfo[ITEM_MAX_ELIXIR].type == ITEM_USE_PARTY_MENU);
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 0}, {MOVE_CONFUSION, 0}, {MOVE_SCRATCH, 0}, {MOVE_GROWL, 0}); }
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 0}, {MOVE_CONFUSION, 0}, {MOVE_TACKLE, 0}, {MOVE_GROWL, 0}); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_MAX_ELIXIR, partyIndex: 0); }
@@ -65,31 +65,44 @@ SINGLE_BATTLE_TEST("Max Elixir restores the PP of all of a battler's moves fully
     }
 }
 
-TO_DO_BATTLE_TEST("Ether won't work if the selected move has all its PP")
-
-TO_DO_BATTLE_TEST("Elixir can be used if at least one move is missing PP in any slot") // The test system can't currently test this, in a test the item is used without running useability checks
-/*
+SINGLE_BATTLE_TEST("Ether has no effect if the selected move has full PP")
 {
-    u8 move1PP;
-    u8 move2PP;
-    u8 move3PP;
-    u8 move4PP;
-    PARAMETRIZE { move1PP = 30; move2PP = 30; move3PP = 20; move4PP = 10; }
-    PARAMETRIZE { move1PP = 40; move2PP = 20; move3PP = 20; move4PP = 10; }
-    PARAMETRIZE { move1PP = 40; move2PP = 30; move3PP = 10; move4PP = 10; }
-    PARAMETRIZE { move1PP = 40; move2PP = 30; move3PP = 20; move4PP = 0; }
     GIVEN {
-        ASSUME(gItemsInfo[ITEM_ELIXIR].battleUsage == EFFECT_ITEM_RESTORE_PP);
-        ASSUME(gItemsInfo[ITEM_ELIXIR].type == ITEM_USE_PARTY_MENU);
-        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_MEDITATE, move1PP}, {MOVE_AGILITY, move2PP}, {MOVE_PSYBEAM, move3PP}, {MOVE_TRICK, move4PP}); }
+        ASSUME(gItemsInfo[ITEM_ETHER].battleUsage == EFFECT_ITEM_RESTORE_PP);
+        ASSUME(gItemsInfo[ITEM_ETHER].type == ITEM_USE_PARTY_MENU_MOVES);
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 35}, {MOVE_CONFUSION, 0}); }
         OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_ETHER, 1);
     } WHEN {
-        TURN { USE_ITEM(player, ITEM_ELIXIR, partyIndex: 0); }
+        TURN { USE_ITEM(player, ITEM_ETHER, partyIndex: 0, move: MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
     } THEN {
-        EXPECT_EQ(player->pp[0], 40);
-        EXPECT_EQ(player->pp[1], 30);
-        EXPECT_EQ(player->pp[2], 20);
-        EXPECT_EQ(player->pp[3], 10);
+        EXPECT(CheckBagHasItem(ITEM_ETHER, 1));
+        EXPECT_EQ(player->pp[0], 35);
+        EXPECT_EQ(player->pp[1], 0);
     }
 }
-*/
+
+SINGLE_BATTLE_TEST("Max Elixir has no effect if all of the target moves have full PP")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_ELIXIR].battleUsage == EFFECT_ITEM_RESTORE_PP);
+        ASSUME(gItemsInfo[ITEM_MAX_ELIXIR].type == ITEM_USE_PARTY_MENU);
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_SCRATCH, 35}, {MOVE_CONFUSION, 25}, {MOVE_TACKLE, 35}, {MOVE_GROWL, 40}); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_MAX_ELIXIR, 1);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_MAX_ELIXIR, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_MAX_ELIXIR, 1));
+        EXPECT_EQ(player->pp[0], 35);
+        EXPECT_EQ(player->pp[1], 25);
+        EXPECT_EQ(player->pp[2], 35);
+        EXPECT_EQ(player->pp[3], 40);
+    }
+}

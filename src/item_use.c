@@ -1202,14 +1202,13 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
     return FALSE;
 }
 
-// Returns whether an item can be used in battle and sets the fail text.
-bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
+// Returns whether an item can be selected in battle and sets the fail text.
+bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
     enum EffectItem battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
-    u32 i, battlerTarget;
-    u16 hp = GetMonData(mon, MON_DATA_HP);
+    u32 battlerTarget;
 
     if (gPartyMenu.slotId == 0)
         battlerTarget = B_POSITION_PLAYER_LEFT;
@@ -1225,27 +1224,8 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             return TRUE;
     }
 
-    // battleUsage checks
     switch (battleUsage)
     {
-    case EFFECT_ITEM_INCREASE_STAT:
-        if (hp == 0 || gPartyMenu.slotId > 1)
-            cannotUse = TRUE;
-        else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
-            cannotUse = TRUE;
-        else
-            SetStatChange(battlerTarget, GetItemEffect(itemId)[1], 1);
-        break;
-    case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (hp == 0 ||gPartyMenu.slotId > 1)
-            cannotUse = TRUE;
-        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
-            cannotUse = TRUE;
-        break;
-    case EFFECT_ITEM_SET_MIST:
-        if (gSideStatuses[GetBattlerSide(gBattlerInMenuId)] & SIDE_STATUS_MIST)
-            cannotUse = TRUE;
-        break;
     case EFFECT_ITEM_ESCAPE:
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             cannotUse = TRUE;
@@ -1271,15 +1251,66 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             break;
         }
         break;
+    default:
+        break;
+    }
+
+    if (failStr != NULL)
+        StringExpandPlaceholders(gStringVar4, failStr);
+    else
+        StringExpandPlaceholders(gStringVar4, gText_WontHaveEffect);
+
+    if (!cannotUse && GetConfig(B_SELECT_NO_EFFECT_ITEMS) < GEN_5)
+        cannotUse = CannotUseItemsInBattle(itemId, mon, gPartyMenu.slotId);
+
+    return cannotUse;
+}
+
+// Returns whether an item can be used in battle and sets the fail text.
+bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon, u32 slotId)
+{
+    u16 battleUsage = GetItemBattleUsage(itemId);
+    bool8 cannotUse = FALSE;
+    const u8* failStr = NULL;
+    u32 i, battlerTarget;
+    u16 hp = GetMonData(mon, MON_DATA_HP);
+
+    if (slotId == 0)
+        battlerTarget = B_POSITION_PLAYER_LEFT;
+    else if (slotId == 1)
+        battlerTarget = B_POSITION_PLAYER_RIGHT;
+    else
+        battlerTarget = MAX_POSITION_COUNT;
+
+    // battleUsage checks
+    switch (battleUsage)
+    {
+    case EFFECT_ITEM_INCREASE_STAT:
+        if (hp == 0 || slotId > 1)
+            cannotUse = TRUE;
+        else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
+            cannotUse = TRUE;
+        break;
+    case EFFECT_ITEM_SET_FOCUS_ENERGY:
+        if (hp == 0 || slotId > 1)
+            cannotUse = TRUE;
+        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
+            cannotUse = TRUE;
+        break;
+    case EFFECT_ITEM_SET_MIST:
+        if (gSideStatuses[GetBattlerSide(gBattlerInMenuId)] & SIDE_STATUS_MIST)
+            cannotUse = TRUE;
+        break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
     // Never called
     {
-        if (hp == 0 || gPartyMenu.slotId > 1)
+        if (hp == 0 || slotId > 1)
         {
             cannotUse = TRUE;
             break;
         }
         enum Ability ability = GetBattlerAbility(battlerTarget);
+        cannotUse = TRUE;
         for (i = STAT_ATK; i < NUM_STATS; i++)
         {
             if (CompareStat(battlerTarget, i, MAX_STAT_STAGE, CMP_EQUAL, ability))
@@ -1341,7 +1372,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 void ItemUseInBattle_BagMenu(u8 taskId)
 {
     gPartyMenu.slotId = gBattleStruct->itemPartyIndex[gBattlerInMenuId] = gBattlerPartyIndexes[gBattlerInMenuId];
-    if (CannotUseItemsInBattle(gSpecialVar_ItemId, NULL))
+    if (CannotSelectItemsInBattle(gSpecialVar_ItemId, NULL))
     {
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
