@@ -2854,7 +2854,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .palette = gMonPalette_Hydrapple,
         .shinyPalette = gMonShinyPalette_Hydrapple,
         .iconSprite = gMonIcon_Hydrapple,
-        .iconPalIndex = 5,
+        .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 12, SHADOW_SIZE_L)
         FOOTPRINT(Hydrapple)
