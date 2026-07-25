@@ -1682,7 +1682,8 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
         }
     }
 
-    GetBattlerPartyState(battler)->timesGotHit++;
+    if (GetBattlerPartyState(battler)->timesGotHit < 6)
+        GetBattlerPartyState(battler)->timesGotHit++;
     gSpecialStatuses[battler].damagedByAttack = TRUE;
 }
 
