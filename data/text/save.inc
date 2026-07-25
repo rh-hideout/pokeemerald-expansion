@@ -19,7 +19,7 @@ gText_DifferentSaveFile::
 	.string "is already saved.\p"
 	.string "If you save now, the other file's\n"
 	.string "adventure, including items and\l"
-	.string "POKéMON, will be entirely lost.\p"
+	.string "[Pokémon], will be entirely lost.\p"
 	.string "Are you sure you want to save now\n"
 	.string "and overwrite the other save file?$"
 
