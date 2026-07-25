@@ -2593,7 +2593,7 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         COMPOUND_STRING("[Calcium]{CLEAR_TO 99}{FONT_SMALL}1,000"),
         COMPOUND_STRING("[Zinc]{CLEAR_TO 99}{FONT_SMALL}1,000"),
         COMPOUND_STRING("[HP Up]{CLEAR_TO 99}{FONT_SMALL}1,000"),
-        COMPOUND_STRING("[PP Up{CLEAR_TO 99}{FONT_SMALL}3,000"),
+        COMPOUND_STRING("[PP Up]{CLEAR_TO 99}{FONT_SMALL}3,000"),
         gText_Exit
     },
     [SCROLL_MULTI_BF_RECEPTIONIST] =
