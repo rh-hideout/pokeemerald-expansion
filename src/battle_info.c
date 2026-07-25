@@ -42,8 +42,9 @@
 
 #define PERMANENT_STATUS 1
 
-// Config
+// Configs
 #define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing Pokémon
+#define B_INFO_ALWAYS_SHOW_ACCURATE_DURATION FALSE // Shows the increased duration of Light Clay / Weather Rocks / Terrain Extenders for both sides
 
 struct BattleInfo
 {
@@ -164,6 +165,10 @@ static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag);
 static void DetailCycleBattler(s8 direction);
 static void DetailInitEffectsList(void);
 static void DetailBuildActiveEffectsForBattler(void);
+static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide side);
+static void TryAddActiveTerrain(enum BattleInfoLabels label, enum BattleSide side);
+static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 remaining, u32 extendedTotal, enum BattleSide side);
+static bool32 ShouldShowIncreasedDuration(enum BattleSide side);
 
 struct DisplayTimer
 {
@@ -171,11 +176,6 @@ struct DisplayTimer
     s8 extendedTotal;
     s8 remaining;
 };
-
-static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide side);
-static void TryAddActiveTerrain(enum BattleInfoLabels label, enum BattleSide side);
-
-static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 remaining, u32 extendedTotal, enum BattleSide side);
 
 static void SetRemainingDuration(struct DisplayTimer *timer);
 static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus, u32 timer, u32 totalTimer, enum BattleSide side);
@@ -254,16 +254,8 @@ static const u8 sTextColor_BattleInfo_Female[] =
     B_INFO_TEXT_COLOR_DARK_PINK
 };
 
-static const u8 sText_BattleInfo_Opponent[] = _("Opponent");
-static const u8 sText_BattleInfo_Ally[] = _("Ally");
-static const u8 sText_BattleInfo_DetailHeldItemLabel[] = _("Held Item");
-static const u8 sText_BattleInfo_DetailHeldItemValue[] = _("None");
-static const u8 sText_BattleInfo_DetailAbilityLabel[] = _("Ability");
-static const u8 sText_BattleInfo_DetailAbilityValue[] = _("None");
 static const u8 sText_BattleInfo_DetailLButtonGlyph[] = _("{L_BUTTON}");
 static const u8 sText_BattleInfo_DetailRButtonGlyph[] = _("{R_BUTTON}");
-static const u8 sText_BattleInfo_DetailEffectsHeader[] = _("Active States and Effects");
-static const u8 sText_BattleInfo_DetailTeraTypeLabel[] = _("Tera\nType:");
 
 static const u8 *const sBattleInfoDetailStatLabels[B_INFO_DETAIL_STAT_ROW_COUNT] =
 {
@@ -1480,8 +1472,10 @@ static void DetailExit(void)
     sData->effectsScroll = 0;
 
     if (sData->iconSpriteId != SPRITE_NONE)
+    {
         FreeAndDestroyMonIconSprite(&gSprites[sData->iconSpriteId]);
-    sData->iconSpriteId = SPRITE_NONE;
+        sData->iconSpriteId = SPRITE_NONE;
+    }
 
     FillBgTilemapBufferRect(B_INFO_TEXT_BG, 0, 0, 0, B_INFO_TILEMAP_WIDTH, B_INFO_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
@@ -1821,11 +1815,9 @@ static void DetailRefreshItemAbilityWindow(void)
     enum BattlerId battler = GetSelectedBattler();
     u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     u8 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
-    const u8 *itemText = sText_BattleInfo_DetailHeldItemValue;
-    const u8 *abilityText = sText_BattleInfo_DetailAbilityValue;
-    u8 itemFont;
-    u8 abilityFont;
-    s16 maxValueWidth;
+    u8 sText_BattleInfo_None[] = _("None");
+    const u8 *itemText = sText_BattleInfo_None;
+    const u8 *abilityText = sText_BattleInfo_None;
 
     if (IsOnPlayerSide(battler) || B_INFO_OPPOSING_INFORMATION)
     {
@@ -1837,16 +1829,16 @@ static void DetailRefreshItemAbilityWindow(void)
         if (ability != ABILITY_NONE)
             abilityText = gAbilitiesInfo[ability].name;
 
-        maxValueWidth = (B_INFO_DETAIL_ITEM_WIN_W * 8) - 6;
-        itemFont = DetailGetBestFitSmallFont(itemText, maxValueWidth);
-        abilityFont = DetailGetBestFitSmallFont(abilityText, maxValueWidth);
+        s32 maxValueWidth = (B_INFO_DETAIL_ITEM_WIN_W * 8) - 6;
+        u32 itemFont = DetailGetBestFitSmallFont(itemText, maxValueWidth);
+        u32 abilityFont = DetailGetBestFitSmallFont(abilityText, maxValueWidth);
 
         AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 33, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, sText_BattleInfo_DetailHeldItemLabel);
+                                     TEXT_SKIP_DRAW, COMPOUND_STRING("Held Item"));
         AddTextPrinterParameterized4(windowId, itemFont, 50, 43, 0, 0, sTextColor_BattleInfo_Default,
                                      TEXT_SKIP_DRAW, itemText);
         AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 56, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, sText_BattleInfo_DetailAbilityLabel);
+                                     TEXT_SKIP_DRAW, COMPOUND_STRING("Ability"));
         AddTextPrinterParameterized4(windowId, abilityFont, 50, 66, 0, 0, sTextColor_BattleInfo_Default,
                                      TEXT_SKIP_DRAW, abilityText);
     }
@@ -1894,7 +1886,7 @@ static void DetailRefreshHeader(void)
                                      2,
                                      14,
                                      0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, sText_BattleInfo_DetailTeraTypeLabel);
+                                     TEXT_SKIP_DRAW, COMPOUND_STRING("Tera\nType:"));
         DetailRefreshTeraTypeIndicator();
     }
     else
@@ -2197,7 +2189,6 @@ static void DetailBuildActiveEffectsForBattler(void)
     TryAddeActiveDamageNonTypes(side);
 
     TryAddActiveStatus(GetStatusEffectFromNonVolatile(battler), PERMANENT_STATUS, side);
-
     TryAddActiveStatus(INFO_INFATUATION, vol->infatuation, side);
     TryAddActiveStatus(INFO_NIGHTMARE, vol->nightmare, side);
     TryAddActiveStatus(INFO_TORMENT, vol->torment, side);
@@ -2261,7 +2252,7 @@ static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide sid
             .remaining = gBattleStruct->weatherDuration,
         };
 
-        if (gBattleStruct->weatherSide == B_SIDE_PLAYER)
+        if (ShouldShowIncreasedDuration(gBattleStruct->weatherSide))
         {
             TryAddActiveStatusTimer(label, timer.remaining, timer.extendedTotal, side);
         }
@@ -2287,7 +2278,7 @@ static void TryAddActiveTerrain(enum BattleInfoLabels status, enum BattleSide si
             .remaining = gFieldTimers.terrainTimer,
         };
 
-        if (gFieldTimers.terrainSide == B_SIDE_PLAYER)
+        if (ShouldShowIncreasedDuration(gFieldTimers.terrainSide))
         {
             TryAddActiveStatusTimer(status, timer.remaining, timer.extendedTotal, side);
         }
@@ -2313,7 +2304,7 @@ static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 
             .remaining = remaining,
         };
 
-        if (side == B_SIDE_PLAYER)
+        if (ShouldShowIncreasedDuration(side))
         {
             TryAddActiveStatusTimer(label, timer.remaining, timer.extendedTotal, side);
         }
@@ -2327,6 +2318,17 @@ static void TryAddActiveScreen(enum BattleInfoLabels label, u32 sideStatus, u32 
     {
         TryAddActiveSideStatus(label, sideStatus, PERMANENT_STATUS, 0, side);
     }
+}
+
+static bool32 ShouldShowIncreasedDuration(enum BattleSide side)
+{
+    if (side == B_SIDE_PLAYER)
+        return TRUE;
+
+    if (B_INFO_ALWAYS_SHOW_ACCURATE_DURATION)
+        return TRUE;
+
+    return FALSE;
 }
 
 static void SetRemainingDuration(struct DisplayTimer *timer)
@@ -2653,7 +2655,7 @@ static void DetailRefreshEffectsWindow(void)
 
     DetailDrawWindowFrame(windowId);
     AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, 2, 0, 0, sTextColor_BattleInfo_Default,
-                                 TEXT_SKIP_DRAW, sText_BattleInfo_DetailEffectsHeader);
+                                 TEXT_SKIP_DRAW, COMPOUND_STRING("{L_BUTTON}"));
 
     if (sData->activeEffectsCount != 0)
     {
@@ -3413,7 +3415,7 @@ static void OverviewDrawLabels(void)
 static const u8 *GetPlayerSideTrainerName(void)
 {
     if (HasPartnerTrainer(B_BATTLER_0))
-        return sText_BattleInfo_Ally;
+        return COMPOUND_STRING("Ally");
     return gSaveBlock2Ptr->playerName;
 }
 
@@ -3421,7 +3423,7 @@ static const u8 *GetPrimaryOpponentTrainerName(void)
 {
     if (GetOpponentTrainerCount() == 1 && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         return GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA);
-    return sText_BattleInfo_Opponent;
+    return COMPOUND_STRING("Opponent");
 }
 
 static u32 GetOpponentTrainerCount(void)
