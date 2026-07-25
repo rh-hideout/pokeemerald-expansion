@@ -140,6 +140,8 @@ gStdScripts_End::
 	.include "data/maps/SootopolisCity/scripts.inc"
 	.include "data/maps/EverGrandeCity/scripts.inc"
 	.include "data/maps/LittlerootTown/scripts.inc"
+	.include "data/maps/CinnabarIsland_Frlg/scripts.inc"
+	.include "data/maps/CinnabarIsland_PokemonCenter_1F_Frlg/scripts.inc"
 	.include "data/maps/OldaleTown/scripts.inc"
 	.include "data/maps/DewfordTown/scripts.inc"
 	.include "data/maps/LavaridgeTown/scripts.inc"
@@ -930,7 +932,6 @@ gStdScripts_End::
 	.include "data/maps/CinnabarIsland_PokemonLab_Lounge_Frlg/scripts.inc"
 	.include "data/maps/CinnabarIsland_PokemonLab_ResearchRoom_Frlg/scripts.inc"
 	.include "data/maps/CinnabarIsland_PokemonLab_ExperimentRoom_Frlg/scripts.inc"
-	.include "data/maps/CinnabarIsland_PokemonCenter_1F_Frlg/scripts.inc"
 	.include "data/maps/CinnabarIsland_PokemonCenter_2F_Frlg/scripts.inc"
 	.include "data/maps/CinnabarIsland_Mart_Frlg/scripts.inc"
 	.include "data/maps/IndigoPlateau_PokemonCenter_1F_Frlg/scripts.inc"
@@ -1752,3 +1753,16 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/LittlerootRuins/scripts.inc"
 
 	.include "data/maps/Town_Library/scripts.inc"
+.include "data/maps/CinnabarIsland_Gym_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_PokemonLab_Entrance_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_PokemonLab_Lounge_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_PokemonLab_ResearchRoom_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_PokemonLab_ExperimentRoom_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_PokemonCenter_2F_Frlg/scripts.inc"
+.include "data/maps/CinnabarIsland_Mart_Frlg/scripts.inc"
+
+@ Custom Pokemon Mansion maps
+.include "data/maps/PokemonMansion_1F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_2F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_3F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_B1F_Frlg/scripts.inc"

@@ -1635,7 +1635,11 @@ const u16 gTilesetPalettes_UnionRoom[][16] =
 
 const u32 gTilesetTiles_UnionRoom[] = INCGFX_U32("data/tilesets/secondary/union_room/tiles.png", ".4bpp.fastSmol");
 
-#if IS_FRLG
+#ifndef ENABLE_FRLG_IN_EMERALD
+#define ENABLE_FRLG_IN_EMERALD 1
+#endif
+
+#if IS_FRLG || ENABLE_FRLG_IN_EMERALD
 
 const u32 gTilesetTiles_Building_Frlg[] = INCGFX_U32("data/tilesets/primary/building_frlg/tiles.png", ".4bpp.smol");
 

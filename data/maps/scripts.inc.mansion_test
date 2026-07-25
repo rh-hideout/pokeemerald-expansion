@@ -1,0 +1,4 @@
+.include "data/maps/PokemonMansion_1F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_2F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_3F_Frlg/scripts.inc"
+.include "data/maps/PokemonMansion_B1F_Frlg/scripts.inc"

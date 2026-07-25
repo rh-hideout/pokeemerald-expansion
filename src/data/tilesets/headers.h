@@ -28,6 +28,10 @@ const struct Tileset gTileset_SecretBaseRedCave =
 const struct Tileset *const gTilesetPointer_SecretBase = &gTileset_SecretBase;
 const struct Tileset *const gTilesetPointer_SecretBaseRedCave = &gTileset_SecretBaseRedCave;
 
+#ifndef ENABLE_FRLG_IN_EMERALD
+#define ENABLE_FRLG_IN_EMERALD 1
+#endif
+
 #if !IS_FRLG
 
 const struct Tileset gTileset_General =
@@ -833,7 +837,9 @@ const struct Tileset gTileset_UnionRoom =
     .callback = NULL,
 };
 
-#else
+#endif // !IS_FRLG
+
+#if IS_FRLG || ENABLE_FRLG_IN_EMERALD
 
 // FRLG tilesets
 const struct Tileset gTileset_BuildingFrlg =

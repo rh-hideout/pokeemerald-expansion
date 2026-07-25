@@ -55,7 +55,7 @@ IntroFlashback_EventScript_Begin:
     end
     
 IntroFlashback_EventScript_TestWarpToCinnabar::
-    warp MAP_CINNABAR_ISLAND, 14, 11
+    warp MAP_CINNABAR_ISLAND, 14, 12
     waitstate
     end
 

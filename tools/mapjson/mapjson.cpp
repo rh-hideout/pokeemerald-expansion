@@ -740,10 +740,27 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         }
         string map_name = json_to_string(map_data, "name");
 
-        if ((version == "emerald" && region != "REGION_HOENN")
-         || (version == "firered" && region != "REGION_KANTO")) {
-            invalid_maps.push_back(map_name);
-        }
+       bool is_custom_kanto_map = false;
+
+for (const auto &custom_map : groups_data["gMapGroup_KantoCustom_Frlg"].array_items()) {
+    if (json_to_string(custom_map) == map_name) {
+        is_custom_kanto_map = true;
+        break;
+    }
+}
+
+bool is_frlg_map =
+    map_name.size() >= 5
+    && map_name.compare(map_name.size() - 5, 5, "_Frlg") == 0;
+
+if ((version == "emerald"
+     && ((is_frlg_map && !is_custom_kanto_map)
+         || (region != "REGION_HOENN"
+             && !(region == "REGION_KANTO" && is_custom_kanto_map))))
+ || (version == "firered"
+     && region != "REGION_KANTO")) {
+    invalid_maps.push_back(map_name);
+}
     }
 
     if (groups_data == Json())
@@ -780,9 +797,8 @@ string generate_layout_headers_text(Json layouts_data) {
             else if (version == "firered")
                 layout_version = "frlg";
         }
-        if ((version == "emerald" && layout_version != "emerald")
-         || (version == "firered" && layout_version != "frlg"))
-            continue;
+        if (version == "firered" && layout_version != "frlg")
+        continue;
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
@@ -820,7 +836,8 @@ string generate_layout_headers_text(Json layouts_data) {
     return text.str();
 }
 
-string generate_layouts_table_text(Json layouts_data) {
+string generate_layouts_table_text(Json layouts_data)
+{
     ostringstream text;
 
     text << get_generated_warning("data/layouts/layouts.json", true);
@@ -828,21 +845,32 @@ string generate_layouts_table_text(Json layouts_data) {
     text << "\t.align 2\n"
          << json_to_string(layouts_data, "layouts_table_label") << "::\n";
 
-    for (auto &layout : layouts_data["layouts"].array_items()) {
+    for (auto &layout : layouts_data["layouts"].array_items())
+    {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
+
         string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty()) {
+
+        if (layout_version.empty())
+        {
             if (version == "emerald")
                 layout_version = "emerald";
             else if (version == "firered")
                 layout_version = "frlg";
         }
-        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
+
+        if (version == "firered" && layout_version != "frlg")
+        {
             text << "\t.4byte NULL\n";
-        } else {
+        }
+        else
+        {
             string layout_name = json_to_string(layout, "name", true);
-            if (layout_name.empty()) layout_name = "NULL";
+
+            if (layout_name.empty())
+                layout_name = "NULL";
+
             text << "\t.4byte " << layout_name << "\n";
         }
     }
