@@ -7,7 +7,11 @@ bool32 GetSafariZoneFlag(void);
 void ResetSafariZoneFlag(void);
 
 void EnterSafariMode(enum SafariIds safariId);
+void SetSafariExitWarp(void);
 void ExitSafariMode(void);
+bool32 ShouldRetireFromSafariOnWhiteout(void);
+void SetSafariWhiteoutWarp(void);
+bool32 CannotEscapeSafari(void);
 
 bool8 SafariZoneTakeStep(void);
 void SafariZoneRetirePrompt(void);

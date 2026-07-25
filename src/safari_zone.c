@@ -18,15 +18,6 @@
 #include "constants/songs.h"
 #include "field_screen_effect.h"
 
-struct PokeblockFeeder
-{
-    /*0x00*/ s16 x;
-    /*0x02*/ s16 y;
-    /*0x04*/ s8 mapNum;
-    /*0x05*/ u8 stepCounter;
-    /*0x08*/ struct Pokeblock pokeblock;
-};
-
 enum SafariRules
 {
     RSE_SAFARI,
@@ -35,20 +26,17 @@ enum SafariRules
 
 struct SafariZone
 {
-    enum SafariRules rules;
+    enum SafariRules rules:8;
     u8 startingBalls;
+    u16 noEscape:1; // prevents the player from using Escape Rope or field moves like Dig/Teleport/Fly to exit the safari
+    u16 exitWarpOnWhiteout:1; // if the players whiteouts, return them to the exit warp instead of the last pokecenter
+    u16 padding:14;
     u16 startingSteps;
     u16 catchMultiplier; // value will be divided by 100 so 150 is a 1.5 multiplier
     struct WarpData exitWarp;
 };
 
-#define DUMMY_WARP {                      \
-    .mapGroup = MAP_GROUP(MAP_UNDEFINED), \
-    .mapNum = MAP_NUM(MAP_UNDEFINED),     \
-    .warpId = WARP_ID_NONE,               \
-    .x = -1,                              \
-    .y = -1,                              \
-}
+#define POKEFEEDER_STEP_DURATION 100 // How many steps do pokefeeder stay active
 
 static const struct SafariZone sSafariZones[SAFARI_COUNT] = {
     [NONE_SAFARI] = {0},
@@ -57,34 +45,26 @@ static const struct SafariZone sSafariZones[SAFARI_COUNT] = {
         .startingBalls = 30,
         .startingSteps = 500,
         .catchMultiplier = 150,
-        #if MAP_ROUTE121_SAFARI_ZONE_ENTRANCE
         .exitWarp = {
             .mapGroup = MAP_GROUP(MAP_ROUTE121_SAFARI_ZONE_ENTRANCE),
             .mapNum = MAP_NUM(MAP_ROUTE121_SAFARI_ZONE_ENTRANCE),
             .warpId = 0
         }
-        #else
-        .exitWarp = DUMMY_WARP
-        #endif
     },
     [FUSCHIA_CITY_SAFARI] = {
         .rules = FRLG_SAFARI,
         .startingBalls = 30,
         .startingSteps = 600,
         .catchMultiplier = 150,
-        #if MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE
+        .noEscape = TRUE,
+        .exitWarpOnWhiteout = TRUE,
         .exitWarp = {
             .mapGroup = MAP_GROUP(MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE),
             .mapNum = MAP_NUM(MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE),
             .warpId = 0
         }
-        #else
-        .exitWarp = DUMMY_WARP
-        #endif
     },
 };
-
-#define NUM_POKEBLOCK_FEEDERS 10
 
 extern const u8 SafariZone_EventScript_TimesUp[];
 extern const u8 SafariZone_EventScript_RetirePrompt[];
@@ -92,36 +72,37 @@ extern const u8 SafariZone_EventScript_OutOfBallsMidBattle[];
 extern const u8 SafariZone_EventScript_OutOfBalls[];
 extern const u8 *const gBattlescriptsForSafariActions[];
 
-struct SafariData
-{
-    enum SafariIds id:8;
-    u8  numBalls;
-    u16 stepCounter;
-    u8  caughtMons;
-    u8  pokeblockUses;
-    struct PokeblockFeeder feeders[NUM_POKEBLOCK_FEEDERS];
-};
+#if OW_ALLOW_SAFARI_SAVING
 
-EWRAM_DATA struct SafariData sSafariData;
-/*
-EWRAM_DATA u8 gNumSafariBalls = 0;
-EWRAM_DATA u16 gSafariZoneStepCounter = 0;
+#define sActiveSafari           gSaveBlock3Ptr->activeSafari
+#define sNumSafariBalls         gSaveBlock3Ptr->numSafariBalls
+#define sSafariZoneCaughtMons   gSaveBlock3Ptr->safariZoneCaughtMons
+#define sSafariZonePkblkUses    gSaveBlock3Ptr->safariZonePkblkUses
+#define sSafariZoneStepCounter  gSaveBlock3Ptr->safariZoneStepCounter
+#define sPokeblockFeeders       gSaveBlock3Ptr->pokeblockFeeders
+
+#else
+
+EWRAM_DATA static enum SafariIds sActiveSafari = 0;
+EWRAM_DATA static u8 sNumSafariBalls = 0;
 EWRAM_DATA static u8 sSafariZoneCaughtMons = 0;
 EWRAM_DATA static u8 sSafariZonePkblkUses = 0;
+EWRAM_DATA static u16 sSafariZoneStepCounter = 0;
 EWRAM_DATA static struct PokeblockFeeder sPokeblockFeeders[NUM_POKEBLOCK_FEEDERS] = {0};
-*/
+
+#endif
 
 static void DecrementFeederStepCounters(void);
 
 
 bool32 GetSafariZoneFlag(void)
 {
-    return sSafariData.id != NONE_SAFARI;
+    return sActiveSafari != NONE_SAFARI;
 }
 
 void ResetSafariZoneFlag(void)
 {
-     memset(&sSafariData, 0, sizeof(sSafariData));
+     sActiveSafari = NONE_SAFARI;
 }
 
 
@@ -135,23 +116,33 @@ void EnterSafariMode(enum SafariIds safariId)
     {
         return;
     }
-    struct WarpData warp = sSafariZones[safariId].exitWarp;
-    assertf(!IsDummyWarp(&warp), "Safari is not exiting to a valid location")
-    {
-        return;
-    }
     IncrementGameStat(GAME_STAT_ENTERED_SAFARI_ZONE);
     VarSet(VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE);
-    sSafariData.id = safariId;
-    sSafariData.numBalls = sSafariZones[safariId].startingBalls;
-    sSafariData.stepCounter = sSafariZones[safariId].startingSteps;
+    sActiveSafari = safariId;
+    sNumSafariBalls = sSafariZones[safariId].startingBalls;
+    sSafariZoneStepCounter = sSafariZones[safariId].startingSteps;
+}
+
+void SetSafariExitWarp(void)
+{
+    SetWarpDestinationFromWarpData(sSafariZones[sActiveSafari].exitWarp);
 }
 
 void ExitSafariMode(void)
 {
-    TryPutSafariFanClubOnAir(sSafariData.caughtMons, sSafariData.pokeblockUses);
-    SetWarpDestinationFromWarpData(sSafariZones[sSafariData.id].exitWarp);
+    TryPutSafariFanClubOnAir(sSafariZoneCaughtMons, sSafariZonePkblkUses);
+    SetSafariExitWarp();
     ResetSafariZoneFlag();
+}
+
+bool32 ShouldRetireFromSafariOnWhiteout(void)
+{
+    return sSafariZones[sActiveSafari].exitWarpOnWhiteout;
+}
+
+bool32 CannotEscapeSafari(void)
+{
+    return sSafariZones[sActiveSafari].noEscape;
 }
 
 bool8 SafariZoneTakeStep(void)
@@ -162,8 +153,8 @@ bool8 SafariZoneTakeStep(void)
     }
 
     DecrementFeederStepCounters();
-    sSafariData.stepCounter--;
-    if (sSafariData.stepCounter == 0)
+    sSafariZoneStepCounter--;
+    if (sSafariZoneStepCounter == 0)
     {
         ScriptContext_SetupScript(SafariZone_EventScript_TimesUp);
         return TRUE;
@@ -178,10 +169,10 @@ void SafariZoneRetirePrompt(void)
 
 void CB2_EndSafariBattle(void)
 {
-    sSafariData.pokeblockUses += gBattleResults.pokeblockThrows;
+    sSafariZonePkblkUses += gBattleResults.pokeblockThrows;
     if (gBattleOutcome == B_OUTCOME_CAUGHT)
-        sSafariData.caughtMons++;
-    if (sSafariData.numBalls != 0)
+        sSafariZoneCaughtMons++;
+    if (sNumSafariBalls != 0)
     {
         SetMainCallback2(CB2_ReturnToField);
     }
@@ -200,9 +191,17 @@ void CB2_EndSafariBattle(void)
     }
 }
 
+#if OW_DISABLE_POKEFEEDERS
+void GetPokeblockFeederInFront(void) {gSpecialVar_Result = -1;}
+void GetPokeblockFeederWithinRange(void) {gSpecialVar_Result = -1;}
+void SafariZoneActivatePokeblockFeeder(u8 pkblId) {}
+static void DecrementFeederStepCounters(void) {}
+struct Pokeblock *SafariZoneGetActivePokeblock(void) {return NULL;}
+#else
+
 static void ClearPokeblockFeeder(u8 index)
 {
-    memset(&sSafariData.feeders[index], 0, sizeof(struct PokeblockFeeder));
+    memset(&sPokeblockFeeders[index], 0, sizeof(struct PokeblockFeeder));
 }
 
 void GetPokeblockFeederInFront(void)
@@ -214,12 +213,12 @@ void GetPokeblockFeederInFront(void)
 
     for (i = 0; i < NUM_POKEBLOCK_FEEDERS; i++)
     {
-        if (gSaveBlock1Ptr->location.mapNum == sSafariData.feeders[i].mapNum
-         && sSafariData.feeders[i].x == x
-         && sSafariData.feeders[i].y == y)
+        if (gSaveBlock1Ptr->location.mapNum == sPokeblockFeeders[i].mapNum
+         && sPokeblockFeeders[i].x == x
+         && sPokeblockFeeders[i].y == y)
         {
             gSpecialVar_Result = i;
-            StringCopy(gStringVar1, gPokeblockNames[sSafariData.feeders[i].pokeblock.color]);
+            StringCopy(gStringVar1, gPokeblockNames[sPokeblockFeeders[i].pokeblock.color]);
             return;
         }
     }
@@ -236,11 +235,11 @@ void GetPokeblockFeederWithinRange(void)
 
     for (i = 0; i < NUM_POKEBLOCK_FEEDERS; i++)
     {
-        if (gSaveBlock1Ptr->location.mapNum == sSafariData.feeders[i].mapNum)
+        if (gSaveBlock1Ptr->location.mapNum == sPokeblockFeeders[i].mapNum && gSaveBlock1Ptr->location.mapGroup == sPokeblockFeeders[i].mapGroup)
         {
             // Get absolute value of x and y distance from Pokeblock feeder on current map.
-            x -= sSafariData.feeders[i].x;
-            y -= sSafariData.feeders[i].y;
+            x -= sPokeblockFeeders[i].x;
+            y -= sPokeblockFeeders[i].y;
             if (x < 0)
                 x *= -1;
             if (y < 0)
@@ -263,7 +262,7 @@ struct Pokeblock *SafariZoneGetActivePokeblock(void)
     if (gSpecialVar_Result == 0xFFFF)
         return NULL;
     else
-        return &sSafariData.feeders[gSpecialVar_Result].pokeblock;
+        return &sPokeblockFeeders[gSpecialVar_Result].pokeblock;
 }
 
 void SafariZoneActivatePokeblockFeeder(u8 pkblId)
@@ -273,21 +272,23 @@ void SafariZoneActivatePokeblockFeeder(u8 pkblId)
 
     for (i = 0; i < NUM_POKEBLOCK_FEEDERS; i++)
     {
-        // Find free entry in sSafariData.feeders
-        if (sSafariData.feeders[i].mapNum == 0
-         && sSafariData.feeders[i].x == 0
-         && sSafariData.feeders[i].y == 0)
+        // Find free entry in sPokeblockFeeders
+        if (sPokeblockFeeders[i].mapNum == 0
+         && sPokeblockFeeders[i].x == 0
+         && sPokeblockFeeders[i].y == 0)
         {
             // Initialize Pokeblock feeder
             GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-            sSafariData.feeders[i].mapNum = gSaveBlock1Ptr->location.mapNum;
-            sSafariData.feeders[i].pokeblock = gSaveBlock1Ptr->pokeblocks[pkblId];
-            sSafariData.feeders[i].stepCounter = 100;
-            sSafariData.feeders[i].x = x;
-            sSafariData.feeders[i].y = y;
-            break;
+            sPokeblockFeeders[i].mapNum = gSaveBlock1Ptr->location.mapNum;
+            sPokeblockFeeders[i].mapGroup = gSaveBlock1Ptr->location.mapGroup;
+            sPokeblockFeeders[i].pokeblock = gSaveBlock1Ptr->pokeblocks[pkblId];
+            sPokeblockFeeders[i].stepCounter = POKEFEEDER_STEP_DURATION;
+            sPokeblockFeeders[i].x = x;
+            sPokeblockFeeders[i].y = y;
+            return;
         }
     }
+    errorf("Could not find a free pokefeeder to activate");
 }
 
 static void DecrementFeederStepCounters(void)
@@ -296,20 +297,21 @@ static void DecrementFeederStepCounters(void)
 
     for (i = 0; i < NUM_POKEBLOCK_FEEDERS; i++)
     {
-        if (sSafariData.feeders[i].stepCounter != 0)
+        if (sPokeblockFeeders[i].stepCounter != 0)
         {
-            sSafariData.feeders[i].stepCounter--;
-            if (sSafariData.feeders[i].stepCounter == 0)
+            sPokeblockFeeders[i].stepCounter--;
+            if (sPokeblockFeeders[i].stepCounter == 0)
                 ClearPokeblockFeeder(i);
         }
     }
 }
+#endif
 
 void PrepareStartMenuSafariString()
 {
-    ConvertIntToDecimalStringN(gStringVar1, sSafariData.stepCounter, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    ConvertIntToDecimalStringN(gStringVar2, sSafariZones[sSafariData.id].startingSteps, STR_CONV_MODE_RIGHT_ALIGN, 3);
-    ConvertIntToDecimalStringN(gStringVar3, sSafariData.numBalls, STR_CONV_MODE_RIGHT_ALIGN, 2);
+    ConvertIntToDecimalStringN(gStringVar1, sSafariZoneStepCounter, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar2, sSafariZones[sActiveSafari].startingSteps, STR_CONV_MODE_RIGHT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar3, sNumSafariBalls, STR_CONV_MODE_RIGHT_ALIGN, 2);
     StringExpandPlaceholders(gStringVar4, gText_MenuSafariStats);
 }
 
@@ -317,25 +319,25 @@ bool32 IsSafariEnding(void)
 {
     if (!GetSafariZoneFlag())
         return FALSE;
-    if (sSafariData.numBalls > 0)
+    if (sNumSafariBalls > 0)
         return FALSE;
     return TRUE;
 }
 
 bool32 InSafariThatDoesNotSendMons(void)
 {
-    enum SafariRules rules = sSafariZones[sSafariData.id].rules;
+    enum SafariRules rules = sSafariZones[sActiveSafari].rules;
     return (rules == RSE_SAFARI || rules == FRLG_SAFARI);
 }
 
 u32 GetSafariZoneBallMultiplier(void)
 {
-    return sSafariZones[sSafariData.id].catchMultiplier;
+    return sSafariZones[sActiveSafari].catchMultiplier;
 }
 
 u32 GetSafariBallCount(void)
 {
-    return sSafariData.numBalls;
+    return sNumSafariBalls;
 }
 
 static const u8 *sSafariControllerMenuString[] = {
@@ -345,7 +347,7 @@ static const u8 *sSafariControllerMenuString[] = {
 
 const u8 *GetSafariControllerMenu(void)
 {
-    return sSafariControllerMenuString[sSafariZones[sSafariData.id].rules];
+    return sSafariControllerMenuString[sSafariZones[sActiveSafari].rules];
 }
 
 static const u8 sSafariControllerActions[][4] = {
@@ -365,7 +367,7 @@ static const u8 sSafariControllerActions[][4] = {
 
 const u8 *GetSafariControllerActions(void)
 {
-    return sSafariControllerActions[sSafariZones[sSafariData.id].rules];
+    return sSafariControllerActions[sSafariZones[sActiveSafari].rules];
 }
 
 u32 GetInitialSafariCatchFactor(void)
@@ -411,7 +413,7 @@ void HandleAction_WatchesCarefully(void)
     gBattle_BG0_Y = 0;
 
     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-    if (sSafariZones[sSafariData.id].rules == FRLG_SAFARI)
+    if (sSafariZones[sActiveSafari].rules == FRLG_SAFARI)
     {
         if (gBattleStruct->safariRockThrowCounter > 0)
         {
@@ -439,7 +441,7 @@ void HandleAction_SafariZoneBallThrow(void)
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
-    sSafariData.numBalls--;
+    sNumSafariBalls--;
     gLastUsedItem = ITEM_SAFARI_BALL;
     gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;

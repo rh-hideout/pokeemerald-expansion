@@ -14,5 +14,6 @@ enum SafariIds {
 #define SAFARI_ZONE_NO_BALLS_LEFT               3
 #define SAFARI_ZONE_NO_BALLS_MID_BATTLE         4
 #define SAFARI_ZONE_RETIRING                    5
+#define SAFARI_ZONE_WHITEOUT                    6
 
 #endif // GUARD_CONSTANTS_SAFARIS_H

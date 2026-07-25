@@ -395,6 +395,12 @@ void DoWhiteOut(void)
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
     SetWarpDestinationToLastHealLocation();
+    if (GetSafariZoneFlag())
+    {
+        VarSet(VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_WHITEOUT);
+        if (ShouldRetireFromSafariOnWhiteout())
+            SetSafariExitWarp();
+    }
     WarpIntoMap();
 }
 
@@ -1936,15 +1942,19 @@ void CB2_WhiteOut(void)
     {
         FieldClearVBlankHBlankCallbacks();
         StopMapMusic();
-        ResetSafariZoneFlag();
         DoWhiteOut();
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
         if (IsWhiteoutCutscene())
+        {
             gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
+        }
         else
+        {
+            ResetSafariZoneFlag(); // needs to happen after cutscene if there is a cutscene
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;
+        }
         state = 0;
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&state);
@@ -2093,7 +2103,6 @@ void CB2_ContinueSavedGame(void)
 
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
-    ResetSafariZoneFlag();
     if (gSaveFileStatus == SAVE_STATUS_ERROR)
         ResetWinStreaks();
 

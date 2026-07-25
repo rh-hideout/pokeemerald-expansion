@@ -7,6 +7,8 @@ FuchsiaCity_SafariZone_Entrance_OnFrame::
 	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_LEFT, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
 	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_STEP_LEFT, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
 	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_MID_BATTLE, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWalkIn
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_RETIRING, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
+	map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_WHITEOUT, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
 	.2byte 0
 
 @ When player runs out of balls mid-battle

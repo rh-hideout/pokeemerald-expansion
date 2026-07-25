@@ -9355,6 +9355,9 @@ static bool32 CriticalCapture(u32 odds)
     if (B_CRITICAL_CAPTURE == FALSE)
         return FALSE;
 
+    if (GetSafariZoneFlag() && !OW_ALLOW_CRITICAL_CAPTURE_SAFARI)
+        return FALSE;
+
     if (B_CRITICAL_CAPTURE_LOCAL_DEX == TRUE)
         totalDexCount = REGIONAL_DEX_COUNT;
     else
