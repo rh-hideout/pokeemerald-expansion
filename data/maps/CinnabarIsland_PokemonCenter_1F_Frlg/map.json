@@ -15,17 +15,96 @@
   "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [],
-  "object_events": [],
- "warp_events": [
+  "object_events": [
     {
-        "x": 7,
-        "y": 8,
-        "elevation": 0,
-        "dest_map": "MAP_CINNABAR_ISLAND",
-        "dest_warp_id": "0"
+      "local_id": "LOCALID_CINNABAR_NURSE",
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+      "x": 7,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CinnabarIsland_Frlg_EventScript_NpcPlaceholder",
+      "flag": "0"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
+      "x": 2,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CinnabarIsland_Frlg_EventScript_NpcPlaceholder",
+      "flag": "0"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_FRLG",
+      "x": 9,
+      "y": 7,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CinnabarIsland_Frlg_EventScript_NpcPlaceholder",
+      "flag": "0"
+    },
+    {
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
+      "x": 14,
+      "y": 6,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CinnabarIsland_Frlg_EventScript_NpcPlaceholder",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_CINNABAR_POKEMON_CENTER_BILL",
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_BILL",
+      "x": 11,
+      "y": 5,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CinnabarIsland_Frlg_EventScript_NpcPlaceholder",
+      "flag": "0"
     }
-],
-    
+  ],
+  "warp_events": [
+    {
+      "x": 7,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_CINNABAR_ISLAND",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_CINNABAR_ISLAND_POKEMON_CENTER_2F",
+      "dest_warp_id": 0
+    }
+  ],
   "coord_events": [],
-   "bg_events": []
+  "bg_events": []
 }

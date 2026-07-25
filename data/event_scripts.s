@@ -801,7 +801,6 @@ gStdScripts_End::
 	.include "data/maps/VermilionCity_Frlg/scripts.inc"
 	.include "data/maps/CeladonCity_Frlg/scripts.inc"
 	.include "data/maps/FuchsiaCity_Frlg/scripts.inc"
-	.include "data/maps/CinnabarIsland_Frlg/scripts.inc"
 	.include "data/maps/IndigoPlateau_Exterior_Frlg/scripts.inc"
 	.include "data/maps/SaffronCity_Frlg/scripts.inc"
 	.include "data/maps/SaffronCity_Connection_Frlg/scripts.inc"
