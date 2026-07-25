@@ -473,3 +473,17 @@ static const union AnimCmd *const sAnims_Kommo_O[] =
     },
 };
 #endif //P_FAMILY_JANGMO_O
+
+#if P_FAMILY_MAGEARNA
+static const union AnimCmd *const sAnims_Magearna[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+        ANIMCMD_FRAME(1, 40),
+        ANIMCMD_FRAME(1, 40),
+        ANIMCMD_FRAME(1, 40),
+        ANIMCMD_FRAME(0, 1),
+        ANIMCMD_END,
+    },
+};
+#endif //P_FAMILY_JANGMO_O

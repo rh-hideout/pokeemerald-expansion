@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
     s16 futureSightDmg;
 
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_PIKACHU);
         PLAYER(SPECIES_RAICHU) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_REGICE);
@@ -142,6 +143,7 @@ SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is about to get hit")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -164,6 +166,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual damage")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_WRAP, MOVE_EFFECT_WRAP));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(10); }
         OPPONENT(SPECIES_WYNAUT);
@@ -231,9 +234,10 @@ SINGLE_BATTLE_TEST("Future Sight set up is not blocked by Protect")
 SINGLE_BATTLE_TEST("Future Sight does not trigger Red Card")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}
@@ -243,6 +247,63 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Red Card")
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_RED_CARD);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight does not trigger Eject Button")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_EJECT_BUTTON);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight does not trigger Rowap Berry")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ROWAP_BERRY].holdEffect == HOLD_EFFECT_ROWAP_BERRY);
+        ASSUME(GetMoveCategory(MOVE_FUTURE_SIGHT) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROWAP_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_ROWAP_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight does not trigger Cursed Body")
+{
+    PASSES_RANDOMLY(10, 10, RNG_CURSED_BODY);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+    } THEN {
+        u32 disabledMove = player->volatiles.disabledMove;
+        EXPECT_EQ(disabledMove, MOVE_NONE);
     }
 }
 

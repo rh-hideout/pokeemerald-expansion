@@ -28,7 +28,8 @@ u32 GetBattlerRawSpeedOrder(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
-void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
+void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
+void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se);
 bool32 CanBattlerSwitch(enum BattlerId battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
@@ -58,7 +59,7 @@ void RestoreAttacker(void);
 void RestoreTarget(void);
 bool32 CanBurnHitThaw(enum Move move);
 bool32 CanMoveThawTarget(enum Ability abilityAtk, enum Move move);
-bool32 CanFireMoveThawTarget(enum Move move);
+bool32 CanFireMoveThawTarget(enum Move move, enum Type moveType);
 
 extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];
