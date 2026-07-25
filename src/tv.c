@@ -181,8 +181,8 @@ static const u8 sText_SoSo[] = _("So-so");
 static const u8 sText_Bad[] = _("Bad");
 static const u8 sText_TheWorst[] = _("The worst");
 
-static const u8 sText_Slots[] = _("SLOTS");
-static const u8 sText_Roulette[] = _("ROULETTE");
+static const u8 sText_Slots[] = _("[Slots]");
+static const u8 sText_Roulette[] = _("[Roulette]");
 static const u8 sText_Jackpot[] = _("jackpot");
 
 static const u16 sNumberOneVarsAndThresholds[][2] = {
