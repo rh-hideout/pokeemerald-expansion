@@ -272,8 +272,8 @@ void Script_BufferFanClubTrainerName(void)
 #endif //FREE_LINK_BATTLE_RECORDS
 }
 
-static const u8 sText_LtSurge[] = _("LT. SURGE");
-static const u8 sText_Koga[] = _("KOGA");
+static const u8 sText_LtSurge[] = _("[Lt. Surge]");
+static const u8 sText_Koga[] = _("[Koga]");
 
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName(struct LinkBattleRecords *linkRecords, u8 whichLinkTrainer, u8 whichNPCTrainer)
