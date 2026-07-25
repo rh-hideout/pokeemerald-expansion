@@ -170,7 +170,7 @@ u8 *CopyItemName(enum Item itemId, u8 *dst)
     return StringCopy(dst, GetItemName(itemId));
 }
 
-const u8 sText_s[] =_("s");
+const u8 sText_s[] =_("[s]");
 
 u8 *CopyItemNameHandlePlural(enum Item itemId, u8 *dst, u32 quantity)
 {
