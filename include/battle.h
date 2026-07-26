@@ -151,6 +151,8 @@ struct SideTimer
 {
     u16 reflectTimer;
     u16 lightscreenTimer;
+    u16 reflectTimerTotal;
+    u16 lightscreenTimerTotal;
     u16 mistTimer;
     u16 safeguardTimer;
     u8 spikesAmount:4;
@@ -158,6 +160,7 @@ struct SideTimer
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
+    u16 auroraVeilTimerTotal;
     u16 tailwindTimer;
     u16 luckyChantTimer;
     // Timers below this point are not swapped by Court Change
@@ -179,8 +182,10 @@ struct FieldTimer
     u8 wonderRoomTimer;
     u8 magicRoomTimer;
     u8 trickRoomTimer;
-    u8 terrain;
+    u8 terrain:7;
+    u8 terrainSide:1;
     u8 terrainTimer;
+    u8 terrainTimerTotal;
     u8 gravityTimer;
     u8 fairyLockTimer;
 };
@@ -584,6 +589,8 @@ struct BattleStruct
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
+    u8 weatherDurationTotal;
+    u8 weatherSide;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
     u8 expOrderId:3;
@@ -679,6 +686,7 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
+    u8 battleStatusHintSpriteId; // battle status hint, window gfx
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     enum Species beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 beatUpSlot:3;

@@ -1686,9 +1686,15 @@ static inline bool32 TrySetReflect(enum BattlerId battler)
     {
         gSideStatuses[side] |= SIDE_STATUS_REFLECT;
         if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].reflectTimer = 8;
+            gSideTimers[side].reflectTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].reflectTimer = 5;
+            gSideTimers[side].reflectTimerTotal = 5;
+        }
 
         if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
@@ -1707,9 +1713,15 @@ static inline bool32 TrySetLightScreen(enum BattlerId battler)
     {
         gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
         if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].lightscreenTimer = 8;
+            gSideTimers[side].lightscreenTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].lightscreenTimer = 5;
+            gSideTimers[side].lightscreenTimerTotal = 5;
+        }
 
         if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
@@ -2790,9 +2802,15 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
         {
             gSideStatuses[GetBattlerSide(effectBattler)] |= SIDE_STATUS_AURORA_VEIL;
             if (GetBattlerHoldEffect(effectBattler) == HOLD_EFFECT_LIGHT_CLAY)
+            {
                 gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimer = 8;
+                gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimerTotal = 8;
+            }
             else
+            {
                 gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimer = 5;
+                gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimerTotal = 5;
+            }
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_AURORA_VEIL;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectScreens;
@@ -6210,6 +6228,7 @@ bool32 CanUseLastResort(enum BattlerId battler)
 static void RemoveAllWeather(void)
 {
     gBattleStruct->weatherDuration = 0;
+    gBattleStruct->weatherDurationTotal = 0;
 
     if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_HEAVY_RAIN;
@@ -6432,6 +6451,9 @@ void BS_CourtChangeSwapSideStatuses(void)
     COURTCHANGE_SWAP(SIDE_STATUS_SAFEGUARD, safeguardTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_TAILWIND, tailwindTimer, temp);
+    SWAP(sideTimerPlayer->reflectTimerTotal, sideTimerOpp->reflectTimerTotal, temp);
+    SWAP(sideTimerPlayer->lightscreenTimerTotal, sideTimerOpp->lightscreenTimerTotal, temp);
+    SWAP(sideTimerPlayer->auroraVeilTimerTotal, sideTimerOpp->auroraVeilTimerTotal, temp);
     // Lucky Chant doesn't exist in gen 8, but seems like it should be affected by Court Change
     COURTCHANGE_SWAP(SIDE_STATUS_LUCKY_CHANT, luckyChantTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_DAMAGE_NON_TYPES, damageNonTypesTimer, temp);
@@ -13493,9 +13515,15 @@ void BS_SetAuroraVeil(void)
     {
         gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
         if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 8;
+            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 5;
+            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimerTotal = 5;
+        }
 
         if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
             gBattleCommunication[MULTISTRING_CHOOSER] = 5;
