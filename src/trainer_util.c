@@ -110,7 +110,8 @@ void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trai
 {
     u32 otID;
     trainerGen->gender = partner->gender;
-    trainerGen->smartTera = partner->aiFlags & AI_FLAG_SMART_TERA;
+    if (trainer->aiFlags & AI_FLAG_SMART_TERA)
+        trainerGen->smartTera = TRUE;
     trainerGen->isFrontier = FALSE;
     StringCopyN(trainerGen->name, partner->trainerName, TRAINER_NAME_LENGTH + 1);
     trainerGen->trainerClass = partner->trainerClass;
