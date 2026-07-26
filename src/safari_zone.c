@@ -88,9 +88,11 @@ EWRAM_DATA static u8 sNumSafariBalls = 0;
 EWRAM_DATA static u8 sSafariZoneCaughtMons = 0;
 EWRAM_DATA static u8 sSafariZonePkblkUses = 0;
 EWRAM_DATA static u16 sSafariZoneStepCounter = 0;
+#if !OW_DISABLE_POKEFEEDERS
 EWRAM_DATA static struct PokeblockFeeder sPokeblockFeeders[NUM_POKEBLOCK_FEEDERS] = {0};
+#endif // !OW_DISABLE_POKEFEEDERS
 
-#endif
+#endif // OW_ALLOW_SAFARI_SAVING
 
 static void DecrementFeederStepCounters(void);
 
