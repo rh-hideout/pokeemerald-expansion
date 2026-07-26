@@ -3533,7 +3533,7 @@ static void PrintMonAbilityName(void)
 static void PrintMonAbilityDescription(void)
 {
     enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ABILITY), gAbilitiesInfo[ability].description, 0, 17, 0, 0);
+    PrintTextOnWindowToFit(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ABILITY), gAbilitiesInfo[ability].description, 0, 17, 0, 0);
 }
 
 static void BufferMonTrainerMemo(void)
@@ -4169,7 +4169,7 @@ static void PrintContestMoveDescription(u8 moveSlot)
     if (move != MOVE_NONE)
     {
         u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
-        PrintTextOnWindow(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
+        PrintTextOnWindowToFit(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
     }
 }
 
@@ -4184,11 +4184,11 @@ static void PrintMoveDetails(enum Move move)
             if (B_SHOW_CATEGORY_ICON == TRUE)
                 ShowCategoryIcon(GetBattleMoveCategory(move));
             PrintMovePowerAndAccuracy(move);
-            PrintTextOnWindow(windowId, GetMoveDescription(move), 6, 1, 0, 0);
+            PrintTextOnWindowToFit(windowId, GetMoveDescription(move), 6, 1, 0, 0);
         }
         else
         {
-            PrintTextOnWindow(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
+            PrintTextOnWindowToFit(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
         }
         PutWindowTilemap(windowId);
     }
