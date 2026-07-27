@@ -7423,9 +7423,9 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .height = 13,
         .weight = 2481,
         .description = COMPOUND_STRING(
-            "This is Magearna once a previously hidden\n",
-            "mode activates. The emotions Magearna had\n",
-            "begun to feel now hide away as it fells\n",
+            "This is Magearna once a previously hidden\n"
+            "mode activates. The emotions Magearna had\n"
+            "begun to feel now hide away as it fells\n"
             "foe after foe."),
         .frontPic = gMonFrontPic_MagearnaMega,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
