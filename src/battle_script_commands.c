@@ -4040,7 +4040,7 @@ static void Cmd_getexp(void)
                     }
 
                     // get exp getter battler
-                    if (IsDoubleBattle())
+                    if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
                     {
                         if (gBattlerPartyIndexes[2] == *expMonId && !(gAbsentBattlerFlags & 4))
                             gBattleStruct->expGetterBattlerId = 2;
