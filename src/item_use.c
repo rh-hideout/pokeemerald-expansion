@@ -36,6 +36,7 @@
 #include "party_menu.h"
 #include "pokeblock.h"
 #include "pokemon.h"
+#include "safari_zone.h"
 #include "script.h"
 #include "sound.h"
 #include "strings.h"
@@ -1104,6 +1105,11 @@ bool8 CanUseDigOrEscapeRopeOnCurMap(void)
 {
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
+
+    if (GetSafariZoneFlag() && CannotEscapeSafari())
+    {
+        return FALSE;
+    }
 
     if (gMapHeader.allowEscaping)
         return TRUE;

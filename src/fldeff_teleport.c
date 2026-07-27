@@ -5,6 +5,7 @@
 #include "follower_npc.h"
 #include "party_menu.h"
 #include "overworld.h"
+#include "safari_zone.h"
 #include "task.h"
 #include "constants/field_effects.h"
 
@@ -15,6 +16,11 @@ bool32 SetUpFieldMove_Teleport(void)
 {
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
+
+    if (GetSafariZoneFlag() && CannotEscapeSafari())
+    {
+        return FALSE;
+    }
 
     if (Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
     {
