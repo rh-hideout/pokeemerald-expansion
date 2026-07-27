@@ -27554,8 +27554,57 @@ const u32 gMonBackPic_BlueEyesWhiteDragon[] = INCGFX_U32("graphics/pokemon/BlueE
 const u16 gMonShinyPalette_BlueEyesWhiteDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/shiny.pal", ".gbapal");
 const u8 gMonIcon_BlueEyesWhiteDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesWhiteDragon/icon.png", ".4bpp");
 
-const u32 gMonFrontPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/anim_front.png", ".4bpp.smol");
-const u16 gMonPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesWhiteDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesWhiteDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_BlueEyesUltimateDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesWhiteDragon/icon.png", ".4bpp");
+const u32 gMonFrontPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_BlueEyesUltimateDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_BlueEyesUltimateDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_BlueEyesUltimateDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
+
+
+const u32 gMonFrontPic_ManEaterBug[] = INCGFX_U32("graphics/pokemon/ManEaterBug/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_ManEaterBug[] = INCGFX_U16("graphics/pokemon/ManEaterBug/normal.pal", ".gbapal");
+const u32 gMonBackPic_ManEaterBug[] = INCGFX_U32("graphics/pokemon/ManEaterBug/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_ManEaterBug[] = INCGFX_U16("graphics/pokemon/ManEaterBug/shiny.pal", ".gbapal");
+const u8 gMonIcon_ManEaterBug[] = INCGFX_U8("graphics/pokemon/ManEaterBug/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_NoblemanEaterBug[] = INCGFX_U32("graphics/pokemon/NoblemanEaterBug/front.png", ".4bpp.smol");
+const u16 gMonPalette_NoblemanEaterBug[] = INCGFX_U16("graphics/pokemon/NoblemanEaterBug/normal.pal", ".gbapal");
+const u32 gMonBackPic_NoblemanEaterBug[] = INCGFX_U32("graphics/pokemon/NoblemanEaterBug/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_NoblemanEaterBug[] = INCGFX_U16("graphics/pokemon/NoblemanEaterBug/shiny.pal", ".gbapal");
+const u8 gMonIcon_NoblemanEaterBug[] = INCGFX_U8("graphics/pokemon/NoblemanEaterBug/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_PetitMoth[] = INCGFX_U32("graphics/pokemon/PetitMoth/anim_front.png", ".4bpp.smol");
+const u16 gMonPalette_PetitMoth[] = INCGFX_U16("graphics/pokemon/PetitMoth/normal.pal", ".gbapal");
+const u32 gMonBackPic_PetitMoth[] = INCGFX_U32("graphics/pokemon/PetitMoth/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_PetitMoth[] = INCGFX_U16("graphics/pokemon/PetitMoth/shiny.pal", ".gbapal");
+const u8 gMonIcon_PetitMoth[] = INCGFX_U8("graphics/pokemon/PetitMoth/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_LarvaeMoth[] = INCGFX_U32("graphics/pokemon/LarvaeMoth/front.png", ".4bpp.smol");
+const u16 gMonPalette_LarvaeMoth[] = INCGFX_U16("graphics/pokemon/LarvaeMoth/normal.pal", ".gbapal");
+const u32 gMonBackPic_LarvaeMoth[] = INCGFX_U32("graphics/pokemon/LarvaeMoth/back.png", ".4bpp.smol"); 
+const u16 gMonShinyPalette_LarvaeMoth[] = INCGFX_U16("graphics/pokemon/LarvaeMoth/shiny.pal", ".gbapal");
+const u8 gMonIcon_LarvaeMoth[] = INCGFX_U8("graphics/pokemon/LarvaeMoth/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_CocoonOfEvolution[] = INCGFX_U32("graphics/pokemon/CocoonOfEvolution/front.png", ".4bpp.smol");
+const u16 gMonPalette_CocoonOfEvolution[] = INCGFX_U16("graphics/pokemon/CocoonOfEvolution/normal.pal", ".gbapal"); 
+const u32 gMonBackPic_CocoonOfEvolution[] = INCGFX_U32("graphics/pokemon/CocoonOfEvolution/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_CocoonOfEvolution[] = INCGFX_U16("graphics/pokemon/CocoonOfEvolution/shiny.pal", ".gbapal");
+const u8 gMonIcon_CocoonOfEvolution[] = INCGFX_U8("graphics/pokemon/CocoonOfEvolution/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GreatMoth[] = INCGFX_U32("graphics/pokemon/GreatMoth/front.png", ".4bpp.smol");
+const u16 gMonPalette_GreatMoth[] = INCGFX_U16("graphics/pokemon/GreatMoth/normal.pal", ".gbapal");
+const u32 gMonBackPic_GreatMoth[] = INCGFX_U32("graphics/pokemon/GreatMoth/back.png", ".4bpp.smol"); 
+const u16 gMonShinyPalette_GreatMoth[] = INCGFX_U16("graphics/pokemon/GreatMoth/shiny.pal", ".gbapal");
+const u8 gMonIcon_GreatMoth[] = INCGFX_U8("graphics/pokemon/GreatMoth/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_PerfectlyUltimateGreatMoth[] = INCGFX_U32("graphics/pokemon/PerfectlyUltimateGreatMoth/front.png", ".4bpp.smol");
+const u16 gMonPalette_PerfectlyUltimateGreatMoth[] = INCGFX_U16("graphics/pokemon/PerfectlyUltimateGreatMoth/normal.pal", ".gbapal");
+const u32 gMonBackPic_PerfectlyUltimateGreatMoth[] = INCGFX_U32("graphics/pokemon/PerfectlyUltimateGreatMoth/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_PerfectlyUltimateGreatMoth[] = INCGFX_U16("graphics/pokemon/PerfectlyUltimateGreatMoth/shiny.pal", ".gbapal");
+const u8 gMonIcon_PerfectlyUltimateGreatMoth[] = INCGFX_U8("graphics/pokemon/PerfectlyUltimateGreatMoth/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_ParasiteCaterpillar[] = INCGFX_U32("graphics/pokemon/ParasiteCaterpillar/front.png", ".4bpp.smol");
+const u16 gMonPalette_ParasiteCaterpillar[] = INCGFX_U16("graphics/pokemon/ParasiteCaterpillar/normal.pal", ".gbapal");
+const u32 gMonBackPic_ParasiteCaterpillar[] = INCGFX_U32("graphics/pokemon/ParasiteCaterpillar/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_ParasiteCaterpillar[] = INCGFX_U16("graphics/pokemon/ParasiteCaterpillar/shiny.pal", ".gbapal");
+const u8 gMonIcon_ParasiteCaterpillar[] = INCGFX_U8("graphics/pokemon/ParasiteCaterpillar/icon.png", ".4bpp");
