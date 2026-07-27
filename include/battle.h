@@ -776,7 +776,7 @@ struct BattleWeatherInfo
     u32 type:4; // used when weather is similar (e.g. Desolate Land and Drought)
 };
 
-extern const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT];
+extern const struct BattleWeatherInfo gBattleWeatherInfo[BATTLE_WEATHER_COUNT];
 
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).

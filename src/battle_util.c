@@ -103,7 +103,7 @@ static const u8 sPkblToEscapeFactor[][3] = {
 static const u8 sGoNearCounterToCatchFactor[] = {4, 3, 2, 1};
 static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
 
-const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] = {
+const struct BattleWeatherInfo gBattleWeatherInfo[BATTLE_WEATHER_COUNT] = {
     [BATTLE_WEATHER_RAIN] =
     {
         .flag = B_WEATHER_RAIN_NORMAL,
@@ -229,9 +229,9 @@ enum BattleWeather GetBattleWeather(u32 weather)
 {
     u32 currBattleWeather = BATTLE_WEATHER_NONE;
 
-    for (u32 i = 0; i < ARRAY_COUNT(sBattleWeatherInfo); i++)
+    for (u32 i = 0; i < ARRAY_COUNT(gBattleWeatherInfo); i++)
     {
-        if (weather & sBattleWeatherInfo[i].flag)
+        if (weather & gBattleWeatherInfo[i].flag)
         {
             currBattleWeather = i;
             break;
@@ -306,14 +306,14 @@ bool32 EndOrContinueWeather(void)
             gBattleMons[battler].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(battler);
         }
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleWeatherInfo[currBattleWeather].endMessage;
         BattleScriptCall(BattleScript_WeatherFaded);
         return TRUE;
     }
     else
     {
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].continuesMessage;
-        gBattleScripting.animArg1 = sBattleWeatherInfo[currBattleWeather].animation;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleWeatherInfo[currBattleWeather].continuesMessage;
+        gBattleScripting.animArg1 = gBattleWeatherInfo[currBattleWeather].animation;
         BattleScriptCall(BattleScript_WeatherContinues);
         return TRUE;
     }
@@ -1990,7 +1990,7 @@ static bool32 TryChangeWeatherWithAbility(enum BattlerId battler, u32 battleWeat
 
 enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum Ability ability)
 {
-    if (gBattleWeather & sBattleWeatherInfo[battleWeatherId].flag)
+    if (gBattleWeather & gBattleWeatherInfo[battleWeatherId].flag)
         return WEATHER_FAILURE_SAME_WEATHER;
 
     if (gBattleStruct->overworldWeatherPresent)
@@ -2006,12 +2006,12 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
 
     if (GetConfig(B_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
     {
-        gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
+        gBattleWeather = gBattleWeatherInfo[battleWeatherId].flag;
     }
     else
     {
-        u32 rock = sBattleWeatherInfo[battleWeatherId].rock;
-        gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
+        u32 rock = gBattleWeatherInfo[battleWeatherId].rock;
+        gBattleWeather = gBattleWeatherInfo[battleWeatherId].flag;
 
         if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
             gBattleStruct->weatherDuration = 0;
@@ -2023,12 +2023,12 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
 
     if (ability != ABILITY_NONE) // Weather started by Ability
     {
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[battleWeatherId].abilityStartMessage;
-        gBattleScripting.animArg1 = sBattleWeatherInfo[battleWeatherId].animation;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleWeatherInfo[battleWeatherId].abilityStartMessage;
+        gBattleScripting.animArg1 = gBattleWeatherInfo[battleWeatherId].animation;
     }
     else // Weather started by Move
     {
-        gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[battleWeatherId].moveStartMessage;
+        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleWeatherInfo[battleWeatherId].moveStartMessage;
     }
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
@@ -2502,12 +2502,12 @@ static bool32 SetStartingHazardStatus(enum Hazards hazard, u32 targetSide, u8 la
 
 static bool32 SetStartingWeatherStatus(enum BattleWeather weather, bool32 isPermanent)
 {
-    if (gBattleWeather & sBattleWeatherInfo[weather].flag)
+    if (gBattleWeather & gBattleWeatherInfo[weather].flag)
         return FALSE;
 
-    gBattleWeather = sBattleWeatherInfo[weather].flag;
-    gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[weather].moveStartMessage;
-    gBattleScripting.animArg1 = sBattleWeatherInfo[weather].animation;
+    gBattleWeather = gBattleWeatherInfo[weather].flag;
+    gBattleCommunication[MULTISTRING_CHOOSER] = gBattleWeatherInfo[weather].moveStartMessage;
+    gBattleScripting.animArg1 = gBattleWeatherInfo[weather].animation;
     if (GetConfig(B_OVERWORLD_WEATHER_OVERRIDE) >= GEN_9)
         gBattleStruct->overworldWeatherPresent = TRUE;
 
