@@ -15,7 +15,7 @@ While the Safari Zones maps are exclusive to the safari mode in vanilla Emerald 
 Being in a safari is a game state and it is not tied to any specific location
 
 In Expansion, safari ids are defined as `enum SafariIds` in `include/constants/safaris` so that they can be called in scripts
-And the actual safari properties is defined in `sSafariZones` in `src/safari_zone.c`
+And the actual safari properties is defined in `sSafariZones` in `src/data/safaris.h`
 
 ## Safari Properties
 
