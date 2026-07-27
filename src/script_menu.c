@@ -85,6 +85,7 @@ static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollecti
     }
 };
 
+
 static const struct ListMenuTemplate sScriptableListMenuTemplate =
 {
     .item_X = 8,

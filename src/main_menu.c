@@ -41,6 +41,8 @@
 #include "title_screen.h"
 #include "window.h"
 #include "mystery_gift_menu.h"
+#include "constants/counterparts.h"
+#include "event_data.h"
 
 u8 CreateObjectGraphicsSprite(
     u16 graphicsId,
@@ -1529,6 +1531,31 @@ default:
 
     gSaveBlock2Ptr->playerGender = gTasks[taskId].tPlayerGender;
     gSaveBlock2Ptr->playerAppearance = gTasks[taskId].tAppearanceIndex;
+
+    switch (gTasks[taskId].tAppearanceIndex)
+    {
+    case 0: // Brendan
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_LEXY);
+        break;
+    case 1: // Justin
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_MAAM);
+        break;
+    case 2: // May
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_SIR);
+        break;
+    case 3: // Ma'am
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_JUSTIN);
+        break;
+    case 4: // Sir
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_MAY);
+        break;
+    case 5: // Lexy
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_BRENDAN);
+        break;
+    default:
+        VarSet(VAR_COUNTERPART_ID, COUNTERPART_NONE);
+        break;
+    }
 
     gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
 }

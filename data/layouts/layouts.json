@@ -9395,6 +9395,16 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/Town_Library/border.bin",
       "blockdata_filepath": "data/layouts/Town_Library/map.bin"
+    },
+    {
+      "id": "LAYOUT_HARD_ROCK_CAFE",
+      "name": "HardRockCafe_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleArena",
+      "border_filepath": "data/layouts/HardRockCafe/border.bin",
+      "blockdata_filepath": "data/layouts/HardRockCafe/map.bin"
     }
   ]
 }

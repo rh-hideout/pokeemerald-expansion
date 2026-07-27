@@ -1132,6 +1132,14 @@ static const struct MenuAction MultichoiceList_HelpOrAdult[] =
 {
     {COMPOUND_STRING("HELP")},
     {COMPOUND_STRING("GET AN ADULT")},
+
+};
+
+static const struct MenuAction MultichoiceList_LittleGirlBookResponse[] =
+{
+    { COMPOUND_STRING("WE'LL FIX IT.") },
+    { COMPOUND_STRING("TELL BLAINE.") },
+    { COMPOUND_STRING("WHERE WAS IT?") },
 };
 
 static const struct MenuAction MultichoiceList_Exit[] =
@@ -1143,6 +1151,17 @@ struct MultichoiceListStruct
 {
     const struct MenuAction *list;
     u8 count;
+};
+
+static const u8 sText_OfCourse[] = _("Of course!");
+static const u8 sText_IGuess[] = _("I guess...");
+static const u8 sText_NahImGood[] = _("Nah, I'm good.");
+
+static const struct MenuAction sMultichoiceList_LibraryHelpBlaine[] =
+{
+    { sText_OfCourse },
+    { sText_IGuess },
+    { sText_NahImGood },
 };
 
 static const struct MultichoiceListStruct sMultichoiceLists[] =
@@ -1167,6 +1186,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_YESNOINFO]                  = MULTICHOICE(MultichoiceList_YesNoInfo),
     [MULTI_PARENT_CHOICE]              = MULTICHOICE(MultichoiceList_ParentChoice),
     [MULTI_HELP_OR_ADULT]              = MULTICHOICE(MultichoiceList_HelpOrAdult),
+    [MULTI_LITTLE_GIRL_BOOK_RESPONSE] = MULTICHOICE(MultichoiceList_LittleGirlBookResponse),
     [MULTI_BATTLE_MODE]                = MULTICHOICE(MultichoiceList_BattleMode),
     [MULTI_UNUSED_19]                  = MULTICHOICE(MultichoiceList_Exit),
     [MULTI_YESNOINFO_2]                = MULTICHOICE(MultichoiceList_YesNoInfo2),
@@ -1308,6 +1328,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
+    [MULTICHOICE_LIBRARY_HELP_BLAINE]                  = MULTICHOICE(sMultichoiceList_LibraryHelpBlaine),
+    
 };
 
 const u8 *const gStdStrings[] =

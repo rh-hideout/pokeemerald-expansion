@@ -252,6 +252,26 @@ static const struct SpriteFrameImage sPicTable_Butterfly[] =
     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 5),
 };
 
+static const struct SpriteFrameImage sPicTable_Books[] =
+{
+    overworld_frame(gObjectEventPic_Books, 4, 4, 0),
+    overworld_frame(gObjectEventPic_Books, 4, 4, 1),
+    overworld_frame(gObjectEventPic_Books, 4, 4, 2),
+    overworld_frame(gObjectEventPic_Books, 4, 4, 3),
+    overworld_frame(gObjectEventPic_Books, 4, 4, 4),
+    overworld_frame(gObjectEventPic_Books, 4, 4, 5),
+};
+
+static const struct SpriteFrameImage sPicTable_Food[] =
+{
+    overworld_frame(gObjectEventPic_Food, 4, 4, 0),
+    overworld_frame(gObjectEventPic_Food, 4, 4, 1),
+    overworld_frame(gObjectEventPic_Food, 4, 4, 2),
+    overworld_frame(gObjectEventPic_Food, 4, 4, 3),
+    overworld_frame(gObjectEventPic_Food, 4, 4, 4),
+    overworld_frame(gObjectEventPic_Food, 4, 4, 5),
+};
+
 static const struct SpriteFrameImage sPicTable_LittleBoy[] = {
     overworld_ascending_frames(gObjectEventPic_LittleBoy, 2, 2),
 };

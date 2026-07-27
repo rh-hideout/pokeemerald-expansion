@@ -1,0 +1,148 @@
+# Query: butterfly
+# ContextLines: 1
+
+55 results - 11 files
+
+data/battle_anim_scripts.s:
+  18368  	call SetBugBg
+  18369: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18370  	delay 1
+  18371: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18372  	delay 1
+  18373  	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 3, 0, 50, 1
+  18374: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18375  	delay 1
+  18376: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18377  	delay 1
+  18378: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18379  	delay 1
+  18380: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18381  	delay 1
+  18382: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18383  	delay 1
+  18384: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18385  	delay 1
+  18386: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18387  	delay 1
+  18388: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18389  	delay 1
+  18390: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18391  	delay 1
+  18392: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18393  	delay 1
+  18394: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18395  	delay 1
+  18396: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18397  	delay 1
+  18398: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, 30
+  18399  	delay 1
+  18400: 	createsprite gMaxFlutterbyButterflySpriteTemplate, ANIM_ATTACKER, 2, 3, 0, -20
+  18401  	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 50, 1
+
+data/maps/IntroFlashback/map.json:
+   84      {
+   85:       "graphics_id": "OBJ_EVENT_GFX_BUTTERFLY",
+   86        "x": 3,
+
+   97      {
+   98:       "graphics_id": "OBJ_EVENT_GFX_BUTTERFLY",
+   99        "x": 22,
+
+  110      {
+  111:       "graphics_id": "OBJ_EVENT_GFX_BUTTERFLY",
+  112        "x": 21,
+
+include/constants/event_objects.h:
+  461      OBJ_EVENT_GFX_SIR_DECORATING,
+  462:     OBJ_EVENT_GFX_BUTTERFLY,
+  463  
+
+  622  #define OBJ_EVENT_PAL_TAG_MAAM                    0x1137
+  623: #define OBJ_EVENT_PAL_TAG_BUTTERFLY               0x1138
+  624  
+
+src/battle_anim_new.c:
+  6089  
+  6090: const struct SpriteTemplate gMaxFlutterbyButterflySpriteTemplate =
+  6091  {
+
+src/event_object_movement.c:
+  537       {gObjectEventPal_Maam,                OBJ_EVENT_PAL_TAG_MAAM},
+  538:      {gObjectEventPal_Butterfly,           OBJ_EVENT_PAL_TAG_BUTTERFLY},
+  539  #if 1
+
+src/data/object_events/object_event_graphics_info_pointers.h:
+  414  extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Mewtwo;
+  415: extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Butterfly;
+  416  extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Entei;
+
+  612      [OBJ_EVENT_GFX_CYNDAQUIL_DOLL] =           &gObjectEventGraphicsInfo_CyndaquilDoll,
+  613:     [OBJ_EVENT_GFX_BUTTERFLY] =                &gObjectEventGraphicsInfo_Butterfly,
+  614      [OBJ_EVENT_GFX_CHIKORITA_DOLL] =           &gObjectEventGraphicsInfo_ChikoritaDoll,
+
+src/data/object_events/object_event_graphics_info.h:
+  486  
+  487: static const union AnimCmd sAnim_ButterflyFlap[] =
+  488  {
+
+  495  
+  496: static const union AnimCmd *const sAnimTable_Butterfly[] =
+  497  {
+  498      // Standing/facing animations
+  499:     sAnim_ButterflyFlap, // south
+  500:     sAnim_ButterflyFlap, // north
+  501:     sAnim_ButterflyFlap, // west
+  502:     sAnim_ButterflyFlap, // east
+  503  
+  504      // Walking/movement animations
+  505:     sAnim_ButterflyFlap, // south
+  506:     sAnim_ButterflyFlap, // north
+  507:     sAnim_ButterflyFlap, // west
+  508:     sAnim_ButterflyFlap, // east
+  509  };
+  510  
+  511: const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Butterfly =
+  512  {
+  513      .tileTag = TAG_NONE,
+  514:     .paletteTag = OBJ_EVENT_PAL_TAG_BUTTERFLY,
+  515      .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+
+  525      .subspriteTables = sOamTables_32x32,
+  526:     .anims = sAnimTable_Butterfly,
+  527:     .images = sPicTable_Butterfly,
+  528  };
+
+src/data/object_events/object_event_graphics.h:
+    6  const u16 gObjectEventPal_Sir[] = INCGFX_U16("graphics/object_events/palettes/sir.pal", ".gbapal");
+    7: const u16 gObjectEventPal_Butterfly[] = INCGFX_U16("graphics/object_events/palettes/butterfly.pal", ".gbapal");
+    8  const u32 gObjectEventPic_RubySapphireBrendanNormal[] = INCGFX_U32("graphics/object_events/pics/people/ruby_sapphire_brendan/walking.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+  137  const u32 gObjectEventPic_Picnicker[] = INCGFX_U32("graphics/object_events/pics/people/picnicker.png", ".4bpp", "-mwidth 2 -mheight 4");
+  138: const u32 gObjectEventPic_Butterfly[] = INCGFX_U32("graphics/object_events/pics/people/butterfly.png", ".4bpp", "-mwidth 4 -mheight 4");
+  139  const u32 gObjectEventPic_Man3[] = INCGFX_U32("graphics/object_events/pics/people/man_3.png", ".4bpp", "-mwidth 2 -mheight 4");
+
+src/data/object_events/object_event_pic_tables.h:
+  244  
+  245: static const struct SpriteFrameImage sPicTable_Butterfly[] =
+  246  {
+  247:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 0),
+  248:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 1),
+  249:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 2),
+  250:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 3),
+  251:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 4),
+  252:     overworld_frame(gObjectEventPic_Butterfly, 4, 4, 5),
+  253  };
+
+src/data/pokemon/species_info/gen_1_families.h:
+  1338          .natDexNum = NATIONAL_DEX_BUTTERFREE,
+  1339:         .categoryName = _("Butterfly"),
+  1340          .height = 11,
+
+  1434          .natDexNum = NATIONAL_DEX_BUTTERFREE,
+  1435:         .categoryName = _("Butterfly"),
+  1436          .height = 170,
+
+src/data/pokemon/species_info/gen_3_families.h:
+  1621          .natDexNum = NATIONAL_DEX_BEAUTIFLY,
+  1622:         .categoryName = _("Butterfly"),
+  1623          .height = 10,

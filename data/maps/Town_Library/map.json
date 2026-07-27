@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_Gentleman",
       "flag": "0"
     },
     {
@@ -37,10 +37,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_Maniac",
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LIBRARY_MOM",
       "graphics_id": "OBJ_EVENT_GFX_MOM",
       "x": 3,
       "y": 17,
@@ -50,10 +51,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_Parent",
       "flag": "FLAG_HIDE_HOME_MOM"
     },
     {
+      "local_id": "LOCALID_LIBRARY_MAGMA_GRUNT",
       "graphics_id": "OBJ_EVENT_GFX_MAGMA_MEMBER_F",
       "x": 17,
       "y": 9,
@@ -63,10 +65,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_GruntConversation",
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LIBRARY_BLAINE",
       "graphics_id": "OBJ_EVENT_GFX_BLAINE",
       "x": 4,
       "y": 14,
@@ -76,10 +79,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_Blaine",
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LIBRARY_AQUA_GRUNT",
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 13,
       "y": 9,
@@ -89,10 +93,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_GruntConversation",
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LIBRARY_DAD",
       "graphics_id": "OBJ_EVENT_GFX_NORMAN",
       "x": 4,
       "y": 17,
@@ -102,7 +107,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "Town_Library_EventScript_Parent",
       "flag": "FLAG_HIDE_HOME_DAD"
     },
     {
@@ -111,6 +116,19 @@
       "y": 16,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BOOKS",
+      "x": 15,
+      "y": 10,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -143,7 +161,43 @@
       "elevation": 0,
       "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "NULL"
+      "script": "Town_Library_EventScript_EntranceRight"
+    },
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 18,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Town_Library_EventScript_EntranceLeft"
+    },
+    {
+      "type": "trigger",
+      "x": 13,
+      "y": 11,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Town_Library_EventScript_GruntConversation"
+    },
+    {
+      "type": "trigger",
+      "x": 17,
+      "y": 11,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Town_Library_EventScript_GruntConversation"
+    },
+    {
+      "type": "trigger",
+      "x": 15,
+      "y": 11,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "Town_Library_EventScript_GruntConversation"
     }
   ],
   "bg_events": []

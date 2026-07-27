@@ -238,7 +238,7 @@
 #define VAR_SOOTOPOLIS_WALLACE_STATE                     0x40D8
 #define VAR_HAS_TALKED_TO_SEAFLOOR_CAVERN_ENTRANCE_GRUNT 0x40D9
 #define VAR_REGISTER_BIRCH_STATE                         0x40DA
-#define VAR_UNUSED_0x40DB                                0x40DB // Unused Var
+#define VAR_COUNTERPART_ID                               0x40DB // Unused Var
 #define VAR_UNUSED_0x40DC                                0x40DC // Unused Var
 #define VAR_GIFT_PICHU_SLOT                              0x40DD
 #define VAR_GIFT_UNUSED_1                                0x40DE // Var is written to, but never read
@@ -270,14 +270,14 @@
 #define VAR_CURIOSITY                                    0x40F8
 #define VAR_RESOLVE                                      0x40F9
 #define VAR_INDEPENDENCE                                 0x40FA
-#define VAR_COUNTERPART_RELATIONSHIP                     0x40FB // Unused Var
-#define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
-#define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
-#define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
-#define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
+#define VAR_COUNTERPART_RELATIONSHIP                     0x40FB
+#define VAR_WISDOM                                       0x40FC
+#define VAR_PERSPECTIVE                                  0x40FD 
+#define VAR_LIBRARY_BOOK_QUEST                           0x40FE
+#define VAR_UNUSED_VAR                               0x40FF // Unused Var
 
 #define VARS_END                                         0x40FF
-#define VARS_COUNT                                       (VARS_END - VARS_START + 1)
+#define VARS_COUNT                  (VARS_END - VARS_START + 1)
 
 #define SPECIAL_VARS_START            0x8000
 // special vars

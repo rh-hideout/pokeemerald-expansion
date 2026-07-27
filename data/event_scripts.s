@@ -1765,3 +1765,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 .include "data/maps/PokemonMansion_2F_Frlg/scripts.inc"
 .include "data/maps/PokemonMansion_3F_Frlg/scripts.inc"
 .include "data/maps/PokemonMansion_B1F_Frlg/scripts.inc"
+
+	.include "data/maps/HardRockCafe/scripts.inc"

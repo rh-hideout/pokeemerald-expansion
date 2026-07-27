@@ -55,15 +55,15 @@
 #define FLAG_HIDE_INTROFALL_DAD    0x21 // Unused Flag
 #define FLAG_HIDE_HOME_MOM    0x22 // Unused Flag
 #define FLAG_HIDE_HOME_DAD    0x23 // Unused Flag
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
-#define FLAG_UNUSED_0x025    0x25 // Unused Flag
-#define FLAG_UNUSED_0x026    0x26 // Unused Flag
-#define FLAG_UNUSED_0x027    0x27 // Unused Flag
-#define FLAG_UNUSED_0x028    0x28 // Unused Flag
-#define FLAG_UNUSED_0x029    0x29 // Unused Flag
-#define FLAG_UNUSED_0x02A    0x2A // Unused Flag
-#define FLAG_UNUSED_0x02B    0x2B // Unused Flag
-#define FLAG_UNUSED_0x02C    0x2C // Unused Flag
+#define FLAG_LIBRARY_INTRO_COMPLETE    0x24 // Unused Flag
+#define FLAG_FLASHBACK_WAKE_COMPLETE    0x25 // Unused Flag
+#define FLAG_INTRO_FLASHBACK_COMPLETE    0x26 // Unused Flag
+#define FLAG_UPSTAIRS_PARENT_LEFT    0x27 // Unused Flag
+#define FLAG_HIDE_UPSTAIRS_MOM    0x28 // Unused Flag
+#define FLAG_HIDE_UPSTAIRS_DAD    0x29 // Unused Flag
+#define FLAG_LIBRARY_BOOK_MISSION_COMPLETE  0x2A
+#define FLAG_FOUND_BOOK_GIRL             0x2B
+#define FLAG_RESTAURANT_BOOK_SEARCH      0x2C
 #define FLAG_UNUSED_0x02D    0x2D // Unused Flag
 #define FLAG_UNUSED_0x02E    0x2E // Unused Flag
 #define FLAG_UNUSED_0x02F    0x2F // Unused Flag
@@ -1623,11 +1623,11 @@
 #define FLAG_UNUSED_0x950                           (DAILY_FLAGS_START + 0x30) // Unused Flag
 #define FLAG_UNUSED_0x951                           (DAILY_FLAGS_START + 0x31) // Unused Flag
 #define FLAG_UNUSED_0x952                           (DAILY_FLAGS_START + 0x32) // Unused Flag
-#define FLAG_UNUSED_0x953                           (DAILY_FLAGS_START + 0x33) // Unused Flag
-#define FLAG_UNUSED_0x954                           (DAILY_FLAGS_START + 0x34) // Unused Flag
-#define FLAG_UNUSED_0x955                           (DAILY_FLAGS_START + 0x35) // Unused Flag
-#define FLAG_UNUSED_0x956                           (DAILY_FLAGS_START + 0x36) // Unused Flag
-#define FLAG_UNUSED_0x957                           (DAILY_FLAGS_START + 0x37) // Unused Flag
+#define FLAG_LIBRARY_GRUNTS_HEARD                           (DAILY_FLAGS_START + 0x33) // Unused Flag
+#define FLAG_LIBRARY_SAT_WITH_GRUNTS                           (DAILY_FLAGS_START + 0x34) // Unused Flag
+#define FLAG_LIBRARY_QUESTIONED_MANIAC                           (DAILY_FLAGS_START + 0x35) // Unused Flag
+#define FLAG_LIBRARY_GENTLEMAN_CLUE                           (DAILY_FLAGS_START + 0x36) // Unused Flag
+#define FLAG_LIBRARY_OUTSIDE_CLUE                           (DAILY_FLAGS_START + 0x37) // Unused Flag
 #define FLAG_UNUSED_0x958                           (DAILY_FLAGS_START + 0x38) // Unused Flag
 #define FLAG_UNUSED_0x959                           (DAILY_FLAGS_START + 0x39) // Unused Flag
 #define FLAG_UNUSED_0x95A                           (DAILY_FLAGS_START + 0x3A) // Unused Flag

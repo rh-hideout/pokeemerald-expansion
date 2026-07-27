@@ -527,6 +527,78 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Butterfly =
     .images = sPicTable_Butterfly,
 };
 
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Books =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_BOOKS,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 512,
+    .width = 32,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = TRUE,
+    .compressed = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gObjectEventBaseOam_32x32,
+    .subspriteTables = sOamTables_32x32,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_Books,
+};
+
+static const union AnimCmd sAnim_Books[] =
+{
+    ANIMCMD_FRAME(1, 1),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_JUMP(0),
+};
+
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Food =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_FOOD,
+    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+    .size = 512,
+    .width = 32,
+    .height = 32,
+    .paletteSlot = PALSLOT_NPC_1,
+    .shadowSize = SHADOW_SIZE_M,
+    .inanimate = FALSE,
+    .compressed = FALSE,
+    .tracks = TRACKS_NONE,
+    .oam = &gObjectEventBaseOam_32x32,
+    .subspriteTables = sOamTables_32x32,
+    .anims = sAnimTable_Standard,
+    .images = sPicTable_Food,
+};
+
+
+static const union AnimCmd sAnim_Food[] =
+{
+    ANIMCMD_FRAME(1, 1),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_FRAME(3, 3),
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd *const sAnimTable_Food[] =
+{
+    // Standing/facing animations
+    sAnim_Food, // south
+    sAnim_Food, // north
+    sAnim_Food, // west
+    sAnim_Food, // east
+
+    // Walking/movement animations
+    sAnim_Food, // south
+    sAnim_Food, // north
+    sAnim_Food, // west
+    sAnim_Food, // east
+};
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Twin = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_2,

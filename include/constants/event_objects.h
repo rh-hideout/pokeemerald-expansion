@@ -460,6 +460,8 @@ enum
     OBJ_EVENT_GFX_SIR_WATERING,
     OBJ_EVENT_GFX_SIR_DECORATING,
     OBJ_EVENT_GFX_BUTTERFLY,
+    OBJ_EVENT_GFX_BOOKS,
+    OBJ_EVENT_GFX_FOOD,
 
     NUM_OBJ_EVENT_GFX,
 };
@@ -621,6 +623,8 @@ enum
 #define OBJ_EVENT_PAL_TAG_SIR                     0x1136
 #define OBJ_EVENT_PAL_TAG_MAAM                    0x1137
 #define OBJ_EVENT_PAL_TAG_BUTTERFLY               0x1138
+#define OBJ_EVENT_PAL_TAG_BOOKS                   0x1139
+#define OBJ_EVENT_PAL_TAG_FOOD                    0x113A
 
 #if OW_FOLLOWERS_POKEBALLS
 // Vanilla

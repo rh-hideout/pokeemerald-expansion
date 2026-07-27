@@ -25,7 +25,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "PlayersHouse_1F_EventScript_Mom",
+      "script": "LittlerootTown_PlayersHouse_2F_EventScript_Mom",
       "flag": "FLAG_HIDE_HOME_MOM"
     },
     {
@@ -65,7 +65,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
+      "script": "LittlerootTown_PlayersHouse_2F_EventScript_Dad",
       "flag": "FLAG_HIDE_HOME_DAD"
     }
   ],
