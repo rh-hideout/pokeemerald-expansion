@@ -851,9 +851,17 @@ static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEven
     if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
     {
         if (task->tTrainerRange--)
+        {
             ObjectEventSetHeldMovement(trainerObj, GetWalkNormalMovementAction(trainerObj->facingDirection));
+        }
         else
+        {
+            // Set trainer's movement type so they stop and remain facing that direction
+            SetTrainerMovementType(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
+            TryOverrideTemplateCoordsForObjectEvent(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
+            OverrideTemplateCoordsForObjectEvent(trainerObj);
             task->tFuncId++;
+        }
     }
     return FALSE;
 }
@@ -862,14 +870,6 @@ static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEven
 static bool8 PlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     struct ObjectEvent *playerObj;
-
-    if (ObjectEventIsMovementOverridden(trainerObj) && !ObjectEventClearHeldMovementIfFinished(trainerObj))
-        return FALSE;
-
-    // Set trainer's movement type so they stop and remain facing that direction
-    SetTrainerMovementType(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
-    TryOverrideTemplateCoordsForObjectEvent(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
-    OverrideTemplateCoordsForObjectEvent(trainerObj);
 
     playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     if (ObjectEventIsMovementOverridden(playerObj) && !ObjectEventClearHeldMovementIfFinished(playerObj))
