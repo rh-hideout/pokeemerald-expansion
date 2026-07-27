@@ -114,7 +114,7 @@ void EnterSafariMode(enum SafariIds safariId)
     {
         return;
     }
-    assertf(safariId < SAFARI_COUNT, "Trying to enter undefined safari zone %d", safariId)
+    assertf(NONE_SAFARI < safariId && safariId < SAFARI_COUNT , "Trying to enter undefined safari zone %d", safariId)
     {
         return;
     }
@@ -565,3 +565,9 @@ void HandleAction_SafariZoneRun(void)
 
 #undef safariBaitThrowCounter
 #undef safariRockThrowCounter
+
+bool8 ScrCmd_getactivesafri(struct ScriptContext * ctx)
+{
+    gSpecialVar_Result = sActiveSafari;
+    return FALSE;
+}
