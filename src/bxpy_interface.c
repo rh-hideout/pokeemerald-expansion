@@ -1728,30 +1728,6 @@ bool8 BXPY_BattleGreaterThanTwoTrainers(void)
     return ((gPartnerTrainerId != TRAINER_NONE) && (gPartnerTrainerId != 0xFFFF));
 }
 
-static void BXPY_ResetMonSprites(enum BattleSide sideIndex)
-{
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetMonSpriteId(sideIndex,partyIndex,SPRITE_NONE);
-    }
-}
-
-static void BXPY_ResetPlayerHPSprites(void)
-{
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetPlayerHpSpriteId(partyIndex,SPRITE_NONE);
-    }
-}
-
-static void BXPY_ResetGenderSprites(enum BattleSide sideIndex)
-{
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetGenderSpriteId(sideIndex,partyIndex,SPRITE_NONE);
-    }
-}
-
 static void BXPY_ResetHighlightSprites(void)
 {
     for (u32 highlightIndex = 0; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
@@ -1765,45 +1741,28 @@ static void BXPY_ResetCursorSprite(void)
     BXPY_SetCursorSpriteId(SPRITE_NONE);
 }
 
-static void BXPY_ResetEnemyTypeSprites(void)
+static void BXPY_ResetAllSpriteIds(void)
 {
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
+        BXPY_SetPlayerSelectedTailSpriteId(partyIndex,SPRITE_NONE);
+        BXPY_SetPlayerSelectedSpriteId(partyIndex,SPRITE_NONE);
+        BXPY_SetPlayerHpSpriteId(partyIndex, SPRITE_NONE);
+
+        for (u32 sideIndex = 0; sideIndex < NUM_BATTLE_SIDES; sideIndex++)
+        {
+            BXPY_SetGenderSpriteId(sideIndex, partyIndex, SPRITE_NONE);
+            BXPY_SetMonSpriteId(sideIndex, partyIndex,SPRITE_NONE);
+        }
+
         for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
         {
             BXPY_SetEnemyTypeSpriteId(partyIndex,typeIndex,SPRITE_NONE);
         }
     }
-}
 
-static void BXPY_ResetPlayerSelectedSprites(void)
-{
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetPlayerSelectedSpriteId(partyIndex,SPRITE_NONE);
-    }
-}
-
-static void BXPY_ResetPlayerSelectedTailSprites(void)
-{
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
-    {
-        BXPY_SetPlayerSelectedTailSpriteId(partyIndex,SPRITE_NONE);
-    }
-}
-
-static void BXPY_ResetAllSpriteIds(void)
-{
     BXPY_ResetCursorSprite();
-    BXPY_ResetMonSprites(B_SIDE_PLAYER);
-    BXPY_ResetMonSprites(B_SIDE_OPPONENT);
-    BXPY_ResetGenderSprites(B_SIDE_PLAYER);
-    BXPY_ResetGenderSprites(B_SIDE_OPPONENT);
-    BXPY_ResetPlayerHPSprites();
-    BXPY_ResetEnemyTypeSprites();
     BXPY_ResetHighlightSprites();
-    BXPY_ResetPlayerSelectedSprites();
-    BXPY_ResetPlayerSelectedTailSprites();
 }
 
 static u32 BXPY_CountNumberSelected(void)
