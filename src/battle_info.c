@@ -290,232 +290,312 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
     [INFO_HARSH_SUNLIGHT] =
     {
         COMPOUND_STRING("Harsh Sunlight"),
-        COMPOUND_STRING("The harsh sunlight weather condition. It boosts the power of Fire-type moves and lowers the power of Water-type moves.")
+        COMPOUND_STRING("Boosts the damage dealt by Fire-type moves by 50% and halves the damage dealt by Water-type moves.")
     },
     [INFO_RAIN] =
     {
         COMPOUND_STRING("Rain"),
-        COMPOUND_STRING("The rain weather condition. It boosts the power of Water-type moves and lowers the power of Fire-type moves.")
+        COMPOUND_STRING("Boosts the damage dealt by Water-type moves by 50% and halves the damage dealt by Fire-type moves.")
     },
     [INFO_SANDSTORM] =
     {
         COMPOUND_STRING("Sandstorm"),
-        COMPOUND_STRING("The sandstorm weather condition. At the end of each turn, it damages all Pokémon that are not Rock, Ground, or Steel types. It boosts the Sp. Def of Rock-type Pokémon.")
+        COMPOUND_STRING("Pokémon that are not Rock, Ground, or Steel types take damage equal to 1/16 of their max HP at the end of every turn. Boosts the Sp. Def stats of Rock-type Pokémon by 50%.")
     },
     [INFO_SNOW] =
     {
         COMPOUND_STRING("Snow"),
-        COMPOUND_STRING("The snow weather condition. It makes Blizzard more likely to hit and boosts the Defense of Ice-type Pokemon.")
+        COMPOUND_STRING("Boosts the Defense stats of Ice-type Pokémon by 50%.")
     },
     [INFO_ELECTRIC_TERRAIN] =
     {
         COMPOUND_STRING("Electric Terrain"),
-        COMPOUND_STRING("For five turns, Pokemon on the ground won't fall asleep. The power of Electric-type moves is boosted.")
+        COMPOUND_STRING("Pokémon on the ground have the power of their Electric-type moves boosted by 30% and they cannot fall asleep.")
     },
     [INFO_GRASSY_TERRAIN] =
     {
         COMPOUND_STRING("Grassy Terrain"),
-        COMPOUND_STRING("For five turns, Pokemon on the ground will have a little HP restored at the end of each turn. The power of Grass-type moves is boosted.")
+        COMPOUND_STRING("Pokémon on the ground have the power of their Grass-type moves boosted by 30% and they have 1/16 of their max HP restored at the end of every turn.")
     },
     [INFO_MISTY_TERRAIN] =
     {
         COMPOUND_STRING("Misty Terrain"),
-        COMPOUND_STRING("For five turns, Pokemon on the ground won't get any status conditions. Damage from Dragon-type moves is halved.")
-    },
-    [INFO_PSYCHIC_TERRAIN] =
-    {
-        COMPOUND_STRING("Psychic Terrain"),
-        COMPOUND_STRING("For five turns, Pokemon on the ground won't be hit by priority moves. The power of Psychic-type moves is boosted.")
+        COMPOUND_STRING("Halves the damage dealt by Dragon-type moves used against Pokémon on the ground. Pokémon on the ground are also immune to status conditions and cannot become confused.")
     },
     [INFO_TRICK_ROOM] =
     {
         COMPOUND_STRING("Trick Room"),
-        COMPOUND_STRING("Slower Pokemon get to move first for five turns.")
+        COMPOUND_STRING("Pokémon with lower Speed stats move first.")
     },
     [INFO_MAGIC_ROOM] =
     {
         COMPOUND_STRING("Magic Room"),
-        COMPOUND_STRING("Pokemon can't use their held items for five turns.")
+        COMPOUND_STRING("Most held items do not work.")
     },
     [INFO_WONDER_ROOM] =
     {
         COMPOUND_STRING("Wonder Room"),
-        COMPOUND_STRING("Pokemon's Defense and Sp. Def are swapped for five turns.")
+        COMPOUND_STRING("Pokémon's Defense and Sp. Def stats are swapped.")
     },
-    [INFO_GRAVITY] =
+    [INFO_CRITICAL_HIT_BOOST] =
     {
-        COMPOUND_STRING("Gravity"),
-        COMPOUND_STRING("Moves are more likely to hit for five turns. Ground-type moves will hit Flying-type Pokemon and Pokemon with the Levitate Ability. Moves that require action midair can't be used.")
+        COMPOUND_STRING("Critical Hit Boost"),
+        COMPOUND_STRING("The Pokémon's attacks are more likely to be critical hits.")
     },
-    [INFO_MIST] =
+    [INFO_CONFUSION] =
     {
-        COMPOUND_STRING("Mist"),
-        COMPOUND_STRING("The Pokemon's stats won't be lowered for five turns.")
+        COMPOUND_STRING("Confused"),
+        COMPOUND_STRING("For 1-4 turns, the Pokémon has a 1-in-3 chance of hurting itself.")
     },
-    [INFO_SAFEGUARD] =
+    [INFO_INFATUATION] =
     {
-        COMPOUND_STRING("Safeguard"),
-        COMPOUND_STRING("The Pokemon is protected from status conditions for five turns.")
+        COMPOUND_STRING("Infatuation"),
+        COMPOUND_STRING("The Pokémon has a 50% chance of being unable to use its moves while the Pokémon that gave it the Infatuated status is on the field.")
+    },
+    [INFO_NIGHTMARE] =
+    {
+        COMPOUND_STRING("Nightmare"),
+        COMPOUND_STRING("The Pokémon will lose HP each turn as long as it is sleeping.")
+    },
+    [INFO_DROWSY] =
+    {
+        COMPOUND_STRING("Drowsy"),
+        COMPOUND_STRING("The Pokémon will fall asleep at the end of the next turn after becoming drowsy.")
+    },
+    [INFO_ENCORE] =
+    {
+        COMPOUND_STRING("Encore"),
+        COMPOUND_STRING("The Pokémon can only use {STR_VAR_1}.")
+    },
+    [INFO_NO_ABILITY] =
+    {
+        COMPOUND_STRING("No Ability"),
+        COMPOUND_STRING("The Pokémon's Ability loses its effect.")
+    },
+    [INFO_TORMENT] =
+    {
+        COMPOUND_STRING("Unable to Repeat"),
+        COMPOUND_STRING("The Pokémon cannot use the same move twice in a row.")
+    },
+    [INFO_TAILWIND] =
+    {
+        COMPOUND_STRING("Tailwind"),
+        COMPOUND_STRING("Doubles the Pokémon's Speed stat.")
     },
     [INFO_LUCKY_CHANT] =
     {
         COMPOUND_STRING("Lucky Chant"),
         COMPOUND_STRING("The opponent's moves won't result in a critical hit.")
     },
-    [INFO_TAILWIND] =
-    {
-        COMPOUND_STRING("Tailwind"),
-        COMPOUND_STRING("The Speed stats of a Pokemon and its allies are doubled for four turns.")
-    },
-    [INFO_CRITICAL_HIT_BOOST] =
-    {
-        COMPOUND_STRING("Critical Hit Boost"),
-        COMPOUND_STRING("The Pokemon is more likely to land critical hits.")
-    },
-    [INFO_CONFUSION] =
-    {
-        COMPOUND_STRING("Confusion"),
-        COMPOUND_STRING("The Pokemon may hurt itself in its confusion. The effect lasts for one to four turns.")
-    },
-    [INFO_INFATUATION] =
-    {
-        COMPOUND_STRING("Infatuation"),
-        COMPOUND_STRING("The Pokemon is less likely to unleash an attack on Pokemon of the opposite gender.")
-    },
-    [INFO_NIGHTMARE] =
-    {
-        COMPOUND_STRING("Nightmare"),
-        COMPOUND_STRING("The Pokemon will lose HP each turn as long as it is sleeping.")
-    },
-    [INFO_DROWSY] =
-    {
-        COMPOUND_STRING("Drowsy"),
-        COMPOUND_STRING("The Pokemon will fall asleep at the end of the turn if it remains on the battlefield.")
-    },
-    [INFO_ENCORE] =
-    {
-        COMPOUND_STRING("Encore"),
-        COMPOUND_STRING("Due to Encore, the Pokemon can use only {STR_VAR_1} for three turns.")
-    },
-    [INFO_TORMENT] =
-    {
-        COMPOUND_STRING("Torment"),
-        COMPOUND_STRING("The Pokemon can't use the same move twice in a row.")
-    },
     [INFO_GRUDGE] =
     {
         COMPOUND_STRING("Grudge"),
-        COMPOUND_STRING("If the Pokemon faints as a result of a move, the PP of that move will be reduced to 0.")
+        COMPOUND_STRING("If the Pokémon faints as a result of a move, the PP of that move will be reduced to 0.")
     },
     [INFO_HEALING_PREVENTED] =
     {
         COMPOUND_STRING("Healing Prevented"),
-        COMPOUND_STRING("For five turns, the Pokemon is unable to recover HP through its moves, Ability, or held item.")
+        COMPOUND_STRING("The Pokémon is unable to restore HP through moves, Abilities, or held items.")
     },
     [INFO_IDENTIFIED] =
     {
-        COMPOUND_STRING("Identified"),
-        COMPOUND_STRING("The Pokemon will be hit by certain moves that usually wouldn't affect it. If the Pokemon's evasiveness has been boosted, the benefits will be ignored when it is attacked.")
+        COMPOUND_STRING("-"),
+        COMPOUND_STRING("The Pokémon will be hit by certain moves that usually wouldn't affect it. If the Pokémon's evasiveness has been boosted, the benefits will be ignored when it is attacked.")
     },
     [INFO_MOVE_DISABLED] =
     {
         COMPOUND_STRING("Move Disabled"),
-        COMPOUND_STRING("{STR_VAR_1} has been disabled and cannot be used for four turns.")
+        COMPOUND_STRING("{STR_VAR_1} cannot be used.")
     },
     [INFO_CANT_ESCAPE] =
     {
         COMPOUND_STRING("Can't Escape"),
-        COMPOUND_STRING("The Pokemon can't flee or be switched out.")
+        COMPOUND_STRING("The Pokémon cannot be switched out of battle.")
     },
     [INFO_LOCK_ON] =
     {
         COMPOUND_STRING("Lock-On"),
-        COMPOUND_STRING("The next move used by the Pokemon will be sure to hit the target that was locked on to.")
+        COMPOUND_STRING("On the next turn after gaining the Locked On status, the Pokémon's move will not miss if targeting the Pokémon that was locked onto.")
     },
     [INFO_EMBARGO] =
     {
         COMPOUND_STRING("Embargo"),
-        COMPOUND_STRING("For five turns, the Pokemon cannot use its held item and no items can be used on it.")
+        COMPOUND_STRING("The Pokémon cannot use its held item and no items can be used on it.")
     },
     [INFO_CHARGE] =
     {
-        COMPOUND_STRING("Charge"),
-        COMPOUND_STRING("The power of the next Electric-type move used by the Pokemon will be doubled.")
+        COMPOUND_STRING("Electric Boost"),
+        COMPOUND_STRING("The power of the next Electric-type move used by the Pokémon will be doubled.")
+    },
+    [INFO_GRAVITY] =
+    {
+        COMPOUND_STRING("Gravity"),
+        COMPOUND_STRING("Boosts the accuracy of moves by 67%. Pokémon such as Flying types or ones with the Levitate Ability become grounded. Moves that involve flying or leaping cannot be used.")
+    },
+    [INFO_MIST] =
+    {
+        COMPOUND_STRING("Mist"),
+        COMPOUND_STRING("The Pokémon's stats won't be lowered.")
+    },
+    [INFO_SAFEGUARD] =
+    {
+        COMPOUND_STRING("Safeguard"),
+        COMPOUND_STRING("The Pokémon is immune to status conditions and cannot become confused.")
+    },
+    [INFO_STEALTH_ROCK] =
+    {
+        COMPOUND_STRING("Stealth Rock"),
+        COMPOUND_STRING("Pokémon that switch into battle will take damage equal to 1/8 of their max HP. This damage differs depending on the Pokémon's type matchup with the Rock type.")
+    },
+    [INFO_STOCKPILING] =
+    {
+        COMPOUND_STRING("Stockpiling"),
+        COMPOUND_STRING("The Pokémon's Defense and Sp. Def stats are boosted by 1 stage for each time it has used Stockpile.")
     },
     [INFO_TAUNT] =
     {
-        COMPOUND_STRING("Taunt"),
-        COMPOUND_STRING("The Pokemon can only use moves that deal damage.")
+        COMPOUND_STRING("Taunted"),
+        COMPOUND_STRING("The Pokémon can use only attacks.")
     },
     [INFO_TELEKINESIS] =
     {
         COMPOUND_STRING("Telekinesis"),
-        COMPOUND_STRING("For three turns, moves used against the Pokemon will hit without fail, except for one-hit KO moves. Also, Ground-type moves won't hit the Pokemon.")
+        COMPOUND_STRING("Moves used against the Pokémon will hit without fail, except for one-hit KO moves. Also, Ground-type moves won't hit the Pokémon.")
     },
     [INFO_MAGNET_RISE] =
     {
         COMPOUND_STRING("Magnet Rise"),
-        COMPOUND_STRING("Ground-type moves won't hit the Pokemon for five turns.")
+        COMPOUND_STRING("The Pokémon floats off the ground, making it immune to Ground-type moves, as well as the Spikes, Toxic Spikes, and Sticky Web statuses.")
+    },
+    [INFO_TOXIC_SPIKES] =
+    {
+        COMPOUND_STRING("Toxic Spikes"),
+        COMPOUND_STRING("Pokémon that switch into battle will be poisoned or, if 2 layers of Toxic Spikes are set, badly poisoned. Pokémon such as Flying types or ones with the Levitate Ability are unaffected.")
+    },
+    [INFO_MUD_SPORT] =
+    {
+        COMPOUND_STRING("Mud Sport"),
+        COMPOUND_STRING("The power of Electric-type moves will be halved.")
     },
     [INFO_WISH] =
     {
         COMPOUND_STRING("Wish"),
-        COMPOUND_STRING("The Pokemon in this spot will have its HP restored on the turn after Wish was used.")
+        COMPOUND_STRING("At the end of the next turn after the Wish status is activated, the HP of the Pokémon in the affected spot will be restored by 1/2 of the max HP of the Pokémon that caused the status.")
+    },
+    [INFO_STICKY_WEB] =
+    {
+        COMPOUND_STRING("Sticky Web"),
+        COMPOUND_STRING("Pokémon that switch into battle will have their Speed stats lowered by 1 stage. Pokémon such as Flying types or ones with the Levitate Ability are unaffected.")
     },
     [INFO_INGRAIN] =
     {
-        COMPOUND_STRING("Ingrain"),
-        COMPOUND_STRING("The Pokemon regains some HP at the end of each turn. Ingrained Pokemon can't be switched out.")
+        COMPOUND_STRING("Ingrained"),
+        COMPOUND_STRING("The Pokémon loses 1/4 of its max HP at the end of every turn.")
     },
     [INFO_CURSE] =
     {
-        COMPOUND_STRING("Curse"),
-        COMPOUND_STRING("The Pokemon takes damage at the end of each turn.")
+        COMPOUND_STRING("Cursed"),
+        COMPOUND_STRING("The Pokémon loses 1/4 of its max HP at the end of every turn.")
+    },
+    [INFO_TRICK_OR_TREAT] =
+    {
+        COMPOUND_STRING("Trick-or-Treating"),
+        COMPOUND_STRING("The Pokémon gains the Ghost type.")
+    },
+    [INFO_LIGHT_SCREEN] =
+    {
+        COMPOUND_STRING("Light Screen"),
+        COMPOUND_STRING("Halves the damage taken from special moves. In Double Battles, this damage is reduced by 1/3 instead.")
+    },
+    [INFO_REFLECT] =
+    {
+        COMPOUND_STRING("Reflect"),
+        COMPOUND_STRING("Halves the damage taken from physical moves. In Double Battles, this damage is reduced by 1/3 instead.")
+    },
+    [INFO_IMPRISON] =
+    {
+        COMPOUND_STRING("Sealing Off"),
+        COMPOUND_STRING("Any moves known by the Pokémon that caused this status cannot be used by its opponents.")
+    },
+    [INFO_PERISHING] =
+    {
+        COMPOUND_STRING("Perishing"),
+        COMPOUND_STRING("The Pokémon will faint 3 turns after gaining the Perishing status.")
+    },
+    [INFO_SPIKES] =
+    {
+        COMPOUND_STRING("Spikes"),
+        COMPOUND_STRING("Pokémon that switch into battle will take damage equal to 1/8 of their max HP. This damage will increase if 2 layers of Spikes are set, and again if 3 layers are set. Pokémon such as Flying types or ones with the Levitate Ability are unaffected.")
+    },
+    [INFO_WATER_SPORT] =
+    {
+        COMPOUND_STRING("Water Sport"),
+        COMPOUND_STRING("The power of Fire-type moves will be halved.")
     },
     [INFO_DESTINY_BOND] =
     {
-        COMPOUND_STRING("Destiny Bond"),
-        COMPOUND_STRING("If the Pokemon is knocked out by an opponent, that opponent will also faint.")
+        COMPOUND_STRING("Destiny Bound"),
+        COMPOUND_STRING("If the Pokémon is knocked out by an opponent, that opponent will also be knocked out.")
+    },
+    [INFO_FORESTS_CURSE] =
+    {
+        COMPOUND_STRING("Forest's Curse"),
+        COMPOUND_STRING("The Pokemon gains the Grass type.")
+    },
+    [INFO_LEECH_SEED] =
+    {
+        COMPOUND_STRING("Leech Seeded"),
+        COMPOUND_STRING("The Pokémon takes damage equal to 1/8 of its max HP at the end of every turn. Whichever Pokémon is in the spot of the Pokémon that caused the Leech Seeded status has its HP restored by the same amount.")
     },
     [INFO_BOUND] =
     {
         COMPOUND_STRING("Bound"),
-        COMPOUND_STRING("The Pokemon is bound and takes damage every turn.")
+        COMPOUND_STRING("For 4-5 turns, the Pokémon takes damage equal to 1/8 of its max HP at the end of every turn. It cannot be switched out of battle.")
     },
     [INFO_BIDE] =
     {
         COMPOUND_STRING("Bide"),
         COMPOUND_STRING("The Pokemon endures attacks for two turns, then strikes back to inflict double the damage it has taken.")
     },
+    [INFO_RAMPAGING] =
+    {
+        COMPOUND_STRING("Rampaging"),
+        COMPOUND_STRING("For 2-3 turns, the Pokémon continues its attack and is unable to take any other actions. After that, it becomes confused.")
+    },
+    [INFO_BADLY_POISONED] =
+    {
+        COMPOUND_STRING("Badly Poisoned"),
+        COMPOUND_STRING("The Pokémon takes increasing poison damage at the end of every turn, starting at 1/16 of the Pokémon's max HP, then 2/16, then 3/16, and so on. If the Pokémon switches out and reenters battle, the damage restarts at 1/16 of its max HP.")
+    },
     [INFO_FUTURE_ATTACK] =
     {
         COMPOUND_STRING("Future Attack"),
-        COMPOUND_STRING("The Pokemon will take damage two turns after an attack was foreseen.")
+        COMPOUND_STRING("The Pokémon in the targeted spot will take damage 2 turns after the Future Attack status is activated.")
     },
     [INFO_UPROAR] =
     {
         COMPOUND_STRING("Uproar"),
-        COMPOUND_STRING("The Pokemon attacks and causes an uproar for three turns. During this time, no Pokemon can fall asleep.")
+        COMPOUND_STRING("For 3 turns, the Pokémon continues its attack and is unable to take any other actions. During this time, no Pokémon on the field can fall asleep.")
     },
     [INFO_AQUA_RING] =
     {
         COMPOUND_STRING("Aqua Ring"),
-        COMPOUND_STRING("The Pokemon is enveloped in a veil made of water. It regains some HP every turn.")
+        COMPOUND_STRING("The Pokémon has 1/16 of its max HP restored at the end of every turn.")
     },
     [INFO_AUTOTOMIZE] =
     {
         COMPOUND_STRING("Autotomize"),
-        COMPOUND_STRING("The Pokemon's weight is reduced, and its Speed is sharply increased.")
+        COMPOUND_STRING("The Pokémon's weight is reduced, and its Speed is sharply increased.")
     },
     [INFO_SMACK_DOWN] =
     {
-        COMPOUND_STRING("Smack Down"),
-        COMPOUND_STRING("The Pokemon has been knocked out of the sky and has fallen to the ground.")
+        COMPOUND_STRING("Landed"),
+        COMPOUND_STRING("The Pokémon is now grounded and can be affected by Ground-type moves.")
     },
     [INFO_FAIRY_LOCK] =
     {
-        COMPOUND_STRING("Fairy Lock"),
-        COMPOUND_STRING("No Pokemon can flee the turn after Fairy Lock is used.")
+        COMPOUND_STRING("Fairy Locked"),
+        COMPOUND_STRING("No Pokémon on the field can be switched out of battle until the end of the next turn after the Fairy Locked status is activated.")
     },
     [INFO_RAINBOW] =
     {
@@ -530,12 +610,37 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
     [INFO_SEA_OF_FIRE] =
     {
         COMPOUND_STRING("Sea of Fire"),
-        COMPOUND_STRING("Pokemon that are not Fire types will take damage every turn.")
+        COMPOUND_STRING("Pokémon that are not Fire types will take damage every turn.")
+    },
+    [INFO_EXTREMELY_HARSH_SUNLIGHT] =
+    {
+        COMPOUND_STRING("Extremely Harsh Sunlight"),
+        COMPOUND_STRING("Boosts the power of Fire-type moves and protects Pokémon from Water-type moves.")
+    },
+    [INFO_HEAVY_RAIN] =
+    {
+        COMPOUND_STRING("Heavy Rain"),
+        COMPOUND_STRING("Boosts the power of Water-type moves and protects Pokemon from Fire-type moves.")
+    },
+    [INFO_STRONG_WINDS] =
+    {
+        COMPOUND_STRING("Strong Winds"),
+        COMPOUND_STRING("The power of moves that are super effective against Flying-type Pokemon is decreased.")
+    },
+    [INFO_PSYCHIC_TERRAIN] =
+    {
+        COMPOUND_STRING("Psychic Terrain"),
+        COMPOUND_STRING("Pokémon on the ground have the power of their Psychic-type moves boosted by 30% and they are immune to priority moves.")
     },
     [INFO_THROAT_CHOP] =
     {
-        COMPOUND_STRING("Throat Chop"),
-        COMPOUND_STRING("The Pokemon can't use any sound-based moves for two turns.")
+        COMPOUND_STRING("Throat Chopped"),
+        COMPOUND_STRING("The Pokémon cannot use any sound-based moves for 2 turns.")
+    },
+    [INFO_AURORA_VEIL] =
+    {
+        COMPOUND_STRING("Aurora Veil"),
+        COMPOUND_STRING("Halves the damage taken from physical and special moves. In Double Battles, this damage is reduced by 1/3 instead.")
     },
     [INFO_LASER_FOCUS] =
     {
@@ -545,246 +650,120 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
     [INFO_TAR_SHOT] =
     {
         COMPOUND_STRING("Tar Shot"),
-        COMPOUND_STRING("The Pokemon has been made weaker to Fire-type moves.")
+        COMPOUND_STRING("The Pokémon has been made weaker to Fire-type moves.")
     },
     [INFO_OCTOLOCK] =
     {
         COMPOUND_STRING("Octolock"),
-        COMPOUND_STRING("The Pokemon's Defense and Sp. Def are both lowered with each passing turn.")
+        COMPOUND_STRING("The Pokémon's Defense and Sp. Def are both lowered with each passing turn.")
     },
-    [INFO_FIXATED] =
+    // G-Max effects
+    [INFO_G_MAX_WILDFIRE] =
     {
-        COMPOUND_STRING("Fixated"),
-        COMPOUND_STRING("The Pokemon is fixated on the last move it used. This move will deal increased damage while the fixation lasts, but any damage dealt to the fixated Pokemon is also increased.")
+        COMPOUND_STRING("G-Max Wildfire"),
+        COMPOUND_STRING("Pokémon that are not Fire types will take damage every turn for four turns.")
     },
-    [INFO_SPLINTERS] =
+    [INFO_G_MAX_VOLCALITH] =
     {
-        COMPOUND_STRING("Splinters"),
-        COMPOUND_STRING("At the end of each turn, the Pokemon is hurt by the jagged splinters digging into it.")
+        COMPOUND_STRING("G-Max Volcalith"),
+        COMPOUND_STRING("Pokémon that are not Rock types will take damage every turn for four turns.")
     },
-    [INFO_OBSCURED] =
+    [INFO_G_MAX_STEELSURGE] =
     {
-        COMPOUND_STRING("Obscured"),
-        COMPOUND_STRING("The Pokemon is concealed in mud or the like, raising the chance that the Pokemon will evade opponents' moves.")
+        COMPOUND_STRING("G-Max Volcalith"),
+        COMPOUND_STRING("Pokémon that switch into battle will take damage.")
     },
-    [INFO_PRIMED] =
+    [INFO_G_MAX_VINE_LASH] =
     {
-        COMPOUND_STRING("Primed"),
-        COMPOUND_STRING("The Pokemon has adopted a hard-hitting stance, increasing the damage it deals with its moves.")
+        COMPOUND_STRING("G-Max Vine Lash"),
+        COMPOUND_STRING("Pokémon that are not Grass types will take damage every turn for four turns.")
     },
-    [INFO_STANCE_SWAP] =
+    [INFO_G_MAX_CANNONADE] =
     {
-        COMPOUND_STRING("Stance Swap"),
-        COMPOUND_STRING("The Pokemon has swapped its offensive stats with its defensive stats.")
-    },
-    [INFO_SLOW_START] =
-    {
-        COMPOUND_STRING("Slow Start"),
-        COMPOUND_STRING("The Pokemon's Attack and Speed stats are halved until it gets going.")
-    },
-    [INFO_SALT_CURE] =
-    {
-        COMPOUND_STRING("Salt Cure"),
-        COMPOUND_STRING("The Pokemon is being salt cured, which deals damage to it each turn. This damage is doubled for Steel-type and Water-type Pokemon.")
-    },
-    [INFO_SYRUPY] =
-    {
-        COMPOUND_STRING("Syrupy"),
-        COMPOUND_STRING("The Pokemon's Speed will drop at the end of each turn for three turns.")
-    },
-    [INFO_GOING_ALL_OUT] =
-    {
-        COMPOUND_STRING("Going All Out"),
-        COMPOUND_STRING("The Pokemon's Attack and Sp. Atk are both boosted thanks to a Trainer's cheer.")
-    },
-    [INFO_HANGING_TOUGH] =
-    {
-        COMPOUND_STRING("Hanging Tough"),
-        COMPOUND_STRING("The Pokemon's Defense and Sp. Def are both boosted thanks to a Trainer's cheer.")
-    },
-    [INFO_POISONED] =
-    {
-        COMPOUND_STRING("Poisoned"),
-        COMPOUND_STRING("At the end of each turn, the Pokemon is hurt by poison.")
-    },
-    [INFO_BADLY_POISONED] =
-    {
-        COMPOUND_STRING("Badly Poisoned"),
-        COMPOUND_STRING("The Pokemon is badly poisoned. The damage the Pokemon takes from the poison worsens every turn.")
-    },
-    [INFO_PARALYZED] =
-    {
-        COMPOUND_STRING("Paralyzed"),
-        COMPOUND_STRING("The Pokemon is paralyzed and may fail to act. Its Speed stat is also lowered.")
-    },
-    [INFO_BURNED] =
-    {
-        COMPOUND_STRING("Burned"),
-        COMPOUND_STRING("At the end of each turn, the Pokemon is hurt by its burn. Any damage it deals with physical moves will also be reduced.")
-    },
-    [INFO_FROSTBITE] =
-    {
-        COMPOUND_STRING("Frostbite"),
-        COMPOUND_STRING("At the end of each turn, the Pokemon is hurt by its frostbite. Any damage it deals with special moves will also be reduced.")
-    },
-    [INFO_STEALTH_ROCK] =
-    {
-        COMPOUND_STRING("Stealth Rock"),
-        COMPOUND_STRING("Pokemon that switch into battle will take damage.")
-    },
-    [INFO_SPIKES] =
-    {
-        COMPOUND_STRING("Spikes"),
-        COMPOUND_STRING("Pokemon that switch into battle will take damage. Flying-type Pokemon or Pokemon with the Levitate Ability will not be affected.")
-    },
-    [INFO_TOXIC_SPIKES] =
-    {
-        COMPOUND_STRING("Toxic Spikes"),
-        COMPOUND_STRING("Pokemon that switch into battle will be poisoned. Flying-type Pokemon or Pokemon with the Levitate Ability will not be affected.")
-    },
-    [INFO_STICKY_WEB] =
-    {
-        COMPOUND_STRING("Sticky Web"),
-        COMPOUND_STRING("Pokemon that switch into battle will have their Speed lowered.")
-    },
-    [INFO_LIGHT_SCREEN] =
-    {
-        COMPOUND_STRING("Light Screen"),
-        COMPOUND_STRING("Damage from special moves is halved for five turns.")
-    },
-    [INFO_REFLECT] =
-    {
-        COMPOUND_STRING("Reflect"),
-        COMPOUND_STRING("Damage from physical moves is halved for five turns.")
-    },
-    [INFO_AURORA_VEIL] =
-    {
-        COMPOUND_STRING("Aurora Veil"),
-        COMPOUND_STRING("For five turns, the power of special and physical moves will be halved.")
-    },
-    [INFO_MUD_SPORT] =
-    {
-        COMPOUND_STRING("Mud Sport"),
-        COMPOUND_STRING("The power of Electric-type moves will be halved for five turns.")
-    },
-    [INFO_WATER_SPORT] =
-    {
-        COMPOUND_STRING("Water Sport"),
-        COMPOUND_STRING("The power of Fire-type moves will be halved for five turns.")
-    },
-    [INFO_FORESTS_CURSE] =
-    {
-        COMPOUND_STRING("Forest's Curse"),
-        COMPOUND_STRING("The Pokemon gains the Grass type.")
-    },
-    [INFO_TRICK_OR_TREAT] =
-    {
-        COMPOUND_STRING("Trick-or-Treat"),
-        COMPOUND_STRING("The Pokemon gains the Ghost type.")
-    },
-    [INFO_POWER_BOOST] =
-    {
-        COMPOUND_STRING("Power Boost"),
-        COMPOUND_STRING("The Pokemon's offensive stats are raised, boosting its Attack and Sp. Atk stats.")
-    },
-    [INFO_POWER_DROP] =
-    {
-        COMPOUND_STRING("Power Drop"),
-        COMPOUND_STRING("The Pokemon's offensive stats are lowered, reducing its Attack and Sp. Atk stats.")
-    },
-    [INFO_GUARD_BOOST] =
-    {
-        COMPOUND_STRING("Guard Boost"),
-        COMPOUND_STRING("The Pokemon's defensive stats are raised, boosting its Defense and Sp. Def stats.")
-    },
-    [INFO_GUARD_DROP] =
-    {
-        COMPOUND_STRING("Guard Drop"),
-        COMPOUND_STRING("The Pokemon's defensive stats are lowered, reducing its Defense and Sp. Def stats.")
+        COMPOUND_STRING("G-Max Cannonade"),
+        COMPOUND_STRING("Pokémon that are not Water types will take damage every turn for four turns.")
     },
     [INFO_FOG] =
     {
         COMPOUND_STRING("Fog"),
         COMPOUND_STRING("All moves are less accurate, apart from moves that are always sure to hit.")
     },
-    [INFO_EXTREMELY_HARSH_SUNLIGHT] =
+    [INFO_SALT_CURE] =
     {
-        COMPOUND_STRING("Extremely Harsh Sunlight"),
-        COMPOUND_STRING("The extremely harsh sunlight weather condition. It boosts the power of Fire-type moves and protects Pokemon from Water-type moves.")
+        COMPOUND_STRING("Salt Cured"),
+        COMPOUND_STRING("The Pokémon takes damage equal to 1/16 of its max HP at the end of every turn. If the Pokémon is a Steel type or Water type, it takes damage equal to 1/8 of its max HP instead.")
     },
-    [INFO_HEAVY_RAIN] =
+    [INFO_SYRUPY] =
     {
-        COMPOUND_STRING("Heavy Rain"),
-        COMPOUND_STRING("The heavy rain weather condition. It boosts the power of Water-type moves and protects Pokemon from Fire-type moves.")
+        COMPOUND_STRING("Syrupy"),
+        COMPOUND_STRING("The Pokémon's Speed stat is lowered by 1 stage at the end of every turn.")
     },
-    [INFO_STRONG_WINDS] =
+    [INFO_GOING_ALL_OUT] =
     {
-        COMPOUND_STRING("Strong Winds"),
-        COMPOUND_STRING("The strong winds weather condition. The power of moves that are super effective against Flying-type Pokemon is decreased.")
+        COMPOUND_STRING("Going All Out"),
+        COMPOUND_STRING("The Pokémon's Attack and Sp. Atk are both boosted thanks to a Trainer's cheer.")
     },
-    [INFO_OUTRAGE] =
+    [INFO_HANGING_TOUGH] =
     {
-        COMPOUND_STRING("Outrage"),
-        COMPOUND_STRING("The Pokemon rampages and attacks for two to three turns. It then becomes confused.")
+        COMPOUND_STRING("Hanging Tough"),
+        COMPOUND_STRING("The Pokémon's Defense and Sp. Def are both boosted thanks to a Trainer's cheer.")
     },
-    [INFO_RAMPAGING] =
+    [INFO_BATTLE_STATE_112] =
     {
-        COMPOUND_STRING("Rampaging"),
-        COMPOUND_STRING("The Pokemon rampages and attacks for two to three turns. It then becomes confused.")
+        COMPOUND_STRING("-"),
+        COMPOUND_STRING("No description.")
     },
-    [INFO_PETAL_DANCE] =
+    [INFO_RECHARGING] =
     {
-        COMPOUND_STRING("Petal Dance"),
-        COMPOUND_STRING("The Pokemon rampages and attacks for two to three turns. It then becomes confused.")
+        COMPOUND_STRING("Recharging"),
+        COMPOUND_STRING("The Pokémon cannot take any actions for 1 turn.")
     },
-    [INFO_RAGING_FURY] =
+    [INFO_CHARGING] =
     {
-        COMPOUND_STRING("Raging Fury"),
-        COMPOUND_STRING("The Pokemon rampages and attacks for two to three turns. It then becomes confused.")
+        COMPOUND_STRING("Charging"),
+        COMPOUND_STRING("The Pokémon spends 1 turn charging before using a move.")
     },
-    [INFO_G_MAX_WILDFIRE] =
+    [INFO_SKY_HIGH] =
     {
-        COMPOUND_STRING("G-Max Wildfire"),
-        COMPOUND_STRING("Pokemon that are not {STR_VAR_1} types will take damage every turn for four turns.")
+        COMPOUND_STRING("Sky-High"), // Fly, Bounce, Sky Drop
+        COMPOUND_STRING("The Pokémon cannot be hit by most moves, excluding moves such as Thunder, Hurricane, and Smack Down. The Pokémon is also unaffected by the terrain.")
     },
-    [INFO_G_MAX_VOLCALITH] =
+    [INFO_SUBMERGED] =
     {
-        COMPOUND_STRING("G-Max Volcalith"),
-        COMPOUND_STRING("Pokemon that are not {STR_VAR_1} types will take damage every turn for four turns.")
+        COMPOUND_STRING("Submerged"), // Dive
+        COMPOUND_STRING("The Pokémon cannot be hit by most moves, but Surf and Whirlpool will hit and will deal double damage. The Pokémon is also unaffected by the terrain.")
     },
-    [INFO_G_MAX_VINE_LASH] =
+    [INFO_UNDERGROUND] =
     {
-        COMPOUND_STRING("G-Max Vine Lash"),
-        COMPOUND_STRING("Pokemon that are not {STR_VAR_1} types will take damage every turn for four turns.")
+        COMPOUND_STRING("Underground"), // Dig
+        COMPOUND_STRING("The Pokémon cannot be hit by most moves, but Earthquake will hit and will deal double damage. The Pokémon is also unaffected by the terrain.")
     },
-    [INFO_G_MAX_CANNONADE] =
+    [INFO_CONCEALED] =
     {
-        COMPOUND_STRING("G-Max Cannonade"),
-        COMPOUND_STRING("Pokemon that are not {STR_VAR_1} types will take damage every turn for four turns.")
+        COMPOUND_STRING("Concealed"), // Shadow Force, Phantom Force
+        COMPOUND_STRING("The Pokémon cannot be hit by moves and is unaffected by the terrain.")
     },
-    [INFO_WILD_MIGHT] =
+    [INFO_MINIMIZED] =
     {
-        COMPOUND_STRING("Wild Might"),
-        COMPOUND_STRING("All the Pokemon's stats are boosted. The Pokemon also takes reduced damage from status conditions and move effects such as poisoning and splinters.")
+        COMPOUND_STRING("Minimized"),
+        COMPOUND_STRING("Moves such as Supercell Slam, Body Slam, Dragon Rush, Flying Press, Heat Crash, and Heavy Slam will not miss the Pokémon and will deal double damage.")
     },
-    [INFO_TERRIBLE_MIGHT] =
+    [INFO_ATK_DEF_SWAPPED] =
     {
-        COMPOUND_STRING("Terrible Might"),
-        COMPOUND_STRING("All the Pokemon's stats are boosted. The Pokemon also takes reduced damage from status conditions and move effects such as poisoning and splinters.")
+        COMPOUND_STRING("Atk/Def Swapped"), // Power Trick
+        COMPOUND_STRING("The Pokémon's Attack and Defense stats are swapped.")
     },
-    [INFO_TERRIFIC_MIGHT] =
+    [INFO_FLASH_FIRE] =
     {
-        COMPOUND_STRING("Terrific Might"),
-        COMPOUND_STRING("The Pokemon takes reduced damage from status conditions and move effects such as poisoning and splinters.")
+        COMPOUND_STRING("Flash Fire"),
+        COMPOUND_STRING("Boosts the power of the Pokémon's Fire-type moves by 50%.")
     },
-    [INFO_FRENZIED_MIGHT] =
+    [INFO_MICLE_BERRY] =
     {
-        COMPOUND_STRING("Frenzied Might"),
-        COMPOUND_STRING("The Pokemon takes reduced damage from status conditions and move effects such as poisoning and splinters.")
+        COMPOUND_STRING("Micle Berry"),
+        COMPOUND_STRING("Boosts the accuracy of the Pokémon's next move by 20%.")
     },
 };
-
-STATIC_ASSERT(ARRAY_COUNT(sBattleInfoEffects) == INFO_COUNT, BattleInfoEffectTableSizeMismatch);
 
 static const u8 sBattleInfoHpBarTiles[8 * TILE_SIZE_4BPP] = {0};
 static const u8 sBattleInfoHpBarLeftEndcapGfx[] = INCBIN_U8("graphics/battle_interface/hpbar_left_endcap.4bpp");
@@ -2655,7 +2634,7 @@ static void DetailRefreshEffectsWindow(void)
 
     DetailDrawWindowFrame(windowId);
     AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, 2, 0, 0, sTextColor_BattleInfo_Default,
-                                 TEXT_SKIP_DRAW, COMPOUND_STRING("{L_BUTTON}"));
+                                 TEXT_SKIP_DRAW, COMPOUND_STRING("Active States and Effects"));
 
     if (sData->activeEffectsCount != 0)
     {
