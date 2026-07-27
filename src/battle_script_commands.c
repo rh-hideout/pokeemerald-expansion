@@ -3852,13 +3852,13 @@ static u32 GetMonHoldEffect(struct Pokemon *mon)
 
 static enum BattlerId GetBattlerFromPlayerPartyId(u32 partyId)
 {
-    if (gBattlerPartyIndexes[B_BATTLER_0] == partyId)
+    if (gBattlerPartyIndexes[B_BATTLER_0] == partyId && !(gAbsentBattlerFlags & 1))
         return B_BATTLER_0;
     if (!IsDoubleBattle())
         return MAX_BATTLERS_COUNT;
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         return MAX_BATTLERS_COUNT;
-    if (gBattlerPartyIndexes[B_BATTLER_2] == partyId)
+    if (gBattlerPartyIndexes[B_BATTLER_2] == partyId && !(gAbsentBattlerFlags & 4))
         return B_BATTLER_2;
     return MAX_BATTLERS_COUNT;
 }
@@ -4072,7 +4072,7 @@ static void Cmd_getexp(void)
     case 3: // Set stats and give exp
         if (gBattleControllerExecFlags == 0)
         {
-            gBattleResources->bufferB[gBattleStruct->expGetterBattlerId][0] = 0;
+            gBattleResources->bufferB[0][0] = 0;
             currLvl = GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_LEVEL);
             if (GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_HP) && currLvl != MAX_LEVEL)
             {
