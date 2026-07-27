@@ -284,6 +284,8 @@ static void DebugAction_ExecuteScript(u8 taskId, void *script);
 static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
+static void DebugAction_Selection_StepUpdate(u8 taskId);
+static void DebugAction_Selection_NextStep(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
@@ -1167,9 +1169,6 @@ static void DebugNativeStep_CloseDebugWindow(u8 taskId)
     UnfreezeObjectEvents();
     UnlockPlayerFieldControls();
 }
-
-static void DebugAction_Selection_StepUpdate(u8 taskId);
-static void DebugAction_Selection_NextStep(u8 taskId);
 
 static void DebugSelection_SetData(u8 taskId, u32 index, u16 value)
 {
