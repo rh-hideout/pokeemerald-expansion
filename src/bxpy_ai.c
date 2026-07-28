@@ -233,7 +233,6 @@ void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArr
 
 static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    enum Move move;
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
 
     struct AiCalcValues aiCalc = {
