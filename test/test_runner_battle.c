@@ -373,10 +373,21 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
 
+    ResetTestInventory();
     SetVariablesForRecordedBattle(&DATA.recordedBattle);
     if (STATE->trials)
         gMain.savedCallback = CB2_BattleTest_NextTrial;
@@ -2077,16 +2088,6 @@ static inline rng_value_t MakeRngValue(const u16 seed)
     return result;
 }
 
-static void ResetTestInventory()
-{
-    ClearBag();
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
-    {
-        if (DATA.inventory[i].itemId != ITEM_NONE)
-            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
-    }
-}
-
 static void CB2_BattleTest_NextTrial(void)
 {
     TearDownBattle();
@@ -2112,7 +2113,6 @@ static void CB2_BattleTest_NextTrial(void)
         gTestRunnerState.result = TEST_RESULT_PASS;
         DATA.recordedBattle.rngSeed = MakeRngValue(STATE->runTrial);
         memset(&DATA.trial, 0, sizeof(DATA.trial));
-        ResetTestInventory();
         SetVariablesForRecordedBattle(&DATA.recordedBattle);
         SetMainCallback2(CB2_InitBattle);
     }
