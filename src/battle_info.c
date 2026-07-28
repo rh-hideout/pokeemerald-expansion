@@ -40,12 +40,6 @@
 #include "constants/songs.h"
 #include "constants/pokemon.h"
 
-#define PERMANENT_STATUS 1
-
-// Configs
-#define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing Pokémon
-#define B_INFO_ALWAYS_SHOW_ACCURATE_DURATION FALSE // Shows the increased duration of Light Clay / Weather Rocks / Terrain Extenders for both sides
-
 struct BattleInfo
 {
     u8 label;
@@ -134,7 +128,8 @@ static void OverviewUpdateCursorPos(void);
 static void OverviewGetCursorPos(const struct BattleInfoCard *card, s16 *outX, s16 *outY);
 static void Task_BattleMenuStatus_HandleInput(u8 taskId);
 static void OverviewHandleInput(u8 taskId);
-static bool32 OverviewTryMoveCursor(s8 dx, s8 dy);
+
+static void OverviewTryMoveCursor(u32 direction);
 static void DetailEnter(void);
 static void DetailExit(void);
 static void DetailHandleInput(u8 taskId);
@@ -1066,14 +1061,6 @@ static const struct BgTemplate sBattleInfoMenuBgTemplates[] =
         .priority = 1,
         .baseTile = 0,
     },
-};
-
-enum
-{
-    WIN_LABEL_TOP,
-    WIN_LABEL_BOTTOM,
-    WIN_ROW_ENEMY,
-    WIN_ROW_PLAYER,
 };
 
 static const struct WindowTemplate sBattleInfoMenuWindowTemplates[] =
@@ -3703,22 +3690,21 @@ static void Task_BattleMenuStatus_HandleInput(u8 taskId)
 
 static void OverviewHandleInput(u8 taskId)
 {
-    bool32 moved = FALSE;
-    u32 currSelectedCard = sData->selectedCard; // OverviewTryMoveCursor modifies selectedCard
-
     if (JOY_NEW(DPAD_LEFT))
-        moved = OverviewTryMoveCursor(-1, 0);
-    else if (JOY_NEW(DPAD_RIGHT))
-        moved = OverviewTryMoveCursor(1, 0);
-    else if (JOY_NEW(DPAD_UP))
-        moved = OverviewTryMoveCursor(0, -1);
-    else if (JOY_NEW(DPAD_DOWN))
-        moved = OverviewTryMoveCursor(0, 1);
-
-    if (moved)
     {
-        OverviewUpdateCardSelectionHighlight(currSelectedCard);
-        OverviewUpdateCursorPos();
+        OverviewTryMoveCursor(B_INFO_CURSOR_LEFT);
+    }
+    else if (JOY_NEW(DPAD_RIGHT))
+    {
+        OverviewTryMoveCursor(B_INFO_CURSOR_RIGHT);
+    }
+    else if (JOY_NEW(DPAD_UP))
+    {
+        OverviewTryMoveCursor(B_INFO_CURSOR_UP);
+    }
+    else if (JOY_NEW(DPAD_DOWN))
+    {
+        OverviewTryMoveCursor(B_INFO_CURSOR_DOWN);
     }
     else if (JOY_NEW(A_BUTTON) && CanViewCard(GetSelectedBattler()))
     {
@@ -3772,63 +3758,28 @@ static void DetailHandleInput(u8 taskId)
     }
 }
 
-static bool32 OverviewTryMoveCursor(s8 dx, s8 dy)
+static void OverviewTryMoveCursor(u32 direction)
 {
-    u8 bestIndex = sData->selectedCard;
-    s16 bestMetric = 0x7FFF;
-    s16 targetRowY;
+    u32 currSelectedCard = sData->selectedCard;
 
-    s32 currX = sData->cards[sData->selectedCard].x;
-    s32 currY = sData->cards[sData->selectedCard].y;
-
-    if (dx != 0)
+    switch (direction)
     {
-        for (u32 i = 0; i < GetCardCount(); i++)
-        {
-            const struct BattleInfoCard *card = &sData->cards[i];
-            s16 diff = card->x - currX;
-
-            if (card->y != currY)
-                continue;
-            if ((dx < 0 && diff >= 0) || (dx > 0 && diff <= 0))
-                continue;
-
-            diff = abs(diff);
-            if (diff < bestMetric)
-            {
-                bestMetric = diff;
-                bestIndex = i;
-            }
-        }
-    }
-    else if (dy != 0)
-    {
-        targetRowY = (currY == B_INFO_ROW_Y_ENEMY) ? B_INFO_ROW_Y_PLAYER : B_INFO_ROW_Y_ENEMY;
-
-        for (u32 i = 0; i < GetCardCount(); i++)
-        {
-            const struct BattleInfoCard *card = &sData->cards[i];
-            s16 diff;
-
-            if (card->y != targetRowY)
-                continue;
-
-            diff = abs(card->x - currX);
-            if (diff < bestMetric)
-            {
-                bestMetric = diff;
-                bestIndex = i;
-            }
-        }
+    case B_INFO_CURSOR_LEFT:
+    case B_INFO_CURSOR_RIGHT:
+        if (IsDoubleBattle())
+            sData->selectedCard ^= 1;
+        break;
+    case B_INFO_CURSOR_UP:
+    case B_INFO_CURSOR_DOWN:
+        if (IsDoubleBattle())
+            sData->selectedCard ^= 2;
+        else
+            sData->selectedCard ^= 1;
+        break;
     }
 
-    if (bestIndex != sData->selectedCard)
-    {
-        sData->selectedCard = bestIndex;
-        return TRUE;
-    }
-
-    return FALSE;
+    OverviewUpdateCardSelectionHighlight(currSelectedCard);
+    OverviewUpdateCursorPos();
 }
 
 static u32 GetCardCount(void)

@@ -33,6 +33,24 @@ enum
     B_INFO_TEXT_COLOR_LIGHT_RED,
 };
 
+enum
+{
+    WIN_LABEL_TOP,
+    WIN_LABEL_BOTTOM,
+    WIN_ROW_ENEMY,
+    WIN_ROW_PLAYER,
+};
+
+enum CursorDiraction
+{
+    B_INFO_CURSOR_LEFT,
+    B_INFO_CURSOR_RIGHT,
+    B_INFO_CURSOR_UP,
+    B_INFO_CURSOR_DOWN,
+};
+
+#define PERMANENT_STATUS 1
+
 #define B_INFO_TEXT_PAL                15
 #define B_INFO_TEXT_BG                 0
 #define B_INFO_BACKDROP_BG             1
