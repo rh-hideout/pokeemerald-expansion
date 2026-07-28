@@ -55,13 +55,10 @@ GHOST_BATTLE_TEST("Ghost battle: Intro plays correctly (no Silph Scope)")
 
 GHOST_BATTLE_TEST("Ghost battle: Intro plays correctly (with Silph Scope)")
 {
-    RUN_OVERWORLD_SCRIPT(
-        additem ITEM_SILPH_SCOPE;
-    );
-
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAROWAK);
+        GIVE_PLAYER_ITEM(ITEM_SILPH_SCOPE, 1);
     } WHEN {
         TURN {}
     } SCENE {
