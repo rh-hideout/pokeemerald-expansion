@@ -6007,21 +6007,25 @@ u32 GetMoveTargetCount(struct DamageContext *ctx)
     switch (GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move))
     {
     case TARGET_BOTH:
-        return IsBattlerAlive(ctx->battlerDef)
-             + IsBattlerAlive(BATTLE_PARTNER(ctx->battlerDef));
+        return CountTrue(
+            IsBattlerAlive(ctx->battlerDef),
+            IsBattlerAlive(BATTLE_PARTNER(ctx->battlerDef))
+        );
     case TARGET_FOES_AND_ALLY:
-        return  IsBattlerAlive(ctx->battlerDef)
-             +  IsBattlerAlive(BATTLE_PARTNER(ctx->battlerDef))
-             +  IsBattlerAlive(BATTLE_PARTNER(ctx->battlerAtk));
+        return CountTrue(
+            IsBattlerAlive(ctx->battlerDef),
+            IsBattlerAlive(BATTLE_PARTNER(ctx->battlerDef)),
+            IsBattlerAlive(BATTLE_PARTNER(ctx->battlerAtk))
+        );
     case TARGET_OPPONENTS_FIELD:
         return 1;
     case TARGET_DEPENDS:
     case TARGET_SELECTED:
     case TARGET_RANDOM:
     case TARGET_OPPONENT:
-        return IsBattlerAlive(ctx->battlerDef);
+        return CountTrue(IsBattlerAlive(ctx->battlerDef));
     case TARGET_USER:
-        return IsBattlerAlive(ctx->battlerAtk);
+        return CountTrue(IsBattlerAlive(ctx->battlerAtk));
     default:
         return 0;
     }
