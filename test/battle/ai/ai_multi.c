@@ -149,7 +149,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
         TURN { EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft); }
         TURN {}
     } THEN {
-        EXPECT_EQ(!IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)), TRUE);
+        EXPECT_EQ(IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)), FALSE);
     }
 }
 
