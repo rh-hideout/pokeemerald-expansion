@@ -665,23 +665,22 @@ u32 CountPlayerTrainerStars(void)
 {
     u8 stars = 0;
 
+    if (GetGameStat(GAME_STAT_ENTERED_HOF))
+        stars++;
+    if (HasAllRegionalMons())
+        stars++;
+
     if (IS_FRLG)
     {
-        if (GetGameStat(GAME_STAT_ENTERED_HOF))
-            stars++;
-        if (HasAllRegionalMons())
-            stars++;
         if (HasAllMons())
             stars++;
+#if FREE_POKEMON_JUMP == FALSE
         if (gSaveBlock2Ptr->berryPick.berriesPicked >= 200 && gSaveBlock2Ptr->pokeJump.jumpsInRow >= 200)
             stars++;
+#endif // FREE_POKEMON_JUMP
     }
     else
     {
-        if (GetGameStat(GAME_STAT_ENTERED_HOF))
-            stars++;
-        if (HasAllRegionalMons())
-            stars++;
         if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
             stars++;
         if (HasAllFrontierSymbols())
@@ -758,13 +757,6 @@ static void SetPlayerCardData(struct TrainerCard *trainerCard, u8 cardType)
         trainerCard->pokeblocksWithFriends = GetCappedGameStat(GAME_STAT_POKEBLOCKS_WITH_FRIENDS, 0xFFFF);
         if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
             trainerCard->hasAllPaintings = TRUE;
-        break;
-    case CARD_TYPE_RS:
-        trainerCard->contestsWithFriends = GetCappedGameStat(GAME_STAT_WON_LINK_CONTEST, 999);
-        trainerCard->pokeblocksWithFriends = GetCappedGameStat(GAME_STAT_POKEBLOCKS_WITH_FRIENDS, 0xFFFF);
-        if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
-            trainerCard->hasAllPaintings = TRUE;
-        trainerCard->stars = GetRubyTrainerStars(trainerCard);
         break;
     case CARD_TYPE_FRLG:
         trainerCard->battleTowerWins = 0;
