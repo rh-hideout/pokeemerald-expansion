@@ -214,7 +214,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("Partner Pokemon do not gain experience")
     }
 }
 
-AI_ONE_VS_TWO_BATTLE_TEST("Both opponent Pokemon give experience in multi battle")
+AI_ONE_VS_TWO_BATTLE_TEST("Both opponent's Pokemon give experience in battle against two opponents")
 {
     u32 expectedXp = 0;
     GIVEN {
