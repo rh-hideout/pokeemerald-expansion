@@ -88,7 +88,7 @@ struct BattleInfoMenuData
     u8 effectsCursor;
     u8 effectsScrollbarSpriteId;
     u16 effectsScroll;
-    u8 windowIds[WIN_DETAIL_COUNT];
+    u32 windowIds[WIN_DETAIL_COUNT];
     u16 bg0Tilemap[BG_SCREEN_SIZE];
     u16 bg1Tilemap[BG_SCREEN_SIZE];
     u8 detailTextBuffer[B_INFO_DETAIL_TEXT_BUFFER_SIZE];
@@ -155,8 +155,8 @@ static void DetailDestroyTypeIcons(void);
 static void DetailCreateStatPips(void);
 static void DetailDestroyStatPips(void);
 static void DetailRefreshStatPips(void);
-static s32 DetailGetStatRowTextY(u8 row);
-static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag);
+static s32 DetailGetStatRowTextY(u32 row);
+static void DetailSetStatPipSpriteGraphic(u32 spriteId, u16 tileTag);
 static void DetailCycleBattler(s8 direction);
 static void DetailInitEffectsList(void);
 static void DetailBuildActiveEffectsForBattler(void);
@@ -182,7 +182,7 @@ static enum BattleInfoLabels GetStatusEffectFromWeather(void);
 static enum BattleInfoLabels GetStatusEffectFromTerrain(void);
 static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battler);
 static void TryAddeActiveDamageNonTypes(enum BattleSide side);
-static bool32 DetailGetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, u16 *outRemaining, u16 *outTotal);
+static bool32 DetailGetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, u32 *outRemaining, u32 *outTotal);
 static void DetailBuildTurnFractionText(u8 *dst, u16 remaining, u16 total);
 static void DetailCopyTextToFit(u8 *dst, const u8 *src, u8 fontId, s16 maxWidth);
 static bool32 DetailTryMoveEffectCursor(s8 direction);
@@ -197,7 +197,7 @@ static void DetailUpdateScrollbarLane(bool8 hasScrollbar);
 static void DetailSetDescriptionPlaceholder(enum BattleInfoLabels  label);
 static void DetailFormatDescriptionText(enum BattleInfoLabels  label, u8 *dst);
 static void DetailClampTextLines(u8 *text, u8 maxLines);
-static void DetailDrawWindowFrame(u8 windowId);
+static void DetailDrawWindowFrame(u32 windowId);
 static const u8 *GetPrimaryOpponentTrainerName(void);
 static const u8 *GetPlayerSideTrainerName(void);
 static const u8 *GetPrimaryOpponentTrainerName(void);
@@ -209,8 +209,8 @@ static u32 CreateHpBarSprite(u16 tileTag, s16 x, s16 y);
 static void DestroyHpBarEndcaps(u8 *leftEndcapSpriteId, u8 *rightEndcapSpriteId);
 static void CreateHpBarEndcaps(u8 *leftEndcapSpriteId, u8 *rightEndcapSpriteId);
 static void UpdateHpBarEndcaps(u8 leftEndcapSpriteId, u8 rightEndcapSpriteId, s16 barCenterX, s16 barY, u8 segmentCount);
-static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPixels, u8 segmentCount);
-static void UpdateHpBarTiles(u8 spriteId, s16 hp, s16 maxHp);
+static void UpdateHpBarTilesWithWidth(u32 spriteId, s16 hp, s16 maxHp, u8 totalPixels, u8 segmentCount);
+static void UpdateHpBarTiles(u32 spriteId, s16 hp, s16 maxHp);
 static void DrawHpBarSprite(struct BattleInfoCard *card);
 static u32 GetBarGfxId(s16 hp, s16 maxHp);
 static u32 GetAilmentFromBattler(enum BattlerId battler);
@@ -1265,7 +1265,6 @@ static void BattleInfoMainCB(void)
 
 static void BattleInfoResetSpriteIds(void)
 {
-    sData->selectedCard = 0;
     sData->cursorSpriteId = SPRITE_NONE;
     sData->iconSpriteId = SPRITE_NONE;
     sData->hpBarSpriteId = SPRITE_NONE;
@@ -1295,9 +1294,6 @@ static void BattleInfoResetSpriteIds(void)
         sData->cards[i].hpBarLeftEndcapSpriteId = SPRITE_NONE;
         sData->cards[i].hpBarRightEndcapSpriteId = SPRITE_NONE;
     }
-
-    for (u32 i = 0; i < ARRAY_COUNT(sData->windowIds); i++)
-        sData->windowIds[i] = WINDOW_NONE;
 }
 
 static void BattleInfoInitBgs(void)
@@ -1382,7 +1378,7 @@ static void OverviewCreateWindows(void)
 
 static void OverviewClearWindows(void)
 {
-    for (u32 i = 0; i < 4; i++)
+    for (u32 i = 0; i < GetCardCount(); i++)
     {
         FillWindowPixelBuffer(i, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT));
         ClearWindowTilemap(i);
@@ -1471,7 +1467,7 @@ static void DetailDestroyWindows(void)
 
     for (u32 i = 0; i < WIN_DETAIL_COUNT; i++)
     {
-        u8 windowId = sData->windowIds[i];
+        u32 windowId = sData->windowIds[i];
 
         if (windowId == WINDOW_NONE)
             continue;
@@ -1495,7 +1491,7 @@ static void DetailDestroyWindows(void)
 
 static void DetailDrawStaticWindows(void)
 {
-    u8 windowId;
+    u32 windowId;
 
     windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
     if (windowId != WINDOW_NONE)
@@ -1633,17 +1629,16 @@ static void DetailRefreshStatusIcon(void)
 
 static void DetailDrawLRButtonGlyphs(void)
 {
-    u8 itemWindowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
-    u8 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
+    u32 itemWindowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
+    u32 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
 
     s32 glyphHeight = 12;//GetKeypadIconHeight(CHAR_L_BUTTON);
+
     if (glyphHeight == 0)
         glyphHeight = GetFontAttribute(FONT_SHORT_NARROW, FONTATTR_MAX_LETTER_HEIGHT);
-    if (glyphHeight <= 0)
-        glyphHeight = 8;
 
-    s32 itemWindowWidth = WindowWidthPx(itemWindowId);
-    s32 itemWindowHeight = GetWindowAttribute(itemWindowId, WINDOW_HEIGHT) * 8;
+    u32 itemWindowWidth = WindowWidthPx(itemWindowId);
+    u32 itemWindowHeight = GetWindowAttribute(itemWindowId, WINDOW_HEIGHT) * 8;
     s32 rGlyphWidth = GetKeypadIconWidth(CHAR_R_BUTTON);
     if (rGlyphWidth == 0)
         rGlyphWidth = GetStringWidth(FONT_SHORT_NARROW, sText_BattleInfo_DetailRButtonGlyph, 0);
@@ -1689,7 +1684,7 @@ static void DetailDestroyTeraTypeIndicator(void)
 
 static void DetailRefreshTeraTypeIndicator(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
+    u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     struct SpriteSheet sheet;
     struct SpriteTemplate template = sSpriteTemplate_BattleInfoDetailGimmick;
 
@@ -1711,8 +1706,8 @@ static void DetailRefreshTeraTypeIndicator(void)
     template.tileTag = B_INFO_DETAIL_TERA_TYPE_TILE_TAG;
     template.paletteTag = TAG_TERA_INDICATOR_PAL;
 
-    s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
-    s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
+    u32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
+    u32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
     sData->teraTypeSpriteId = CreateSprite(&template, windowLeftPx + 24 + (B_INFO_DETAIL_GIMMICK_W / 2), windowTopPx + 23, 0);
 
     if (sData->teraTypeSpriteId != SPRITE_NONE)
@@ -1743,7 +1738,7 @@ static void DetailDestroyGimmickIndicator(void)
 
 static void DetailRefreshGimmickIndicator(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
+    u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     const u8 *indicatorData;
     u32 palTag;
     struct SpriteTemplate template = sSpriteTemplate_BattleInfoDetailGimmick;
@@ -1779,8 +1774,9 @@ static void DetailRefreshGimmickIndicator(void)
 static void DetailRefreshItemAbilityWindow(void)
 {
     enum BattlerId battler = GetSelectedBattler();
-    u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
-    u8 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
+    u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
+    u32 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
+
     u8 sText_BattleInfo_None[] = _("None");
     const u8 *itemText = sText_BattleInfo_None;
     const u8 *abilityText = sText_BattleInfo_None;
@@ -1796,6 +1792,7 @@ static void DetailRefreshItemAbilityWindow(void)
             abilityText = gAbilitiesInfo[ability].name;
 
         s32 maxValueWidth = (B_INFO_DETAIL_ITEM_WIN_W * 8) - 6;
+
         u32 itemFont = DetailGetBestFitSmallFont(itemText, maxValueWidth);
         u32 abilityFont = DetailGetBestFitSmallFont(abilityText, maxValueWidth);
 
@@ -1818,7 +1815,7 @@ static void DetailRefreshItemAbilityWindow(void)
 
 static void DetailRefreshHeader(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
+    u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     struct Pokemon *mon = GetBattlerMon(GetSelectedBattler());
     enum Gender gender = GetMonGender(mon);
     u32 level = GetMonData(mon, MON_DATA_LEVEL);
@@ -1829,17 +1826,14 @@ static void DetailRefreshHeader(void)
     u8 maxLevelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
 
     ConvertIntToDecimalStringN(maxLevelText + 2, 999, STR_CONV_MODE_LEFT_ALIGN, 3);
+
     s32 levelMaxWidth = GetStringWidth(FONT_SMALL, maxLevelText, 0);
     s32 levelX = genderX - 2 - levelMaxWidth;
-
-    if (levelX < 2)
-        levelX = 2;
+    levelX = min(levelX, 2);
 
     u8 monName[POKEMON_NAME_LENGTH + 1];
     GetMonData(GetBattlerMon(GetSelectedBattler()), MON_DATA_NICKNAME, monName);
-    s32 maxNameWidth = levelX - 4;
-    if (maxNameWidth < 16)
-        maxNameWidth = 16;
+    u32 maxNameWidth = max(levelX - 4, 16);
 
     u32 nameFont = GetBestFitNameFont(monName, maxNameWidth);
     AddTextPrinterParameterized4(windowId, nameFont, 2, 2, 0, 0, sTextColor_BattleInfo_Default,
@@ -1920,7 +1914,7 @@ static void DetailRefreshTypeIcons(void)
     enum BattlerId battler = GetSelectedBattler();
     enum Type type1 = gBattleMons[battler].types[0];
     enum Type type2 = gBattleMons[battler].types[1];
-    u8 windowId = sData->windowIds[WIN_DETAIL_HEADER];
+    u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
 
     DetailDestroyTypeIcons();
 
@@ -1930,11 +1924,6 @@ static void DetailRefreshTypeIcons(void)
         type2 = type1;
     }
 
-    if (type1 >= NUMBER_OF_MON_TYPES)
-        type1 = TYPE_MYSTERY;
-    if (type2 >= NUMBER_OF_MON_TYPES)
-        type2 = TYPE_MYSTERY;
-
     s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
 
@@ -1942,7 +1931,7 @@ static void DetailRefreshTypeIcons(void)
     s32 type2LeftPx = rightAlignedTypeRightPx - 32;
     s32 type1LeftPx = type2LeftPx - 33;
 
-    u8 spriteId = CreateSprite(&gSpriteTemplate_MoveTypes, type1LeftPx + 16, windowTopPx + 25, 0);
+    u32 spriteId = CreateSprite(&gSpriteTemplate_MoveTypes, type1LeftPx + 16, windowTopPx + 25, 0);
 
     StartSpriteAnim(&gSprites[spriteId], type1);
     gSprites[spriteId].oam.paletteNum = gTypesInfo[type1].palette;
@@ -1960,9 +1949,9 @@ static void DetailRefreshTypeIcons(void)
     sData->typeIconSpriteIds[1] = spriteId;
 }
 
-static s32 DetailGetStatRowTextY(u8 row)
+static s32 DetailGetStatRowTextY(u32 row)
 {
-    s16 y = 15 + row * 9;
+    u32 y = 15 + row * 9;
 
     if (row >= 5)
         y += 3;
@@ -1970,9 +1959,9 @@ static s32 DetailGetStatRowTextY(u8 row)
     return y;
 }
 
-static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag)
+static void DetailSetStatPipSpriteGraphic(u32 spriteId, u16 tileTag)
 {
-    u16 tileStart;
+    u32 tileStart;
 
     if (spriteId == SPRITE_NONE)
         return;
@@ -1987,7 +1976,7 @@ static void DetailSetStatPipSpriteGraphic(u8 spriteId, u16 tileTag)
 
 static void DetailCreateStatPips(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_STATS];
+    u32 windowId = sData->windowIds[WIN_DETAIL_STATS];
 
     DetailDestroyStatPips();
 
@@ -2004,19 +1993,20 @@ static void DetailCreateStatPips(void)
 
     for (u32 row = 0; row < B_INFO_DETAIL_STAT_ROW_COUNT; row++)
     {
-        s16 rowY = windowTopPx + DetailGetStatRowTextY(row) + 8;
+        s32 rowY = windowTopPx + DetailGetStatRowTextY(row) + 8;
 
         for (u32 col = 0; col < B_INFO_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
-            u8 spriteId = CreateSprite(&sSpriteTemplate_BattleInfoDetailStatPip,
+            u32 spriteId = CreateSprite(&sSpriteTemplate_BattleInfoDetailStatPip,
                                        windowLeftPx + 56 + col * 8,
                                        rowY, 0);
             sData->statPipSpriteIds[row][col] = spriteId;
-            if (spriteId != SPRITE_NONE)
-            {
-                gSprites[spriteId].invisible = FALSE;
-                gSprites[spriteId].oam.priority = 0;
-            }
+
+            if (spriteId == SPRITE_NONE)
+                continue;
+
+            gSprites[spriteId].invisible = FALSE;
+            gSprites[spriteId].oam.priority = 0;
         }
     }
 }
@@ -2027,7 +2017,7 @@ static void DetailDestroyStatPips(void)
     {
         for (u32 col = 0; col < B_INFO_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
-            u8 spriteId = sData->statPipSpriteIds[row][col];
+            u32 spriteId = sData->statPipSpriteIds[row][col];
 
             if (spriteId != SPRITE_NONE)
                 DestroySprite(&gSprites[spriteId]);
@@ -2047,9 +2037,9 @@ static void DetailRefreshStatPips(void)
 
     for (u32 row = 0; row < B_INFO_DETAIL_STAT_ROW_COUNT; row++)
     {
-        s8 delta = gBattleMons[battler].statStages[sBattleInfoDetailStatIds[row]] - DEFAULT_STAT_STAGE;
-        u8 absDelta = (delta >= 0) ? delta : -delta;
-        u16 tileTag = B_INFO_DETAIL_STAT_PIP_DOT_TILE_TAG;
+        s32 delta = gBattleMons[battler].statStages[sBattleInfoDetailStatIds[row]] - DEFAULT_STAT_STAGE;
+        u32 absDelta = (delta >= 0) ? delta : -delta;
+        u32 tileTag = B_INFO_DETAIL_STAT_PIP_DOT_TILE_TAG;
 
         if (absDelta > B_INFO_DETAIL_STAT_PIPS_PER_ROW)
             absDelta = B_INFO_DETAIL_STAT_PIPS_PER_ROW;
@@ -2061,8 +2051,8 @@ static void DetailRefreshStatPips(void)
 
         for (u32 col = 0; col < B_INFO_DETAIL_STAT_PIPS_PER_ROW; col++)
         {
-            u8 spriteId = sData->statPipSpriteIds[row][col];
-            u16 currentTag = (col < absDelta) ? tileTag : B_INFO_DETAIL_STAT_PIP_DOT_TILE_TAG;
+            u32 spriteId = sData->statPipSpriteIds[row][col];
+            u32 currentTag = (col < absDelta) ? tileTag : B_INFO_DETAIL_STAT_PIP_DOT_TILE_TAG;
 
             DetailSetStatPipSpriteGraphic(spriteId, currentTag);
         }
@@ -2370,7 +2360,7 @@ static void TryAddActiveStatusInternal(enum BattleInfoLabels label, u32 timerOrF
     sData->activeEffects[sData->activeEffectsCount++] = entry;
 }
 
-static bool32 DetailGetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, u16 *outRemaining, u16 *outTotal)
+static bool32 DetailGetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, u32 *outRemaining, u32 *outTotal)
 {
     if (!entry->durationKnown )
         return FALSE;
@@ -2530,7 +2520,7 @@ static bool32 DetailTryMoveEffectCursor(s8 direction)
     return TRUE;
 }
 
-static void DisplayRow(u8 windowId, u32 row, u32 index, u32 fractionYOffset)
+static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
 {
     u32 y = 16 + row * 12;
     const struct BattleInfo *entry = &sData->activeEffects[index];
@@ -2541,8 +2531,8 @@ static void DisplayRow(u8 windowId, u32 row, u32 index, u32 fractionYOffset)
         AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, 2, y, 0, 0, sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, gText_SelectorArrow2);
     }
 
-    u16 remaining;
-    u16 total;
+    u32 remaining;
+    u32 total;
     bool32 hasFraction = DetailGetDisplayedDuration(entry, B_SIDE_PLAYER, &remaining, &total);
 
     if (hasFraction)
@@ -2611,7 +2601,7 @@ static void DisplayRow(u8 windowId, u32 row, u32 index, u32 fractionYOffset)
 
 static void DetailRefreshEffectsWindow(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
+    u32 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
     u8 fractionYOffset = 0;
 
     if (GetFontAttribute(FONT_SMALL_NARROWER, FONTATTR_MAX_LETTER_HEIGHT) < 12)
@@ -2654,17 +2644,17 @@ static void DetailRefreshEffectsScrollbar(void)
     DetailUpdateScrollbarLane(TRUE);
 
     u32 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
-    s32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
-    s32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    s32 scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
-    s32 scrollbarMinY = windowTopPx + 16 + 7;
-    s32 scrollbarMaxY = scrollbarMinY + 3 + (B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
-    s32 maxScroll = sData->activeEffectsCount - B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS;
+    u32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
+    u32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
+    u32 scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
+    u32 scrollbarMinY = windowTopPx + 16 + 7;
+    u32 scrollbarMaxY = scrollbarMinY + 3 + (B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
+    u32 maxScroll = sData->activeEffectsCount - B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS;
 
     if (sData->effectsScroll > maxScroll)
         sData->effectsScroll = maxScroll;
 
-    u8 spriteId;
+    u32 spriteId;
     if (sData->effectsScrollbarSpriteId == SPRITE_NONE)
     {
         spriteId = CreateSprite(&sSpriteTemplate_BattleInfoDetailEffectsScrollbar, scrollbarX, scrollbarMinY, 0);
@@ -2682,29 +2672,22 @@ static void DetailRefreshEffectsScrollbar(void)
 
 static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
-    s16 laneX;
-    s16 laneYStart;
-    s16 laneTileCount;
-
-    laneX = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT)
-            + (WindowWidthPx(windowId) - 6) / 8;
-    laneYStart = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) + (16 / 8);
-    laneTileCount = ((B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS * 12) + 7) / 8;
-    laneTileCount++;
-    laneYStart++;
-    laneTileCount -= 2;
-
-    if (laneTileCount <= 0)
-        return;
+    u32 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
+    s32 laneX = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) + (WindowWidthPx(windowId) - 6) / 8;
 
     if (laneX < 0 || laneX >= B_INFO_TILEMAP_WIDTH)
         return;
 
+    s32 laneYStart = (GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) + (16 / 8)) + 1;
+    s32 laneTileCount = (((B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS * 12) + 7) / 8) + 1;
+
+    if (laneTileCount <= 0)
+        return;
+
     for (u32 i = 0; i < laneTileCount; i++)
     {
-        s16 tileY = laneYStart + i;
-        u16 index;
+        s32 tileY = laneYStart + i;
+        u32 index;
 
         if (tileY < 0 || tileY >= B_INFO_TILEMAP_HEIGHT)
             continue;
@@ -2718,9 +2701,9 @@ static void DetailUpdateScrollbarLane(bool8 hasScrollbar)
 
     if (laneTileCount > 0)
     {
-        s16 topTileY = laneYStart - 1;
-        s16 bottomTileY = laneYStart + laneTileCount;
-        u16 index;
+        s32 topTileY = laneYStart - 1;
+        s32 bottomTileY = laneYStart + laneTileCount;
+        u32 index;
 
         if (topTileY >= 0 && topTileY < B_INFO_TILEMAP_HEIGHT)
         {
@@ -2768,6 +2751,7 @@ static void DetailSetDescriptionPlaceholder(enum BattleInfoLabels  label)
         StringCopy(gStringVar1, COMPOUND_STRING("Water"));
         break;
     default:
+        StringCopy(gStringVar1, COMPOUND_STRING(""));
         break;
     }
 }
@@ -2799,17 +2783,8 @@ static void DetailClampTextLines(u8 *text, u8 maxLines)
 
 static void DetailRefreshDescriptionWindow(void)
 {
-    u8 windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
-    u8 descFont = FONT_SMALL_NARROWER;
-    u8 maxLines;
-    u8 lineHeight;
-    u16 windowHeightPx;
-    u16 availableHeight;
-    u32 wrapWidth;
-    u8 *end;
-
-    if (windowId == WINDOW_NONE)
-        return;
+    u32 windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
+    u32 descFont = FONT_SMALL_NARROWER;
 
     DetailDrawWindowFrame(windowId);
 
@@ -2824,22 +2799,22 @@ static void DetailRefreshDescriptionWindow(void)
         DetailFormatDescriptionText(label, sData->detailTextBuffer);
     }
 
-    wrapWidth = WindowWidthPx(windowId) - (2 * 2) - 2;
+    u32 wrapWidth = WindowWidthPx(windowId) - (2 * 2) - 2;
     if (wrapWidth < 8)
         wrapWidth = 8;
 
-    windowHeightPx = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
-    availableHeight = (windowHeightPx > 2 + 1) ? windowHeightPx - 2 - 1 : 1;
-    lineHeight = GetFontAttribute(descFont, FONTATTR_MAX_LETTER_HEIGHT) + GetFontAttribute(descFont, FONTATTR_LINE_SPACING);
+    u32 windowHeightPx = GetWindowAttribute(windowId, WINDOW_HEIGHT) * 8;
+    u32 availableHeight = (windowHeightPx > 2 + 1) ? windowHeightPx - 2 - 1 : 1;
+    u32 lineHeight = GetFontAttribute(descFont, FONTATTR_MAX_LETTER_HEIGHT) + GetFontAttribute(descFont, FONTATTR_LINE_SPACING);
     if (lineHeight == 0)
         lineHeight = 1;
-    maxLines = availableHeight / lineHeight;
+    u32 maxLines = availableHeight / lineHeight;
     if (maxLines == 0)
         maxLines = 1;
 
     BreakStringAutomatic(sData->detailTextBuffer, wrapWidth, maxLines, descFont, HIDE_SCROLL_PROMPT);
 
-    end = sData->detailTextBuffer + StringLength(sData->detailTextBuffer);
+    u8 *end = sData->detailTextBuffer + StringLength(sData->detailTextBuffer);
     WrapFontIdToFit(sData->detailTextBuffer, end, descFont, wrapWidth);
     DetailClampTextLines(sData->detailTextBuffer, maxLines);
 
@@ -2861,20 +2836,18 @@ static void DetailRefreshEffectsSection(void)
 
 static void DetailDestroyEffectsCursor(void)
 {
-    if (sData->cursorSpriteId != SPRITE_NONE)
-    {
-        DestroySprite(&gSprites[sData->cursorSpriteId]);
-        sData->cursorSpriteId = SPRITE_NONE;
-    }
+    if (sData->cursorSpriteId == SPRITE_NONE)
+        return;
+    DestroySprite(&gSprites[sData->cursorSpriteId]);
+    sData->cursorSpriteId = SPRITE_NONE;
 }
 
 static void DetailDestroyEffectsScrollbar(void)
 {
-    if (sData->effectsScrollbarSpriteId != SPRITE_NONE)
-    {
-        DestroySprite(&gSprites[sData->effectsScrollbarSpriteId]);
-        sData->effectsScrollbarSpriteId = SPRITE_NONE;
-    }
+    if (sData->effectsScrollbarSpriteId == SPRITE_NONE)
+        return;
+    DestroySprite(&gSprites[sData->effectsScrollbarSpriteId]);
+    sData->effectsScrollbarSpriteId = SPRITE_NONE;
 }
 
 static void DetailUpdateEffectsCursor(void)
@@ -2882,7 +2855,7 @@ static void DetailUpdateEffectsCursor(void)
     DetailDestroyEffectsCursor();
 }
 
-static void DetailDrawWindowFrame(u8 windowId)
+static void DetailDrawWindowFrame(u32 windowId)
 {
     FillWindowPixelBuffer(windowId, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT));
 }
@@ -2964,7 +2937,7 @@ static void OverviewDrawCards(void)
 
 static void OverviewDrawCard(struct BattleInfoCard *card)
 {
-    u8 windowId = (card->y == B_INFO_ROW_Y_ENEMY) ? WIN_ROW_ENEMY : WIN_ROW_PLAYER;
+    u32 windowId = (card->y == B_INFO_ROW_Y_ENEMY) ? WIN_ROW_ENEMY : WIN_ROW_PLAYER;
     u8 nameFont;
     const u8 *gimmickIndicatorData;
     u32 gimmickIndicatorPalTag;
@@ -3142,9 +3115,8 @@ static u32 GetCenterRow(void)
 static void OverviewComputeHeaderLayout(s16 labelWidth, u8 *outTextLenTiles, s16 *outHeaderX, s16 *outHeaderWidth)
 {
     u32 textLenTiles = (labelWidth + 7) / 8;
+    textLenTiles = max(textLenTiles, 1);
 
-    if (textLenTiles == 0)
-        textLenTiles = 1;
     if (textLenTiles & 1)
         textLenTiles++;
 
@@ -3198,10 +3170,10 @@ static void OverviewDrawStatusCard(u16 *tilemap, s16 x, s16 y, u8 width, u8 heig
 
     if (isBottomRow)
     {
-        u16 swappedTopLeft = bottomLeftTile;
-        u16 swappedTopEdge = bottomEdgeTile;
-        u16 swappedBottomLeft = topLeftTile;
-        u16 swappedBottomEdge = topEdgeTile;
+        u32 swappedTopLeft = bottomLeftTile;
+        u32 swappedTopEdge = bottomEdgeTile;
+        u32 swappedBottomLeft = topLeftTile;
+        u32 swappedBottomEdge = topEdgeTile;
 
         topLeftTile = swappedTopLeft;
         topEdgeTile = swappedTopEdge;
@@ -3240,20 +3212,19 @@ static void OverviewDrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles)
     if (textLenTiles == 0)
         textLenTiles = 1;
 
+    if (y < 0 || y + 2 >= B_INFO_TILEMAP_HEIGHT)
+        return;
+
     u32 interior = textLenTiles;
     if (interior & 1)
         interior++;
 
-    u32 width = interior + 2;
-    if (width > B_INFO_TILEMAP_WIDTH)
-        width = B_INFO_TILEMAP_WIDTH;
+    u32 width = min(B_INFO_TILEMAP_WIDTH, interior + 2);
 
     if (x < 0)
         x = 0;
     if (x + width > B_INFO_TILEMAP_WIDTH)
         x = B_INFO_TILEMAP_WIDTH - width;
-    if (y < 0 || y + 2 >= B_INFO_TILEMAP_HEIGHT)
-        return;
 
     OverviewSetBgTile(tilemap, x, y, B_INFO_BG_TILE_HEADER_CORNER, 0);
     OverviewSetBgTile(tilemap, x + width - 1, y, B_INFO_BG_TILE_HEADER_CORNER, B_INFO_BG_ATTR_HFLIP);
@@ -3273,11 +3244,8 @@ static void OverviewDrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles)
 
 static void OverviewDrawCardBackground(const struct BattleInfoCard *card, bool8 isActive)
 {
-    s16 cardTileX;
-    s16 cardTileY;
-
-    cardTileX = card->x / 8;
-    cardTileY = card->y / 8;
+    s32 cardTileX = card->x / 8;
+    s32 cardTileY = card->y / 8;
     OverviewFillBgRect(sData->bg1Tilemap, cardTileX, cardTileY,
                                     B_INFO_CARD_TILE_W, B_INFO_CARD_TILE_H, B_INFO_BG_TILE_FILL, 0);
     OverviewDrawStatusCard(sData->bg1Tilemap, cardTileX, cardTileY,
@@ -3485,7 +3453,7 @@ static u32 CreateHpBarSprite(u16 tileTag, s16 x, s16 y)
     };
 
     struct SpriteTemplate template = sSpriteTemplate_BattleInfoHpBar;
-    u8 spriteId;
+    u32 spriteId;
 
     LoadSpriteSheet(&sheet);
     template.tileTag = tileTag;
@@ -3556,16 +3524,13 @@ static void UpdateHpBarEndcaps(u8 leftEndcapSpriteId, u8 rightEndcapSpriteId, s1
     }
 }
 
-static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPixels, u8 segmentCount)
+static void UpdateHpBarTilesWithWidth(u32 spriteId, s16 hp, s16 maxHp, u8 totalPixels, u8 segmentCount)
 {
-    u8 array[B_INFO_HP_BAR_SEGMENTS];
-    u8 filledPixels;
-    u8 barElementId;
-    u16 tileNum;
+    u32 array[B_INFO_HP_BAR_SEGMENTS];
     void *dst;
 
-    filledPixels = GetScaledHPFraction(hp, maxHp, totalPixels);
-    barElementId = GetBarGfxId(hp, maxHp);
+    u32 filledPixels = GetScaledHPFraction(hp, maxHp, totalPixels);
+    u32 barElementId = GetBarGfxId(hp, maxHp);
 
     for (u32 i = 0; i < B_INFO_HP_BAR_SEGMENTS; i++)
         array[i] = 0;
@@ -3587,7 +3552,7 @@ static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPi
         }
     }
 
-    tileNum = gSprites[spriteId].oam.tileNum;
+    u32 tileNum = gSprites[spriteId].oam.tileNum;
     for (u32 i = 0; i < B_INFO_HP_BAR_SEGMENTS; i++)
     {
         if (i < 3)
@@ -3606,7 +3571,7 @@ static void UpdateHpBarTilesWithWidth(u8 spriteId, s16 hp, s16 maxHp, u8 totalPi
     }
 }
 
-static void UpdateHpBarTiles(u8 spriteId, s16 hp, s16 maxHp)
+static void UpdateHpBarTiles(u32 spriteId, s16 hp, s16 maxHp)
 {
     UpdateHpBarTilesWithWidth(spriteId, hp, maxHp, B_INFO_HEALTHBAR_PIXELS, B_INFO_HP_BAR_SEGMENTS);
 }
