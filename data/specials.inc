@@ -642,3 +642,4 @@ gSpecials::
 	def_special Special_ApplyGardenTint
     def_special Special_ApplyFallTint
     def_special Special_ClearIntroTint
+

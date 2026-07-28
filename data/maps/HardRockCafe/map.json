@@ -2,7 +2,7 @@
   "id": "MAP_HARD_ROCK_CAFE",
   "name": "HardRockCafe",
   "layout": "LAYOUT_HARD_ROCK_CAFE",
-  "music": "MUS_DUMMY",
+  "music": "MUS_RG_PEWTER",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -67,7 +67,8 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
+      "local_id": "LOCALID_COUNTERPART",
+      "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 7,
       "y": 15,
       "elevation": 0,

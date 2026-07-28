@@ -3,6 +3,10 @@
 #include "constants/relationships.h"
 #include "constants/vars.h"
 #include "event_data.h"
+#include "constants/counterparts.h"
+
+
+
 
 void UpdateRelationship(void)
 {

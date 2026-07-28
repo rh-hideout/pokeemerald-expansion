@@ -51,6 +51,8 @@
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
+#include "constants/counterparts.h"
+#include "constants/vars.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
@@ -197,6 +199,33 @@ void NewGameInitData(void)
     PlayTimeCounter_Reset();
     ClearPokedexFlags();
     InitEventData();
+
+    switch (gSaveBlock2Ptr->playerAppearance)
+    {
+    case 0: // Brendan
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_LEXY);
+    break;
+    case 1: // Justin
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_MAAM);
+    break;
+    case 2: // May
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_SIR);
+    break;
+    case 3: // Ma'am
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_JUSTIN);
+    break;
+    case 4: // Sir
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_MAY);
+    break;
+    case 5: // Lexy
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_BRENDAN);
+    break;
+    default:
+    VarSet(VAR_COUNTERPART_ID, COUNTERPART_NONE);
+    break;
+}
+
+ClearTVShowData();
     ClearTVShowData();
     ResetGabbyAndTy();
     ClearSecretBases();

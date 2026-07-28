@@ -1,15 +1,6 @@
 #ifndef GUARD_CONSTANTS_RELATIONSHIPS_H
 #define GUARD_CONSTANTS_RELATIONSHIPS_H
 
-// Counterpart Identity
-enum
-{
-    COUNTERPART_NONE,
-    COUNTERPART_BRENDAN,
-    COUNTERPART_MAY,
-    COUNTERPART_JUSTIN,
-    COUNTERPART_PLAYER_TWIN,
-};
 
 // Counterpart Relationship
 enum
