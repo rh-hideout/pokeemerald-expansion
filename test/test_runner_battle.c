@@ -387,7 +387,6 @@ static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
 
-    ResetTestInventory();
     SetVariablesForRecordedBattle(&DATA.recordedBattle);
     if (STATE->trials)
         gMain.savedCallback = CB2_BattleTest_NextTrial;
@@ -395,6 +394,7 @@ static void StartBattle(void)
         gMain.savedCallback = CB2_BattleTest_NextParameter;
     else
         gMain.savedCallback = CB2_TestRunner;
+    ResetTestInventory();
     SetMainCallback2(CB2_InitBattle);
 
     STATE->checkProgressParameter = 0;
@@ -2113,6 +2113,7 @@ static void CB2_BattleTest_NextTrial(void)
         gTestRunnerState.result = TEST_RESULT_PASS;
         DATA.recordedBattle.rngSeed = MakeRngValue(STATE->runTrial);
         memset(&DATA.trial, 0, sizeof(DATA.trial));
+        ResetTestInventory();
         SetVariablesForRecordedBattle(&DATA.recordedBattle);
         SetMainCallback2(CB2_InitBattle);
     }
