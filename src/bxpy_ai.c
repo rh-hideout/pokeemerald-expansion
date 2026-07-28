@@ -30,6 +30,7 @@ void BXPY_SetupAIData()
     BXPY_SetupBattlers();
     BXPY_SetupAIFlags();
     InitializeStartingStatus();
+    AssignUsableGimmicks();
     gFieldStatuses = BXPY_GetStartingFieldStatus();
     gBattleWeather = BXPY_GetWeather();
     gFieldTimers.terrain = BXPY_GetTerrain();
@@ -119,6 +120,7 @@ void BXPY_ClearAIData(void)
     FREE_AND_SET_NULL(gAiThinkingStruct);
     FREE_AND_SET_NULL(gAiLogicData);
     FREE_AND_SET_NULL(gBattleHistory);
+    FREE_AND_SET_NULL(gBattleStruct);
 }
 
 void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiPartyData)
@@ -233,15 +235,25 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
 {
     enum Move move;
     u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+
+    struct AiCalcValues aiCalc = {
+        .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
+        .gimmickDef = GIMMICK_NONE,
+        .weather = BXPY_GetWeather(),
+        .terrain = BXPY_GetTerrain(),
+    };
     
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        move = gBattleMons[battlerAtk].moves[moveIndex];
-        if (IsMoveUnusable(moveIndex, move, moveLimitations))
-            continue;
         struct SimulatedDamage dmg = {0};
-        uq4_12_t effectiveness = Q_4_12(0.0);
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, BXPY_GetWeather(), BXPY_GetTerrain());
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        aiCalc.move = gBattleMons[battlerAtk].moves[moveIndex];
+        gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+
+        if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
+            continue;
+
+        dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
         gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
     }
 }
