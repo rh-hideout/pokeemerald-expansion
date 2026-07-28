@@ -150,3 +150,22 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.3333), results[0].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Orichalcum Pulse activates when entering battle in sun (Overworld Sun)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_9);
+        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); }
+        OPPONENT(SPECIES_WOBBUFFET) {};
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        NOT MESSAGE("But it failed!");
+        MESSAGE("Koraidon basked in the sunlight, sending its ancient pulse into a frenzy!");
+    } THEN {
+        ResetStartingStatuses();
+    }
+}

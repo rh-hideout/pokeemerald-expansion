@@ -441,6 +441,19 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
     }
 }
 
+SINGLE_BATTLE_TEST("Electro Shot does not need a charging turn in Primal Rain")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
+        HP_BAR(opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
 {
     GIVEN {
@@ -460,5 +473,18 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
             MESSAGE("Wobbuffet used Electro Shot!");
         }
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Two Turn moves do not become one turn moves during weather if they don't have the property")
+{
+    GIVEN {
+        PLAYER(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAZOR_WIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
+        NOT HP_BAR(opponent);
     }
 }
