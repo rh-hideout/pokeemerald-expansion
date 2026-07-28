@@ -183,3 +183,33 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
 }
 
 #endif // I_EXP_SHARE_ITEM
+
+AI_DOUBLE_BATTLE_TEST("Both Pokemon gain experience in double battles")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Level(99); }
+        PLAYER(SPECIES_DITTO) { Level(1); };
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_MEMENTO); }
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {  }
+    } THEN {
+        EXPECT(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_EXP) > gExperienceTables[gSpeciesInfo[SPECIES_WOBBUFFET].growthRate][99]);
+        EXPECT(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_LEVEL) > 1);
+    }
+}
+
+AI_TWO_VS_ONE_BATTLE_TEST("Partner Pokemon do not gain experience")
+{
+    GIVEN {
+        PLAYER(SPECIES_METAPOD) { Level(1); }
+        PARTNER(SPECIES_DITTO) { Level(1); };
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_MEMENTO); }
+        OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {  }
+    } THEN {
+        EXPECT_GT(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_LEVEL), 1);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PARTNER][0], MON_DATA_LEVEL), 1);
+    }
+}

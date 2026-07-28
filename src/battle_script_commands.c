@@ -5654,7 +5654,7 @@ static void Cmd_yesnoboxlearnmove(void)
                 gBattleScripting.learnMoveState = 5;
             }
         }
-        else if (JOY_NEW(B_BUTTON))
+        else if (JOY_NEW(B_BUTTON) || TESTING)
         {
             PlaySE(SE_SELECT);
             gBattleScripting.learnMoveState = 5;
@@ -6298,7 +6298,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 6:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE)
+        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
         {
             // Draw page 2 of level up box
             PlaySE(SE_SELECT);
@@ -6308,7 +6308,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 8:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE)
+        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
         {
             // Close level up box
             PlaySE(SE_SELECT);
