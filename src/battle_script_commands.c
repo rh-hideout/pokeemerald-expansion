@@ -3856,7 +3856,7 @@ static enum BattlerId GetBattlerFromPlayerPartyId(u32 partyId)
         return B_BATTLER_0;
     if (!IsDoubleBattle())
         return MAX_BATTLERS_COUNT;
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (!BattlerIsPlayer(B_BATTLER_2))
         return MAX_BATTLERS_COUNT;
     if (gBattlerPartyIndexes[B_BATTLER_2] == partyId && !(gAbsentBattlerFlags & 4))
         return B_BATTLER_2;
