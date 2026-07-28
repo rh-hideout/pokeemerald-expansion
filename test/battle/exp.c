@@ -184,7 +184,7 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
 
 #endif // I_EXP_SHARE_ITEM
 
-AI_DOUBLE_BATTLE_TEST("Both Pokemon gain experience in double battles")
+AI_DOUBLE_BATTLE_TEST("Both player Pokemon gain experience in double battles")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(99); }
@@ -211,5 +211,27 @@ AI_TWO_VS_ONE_BATTLE_TEST("Partner Pokemon do not gain experience")
     } THEN {
         EXPECT_GT(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_LEVEL), 1);
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PARTNER][0], MON_DATA_LEVEL), 1);
+    }
+}
+
+AI_ONE_VS_TWO_BATTLE_TEST("Both opponent Pokemon give experience in multi battle")
+{
+    u32 expectedXp = 0;
+    GIVEN {
+        WITH_CONFIG(B_SCALED_EXP, GEN_3);
+        WITH_CONFIG(B_UNEVOLVED_EXP_MULTIPLIER, GEN_3);
+        PLAYER(SPECIES_METAPOD) { Level(1); Speed(3);}
+        PLAYER(SPECIES_WOBBUFFET) { Level(100); Speed(3);};
+        OPPONENT_B(SPECIES_WYNAUT)      { Moves(MOVE_MEMENTO); Speed(2);}
+        OPPONENT_B(SPECIES_WYNAUT)   { Moves(MOVE_CELEBRATE); Speed(1); }
+        OPPONENT_A(SPECIES_WOBBUFFET)   { Moves(MOVE_MEMENTO);  Speed(1);}
+        OPPONENT_A(SPECIES_WOBBUFFET)   { Moves(MOVE_CELEBRATE); Speed(1);}
+        expectedXp = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_EXP);
+        expectedXp += gSpeciesInfo[SPECIES_WYNAUT].expYield * 100 / 7 * 150 / 100; // level (100) * scaling multipler (1 / 7) * trainer multiplier (150 /100)
+        expectedXp += gSpeciesInfo[SPECIES_WOBBUFFET].expYield * 100 / 7 * 150 / 100;
+    } WHEN {
+        TURN {  }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PARTNER][0], MON_DATA_EXP), expectedXp);
     }
 }

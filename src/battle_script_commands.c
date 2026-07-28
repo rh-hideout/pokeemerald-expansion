@@ -3894,7 +3894,7 @@ static void Cmd_getexp(void)
         else
         {
             gBattleScripting.getexpState++;
-            gBattleStruct->givenExpMons |= (1u << gBattlerPartyIndexes[gBattlerFainted]);
+            gBattleStruct->givenExpMons[GetBattlerTrainer(gBattlerFainted) & BIT_FLANK] |= (1u << gBattlerPartyIndexes[gBattlerFainted]);
         }
         break;
     case 1: // calculate experience points to redistribute
