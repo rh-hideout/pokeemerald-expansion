@@ -32,12 +32,21 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
         PLAYER(SPECIES_WOBBUFFET) { Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_TAKE_HEART); }
+        switch (status1)
+        {
+            case STATUS1_FREEZE:
+                TURN { MOVE(player, MOVE_TAKE_HEART, WITH_RNG(RNG_FROZEN, TRUE)); }
+                break;
+            case STATUS1_PARALYSIS:
+                TURN { MOVE(player, MOVE_TAKE_HEART, WITH_RNG(RNG_PARALYSIS, FALSE)); }
+                break;
+            default:
+                TURN { MOVE(player, MOVE_TAKE_HEART); }
+        }
     } SCENE {
         if (status1 == STATUS1_SLEEP) {
             MESSAGE("Wobbuffet is fast asleep.");
         } else if (status1 == STATUS1_FREEZE) {
-            PASSES_RANDOMLY(20, 100, RNG_FROZEN);
             STATUS_ICON(player, none: TRUE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         } else {

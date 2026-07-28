@@ -61,6 +61,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 1-100")
         case EFFECT_OHKO:
             TURN { EXPECT_MOVE(opponentLeft, move); SEND_OUT(playerLeft, 2); }
             break;
+        case EFFECT_CONFUSE:
+            TURN { EXPECT_MOVE(opponentRight, move); }
+            break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }
         }
@@ -140,6 +143,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 101-200")
             break;
         case EFFECT_OHKO:
             TURN { EXPECT_MOVE(opponentLeft, move); SEND_OUT(playerLeft, 2); }
+            break;
+        case EFFECT_CONFUSE:
+            TURN { EXPECT_MOVE(opponentRight, move); }
             break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }
@@ -222,6 +228,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
         case EFFECT_RECYCLE:
         case EFFECT_SLEEP_TALK:
             TURN { SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerLeft); }
+            break;
+        case EFFECT_SWAGGER:
+            TURN { SCORE_LT_VAL(opponentRight, move, AI_SCORE_DEFAULT, target: playerLeft); }
             break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }

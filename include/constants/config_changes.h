@@ -159,6 +159,7 @@
     F(B_FAINT_MOVE_EFFECT_TIMING,  faintEffectTiming,       (u32, GEN_COUNT - 1)) \
     F(B_ENCORE_PRIORITY,           encorePriority,          (u32, GEN_COUNT - 1)) \
     F(B_RAGE_FIST,                 rageFist,                (u32, GEN_COUNT - 1)) \
+    F(B_MOVE_EFFECTS_BEFORE_MOVES, moveEffectsBeforeMoves,  (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(B_STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -224,6 +225,7 @@
     F(B_OVERWORLD_SNOW,            overworldSnow,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SNOW_WARNING,              snowWarning,             (u32, GEN_COUNT - 1)) \
     F(B_PREFERRED_ICE_WEATHER,     preferredIceWeather,     (u32, B_ICE_WEATHER_SNOW)) /* TODO: use in tests */ \
+    F(B_OVERWORLD_WEATHER_OVERRIDE,overworldWeatherOverride,(u32, GEN_COUNT - 1)) \
     /* Terrain settings */ \
     F(B_TERRAIN_TYPE_BOOST,        terrainTypeBoost,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SECRET_POWER_EFFECT,       secretPowerEffect,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

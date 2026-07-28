@@ -370,7 +370,6 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
     {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
     {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
-    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
     {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
     {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
     {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},

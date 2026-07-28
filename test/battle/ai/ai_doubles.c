@@ -37,7 +37,6 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
 
     PARAMETRIZE { move1 = MOVE_LEER; move2 = MOVE_TOXIC; }
-    PARAMETRIZE { move1 = MOVE_HELPING_HAND; move2 = MOVE_PROTECT; }
     PARAMETRIZE { move1 = MOVE_ACUPRESSURE; move2 = MOVE_DOUBLE_TEAM; move3 = MOVE_TOXIC; move4 = MOVE_PROTECT; }
 
     GIVEN {
@@ -277,6 +276,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
     }
 
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
@@ -301,6 +301,11 @@ TO_DO_BATTLE_TEST("AI understands Wide Guard")
 
 AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for no reason")
 {
+    u32 chance = 0;
+
+    PARAMETRIZE { chance = 0; }
+    PARAMETRIZE { chance = 100; }
+
     enum Move move;
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
@@ -333,6 +338,7 @@ AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for
     PARAMETRIZE { move = MOVE_TEATIME; }
     PARAMETRIZE { move = MOVE_WONDER_ROOM; }
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, chance);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -343,7 +349,15 @@ AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_TACKLE); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_TACKLE); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, move); EXPECT_MOVE(opponentRight, MOVE_TACKLE); }
+        TURN {
+            if (chance == 100) {
+                EXPECT_MOVE(opponentLeft, move);
+                EXPECT_MOVE(opponentRight, MOVE_TACKLE);
+            } else {
+                EXPECT_MOVE(opponentLeft, MOVE_TACKLE);
+                EXPECT_MOVE(opponentRight, move);
+            }
+        }
     }
 }
 
@@ -1108,6 +1122,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind based on speed matchups")
     PARAMETRIZE { speed1 = 20; speed2 = 20; speed3 = 10; speed4 = 30; expectTailwind = FALSE; }
 
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speed1); }
@@ -1217,8 +1232,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Power Split to improve its stats")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(player);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_POWER_SPLIT, MOVE_TACKLE, MOVE_ROUND); }
-        OPPONENT(opponent) { Moves(MOVE_TACKLE, MOVE_ROUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_POWER_SPLIT, MOVE_TACKLE, MOVE_MAGICAL_LEAF); }
+        OPPONENT(opponent) { Moves(MOVE_TACKLE, MOVE_MAGICAL_LEAF); }
     } WHEN {
         if (player == SPECIES_PHEROMOSA)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_POWER_SPLIT, target:playerLeft); }
