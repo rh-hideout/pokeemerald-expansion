@@ -1074,7 +1074,10 @@ static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum
     enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
     if (battlerAi == BATTLE_PARTNER(battlerDef))
     {
-        if (target == TARGET_BOTH || target == TARGET_OPPONENTS_FIELD)
+        if (target == TARGET_OPPONENT
+         || target == TARGET_RANDOM
+         || target == TARGET_BOTH
+         || target == TARGET_OPPONENTS_FIELD)
             return FALSE;
     }
     if (!IsBattlerAlly(battlerAi, battlerDef) && target == TARGET_USER_OR_ALLY)
