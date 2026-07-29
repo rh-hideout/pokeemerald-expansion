@@ -1137,12 +1137,12 @@ static inline enum BattlerId GetOppositeBattler(enum BattlerId battler)
     return GetBattlerAtPosition(GetBattlerPosition(battler) ^ BIT_SIDE);
 }
 
-static inline enum BattlerPosition GetPartnerBattlePosition(enum BattlerPosition position)
+static inline enum BattlerPosition GetPartnerPosition(enum BattlerPosition position)
 {
     return (position ^ BIT_FLANK);
 }
 
-static inline enum BattlerPosition GetOppositeBattlePosition(enum BattlerPosition position)
+static inline enum BattlerPosition GetOppositePosition(enum BattlerPosition position)
 {
     return (position ^ BIT_SIDE);
 }
@@ -1164,7 +1164,7 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
 
 static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
 {
-    return GetBattlerAtPosition(GetOppositeBattlePosition((enum BattlerPosition)GetBattlerSide(battler)));
+    return GetBattlerAtPosition(GetOppositePosition((enum BattlerPosition)GetBattlerSide(battler)));
 }
 
 static inline bool32 IsDoubleBattle(void)

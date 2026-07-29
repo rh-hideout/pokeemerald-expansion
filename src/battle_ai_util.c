@@ -5552,7 +5552,7 @@ bool32 AI_ShouldSpicyExtract(enum BattlerId battlerAtk, enum BattlerId battlerAt
 {
     bool32 preventsStatLoss;
     enum Ability partnerAbility = aiData->abilities[battlerAtkPartner];
-    enum BattlerPosition opposingPosition = GetOppositeBattlePosition(GetBattlerPosition(battlerAtk));
+    enum BattlerPosition opposingPosition = GetOppositePosition(GetBattlerPosition(battlerAtk));
     enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
 
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
@@ -6202,7 +6202,7 @@ u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum
         if (gAbsentBattlerFlags & (1u << GetPartnerBattler(battler)))
             *battlerIn2 = battler;
         else
-            *battlerIn2 = GetBattlerAtPosition(GetPartnerBattlePosition(battlerPosition));
+            *battlerIn2 = GetBattlerAtPosition(GetPartnerPosition(battlerPosition));
 
         opposingBattler = GetOppositeBattler(*battlerIn1);
         if (gAbsentBattlerFlags & (1u << opposingBattler))
@@ -6210,7 +6210,7 @@ u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum
     }
     else
     {
-        opposingBattler = GetBattlerAtPosition(GetOppositeBattlePosition(battlerPosition));
+        opposingBattler = GetBattlerAtPosition(GetOppositePosition(battlerPosition));
         *battlerIn1 = battler;
         *battlerIn2 = battler;
     }

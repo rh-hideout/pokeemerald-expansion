@@ -1805,7 +1805,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
         u8 position;
 
         if ((Random() & 1) == 0)
-            position = GetPartnerBattlePosition(opposing);
+            position = GetPartnerPosition(opposing);
         else
             position = opposing;
 
@@ -1814,7 +1814,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
     else
     {
         if ((gAbsentBattlerFlags & (1u << opposing)))
-            return GetBattlerAtPosition(GetPartnerBattlePosition(opposing));
+            return GetBattlerAtPosition(GetPartnerPosition(opposing));
         else
             return GetBattlerAtPosition(opposing);
     }

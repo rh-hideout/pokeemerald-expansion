@@ -3287,7 +3287,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = gLinkPlayers[multiplayerId].name;
                 break;
             case B_TXT_LINK_PARTNER_NAME: // link partner name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(GetPartnerBattlePosition(gLinkPlayers[multiplayerId].id))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(GetPartnerPosition(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_OPPONENT1_NAME: // link opponent 1 name
                 toCpy = gLinkPlayers[GetBattlerMultiplayerId(LEFT_FOE(gLinkPlayers[multiplayerId].id))].name;

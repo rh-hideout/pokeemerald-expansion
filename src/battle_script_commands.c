@@ -5363,7 +5363,7 @@ static void Cmd_openpartyscreen(void)
             }
             else
             {
-                enum BattlerId battlerOpposite = GetBattlerAtPosition(GetOppositeBattlePosition(GetBattlerPosition(battler)));
+                enum BattlerId battlerOpposite = GetBattlerAtPosition(GetOppositePosition(GetBattlerPosition(battler)));
                 if (gAbsentBattlerFlags & (1u << battlerOpposite))
                     battlerOpposite ^= BIT_FLANK;
 
@@ -7690,7 +7690,7 @@ static void Cmd_updatestatusicon(void)
         }
         if ((IsDoubleBattle()))
         {
-            battler = GetBattlerAtPosition(GetPartnerBattlePosition(GetBattlerPosition(gBattlerAttacker)));
+            battler = GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(gBattlerAttacker)));
             if (!(gAbsentBattlerFlags & (1u << battler)))
             {
                 BtlController_EmitStatusIconUpdate(battler, B_COMM_TO_CONTROLLER, gBattleMons[battler].status1);
@@ -8274,7 +8274,7 @@ static void Cmd_healpartystatus(void)
     u32 i = 0;
     u32 zero = 0;
     u32 toHeal = 0;
-    enum BattlerId partner = GetBattlerAtPosition(GetPartnerBattlePosition(GetBattlerPosition(gBattlerAttacker)));
+    enum BattlerId partner = GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(gBattlerAttacker)));
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
     bool32 isSoundMove = IsSoundMove(gCurrentMove);
 
@@ -8868,7 +8868,7 @@ static void Cmd_trysethelpinghand(void)
         return;
     }
 
-    gBattlerTarget = GetBattlerAtPosition(GetPartnerBattlePosition(GetBattlerPosition(gBattlerAttacker)));
+    gBattlerTarget = GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(gBattlerAttacker)));
 
     if (IsBattlerAlive(gBattlerTarget) && !HasBattlerActedThisTurn(gBattlerTarget))
     {

@@ -4095,8 +4095,8 @@ static void HandleTurnActionSelectionState(void)
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI
                 || (position & BIT_FLANK) == B_FLANK_LEFT
-                || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerBattlePosition(position))
-                || gBattleCommunication[GetBattlerAtPosition(GetPartnerBattlePosition(position))] == STATE_WAIT_ACTION_CONFIRMED)
+                || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerPosition(position))
+                || gBattleCommunication[GetBattlerAtPosition(GetPartnerPosition(position))] == STATE_WAIT_ACTION_CONFIRMED)
             {
                 if (gAbsentBattlerFlags & 1u << battler || gBattleStruct->battlerState[battler].commandingDondozo)
                 {
@@ -4306,7 +4306,7 @@ static void HandleTurnActionSelectionState(void)
                         RecordedBattle_ClearBattlerAction(GetPartnerBattler(battler), 3);
                     }
 
-                    gBattleStruct->gimmick.toActivate &= ~((1u << GetPartnerBattlePosition(GetBattlerPosition(battler))));
+                    gBattleStruct->gimmick.toActivate &= ~((1u << GetPartnerPosition(GetBattlerPosition(battler))));
                     BtlController_EmitEndBounceEffect(battler, B_COMM_TO_CONTROLLER);
                     MarkBattlerForControllerExec(battler);
                     return;
@@ -4511,7 +4511,7 @@ static void HandleTurnActionSelectionState(void)
 
                 if (((gBattleTypeFlags & BATTLE_TYPE_MULTI) || !IsDoubleBattle())
                     || (position & BIT_FLANK) != B_FLANK_LEFT
-                    || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerBattlePosition(position)))
+                    || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerPosition(position)))
                 {
                     BtlController_EmitLinkStandbyMsg(battler, B_COMM_TO_CONTROLLER, LINK_STANDBY_MSG_STOP_BOUNCE, i);
                 }
