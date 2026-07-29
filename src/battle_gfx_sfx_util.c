@@ -304,7 +304,7 @@ u16 ChooseMoveAndTargetInBattlePalace(enum BattlerId battler)
     else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
     else
-        chosenMoveIndex |= (GetBattlerAtPosition((enum BattlerPosition)(GetBattlerSide(battler) ^ BIT_SIDE)) << 8);
+        chosenMoveIndex |= (GetBattlerLeftFoe(battler) << 8);
 
     return chosenMoveIndex;
 }
@@ -366,7 +366,7 @@ static u16 GetBattlePalaceTarget(enum BattlerId battler)
         }
 
         if (gBattleMons[opposing1].hp == gBattleMons[opposing2].hp)
-            return (GetOppositeBattler((enum BattlerId)(battler & BIT_SIDE)) + (Random() & 2)) << 8;
+            return (GetBattlerLeftFoe(battler) + (Random() & 2)) << 8;
 
         switch (gNaturesInfo[GetNatureFromPersonality(gBattleMons[battler].personality)].battlePalaceSmokescreen)
         {
@@ -381,7 +381,7 @@ static u16 GetBattlePalaceTarget(enum BattlerId battler)
             else
                 return opposing2 << 8;
         case PALACE_TARGET_RANDOM:
-            return (GetOppositeBattler((enum BattlerId)(battler & BIT_SIDE)) + (Random() & 2)) << 8;
+            return (GetBattlerLeftFoe(battler) + (Random() & 2)) << 8;
         }
     }
 

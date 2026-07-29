@@ -1796,7 +1796,7 @@ u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 
 u8 GetDefaultMoveTarget(enum BattlerId battlerId)
 {
-    u8 opposing = GetOppositeBattler((enum BattlerId)GetBattlerSide(battlerId));
+    u8 opposing = GetBattlerLeftFoe(battlerId);
 
     if (!IsDoubleBattle())
         return GetBattlerAtPosition(opposing);
