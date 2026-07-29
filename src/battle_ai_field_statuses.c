@@ -86,7 +86,7 @@ bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutco
         else if (weather & B_WEATHER_ICY_ANY)
             result = BenefitsFromHailOrSnow(battler, weather);
 
-        battler = BATTLE_PARTNER(battler);
+        battler = GetPartnerBattler(battler);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
@@ -127,7 +127,7 @@ bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEff
         if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
             result = BenefitsFromTrickRoom(battler);
 
-        battler = BATTLE_PARTNER(battler);
+        battler = GetPartnerBattler(battler);
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
@@ -383,13 +383,13 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_MISTY_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_MISTY_TERRAIN))
+     || HasBattlerTerrainBoostMove(GetPartnerBattler(battler), STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
     bool32 allyGrounded = FALSE;
     if (HasPartner(battler))
-        allyGrounded = AI_IsBattlerGrounded(BATTLE_PARTNER(battler));
+        allyGrounded = AI_IsBattlerGrounded(GetPartnerBattler(battler));
 
     if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
      || (HasMoveWithEffect(RIGHT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(RIGHT_FOE(battler))))
@@ -417,13 +417,13 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(BATTLE_PARTNER(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+     || HasBattlerTerrainBoostMove(GetPartnerBattler(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
     bool32 allyGrounded = FALSE;
     if (HasPartner(battler))
-        allyGrounded = AI_IsBattlerGrounded(BATTLE_PARTNER(battler));
+        allyGrounded = AI_IsBattlerGrounded(GetPartnerBattler(battler));
 
     // don't bother if we're not grounded
     if (grounded || allyGrounded)
@@ -533,7 +533,7 @@ s32 CalcWeatherScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
              || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_SOLAR_BEAM)
              || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_MOONLIGHT))
                 score += WEAK_EFFECT;
-            if (HasDamagingMoveOfType(battlerDef, TYPE_FIRE) || HasDamagingMoveOfType(BATTLE_PARTNER(battlerDef), TYPE_FIRE))
+            if (HasDamagingMoveOfType(battlerDef, TYPE_FIRE) || HasDamagingMoveOfType(GetPartnerBattler(battlerDef), TYPE_FIRE))
                 score += WEAK_EFFECT;
         }
         break;
@@ -546,9 +546,9 @@ s32 CalcWeatherScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
                 score += WEAK_EFFECT;
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_HEAT_ROCK)
                 score += WEAK_EFFECT;
-            if (HasDamagingMoveOfType(battlerDef, TYPE_WATER) || HasDamagingMoveOfType(BATTLE_PARTNER(battlerDef), TYPE_WATER))
+            if (HasDamagingMoveOfType(battlerDef, TYPE_WATER) || HasDamagingMoveOfType(GetPartnerBattler(battlerDef), TYPE_WATER))
                 score += WEAK_EFFECT;
-            if (HasMoveWithFlag(battlerDef, MoveHas50AccuracyInSun) || HasMoveWithFlag(BATTLE_PARTNER(battlerDef), MoveHas50AccuracyInSun))
+            if (HasMoveWithFlag(battlerDef, MoveHas50AccuracyInSun) || HasMoveWithFlag(GetPartnerBattler(battlerDef), MoveHas50AccuracyInSun))
                 score += WEAK_EFFECT;
         }
         break;

@@ -1778,7 +1778,7 @@ u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
     case BATTLE_ALIVE_EXCEPT_BATTLER_SIDE:
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != battler && i != BATTLE_PARTNER(battler) && !(gAbsentBattlerFlags & (1u << i)))
+            if (i != battler && i != GetPartnerBattler(battler) && !(gAbsentBattlerFlags & (1u << i)))
                 retVal++;
         }
         break;
@@ -1796,7 +1796,7 @@ u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 
 u8 GetDefaultMoveTarget(enum BattlerId battlerId)
 {
-    u8 opposing = BATTLE_OPPOSITE(GetBattlerSide(battlerId));
+    u8 opposing = GetOppositeBattler((enum BattlerId)GetBattlerSide(battlerId));
 
     if (!IsDoubleBattle())
         return GetBattlerAtPosition(opposing);
@@ -1805,7 +1805,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
         u8 position;
 
         if ((Random() & 1) == 0)
-            position = BATTLE_PARTNER(opposing);
+            position = GetPartnerBattlePosition(opposing);
         else
             position = opposing;
 
@@ -1814,7 +1814,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
     else
     {
         if ((gAbsentBattlerFlags & (1u << opposing)))
-            return GetBattlerAtPosition(BATTLE_PARTNER(opposing));
+            return GetBattlerAtPosition(GetPartnerBattlePosition(opposing));
         else
             return GetBattlerAtPosition(opposing);
     }
@@ -3052,7 +3052,7 @@ u8 CalculatePartyCount(enum BattleTrainer trainer)
 
 u8 CalculatePartyCountOfSide(enum BattlerId battler)
 {
-    return CalculatePartyCount(GetBattlerTrainer(battler)) + (BattleSideHasTwoTrainers(battler & BIT_SIDE) ? CalculatePartyCount(BATTLE_PARTNER(battler)) : 0);
+    return CalculatePartyCount(GetBattlerTrainer(battler)) + (BattleSideHasTwoTrainers(battler & BIT_SIDE) ? CalculatePartyCount(GetBattlerTrainer(GetPartnerBattler(battler))) : 0);
 }
 
 u8 CalculatePlayerPartyCount(void)

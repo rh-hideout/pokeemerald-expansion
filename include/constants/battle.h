@@ -84,14 +84,10 @@ enum __attribute__((packed)) BattleTrainer
     MAX_BATTLE_TRAINERS,
 };
 
-// These macros can be used with either battler ID or positions to get the partner or the opposite mon
-#define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
-#define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)
-
 // Left and right are determined by how they're referred to in tests and everywhere else.
 // Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
-#define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
-#define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
+#define LEFT_FOE(battler) ((battler ^ BIT_SIDE) & BIT_SIDE)
+#define RIGHT_FOE(battler) (((battler ^ BIT_SIDE) & BIT_SIDE) | BIT_FLANK)
 
 enum BattleSide
 {

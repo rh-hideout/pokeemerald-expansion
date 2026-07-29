@@ -737,7 +737,7 @@ void AnimTask_PositionFissureBgOnBattler(u8 taskId)
     enum BattlerId battler = (gBattleAnimArgs[0] & ANIM_TARGET) ? gBattleAnimTarget : gBattleAnimAttacker;
 
     if (gBattleAnimArgs[0] > ANIM_TARGET)
-        battler = BATTLE_PARTNER(battler);
+        battler = GetPartnerBattler(battler);
 
     newTask = &gTasks[CreateTask(WaitForFissureCompletion, gBattleAnimArgs[1])];
     newTask->data[1] = (32 - GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2)) & 0x1FF;

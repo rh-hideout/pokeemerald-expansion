@@ -1255,7 +1255,7 @@ static void AnimWillOWispFire(struct Sprite *sprite)
 
     if (IsDoubleBattle()
      && !IsContest()
-     && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimTarget))
+     && IsBattlerAlive(GetPartnerBattler(gBattleAnimTarget))
      && GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH)
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
 
@@ -1291,7 +1291,7 @@ void AnimTask_MoveHeatWaveTargets(u8 taskId)
     struct Task *task = &gTasks[taskId];
 
     task->data[12] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
-    task->data[13] = IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)) + 1;
+    task->data[13] = IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)) + 1;
     task->data[14] = GetAnimBattlerSpriteId(ANIM_TARGET);
     task->data[15] = GetAnimBattlerSpriteId(ANIM_DEF_PARTNER);
 
