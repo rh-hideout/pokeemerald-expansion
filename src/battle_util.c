@@ -76,6 +76,37 @@ extern const u8 *const gBattlescriptsForRunningByItem[];
 extern const u8 *const gBattlescriptsForUsingItem[];
 extern const u8 *const gBattlescriptsForSafariActions[];
 
+enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
+{
+    enum BattlerId battler;
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerPosition(battler) == position)
+            break;
+    }
+    return battler;
+}
+
+enum BattlerPosition GetPartnerPosition(enum BattlerPosition position)
+{
+    return (position ^ BIT_FLANK);
+}
+
+enum BattlerPosition GetOppositePosition(enum BattlerPosition position)
+{
+    return (position ^ BIT_SIDE);
+}
+
+enum BattlerId GetPartnerBattler(enum BattlerId battler)
+{
+    return GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(battler)));
+}
+
+enum BattlerId GetOppositeBattler(enum BattlerId battler)
+{
+    return GetBattlerAtPosition(GetOppositePosition(GetBattlerPosition(battler)));
+}
+
 static const u8 sPkblToEscapeFactor[][3] = {
     {
         [B_MSG_MON_CURIOUS]    = 0,
@@ -5542,12 +5573,12 @@ u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget)
     case TARGET_DEPENDS:
     case TARGET_BOTH:
     case TARGET_FOES_AND_ALLY:
-        targetBattler = GetOpposingSideBattler(gBattlerAttacker);
+        targetBattler = GetBattlerLeftFoe(gBattlerAttacker);
         if (IsDoubleBattle() && !IsBattlerAlive(targetBattler))
             targetBattler ^= BIT_FLANK;
         break;
     case TARGET_OPPONENTS_FIELD:
-        targetBattler = GetOpposingSideBattler(gBattlerAttacker);
+        targetBattler = GetBattlerLeftFoe(gBattlerAttacker);
         break;
     case TARGET_USER:
     default:
@@ -10914,9 +10945,9 @@ enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId bat
     case B_BATTLER_1:
         return GetPartnerBattler(battlerAtk);
     case B_BATTLER_2:
-        return LEFT_FOE(battlerAtk);
+        return GetBattlerLeftFoe(battlerAtk);
     case B_BATTLER_3:
-        return RIGHT_FOE(battlerAtk);
+        return GetBattlerRightFoe(battlerAtk);
     default:
         errorf("Illegal battler");
         return B_BATTLER_0;

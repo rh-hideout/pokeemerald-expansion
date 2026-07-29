@@ -6606,8 +6606,8 @@ static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId batt
     u32 temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
-     || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
+    if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
+     || gBattleStruct->futureSight[GetBattlerRightFoe(battlerAtk)].counter > 0)
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {

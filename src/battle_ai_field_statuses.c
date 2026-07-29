@@ -264,9 +264,9 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(enum BattlerId battler)
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
-        if (!IS_BATTLER_ANY_TYPE(LEFT_FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
-         && gAiLogicData->holdEffects[LEFT_FOE(battler)] != HOLD_EFFECT_SAFETY_GOGGLES
-         && !DoesAbilityBenefitFromWeather(gAiLogicData->abilities[LEFT_FOE(battler)], B_WEATHER_SANDSTORM))
+        if (!IS_BATTLER_ANY_TYPE(GetBattlerLeftFoe(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+         && gAiLogicData->holdEffects[GetBattlerLeftFoe(battler)] != HOLD_EFFECT_SAFETY_GOGGLES
+         && !DoesAbilityBenefitFromWeather(gAiLogicData->abilities[GetBattlerLeftFoe(battler)], B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
             return FIELD_EFFECT_NEUTRAL;
@@ -291,7 +291,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(enum BattlerId battler, u3
     if (HasLightSensitiveMove(battler))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (HasMoveWithFlag(LEFT_FOE(battler), MoveAlwaysHitsInHailSnow))
+    if (HasMoveWithFlag(GetBattlerLeftFoe(battler), MoveAlwaysHitsInHailSnow))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -313,7 +313,7 @@ static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler)
     if (HasLightSensitiveMove(battler) || HasDamagingMoveOfType(battler, TYPE_FIRE))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (HasMoveWithFlag(LEFT_FOE(battler), MoveAlwaysHitsInRain))
+    if (HasMoveWithFlag(GetBattlerLeftFoe(battler), MoveAlwaysHitsInRain))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -328,12 +328,12 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
     if (HasBattlerTerrainBoostMove(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
 
-    if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
-     || (HasMoveWithEffect(RIGHT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(RIGHT_FOE(battler))))
+    if ((HasMoveWithEffect(GetBattlerLeftFoe(battler), EFFECT_REST) && AI_IsBattlerGrounded(GetBattlerLeftFoe(battler)))
+     || (HasMoveWithEffect(GetBattlerRightFoe(battler), EFFECT_REST) && AI_IsBattlerGrounded(GetBattlerRightFoe(battler))))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = AI_IsBattlerGrounded(battler);
-    if (grounded && HasBattlerSideMoveWithAdditionalEffect(LEFT_FOE(battler), MOVE_EFFECT_SLEEP))
+    if (grounded && HasBattlerSideMoveWithAdditionalEffect(GetBattlerLeftFoe(battler), MOVE_EFFECT_SLEEP))
         return FIELD_EFFECT_POSITIVE;
 
     if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP)
@@ -341,8 +341,8 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battle
     || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(GetBattlerLeftFoe(battler), STATUS_FIELD_ELECTRIC_TERRAIN)
+     || HasBattlerTerrainBoostMove(GetBattlerRightFoe(battler), STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -362,14 +362,14 @@ static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
     bool32 grounded = AI_IsBattlerGrounded(battler);
 
     // Weaken spamming Earthquake, Magnitude, and Bulldoze.
-    if (grounded && (HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_EARTHQUAKE)
-    || HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_MAGNITUDE)))
+    if (grounded && (HasBattlerSideMoveWithEffect(GetBattlerLeftFoe(battler), EFFECT_EARTHQUAKE)
+    || HasBattlerSideMoveWithEffect(GetBattlerLeftFoe(battler), EFFECT_MAGNITUDE)))
         return FIELD_EFFECT_POSITIVE;
 
     if (grounded && HasDamagingMoveOfType(battler, TYPE_GRASS))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_GRASSY_GLIDE))
+    if (HasBattlerSideMoveWithEffect(GetBattlerLeftFoe(battler), EFFECT_GRASSY_GLIDE))
         return FIELD_EFFECT_NEGATIVE;
 
 
@@ -391,17 +391,17 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
     if (HasPartner(battler))
         allyGrounded = AI_IsBattlerGrounded(GetPartnerBattler(battler));
 
-    if ((HasMoveWithEffect(LEFT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(LEFT_FOE(battler)))
-     || (HasMoveWithEffect(RIGHT_FOE(battler), EFFECT_REST) && AI_IsBattlerGrounded(RIGHT_FOE(battler))))
+    if ((HasMoveWithEffect(GetBattlerLeftFoe(battler), EFFECT_REST) && AI_IsBattlerGrounded(GetBattlerLeftFoe(battler)))
+     || (HasMoveWithEffect(GetBattlerRightFoe(battler), EFFECT_REST) && AI_IsBattlerGrounded(GetBattlerRightFoe(battler))))
         return FIELD_EFFECT_POSITIVE;
 
     // harass dragons
     if ((grounded || allyGrounded)
-     && (HasDamagingMoveOfType(LEFT_FOE(battler), TYPE_DRAGON) || HasDamagingMoveOfType(RIGHT_FOE(battler), TYPE_DRAGON)))
+     && (HasDamagingMoveOfType(GetBattlerLeftFoe(battler), TYPE_DRAGON) || HasDamagingMoveOfType(GetBattlerRightFoe(battler), TYPE_DRAGON)))
         return FIELD_EFFECT_POSITIVE;
 
     if ((grounded || allyGrounded)
-     && (HasNonVolatileMoveEffect(LEFT_FOE(battler), MOVE_EFFECT_SLEEP) || HasNonVolatileMoveEffect(RIGHT_FOE(battler), MOVE_EFFECT_SLEEP)))
+     && (HasNonVolatileMoveEffect(GetBattlerLeftFoe(battler), MOVE_EFFECT_SLEEP) || HasNonVolatileMoveEffect(GetBattlerRightFoe(battler), MOVE_EFFECT_SLEEP)))
         return FIELD_EFFECT_POSITIVE;
 
     if (grounded && (gBattleMons[battler].status1 & STATUS1_SLEEP || gBattleMons[battler].volatiles.yawn))
@@ -429,17 +429,17 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler
     if (grounded || allyGrounded)
     {
         // harass priority
-        if (AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_GALE_WINGS)
-         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_TRIAGE)
-         || AI_IsAbilityOnSide(LEFT_FOE(battler), ABILITY_PRANKSTER))
+        if (AI_IsAbilityOnSide(GetBattlerLeftFoe(battler), ABILITY_GALE_WINGS)
+         || AI_IsAbilityOnSide(GetBattlerLeftFoe(battler), ABILITY_TRIAGE)
+         || AI_IsAbilityOnSide(GetBattlerLeftFoe(battler), ABILITY_PRANKSTER))
             return FIELD_EFFECT_POSITIVE;
     }
 
     if (grounded && HasDamagingMoveOfType(battler, TYPE_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasBattlerTerrainBoostMove(LEFT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN)
-     || HasBattlerTerrainBoostMove(RIGHT_FOE(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (HasBattlerTerrainBoostMove(GetBattlerLeftFoe(battler), STATUS_FIELD_PSYCHIC_TERRAIN)
+     || HasBattlerTerrainBoostMove(GetBattlerRightFoe(battler), STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_NEGATIVE;
 
     if (AI_IsAbilityOnSide(battler, ABILITY_GALE_WINGS)
@@ -461,17 +461,17 @@ static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler)
     if (HasMoveWithFlag(battler, IsMoveGravityBanned))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (IsBattlerAlive(LEFT_FOE(battler)))
+    if (IsBattlerAlive(GetBattlerLeftFoe(battler)))
     {
-        if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
-         || (!AI_IsBattlerGrounded(LEFT_FOE(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
+        if (HasMoveWithLowAccuracy(battler, GetBattlerLeftFoe(battler), LOW_ACCURACY_THRESHOLD, FALSE)
+         || (!AI_IsBattlerGrounded(GetBattlerLeftFoe(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
             return FIELD_EFFECT_POSITIVE;
     }
 
-    if (IsBattlerAlive(RIGHT_FOE(battler)))
+    if (IsBattlerAlive(GetBattlerRightFoe(battler)))
     {
-        if (HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
-         || (!AI_IsBattlerGrounded(RIGHT_FOE(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
+        if (HasMoveWithLowAccuracy(battler, GetBattlerRightFoe(battler), LOW_ACCURACY_THRESHOLD, FALSE)
+         || (!AI_IsBattlerGrounded(GetBattlerRightFoe(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
             return FIELD_EFFECT_POSITIVE;
     }
 
@@ -483,10 +483,10 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
     // If we're in singles, we literally only care about speed.
     if (IsBattle1v1())
     {
-        if (gAiLogicData->speedStats[battler] < gAiLogicData->speedStats[LEFT_FOE(battler)])
+        if (gAiLogicData->speedStats[battler] < gAiLogicData->speedStats[GetBattlerLeftFoe(battler)])
             return FIELD_EFFECT_POSITIVE;
         // If we tie, we shouldn't change trick room state.
-        else if (gAiLogicData->speedStats[battler] == gAiLogicData->speedStats[LEFT_FOE(battler)])
+        else if (gAiLogicData->speedStats[battler] == gAiLogicData->speedStats[GetBattlerLeftFoe(battler)])
             return FIELD_EFFECT_NEUTRAL;
         else
             return FIELD_EFFECT_NEGATIVE;
@@ -507,7 +507,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
     }
 
     // If we are faster or tie, we don't want trick room.
-    if ((gAiLogicData->speedStats[battler] >= gAiLogicData->speedStats[LEFT_FOE(battler)]) || (gAiLogicData->speedStats[battler] >= gAiLogicData->speedStats[RIGHT_FOE(battler)]))
+    if ((gAiLogicData->speedStats[battler] >= gAiLogicData->speedStats[GetBattlerLeftFoe(battler)]) || (gAiLogicData->speedStats[battler] >= gAiLogicData->speedStats[GetBattlerRightFoe(battler)]))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_POSITIVE;

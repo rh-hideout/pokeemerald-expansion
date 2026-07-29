@@ -84,11 +84,6 @@ enum __attribute__((packed)) BattleTrainer
     MAX_BATTLE_TRAINERS,
 };
 
-// Left and right are determined by how they're referred to in tests and everywhere else.
-// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
-#define LEFT_FOE(battler) GetBattlerAtPosition((battler ^ BIT_SIDE) & BIT_SIDE)
-#define RIGHT_FOE(battler) GetBattlerAtPosition(((battler ^ BIT_SIDE) & BIT_SIDE) | BIT_FLANK)
-
 enum BattleSide
 {
     B_SIDE_PLAYER = 0,

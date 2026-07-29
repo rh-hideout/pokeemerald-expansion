@@ -1077,6 +1077,12 @@ struct Pokemon *GetBattlerParty(enum BattlerId battler);
 struct Pokemon *GetTrainerParty(enum BattleTrainer trainer);
 struct Pokemon* GetBattlerMon(enum BattlerId battler);
 
+enum BattlerId GetBattlerAtPosition(enum BattlerPosition position);
+enum BattlerId GetPartnerBattler(enum BattlerId battler);
+enum BattlerId GetOppositeBattler(enum BattlerId battler);
+enum BattlerPosition GetPartnerPosition(enum BattlerPosition position);
+enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
+
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
     if (battler >= gBattlersCount)
@@ -1116,37 +1122,6 @@ static inline enum BattlerPosition GetBattlerPosition(enum BattlerId battler)
     return gBattlerPositions[battler];
 }
 
-static inline enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
-{
-    enum BattlerId battler;
-    for (battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (GetBattlerPosition(battler) == position)
-            break;
-    }
-    return battler;
-}
-
-static inline enum BattlerId GetPartnerBattler(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(GetBattlerPosition(battler) ^ BIT_FLANK);
-}
-
-static inline enum BattlerId GetOppositeBattler(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(GetBattlerPosition(battler) ^ BIT_SIDE);
-}
-
-static inline enum BattlerPosition GetPartnerPosition(enum BattlerPosition position)
-{
-    return (position ^ BIT_FLANK);
-}
-
-static inline enum BattlerPosition GetOppositePosition(enum BattlerPosition position)
-{
-    return (position ^ BIT_SIDE);
-}
-
 static inline enum BattleSide GetBattlerSide(enum BattlerId battler)
 {
     return GetBattlerPosition(battler) & BIT_SIDE;
@@ -1162,9 +1137,16 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
 }
 
-static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
+// Left and right are determined by how they're referred to in tests and everywhere else.
+// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
+static inline enum BattlerId GetBattlerLeftFoe(enum BattlerId battler)
 {
     return GetBattlerAtPosition(GetOppositePosition((enum BattlerPosition)GetBattlerSide(battler)));
+}
+
+static inline enum BattlerId GetBattlerRightFoe(enum BattlerId battler)
+{
+    return GetPartnerBattler(GetBattlerLeftFoe(battler));
 }
 
 static inline bool32 IsDoubleBattle(void)

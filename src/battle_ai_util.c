@@ -2531,8 +2531,8 @@ static u32 GetUsableMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveE
 
 static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, u32 moveIndex, struct AiLogicData *aiData)
 {
-    enum BattlerId leftFoe = LEFT_FOE(battler);
-    enum BattlerId rightFoe = RIGHT_FOE(battler);
+    enum BattlerId leftFoe = GetBattlerLeftFoe(battler);
+    enum BattlerId rightFoe = GetBattlerRightFoe(battler);
 
     if (IsBattlerAlive(leftFoe) && aiData->effectiveness[battler][leftFoe][moveIndex] > UQ_4_12(0.0))
         return TRUE;
@@ -4044,7 +4044,7 @@ bool32 IsBattle1v1(void)
 bool32 HasTwoOpponents(enum BattlerId battler)
 {
     if (IsDoubleBattle()
-      && IsBattlerAlive(LEFT_FOE(battler)) && IsBattlerAlive(RIGHT_FOE(battler)))
+      && IsBattlerAlive(GetBattlerLeftFoe(battler)) && IsBattlerAlive(GetBattlerRightFoe(battler)))
         return TRUE;
     return FALSE;
 }
@@ -5558,7 +5558,7 @@ bool32 AI_ShouldSpicyExtract(enum BattlerId battlerAtk, enum BattlerId battlerAt
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
      || partnerAbility == ABILITY_CONTRARY
      || partnerAbility == ABILITY_GOOD_AS_GOLD
-     || HasBattlerSideMoveWithEffect(LEFT_FOE(battlerAtk), EFFECT_FOUL_PLAY))
+     || HasBattlerSideMoveWithEffect(GetBattlerLeftFoe(battlerAtk), EFFECT_FOUL_PLAY))
         return FALSE;
 
     preventsStatLoss = !CanLowerStat(battlerAtk, battlerAtkPartner, aiData, STAT_DEF);
@@ -5971,8 +5971,8 @@ enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Abilit
         return GOOD_EFFECT;
     // Conditional ability logic goes here.
     case ABILITY_COMPOUND_EYES:
-        if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), 90, FALSE)
-         || HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), 90, FALSE))
+        if (HasMoveWithLowAccuracy(battler, GetBattlerLeftFoe(battler), 90, FALSE)
+         || HasMoveWithLowAccuracy(battler, GetBattlerRightFoe(battler), 90, FALSE))
             return GOOD_EFFECT;
         break;
     case ABILITY_CONTRARY:
@@ -6004,7 +6004,7 @@ enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Abilit
         break;
     case ABILITY_INTIMIDATE:
     {
-        enum Ability abilityDef = aiData->abilities[LEFT_FOE(battler)];
+        enum Ability abilityDef = aiData->abilities[GetBattlerLeftFoe(battler)];
         if (DoesIntimidateRaiseStats(abilityDef))
         {
             return AWFUL_EFFECT;
@@ -6013,27 +6013,27 @@ enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Abilit
         {
             if (HasTwoOpponents(battler))
             {
-                abilityDef = aiData->abilities[RIGHT_FOE(battler)];
+                abilityDef = aiData->abilities[GetBattlerRightFoe(battler)];
                 if (DoesIntimidateRaiseStats(abilityDef))
                 {
                     return AWFUL_EFFECT;
                 }
                 else
                 {
-                    enum AIScore score1 = IncreaseStatDownScore(battler, LEFT_FOE(battler), STAT_ATK);
-                    enum AIScore score2 = IncreaseStatDownScore(battler, RIGHT_FOE(battler), STAT_ATK);
+                    enum AIScore score1 = IncreaseStatDownScore(battler, GetBattlerLeftFoe(battler), STAT_ATK);
+                    enum AIScore score2 = IncreaseStatDownScore(battler, GetBattlerRightFoe(battler), STAT_ATK);
                     if (score1 > score2)
                         return score1;
                     else
                         return score2;
                 }
             }
-            return IncreaseStatDownScore(battler, LEFT_FOE(battler), STAT_ATK);
+            return IncreaseStatDownScore(battler, GetBattlerLeftFoe(battler), STAT_ATK);
         }
     }
     case ABILITY_NO_GUARD:
-        if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
-         || HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE))
+        if (HasMoveWithLowAccuracy(battler, GetBattlerLeftFoe(battler), LOW_ACCURACY_THRESHOLD, FALSE)
+         || HasMoveWithLowAccuracy(battler, GetBattlerRightFoe(battler), LOW_ACCURACY_THRESHOLD, FALSE))
             return GOOD_EFFECT;
         break;
     // Toxic counter ticks upward while Poison Healed; losing Poison Heal while Toxiced can KO.
@@ -6374,7 +6374,7 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
 {
     s32 tempScore = 0;
-    enum BattlerId foe = LEFT_FOE(battlerAtk);
+    enum BattlerId foe = GetBattlerLeftFoe(battlerAtk);
 
     if (AI_IsAbilityOnSide(foe, ABILITY_UNAWARE) || AI_IsAbilityOnSide(foe, ABILITY_OPPORTUNIST))
         return tempScore;

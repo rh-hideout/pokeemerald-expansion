@@ -1936,10 +1936,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             {
                 ADJUST_SCORE(-10); //Don't wipe your team if you're going to lose
             }
-            else if ((!IsBattlerAlive(LEFT_FOE(battlerAtk)) || aiData->abilities[LEFT_FOE(battlerAtk)] == ABILITY_SOUNDPROOF
-              || gBattleMons[LEFT_FOE(battlerAtk)].volatiles.perishSong)
-              && (!IsBattlerAlive(RIGHT_FOE(battlerAtk)) || aiData->abilities[RIGHT_FOE(battlerAtk)] == ABILITY_SOUNDPROOF
-              || gBattleMons[RIGHT_FOE(battlerAtk)].volatiles.perishSong))
+            else if ((!IsBattlerAlive(GetBattlerLeftFoe(battlerAtk)) || aiData->abilities[GetBattlerLeftFoe(battlerAtk)] == ABILITY_SOUNDPROOF
+              || gBattleMons[GetBattlerLeftFoe(battlerAtk)].volatiles.perishSong)
+              && (!IsBattlerAlive(GetBattlerRightFoe(battlerAtk)) || aiData->abilities[GetBattlerRightFoe(battlerAtk)] == ABILITY_SOUNDPROOF
+              || gBattleMons[GetBattlerRightFoe(battlerAtk)].volatiles.perishSong))
             {
                 ADJUST_SCORE(-10); //Both enemies are perish songed
             }
@@ -2018,8 +2018,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_HIT_ESCAPE:
         break;
     case EFFECT_FUTURE_SIGHT:
-        if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
-         || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
+        if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
+         || gBattleStruct->futureSight[GetBattlerRightFoe(battlerAtk)].counter > 0)
             ADJUST_SCORE(-12);
         else
             ADJUST_SCORE(GOOD_EFFECT);
@@ -3071,8 +3071,8 @@ static s32 AI_TryToFaint(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
 static bool32 ShouldTriggerPartnerAbility(enum BattlerId battlerAtk, enum Move move, enum Ability ability)
 {
     enum BattlerId partner = GetPartnerBattler(battlerAtk);
-    enum BattlerId leftFoe = LEFT_FOE(battlerAtk);
-    enum BattlerId rightFoe = RIGHT_FOE(battlerAtk);
+    enum BattlerId leftFoe = GetBattlerLeftFoe(battlerAtk);
+    enum BattlerId rightFoe = GetBattlerRightFoe(battlerAtk);
 
     switch (ability)
     {
@@ -3178,38 +3178,38 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         else
         {
-            u32 ownHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtk, LEFT_FOE(battlerAtk), AI_ATTACKING);
-            u32 partnerHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtkPartner, LEFT_FOE(battlerAtk), AI_ATTACKING);
-            u32 ownHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtk, RIGHT_FOE(battlerAtk), AI_ATTACKING);
-            u32 partnerHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtkPartner, RIGHT_FOE(battlerAtk), AI_ATTACKING);
+            u32 ownHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtk, GetBattlerLeftFoe(battlerAtk), AI_ATTACKING);
+            u32 partnerHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtkPartner, GetBattlerLeftFoe(battlerAtk), AI_ATTACKING);
+            u32 ownHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtk, GetBattlerRightFoe(battlerAtk), AI_ATTACKING);
+            u32 partnerHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtkPartner, GetBattlerRightFoe(battlerAtk), AI_ATTACKING);
 
             if (hasTwoOpponents)
             {
                 // Might be about to die
-                if (CanTargetFaintAi(LEFT_FOE(battlerAtk), battlerAtk) && CanTargetFaintAi(RIGHT_FOE(battlerAtk), battlerAtk)
-                 && AI_IsSlower(battlerAtk, LEFT_FOE(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY)
-                 && AI_IsSlower(battlerAtk, RIGHT_FOE(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
+                if (CanTargetFaintAi(GetBattlerLeftFoe(battlerAtk), battlerAtk) && CanTargetFaintAi(GetBattlerRightFoe(battlerAtk), battlerAtk)
+                 && AI_IsSlower(battlerAtk, GetBattlerLeftFoe(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY)
+                 && AI_IsSlower(battlerAtk, GetBattlerRightFoe(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
 
                 if (ownHitsToKOFoe1 > partnerHitsToKOFoe1 && partnerHitsToKOFoe1 > 1
                  && ownHitsToKOFoe2 > partnerHitsToKOFoe2 && partnerHitsToKOFoe2 > 1)
                     ADJUST_SCORE(GOOD_EFFECT);
             }
-            else if (IsBattlerAlive(LEFT_FOE(battlerAtk)))
+            else if (IsBattlerAlive(GetBattlerLeftFoe(battlerAtk)))
             {
                 // Might be about to die
-                if (CanTargetFaintAi(LEFT_FOE(battlerAtk), battlerAtk)
-                 && AI_IsSlower(battlerAtk, LEFT_FOE(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
+                if (CanTargetFaintAi(GetBattlerLeftFoe(battlerAtk), battlerAtk)
+                 && AI_IsSlower(battlerAtk, GetBattlerLeftFoe(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
 
                 if (ownHitsToKOFoe1 > partnerHitsToKOFoe1 && partnerHitsToKOFoe1 > 1)
                     ADJUST_SCORE(GOOD_EFFECT);
             }
-            else if (IsBattlerAlive(RIGHT_FOE(battlerAtk)))
+            else if (IsBattlerAlive(GetBattlerRightFoe(battlerAtk)))
             {
                 // Might be about to die
-                if (CanTargetFaintAi(RIGHT_FOE(battlerAtk), battlerAtk)
-                 && AI_IsSlower(battlerAtk, RIGHT_FOE(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
+                if (CanTargetFaintAi(GetBattlerRightFoe(battlerAtk), battlerAtk)
+                 && AI_IsSlower(battlerAtk, GetBattlerRightFoe(battlerAtk), move, incomingMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
 
                 if (ownHitsToKOFoe2 > partnerHitsToKOFoe2 && partnerHitsToKOFoe2 > 1)
@@ -3674,8 +3674,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
 
-                    if ((!IsBattlerAlive(LEFT_FOE(battlerAtk)) || ShouldRecover(battlerAtk, LEFT_FOE(battlerAtk), move, 50))
-                     && (!IsBattlerAlive(RIGHT_FOE(battlerAtk)) || ShouldRecover(battlerAtk, RIGHT_FOE(battlerAtk), move, 50)))
+                    if ((!IsBattlerAlive(GetBattlerLeftFoe(battlerAtk)) || ShouldRecover(battlerAtk, GetBattlerLeftFoe(battlerAtk), move, 50))
+                     && (!IsBattlerAlive(GetBattlerRightFoe(battlerAtk)) || ShouldRecover(battlerAtk, GetBattlerRightFoe(battlerAtk), move, 50)))
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                 }
                 break;
@@ -3728,8 +3728,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && HasMoveWithEffect(battlerAtkPartner, EFFECT_TRICK_ROOM))
                     ADJUST_SCORE(DECENT_EFFECT);
 
-                if (AI_IsSlower(battlerAtkPartner, LEFT_FOE(battlerAtk), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)  // Opponent mon 1 goes before partner
-                 && AI_IsSlower(battlerAtkPartner, RIGHT_FOE(battlerAtk), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // Opponent mon 2 goes before partner
+                if (AI_IsSlower(battlerAtkPartner, GetBattlerLeftFoe(battlerAtk), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)  // Opponent mon 1 goes before partner
+                 && AI_IsSlower(battlerAtkPartner, GetBattlerRightFoe(battlerAtk), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // Opponent mon 2 goes before partner
                 {
                     if (partnerEffect == EFFECT_REFLECT_DAMAGE)
                         break; // These moves need to go last
@@ -3738,8 +3738,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 break;
             case EFFECT_HEAL_PULSE:
             case EFFECT_HIT_ENEMY_HEAL_ALLY:
-                if (AI_IsFaster(battlerAtk, LEFT_FOE(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
-                 && AI_IsFaster(battlerAtk, RIGHT_FOE(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
+                if (AI_IsFaster(battlerAtk, GetBattlerLeftFoe(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
+                 && AI_IsFaster(battlerAtk, GetBattlerRightFoe(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
                  && gBattleMons[battlerAtkPartner].hp < gBattleMons[battlerAtkPartner].maxHP / 2)
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
                 break;
@@ -5436,8 +5436,8 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             u32 tailwindScore = 0;
             u32 speed = aiData->speedStats[battlerAtk];
             u32 partnerSpeed = aiData->speedStats[GetPartnerBattler(battlerAtk)];
-            u32 foe1Speed = aiData->speedStats[LEFT_FOE(battlerAtk)];
-            u32 foe2Speed = aiData->speedStats[RIGHT_FOE(battlerAtk)];
+            u32 foe1Speed = aiData->speedStats[GetBattlerLeftFoe(battlerAtk)];
+            u32 foe2Speed = aiData->speedStats[GetBattlerRightFoe(battlerAtk)];
 
             if (speed <= foe1Speed && (speed * 2) > foe1Speed)
                 tailwindScore += 1;
@@ -6118,7 +6118,7 @@ static s32 AI_AttacksPartner(enum BattlerId battlerAtk, enum BattlerId battlerDe
         u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE);
 
         if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY && hitsToKO > 0 &&
-           (GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0 || GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerDef), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0))
+           (GetNoOfHitsToKOBattler(battlerAtk, GetBattlerLeftFoe(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0 || GetNoOfHitsToKOBattler(battlerAtk, GetBattlerLeftFoe(battlerDef), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0))
             ADJUST_SCORE(BEST_EFFECT);
 
         if (hitsToKO > 0)
@@ -6198,8 +6198,8 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             if (gBattleMons[battlerDef].volatiles.healBlock)
                 return 0;
 
-            if (CanTargetFaintAi(LEFT_FOE(battlerAtk), GetPartnerBattler(battlerAtk))
-             || CanTargetFaintAi(RIGHT_FOE(battlerAtk), GetPartnerBattler(battlerAtk)))
+            if (CanTargetFaintAi(GetBattlerLeftFoe(battlerAtk), GetPartnerBattler(battlerAtk))
+             || CanTargetFaintAi(GetBattlerRightFoe(battlerAtk), GetPartnerBattler(battlerAtk)))
                 ADJUST_SCORE(-1);
 
             if (gAiLogicData->hpPercents[battlerDef] <= 50)
