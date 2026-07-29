@@ -3241,7 +3241,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
          && (atkPartnerHoldEffect == HOLD_EFFECT_SCOPE_LENS
           || IS_BATTLER_OF_TYPE(battlerAtkPartner, TYPE_DRAGON)
           || GetMoveCriticalHitStage(aiData->partnerMove) > 0
-          || HasMoveWithCriticalHitChance(battlerAtkPartner)))
+          || HasMoveWithCriticalHitChance(battlerAtkPartner)
+          || CritEspeciallyDesirable(battlerAtkPartner, BattlerDef)))
         {
             ADJUST_SCORE(GOOD_EFFECT);
         }
@@ -4548,11 +4549,15 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_LASER_FOCUS:
+    case EFFECT_DRAGON_CHEER:
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
-         || aiData->abilities[battlerAtk] == ABILITY_SNIPER
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
+            ADJUST_SCORE(GOOD_EFFECT); // fall through
+    case EFFECT_LASER_FOCUS:
+        if (aiData->abilities[battlerAtk] == ABILITY_SNIPER);
+            ADJUST_SCORE(GOOD_EFFECT); // fall through
+        if (CritEspeciallyDesirable(BattlerAtk, BattlerDef);
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_CONFUSE:
@@ -5672,6 +5677,14 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
                 break;
+            case MOVE_EFFECT_CRIT_PLUS_SIDE:
+            {
+                if (CritEspeciallyDesirable(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
+                {
+                    score +=10;
+                    break;
+                }
+            }
             case MOVE_EFFECT_ORDER_UP:
             {
                 enum Stat stat = STAT_ATK;
