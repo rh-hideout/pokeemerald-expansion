@@ -37,9 +37,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_ESCAPE_ROPE",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM66",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_GRANITE_CAVE_1F_ESCAPE_ROPE"
+      "flag": "FLAG_ITEM_GRANITE_CAVE_1F_TM66"
     }
   ],
   "warp_events": [

@@ -816,6 +816,42 @@ static const struct MenuAction MultichoiceList_BerryPlot[] =
     {gText_Exit},
 };
 
+
+static const struct MenuAction MultiChoiceList_Starter_Gen_Options[] =
+{
+    {COMPOUND_STRING("Gen 1-3")},
+    {COMPOUND_STRING("Gen 4-6")},
+    {COMPOUND_STRING("Gen 7-9")},
+};
+
+static const struct MenuAction MultiChoiceList_ChampionChallenge_Page1[] =
+{
+    {gText_Exit},
+    {COMPOUND_STRING("Lv. {STR_VAR_1}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_2}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_3}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_4}")},
+    {COMPOUND_STRING("Next Page")},
+};
+
+static const struct MenuAction MultiChoiceList_ChampionChallenge_Page2[] =
+{
+    {gText_Exit},
+    {COMPOUND_STRING("Prev Page")},
+    {COMPOUND_STRING("Lv. {STR_VAR_1}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_2}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_3}")},
+    {COMPOUND_STRING("Next Page")},
+};
+
+static const struct MenuAction MultiChoiceList_ChampionChallenge_Page3[] =
+{
+    {gText_Exit},
+    {COMPOUND_STRING("Prev Page")},
+    {COMPOUND_STRING("Lv. {STR_VAR_1}")},
+    {COMPOUND_STRING("Lv. {STR_VAR_2}")},
+};
+
 static const struct MenuAction sMultichoiceList_BikeShop[] = {
     {COMPOUND_STRING("BICYCLE{CLEAR_TO 73}{FONT_SMALL}¥1,000,000")},
     {COMPOUND_STRING("NO THANKS")}
@@ -1294,6 +1330,10 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
+    [STARTER_GEN_OPTIONS]              = MULTICHOICE(MultiChoiceList_Starter_Gen_Options),
+    [CHAMPION_CHALLENGE_CHOICE_PAGE1]  = MULTICHOICE(MultiChoiceList_ChampionChallenge_Page1),
+    [CHAMPION_CHALLENGE_CHOICE_PAGE2]  = MULTICHOICE(MultiChoiceList_ChampionChallenge_Page2),
+    [CHAMPION_CHALLENGE_CHOICE_PAGE3]  = MULTICHOICE(MultiChoiceList_ChampionChallenge_Page3),
 };
 
 const u8 *const gStdStrings[] =

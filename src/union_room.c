@@ -4109,10 +4109,10 @@ static void ItemPrintFunc_EmptyList(u8 windowId, u32 itemId, u8 y)
 
 static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData *data, const u8 *playerName, u8 colorIdx)
 {
-    u8 levelStr[4];
+    u8 levelStr[5];
     enum Species species = data->tradeSpecies;
     enum Type type = data->tradeType;
-    u8 level = data->tradeLevel;
+    u16 level = data->tradeLevel;
 
     PrintUnionRoomText(windowId, FONT_NORMAL, playerName, 8, y, colorIdx);
     if (species == SPECIES_EGG)

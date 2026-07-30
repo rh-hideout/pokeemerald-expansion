@@ -340,6 +340,7 @@ PLAYER         = FD 01
 STR_VAR_1      = FD 02
 STR_VAR_2      = FD 03
 STR_VAR_3      = FD 04
+STR_VAR_4      = FD 0F
 KUN            = FD 05
 RIVAL          = FD 06
 @ version-dependent strings (originally made for Ruby/Sapphire differences)

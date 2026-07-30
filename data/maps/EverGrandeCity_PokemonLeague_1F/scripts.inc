@@ -135,3 +135,22 @@ EverGrandeCity_PokemonLeague_1F_Text_GoForth:
 	.string "TRAINER! Believe in yourself and your\n"
 	.string "POKéMON, and go forth!$"
 
+EverGrandeCity_PokemonCenter_1F_EventScript_ClearChallengeState::
+	clearflag FLAG_IS_CHALLENGING_CHAMPION
+	end
+
+@ CUSTOM
+@ Allows player to pass by guard to Champion's Challenge Room once Elite 4 has been beaten
+EverGrandeCity_PokemonLeague_1F_EventScript_ChampionRoomGuard::
+	lock
+	faceplayer
+	message EverGrandeCity_PokemonLeague_1F_Text_MustBeChampion
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+EverGrandeCity_PokemonLeague_1F_Text_MustBeChampion:
+	.string "Sorry, only those who have become\n"
+	.string "champions are allowed to enter\l"
+	.string "the Champions Challenge Room.$"

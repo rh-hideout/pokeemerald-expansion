@@ -698,7 +698,7 @@ static void CreateRibbonMonsList(void)
 static void BufferRibbonMonInfoText(struct PokenavListItem *listItem, u8 *dest)
 {
     u8 gender;
-    u8 level;
+    u16 level;
     u8 *s, *end;
     const u8 *genderStr;
     struct PokenavMonListItem *item = (struct PokenavMonListItem *)listItem;

@@ -3,6 +3,7 @@ SeafloorCavern_Room9_MapScripts::
 
 SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
 	lockall
+	specialvar VAR_PREV_LEVEL_CAP, GetCurrentLevelCapSpecial
 	setvar VAR_0x8004, LOCALID_SEAFLOOR_CAVERN_ARCHIE
 	setvar VAR_0x8005, LOCALID_SEAFLOOR_CAVERN_MAXIE
 	setvar VAR_0x8006, LOCALID_SEAFLOOR_CAVERN_GRUNT_1
@@ -134,6 +135,7 @@ SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
 	setflag FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_MAGMA_GRUNTS
 	setflag FLAG_HIDE_SEAFLOOR_CAVERN_ROOM_9_KYOGRE
 	setflag FLAG_HIDE_SEAFLOOR_CAVERN_AQUA_GRUNTS
+	call Common_EventScript_CheckLevelCapIncrease
 	setflag FLAG_HIDE_MAP_NAME_POPUP
 	warp MAP_ROUTE128, 38, 22
 	waitstate

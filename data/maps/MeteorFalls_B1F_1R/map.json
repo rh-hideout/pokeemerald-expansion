@@ -60,5 +60,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 9,
+      "y": 4,
+      "elevation": 3,
+      "item": "ITEM_SALAMENCITE",
+      "flag": "FLAG_ITEM_SALAMENCITE"
+    }
+  ]
 }

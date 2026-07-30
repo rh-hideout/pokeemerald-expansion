@@ -154,9 +154,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_PP_UP",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM61",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_ROUTE_109_PP_UP"
+      "flag": "FLAG_ITEM_ROUTE_109_TM61"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TUBER_F",
@@ -323,9 +323,9 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_POTION",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM80",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_ROUTE_109_POTION"
+      "flag": "FLAG_ITEM_ROUTE_109_TM80"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MAN_5",
@@ -339,6 +339,19 @@
       "trainer_sight_or_berry_tree_id": "3",
       "script": "Route109_EventScript_Elijah",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 7,
+      "y": 43,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_FIGHTINIUM_Z",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_FIGHTINIUM_Z"
     }
   ],
   "warp_events": [

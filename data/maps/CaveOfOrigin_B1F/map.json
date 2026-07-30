@@ -40,5 +40,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 9,
+      "y": 9,
+      "elevation": 3,
+      "item": "ITEM_STEELIXITE",
+      "flag": "FLAG_ITEM_STEELIXITE"
+    }
+  ]
 }

@@ -30,6 +30,10 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
+#include "title_screen.h"
+#include "start_menu.h"
+#include "caps.h"
+#include "new_game.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
@@ -37,15 +41,36 @@ static void HealPlayerBoxes(void);
 
 void HealPlayerParty(void)
 {
-    u32 i;
-    for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
-        HealPokemon(&gParties[B_TRAINER_PLAYER][i]);
-    if (OW_PC_HEAL >= GEN_8)
-        HealPlayerBoxes();
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        RemoveFaintedMonsFromParty();
+    }
 
-    // Recharge Tera Orb, if possible.
-    if (B_FLAG_TERA_ORB_CHARGED != 0 && CheckBagHasItem(ITEM_TERA_ORB, 1))
-        FlagSet(B_FLAG_TERA_ORB_CHARGED);
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled && IsPartyEmpty())
+    {
+        SetMainCallback2(CB2_NewGame);
+        return;
+    }
+
+    if (gPartiesCount[B_TRAINER_PLAYER] > 0) {
+        u32 i;
+        for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
+            HealPokemon(&gParties[B_TRAINER_PLAYER][i]);
+        if (OW_PC_HEAL >= GEN_8)
+            HealPlayerBoxes();
+
+        // Recharge Tera Orb, if possible.
+        if (B_FLAG_TERA_ORB_CHARGED != 0 && CheckBagHasItem(ITEM_TERA_ORB, 1))
+            FlagSet(B_FLAG_TERA_ORB_CHARGED);
+
+        if (gSaveBlock1Ptr->nuzlockeModeEnabled || gSaveBlock1Ptr->autosaveModeEnabled)
+        {
+            AutosaveGame();
+        }
+    }
+    else {
+        // Do nothing
+    }
 }
 
 static void HealPlayerBoxes(void)
@@ -114,11 +139,13 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
+void CreateScriptedWildMon(enum Species species, u16 level, enum Item item)
 {
     u8 heldItem[2];
 
     ZeroEnemyPartyMons();
+    /* Apply New Game+ level offset */
+    level = min(level + GetNewGamePlusLevelOffset(), MAX_LEVEL);
     u32 personality = GetMonPersonality(species,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
@@ -132,12 +159,17 @@ void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
         SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, heldItem);
     }
 }
-void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item item1, enum Species species2, u8 level2, enum Item item2)
+void CreateScriptedDoubleWildMon(enum Species species1, u16 level1, enum Item item1, enum Species species2, u16 level2, enum Item item2)
 {
     u8 heldItem1[2];
     u8 heldItem2[2];
 
     ZeroEnemyPartyMons();
+
+    /* Apply New Game+ level offset to both wild mons */
+    level1 = min(level1 + GetNewGamePlusLevelOffset(), MAX_LEVEL);
+    level2 = min(level2 + GetNewGamePlusLevelOffset(), MAX_LEVEL);
+
     u32 personality = GetMonPersonality(species1,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
@@ -359,7 +391,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8 level, enum Item item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u16 *evs, u16 *ivs, enum Move *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
+u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u16 level, enum Item item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u16 *evs, u16 *ivs, enum Move *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     struct Pokemon mon;
     u32 i;
@@ -476,7 +508,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
     return MON_GIVEN_TO_PARTY;
 }
 
-u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
+u32 ScriptGiveMon(enum Species species, u16 level, enum Item item)
 {
     struct Pokemon mon;
     u8 heldItem[2];
@@ -503,7 +535,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 side            = ScriptReadByte(ctx);
     u8 slot            = ScriptReadByte(ctx);
     enum Species species = VarGet(ScriptReadHalfword(ctx));
-    u8 level           = VarGet(ScriptReadHalfword(ctx));
+    u16 level           = VarGet(ScriptReadHalfword(ctx));
 
     u32 flags          = ScriptReadWord(ctx);
     enum Item item     = PARSE_FLAG(0, ITEM_NONE);
@@ -663,3 +695,4 @@ void Script_GiveRandomBerry(struct ScriptContext *ctx)
 
     gSpecialVar_Result = BerryTypeToItemId(RandomUniform(RNG_RANDOM_BERRY, loBerry, hiBerry));
 }
+

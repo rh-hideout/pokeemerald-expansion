@@ -13,29 +13,29 @@ Gender: Male
 Music: Male
 AI: Basic Trainer
 
-Metang
+Corviknight
 Brave Nature
-Level: 42
+Level: 48
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 Def / 6 SpA
-- Light Screen
-- Psychic
-- Reflect
-- Metal Claw
+- Air Slash
+- U-Turn
+- Body Slam
+- Magnet Bomb
 
-Skarmory
+Gholdengo
 Impish Nature
-Level: 43
+Level: 49
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 HP / 6 SpA / 252 SpD
-- Toxic
-- Aerial Ace
+- Shadow Ball
+- Flash Cannon
 - Protect
-- Steel Wing
+- Power Gem
 
-Aggron
+Archaludon
 Adamant Nature
-Level: 44
+Level: 50
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 Atk / 252 SpA / 6 SpD
 - Thunder

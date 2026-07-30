@@ -105,9 +105,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_ETHER",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM82",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_ROUTE_113_MAX_ETHER"
+      "flag": "FLAG_ITEM_ROUTE_113_TM82"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
@@ -461,6 +461,22 @@
       "elevation": 3,
       "item": "ITEM_NUGGET",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_113_NUGGET"
+    },
+    {
+      "type": "hidden_item",
+      "x": 57,
+      "y": 2,
+      "elevation": 3,
+      "item": "ITEM_LOPUNNITE",
+      "flag": "FLAG_ITEM_LOPUNNITE"
+    },
+    {
+      "type": "hidden_item",
+      "x": 76,
+      "y": 13,
+      "elevation": 3,
+      "item": "ITEM_AUDINITE",
+      "flag": "FLAG_ITEM_AUDINITE"
     }
   ]
 }

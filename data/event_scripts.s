@@ -130,6 +130,8 @@ gStdScripts::
 gStdScripts_End::
 
 
+	.include "data/scripts/level_cap.inc"
+	.include "data/scripts/roamer_message.inc"
 	.include "data/maps/PetalburgCity/scripts.inc"
 	.include "data/maps/SlateportCity/scripts.inc"
 	.include "data/maps/MauvilleCity/scripts.inc"
@@ -1379,6 +1381,10 @@ gText_SandstormIsVicious::
 	.string "The sandstorm is vicious.\n"
 	.string "It's impossible to keep going.$"
 
+gText_SelectWithoutRegisteredLongItem::
+	.string "A second item in the BAG can be\n"
+	.string "registered to holding SELECT.$"
+
 gText_SelectWithoutRegisteredItem::
 	.string "An item in the BAG can be\n"
 	.string "registered to SELECT for easy use.$"
@@ -1556,6 +1562,10 @@ EventScript_SelectWithoutRegisteredItem::
 	end
 
 	.include "data/scripts/field_poison.inc"
+
+EventScript_SelectWithoutRegisteredLongItem::
+	msgbox gText_SelectWithoutRegisteredLongItem, MSGBOX_SIGN
+	end
 
 Common_EventScript_NopReturn::
 	return
@@ -1738,3 +1748,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
 	.include "data/scripts/wild_encounter.inc"
+	.include "data/maps/EverGrandeCity_Champion_ChallengeRoom1/scripts.inc"
+	.include "data/maps/EverGrandeCity_Champion_ChallengeRoom2/scripts.inc"

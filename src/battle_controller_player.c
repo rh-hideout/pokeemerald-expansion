@@ -48,6 +48,9 @@
 #include "type_icons.h"
 #include "pokedex.h"
 #include "test/battle.h"
+#include "ui_birch_case.h"
+#include "event_data.h"
+#include "battle_ai_util.h"
 
 static void PlayerHandleLoadMonSprite(enum BattlerId battler);
 static void PlayerHandleDrawTrainerPic(enum BattlerId battler);
@@ -693,6 +696,14 @@ void HandleInputChooseMove(enum BattlerId battler)
 {
     u32 canSelectTarget = 0;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+
+    // If AI is controlling the player, emit the AI's chosen move directly instead of waiting for manual input
+    if (IsPlayerAiControlled())
+    {
+        SetFinalChosenTarget(battler, FALSE);
+        BtlController_Complete(battler);
+        return;
+    }
 
     if (JOY_HELD(DPAD_ANY) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
         gPlayerDpadHoldFrames++;
@@ -1427,9 +1438,9 @@ static void Task_GiveExpToMon(u8 taskId)
     {
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monId];
         enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-        u8 level = GetMonData(mon, MON_DATA_LEVEL);
+        u16 level = GetMonData(mon, MON_DATA_LEVEL);
         u32 currExp = GetMonData(mon, MON_DATA_EXP);
-        u32 nextLvlExp = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1];
+        u32 nextLvlExp = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level + 1);
         u32 expAfterGain = currExp + gainedExp;
         u32 oldMaxHP = GetMonData(mon, MON_DATA_MAX_HP);
 
@@ -1472,14 +1483,14 @@ static void Task_PrepareToGiveExpWithExpBar(u8 taskId)
     s32 gainedExp = GetTaskExpValue(taskId);
     enum BattlerId battler = gTasks[taskId].tExpTask_battler;
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monIndex];
-    u8 level = GetMonData(mon, MON_DATA_LEVEL);
+    u16 level = GetMonData(mon, MON_DATA_LEVEL);
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = GetMonData(mon, MON_DATA_EXP);
-    u32 currLvlExp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
+    u32 currLvlExp = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level);
     u32 expToNextLvl;
 
     exp -= currLvlExp;
-    expToNextLvl = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1] - currLvlExp;
+    expToNextLvl = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level + 1) - currLvlExp;
     SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], expToNextLvl, exp, -gainedExp);
     TestRunner_Battle_RecordExp(battler, exp, -gainedExp);
     PlaySE(SE_EXP);
@@ -1513,7 +1524,7 @@ static void Task_GiveExpWithExpBar(u8 taskId)
             currExp = GetMonData(mon, MON_DATA_EXP);
             species = GetMonData(mon, MON_DATA_SPECIES);
             oldMaxHP = GetMonData(mon, MON_DATA_MAX_HP);
-            expOnNextLvl = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1];
+            expOnNextLvl = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level + 1);
 
             expAfterGain = currExp + gainedExp;
             if (expAfterGain >= expOnNextLvl)
@@ -1747,6 +1758,13 @@ static void MoveSelectionDisplayMoveType(enum BattlerId battler)
         struct Pokemon *mon = GetBattlerMon(battler);
         type = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
     }
+
+    // Apply type randomization if enabled (after dynamic type to override it)
+    if (FlagGet(FLAG_RANDOMIZE_TYPE))
+    {
+        type = GetRandomMoveType(move);
+    }
+
     end = StringCopy(txtPtr, gTypesInfo[type].name);
 
     PrependFontIdToFit(txtPtr, end, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_TYPE) - 25);
@@ -2019,6 +2037,17 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
 {
     s32 i;
 
+    // If AI is controlling the player, skip the action menu entirely and go straight to
+    // B_ACTION_USE_MOVE, same as OpponentHandleChooseAction does for AI-controlled opponents.
+    // This lets the normal B_ACTION_USE_MOVE -> EmitChooseMove -> PlayerHandleChooseMove pipeline
+    // run so the AI's chosen move actually gets recorded (see HandleInputChooseMove).
+    if (IsPlayerAiControlled() && !(gBattleTypeFlags & BATTLE_TYPE_PALACE))
+    {
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
+        BtlController_Complete(battler);
+        return;
+    }
+
     gBattlerControllerFuncs[battler] = HandleChooseActionAfterDma3;
     BattleTv_ClearExplosionFaintCause();
     BattlePutTextOnWindow(gText_BattleMenu, B_WIN_ACTION_MENU);
@@ -2113,6 +2142,16 @@ static void PlayerChooseMoveInBattlePalace(enum BattlerId battler)
 
 void PlayerHandleChooseMove(enum BattlerId battler)
 {
+    // If AI is controlling the player, emit the AI's chosen move immediately instead of
+    // building/showing the move selection UI first (which would otherwise flash on screen
+    // for a frame before HandleInputChooseMove's own AI check kicked in).
+    if (IsPlayerAiControlled() && !(gBattleTypeFlags & BATTLE_TYPE_PALACE))
+    {
+        SetFinalChosenTarget(battler, FALSE);
+        BtlController_Complete(battler);
+        return;
+    }
+
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
         gBattleStruct->arenaMindPoints[battler] = 8;
@@ -2409,6 +2448,13 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
     ctx.battlerDef = battlerDef;
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];
     ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battlerAtk), ctx.move, battlerAtk, MON_IN_BATTLE);
+    
+    // Apply type randomization if enabled (after dynamic type to override it)
+    if (FlagGet(FLAG_RANDOMIZE_TYPE))
+    {
+        ctx.moveType = GetRandomMoveType(ctx.move);
+    }
+
     ctx.updateFlags = FALSE;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
     ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);

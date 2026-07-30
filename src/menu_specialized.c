@@ -1573,7 +1573,9 @@ void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 s
 
     for (i = 0; i < NUM_STATS; i++)
     {
-        if (stats[i] > 99)
+        if (stats[i] > 999)
+            numDigits = 4;
+        else if (stats[i] > 99)
             numDigits = 3;
         else if (stats[i] > 9)
             numDigits = 2;

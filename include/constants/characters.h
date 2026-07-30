@@ -270,6 +270,7 @@
 #define PLACEHOLDER_ID_KYOGRE        0xC
 #define PLACEHOLDER_ID_GROUDON       0xD
 #define PLACEHOLDER_ID_REGION        0xE
+#define PLACEHOLDER_ID_STRING_VAR_4  0xF
 
 // battle placeholders are located in battle_message.h
 

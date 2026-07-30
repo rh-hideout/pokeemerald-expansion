@@ -153,7 +153,7 @@ enum __attribute__((packed)) Stat
 #define MAX_GIFT_RIBBON 64
 
 #define MIN_LEVEL 1
-#define MAX_LEVEL 100
+#define MAX_LEVEL 1000 // Can go up to 65535
 
 #define MAX_DYNAMAX_LEVEL 10
 

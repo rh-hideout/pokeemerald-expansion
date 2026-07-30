@@ -219,7 +219,7 @@ struct DebugMenuOption
 struct DebugMonData
 {
     enum Species species;
-    u8 level;
+    u16 level;
     bool8 isShiny:1;
     u8 nature:5;
     u8 abilityNum:2;
@@ -278,6 +278,7 @@ static void DebugAction_Util_Weather(u8 taskId);
 static void DebugAction_Util_Weather_SelectId(u8 taskId);
 static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
+static void DebugAction_Util_SetNewGamePlusCycle(u8 taskId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
@@ -439,6 +440,7 @@ static const u8 sDebugText_Util_WarpToMap_SelectMap[] =      _("Map: {STR_VAR_1}
 static const u8 sDebugText_Util_WarpToMap_SelectWarp[] =     _("Warp:{CLEAR_TO 90}\n{STR_VAR_1}{CLEAR_TO 90}\n{CLEAR_TO 90}\n{STR_VAR_3}{CLEAR_TO 90}");
 static const u8 sDebugText_Util_WarpToMap_SelMax[] =         _("{STR_VAR_1} / {STR_VAR_2}");
 static const u8 sDebugText_Util_Weather_ID[] =               _("Weather ID: {STR_VAR_3}\n{STR_VAR_1}\n{STR_VAR_2}");
+static const u8 sDebugText_Util_NewGameCycle[] =              _("NG+ Stage: {STR_VAR_2}{CLEAR_TO 90}\n{STR_VAR_3}");
 
 //Time Menu
 
@@ -584,6 +586,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Set weather…"),      DebugAction_Util_Weather },
     { COMPOUND_STRING("Font Test…"),        DebugAction_ExecuteScript, Debug_EventScript_FontTest },
     { COMPOUND_STRING("Time Functions…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_TimeMenu, },
+    { COMPOUND_STRING("NG+ Cycle…"),        DebugAction_Util_SetNewGamePlusCycle },
     { COMPOUND_STRING("Watch credits…"),    DebugAction_Util_WatchCredits },
     { COMPOUND_STRING("Cheat start"),       DebugAction_Util_CheatStart },
     { COMPOUND_STRING("Berry Functions…"),  DebugAction_OpenSubMenu, sDebugMenu_Actions_BerryFunctions },
@@ -1751,6 +1754,101 @@ static void DebugAction_Util_CheatStart(u8 taskId)
         Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStartFrlg);
     else
         Debug_DestroyMenu_Full_Script(taskId, Debug_CheatStart);
+}
+
+static void DebugAction_Util_SetNewGamePlusCycle(u8 taskId)
+{
+    u32 windowId;
+
+    if (gTasks[taskId].tSubWindowId == 0)
+    {
+        ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tWindowId);
+
+        HideMapNamePopUpWindow();
+        LoadMessageBoxAndBorderGfx();
+        windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+        DrawStdWindowFrame(windowId, FALSE);
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+
+        gTasks[taskId].tSubWindowId = windowId;
+        gTasks[taskId].tInput = gSaveBlock2Ptr->newGamePlus;
+        gTasks[taskId].tDigit = 0;
+        gTasks[taskId].data[5] = 0; // state: 0 = editing newgame+, 1 = editing cycle
+        gTasks[taskId].data[6] = gSaveBlock2Ptr->newGamePlus; // store NG+ count until save
+        gTasks[taskId].func = DebugAction_Util_SetNewGamePlusCycle;
+
+        ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
+        ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].data[6], STR_CONV_MODE_LEADING_ZEROS, 1);
+        StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
+        StringExpandPlaceholders(gStringVar4, sDebugText_Util_NewGameCycle);
+        AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+    }
+
+    if (gTasks[taskId].data[5] == 0)
+    {
+        if (JOY_NEW(DPAD_ANY))
+        {
+            PlaySE(SE_SELECT);
+            Debug_HandleInput_Numeric(taskId, 0, 100, 3);
+            gTasks[taskId].data[6] = gTasks[taskId].tInput;
+
+            ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
+            ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].data[6], STR_CONV_MODE_LEADING_ZEROS, 1);
+            StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
+            StringExpandPlaceholders(gStringVar4, sDebugText_Util_NewGameCycle);
+            AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        }
+
+        if (JOY_NEW(A_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            gTasks[taskId].data[6] = gTasks[taskId].tInput; // store new game+
+            gSaveBlock2Ptr->newGamePlus = (u8)gTasks[taskId].data[6];
+            gIsNewGamePlus = (gSaveBlock2Ptr->newGamePlus > 0);
+            gTasks[taskId].tInput = gTasks[taskId].data[6] = gSaveBlock2Ptr->newGamePlus;
+            gTasks[taskId].tDigit = 0;
+            gTasks[taskId].data[5] = 1; // switch to editing cycle
+
+            ConvertIntToDecimalStringN(gStringVar1, gSaveBlock2Ptr->newGamePlus, STR_CONV_MODE_LEADING_ZEROS, 3);
+            ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
+            StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
+            StringExpandPlaceholders(gStringVar4, sDebugText_Util_NewGameCycle);
+            AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        }
+        else if (JOY_NEW(B_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            DebugAction_DestroyExtraWindow(taskId);
+        }
+    }
+    else // editing cycle
+    {
+        if (JOY_NEW(DPAD_ANY))
+        {
+            PlaySE(SE_SELECT);
+            Debug_HandleInput_Numeric(taskId, 0, 100, 3);
+
+            ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].data[6], STR_CONV_MODE_LEADING_ZEROS, 3);
+            ConvertIntToDecimalStringN(gStringVar2, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);
+            StringCopy(gStringVar3, gText_DigitIndicator[gTasks[taskId].tDigit]);
+            StringExpandPlaceholders(gStringVar4, sDebugText_Util_NewGameCycle);
+            AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+        }
+
+        if (JOY_NEW(A_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            gSaveBlock2Ptr->newGamePlus = (u8)gTasks[taskId].tInput;
+            gIsNewGamePlus = (gSaveBlock2Ptr->newGamePlus > 0);
+            DebugAction_DestroyExtraWindow(taskId);
+        }
+        else if (JOY_NEW(B_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            DebugAction_DestroyExtraWindow(taskId);
+        }
+    }
 }
 
 void BufferExpansionVersion(struct ScriptContext *ctx)
@@ -3487,7 +3585,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 EVs[NUM_STATS];
     u8 ev_val;
     enum Species species = sDebugMonData->species;
-    u8 level        = sDebugMonData->level;
+    u16 level        = sDebugMonData->level;
     bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
     u8 abilityNum   = sDebugMonData->abilityNum;

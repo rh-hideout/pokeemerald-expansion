@@ -24,9 +24,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_POTION",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM70",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_MT_PYRE_EXTERIOR_MAX_POTION"
+      "flag": "FLAG_ITEM_MT_PYRE_EXTERIOR_TM70"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",

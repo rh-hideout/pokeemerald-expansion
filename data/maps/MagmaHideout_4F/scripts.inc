@@ -2,6 +2,7 @@ MagmaHideout_4F_MapScripts::
 	.byte 0
 
 MagmaHideout_4F_EventScript_Maxie::
+	specialvar VAR_PREV_LEVEL_CAP, GetCurrentLevelCapSpecial
 	lockall
 	playbgm MUS_ENCOUNTER_MAGMA, FALSE
 	msgbox MagmaHideout_4F_Text_MaxieAwakenGroudon, MSGBOX_DEFAULT
@@ -68,6 +69,7 @@ MagmaHideout_4F_EventScript_Maxie::
 	removeobject LOCALID_MAGMA_HIDEOUT_4F_GRUNT_3
 	removeobject LOCALID_MAGMA_HIDEOUT_4F_TABITHA
 	setflag FLAG_HIDE_MAGMA_HIDEOUT_GRUNTS
+	call Common_EventScript_CheckLevelCapIncrease
 	fadescreen FADE_FROM_BLACK
 	releaseall
 	end

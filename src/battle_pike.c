@@ -35,7 +35,7 @@ struct PikeRoomNPC
 struct PikeWildMon
 {
     enum Species species;
-    u8 levelDelta;
+    u16 levelDelta;
     u16 moves[MAX_MON_MOVES];
 };
 
@@ -84,7 +84,7 @@ static void TryHealMons(u8 healCount);
 static void Task_DoStatusInflictionScreenFlash(u8 taskId);
 static bool8 AtLeastTwoAliveMons(void);
 static u8 SpeciesToPikeMonId(enum Species species);
-static bool8 CanEncounterWildMon(u8 monLevel);
+static bool8 CanEncounterWildMon(u16 monLevel);
 static u8 GetPikeQueenFightType(u8);
 static bool8 StatusInflictionFadeOut(struct Task *task);
 static bool8 StatusInflictionFadeIn(struct Task *task);
@@ -1139,7 +1139,7 @@ bool32 TryGenerateBattlePikeWildMon(bool8 checkKeenEyeIntimidate)
 
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0],
                MON_DATA_EXP,
-               &gExperienceTables[gSpeciesInfo[wildMons[headerId][pikeMonId].species].growthRate][monLevel]);
+               &(u32){ GetExperienceAtLevel(gSpeciesInfo[wildMons[headerId][pikeMonId].species].growthRate, monLevel) });
 
     if (GetSpeciesAbility(wildMons[headerId][pikeMonId].species, 1))
         abilityNum = Random() % 2;
@@ -1619,14 +1619,14 @@ static void InitPikeChallenge(void)
     gBattleOutcome = 0;
 }
 
-static bool8 CanEncounterWildMon(u8 enemyMonLevel)
+static bool8 CanEncounterWildMon(u16 enemyMonLevel)
 {
     if (!GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
     {
         enum Ability monAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][0]);
         if (monAbility == ABILITY_KEEN_EYE || monAbility == ABILITY_INTIMIDATE)
         {
-            u8 playerMonLevel = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_LEVEL);
+            u16 playerMonLevel = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_LEVEL);
             if (playerMonLevel > 5 && enemyMonLevel <= playerMonLevel - 5 && Random() % 2 == 0)
                 return FALSE;
         }

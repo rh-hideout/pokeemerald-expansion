@@ -17,8 +17,8 @@ struct FieldInput
     bool8 input_field_1_3:1;
     bool8 input_field_1_4:1;
     bool8 input_field_1_5:1;
-    bool8 input_field_1_6:1;
-    bool8 input_field_1_7:1;
+    bool8 input_field_1_6:1;  // Used to detect registered item tapping select
+    bool8 input_field_1_7:1;  // Used to detect registered item holding select
     u8 dpadDirection;
 };
 

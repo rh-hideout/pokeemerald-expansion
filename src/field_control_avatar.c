@@ -47,6 +47,7 @@
 
 static EWRAM_DATA u8 sWildEncounterImmunitySteps = 0;
 static EWRAM_DATA u16 sPrevMetatileBehavior = 0;
+static EWRAM_DATA u8 sPlayerSelectHoldFrames = 0;
 
 COMMON_DATA u8 gSelectedObjectEvent = 0;
 
@@ -99,6 +100,8 @@ void FieldClearPlayerInput(struct FieldInput *input)
     input->input_field_1_1 = FALSE;
     input->input_field_1_2 = FALSE;
     input->input_field_1_3 = FALSE;
+    input->input_field_1_6 = FALSE;
+    input->input_field_1_7 = FALSE;
     input->dpadDirection = 0;
 }
 
@@ -122,6 +125,18 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
                 input->pressedBButton = TRUE;
             if (newKeys & R_BUTTON)
                 input->pressedRButton = TRUE;
+            
+            // CUSTOM - Logic for holding select on secondary registered item
+            if (sPlayerSelectHoldFrames == 60)
+                input->input_field_1_7 = TRUE;
+            if (JOY_HELD(SELECT_BUTTON))
+                sPlayerSelectHoldFrames = sPlayerSelectHoldFrames < 0xFF ? sPlayerSelectHoldFrames + 1 : 0xFF;
+            else if (sPlayerSelectHoldFrames != 0)
+            {
+               if (sPlayerSelectHoldFrames < 60)
+                    input->input_field_1_6 = TRUE;
+                sPlayerSelectHoldFrames = 0;
+            }
         }
 
         if (heldKeys & (DPAD_UP | DPAD_DOWN | DPAD_LEFT | DPAD_RIGHT))
@@ -148,9 +163,16 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     else if (heldKeys & DPAD_RIGHT)
         input->dpadDirection = DIR_EAST;
 
+    // If B is pressed, field controls are allowed, and the player is either running or walking.
+    if ((newKeys & B_BUTTON) && (!ArePlayerFieldControlsLocked())
+    && (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_DASH | PLAYER_AVATAR_FLAG_ON_FOOT)))
+    {
+        gRunToggleBtnSet = TRUE;
+    }
+
     if (DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {
-        if ((heldKeys & DEBUG_OVERWORLD_HELD_KEYS) && input->DEBUG_OVERWORLD_TRIGGER_EVENT)
+        if (FlagGet(FLAG_DEBUG) && (heldKeys & DEBUG_OVERWORLD_HELD_KEYS) && input->DEBUG_OVERWORLD_TRIGGER_EVENT)
         {
             input->input_field_1_2 = TRUE;
             input->DEBUG_OVERWORLD_TRIGGER_EVENT = FALSE;
@@ -234,13 +256,16 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->tookStep && TryFindHiddenPokemon())
         return TRUE;
 
-    if (input->pressedSelectButton && UseRegisteredKeyItemOnField() == TRUE)
+    if (input->input_field_1_6 && UseRegisteredKeyItemOnField(FALSE) == TRUE)
+        return TRUE;
+
+    if (input->input_field_1_7 && UseRegisteredKeyItemOnField(TRUE) == TRUE)
         return TRUE;
 
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
 
-    if (input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    if (input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU && FlagGet(FLAG_DEBUG))
     {
         PlaySE(SE_WIN_OPEN);
         FreezeObjectEvents();
@@ -641,17 +666,23 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metati
 {
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
         return EventScript_CurrentTooFast;
-    if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
+    if (FlagGet(FLAG_BADGE05_GET) == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )
+    {
+        gSpecialVar_Result = GetFirstNonFaintedPartyIndex();
         return EventScript_UseSurf;
+    }
 
     if (MetatileBehavior_IsWaterfall(metatileBehavior) == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_WATERFALL)
      )
     {
         if (IsFieldMoveUnlocked(FIELD_MOVE_WATERFALL) && IsPlayerSurfingNorth() == TRUE)
+        {
+            gSpecialVar_Result = GetFirstNonFaintedPartyIndex();
             return EventScript_UseWaterfall;
+        }
         else
             return EventScript_CannotUseWaterfall;
     }
@@ -665,6 +696,7 @@ static bool32 TrySetupDiveDownScript(void)
 
     if (IsFieldMoveUnlocked(FIELD_MOVE_DIVE) && TrySetDiveWarp() == 2)
     {
+        gSpecialVar_Result = GetFirstNonFaintedPartyIndex();
         ScriptContext_SetupScript(EventScript_UseDive);
         return TRUE;
     }
@@ -678,6 +710,7 @@ static bool32 TrySetupDiveEmergeScript(void)
 
     if (IsFieldMoveUnlocked(FIELD_MOVE_DIVE) && gMapHeader.mapType == MAP_TYPE_UNDERWATER && TrySetDiveWarp() == 1)
     {
+        gSpecialVar_Result = GetFirstNonFaintedPartyIndex();
         ScriptContext_SetupScript(EventScript_UseDiveUnderwater);
         return TRUE;
     }

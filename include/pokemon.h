@@ -133,9 +133,8 @@ struct PokemonSubstruct0
     enum Type teraType:5; // 30 types.
     u16 heldItem:10; // 1023 items.
     u16 unused_02:6;
-    u32 experience:21;
-    u32 nickname11:8; // 11th character of nickname.
-    u32 unused_04:3;
+    u32 experience; // Experience (now full 32 bits to support levels beyond 255)
+    u8 nickname11; // 11th character of nickname.
     u8 ppBonuses;
     u8 friendship;
     u16 pokeball:6; // 63 balls.
@@ -185,10 +184,10 @@ struct PokemonSubstruct3
 {
     u8 pokerus;
     u8 metLocation;
-    u16 metLevel:7;
-    u16 metGame:4;
-    u16 dynamaxLevel:4;
-    u16 otGender:1;
+    u32 metLevel:16;
+    u32 metGame:4;
+    u32 dynamaxLevel:4;
+    u32 otGender:1;
     u32 hpIV:5;
     u32 attackIV:5;
     u32 defenseIV:5;
@@ -285,7 +284,7 @@ struct Pokemon
 {
     struct BoxPokemon box;
     u32 status;
-    u8 level;
+    u16 level;
     u8 mail;
     u16 hp;
     u16 maxHP;
@@ -356,7 +355,7 @@ struct BattlePokemon
     enum Type types[3];
     u8 pp[MAX_MON_MOVES];
     u16 hp;
-    u8 level;
+    u16 level;
     u8 friendship;
     u16 maxHP;
     enum Item item;
@@ -368,7 +367,7 @@ struct BattlePokemon
     u32 status1;
     struct Volatiles volatiles;
     u32 otId;
-    u8 metLevel:7;
+    u16 metLevel;
     u8 isShiny:1;
     u8 affectionHearts;
 };
@@ -723,7 +722,6 @@ extern u8 gTriedEvolving;
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
 extern const struct SpeciesInfo gSpeciesInfo[];
-extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u8 gPPUpGetMask[];
 extern const u8 gPPUpClearMask[];
 extern const u8 gPPUpAddValues[];
@@ -742,15 +740,16 @@ void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
 u32 GetMonPersonality(enum Species species, u8 gender, u8 nature, u8 unownLetter);
 bool32 ComputePlayerShinyOdds(u32 personality, u32 value);
-void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId);
-void CreateRandomMon(struct Pokemon *mon, enum Species species, u8 level);
-void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u8 fixedIv);
-void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId);
-void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV);
+enum Species GetRandomizedSpecies(enum Species species);
+void CreateMon(struct Pokemon *mon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId);
+void CreateRandomMon(struct Pokemon *mon, enum Species species, u16 level);
+void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u16 level, u8 fixedIv);
+void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId);
+void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV);
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV);
 void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect);
-void CreateMaleMon(struct Pokemon *mon, enum Species species, u8 level);
-void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u8 level, u32 ivs, u32 personality);
+void CreateMaleMon(struct Pokemon *mon, enum Species species, u16 level);
+void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u16 level, u32 ivs, u32 personality);
 void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
 void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPokemon *src, bool8 lvl50);
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
@@ -760,8 +759,9 @@ enum TrainerClassID GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
 void CalculateMonStats(struct Pokemon *mon);
 void BoxMonToMon(const struct BoxPokemon *src, struct Pokemon *dest);
-u8 GetLevelFromMonExp(struct Pokemon *mon);
-u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon);
+u16 GetLevelFromMonExp(struct Pokemon *mon);
+u16 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon);
+u32 GetExperienceAtLevel(u8 growthRate, u16 level);
 u16 GiveMoveToMon(struct Pokemon *mon, enum Move move);
 u16 GiveMoveToBoxMon(struct BoxPokemon *boxMon, enum Move move);
 u16 GiveMoveToBattleMon(struct BattlePokemon *mon, enum Move move);
@@ -835,6 +835,7 @@ const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species);
 const u16 *GetSpeciesTeachableLearnset(enum Species species);
 const u16 *GetSpeciesEggMoves(enum Species species);
 const struct Evolution *GetSpeciesEvolutions(enum Species species);
+u16 GetFinalEvolution(enum Species species);
 const u16 *GetSpeciesFormTable(enum Species species);
 const struct FormChange *GetSpeciesFormChanges(enum Species species);
 u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex);
@@ -947,6 +948,8 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
 u32 GetRegionalFormByRegion(enum Species species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(enum Species species, u32 currentRegion);
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
+u8 GetMonType1(struct Pokemon *mon);
+u8 GetMonType2(struct Pokemon *mon);
 bool8 ShouldSkipFriendshipChange(void);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);

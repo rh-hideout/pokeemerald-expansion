@@ -38,6 +38,8 @@
 #include "main.h"
 #include "malloc.h"
 #include "m4a.h"
+#include "new_game.h"
+#include "caps.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
@@ -61,6 +63,7 @@
 #include "trainer_pools.h"
 #include "trig.h"
 #include "tv.h"
+#include "ui_birch_case.h"
 #include "util.h"
 #include "wild_encounter.h"
 #include "window.h"
@@ -79,6 +82,7 @@
 #include "constants/trainers.h"
 #include "constants/weather.h"
 #include "cable_club.h"
+#include "start_menu.h"
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -297,6 +301,7 @@ const struct OamData gOamData_BattleSpritePlayerSide =
 static const s8 sCenterToCornerVecXs[8] ={-32, -16, -16, -32, -32};
 
 #include "data/types_info.h"
+#include <stdbool.h>
 
 // [TRAINER_CLASS_XYZ] = { _("name"), <money=5>, <ball=BALL_POKE> }
 const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
@@ -564,7 +569,7 @@ static void CB2_InitBattleInternal(void)
     gBattle_BG3_X = 0;
     gBattle_BG3_Y = 0;
 
-    if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
+    if (!FlagGet(FLAG_DEBUG) || (FlagGet(FLAG_DEBUG) && !gIsDebugBattle))
         gBattleEnvironment = BattleSetup_GetEnvironmentId();
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
@@ -590,7 +595,7 @@ static void CB2_InitBattleInternal(void)
     else
         SetMainCallback2(CB2_HandleStartBattle);
 
-    if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
+    if (!FlagGet(FLAG_DEBUG) || (FlagGet(FLAG_DEBUG) && !gIsDebugBattle))
     {
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
         {
@@ -1836,15 +1841,233 @@ u32 GeneratePersonalityForGender(u32 gender, enum Species species)
         return speciesInfo->genderRatio / 2;
 }
 
+static bool32 IsNewGamePlusDamageMove(u16 move)
+{
+    if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+        return FALSE;
+
+    return GetMoveCategory(move) != DAMAGE_CATEGORY_STATUS;
+}
+
+static bool32 ShouldReplaceMoveForNewGamePlus(u16 move)
+{
+    if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+        return TRUE;
+
+    if (!IsNewGamePlusDamageMove(move))
+        return TRUE;
+
+    if (GetMovePower(move) < 70)
+        return TRUE;
+
+    return FALSE;
+}
+
+static bool32 IsMoveInArray(const u16 *moves, u8 count, u16 move)
+{
+    u8 i;
+
+    for (i = 0; i < count; i++)
+    {
+        if (moves[i] == move)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static u8 GetSpeciesLearnableMoves(u16 species, u16 *moves)
+{
+    u8 numMoves = 0;
+    int i;
+    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+
+    numMoves = GetLevelUpMovesBySpecies(species, moves);
+
+    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+    {
+        if (!IsMoveInArray(moves, numMoves, teachableLearnset[i]))
+            moves[numMoves++] = teachableLearnset[i];
+    }
+
+    return numMoves;
+}
+
+static u8 GetMonPrimaryType(u16 species)
+{
+    u8 primaryType = gSpeciesInfo[species].types[0];
+    u8 secondaryType = gSpeciesInfo[species].types[1];
+
+    if (secondaryType != TYPE_NONE && primaryType == TYPE_NORMAL)
+        return secondaryType;
+
+    return primaryType;
+}
+
+static u16 GetBestNewGamePlusMoveCandidate(u16 species, const u16 *currentMoves, u8 currentMoveCount, const bool32 *typeUsed, u8 preferredCategory, bool32 usePreferredCategory, u8 primaryType, bool32 requirePrimaryType)
+{
+    u16 learnableMoves[256];
+    u8 numLearnableMoves = GetSpeciesLearnableMoves(species, learnableMoves);
+    u16 bestMove = MOVE_NONE;
+    s32 bestScore = -1;
+    u8 i;
+
+    for (i = 0; i < numLearnableMoves; i++)
+    {
+        u16 move = learnableMoves[i];
+
+        if (!IsNewGamePlusDamageMove(move))
+            continue;
+        if (IsMoveInArray(currentMoves, currentMoveCount, move))
+            continue;
+
+        u8 moveType = GetMoveType(move);
+        u8 moveCategory = GetMoveCategory(move);
+        s32 score = GetMovePower(move) * 10;
+
+        if (!usePreferredCategory || moveCategory == preferredCategory)
+            score += 100;
+
+        if (moveType == primaryType)
+            score += 200;
+
+        if (moveType < NUMBER_OF_MON_TYPES && !typeUsed[moveType])
+            score += 50;
+
+        if (requirePrimaryType && moveType != primaryType)
+            continue;
+
+        if (score > bestScore || (score == bestScore && move < bestMove))
+        {
+            bestScore = score;
+            bestMove = move;
+        }
+    }
+
+    return bestMove;
+}
+
+static s8 FindMoveReplacementSlot(const u16 *moves, u8 primaryType, u8 preferredCategory)
+{
+    s8 worstSlot = -1;
+    s32 worstValue = 0x7FFFFFFF;
+    u8 j;
+
+    for (j = 0; j < MAX_MON_MOVES; j++)
+    {
+        u16 move = moves[j];
+
+        if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+            return j;
+        if (!IsNewGamePlusDamageMove(move))
+            return j;
+
+        u8 moveType = GetMoveType(move);
+        u8 moveCategory = GetMoveCategory(move);
+        s32 score = GetMovePower(move) * 10;
+
+        if (moveType == primaryType)
+            score += 100;
+        if (moveCategory == preferredCategory)
+            score += 50;
+
+        if (score < worstValue)
+        {
+            worstValue = score;
+            worstSlot = j;
+        }
+    }
+
+    return worstSlot >= 0 ? worstSlot : 0;
+}
+
+static void AssignNewGamePlusTrainerPokemonMoves(struct Pokemon *mon, u16 *moves)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u8 atk = GetMonData(mon, MON_DATA_ATK, NULL);
+    u8 spatk = GetMonData(mon, MON_DATA_SPATK, NULL);
+    u8 primaryType = GetMonPrimaryType(species);
+    u8 preferredCategory = (atk > spatk) ? DAMAGE_CATEGORY_PHYSICAL : ((spatk > atk) ? DAMAGE_CATEGORY_SPECIAL : DAMAGE_CATEGORY_PHYSICAL);
+    bool32 usePreferredCategory = atk != spatk;
+    bool32 typeUsed[NUMBER_OF_MON_TYPES] = {0};
+    bool32 hasValidPrimaryTypeMove = FALSE;
+    u8 j;
+
+    for (j = 0; j < MAX_MON_MOVES; j++)
+    {
+        u16 move = moves[j];
+
+        if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+            continue;
+
+        if (IsNewGamePlusDamageMove(move))
+            typeUsed[GetMoveType(move)] = TRUE;
+
+        if (!ShouldReplaceMoveForNewGamePlus(move) && GetMoveType(move) == primaryType)
+            hasValidPrimaryTypeMove = TRUE;
+    }
+
+    if (!hasValidPrimaryTypeMove)
+    {
+        for (j = 0; j < MAX_MON_MOVES; j++)
+        {
+            if (ShouldReplaceMoveForNewGamePlus(moves[j]))
+            {
+                u16 candidate = GetBestNewGamePlusMoveCandidate(species, moves, MAX_MON_MOVES, typeUsed, preferredCategory, usePreferredCategory, primaryType, TRUE);
+                if (candidate != MOVE_NONE)
+                {
+                    moves[j] = candidate;
+                    typeUsed[GetMoveType(candidate)] = TRUE;
+                    hasValidPrimaryTypeMove = TRUE;
+                    break;
+                }
+            }
+        }
+
+        if (!hasValidPrimaryTypeMove)
+        {
+            s8 slot = FindMoveReplacementSlot(moves, primaryType, preferredCategory);
+            if (slot >= 0)
+            {
+                u16 candidate = GetBestNewGamePlusMoveCandidate(species, moves, MAX_MON_MOVES, typeUsed, preferredCategory, usePreferredCategory, primaryType, TRUE);
+                if (candidate != MOVE_NONE)
+                {
+                    moves[slot] = candidate;
+                    typeUsed[GetMoveType(candidate)] = TRUE;
+                    hasValidPrimaryTypeMove = TRUE;
+                }
+            }
+        }
+    }
+
+    for (j = 0; j < MAX_MON_MOVES; j++)
+    {
+        if (ShouldReplaceMoveForNewGamePlus(moves[j]))
+        {
+            u16 candidate = GetBestNewGamePlusMoveCandidate(species, moves, MAX_MON_MOVES, typeUsed, preferredCategory, usePreferredCategory, primaryType, FALSE);
+            if (candidate != MOVE_NONE)
+            {
+                moves[j] = candidate;
+                typeUsed[GetMoveType(candidate)] = TRUE;
+            }
+        }
+    }
+}
+
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry)
 {
     bool32 noMoveSet = TRUE;
     u32 j;
+    u16 assignedMoves[MAX_MON_MOVES];
+    
+    if (gSaveBlock2Ptr->newGamePlus > 0)
+        AssignNewGamePlusTrainerPokemonMoves(mon, assignedMoves);
 
     for (j = 0; j < MAX_MON_MOVES; ++j)
     {
         if (partyEntry->moves[j] != MOVE_NONE)
             noMoveSet = FALSE;
+        assignedMoves[j] = partyEntry->moves[j];
     }
     if (noMoveSet)
     {
@@ -1855,23 +2078,212 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 
     for (j = 0; j < MAX_MON_MOVES; ++j)
     {
-        u32 pp = GetMovePP(partyEntry->moves[j]);
-        SetMonData(mon, MON_DATA_MOVE1 + j, &partyEntry->moves[j]);
+        u32 pp = GetMovePP(assignedMoves[j]);
+        SetMonData(mon, MON_DATA_MOVE1 + j, &assignedMoves[j]);
         SetMonData(mon, MON_DATA_PP1 + j, &pp);
     }
 }
 
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 halfTeam, u32 battleTypeFlags)
+static u16 GetMegaStoneForSpecies(u16 species)
+{
+    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+    u32 i;
+
+    if (formChanges == NULL)
+        return ITEM_NONE;
+
+    for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+    {
+        if (formChanges[i].method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM)
+            return formChanges[i].param1;
+    }
+
+    return ITEM_NONE;
+}
+
+static u16 GetTypeBasedZCrystal(u8 type)
+{
+    switch (type)
+    {
+    case TYPE_NORMAL:  return ITEM_NORMALIUM_Z;
+    case TYPE_FIGHTING: return ITEM_FIGHTINIUM_Z;
+    case TYPE_FLYING:  return ITEM_FLYINIUM_Z;
+    case TYPE_POISON:  return ITEM_POISONIUM_Z;
+    case TYPE_GROUND:  return ITEM_GROUNDIUM_Z;
+    case TYPE_ROCK:    return ITEM_ROCKIUM_Z;
+    case TYPE_BUG:     return ITEM_BUGINIUM_Z;
+    case TYPE_GHOST:   return ITEM_GHOSTIUM_Z;
+    case TYPE_STEEL:   return ITEM_STEELIUM_Z;
+    case TYPE_FIRE:    return ITEM_FIRIUM_Z;
+    case TYPE_WATER:   return ITEM_WATERIUM_Z;
+    case TYPE_GRASS:   return ITEM_GRASSIUM_Z;
+    case TYPE_ELECTRIC:return ITEM_ELECTRIUM_Z;
+    case TYPE_PSYCHIC: return ITEM_PSYCHIUM_Z;
+    case TYPE_ICE:     return ITEM_ICIUM_Z;
+    case TYPE_DRAGON:  return ITEM_DRAGONIUM_Z;
+    case TYPE_DARK:    return ITEM_DARKINIUM_Z;
+    case TYPE_FAIRY:   return ITEM_FAIRIUM_Z;
+    default:          return ITEM_NONE;
+    }
+}
+
+static u16 GetRandomMonZCrystal(struct Pokemon *mon, rng_value_t *rngState)
+{
+    u16 candidates[MAX_MON_MOVES];
+    bool32 typeSeen[NUMBER_OF_MON_TYPES] = {0};
+    u8 candidateCount = 0;
+    u8 i;
+    u16 move;
+    u16 item;
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        move = GetMonData(mon, MON_DATA_MOVE1 + i, NULL);
+        if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
+            continue;
+
+        item = GetTypeBasedZCrystal(GetMoveType(move));
+        if (item == ITEM_NONE)
+            continue;
+
+        u8 type = GetMoveType(move);
+        if (type >= NUMBER_OF_MON_TYPES || typeSeen[type])
+            continue;
+
+        typeSeen[type] = TRUE;
+        candidates[candidateCount++] = item;
+    }
+
+    if (candidateCount == 0)
+        return ITEM_NONE;
+
+    return candidates[LocalRandom(rngState) % candidateCount];
+}
+
+static void ApplyNewGamePlusHoldItem(struct Pokemon *mon, u16 species, rng_value_t *rngState)
+{
+    u16 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+    u8 ngpRuns = gSaveBlock2Ptr->newGamePlus;
+    u8 chance = ngpRuns > 20 ? 100 : (ngpRuns * 5);
+    u16 newItem;
+
+    if (heldItem != ITEM_NONE || ngpRuns == 0)
+        return;
+
+    if (LocalRandom(rngState) % 100 >= chance)
+        return;
+
+    newItem = GetMegaStoneForSpecies(species);
+    if (newItem != ITEM_NONE)
+    {
+        SetMonData(mon, MON_DATA_HELD_ITEM, &newItem);
+        return;
+    }
+
+    newItem = GetRandomMonZCrystal(mon, rngState);
+    if (newItem != ITEM_NONE)
+        SetMonData(mon, MON_DATA_HELD_ITEM, &newItem);
+}
+
+// Returns the level adjustment for a given base level and difficulty
+static s8 GetDifficultyLevelAdjustment(u16 baseLevel, u8 difficulty)
+{
+    // Clamp baseLevel between 5 and 60
+    if (baseLevel < 5)
+        baseLevel = 5;
+    if (baseLevel > 60)
+        baseLevel = 60;
+
+    // Linear scaling: 1 at level 5, 5 at level 60
+    u8 diff = 1 + ((baseLevel - 5) * 4) / 55; // 4 = 5-1, 55 = 60-5
+
+    switch (difficulty)
+    {
+    case 0: // Easy
+        return -diff;
+    case 2: // Hard
+        return diff;
+    default: // Normal
+        return 0;
+    }
+}
+
+// Linear scaling: 30 at level 1, 252 at level 60
+static u16 GetMaxRandomizedEVForLevel(u16 level)
+{
+    if (level < 1)
+        level = 1;
+    if (level > 60)
+        level = 60;
+    return 30 + ((level - 1) * (252 - 30)) / (60 - 1);
+}
+
+static void SetTrainerMonEVsByHighestBaseStats(struct Pokemon *mon, u16 species)
+{
+    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
+    u16 evs[NUM_STATS] = {0};
+    u16 baseStats[NUM_STATS];
+    s16 statOrder[NUM_STATS];
+    u16 remaining = MAX_TOTAL_EVS;
+    int i, j;
+
+    baseStats[STAT_HP] = speciesInfo->baseHP;
+    baseStats[STAT_ATK] = speciesInfo->baseAttack;
+    baseStats[STAT_DEF] = speciesInfo->baseDefense;
+    baseStats[STAT_SPEED] = speciesInfo->baseSpeed;
+    baseStats[STAT_SPATK] = speciesInfo->baseSpAttack;
+    baseStats[STAT_SPDEF] = speciesInfo->baseSpDefense;
+
+    for (i = 0; i < NUM_STATS; i++)
+        statOrder[i] = i;
+
+    for (i = 0; i < NUM_STATS - 1; i++)
+    {
+        for (j = i + 1; j < NUM_STATS; j++)
+        {
+            if (baseStats[statOrder[j]] > baseStats[statOrder[i]] ||
+               (baseStats[statOrder[j]] == baseStats[statOrder[i]] && statOrder[j] < statOrder[i]))
+            {
+                s16 tmp = statOrder[i];
+                statOrder[i] = statOrder[j];
+                statOrder[j] = tmp;
+            }
+        }
+    }
+
+    for (i = 0; i < NUM_STATS && remaining > 0; i++)
+    {
+        u16 allocation = remaining;
+        if (allocation > MAX_PER_STAT_EVS)
+            allocation = MAX_PER_STAT_EVS;
+
+        evs[statOrder[i]] = allocation;
+        remaining -= allocation;
+    }
+
+    for (i = 0; i < NUM_STATS; i++)
+        SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
+}
+
+u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
     u32 personalityValue;
-    u8 monsCount;
+    u8 monsCount = 0;
+    u8 startIndex = 0;
+    u8 actualCount = 0;
+    u8 maxPartySize = PARTY_SIZE;
+    bool isNGPlus = gSaveBlock2Ptr->newGamePlus > 0;
+
+    if (maxPartySize > PARTY_SIZE)
+        maxPartySize = PARTY_SIZE;
+
     if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
                                                                         | BATTLE_TYPE_TRAINER_HILL)))
     {
         ZeroPartyMons(party);
 
-        if (halfTeam)
+        if (firstTrainer)
         {
             if (trainer->partySize > PARTY_SIZE / 2)
                 monsCount = PARTY_SIZE / 2;
@@ -1883,8 +2295,131 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             monsCount = trainer->partySize;
         }
 
+        // New Game+: Handle two-opponent battles with party size capping
+        if (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && isNGPlus)
+        {
+            if (monsCount > maxPartySize / 2)
+                monsCount = maxPartySize / 2;
+        }
+        else if (!firstTrainer && monsCount > maxPartySize)
+        {
+            monsCount = maxPartySize;
+        }
+
         u32 monIndices[monsCount];
         DoTrainerPartyPool(trainer, monIndices, monsCount, battleTypeFlags);
+
+        // New Game+: For second trainer in two-opponent, trim weakest if over capacity
+        if (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !firstTrainer && isNGPlus)
+        {
+            for (startIndex = 0; startIndex < maxPartySize; startIndex++)
+            {
+                if (GetMonData(&party[startIndex], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+                    break;
+            }
+            if (startIndex + monsCount > maxPartySize)
+            {
+                u8 keepCount = maxPartySize - startIndex;
+                struct MonEntry {
+                    u32 idx;
+                    u32 total;
+                } entries[PARTY_SIZE];
+
+                for (u8 j = 0; j < monsCount; j++)
+                {
+                    u16 species = trainer->party[monIndices[j]].species;
+                    entries[j].idx = j;
+                    entries[j].total = gSpeciesInfo[species].baseHP + gSpeciesInfo[species].baseAttack + gSpeciesInfo[species].baseDefense + gSpeciesInfo[species].baseSpeed + gSpeciesInfo[species].baseSpAttack + gSpeciesInfo[species].baseSpDefense;
+                }
+
+                // Bubble sort by total stats descending (strongest first)
+                for (u8 a = 0; a + 1 < monsCount; a++)
+                {
+                    for (u8 b = 0; b + 1 < monsCount - a; b++)
+                    {
+                        if (entries[b].total < entries[b + 1].total || (entries[b].total == entries[b + 1].total && entries[b].idx > entries[b + 1].idx))
+                        {
+                            struct MonEntry temp = entries[b];
+                            entries[b] = entries[b + 1];
+                            entries[b + 1] = temp;
+                        }
+                    }
+                }
+
+                for (u8 j = 0; j < keepCount; j++)
+                {
+                    monIndices[j] = monIndices[entries[j].idx];
+                }
+                monsCount = keepCount;
+            }
+        }
+
+        // New Game+: Determine theme type and which mons to replace
+        bool to_replace[PARTY_SIZE] = {};
+        u8 themeType = TYPE_MYSTERY;
+        if (isNGPlus)
+        {
+            u32 effective_size = trainer->partySize + gSaveBlock2Ptr->newGamePlus;
+            u32 num_to_replace = 0;
+
+            // Count type frequencies for theme detection
+            u8 typeCounts[NUMBER_OF_MON_TYPES] = {0};
+            u8 maxCount = 0;
+            for (u32 i = 0; i < monsCount; i++)
+            {
+                u16 species = GetFinalEvolution(trainer->party[monIndices[i]].species);
+                u8 type = GetMonPrimaryType(species);
+                typeCounts[type]++;
+                if (typeCounts[type] > maxCount)
+                {
+                    maxCount = typeCounts[type];
+                    themeType = type;
+                }
+            }
+
+            // Calculate how many mons to replace with NG+ additions
+            if (effective_size > maxPartySize)
+            {
+                num_to_replace = effective_size - maxPartySize;
+                if (num_to_replace > maxPartySize)
+                    num_to_replace = maxPartySize;
+            }
+
+            // Select weakest mons for replacement via stat total
+            if (num_to_replace > 0)
+            {
+                typedef struct {
+                    u32 index;
+                    u32 total;
+                } StatEntry;
+                StatEntry stats[PARTY_SIZE];
+                for (u32 i = 0; i < monsCount; i++)
+                {
+                    u16 species = trainer->party[monIndices[i]].species;
+                    u32 total = gSpeciesInfo[species].baseHP + gSpeciesInfo[species].baseAttack + gSpeciesInfo[species].baseDefense + gSpeciesInfo[species].baseSpeed + gSpeciesInfo[species].baseSpAttack + gSpeciesInfo[species].baseSpDefense;
+                    stats[i].index = i;
+                    stats[i].total = total;
+                }
+                // Bubble sort by total ascending (weakest first)
+                for (u32 i = 0; i < monsCount - 1; i++)
+                {
+                    for (u32 j = 0; j < monsCount - i - 1; j++)
+                    {
+                        if (stats[j].total > stats[j+1].total)
+                        {
+                            StatEntry temp = stats[j];
+                            stats[j] = stats[j+1];
+                            stats[j+1] = temp;
+                        }
+                    }
+                }
+                u32 replace_count = num_to_replace < monsCount ? num_to_replace : monsCount;
+                for (u32 k = 0; k < replace_count; k++)
+                {
+                    to_replace[stats[k].index] = true;
+                }
+            }
+        }
 
         for (s32 i = 0; i < monsCount; i++)
         {
@@ -1915,20 +2450,124 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 otId.method = OT_ID_PRESET;
                 otId.value = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, personalityValue, otId);
+
+            // New Game+: Determine species (randomized or original)
+            u16 species;
+            if (to_replace[i] && isNGPlus)
+            {
+                u32 trainerId = GetTrainerId(gSaveBlock2Ptr->playerTrainerId);
+                rng_value_t rngState = LocalRandomSeed(trainerId + monIndex + GetNewGamePlusLevelOffset());
+                u32 attempts = 0;
+                do
+                {
+                    species = LocalRandom(&rngState) % NUM_SPECIES;
+                    u16 speciesFinal = GetFinalEvolution(species);
+                    if (gSpeciesInfo[species].isSubLegendary || gSpeciesInfo[species].isMythical || gSpeciesInfo[species].isParadox)
+                    {
+                        // Allow legendaries/mythicals/paradox only if they match theme
+                        if (themeType == TYPE_MYSTERY || GetMonPrimaryType(speciesFinal) == themeType)
+                            break;
+                    }
+                    attempts++;
+                    if (attempts > 500 && themeType != TYPE_MYSTERY)
+                        themeType = TYPE_MYSTERY;
+                } while (TRUE);
+            }
+            else
+            {
+                species = partyData[monIndex].species;
+            }
+
+            // Apply New Game+ evolution to final form
+            if (isNGPlus)
+                species = GetFinalEvolution(species);
+
+            // New Game+: Difficulty-based level adjustment + NG+ level offset
+            u16 baseLevel = partyData[monIndex].lvl;
+            s8 adjustment = GetDifficultyLevelAdjustment(baseLevel, gSaveBlock1Ptr->difficulty);
+            u16 newLevel = baseLevel + adjustment;
+            newLevel = min((u32)newLevel + GetNewGamePlusLevelOffset(), MAX_LEVEL);
+
+            if (newLevel < 1)
+                newLevel = 1;
+            else if (newLevel > MAX_LEVEL)
+                newLevel = MAX_LEVEL;
+
+            CreateMon(&party[i], species, newLevel, personalityValue, otId);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
-            CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
-            SetMonData(&party[i], MON_DATA_IVS, &(partyData[monIndex].iv));
-            if (partyData[monIndex].ev != NULL)
+            // New Game+: Apply hold item modifications
+            if (isNGPlus)
             {
-                SetMonData(&party[i], MON_DATA_HP_EV, &(partyData[monIndex].ev[0]));
-                SetMonData(&party[i], MON_DATA_ATK_EV, &(partyData[monIndex].ev[1]));
-                SetMonData(&party[i], MON_DATA_DEF_EV, &(partyData[monIndex].ev[2]));
-                SetMonData(&party[i], MON_DATA_SPATK_EV, &(partyData[monIndex].ev[3]));
-                SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[monIndex].ev[4]));
-                SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[monIndex].ev[5]));
+                u32 trainerId = GetTrainerId(gSaveBlock2Ptr->playerTrainerId);
+                rng_value_t holdItemRngState = LocalRandomSeed(trainerId + monIndex + GetNewGamePlusLevelOffset());
+                ApplyNewGamePlusHoldItem(&party[i], species, &holdItemRngState);
             }
+
+            // New Game+: Set EVs by highest base stats
+            if (isNGPlus)
+                SetTrainerMonEVsByHighestBaseStats(&party[i], species);
+
+            // Move randomization (independent of species randomization)
+            if (FlagGet(FLAG_RANDOMIZE_MOVES))
+            {
+                u16 species = partyData[monIndex].species;
+                u16 randomMoves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
+                u8 moveCount = 0;
+
+                // Collect unique random moves from non-empty original slots
+                for (u8 moveIdx = 0; moveIdx < MAX_MON_MOVES; moveIdx++)
+                {
+                    if (partyData[monIndex].moves[moveIdx] == MOVE_NONE)
+                        continue;
+
+                    u16 randomMove = GetRandomMove(species, partyData[monIndex].moves[moveIdx]);
+
+                    // Check for duplicates before adding
+                    bool32 isDuplicate = FALSE;
+                    for (u8 j = 0; j < moveCount; j++)
+                    {
+                        if (randomMoves[j] == randomMove)
+                        {
+                            isDuplicate = TRUE;
+                            break;
+                        }
+                    }
+
+                    if (!isDuplicate && moveCount < MAX_MON_MOVES)
+                    {
+                        randomMoves[moveCount++] = randomMove;
+                    }
+                }
+
+                for (u8 moveIdx = 0; moveIdx < MAX_MON_MOVES; moveIdx++)
+                {
+                    u32 pp = GetMovePP(randomMoves[moveIdx]);
+                    SetMonData(&party[i], MON_DATA_MOVE1 + moveIdx, &randomMoves[moveIdx]);
+                    SetMonData(&party[i], MON_DATA_PP1 + moveIdx, &pp);
+                }
+            }
+            else
+            {
+                CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
+            }
+
+            // IVs and EVs (only if not randomizing)
+            if (!FlagGet(FLAG_RANDOMIZE_MON))
+            {
+                SetMonData(&party[i], MON_DATA_IVS, &(partyData[monIndex].iv));
+                if (partyData[monIndex].ev != NULL)
+                {
+                    SetMonData(&party[i], MON_DATA_HP_EV, &(partyData[monIndex].ev[0]));
+                    SetMonData(&party[i], MON_DATA_ATK_EV, &(partyData[monIndex].ev[1]));
+                    SetMonData(&party[i], MON_DATA_DEF_EV, &(partyData[monIndex].ev[2]));
+                    SetMonData(&party[i], MON_DATA_SPATK_EV, &(partyData[monIndex].ev[3]));
+                    SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[monIndex].ev[4]));
+                    SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[monIndex].ev[5]));
+                }
+            }
+
+            // Ability handling
             if (partyData[monIndex].ability != ABILITY_NONE)
             {
                 const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
@@ -1951,20 +2590,28 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
+
+            // Ball handling
             if (partyData[monIndex].ball < POKEBALL_COUNT)
             {
                 ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
             }
+
+            // Nickname
             if (partyData[monIndex].nickname != NULL)
             {
                 SetMonData(&party[i], MON_DATA_NICKNAME, partyData[monIndex].nickname);
             }
+
+            // Shiny flag
             if (partyData[monIndex].isShiny)
             {
                 bool32 data = TRUE;
                 SetMonData(&party[i], MON_DATA_IS_SHINY, &data);
             }
+
+            // Dynamax level
             if (partyData[monIndex].dynamaxLevel > 0)
             {
                 u32 data = partyData[monIndex].dynamaxLevel;
@@ -1972,17 +2619,22 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                     gBattleStruct->opponentMonCanDynamax |= 1 << i;
                 SetMonData(&party[i], MON_DATA_DYNAMAX_LEVEL, &data);
             }
+
+            // Gigantamax factor
             if (partyData[monIndex].gigantamaxFactor)
             {
                 u32 data = partyData[monIndex].gigantamaxFactor;
                 SetMonData(&party[i], MON_DATA_GIGANTAMAX_FACTOR, &data);
             }
-            if (partyData[monIndex].teraType > 0)
+
+            // Tera type (only if not randomizing types)
+            if (partyData[monIndex].teraType > 0 && !FlagGet(FLAG_RANDOMIZE_TYPE))
             {
                 gBattleStruct->opponentMonCanTera |= 1 << i;
                 enum Type data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
+
             CalculateMonStats(&party[i]);
 
             if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == -1)
@@ -1993,7 +2645,168 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
         }
     }
 
-    return trainer->partySize;
+    actualCount = startIndex + monsCount;
+
+    // New Game+: Add extra Pokémon for ace trainers and party size overflow
+    if (isNGPlus && (battleTypeFlags & BATTLE_TYPE_TRAINER) && startIndex + monsCount < maxPartySize)
+    {
+        u8 extraCount = 0;
+        if (startIndex + monsCount < maxPartySize)
+            extraCount = min(gSaveBlock2Ptr->newGamePlus, maxPartySize - (startIndex + monsCount));
+        u8 numAces = 0;
+        if (trainer->aiFlags & AI_FLAG_DOUBLE_ACE_POKEMON)
+            numAces = 2;
+        else if (trainer->aiFlags & AI_FLAG_ACE_POKEMON)
+            numAces = 1;
+        u16 usedSpecies[PARTY_SIZE];
+        u8 usedTypes[PARTY_SIZE];
+        s32 i;
+        for (i = 0; i < startIndex + monsCount; i++)
+        {
+            usedSpecies[i] = GetFinalEvolution(GetMonData(&party[i], MON_DATA_SPECIES, NULL));
+            usedTypes[i] = GetMonPrimaryType(usedSpecies[i]);
+        }
+
+        // Create randomization seed based on original party
+        u32 seed = 0;
+        for (i = 0; i < startIndex + monsCount; i++)
+        {
+            seed += usedSpecies[i];
+        }
+        u8 typeCounts[NUMBER_OF_MON_TYPES] = {0};
+        for (i = 0; i < startIndex + monsCount; i++)
+        {
+            typeCounts[usedTypes[i]]++;
+        }
+        u8 themeType = TYPE_MYSTERY;
+        u8 maxCount = 0;
+        for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
+        {
+            if (typeCounts[i] > maxCount)
+            {
+                maxCount = typeCounts[i];
+                themeType = i;
+            }
+        }
+        u16 level = GetMonData(&party[startIndex + monsCount - 1], MON_DATA_LEVEL, NULL);
+        if (extraCount > 0 && numAces > 0)
+        {
+            // Shift aces to the end
+            for (u8 i = 0; i < numAces; i++)
+            {
+                party[startIndex + monsCount + extraCount - numAces + i] = party[startIndex + monsCount - numAces + i];
+            }
+        }
+        rng_value_t rngState = LocalRandomSeed(seed + GetNewGamePlusLevelOffset());
+        for (u8 extra = 0; extra < extraCount; extra++)
+        {
+            u16 chosenSpecies = SPECIES_NONE;
+            u8 attempts = 0;
+            while (chosenSpecies == SPECIES_NONE && attempts < 100)
+            {
+                u16 candidate = GetRandomBaseSpecies(&rngState);
+                u16 candidateFinal = GetFinalEvolution(candidate);
+
+                if (
+                    gSpeciesInfo[candidateFinal].isSubLegendary
+                    || gSpeciesInfo[candidateFinal].isMythical
+                    || gSpeciesInfo[candidateFinal].isGigantamax
+                    || gSpeciesInfo[candidateFinal].isUltraBeast
+                    || gSpeciesInfo[candidateFinal].isParadox
+                    || gSpeciesInfo[candidateFinal].isTotem
+                )
+                {
+                    attempts++;
+                    continue;
+                }
+                bool8 alreadyInParty = FALSE;
+                for (u8 k = 0; k < startIndex + monsCount + extra; k++)
+                {
+                    if (usedSpecies[k] == candidateFinal)
+                    {
+                        alreadyInParty = TRUE;
+                        break;
+                    }
+                }
+                if (alreadyInParty)
+                {
+                    attempts++;
+                    continue;
+                }
+                if (GetMonPrimaryType(candidate) != themeType)
+                {
+                    attempts++;
+                    continue;
+                }
+                chosenSpecies = candidateFinal;
+            }
+            if (chosenSpecies == SPECIES_NONE)
+            {
+                // Fallback: check for any valid pokemon
+                for (u16 candidate = 1; candidate < NUM_SPECIES; candidate++)
+                {
+                    u16 candidateFinal = GetFinalEvolution(candidate);
+
+                    if (
+                        gSpeciesInfo[candidateFinal].isSubLegendary
+                        || gSpeciesInfo[candidateFinal].isMythical
+                        || gSpeciesInfo[candidateFinal].isGigantamax
+                        || gSpeciesInfo[candidateFinal].isUltraBeast
+                        || gSpeciesInfo[candidateFinal].isParadox
+                        || gSpeciesInfo[candidateFinal].isTotem
+                    )
+                        continue;
+
+                    bool8 alreadyInParty = FALSE;
+                    for (u8 k = 0; k < startIndex + monsCount + extra; k++)
+                    {
+                        if (usedSpecies[k] == candidateFinal)
+                        {
+                            alreadyInParty = TRUE;
+                            break;
+                        }
+                    }
+
+                    if (alreadyInParty)
+                        continue;
+
+                    if (GetMonPrimaryType(candidateFinal) != themeType)
+                        continue;
+
+                    chosenSpecies = candidateFinal;
+                    break;
+                }
+            }
+            u32 personalityValue = Random32();
+            u8 selectedMonIndex = startIndex + monsCount - numAces + extra;
+            
+            CreateMon(&party[selectedMonIndex], chosenSpecies, level, personalityValue, OTID_STRUCT_RANDOM_NO_SHINY);
+            SetTrainerMonEVsByHighestBaseStats(&party[selectedMonIndex], chosenSpecies);
+            GiveMonInitialMoveset(&party[selectedMonIndex]);
+            u16 moves[MAX_MON_MOVES];
+            u8 j;
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                moves[j] = GetMonData(&party[selectedMonIndex], MON_DATA_MOVE1 + j, NULL);
+            }
+            AssignNewGamePlusTrainerPokemonMoves(&party[selectedMonIndex], moves);
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                u32 pp = GetMovePP(moves[j]);
+                SetMonData(&party[selectedMonIndex], MON_DATA_MOVE1 + j, &moves[j]);
+                SetMonData(&party[selectedMonIndex], MON_DATA_PP1 + j, &pp);
+            }
+            CalculateMonStats(&party[selectedMonIndex]);
+            usedSpecies[startIndex + monsCount + extra] = chosenSpecies;
+            usedTypes[startIndex + monsCount + extra] = GetMonPrimaryType(chosenSpecies);
+        }
+        actualCount += extraCount;
+    }
+
+    if (actualCount == 0)
+        actualCount = startIndex + monsCount;
+
+    return actualCount;
 }
 
 static enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
@@ -2004,7 +2817,7 @@ static enum BattleTrainer GetBattlerTrainerFromParty(struct Pokemon *party)
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
     u8 retVal;
-    bool32 halfTeam = (BattleSideHasTwoTrainers(GetBattlerTrainerFromParty(party) & BIT_SIDE) && !AreMultiPartiesFullTeams());
+    bool32 firstTrainer = (BattleSideHasTwoTrainers(GetBattlerTrainerFromParty(party) & BIT_SIDE) && !AreMultiPartiesFullTeams());
 
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
@@ -2020,11 +2833,11 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
         if (tempTrainer.partySize == 0)
             tempTrainer.partySize = origTrainer->partySize;
 
-        retVal = CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), halfTeam, gBattleTypeFlags);
+        retVal = CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), firstTrainer, gBattleTypeFlags);
     }
     else
     {
-        retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), halfTeam, gBattleTypeFlags);
+        retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
     }
     return retVal;
 }
@@ -2985,7 +3798,7 @@ static void ClearSetBScriptingStruct(void)
     memset(&gBattleScripting, 0, sizeof(gBattleScripting));
 
     gBattleScripting.windowsType = temp;
-    gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
+    gBattleScripting.battleStyle = ((FlagGet(FLAG_AI_BATTLES) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)) || (FlagGet(FLAG_AI_WILD_BATTLES) && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))) ? TRUE : gSaveBlock2Ptr->optionsBattleStyle;
     #if TESTING
     gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
     #endif
@@ -3269,10 +4082,8 @@ void FaintClearSetData(enum BattlerId battler)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
-    enum Species originalSpecies = gBattleMons[battler].volatiles.transformedMonSpecies;
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
     gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
-    gBattleMons[battler].volatiles.transformedMonSpecies = originalSpecies; // Also keep transformed species for ev and exp calculation
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
@@ -3360,9 +4171,35 @@ void FaintClearSetData(enum BattlerId battler)
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
     }
 
-    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);
-    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;
+    // Apply type randomization if enabled
+    {
+        u8 type1, type2;
+        u8 originalType1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
+        u8 originalType2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
+        bool8 isOriginalDualType = (originalType2 != TYPE_NONE && originalType2 != originalType1);
+
+        if (FlagGet(FLAG_RANDOMIZE_TYPE))
+        {
+            type1 = GetRandomType(gBattleMons[battler].species, 0);
+            // Only randomize type2 if the original species had a dual type
+            if (isOriginalDualType)
+            {
+                type2 = GetRandomType(gBattleMons[battler].species, 1);
+            }
+            else
+            {
+                type2 = type1;
+            }
+        }
+        else
+        {
+            type1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
+            type2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
+        }
+        gBattleMons[battler].types[0] = type1;
+        gBattleMons[battler].types[1] = type2;
+        gBattleMons[battler].types[2] = TYPE_MYSTERY;
+    }
 
     Ai_UpdateFaintData(battler);
     TryBattleFormChange(battler, FORM_CHANGE_FAINT, GetBattlerAbility(battler));
@@ -3432,6 +4269,51 @@ static void DoBattleIntro(void)
                         gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
                 }
                 #endif
+
+                // Apply type randomization if enabled
+                {
+                    u8 type1, type2;
+                    u8 originalType1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
+                    u8 originalType2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
+                    bool8 isOriginalDualType = (originalType2 != TYPE_NONE && originalType2 != originalType1);
+
+                    if (FlagGet(FLAG_RANDOMIZE_TYPE))
+                    {
+                        type1 = GetRandomType(gBattleMons[battler].species, 0);
+                        // Only randomize type2 if the original species had a dual type
+                        if (isOriginalDualType)
+                        {
+                            type2 = GetRandomType(gBattleMons[battler].species, 1);
+                        }
+                        else
+                        {
+                            type2 = type1;
+                        }
+                    }
+                    else
+                    {
+                        type1 = gSpeciesInfo[gBattleMons[battler].species].types[0];
+                        type2 = gSpeciesInfo[gBattleMons[battler].species].types[1];
+                    }
+                    gBattleMons[battler].types[0] = type1;
+                    gBattleMons[battler].types[1] = type2;
+                    gBattleMons[battler].types[2] = TYPE_MYSTERY;
+                }
+
+                // Apply move randomization if enabled
+                if (FlagGet(FLAG_RANDOMIZE_MOVES))
+                {
+                    u32 moveIdx;
+                    for (moveIdx = 0; moveIdx < MAX_MON_MOVES; moveIdx++)
+                    {
+                        if (gBattleMons[battler].moves[moveIdx] != MOVE_NONE)
+                        {
+                            u16 originalMove = gBattleMons[battler].moves[moveIdx];
+                            gBattleMons[battler].moves[moveIdx] = GetRandomMove(gBattleMons[battler].species, originalMove);
+                            gBattleMons[battler].pp[moveIdx] = GetMovePP(gBattleMons[battler].moves[moveIdx]);
+                        }
+                    }
+                }
             }
 
             // Draw sprite.
@@ -3829,7 +4711,6 @@ static void TryDoEventsBeforeFirstTurn(void)
         }
         TurnValuesCleanUp(FALSE);
         memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
-        memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
         BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
         AssignUsableGimmicks();
         SetShellSideArmCategory();
@@ -3845,6 +4726,8 @@ static void TryDoEventsBeforeFirstTurn(void)
         gBattleScripting.moveendState = 0;
         gBattleStruct->eventState.faintedAction = 0;
         gBattleStruct->eventState.endTurn = 0;
+
+        memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
 
         if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         {
@@ -3930,7 +4813,6 @@ bool32 EndTurnEvents(void) // Called from Battle Script
         gBattleMons[battler].volatiles.electrified = FALSE;
         gBattleMons[battler].volatiles.flinched = FALSE;
         gBattleMons[battler].volatiles.powder = FALSE;
-        memset(&gQueuedStatBoosts[battler], 0, sizeof(struct QueuedStatBoost));
 
         if (gBattleStruct->battlerState[battler].stompingTantrumTimer > 0)
             gBattleStruct->battlerState[battler].stompingTantrumTimer--;
@@ -4085,7 +4967,7 @@ static void HandleTurnActionSelectionState(void)
         case STATE_TURN_START_RECORD: // Recorded battle related action on start of every turn.
             RecordedBattle_CopyBattlerMoves(battler);
             gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
-            bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
+            bool32 isAiBattler = (((gBattleTypeFlags & BATTLE_TYPE_HAS_AI) || IsWildMonSmart() || IsPlayerAiControlled())) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
             if (isAiBattler)
             {
                 ComputeAiBattlerDecisions(battler); // Do AI score computations here so we can use them in AI_TrySwitchOrUseItem
@@ -4108,6 +4990,10 @@ static void HandleTurnActionSelectionState(void)
                 }
                 else
                 {
+                    // Note: when AI is controlling the player, action selection still goes through
+                    // BtlController_EmitChooseAction below so PlayerHandleChooseAction can route the
+                    // action/move choice through the same pipeline used for AI-controlled opponents,
+                    // which is what actually records the AI's chosen move.
                     if (gBattleMons[battler].volatiles.multipleTurns
                         || gBattleMons[battler].volatiles.rechargeTimer > 0)
                     {
@@ -4405,6 +5291,27 @@ static void HandleTurnActionSelectionState(void)
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
                             gBattleStruct->chosenMovePositions[battler] = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
                             gChosenMoveByBattler[battler] = GetBattlerChosenMove(battler);
+
+                            // Get the actual move to use (apply randomization if enabled)
+                            u16 moveId;
+                            if (FlagGet(FLAG_RANDOMIZE_MOVES))
+                            {
+                                u16 originalMove = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+                                if (originalMove != MOVE_NONE)
+                                {
+                                    moveId = GetRandomMove(gBattleMons[battler].species, originalMove);
+                                }
+                                else
+                                {
+                                    moveId = originalMove;
+                                }
+                            }
+                            else
+                            {
+                                moveId = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+                            }
+                            gChosenMoveByBattler[battler] = moveId;
+
                             gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                             if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
@@ -5021,6 +5928,11 @@ static void SetActionsAndBattlersTurnOrder(void)
     gBattleScripting.battler = 0;
 }
 
+u16 GetCurrentMapId(void)
+{
+    return gSaveBlock1Ptr->location.mapNum;
+}
+
 static void TurnValuesCleanUp(bool8 var0)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
@@ -5031,6 +5943,7 @@ static void TurnValuesCleanUp(bool8 var0)
             gProtectStructs[i].quash = FALSE;
             gProtectStructs[i].usedCustapBerry = FALSE;
             gProtectStructs[i].quickDraw = FALSE;
+            memset(&gQueuedStatBoosts[i], 0, sizeof(struct QueuedStatBoost));
         }
         else
         {
@@ -5575,7 +6488,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
     {
         gIsFishingEncounter = FALSE;
         gIsSurfingEncounter = FALSE;
-        if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
+        if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT || gBattleOutcome == B_OUTCOME_RAN))
         {
             IncrementDexNavChain();
             TryIncrementSpeciesSearchLevel();
@@ -5695,11 +6608,17 @@ static void ReturnFromBattleToOverworld(void)
         if ((gBattleOutcome == B_OUTCOME_WON) || gBattleOutcome == B_OUTCOME_CAUGHT ||
             gBattleOutcome == B_OUTCOME_DREW)
 #endif
-            SetRoamerInactive(gEncounteredRoamerIndex);
+            // CUSTOM - Roamers now persist even when fainted, just respawn at full health
+            // SetRoamerInactive(gEncounteredRoamerIndex);
+            if (gBattleOutcome == B_OUTCOME_CAUGHT) {
+                NextRoamer(gEncounteredRoamerIndex);
+            }
     }
 
     m4aSongNumStop(SE_LOW_HEALTH);
     SetMainCallback2(gMain.savedCallback);
+    // After every battle, move all roamer locations
+    MoveAllRoamersToOtherLocationSets();
 }
 
 void RunBattleScriptCommands_PopCallbacksStack(void)

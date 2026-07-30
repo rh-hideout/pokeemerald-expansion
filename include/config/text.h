@@ -2,8 +2,8 @@
 #define GUARD_CONFIG_TEXT_H
 
 // Text settings:
-#define AUTO_SCROLL_TEXT             FALSE   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.
-#define NUM_FRAMES_AUTO_SCROLL_DELAY 49
+#define AUTO_SCROLL_TEXT             FLAG_AUTO_SCROLL_TEXT   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.
+#define NUM_FRAMES_AUTO_SCROLL_DELAY 20
 
 // A note on the modifiers: they are roughly multiplicative, so having them set at 1 is vanilla speed. They also are used to calculate frame delays for the speed of the scroll effect and the animated down arrow, so to that end, they are capped at 31 to prevent the text printing from desyncing with A/B button inputs.
 // From testing, a value of 18 to 20 is essentially equivalent to instant text.

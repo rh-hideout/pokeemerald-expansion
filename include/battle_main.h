@@ -12,13 +12,13 @@ struct MultiPartnerMenuPokemon
     /*0x00*/ enum Species species;
     /*0x02*/ enum Item heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
-    /*0x0F*/ u8 level;
-    /*0x10*/ u16 hp;
-    /*0x12*/ u16 maxhp;
-    /*0x14*/ u32 status;
-    /*0x18*/ u32 personality;
-    /*0x1C*/ u8 gender;
-    /*0x1D*/ u8 language;
+    /*0x0F*/ u16 level;
+    /*0x11*/ u16 hp;
+    /*0x13*/ u16 maxhp;
+    /*0x15*/ u32 status;
+    /*0x19*/ u32 personality;
+    /*0x1D*/ u8 gender;
+    /*0x1E*/ u8 language;
 };
 
 // defines for the 'DoBounceEffect' function
@@ -112,6 +112,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
 u32 GeneratePersonalityForGender(u32 gender, enum Species species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
+u16 GetCurrentMapId(void);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);

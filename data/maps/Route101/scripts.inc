@@ -215,17 +215,44 @@ Route101_EventScript_RouteSign::
 	msgbox Route101_Text_RouteSign, MSGBOX_SIGN
 	end
 
-Route101_EventScript_BirchsBag::
+Route101_EventScript_OpenStarterCase::
 	lock
 	faceplayer
 	setflag FLAG_SYS_POKEMON_GET
 	setflag FLAG_RESCUED_BIRCH
+	message Route101_Text_GenSelect
+	waitmessage
+	multichoice 25, 6, STARTER_GEN_OPTIONS TRUE
+	switch VAR_RESULT
+	closemessage
 	fadescreen FADE_TO_BLACK
+	delay 30
+	callnative StartNewPokeballCaseUI
+	waitstate
+	goto_if_eq VAR_0x8004, 1, Route101_EventScript_OpenStarterCase
+	goto Route101_EventScript_BirchsBag
+
+Route101_EventScript_StartBirchsBag::
+	lock
+	faceplayer
+	setflag FLAG_SYS_POKEMON_GET
+	setflag FLAG_RESCUED_BIRCH
+	callnative CheckNewGamePlus
+	goto_if_ne VAR_RESULT, 1, Route101_EventScript_OpenStarterCase
+	goto Route101_EventScript_BirchsBag
+
+Route101_EventScript_BirchsBag::
+	setwildbattle SPECIES_ZIGZAGOON 2
+	waitse
+	playmoncry SPECIES_ZIGZAGOON, CRY_MODE_ENCOUNTER
+	delay 40
+	waitmoncry
+	setflag FLAG_SYS_CTRL_OBJ_DELETE
+	dowildbattle
+	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	removeobject LOCALID_ROUTE101_ZIGZAGOON
 	setobjectxy LOCALID_PLAYER, 6, 13
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	special ChooseStarter
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchApproachPlayer
 	waitmovement 0
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
@@ -296,3 +323,5 @@ Route101_Text_RouteSign:
 	.string "ROUTE 101\n"
 	.string "{UP_ARROW} OLDALE TOWN$"
 
+Route101_Text_GenSelect:
+	.string "Which case would you like to open?$"

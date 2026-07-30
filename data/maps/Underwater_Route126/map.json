@@ -105,6 +105,14 @@
       "elevation": 3,
       "item": "ITEM_BLUE_SHARD",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_126_BLUE_SHARD"
+    },
+    {
+      "type": "hidden_item",
+      "x": 34,
+      "y": 69,
+      "elevation": 3,
+      "item": "ITEM_SHARPEDONITE",
+      "flag": "FLAG_ITEM_SHARPEDONITE"
     }
   ]
 }

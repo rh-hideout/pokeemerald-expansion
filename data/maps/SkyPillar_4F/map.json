@@ -39,5 +39,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 5,
+      "y": 3,
+      "elevation": 3,
+      "item": "ITEM_ABOMASITE",
+      "flag": "FLAG_ITEM_ABOMASITE"
+    }
+  ]
 }

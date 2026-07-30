@@ -51,9 +51,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_POKE_BALL",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM92",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_RUSTURF_TUNNEL_POKE_BALL"
+      "flag": "FLAG_ITEM_RUSTURF_TUNNEL_TM92"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
@@ -64,9 +64,9 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_ETHER",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM65",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_RUSTURF_TUNNEL_MAX_ETHER"
+      "flag": "FLAG_ITEM_RUSTURF_TUNNEL_TM65"
     },
     {
       "local_id": "LOCALID_RUSTURF_TUNNEL_BRINEY",

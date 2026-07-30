@@ -1,0 +1,235 @@
+.set ID_RECEPTIONIST, 1
+
+EverGrandeCity_Champion_ChallengeRoom1_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, EverGrandeCity_Champion_ChallengeRoom1_AfterWarp
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, EverGrandeCity_Champion_ChallengeRoom1_OnWarp
+	.byte 0
+
+EverGrandeCity_Champion_ChallengeRoom1_OnWarp:
+	map_script_2 VAR_TEMP_0, 1, EverGrandeCity_Champion_ChallengeRoom1_PostBattleTransition
+	.2byte 0
+
+EverGrandeCity_Champion_ChallengeRoom1_AfterWarp::
+	getplayerxy VAR_0x8004, VAR_0x8005
+	goto_if_eq VAR_0x8004, 4, EverGrandeCity_Champion_ChallengeRoom1_CheckYPos
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_CheckYPos::
+	goto_if_eq VAR_0x8005, 4, EverGrandeCity_Champion_ChallengeRoom1_setBattleTransition
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_setBattleTransition::
+	setobjectxyperm ID_RECEPTIONIST, 3, 6
+	setobjectmovementtype ID_RECEPTIONIST, MOVEMENT_TYPE_FACE_RIGHT
+	setvar VAR_TEMP_0, 1
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_PostBattleTransition::
+	lock
+	setvar VAR_TEMP_0, 0
+	clearflag FLAG_IS_CHALLENGING_CHAMPION
+	applymovement OBJ_EVENT_ID_PLAYER, EverGrandeCity_Champion_ChallengeRoom2_EventScript_Player_MoveBehindCounter
+	waitmovement 0
+	applymovement ID_RECEPTIONIST, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_MoveToCounter
+	waitmovement 0
+	setobjectmovementtype ID_RECEPTIONIST, MOVEMENT_TYPE_FACE_DOWN
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Intro::
+	lock
+	message EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_Question1
+	waitmessage
+	goto EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice1	
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice1::
+	multichoice 25, 0, CHAMPION_CHALLENGE_CHOICE_PAGE1, FALSE
+	switch VAR_RESULT
+	case 0, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	case 1, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option1
+	case 2, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option2
+	case 3, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option3
+	case 4, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option4
+	case 5, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice2
+ 	case MULTI_B_PRESSED, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	return
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice2::
+	multichoice 25, 0, CHAMPION_CHALLENGE_CHOICE_PAGE2, FALSE
+	switch VAR_RESULT
+	case 0, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	case 1, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice1
+	case 2, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option5
+	case 3, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option6
+	case 4, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option7
+	case 5, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice3
+ 	case MULTI_B_PRESSED, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	return
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice3::
+	multichoice 25, 0, CHAMPION_CHALLENGE_CHOICE_PAGE3, FALSE
+	switch VAR_RESULT
+	case 0, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	case 1, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Multichoice2
+	case 2, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option8
+	case 3, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option9
+ 	case MULTI_B_PRESSED, EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect
+	return
+
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_ExitChallengeSelect::
+	message EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_Goodbye
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_HideAllChampions::
+	setflag FLAG_IS_CHALLENGING_CHAMPION
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_1
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_2
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_3
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_4
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_5
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_6
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_7
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_8
+	setflag FLAG_HIDE_CHAMPION_CHALLENGER_9
+	return
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected::
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_HideAllChampions
+	message EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_GoodLuck
+	waitmessage
+	delay 60
+	closemessage
+	applymovement ID_RECEPTIONIST, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_MoveAway
+	waitmovement 0
+	return
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor::
+	applymovement OBJ_EVENT_ID_PLAYER, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Player_MoveToDoor
+	waitmovement 0
+	warp MAP_EVER_GRANDE_CITY_CHAMPION_CHALLENGE_ROOM2, 9, 5
+	waitstate
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked::
+	message EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_NotAllowed
+	waitmessage
+	waitbuttonpress
+	closemessage
+	goto EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Intro
+
+EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_Question1::
+	.string "Which challenge would you like to\n"
+	.string "attempt today?$"
+
+EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_Goodbye::
+	.string "Okay, see you again soon!$"
+
+EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_GoodLuck::
+	.string "Right this way, good luck!$"
+
+EverGrandeCity_Champion_ChallengeRoom1_Text_Receptionist1_NotAllowed::
+	.string "You must complete the previous\n"
+	.string "challenge tier before attempting this\l"
+	.string "challenge.$"
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_MoveAway::
+	walk_up
+	walk_left
+	face_right
+	step_end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_MoveToCounter::
+	walk_right
+	walk_down
+	step_end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Player_MoveToDoor::
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+EverGrandeCity_Champion_ChallengeRoom2_EventScript_Player_MoveBehindCounter::
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+// BELOW SCRIPTS ARE PER OPTION ---------------------------------------------------
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option1::
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_1
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option2::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_1, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_2
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option3::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_2, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_3
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option4::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_3, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_4
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option5::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_4, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_5
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option6::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_5, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_6
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option7::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_6, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_7
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option8::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_7, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_8
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end
+
+EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_Option9::
+	goto_if_unset FLAG_BEAT_CHAMPION_CHALLENGER_8, EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionNotUnlocked
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_Receptionist1_OptionSelected
+	clearflag FLAG_HIDE_CHAMPION_CHALLENGER_9
+	call EverGrandeCity_Champion_ChallengeRoom1_EventScript_PlayerMoveToDoor
+	release
+	end

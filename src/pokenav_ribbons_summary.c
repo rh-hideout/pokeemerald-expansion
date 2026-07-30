@@ -75,7 +75,7 @@ static u32 sRibbonDraw_Total;
 static u32 sRibbonDraw_Current;
 
 static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *);
-static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
+static void PrintRibbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *);
 static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *);
 static void ZoomOutSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *);
 static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *);
@@ -378,7 +378,7 @@ static u32 GetRibbonsSummaryMonListCount(void)
     return list->monList->listCount;
 }
 
-static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
+static void GetMonNicknameLevelGender(u8 *nick, u16 *level, u8 *gender)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;
@@ -684,7 +684,7 @@ static u32 LoopedTask_SwitchRibbonsSummaryMon(s32 state)
     case 1:
         if (!IsMonSpriteAnimating(menu))
         {
-            PrintRibbbonsSummaryMonInfo(menu);
+            PrintRibbonsSummaryMonInfo(menu);
             return LT_INC_AND_CONTINUE;
         }
         return LT_PAUSE;
@@ -868,18 +868,19 @@ static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *men
 {
     menu->nameWindowId = AddWindow(&sRibbonSummaryMonNameWindowTemplate);
     PutWindowTilemap(menu->nameWindowId);
-    PrintRibbbonsSummaryMonInfo(menu);
+    PrintRibbonsSummaryMonInfo(menu);
 }
 
 static const u8 sText_MaleSymbol[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
 static const u8 sText_FemaleSymbol[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
 static const u8 sText_NoGenderSymbol[] = _("{UNK_SPACER}");
 
-static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
+static void PrintRibbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     const u8 *genderTxt;
     u8 *txtPtr;
-    u8 level, gender;
+    u16 level;
+    u8 gender;
     u16 windowId = menu->nameWindowId;
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));

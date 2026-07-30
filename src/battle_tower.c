@@ -1910,9 +1910,9 @@ static u16 GetBattleTentTrainerId(void)
         return 0;
 }
 
-u8 SetTentPtrsGetLevel(void)
+u16 SetTentPtrsGetLevel(void)
 {
-    u8 level = TENT_MIN_LEVEL;
+    u16 level = TENT_MIN_LEVEL;
     u32 facility = VarGet(VAR_FRONTIER_FACILITY);
 
     if (facility == FRONTIER_FACILITY_FACTORY)
@@ -1968,7 +1968,7 @@ static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount)
 {
     s32 i, j;
     u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
-    u8 level = SetTentPtrsGetLevel();
+    u16 level = SetTentPtrsGetLevel();
     u8 fixedIV = 0;
     u8 bfMonCount;
     const u16 *monSet = NULL;
@@ -2067,14 +2067,15 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
             u32 i;
-            u8 enemyLevel = SetFacilityPtrsGetLevel();
+            u16 enemyLevel = SetFacilityPtrsGetLevel();
 
             for (i = 0; i < PARTY_SIZE; i++)
             {
                 enum Species species = GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES);
                 if (species)
                 {
-                    SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
+                    u32 exp = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, enemyLevel);
+                    SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_EXP, &exp);
                     CalculateMonStats(&gParties[B_TRAINER_OPPONENT_A][i]);
                 }
             }
@@ -2083,7 +2084,8 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
                 enum Species species = GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES);
                 if (species)
                 {
-                    SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
+                    u32 exp = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, enemyLevel);
+                    SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_EXP, &exp);
                     CalculateMonStats(&gParties[B_TRAINER_OPPONENT_B][i]);
                 }
             }

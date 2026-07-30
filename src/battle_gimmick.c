@@ -361,8 +361,10 @@ void UpdateIndicatorLevelData(u32 healthboxId, u32 level)
 {
     s32 xDelta = 0;
 
-    if (level >= 100)
-        xDelta -= 4;
+    if (level >= 1000)
+        xDelta -= 9;
+    else if (level >= 100)
+        xDelta -= 5;
     else if (level < 10)
         xDelta += 5;
 

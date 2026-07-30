@@ -2186,7 +2186,7 @@ static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tou
     #else
     u8 fixedIv = GetDomeTrainerMonIvs(tournamentTrainerId); // BUG: Using the wrong ID. As a result, all Pokémon have ivs of 3.
     #endif
-    u8 level = SetFacilityPtrsGetLevel();
+    u16 level = SetFacilityPtrsGetLevel();
 
     CreateFacilityMon(&gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]],
                       level, fixedIv, otId, 0, &gParties[B_TRAINER_OPPONENT_A][monPartyId]);

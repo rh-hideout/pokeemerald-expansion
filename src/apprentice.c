@@ -319,7 +319,7 @@ static u16 GetRandomAlternateMove(u8 monId)
     bool32 needTMs = FALSE;
     enum Move move = MOVE_NONE;
     bool32 shouldUseMove;
-    u8 level;
+    u16 level;
 
     id = APPRENTICE_SPECIES_ID(monId);
     species = gApprentices[PLAYER_APPRENTICE.id].species[id];
@@ -437,7 +437,8 @@ static bool8 TrySetMove(u8 monId, enum Move move)
 static void GetLatestLearnedMoves(enum Species species, u16 *moves)
 {
     u8 i, j;
-    u8 level, numLearnsetMoves;
+    u16 level;
+    u8 numLearnsetMoves;
     const struct LevelUpMove *learnset;
 
     if (PLAYER_APPRENTICE.lvlMode == APPRENTICE_LVL_MODE_50)

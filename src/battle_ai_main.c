@@ -255,11 +255,13 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 {
     u64 flags = 0;
 
-    if (!IsSmartBattle())
+    // Allow wild battles (non-trainer) to proceed regardless of FLAG_AI_WILD_BATTLES
+    if (!IsSmartBattle() && gBattleTypeFlags & BATTLE_TYPE_TRAINER && !FlagGet(FLAG_AI_WILD_BATTLES))
     {
         return 0;
     }
-    if (trainerId == 0xFFFF)
+    // Wild battle: use wild AI flags when opponentA is 0 (wild battles have opponentA = 0 from ResetTrainerOpponentIds)
+    if (trainerId == 0xFFFF || (trainerId == 0 && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
     {
         flags = GetWildAiFlags();
     }
@@ -279,6 +281,29 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
             flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
         else
             flags = GetTrainerAIFlagsFromId(trainerId);
+        // --- DIFFICULTY PATCH START ---
+        if (gSaveBlock1Ptr != NULL) // Make sure save is loaded
+        {
+            switch (gSaveBlock1Ptr->difficulty)
+            {
+            case 0: // Easy: downgrade SMART to BASIC
+                if (flags & AI_FLAG_SMART_TRAINER)
+                {
+                    flags &= ~AI_FLAG_SMART_TRAINER;
+                    flags |= AI_FLAG_BASIC_TRAINER;
+                }
+                break;
+            case 2: // Hard: upgrade BASIC to SMART
+                if (flags & AI_FLAG_BASIC_TRAINER)
+                {
+                    flags &= ~AI_FLAG_BASIC_TRAINER;
+                    flags |= AI_FLAG_SMART_TRAINER;
+                }
+                break;
+            // Normal: do nothing
+            }
+        }
+        // --- DIFFICULTY PATCH END ---
     }
 
     if (IsDoubleBattle() && flags != 0)
@@ -302,8 +327,18 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 
 void BattleAI_SetupFlags(void)
 {
-    if (IsAiVsAiBattle())
-        gAiThinkingStruct->aiFlags[B_BATTLER_0] = GetAiFlags(gPartnerTrainerId, B_BATTLER_0);
+    if (IsAiVsAiBattle() || IsPlayerAiControlled())
+    {
+        // gPartnerTrainerId is TRAINER_NONE outside of real partner battles, which made
+        // GetAiFlags return 0 (no scoring at all) for AI-controlled players in the common
+        // case of a normal trainer battle with no partner. Fall back to the opposing
+        // trainer(s)' own AI flags instead, same as the "prediction" flags computed below.
+        if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) && gPartnerTrainerId != TRAINER_NONE)
+            gAiThinkingStruct->aiFlags[B_BATTLER_0] = GetAiFlags(gPartnerTrainerId, B_BATTLER_0);
+        else
+            gAiThinkingStruct->aiFlags[B_BATTLER_0] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_BATTLER_0)
+                                                     | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_BATTLER_0);
+    }
     else
         gAiThinkingStruct->aiFlags[B_BATTLER_0] = 0; // player has no AI
 
@@ -344,7 +379,7 @@ void BattleAI_SetupFlags(void)
     {
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = GetAiFlags(gPartnerTrainerId, B_BATTLER_2);
     }
-    else if (IsDoubleBattle() && IsAiVsAiBattle())
+    else if (IsDoubleBattle() && IsPlayerAiControlled())
     {
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = gAiThinkingStruct->aiFlags[B_BATTLER_0];
     }
@@ -1074,10 +1109,7 @@ static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum
     enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
     if (battlerAi == BATTLE_PARTNER(battlerDef))
     {
-        if (target == TARGET_OPPONENT
-         || target == TARGET_RANDOM
-         || target == TARGET_BOTH
-         || target == TARGET_OPPONENTS_FIELD)
+        if (target == TARGET_BOTH || target == TARGET_OPPONENTS_FIELD)
             return FALSE;
     }
     if (!IsBattlerAlly(battlerAi, battlerDef) && target == TARGET_USER_OR_ALLY)

@@ -40,6 +40,8 @@
 #include "constants/metatile_behaviors.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "save.h"
+#include "title_screen.h"
 
 #define subsprite_table(ptr) {.subsprites = ptr, .subspriteCount = (sizeof ptr) / (sizeof(struct Subsprite))}
 
@@ -1129,18 +1131,32 @@ bool8 FldEff_PokecenterHeal(void)
     u32 nPokemon;
     struct Task *task;
 
-    nPokemon = (OW_IGNORE_EGGS_ON_HEAL <= GEN_3) ? CalculatePlayerPartyCount() : CountPartyNonEggMons();
-    task = &gTasks[CreateTask(Task_PokecenterHeal, 0xff)];
-    task->tNumMons = nPokemon;
-    task->tFirstBallX = 93;
-    task->tFirstBallY = 36;
-    task->tMonitorX = 124;
-    task->tMonitorY = 24;
-    return FALSE;
+    if (IsPartyEmpty() && gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        ClearSaveData();
+        SetMainCallback2(CB2_NewGame);
+        FieldEffectActiveListRemove(FLDEFF_POKECENTER_HEAL);
+        return FALSE;
+    }
+    else {
+        nPokemon = (OW_IGNORE_EGGS_ON_HEAL <= GEN_3) ? CalculatePlayerPartyCount() : CountPartyNonEggMons();
+        task = &gTasks[CreateTask(Task_PokecenterHeal, 0xff)];
+        task->tNumMons = nPokemon;
+        task->tFirstBallX = 93;
+        task->tFirstBallY = 36;
+        task->tMonitorX = 124;
+        task->tMonitorY = 24;
+        return FALSE;
+    }
 }
 
 static void Task_PokecenterHeal(u8 taskId)
 {
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        RemoveFaintedMonsFromParty();
+    }
+
     struct Task *task;
     task = &gTasks[taskId];
     sPokecenterHealEffectFuncs[task->tState](task);

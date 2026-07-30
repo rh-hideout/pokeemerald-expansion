@@ -32,6 +32,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "data/tutor_moves.h"
+#include "ui_birch_case.h"
 
 // The different versions of hearts are selected using animation
 // commands.
@@ -890,7 +891,10 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
                     alreadyInList = TRUE;
             }
             if (!alreadyInList)
-                moves[numMoves++] = learnset[i].move;
+            {
+                u16 effectiveMove = GetEffectiveMove(learnset[i].move, species);
+                moves[numMoves++] = effectiveMove;
+            }
         }
 
         species = (P_PRE_EVO_MOVES ? GetSpeciesPreEvolution(species) : SPECIES_NONE);
@@ -914,7 +918,10 @@ static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
     for (u32 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
     {
         if (!BoxMonKnowsMove(mon, eggMoves[i]))
-            moves[numMoves++] = eggMoves[i];
+        {
+            u16 effectiveMove = GetEffectiveMove(eggMoves[i], species);
+            moves[numMoves++] = effectiveMove;
+        }
     }
 
     return numMoves;
@@ -940,7 +947,10 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
             continue;
 
         if (!BoxMonKnowsMove(mon, move))
-            moves[numMoves++] = move;
+        {
+            u16 effectiveMove = GetEffectiveMove(move, species);
+            moves[numMoves++] = effectiveMove;
+        }
     }
 
     return numMoves;
@@ -959,7 +969,10 @@ static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
             continue;
 
         if (!BoxMonKnowsMove(mon, move))
-            moves[numMoves++] = move;
+        {
+            u16 effectiveMove = GetEffectiveMove(move, species);
+            moves[numMoves++] = effectiveMove;
+        }
     }
 
     return numMoves;

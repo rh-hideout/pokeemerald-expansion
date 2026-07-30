@@ -14,6 +14,7 @@ void DoTVShowInSearchOfTrainers(void);
 void TryPutTreasureInvestigatorsOnAir(void);
 void TryPutLotteryWinnerReportOnAir(void);
 void TryPutTrainerFanClubOnAir(void);
+void ChangePokemonNickname(void);
 void IncrementDailyPlantedBerries(void);
 void IncrementDailyPickedBerries(void);
 void IncrementDailyBattlePoints(u16 delta);

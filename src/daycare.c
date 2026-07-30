@@ -345,7 +345,8 @@ static void ApplyDaycareExperience(struct Pokemon *mon)
 
 static u32 GetExpAtLevelCap(struct Pokemon *mon)
 {
-    return gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate][GetCurrentLevelCap()];
+    u32 levelCap = GetCurrentLevelCap();
+    return GetExperienceAtLevel(gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate, levelCap);
 }
 
 static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
@@ -394,7 +395,7 @@ u16 TakePokemonFromDaycare(void)
     return TakeSelectedPokemonMonFromDaycareShiftSlots(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-static u8 GetLevelAfterDaycareSteps(struct BoxPokemon *mon, u32 steps)
+static u16 GetLevelAfterDaycareSteps(struct BoxPokemon *mon, u32 steps)
 {
     struct BoxPokemon tempMon = *mon;
 
@@ -403,10 +404,10 @@ static u8 GetLevelAfterDaycareSteps(struct BoxPokemon *mon, u32 steps)
     return GetLevelFromBoxMonExp(&tempMon);
 }
 
-static u8 GetNumLevelsGainedFromSteps(struct DaycareMon *daycareMon)
+static u16 GetNumLevelsGainedFromSteps(struct DaycareMon *daycareMon)
 {
-    u8 levelBefore;
-    u8 levelAfter;
+    u16 levelBefore;
+    u16 levelAfter;
 
     levelBefore = GetLevelFromBoxMonExp(&daycareMon->mon);
     levelAfter = GetLevelAfterDaycareSteps(&daycareMon->mon, daycareMon->steps);
@@ -415,9 +416,9 @@ static u8 GetNumLevelsGainedFromSteps(struct DaycareMon *daycareMon)
     return levelAfter - levelBefore;
 }
 
-static u8 GetNumLevelsGainedForDaycareMon(struct DaycareMon *daycareMon)
+static u16 GetNumLevelsGainedForDaycareMon(struct DaycareMon *daycareMon)
 {
-    u8 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
+    u16 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
     ConvertIntToDecimalStringN(gStringVar2, numLevelsGained, STR_CONV_MODE_LEFT_ALIGN, 2);
     GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     return numLevelsGained;
@@ -427,7 +428,7 @@ static u32 GetDaycareCostForSelectedMon(struct DaycareMon *daycareMon)
 {
     u32 cost;
 
-    u8 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
+    u16 numLevelsGained = GetNumLevelsGainedFromSteps(daycareMon);
     GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     cost = 100 + 100 * numLevelsGained;
     ConvertIntToDecimalStringN(gStringVar2, cost, STR_CONV_MODE_LEFT_ALIGN, 5);
@@ -450,7 +451,7 @@ static void UNUSED Debug_AddDaycareSteps(u16 numSteps)
     gSaveBlock1Ptr->daycare.mons[1].steps += numSteps;
 }
 
-u8 GetNumLevelsGainedFromDaycare(void)
+u16 GetNumLevelsGainedFromDaycare(void)
 {
     if (GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[gSpecialVar_0x8004].mon, MON_DATA_SPECIES) != 0)
         return GetNumLevelsGainedForDaycareMon(&gSaveBlock1Ptr->daycare.mons[gSpecialVar_0x8004]);
@@ -1080,7 +1081,7 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
     u8 parentSlots[DAYCARE_MON_COUNT] = {0};
     bool8 isEgg;
 
-    if (GetDaycareCompatibilityScore(daycare) == PARENTS_INCOMPATIBLE)
+    if ((GetDaycareCompatibilityScore(daycare) == PARENTS_INCOMPATIBLE) || gSaveBlock1Ptr->nuzlockeModeEnabled)
         return;
 
     species = DetermineEggSpeciesAndParentSlots(daycare, parentSlots);
@@ -1105,7 +1106,7 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
 
 void CreateEgg(struct Pokemon *mon, enum Species species, bool8 setHotSpringsLocation)
 {
-    u8 metLevel;
+    u16 metLevel;
     enum PokeBall ball;
     enum Language language;
     metloc_u8_t metLocation;
@@ -1134,7 +1135,7 @@ static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct 
 {
     u32 personality;
     enum PokeBall ball;
-    u8 metLevel;
+    u16 metLevel;
     u8 language;
 
     personality = daycare->offspringPersonality;
@@ -1455,7 +1456,7 @@ static void UNUSED GetDaycareLevelMenuText(struct DayCare *daycare, u8 *dest)
 static void UNUSED GetDaycareLevelMenuLevelText(struct DayCare *daycare, u8 *dest)
 {
     u8 i;
-    u8 level;
+    u16 level;
     u8 text[20];
 
     *dest = EOS;
@@ -1502,7 +1503,7 @@ static void DaycarePrintMonNickname(struct DayCare *daycare, u8 windowId, u32 da
 
 static void DaycarePrintMonLvl(struct DayCare *daycare, u8 windowId, u32 daycareSlotId, u32 y)
 {
-    u8 level;
+    u16 level;
     u32 x;
     u8 lvlText[12];
     u8 intText[8];
@@ -1638,7 +1639,7 @@ bool8 IsThereMonInRoute5Daycare(void)
     return FALSE;
 }
 
-u8 GetNumLevelsGainedForRoute5DaycareMon(void)
+u16 GetNumLevelsGainedForRoute5DaycareMon(void)
 {
 #if IS_FRLG
     return GetNumLevelsGainedForDaycareMon(&gSaveBlock1Ptr->route5DayCareMon);

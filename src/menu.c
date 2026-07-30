@@ -74,6 +74,24 @@ static EWRAM_DATA u8 sHofPCTopBarWindowId = 0;
 static EWRAM_DATA bool8 sScheduledBgCopiesToVram[4] = {FALSE};
 static EWRAM_DATA u16 sTempTileDataBufferIdx = 0;
 static EWRAM_DATA void *sTempTileDataBuffer[0x20] = {NULL};
+static u8 sExpandedMenuTextBuffer[0x100];
+
+static const u8 *GetExpandedMenuText(const u8 *text)
+{
+    const u8 *cursor = text;
+
+    while (*cursor != EOS)
+    {
+        if (*cursor == PLACEHOLDER_BEGIN)
+        {
+            StringExpandPlaceholders(sExpandedMenuTextBuffer, text);
+            return sExpandedMenuTextBuffer;
+        }
+        cursor++;
+    }
+
+    return text;
+}
 
 const u16 gStandardMenuPalette[] = INCGFX_U16("graphics/interface/std_menu.pal", ".gbapal");
 
@@ -393,7 +411,13 @@ void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
 u8 AddStartMenuWindow(u8 numActions)
 {
     if (sStartMenuWindowId == WINDOW_NONE)
-        sStartMenuWindowId = AddWindowParameterized(0, 22, 1, 7, (numActions * 2) + 2, 15, 0x139);
+    {
+        u8 width = 7;
+        u8 left = 22;
+        u8 calculatedHeight = (numActions * 3) - 4;
+        u8 height = calculatedHeight > 18 ? 18 : calculatedHeight;  // Fixed maximum height to prevent menu resizing (accommodates up to 11 menu items)
+        sStartMenuWindowId = AddWindowParameterized(0, left, 1, width, height, 15, 0x139);
+    }
     return sStartMenuWindowId;
 }
 
@@ -858,7 +882,7 @@ void PrintMenuActionTextsAtPos(u8 windowId, u8 fontId, u8 left, u8 top, u8 lineH
 {
     u8 i;
     for (i = 0; i < itemCount; i++)
-        AddTextPrinterParameterized(windowId, fontId, menuActions[i].text, left, (lineHeight * i) + top, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, fontId, GetExpandedMenuText(menuActions[i].text), left, (lineHeight * i) + top, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -894,7 +918,7 @@ void PrintMenuActionTexts(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpac
 
     for (i = 0; i < itemCount; i++)
     {
-        printer.currentChar = menuActions[actionIds[i]].text;
+        printer.currentChar = GetExpandedMenuText(menuActions[actionIds[i]].text);
         printer.y = (lineHeight * i) + top;
         printer.currentY = printer.y;
         AddTextPrinter(&printer, TEXT_SKIP_DRAW, NULL);
@@ -1347,7 +1371,7 @@ void PrintMenuTable(u8 windowId, u8 itemCount, const struct MenuAction *menuActi
     u32 i;
 
     for (i = 0; i < itemCount; i++)
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, menuActions[i].text, 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, GetExpandedMenuText(menuActions[i].text), 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
 
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
@@ -1371,7 +1395,7 @@ void PrintMenuActionTextsInUpperLeftCorner(u8 windowId, u8 itemCount, const stru
 
     for (i = 0; i < itemCount; i++)
     {
-        printer.currentChar = menuActions[actionIds[i]].text;
+        printer.currentChar = GetExpandedMenuText(menuActions[actionIds[i]].text);
         printer.y = (i * 16) + 1;
         printer.currentY = (i * 16) + 1;
         AddTextPrinter(&printer, TEXT_SKIP_DRAW, NULL);

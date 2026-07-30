@@ -220,9 +220,9 @@ const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
     [REMATCH_SAWYER] = REMATCH(TRAINER_SAWYER_1, TRAINER_SAWYER_2, TRAINER_SAWYER_3, TRAINER_SAWYER_4, TRAINER_SAWYER_5, MAP_MT_CHIMNEY),
     [REMATCH_KIRA_AND_DAN] = REMATCH(TRAINER_KIRA_AND_DAN_1, TRAINER_KIRA_AND_DAN_2, TRAINER_KIRA_AND_DAN_3, TRAINER_KIRA_AND_DAN_4, TRAINER_KIRA_AND_DAN_5, MAP_ABANDONED_SHIP_ROOMS2_1F),
     [REMATCH_WALLY_VR] = REMATCH(TRAINER_WALLY_VR_2, TRAINER_WALLY_VR_3, TRAINER_WALLY_VR_4, TRAINER_WALLY_VR_5, TRAINER_WALLY_VR_5, MAP_VICTORY_ROAD_1F),
-    [REMATCH_ROXANNE] = REMATCH(TRAINER_ROXANNE_1, TRAINER_ROXANNE_2, TRAINER_ROXANNE_3, TRAINER_ROXANNE_4, TRAINER_ROXANNE_5, MAP_RUSTBORO_CITY),
-    [REMATCH_BRAWLY] = REMATCH(TRAINER_BRAWLY_1, TRAINER_BRAWLY_2, TRAINER_BRAWLY_3, TRAINER_BRAWLY_4, TRAINER_BRAWLY_5, MAP_DEWFORD_TOWN),
-    [REMATCH_WATTSON] = REMATCH(TRAINER_WATTSON_1, TRAINER_WATTSON_2, TRAINER_WATTSON_3, TRAINER_WATTSON_4, TRAINER_WATTSON_5, MAP_MAUVILLE_CITY),
+    [REMATCH_ROXANNE] = REMATCH(TRAINER_ROXANNE_1, TRAINER_CHAMPION_BRANDON, TRAINER_CHAMPION_GRETA, TRAINER_CHAMPION_ANABEL, TRAINER_CHAMPION_SPENSER, MAP_RUSTBORO_CITY),
+    [REMATCH_BRAWLY] = REMATCH(TRAINER_BRAWLY_1, TRAINER_CHAMPION_TUCKER, TRAINER_CHAMPION_LUCY, TRAINER_CHAMPION_NOLAND, TRAINER_CHAMPION_LEAF, MAP_DEWFORD_TOWN),
+    [REMATCH_WATTSON] = REMATCH(TRAINER_WATTSON_1, TRAINER_CHAMPION_RED, TRAINER_WATTSON_3, TRAINER_WATTSON_4, TRAINER_WATTSON_5, MAP_MAUVILLE_CITY),
     [REMATCH_FLANNERY] = REMATCH(TRAINER_FLANNERY_1, TRAINER_FLANNERY_2, TRAINER_FLANNERY_3, TRAINER_FLANNERY_4, TRAINER_FLANNERY_5, MAP_LAVARIDGE_TOWN),
     [REMATCH_NORMAN] = REMATCH(TRAINER_NORMAN_1, TRAINER_NORMAN_2, TRAINER_NORMAN_3, TRAINER_NORMAN_4, TRAINER_NORMAN_5, MAP_PETALBURG_CITY),
     [REMATCH_WINONA] = REMATCH(TRAINER_WINONA_1, TRAINER_WINONA_2, TRAINER_WINONA_3, TRAINER_WINONA_4, TRAINER_WINONA_5, MAP_FORTREE_CITY),
@@ -663,6 +663,16 @@ static void CB2_EndWildBattle(void)
     }
     else
     {
+        // Handles nuzlocke mode setting pokemon being caught on this route
+        if ((gSaveBlock1Ptr->nuzlockeModeEnabled && FlagGet(FLAG_NUZLOCKE_CATCH_MODE)))
+        {
+            u16 route = GetCurrentMapId();
+            SET_NUZLOCKE_FLAG(route);
+            gDoAutosaveAfterBattle = TRUE;
+        }
+        else if (gSaveBlock1Ptr->autosaveModeEnabled) {
+            gDoAutosaveAfterBattle = TRUE;
+        }
         SetMainCallback2(CB2_ReturnToField);
         DowngradeBadPoison();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
@@ -817,10 +827,10 @@ static u16 GetSumOfPlayerPartyLevel(u8 numMons)
     return sum;
 }
 
-static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
+static u16 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 {
     u8 i;
-    u8 sum;
+    u16 sum;
     u32 count = numMons;
     const struct TrainerMon *party;
 
@@ -839,8 +849,8 @@ static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 enum BattleTransition GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
-    u8 enemyLevel = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
+    u16 enemyLevel = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+    u16 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
     {
@@ -862,8 +872,8 @@ enum BattleTransition GetTrainerBattleTransition(void)
 {
     u8 minPartyCount = 1;
     u8 transitionType;
-    u8 enemyLevel;
-    u8 playerLevel;
+    u16 enemyLevel;
+    u16 playerLevel;
     u32 trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
     enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
 
@@ -904,8 +914,8 @@ enum BattleTransition GetTrainerBattleTransition(void)
 enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id)
 {
     u16 var;
-    u8 enemyLevel = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
+    u16 enemyLevel = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+    u16 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
     {
@@ -960,12 +970,14 @@ void ChooseStarter(void)
 
 static void CB2_GiveStarter(void)
 {
-    u16 starterMon;
+    // CUSTOM - Disabled starter mon selection in order to use custom all 9 gen mon selection script
 
-    *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
-    starterMon = GetStarterPokemon(gSpecialVar_Result);
-    ScriptGiveMon(starterMon, 5, ITEM_NONE);
-    ResetTasks();
+    // u16 starterMon;
+
+    // *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
+    // starterMon = GetStarterPokemon(gSpecialVar_Result);
+    // ScriptGiveMon(starterMon, 5, ITEM_NONE);
+    // ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
     BattleTransition_Start(B_TRANSITION_BLUR);
@@ -1435,6 +1447,11 @@ static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
 
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        gDoAutosaveAfterBattle = TRUE;
+    }
+
     gIsDebugBattle = FALSE;
     if (FollowerNPCIsBattlePartner())
     {
@@ -1784,29 +1801,31 @@ bool32 TrainerIsMatchCallRegistered(s32 i)
 #if FREE_MATCH_CALL == FALSE
 static bool32 UpdateRandomTrainerRematches(const struct RematchTrainer *table, u16 mapGroup, u16 mapNum)
 {
-    s32 i;
+    // s32 i;
 
-    if (CheckBagHasItem(ITEM_VS_SEEKER, 1) && I_VS_SEEKER_CHARGING != 0)
-        return FALSE;
+    // if (CheckBagHasItem(ITEM_VS_SEEKER, 1) && I_VS_SEEKER_CHARGING != 0)
+    //     return FALSE;
 
-    for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
-    {
-        if (!DoesCurrentMapMatchRematchTrainerMap(i,table,mapGroup,mapNum) || IsRematchForbidden(i))
-            continue; // Only check permitted trainers within the current map.
+    // for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+    // {
+    //     if (!DoesCurrentMapMatchRematchTrainerMap(i,table,mapGroup,mapNum) || IsRematchForbidden(i))
+    //         continue; // Only check permitted trainers within the current map.
 
-        if (gSaveBlock1Ptr->trainerRematches[i] != 0)
-        {
-            // Trainer already wants a rematch. Don't bother updating it.
-            return TRUE;
-        }
-        else if (TrainerIsMatchCallRegistered(i) && ((Random() % 100) <= 30))
-            // 31% chance of getting a rematch.
-        {
-            SetRematchIdForTrainer(table, i);
-            return TRUE;
-        }
-    }
+    //     if (gSaveBlock1Ptr->trainerRematches[i] != 0)
+    //     {
+    //         // Trainer already wants a rematch. Don't bother updating it.
+    //         return TRUE;
+    //     }
+    //     else if (TrainerIsMatchCallRegistered(i) && ((Random() % 100) <= 30))
+    //         // 31% chance of getting a rematch.
+    //     {
+    //         SetRematchIdForTrainer(table, i);
+    //         return TRUE;
+    //     }
+    // }
 
+    
+    // CUSTOM - DISABLE ALL REMATCH FUNCTIONALITY
     return FALSE;
 }
 #endif //FREE_MATCH_CALL

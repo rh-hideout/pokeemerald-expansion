@@ -638,7 +638,12 @@ static void LoadWallClockGraphics(void)
     DmaClear16(3, (void *)PLTT, PLTT_SIZE);
     DecompressDataWithHeaderVram(gWallClock_Gfx, (void *)VRAM);
 
-    if (gSpecialVar_0x8004 == MALE)
+    u8 gender = gSpecialVar_0x8004;
+
+    if (gender != MALE && gender != FEMALE)
+        gender = gSaveBlock2Ptr->playerGender;
+
+    if (gender == MALE)
         LoadPalette(gWallClockMale_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
     else
         LoadPalette(gWallClockFemale_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
@@ -684,13 +689,15 @@ void CB2_StartWallClock(void)
     DecompressDataWithHeaderVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
 
     taskId = CreateTask(Task_SetClock_WaitFadeIn, 0);
-    gTasks[taskId].tHours = gLocalTime.hours;
-    gTasks[taskId].tMinutes = gLocalTime.minutes;
-    gTasks[taskId].tMoveDir = 0;
-    gTasks[taskId].tPeriod = gTasks[taskId].tHours / 12;
-    gTasks[taskId].tMoveSpeed = 0;
-    gTasks[taskId].tMinuteHandAngle = gTasks[taskId].tMinutes * 6;
-    gTasks[taskId].tHourHandAngle = (gTasks[taskId].tHours % 12) * 30 + (gTasks[taskId].tMinutes / 10) * 5;
+    // CUSTOM - No default time, get local time
+    InitClockWithRtc(taskId);
+    // gTasks[taskId].tHours = gLocalTime.hours;
+    // gTasks[taskId].tMinutes = gLocalTime.minutes;
+    // gTasks[taskId].tMoveDir = 0;
+    // gTasks[taskId].tPeriod = gTasks[taskId].tHours / 12;
+    // gTasks[taskId].tMoveSpeed = 0;
+    // gTasks[taskId].tMinuteHandAngle = gTasks[taskId].tMinutes * 6;
+    // gTasks[taskId].tHourHandAngle = (gTasks[taskId].tHours % 12) * 30 + (gTasks[taskId].tMinutes / 10) * 5;
 
     spriteId = CreateSprite(&sSpriteTemplate_MinuteHand, 120, 80, 1);
     gSprites[spriteId].sTaskId = taskId;

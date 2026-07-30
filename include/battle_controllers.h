@@ -309,6 +309,7 @@ void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(enum BattlerId battler, u32 bufferId, u16 size, u8 *data);
 void UpdateFriendshipFromXItem(enum BattlerId battler);
 bool32 IsAiVsAiBattle(void);
+bool32 IsPlayerAiControlled(void);
 bool32 BattlerIsPlayer(enum BattlerId battlerId);
 bool32 BattlerIsPartner(enum BattlerId battlerId);
 bool32 BattlerIsOpponent(enum BattlerId battlerId);

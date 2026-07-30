@@ -361,7 +361,7 @@ struct BattleTowerPokemon
     enum Species species;
     enum Item heldItem;
     enum Move moves[MAX_MON_MOVES];
-    u8 level;
+    u16 level;
     u8 ppBonuses;
     u8 hpEV;
     u8 attackEV;
@@ -385,7 +385,7 @@ struct BattleTowerPokemon
 
 struct EmeraldBattleTowerRecord
 {
-    /*0x00*/ u8 lvlMode; // 0 = level 50, 1 = level 100
+    /*0x00*/ u16 lvlMode; // 0 = level 50, 1 = level 100
     /*0x01*/ u8 facilityClass;
     /*0x02*/ u16 winStreak;
     /*0x04*/ u8 name[PLAYER_NAME_LENGTH + 1];
@@ -604,7 +604,8 @@ struct SaveBlock2
              //u16 padding1:4;
              //u16 padding2;
     /*0x18*/ struct Pokedex pokedex;
-    /*0x90*/ u8 filler_90[0x8];
+    /*0x90*/ u8 filler_90[0x7];
+    /*0x97*/ u8 newGamePlus; // New Game+ counter (0-255)
     /*0x98*/ struct Time localTimeOffset;
     /*0xA0*/ struct Time lastBerryTreeUpdate;
     /*0xA8*/ u32 gcnLinkFlags; // Read by Pokémon Colosseum/XD
@@ -634,7 +635,7 @@ struct SecretBaseParty
     enum Move moves[PARTY_SIZE * MAX_MON_MOVES];
     enum Species species[PARTY_SIZE];
     enum Item heldItems[PARTY_SIZE];
-    u8 levels[PARTY_SIZE];
+    u16 levels[PARTY_SIZE];
     u8 EVs[PARTY_SIZE];
 };
 
@@ -695,17 +696,17 @@ struct Roamer
     /*0x04*/ u32 personality;
     /*0x08*/ enum Species species;
     /*0x0A*/ u16 hp;
-    /*0x0C*/ u8 level;
-    /*0x0D*/ u8 statusA;
-    /*0x0E*/ u8 cool;
-    /*0x0F*/ u8 beauty;
-    /*0x10*/ u8 cute;
-    /*0x11*/ u8 smart;
-    /*0x12*/ u8 tough;
-    /*0x13*/ bool8 active;
-    /*0x14*/ u8 statusB; // Stores frostbite
-    /*0x15*/ bool8 shiny;
-    /*0x16*/ u8 filler[0x6];
+    /*0x0C*/ u16 level;
+    /*0x0E*/ u8 statusA;
+    /*0x0F*/ u8 cool;
+    /*0x10*/ u8 beauty;
+    /*0x11*/ u8 cute;
+    /*0x12*/ u8 smart;
+    /*0x13*/ u8 tough;
+    /*0x14*/ bool8 active;
+    /*0x15*/ u8 statusB; // Stores frostbite
+    /*0x16*/ bool8 shiny;
+    /*0x17*/ u8 filler[0x5];
 };
 
 struct RamScriptData
@@ -1082,6 +1083,8 @@ struct ExternalEventFlags
 
 } __attribute__((packed));/*size = 0x15*/
 
+#define NUM_WILD_ENCOUNTER_MAPS 116
+
 struct Bag
 {
     struct ItemSlot items[BAG_ITEMS_COUNT];
@@ -1120,6 +1123,12 @@ struct SaveBlock1
     /*0x988*/ u8 filler1[0x34]; // Previously Dex Flags, feel free to remove.
 #endif //FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1
     /*0x9BC*/ u16 berryBlenderRecords[3];
+    // LOST TRACK BELOW HERE
+    /*0x9C2*/ u8 nuzlockeModeEnabled;
+    /*0x9C3*/ u8 autosaveModeEnabled;
+    /*0x9C4*/ u8 difficulty;
+    /*0x9C5*/ u8 unused_9C5;
+    /*0x9C6*/ u16 registeredLongItem; // Registered for long press of SELECT button
     /*0x9C2*/ u8 unused_9C2[2];
               u32 dailySeed;
 #if FREE_MATCH_CALL == FALSE
@@ -1150,7 +1159,7 @@ struct SaveBlock1
     /*0x2B90*/ enum Species outbreakPokemonSpecies;
     /*0x2B92*/ u8 outbreakLocationMapNum;
     /*0x2B93*/ u8 outbreakLocationMapGroup;
-    /*0x2B94*/ u8 outbreakPokemonLevel;
+    /*0x2B94*/ u16 outbreakPokemonLevel;
     /*0x2B95*/ u8 outbreakUnused1;
     /*0x2B96*/ u16 outbreakUnused2;
     /*0x2B98*/ u16 outbreakPokemonMoves[MAX_MON_MOVES];
@@ -1201,6 +1210,7 @@ struct SaveBlock1
     /*0x3???*/ struct TrainerHillSave trainerHill;
 #endif //FREE_TRAINER_HILL
     /*0x3???*/ struct WaldaPhrase waldaPhrase;
+    /*0x3???*/ u8 nuzlockeCaughtFlags[(NUM_WILD_ENCOUNTER_MAPS / 8)];
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     u32 towerChallengeId;
     struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
@@ -1220,6 +1230,10 @@ struct MapPosition
     s16 y;
     s8 elevation;
 };
+
+// Helper macros
+#define GET_NUZLOCKE_FLAG(route) (gSaveBlock1Ptr->nuzlockeCaughtFlags[(route) / 8] & (1 << ((route) % 8)))
+#define SET_NUZLOCKE_FLAG(route) (gSaveBlock1Ptr->nuzlockeCaughtFlags[(route) / 8] |= (1 << ((route) % 8)))
 
 #if TESTING
 extern bool32 gLoadFail;

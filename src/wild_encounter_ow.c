@@ -74,7 +74,7 @@ struct InfoOWE
     enum Species speciesId;
     enum CategoryOWE category;
     u8 localId;
-    u8 level;
+    u16 level;
     bool8 isShiny;
     bool8 isFemale;
     bool8 noDespawn;

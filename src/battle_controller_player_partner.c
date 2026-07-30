@@ -34,6 +34,7 @@
 #include "constants/party_menu.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
+#include "event_data.h"
 
 static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler);
 static void PlayerPartnerHandleTrainerSlide(enum BattlerId battler);
@@ -234,7 +235,19 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
     }
     else if (IsAiVsAiBattle())
     {
-        trainerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+        if (gBattlerBattleController[battler] != BATTLE_CONTROLLER_OPPONENT && gBattlerBattleController[battler] != BATTLE_CONTROLLER_RECORDED_OPPONENT)
+        {
+            trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
+            isFrontPic = FALSE;
+        }
+        else
+            if (gBattlerBattleController[battler] != BATTLE_CONTROLLER_OPPONENT && gBattlerBattleController[battler] != BATTLE_CONTROLLER_RECORDED_OPPONENT)
+        {
+            trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
+            isFrontPic = FALSE;
+        }
+        else
+            trainerPicId = GetTrainerPicFromId(gPartnerTrainerId);
         xPos = 60;
         yPos = 80;
     }
@@ -250,6 +263,9 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
         isFrontPic = FALSE;
     else
         isFrontPic = TRUE;
+
+    // THIS IS A POOR FIX FOR THE AI BATTLE SHOWING THE PLAYER'S FRONT SPRITE INSTEAD OF BACK SPRITE
+    isFrontPic = FALSE;
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
 }
@@ -327,8 +343,13 @@ static void PlayerPartnerHandleIntroTrainerBallThrow(enum BattlerId battler)
 
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
         trainerPal = GetTrainerBackPicPalette(gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic);
-    else if (IsAiVsAiBattle())
-        trainerPal = GetTrainerFrontPicPalette(GetTrainerPicFromId(gPartnerTrainerId));
+    else if (IsAiVsAiBattle() || IsPlayerAiControlled())
+    {
+        if (gBattlerBattleController[battler] != BATTLE_CONTROLLER_OPPONENT && gBattlerBattleController[battler] != BATTLE_CONTROLLER_RECORDED_OPPONENT)
+            trainerPal = GetTrainerFrontPicPalette(GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION));
+        else
+            trainerPal = GetTrainerFrontPicPalette(GetTrainerPicFromId(gPartnerTrainerId));
+    }
     else
         trainerPal = GetTrainerFrontPicPalette(GetFrontierTrainerFrontSpriteId(gPartnerTrainerId)); // 2 vs 2 multi battle in Battle Frontier, load front sprite and pal.
 

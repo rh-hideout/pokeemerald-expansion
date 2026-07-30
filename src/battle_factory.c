@@ -335,7 +335,7 @@ static void SetRentalsToOpponentParty(void)
 static void SetPlayerAndOpponentParties(void)
 {
     int i;
-    u8 monLevel;
+    u16 monLevel;
     u16 monId;
     u8 ivs;
 
@@ -805,7 +805,7 @@ void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
 {
     u8 i;
-    u8 level;
+    u16 level;
     u8 fixedIV;
     u32 otID;
 
@@ -858,7 +858,7 @@ static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
 static void FillFactoryTentTrainerParty(u16 trainerId, u8 firstMonId)
 {
     u8 i;
-    u8 level = TENT_MIN_LEVEL;
+    u16 level = TENT_MIN_LEVEL;
     u8 fixedIV = 0;
     u32 otID = READ_OTID_FROM_SAVE;
 

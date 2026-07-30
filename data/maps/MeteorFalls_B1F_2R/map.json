@@ -27,6 +27,19 @@
       "trainer_sight_or_berry_tree_id": "ITEM_TM_DRAGON_CLAW",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_METEOR_FALLS_B1F_2R_TM_DRAGON_CLAW"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 7,
+      "y": 15,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_KOMMONIUM_Z",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_KOMMONIUM_Z"
     }
   ],
   "warp_events": [

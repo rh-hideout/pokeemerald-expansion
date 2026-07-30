@@ -75,6 +75,7 @@
 #include "vs_seeker.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
+#include "constants/items.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/layouts.h"
@@ -83,6 +84,9 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "pokemon.h"
+#include "constants/species.h"
+#include "title_screen.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -203,6 +207,8 @@ static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
 static u16 (*sPlayerKeyInterceptCallback)(u32);
 static bool8 sReceivingFromLink;
 static u8 sRfuKeepAliveTimer;
+bool8 gDoAutosave = FALSE;
+bool8 gDoAutosaveAfterBattle = FALSE;
 
 COMMON_DATA u16 *gOverworldTilemapBuffer_Bg2 = NULL;
 COMMON_DATA u16 *gOverworldTilemapBuffer_Bg1 = NULL;
@@ -875,6 +881,37 @@ bool8 SetDiveWarpDive(u16 x, u16 y)
     return SetDiveWarp(CONNECTION_DIVE, x, y);
 }
 
+void Task_ShowRoamerMessageDelayed(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    s16 *data = task->data;
+
+    switch (data[0])
+    {
+    case 0: // waiting for map popup / transitions to finish
+        if (!FuncIsActiveTask(Task_MapNamePopUpWindow) && IsFieldMessageBoxHidden() && !gPaletteFade.active && !ScriptContext_IsEnabled())
+        {
+            data[0] = 1;
+            // play cry
+            s8 pan = (Random() % 88) + 212;
+            u16 species = data[1];
+            if (species != SPECIES_NONE)
+                PlayCry_NormalNoDucking(species, pan, CRY_VOLUME, CRY_PRIORITY_AMBIENT);
+            // start script; the script itself handles locking/release and wait-for-input
+            ScriptContext_SetupScript(EventScript_RoamerNearby);
+        }
+        break;
+    case 1: // wait for script to finish and message box to be closed
+        if (!ScriptContext_IsEnabled() && IsFieldMessageBoxHidden())
+        {
+            UnfreezeObjectEvents();
+            UnlockPlayerFieldControls();
+            DestroyTask(taskId);
+        }
+        break;
+    }
+}
+
 void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
 {
     SetWarpDestination(mapGroup, mapNum, WARP_ID_NONE, -1, -1);
@@ -913,6 +950,39 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     InitSecondaryTilesetAnimation();
     UpdateLocationHistoryForRoamer();
     MoveAllRoamers();
+    {
+        bool8 roamerNearby = FALSE;
+        u16 roamerSpecies = SPECIES_NONE;
+        u8 roamerIndex = ROAMER_COUNT;
+
+        for (u8 i = 0; i < ROAMER_COUNT; i++)
+        {
+            if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) && gSaveBlock1Ptr->roamer[i].active)
+            {
+                roamerNearby = TRUE;
+                roamerSpecies = gSaveBlock1Ptr->roamer[i].species;
+                roamerIndex = i;
+                break;
+            }
+        }
+
+        if (roamerNearby)
+        {
+            // Remember which roamer index was detected so TryStartRoamerEncounter
+            // can deterministically spawn it for the next wild encounter.
+            gRoamerNearbyIndexOverride = roamerIndex;
+
+            // Create a delayed task that waits for map popup/transition to finish
+            // before showing the roamer message. Store species in task data[1].
+            if (!FuncIsActiveTask(Task_ShowRoamerMessageDelayed))
+            {
+                u8 t = CreateTask(Task_ShowRoamerMessageDelayed, 80);
+                gTasks[t].data[0] = 0; // initial state
+                gTasks[t].data[1] = roamerSpecies;
+                gTasks[t].data[2] = roamerIndex;
+            }
+        }
+    }
     DoCurrentWeather();
     ResetFieldTasksArgs();
     RunOnResumeMapScript();
@@ -1109,6 +1179,8 @@ bool32 Overworld_IsBikingAllowed(void)
 // Flash level of 8 is fully black
 void SetDefaultFlashLevel(void)
 {
+    if (CheckBagHasItem(ITEM_HM05, 1))
+        FlagSet(FLAG_SYS_USE_FLASH);
     if (!gMapHeader.cave)
         gSaveBlock1Ptr->flashLevel = 0;
     else if (FlagGet(FLAG_SYS_USE_FLASH))
@@ -1298,6 +1370,8 @@ void Overworld_PlaySpecialMapMusic(void)
             music = MUS_UNDERWATER;
         else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
             music = (IS_FRLG ? MUS_RG_SURF : MUS_SURF);
+        else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            music = MUS_CYCLING;
     }
 
     if (music != GetCurrentMapMusic())
@@ -1337,10 +1411,12 @@ static void TransitionMapMusic(void)
         }
         if (newMusic != currentMusic)
         {
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
-                FadeOutAndFadeInNewMapMusic(newMusic, 4, 4);
-            else
-                FadeOutAndPlayNewMapMusic(newMusic, 8);
+            // Commented out below to prevent cycling music from stopping when transitioning maps
+
+            // if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
+            //     FadeOutAndFadeInNewMapMusic(newMusic, 4, 4);
+            // else
+            FadeOutAndPlayNewMapMusic(newMusic, 8);
         }
     }
 }
@@ -1884,6 +1960,10 @@ void CB2_Overworld(void)
         SetFieldVBlankCallback();
         return;
     }
+    if (gDoAutosaveAfterBattle) {
+        gDoAutosaveAfterBattle = FALSE;
+        AutosaveGame();
+    }
 }
 
 void SetMainCallback1(MainCallback cb)
@@ -1959,6 +2039,9 @@ void CB2_WhiteOut(void)
         StopMapMusic();
         ResetSafariZoneFlag_();
         DoWhiteOut();
+        if (gSaveBlock1Ptr->nuzlockeModeEnabled) {
+            RemoveFaintedMonsFromParty();
+        }
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
@@ -2030,6 +2113,14 @@ static void CB2_LoadMapOnReturnToFieldCableClub(void)
 
 void CB2_ReturnToField(void)
 {
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        gDoAutosave = TRUE;
+        RemoveFaintedMonsFromParty();
+    }
+    else if (gSaveBlock1Ptr->autosaveModeEnabled) {
+        gDoAutosave = TRUE;
+    }
     if (IsOverworldLinkActive() == TRUE)
     {
         SetMainCallback2(CB2_ReturnToFieldLink);
@@ -2080,8 +2171,60 @@ void CB2_ReturnToFieldWithOpenMenu(void)
     CB2_ReturnToField();
 }
 
+bool8 IsPartyEmpty(void)
+{
+    // Do not perform check if the player hasn't gotten their starter mon yet
+    if (!FlagGet(FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG))
+    {
+        return FALSE;
+    }
+
+    u32 i;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE &&
+            GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) > 0)
+            return FALSE; // At least one usable Pokémon remains
+    }
+    return TRUE; // No usable Pokémon left
+}
+
+void RemoveFaintedMonsFromParty(void)
+{
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled) {
+        int i, j;
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE &&
+                GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) == 0)
+            {
+                // Shift all Pokémon above this one down by one
+                for (j = i; j < PARTY_SIZE - 1; j++)
+                    gParties[B_TRAINER_PLAYER][j] = gParties[B_TRAINER_PLAYER][j + 1];
+                // Clear the last slot
+                ZeroMonData(&gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1]);
+                i--; // Stay at the same index to check the new Pokémon in this slot
+            }
+        }
+
+        if (IsPartyEmpty()){
+            // Wipe the save file
+            ClearSaveData();
+        }
+        else {
+            gDoAutosave = TRUE;
+        }
+    }
+}
+
 void CB2_ReturnToFieldContinueScript(void)
 {
+    if (IsPartyEmpty() && gSaveBlock1Ptr->nuzlockeModeEnabled)
+    {
+        gFieldCallback = CB2_NewGame;
+        return;
+    }
+
     FieldClearVBlankHBlankCallbacks();
     gFieldCallback = FieldCB_ContinueScript;
     CB2_ReturnToField();
@@ -2379,6 +2522,37 @@ static bool32 ReturnToFieldLocal(u8 *state)
         ResetMirageTowerAndSaveBlockPtrs();
         ResetScreenForMapLoad();
         ResumeMap(FALSE);
+        /* Roamer: update history, move roamers, and show nearby message if present */
+        UpdateLocationHistoryForRoamer();
+        MoveAllRoamers();
+        {
+            bool8 roamerNearby = FALSE;
+            u16 roamerSpecies = SPECIES_NONE;
+            u8 roamerIndex = ROAMER_COUNT;
+
+            for (u8 i = 0; i < ROAMER_COUNT; i++)
+            {
+                if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) && gSaveBlock1Ptr->roamer[i].active)
+                {
+                    roamerNearby = TRUE;
+                    roamerSpecies = gSaveBlock1Ptr->roamer[i].species;
+                    roamerIndex = i;
+                    break;
+                }
+            }
+
+            if (roamerNearby)
+            {
+                gRoamerNearbyIndexOverride = roamerIndex;
+                if (!FuncIsActiveTask(Task_ShowRoamerMessageDelayed))
+                {
+                    u8 t = CreateTask(Task_ShowRoamerMessageDelayed, 80);
+                    gTasks[t].data[0] = 0;
+                    gTasks[t].data[1] = roamerSpecies;
+                    gTasks[t].data[2] = roamerIndex;
+                }
+            }
+        }
         InitObjectEventsReturnToField();
         if (gFieldCallback == FieldCallback_UseFly)
             RemoveFollowingPokemon();

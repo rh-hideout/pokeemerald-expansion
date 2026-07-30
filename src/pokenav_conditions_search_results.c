@@ -703,7 +703,7 @@ static void CreateSearchResultsList(void)
 static void BufferSearchMonListItem(struct PokenavMonListItem *item, u8 *dest)
 {
     u8 gender;
-    u8 level;
+    u16 level;
     u8 *s, *end;
     const u8 *genderStr;
     u32 fontId;

@@ -30,6 +30,7 @@
 #include "palette.h"
 #include "pokeball.h"
 #include "pokemon.h"
+#include "ui_birch_case.h"
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
@@ -138,34 +139,38 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u8 isEgg:1; // 0x4
         u8 isShiny:1;
         u8 padding:6;
-        u8 level; // 0x5
-        u8 ribbonCount; // 0x6
-        u8 ailment; // 0x7
-        u8 abilityNum; // 0x8
-        metloc_u8_t metLocation; // 0x9
-        u8 metLevel; // 0xA
-        u8 metGame; // 0xB
-        u32 pid; // 0xC
-        u32 exp; // 0x10
-        enum Move moves[MAX_MON_MOVES]; // 0x14
-        u8 pp[MAX_MON_MOVES]; // 0x1C
-        u16 currentHP; // 0x20
-        u16 maxHP; // 0x22
-        u16 atk; // 0x24
-        u16 def; // 0x26
-        u16 spatk; // 0x28
-        u16 spdef; // 0x2A
-        u16 speed; // 0x2C
-        enum Item item; // 0x2E
-        u16 friendship; // 0x30
-        u8 OTGender; // 0x32
-        u8 nature; // 0x33
-        u8 ppBonuses; // 0x34
-        u8 sanity; // 0x35
-        u8 OTName[17]; // 0x36
-        u32 OTID; // 0x48
+        u16 level; // 0x5
+        u8 ribbonCount; // 0x7
+        u8 ailment; // 0x8
+        u8 abilityNum; // 0x9
+        metloc_u8_t metLocation; // 0xA
+        u16 metLevel; // 0xB
+        u8 metGame; // 0xD
+        u32 pid; // 0xE
+        u32 exp; // 0x12
+        enum Move moves[MAX_MON_MOVES]; // 0x16
+        u8 pp[MAX_MON_MOVES]; // 0x1E
+        u16 currentHP; // 0x22
+        u16 maxHP; // 0x24
+        u16 atk; // 0x26
+        u16 def; // 0x28
+        u16 spatk; // 0x2A
+        u16 spdef; // 0x2C
+        u16 speed; // 0x2E
+        enum Item item; // 0x30
+        u16 friendship; // 0x32
+        u8 OTGender; // 0x34
+        u8 nature; // 0x35
+        u8 ppBonuses; // 0x36
+        u8 sanity; // 0x37
+        u8 OTName[17]; // 0x38
+        u32 OTID; // 0x4A
         enum Type teraType;
+        u8 type1;
+        u8 type2;
         u8 mintNature;
+        u16 originalMoves[MAX_MON_MOVES]; // Store original (non-randomized) moves for proper seed generation
+        bool8 isOriginalDualType; // Track if the original species had a dual type
     } summary;
     u16 bgTilemapBuffers[PSS_PAGE_COUNT][2][0x400];
     u8 mode;
@@ -1546,12 +1551,47 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         else
             sum->isEgg = GetMonData(mon, MON_DATA_IS_EGG);
 
+        // Extract types early so they're available for display
+        sum->teraType = GetMonData(mon, MON_DATA_TERA_TYPE);
+
+        // Check if original species has a dual type
+        u8 originalType1 = gSpeciesInfo[sum->species].types[0];
+        u8 originalType2 = gSpeciesInfo[sum->species].types[1];
+        sum->isOriginalDualType = (originalType2 != TYPE_NONE && originalType2 != originalType1);
+
+        if (FlagGet(FLAG_RANDOMIZE_TYPE) && !sMonSummaryScreen->isBoxMon)
+        {
+            sum->type1 = GetRandomType(sum->species, 0);
+            // Only randomize type2 if the original species had a dual type
+            if (sum->isOriginalDualType)
+            {
+                sum->type2 = GetRandomType(sum->species, 1);
+            }
+            else
+            {
+                sum->type2 = sum->type1;
+            }
+        }
+        else
+        {
+            sum->type1 = originalType1;
+            sum->type2 = gSpeciesInfo[sum->species].types[1];
+        }
+
         break;
     case 1:
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            sum->moves[i] = GetMonData(mon, MON_DATA_MOVE1+i);
-            sum->pp[i] = GetMonData(mon, MON_DATA_PP1+i);
+            // Always store the original (non-randomized) move for proper seed generation
+            sum->originalMoves[i] = GetMonData(mon, MON_DATA_MOVE1+i);
+            sum->moves[i] = sum->originalMoves[i];
+
+            // Apply randomization for display if enabled, but always use original move as seed
+            if (FlagGet(FLAG_RANDOMIZE_MOVES) && !sMonSummaryScreen->isBoxMon && sum->moves[i] != MOVE_NONE)
+            {
+                sum->moves[i] = GetRandomMove(sum->species, sum->originalMoves[i]);
+            }
+            sum->pp[i] = GetMovePP(sum->moves[i]);
         }
         sum->ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
         break;
@@ -1571,7 +1611,6 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         break;
     default:
         sum->ribbonCount = GetMonData(mon, MON_DATA_RIBBON_COUNT);
-        sum->teraType = GetMonData(mon, MON_DATA_TERA_TYPE);
         sum->isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
         return TRUE;
     }
@@ -1726,11 +1765,11 @@ static void HandleMoveRelearnerInput(u8 taskId)
     {
         sMonSummaryScreen->callback = CB2_InitLearnMove;
         gRelearnMode = sMonSummaryScreen->currPageIndex;
+        gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
         if (sMonSummaryScreen->isBoxMon)
         {
             gSpecialVar_0x8004 = PC_MON_CHOSEN;
             gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
-            gSpecialVar_MonBoxId = StorageGetCurrentBox();
         }
         else
         {
@@ -2393,6 +2432,19 @@ static bool8 HasMoreThanOneMove(void)
     return FALSE;
 }
 
+static u16 GetDisplayedNewMove(void)
+{
+    u16 newMove = sMonSummaryScreen->newMove;
+
+    if (newMove == MOVE_NONE)
+        return MOVE_NONE;
+
+    if (FlagGet(FLAG_RANDOMIZE_MOVES) && !sMonSummaryScreen->isBoxMon)
+        return GetEffectiveMove(newMove, sMonSummaryScreen->summary.species);
+
+    return newMove;
+}
+
 static void ChangeSelectedMove(s16 *taskData, s8 direction, u8 *moveIndexPtr)
 {
     s8 i, newMoveIndex;
@@ -2410,7 +2462,7 @@ static void ChangeSelectedMove(s16 *taskData, s8 direction, u8 *moveIndexPtr)
 
         if (newMoveIndex == MAX_MON_MOVES)
         {
-            move = sMonSummaryScreen->newMove;
+            move = GetDisplayedNewMove();
             break;
         }
         move = sMonSummaryScreen->summary.moves[newMoveIndex];
@@ -2554,6 +2606,8 @@ static void SwapMonMoves(struct Pokemon *mon, u8 moveIndex1, u8 moveIndex2)
 
     enum Move move1 = summary->moves[moveIndex1];
     enum Move move2 = summary->moves[moveIndex2];
+    enum Move originalMove1 = summary->originalMoves[moveIndex1];
+    enum Move originalMove2 = summary->originalMoves[moveIndex2];
     u8 move1pp = summary->pp[moveIndex1];
     u8 move2pp = summary->pp[moveIndex2];
     u8 ppBonuses = summary->ppBonuses;
@@ -2567,15 +2621,20 @@ static void SwapMonMoves(struct Pokemon *mon, u8 moveIndex1, u8 moveIndex2)
     ppBonuses &= ~ppUpMask2;
     ppBonuses |= (ppBonusMove1 << (moveIndex2 * 2)) + (ppBonusMove2 << (moveIndex1 * 2));
 
-    // Swap the moves
-    SetMonData(mon, MON_DATA_MOVE1 + moveIndex1, &move2);
-    SetMonData(mon, MON_DATA_MOVE1 + moveIndex2, &move1);
+    // Swap the original moves (save these to Pokémon data, not the randomized ones)
+    SetMonData(mon, MON_DATA_MOVE1 + moveIndex1, &originalMove2);
+    SetMonData(mon, MON_DATA_MOVE1 + moveIndex2, &originalMove1);
     SetMonData(mon, MON_DATA_PP1 + moveIndex1, &move2pp);
     SetMonData(mon, MON_DATA_PP1 + moveIndex2, &move1pp);
     SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 
+    // Swap the displayed moves
     summary->moves[moveIndex1] = move2;
     summary->moves[moveIndex2] = move1;
+
+    // Swap the original moves
+    summary->originalMoves[moveIndex1] = originalMove2;
+    summary->originalMoves[moveIndex2] = originalMove1;
 
     summary->pp[moveIndex1] = move2pp;
     summary->pp[moveIndex2] = move1pp;
@@ -2589,6 +2648,8 @@ static void SwapBoxMonMoves(struct BoxPokemon *mon, u8 moveIndex1, u8 moveIndex2
 
     enum Move move1 = summary->moves[moveIndex1];
     enum Move move2 = summary->moves[moveIndex2];
+    enum Move originalMove1 = summary->originalMoves[moveIndex1];
+    enum Move originalMove2 = summary->originalMoves[moveIndex2];
     u8 move1pp = summary->pp[moveIndex1];
     u8 move2pp = summary->pp[moveIndex2];
     u8 ppBonuses = summary->ppBonuses;
@@ -2602,15 +2663,20 @@ static void SwapBoxMonMoves(struct BoxPokemon *mon, u8 moveIndex1, u8 moveIndex2
     ppBonuses &= ~ppUpMask2;
     ppBonuses |= (ppBonusMove1 << (moveIndex2 * 2)) + (ppBonusMove2 << (moveIndex1 * 2));
 
-    // Swap the moves
-    SetBoxMonData(mon, MON_DATA_MOVE1 + moveIndex1, &move2);
-    SetBoxMonData(mon, MON_DATA_MOVE1 + moveIndex2, &move1);
+    // Swap the original moves (save these to Pokémon data, not the randomized ones)
+    SetBoxMonData(mon, MON_DATA_MOVE1 + moveIndex1, &originalMove2);
+    SetBoxMonData(mon, MON_DATA_MOVE1 + moveIndex2, &originalMove1);
     SetBoxMonData(mon, MON_DATA_PP1 + moveIndex1, &move2pp);
     SetBoxMonData(mon, MON_DATA_PP1 + moveIndex2, &move1pp);
     SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 
+    // Swap the displayed moves
     summary->moves[moveIndex1] = move2;
     summary->moves[moveIndex2] = move1;
+
+    // Swap the original moves
+    summary->originalMoves[moveIndex1] = originalMove2;
+    summary->originalMoves[moveIndex2] = originalMove1;
 
     summary->pp[moveIndex1] = move2pp;
     summary->pp[moveIndex2] = move1pp;
@@ -3081,8 +3147,10 @@ static void DrawExperienceProgressBar(struct Pokemon *unused)
 
     if (summary->level < MAX_LEVEL)
     {
-        u32 expBetweenLevels = gExperienceTables[gSpeciesInfo[summary->species].growthRate][summary->level + 1] - gExperienceTables[gSpeciesInfo[summary->species].growthRate][summary->level];
-        u32 expSinceLastLevel = summary->exp - gExperienceTables[gSpeciesInfo[summary->species].growthRate][summary->level];
+        u32 nextXP = GetExperienceAtLevel(gSpeciesInfo[summary->species].growthRate, summary->level + 1);
+        u32 prevXP = GetExperienceAtLevel(gSpeciesInfo[summary->species].growthRate, summary->level);
+        u32 expBetweenLevels = nextXP - prevXP;
+        u32 expSinceLastLevel = summary->exp - prevXP;
 
         // Calculate the number of 1-pixel "ticks" to illuminate in the experience progress bar.
         // There are 8 tiles that make up the bar, and each tile has 8 "ticks". Hence, the numerator
@@ -3235,9 +3303,9 @@ static void PrintNotEggInfo(void)
             SetMonPicBackgroundPalette(TRUE);
     }
     StringCopy(gStringVar1, gText_LevelSymbol);
-    ConvertIntToDecimalStringN(gStringVar2, summary->level, STR_CONV_MODE_LEFT_ALIGN, 3);
+    ConvertIntToDecimalStringN(gStringVar2, summary->level, STR_CONV_MODE_LEFT_ALIGN, 4);
     StringAppend(gStringVar1, gStringVar2);
-    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gStringVar1, 24, 17, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gStringVar1, 20, 17, 0, 1);
     GetMonNickname(mon, gStringVar1);
     PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, 0, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME) - 9);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gText_Slash, 0, 1, 0, 1);
@@ -3621,10 +3689,10 @@ static void BufferNatureString(void)
 
 static void GetMetLevelString(u8 *output)
 {
-    u8 level = sMonSummaryScreen->summary.metLevel;
+    u16 level = sMonSummaryScreen->summary.metLevel;
     if (level == 0)
         level = EGG_HATCH_LEVEL;
-    ConvertIntToDecimalStringN(output, level, STR_CONV_MODE_LEFT_ALIGN, 3);
+    ConvertIntToDecimalStringN(output, level, STR_CONV_MODE_LEFT_ALIGN, 4);
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(3, output);
 }
 
@@ -3902,10 +3970,10 @@ static void BufferLeftColumnStats(void)
 
     DynamicPlaceholderTextUtil_Reset();
 
-    BufferStat(currentHPString, STAT_HP, sMonSummaryScreen->summary.currentHP, 0, 3);
-    BufferStat(maxHPString, STAT_HP, sMonSummaryScreen->summary.maxHP, 1, 3);
-    BufferStat(attackString, STAT_ATK, sMonSummaryScreen->summary.atk, 2, 7);
-    BufferStat(defenseString, STAT_DEF, sMonSummaryScreen->summary.def, 3, 7);
+    BufferStat(currentHPString, STAT_HP, sMonSummaryScreen->summary.currentHP, 0, 4);
+    BufferStat(maxHPString, STAT_HP, sMonSummaryScreen->summary.maxHP, 1, 4);
+    BufferStat(attackString, STAT_ATK, sMonSummaryScreen->summary.atk, 2, 9);
+    BufferStat(defenseString, STAT_DEF, sMonSummaryScreen->summary.def, 3, 9);
 
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsLeftColumnLayout);
 
@@ -3923,9 +3991,9 @@ static void BufferLeftColumnIvEvStats(void)
 
     DynamicPlaceholderTextUtil_Reset();
 
-    BufferStat(hpIvEvString, STAT_HP, sMonSummaryScreen->summary.currentHP, 0, 7);
-    BufferStat(attackIvEvString, STAT_ATK, sMonSummaryScreen->summary.atk, 1, 7);
-    BufferStat(defenseIvEvString, STAT_DEF, sMonSummaryScreen->summary.def, 2, 7);
+    BufferStat(hpIvEvString, STAT_HP, sMonSummaryScreen->summary.currentHP, 0, 8);
+    BufferStat(attackIvEvString, STAT_ATK, sMonSummaryScreen->summary.atk, 1, 8);
+    BufferStat(defenseIvEvString, STAT_DEF, sMonSummaryScreen->summary.def, 2, 8);
 
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsLeftIVEVColumnLayout);
 
@@ -3936,23 +4004,38 @@ static void BufferLeftColumnIvEvStats(void)
 
 static void PrintLeftColumnStats(void)
 {
-    int x;
+    u8 windowId = AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT);
 
-    if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS && !P_SUMMARY_SCREEN_IV_EV_VALUES)
-        x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 46);
-    else
-        x = 4;
+    u8 currentHP[20];
+    u8 maxHP[20];
+    u8 hpString[40];
+    u8 attack[20];
+    u8 defense[20];
 
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_LEFT), gStringVar4, x, 1, 0, 0);
+    struct PokeSummary *sum = &sMonSummaryScreen->summary;
+
+    BufferStat(currentHP, STAT_HP, sum->currentHP, 0, 4);
+    BufferStat(maxHP, STAT_HP, sum->maxHP, 1, 4);
+    BufferStat(attack, STAT_ATK, sum->atk, 2, 9);
+    BufferStat(defense, STAT_DEF, sum->def, 3, 9);
+
+    StringCopy(hpString, currentHP);
+    StringAppend(hpString, COMPOUND_STRING("/"));
+    StringAppend(hpString, maxHP);
+
+    // HP moved 1 pixel left
+    PrintTextOnWindowWithFont(windowId, hpString, 1, 1, 0, 0, FONT_NARROW);
+    PrintTextOnWindowWithFont(windowId, attack, 2, 17, 0, 0, FONT_NARROW);
+    PrintTextOnWindowWithFont(windowId, defense, 2, 33, 0, 0, FONT_NARROW);
 }
 
 static void BufferRightColumnStats(void)
 {
     DynamicPlaceholderTextUtil_Reset();
 
-    BufferStat(gStringVar1, STAT_SPATK, sMonSummaryScreen->summary.spatk, 0, 3);
-    BufferStat(gStringVar2, STAT_SPDEF, sMonSummaryScreen->summary.spdef, 1, 3);
-    BufferStat(gStringVar3, STAT_SPEED, sMonSummaryScreen->summary.speed, 2, 3);
+    BufferStat(gStringVar1, STAT_SPATK, sMonSummaryScreen->summary.spatk, 0, 4);
+    BufferStat(gStringVar2, STAT_SPDEF, sMonSummaryScreen->summary.spdef, 1, 4);
+    BufferStat(gStringVar3, STAT_SPEED, sMonSummaryScreen->summary.speed, 2, 4);
 
     DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sStatsRightColumnLayout);
 }
@@ -3962,11 +4045,11 @@ static void PrintRightColumnStats(void)
     int x;
 
     if (sMonSummaryScreen->skillsPageMode == SUMMARY_SKILLS_MODE_IVS && !P_SUMMARY_SCREEN_IV_EV_VALUES)
-        x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar4, 20);
+        x = GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 20);
     else
         x = 2;
 
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT), gStringVar4, x, 1, 0, 0);
+    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_STATS_RIGHT), gStringVar4, x, 1, 0, 0, FONT_NARROW);
 }
 
 static void PrintExpPointsNextLevel(void)
@@ -3976,17 +4059,17 @@ static void PrintExpPointsNextLevel(void)
     int x;
     u32 expToNextLevel;
 
-    ConvertIntToDecimalStringN(gStringVar1, sum->exp, STR_CONV_MODE_RIGHT_ALIGN, 7);
-    x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 42) + 2;
+    ConvertIntToDecimalStringN(gStringVar1, sum->exp, STR_CONV_MODE_RIGHT_ALIGN, 8);
+    x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 42) - 4;
     PrintTextOnWindow(windowId, gStringVar1, x, 1, 0, 0);
 
     if (sum->level < MAX_LEVEL)
-        expToNextLevel = gExperienceTables[gSpeciesInfo[sum->species].growthRate][sum->level + 1] - sum->exp;
+        expToNextLevel = GetExperienceAtLevel(gSpeciesInfo[sum->species].growthRate, sum->level + 1) - sum->exp;
     else
         expToNextLevel = 0;
 
-    ConvertIntToDecimalStringN(gStringVar1, expToNextLevel, STR_CONV_MODE_RIGHT_ALIGN, 6);
-    x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 42) + 2;
+    ConvertIntToDecimalStringN(gStringVar1, expToNextLevel, STR_CONV_MODE_RIGHT_ALIGN, 8);
+    x = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 42) - 4;
     PrintTextOnWindow(windowId, gStringVar1, x, 17, 0, 0);
 }
 
@@ -4001,8 +4084,9 @@ static void PrintBattleMoves(void)
         PrintNewMoveDetailsOrCancelText();
         if (sMonSummaryScreen->firstMoveIndex == MAX_MON_MOVES)
         {
-            if (sMonSummaryScreen->newMove != MOVE_NONE)
-                PrintMoveDetails(sMonSummaryScreen->newMove);
+            u16 move = GetDisplayedNewMove();
+            if (move != MOVE_NONE)
+                PrintMoveDetails(move);
         }
         else
         {
@@ -4037,7 +4121,7 @@ static void Task_PrintBattleMoves(u8 taskId)
         if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
         {
             if (sMonSummaryScreen->firstMoveIndex == MAX_MON_MOVES)
-                data[1] = sMonSummaryScreen->newMove;
+                data[1] = GetDisplayedNewMove();
             else
                 data[1] = sMonSummaryScreen->summary.moves[sMonSummaryScreen->firstMoveIndex];
         }
@@ -4181,7 +4265,7 @@ static void PrintContestMoveDescription(u8 moveSlot)
     enum Move move;
 
     if (moveSlot == MAX_MON_MOVES)
-        move = sMonSummaryScreen->newMove;
+        move = GetDisplayedNewMove();
     else
         move = sMonSummaryScreen->summary.moves[moveSlot];
 
@@ -4230,7 +4314,7 @@ static void PrintNewMoveDetailsOrCancelText(void)
     }
     else
     {
-        enum Move move = sMonSummaryScreen->newMove;
+        enum Move move = GetDisplayedNewMove();
 
         if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES)
             PrintTextOnWindowToFit(windowId1, GetMoveName(move), 0, 65, 0, 6);
@@ -4356,6 +4440,7 @@ void SetTypeSpritePosAndPal(enum Type typeId, u8 x, u8 y, u8 spriteArrayId)
 static void SetMonTypeIcons(void)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
+    struct Pokemon *mon = &sMonSummaryScreen->currentMon;
     if (summary->isEgg)
     {
         SetTypeSpritePosAndPal(TYPE_MYSTERY, 120, 48, SPRITE_ARR_ID_TYPE);
@@ -4363,17 +4448,19 @@ static void SetMonTypeIcons(void)
     }
     else
     {
-        SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 0), 120, 48, SPRITE_ARR_ID_TYPE);
-        if (GetSpeciesType(summary->species, 0) != GetSpeciesType(summary->species, 1))
+        u8 type1 = summary->type1;
+        u8 type2 = summary->type2;
+        SetTypeSpritePosAndPal(type1, 120, 48, SPRITE_ARR_ID_TYPE);
+        if (type1 != type2)
         {
-            SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 1), 160, 48, SPRITE_ARR_ID_TYPE + 1);
+            SetTypeSpritePosAndPal(type2, 160, 48, SPRITE_ARR_ID_TYPE + 1);
             SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, FALSE);
         }
         else
         {
             SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, TRUE);
         }
-        if (P_SHOW_TERA_TYPE >= GEN_9)
+        if (P_SHOW_TERA_TYPE >= GEN_9 && FlagGet(FLAG_BADGE07_GET))
         {
             SetTypeSpritePosAndPal(summary->teraType, 200, 48, SPRITE_ARR_ID_TYPE + 2);
         }
@@ -4430,6 +4517,12 @@ static void SetMoveTypeIcons(void)
         {
             SetSpriteInvisibility(i + SPRITE_ARR_ID_TYPE, TRUE);
         }
+
+        // Apply type randomization if enabled (after dynamic type to override it)
+        if (FlagGet(FLAG_RANDOMIZE_TYPE) && !sMonSummaryScreen->isBoxMon)
+        {
+            type = GetRandomMoveType(summary->moves[i]);
+        }
     }
 }
 
@@ -4449,10 +4542,17 @@ static void SetContestMoveTypeIcons(void)
 static void SetNewMoveTypeIcon(void)
 {
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
-    enum Type type = GetMoveType(sMonSummaryScreen->newMove);
-    type = SummaryScreen_GetDynamicMoveType(mon, sMonSummaryScreen->newMove, type);
+    enum Move move = GetDisplayedNewMove();
+    enum Type type = GetMoveType(move);
+    type = SummaryScreen_GetDynamicMoveType(mon, move, type);
+    
+    // Apply type randomization if enabled (after dynamic type to override it)
+    if (FlagGet(FLAG_RANDOMIZE_TYPE) && !sMonSummaryScreen->isBoxMon)
+    {
+        type = GetRandomMoveType(move);
+    }
 
-    if (sMonSummaryScreen->newMove == MOVE_NONE)
+    if (move == MOVE_NONE)
     {
         SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 4, TRUE);
     }
@@ -4464,7 +4564,7 @@ static void SetNewMoveTypeIcon(void)
         }
         else
         {
-            SetTypeSpritePosAndPal(NUMBER_OF_MON_TYPES + GetMoveContestCategory(sMonSummaryScreen->newMove), 85, 96, SPRITE_ARR_ID_TYPE + 4);
+            SetTypeSpritePosAndPal(NUMBER_OF_MON_TYPES + GetMoveContestCategory(move), 85, 96, SPRITE_ARR_ID_TYPE + 4);
         }
     }
 }

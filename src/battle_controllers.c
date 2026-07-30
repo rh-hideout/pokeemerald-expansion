@@ -35,6 +35,7 @@
 #include "constants/songs.h"
 #include "test/battle.h"
 #include "test/test.h"
+#include "event_data.h"
 
 static EWRAM_DATA u8 sLinkSendTaskId = 0;
 static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
@@ -58,7 +59,17 @@ static void AnimateMonAfterKnockout(enum BattlerId battler);
 
 bool32 IsAiVsAiBattle(void)
 {
-    return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+    else
+        return FALSE;
+}
+
+// Returns TRUE when player battlers should be controlled by AI.
+// Covers both trainer autobattles and wild AI battles.
+bool32 IsPlayerAiControlled(void)
+{
+    return (IsAiVsAiBattle() || (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && FlagGet(FLAG_AI_WILD_BATTLES)));
 }
 
 bool32 BattlerIsPlayer(enum BattlerId battlerId)
@@ -112,7 +123,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
         break;
     }
 
-    if (IsAiVsAiBattle())
+    if (IsPlayerAiControlled())
         return TRUE;
 
     return FALSE;
@@ -195,7 +206,8 @@ static void InitBtlControllersInternal(void)
     bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
     bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
     bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
-    bool32 isAIvsAI = IsAiVsAiBattle();
+    bool32 isPlayerAiControlled = IsPlayerAiControlled();
+    bool32 isAIvsAI = isPlayerAiControlled && (gBattleTypeFlags & BATTLE_TYPE_TRAINER);
 
     if (!isLink || isMaster)
         gBattleMainFunc = BeginBattleIntro;
@@ -276,8 +288,6 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally;
             else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToOakOrOldMan;
-            else if (isAIvsAI)
-                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToPlayerPartner;
             else
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToPlayer;
 
@@ -308,7 +318,7 @@ static void InitBtlControllersInternal(void)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
             else if ((isInGamePartner && !isRecorded)
-                    || isAIvsAI)
+                    || isPlayerAiControlled)
             {
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
             }
@@ -1664,8 +1674,10 @@ static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, u32 
         size = 4;
         break;
     case REQUEST_LEVEL_BATTLE:
-        dst[0] = GetMonData(&party[monId], MON_DATA_LEVEL);
-        size = 1;
+        data16 = GetMonData(&party[monId], MON_DATA_LEVEL);
+        dst[0] = data16;
+        dst[1] = data16 >> 8;
+        size = 2;
         break;
     case REQUEST_HP_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_HP);
@@ -1977,24 +1989,27 @@ static void SetBattlerMonData(enum BattlerId battler, struct Pokemon *party, u32
         HandleLowHpMusicChange(&party[gBattlerPartyIndexes[battler]], battler);
 }
 
-// In normal singles, if follower Pokémon exists, and the Pokémon following is being sent out, have it slide in instead of being thrown
+// Disabled: the player's Pokémon should always be thrown from its Poké Ball at the start of battle.
 static bool8 ShouldDoSlideInAnim(enum BattlerId battler)
 {
-    struct ObjectEvent *followerObj = GetFollowerObject();
-    if (!followerObj || followerObj->invisible)
-        return FALSE;
+    // ORIGINAL LOGIC, CURRENTLY DISABLED
+    // struct ObjectEvent *followerObj = GetFollowerObject();
+    // if (!followerObj || followerObj->invisible)
+    //     return FALSE;
 
-    if (gBattleTypeFlags & (
-        BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_FIRST_BATTLE |
-        BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
-        BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL)
-    )
-        return FALSE;
+    // if (gBattleTypeFlags & (
+    //     BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_FIRST_BATTLE |
+    //     BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
+    //     BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL)
+    // )
+    //     return FALSE;
 
-    if (GetFirstLiveMon() != GetBattlerMon(battler))
-        return FALSE;
+    // if (GetFirstLiveMon() != GetBattlerMon(battler))
+    //     return FALSE;
 
-    return TRUE;
+    // return TRUE;
+
+    return FALSE;
 }
 
 void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn)

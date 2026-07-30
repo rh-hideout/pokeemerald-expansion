@@ -485,7 +485,7 @@ struct PokemonStorageSystemData
     u16 displayUnusedVar;
     bool8 setMosaic;
     u8 displayMonMarkings;
-    u8 displayMonLevel;
+    u16 displayMonLevel;
     bool8 displayMonIsEgg;
     u8 displayMonName[POKEMON_NAME_LENGTH + 1];
     u8 displayMonNameText[36];

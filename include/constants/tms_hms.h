@@ -51,7 +51,57 @@
     F(STEEL_WING) \
     F(SKILL_SWAP) \
     F(SNATCH) \
-    F(OVERHEAT)
+    F(OVERHEAT) \
+    F(TAKE_DOWN) \
+    F(MUD_SLAP) \
+    F(FIRE_FANG) \
+    F(THUNDER_FANG) \
+    F(ICE_FANG) \
+    F(LOW_KICK) \
+    F(ACID_SPRAY) \
+    F(ACROBATICS) \
+    F(DRAINING_KISS) \
+    F(DAZZLING_GLEAM) \
+    F(POWER_GEM) \
+    F(LIQUIDATION) \
+    F(REVERSAL) \
+    F(PHANTOM_FORCE) \
+    F(BUG_BUZZ) \
+    F(GYRO_BALL) \
+    F(PETAL_BLIZZARD) \
+    F(LASH_OUT) \
+    F(DRACO_METEOR) \
+    F(VOLT_SWITCH) \
+    F(ZEN_HEADBUTT) \
+    F(HYPER_VOICE) \
+    F(GUNK_SHOT) \
+    F(ROCK_BLAST) \
+    F(AIR_SLASH) \
+    F(HEX) \
+    F(SCALD) \
+    F(ICY_WIND) \
+    F(DRAGON_TAIL) \
+    F(BULLDOZE) \
+    F(STEEL_BEAM) \
+    F(DARK_PULSE) \
+    F(AURA_SPHERE) \
+    F(HEAT_WAVE) \
+    F(ENERGY_BALL) \
+    F(PLAY_ROUGH) \
+    F(U_TURN) \
+    F(FAKE_TEARS) \
+    F(DRAGON_DANCE) \
+    F(CHARM) \
+    F(NASTY_PLOT) \
+    F(TAILWIND) \
+    F(CURSE) \
+    F(SPIKES) \
+    F(HAZE) \
+    F(ENDURE) \
+    F(STEALTH_ROCK) \
+    F(PAIN_SPLIT) \
+    F(AGILITY) \
+    F(SWORDS_DANCE)
 
 #define FOREACH_HM(F) \
     F(CUT) \

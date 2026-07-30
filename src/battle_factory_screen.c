@@ -1711,7 +1711,7 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
 {
     u8 i = 0;
     u8 ivs = 0;
-    u8 level = 0;
+    u16 level = 0;
     u32 otId = 0;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
@@ -1746,7 +1746,7 @@ static void CreateSlateportTentSelectableMons(u8 firstMonId)
 {
     u8 i;
     u8 ivs = 0;
-    u8 level = TENT_MIN_LEVEL;
+    u16 level = TENT_MIN_LEVEL;
     u32 otId = 0;
 
     gFacilityTrainerMons = gSlateportBattleTentMons;

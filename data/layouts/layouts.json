@@ -2964,7 +2964,7 @@
       "id": "LAYOUT_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
       "name": "EverGrandeCity_PokemonLeague_1F_Layout",
       "width": 19,
-      "height": 12,
+      "height": 27,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonCenter",
       "border_filepath": "data/layouts/EverGrandeCity_PokemonLeague_1F/border.bin",
@@ -4851,6 +4851,26 @@
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_EVER_GRANDE_CITY_CHAMPION_CHALLENGE_ROOM1",
+      "name": "EverGrandeCity_Champion_ChallengeRoom1_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattleFactory",
+      "border_filepath": "data/layouts/EverGrandeCity_Champion_ChallengeRoom1/border.bin",
+      "blockdata_filepath": "data/layouts/EverGrandeCity_Champion_ChallengeRoom1/map.bin"
+    },
+    {
+      "id": "LAYOUT_EVER_GRANDE_CITY_CHAMPION_CHALLENGE_ROOM2",
+      "name": "EverGrandeCity_Champion_ChallengeRoom2_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_BattleFactory",
+      "border_filepath": "data/layouts/EverGrandeCity_Champion_ChallengeRoom2/border.bin",
+      "blockdata_filepath": "data/layouts/EverGrandeCity_Champion_ChallengeRoom2/map.bin"
     },
     {
       "id": "LAYOUT_PALLET_TOWN_PLAYERS_HOUSE_1F_FRLG",

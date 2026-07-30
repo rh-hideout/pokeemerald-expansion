@@ -60,9 +60,12 @@ test/battle/partner_control.h
 tools/compresSmol/compresSmol
 tools/compresSmol/compresSmolTilemap
 tools/aif2pcm/aif2pcm
+docs/ai/*
 *.Identifier
 *.smol
 *.fastSmol
 *.smolTM
 __pycache__
 .map_version
+__decomps/
+__BUILD_INSTRUCTIONS.txt

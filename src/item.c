@@ -519,6 +519,15 @@ void SwapRegisteredBike(void)
         gSaveBlock1Ptr->registeredItem = ITEM_MACH_BIKE;
         break;
     }
+    switch (gSaveBlock1Ptr->registeredLongItem)
+    {
+    case ITEM_MACH_BIKE:
+        gSaveBlock1Ptr->registeredLongItem = ITEM_ACRO_BIKE;
+        break;
+    case ITEM_ACRO_BIKE:
+        gSaveBlock1Ptr->registeredLongItem = ITEM_MACH_BIKE;
+        break;
+    }
 }
 
 void CompactItemsInBagPocket(enum Pocket pocketId)
@@ -818,8 +827,10 @@ const u8 *GetItemName(enum Item itemId)
 }
 
 u32 GetItemPrice(enum Item itemId)
-{
-    return gItemsInfo[SanitizeItemId(itemId)].price;
+{    
+    u32 price = gItemsInfo[SanitizeItemId(itemId)].price;
+    price /= FlagGet(FLAG_IS_CHAMPION) ? 10 : 1;
+    return price;
 }
 
 static bool32 DoesItemHavePluralName(enum Item itemId)

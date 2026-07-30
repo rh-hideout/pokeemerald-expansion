@@ -723,7 +723,9 @@ const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface
                                                   "graphics/battle_interface/status3.4bpp",
                                                   "graphics/battle_interface/status4.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_frameend.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_frameend_bar.4bpp");
+                                                  "graphics/battle_interface/healthbox_doubles_frameend_bar.4bpp",
+                                                  "graphics/battle_interface/nuzlocke_can_catch.4bpp",
+                                                  "graphics/battle_interface/nuzlocke_cannot_catch.4bpp");
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCGFX_U32("graphics/battle_interface/unused_window3.png", ".4bpp.smol");
 const u32 gBattleInterfaceGfx_UnusedWindow4[] = INCGFX_U32("graphics/battle_interface/unused_window4.png", ".4bpp.smol");
 
@@ -1702,6 +1704,29 @@ const u32 gPartyMenuBg_Tilemap[] = INCGFX_U32("graphics/party_menu/bg.bin", ".sm
 const u32 gPartyMenuPokeball_Gfx[] = INCGFX_U32("graphics/party_menu/pokeball.png", ".4bpp.smol");
 const u32 gPartyMenuPokeballSmall_Gfx[] = INCGFX_U32("graphics/party_menu/pokeball_small.png", ".4bpp.smol"); //unused
 const u16 gPartyMenuPokeball_Pal[] = INCGFX_U16("graphics/party_menu/pokeball.png", ".gbapal");
+
+const u32 gPartyMenuGreatball_Gfx[] = INCGFX_U32("graphics/party_menu/greatball.png", ".4bpp.smol");
+const u16 gPartyMenuGreatball_Pal[] = INCGFX_U16("graphics/party_menu/greatball.png", ".gbapal");
+const u32 gPartyMenuUltraball_Gfx[] = INCGFX_U32("graphics/party_menu/ultraball.png", ".4bpp.smol");
+const u16 gPartyMenuUltraball_Pal[] = INCGFX_U16("graphics/party_menu/ultraball.png", ".gbapal");
+const u32 gPartyMenuMasterball_Gfx[] = INCGFX_U32("graphics/party_menu/masterball.png", ".4bpp.smol");
+const u16 gPartyMenuMasterball_Pal[] = INCGFX_U16("graphics/party_menu/masterball.png", ".gbapal");
+const u32 gPartyMenuSafariball_Gfx[] = INCGFX_U32("graphics/party_menu/safariball.png", ".4bpp.smol");
+const u16 gPartyMenuSafariball_Pal[] = INCGFX_U16("graphics/party_menu/safariball.png", ".gbapal");
+const u32 gPartyMenuNetball_Gfx[] = INCGFX_U32("graphics/party_menu/netball.png", ".4bpp.smol");
+const u16 gPartyMenuNetball_Pal[] = INCGFX_U16("graphics/party_menu/netball.png", ".gbapal");
+const u32 gPartyMenuDiveball_Gfx[] = INCGFX_U32("graphics/party_menu/diveball.png", ".4bpp.smol");
+const u16 gPartyMenuDiveball_Pal[] = INCGFX_U16("graphics/party_menu/diveball.png", ".gbapal");
+const u32 gPartyMenuNestball_Gfx[] = INCGFX_U32("graphics/party_menu/nestball.png", ".4bpp.smol");
+const u16 gPartyMenuNestball_Pal[] = INCGFX_U16("graphics/party_menu/nestball.png", ".gbapal");
+const u32 gPartyMenuRepeatball_Gfx[] = INCGFX_U32("graphics/party_menu/repeatball.png", ".4bpp.smol");
+const u16 gPartyMenuRepeatball_Pal[] = INCGFX_U16("graphics/party_menu/repeatball.png", ".gbapal");
+const u32 gPartyMenuTimerball_Gfx[] = INCGFX_U32("graphics/party_menu/timerball.png", ".4bpp.smol");
+const u16 gPartyMenuTimerball_Pal[] = INCGFX_U16("graphics/party_menu/timerball.png", ".gbapal");
+const u32 gPartyMenuLuxuryball_Gfx[] = INCGFX_U32("graphics/party_menu/luxuryball.png", ".4bpp.smol");
+const u16 gPartyMenuLuxuryball_Pal[] = INCGFX_U16("graphics/party_menu/luxuryball.png", ".gbapal");
+const u32 gPartyMenuPremierball_Gfx[] = INCGFX_U32("graphics/party_menu/premierball.png", ".4bpp.smol");
+const u16 gPartyMenuPremierball_Pal[] = INCGFX_U16("graphics/party_menu/premierball.png", ".gbapal");
 
 const u32 gStatusGfx_Icons[] = INCGFX_U32("graphics/interface/status_icons.png", ".4bpp.smol");
 const u16 gStatusPal_Icons[] = INCGFX_U16("graphics/interface/status_icons.png", ".gbapal");

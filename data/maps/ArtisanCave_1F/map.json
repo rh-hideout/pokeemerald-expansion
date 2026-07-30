@@ -24,9 +24,9 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_CARBOS",
+      "trainer_sight_or_berry_tree_id": "ITEM_METAGROSSITE",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_ARTISAN_CAVE_1F_CARBOS"
+      "flag": "FLAG_ITEM_METAGROSSITE"
     }
   ],
   "warp_events": [
@@ -46,5 +46,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 10,
+      "y": 15,
+      "elevation": 0,
+      "item": "ITEM_ZINC",
+      "flag": "FLAG_HIDDEN_ITEM_ARTISAN_CAVE_B1F_ZINC"
+    }
+  ]
 }

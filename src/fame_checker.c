@@ -764,7 +764,7 @@
 //                 task->func = Task_StartToCloseFameChecker;
 //             else if (sFameCheckerData->inPickMode)
 //             {
-//                 if (!IsTextPrinterActive(2) && HasUnlockedAllFlavorTextsForCurrentPerson() == TRUE)
+//                 if (!IsTextPrinterActiveOnWindow(2) && HasUnlockedAllFlavorTextsForCurrentPerson() == TRUE)
 //                     GetPickModeText();
 //             }
 //             else if (sFameCheckerData->personHasUnlockedPanels)
@@ -860,7 +860,7 @@
 //     s16 *data = gTasks[taskId].data;
 
 //     RunTextPrinters();
-//     if (JOY_NEW(A_BUTTON) && !IsTextPrinterActive(2))
+//     if (JOY_NEW(A_BUTTON) && !IsTextPrinterActiveOnWindow(2))
 //     {
 //         u8 spriteId = sFameCheckerData->spriteIds[data[1]];
 //         if (gSprites[spriteId].data[1] != 0xFF)

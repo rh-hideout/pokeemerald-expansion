@@ -273,6 +273,8 @@ EventScript_ResetAllMapFlags::
 	setflag FLAG_HIDE_SKY_PILLAR_WALLACE
 	setflag FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL
 	call EventScript_ResetAllBerries
+	@ Level cap is enabled by default
+	clearflag FLAG_LEVEL_CAP_OFF
 	end
 
 EventScript_ResetAllMapFlagsFrlg::

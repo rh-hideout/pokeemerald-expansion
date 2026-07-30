@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
+#include "caps.h"
 #include "battle_special.h"
 #include "cable_club.h"
 #include "data.h"
@@ -1636,6 +1637,23 @@ u8 GetLeadMonIndex(void)
             return i;
     }
     return 0;
+}
+
+// Used to pick which party mon is shown performing a field move (e.g. Surf) when
+// it's triggered automatically (not via party menu selection), so the mon doesn't
+// need to know the move itself (e.g. a following NPC granting Surf).
+u8 GetFirstNonFaintedPartyIndex(void)
+{
+    u8 i;
+    u8 partyCount = CalculatePlayerPartyCount();
+    for (i = 0; i < partyCount; i++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
+         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) != 0)
+            return i;
+    }
+    return GetLeadMonIndex();
 }
 
 enum Species ScriptGetPartyMonSpecies(void)
@@ -4471,6 +4489,11 @@ void UseBlankMessageToCancelPokemonPic(void)
 {
     DeactivateSingleTextPrinter(0, WINDOW_TEXT_PRINTER);
     ScriptMenu_HidePokemonPic();
+}
+
+void GetCurrentLevelCapSpecial(void)
+{
+    gSpecialVar_Result = GetCurrentLevelCap();
 }
 
 static void UIAskConfirmation(void)

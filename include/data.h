@@ -71,7 +71,7 @@ struct TrainerMon
     enum Species species;
     enum Item heldItem;
     enum Ability ability;
-    u8 lvl;
+    u16 lvl;
     enum PokeBall ball:8;
     u8 friendship;
     u8 nature:5;

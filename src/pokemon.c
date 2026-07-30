@@ -34,6 +34,7 @@
 #include "overworld.h"
 #include "party_menu.h"
 #include "pokedex.h"
+#include "constants/pokedex.h"
 #include "pokeblock.h"
 #include "pokemon.h"
 #include "pokemon_animation.h"
@@ -53,6 +54,8 @@
 #include "text.h"
 #include "trainer.h"
 #include "trainer_hill.h"
+#include "new_game.h"
+#include "ui_birch_case.h"
 #include "util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
@@ -70,6 +73,7 @@
 #include "constants/party_menu.h"
 #include "constants/regions.h"
 #include "constants/songs.h"
+#include "constants/species.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
@@ -764,7 +768,171 @@ UNUSED static const struct BoxPokemon sBoxPokemonConstantsFit =
     },
 };
 
-STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
+STATIC_ASSERT(MAX_LEVEL <= 1000, PokemonSubstruct0_experience_PotentiallyTooSmall); // Level can be stored in u16.
+
+// ORIGINAL CALCULATION, KEEPING IN CASE I DECIDE TO REVERT
+
+// u32 GetExperienceAtLevel(u8 growthRate, u16 level)
+// {
+//     if (level == 0)
+//         return 0;
+
+//     if (level == 1)
+//         return 1;
+
+//     u64 n = level;
+//     u64 exp = 0;
+
+//     switch (growthRate)
+//     {
+//     case GROWTH_MEDIUM_FAST:
+//         exp = EXP_MEDIUM_FAST(n);
+//         break;
+//     case GROWTH_ERRATIC:
+//         if (n <= 50)
+//             exp = (100 - n) * CUBE(n) / (50 * CUSTOM_XP_SCALING_FACTOR);
+//         else if (n <= 68)
+//             exp = (150 - n) * CUBE(n) / (100 * CUSTOM_XP_SCALING_FACTOR);
+//         else if (n <= 100)
+//             exp = ((1911 - 10 * n) / 3) * CUBE(n) / (500 * CUSTOM_XP_SCALING_FACTOR);
+//         else
+//         {
+//             u64 xp99  = ((1911 - 10 * 99) / 3) * CUBE(99) / (500 * CUSTOM_XP_SCALING_FACTOR);
+//             u64 xp100 = ((1911 - 10 * 100) / 3) * CUBE(100) / (500 * CUSTOM_XP_SCALING_FACTOR);
+
+//             u64 slope = (xp100 - xp99);
+//             u64 extra = (n - 100);
+//             exp = xp100 + (slope * extra);
+//         }
+//         exp += BASE_XP_OFFSET;
+//         break;
+//     case GROWTH_FLUCTUATING:
+//         if (n <= 15)
+//             exp = (((n + 1) / 3 + 24) * CUBE(n) / (50 * CUSTOM_XP_SCALING_FACTOR));
+//         else if (n <= 36)
+//             exp = ((n + 14) * CUBE(n) / (50 * CUSTOM_XP_SCALING_FACTOR));
+//         else
+//             exp = (((n / 2) + 32) * CUBE(n) / (50 * CUSTOM_XP_SCALING_FACTOR));
+//         exp += BASE_XP_OFFSET;
+//         break;
+//     case GROWTH_MEDIUM_SLOW:
+//         exp = (6 * CUBE(n)) / (5 * CUSTOM_XP_SCALING_FACTOR) - (15 * SQUARE(n)) / CUSTOM_XP_SCALING_FACTOR + (100 * n) / CUSTOM_XP_SCALING_FACTOR - (140 / CUSTOM_XP_SCALING_FACTOR);
+//         exp += BASE_XP_OFFSET;
+//         break;
+//     case GROWTH_FAST:
+//         exp = EXP_FAST(n);
+//         break;
+//     case GROWTH_SLOW:
+//         exp = EXP_SLOW(n);
+//         break;
+//     default:
+//         exp = 0;
+//         break;
+//     }
+
+//     if (exp > UINT32_MAX)
+//         exp = UINT32_MAX;
+
+//     return (u32)exp;
+// }
+
+// NEW FORMULA CALCULATION
+
+static double Oscillate(u32 n, u32 period)
+{
+    u32 pos = n % period;
+
+    if (pos < period / 2)
+        return ((double)pos / (period / 2));
+
+    return 2.0 - ((double)pos / (period / 2));
+}
+
+u32 GetExperienceAtLevel(u8 growthRate, u16 level)
+{
+    if (level == 0)
+        return 0;
+
+    if (level == 1)
+        return 1;
+
+    u64 n = level;
+
+    // Base curve (shared foundation for all growth rates)
+    u64 base = (CUBE(n) / CUSTOM_XP_SCALING_FACTOR) + BASE_XP_OFFSET;
+
+    double t = (double)n / 1000.0;   // normalized level [0..1]
+    double multiplier = 1.0;
+
+    switch (growthRate)
+    {
+        // ---------------------------------------------------------
+        // MEDIUM FAST (baseline)
+        // ---------------------------------------------------------
+        case GROWTH_MEDIUM_FAST:
+            multiplier = 1.0;
+            break;
+
+        // ---------------------------------------------------------
+        // FAST (slightly easier early, converges to baseline)
+        // ---------------------------------------------------------
+        case GROWTH_FAST:
+            multiplier = 0.85 + 0.15 * t;
+            break;
+
+        // ---------------------------------------------------------
+        // SLOW (hard early, converges upward toward baseline)
+        // ---------------------------------------------------------
+        case GROWTH_SLOW:
+            multiplier = 1.15 - 0.15 * t;
+            break;
+
+        // ---------------------------------------------------------
+        // MEDIUM SLOW (curved easing)
+        // ---------------------------------------------------------
+        case GROWTH_MEDIUM_SLOW:
+            multiplier = 1.20 - 0.40 * t + 0.20 * t * t;
+            break;
+
+        // ---------------------------------------------------------
+        // FLUCTUATING (decaying oscillation)
+        // ---------------------------------------------------------
+        case GROWTH_FLUCTUATING:
+        {
+            double wave = (Oscillate(n, 120) - 0.5) * 0.5;
+            double decay = (1.0 - t) * (1.0 - t);
+
+            multiplier = 1.0 + wave * decay;
+            break;
+        }
+
+        // ---------------------------------------------------------
+        // ERRATIC (bounded chaos, stabilizing over time)
+        // ---------------------------------------------------------
+        case GROWTH_ERRATIC:
+        {
+            u32 seed = n * 1103515245u + 12345u;
+            double noise = ((seed >> 16) & 1023) / 512.0 - 1.0;
+
+            double decay = (1.0 - t) * (1.0 - t) * (1.0 - t);
+
+            multiplier = 1.0 + noise * 0.35 * decay;
+            break;
+        }
+
+        default:
+            multiplier = 1.0;
+            break;
+    }
+
+    // Apply multiplier safely
+    double exp_d = (double)base * multiplier;
+
+    if (exp_d > (double)UINT32_MAX)
+        exp_d = (double)UINT32_MAX;
+
+    return (u32)exp_d;
+}
 
 static u32 CompressStatus(u32 status)
 {
@@ -835,28 +1003,43 @@ void ZeroEnemyPartyMons(void)
     gPartiesCount[B_TRAINER_OPPONENT_B] = 0;
 }
 
-void CreateRandomMon(struct Pokemon *mon, enum Species species, u8 level)
+void CreateRandomMon(struct Pokemon *mon, enum Species species, u16 level)
 {
     CreateRandomMonWithIVs(mon, species, level, USE_RANDOM_IVS);
 }
 
-void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u8 fixedIv)
+void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u16 level, u8 fixedIv)
 {
     CreateMonWithIVs(mon, species, level, Random32(), OTID_STRUCT_PLAYER_ID, fixedIv);
     GiveMonInitialMoveset(mon);
 }
 
-void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
+// Single point where FLAG_RANDOMIZE_MON swaps a species. Every mon goes through
+// CreateMon, so callers must not randomize beforehand or the species is rerolled twice.
+enum Species GetRandomizedSpecies(enum Species species)
+{
+    u32 otId;
+    rng_value_t rngState;
+
+    if (species == SPECIES_NONE || !FlagGet(FLAG_RANDOMIZE_MON))
+        return species;
+
+    otId = GetTrainerId(gSaveBlock2Ptr->playerTrainerId);
+    rngState = LocalRandomSeed(otId + species + GetNewGamePlusLevelOffset());
+    return (LocalRandom(&rngState) % (NUM_SPECIES - 1)) + 1;
+}
+
+void CreateMon(struct Pokemon *mon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId trainerId)
 {
     u32 mail;
     ZeroMonData(mon);
-    CreateBoxMon(&mon->box, species, level, personality, trainerId);
+    CreateBoxMon(&mon->box, GetRandomizedSpecies(species), level, personality, trainerId);
     SetMonData(mon, MON_DATA_LEVEL, &level);
     mail = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &mail);
 }
 
-void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV)
+void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV)
 {
     CreateMon(mon, species, level, personality, trainerId);
     SetBoxMonIVs(&mon->box, fixedIV);
@@ -963,7 +1146,7 @@ void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect)
     }
 }
 
-void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
+void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId trainerId)
 {
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
     u32 value;
@@ -1000,7 +1183,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
     SetBoxMonData(boxMon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
     SetBoxMonData(boxMon, MON_DATA_SPECIES, &species);
-    SetBoxMonData(boxMon, MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][level]);
+    u32 exp = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level);
+    SetBoxMonData(boxMon, MON_DATA_EXP, &exp);
     SetBoxMonData(boxMon, MON_DATA_FRIENDSHIP, &gSpeciesInfo[species].friendship);
     value = GetCurrentRegionMapSectionId();
     SetBoxMonData(boxMon, MON_DATA_MET_LOCATION, &value);
@@ -1078,14 +1262,14 @@ u32 GetMonPersonality(enum Species species, u8 gender, u8 nature, u8 unownLetter
 }
 
 // This is only used to create Wally's Ralts.
-void CreateMaleMon(struct Pokemon *mon, enum Species species, u8 level)
+void CreateMaleMon(struct Pokemon *mon, enum Species species, u16 level)
 {
     u32 personality = GetMonPersonality(species, MON_MALE, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(mon, species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(mon);
 }
 
-void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u8 level, u32 ivs, u32 personality)
+void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u16 level, u32 ivs, u32 personality)
 {
     CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonData(mon, MON_DATA_IVS, &ivs);
@@ -1151,7 +1335,7 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
 {
     s32 i;
     u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
-    u8 level;
+    u16 level;
     enum Language language;
     u8 value;
 
@@ -1275,7 +1459,7 @@ void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerP
     GetMonData(mon, MON_DATA_NICKNAME10, dest->nickname);
 }
 
-static void CreateEventMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId otId)
+static void CreateEventMon(struct Pokemon *mon, enum Species species, u16 level, u32 personality, struct OriginalTrainerId otId)
 {
     bool32 isModernFatefulEncounter = TRUE;
 
@@ -1369,6 +1553,47 @@ static u16 CalculateBoxMonChecksumReencrypt(struct BoxPokemon *boxMon)
     return checksum;
 }
 
+// Level scaling soft-cap for stats above level 100
+// Creates diminishing returns to prevent absurd stat growth at high levels
+static s32 GetScaledStatLevel(s32 level)
+{
+    // Vanilla-style scaling up to level 100.
+    if (level <= 100)
+        return level * 1000;
+
+    // Amount above level 100.
+    s32 over = level - 100;
+
+    // BASE: Starting scaled value at level 100.
+    // Normally should remain 100000 unless you redesign the entire stat progression system.
+    const s32 BASE = 100000;
+
+    // MAX_BONUS: Maximum additional scaling obtainable AFTER level 100.
+    // Final theoretical cap: BASE + MAX_BONUS
+    // Example: 100000 + 800000 = 900000 (Level 1000 behaves approximately like level 900)
+    const s32 MAX_BONUS = 800000;
+
+    // CURVE: Controls how quickly diminishing returns kick in.
+    // Smaller values = faster growth, Larger values = slower growth
+    const s32 CURVE = 250;
+
+    // Diminishing returns formula: bonus = (MAX_BONUS * over) / (over + CURVE)
+    // The bonus can NEVER exceed MAX_BONUS.
+    s32 bonus = (MAX_BONUS * over) / (over + CURVE);
+
+    return BASE + bonus;
+}
+
+#define CALC_STAT(base, iv, ev, statIndex, field, levelScaled)             \
+{                                                                          \
+    u8 baseStat = gSpeciesInfo[species].base;                              \
+    s32 n = (((2 * baseStat + iv + ev / 4) * (levelScaled)) / 100000) + 5; \
+    n = ModifyStatByNature(nature, n, statIndex);                          \
+    if (B_FRIENDSHIP_BOOST == TRUE)                                        \
+        n = n + ((n * 10 * friendship) / (MAX_FRIENDSHIP * 100));          \
+    SetMonData(mon, field, &n);                                            \
+}
+
 void CalculateMonStats(struct Pokemon *mon)
 {
     s32 oldMaxHP = GetMonData(mon, MON_DATA_MAX_HP);
@@ -1379,57 +1604,44 @@ void CalculateMonStats(struct Pokemon *mon)
     s32 newMaxHP;
 
     u8 nature = GetMonData(mon, MON_DATA_HIDDEN_NATURE);
+    s32 levelScaled = GetScaledStatLevel(level);
 
     SetMonData(mon, MON_DATA_LEVEL, &level);
 
-    bool32 hyperTrained[NUM_STATS]; //In a battle test, hyper training flag indicates a fixed stat
-    s32 iv[NUM_STATS];
-    s32 ev[NUM_STATS];
-    for (u32 i = 0; i < NUM_STATS; i++)
-    {
-        hyperTrained[i] = GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + i);
-        iv[i] = GetMonData(mon, MON_DATA_HP_IV + i);
-        ev[i] = GetMonData(mon, MON_DATA_HP_EV + i);
+    s32 hpIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_HP) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_HP_IV);
+    s32 hpEV = GetMonData(mon, MON_DATA_HP_EV);
+    s32 attackIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_ATK) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_ATK_IV);
+    s32 attackEV = GetMonData(mon, MON_DATA_ATK_EV);
+    s32 defenseIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_DEF) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_DEF_IV);
+    s32 defenseEV = GetMonData(mon, MON_DATA_DEF_EV);
+    s32 speedIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_SPEED) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_SPEED_IV);
+    s32 speedEV = GetMonData(mon, MON_DATA_SPEED_EV);
+    s32 spAttackIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_SPATK) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_SPATK_IV);
+    s32 spAttackEV = GetMonData(mon, MON_DATA_SPATK_EV);
+    s32 spDefenseIV = GetMonData(mon, MON_DATA_HYPER_TRAINED_SPDEF) ? MAX_PER_STAT_IVS : GetMonData(mon, MON_DATA_SPDEF_IV);
+    s32 spDefenseEV = GetMonData(mon, MON_DATA_SPDEF_EV);
 
-        if (hyperTrained[i])
-        {
-        #if TESTING
-            if (gMain.inBattle)
-                continue;
-        #endif
-            iv[i] = MAX_PER_STAT_IVS;
-        }
-
-        if (i == STAT_HP)
-            continue;
-
-        u8 baseStat = GetSpeciesBaseStat(species, i);
-        s32 n = (((2 * baseStat + iv[i] + ev[i] / 4) * level) / 100) + 5;
-        n = ModifyStatByNature(nature, n, i);
-        if (B_FRIENDSHIP_BOOST == TRUE)
-            n = n + ((n * 10 * friendship) / (MAX_FRIENDSHIP * 100));
-        SetMonData(mon, MON_DATA_MAX_HP + i, &n);
-    }
-
-#if TESTING
-    if (hyperTrained[STAT_HP] && gMain.inBattle)
-        return;
-#endif
-
-    if (HasShedinjaHPHandling(species))
+    if (species == SPECIES_SHEDINJA)
     {
         newMaxHP = 1;
     }
     else
     {
-        s32 n = 2 * GetSpeciesBaseHP(species) + iv[STAT_HP];
-        newMaxHP = (((n + ev[STAT_HP] / 4) * level) / 100) + level + 10;
+        s32 n = 2 * gSpeciesInfo[species].baseHP + hpIV;
+        newMaxHP = (((n + hpEV / 4) * levelScaled) / 100000) + (levelScaled / 1000) + 10;
     }
 
     gBattleScripting.levelUpHP = newMaxHP - oldMaxHP;
     if (gBattleScripting.levelUpHP == 0)
         gBattleScripting.levelUpHP = 1;
+
     SetMonData(mon, MON_DATA_MAX_HP, &newMaxHP);
+
+    CALC_STAT(baseAttack, attackIV, attackEV, STAT_ATK, MON_DATA_ATK, levelScaled)
+    CALC_STAT(baseDefense, defenseIV, defenseEV, STAT_DEF, MON_DATA_DEF, levelScaled)
+    CALC_STAT(baseSpeed, speedIV, speedEV, STAT_SPEED, MON_DATA_SPEED, levelScaled)
+    CALC_STAT(baseSpAttack, spAttackIV, spAttackEV, STAT_SPATK, MON_DATA_SPATK, levelScaled)
+    CALC_STAT(baseSpDefense, spDefenseIV, spDefenseEV, STAT_SPDEF, MON_DATA_SPDEF, levelScaled)
 
     // Since a Pokémon's maxHP data could either not have
     // been initialized at this point or this Pokémon is
@@ -1463,25 +1675,25 @@ void BoxMonToMon(const struct BoxPokemon *src, struct Pokemon *dest)
     SetMonData(dest, MON_DATA_HP, &value);
 }
 
-u8 GetLevelFromMonExp(struct Pokemon *mon)
+u16 GetLevelFromMonExp(struct Pokemon *mon)
 {
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = GetMonData(mon, MON_DATA_EXP);
     s32 level = 1;
 
-    while (level <= MAX_LEVEL && gExperienceTables[gSpeciesInfo[species].growthRate][level] <= exp)
+    while (level <= MAX_LEVEL && GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level) <= exp)
         level++;
 
     return level - 1;
 }
 
-u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon)
+u16 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon)
 {
     enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     u32 exp = GetBoxMonData(boxMon, MON_DATA_EXP);
     s32 level = 1;
 
-    while (level <= MAX_LEVEL && gExperienceTables[gSpeciesInfo[species].growthRate][level] <= exp)
+    while (level <= MAX_LEVEL && GetExperienceAtLevel(gSpeciesInfo[species].growthRate, level) <= exp)
         level++;
 
     return level - 1;
@@ -1592,6 +1804,7 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
 
         if (!alreadyKnown)
         {
+            // Store the original move; move randomization is applied at display time only
             if (addedMoves < MAX_MON_MOVES)
             {
                 moves[addedMoves] = learnset[i].move;
@@ -1694,6 +1907,7 @@ enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u3
 
     if (learnset[sLearningMoveTableID].level == level)
     {
+        // Store the original move; move randomization is applied at display time only
         gMoveToLearn = learnset[sLearningMoveTableID].move;
         sLearningMoveTableID++;
         retVal = GiveMoveToMon(mon, gMoveToLearn);
@@ -2579,7 +2793,7 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
         SetBoxMonData(&mon->box, MON_DATA_STATUS, dataArg);
         break;
     case MON_DATA_LEVEL:
-        SET8(mon->level);
+        SET16(mon->level);
         break;
     case MON_DATA_HP:
     {
@@ -2759,7 +2973,7 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             SET8(GetSubstruct3(boxMon)->metLocation);
             break;
         case MON_DATA_MET_LEVEL:
-            SET8(GetSubstruct3(boxMon)->metLevel);
+            SET16(GetSubstruct3(boxMon)->metLevel);
             break;
         case MON_DATA_MET_GAME:
             SET8(GetSubstruct3(boxMon)->metGame);
@@ -3355,6 +3569,24 @@ const struct Evolution *GetSpeciesEvolutions(enum Species species)
     return evolutions;
 }
 
+u16 GetFinalEvolution(enum Species species)
+{
+    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+    if (evolutions == NULL || evolutions[0].method == EVOLUTIONS_END)
+        return species; // No evolutions
+
+    // Count evolutions
+    int count = 0;
+    while (evolutions[count].method != EVOLUTIONS_END)
+        count++;
+
+    if (count != 1)
+        return species; // Branched or none, don't change
+
+    // Recurse
+    return GetFinalEvolution(evolutions[0].targetSpecies);
+}
+
 const u16 *GetSpeciesFormTable(enum Species species)
 {
     const u16 *formTable = gSpeciesInfo[SanitizeSpeciesId(species)].formSpeciesIdTable;
@@ -3476,10 +3708,10 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyI
 
 // EXP candies store an index for this table in their holdEffectParam.
 const u32 sExpCandyExperienceTable[] = {
-    [EXP_100 - 1] = 100,
+    [EXP_20 - 1] = 20,
+    [EXP_150 - 1] = 150,
     [EXP_800 - 1] = 800,
     [EXP_3000 - 1] = 3000,
-    [EXP_10000 - 1] = 10000,
     [EXP_30000 - 1] = 30000,
 };
 
@@ -3502,7 +3734,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
-    u8 levelBefore;
+    u16 levelBefore;
     bool8 didLevelUp = FALSE;
     bool8 isLevelUpItem;
 
@@ -3559,7 +3791,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
 
                 if (param == 0) // Rare Candy
                 {
-                    dataUnsigned = gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate][GetMonData(mon, MON_DATA_LEVEL) + 1];
+                    dataUnsigned = GetExperienceAtLevel(gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].growthRate, GetMonData(mon, MON_DATA_LEVEL) + 1);   
                 }
                 else if (param - 1 < ARRAY_COUNT(sExpCandyExperienceTable)) // EXP Candies
                 {
@@ -3569,12 +3801,16 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                     if (B_RARE_CANDY_CAP && B_EXP_CAP_TYPE == EXP_CAP_HARD)
                     {
                         u32 currentLevelCap = GetCurrentLevelCap();
-                        if (dataUnsigned > gExperienceTables[gSpeciesInfo[species].growthRate][currentLevelCap])
-                            dataUnsigned = gExperienceTables[gSpeciesInfo[species].growthRate][currentLevelCap];
+                        // Only cap at level cap threshold if below the cap
+                        if (GetMonData(mon, MON_DATA_LEVEL) < currentLevelCap)
+                        {
+                            if (dataUnsigned > GetExperienceAtLevel(gSpeciesInfo[species].growthRate, currentLevelCap))
+                                dataUnsigned = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, currentLevelCap);
+                        }
                     }
-                    else if (dataUnsigned > gExperienceTables[gSpeciesInfo[species].growthRate][MAX_LEVEL])
+                    else if (dataUnsigned > GetExperienceAtLevel(gSpeciesInfo[species].growthRate, MAX_LEVEL))
                     {
-                        dataUnsigned = gExperienceTables[gSpeciesInfo[species].growthRate][MAX_LEVEL];
+                        dataUnsigned = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, MAX_LEVEL);
                     }
                 }
 
@@ -4735,7 +4971,7 @@ bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
 {
     int i;
     enum Species species = GetMonData(mon, MON_DATA_SPECIES, 0);
-    u8 level = GetMonData(mon, MON_DATA_LEVEL, 0);
+    u16 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (evolutions == NULL)
@@ -5170,14 +5406,14 @@ u16 GetMonEVCount(struct Pokemon *mon)
 bool8 TryIncrementMonLevel(struct Pokemon *mon)
 {
     enum Species species = GetMonData(mon, MON_DATA_SPECIES, 0);
-    u8 nextLevel = GetMonData(mon, MON_DATA_LEVEL, 0) + 1;
+    u16 nextLevel = GetMonData(mon, MON_DATA_LEVEL, 0) + 1;
     u32 expPoints = GetMonData(mon, MON_DATA_EXP, 0);
-    if (expPoints > gExperienceTables[gSpeciesInfo[species].growthRate][MAX_LEVEL])
+    if (expPoints > GetExperienceAtLevel(gSpeciesInfo[species].growthRate, MAX_LEVEL))
     {
-        expPoints = gExperienceTables[gSpeciesInfo[species].growthRate][MAX_LEVEL];
+        expPoints = GetExperienceAtLevel(gSpeciesInfo[species].growthRate, MAX_LEVEL);
         SetMonData(mon, MON_DATA_EXP, &expPoints);
     }
-    if (nextLevel > GetCurrentLevelCap() || expPoints < gExperienceTables[gSpeciesInfo[species].growthRate][nextLevel])
+    if (nextLevel > GetCurrentLevelCap() || expPoints < GetExperienceAtLevel(gSpeciesInfo[species].growthRate, nextLevel))
     {
         return FALSE;
     }
@@ -5193,9 +5429,11 @@ u8 CanLearnTeachableMove(enum Species species, enum Move move)
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
     if (species == SPECIES_EGG)
         return FALSE;
+    // Apply move randomization at the earliest point in the chain
+    u16 effectiveMove = GetEffectiveMove(move, species);
     for (u32 i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
     {
-        if (teachableLearnset[i] == move)
+        if (teachableLearnset[i] == effectiveMove)
             return TRUE;
     }
     return FALSE;
@@ -6360,7 +6598,7 @@ bool32 DoesSpeciesHaveFormChangeMethod(enum Species species, enum FormChanges me
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
 {
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-    u8 level = GetMonData(mon, MON_DATA_LEVEL);
+    u16 level = GetMonData(mon, MON_DATA_LEVEL);
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 
     // Since you can learn more than one move per level,

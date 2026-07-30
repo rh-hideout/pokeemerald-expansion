@@ -1,5 +1,6 @@
 #include "global.h"
 #include "frontier_util.h"
+#include "badge_mart.h"
 #include "battle_setup.h"
 #include "battle_util.h"
 #include "berry.h"
@@ -1768,6 +1769,8 @@ static bool8 WaitForAorBPress(void)
         return TRUE;
     if (JOY_NEW(B_BUTTON))
         return TRUE;
+    if (FlagGet(FLAG_AUTO_SCROLL_TEXT))
+        return TRUE;
     return FALSE;
 }
 
@@ -2515,10 +2518,10 @@ bool8 ScrCmd_cleartrainerflag(struct ScriptContext *ctx)
 bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 {
     enum Species species = ScriptReadHalfword(ctx);
-    u8 level = ScriptReadByte(ctx);
+    u16 level = ScriptReadByte(ctx);
     enum Item item = ScriptReadHalfword(ctx);
     enum Species species2 = ScriptReadHalfword(ctx);
-    u8 level2 = ScriptReadByte(ctx);
+    u16 level2 = ScriptReadByte(ctx);
     enum Item item2 = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
@@ -2581,6 +2584,17 @@ bool8 ScrCmd_pokemartdecoration2(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     CreateDecorationShop2Menu(ptr);
+    ScriptContext_Stop();
+    return TRUE;
+}
+
+bool8 ScrCmd_pokemartbadgebased(struct ScriptContext *ctx)
+{
+    const u16 *inventory = GetBadgeBasedMartInventory();
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    CreatePokemartMenu(inventory);
     ScriptContext_Stop();
     return TRUE;
 }

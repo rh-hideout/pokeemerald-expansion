@@ -6418,7 +6418,7 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
-    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
+    return targetSpecies >= SPECIES_ALCREMIE_STRAWBERRY_VANILLA_CREAM && targetSpecies <= SPECIES_ALCREMIE_RIBBON_RAINBOW_SWIRL;
 }
 
 bool32 IsItemSweet(enum Item item)

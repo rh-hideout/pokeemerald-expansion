@@ -59,6 +59,20 @@ static const struct PartyMenuBoxInfoRects sPartyBoxInfoRects[] =
         },
         77, 4, 64, 16        // Description text
     },
+    [PARTY_BOX_EQUAL_COLUMN] = //Custom party menu
+    {
+        BlitBitmapToPartyWindow_Equal, 
+        {
+            //The below are the x, y, width, and height for each of the following info
+            33,  1, 40, 13, // Nickname
+            3, 25, 32,  8, // Level 85,  1, 32,  8,
+           100,  1,  8,  8, // Gender 79,  1,  8,  8, 
+            33, 11, 24,  8, // HP
+            48, 11, 24,  8, // Max HP
+            48, 26, 56,  3  // HP bar
+        }, 
+        33, 13, 64, 16      // Description text (e.g. NO USE)
+    },
 };
 
 
@@ -69,12 +83,12 @@ static const u8 sPartyMenuSpriteCoords[PARTY_LAYOUT_COUNT][PARTY_SIZE][4 * 2] =
 {
     [PARTY_LAYOUT_SINGLE] =
     {
-        { 16,  40,  20,  50,  50,  52,  16,  34},
-        {104,  18, 108,  28, 136,  27, 102,  25},
-        {104,  42, 108,  52, 136,  51, 102,  49},
-        {104,  66, 108,  76, 136,  75, 102,  73},
-        {104,  90, 108, 100, 136,  99, 102,  97},
-        {104, 114, 108, 124, 136, 123, 102, 121},
+        { 24,  14,  38,  33, 104,  19,  24,  18},
+        {136,  22, 150,  41, 216,  27, 136,  26},
+        { 24,  54,  38,  73, 104,  59,  24,  58},
+        {136,  62, 150,  81, 216,  67, 136,  66},
+        { 24,  94,  38, 113, 104,  99,  24,  98},
+        {136, 102, 150, 121, 216, 107, 136, 106},
     },
     [PARTY_LAYOUT_DOUBLE] =
     {
@@ -221,6 +235,74 @@ static const struct WindowTemplate sSinglePartyMenuWindowTemplate[] =
         .height = 4,
         .paletteNum = 14,
         .baseBlock = 0x1DF,
+    },
+    DUMMY_WIN_TEMPLATE
+};
+
+static const struct WindowTemplate sSinglePartyMenuWindowTemplate_Equal[] = //Custom party menu
+{
+    {//Slot 0 left
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 0,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 3,
+        .baseBlock = 0x63,
+    },
+    {//Slot 1 right
+        .bg = 0,
+        .tilemapLeft = 15,
+        .tilemapTop = 1,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 4,
+        .baseBlock = 0xA9,
+    },
+    {//Slot 2 left
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 5,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 5,
+        .baseBlock = 0xEF, //0xDF,
+    },
+    {//Slot 3 right
+        .bg = 0,
+        .tilemapLeft = 15,
+        .tilemapTop = 6,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 6,
+        .baseBlock = 0x135, //0x115,
+    },
+    {//Slot 4 left
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 10,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 7,
+        .baseBlock = 0x17B, //0x14B,
+    },
+    {//Slot 5 right
+        .bg = 0,
+        .tilemapLeft = 15,
+        .tilemapTop = 11,
+        .width = 14,
+        .height = 5,
+        .paletteNum = 8,
+        .baseBlock = 0x1C1, //0x181,
+    },
+    {
+        .bg = 2,
+        .tilemapLeft = 1,
+        .tilemapTop = 15,
+        .width = 28,
+        .height = 4,
+        .paletteNum = 14,
+        .baseBlock = 0x21F, //0x1DF,
     },
     DUMMY_WIN_TEMPLATE
 };
@@ -490,6 +572,17 @@ static const struct WindowTemplate sCancelButtonWindowTemplate =
     .baseBlock = 0x1C7,
 };
 
+static const struct WindowTemplate sCancelButtonWindowTemplate_equal =
+{
+    .bg = 0,
+    .tilemapLeft = 24,
+    .tilemapTop = 17,
+    .width = 6,
+    .height = 2,
+    .paletteNum = 3,
+    .baseBlock = 0x207, //0x1C7,  //Custom party menu
+};
+
 static const struct WindowTemplate sMultiCancelButtonWindowTemplate =
 {
     .bg = 0,
@@ -501,6 +594,17 @@ static const struct WindowTemplate sMultiCancelButtonWindowTemplate =
     .baseBlock = 0x1C7,
 };
 
+static const struct WindowTemplate sMultiCancelButtonWindowTemplate_equal =
+{
+    .bg = 0,
+    .tilemapLeft = 24,
+    .tilemapTop = 18,
+    .width = 6,
+    .height = 2,
+    .paletteNum = 3,
+    .baseBlock = 0x207, //0x1C7,  //Custom party menu
+};
+
 static const struct WindowTemplate sConfirmButtonWindowTemplate =
 {
     .bg = 0,
@@ -510,6 +614,17 @@ static const struct WindowTemplate sConfirmButtonWindowTemplate =
     .height = 2,
     .paletteNum = 3,
     .baseBlock = 0x1D3,
+};
+
+static const struct WindowTemplate sConfirmButtonWindowTemplate_equal =
+{
+    .bg = 0,
+    .tilemapLeft = 24,
+    .tilemapTop = 16,
+    .width = 6,
+    .height = 2,
+    .paletteNum = 3,
+    .baseBlock = 0x213, //0x1D3,  //Custom party menu
 };
 
 static const struct WindowTemplate sDefaultPartyMsgWindowTemplate =
@@ -697,6 +812,34 @@ static const u8 sSlotTilemap_Wide[]      = INCBIN_U8("graphics/party_menu/slot_w
 static const u8 sSlotTilemap_WideNoHP[]  = INCBIN_U8("graphics/party_menu/slot_wide_no_hp.bin");
 static const u8 sSlotTilemap_WideEmpty[] = INCBIN_U8("graphics/party_menu/slot_wide_empty.bin");
 
+ //Custom party menu
+ static const u8 sEqualMainSlotTileNums[] =      
+ {
+    43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+    49, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 50,
+    49, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 50,
+    49, 33, 33, 33, 52, 53, 51, 51, 51, 51, 51, 51, 51, 54,
+    55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57
+};
+
+static const u8 sEqualMainSlotTileNums_Egg[] =  
+{
+    43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45,
+    49, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 50,
+    49, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 50,
+    49, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 50,
+    55, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 56, 57
+};
+
+static const u8 sEqualEmptySlotTileNums[] = 
+{
+    21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23,
+    30,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 31,
+    30,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 31,
+    30,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 31,
+    37, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 38, 39
+};
+
 // Palette offsets
 static const u8 sGenderPalOffsets[] = {11, 12};
 static const u8 sHPBarPalOffsets[] = {9, 10};
@@ -794,6 +937,7 @@ struct
 } static const sCursorOptions[MENU_FIELD_MOVES] =
 {
     [MENU_SUMMARY]         = {COMPOUND_STRING("SUMMARY"),         CursorCb_Summary},
+    [MENU_STAT_EDIT]       = {COMPOUND_STRING("EDIT STAT"),       CursorCb_StatEdit},
     [MENU_SWITCH]          = {COMPOUND_STRING("SWITCH"),          CursorCb_Switch},
     [MENU_CANCEL1]         = {gText_Cancel2,                      CursorCb_Cancel1},
     [MENU_ITEM]            = {COMPOUND_STRING("ITEM"),            CursorCb_Item},
@@ -1002,6 +1146,206 @@ static const struct SpriteTemplate sSpriteTemplate_MenuPokeball =
     .paletteTag = TAG_POKEBALL,
     .oam = &sOamData_MenuPokeball,
     .anims = sSpriteAnimTable_MenuPokeball,
+};
+
+
+static const struct CompressedSpriteSheet sSpriteSheet_MenuGreatball =
+{
+    gPartyMenuGreatball_Gfx, 0x400, TAG_GREATBALL
+};
+static const struct SpritePalette sSpritePalette_MenuGreatball =
+{
+    gPartyMenuGreatball_Pal, TAG_GREATBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuGreatball =
+{
+    .tileTag = TAG_GREATBALL,
+    .paletteTag = TAG_GREATBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuUltraball =
+{
+    gPartyMenuUltraball_Gfx, 0x400, TAG_ULTRABALL
+};
+static const struct SpritePalette sSpritePalette_MenuUltraball =
+{
+    gPartyMenuUltraball_Pal, TAG_ULTRABALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuUltraball =
+{
+    .tileTag = TAG_ULTRABALL,
+    .paletteTag = TAG_ULTRABALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuMasterball =
+{
+    gPartyMenuMasterball_Gfx, 0x400, TAG_MASTERBALL
+};
+static const struct SpritePalette sSpritePalette_MenuMasterball =
+{
+    gPartyMenuMasterball_Pal, TAG_MASTERBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuMasterball =
+{
+    .tileTag = TAG_MASTERBALL,
+    .paletteTag = TAG_MASTERBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuSafariball =
+{
+    gPartyMenuSafariball_Gfx, 0x400, TAG_SAFARIBALL
+};
+static const struct SpritePalette sSpritePalette_MenuSafariball =
+{
+    gPartyMenuSafariball_Pal, TAG_SAFARIBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuSafariball =
+{
+    .tileTag = TAG_SAFARIBALL,
+    .paletteTag = TAG_SAFARIBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuNetball =
+{
+    gPartyMenuNetball_Gfx, 0x400, TAG_NETBALL
+};
+static const struct SpritePalette sSpritePalette_MenuNetball =
+{
+    gPartyMenuNetball_Pal, TAG_NETBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuNetball =
+{
+    .tileTag = TAG_NETBALL,
+    .paletteTag = TAG_NETBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuDiveball =
+{
+    gPartyMenuDiveball_Gfx, 0x400, TAG_DIVEBALL
+};
+static const struct SpritePalette sSpritePalette_MenuDiveball =
+{
+    gPartyMenuDiveball_Pal, TAG_DIVEBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuDiveball =
+{
+    .tileTag = TAG_DIVEBALL,
+    .paletteTag = TAG_DIVEBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuNestball =
+{
+    gPartyMenuNestball_Gfx, 0x400, TAG_NESTBALL
+};
+static const struct SpritePalette sSpritePalette_MenuNestball =
+{
+    gPartyMenuNestball_Pal, TAG_NESTBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuNestball =
+{
+    .tileTag = TAG_NESTBALL,
+    .paletteTag = TAG_NESTBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuRepeatball =
+{
+    gPartyMenuRepeatball_Gfx, 0x400, TAG_REPEATBALL
+};
+static const struct SpritePalette sSpritePalette_MenuRepeatball =
+{
+    gPartyMenuRepeatball_Pal, TAG_REPEATBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuRepeatball =
+{
+    .tileTag = TAG_REPEATBALL,
+    .paletteTag = TAG_REPEATBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuTimerball =
+{
+    gPartyMenuTimerball_Gfx, 0x400, TAG_TIMERBALL
+};
+static const struct SpritePalette sSpritePalette_MenuTimerball =
+{
+    gPartyMenuTimerball_Pal, TAG_TIMERBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuTimerball =
+{
+    .tileTag = TAG_TIMERBALL,
+    .paletteTag = TAG_TIMERBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuLuxuryball =
+{
+    gPartyMenuLuxuryball_Gfx, 0x400, TAG_LUXURYBALL
+};
+static const struct SpritePalette sSpritePalette_MenuLuxuryball =
+{
+    gPartyMenuLuxuryball_Pal, TAG_LUXURYBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuLuxuryball =
+{
+    .tileTag = TAG_LUXURYBALL,
+    .paletteTag = TAG_LUXURYBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_MenuPremierball =
+{
+    gPartyMenuPremierball_Gfx, 0x400, TAG_PREMIERBALL
+};
+static const struct SpritePalette sSpritePalette_MenuPremierball =
+{
+    gPartyMenuPremierball_Pal, TAG_PREMIERBALL
+};
+static const struct SpriteTemplate sSpriteTemplate_MenuPremierball =
+{
+    .tileTag = TAG_PREMIERBALL,
+    .paletteTag = TAG_PREMIERBALL,
+    .oam = &sOamData_MenuPokeball,
+    .anims = sSpriteAnimTable_MenuPokeball,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_MenuPokeballSmall =

@@ -2015,7 +2015,7 @@ static void PrintPartyNicknames(u8 whichParty)
 
 static void PrintLevelAndGender(u8 whichParty, u8 monIdx, u8 x, u8 y, u8 width, u8 height)
 {
-    u8 level;
+    u16 level;
     u32 symbolTile;
     u8 gender;
     u8 nickname[POKEMON_NAME_LENGTH + 1];

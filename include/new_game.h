@@ -2,6 +2,7 @@
 #define GUARD_NEW_GAME_H
 
 extern bool8 gDifferentSaveFile;
+extern bool8 gIsNewGamePlus;
 // Shortcuts some randomness in berry_blender.c, and enables debug printing
 // in contest.c.
 extern bool8 gEnableContestDebugging;

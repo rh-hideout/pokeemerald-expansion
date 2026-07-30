@@ -108,7 +108,7 @@ struct __attribute__((packed, aligned(2))) RfuGameData
     u8 activity:7;
     u8 startedActivity:1;
     u8 playerGender:1;
-    u8 tradeLevel:7;
+    u16 tradeLevel:10;
     u8 tradeType:6;
     u8 filler:2;
 };

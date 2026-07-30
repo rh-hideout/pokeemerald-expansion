@@ -42,8 +42,8 @@ enum MapPopUp_Themes_BW
 };
 
 // static functions
-static void Task_MapNamePopUpWindow(u8 taskId);
-static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId);
+void Task_MapNamePopUpWindow(u8 taskId);
+void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId);
 static void ShowMapNamePopUpWindow(void);
 static void LoadMapNamePopUpWindowBg(void);
 
@@ -397,7 +397,7 @@ void ShowMapNamePopup(void)
     }
 }
 
-static void Task_MapNamePopUpWindow(u8 taskId)
+void Task_MapNamePopUpWindow(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
@@ -506,7 +506,7 @@ void HideMapNamePopUpWindow(void)
     }
 }
 
-static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
+void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
 {
     u8 mapDisplayHeader[24];
     u8 *withoutPrefixPtr = &(mapDisplayHeader[0]);

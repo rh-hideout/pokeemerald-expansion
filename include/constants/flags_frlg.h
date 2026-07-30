@@ -2340,7 +2340,7 @@
 #define FLAG_ITEM_ROUTE_133_BIG_PEARL                               0
 #define FLAG_ITEM_ROUTE_133_STAR_PIECE                              0
 #define FLAG_ITEM_PETALBURG_CITY_MAX_REVIVE                         0
-#define FLAG_ITEM_PETALBURG_CITY_ETHER                              0
+#define FLAG_ITEM_PETALBURG_CITY_LINKING_CORD                              0
 #define FLAG_ITEM_RUSTBORO_CITY_X_DEFEND                            0
 #define FLAG_ITEM_LILYCOVE_CITY_MAX_REPEL                           0
 #define FLAG_ITEM_MOSSDEEP_CITY_NET_BALL                            0
@@ -2435,7 +2435,7 @@
 #define FLAG_ITEM_AQUA_HIDEOUT_B1F_NUGGET                           0
 #define FLAG_ITEM_MOSSDEEP_STEVENS_HOUSE_HM08                       0 // Unused Flag, leftover from R/S. HM08 is given to the player directly in Emerald
 #define FLAG_ITEM_ROUTE_119_NUGGET                                  0
-#define FLAG_ITEM_ROUTE_104_POTION                                  0
+#define FLAG_ITEM_ROUTE_104_LINKING_CORD                                  0
 #define FLAG_UNUSED_0x470                                           0 // Unused Flag
 #define FLAG_ITEM_ROUTE_103_PP_UP                                   0
 #define FLAG_UNUSED_0x472                                           0 // Unused Flag

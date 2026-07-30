@@ -119,12 +119,12 @@ typedef union // size = 0x24
         /*0x14*/ enum Species defeatedSpecies;
         /*0x16*/ u16 numFights;
         /*0x18*/ u16 words[1];
-        /*0x1A*/ u8 btLevel;
-        /*0x1B*/ u8 interviewResponse;
-        /*0x1C*/ bool8 wonTheChallenge;
-        /*0x1D*/ u8 playerLanguage;
-        /*0x1E*/ u8 opponentLanguage;
-        /*0x1F*/ //u8 padding;
+        /*0x1A*/ u16 btLevel;
+        /*0x1C*/ u8 interviewResponse;
+        /*0x1D*/ bool8 wonTheChallenge;
+        /*0x1E*/ u8 playerLanguage;
+        /*0x1F*/ u8 opponentLanguage;
+        /*0x20*/ //u8 padding;
     } bravoTrainerTower;
 
     // TVSHOW_CONTEST_LIVE_UPDATES
@@ -352,7 +352,7 @@ typedef union // size = 0x24
     struct {
         /*0x00*/ u8 kind;
         /*0x01*/ bool8 active;
-        /*0x02*/ u8 avgLevel;
+        /*0x02*/ u16 avgLevel;
         /*0x03*/ u8 numDecorations;
         /*0x04*/ u8 decorations[4];
         /*0x08*/ enum Species species;
@@ -484,11 +484,11 @@ typedef union // size = 0x24
         /*0x11*/ u8 locationMapGroup;
         /*0x12*/ u8 unused4;
         /*0x13*/ u8 probability;
-        /*0x14*/ u8 level;
-        /*0x15*/ u8 unused5;
-        /*0x16*/ u16 daysBeforeOutbreak;
-        /*0x18*/ u8 language;
-        /*0x19*/ //u8 padding;
+        /*0x14*/ u16 level;
+        /*0x16*/ u8 unused5;
+        /*0x17*/ u16 daysLeft;
+        /*0x19*/ u8 language;
+        /*0x1A*/ //u8 padding;
     } massOutbreak;
 } TVShow;
 

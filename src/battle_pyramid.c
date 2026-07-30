@@ -48,7 +48,7 @@ extern const struct MapLayout *const gMapLayouts[];
 struct PyramidWildMon
 {
     enum Species species;
-    u8 lvl;
+    u16 lvl;
     u8 abilityNum;
     u16 moves[MAX_MON_MOVES];
 };
@@ -1500,7 +1500,7 @@ void GenerateBattlePyramidWildMon(enum Species forceSpecies)
     }
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0],
                MON_DATA_EXP,
-               &gExperienceTables[gSpeciesInfo[species].growthRate][lvl]);
+               &(u32){ GetExperienceAtLevel(gSpeciesInfo[species].growthRate, lvl) });
 
     // Give initial moves and replace one with desired move
     GiveBoxMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0].box);
@@ -1601,7 +1601,7 @@ void GenerateBattlePyramidWildMon(enum Species forceSpecies)
     }
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0],
                MON_DATA_EXP,
-               &gExperienceTables[gSpeciesInfo[wildMons[id].species].growthRate][lvl]);
+               &(u32){ GetExperienceAtLevel(gSpeciesInfo[wildMons[id].species].growthRate, lvl) });
 
     switch (wildMons[id].abilityNum)
     {

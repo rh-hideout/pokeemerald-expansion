@@ -152,8 +152,8 @@ Route121_SafariZoneEntrance_Text_NotEnoughMoney:
 	.string "You don't have enough money.\n"
 	.string "Sorry.$"
 
-Route121_SafariZoneEntrance_Text_ThatWillBe500Please:
-	.string "That will be ¥500, please.$"
+Route121_SafariZoneEntrance_Text_ThatWillBe50Please:
+	.string "That will be ¥50, please.$"
 
 Route121_SafariZoneEntrance_Text_HereAreYourSafariBalls:
 	.string "Here are your SAFARI BALLS.$"

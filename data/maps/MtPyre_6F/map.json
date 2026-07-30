@@ -30,8 +30,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 6,
-      "y": 9,
+      "x": 0,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -72,5 +72,14 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 6,
+      "y": 8,
+      "elevation": 3,
+      "item": "ITEM_GARDEVOIRITE",
+      "flag": "FLAG_ITEM_GARDEVOIRITE"
+    }
+  ]
 }

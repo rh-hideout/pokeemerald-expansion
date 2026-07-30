@@ -5,6 +5,7 @@
 #include "field_specials.h"
 #include "item.h"
 #include "menu.h"
+#include "caps.h"
 #include "palette.h"
 #include "script.h"
 #include "script_menu.h"
@@ -62,6 +63,7 @@ static void CreateLilycoveSSTidalMultichoice(void);
 static bool8 IsPicboxClosed(void);
 static void CreateStartMenuForPokenavTutorial(void);
 static void InitMultichoiceNoWrap(bool8 ignoreBPress, u8 unusedCount, u8 windowId, u8 multichoiceId);
+static void SetChampionChallengeLevelVarStrings(u8 multichoiceId);
 static void MultichoiceDynamicEventDebug_OnInit(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventDebug_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventDebug_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
@@ -419,12 +421,41 @@ static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenu
     }
 }
 
+static void SetChampionChallengeLevelVarStrings(u8 multichoiceId)
+{
+    u32 offset = GetNewGamePlusLevelOffset();
+
+    switch (multichoiceId)
+    {
+    case CHAMPION_CHALLENGE_CHOICE_PAGE1:
+        ConvertIntToDecimalStringN(gStringVar1, 66 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar2, 67 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, 68 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar4, 69 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        break;
+    case CHAMPION_CHALLENGE_CHOICE_PAGE2:
+        ConvertIntToDecimalStringN(gStringVar1, 70 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar2, 71 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar3, 72 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        break;
+    case CHAMPION_CHALLENGE_CHOICE_PAGE3:
+        ConvertIntToDecimalStringN(gStringVar1, 73 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        ConvertIntToDecimalStringN(gStringVar2, 74 + offset, STR_CONV_MODE_LEFT_ALIGN, 3);
+        break;
+    default:
+        break;
+    }
+}
+
 void DrawMultichoiceMenuInternal(u8 left, u8 top, u8 multichoiceId, bool8 ignoreBPress, u8 cursorPos, const struct MenuAction *actions, int count)
 {
     int i;
     u8 windowId;
     int width = 0;
     u8 newWidth;
+
+    if (multichoiceId == CHAMPION_CHALLENGE_CHOICE_PAGE1 || multichoiceId == CHAMPION_CHALLENGE_CHOICE_PAGE2 || multichoiceId == CHAMPION_CHALLENGE_CHOICE_PAGE3)
+        SetChampionChallengeLevelVarStrings(multichoiceId);
 
     for (i = 0; i < count; i++)
     {

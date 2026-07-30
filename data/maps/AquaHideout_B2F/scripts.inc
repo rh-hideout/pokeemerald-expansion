@@ -45,9 +45,11 @@ AquaHideout_B2F_EventScript_SubmarineEscape::
 	delay 20
 	applymovement VAR_0x8008, Common_Movement_FacePlayer
 	waitmovement 0
+	specialvar VAR_RESULT, GetCurrentLevelCapSpecial
 	msgbox AquaHideout_B2F_Text_MattPostBattle, MSGBOX_DEFAULT
 	setflag FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE
 	setflag FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS
+	call Common_EventScript_CheckLevelCapIncrease
 	release
 	end
 

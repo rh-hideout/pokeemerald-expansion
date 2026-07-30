@@ -1145,7 +1145,13 @@ void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 
 static u32 GetBallThrowableState(void)
 {
-    if (IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
+    if (gSaveBlock1Ptr->nuzlockeModeEnabled && FlagGet(FLAG_NUZLOCKE_CATCH_MODE))
+    {
+        u16 route = GetCurrentMapId();
+        if (GET_NUZLOCKE_FLAG(route))
+            return BALL_THROW_UNABLE_NUZLOCKE;
+    }
+    else if (IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
      && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
         return BALL_THROW_UNABLE_TWO_MONS;
     else if (IsPlayerPartyAndPokemonStorageFull() == TRUE)
@@ -1163,6 +1169,7 @@ bool32 CanThrowBall(void)
     return (GetBallThrowableState() == BALL_THROW_ABLE);
 }
 
+static const u8 sText_CantThrowPokeBall_Nuzlocke[] = _("You cannot catch any more Pokémon\nin this area!\p");
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
@@ -1177,6 +1184,12 @@ void ItemUseInBattle_PokeBall(u8 taskId)
             Task_FadeAndCloseBagMenu(taskId);
         else
             CloseBattlePyramidBag(taskId);
+        break;
+    case BALL_THROW_UNABLE_NUZLOCKE:
+        if (!InBattlePyramid_())
+            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_Nuzlocke, CloseItemMessage);
+        else
+            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_Nuzlocke, Task_CloseBattlePyramidBagMessage);
         break;
     case BALL_THROW_UNABLE_TWO_MONS:
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
@@ -1304,6 +1317,10 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     case EFFECT_ITEM_THROW_BALL:
         switch (GetBallThrowableState())
         {
+        case BALL_THROW_UNABLE_NUZLOCKE:
+            failStr = sText_CantThrowPokeBall_Nuzlocke;
+            cannotUse = TRUE;
+            break;
         case BALL_THROW_UNABLE_TWO_MONS:
             failStr = sText_CantThrowPokeBall_TwoMons;
             cannotUse = TRUE;

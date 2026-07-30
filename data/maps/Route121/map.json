@@ -394,9 +394,9 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_REVIVE",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM89",
       "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_ROUTE_121_REVIVE"
+      "flag": "FLAG_ITEM_ROUTE_121_TM89"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
@@ -535,6 +535,14 @@
       "elevation": 3,
       "item": "ITEM_MAX_REVIVE",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_121_MAX_REVIVE"
+    },
+    {
+      "type": "hidden_item",
+      "x": 56,
+      "y": 5,
+      "elevation": 3,
+      "item": "ITEM_BANETTITE",
+      "flag": "FLAG_ITEM_BANETTITE"
     }
   ]
 }

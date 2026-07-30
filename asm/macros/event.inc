@@ -370,7 +370,8 @@
 	.byte SCR_OP_GETTIME
 	.endm
 
-	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in include/constants/rtc.h.
+	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
+	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
 	.macro gettimeofday
 	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
@@ -1310,6 +1311,11 @@
 	.macro pokemartdecoration2 products:req
 	.byte SCR_OP_POKEMARTDECORATION2
 	.4byte \products
+	.endm
+
+	@ Opens the Pokemart system with a dynamic inventory based on the player's collected gym badges.
+	.macro pokemartbadgebased
+	.byte SCR_OP_POKEMARTBADGEBASED
 	.endm
 
 	@ Starts up the slot machine minigame. id is a SLOT_MACHINE_* value that influences probabilities of certain reel outcomes.
