@@ -3163,7 +3163,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-            target = (battlerId ^ BIT_SIDE);
+        target = (battlerId ^ BIT_SIDE);
     }
     else
     {
