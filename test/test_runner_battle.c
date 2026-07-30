@@ -2875,7 +2875,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
          || moveTarget == TARGET_FOES_AND_ALLY
          || moveTarget == TARGET_OPPONENTS_FIELD)
         {
-            target = ((battlerId ^ BIT_SIDE) & BIT_SIDE);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
         {
@@ -2885,7 +2885,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
 
-            target = ((battlerId ^ BIT_SIDE) & BIT_SIDE);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_USER
               || moveTarget == TARGET_ALL_BATTLERS
@@ -3163,7 +3163,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-            target = ((battlerId ^ BIT_SIDE) & BIT_SIDE);
+            target = (battlerId ^ BIT_SIDE);
     }
     else
     {
