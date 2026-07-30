@@ -162,7 +162,7 @@ enum BXPYPaletteTags
 };
 
 #define FONT_BXPY_HELPBAR                         FONT_SMALL
-#define NUM_BXPY_MAX_MONS_SHOWED                  6
+#define NUM_BXPY_MAX_MONS_SHOWED                  PARTY_SIZE
 
 #define BXPY_SPECIES_NICKNAME_WIDTH               8
 #define BXPY_SPECIES_ITEM_WIDTH                   4
