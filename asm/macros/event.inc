@@ -1771,12 +1771,12 @@
 	.byte SCR_OP_UNLOADHELP
 	.endm
 
-	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
+	@ After using this command, all standard message boxes will use the signpost frame.
 	.macro signmsg
 	.byte SCR_OP_SIGNMSG
 	.endm
 
-	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
+	@ Ends the effects of signmsg, returning message box frames to normal.
 	.macro normalmsg
 	.byte SCR_OP_NORMALMSG
 	.endm
