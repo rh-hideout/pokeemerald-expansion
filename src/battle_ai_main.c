@@ -4633,7 +4633,6 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_DRAGON_CHEER:
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
