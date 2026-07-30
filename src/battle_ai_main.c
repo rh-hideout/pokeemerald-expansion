@@ -5742,10 +5742,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             case MOVE_EFFECT_CRIT_PLUS_SIDE:
             {
                 if (CritEspeciallyDesirable(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
-                {
                     score +=10;
-                    break;
-                }
+                
+                break;
             }
             case MOVE_EFFECT_ORDER_UP:
             {
