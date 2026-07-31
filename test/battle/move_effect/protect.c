@@ -1161,3 +1161,23 @@ SINGLE_BATTLE_TEST("Protect: Mat Block, King's Shield, Obstruct, Burning Bulwark
         NOT MESSAGE("Wobbuffet protected itself!");
     }
 }
+
+SINGLE_BATTLE_TEST("Protect: Wide Guard protects user from spread moves even in Single Battles")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_LEER; }
+    PARAMETRIZE { move = MOVE_DAZZLING_GLEAM; }
+    PARAMETRIZE { move = MOVE_EARTHQUAKE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_WIDE_GUARD); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        MESSAGE("Wobbuffet protected itself!");
+    }
+}

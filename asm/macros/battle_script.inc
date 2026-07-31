@@ -37,9 +37,10 @@
 	.byte \battler
 	.endm
 
-	.macro datahpupdate battler:req
+	.macro datahpupdate battler:req assuranceDouble:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
+    .byte \assuranceDouble
 	.endm
 
 	.macro critmessage
@@ -2125,4 +2126,8 @@
 	.byte \comparison
 	.byte \terrain
 	.4byte \jumpInstr
+	.endm
+
+	.macro trydomoveeffectsbeforemoves
+	callnative BS_TryDoMoveEffectsBeforeMoves
 	.endm

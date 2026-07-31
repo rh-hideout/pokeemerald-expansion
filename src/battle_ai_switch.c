@@ -2940,8 +2940,9 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
 
 static enum Gimmick GetPossibleGimmickForSwitchIn(enum BattlerId battler)
 {
-    bool32 canUseTera = gBattleStruct->opponentMonCanTera & 1 << gBattlerPartyIndexes[battler];
-    bool32 canUseDynamax = gBattleStruct->opponentMonCanDynamax & 1 << gBattlerPartyIndexes[battler];
+    struct Pokemon *mon = GetBattlerMon(battler);
+    bool32 canUseTera = GetMonData(mon, MON_DATA_TERA_TYPE) != TYPE_MYSTERY;
+    bool32 canUseDynamax = GetMonData(mon, MON_DATA_DYNAMAX_LEVEL) != BLOCK_AI_DYNAMAX;
 
     for (enum Gimmick gimmick = GIMMICK_NONE; gimmick < GIMMICKS_COUNT; gimmick++)
     {

@@ -4,7 +4,7 @@ The dynamic multichoice macros is a feature created by SBird to replace the much
 ## The Macros
 There are three types of macros that you can use in your scripting, `dynmultichoice`, `dynmultipush`, and `dynmultistack`.
 
-### **dynmultichoice`**
+### **`dynmultichoice`**
 `dynmultichoice` is the simplest macro and what you'll use the most. Here's a sample of using `dynmultichoice` in your script:
 ```
 EventScript_ExampleScript::
@@ -51,24 +51,24 @@ Here is a look at the macro and it's arguments:
 - Determines the **y-coordinate** of where your menu starts from its top-left corner (explanation below)
 
 #### ignoreBPress
-- **Expected Value:**True/False
-- Controls whether the player **can exit using the B button**. If set to **true**, the player **cannot exit**. |
+- **Expected Value:** True/False
+- Controls whether the player **can exit using the B button**. If set to **true**, the player **cannot exit**.
 
 #### maxBeforeScroll
-- **Expected Value:**Integer
-- Controls **how many options are shown** before the player has to scroll.                                     |
+- **Expected Value:** Integer
+- Controls **how many options are shown** before the player has to scroll.
 
 #### initialSelected
-- **Expected Value:**Integer
-- **Chooses which option** (from a 0-index) **is already selected** upon opening the menu.                     |
+- **Expected Value:** Integer
+- **Chooses which option** (from a 0-index) **is already selected** upon opening the menu.
 
 #### callbacks
-- **Expected Value:**Constant
-- Designates **which callback** is used. Elaborated more later.                                                     |
+- **Expected Value:** Constant
+- Designates **which callback** is used. Elaborated more later.
 
 #### argv
-- **Expected Value:**String
-- **The choices** that the player can choose from the menu.                                                    |
+- **Expected Value:** String
+- **The choices** that the player can choose from the menu.
 
 
 *How to position arguments `left` and `top`*:
@@ -558,9 +558,15 @@ static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollecti
     },
     [DYN_MULTICHOICE_CB_SHOW_ITEM] =
     {
-        .OnInit = MultichoiceDynamicEventShowItem_OnInit,
+        .OnInit = MultichoiceDynamicEventShowSprite_OnInit,
         .OnSelectionChanged = MultichoiceDynamicEventShowItem_OnSelectionChanged,
-        .OnDestroy = MultichoiceDynamicEventShowItem_OnDestroy
+        .OnDestroy = MultichoiceDynamicEventShowSprite_OnDestroy
+    },
+    [DYN_MULTICHOICE_CB_SHOW_PKMN] =
+    {
+        .OnInit = MultichoiceDynamicEventShowSprite_OnInit,
+        .OnSelectionChanged = MultichoiceDynamicEventShowPkmn_OnSelectionChanged,
+        .OnDestroy = MultichoiceDynamicEventShowSprite_OnDestroy
     }
 };
 ```
@@ -575,4 +581,7 @@ For `DYN_MULTICHOICE_CB_SHOW_ITEM`, the breakdown is as follows:
 - `.OnSelectionChanged`: Destroys the previous sprite, then draws the new sprite on screen.
 - `.OnDestroy`: Destroys the current sprite on screen.
 
-`DYN_MULTICHOICE_CB_SHOW_ITEM` shows the item whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/items.h`](../../include/constants/items.h). An item with the ID 0 will show nothing, an item with the ID 1 will show a PokéBall, an item with the ID 2 will show a Great Ball, and so on.
+### Current callbacks that show sprites
+- `DYN_MULTICHOICE_CB_SHOW_ITEM` shows the item whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/items.h`](../../include/constants/items.h). An item with the ID 0 will show nothing, an item with the ID 1 will show a PokéBall, an item with the ID 2 will show a Great Ball, and so on.
+
+- `DYN_MULTICHOICE_CB_SHOW_PKMN` shows the Pokémon's icon whose constant is equal to the current highlight option's ID. Each constant is listed in [`include/constants/species.h`](../../include/constants/species.h). A Pokémon with the ID 0 will show the decamark, a Pokémon with the ID 1 will show a Bulbasaur, a Pokémon with the ID 2 will show an Ivysaur, and so on.

@@ -144,3 +144,21 @@ SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
         EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
     }
 }
+
+SINGLE_BATTLE_TEST("Primordial Sea fails if overworld weather is present (Gen9)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_PRIMORDIAL_SEA);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN);
+        ResetStartingStatuses();
+    }
+}

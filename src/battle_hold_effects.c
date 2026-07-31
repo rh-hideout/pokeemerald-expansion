@@ -15,7 +15,6 @@
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].onSwitchIn; }
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].mirrorHerb; }
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect)           { return gHoldEffectsInfo[holdEffect].whiteHerb; }
-bool32 IsWhiteHerbEndTurnActivation(enum HoldEffect holdEffect)    { return gHoldEffectsInfo[holdEffect].whiteHerbEndTurn; }
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect)      { return gHoldEffectsInfo[holdEffect].onStatusChange; }
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].onHpThreshold; }
 bool32 IsKeeMarangaBerryActivation(enum HoldEffect holdEffect)     { return gHoldEffectsInfo[holdEffect].keeMarangaBerry; }
@@ -29,6 +28,7 @@ bool32 IsOnEffectActivation(enum HoldEffect holdEffect)            { return gHol
 bool32 IsOnBerryActivation(enum HoldEffect holdEffect)             { return GetItemPocket(gLastUsedItem) == POCKET_BERRIES; }
 bool32 IsOnFlingActivation(enum HoldEffect holdEffect)             { return gHoldEffectsInfo[holdEffect].onFling; }
 bool32 IsBoosterEnergyActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].boosterEnergy; }
+bool32 IsOrbsWhiteHerbActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].orbsWhiteHerbActivation; }
 
 bool32 IsForceTriggerItemActivation(enum HoldEffect holdEffect)
 {
@@ -66,7 +66,7 @@ enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
         gBattlerAbility = gBattleScripting.battler = battler;
         gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
-        BattleScriptCall(BattleScript_BoosterEnergyRet);
+        BattleScriptCall(BattleScript_BoosterEnergy);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -102,26 +102,16 @@ static enum ItemEffect TryTerrainSeeds(enum BattlerId battler, enum Item item)
     return ITEM_NO_EFFECT;
 }
 
-static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
-{
-    enum Ability ability = GetBattlerAbility(battler);
-    if  (ability == ABILITY_OWN_TEMPO
-      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldTimers.terrain)
-      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
-        return FALSE;
-    return TRUE;
-}
-
 static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
     if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
         return ITEM_NO_EFFECT;
 
-    if (CanBeInfinitelyConfused(battler))
-        gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
+    if (CanBeConfused(battler, battler))
+        gBattleMons[battler].volatiles.confusionTimer = PERMANENT_VOLATILE;
 
     SetStatChange(battler, STAT_ATK, 2);
-    BattleScriptCall(BattleScript_BerserkGeneRet);
+    BattleScriptCall(BattleScript_BerserkGene);
     return ITEM_STATS_CHANGE;
 }
 
@@ -731,9 +721,9 @@ static enum ItemEffect TryCureConfusion(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gBattleMons[battler].volatiles.confusionTurns > 0)
+    if (gBattleMons[battler].volatiles.confusionTimer > 0)
     {
-        RemoveConfusionStatus(battler);
+        gBattleMons[battler].volatiles.confusionTimer = 0;
         BattleScriptCall(BattleScript_BerryCureConfusionRet);
         effect = ITEM_EFFECT_OTHER;
     }
@@ -747,7 +737,7 @@ static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
     bool32 curedStatus = FALSE;
     bool32 curedConfusion = FALSE;
 
-    if (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0)
+    if (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTimer > 0)
     {
         if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
         {
@@ -781,10 +771,10 @@ static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FROSTBITE;
             curedStatus = TRUE;
         }
-        if (gBattleMons[battler].volatiles.confusionTurns > 0)
+        if (gBattleMons[battler].volatiles.confusionTimer > 0)
             curedConfusion = TRUE;
         gBattleMons[battler].status1 = 0;
-        RemoveConfusionStatus(battler);
+        gBattleMons[battler].volatiles.confusionTimer = 0;
         if (curedStatus && curedConfusion)
             BattleScriptCall(BattleScript_BerryCureStatusAndConfusionRet);
         else if (curedConfusion)

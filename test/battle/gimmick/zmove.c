@@ -564,8 +564,9 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Stoked Sparksurfer paralyzes the target")
 SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two stages")
 {
     GIVEN {
+        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9); // The test will fail without this on GEN_CHAMPIONS
         ASSUME(GetMoveEffect(MOVE_EXTREME_EVOBOOST) == EFFECT_EXTREME_EVOBOOST);
-        PLAYER(SPECIES_EEVEE) { Item(ITEM_EEVIUM_Z); }
+        PLAYER(SPECIES_EEVEE) { Item(ITEM_EEVIUM_Z); Moves(MOVE_POUND, MOVE_LAST_RESORT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_LAST_RESORT, gimmick: GIMMICK_Z_MOVE); }
