@@ -40,7 +40,7 @@ enum
 #define MON_SPRITE_X_OFF -32
 #define MON_SPRITE_Y     104
 
-static const u8 gText_RibbonsF700[] = _("RIBBONS {DYNAMIC 0}");
+static const u8 gText_RibbonsF700[] = _("[Ribbons] {DYNAMIC 0}");
 
 struct Pokenav_RibbonsSummaryList
 {
