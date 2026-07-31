@@ -75,12 +75,12 @@ static inline enum Gender SetQuickstartPlayerGender()
 static void CB2_SkipToNewGame(void)
 {
 #if IS_FRLG
-    static const u8 sText_PlayerMale[] = _("RED");
-    static const u8 sText_PlayerFemale[] = _("LEAF");
-    static const u8 sText_Rival[] = _("BLUE");
+    static const u8 sText_PlayerMale[] = _("[Red]");
+    static const u8 sText_PlayerFemale[] = _("[Leaf]");
+    static const u8 sText_Rival[] = _("[Blue]");
 #else
-    static const u8 sText_PlayerMale[] = _("BRENDAN");
-    static const u8 sText_PlayerFemale[] = _("MAY");
+    static const u8 sText_PlayerMale[] = _("[Brendan]");
+    static const u8 sText_PlayerFemale[] = _("[May]");
 #endif  // IS_FRLG
 
     if (!UpdatePaletteFade())

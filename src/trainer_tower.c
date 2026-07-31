@@ -95,7 +95,7 @@ static u32 GetTrainerTowerRecordTime(u32 *);
 static void SetTrainerTowerRecordTime(u32 *, u32);
 #endif //FREE_TRAINER_TOWER
 
-const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
+const u8 gText_XMinYZSec[] = _("{STR_VAR_1}[Min]. {STR_VAR_2}.{STR_VAR_3}[Sec].");
 
 extern const u8 gText_TimeBoard[];
 

@@ -187,7 +187,7 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
     .baseBlock = 0x8
 };
 
-static const u8 sText_MenuDebug[] = _("DEBUG");
+static const u8 sText_MenuDebug[] = _("[Debug]");
 
 static const struct MenuAction sStartMenuItems[] =
 {
