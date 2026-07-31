@@ -548,8 +548,7 @@ u32 AI_TryGimmick(enum BattlerId battler, enum Ability ability, enum Gimmick gim
         SetActiveGimmick(battler, gimmick);
         break;
     case GIMMICK_TERA:
-        if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA // calcs are done in a different function
-         || !IsTrainerMonTeraTypeSet(GetBattlerMon(battler)))
+        if (GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) == TYPE_MYSTERY)
         {
             gimmick = GIMMICK_NONE;
         }
@@ -560,14 +559,14 @@ u32 AI_TryGimmick(enum BattlerId battler, enum Ability ability, enum Gimmick gim
         }
         break;
     case GIMMICK_DYNAMAX:
-        if (IsTrainerMonDynamaxLevelSet(GetBattlerMon(battler)))
+        if (GetMonData(GetBattlerMon(battler), MON_DATA_DYNAMAX_LEVEL) == BLOCK_AI_DYNAMAX)
         {
-            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, ability);
-            SetActiveGimmick(battler, gimmick);
+            gimmick = GIMMICK_NONE;
         }
         else
         {
-            gimmick = GIMMICK_NONE;
+            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, ability);
+            SetActiveGimmick(battler, gimmick);
         }
         break;
     case GIMMICK_Z_MOVE:
@@ -5295,6 +5294,7 @@ void DecideTerastal(enum BattlerId battler)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
         aiCalc.move = aiMoves[moveIndex];
         if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalc.move))
             altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc, battler, opposingBattler);
@@ -5302,6 +5302,7 @@ void DecideTerastal(enum BattlerId battler)
             altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
         SetActiveGimmick(battler, GIMMICK_TERA);
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
         aiCalc.move = oppMoves[moveIndex];
         if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
         {
@@ -5353,8 +5354,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
     {
         if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
          && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
             numPossibleTera++;
     }
 
