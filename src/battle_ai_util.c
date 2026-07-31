@@ -548,8 +548,8 @@ u32 AI_TryGimmick(enum BattlerId battler, enum Ability ability, enum Gimmick gim
         SetActiveGimmick(battler, gimmick);
         break;
     case GIMMICK_TERA:
-        if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA // has "smart" behavior
-         || GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) == TYPE_MYSTERY)
+        if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA // calcs are done in a different function
+         || !IsTrainerMonTeraTypeSet(GetBattlerMon(battler)))
         {
             gimmick = GIMMICK_NONE;
         }
@@ -560,7 +560,7 @@ u32 AI_TryGimmick(enum BattlerId battler, enum Ability ability, enum Gimmick gim
         }
         break;
     case GIMMICK_DYNAMAX:
-        if (GetMonData(GetBattlerMon(battler), MON_DATA_DYNAMAX_LEVEL) != BLOCK_AI_DYNAMAX)
+        if (IsTrainerMonDynamaxLevelSet(GetBattlerMon(battler)))
         {
             TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, ability);
             SetActiveGimmick(battler, gimmick);
