@@ -3389,7 +3389,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           && (HasMoveWithEffect(battlerAtkPartner, EFFECT_EARTHQUAKE) || HasMoveWithEffect(battlerAtkPartner, EFFECT_MAGNITUDE))
           && (AI_GetMoveEffectiveness(MOVE_EARTHQUAKE, battlerAtk, battlerAtkPartner) != UQ_4_12(0.0))) // Doesn't resist ground move
         {
-            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_COMBO)
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_DEEP_PARTNER_THINKING)
             {
                 if (PartnerMoveEffectIs(battlerAtkPartner, aiData->partnerMove, EFFECT_EARTHQUAKE)
                  || PartnerMoveEffectIs(battlerAtkPartner, aiData->partnerMove, EFFECT_MAGNITUDE))
