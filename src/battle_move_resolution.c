@@ -4222,8 +4222,8 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case FAINT_BLOCK_FAINT_TARGET:
-                TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
                 SetValuesOnFaint(battlerDef);
+                TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
                 BattleScriptCall(BattleScript_FaintBattler);
                 result = MOVEEND_RESULT_RUN_SCRIPT;
                 gBattleStruct->eventState.moveEndBlock++;
