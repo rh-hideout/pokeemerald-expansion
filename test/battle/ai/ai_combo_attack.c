@@ -2,7 +2,7 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (with flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (with AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -24,7 +24,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (with flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (with AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -48,7 +48,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (with flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (with AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -70,7 +70,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner
 }
 
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (with flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (with AI_FLAG_CONSIDER_COMBO)")
 {
     u32 speed = 0;
     PARAMETRIZE { speed = 30; }
@@ -98,7 +98,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (no flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (no AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -120,7 +120,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (no flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (no AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -144,7 +144,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (no flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (no AI_FLAG_CONSIDER_COMBO)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -166,7 +166,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner
 }
 
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (no flag)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (no AI_FLAG_CONSIDER_COMBO)")
 {
     u32 speed = 0;
     PARAMETRIZE { speed = 30; }
@@ -189,6 +189,74 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
             } else { // Flamethrower gets the best damage move
                 EXPECT_MOVE(opponentLeft, MOVE_FLAMETHROWER, target:playerLeft);
                 EXPECT_MOVE(opponentRight, MOVE_FUSION_BOLT, target:playerLeft);
+            }
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor selection of Magnet Rise")
+{
+    u64 flags = 0;
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
+        ASSUME(GetMoveEffect(MOVE_MAGNET_RISE) == EFFECT_MAGNET_RISE);
+        ASSUME(GetMoveEffect(MOVE_FLAMETHROWER) == EFFECT_HIT);
+        AI_FLAGS(flags);
+        TIE_BREAK_TARGET(TARGET_TIE_LO,0);
+        PLAYER(SPECIES_LEAVANNY) { Speed(10); }
+        PLAYER(SPECIES_LEAVANNY) { Speed(20); }
+        OPPONENT(SPECIES_HEATRAN) { Speed(30); Moves(MOVE_MAGNET_RISE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_HEATRAN) { Speed(40); Moves(MOVE_EARTHQUAKE, MOVE_FLAMETHROWER); }
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
+            if (flags & AI_FLAG_CONSIDER_COMBO)
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
+                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);
+            }
+            else
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_MAGNET_RISE);
+                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT + DECENT_EFFECT, target: playerLeft);
+            }
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor selection of Magnet Rise (reversed)")
+{
+    u64 flags = 0;
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
+        ASSUME(GetMoveEffect(MOVE_MAGNET_RISE) == EFFECT_MAGNET_RISE);
+        ASSUME(GetMoveEffect(MOVE_FLAMETHROWER) == EFFECT_HIT);
+        AI_FLAGS(flags);
+        TIE_BREAK_TARGET(TARGET_TIE_LO,0);
+        PLAYER(SPECIES_LEAVANNY) { Speed(10); }
+        PLAYER(SPECIES_LEAVANNY) { Speed(20); }
+        OPPONENT(SPECIES_HEATRAN) { Speed(30); Moves(MOVE_MAGNET_RISE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_HEATRAN) { Speed(40); Moves(MOVE_EARTHQUAKE, MOVE_FLAMETHROWER); }
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
+            if (flags & AI_FLAG_CONSIDER_COMBO)
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
+                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);
+            }
+            else
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_MAGNET_RISE);
+                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT + DECENT_EFFECT, target: playerLeft);
             }
         }
     }
