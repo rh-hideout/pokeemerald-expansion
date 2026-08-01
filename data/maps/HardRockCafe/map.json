@@ -15,29 +15,30 @@
   "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_BROCK",
       "graphics_id": "OBJ_EVENT_GFX_BROCK",
       "x": 10,
-      "y": 4,
+      "y": 8,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_Brock",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CHANSEY",
       "x": 9,
-      "y": 4,
+      "y": 8,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_Chansey",
       "flag": "0"
     },
     {
@@ -50,7 +51,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_PancakeChef",
       "flag": "0"
     },
     {
@@ -63,7 +64,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_PancakeDiner",
       "flag": "0"
     },
     {
@@ -77,7 +78,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_Counterpart",
       "flag": "0"
     },
     {
@@ -90,7 +91,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_MaxieNiece",
       "flag": "0"
     },
     {
@@ -103,7 +104,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_Maxie",
       "flag": "0"
     },
     {
@@ -116,7 +117,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "HardRockCafe_MaxieChef",
       "flag": "0"
     },
     {
@@ -144,6 +145,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_BLAINE",
+      "graphics_id": "OBJ_EVENT_GFX_BLAINE",
+      "x": 11,
+      "y": 19,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_HARD_ROCK_BLAINE"
     }
   ],
   "warp_events": [
@@ -152,6 +167,14 @@
       "y": 19,
       "elevation": 0,
       "dest_map": "MAP_LITTLEROOT_TOWN",
+      "dest_warp_id": "5"
+    },
+    {
+      "warp_id": "PEWTER_CITY",
+      "x": 9,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_PEWTER_CITY",
       "dest_warp_id": "0"
     }
   ],

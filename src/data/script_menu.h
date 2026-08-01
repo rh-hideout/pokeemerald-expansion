@@ -1164,6 +1164,15 @@ static const struct MenuAction sMultichoiceList_LibraryHelpBlaine[] =
     { sText_NahImGood },
 };
 
+static const struct MenuAction  sMultichoiceList_CounterpartBookResponse[] =
+{
+    { COMPOUND_STRING("Thank you for finding it.") },
+    { COMPOUND_STRING("How did you find it?") },
+    { COMPOUND_STRING("I would've found it first.") },
+    { COMPOUND_STRING("Why do you even care?") },
+};
+
+
 static const struct MultichoiceListStruct sMultichoiceLists[] =
 {
     [MULTI_BRINEY_ON_DEWFORD]          = MULTICHOICE(MultichoiceList_BrineyOnDewford),
@@ -1329,6 +1338,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
     [MULTICHOICE_LIBRARY_HELP_BLAINE]                  = MULTICHOICE(sMultichoiceList_LibraryHelpBlaine),
+    [MULTICHOICE_COUNTERPART_BOOK_RESPONSE]            = MULTICHOICE(sMultichoiceList_CounterpartBookResponse),
     
 };
 
@@ -1445,6 +1455,7 @@ static const u8 *const sWirelessOptions_NoRecordMixBerryCrush[] =
     CableClub_Text_YouMayBattleHere,
     CableClub_Text_CancelSelectedItem,
 };
+
 
 static const u8 *const sSeagallopDestStrings[] = {
     [SEAGALLOP_VERMILION_CITY] = gText_Vermilion,

@@ -542,7 +542,7 @@ Town_Library_Text_AskGruntsDirectly:
 
 Town_Library_Text_GruntsDefendThemselves:
     .string "MAGMA GRUNT: Wow. Low-hanging\n"
-    .string "fruit.\p"
+    .string "fruit man, Uncool.\p"
     .string "AQUA GRUNT: But I guess we should\n"
     .string "have expected that.\p"
     .string "MAGMA GRUNT: We would never steal\n"

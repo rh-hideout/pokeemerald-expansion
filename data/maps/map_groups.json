@@ -40,7 +40,6 @@
     "gMapGroup_TownsAndRoutes_Frlg",
     "gMapGroup_IndoorPallet_Frlg",
     "gMapGroup_IndoorViridian_Frlg",
-    "gMapGroup_IndoorPewter_Frlg",
     "gMapGroup_IndoorCerulean_Frlg",
     "gMapGroup_IndoorLavender_Frlg",
     "gMapGroup_IndoorVermilion_Frlg",
@@ -863,7 +862,6 @@
   "gMapGroup_TownsAndRoutes_Frlg": [
     "PalletTown_Frlg",
     "ViridianCity_Frlg",
-    "PewterCity_Frlg",
     "CeruleanCity_Frlg",
     "LavenderTown_Frlg",
     "VermilionCity_Frlg",
@@ -937,16 +935,7 @@
     "ViridianCity_PokemonCenter_1F_Frlg",
     "ViridianCity_PokemonCenter_2F_Frlg"
   ],
-  "gMapGroup_IndoorPewter_Frlg": [
-    "PewterCity_Museum_1F_Frlg",
-    "PewterCity_Museum_2F_Frlg",
-    "PewterCity_Gym_Frlg",
-    "PewterCity_Mart_Frlg",
-    "PewterCity_House1_Frlg",
-    "PewterCity_PokemonCenter_1F_Frlg",
-    "PewterCity_PokemonCenter_2F_Frlg",
-    "PewterCity_House2_Frlg"
-  ],
+
   "gMapGroup_IndoorCerulean_Frlg": [
     "CeruleanCity_House1_Frlg",
     "CeruleanCity_House2_Frlg",
@@ -1167,6 +1156,16 @@
     "PokemonMansion_1F_Frlg",
     "PokemonMansion_2F_Frlg",
     "PokemonMansion_3F_Frlg",
-    "PokemonMansion_B1F_Frlg"
+    "PokemonMansion_B1F_Frlg",
+     "PewterCity_Frlg",
+     "PewterCity_Museum_1F_Frlg",
+    "PewterCity_Museum_2F_Frlg",
+    "PewterCity_Gym_Frlg",
+    "PewterCity_Mart_Frlg",
+    "PewterCity_House1_Frlg",
+    "PewterCity_PokemonCenter_1F_Frlg",
+    "PewterCity_PokemonCenter_2F_Frlg",
+    "PewterCity_House2_Frlg"
+
   ]
 }

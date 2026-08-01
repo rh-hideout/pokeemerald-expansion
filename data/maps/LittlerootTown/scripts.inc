@@ -30,7 +30,8 @@ LittlerootTown_MapScripts::
 
 LittlerootTown_OnTransition:
     setflag FLAG_VISITED_LITTLEROOT_TOWN
-
+    setflag FLAG_HIDE_HARD_ROCK_BLAINE
+    
     call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_HideMapNamePopup
     call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_EventScript_LeftLabAfterDexUpgrade
 

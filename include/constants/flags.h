@@ -64,10 +64,10 @@
 #define FLAG_LIBRARY_BOOK_MISSION_COMPLETE  0x2A
 #define FLAG_FOUND_BOOK_GIRL             0x2B
 #define FLAG_RESTAURANT_BOOK_SEARCH      0x2C
-#define FLAG_UNUSED_0x02D    0x2D // Unused Flag
-#define FLAG_UNUSED_0x02E    0x2E // Unused Flag
-#define FLAG_UNUSED_0x02F    0x2F // Unused Flag
-#define FLAG_UNUSED_0x030    0x30 // Unused Flag
+#define FLAG_COUNTERPART_RELATIONSHIP_LOCKED 0x2D
+#define FLAG_COUNTERPART_BOOK_SCENE_DONE 0x2E
+#define FLAG_HIDE_HARD_ROCK_BLAINE    0x2F // Unused Flag
+#define FLAG_COUNTERPART_HOME_INVITE    0x30 // Unused Flag
 #define FLAG_UNUSED_0x031    0x31 // Unused Flag
 #define FLAG_UNUSED_0x032    0x32 // Unused Flag
 #define FLAG_UNUSED_0x033    0x33 // Unused Flag
