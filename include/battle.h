@@ -1082,6 +1082,8 @@ enum BattlerId GetPartnerBattler(enum BattlerId battler);
 enum BattlerId GetOppositeBattler(enum BattlerId battler);
 enum BattlerPosition GetPartnerPosition(enum BattlerPosition position);
 enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
+enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
+enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
@@ -1135,18 +1137,6 @@ static inline bool32 IsOnPlayerSide(enum BattlerId battler)
 static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
-}
-
-// Left and right are determined by how they're referred to in tests and everywhere else.
-// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
-static inline enum BattlerId GetBattlerLeftFoe(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(GetOppositePosition((enum BattlerPosition)GetBattlerSide(battler)));
-}
-
-static inline enum BattlerId GetBattlerRightFoe(enum BattlerId battler)
-{
-    return GetPartnerBattler(GetBattlerLeftFoe(battler));
 }
 
 static inline bool32 IsDoubleBattle(void)

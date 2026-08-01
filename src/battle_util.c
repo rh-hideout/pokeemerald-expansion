@@ -107,6 +107,18 @@ enum BattlerId GetOppositeBattler(enum BattlerId battler)
     return GetBattlerAtPosition(GetOppositePosition(GetBattlerPosition(battler)));
 }
 
+// Left and right are determined by how they're referred to in tests and everywhere else.
+// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
+enum BattlerId GetBattlerLeftFoe(enum BattlerId battler)
+{
+    return GetBattlerAtPosition(GetOppositePosition((enum BattlerPosition)GetBattlerSide(battler)));
+}
+
+enum BattlerId GetBattlerRightFoe(enum BattlerId battler)
+{
+    return GetPartnerBattler(GetBattlerLeftFoe(battler));
+}
+
 static const u8 sPkblToEscapeFactor[][3] = {
     {
         [B_MSG_MON_CURIOUS]    = 0,
