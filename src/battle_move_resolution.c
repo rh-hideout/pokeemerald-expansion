@@ -4156,7 +4156,6 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
             case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
                 if (IsBattlerAlive(battlerDef)
                  || battlerDef >= gBattlersCount
-                 || (gAbsentBattlerFlags & 1u << battlerDef)
                  || gBattleStruct->battlerState[battlerDef].notOnField)
                 {
                     gBattleStruct->eventState.moveEndBlock = FAINT_BLOCK_COUNT;
