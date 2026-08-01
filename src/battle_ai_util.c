@@ -4311,15 +4311,19 @@ bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enu
 }
 
 //PARTNER_MOVE_EFFECT_IS
-bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck)
+bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum BattleMoveEffects effectCheck)
 {
+    enum Move partnerMove = gAiLogicData->partnerMove;
     if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck)
-        return TRUE;
+    if ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
+     || (IsThinkingBeforePartner(battlerAtkPartner, GetPartnerBattler(battlerAtkPartner))))
+    {
+        return (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck);
+    }
 
-    return FALSE;
+    return HasMoveWithEffect(battlerAtkPartner, effectCheck);
 }
 
 //PARTNER_MOVE_IS_TAILWIND_TRICKROOM
@@ -6573,7 +6577,7 @@ bool32 ShouldUseFusionMove(enum BattlerId battler)
         return FALSE;
 
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
-        return PartnerMoveEffectIs(partner, partnerMove, EFFECT_FUSION_COMBO);
+        return PartnerMoveEffectIs(partner, EFFECT_FUSION_COMBO);
     else if (gAiLogicData->partnerMoveSimulation)
         return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
 
@@ -6592,7 +6596,7 @@ bool32 ShouldUseRound(enum BattlerId battler, enum BattleMoveEffects moveEffect)
         return FALSE;
 
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
-        return PartnerMoveEffectIs(partner, partnerMove, moveEffect);
+        return PartnerMoveEffectIs(partner, moveEffect);
     else if (gAiLogicData->partnerMoveSimulation) // First battler check, so check moveset of partner
         return HasMoveWithEffect(partner, moveEffect);
 
