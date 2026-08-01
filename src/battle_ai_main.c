@@ -1027,13 +1027,13 @@ static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId 
     {
         gAiLogicData->partnerMove = allyMoves[allyIndex];
 
-        for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+        for (enum BattlerId target = B_BATTLER_0; target < MAX_BATTLERS_COUNT; target++)
         {
-            if (gBattleMons[battlerIndex].hp == 0 || battlerIndex == battler)
+            if (gBattleMons[target].hp == 0 || target == battler)
             {
                 continue;
             }
-            DoAIScoreProcessing(battler, battlerIndex);
+            DoAIScoreProcessing(battler, target);
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
@@ -1042,7 +1042,7 @@ static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId 
                 if (currentMove == MOVE_NONE)
                     continue;
 
-                if (!CanTargetBattler(battler, battlerIndex, currentMove))
+                if (!CanTargetBattler(battler, target, currentMove))
                     continue;
 
                 if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
@@ -1050,14 +1050,14 @@ static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId 
                     bool32 shouldAddToArray = TRUE;
                     for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
                     {
-                        if (bestMoves[i] == currentMove && bestTargets[i] == battlerIndex)
+                        if (bestMoves[i] == currentMove && bestTargets[i] == target)
                             shouldAddToArray = FALSE; // No point adding duplicates
                     }
 
                     if (shouldAddToArray)
                     {
                         bestMoves[arrayPos] = currentMove;
-                        bestTargets[arrayPos++] = battlerIndex;
+                        bestTargets[arrayPos++] = target;
                     }
                 }
 
@@ -1065,7 +1065,7 @@ static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId 
                 {
                     highestMoveScore = gAiThinkingStruct->score[moveIndex];
                     bestMoves[0] = currentMove;
-                    bestTargets[0] = battlerIndex;
+                    bestTargets[0] = target;
                     arrayPos = 1;
                     for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
                     {
