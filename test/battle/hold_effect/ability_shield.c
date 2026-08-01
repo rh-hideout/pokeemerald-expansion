@@ -22,12 +22,10 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
         if (item == ITEM_ABILITY_SHIELD) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Torkoal's Ability is protected by the effects of its Ability Shield!");
             ABILITY_POPUP(player, ABILITY_DROUGHT);
         } else {
             NONE_OF {
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
                 MESSAGE("Torkoal's Ability is protected by the effects of its Ability Shield!");
                 ABILITY_POPUP(player, ABILITY_DROUGHT);
             }
@@ -47,7 +45,6 @@ DOUBLE_BATTLE_TEST("Ability Shield prevents Intimidate from reactivating after N
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         MESSAGE("The opposing Gyarados's Ability is protected by the effects of its Ability Shield!");
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
@@ -172,12 +169,10 @@ SINGLE_BATTLE_TEST("Ability Shield activates a previously suppressed ability whe
             ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
     }
@@ -195,7 +190,6 @@ SINGLE_BATTLE_TEST("Ability Shield doesn't reactivate an ability when receiving 
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
@@ -268,7 +262,6 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
                 ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             }
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
@@ -293,7 +286,6 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
     } SCENE {
         if (item == ITEM_ABILITY_SHIELD) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Lopunny's Ability is protected by the effects of its Ability Shield!");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);

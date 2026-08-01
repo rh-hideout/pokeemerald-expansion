@@ -36,19 +36,19 @@ SixIsland_WaterPath_House1_EventScript_ShownNonHeracross::
 
 SixIsland_WaterPath_House1_EventScript_ShownSmallHeracross::
 	goto_if_unset FLAG_GOT_NEST_BALL_FROM_WATER_PATH_HOUSE_1, SixIsland_WaterPath_House1_EventScript_ShownBigHeracross
-	msgbox SixIsland_WaterPath_House1_Text_ItsXInchesYInchesWasBiggest
+	msgbox SixIsland_WaterPath_House1_Text_ItsXSizeYSizeWasBiggest
 	release
 	end
 
 SixIsland_WaterPath_House1_EventScript_ShownTiedHeracross::
 	goto_if_unset FLAG_GOT_NEST_BALL_FROM_WATER_PATH_HOUSE_1, SixIsland_WaterPath_House1_EventScript_ShownBigHeracross
-	msgbox SixIsland_WaterPath_House1_Text_ItsXInchesSameAsBefore
+	msgbox SixIsland_WaterPath_House1_Text_ItsXSizeSameAsBefore
 	release
 	end
 
 SixIsland_WaterPath_House1_EventScript_ShownBigHeracross::
 	setflag FLAG_GOT_NEST_BALL_FROM_WATER_PATH_HOUSE_1
-	msgbox SixIsland_WaterPath_House1_Text_ItsXInchesDeserveReward
+	msgbox SixIsland_WaterPath_House1_Text_ItsXSizeDeserveReward
 	giveitem ITEM_NEST_BALL
 	goto_if_eq VAR_RESULT, FALSE, SixIsland_WaterPath_House1_EventScript_NoRoomForNestBall
 	msgbox SixIsland_WaterPath_House1_Text_WantToSeeBiggerOne
@@ -69,7 +69,7 @@ SixIsland_WaterPath_House1_EventScript_SizeRecord::
 
 SixIsland_WaterPath_House1_EventScript_SizeRecordNonEmpty::
 	special GetHeracrossSizeRecordInfo
-	msgbox SixIsland_WaterPath_House1_Text_BiggestHeracrossIsXInches
+	msgbox SixIsland_WaterPath_House1_Text_BiggestHeracrossIsXSize
 	releaseall
 	end
 
@@ -84,8 +84,8 @@ SixIsland_WaterPath_House1_Text_MayIMeasureHeracross::
 	.string "Please, please, may I measure how\n"
 	.string "big it is?$"
 
-SixIsland_WaterPath_House1_Text_ItsXInchesDeserveReward::
-	.string "Eeeek, it's {STR_VAR_2} inches!\n"
+SixIsland_WaterPath_House1_Text_ItsXSizeDeserveReward::
+	.string "Eeeek, it's {STR_VAR_2}!\n"
 	.string "I've never seen anything like this!\l"
 	.string "You deserve a reward!$"
 
@@ -95,14 +95,14 @@ SixIsland_WaterPath_House1_Text_WantToSeeBiggerOne::
 	.string "Oh, how I adore them, big\n"
 	.string "HERACROSS!$"
 
-SixIsland_WaterPath_House1_Text_ItsXInchesSameAsBefore::
-	.string "Huh? This {STR_VAR_2}-inch measurement…\n"
+SixIsland_WaterPath_House1_Text_ItsXSizeSameAsBefore::
+	.string "Huh? This {STR_VAR_2} measurement…\n"
 	.string "Oh, boo! It's the same as before.$"
 
-SixIsland_WaterPath_House1_Text_ItsXInchesYInchesWasBiggest::
-	.string "Oh, it's just {STR_VAR_2} inches.\n"
+SixIsland_WaterPath_House1_Text_ItsXSizeYSizeWasBiggest::
+	.string "Oh, it's just {STR_VAR_2}.\n"
 	.string "The HERACROSS before was bigger.\p"
-	.string "It was {STR_VAR_3} inches, the biggest\n"
+	.string "It was {STR_VAR_3}, the biggest\n"
 	.string "HERACROSS you've brought me.$"
 
 SixIsland_WaterPath_House1_Text_ThisWontDo::
@@ -114,13 +114,12 @@ SixIsland_WaterPath_House1_Text_YourBagIsFull::
 	.string "Your BAG is full.\n"
 	.string "My reward won't fit.$"
 
-SixIsland_WaterPath_House1_Text_BiggestHeracrossIsXInches::
+SixIsland_WaterPath_House1_Text_BiggestHeracrossIsXSize::
 	.string "The biggest HERACROSS that I have\n"
 	.string "ever seen measured so far is:\p"
-	.string "{STR_VAR_3} inches!$"
+	.string "{STR_VAR_3}!$"
 
 SixIsland_WaterPath_House1_Text_BlankChartOfSomeSort::
 	.string "It's a blank chart of some sort.\p"
 	.string "It has spaces for writing in\n"
 	.string "records of some kind.$"
-

@@ -103,14 +103,13 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
 s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
 s32 GetWhichBattlerFasterOrTies(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
 s32 GetWhichBattlerFaster(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
+const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState monInBattle);
-void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler);
+enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum MonState state);
+void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 bool32 IsWildMonSmart(void);
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
-u32 GeneratePersonalityForGender(u32 gender, enum Species species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);

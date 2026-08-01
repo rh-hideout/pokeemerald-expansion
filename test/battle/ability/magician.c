@@ -17,11 +17,11 @@ SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb")
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
         MESSAGE("Delphox stole the opposing Wobbuffet's Life Orb!");
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("Delphox lost some of its HP!");
         // 2nd turn - Life Orb recoil happens now
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("Delphox lost some of its HP!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_LIFE_ORB);
         EXPECT_EQ(opponent->item, ITEM_NONE);

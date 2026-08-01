@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
+#include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
@@ -2167,7 +2168,7 @@ void Controller_WaitForHealthBar(enum BattlerId battler)
 {
     s16 hpValue = MoveBattleBar(battler, gHealthboxSpriteIds[battler], HEALTH_BAR, 0);
     struct Pokemon *mon = GetBattlerMon(battler);
-    s32 maxHP = GetMonData(mon, MON_DATA_MAX_HP);   
+    s32 maxHP = GetMonData(mon, MON_DATA_MAX_HP);
 
     SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
     if (hpValue != -1)
@@ -3344,4 +3345,62 @@ bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
 bool32 TrainerHasParty(enum BattleTrainer trainer)
 {
     return (trainer < B_TRAINER_PARTNER || BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE)));
+}
+
+// Used for partner and opponent
+void SetFinalChosenTarget(enum BattlerId battler, bool32 partner)
+{
+    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+
+    enum BattlerId chosenTarget = gAiBattleData->chosenTarget[battler];
+    u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
+    u32 chosenMove = moveInfo->moves[chosenMoveIndex];
+    enum MoveTarget targetType = GetBattlerMoveTargetType(battler, chosenMove);
+
+    switch (targetType)
+    {
+    case TARGET_ALLY:
+        chosenTarget = BATTLE_PARTNER(battler);
+        break;
+    case TARGET_USER_OR_ALLY: // AI could have chosen opponent as the target because of the way the score system works
+        if (!IsBattlerAlly(battler, chosenTarget))
+            chosenTarget = battler;
+        break;
+    case TARGET_USER:
+    case TARGET_ALL_BATTLERS:
+    case TARGET_FIELD:
+        chosenTarget = battler;
+        break;
+    case TARGET_BOTH:
+        if (partner)
+        {
+            chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            if (!IsBattlerAlive(chosenTarget))
+                chosenTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        }
+        else
+        {
+            chosenTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+            if (!IsBattlerAlive(chosenTarget))
+                chosenTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
+        }
+        break;
+    default:
+        break;
+    }
+
+    gBattlerTarget = chosenTarget;
+
+    enum Gimmick usableGimmick = gBattleStruct->gimmick.usableGimmick[battler];
+    bool32 isAIUsingGimmick = gAiBattleData->aiUsingGimmick & (1u << battler);
+    if (usableGimmick != GIMMICK_NONE && isAIUsingGimmick && !HasTrainerUsedGimmick(battler, usableGimmick))
+    {
+        gBattleStruct->gimmick.toActivate |= 1u << battler;
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (chosenTarget << 8));
+    }
+    else
+    {
+        SetAIUsingGimmick(battler, NO_GIMMICK);
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (chosenTarget << 8));
+    }
 }

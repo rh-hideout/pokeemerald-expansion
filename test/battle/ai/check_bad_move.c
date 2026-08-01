@@ -73,7 +73,7 @@ AI_SINGLE_BATTLE_TEST("AI predicts semi-invulnerable entry and chooses a move th
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DIVE) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIVE) == STATE_UNDERWATER);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_DIVE) == STATE_UNDERWATER);
         ASSUME(!MoveDamagesUnderWater(MOVE_THUNDERBOLT));
         ASSUME(MoveDamagesUnderWater(MOVE_SURF));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);

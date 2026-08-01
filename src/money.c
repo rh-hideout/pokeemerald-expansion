@@ -2,6 +2,7 @@
 #include "money.h"
 #include "graphics.h"
 #include "event_data.h"
+#include "palette.h"
 #include "string_util.h"
 #include "text.h"
 #include "menu.h"
@@ -14,7 +15,7 @@
 EWRAM_DATA static u8 sMoneyBoxWindowId = 0;
 EWRAM_DATA static u8 sMoneyLabelSpriteId = 0;
 
-#define MONEY_LABEL_TAG 0x2722
+#define MONEY_LABEL_TAG 0x2722 | BLEND_IMMUNE_FLAG
 
 static const struct OamData sOamData_MoneyLabel =
 {

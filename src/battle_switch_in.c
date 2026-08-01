@@ -143,7 +143,7 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, calcValues.abilities[battler], 0, TRUE))
+            if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, calcValues.abilities[battler], MOVE_NONE, TRUE))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -250,7 +250,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         {
             gBattleStruct->eventState.battlerSwitchIn++;
         }
-        else if (EmergencyExitCanBeTriggered(battler))
+        else if (EmergencyExitCanBeTriggered(battler, calcValues->abilities[battler]))
         {
             gBattleScripting.battler = gBattlerAbility = battler;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;

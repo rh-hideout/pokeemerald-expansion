@@ -625,14 +625,6 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
     return FALSE;
 }
 
-void SetInstantOWESpawnTimer(void)
-{
-    if (!WE_OW_ENCOUNTERS)
-        return;
-
-    sOWESpawnCountdown = 0;
-}
-
 void SetMinimumOWESpawnTimer(void)
 {
     if (!WE_OW_ENCOUNTERS)

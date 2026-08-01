@@ -37,7 +37,7 @@ EWRAM_DATA struct ConfigChanges *gConfigChangesTestOverride = NULL;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
-u32 GetConfigInternal(enum ConfigTag _config)
+ARM_FUNC u32 GetConfigInternal(enum ConfigTag _config)
 {
 #if TESTING
     if (gConfigChangesTestOverride == NULL)

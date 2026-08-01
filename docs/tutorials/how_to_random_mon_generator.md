@@ -60,6 +60,12 @@ If a species option has a `filterFunc`, pass any args that function requires. Om
 
 You could also, using similar logic, create a function that treats `arg1` as a type value, and then filter only for pokemon of that type if possible. If you do not pass a filter function, then no filter beyond the other elements is applied.
 
+### Debugging randomizer options
+
+If you want to verify you set up your options correctly, you can open your debug menu and go
+Utility -> Test Species/Item Randomiser
+Then select the index of the options in options array, followed by the filter function arguments (you can leave it at 0 if not relevant) and the game will generate 24 random results. You can press A to generate 24 more or press B to quit.
+
 ### Example Setup
 
 For a named random mon option, define the script-facing value in [include/constants/random_mon_generation.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/random_mon_generation.h), then use that same enum value as the array index in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). With separate species and/or ban pools, your setup would look like this:

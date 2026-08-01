@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Population Bomb can hit ten times")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-        MESSAGE("The Pokémon was hit 10 time(s)!");
+        MESSAGE("The Pokémon was hit 10 times!");
     }
 }
 
@@ -41,10 +41,10 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is checked independently for ea
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
-        MESSAGE("The Pokémon was hit 1 time(s)!");
+        MESSAGE("The Pokémon was hit 1 time!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-            MESSAGE("The Pokémon was hit 2 time(s)!");
+            MESSAGE("The Pokémon was hit 2 times!");
         }
     } THEN {
         EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first h
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-        MESSAGE("The Pokémon was hit 10 time(s)!");
+        MESSAGE("The Pokémon was hit 10 times!");
     }
 }
 
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first h
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-        MESSAGE("The Pokémon was hit 4 time(s)!");
+        MESSAGE("The Pokémon was hit 4 times!");
     }
 }
 
@@ -111,6 +111,6 @@ SINGLE_BATTLE_TEST("Population Bomb with Skill Link ignores Loaded Dice roll and
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-        MESSAGE("The Pokémon was hit 10 time(s)!");
+        MESSAGE("The Pokémon was hit 10 times!");
     }
 }

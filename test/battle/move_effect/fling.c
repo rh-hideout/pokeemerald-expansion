@@ -219,8 +219,8 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if the user is asleep/frozen/
             TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_FROZEN, FALSE)); }
             TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_FROZEN, TRUE)); }
         } else if (status == STATUS1_PARALYSIS) {
-            TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_PARALYSIS, FALSE)); }
             TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_PARALYSIS, TRUE)); }
+            TURN { MOVE(player, MOVE_FLING, WITH_RNG(RNG_PARALYSIS, FALSE)); }
         } else {
             TURN { MOVE(player, MOVE_FLING); }
             TURN { MOVE(player, MOVE_FLING); }
@@ -482,13 +482,6 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP) {
-            if (item == ITEM_ORAN_BERRY) {
-                MESSAGE("The opposing Wobbuffet restored its health using its Oran Berry!");
-            } else if (item == ITEM_SITRUS_BERRY) {
-                MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
-            } else {
-                MESSAGE("Wobbuffet restored its health using its Enigma Berry!");
-            }
             HP_BAR(opponent);
         }
         else if (effect == HOLD_EFFECT_RESTORE_PP) {

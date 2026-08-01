@@ -204,6 +204,36 @@ u8 CreateMonIconNoPersonalityIsEgg(enum Species species, void (*callback)(struct
     return spriteId;
 }
 
+u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species)
+{
+    struct SpritePalette palette;
+    palette.data = gMonIconPaletteTable[gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex].data;
+    palette.tag = paletteTag;
+    LoadSpritePalette(&palette);
+
+    struct SpriteSheet spriteSheet;
+    spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
+    spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
+    spriteSheet.tag = tileTag;
+    LoadSpriteSheet(&spriteSheet);
+
+    struct SpriteTemplate spriteTemplate =
+    {
+        .tileTag = tileTag,
+        .paletteTag = paletteTag,
+        .oam = &sMonIconOamData,
+        .anims = sMonIconAnims,
+        .images = NULL,
+        .affineAnims = sMonIconAffineAnims
+    };
+
+    u8 spriteId = CreateSprite(&spriteTemplate, 0, 0, 0);
+    gSprites[spriteId].animPaused = TRUE;
+    gSprites[spriteId].animBeginning = FALSE;
+    UpdateMonIconFrame(&gSprites[spriteId]);
+    return spriteId;
+}
+
 enum Species GetIconSpecies(enum Species species, u32 personality)
 {
     species = SanitizeSpeciesId(species);
@@ -249,15 +279,6 @@ void LoadMonIconPalettes(void)
     u8 i;
     for (i = 0; i < ARRAY_COUNT(gMonIconPaletteTable); i++)
         LoadSpritePalette(&gMonIconPaletteTable[i]);
-}
-
-// unused
-void SafeLoadMonIconPalette(enum Species species)
-{
-    u8 palIndex;
-    palIndex = gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex;
-    if (IndexOfSpritePaletteTag(gMonIconPaletteTable[palIndex].tag) == 0xFF)
-        LoadSpritePalette(&gMonIconPaletteTable[palIndex]);
 }
 
 void LoadMonIconPalette(enum Species species)
@@ -341,6 +362,15 @@ const u8 *GetMonIconTilesIsEgg(enum Species species, u32 personality, bool32 isE
     }
 
     return iconSprite;
+}
+
+const u8 *GetMonIconTilesByIconType(enum Species species, enum SpeciesIconType iconType)
+{
+    if (iconType == EGG_ICON)
+        return gEggDatas[gSpeciesInfo[species].eggId].eggIcon;
+    if (iconType == FEMALE_ICON)
+        return gSpeciesInfo[species].iconSpriteFemale;
+    return gSpeciesInfo[species].iconSprite;
 }
 
 void TryLoadAllMonIconPalettesAtOffset(u16 offset)

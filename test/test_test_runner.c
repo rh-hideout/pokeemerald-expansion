@@ -10,6 +10,12 @@ TEST("Tests resume after CRASH")
     f();
 }
 
+TEST("fatalf counts as CRASH")
+{
+    KNOWN_CRASHING;
+    fatalf("should CRASH");
+}
+
 MULTI_BATTLE_TEST("Forced Abilities are set correctly in multi battle tests")
 {
     GIVEN {
@@ -173,6 +179,46 @@ SINGLE_BATTLE_TEST("EXPECT_FAIL: Incorrect use of SUB_HIT results in test failur
     }
 }
 
+SINGLE_BATTLE_TEST("USE_ITEM will add item to bag if GIVE_PLAYER_ITEM was not used")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POKE_FLUTE); }
+    } THEN {
+        EXPECT_EQ(TRUE, CheckBagHasItem(ITEM_POKE_FLUTE, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("USE_ITEM for opponent does not add item to bag")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(opponent, ITEM_POKE_FLUTE); }
+    } THEN {
+        EXPECT_EQ(FALSE, CheckBagHasItem(ITEM_POKE_FLUTE, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("GIVE_PLAYER_ITEM adds an item to bag")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_POTION, 1);
+    } WHEN {
+        TURN { }
+    } THEN {
+        EXPECT_EQ(TRUE, CheckBagHasItem(ITEM_POTION, 1));
+    }
+}
+
 MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test")
 {
     GIVEN {
@@ -187,5 +233,31 @@ MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP correctly detects popups")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ITEM_POPUP(player, ITEM_LEFTOVERS);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        EXPECT_FAIL {
+            ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
+        }
     }
 }

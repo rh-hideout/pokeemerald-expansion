@@ -51,7 +51,6 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
     }
 }
 

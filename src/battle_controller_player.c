@@ -1806,8 +1806,9 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     StringAppend(gDisplayedStringBattle, acc_start);
     StringAppend(gDisplayedStringBattle, acc_desc);
     StringAppend(gDisplayedStringBattle, acc_num);
-    StringAppend(gDisplayedStringBattle, gText_NewLine);
-    StringAppend(gDisplayedStringBattle, GetMoveDescription(move));
+    u8 *descStart = StringAppend(gDisplayedStringBattle, gText_NewLine);
+    u8 *descEnd = StringAppend(gDisplayedStringBattle, GetMoveDescription(move));
+    WrapFontIdToFit(descStart, descEnd, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_DESCRIPTION));
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_DESCRIPTION);
 
     if (gCategoryIconSpriteId == 0xFF)
@@ -2386,9 +2387,11 @@ enum
 {
     EFFECTIVENESS_CANNOT_VIEW,
     EFFECTIVENESS_NO_EFFECT,
+    EFFECTIVENESS_MOSTLY_INEFFECTIVE,
     EFFECTIVENESS_NOT_VERY_EFFECTIVE,
     EFFECTIVENESS_NORMAL,
     EFFECTIVENESS_SUPER_EFFECTIVE,
+    EFFECTIVENESS_EXTREMELY_EFFECTIVE,
 };
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
@@ -2414,6 +2417,8 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];
     ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battlerAtk), ctx.move, battlerAtk, MON_IN_BATTLE);
     ctx.updateFlags = FALSE;
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
     ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);
     ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
@@ -2426,6 +2431,8 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
 
     if (modifier == UQ_4_12(0.0))
         return EFFECTIVENESS_NO_EFFECT; // No effect
+    else if (modifier <= UQ_4_12(0.25))
+        return EFFECTIVENESS_MOSTLY_INEFFECTIVE; // Mostly ineffective
     else if (modifier <= UQ_4_12(0.5))
         return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
     else if (modifier >= UQ_4_12(2.0))
@@ -2468,9 +2475,11 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum Bat
         switch (foeEffectiveness)
         {
         case EFFECTIVENESS_SUPER_EFFECTIVE:
+        case EFFECTIVENESS_EXTREMELY_EFFECTIVE:
             StringCopy(txtPtr, superEffectiveIcon);
             break;
         case EFFECTIVENESS_NOT_VERY_EFFECTIVE:
+        case EFFECTIVENESS_MOSTLY_INEFFECTIVE:
             StringCopy(txtPtr, notVeryEffectiveIcon);
             break;
         case EFFECTIVENESS_NO_EFFECT:

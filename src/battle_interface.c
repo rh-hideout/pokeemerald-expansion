@@ -2366,25 +2366,28 @@ static void FillHealthboxObject(void *dest, u32 valMult, u32 numTiles)
 
 #define ABILITY_POP_UP_WAIT_FRAMES 48
 
-/*
- * BG = BackGround
- * FG = ForeGround
- * SH = SHadow
- */
-#define ABILITY_POP_UP_BATTLER_BG_TXTCLR 2
-#define ABILITY_POP_UP_BATTLER_FG_TXTCLR 7
-#define ABILITY_POP_UP_BATTLER_SH_TXTCLR 1
-
-#define ABILITY_POP_UP_ABILITY_BG_TXTCLR 7
-#define ABILITY_POP_UP_ABILITY_FG_TXTCLR 9
-#define ABILITY_POP_UP_ABILITY_SH_TXTCLR 1
-
 #define sState          data[0]
 #define sAutoDestroy    data[1]
 #define sTimer          data[2]
 #define sIsPlayerSide   data[3]
 #define sBattlerId      data[4]
 #define sIsMain         data[5]
+
+static const union TextColor sBattlerTextColor =
+{
+    .background = 0,
+    .foreground = 7,
+    .shadow = 1,
+    .accent = 0,
+};
+
+static const union TextColor sAbilityTextColor =
+{
+    .background = 0,
+    .foreground = 9,
+    .shadow = 1,
+    .accent = 0,
+};
 
 enum
 {
@@ -2448,72 +2451,37 @@ static const s16 sAbilityPopUpCoordsSingles[MAX_BATTLERS_COUNT][2] =
     {178, 57}, // Opponent
 };
 
-static u8 *AddTextPrinterAndCreateWindowOnAbilityPopUp(const u8 *str, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 *windowId)
+static void PrintOnAbilityPopUp(const u8 *str, u32 spriteId1, u32 spriteId2, u32 x, u32 y, bool32 isName)
 {
-    u32 fontId;
-    u8 color[3] = {bgColor, fgColor, shadowColor};
-    struct WindowTemplate winTemplate = {0};
-    winTemplate.width = ABILITY_POP_UP_WIN_WIDTH;
-    winTemplate.height = 2;
-
-    *windowId = AddWindow(&winTemplate);
-    FillWindowPixelBuffer(*windowId, PIXEL_FILL(bgColor));
-
-    fontId = GetFontIdToFit(str, FONT_SMALL, 0, ABILITY_POP_UP_STR_WIDTH);
-    AddTextPrinterParameterized4(*windowId, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
-
-    return (u8 *)(GetWindowAttribute(*windowId, WINDOW_TILE_DATA));
-}
-
-static void TextIntoAbilityPopUp(void *dest, u8 *windowTileData, s32 windowWidth, bool32 printNickname)
-{
-    #define PIXELS(n) (n * 4)
-    if (windowWidth > 0)
+    s16 data1[8];
+    s16 data2[8];
+    for (u32 i = 0; i < 8; i++)
     {
-        do
-        {
-            if (printNickname)
-            {
-                CpuCopy32(windowTileData + PIXELS(3), dest + PIXELS(3), PIXELS(5));
-                CpuCopy32(windowTileData + TILE_OFFSET_4BPP(ABILITY_POP_UP_WIN_WIDTH), dest + TILE_OFFSET_4BPP(8), PIXELS(5));
-            }
-            else
-            {
-                CpuCopy32(windowTileData + PIXELS(7), dest + PIXELS(7), PIXELS(1));
-                CpuCopy32(windowTileData + TILE_OFFSET_4BPP(ABILITY_POP_UP_WIN_WIDTH), dest + TILE_OFFSET_4BPP(8), TILE_SIZE_4BPP);
-            }
-
-            dest += TILE_SIZE_4BPP, windowTileData += TILE_SIZE_4BPP;
-            windowWidth--;
-        } while (windowWidth != 0);
-    }
-    #undef PIXELS
-}
-
-static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 printNickname, enum BattlerId battler)
-{
-    u32 windowId, fontId;
-    u8 *windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x, y, bgColor, fgColor, shadowColor, &windowId);
-    u32 size1 = ABILITY_POP_UP_OPPONENT_LEFT_WIN_W, size2 = ABILITY_POP_UP_OPPONENT_RIGHT_WIN_W;
-
-    spriteTileData1 += TILE_OFFSET_4BPP(1);
-    if (IsOnPlayerSide(battler))
-    {
-        size1 = ABILITY_POP_UP_PLAYER_LEFT_WIN_W, size2 = ABILITY_POP_UP_PLAYER_RIGHT_WIN_W;
-        // Increment again as the *first* column of the sprite
-        // is not shown for player's pop up when sliding in.
-        spriteTileData1 += TILE_OFFSET_4BPP(1);
+        data1[i] = gSprites[spriteId1].data[i];
+        data2[i] = gSprites[spriteId2].data[i];
     }
 
-    TextIntoAbilityPopUp(spriteTileData1, windowTileData, size1, printNickname);
-    fontId = GetFontIdToFit(str, FONT_SMALL, 0, ABILITY_POP_UP_STR_WIDTH);
-    if (GetStringWidth(fontId, str, 0) > (size1 * 8))
+    u32 font = GetFontIdToFit(str, FONT_SMALL, 0, ABILITY_POP_UP_STR_WIDTH);
+
+    u8 ids[2] = {spriteId1, spriteId2};
+    const u32 *spriteSrcs[2] = {&sAbilityPopUpGfx[0], &sAbilityPopUpGfx[256]};
+    SetupSpritesForTextPrinting(ids, spriteSrcs, 2, 1);
+
+    if (isName)
     {
-        windowTileData += TILE_OFFSET_4BPP(size1);
-        TextIntoAbilityPopUp(spriteTileData2, windowTileData, size2, printNickname);
+        AddSpriteTextPrinterParameterized6(spriteId1, font, x, y, 0, 0, sBattlerTextColor, TEXT_SKIP_DRAW, str);
+    }
+    else
+    {
+        FillSpriteRectSprite(spriteId1, x, y, ABILITY_POP_UP_STR_WIDTH, 16);
+        AddSpriteTextPrinterParameterized6(spriteId1, font, x, y, 0, 0, sAbilityTextColor, TEXT_SKIP_DRAW, str);
     }
 
-    RemoveWindow(windowId);
+    for (u32 i = 0; i < 8; i++)
+    {
+        gSprites[spriteId1].data[i] = data1[i];
+        gSprites[spriteId2].data[i] = data2[i];
+    }
 }
 
 static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 spriteId2)
@@ -2534,31 +2502,41 @@ static void PrintBattlerOnAbilityPopUp(enum BattlerId battler, u8 spriteId1, u8 
     if (lastChar != CHAR_S && lastChar != CHAR_s)
         StringAppend(gStringVar1, COMPOUND_STRING("s"));
 
-    PrintOnAbilityPopUp(gStringVar1,
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum),
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum),
-                        0, 0,
-                        ABILITY_POP_UP_BATTLER_BG_TXTCLR, ABILITY_POP_UP_BATTLER_FG_TXTCLR, ABILITY_POP_UP_BATTLER_SH_TXTCLR,
-                        TRUE, gSprites[spriteId1].sBattlerId);
+    u32 x;
+    u32 y = 0;
+    if (IsOnPlayerSide(battler))
+        x = 16;
+    else
+        x = 8;
+
+    PrintOnAbilityPopUp(gStringVar1, spriteId1, spriteId2, x, y, TRUE);
 }
 
 static void PrintAbilityOnAbilityPopUp(enum Ability ability, u8 spriteId1, u8 spriteId2)
 {
-    PrintOnAbilityPopUp(COMPOUND_STRING("                    "),
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum) + TILE_OFFSET_4BPP(8),
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
-                        0, 4,
-                        ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
-                        FALSE, gSprites[spriteId1].sBattlerId);
-    PrintOnAbilityPopUp(gAbilitiesInfo[ability].name,
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum) + TILE_OFFSET_4BPP(8),
-                        (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
-                        0, 4,
-                        ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
-                        FALSE, gSprites[spriteId1].sBattlerId);
+    u32 x;
+    u32 y = 12;
+    if (IsOnPlayerSide(gSprites[spriteId1].sBattlerId))
+        x = 16;
+    else
+        x = 8;
+
+    PrintOnAbilityPopUp(gAbilitiesInfo[ability].name, spriteId1, spriteId2, x, y, FALSE);
 }
 
-static inline bool32 IsAnyAbilityPopUpActive(void)
+static void PrintItemOnItemPopUp(enum Item item, u8 spriteId1, u8 spriteId2)
+{
+    u32 x;
+    u32 y = 12;
+    if (IsOnPlayerSide(gSprites[spriteId1].sBattlerId))
+        x = 16;
+    else
+        x = 8;
+
+    PrintOnAbilityPopUp(GetItemName(item), spriteId1, spriteId2, x, y, FALSE);
+}
+
+bool32 IsAnyAbilityPopUpActive(void)
 {
     u32 activeAbilityPopUps = 0;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -2728,6 +2706,78 @@ static void Task_FreeAbilityPopUpGfx(u8 taskId)
         }
         FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
         DestroyTask(taskId);
+    }
+}
+
+void CreateItemPopUp(enum BattlerId battler)
+{
+    u8 *spriteIds;
+    u32 xSlide, tileTag;
+    enum BattlerPosition battlerPosition = GetBattlerPosition(battler);
+    struct SpriteTemplate template;
+    const s16 (*coords)[2];
+
+    if (gTestRunnerEnabled)
+    {
+        TestRunner_Battle_RecordItemPopUp(battler, gLastUsedItem);
+        if (gTestRunnerHeadless)
+            return;
+    }
+
+    if (!IsAnyAbilityPopUpActive())
+        LoadSpritePalette(&sSpritePalette_AbilityPopUp);
+
+    tileTag = (TAG_ABILITY_POP_UP_PLAYER1 + battler);
+    if (IndexOfSpriteTileTag(tileTag) == 0xFF)
+    {
+        struct SpriteSheet sheet = sSpriteSheet_AbilityPopUp;
+        sheet.tag = tileTag;
+        LoadSpriteSheet(&sheet);
+    }
+
+    coords = IsDoubleBattle() ? sAbilityPopUpCoordsDoubles : sAbilityPopUpCoordsSingles;
+    xSlide = IsOnPlayerSide(battler) ? -ABILITY_POP_UP_POS_X_SLIDE : ABILITY_POP_UP_POS_X_SLIDE;
+
+    template = sSpriteTemplate_AbilityPopUp;
+    template.tileTag = tileTag;
+    spriteIds = gBattleStruct->abilityPopUpSpriteIds[battler];
+    spriteIds[0] = CreateSprite(&template, coords[battlerPosition][0] + xSlide,
+                                           coords[battlerPosition][1], 0);
+    spriteIds[1] = CreateSprite(&template, coords[battlerPosition][0] + xSlide + ABILITY_POP_UP_POS_X_DIFF,
+                                           coords[battlerPosition][1], 0);
+
+    if (IsOnPlayerSide(battler))
+    {
+        gSprites[spriteIds[0]].sIsPlayerSide = TRUE;
+        gSprites[spriteIds[1]].sIsPlayerSide = TRUE;
+    }
+
+    gSprites[spriteIds[1]].oam.tileNum += 32; // Second half of the pop up tiles.
+
+    // Create only one instance, as it's only used for
+    // tracking the SpriteSheet(s) and SpritePalette.
+    if (!IsAnyAbilityPopUpActive())
+        CreateTask(Task_FreeAbilityPopUpGfx, 5);
+
+    gBattleStruct->battlerState[battler].activeAbilityPopUps = TRUE;
+
+    gSprites[spriteIds[0]].sIsMain = TRUE;
+    gSprites[spriteIds[0]].sBattlerId = battler;
+    gSprites[spriteIds[1]].sBattlerId = battler;
+
+    PrintBattlerOnAbilityPopUp(battler, spriteIds[0], spriteIds[1]);
+    PrintItemOnItemPopUp(gLastUsedItem, spriteIds[0], spriteIds[1]);
+}
+
+void FreeAbilityPopUpGfx(void)
+{
+    for (u32 i = 0; i < NUM_TASKS; i++)
+    {
+        if (gTasks[i].isActive)
+        {
+            if (gTasks[i].func == Task_FreeAbilityPopUpGfx)
+                DestroyTask(i);
+        }
     }
 }
 
