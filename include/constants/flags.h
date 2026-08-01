@@ -68,8 +68,8 @@
 #define FLAG_COUNTERPART_BOOK_SCENE_DONE 0x2E
 #define FLAG_HIDE_HARD_ROCK_BLAINE    0x2F // Unused Flag
 #define FLAG_COUNTERPART_HOME_INVITE    0x30 // Unused Flag
-#define FLAG_UNUSED_0x031    0x31 // Unused Flag
-#define FLAG_UNUSED_0x032    0x32 // Unused Flag
+#define FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK 
+#define FLAG_HIDE_COUNTERPART_ROUTE101_WALK  
 #define FLAG_UNUSED_0x033    0x33 // Unused Flag
 #define FLAG_UNUSED_0x034    0x34 // Unused Flag
 #define FLAG_UNUSED_0x035    0x35 // Unused Flag

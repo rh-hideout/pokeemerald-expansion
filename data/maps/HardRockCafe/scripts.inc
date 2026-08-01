@@ -2,6 +2,10 @@ HardRockCafe_MapScripts::
     map_script MAP_SCRIPT_ON_LOAD, HardRockCafe_SetCounterpartGraphics
     .byte 0
 
+@ Temporary map-specific object ID.
+@ Hard Rock Cafe counterpart is object event 5.
+#define LOCALID_HARD_ROCK_COUNTERPART 5
+
 @ ============================================================================
 @ Dynamic counterpart graphics + Blaine setup
 @ ============================================================================
@@ -68,7 +72,7 @@ HardRockCafe_CounterpartWrongSide:
 
 HardRockCafe_CounterpartSceneStart:
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceCounterpart
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
     waitmovement 0
 
     checkflag FLAG_COUNTERPART_BOOK_SCENE_DONE
@@ -188,14 +192,14 @@ HardRockCafe_BrockReveal:
 
     @ Player and counterpart turn toward him.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerLooksAtBrock
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartLooksAtBrock
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartLooksAtBrock
     waitmovement 0
 
     delay 20
 
     @ They walk toward Brock together.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerApproachesBrock
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartApproachesBrock
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartApproachesBrock
     waitmovement 0
 
     @ Brock turns toward them.
@@ -549,14 +553,14 @@ HardRockCafe_BlaineArrival:
 
     @ Blaine begins speaking, so both characters turn toward him.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceBlaine
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
     waitmovement 0
 
     msgbox HardRockCafe_Text_BlainePraise, MSGBOX_DEFAULT
 
     @ The player turns back to the counterpart for the levitation aside.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceCounterpart
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
     waitmovement 0
 
     msgbox HardRockCafe_Text_PlayerNoticesLevitation, MSGBOX_DEFAULT
@@ -612,7 +616,7 @@ HardRockCafe_LevitationUnknown:
 HardRockCafe_BlaineContinues:
     @ The aside is over; both turn back to Blaine so he can continue.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceBlaine
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
     waitmovement 0
 
     msgbox HardRockCafe_Text_BlaineRecognizesCounterpart, MSGBOX_DEFAULT
@@ -629,7 +633,7 @@ HardRockCafe_BlaineRewardInstruction:
     @ The counterpart realizes this is the player's first day,
     @ so they turn toward one another again.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceCounterpart
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFacePlayer
     waitmovement 0
 
     msgbox HardRockCafe_Text_CounterpartLearnsName, MSGBOX_DEFAULT
@@ -637,7 +641,7 @@ HardRockCafe_BlaineRewardInstruction:
 
     @ Both turn back toward Blaine for his exit line.
     applymovement LOCALID_PLAYER, HardRockCafe_Movement_PlayerFaceBlaine
-    applymovement LOCALID_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_CounterpartFaceBlaine
     waitmovement 0
 
     msgbox HardRockCafe_Text_BlaineLeaves, MSGBOX_DEFAULT

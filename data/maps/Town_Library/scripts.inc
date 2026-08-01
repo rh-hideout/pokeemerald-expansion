@@ -291,13 +291,14 @@ Town_Library_EventScript_BlaineWaitingForParent:
 Town_Library_EventScript_BlaineGiveRunningShoes:
     msgbox Town_Library_Text_BlaineRunningShoesOpening, MSGBOX_DEFAULT
 
-    @ Running Shoes are enabled by a system flag, not added to the Bag.
     setflag FLAG_SYS_B_DASH
 
     msgbox Town_Library_Text_ReceivedRunningShoes, MSGBOX_DEFAULT
     msgbox Town_Library_Text_BlaineFifthBadge, MSGBOX_DEFAULT
 
     setvar VAR_LIBRARY_BOOK_QUEST, 5
+    setvar VAR_COUNTERPART_HOME_EVENT, 1
+
     release
     end
 
@@ -480,7 +481,7 @@ Town_Library_Movement_MagmaFacePlayer:
 Town_Library_Movement_PlayerFaceBlaine:
     face_up
     step_end
-    
+
 Town_Library_Movement_LeftEntranceAlign:
     walk_left
     walk_left

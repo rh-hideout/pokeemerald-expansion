@@ -529,14 +529,25 @@ LittlerootTown_EventScript_BirchsLabSign::
 
 
 LittlerootTown_EventScript_BrendansHouseSign::
-    msgbox LittlerootTown_Text_PlayersHouse, MSGBOX_SIGN
+    msgbox LittlerootTown_Text_NeighborsHouse, MSGBOX_SIGN
     end
 
 
 LittlerootTown_EventScript_MaysHouseSign::
-    msgbox LittlerootTown_Text_NeighborHouse, MSGBOX_SIGN
+    msgbox LittlerootTown_Text_PlayersHouse, MSGBOX_SIGN
     end
 
+LittlerootTown_EventScript_HardrockCafeSign::
+    msgbox LittlerootTown_Text_HardRockCafe, MSGBOX_SIGN
+    end
+
+LittlerootTown_EventScript_TownLibrarySign::
+    msgbox LittlerootTown_Text_TownLibrary, MSGBOX_SIGN
+    end
+
+LittlerootTown_EventScript_LittlerootRuins::
+    msgbox LittlerootTown_Text_LittlerootRuins, MSGBOX_SIGN
+    end
 
 @ =============================================================================
 @ COMPATIBILITY HOUSE-SIGN LABELS
@@ -553,12 +564,12 @@ LittlerootTown_EventScript_PlayersHouseSignFemale:
 
 
 LittlerootTown_EventScript_BirchsHouseSignMale:
-    msgbox LittlerootTown_Text_NeighborHouse, MSGBOX_DEFAULT
+    msgbox LittlerootTown_Text_NeighborsHouse, MSGBOX_DEFAULT
     return
 
 
 LittlerootTown_EventScript_BirchsHouseSignFemale:
-    msgbox LittlerootTown_Text_NeighborHouse, MSGBOX_DEFAULT
+    msgbox LittlerootTown_Text_NeighborsHouse, MSGBOX_DEFAULT
     return
 
 
@@ -773,23 +784,32 @@ LittlerootTown_Text_TownSign:
 
 
 LittlerootTown_Text_ProfBirchsLab:
-    .string "PROF. BIRCH'S POKéMON LAB$"
+    .string "PROF. OAK'S POKéMON LAB$"
 
 
 LittlerootTown_Text_PlayersHouse:
     .string "{PLAYER}'s HOUSE$"
 
 
-LittlerootTown_Text_NeighborHouse:
+LittlerootTown_Text_NeighborsHouse:
     .string "A cozy LITTLEROOT home.$"
 
+LittlerootTown_Text_HardRockCafe:
+    .string "Hard Rock Cafe.$"
+
+LittlerootTown_Text_TownLibrary:
+    .string "Littleroot Town Library.$"
+
+LittlerootTown_Text_LittlerootRuins:
+    .string "Littleroot Ruins\n"
+    .string "Enter at your own risk.$"
 
 @ =============================================================================
 @ DEX-UPGRADE TEXT
 @ =============================================================================
 
 LittlerootTown_Text_BirchSomethingToShowYouAtLab:
-    .string "PROF. BIRCH: Ah, {PLAYER}!\p"
+    .string "PROF. OAK: Ah, {PLAYER}!\p"
     .string "I have something important to\n"
     .string "show you at the LAB.\p"
     .string "Come with me.$"
