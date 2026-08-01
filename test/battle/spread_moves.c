@@ -664,3 +664,26 @@ DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not presen
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerRight);
     }
 }
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Magic Bounce)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_GROWL) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(3); }
+        OPPONENT(SPECIES_HATTERENE) { HP(1); Speed(2); Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_GROWL);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, playerRight);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
