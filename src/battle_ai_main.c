@@ -1033,45 +1033,42 @@ static void BattleAI_ConsiderCombo(enum BattlerId battler, enum BattlerId battle
             {
                 continue;
             }
-            else
+            DoAIScoreProcessing(battler, battlerIndex);
+
+            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                DoAIScoreProcessing(battler, battlerIndex);
-
-                for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+                enum Move currentMove = gBattleMons[battler].moves[moveIndex];
+                if (currentMove != MOVE_NONE)
                 {
-                    enum Move currentMove = gBattleMons[battler].moves[moveIndex];
-                    if (currentMove != MOVE_NONE)
+                    if (!CanTargetBattler(battler, battlerIndex, currentMove))
+                        continue;
+
+                    if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
                     {
-                        if (!CanTargetBattler(battler, battlerIndex, currentMove))
-                            continue;
-
-                        if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
+                        bool32 shouldAddToArray = TRUE;
+                        for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
                         {
-                            bool32 shouldAddToArray = TRUE;
-                            for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
-                            {
-                                if (bestMoves[i] == currentMove && bestTargets[i] == battlerIndex)
-                                    shouldAddToArray = FALSE; // No point adding duplicates
-                            }
-
-                            if (shouldAddToArray)
-                            {
-                                bestMoves[arrayPos] = currentMove;
-                                bestTargets[arrayPos++] = battlerIndex;
-                            }
+                            if (bestMoves[i] == currentMove && bestTargets[i] == battlerIndex)
+                                shouldAddToArray = FALSE; // No point adding duplicates
                         }
 
-                        if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                        if (shouldAddToArray)
                         {
-                            highestMoveScore = gAiThinkingStruct->score[moveIndex];
-                            bestMoves[0] = currentMove;
-                            bestTargets[0] = battlerIndex;
-                            arrayPos = 1;
-                            for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
-                            {
-                                bestMoves[i] = MOVE_NONE;
-                                bestTargets[i] = 0;
-                            }
+                            bestMoves[arrayPos] = currentMove;
+                            bestTargets[arrayPos++] = battlerIndex;
+                        }
+                    }
+
+                    if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                    {
+                        highestMoveScore = gAiThinkingStruct->score[moveIndex];
+                        bestMoves[0] = currentMove;
+                        bestTargets[0] = battlerIndex;
+                        arrayPos = 1;
+                        for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
+                        {
+                            bestMoves[i] = MOVE_NONE;
+                            bestTargets[i] = 0;
                         }
                     }
                 }
@@ -1101,52 +1098,44 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
         enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
         enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
     
-        if (IsThinkingBeforePartner(battlerAtk, battlerPartner)) // Default to normal move selection if not
+        if (IsThinkingBeforePartner(battlerAtk, battlerPartner) && !gAiLogicData->partnerMoveSimulation) // Default to normal move selection if not
         {
             BattleAI_ConsiderCombo(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
+            s32 tempFinalScore[MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
             for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
             {
                 gAiLogicData->partnerMove = partnerBestMoves[i];
                 gAiBattleData->chosenTarget[battlerPartner] = partnerBestTargets[i];
+                gAiLogicData->partnerMoveSimulation = TRUE;
+                struct ChosenAction interimAction = ChooseMoveOrAction_Doubles(battlerAtk);
+                gAiLogicData->partnerMoveSimulation = FALSE;
 
-                for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+                if (comboBestScore < gAiThinkingStruct->score[interimAction.moveIndex])
                 {
-                    if (gBattleMons[battlerIndex].hp == 0 || battlerIndex == battlerAtk)
-                    {
-                        actionOrMoveIndex[battlerIndex] = 0xFF;
-                        bestMovePointsForTarget[battlerIndex] = -1;
-                    }
-                    else
-                    {
-                        DoAIScoreProcessing(battlerAtk, battlerIndex);
+                    comboBestScore = gAiThinkingStruct->score[interimAction.moveIndex];
+                    mostViableMove = gBattleMons[battlerAtk].moves[interimAction.moveIndex];
+                    mostViableTarget = interimAction.target;
 
-                        for (u32 moveIndex = 0; gBattleMons[battlerAtk].moves[moveIndex] != MOVE_NONE; moveIndex++)
-                        {
-                            enum Move currentMove = gBattleMons[battlerAtk].moves[moveIndex];
-                            if (!CanTargetBattler(battlerAtk, battlerIndex, currentMove))
-                                continue;
-
-                            if (comboBestScore < gAiThinkingStruct->score[moveIndex])
-                            {
-                                comboBestScore = gAiThinkingStruct->score[moveIndex];
-                                mostViableMove = currentMove;
-                                mostViableTarget = gBattlerTarget;
-                            }
-                        }
-                        #if TESTING
-                        gBattleTestRunnerState->data.trial.scoreTieCount = 1; // For now, only taking the first found highest score
-                        #endif
+                    // Store scores found when testing best move
+                    for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+                    {
                         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
                         {
-                            if (gAiBattleData->finalScore[battlerAtk][gBattlerTarget][moveIndex] < gAiThinkingStruct->score[moveIndex])
-                                gAiBattleData->finalScore[battlerAtk][gBattlerTarget][moveIndex] = gAiThinkingStruct->score[moveIndex];
+                            if (tempFinalScore[battlerIndex][moveIndex] < gAiBattleData->finalScore[battlerAtk][battlerIndex][moveIndex])
+                                tempFinalScore[battlerIndex][moveIndex] = gAiBattleData->finalScore[battlerAtk][battlerIndex][moveIndex];
                         }
                     }
                 }
-                #if TESTING
-                gBattleTestRunnerState->data.trial.targetTieCount = 1; // For now, only taking the first found highest score
-                #endif
             }
+
+            memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(gAiBattleData->finalScore[battlerAtk]));
+
+            #if TESTING
+            // For now, only taking the first found highest score
+            gBattleTestRunnerState->data.trial.scoreTieCount = 1;
+            gBattleTestRunnerState->data.trial.targetTieCount = 1;
+            #endif
+
             struct ChosenAction chosen = {0};
             chosen.target = mostViableTarget;
             chosen.moveIndex = GetMoveIndex(battlerAtk, mostViableMove);
