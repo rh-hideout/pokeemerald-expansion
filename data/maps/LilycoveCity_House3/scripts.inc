@@ -123,21 +123,21 @@ LilycoveCity_House3_Text_ExplainPokeblocks:
 	.string "the better it is. Don't forget this!\p"
 	.string "A good {POKEBLOCK} has a low feel\n"
 	.string "rating and a high level.\p"
-	.string "A POKéMON can eat more good\n"
+	.string "A [Pokémon] can eat more good\n"
 	.string "{POKEBLOCK}S than ordinary ones, too.\p"
 	.string "And this is important.\p"
 	.string "If you want to make smooth {POKEBLOCK}S,\n"
-	.string "use different kinds of BERRIES.\p"
-	.string "Don't be stingy--the kinds of BERRIES\n"
+	.string "use different kinds of [Berries].\p"
+	.string "Don't be stingy--the kinds of [Berries]\n"
 	.string "affect the smoothness of {POKEBLOCK}S.\p"
 	.string "And another thing.\p"
-	.string "The more people blending BERRIES,\n"
+	.string "The more people blending [Berries],\n"
 	.string "the smoother the {POKEBLOCK}S.\p"
 	.string "That's why you should talk to other\n"
 	.string "people and make {POKEBLOCK}S together.\p"
 	.string "That's about all you need to know to\n"
 	.string "make good {POKEBLOCK}S.\p"
-	.string "If everyone had POKéMON they love,\n"
+	.string "If everyone had [Pokémon] they love,\n"
 	.string "smooth {POKEBLOCK}S, and a loving family,\l"
 	.string "the world would be a happier place.\p"
 	.string "Don't give up, dear!$"
@@ -149,20 +149,19 @@ LilycoveCity_House3_Text_HappyToHaveQuadruplets:
 	.string "it makes me happy.$"
 
 LilycoveCity_House3_Text_GoingToWinMultiBattles:
-	.string "We're having MULTI BATTLES, but I know\n"
+	.string "We're having [Multi Battles], but I know\n"
 	.string "I'm going to win.$"
 
 LilycoveCity_House3_Text_LikeMixingAtRecordCorner:
 	.string "We like mixing stuff at\n"
-	.string "the RECORD CORNER.\p"
+	.string "the [Record Corner].\p"
 	.string "But what gets mixed up?$"
 
 LilycoveCity_House3_Text_MakePokeblocksWithBerryBlender:
 	.string "We're going to make super {POKEBLOCK}S\n"
-	.string "with a BERRY BLENDER!$"
+	.string "with a [Berry Blender]!$"
 
 LilycoveCity_House3_Text_GoingToEnterContest:
 	.string "I want to brag about how tough my\n"
-	.string "POKéMON is, so we're going to enter\l"
-	.string "a CONTEST together.$"
-
+	.string "[Pokémon] is, so we're going to enter\l"
+	.string "a [Contest] together.$"
