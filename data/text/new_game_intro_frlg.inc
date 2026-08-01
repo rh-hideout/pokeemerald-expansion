@@ -143,7 +143,7 @@ gControlsGuide_Text_BButton::
 
 gControlsGuide_Text_StartButton::
 	.string "Press this button to open the\n"
-	.string "[Menu.]$"
+	.string "[Menu].$"
 
 gControlsGuide_Text_SelectButton::
 	.string "Used to shift items and to use\n"

@@ -74,7 +74,7 @@ FourIsland_House2_Text_WowHoFHighest::
 	.string "That's it, I have to give you this.$"
 
 FourIsland_House2_Text_HoFStickerApplied::
-	.string "The [Hall Of Fame Sticker] was\n"
+	.string "The [Hall of Fame Sticker] was\n"
 	.string "applied to the [Trainer Card].$"
 
 FourIsland_House2_Text_ComeBackWithBetterStoryHoF::

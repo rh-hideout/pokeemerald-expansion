@@ -124,7 +124,7 @@ MatchCall_WildBattleText15::
 	.string "Hey, {PLAYER}!\n"
 	.string "This is {STR_VAR_1}!\p"
 	.string "I've been thinking about trying\n"
-	.string "to catch me some [Pokémon.]\p"
+	.string "to catch me some [Pokémon].\p"
 	.string "But I can't seem to find any.\n"
 	.string "It's a real puzzler for me!\p"
 	.string "I'm at my wit's end!\n"
@@ -2844,7 +2844,7 @@ MatchCall_Text_BirchRegisterCall:
 
 MatchCall_Text_RegisteredBirch:
 	.string "Registered [Prof. Birch]\n"
-	.string "in the [PokéNav.]$"
+	.string "in the [PokéNav].$"
 
 MatchCall_Text_UnusedProfBirch:
 	.string "[Prof. Birch]: When one has both\n"
