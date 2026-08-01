@@ -1091,12 +1091,13 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     u32 mostViableTargetsNo;
     u32 mostViableMovesNo;
     s32 mostMovePoints;
-    enum Move mostViableMove = MOVE_NONE;
-    s32 comboBestScore = 0;
     enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
 
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_COMBO)
     {
+        enum Move mostViableMove = MOVE_NONE;
+        enum BattlerId mostViableTarget = B_BATTLER_0;
+        s32 comboBestScore = 0;
         enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
         enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
     
@@ -1129,7 +1130,7 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
                             {
                                 comboBestScore = gAiThinkingStruct->score[moveIndex];
                                 mostViableMove = currentMove;
-                                gAiBattleData->chosenTarget[battlerAtk] = gBattlerTarget;
+                                mostViableTarget = gBattlerTarget;
                             }
                         }
                         #if TESTING
@@ -1147,7 +1148,7 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
                 #endif
             }
             struct ChosenAction chosen = {0};
-            chosen.target = gAiBattleData->chosenTarget[battlerAtk];
+            chosen.target = mostViableTarget;
             chosen.moveIndex = GetMoveIndex(battlerAtk, mostViableMove);
             return chosen;
         }
