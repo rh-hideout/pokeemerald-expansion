@@ -1038,38 +1038,39 @@ static void BattleAI_ConsiderCombo(enum BattlerId battler, enum BattlerId battle
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
                 enum Move currentMove = gBattleMons[battler].moves[moveIndex];
-                if (currentMove != MOVE_NONE)
+
+                if (currentMove == MOVE_NONE)
+                    continue;
+
+                if (!CanTargetBattler(battler, battlerIndex, currentMove))
+                    continue;
+
+                if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
                 {
-                    if (!CanTargetBattler(battler, battlerIndex, currentMove))
-                        continue;
-
-                    if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
+                    bool32 shouldAddToArray = TRUE;
+                    for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
                     {
-                        bool32 shouldAddToArray = TRUE;
-                        for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
-                        {
-                            if (bestMoves[i] == currentMove && bestTargets[i] == battlerIndex)
-                                shouldAddToArray = FALSE; // No point adding duplicates
-                        }
-
-                        if (shouldAddToArray)
-                        {
-                            bestMoves[arrayPos] = currentMove;
-                            bestTargets[arrayPos++] = battlerIndex;
-                        }
+                        if (bestMoves[i] == currentMove && bestTargets[i] == battlerIndex)
+                            shouldAddToArray = FALSE; // No point adding duplicates
                     }
 
-                    if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                    if (shouldAddToArray)
                     {
-                        highestMoveScore = gAiThinkingStruct->score[moveIndex];
-                        bestMoves[0] = currentMove;
-                        bestTargets[0] = battlerIndex;
-                        arrayPos = 1;
-                        for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
-                        {
-                            bestMoves[i] = MOVE_NONE;
-                            bestTargets[i] = 0;
-                        }
+                        bestMoves[arrayPos] = currentMove;
+                        bestTargets[arrayPos++] = battlerIndex;
+                    }
+                }
+
+                if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                {
+                    highestMoveScore = gAiThinkingStruct->score[moveIndex];
+                    bestMoves[0] = currentMove;
+                    bestTargets[0] = battlerIndex;
+                    arrayPos = 1;
+                    for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
+                    {
+                        bestMoves[i] = MOVE_NONE;
+                        bestTargets[i] = 0;
                     }
                 }
             }
