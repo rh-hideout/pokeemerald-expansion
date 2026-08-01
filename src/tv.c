@@ -2886,24 +2886,30 @@ static enum Species GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, enum
 
 static enum Species GetRandomDifferentSpeciesSeenByPlayer(enum Species excludedSpecies)
 {
-    enum Species species = Random() % (NUM_SPECIES - 1) + 1;
-    enum Species initSpecies = species;
-
-    while (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN) != TRUE || species == excludedSpecies)
+    enum NationalDexOrder selectedNatDex;
+    enum NationalDexOrder excludexNatDex = SpeciesToNationalPokedexNum(excludedSpecies);
+    enum NationalDexOrder *natDexArray = Alloc(POKEMON_SLOTS_NUMBER * sizeof(enum NationalDexOrder));
+    u32 count = 0;
+    for (u32 i = 0; i < NUM_DEX_FLAG_BYTES; i++)
     {
-        if (species == SPECIES_NONE + 1)
-            species = NUM_SPECIES - 1;
-        else
-            species--;
-
-        if (species == initSpecies)
+        u32 tmp = gSaveBlock1Ptr->dexSeen[i];
+        for (u32 j = 0; j < 8; j++)
         {
-            // Looped back to initial species (only Pokémon seen), must choose excluded species
-            species = excludedSpecies;
-            return species;
+            if (tmp & 1)
+                natDexArray[count++] = i * 8 + j + 1;
+            tmp >>= 1;
         }
-    };
-    return species;
+    }
+    if (count <= 1)
+    {
+        Free(natDexArray);
+        return excludedSpecies;
+    }
+    do {
+        selectedNatDex = natDexArray[RandomUniform(RNG_NONE, 0, count - 1)];
+    } while (selectedNatDex == excludexNatDex);
+    Free(natDexArray);
+    return NationalPokedexNumToSpecies(selectedNatDex);
 }
 
 static void Script_FindFirstEmptyNormalTVShowSlot(void)

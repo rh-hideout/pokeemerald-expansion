@@ -204,6 +204,36 @@ u8 CreateMonIconNoPersonalityIsEgg(enum Species species, void (*callback)(struct
     return spriteId;
 }
 
+u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species)
+{
+    struct SpritePalette palette;
+    palette.data = gMonIconPaletteTable[gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex].data;
+    palette.tag = paletteTag;
+    LoadSpritePalette(&palette);
+
+    struct SpriteSheet spriteSheet;
+    spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
+    spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
+    spriteSheet.tag = tileTag;
+    LoadSpriteSheet(&spriteSheet);
+
+    struct SpriteTemplate spriteTemplate =
+    {
+        .tileTag = tileTag,
+        .paletteTag = paletteTag,
+        .oam = &sMonIconOamData,
+        .anims = sMonIconAnims,
+        .images = NULL,
+        .affineAnims = sMonIconAffineAnims
+    };
+
+    u8 spriteId = CreateSprite(&spriteTemplate, 0, 0, 0);
+    gSprites[spriteId].animPaused = TRUE;
+    gSprites[spriteId].animBeginning = FALSE;
+    UpdateMonIconFrame(&gSprites[spriteId]);
+    return spriteId;
+}
+
 enum Species GetIconSpecies(enum Species species, u32 personality)
 {
     species = SanitizeSpeciesId(species);

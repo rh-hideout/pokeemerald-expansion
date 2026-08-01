@@ -20,6 +20,30 @@ SINGLE_BATTLE_TEST("Poison Touch has a 30% chance to poison when attacking with 
     }
 }
 
+SINGLE_BATTLE_TEST("Poison Touch is checked after the move's additional effect")
+{
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
+        ASSUME(MoveMakesContact(MOVE_NUZZLE));
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+    } THEN {
+        EXPECT(opponent->status1 & STATUS1_PARALYSIS);
+    }
+}
+
 SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
 {
     enum Move move;

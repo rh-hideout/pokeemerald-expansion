@@ -37,9 +37,10 @@
 	.byte \battler
 	.endm
 
-	.macro datahpupdate battler:req
+	.macro datahpupdate battler:req assuranceDouble:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
+    .byte \assuranceDouble
 	.endm
 
 	.macro critmessage
@@ -87,15 +88,6 @@
 		setmoveeffect \moveEffect
 	.endif
 	.byte B_SCR_OP_SETEFFECTPRIMARY
-	.byte \battler
-	.byte \effectBattler
-	.endm
-
-	.macro seteffectsecondary battler:req, effectBattler:req, moveEffect=0
-	.if \moveEffect != 0
-		setmoveeffect \moveEffect
-	.endif
-	.byte B_SCR_OP_SETEFFECTSECONDARY
 	.byte \battler
 	.byte \effectBattler
 	.endm
@@ -1438,8 +1430,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcommanderactive jumpInstr:req
+	.macro jumpifcommanderactive battler:req, jumpInstr:req
 	callnative BS_JumpIfCommanderActive
+	.byte \battler
 	.4byte \jumpInstr
 	.endm
 
@@ -2133,4 +2126,8 @@
 	.byte \comparison
 	.byte \terrain
 	.4byte \jumpInstr
+	.endm
+
+	.macro trydomoveeffectsbeforemoves
+	callnative BS_TryDoMoveEffectsBeforeMoves
 	.endm

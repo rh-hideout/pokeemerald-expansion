@@ -748,6 +748,11 @@
 	create_overheat_flame_sprite \anim_battler, 66, speed=1, unk1=224, unk2=30, duration=25, y=\y
 	.endm
 
+	.macro create_razor_leaf_cutters anim_battler=ANIM_TARGET, target_both:req
+	create_razor_leaf_cutter_sprite \anim_battler, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=20, target_both=\target_both
+	create_razor_leaf_cutter_sprite \anim_battler, 3, initial_x=20, initial_y=-10, target_x=20, target_y=0, duration=22, wave_amplitude=-20, target_both=\target_both
+	.endm
+
 	.macro create_syrup_bomb_projectile anim_battler:req, sprite:req
 	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
 	createsprite \sprite, \anim_battler, 2, 20, 0, 40, 0

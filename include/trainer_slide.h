@@ -1,6 +1,7 @@
 #ifndef GUARD_TRAINER_SLIDE_H
 #define GUARD_TRAINER_SLIDE_H
 
+#include "constants/comparison_operators.h"
 #include "constants/trainer_slide.h"
 
 
@@ -22,6 +23,6 @@ bool32 IsTrainerSlidePlayed(enum BattlerId battler, enum TrainerSlideType slideI
 void InitalizeTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId);
 void MarkTrainerSlideAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 void MarkInitializedTrainerSlidesAsPlayed(enum BattlerId battler, enum TrainerSlideType slideId);
-u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold);
+u32 BattlerHPPercentage(enum BattlerId battler, enum ComparisonOperators operation, u32 threshold);
 
 #endif // GUARD_TRAINER_SLIDE_H

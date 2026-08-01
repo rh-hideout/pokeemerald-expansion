@@ -1230,7 +1230,7 @@ void SpriteCB_EnemyShadow(struct Sprite *shadowSprite)
         return;
     }
 
-    s8 xOffset = 0, UNUSED yOffset = 0, size = SHADOW_SIZE_S;
+    s8 xOffset = 0, yOffset = 0, size = SHADOW_SIZE_S;
     if (gAnimScriptActive || battlerSprite->invisible)
     {
         invisible = TRUE;

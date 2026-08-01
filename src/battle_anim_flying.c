@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_anim.h"
 #include "palette.h"
+#include "sprite.h"
 #include "trig.h"
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
@@ -362,31 +363,20 @@ void AnimTask_AnimateGustTornadoPalette(u8 taskId)
 {
     gTasks[taskId].data[0] = gBattleAnimArgs[1];
     gTasks[taskId].data[1] = gBattleAnimArgs[0];
-    gTasks[taskId].data[2] = IndexOfSpritePaletteTag(ANIM_TAG_GUST);
     gTasks[taskId].func = AnimTask_AnimateGustTornadoPalette_Step;
 }
 
 static void AnimTask_AnimateGustTornadoPalette_Step(u8 taskId)
 {
-    u8 data2;
-    u16 temp;
-    int i, base;
-
     if (gTasks[taskId].data[10]++ == gTasks[taskId].data[1])
     {
         gTasks[taskId].data[10] = 0;
-        data2 = gTasks[taskId].data[2];
-        temp = gPlttBufferFaded[OBJ_PLTT_ID(data2) + 8];
-        i = 7;
-        base = PLTT_ID(data2);
+        u32 palOffset = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_GUST));
+        u16 *palPtr = &gPlttBufferFaded[palOffset];
 
-        do
-        {
-            gPlttBufferFaded[base + OBJ_PLTT_OFFSET + 1 + i] = gPlttBufferFaded[base + OBJ_PLTT_OFFSET + i];
-            i--;
-        } while (i > 0);
-
-        gPlttBufferFaded[base + OBJ_PLTT_OFFSET + 1] = temp;
+        u32 temp = palPtr[8];
+        memmove(&palPtr[2], &palPtr[1], PLTT_SIZEOF(7));
+        palPtr[1] = temp;
     }
 
     if (--gTasks[taskId].data[0] == 0)

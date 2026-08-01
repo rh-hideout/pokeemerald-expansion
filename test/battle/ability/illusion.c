@@ -72,6 +72,22 @@ SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot")
     }
 }
 
+ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a battle with two opponent trainers")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WYNAUT);
+        OPPONENT_B(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {}
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_OPPONENT_B][1] == gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].mon);
+    }
+}
+
 SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
 {
     GIVEN {

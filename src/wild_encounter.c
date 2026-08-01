@@ -6,6 +6,7 @@
 #include "fieldmap.h"
 #include "fishing.h"
 #include "follower_npc.h"
+#include "item.h"
 #include "random.h"
 #include "field_player_avatar.h"
 #include "link.h"
@@ -1135,7 +1136,8 @@ static void ApplyFluteEncounterRateMod(u32 *encRate)
 
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 {
-    if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
+    enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM);
+    if (gItemsInfo[heldItem].holdEffect == HOLD_EFFECT_REPEL)
         *encRate = *encRate * 2 / 3;
 }
 

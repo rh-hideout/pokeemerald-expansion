@@ -78,7 +78,7 @@ static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_E
 #include "../test/battle/trainer_slides.h"
 };
 
-u32 BattlerHPPercentage(enum BattlerId battler, u32 operation, u32 threshold)
+u32 BattlerHPPercentage(enum BattlerId battler, enum ComparisonOperators operation, u32 threshold)
 {
     switch (operation)
     {

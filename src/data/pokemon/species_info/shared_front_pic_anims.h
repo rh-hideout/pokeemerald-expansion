@@ -18,6 +18,40 @@ static const union AnimCmd *const sAnims_TwoFramePlaceHolder[] =
     },
 };
 
+#if P_FAMILY_RATTATA
+#if P_ALOLAN_FORMS
+static const union AnimCmd *const sAnims_RaticateAlola[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+            ANIMCMD_FRAME(1, 11),
+            ANIMCMD_FRAME(0, 11),
+            ANIMCMD_FRAME(1, 11),
+            ANIMCMD_FRAME(0, 1),
+	        ANIMCMD_END,
+	},
+};
+#endif //P_ALOLAN_FORMS
+#endif //P_FAMILY_RATTATA
+
+#if P_FAMILY_CUBONE
+#if P_ALOLAN_FORMS
+static const union AnimCmd *const sAnims_MarowakAlola[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+            ANIMCMD_FRAME(1, 14),
+            ANIMCMD_FRAME(0, 14),
+            ANIMCMD_FRAME(1, 14),
+            ANIMCMD_FRAME(0, 14),
+            ANIMCMD_FRAME(1, 14),
+            ANIMCMD_FRAME(0, 14),
+	        ANIMCMD_END,
+	},
+};
+#endif //P_ALOLAN_FORMS
+#endif //P_FAMILY_CUBONE
+
 #if P_FAMILY_BURMY
 static const union AnimCmd *const sAnims_Burmy[] =
 {
@@ -363,8 +397,12 @@ static const union AnimCmd *const sAnims_Vikavolt[] =
 {
     sAnim_GeneralFrame0,
     (const union AnimCmd[]) {
-        ANIMCMD_FRAME(0, 1),
-        ANIMCMD_FRAME(1, 15),
+        ANIMCMD_FRAME(0, 10),
+        ANIMCMD_FRAME(1, 10),
+        ANIMCMD_FRAME(0, 10),
+        ANIMCMD_FRAME(1, 10),
+        ANIMCMD_FRAME(0, 10),
+        ANIMCMD_FRAME(1, 10),
         ANIMCMD_FRAME(0, 1),
         ANIMCMD_END,
     },
@@ -420,6 +458,19 @@ static const union AnimCmd *const sAnims_Araquanid[] =
 };
 #endif //P_FAMILY_DEWPIDER
 
+#if P_FAMILY_FOMANTIS
+static const union AnimCmd *const sAnims_Lurantis[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+        ANIMCMD_FRAME(0, 5),
+        ANIMCMD_FRAME(1, 35),
+        ANIMCMD_FRAME(0, 1),
+        ANIMCMD_END,
+    },
+};
+#endif //P_FAMILY_FOMANTIS
+
 #if P_FAMILY_SALANDIT
 static const union AnimCmd *const sAnims_Salazzle[] =
 {
@@ -468,6 +519,20 @@ static const union AnimCmd *const sAnims_Kommo_O[] =
         ANIMCMD_FRAME(1, 20),
         ANIMCMD_FRAME(0, 20),
         ANIMCMD_FRAME(1, 20),
+        ANIMCMD_FRAME(0, 1),
+        ANIMCMD_END,
+    },
+};
+#endif //P_FAMILY_JANGMO_O
+
+#if P_FAMILY_MAGEARNA
+static const union AnimCmd *const sAnims_Magearna[] =
+{
+    sAnim_GeneralFrame0,
+    (const union AnimCmd[]) {
+        ANIMCMD_FRAME(1, 40),
+        ANIMCMD_FRAME(1, 40),
+        ANIMCMD_FRAME(1, 40),
         ANIMCMD_FRAME(0, 1),
         ANIMCMD_END,
     },
