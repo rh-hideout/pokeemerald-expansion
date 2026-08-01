@@ -2,11 +2,11 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (with AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (with AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_POWERFUL_STATUS | AI_FLAG_CONSIDER_COMBO);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_POWERFUL_STATUS | AI_FLAG_DEEP_PARTNER_THINKING);
         TIE_BREAK_TARGET(TARGET_TIE_LO,0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(6); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
@@ -24,11 +24,11 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (with AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (with AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_DEEP_PARTNER_THINKING);
         TIE_BREAK_TARGET(TARGET_TIE_LO,0);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -48,11 +48,11 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (with AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (with AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_DEEP_PARTNER_THINKING);
         TIE_BREAK_TARGET(TARGET_TIE_LO,0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
@@ -70,7 +70,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner
 }
 
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (with AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (with AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     u32 speed = 0;
     PARAMETRIZE { speed = 30; }
@@ -79,7 +79,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUSION_FLARE) == EFFECT_FUSION_COMBO);
         ASSUME(GetMoveEffect(MOVE_FUSION_BOLT) == EFFECT_FUSION_COMBO);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_DEEP_PARTNER_THINKING);
         TIE_BREAK_TARGET(TARGET_TIE_LO,0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
@@ -98,7 +98,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (no AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower battlerId if higher battlerId subsequently does not choose Round (no AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -120,7 +120,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round will not be incentivised on lower bat
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (no AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging moves if present on both battlers (no AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -144,7 +144,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is incentivised over higher damaging 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (no AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner not also having Round when Round is the best available move (no AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
@@ -166,7 +166,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner
 }
 
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (no AI_FLAG_CONSIDER_COMBO)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before (no AI_FLAG_DEEP_PARTNER_THINKING)")
 {
     u32 speed = 0;
     PARAMETRIZE { speed = 30; }
@@ -194,11 +194,11 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor selection of Magnet Rise")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_DEEP_PARTNER_THINKING prevents poor selection of Magnet Rise")
 {
     u64 flags = 0;
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
-    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO; }
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_DEEP_PARTNER_THINKING; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
@@ -214,7 +214,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor select
     } WHEN {
         TURN {
             EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
-            if (flags & AI_FLAG_CONSIDER_COMBO)
+            if (flags & AI_FLAG_DEEP_PARTNER_THINKING)
             {
                 EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
                 SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);
@@ -228,11 +228,11 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor select
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor selection of Magnet Rise (reversed)")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_DEEP_PARTNER_THINKING prevents poor selection of Magnet Rise (reversed)")
 {
     u64 flags = 0;
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
-    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CONSIDER_COMBO; }
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_DEEP_PARTNER_THINKING; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
@@ -248,7 +248,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_CONSIDER_COMBO prevents poor select
     } WHEN {
         TURN {
             EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
-            if (flags & AI_FLAG_CONSIDER_COMBO)
+            if (flags & AI_FLAG_DEEP_PARTNER_THINKING)
             {
                 EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
                 SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);

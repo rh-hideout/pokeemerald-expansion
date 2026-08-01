@@ -120,7 +120,7 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
     [34] = NULL,                     // AI_FLAG_ABILITY_OMNISCIENCE
     [35] = NULL,                     // AI_FLAG_ITEM_OMNISCIENCE
     [36] = NULL,                     // AI_FLAG_MOVE_OMNISCIENCE
-    [37] = NULL,                     // AI_FLAG_CONSIDER_COMBO
+    [37] = NULL,                     // AI_FLAG_DEEP_PARTNER_THINKING
     [38] = NULL,                     // Unused
     [39] = NULL,                     // Unused
     [40] = NULL,                     // Unused
@@ -1017,7 +1017,7 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     return chosen;
 }
 
-static void BattleAI_ConsiderCombo(enum BattlerId battler, enum BattlerId battlerPartner, enum Move *bestMoves, enum BattlerId *bestTargets)
+static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId battlerPartner, enum Move *bestMoves, enum BattlerId *bestTargets)
 {
     s32 highestMoveScore = 0;
     enum Move *allyMoves = GetMovesArray(battlerPartner);
@@ -1091,17 +1091,17 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     s32 mostMovePoints;
     enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
 
-    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_COMBO)
-    {
-        enum Move mostViableMove = MOVE_NONE;
-        enum BattlerId mostViableTarget = B_BATTLER_0;
-        s32 comboBestScore = 0;
-        enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
-        enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
-    
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_DEEP_PARTNER_THINKING)
+    {    
         if (IsThinkingBeforePartner(battlerAtk, battlerPartner) && !gAiLogicData->partnerMoveSimulation) // Default to normal move selection if not
         {
-            BattleAI_ConsiderCombo(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
+            enum Move mostViableMove = MOVE_NONE;
+            enum BattlerId mostViableTarget = B_BATTLER_0;
+            s32 comboBestScore = 0;
+            enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
+            enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
+
+            BattleAI_DeepPartnerThinking(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
             s32 tempFinalScore[MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
             for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
             {

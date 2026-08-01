@@ -4275,7 +4275,7 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
 // It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
@@ -4293,7 +4293,7 @@ bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum Batt
 //PARTNER_MOVE_EFFECT_IS_STATUS_SAME_TARGET
 bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
@@ -4313,7 +4313,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enu
 //PARTNER_MOVE_EFFECT_IS
 bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck)
@@ -6572,7 +6572,7 @@ bool32 ShouldUseFusionMove(enum BattlerId battler)
     if (!WillPartnerActBeforeOrAfter(battler, partner))
         return FALSE;
 
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSIDER_COMBO)
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
         return PartnerMoveEffectIs(partner, partnerMove, EFFECT_FUSION_COMBO);
     else if (gAiLogicData->partnerMoveSimulation)
         return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
@@ -6591,7 +6591,7 @@ bool32 ShouldUseRound(enum BattlerId battler, enum BattleMoveEffects moveEffect)
     if (!IsBattlerAlive(partner))
         return FALSE;
 
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSIDER_COMBO)
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
         return PartnerMoveEffectIs(partner, partnerMove, moveEffect);
     else if (gAiLogicData->partnerMoveSimulation) // First battler check, so check moveset of partner
         return HasMoveWithEffect(partner, moveEffect);
@@ -6610,7 +6610,7 @@ bool32 ShouldUsePledgeMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     enum BattleSide atkSide = GetBattlerSide(battlerAtk);
     enum BattleSide defSide = GetBattlerSide(battlerDef);
 
-    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_COMBO)
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_DEEP_PARTNER_THINKING)
     {
         switch (move)
         {
