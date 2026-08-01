@@ -151,6 +151,13 @@
       "elevation": 0,
       "dest_map": "MAP_LITTLEROOT_TOWN",
       "dest_warp_id": "4"
+    },
+    {
+      "x": 9,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_CINNABAR_ISLAND",
+      "dest_warp_id": "2"
     }
   ],
   "coord_events": [

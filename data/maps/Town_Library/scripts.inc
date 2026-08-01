@@ -8,10 +8,10 @@ Town_Library_MapScripts::
 @ VAR_LIBRARY_BOOK_QUEST
 @   0 = Quest has not started
 @   1 = Searching for Blaine's missing book
-@   2 = Book found / return to Blaine      (future)
-@   3 = Book returned                      (future)
-@   4 = Deliver cookbook to restaurant     (future)
-@   5 = Quest complete                     (future)
+@   2 = Restaurant scene complete; return to the library
+@   3 = Parent gave the Mysterious Key or Mysterious Book
+@   4 = Reserved for a future transition, if needed
+@   5 = Quest complete; Running Shoes received
 @
 @ Both entrance coordinate triggers should use:
 @   Town_Library_EventScript_EntranceScene
@@ -175,6 +175,139 @@ Town_Library_EventScript_EntranceDone:
 
 
 @ =============================================================================
+@ PARENT INTERACTION
+@
+@ Assign this script to both Mom and Dad in Porymap:
+@   Town_Library_EventScript_Parent
+@ =============================================================================
+
+Town_Library_EventScript_Parent::
+    lock
+    faceplayer
+
+    compare VAR_LIBRARY_BOOK_QUEST, 1
+    goto_if_eq Town_Library_EventScript_ParentQuestReminder
+
+    compare VAR_LIBRARY_BOOK_QUEST, 2
+    goto_if_eq Town_Library_EventScript_ParentReward
+
+    compare VAR_LIBRARY_BOOK_QUEST, 3
+    goto_if_eq Town_Library_EventScript_ParentAfterReward
+
+    compare VAR_LIBRARY_BOOK_QUEST, 5
+    goto_if_eq Town_Library_EventScript_ParentQuestComplete
+
+    msgbox Town_Library_Text_ParentNormal, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_ParentQuestReminder:
+    msgbox Town_Library_Text_ParentQuestReminder, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_ParentReward:
+    msgbox Town_Library_Text_ParentRewardOpening, MSGBOX_DEFAULT
+    msgbox Town_Library_Text_ParentJourneySpeech, MSGBOX_DEFAULT
+
+    compare VAR_WISDOM, VAR_CURIOSITY
+    goto_if_gt Town_Library_EventScript_GiveMysteriousKey
+
+    @ Curiosity wins ties.
+    goto Town_Library_EventScript_GiveMysteriousBook
+
+Town_Library_EventScript_GiveMysteriousKey:
+    msgbox Town_Library_Text_ParentGiveKey, MSGBOX_DEFAULT
+    giveitem ITEM_MYSTERIOUS_KEY
+    setvar VAR_LIBRARY_BOOK_QUEST, 3
+    msgbox Town_Library_Text_ParentRewardClosing, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_GiveMysteriousBook:
+    msgbox Town_Library_Text_ParentGiveBook, MSGBOX_DEFAULT
+    giveitem ITEM_MYSTERIOUS_BOOK
+    setvar VAR_LIBRARY_BOOK_QUEST, 3
+    msgbox Town_Library_Text_ParentRewardClosing, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_ParentAfterReward:
+    msgbox Town_Library_Text_ParentSeeBlaine, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_ParentQuestComplete:
+    msgbox Town_Library_Text_ParentQuestComplete, MSGBOX_DEFAULT
+    release
+    end
+
+
+@ =============================================================================
+@ BLAINE INTERACTION
+@
+@ Assign this script to Blaine in Porymap:
+@   Town_Library_EventScript_Blaine
+@ =============================================================================
+
+Town_Library_EventScript_Blaine::
+    lock
+    faceplayer
+
+    compare VAR_LIBRARY_BOOK_QUEST, 0
+    goto_if_eq Town_Library_EventScript_BlaineBeforeQuest
+
+    compare VAR_LIBRARY_BOOK_QUEST, 1
+    goto_if_eq Town_Library_EventScript_BlaineSearching
+
+    compare VAR_LIBRARY_BOOK_QUEST, 2
+    goto_if_eq Town_Library_EventScript_BlaineWaitingForParent
+
+    compare VAR_LIBRARY_BOOK_QUEST, 3
+    goto_if_eq Town_Library_EventScript_BlaineGiveRunningShoes
+
+    compare VAR_LIBRARY_BOOK_QUEST, 5
+    goto_if_eq Town_Library_EventScript_BlaineAfterQuest
+
+    msgbox Town_Library_Text_BlaineAfterQuest, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_BlaineBeforeQuest:
+    msgbox Town_Library_Text_BlaineBeforeQuest, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_BlaineSearching:
+    msgbox Town_Library_Text_BlaineSearching, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_BlaineWaitingForParent:
+    msgbox Town_Library_Text_BlaineWaitingForParent, MSGBOX_DEFAULT
+    release
+    end
+
+Town_Library_EventScript_BlaineGiveRunningShoes:
+    msgbox Town_Library_Text_BlaineRunningShoesOpening, MSGBOX_DEFAULT
+
+    @ Running Shoes are enabled by a system flag, not added to the Bag.
+    setflag FLAG_SYS_B_DASH
+
+    msgbox Town_Library_Text_ReceivedRunningShoes, MSGBOX_DEFAULT
+    msgbox Town_Library_Text_BlaineFifthBadge, MSGBOX_DEFAULT
+
+    setvar VAR_LIBRARY_BOOK_QUEST, 5
+    release
+    end
+
+Town_Library_EventScript_BlaineAfterQuest:
+    msgbox Town_Library_Text_BlaineAfterQuest, MSGBOX_DEFAULT
+    release
+    end
+
+
+@ =============================================================================
 @ CUTSCENE FACING HELPERS
 @ =============================================================================
 
@@ -193,76 +326,6 @@ Town_Library_EventScript_FaceDad:
     applymovement LOCALID_LIBRARY_DAD, Town_Library_Movement_ParentFacePlayer
     waitmovement 0
     return
-
-Town_Library_Movement_LeftEntranceAlign:
-    walk_left
-    walk_left
-    step_end
-
-Town_Library_Movement_RightEntranceAlign:
-    step_end
-
-Town_Library_Movement_PlayerApproachBlaine:
-    walk_left
-    walk_left
-    face_up
-    step_end
-
-
-
-@ =============================================================================
-@ PARENT INTERACTION
-@
-@ Assign this script to both Mom and Dad in Porymap:
-@   Town_Library_EventScript_Parent
-@ =============================================================================
-
-Town_Library_EventScript_Parent::
-    lock
-
-    compare VAR_LIBRARY_BOOK_QUEST, 1
-    goto_if_eq Town_Library_EventScript_ParentQuestReminder
-
-    msgbox Town_Library_Text_ParentNormal, MSGBOX_NPC
-    release
-    end
-
-Town_Library_EventScript_ParentQuestReminder:
-    msgbox Town_Library_Text_ParentQuestReminder, MSGBOX_NPC
-    release
-    end
-
-
-@ =============================================================================
-@ BLAINE INTERACTION
-@
-@ Assign this script to Blaine in Porymap:
-@   Town_Library_EventScript_Blaine
-@ =============================================================================
-
-Town_Library_EventScript_Blaine::
-    lock
-
-    compare VAR_LIBRARY_BOOK_QUEST, 0
-    goto_if_eq Town_Library_EventScript_BlaineBeforeQuest
-
-    compare VAR_LIBRARY_BOOK_QUEST, 1
-    goto_if_eq Town_Library_EventScript_BlaineSearching
-
-    @ Temporary fallback until book-return states are written.
-    msgbox Town_Library_Text_BlaineSearching, MSGBOX_NPC
-    release
-    end
-
-Town_Library_EventScript_BlaineBeforeQuest:
-    msgbox Town_Library_Text_BlaineBeforeQuest, MSGBOX_NPC
-    release
-    end
-
-Town_Library_EventScript_BlaineSearching:
-    msgbox Town_Library_Text_BlaineSearching, MSGBOX_NPC
-    release
-    end
 
 
 @ =============================================================================
@@ -344,14 +407,14 @@ Town_Library_EventScript_Maniac::
     goto_if_ne Town_Library_EventScript_ManiacNormal
 
     msgbox Town_Library_Text_AskManiac, MSGBOX_DEFAULT
-    msgbox Town_Library_Text_ManiacQuestion, MSGBOX_NPC
+    msgbox Town_Library_Text_ManiacQuestion, MSGBOX_DEFAULT
 
     setflag FLAG_LIBRARY_QUESTIONED_MANIAC
     release
     end
 
 Town_Library_EventScript_ManiacNormal:
-    msgbox Town_Library_Text_ManiacNormal, MSGBOX_NPC
+    msgbox Town_Library_Text_ManiacNormal, MSGBOX_DEFAULT
     release
     end
 
@@ -370,14 +433,14 @@ Town_Library_EventScript_Gentleman::
     goto_if_ne Town_Library_EventScript_GentlemanNormal
 
     msgbox Town_Library_Text_AskGentleman, MSGBOX_DEFAULT
-    msgbox Town_Library_Text_GentlemanClue, MSGBOX_NPC
+    msgbox Town_Library_Text_GentlemanClue, MSGBOX_DEFAULT
 
     setflag FLAG_LIBRARY_GENTLEMAN_CLUE
     release
     end
 
 Town_Library_EventScript_GentlemanNormal:
-    msgbox Town_Library_Text_GentlemanNormal, MSGBOX_NPC
+    msgbox Town_Library_Text_GentlemanNormal, MSGBOX_DEFAULT
     release
     end
 
@@ -417,7 +480,20 @@ Town_Library_Movement_MagmaFacePlayer:
 Town_Library_Movement_PlayerFaceBlaine:
     face_up
     step_end
+    
+Town_Library_Movement_LeftEntranceAlign:
+    walk_left
+    walk_left
+    step_end
 
+Town_Library_Movement_RightEntranceAlign:
+    step_end
+
+Town_Library_Movement_PlayerApproachBlaine:
+    walk_left
+    walk_left
+    face_up
+    step_end
 
 @ =============================================================================
 @ INTRO TEXT
@@ -486,6 +562,76 @@ Town_Library_Text_BlaineSearchTown:
     .string "look around Littleroot.\p"
     .string "Bring the book back to me when\n"
     .string "you find it.$"
+
+
+@ =============================================================================
+@ PARENT REWARD TEXT
+@ =============================================================================
+
+Town_Library_Text_ParentRewardOpening:
+    .string "You handled yourself well today,\n"
+    .string "{PLAYER}.\p"
+    .string "Better than you may realize.$"
+
+Town_Library_Text_ParentJourneySpeech:
+    .string "The road ahead will ask you what\n"
+    .string "kind of person you intend to be.\p"
+    .string "Keep this close.\n"
+    .string "One day, you'll understand why.$"
+
+Town_Library_Text_ParentGiveKey:
+    .string "I think this belongs with you.\p"
+    .string "It may open more than a door.$"
+
+Town_Library_Text_ParentGiveBook:
+    .string "I think this belongs with you.\p"
+    .string "Not every answer is meant to be\n"
+    .string "found all at once.$"
+
+Town_Library_Text_ParentRewardClosing:
+    .string "Don't worry about understanding\n"
+    .string "it yet.\p"
+    .string "For now, go speak with Blaine.$"
+
+Town_Library_Text_ParentSeeBlaine:
+    .string "Blaine still has something for\n"
+    .string "you.$"
+
+Town_Library_Text_ParentQuestComplete:
+    .string "Your journey is yours now.\p"
+    .string "Take it one step at a time.$"
+
+
+@ =============================================================================
+@ BLAINE REWARD TEXT
+@ =============================================================================
+
+Town_Library_Text_BlaineWaitingForParent:
+    .string "Your parent has been waiting to\n"
+    .string "speak with you.\p"
+    .string "Come back to me afterward.$"
+
+Town_Library_Text_BlaineRunningShoesOpening:
+    .string "There you are!\p"
+    .string "You found the book and saw the\n"
+    .string "job through.\p"
+    .string "A proper journey calls for proper\n"
+    .string "footwear.$"
+
+Town_Library_Text_ReceivedRunningShoes:
+    .string "{PLAYER} received the\n"
+    .string "Running Shoes!\p"
+    .string "Hold the B Button to run.$"
+
+Town_Library_Text_BlaineFifthBadge:
+    .string "Come back after you've earned\n"
+    .string "your fifth Badge.\p"
+    .string "By then, you should be ready to\n"
+    .string "help me with something else.$"
+
+Town_Library_Text_BlaineAfterQuest:
+    .string "Five Badges, {PLAYER}.\p"
+    .string "Then we'll talk.$"
 
 
 @ =============================================================================
@@ -592,4 +738,5 @@ Town_Library_Text_GentlemanClue:
 Town_Library_Text_GentlemanNormal:
     .string "A good library demands good\n"
     .string "manners.$"
+
     

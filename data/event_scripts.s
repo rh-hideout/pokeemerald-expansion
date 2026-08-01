@@ -795,8 +795,7 @@ gStdScripts_End::
 	.include "data/maps/NavelRock_Harbor_Frlg/scripts.inc"
 	.include "data/maps/PalletTown_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_Frlg/scripts.inc"
+		.include "data/maps/CeruleanCity_Frlg/scripts.inc"
 	.include "data/maps/LavenderTown_Frlg/scripts.inc"
 	.include "data/maps/VermilionCity_Frlg/scripts.inc"
 	.include "data/maps/CeladonCity_Frlg/scripts.inc"
@@ -864,15 +863,7 @@ gStdScripts_End::
 	.include "data/maps/ViridianCity_Mart_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_PokemonCenter_1F_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_PokemonCenter_2F_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_Museum_1F_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_Museum_2F_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_Gym_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_Mart_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_House1_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_PokemonCenter_1F_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_PokemonCenter_2F_Frlg/scripts.inc"
-	.include "data/maps/PewterCity_House2_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_House1_Frlg/scripts.inc"
+									.include "data/maps/CeruleanCity_House1_Frlg/scripts.inc"
 	.include "data/maps/CeruleanCity_House2_Frlg/scripts.inc"
 	.include "data/maps/CeruleanCity_House3_Frlg/scripts.inc"
 	.include "data/maps/CeruleanCity_PokemonCenter_1F_Frlg/scripts.inc"
@@ -1767,3 +1758,32 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 .include "data/maps/PokemonMansion_B1F_Frlg/scripts.inc"
 
 	.include "data/maps/HardRockCafe/scripts.inc"
+
+@ ===== Minimal Pewter FRLG map-script tables =====
+PewterCity_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_Museum_1F_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_Museum_2F_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_Gym_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_Mart_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_House1_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_PokemonCenter_1F_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_PokemonCenter_2F_Frlg_MapScripts::
+    .byte 0
+
+PewterCity_House2_Frlg_MapScripts::
+    .byte 0
+

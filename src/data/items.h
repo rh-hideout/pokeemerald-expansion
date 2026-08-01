@@ -14326,6 +14326,7 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_OldKey,
     },
 
+
     [ITEM_SCANNER] =
     {
         .name = ITEM_NAME("Scanner"),
@@ -14676,6 +14677,40 @@ const struct ItemInfo gItemsInfo[] =
         .iconPic = gItemIcon_AbilityShield,
         .iconPalette = gItemIconPalette_AbilityShield,
     },
+
+     [ITEM_MYSTERIOUS_KEY] =
+    {
+        .name = ITEM_NAME("Mysterious Key"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A key that opens a\n"
+            "mysterious lock?\n"
+            "Its purpose is unknown."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_MysteriousKey,
+        .iconPalette = gItemIconPalette_MysteriousKey,
+    },
+
+
+    [ITEM_MYSTERIOUS_BOOK] =
+    {
+        .name = ITEM_NAME("Mysterious Book"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A book filled with\n"
+            "mysterious information?\n"
+            "Its purpose is unknown."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_MysteriousBook,
+        .iconPalette = gItemIconPalette_MysteriousBook,
+    },
+
 
 // GEN 9 ITEMS
 

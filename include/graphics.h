@@ -1566,6 +1566,10 @@ extern const u16 gItemIconPalette_DynamaxBand[];
 // Misc. Key Items
 extern const u32 gItemIcon_Bicycle[];
 extern const u16 gItemIconPalette_Bicycle[];
+extern const u32 gItemIcon_MysteriousBook[];
+extern const u16 gItemIconPalette_MysteriousBook[];
+extern const u32 gItemIcon_MysteriousKey[];
+extern const u16 gItemIconPalette_MysteriousKey[];
 extern const u32 gItemIcon_MachBike[];
 extern const u16 gItemIconPalette_MachBike[];
 extern const u32 gItemIcon_AcroBike[];

@@ -250,7 +250,7 @@ HardRockCafe_FinishBookScene:
     setflag FLAG_COUNTERPART_HOME_INVITE
 
     @ Add the library quest stage here when ready.
-    @ setvar VAR_LIBRARY_QUEST, 2
+    setvar VAR_LIBRARY_BOOK_QUEST, 2
 
     release
     end

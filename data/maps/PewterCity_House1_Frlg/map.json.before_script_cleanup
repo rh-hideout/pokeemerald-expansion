@@ -1,6 +1,6 @@
 {
-  "id": "MAP_PEWTER_CITY_HOUSE2",
-  "name": "PewterCity_House2_Frlg",
+  "id": "MAP_PEWTER_CITY_HOUSE1",
+  "name": "PewterCity_House1_Frlg",
   "layout": "LAYOUT_HOUSE2_FRLG",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",
@@ -18,16 +18,16 @@
   "object_events": [
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
-      "x": 3,
-      "y": 3,
+      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN",
+      "x": 1,
+      "y": 2,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "PewterCity_House1_EventScript_BaldingMan",
       "flag": "0"
     },
     {
@@ -36,12 +36,27 @@
       "x": 5,
       "y": 3,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_UP",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "PewterCity_House1_EventScript_LittleBoy",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_PEWTER_HOUSE_NIDORAN",
+      "type": "object",
+      "graphics_id": "OBJ_EVENT_GFX_NIDORAN_M",
+      "x": 6,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PewterCity_House1_EventScript_Nidoran",
       "flag": "0"
     }
   ],
@@ -51,21 +66,21 @@
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_PEWTER_CITY",
-      "dest_warp_id": "6"
+      "dest_warp_id": "4"
     },
     {
       "x": 4,
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_PEWTER_CITY",
-      "dest_warp_id": "6"
+      "dest_warp_id": "4"
     },
     {
       "x": 5,
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_PEWTER_CITY",
-      "dest_warp_id": "6"
+      "dest_warp_id": "4"
     }
   ],
   "coord_events": [],
