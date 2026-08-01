@@ -1146,6 +1146,7 @@ static void Cmd_typecalc(void)
 
 static void Cmd_multihitresultmessage(void)
 {
+    // To be removed
     CMD_ARGS();
 
     if (gBattleControllerExecFlags)
@@ -1373,6 +1374,7 @@ static inline bool32 ShouldRelyOnTwoFoesMessage(u32 moveResult)
 
 static void Cmd_resultmessage(void)
 {
+    // To be removed
     CMD_ARGS();
 
     enum StringID stringId = 0;
@@ -1381,6 +1383,12 @@ static void Cmd_resultmessage(void)
 
     if (gBattleControllerExecFlags)
         return;
+
+    if (gSpecialStatuses[gBattlerTarget].resultMessagePrinted)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
 
     if (*moveResultFlags & MOVE_RESULT_MISSED && !(*moveResultFlags & MOVE_RESULT_DOESNT_AFFECT_FOE))
     {
@@ -1527,7 +1535,10 @@ static void Cmd_resultmessage(void)
         }
     }
     if (stringId)
+    {
         PrepareStringBattle(stringId, gBattlerAttacker);
+        gSpecialStatuses[gBattlerTarget].resultMessagePrinted = TRUE;
+    }
     else
         gBattleCommunication[MSG_DISPLAY] = 0;
 
@@ -3047,52 +3058,12 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 }
 
-static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
-{
-    if (additionalEffect->preAttackEffect)
-        return FALSE;
-
-    if (additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
-        return FALSE;
-
-    // If Toxic Chain will activate it blocks all other non volatile effects
-    if (gBattleStruct->toxicChainPriority && additionalEffect->moveEffect <= MOVE_EFFECT_FROSTBITE)
-        return FALSE;
-
-    if (additionalEffect->self
-     && NumAffectedSpreadMoveTargets() > 1
-     && GetNextTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), TRUE) != MAX_BATTLERS_COUNT)
-        return FALSE;
-
-    // Certain move effects only apply if the target raised stats this turn (e.g. Burning Jealousy)
-    if (additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[gBattlerTarget].statRaised)
-        return FALSE;
-
-    // Certain additional effects only apply on a two-turn move's charge turn
-    if (additionalEffect->onChargeTurnOnly != gProtectStructs[gBattlerAttacker].chargingTurn)
-        return FALSE;
-
-    return TRUE;
-}
-
-static void SetToxicChainPriority(void)
-{
-    if (gBattleStruct->toxicChainPriority)
-        return;
-
-    enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    if (abilityAtk == ABILITY_TOXIC_CHAIN
-     && IsBattlerAlive(gBattlerTarget)
-     && CanBePoisoned(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerAbility(gBattlerTarget))
-     && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-     && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
-        gBattleStruct->toxicChainPriority = TRUE;
-}
-
 static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
+    // Only onChargingTurnOnly additional effects are handled here
+    // TODO: Refactor CancelerCharging to include this
     if (!IsBattlerUnaffectedByMove(gBattlerTarget))
     {
         struct BattleCalcValues cv = {0};
@@ -3105,14 +3076,19 @@ static void Cmd_setadditionaleffects(void)
         struct SetEffect se = {0};
 
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
-        SetToxicChainPriority();
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
             u32 percentChance;
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            enum BattlerId effectBattler = additionalEffect->self ? gBattlerAttacker : gBattlerTarget;
 
             // Various checks for if this move effect can be applied this turn
-            if (CanApplyAdditionalEffect(additionalEffect))
+            if (!additionalEffect->preAttackEffect
+             && !(additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
+             && !(additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[effectBattler].statRaised)
+             && (effectBattler == gBattlerAttacker) == additionalEffect->self
+             && gProtectStructs[gBattlerAttacker].chargingTurn
+             && additionalEffect->onChargeTurnOnly)
             {
                 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect);
 
@@ -3122,7 +3098,7 @@ static void Cmd_setadditionaleffects(void)
                     se.additionalEffect = additionalEffect;
                     se.moveEffect = additionalEffect->moveEffect;
                     se.script = gBattlescriptCurrInstr;
-                    se.effectBattler = additionalEffect->self ? cv.battlerAtk : cv.battlerDef;
+                    se.effectBattler = effectBattler;
                     se.primary = percentChance == 0;
                     se.certain = percentChance >= 100;
                     se.onSide = additionalEffect->onSide; // TODO
@@ -4299,7 +4275,7 @@ static void Cmd_tryselfconfusiondmgformchange(void)
 
     if (TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG, ability))
     {
-        gBattleScripting.battler = gBattlerAttacker;
+        gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
         switch (ability)
         {
         case ABILITY_DISGUISE:
@@ -5584,16 +5560,13 @@ static void Cmd_statusanimation(void)
 #define DONE_TARGET_FAILURE (gBattleStruct->eventState.atkCanceler == CANCELER_END)
 static void Cmd_futuresighttargetfailure(void)
 {
-    CMD_ARGS(const u8 *failInstr);
+    CMD_ARGS();
 
     // Just do CancelerTargetFailure
     if (!DONE_TARGET_FAILURE && DoAttackCanceler() != CANCELER_RESULT_SUCCESS)
         return;
 
-    if (IsBattlerUnaffectedByMove(gBattlerTarget))
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 #undef DONE_TARGET_FAILURE
 

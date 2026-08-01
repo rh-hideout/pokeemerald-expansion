@@ -570,7 +570,7 @@ enum StringID
     STRINGID_ATTACKERBROKETHROUGHPARALYSIS,
     STRINGID_ATTACKERHEALEDITSBURN,
     STRINGID_ATTACKERMELTEDTHEICE,
-    STRINGID_TARGETTOUGHEDITOUT,
+    STRINGID_BATTLERTOUGHEDITOUT,
     STRINGID_ATTACKERLOSTELECTRICTYPE,
     STRINGID_ATTACKERSWITCHEDSTATWITHTARGET,
     STRINGID_BEINGHITCHARGEDPKMNWITHPOWER,
@@ -732,6 +732,14 @@ enum StringID
 // used to determine which of a set of messages to print.
 // They are assigned to the MULTISTRING_CHOOSER byte of gBattleCommunication
 // and read when e.g. the command printfromtable is used.
+
+// gExtremelyEffectiveStringIds, gSuperEffectiveStringIds, gNotVeryEffectiveStringIds and gMostlyIneffectiveStringIds
+enum EffectivenessTargetStringID
+{
+    B_MSG_ONE_TARGET,
+    B_MSG_ONE_OF_TWO_TARGETS,
+    B_MSG_TWO_TARGETS,
+};
 
 // gStatUpStringIds and gStatDownStringIds
 enum StatChangedStringID

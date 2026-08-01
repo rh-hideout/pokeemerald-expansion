@@ -73,6 +73,32 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to in
     }
 }
 
+
+DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to indirect damage from user's move")
+{
+    enum Species species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE, abilityPopUp = ABILITY_NONE;
+    PARAMETRIZE { species = SPECIES_SALAMENCE;   ability = ABILITY_MOXIE;            abilityPopUp = ABILITY_MOXIE;          }
+    PARAMETRIZE { species = SPECIES_GLASTRIER;   ability = ABILITY_CHILLING_NEIGH;   abilityPopUp = ABILITY_CHILLING_NEIGH; }
+    PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; abilityPopUp = ABILITY_CHILLING_NEIGH; }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FLAME_BURST, MOVE_EFFECT_FLAME_BURST));
+        PLAYER(species) { Ability(ability); }
+        PLAYER(SPECIES_SNORUNT) { HP(1); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_GLALIE) { HP(1); }
+        OPPONENT(SPECIES_ABRA) { HP(1); }
+        OPPONENT(SPECIES_ABRA);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FLAME_BURST, target: opponentRight); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAME_BURST, playerLeft);
+        ABILITY_POPUP(playerLeft, abilityPopUp);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximum Attack stage")
 {
     enum Species species = SPECIES_NONE;

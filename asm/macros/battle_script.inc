@@ -559,9 +559,8 @@
 	statusanimation \battler, \volatile, TRUE
 	.endm
 
-	.macro futuresighttargetfailure failInstr:req
+	.macro futuresighttargetfailure
 	.byte B_SCR_OP_FUTURESIGHTTARGETFAILURE
-	.4byte \failInstr
 	.endm
 
 	.macro getpossiblenexttarget jumpInstr:req
