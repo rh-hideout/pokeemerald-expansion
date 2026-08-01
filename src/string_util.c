@@ -3,6 +3,9 @@
 #include "text.h"
 #include "strings.h"
 #include "union_room_chat.h"
+#include "constants/counterparts.h"
+#include "constants/vars.h"
+#include "event_data.h"
 
 EWRAM_DATA u8 gStringVar1[0x100] = {0};
 EWRAM_DATA u8 gStringVar2[0x100] = {0};
@@ -483,10 +486,33 @@ static const u8 *ExpandPlaceholder_RivalName(void)
         return gSaveBlock1Ptr->rivalName;
 #endif
 
-    if (gSaveBlock2Ptr->playerGender == MALE)
-        return (IS_FRLG ? gText_ExpandedPlaceholder_Green : gText_ExpandedPlaceholder_May);
-    else
-        return (IS_FRLG ? gText_ExpandedPlaceholder_Red : gText_ExpandedPlaceholder_Brendan);
+    switch (VarGet(VAR_COUNTERPART_ID))
+    {
+    case COUNTERPART_BRENDAN:
+        return gText_ExpandedPlaceholder_Brendan;
+
+    case COUNTERPART_MAY:
+        return gText_ExpandedPlaceholder_May;
+
+    case COUNTERPART_LEXY:
+        return gText_ExpandedPlaceholder_Celeste;
+
+    case COUNTERPART_JUSTIN:
+        return gText_ExpandedPlaceholder_Hiiro;
+
+    case COUNTERPART_MAAM:
+        return gText_ExpandedPlaceholder_Aleciya;
+
+    case COUNTERPART_SIR:
+        return gText_ExpandedPlaceholder_Aster;
+
+    default:
+        // Safe fallback if the counterpart has not been chosen yet.
+        if (gSaveBlock2Ptr->playerGender == MALE)
+            return gText_ExpandedPlaceholder_May;
+        else
+            return gText_ExpandedPlaceholder_Brendan;
+    }
 }
 
 static const u8 *ExpandPlaceholder_Version(void)

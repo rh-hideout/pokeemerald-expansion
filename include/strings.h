@@ -16,6 +16,10 @@ extern const u8 gText_ExpandedPlaceholder_Kyogre[];
 extern const u8 gText_ExpandedPlaceholder_Groudon[];
 extern const u8 gText_ExpandedPlaceholder_Brendan[];
 extern const u8 gText_ExpandedPlaceholder_May[];
+extern const u8 gText_ExpandedPlaceholder_Celeste[];
+extern const u8 gText_ExpandedPlaceholder_Hiiro[];
+extern const u8 gText_ExpandedPlaceholder_Aleciya[];
+extern const u8 gText_ExpandedPlaceholder_Aster[];
 extern const u8 gText_ExpandedPlaceholder_Red[];
 extern const u8 gText_ExpandedPlaceholder_Green[];
 
