@@ -1117,18 +1117,11 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
                     mostViableTarget = interimAction.target;
 
                     // Store scores found when testing best move
-                    for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
-                    {
-                        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-                        {
-                            if (tempFinalScore[battlerIndex][moveIndex] < gAiBattleData->finalScore[battlerAtk][battlerIndex][moveIndex])
-                                tempFinalScore[battlerIndex][moveIndex] = gAiBattleData->finalScore[battlerAtk][battlerIndex][moveIndex];
-                        }
-                    }
+                    memcpy(tempFinalScore, gAiBattleData->finalScore[battlerAtk], sizeof(gAiBattleData->finalScore[battlerAtk]));
                 }
             }
 
-            memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(gAiBattleData->finalScore[battlerAtk]));
+            memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(tempFinalScore));
 
             #if TESTING
             // For now, only taking the first found highest score
