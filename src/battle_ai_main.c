@@ -3386,19 +3386,10 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_MAGNET_RISE:
         if (AI_IsBattlerGrounded(battlerAtk)
-          && (HasMoveWithEffect(battlerAtkPartner, EFFECT_EARTHQUAKE) || HasMoveWithEffect(battlerAtkPartner, EFFECT_MAGNITUDE))
+          && (PartnerMoveEffectIs(battlerAtkPartner, EFFECT_EARTHQUAKE) || PartnerMoveEffectIs(battlerAtkPartner, EFFECT_MAGNITUDE))
           && (AI_GetMoveEffectiveness(MOVE_EARTHQUAKE, battlerAtk, battlerAtkPartner) != UQ_4_12(0.0))) // Doesn't resist ground move
         {
-            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_DEEP_PARTNER_THINKING)
-            {
-                if (PartnerMoveEffectIs(battlerAtkPartner, EFFECT_EARTHQUAKE)
-                 || PartnerMoveEffectIs(battlerAtkPartner, EFFECT_MAGNITUDE))
-                {
-                    RETURN_SCORE_PLUS(DECENT_EFFECT); // partner is using earthquake or magnitude -> good idea to use magnet rise
-                }
-                break;
-            }
-            RETURN_SCORE_PLUS(DECENT_EFFECT);   // partner has earthquake or magnitude -> good idea to use magnet rise
+            RETURN_SCORE_PLUS(DECENT_EFFECT);   // partner has/using earthquake or magnitude -> good idea to use magnet rise
         }
         break;
     case EFFECT_DRAGON_CHEER:

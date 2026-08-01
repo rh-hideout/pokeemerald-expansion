@@ -248,16 +248,9 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_DEEP_PARTNER_THINKING prevents poor
     } WHEN {
         TURN {
             EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
-            if (flags & AI_FLAG_DEEP_PARTNER_THINKING)
-            {
-                EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
-                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);
-            }
-            else
-            {
-                EXPECT_MOVE(opponentLeft, MOVE_MAGNET_RISE);
-                SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT + DECENT_EFFECT, target: playerLeft);
-            }
+            // Here the Magnet Rise user thinks second, so it can see no EQ and passes in both cases
+            EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
+            SCORE_EQ_VAL(opponentLeft, MOVE_MAGNET_RISE, AI_SCORE_DEFAULT, target: playerLeft);
         }
     }
 }
