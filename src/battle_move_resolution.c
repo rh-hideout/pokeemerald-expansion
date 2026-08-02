@@ -3741,6 +3741,12 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
     {
         enum BattlerId effectBattler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
 
+        if (effectBattler == cv->battlerAtk && !IsBattlerAlly(cv->battlerDef, effectBattler))
+        {
+            gBattleStruct->eventState.moveEndBattler++;
+            continue;
+        }
+
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter
          && (!ShouldSkipBattlerForMoveEnd(effectBattler, cv) || effectBattler == cv->battlerAtk))
         {
