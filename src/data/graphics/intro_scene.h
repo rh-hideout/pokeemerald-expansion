@@ -14,31 +14,31 @@ const u32 gIntroBrendan_Gfx[] = INCGFX_U32("graphics/intro/scene_2/brendan.png",
 const u32 gIntroMay_Gfx[] = INCGFX_U32("graphics/intro/scene_2/may.png", ".4bpp.smol");
 
 const u32 gIntroGroudon_Gfx[] = INCGFX_U32("graphics/intro/scene_3/groudon.png", ".8bpp.smol");
-const u32 gIntroGroudon_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/groudon.bin.smolTM");
+const u32 gIntroGroudon_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/groudon.bin", ".smolTM");
 
 const u32 gIntroKyogre_Gfx[] = INCGFX_U32("graphics/intro/scene_3/kyogre.png", ".8bpp.smol");
-const u32 gIntroKyogre_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/kyogre.bin.smolTM");
+const u32 gIntroKyogre_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/kyogre.bin", ".smolTM");
 
 const u32 gIntroLegendBg_Gfx[] = INCGFX_U32("graphics/intro/scene_3/legend_bg.png", ".4bpp.smol"); // groudon/kyogre bg
-const u32 gIntroGroudonBg_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/groudon_bg.bin.smolTM");
-const u32 gIntroKyogreBg_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/kyogre_bg.bin.smolTM");
+const u32 gIntroGroudonBg_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/groudon_bg.bin", ".smolTM");
+const u32 gIntroKyogreBg_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/kyogre_bg.bin", ".smolTM");
 
 const u32 gIntroClouds_Gfx[] = INCGFX_U32("graphics/intro/scene_3/clouds.png", ".4bpp.smol");
-const u32 gIntroCloudsLeft_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/clouds_left.bin.smolTM");
-const u32 gIntroCloudsRight_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/clouds_right.bin.smolTM");
-const u32 gIntroCloudsSun_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/clouds_sun.bin.smolTM");
+const u32 gIntroCloudsLeft_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/clouds_left.bin", ".smolTM");
+const u32 gIntroCloudsRight_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/clouds_right.bin", ".smolTM");
+const u32 gIntroCloudsSun_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/clouds_sun.bin", ".smolTM");
 
 const u32 gIntroLightning_Gfx[] = INCGFX_U32("graphics/intro/scene_3/lightning.png", ".4bpp.smol");
 const u16 gIntroLightning_Pal[] = INCGFX_U16("graphics/intro/scene_3/lightning.png", ".gbapal");
 
 const u32 gIntroRayquaza_Gfx[] = INCGFX_U32("graphics/intro/scene_3/rayquaza.png", ".4bpp.smol");
-const u32 gIntroRayquaza_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/rayquaza.bin.smolTM");
+const u32 gIntroRayquaza_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/rayquaza.bin", ".smolTM");
 
-const u32 gIntroUnused1_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/unused_1.bin.smolTM");
-const u32 gIntroUnused2_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/unused_2.bin.smolTM");
+const u32 gIntroUnused1_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/unused_1.bin", ".smolTM");
+const u32 gIntroUnused2_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/unused_2.bin", ".smolTM");
 
 const u32 gIntroRayquazaClouds_Gfx[] = INCGFX_U32("graphics/intro/scene_3/rayquaza_clouds.png", ".4bpp.smol");
-const u32 gIntroRayquazaClouds_Tilemap[] = INCBIN_U32("graphics/intro/scene_3/rayquaza_clouds.bin.smolTM");
+const u32 gIntroRayquazaClouds_Tilemap[] = INCGFX_U32("graphics/intro/scene_3/rayquaza_clouds.bin", ".smolTM");
 
 const u32 gIntroBubbles_Gfx[] = INCGFX_U32("graphics/intro/scene_3/bubbles.png", ".4bpp.smol");
 const u16 gIntroBubbles_Pal[] = INCGFX_U16("graphics/intro/scene_3/bubbles.png", ".gbapal");

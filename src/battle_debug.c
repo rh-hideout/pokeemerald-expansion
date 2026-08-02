@@ -370,7 +370,6 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
     {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
     {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
-    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
     {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
     {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
     {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
@@ -388,10 +387,8 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
     {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
     {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
-    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
     {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
     {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 
@@ -669,7 +666,7 @@ void CB2_BattleDebugMenu(void)
         ResetBgsAndClearDma3BusyFlags(0);
         InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
         ResetAllBgsCoordinates();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         DeactivateAllTextPrinters();
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
         ShowBg(0);
@@ -729,42 +726,42 @@ static const u8 sTextColorTable[][3] =
 
 static void PutMovesPointsText(struct BattleDebugMenu *data)
 {
-    u32 i, j, count, battlerDef, chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
+    u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
     u8 *text = Alloc(0x50);
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);
     AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Score/Dmg"), 3, 0, 0, NULL);
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         text[0] = CHAR_SPACE;
-        StringCopy(text + 1, GetMoveName(gBattleMons[data->aiBattlerId].moves[i]));
-        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, (i * 15) + 15, 0, NULL);
-        for (count = 0, j = 0; j < MAX_BATTLERS_COUNT; j++)
+        StringCopy(text + 1, GetMoveName(gBattleMons[data->aiBattlerId].moves[moveIndex]));
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, (moveIndex * 15) + 15, 0, NULL);
+        for (u32 count = 0, battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
         {
-            if (data->spriteIds.aiIconSpriteIds[j] == 0xFF)
+            if (data->spriteIds.aiIconSpriteIds[battler] == 0xFF)
                 continue;
-            battlerDef = gSprites[data->spriteIds.aiIconSpriteIds[j]].data[0];
+            u32 battlerDef = gSprites[data->spriteIds.aiIconSpriteIds[battler]].data[0];
             ConvertIntToDecimalStringN(text,
-                                       gAiBattleData->finalScore[data->aiBattlerId][battlerDef][i],
+                                       gAiBattleData->finalScore[data->aiBattlerId][battlerDef][moveIndex],
                                        STR_CONV_MODE_RIGHT_ALIGN, 3);
             // If chosen move and chosen target
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
             ConvertIntToDecimalStringN(text,
-                                       AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
+                                       AI_GetDamage(data->aiBattlerId, battlerDef, moveIndex, AI_ATTACKING, gAiLogicData),
                                        STR_CONV_MODE_LEADING_ZEROS, 3);
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
             count++;
         }
@@ -773,7 +770,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
         struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
-        u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        enum Species switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74, 79, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("Switching to "));
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, gSpeciesInfo[switchMon].speciesName);
     }
@@ -2170,11 +2167,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_RESTORE_PP]       = COMPOUND_STRING("Restore Pp"),
     [HOLD_EFFECT_CURE_CONFUSION]   = COMPOUND_STRING("Cure Confusion"),
     [HOLD_EFFECT_CURE_STATUS]      = COMPOUND_STRING("Cure Status"),
-    [HOLD_EFFECT_CONFUSE_SPICY]    = COMPOUND_STRING("Confuse Spicy"),
-    [HOLD_EFFECT_CONFUSE_DRY]      = COMPOUND_STRING("Confuse Dry"),
-    [HOLD_EFFECT_CONFUSE_SWEET]    = COMPOUND_STRING("Confuse Sweet"),
-    [HOLD_EFFECT_CONFUSE_BITTER]   = COMPOUND_STRING("Confuse Bitter"),
-    [HOLD_EFFECT_CONFUSE_SOUR]     = COMPOUND_STRING("Confuse Sour"),
+    [HOLD_EFFECT_CONFUSE_FLAVOR]   = COMPOUND_STRING("Confuse Flavor"),
     [HOLD_EFFECT_ATTACK_UP]        = COMPOUND_STRING("Attack Up"),
     [HOLD_EFFECT_DEFENSE_UP]       = COMPOUND_STRING("Defense Up"),
     [HOLD_EFFECT_SPEED_UP]         = COMPOUND_STRING("Speed Up"),

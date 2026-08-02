@@ -55,6 +55,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
         // .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
+        .twoTurnEffect = TRUE,
     },
 
     [EFFECT_NON_VOLATILE_STATUS] =
@@ -62,12 +63,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectNonVolatileStatus,
         .battleTvScore = 0, // Handled within the battle TV functions
         .encourageEncore = TRUE,
-    },
-
-    [EFFECT_ABSORB] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 4,
     },
 
     [EFFECT_TERRAIN_BOOST] =
@@ -78,7 +73,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DREAM_EATER] =
     {
-        .battleScript = BattleScript_EffectDreamEater,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
@@ -514,7 +509,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PRESENT] =
     {
-        .battleScript = BattleScript_EffectPresent,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
@@ -953,7 +948,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PLEDGE] =
     {
-        .battleScript = BattleScript_EffectPledge,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1250,27 +1245,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_MISTY_TERRAIN] =
+    [EFFECT_TERRAIN] =
     {
-        .battleScript = BattleScript_EffectMistyTerrain,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_GRASSY_TERRAIN] =
-    {
-        .battleScript = BattleScript_EffectGrassyTerrain,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_ELECTRIC_TERRAIN] =
-    {
-        .battleScript = BattleScript_EffectElectricTerrain,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_PSYCHIC_TERRAIN] =
-    {
-        .battleScript = BattleScript_EffectPsychicTerrain,
+        .battleScript = BattleScript_EffectTerrain,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1703,7 +1680,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SHELL_TRAP] =
     {
-        .battleScript = BattleScript_EffectShellTrap,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 

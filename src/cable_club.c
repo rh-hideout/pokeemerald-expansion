@@ -372,8 +372,8 @@ static void Task_LinkupExchangeDataWithLeader(u8 taskId)
         SaveLinkPlayers(gFieldLinkPlayerCount);
         card = (struct TrainerCard *)gBlockSendBuffer;
         TrainerCard_GenerateCardForLinkPlayer(card);
-        card->monSpecies[0] = GetMonData(&gParties[B_TRAINER_0][gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
-        card->monSpecies[1] = GetMonData(&gParties[B_TRAINER_0][gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
+        card->monSpecies[0] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
+        card->monSpecies[1] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
         gTasks[taskId].func = Task_LinkupAwaitTrainerCardData;
     }
 }
@@ -420,14 +420,14 @@ static void Task_LinkupCheckStatusAfterConfirm(u8 taskId)
         SaveLinkPlayers(gFieldLinkPlayerCount);
         card = (struct TrainerCard *)gBlockSendBuffer;
         TrainerCard_GenerateCardForLinkPlayer(card);
-        card->monSpecies[0] = GetMonData(&gParties[B_TRAINER_0][gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
-        card->monSpecies[1] = GetMonData(&gParties[B_TRAINER_0][gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
+        card->monSpecies[0] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[0] - 1], MON_DATA_SPECIES);
+        card->monSpecies[1] = GetMonData(&gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[1] - 1], MON_DATA_SPECIES);
         gTasks[taskId].func = Task_LinkupAwaitTrainerCardData;
         SendBlockRequest(BLOCK_REQ_SIZE_100);
     }
 }
 
-bool32 AreBattleTowerLinkSpeciesSame(u16 *speciesList1, u16 *speciesList2)
+bool32 AreBattleTowerLinkSpeciesSame(enum Species *speciesList1, enum Species *speciesList2)
 {
     int i;
     int j;

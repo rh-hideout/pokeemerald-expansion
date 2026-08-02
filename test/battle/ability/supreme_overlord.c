@@ -7,6 +7,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord boosts Attack by an additive 10% per fainte
     PARAMETRIZE { switchMon = FALSE; }
     PARAMETRIZE { switchMon = TRUE; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);
@@ -38,6 +39,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord's boost caps at a 1.5x multipler", s16 dama
     PARAMETRIZE { faintCount = 5; }
     PARAMETRIZE { faintCount = 6; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);
@@ -131,5 +133,67 @@ SINGLE_BATTLE_TEST("Supreme Overlord's message displays correctly after all batt
         MESSAGE("2 sent out Kingambit!");
         ABILITY_POPUP(opponent, ABILITY_SUPREME_OVERLORD);
         MESSAGE("The opposing Kingambit gained strength from the fallen!");
+    }
+}
+
+MULTI_BATTLE_TEST("Supreme Overlord does not count a partner Trainer's fainted Pokemon in a multi battle", s16 damage)
+{
+    bool32 faintPartner = FALSE;
+
+    PARAMETRIZE { faintPartner = FALSE; }
+    PARAMETRIZE { faintPartner = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (faintPartner)
+            TURN { MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight, 1); }
+        TURN { SWITCH(playerLeft, 1); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_SUPREME_OVERLORD);
+            MESSAGE("Kingambit gained strength from the fallen!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+MULTI_BATTLE_TEST("Supreme Overlord does not count an opposing partner Trainer's fainted Pokemon in a multi battle", s16 damage)
+{
+    bool32 faintPartner = FALSE;
+
+    PARAMETRIZE { faintPartner = FALSE; }
+    PARAMETRIZE { faintPartner = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
+    } WHEN {
+        if (faintPartner)
+            TURN { MOVE(opponentLeft, MOVE_MEMENTO, target: playerLeft); SEND_OUT(opponentLeft, 1); }
+        TURN { SWITCH(opponentRight, 1); }
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponentRight, ABILITY_SUPREME_OVERLORD);
+            MESSAGE("The opposing Kingambit gained strength from the fallen!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        HP_BAR(playerLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }

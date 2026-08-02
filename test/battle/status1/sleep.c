@@ -49,22 +49,3 @@ SINGLE_BATTLE_TEST("Sleep: Spore doesn't affect grass types (Gen6+)")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
     }
 }
-
-AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
-{
-    u32 species;
-    enum Ability ability;
-
-    PARAMETRIZE { species = SPECIES_HOOTHOOT; ability = ABILITY_INSOMNIA; }
-    PARAMETRIZE { species = SPECIES_MANKEY; ability = ABILITY_VITAL_SPIRIT; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HYPNOSIS); }
-    } WHEN {
-        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_HYPNOSIS); } // Both get -10
-    }
-}

@@ -112,3 +112,25 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the defender behind a
         STATUS_ICON(player, burn: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Spicy Spray does not activate if Future Sight attacker is not on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SCOVILLAIN) { Item(ITEM_SCOVILLAINITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
+            STATUS_ICON(player, burn: TRUE);
+        }
+    }
+}

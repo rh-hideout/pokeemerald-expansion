@@ -378,6 +378,15 @@ static const struct WindowTemplate sStandardBattleWindowTemplates[] =
         .paletteNum = 5,
         .baseBlock = 0x0350,
     },
+    [B_CATCH_OR_NOT] = {
+        .bg = 0,
+        .tilemapLeft = 21,
+        .tilemapTop = 9,
+        .width = 8,
+        .height = 4,
+        .paletteNum = 5,
+        .baseBlock = 0x03BC,
+    },
     DUMMY_WIN_TEMPLATE
 };
 
@@ -897,7 +906,7 @@ static u8 GetBattleEnvironmentOverride(void)
         return BATTLE_ENVIRONMENT_FRONTIER;
     else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
     {
-        switch (GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES))
+        switch (GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES))
         {
         case SPECIES_GROUDON:
             return BATTLE_ENVIRONMENT_GROUDON;
@@ -1350,23 +1359,9 @@ bool8 LoadChosenBattleElement(u8 caseId)
 
 void DrawTerrainTypeBattleBackground(void)
 {
-    switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-    {
-    case STATUS_FIELD_GRASSY_TERRAIN:
-        LoadMoveBg(BG_GRASSY_TERRAIN);
-        break;
-    case STATUS_FIELD_MISTY_TERRAIN:
-        LoadMoveBg(BG_MISTY_TERRAIN);
-        break;
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
-        LoadMoveBg(BG_ELECTRIC_TERRAIN);
-        break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
-        LoadMoveBg(BG_PSYCHIC_TERRAIN);
-        break;
-    default:
+    if (gFieldTimers.terrain != B_TERRAIN_NONE)
+        LoadMoveBg(gBattleTerrainInfo[gFieldTimers.terrain].battleBackground);
+    else
         DrawMainBattleBackground();
-        break;
-    }
 }
 

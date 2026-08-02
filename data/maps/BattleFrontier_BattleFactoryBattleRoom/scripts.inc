@@ -101,7 +101,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum::
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
 	switch VAR_RESULT
-	case 7, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon
+	case FRONTIER_STAGES_PER_CHALLENGE, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon
 	setvar VAR_0x8006, 1
 	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM, 8, 8
 	waitstate

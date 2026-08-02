@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Hunger Switch switches Morpeko's forms at the end of the turn")
 {
-    u16 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MORPEKO_FULL_BELLY; }
     PARAMETRIZE { species = SPECIES_MORPEKO_HANGRY; }
     GIVEN {

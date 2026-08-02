@@ -63,16 +63,16 @@
 struct ApprenticePartyMovesData
 {
     u8 moveCounter;
-    u16 moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
+    enum Move moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
     u8 moveSlots[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
 };
 
 struct ApprenticeQuestionData
 {
-    u16 speciesId;
-    u16 altSpeciesId;
-    u16 move1;
-    u16 move2;
+    enum Species speciesId;
+    enum Species altSpeciesId;
+    enum Move move1;
+    enum Move move2;
 };
 
 // IWRAM common
@@ -202,7 +202,7 @@ static void SetPlayersApprenticeLvlMode(u8 mode)
 
 static void ShuffleApprenticeSpecies(void)
 {
-    u8 species[APPRENTICE_SPECIES_COUNT];
+    enum Species species[APPRENTICE_SPECIES_COUNT];
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(species); i++)

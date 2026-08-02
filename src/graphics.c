@@ -3,10 +3,10 @@
 
 const u32 gBattleTextboxTiles[] = INCGFX_U32("graphics/battle_interface/textbox.png", ".4bpp.smol");
 const u16 gBattleTextboxPalette[] = INCBIN_U16("graphics/battle_interface/textbox.gbapal");
-const u32 gBattleTextboxTilemap[] = INCBIN_U32("graphics/battle_interface/textbox_map.bin.smolTM");
+const u32 gBattleTextboxTilemap[] = INCGFX_U32("graphics/battle_interface/textbox_map.bin", ".smolTM");
 
 const u32 gUnusedGfx_OldCharmap[] = INCGFX_U32("graphics/unused/old_charmap.png", ".4bpp.smol"); // japanese table and bunch of stuff
-const u32 gUnusedTimemap_OldCharmap[] = INCBIN_U32("graphics/unused/old_charmap.bin.smolTM");
+const u32 gUnusedTimemap_OldCharmap[] = INCGFX_U32("graphics/unused/old_charmap.bin", ".smolTM");
 const u16 gUnusedPal_OldCharmap[] = INCGFX_U16("graphics/unused/old_charmap.png", ".gbapal");
 
 const u32 gSmokescreenImpactTiles[] = INCGFX_U32("graphics/battle_anims/sprites/smokescreen_impact.png", ".4bpp.smol");
@@ -494,7 +494,7 @@ const u16 gOldBattleInterfacePal_1_2_3[] = INCBIN_U16("graphics/unused/obi_palpa
 const u16 gOldBattleInterfacePal4[] = INCGFX_U16("graphics/unused/old_pal4.pal", ".gbapal"); // 4 is by itself
 const u16 gOldBattleInterfacePal_5_6_7[] = INCBIN_U16("graphics/unused/obi_palpak3.gbapal"); // palettes 5-7
 const u32 gOldBattleInterfaceGfx2[] = INCGFX_U32("graphics/unused/obi2.4bpp", ".smol");
-const u32 gOldBattleInterfaceTilemap[] = INCBIN_U32("graphics/unused/old_battle_interface_tilemap.bin.smolTM");
+const u32 gOldBattleInterfaceTilemap[] = INCGFX_U32("graphics/unused/old_battle_interface_tilemap.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_ClawSlash2[] = INCGFX_U16("graphics/battle_anims/sprites/claw_slash_2.png", ".gbapal");
 const u16 gBattleAnimSpritePal_ClawSlash[] = INCGFX_U16("graphics/battle_anims/sprites/claw_slash.png", ".gbapal");
@@ -615,7 +615,7 @@ const u16 gBattleAnimUnused_Unknown3[] = INCBIN_U16("graphics/battle_anims/unuse
 
 const u32 gBattleAnimUnusedGfx_LineSketch2[] = INCGFX_U32("graphics/battle_anims/unused/line_sketch_2.png", ".8bpp.smol");
 const u16 gBattleAnimUnusedPal_LineSketch2[] = INCGFX_U16("graphics/battle_anims/unused/line_sketch_2.pal", ".gbapal");
-const u32 gBattleAnimUnusedTilemap_LineSketch2[] = INCBIN_U32("graphics/battle_anims/unused/line_sketch_2.bin.smolTM");
+const u32 gBattleAnimUnusedTilemap_LineSketch2[] = INCGFX_U32("graphics/battle_anims/unused/line_sketch_2.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_BlueLines[] = INCGFX_U32("graphics/battle_anims/sprites/blue_lines.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_BlueLines[] = INCGFX_U16("graphics/battle_anims/sprites/blue_lines.png", ".gbapal");
@@ -631,7 +631,7 @@ const u16 gBattleAnimSpritePal_RedTube[] = INCGFX_U16("graphics/battle_anims/spr
 const u16 gBattleAnimSpritePal_Amnesia[] = INCGFX_U16("graphics/battle_anims/sprites/amnesia.png", ".gbapal");
 const u16 gBattleAnimSpritePal_String2[] = INCGFX_U16("graphics/battle_anims/sprites/string_2.png", ".gbapal");
 
-const u32 gBattleAnimUnused_Unknown4[] = INCBIN_U32("graphics/battle_anims/unused/unknown_4.bin.smolTM");
+const u32 gBattleAnimUnused_Unknown4[] = INCGFX_U32("graphics/battle_anims/unused/unknown_4.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_Pencil2[] = INCGFX_U16("graphics/battle_anims/sprites/pencil_2.png", ".gbapal");
 const u16 gBattleAnimSpritePal_Petal[] = INCGFX_U16("graphics/battle_anims/sprites/petal.png", ".gbapal");
@@ -690,20 +690,20 @@ const u16 gBattleAnimSpritePal_WaterColumn[] = INCGFX_U16("graphics/battle_anims
 const u32 gBattleAnimSpriteGfx_MudUnk[] = INCGFX_U32("graphics/battle_anims/sprites/mud_unk.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_MudUnk[] = INCGFX_U16("graphics/battle_anims/sprites/mud_unk.png", ".gbapal");
 
-const u32 gUnusedTilemap_BlueFrame[] = INCBIN_U32("graphics/unused/blue_frame.bin.smolTM"); // P1, P2, P3 and P4 tilemaps?
-const u32 gUnusedTilemap_RedYellowGreenFrame[] = INCBIN_U32("graphics/unused/redyellowgreen_frame.bin.smolTM");
+const u32 gUnusedTilemap_BlueFrame[] = INCGFX_U32("graphics/unused/blue_frame.bin", ".smolTM"); // P1, P2, P3 and P4 tilemaps?
+const u32 gUnusedTilemap_RedYellowGreenFrame[] = INCGFX_U32("graphics/unused/redyellowgreen_frame.bin", ".smolTM");
 const u32 gUnusedGfx_ColorFrames[] = INCGFX_U32("graphics/unused/color_frames.png", ".4bpp.smol", "-num_tiles 353 -Wnum_tiles");
 const u16 gUnusedPal_ColorFrames[] = INCGFX_U16("graphics/unused/color_frames.png", ".gbapal");
 
 const u32 gBattleAnimSpriteGfx_RainDrops[] = INCGFX_U32("graphics/battle_anims/sprites/rain_drops.png", ".4bpp.smol");
 
 const u32 gBattleAnimUnusedGfx_WaterSplash[] = INCGFX_U32("graphics/battle_anims/unused/water_splash.png", ".8bpp.smol");
-const u32 gBattleAnimUnusedTilemap_WaterSplash[] = INCBIN_U32("graphics/battle_anims/unused/water_splash.bin.smolTM");
+const u32 gBattleAnimUnusedTilemap_WaterSplash[] = INCGFX_U32("graphics/battle_anims/unused/water_splash.bin", ".smolTM");
 const u16 gBattleAnimUnusedPal_WaterSplash[] = INCGFX_U16("graphics/battle_anims/unused/water_splash.png", ".gbapal");
 
 const u32 gUnusedGfx_BasicFrame[] = INCGFX_U32("graphics/unused/basic_frame.png", ".4bpp.smol");
 const u16 gUnusedPal_BasicFrame[] = INCGFX_U16("graphics/unused/basic_frame.png", ".gbapal");
-const u32 gUnusedTilemap_BasicFrame[] = INCBIN_U32("graphics/unused/basic_frame.bin.smolTM");
+const u32 gUnusedTilemap_BasicFrame[] = INCGFX_U32("graphics/unused/basic_frame.bin", ".smolTM");
 
 // Battle Interface
 
@@ -802,16 +802,16 @@ const u16 gBattleAnimSpritePal_TatsugiriStretchy[] = INCGFX_U16("graphics/battle
 // Contest
 const u32 gJPContestGfx1[] = INCGFX_U32("graphics/contest/japanese/composite_1.4bpp", ".smol");
 const u16 gJPContestPal[] = INCGFX_U16("graphics/contest/japanese/palette.pal", ".gbapal");
-const u32 gJPContestBgTilemap[] = INCBIN_U32("graphics/contest/japanese/bg.bin.smolTM");
-const u32 gJPContestWindowsTilemap[] = INCBIN_U32("graphics/contest/japanese/windows.bin.smolTM");
+const u32 gJPContestBgTilemap[] = INCGFX_U32("graphics/contest/japanese/bg.bin", ".smolTM");
+const u32 gJPContestWindowsTilemap[] = INCGFX_U32("graphics/contest/japanese/windows.bin", ".smolTM");
 const u32 gJPContestGfx2[] = INCGFX_U32("graphics/contest/japanese/composite_2.4bpp", ".smol");
 
 const u16 gContestInterfaceAudiencePalette[] = INCGFX_U16("graphics/contest/interface.png", ".gbapal");
-const u32 gContestAudienceTilemap[] = INCBIN_U32("graphics/contest/audience.bin.smolTM");
-const u32 gContestInterfaceTilemap[] = INCBIN_U32("graphics/contest/interface.bin.smolTM");
-const u32 gJPContestInterfaceTilemap[] = INCBIN_U32("graphics/contest/japanese/interface.bin.smolTM");
-const u32 gJPContestAudienceTilemap[] = INCBIN_U32("graphics/contest/japanese/audience.bin.smolTM");
-const u32 gContestCurtainTilemap[] = INCBIN_U32("graphics/contest/curtain.bin.smolTM");
+const u32 gContestAudienceTilemap[] = INCGFX_U32("graphics/contest/audience.bin", ".smolTM");
+const u32 gContestInterfaceTilemap[] = INCGFX_U32("graphics/contest/interface.bin", ".smolTM");
+const u32 gJPContestInterfaceTilemap[] = INCGFX_U32("graphics/contest/japanese/interface.bin", ".smolTM");
+const u32 gJPContestAudienceTilemap[] = INCGFX_U32("graphics/contest/japanese/audience.bin", ".smolTM");
+const u32 gContestCurtainTilemap[] = INCGFX_U32("graphics/contest/curtain.bin", ".smolTM");
 
 const u32 gContestInterfaceGfx[] = INCGFX_U32("graphics/contest/interface.png", ".4bpp.smol");
 const u32 gContestAudienceGfx[] = INCGFX_U32("graphics/contest/audience.png", ".4bpp.smol");
@@ -826,9 +826,9 @@ const u16 gJPContestVoltagePal[] = INCGFX_U16("graphics/contest/japanese/voltage
 
 // Contest results
 const u32 gContestResults_Gfx[]                  = INCGFX_U32("graphics/contest/results_screen/tiles.png", ".4bpp.smol");
-const u32 gContestResults_WinnerBanner_Tilemap[] = INCBIN_U32("graphics/contest/results_screen/winner_banner.bin.smolTM");
-const u32 gContestResults_Interface_Tilemap[]    = INCBIN_U32("graphics/contest/results_screen/interface.bin.smolTM");
-const u32 gContestResults_Bg_Tilemap[]           = INCBIN_U32("graphics/contest/results_screen/bg.bin.smolTM");
+const u32 gContestResults_WinnerBanner_Tilemap[] = INCGFX_U32("graphics/contest/results_screen/winner_banner.bin", ".smolTM");
+const u32 gContestResults_Interface_Tilemap[]    = INCGFX_U32("graphics/contest/results_screen/interface.bin", ".smolTM");
+const u32 gContestResults_Bg_Tilemap[]           = INCGFX_U32("graphics/contest/results_screen/bg.bin", ".smolTM");
 const u16 gContestResults_Pal[]                  = INCGFX_U16("graphics/contest/results_screen/tiles.png", ".gbapal");
 
 const u32 gBattleAnimSpriteGfx_Impact[] = INCGFX_U32("graphics/battle_anims/sprites/impact.png", ".4bpp.smol");
@@ -910,7 +910,7 @@ const u16 gBattleAnimSpritePal_MistCloud[] = INCGFX_U16("graphics/battle_anims/s
 
 const u32 gBattleAnimUnusedGfx_Lights[] = INCGFX_U32("graphics/battle_anims/unused/lights.png", ".4bpp.smol");
 const u16 gBattleAnimUnusedPal_Lights[] = INCGFX_U16("graphics/battle_anims/unused/lights.png", ".gbapal");
-const u32 gBattleAnimUnusedTilemap_Lights[] = INCBIN_U32("graphics/battle_anims/unused/lights.bin.smolTM");
+const u32 gBattleAnimUnusedTilemap_Lights[] = INCGFX_U32("graphics/battle_anims/unused/lights.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_WhirlwindLines[] = INCGFX_U32("graphics/battle_anims/sprites/whirlwind_lines.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_WhirlwindLines[] = INCGFX_U16("graphics/battle_anims/sprites/whirlwind_lines.png", ".gbapal");
@@ -945,15 +945,15 @@ const u32 gBattleAnimSpriteGfx_SparkH[] = INCGFX_U32("graphics/battle_anims/spri
 
 const u32 gBattleAnimBgImage_Dark[] = INCGFX_U32("graphics/battle_anims/backgrounds/dark.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Dark[] = INCGFX_U16("graphics/battle_anims/backgrounds/dark.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Dark[] = INCBIN_U32("graphics/battle_anims/backgrounds/dark.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Dark[] = INCGFX_U32("graphics/battle_anims/backgrounds/dark.bin", ".smolTM");
 
 const u32 gMetalShineGfx[] = INCGFX_U32("graphics/battle_anims/masks/metal_shine.png", ".4bpp.smol");
 const u16 gMetalShinePalette[] = INCGFX_U16("graphics/battle_anims/masks/metal_shine.png", ".gbapal");
-const u32 gMetalShineTilemap[] = INCBIN_U32("graphics/battle_anims/masks/metal_shine.bin.smolTM");
+const u32 gMetalShineTilemap[] = INCGFX_U32("graphics/battle_anims/masks/metal_shine.bin", ".smolTM");
 
 const u32 gUnusedGfx_Goosuto[] = INCGFX_U32("graphics/battle_anims/unused/goosuto.png", ".4bpp.smol"); // ghost
 const u16 gUnusedPal_Goosuto[] = INCGFX_U16("graphics/battle_anims/unused/goosuto.png", ".gbapal");
-const u32 gUnusedTilemap_Goosuto[] = INCBIN_U32("graphics/battle_anims/unused/goosuto.bin.smolTM");
+const u32 gUnusedTilemap_Goosuto[] = INCGFX_U32("graphics/battle_anims/unused/goosuto.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_YellowStar[] = INCGFX_U32("graphics/battle_anims/sprites/yellow_star.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_YellowStar[] = INCGFX_U16("graphics/battle_anims/sprites/yellow_star.png", ".gbapal");
@@ -990,7 +990,7 @@ const u16 gBattleAnimSpritePal_SphereToCube[] = INCGFX_U16("graphics/battle_anim
 
 const u32 gBattleAnimBgImage_Psychic[] = INCGFX_U32("graphics/battle_anims/backgrounds/psychic.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Psychic[] = INCGFX_U16("graphics/battle_anims/backgrounds/psychic.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Psychic[] = INCBIN_U32("graphics/battle_anims/backgrounds/psychic.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Psychic[] = INCGFX_U32("graphics/battle_anims/backgrounds/psychic.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_Eye[] = INCGFX_U32("graphics/battle_anims/sprites/eye.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Eye[] = INCGFX_U16("graphics/battle_anims/sprites/eye.png", ".gbapal");
@@ -1026,7 +1026,7 @@ const u32 gBattleAnimSpriteGfx_PurpleHandOutline[] = INCGFX_U32("graphics/battle
 const u16 gBattleAnimSpritePal_PurpleHandOutline[] = INCGFX_U16("graphics/battle_anims/sprites/purple_hand_outline.png", ".gbapal");
 
 const u32 gBattleAnimMaskImage_Curse[] = INCGFX_U32("graphics/battle_anims/masks/curse.png", ".4bpp.smol");
-const u32 gBattleAnimMaskTilemap_Curse[] = INCBIN_U32("graphics/battle_anims/masks/curse.bin.smolTM");
+const u32 gBattleAnimMaskTilemap_Curse[] = INCGFX_U32("graphics/battle_anims/masks/curse.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_Pencil[] = INCGFX_U32("graphics/battle_anims/sprites/pencil.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Pencil[] = INCGFX_U16("graphics/battle_anims/sprites/pencil.png", ".gbapal");
@@ -1089,7 +1089,7 @@ const u16 gBattleAnimSpritePal_RedHeart[] = INCGFX_U16("graphics/battle_anims/sp
 
 const u32 gBattleAnimBgImage_Attract[] = INCGFX_U32("graphics/battle_anims/backgrounds/attract.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Attract[] = INCGFX_U16("graphics/battle_anims/backgrounds/attract.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Attract[] = INCBIN_U32("graphics/battle_anims/backgrounds/attract.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Attract[] = INCGFX_U32("graphics/battle_anims/backgrounds/attract.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_RedOrb[] = INCGFX_U32("graphics/battle_anims/sprites/red_orb.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_RedOrb[] = INCGFX_U16("graphics/battle_anims/sprites/red_orb.png", ".gbapal");
@@ -1140,10 +1140,10 @@ const u32 gBattleAnimSpriteGfx_LetterZ[] = INCGFX_U32("graphics/battle_anims/spr
 
 const u16 gBattleAnimBgPalette_Impact[] = INCGFX_U16("graphics/battle_anims/backgrounds/impact.png", ".gbapal");
 const u32 gBattleAnimBgImage_Impact[] = INCGFX_U32("graphics/battle_anims/backgrounds/impact.png", ".4bpp.smol");
-const u32 gBattleAnimBgTilemap_ImpactOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/impact_opponent.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ImpactOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/impact_opponent.bin", ".smolTM");
 
-const u32 gBattleAnimBgTilemap_ImpactPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/impact_player.bin.smolTM");
-const u32 gBattleAnimBgTilemap_ImpactContests[] = INCBIN_U32("graphics/battle_anims/backgrounds/impact_contests.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ImpactPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/impact_player.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_ImpactContests[] = INCGFX_U32("graphics/battle_anims/backgrounds/impact_contests.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_JaggedMusicNote[] = INCGFX_U32("graphics/battle_anims/sprites/jagged_music_note.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_JaggedMusicNote[] = INCGFX_U16("graphics/battle_anims/sprites/jagged_music_note.png", ".gbapal");
@@ -1184,35 +1184,35 @@ const u16 gBattleAnimBgPalette_Drill[] = INCGFX_U16("graphics/battle_anims/backg
 
 const u16 gBattleAnimBgPalette_Sky[] = INCGFX_U16("graphics/battle_anims/backgrounds/sky.pal", ".gbapal");
 
-const u32 gBattleAnimBgTilemap_Drill[] = INCBIN_U32("graphics/battle_anims/backgrounds/drill.bin.smolTM");
-const u32 gBattleAnimBgTilemap_DrillContests[] = INCBIN_U32("graphics/battle_anims/backgrounds/drill_contests.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Drill[] = INCGFX_U32("graphics/battle_anims/backgrounds/drill.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_DrillContests[] = INCGFX_U32("graphics/battle_anims/backgrounds/drill_contests.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_Aurora[] = INCGFX_U32("graphics/battle_anims/backgrounds/aurora.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Aurora[] = INCGFX_U16("graphics/battle_anims/backgrounds/aurora.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Aurora[] = INCBIN_U32("graphics/battle_anims/backgrounds/aurora.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Aurora[] = INCGFX_U32("graphics/battle_anims/backgrounds/aurora.bin", ".smolTM");
 
-const u32 gBattleAnimBgTilemap_HighspeedOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/highspeed_opponent.bin.smolTM");
+const u32 gBattleAnimBgTilemap_HighspeedOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/highspeed_opponent.bin", ".smolTM");
 const u16 gBattleAnimBgPalette_Highspeed[] = INCGFX_U16("graphics/battle_anims/backgrounds/highspeed.png", ".gbapal");
 
 const u16 gBattleAnimBgPalette_Bug[] = INCGFX_U16("graphics/battle_anims/backgrounds/bug.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_Highspeed[] = INCGFX_U32("graphics/battle_anims/backgrounds/highspeed.png", ".4bpp.smol");
-const u32 gBattleAnimBgTilemap_HighspeedPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/highspeed_player.bin.smolTM");
+const u32 gBattleAnimBgTilemap_HighspeedPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/highspeed_player.bin", ".smolTM");
 
 const u32 gBattleAnimMaskImage_LightBeam[] = INCGFX_U32("graphics/battle_anims/masks/light_beam.png", ".4bpp.smol");
 const u16 gBattleAnimMaskPalette_LightBeam[] = INCGFX_U16("graphics/battle_anims/masks/light_beam.png", ".gbapal");
-const u32 gBattleAnimMaskTilemap_LightBeam[] = INCBIN_U32("graphics/battle_anims/masks/light_beam.bin.smolTM");
+const u32 gBattleAnimMaskTilemap_LightBeam[] = INCGFX_U32("graphics/battle_anims/masks/light_beam.bin", ".smolTM");
 
-const u32 gBattleAnimBgTilemap_GuillotineOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/guillotine_opponent.bin.smolTM");
-const u32 gBattleAnimBgTilemap_GuillotinePlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/guillotine_player.bin.smolTM");
-const u32 gBattleAnimBgTilemap_GuillotineContests[] = INCBIN_U32("graphics/battle_anims/backgrounds/guillotine_contests.bin.smolTM");
+const u32 gBattleAnimBgTilemap_GuillotineOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/guillotine_opponent.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_GuillotinePlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/guillotine_player.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_GuillotineContests[] = INCGFX_U32("graphics/battle_anims/backgrounds/guillotine_contests.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_Guillotine[] = INCGFX_U32("graphics/battle_anims/backgrounds/guillotine.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Guillotine[] = INCGFX_U16("graphics/battle_anims/backgrounds/guillotine.png", ".gbapal");
 
 const u32 gBattleAnimBgImage_Thunder[] = INCGFX_U32("graphics/battle_anims/backgrounds/thunder.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Thunder[] = INCGFX_U16("graphics/battle_anims/backgrounds/thunder.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Thunder[] = INCBIN_U32("graphics/battle_anims/backgrounds/thunder.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Thunder[] = INCGFX_U32("graphics/battle_anims/backgrounds/thunder.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_PainSplit[] = INCGFX_U32("graphics/battle_anims/sprites/pain_split.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_PainSplit[] = INCGFX_U16("graphics/battle_anims/sprites/pain_split.png", ".gbapal");
@@ -1246,8 +1246,8 @@ const u32 gBattleAnimSpriteGfx_SweatDrop[] = INCGFX_U32("graphics/battle_anims/s
 const u16 gBattleAnimSpritePal_SweatDrop[] = INCGFX_U16("graphics/battle_anims/sprites/sweat_drop.png", ".gbapal");
 
 const u32 gStatAnim_Gfx[]              = INCGFX_U32("graphics/battle_anims/stat_change/tiles.png", ".4bpp.smol");
-const u32 gStatAnim_Increase_Tilemap[] = INCBIN_U32("graphics/battle_anims/stat_change/increase.bin.smolTM");
-const u32 gStatAnim_Decrease_Tilemap[] = INCBIN_U32("graphics/battle_anims/stat_change/decrease.bin.smolTM");
+const u32 gStatAnim_Increase_Tilemap[] = INCGFX_U32("graphics/battle_anims/stat_change/increase.bin", ".smolTM");
+const u32 gStatAnim_Decrease_Tilemap[] = INCGFX_U32("graphics/battle_anims/stat_change/decrease.bin", ".smolTM");
 const u16 gStatAnim_Defense_Pal[]      = INCGFX_U16("graphics/battle_anims/stat_change/defense.pal", ".gbapal");
 const u16 gStatAnim_Attack_Pal[]       = INCGFX_U16("graphics/battle_anims/stat_change/attack.pal", ".gbapal");
 const u16 gStatAnim_Accuracy_Pal[]     = INCGFX_U16("graphics/battle_anims/stat_change/accuracy.pal", ".gbapal");
@@ -1259,7 +1259,7 @@ const u16 gStatAnim_SpDefense_Pal[]    = INCGFX_U16("graphics/battle_anims/stat_
 
 const u32 gCureBubblesGfx[] = INCGFX_U32("graphics/battle_anims/masks/cure_bubbles.png", ".4bpp.smol");
 const u16 gCureBubblesPal[] = INCGFX_U16("graphics/battle_anims/masks/cure_bubbles.png", ".gbapal");
-const u32 gCureBubblesTilemap[] = INCBIN_U32("graphics/battle_anims/masks/cure_bubbles.bin.smolTM");
+const u32 gCureBubblesTilemap[] = INCGFX_U32("graphics/battle_anims/masks/cure_bubbles.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_PurpleScratch[] = INCGFX_U16("graphics/battle_anims/sprites/purple_scratch.png", ".gbapal");
 const u32 gBattleAnimSpriteGfx_PurpleScratch[] = INCGFX_U32("graphics/battle_anims/sprites/purple_scratch.png", ".4bpp.smol");
@@ -1274,7 +1274,7 @@ const u32 gBattleAnimSpriteGfx_TagHand[] = INCGFX_U32("graphics/battle_anims/spr
 const u32 gBattleAnimSpriteGfx_NoiseLine[] = INCGFX_U32("graphics/battle_anims/sprites/noise_line.png", ".4bpp.smol");
 
 const u32 UnusedLevelupAnimationGfx[] = INCGFX_U32("graphics/battle_anims/masks/unused_level_up.png", ".4bpp.smol", "-num_tiles 14 -Wnum_tiles");
-const u32 UnusedLevelupAnimationTilemap[] = INCBIN_U32("graphics/battle_anims/masks/unused_level_up.bin.smolTM");
+const u32 UnusedLevelupAnimationTilemap[] = INCGFX_U32("graphics/battle_anims/masks/unused_level_up.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_SmallRedEye[] = INCGFX_U32("graphics/battle_anims/sprites/small_red_eye.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_SmallRedEye[] = INCGFX_U16("graphics/battle_anims/sprites/small_red_eye.png", ".gbapal");
@@ -1322,7 +1322,7 @@ const u16 gBattleAnimUnusedPal_Unknown2[] = INCGFX_U16("graphics/battle_anims/un
 #include "data/graphics/trainers.h"
 
 const u32 gBattleVSFrame_Gfx[] = INCGFX_U32("graphics/battle_transitions/vs_frame.png", ".4bpp.smol", "-num_tiles 16 -Wnum_tiles");
-const u32 gBattleVSFrame_Tilemap[] = INCBIN_U32("graphics/battle_transitions/vs_frame.bin.smolTM");
+const u32 gBattleVSFrame_Tilemap[] = INCGFX_U32("graphics/battle_transitions/vs_frame.bin", ".smolTM");
 const u16 gBattleVSFrame_Pal[] = INCGFX_U16("graphics/battle_transitions/vs_frame.png", ".gbapal");
 
 const u32 gVsLettersGfx[] = INCGFX_U32("graphics/battle_transitions/vs.png", ".4bpp.smol");
@@ -1332,12 +1332,12 @@ const u32 gVsLettersGfx[] = INCGFX_U32("graphics/battle_transitions/vs.png", ".4
 // Battle Dome
 const u32 gDomeTourneyTree_Gfx[] = INCGFX_U32("graphics/battle_frontier/tourney_tree.png", ".4bpp.smol");
 const u32 gDomeTourneyLine_Gfx[] = INCGFX_U32("graphics/battle_frontier/tourney_line.png", ".4bpp.smol"); // the red glow mask for the tourney advancement lines
-const u32 gDomeTourneyTree_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_tree.bin.smolTM");
-const u32 gDomeTourneyLineDown_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_line_down_map.bin.smolTM");
-const u32 gDomeTourneyLineUp_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_line_up_map.bin.smolTM");
+const u32 gDomeTourneyTree_Tilemap[] = INCGFX_U32("graphics/battle_frontier/tourney_tree.bin", ".smolTM");
+const u32 gDomeTourneyLineDown_Tilemap[] = INCGFX_U32("graphics/battle_frontier/tourney_line_down_map.bin", ".smolTM");
+const u32 gDomeTourneyLineUp_Tilemap[] = INCGFX_U32("graphics/battle_frontier/tourney_line_up_map.bin", ".smolTM");
 const u32 gDomeTourneyInfoCard_Gfx[] = INCGFX_U32("graphics/battle_frontier/tourney_info_card.png", ".4bpp.smol");
-const u32 gDomeTourneyInfoCard_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_info_card_tilemap.bin.smolTM");
-const u32 gDomeTourneyInfoCardBg_Tilemap[] = INCBIN_U32("graphics/battle_frontier/tourney_info_card_bg.bin.smolTM");
+const u32 gDomeTourneyInfoCard_Tilemap[] = INCGFX_U32("graphics/battle_frontier/tourney_info_card_tilemap.bin", ".smolTM");
+const u32 gDomeTourneyInfoCardBg_Tilemap[] = INCGFX_U32("graphics/battle_frontier/tourney_info_card_bg.bin", ".smolTM");
 const u32 gDomeTourneyTreeButtons_Gfx[] = INCGFX_U32("graphics/battle_frontier/tourney_buttons.png", ".4bpp.smol"); // exit/cancel and Poké Ball buttons
 const u16 gDomeTourneyTree_Pal[] = INCGFX_U16("graphics/battle_frontier/tourney_tree.png", ".gbapal");
 const u16 gDomeTourneyTreeButtons_Pal[] = INCGFX_U16("graphics/battle_frontier/tourney_buttons.pal", ".gbapal");
@@ -1358,15 +1358,15 @@ static const u16 sUnused0[] = {0x13F, 0x119, 0x113, 0x10E};
 
 const u16 gBattlePyramidFloor_Pal[][16] = INCGFX_U16("graphics/battle_frontier/pyramid_floor.pal", ".gbapal");
 
-const u32 gMultiBattleIntroBg_Opponent_Tilemap[] = INCBIN_U32("graphics/battle_frontier/multi_battle_intro_bg_opponent.bin.smolTM");
-const u32 gMultiBattleIntroBg_Player_Tilemap[] = INCBIN_U32("graphics/battle_frontier/multi_battle_intro_bg_player.bin.smolTM");
+const u32 gMultiBattleIntroBg_Opponent_Tilemap[] = INCGFX_U32("graphics/battle_frontier/multi_battle_intro_bg_opponent.bin", ".smolTM");
+const u32 gMultiBattleIntroBg_Player_Tilemap[] = INCGFX_U32("graphics/battle_frontier/multi_battle_intro_bg_player.bin", ".smolTM");
 
 #include "data/graphics/intro_scene.h"
 
 const u32 gBattleAnimSpriteGfx_FlyingDirt[] = INCGFX_U32("graphics/battle_anims/sprites/flying_dirt.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_FlyingDirt[] = INCGFX_U16("graphics/battle_anims/sprites/flying_dirt.png", ".gbapal");
 
-const u32 gBattleAnimBgTilemap_Sandstorm[] = INCBIN_U32("graphics/battle_anims/backgrounds/sandstorm_brew.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Sandstorm[] = INCGFX_U32("graphics/battle_anims/backgrounds/sandstorm_brew.bin", ".smolTM");
 const u32 gBattleAnimBgImage_Sandstorm[] = INCGFX_U32("graphics/battle_anims/backgrounds/sandstorm_brew.png", ".4bpp.smol");
 
 const u16 gBattleAnimSpritePal_Windstorm[] = INCGFX_U16("graphics/battle_anims/backgrounds/windstorm_brew.pal", ".gbapal");
@@ -1376,7 +1376,7 @@ const u16 gBattleAnimSpritePal_MetalSoundWaves[] = INCGFX_U16("graphics/battle_a
 
 const u32 gBattleAnimBgImage_Ice[] = INCGFX_U32("graphics/battle_anims/backgrounds/ice.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Ice[] = INCGFX_U16("graphics/battle_anims/backgrounds/ice.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Ice[] = INCBIN_U32("graphics/battle_anims/backgrounds/ice.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Ice[] = INCGFX_U32("graphics/battle_anims/backgrounds/ice.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_IcicleSpear[] = INCGFX_U32("graphics/battle_anims/sprites/icicle_spear.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_IcicleSpear[] = INCGFX_U16("graphics/battle_anims/sprites/icicle_spear.png", ".gbapal");
@@ -1412,7 +1412,7 @@ const u16 gBattleAnimSpritePal_Gem1[] = INCGFX_U16("graphics/battle_anims/sprite
 
 const u32 gBattleAnimBgImage_InAir[] = INCGFX_U32("graphics/battle_anims/backgrounds/in_air.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_InAir[] = INCGFX_U16("graphics/battle_anims/backgrounds/in_air.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_InAir[] = INCBIN_U32("graphics/battle_anims/backgrounds/in_air.bin.smolTM");
+const u32 gBattleAnimBgTilemap_InAir[] = INCGFX_U32("graphics/battle_anims/backgrounds/in_air.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_Protect[] = INCGFX_U32("graphics/battle_anims/sprites/protect.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Protect[] = INCGFX_U16("graphics/battle_anims/sprites/protect.png", ".gbapal");
@@ -1426,12 +1426,12 @@ const u32 gBattleInterface_BallStatusBarGfx[] = INCGFX_U32("graphics/battle_inte
 
 const u32 gBattleAnimBgImage_Ghost[] = INCGFX_U32("graphics/battle_anims/backgrounds/ghost.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Ghost[] = INCGFX_U16("graphics/battle_anims/backgrounds/ghost.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Ghost[] = INCBIN_U32("graphics/battle_anims/backgrounds/ghost.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Ghost[] = INCGFX_U32("graphics/battle_anims/backgrounds/ghost.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_WhipHit[] = INCGFX_U16("graphics/battle_anims/sprites/whip_hit.pal", ".gbapal");
 
 const u16 gBattleAnimBgPalette_SolarBeam[] = INCGFX_U16("graphics/battle_anims/backgrounds/solarbeam.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_SolarBeam[] = INCBIN_U32("graphics/battle_anims/backgrounds/solarbeam.bin.smolTM"); // Unused
+const u32 gBattleAnimBgTilemap_SolarBeam[] = INCGFX_U32("graphics/battle_anims/backgrounds/solarbeam.bin", ".smolTM"); // Unused
 
 const u16 gBattleAnimBgPalette_MagmaStorm[] = INCGFX_U16("graphics/battle_anims/backgrounds/magma_storm.pal", ".gbapal");
 
@@ -1439,13 +1439,13 @@ const u16 gBattleAnimBgPalette_MagmaStorm[] = INCGFX_U16("graphics/battle_anims/
 
 const u32 gBattleAnimBgImage_Hurricane[] = INCGFX_U32("graphics/battle_anims/backgrounds/hurricane.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Hurricane[] = INCGFX_U16("graphics/battle_anims/backgrounds/hurricane.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Hurricane[] = INCBIN_U32("graphics/battle_anims/backgrounds/hurricane.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Hurricane[] = INCGFX_U32("graphics/battle_anims/backgrounds/hurricane.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_RockWrecker[] = INCGFX_U16("graphics/battle_anims/backgrounds/rock_wrecker.pal", ".gbapal");
 
-const u32 gBattleAnimBgTilemap_GigaImpactPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/giga_impact_player.bin.smolTM");
-const u32 gBattleAnimBgTilemap_GigaImpactOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/giga_impact_opponent.bin.smolTM");
-const u32 gBattleAnimBgTilemap_GigaImpactContest[] = INCBIN_U32("graphics/battle_anims/backgrounds/giga_impact_contest.bin.smolTM");
+const u32 gBattleAnimBgTilemap_GigaImpactPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/giga_impact_player.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_GigaImpactOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/giga_impact_opponent.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_GigaImpactContest[] = INCGFX_U32("graphics/battle_anims/backgrounds/giga_impact_contest.bin", ".smolTM");
 const u32 gBattleAnimBgImage_GigaImpact[] = INCGFX_U32("graphics/battle_anims/backgrounds/giga_impact.png", ".4bpp.smol");
 const u32 gBattleAnimBgImage_GigaImpactContest[] = INCGFX_U32("graphics/battle_anims/backgrounds/giga_impact_contest.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_GigaImpact[] = INCGFX_U16("graphics/battle_anims/backgrounds/giga_impact.pal", ".gbapal");
@@ -1457,37 +1457,37 @@ const u16 gBattleAnimBgPalette_SludgeWave[] = INCGFX_U16("graphics/battle_anims/
 
 const u32 gBattleAnimBgImage_Aeroblast[] = INCGFX_U32("graphics/battle_anims/backgrounds/aeroblast_tiles.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Aeroblast[] = INCGFX_U16("graphics/battle_anims/backgrounds/aeroblast.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Aeroblast[] = INCBIN_U32("graphics/battle_anims/backgrounds/aeroblast_map.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Aeroblast[] = INCGFX_U32("graphics/battle_anims/backgrounds/aeroblast_map.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_AuraSphere[] = INCGFX_U16("graphics/battle_anims/backgrounds/aura_sphere.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_BlackholeEclipse[] = INCGFX_U32("graphics/battle_anims/backgrounds/blackhole_eclipse.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_BlackholeEclipse[] = INCGFX_U16("graphics/battle_anims/backgrounds/blackhole_eclipse.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_BlackholeEclipse[] = INCBIN_U32("graphics/battle_anims/backgrounds/blackhole_eclipse.bin.smolTM");
+const u32 gBattleAnimBgTilemap_BlackholeEclipse[] = INCGFX_U32("graphics/battle_anims/backgrounds/blackhole_eclipse.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_BloomDoom[] = INCGFX_U32("graphics/battle_anims/backgrounds/bloom_doom.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_BloomDoom[] = INCGFX_U16("graphics/battle_anims/backgrounds/bloom_doom.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_BloomDoom[] = INCBIN_U32("graphics/battle_anims/backgrounds/bloom_doom.bin.smolTM");
+const u32 gBattleAnimBgTilemap_BloomDoom[] = INCGFX_U32("graphics/battle_anims/backgrounds/bloom_doom.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_BoltStrike[] = INCGFX_U32("graphics/battle_anims/backgrounds/bolt_strike.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_BoltStrike[] = INCGFX_U16("graphics/battle_anims/backgrounds/bolt_strike.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_BoltStrike[] = INCBIN_U32("graphics/battle_anims/backgrounds/bolt_strike.bin.smolTM");
+const u32 gBattleAnimBgTilemap_BoltStrike[] = INCGFX_U32("graphics/battle_anims/backgrounds/bolt_strike.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_ClangorousSoulblaze[] = INCGFX_U32("graphics/battle_anims/backgrounds/clangorous_soulblaze.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ClangorousSoulblaze[] = INCGFX_U16("graphics/battle_anims/backgrounds/clangorous_soulblaze.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ClangorousSoulblaze[] = INCBIN_U32("graphics/battle_anims/backgrounds/clangorous_soulblaze.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ClangorousSoulblaze[] = INCGFX_U32("graphics/battle_anims/backgrounds/clangorous_soulblaze.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_DynamaxCannon[] = INCGFX_U16("graphics/battle_anims/backgrounds/dynamax_cannon.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_Fire1[] = INCGFX_U32("graphics/battle_anims/backgrounds/fire1.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Fire1[] = INCGFX_U16("graphics/battle_anims/backgrounds/fire1.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Fire1[] = INCBIN_U32("graphics/battle_anims/backgrounds/fire1.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Fire1[] = INCGFX_U32("graphics/battle_anims/backgrounds/fire1.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_Fire2[] = INCGFX_U16("graphics/battle_anims/backgrounds/fire2.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_FocusBlast[] = INCGFX_U32("graphics/battle_anims/backgrounds/focus_blast.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_FocusBlast[] = INCGFX_U16("graphics/battle_anims/backgrounds/focus_blast.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_FocusBlast[] = INCBIN_U32("graphics/battle_anims/backgrounds/focus_blast.bin.smolTM");
+const u32 gBattleAnimBgTilemap_FocusBlast[] = INCGFX_U32("graphics/battle_anims/backgrounds/focus_blast.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_GarbageFalls[] = INCGFX_U16("graphics/battle_anims/backgrounds/garbage_falls.pal", ".gbapal");
 
@@ -1495,12 +1495,12 @@ const u16 gBattleAnimBgPalette_GunkShot[] = INCGFX_U16("graphics/battle_anims/ba
 
 const u32 gBattleAnimBgImage_HydroCannon[] = INCGFX_U32("graphics/battle_anims/backgrounds/hydro_cannon.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_HydroCannon[] = INCGFX_U16("graphics/battle_anims/backgrounds/hydro_cannon.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_HydroCannon[] = INCBIN_U32("graphics/battle_anims/backgrounds/hydro_cannon.bin.smolTM");
+const u32 gBattleAnimBgTilemap_HydroCannon[] = INCGFX_U32("graphics/battle_anims/backgrounds/hydro_cannon.bin", ".smolTM");
 const u16 gBattleAnimBgPalette_Chloroblast[] = INCGFX_U16("graphics/battle_anims/backgrounds/chloroblast.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_HydroPump[] = INCGFX_U32("graphics/battle_anims/backgrounds/hydro_pump.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_HydroPump[] = INCGFX_U16("graphics/battle_anims/backgrounds/hydro_pump.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_HydroPump[] = INCBIN_U32("graphics/battle_anims/backgrounds/hydro_pump.bin.smolTM");
+const u32 gBattleAnimBgTilemap_HydroPump[] = INCGFX_U32("graphics/battle_anims/backgrounds/hydro_pump.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_HyperBeam[] = INCGFX_U16("graphics/battle_anims/backgrounds/hyper_beam.pal", ".gbapal");
 
@@ -1508,61 +1508,61 @@ const u16 gBattleAnimBgPalette_HyperspaceFury[] = INCGFX_U16("graphics/battle_an
 
 const u32 gBattleAnimBgImage_InfernoOverdrive[] = INCGFX_U32("graphics/battle_anims/backgrounds/inferno_overdrive.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_InfernoOverdrive[] = INCGFX_U16("graphics/battle_anims/backgrounds/inferno_overdrive.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_InfernoOverdrive[] = INCBIN_U32("graphics/battle_anims/backgrounds/inferno_overdrive.bin.smolTM");
+const u32 gBattleAnimBgTilemap_InfernoOverdrive[] = INCGFX_U32("graphics/battle_anims/backgrounds/inferno_overdrive.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_LeafStorm[] = INCGFX_U32("graphics/battle_anims/backgrounds/leaf_storm.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_LeafStorm[] = INCGFX_U16("graphics/battle_anims/backgrounds/leaf_storm.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_LeafStorm[] = INCBIN_U32("graphics/battle_anims/backgrounds/leaf_storm.bin.smolTM");
+const u32 gBattleAnimBgTilemap_LeafStorm[] = INCGFX_U32("graphics/battle_anims/backgrounds/leaf_storm.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_MaliciousMoonsault[] = INCGFX_U32("graphics/battle_anims/backgrounds/malicious_moonsault.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_MaliciousMoonsault[] = INCGFX_U16("graphics/battle_anims/backgrounds/malicious_moonsault.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_MaliciousMoonsault[] = INCBIN_U32("graphics/battle_anims/backgrounds/malicious_moonsault.bin.smolTM");
+const u32 gBattleAnimBgTilemap_MaliciousMoonsault[] = INCGFX_U32("graphics/battle_anims/backgrounds/malicious_moonsault.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_MaxLightning[] = INCGFX_U32("graphics/battle_anims/backgrounds/max_lightning.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_MaxLightning[] = INCGFX_U16("graphics/battle_anims/backgrounds/max_lightning.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_MaxLightning[] = INCBIN_U32("graphics/battle_anims/backgrounds/max_lightning.bin.smolTM");
+const u32 gBattleAnimBgTilemap_MaxLightning[] = INCGFX_U32("graphics/battle_anims/backgrounds/max_lightning.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_NeverendingNightmare[] = INCGFX_U32("graphics/battle_anims/backgrounds/neverending_nightmare.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_NeverendingNightmare[] = INCGFX_U16("graphics/battle_anims/backgrounds/neverending_nightmare.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_NeverendingNightmare[] = INCBIN_U32("graphics/battle_anims/backgrounds/neverending_nightmare.bin.smolTM");
+const u32 gBattleAnimBgTilemap_NeverendingNightmare[] = INCGFX_U32("graphics/battle_anims/backgrounds/neverending_nightmare.bin", ".smolTM");
 
 #if B_NEW_TERRAIN_BACKGROUNDS
 const u32 gBattleAnimBgImage_ElectricTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_electric_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ElectricTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/new_electric_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ElectricTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/new_electric_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ElectricTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_electric_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_GrassyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_grassy_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_GrassyTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/new_grassy_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_GrassyTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/new_grassy_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_GrassyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_grassy_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_MistyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_misty_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_MistyTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/new_misty_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_MistyTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/new_misty_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_MistyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_misty_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_PsychicTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_psychic_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_PsychicTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/new_psychic_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_PsychicTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/new_psychic_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_PsychicTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/new_psychic_terrain.bin", ".smolTM");
 #else
 const u32 gBattleAnimBgImage_PsychicTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/psychic_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_PsychicTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/psychic_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_PsychicTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/psychic_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_PsychicTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/psychic_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_ElectricTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/electric_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ElectricTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/electric_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ElectricTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/electric_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ElectricTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/electric_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_GrassyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/grassy_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_GrassyTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/grassy_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_GrassyTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/grassy_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_GrassyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/grassy_terrain.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_MistyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/misty_terrain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_MistyTerrain[] = INCGFX_U16("graphics/battle_anims/backgrounds/misty_terrain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_MistyTerrain[] = INCBIN_U32("graphics/battle_anims/backgrounds/misty_terrain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_MistyTerrain[] = INCGFX_U32("graphics/battle_anims/backgrounds/misty_terrain.bin", ".smolTM");
 #endif
 
 const u32 gBattleAnimBgImage_Nightmare[] = INCGFX_U32("graphics/battle_anims/backgrounds/nightmare.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Nightmare[] = INCGFX_U16("graphics/battle_anims/backgrounds/nightmare.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Nightmare[] = INCBIN_U32("graphics/battle_anims/backgrounds/nightmare.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Nightmare[] = INCGFX_U32("graphics/battle_anims/backgrounds/nightmare.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_PoisonFalls[] = INCGFX_U16("graphics/battle_anims/backgrounds/poison_falls.pal", ".gbapal");
 
@@ -1570,11 +1570,11 @@ const u16 gBattleAnimBgPalette_PsychicNew[] = INCGFX_U16("graphics/battle_anims/
 
 const u32 gBattleAnimBgImage_ShatteredPsyche[] = INCGFX_U32("graphics/battle_anims/backgrounds/shattered_psyche.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ShatteredPsyche[] = INCGFX_U16("graphics/battle_anims/backgrounds/shattered_psyche.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ShatteredPsyche[] = INCBIN_U32("graphics/battle_anims/backgrounds/shattered_psyche.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ShatteredPsyche[] = INCGFX_U32("graphics/battle_anims/backgrounds/shattered_psyche.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_RockField[] = INCGFX_U32("graphics/battle_anims/backgrounds/rock_field.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_RockDay[] = INCGFX_U16("graphics/battle_anims/backgrounds/rock_day.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_RockField[] = INCBIN_U32("graphics/battle_anims/backgrounds/rock_field.bin.smolTM");
+const u32 gBattleAnimBgTilemap_RockField[] = INCGFX_U32("graphics/battle_anims/backgrounds/rock_field.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_RockAfternoon[] = INCGFX_U16("graphics/battle_anims/backgrounds/rock_afternoon.pal", ".gbapal");
 
@@ -1582,17 +1582,17 @@ const u16 gBattleAnimBgPalette_RockNight[] = INCGFX_U16("graphics/battle_anims/b
 
 const u32 gBattleAnimBgImage_SnuggleForever[] = INCGFX_U32("graphics/battle_anims/backgrounds/snuggle_forever.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_SnuggleForever[] = INCGFX_U16("graphics/battle_anims/backgrounds/snuggle_forever.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_SnuggleForever[] = INCBIN_U32("graphics/battle_anims/backgrounds/snuggle_forever.bin.smolTM");
+const u32 gBattleAnimBgTilemap_SnuggleForever[] = INCGFX_U32("graphics/battle_anims/backgrounds/snuggle_forever.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_SoulStealing7StarStrike[] = INCGFX_U32("graphics/battle_anims/backgrounds/soulstealing_7star_strike.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_SoulStealing7StarStrike[] = INCGFX_U16("graphics/battle_anims/backgrounds/soulstealing_7star_strike.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_SoulStealing7StarStrike[] = INCBIN_U32("graphics/battle_anims/backgrounds/soulstealing_7star_strike.bin.smolTM");
+const u32 gBattleAnimBgTilemap_SoulStealing7StarStrike[] = INCGFX_U32("graphics/battle_anims/backgrounds/soulstealing_7star_strike.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_TectonicRage[] = INCGFX_U16("graphics/battle_anims/backgrounds/tectonic_rage.pal", ".gbapal");
 
 const u32 gBattleAnimBgImage_TrickRoom[] = INCGFX_U32("graphics/battle_anims/backgrounds/trick_room.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_TrickRoom[] = INCGFX_U16("graphics/battle_anims/backgrounds/trick_room.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_TrickRoom[] = INCBIN_U32("graphics/battle_anims/backgrounds/trick_room.bin.smolTM");
+const u32 gBattleAnimBgTilemap_TrickRoom[] = INCGFX_U32("graphics/battle_anims/backgrounds/trick_room.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_MagicRoom[] = INCGFX_U16("graphics/battle_anims/backgrounds/magic_room.pal", ".gbapal");
 
@@ -1600,49 +1600,49 @@ const u16 gBattleAnimBgPalette_WonderRoom[] = INCGFX_U16("graphics/battle_anims/
 
 const u32 gBattleAnimBgImage_TwinkleTackle[] = INCGFX_U32("graphics/battle_anims/backgrounds/twinkle_tackle.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_TwinkleTackle[] = INCGFX_U16("graphics/battle_anims/backgrounds/twinkle_tackle.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_TwinkleTackle[] = INCBIN_U32("graphics/battle_anims/backgrounds/twinkle_tackle.bin.smolTM");
+const u32 gBattleAnimBgTilemap_TwinkleTackle[] = INCGFX_U32("graphics/battle_anims/backgrounds/twinkle_tackle.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_WaterPulse[] = INCGFX_U32("graphics/battle_anims/backgrounds/water_pulse.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_WaterPulse[] = INCGFX_U16("graphics/battle_anims/backgrounds/water_pulse.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_WaterPulse[] = INCBIN_U32("graphics/battle_anims/backgrounds/water_pulse.bin.smolTM");
+const u32 gBattleAnimBgTilemap_WaterPulse[] = INCGFX_U32("graphics/battle_anims/backgrounds/water_pulse.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_Waterfall[] = INCGFX_U32("graphics/battle_anims/backgrounds/waterfall.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Waterfall[] = INCGFX_U16("graphics/battle_anims/backgrounds/waterfall.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Waterfall[] = INCBIN_U32("graphics/battle_anims/backgrounds/waterfall.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Waterfall[] = INCGFX_U32("graphics/battle_anims/backgrounds/waterfall.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_DarkVoid[] = INCGFX_U16("graphics/battle_anims/backgrounds/dark_void.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_DarkVoid[] = INCBIN_U32("graphics/battle_anims/backgrounds/dark_void.bin.smolTM");
+const u32 gBattleAnimBgTilemap_DarkVoid[] = INCGFX_U32("graphics/battle_anims/backgrounds/dark_void.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_ZMoveActivate[] = INCGFX_U32("graphics/battle_anims/backgrounds/zmove_activate.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ZMoveActivate[] = INCGFX_U16("graphics/battle_anims/backgrounds/zmove_activate.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ZMoveActivate[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_activate.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ZMoveActivate[] = INCGFX_U32("graphics/battle_anims/backgrounds/zmove_activate.bin", ".smolTM");
 
 const u32 gBattleAnimBgImage_ZMoveMountain[] = INCGFX_U32("graphics/battle_anims/backgrounds/zmove_mountain.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_ZMoveMountain[] = INCGFX_U16("graphics/battle_anims/backgrounds/zmove_mountain.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_ZMoveMountain[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_mountain.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ZMoveMountain[] = INCGFX_U32("graphics/battle_anims/backgrounds/zmove_mountain.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_SteelBeam[] = INCGFX_U16("graphics/battle_anims/backgrounds/steel_beam.pal", ".gbapal");
 
 // misc
 const u32 gBerryBlenderCenter_Gfx[] = INCGFX_U32("graphics/berry_blender/center.png", ".8bpp.smol");
 const u32 gBerryBlenderOuter_Gfx[] = INCGFX_U32("graphics/berry_blender/outer.png", ".4bpp.smol");
-const u32 gBerryBlenderOuter_Tilemap[] = INCBIN_U32("graphics/berry_blender/outer_map.bin.smolTM");
+const u32 gBerryBlenderOuter_Tilemap[] = INCGFX_U32("graphics/berry_blender/outer_map.bin", ".smolTM");
 
 const u16 gBattleAnimBgPalette_Cosmic[] = INCGFX_U16("graphics/battle_anims/backgrounds/cosmic.png", ".gbapal");
 const u32 gBattleAnimBgImage_Cosmic[] = INCGFX_U32("graphics/battle_anims/backgrounds/cosmic.png", ".4bpp.smol");
-const u32 gBattleAnimBgTilemap_Cosmic[] = INCBIN_U32("graphics/battle_anims/backgrounds/cosmic.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Cosmic[] = INCGFX_U32("graphics/battle_anims/backgrounds/cosmic.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_SlamHit2[] = INCGFX_U16("graphics/battle_anims/sprites/slam_hit_2.png", ".gbapal");
 const u32 gBattleAnimSpriteGfx_SlamHit2[] = INCGFX_U32("graphics/battle_anims/sprites/slam_hit_2.png", ".4bpp.smol");
 
-const u32 gBattleAnimFogTilemap[] = INCBIN_U32("graphics/battle_anims/backgrounds/fog.bin.smolTM");
+const u32 gBattleAnimFogTilemap[] = INCGFX_U32("graphics/battle_anims/backgrounds/fog.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_WeatherBall[] = INCGFX_U16("graphics/battle_anims/sprites/weather_ball.png", ".gbapal");
 const u32 gBattleAnimSpriteGfx_WeatherBall[] = INCGFX_U32("graphics/battle_anims/sprites/weather_ball.png", ".4bpp.smol");
 
-const u32 gBattleAnimBgTilemap_ScaryFacePlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/scary_face_player.bin.smolTM");
-const u32 gBattleAnimBgTilemap_ScaryFaceOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/scary_face_opponent.bin.smolTM");
-const u32 gBattleAnimBgTilemap_ScaryFaceContest[] = INCBIN_U32("graphics/battle_anims/backgrounds/scary_face_contest.bin.smolTM");
+const u32 gBattleAnimBgTilemap_ScaryFacePlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/scary_face_player.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_ScaryFaceOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/scary_face_opponent.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_ScaryFaceContest[] = INCGFX_U32("graphics/battle_anims/backgrounds/scary_face_contest.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_Hail[] = INCGFX_U32("graphics/battle_anims/sprites/hail.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Hail[] = INCGFX_U16("graphics/battle_anims/sprites/hail.png", ".gbapal");
@@ -1663,7 +1663,7 @@ const u16 gBattleAnimSpritePal_DirtMound[] = INCGFX_U16("graphics/battle_anims/s
 
 const u32 gBattleAnimBgImage_Fissure[] = INCGFX_U32("graphics/battle_anims/backgrounds/fissure.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Fissure[] = INCGFX_U16("graphics/battle_anims/backgrounds/fissure.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_Fissure[] = INCBIN_U32("graphics/battle_anims/backgrounds/fissure.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Fissure[] = INCGFX_U32("graphics/battle_anims/backgrounds/fissure.bin", ".smolTM");
 
 const u32 gBattleAnimSpriteGfx_Bird[] = INCGFX_U32("graphics/battle_anims/sprites/bird.png", ".4bpp.smol");
 const u16 gBattleAnimSpritePal_Bird[] = INCGFX_U16("graphics/battle_anims/sprites/bird.png", ".gbapal");
@@ -1674,9 +1674,9 @@ const u16 gBattleAnimSpritePal_CrossImpact[] = INCGFX_U16("graphics/battle_anims
 const u32 gBattleAnimBgImage_Surf[] = INCGFX_U32("graphics/battle_anims/backgrounds/water.png", ".4bpp.smol");
 const u16 gBattleAnimBgPalette_Surf[] = INCGFX_U16("graphics/battle_anims/backgrounds/water.png", ".gbapal");
 
-const u32 gBattleAnimBgTilemap_SurfOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/water_opponent.bin.smolTM");
-const u32 gBattleAnimBgTilemap_SurfPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/water_player.bin.smolTM");
-const u32 gBattleAnimBgTilemap_SurfContest[] = INCBIN_U32("graphics/battle_anims/backgrounds/water_contest.bin.smolTM");
+const u32 gBattleAnimBgTilemap_SurfOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/water_opponent.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_SurfPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/water_player.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_SurfContest[] = INCGFX_U32("graphics/battle_anims/backgrounds/water_contest.bin", ".smolTM");
 
 const u16 gBattleAnimSpritePal_Slash2[] = INCGFX_U16("graphics/battle_anims/sprites/slash_2.pal", ".gbapal");
 
@@ -1687,17 +1687,17 @@ const u16 gBattleAnimSpritePal_WhiteShadow[] = INCGFX_U16("graphics/battle_anims
 const u32 gBattleAnimBgImage_RainbowPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/rainbow_player_tile.png", ".4bpp.smol");
 const u32 gBattleAnimBgImage_RainbowOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/rainbow_opponent_tile.png", ".4bpp.smol");
 const u16 gBattleAnimBGPalette_Rainbow[] = INCGFX_U16("graphics/battle_anims/backgrounds/rainbow_player_tile.png", ".gbapal");
-const u32 gBattleAnimBgTilemap_RainbowPlayer[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_player_tile.bin.smolTM");
-const u32 gBattleAnimBgTilemap_RainbowOpponent[] = INCBIN_U32("graphics/battle_anims/backgrounds/rainbow_opponent_tile.bin.smolTM");
+const u32 gBattleAnimBgTilemap_RainbowPlayer[] = INCGFX_U32("graphics/battle_anims/backgrounds/rainbow_player_tile.bin", ".smolTM");
+const u32 gBattleAnimBgTilemap_RainbowOpponent[] = INCGFX_U32("graphics/battle_anims/backgrounds/rainbow_opponent_tile.bin", ".smolTM");
 
 // Pledge Effect field status - Swamp
 const u32 gBattleAnimBgImage_Swamp[] = INCGFX_U32("graphics/battle_anims/backgrounds/swampswizzle.png", ".4bpp.smol");
 const u16 gBattleAnimBGPalette_Swamp[] = INCGFX_U16("graphics/battle_anims/backgrounds/swampswizzle.pal", ".gbapal");
-const u32 gBattleAnimBgTilemap_Swamp[] = INCBIN_U32("graphics/battle_anims/backgrounds/swampswizzle.bin.smolTM");
+const u32 gBattleAnimBgTilemap_Swamp[] = INCGFX_U32("graphics/battle_anims/backgrounds/swampswizzle.bin", ".smolTM");
 
 const u32 gPartyMenuBg_Gfx[] = INCGFX_U32("graphics/party_menu/bg.png", ".4bpp.smol", "-num_tiles 62 -Wnum_tiles");
 const u16 gPartyMenuBg_Pal[] = INCGFX_U16("graphics/party_menu/bg.png", ".gbapal");
-const u32 gPartyMenuBg_Tilemap[] = INCBIN_U32("graphics/party_menu/bg.bin.smolTM");
+const u32 gPartyMenuBg_Tilemap[] = INCGFX_U32("graphics/party_menu/bg.bin", ".smolTM");
 
 const u32 gPartyMenuPokeball_Gfx[] = INCGFX_U32("graphics/party_menu/pokeball.png", ".4bpp.smol");
 const u32 gPartyMenuPokeballSmall_Gfx[] = INCGFX_U32("graphics/party_menu/pokeball_small.png", ".4bpp.smol"); //unused
@@ -1721,11 +1721,11 @@ const u32 gSummaryScreen_Gfx[]                = INCGFX_U32("graphics/summary_scr
 const u32 gSummaryScreen_Gfx[]                = INCGFX_U32("graphics/summary_screen/tiles.png", ".4bpp.smol");
 #endif // P_SUMMARY_SCREEN_IV_EV_TILESET
 const u16 gSummaryScreen_Pal[]                = INCGFX_U16("graphics/summary_screen/tiles.png", ".gbapal");
-const u32 gSummaryPage_Info_Tilemap[]         = INCBIN_U32("graphics/summary_screen/page_info.bin.smolTM");
-const u32 gSummaryPage_Skills_Tilemap[]       = INCBIN_U32("graphics/summary_screen/page_skills.bin.smolTM");
-const u32 gSummaryPage_BattleMoves_Tilemap[]  = INCBIN_U32("graphics/summary_screen/page_battle_moves.bin.smolTM");
-const u32 gSummaryPage_ContestMoves_Tilemap[] = INCBIN_U32("graphics/summary_screen/page_contest_moves.bin.smolTM");
-const u32 gSummaryPage_InfoEgg_Tilemap[]      = INCBIN_U32("graphics/summary_screen/page_info_egg.bin.smolTM");
+const u32 gSummaryPage_Info_Tilemap[]         = INCGFX_U32("graphics/summary_screen/page_info.bin", ".smolTM");
+const u32 gSummaryPage_Skills_Tilemap[]       = INCGFX_U32("graphics/summary_screen/page_skills.bin", ".smolTM");
+const u32 gSummaryPage_BattleMoves_Tilemap[]  = INCGFX_U32("graphics/summary_screen/page_battle_moves.bin", ".smolTM");
+const u32 gSummaryPage_ContestMoves_Tilemap[] = INCGFX_U32("graphics/summary_screen/page_contest_moves.bin", ".smolTM");
+const u32 gSummaryPage_InfoEgg_Tilemap[]      = INCGFX_U32("graphics/summary_screen/page_info_egg.bin", ".smolTM");
 
 const u32 gBagMaleTiles[] = INCGFX_U32("graphics/bag/bag_male.png", ".4bpp.smol");
 const u32 gBagFemaleTiles[] = INCGFX_U32("graphics/bag/bag_female.png", ".4bpp.smol");
@@ -1735,11 +1735,11 @@ const u16 gBagScreenMale_Pal[] = INCGFX_U16("graphics/bag/menu_male.pal", ".gbap
 const u16 gBagScreenFemale_Pal[] = INCGFX_U16("graphics/bag/menu_female.pal", ".gbapal");
 
 const u32 gBagScreen_Gfx[] = INCGFX_U32("graphics/bag/menu.png", ".4bpp.smol", "-num_tiles 53 -Wnum_tiles");
-const u32 gBagScreen_GfxTileMap[] = INCBIN_U32("graphics/bag/menu.bin.smolTM");
+const u32 gBagScreen_GfxTileMap[] = INCGFX_U32("graphics/bag/menu.bin", ".smolTM");
 
 const u32 gBattlePyramidBag_Gfx[]          = INCGFX_U32("graphics/bag/bag_pyramid.png", ".4bpp.smol");
 const u16 gBattlePyramidBag_Pal[]          = INCGFX_U16("graphics/bag/bag_pyramid.pal", ".gbapal"); // female palette is first and male is second.
-const u32 gBattlePyramidBagTilemap[]       = INCBIN_U32("graphics/bag/menu_pyramid.bin.smolTM");
+const u32 gBattlePyramidBagTilemap[]       = INCGFX_U32("graphics/bag/menu_pyramid.bin", ".smolTM");
 const u16 gBattlePyramidBagInterface_Pal[] = INCGFX_U16("graphics/bag/menu_pyramid.pal", ".gbapal");
 
 const u32 gSwapLineGfx[] = INCGFX_U32("graphics/interface/swap_line.png", ".4bpp.smol");
@@ -1747,7 +1747,7 @@ const u16 gSwapLinePal[] = INCGFX_U16("graphics/interface/swap_line.png", ".gbap
 
 const u32 gShopMenu_Gfx[] = INCGFX_U32("graphics/shop/menu.png", ".4bpp.smol");
 const u16 gShopMenu_Pal[] = INCGFX_U16("graphics/shop/menu.png", ".gbapal");
-const u32 gShopMenu_Tilemap[] = INCBIN_U32("graphics/shop/menu.bin.smolTM");
+const u32 gShopMenu_Tilemap[] = INCGFX_U32("graphics/shop/menu.bin", ".smolTM");
 const u32 gShopMenuMoney_Gfx[] = INCGFX_U32("graphics/shop/money.png", ".4bpp.smol");
 
 // Pokeblock
@@ -1758,7 +1758,7 @@ const u16 gMenuPokeblock_Pal[] = INCGFX_U16("graphics/pokeblock/menu.pal", ".gba
 const u32 gMenuPokeblockDevice_Gfx[] = INCGFX_U32("graphics/pokeblock/device.png", ".4bpp.smol");
 const u16 gMenuPokeblockDevice_Pal[] = INCGFX_U16("graphics/pokeblock/device.png", ".gbapal");
 
-const u32 gMenuPokeblock_Tilemap[] = INCBIN_U32("graphics/pokeblock/menu.bin.smolTM");
+const u32 gMenuPokeblock_Tilemap[] = INCGFX_U32("graphics/pokeblock/menu.bin", ".smolTM");
 
 const u32 gPokeblock_Gfx[] = INCGFX_U32("graphics/pokeblock/pokeblock.png", ".4bpp.smol");
 const u16 gPokeblockRed_Pal[] = INCGFX_U16("graphics/pokeblock/red.pal", ".gbapal");
@@ -1776,7 +1776,7 @@ const u16 gPokeblockBlack_Pal[] = INCGFX_U16("graphics/pokeblock/black.pal", ".g
 const u16 gPokeblockWhite_Pal[] = INCGFX_U16("graphics/pokeblock/white.pal", ".gbapal");
 const u16 gPokeblockGold_Pal[] = INCGFX_U16("graphics/pokeblock/gold.pal", ".gbapal");
 
-const u32 gPokeblockFeedBg_Tilemap[] = INCBIN_U32("graphics/pokeblock/feeding_bg.bin.smolTM");
+const u32 gPokeblockFeedBg_Tilemap[] = INCGFX_U32("graphics/pokeblock/feeding_bg.bin", ".smolTM");
 
 #include "data/graphics/berries.h"
 #include "data/graphics/rayquaza_scene.h"
@@ -1830,19 +1830,19 @@ const u16 gPokedexBgNational_Pal[] = INCGFX_U16("graphics/pokedex/bg_national.pa
 const u32 gPokedexMenu_Gfx[] = INCGFX_U32("graphics/pokedex/menu.png", ".4bpp.smol");
 const u32 gPokedexInterface_Gfx[] = INCGFX_U32("graphics/pokedex/interface.png", ".4bpp.smol");
 const u32 gUnused_PokedexNoBall[] = INCGFX_U32("graphics/pokedex/noball_unused.png", ".4bpp.smol");
-const u32 gPokedexStartMenuMain_Tilemap[] = INCBIN_U32("graphics/pokedex/start_menu_main.bin.smolTM");
-const u32 gPokedexStartMenuSearchResults_Tilemap[] = INCBIN_U32("graphics/pokedex/start_menu_search_results.bin.smolTM");
-const u32 gPokedexList_Tilemap[] = INCBIN_U32("graphics/pokedex/list.bin.smolTM");
-const u32 gPokedexListUnderlay_Tilemap[] = INCBIN_U32("graphics/pokedex/list_underlay.bin.smolTM");
-const u32 gPokedexSizeScreen_Tilemap[] = INCBIN_U32("graphics/pokedex/size_screen.bin.smolTM");
-const u32 gPokedexScreenSelectBarMain_Tilemap[] = INCBIN_U32("graphics/pokedex/screen_select_bar_main.bin.smolTM");
-const u32 gPokedexScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/screen_select_bar_submenu.bin.smolTM");
-const u32 gPokedexInfoScreen_Tilemap[] = INCBIN_U32("graphics/pokedex/info_screen.bin.smolTM");
-const u32 gPokedexCryScreen_Tilemap[] = INCBIN_U32("graphics/pokedex/cry_screen.bin.smolTM");
+const u32 gPokedexStartMenuMain_Tilemap[] = INCGFX_U32("graphics/pokedex/start_menu_main.bin", ".smolTM");
+const u32 gPokedexStartMenuSearchResults_Tilemap[] = INCGFX_U32("graphics/pokedex/start_menu_search_results.bin", ".smolTM");
+const u32 gPokedexList_Tilemap[] = INCGFX_U32("graphics/pokedex/list.bin", ".smolTM");
+const u32 gPokedexListUnderlay_Tilemap[] = INCGFX_U32("graphics/pokedex/list_underlay.bin", ".smolTM");
+const u32 gPokedexSizeScreen_Tilemap[] = INCGFX_U32("graphics/pokedex/size_screen.bin", ".smolTM");
+const u32 gPokedexScreenSelectBarMain_Tilemap[] = INCGFX_U32("graphics/pokedex/screen_select_bar_main.bin", ".smolTM");
+const u32 gPokedexScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/screen_select_bar_submenu.bin", ".smolTM");
+const u32 gPokedexInfoScreen_Tilemap[] = INCGFX_U32("graphics/pokedex/info_screen.bin", ".smolTM");
+const u32 gPokedexCryScreen_Tilemap[] = INCGFX_U32("graphics/pokedex/cry_screen.bin", ".smolTM");
 const u16 gPokedexSearchMenu_Pal[] = INCGFX_U16("graphics/pokedex/search_menu.pal", ".gbapal");
 const u32 gPokedexSearchMenu_Gfx[] = INCGFX_U32("graphics/pokedex/search_menu.png", ".4bpp.smol");
-const u32 gPokedexSearchMenuNational_Tilemap[] = INCBIN_U32("graphics/pokedex/search_menu_national.bin.smolTM");
-const u32 gPokedexSearchMenuHoenn_Tilemap[] = INCBIN_U32("graphics/pokedex/search_menu_hoenn.bin.smolTM");
+const u32 gPokedexSearchMenuNational_Tilemap[] = INCGFX_U32("graphics/pokedex/search_menu_national.bin", ".smolTM");
+const u32 gPokedexSearchMenuHoenn_Tilemap[] = INCGFX_U32("graphics/pokedex/search_menu_hoenn.bin", ".smolTM");
 
 const u16 gSummaryScreen_MoveEffect_Battle_Tilemap[] = INCBIN_U16("graphics/summary_screen/effect_battle.bin");
 const u16 gSummaryScreen_MoveEffect_Contest_Tilemap[] = INCBIN_U16("graphics/summary_screen/effect_contest.bin");
@@ -1850,7 +1850,7 @@ const u16 gSummaryScreen_MoveEffect_Cancel_Tilemap[] = INCBIN_U16("graphics/summ
 
 const u16 gIntroCopyright_Pal[] = INCGFX_U16("graphics/intro/copyright.png", ".gbapal");
 const u32 gIntroCopyright_Gfx[] = INCGFX_U32("graphics/intro/copyright.png", ".4bpp.smol");
-const u32 gIntroCopyright_Tilemap[] = INCBIN_U32("graphics/intro/copyright.bin.smolTM");
+const u32 gIntroCopyright_Tilemap[] = INCGFX_U32("graphics/intro/copyright.bin", ".smolTM");
 
 const u16 gPokedexAreaScreenAreaUnknown_Pal[] = INCGFX_U16("graphics/pokedex/area_unknown.png", ".gbapal");
 const u32 gPokedexAreaScreenAreaUnknown_Gfx[] = INCGFX_U32("graphics/pokedex/area_unknown.png", ".4bpp.smol");
@@ -1880,7 +1880,7 @@ const u16 gContestResultsTitle_Tilemap[]        = INCBIN_U16("graphics/contest/r
 
 const u16 gPokenavCondition_Pal[] = INCGFX_U16("graphics/pokenav/condition/graph.png", ".gbapal");
 const u32 gPokenavCondition_Gfx[] = INCGFX_U32("graphics/pokenav/condition/graph.png", ".4bpp.smol");
-const u32 gPokenavCondition_Tilemap[] = INCBIN_U32("graphics/pokenav/condition/graph.bin.smolTM");
+const u32 gPokenavCondition_Tilemap[] = INCGFX_U32("graphics/pokenav/condition/graph.bin", ".smolTM");
 
 const u16 gPokenavOptions_Tilemap[] = INCBIN_U16("graphics/pokenav/options/options.bin");
 const u32 gPokenavOptions_Gfx[] = INCGFX_U32("graphics/pokenav/options/options.4bpp", ".smol");
@@ -1888,7 +1888,7 @@ const u16 gPokenavOptions_Pal[] = INCGFX_U16("graphics/pokenav/options/options.p
 
 const u16 gPokenavHeader_Pal[] = INCGFX_U16("graphics/pokenav/header.png", ".gbapal");
 const u32 gPokenavHeader_Gfx[] = INCGFX_U32("graphics/pokenav/header.png", ".4bpp.smol", "-num_tiles 53 -Wnum_tiles"); // TODO: use width 9 and makefile rule for cleanliness, make wasnt behaving, didnt want to apply num_tiles to this
-const u32 gPokenavHeader_Tilemap[] = INCBIN_U32("graphics/pokenav/header.bin.smolTM");
+const u32 gPokenavHeader_Tilemap[] = INCGFX_U32("graphics/pokenav/header.bin", ".smolTM");
 
 const u16 gPokenavLeftHeader_Pal[] = INCGFX_U16("graphics/pokenav/left_headers/palette.pal", ".gbapal");
 const u32 gPokenavLeftHeaderBeauty_Gfx[] = INCGFX_U32("graphics/pokenav/left_headers/beauty.png", ".4bpp.smol");
@@ -1906,7 +1906,7 @@ const u32 gPokenavLeftHeaderParty_Gfx[] = INCGFX_U32("graphics/pokenav/left_head
 
 const u16 gPokenavMessageBox_Pal[] = INCGFX_U16("graphics/pokenav/message.png", ".gbapal");
 const u32 gPokenavMessageBox_Gfx[] = INCGFX_U32("graphics/pokenav/message.png", ".4bpp.smol");
-const u32 gPokenavMessageBox_Tilemap[] = INCBIN_U32("graphics/pokenav/message.bin.smolTM");
+const u32 gPokenavMessageBox_Tilemap[] = INCGFX_U32("graphics/pokenav/message.bin", ".smolTM");
 
 const u16 gRegionMapCityZoomTiles_Pal[] = INCGFX_U16("graphics/pokenav/region_map/zoom_tiles.png", ".gbapal");
 const u32 gRegionMapCityZoomText_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/city_zoom_text.png", ".4bpp.smol");
@@ -1939,13 +1939,13 @@ const u32 gEasyChatMode_Gfx[] = INCGFX_U32("graphics/easy_chat/mode.png", ".4bpp
 const u16 gEasyChatMode_Pal[] = INCGFX_U16("graphics/easy_chat/mode.png", ".gbapal");
 
 const u32 gEasyChatWindow_Gfx[] = INCGFX_U32("graphics/easy_chat/window.png", ".4bpp.smol"); // uses mode pal
-const u32 gEasyChatWindow_Tilemap[] = INCBIN_U32("graphics/easy_chat/window.bin.smolTM");
+const u32 gEasyChatWindow_Tilemap[] = INCGFX_U32("graphics/easy_chat/window.bin", ".smolTM");
 
 const u16 gWallClockMale_Pal[]      = INCGFX_U16("graphics/wallclock/male.pal", ".gbapal");
 const u16 gWallClockFemale_Pal[]    = INCGFX_U16("graphics/wallclock/female.pal", ".gbapal");
 const u32 gWallClock_Gfx[]          = INCGFX_U32("graphics/wallclock/clock.png", ".4bpp.smol");
-const u32 gWallClockStart_Tilemap[] = INCBIN_U32("graphics/wallclock/clock_start.bin.smolTM");
-const u32 gWallClockView_Tilemap[]  = INCBIN_U32("graphics/wallclock/clock_view.bin.smolTM");
+const u32 gWallClockStart_Tilemap[] = INCGFX_U32("graphics/wallclock/clock_start.bin", ".smolTM");
+const u32 gWallClockView_Tilemap[]  = INCGFX_U32("graphics/wallclock/clock_view.bin", ".smolTM");
 
 const u16 gUsePokeblockCondition_Pal[] = INCGFX_U16("graphics/pokeblock/use_screen/condition.png", ".gbapal");
 const u32 gUsePokeblockCondition_Gfx[] = INCGFX_U32("graphics/pokeblock/use_screen/condition.png", ".4bpp.smol");
@@ -1956,7 +1956,7 @@ const u8 gUsePokeblockUpDown_Gfx[] = INCGFX_U8("graphics/pokeblock/use_screen/up
 const u16 gUsePokeblockGraph_Pal[] = INCGFX_U16("graphics/pokeblock/use_screen/graph.png", ".gbapal");
 const u32 gUsePokeblockGraph_Gfx[] = INCGFX_U32("graphics/pokeblock/use_screen/graph.png", ".4bpp.smol");
 
-const u32 gUsePokeblockGraph_Tilemap[] = INCBIN_U32("graphics/pokeblock/use_screen/graph.bin.smolTM");
+const u32 gUsePokeblockGraph_Tilemap[] = INCGFX_U32("graphics/pokeblock/use_screen/graph.bin", ".smolTM");
 const u16 gUsePokeblockNatureWin_Pal[] = INCGFX_U16("graphics/pokeblock/use_screen/nature.pal", ".gbapal");
 
 #include "data/graphics/slot_machine.h"
@@ -1965,23 +1965,23 @@ const u16 gUsePokeblockNatureWin_Pal[] = INCGFX_U16("graphics/pokeblock/use_scre
 
 const u16 gHoennTrainerCardGreen_Pal[] = INCGFX_U16("graphics/trainer_card/green.pal", ".gbapal");
 const u32 gHoennTrainerCard_Gfx[] = INCGFX_U32("graphics/trainer_card/tiles.png", ".4bpp.smol");
-const u32 gHoennTrainerCardBg_Tilemap[] = INCBIN_U32("graphics/trainer_card/bg.bin.smolTM");
-const u32 gHoennTrainerCardFront_Tilemap[] = INCBIN_U32("graphics/trainer_card/front.bin.smolTM");
-const u32 gHoennTrainerCardBack_Tilemap[] = INCBIN_U32("graphics/trainer_card/back.bin.smolTM");
-const u32 gHoennTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/front_link.bin.smolTM");
+const u32 gHoennTrainerCardBg_Tilemap[] = INCGFX_U32("graphics/trainer_card/bg.bin", ".smolTM");
+const u32 gHoennTrainerCardFront_Tilemap[] = INCGFX_U32("graphics/trainer_card/front.bin", ".smolTM");
+const u32 gHoennTrainerCardBack_Tilemap[] = INCGFX_U32("graphics/trainer_card/back.bin", ".smolTM");
+const u32 gHoennTrainerCardFrontLink_Tilemap[] = INCGFX_U32("graphics/trainer_card/front_link.bin", ".smolTM");
 
 const u16 gKantoTrainerCardBlue_Pal[] = INCGFX_U16("graphics/trainer_card/frlg/blue.pal", ".gbapal");
 const u32 gKantoTrainerCard_Gfx[] = INCGFX_U32("graphics/trainer_card/frlg/tiles.png", ".4bpp.smol");
-const u32 gKantoTrainerCardBg_Tilemap[] = INCBIN_U32("graphics/trainer_card/frlg/bg.bin.smolTM");
-const u32 gKantoTrainerCardFront_Tilemap[] = INCBIN_U32("graphics/trainer_card/frlg/front.bin.smolTM");
-const u32 gKantoTrainerCardBack_Tilemap[] = INCBIN_U32("graphics/trainer_card/frlg/back.bin.smolTM");
-const u32 gKantoTrainerCardFrontLink_Tilemap[] = INCBIN_U32("graphics/trainer_card/frlg/front_link.bin.smolTM");
+const u32 gKantoTrainerCardBg_Tilemap[] = INCGFX_U32("graphics/trainer_card/frlg/bg.bin", ".smolTM");
+const u32 gKantoTrainerCardFront_Tilemap[] = INCGFX_U32("graphics/trainer_card/frlg/front.bin", ".smolTM");
+const u32 gKantoTrainerCardBack_Tilemap[] = INCGFX_U32("graphics/trainer_card/frlg/back.bin", ".smolTM");
+const u32 gKantoTrainerCardFrontLink_Tilemap[] = INCGFX_U32("graphics/trainer_card/frlg/front_link.bin", ".smolTM");
 
 // Pokémon storage system
 
 const u32 gStorageSystemMenu_Gfx[] = INCGFX_U32("graphics/pokemon_storage/menu.png", ".4bpp.smol");
 const u16 gStorageSystemPartyMenu_Pal[] = INCGFX_U16("graphics/pokemon_storage/party_menu.pal", ".gbapal");
-const u32 gStorageSystemPartyMenu_Tilemap[] = INCBIN_U32("graphics/pokemon_storage/party_menu.bin.smolTM");
+const u32 gStorageSystemPartyMenu_Tilemap[] = INCGFX_U32("graphics/pokemon_storage/party_menu.bin", ".smolTM");
 
 // naming screen
 
@@ -2007,19 +2007,19 @@ const u32 gNamingScreenCursorFilled_Gfx[]        = INCGFX_U32("graphics/naming_s
 const u32 gNamingScreenPageSwapButton_Gfx[]      = INCGFX_U32("graphics/naming_screen/page_swap_button.png", ".4bpp");
 const u32 gNamingScreenInputArrow_Gfx[]          = INCGFX_U32("graphics/naming_screen/input_arrow.png", ".4bpp");
 const u32 gNamingScreenUnderscore_Gfx[]          = INCGFX_U32("graphics/naming_screen/underscore.png", ".4bpp");
-const u32 gNamingScreenBackground_Tilemap[]      = INCBIN_U32("graphics/naming_screen/background.bin.smolTM");
-const u32 gNamingScreenKeyboardUpper_Tilemap[]   = INCBIN_U32("graphics/naming_screen/keyboard_upper.bin.smolTM");
-const u32 gNamingScreenKeyboardLower_Tilemap[]   = INCBIN_U32("graphics/naming_screen/keyboard_lower.bin.smolTM");
-const u32 gNamingScreenKeyboardSymbols_Tilemap[] = INCBIN_U32("graphics/naming_screen/keyboard_symbols.bin.smolTM");
+const u32 gNamingScreenBackground_Tilemap[]      = INCGFX_U32("graphics/naming_screen/background.bin", ".smolTM");
+const u32 gNamingScreenKeyboardUpper_Tilemap[]   = INCGFX_U32("graphics/naming_screen/keyboard_upper.bin", ".smolTM");
+const u32 gNamingScreenKeyboardLower_Tilemap[]   = INCGFX_U32("graphics/naming_screen/keyboard_lower.bin", ".smolTM");
+const u32 gNamingScreenKeyboardSymbols_Tilemap[] = INCGFX_U32("graphics/naming_screen/keyboard_symbols.bin", ".smolTM");
 
 // union room chat
 const u16 gUnionRoomChat_Background_Pal[] = INCGFX_U16("graphics/union_room_chat/background.png", ".gbapal");
 const u32 gUnionRoomChat_Background_Gfx[] = INCGFX_U32("graphics/union_room_chat/background.png", ".4bpp.smol");
-const u32 gUnionRoomChat_Background_Tilemap[] = INCBIN_U32("graphics/union_room_chat/background.bin.smolTM");
+const u32 gUnionRoomChat_Background_Tilemap[] = INCGFX_U32("graphics/union_room_chat/background.bin", ".smolTM");
 const u16 gUnionRoomChat_InputText_Pal[] = INCGFX_U16("graphics/union_room_chat/input_text.pal", ".gbapal");
 const u16 gUnionRoomChat_Keyboard_Pal[] = INCGFX_U16("graphics/union_room_chat/keyboard.png", ".gbapal");
 const u32 gUnionRoomChat_Keyboard_Gfx[] = INCGFX_U32("graphics/union_room_chat/keyboard.png", ".4bpp.smol");
-const u32 gUnionRoomChat_Keyboard_Tilemap[] = INCBIN_U32("graphics/union_room_chat/keyboard.bin.smolTM");
+const u32 gUnionRoomChat_Keyboard_Tilemap[] = INCGFX_U32("graphics/union_room_chat/keyboard.bin", ".smolTM");
 const u32 gUnionRoomChat_RButtonLabels[] = INCGFX_U32("graphics/union_room_chat/r_button_labels.png", ".4bpp.smol");
 
 const u16 ALIGNED(4) gTilesetPalettes_General[][16] =
@@ -2078,7 +2078,7 @@ const u16 gWallpaperPalettes_Horizontal[][16] =
 };
 
 const u32 gWallpaperTiles_Horizontal[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/horizontal/tiles.4bpp", ".smol");
-const u32 gWallpaperTilemap_Horizontal[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/horizontal/tilemap.bin.smolTM");
+const u32 gWallpaperTilemap_Horizontal[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/horizontal/tilemap.bin", ".smolTM");
 
 const u16 gWallpaperPalettes_Ribbon[][16] =
 {
@@ -2087,11 +2087,11 @@ const u16 gWallpaperPalettes_Ribbon[][16] =
 };
 
 const u32 gWallpaperTiles_Ribbon[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/ribbon/tiles.4bpp", ".smol");
-const u32 gWallpaperTilemap_Ribbon[] = INCBIN_U32("graphics/pokemon_storage/wallpapers/ribbon/tilemap.bin.smolTM");
+const u32 gWallpaperTilemap_Ribbon[] = INCGFX_U32("graphics/pokemon_storage/wallpapers/ribbon/tilemap.bin", ".smolTM");
 
 const u16 gPokenavRibbonsSummaryBg_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/summary_bg.png", ".gbapal");
 const u32 gPokenavRibbonsSummaryBg_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/summary_bg.png", ".4bpp.smol");
-const u32 gPokenavRibbonsSummaryBg_Tilemap[] = INCBIN_U32("graphics/pokenav/ribbons/summary_bg.bin.smolTM");
+const u32 gPokenavRibbonsSummaryBg_Tilemap[] = INCGFX_U32("graphics/pokenav/ribbons/summary_bg.bin", ".smolTM");
 
 const u16 gMonIconPalettes[][16] =
 {
@@ -2106,24 +2106,24 @@ const u16 gMonIconPalettes[][16] =
 const u16 gTitleScreenBgPalettes[]         = INCBIN_U16("graphics/title_screen/pokemon_logo.gbapal",
                                                         "graphics/title_screen/rayquaza_and_clouds.gbapal");
 const u16 gTitleScreenEmeraldVersionPal[]  = INCGFX_U16("graphics/title_screen/emerald_version.png", ".gbapal");
-const u32 gTitleScreenCloudsTilemap[]      = INCBIN_U32("graphics/title_screen/clouds.bin.smolTM");
+const u32 gTitleScreenCloudsTilemap[]      = INCGFX_U32("graphics/title_screen/clouds.bin", ".smolTM");
 const u32 gTitleScreenPokemonLogoGfx[]     = INCGFX_U32("graphics/title_screen/pokemon_logo.png", ".8bpp.smol");
 const u32 gTitleScreenEmeraldVersionGfx[]  = INCGFX_U32("graphics/title_screen/emerald_version.png", ".8bpp.smol", "-mwidth 8 -mheight 4");
 const u16 gTitleScreenPressStartPal[]      = INCGFX_U16("graphics/title_screen/press_start.png", ".gbapal");
 const u32 gTitleScreenPressStartGfx[]      = INCGFX_U32("graphics/title_screen/press_start.png", ".4bpp.smol");
-const u32 gTitleScreenPokemonLogoTilemap[] = INCBIN_U32("graphics/title_screen/pokemon_logo.bin.smolTM");
+const u32 gTitleScreenPokemonLogoTilemap[] = INCGFX_U32("graphics/title_screen/pokemon_logo.bin", ".smolTM");
 
 const u16 gFrontierPassBg_Pal[][16]                      = INCGFX_U16("graphics/frontier_pass/bg.png", ".gbapal"); // 8 x 16
 const u32 gFrontierPassBg_Gfx[]                          = INCGFX_U32("graphics/frontier_pass/bg.png", ".4bpp.smol");
 const u32 gFrontierPassMapAndCard_Gfx[]                  = INCGFX_U32("graphics/frontier_pass/map_and_card.png", ".8bpp.smol");
-const u32 gFrontierPassBg_Tilemap[]                      = INCBIN_U32("graphics/frontier_pass/bg.bin.smolTM");
+const u32 gFrontierPassBg_Tilemap[]                      = INCGFX_U32("graphics/frontier_pass/bg.bin", ".smolTM");
 const u32 gFrontierPassCancelButton_Tilemap[]            = INCBIN_U32("graphics/frontier_pass/cancel.bin");
 const u32 gFrontierPassCancelButtonHighlighted_Tilemap[] = INCBIN_U32("graphics/frontier_pass/cancel_highlighted.bin");
 
 // Berry Crush
 const u16 gBerryCrush_Crusher_Pal[] = INCGFX_U16("graphics/berry_crush/crusher.png", ".gbapal");
 const u32 gBerryCrush_Crusher_Gfx[] = INCGFX_U32("graphics/berry_crush/crusher.png", ".4bpp.smol");
-const u32 gBerryCrush_TextWindows_Tilemap[] = INCBIN_U32("graphics/berry_crush/text_windows.bin.smolTM");
+const u32 gBerryCrush_TextWindows_Tilemap[] = INCGFX_U32("graphics/berry_crush/text_windows.bin", ".smolTM");
 
 const u32 gBattleIcons_Gfx1[] = INCGFX_U32("graphics/types/battle_icons1.png", ".4bpp.smol");
 const u32 gBattleIcons_Gfx2[] = INCGFX_U32("graphics/types/battle_icons2.png", ".4bpp.smol");

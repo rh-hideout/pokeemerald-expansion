@@ -43,7 +43,7 @@ AI_SINGLE_BATTLE_TEST("TESTING: forced illegal bench abilities are honored durin
 AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move selection when scores are tied (Singles)")
 {
     u32 tiedMove;
-    u16 expectedMove;
+    enum Move expectedMove;
     PARAMETRIZE { tiedMove = 3; expectedMove = MOVE_ICE_BEAM;       }
     PARAMETRIZE { tiedMove = 2; expectedMove = MOVE_FLAMETHROWER;   }
     PARAMETRIZE { tiedMove = 1; expectedMove = MOVE_SLUDGE_BOMB;    }
@@ -65,7 +65,7 @@ AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move
 AI_DOUBLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move selection when scores are tied (Doubles)")
 {
     u32 tiedMove;
-    u16 expectedMove;
+    enum Move expectedMove;
     PARAMETRIZE { tiedMove = 3; expectedMove = MOVE_ICE_BEAM;       }
     PARAMETRIZE { tiedMove = 2; expectedMove = MOVE_FLAMETHROWER;   }
     PARAMETRIZE { tiedMove = 1; expectedMove = MOVE_SLUDGE_BOMB;    }
@@ -88,8 +88,8 @@ AI_DOUBLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move
 // SCORE_TIE_RANDOM tested separately as needs larger sample size
 AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE correctly controls AI move selection when scores are tied for all values in enum ScoreTieResolution (Singles)")
 {
-    u32 enumValue;
-    u16 expectedMove;
+    enum ScoreTieResolution enumValue;
+    enum Move expectedMove;
     PARAMETRIZE { enumValue = SCORE_TIE_NONE;   expectedMove = MOVE_THUNDERBOLT;    }
     PARAMETRIZE { enumValue = SCORE_TIE_LO;     expectedMove = MOVE_THUNDERBOLT;    }
     PARAMETRIZE { enumValue = SCORE_TIE_HI;     expectedMove = MOVE_ICE_BEAM;       }
@@ -111,8 +111,8 @@ AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE correctly controls AI move selection when
 // SCORE_TIE_RANDOM tested separately as needs larger sample size
 AI_DOUBLE_BATTLE_TEST("TIE_BREAK_SCORE correctly controls AI move selection when scores are tied for all values in enum ScoreTieResolution (Doubles)")
 {
-    u32 enumValue;
-    u16 expectedMove;
+    enum ScoreTieResolution enumValue;
+    enum Move expectedMove;
     PARAMETRIZE { enumValue = SCORE_TIE_NONE;   expectedMove = MOVE_THUNDERBOLT;    }
     PARAMETRIZE { enumValue = SCORE_TIE_LO;     expectedMove = MOVE_THUNDERBOLT;    }
     PARAMETRIZE { enumValue = SCORE_TIE_HI;     expectedMove = MOVE_ICE_BEAM;       }

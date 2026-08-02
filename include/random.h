@@ -132,7 +132,6 @@ enum RandomTag
     RNG_CURSED_BODY,
     RNG_CUTE_CHARM,
     RNG_DAMAGE_MODIFIER,
-    RNG_DIRE_CLAW,
     RNG_EFFECT_SPORE,
     RNG_FLAME_BODY,
     RNG_FORCE_RANDOM_SWITCH,
@@ -149,6 +148,7 @@ enum RandomTag
     RNG_METRONOME,
     RNG_MOODY_INCREASE,
     RNG_MOODY_DECREASE,
+    RNG_RANDOM_FROM_LIST,
     RNG_PARALYSIS,
     RNG_PICKUP,
     RNG_POISON_POINT,
@@ -166,7 +166,6 @@ enum RandomTag
     RNG_STATIC,
     RNG_STENCH,
     RNG_TOXIC_CHAIN,
-    RNG_TRI_ATTACK,
     RNG_QUICK_DRAW,
     RNG_QUICK_CLAW,
     RNG_TRACE,
@@ -250,6 +249,15 @@ enum RandomTag
     RNG_AI_FAKE_OUT_SAVE_ALLY,
     RNG_AI_DMG_ROLL_RANDOM,
     RNG_RANDOM_BERRY,
+    RNG_DAYCARE_MAKE_EGG,
+    RNG_DAYCARE_PICK_NATURE_PARENT,
+    RNG_DAYCARE_NATURE_INHERITANCE,
+    RNG_DAYCARE_INHERITED_STATS,
+    RNG_DAYCARE_PICK_IVS_PARENT,
+    RNG_DAYCARE_PICK_BALL_PARENT,
+    RNG_DAYCARE_ABILITY_INHERITANCE,
+    RNG_DEXNAV_RANDOM_EGG_MOVE,
+    RNG_RANDOM_BALL,
 };
 
 #define RandomWeighted(tag, ...) \
@@ -266,7 +274,11 @@ enum RandomTag
 #define RandomPercentage(tag, t) \
     ({ \
         u32 r; \
-        if (t <= 0) \
+        if_comptime (t == 50) \
+        { \
+            r = RandomUniform(tag, FALSE, TRUE); \
+        } \
+        else if (t <= 0) \
         { \
             r = FALSE; \
         } \
@@ -299,7 +311,6 @@ const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t 
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
 
-u32 RandomBit(enum RandomTag tag, u32 bits);
 u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
 #if TESTING

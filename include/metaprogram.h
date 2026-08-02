@@ -207,4 +207,14 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1
 
+/* Expands to 'if (true)' if 'cond' can be evaluated at compile-time and
+ * evaluates to non-zero; expands to 'if (false)' otherwise.
+ *
+ * GCC will not generate code for an 'if (false) { ... }', so this can
+ * be used to write compile-time optimizations without a run-time cost.
+ *
+ * Because 'cond' must be known at compile-time, this is rarely useful
+ * outside macros. */
+#define if_comptime(cond) if (__builtin_constant_p((cond) ? 0 : *(int *)0))
+
 #endif

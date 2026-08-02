@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Toxic inflicts bad poison")
 
 SINGLE_BATTLE_TEST("Toxic can't bad poison a poison or steel type")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_BELDUM; }
     PARAMETRIZE { species = SPECIES_BULBASAUR; }
@@ -45,7 +45,8 @@ SINGLE_BATTLE_TEST("Toxic can't bad poison a poison or steel type")
 
 SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
 {
-    u32 species, gen;
+    enum Species species;
+    u32 gen;
     bool32 hit;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_5; }
     PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = FALSE; gen = GEN_5; }
@@ -70,24 +71,5 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
                 STATUS_ICON(opponent, badPoison: TRUE);
             }
         }
-    }
-}
-
-AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
-{
-    u32 species;
-    enum Ability ability;
-
-    PARAMETRIZE { species = SPECIES_SNORLAX; ability = ABILITY_IMMUNITY; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
-    PARAMETRIZE { species = SPECIES_BULBASAUR; ability = ABILITY_OVERGROW; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_TOXIC); }
-    } WHEN {
-        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_TOXIC); } // Both get -10
     }
 }

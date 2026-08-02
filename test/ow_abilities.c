@@ -29,7 +29,7 @@ TEST("DoesLeadingMonHaveAbilityEffect returns FALSE if the first mon in party is
     );
     EXPECT_EQ(DoesLeadingMonHaveAbilityEffect(abilityArray), TRUE);
     bool32 isEgg = TRUE;
-    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_EGG, &isEgg);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG, &isEgg);
     EXPECT_EQ(DoesLeadingMonHaveAbilityEffect(abilityArray), FALSE);
 }
 
@@ -72,7 +72,7 @@ TEST("DoesPartyMemberHaveAbilityEffect returns FALSE if the ability is owned by 
     EXPECT_EQ(DoesPartyMemberHaveAbilityEffect(abilityArray), TRUE);
     bool32 isEgg = TRUE;
     for (u32 j = 0; j < 6; j++)
-        SetMonData(&gParties[B_TRAINER_0][j], MON_DATA_IS_EGG, &isEgg);
+        SetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_IS_EGG, &isEgg);
     EXPECT_EQ(DoesPartyMemberHaveAbilityEffect(abilityArray), FALSE);
 }
 

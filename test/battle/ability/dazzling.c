@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user from priority moves")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -31,7 +31,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user fr
 
 DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partner from priority moves")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partn
 
 DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail don't protect the user from negative priority")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -76,7 +76,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail don't protect the u
 
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all multi hit hits with one activation")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -102,7 +102,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all mu
 
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean activation")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
     PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
@@ -125,7 +126,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean act
 // Moves that target the field don't get blocked
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -153,7 +154,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 // Moves that target all battlers are blocked
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail on opponents block Teatime")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -179,7 +180,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail on opponents block 
 
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block a move's Z-Status effect")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -203,7 +204,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block a move
 
 SINGLE_BATTLE_TEST("Mold Breaker ignores Dazzling, Queenly Majesty and Armor Tail")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -224,7 +225,7 @@ SINGLE_BATTLE_TEST("Mold Breaker ignores Dazzling, Queenly Majesty and Armor Tai
 
 DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority, which is considered for Dazzling, Queenly Majesty and Armor Tail")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -255,7 +256,7 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority, which is consider
 
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block high-priority moves called by other moves")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
@@ -280,7 +281,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block high-p
 
 DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail from partner don't block priority moves that target it")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }

@@ -2979,8 +2979,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Sylveon
 .endif @ P_GEN_6_CROSS_EVOS
 .endif @ P_FAMILY_EEVEE
-.if P_FAMILY_PORYGON == TRUE
 	cry_reverse Cry_Porygon
+.if P_FAMILY_PORYGON == TRUE
 .if P_GEN_2_CROSS_EVOS == TRUE
 	cry_reverse Cry_Porygon2
 .if P_GEN_4_CROSS_EVOS == TRUE

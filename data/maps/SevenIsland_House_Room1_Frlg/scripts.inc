@@ -117,7 +117,6 @@ SevenIsland_House_Room1_EventScript_ChooseParty::
 	msgbox SevenIsland_House_Room1_Text_LimitThreeMonsPerSide
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	return
 
 SevenIsland_House_Room1_EventScript_EnterBattleRoomNorth::

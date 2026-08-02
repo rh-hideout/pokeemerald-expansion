@@ -1057,7 +1057,7 @@ static bool32 UpdateMatchCallMinutesCounter(void)
 static bool32 CheckMatchCallChance(void)
 {
     int callChance = 1;
-    if (!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_LIGHTNING_ROD)
+    if (!GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gParties[B_TRAINER_PLAYER][0]) == ABILITY_LIGHTNING_ROD)
         callChance = 2;
 
     if (Random() % 10 < callChance * 3)
@@ -1676,15 +1676,13 @@ static void BuildMatchCallString(int matchCallId, const struct MatchCallText *ma
     StringExpandPlaceholders(str, matchCallText->text);
 }
 
-static u8 *const sMatchCallTextStringVars[] = { gStringVar1, gStringVar2, gStringVar3 };
-
 static void PopulateMatchCallStringVars(int matchCallId, const s8 *stringVarFuncIds)
 {
     int i;
     for (i = 0; i < NUM_STRVARS_IN_MSG; i++)
     {
         if (stringVarFuncIds[i] >= 0)
-            PopulateMatchCallStringVar(matchCallId, stringVarFuncIds[i], sMatchCallTextStringVars[i]);
+            PopulateMatchCallStringVar(matchCallId, stringVarFuncIds[i], GetStringVar(i));
     }
 }
 
@@ -2043,15 +2041,6 @@ void LoadMatchCallWindowGfx(u32 windowId, u32 destOffset, u32 paletteId)
 void DrawMatchCallTextBoxBorder(u32 windowId, u32 tileOffset, u32 paletteId)
 {
     DrawMatchCallTextBoxBorder_Internal(windowId, tileOffset, paletteId);
-}
-
-u32 GetTrainerRematchStepCounter(void)
-{
-#if FREE_MATCH_CALL == FALSE
-    return gSaveBlock1Ptr->trainerRematchStepCounter;
-#else
-    return 0;
-#endif
 }
 
 void SetTrainerRematchStepCounter(u32 value)

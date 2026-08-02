@@ -27,10 +27,12 @@ struct StatChange
     u32 targetMissed:1;
     u32 stickyWeb:1;
     u32 ignoreCertainFailure:1; // for mirror armor and substitute
-    u32 padding:19;
+    u32 mirrorHerbActivation:1;
+    u32 opportunistActivation:1;
+    u32 padding:17;
 };
 
-extern u32 const sAccurateStatOrder[NUM_BATTLE_STATS];
+extern enum Stat const sAccurateStatOrder[NUM_BATTLE_STATS];
 
 bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
 bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st);
@@ -39,12 +41,11 @@ void SetStatChange(enum BattlerId battler, enum Stat stat, s32 stage);
 void SetStatChange2(enum BattlerId battler, enum Stat stat, s32 stage);
 void ClearStatChangeValues(void);
 void ClearOtherStatChangeValues(enum BattlerId battler);
+void ClearBothStatChangeQueues(void);
 enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct StatChange *st);
-
-u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect);
-
+u32 GetStatStage(enum Stat stat, const struct AdditionalEffect *additionalEffect);
+bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability);
 enum MoveResult DoStatChangeResolution(struct BattleCalcValues *cv);
-
 bool32 CanStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 bool32 IsStatChangeStatusMove(enum Move move, bool32 (*isStatChange)(const struct AdditionalEffect *effect));
 bool32 IsAtkStatUpMove(const struct AdditionalEffect *effect);

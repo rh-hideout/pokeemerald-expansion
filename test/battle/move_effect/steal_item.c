@@ -128,12 +128,13 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
     }
 }
 
-SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faints before")
+SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faints before (Gen9)")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
@@ -145,6 +146,26 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_EQ(opponent->item, ITEM_ROCKY_HELMET);
+    }
+}
+
+SINGLE_BATTLE_TEST("Thief and Covet can steal target's held item if user faints before (Champions)")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_ROCKY_HELMET);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
     }
 }
 

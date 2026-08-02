@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities", s1
 
 SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and Shell Armor to receive critical hits")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }

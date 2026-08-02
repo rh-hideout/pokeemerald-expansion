@@ -477,19 +477,20 @@ typedef union // size = 0x24
         /*0x01*/ bool8 active;
         /*0x02*/ u8 unused1;
         /*0x03*/ u8 unused3;
-        /*0x04*/ enum Move moves[MAX_MON_MOVES];
+        /*0x04*/ enum Move moves[MAX_MON_MOVES]; // UNUSED*
         /*0x0C*/ enum Species species;
-        /*0x0E*/ u16 unused2;
+        /*0x0E*/ enum MassOutbreakIndex outbreakIndex;
+        /*0x0F*/ u8 unused2;
         /*0x10*/ u8 locationMapNum;
         /*0x11*/ u8 locationMapGroup;
         /*0x12*/ u8 unused4;
-        /*0x13*/ u8 probability;
-        /*0x14*/ u8 level;
+        /*0x13*/ u8 probability; // UNUSED*
+        /*0x14*/ u8 level; // UNUSED*
         /*0x15*/ u8 unused5;
-        /*0x16*/ u16 daysLeft;
+        /*0x16*/ u16 daysBeforeOutbreak;
         /*0x18*/ u8 language;
         /*0x19*/ //u8 padding;
-    } massOutbreak;
+    } massOutbreak; // *UNUSED means the value may still be technically used to read values from previous Expansion versions's saves
 } TVShow;
 
 typedef struct

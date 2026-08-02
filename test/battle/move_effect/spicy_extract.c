@@ -188,7 +188,7 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amu
 
 AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does not benefit partner")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GHOLDENGO; ability = ABILITY_GOOD_AS_GOLD; }

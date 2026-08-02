@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
 {
     u32 j;
-    static const u16 sArceusFormSpeciesIdTable[] = {
+    static const enum Species sArceusFormSpeciesIdTable[] = {
         SPECIES_ARCEUS,
         SPECIES_ARCEUS_FIGHTING,
         SPECIES_ARCEUS_FLYING,
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
         SPECIES_ARCEUS_DARK,
         SPECIES_ARCEUS_FAIRY,
     };
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
 
     for (j = 0; j < ARRAY_COUNT(sArceusFormSpeciesIdTable); j++)
     {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
 SINGLE_BATTLE_TEST("Reflect Type does not affect any of Silvally's forms")
 {
     u32 j;
-    static const u16 sSilvallyFormSpeciesIdTable[] = {
+    static const enum Species sSilvallyFormSpeciesIdTable[] = {
         SPECIES_SILVALLY,
         SPECIES_SILVALLY_FIGHTING,
         SPECIES_SILVALLY_FLYING,
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Silvally's forms")
         SPECIES_SILVALLY_DARK,
         SPECIES_SILVALLY_FAIRY,
     };
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
 
     for (j = 0; j < ARRAY_COUNT(sSilvallyFormSpeciesIdTable); j++)
     {

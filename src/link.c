@@ -155,7 +155,7 @@ static void SendRecvDone(void);
 
 static const u16 sWirelessLinkDisplayPal[] = INCGFX_U16("graphics/link/wireless_display.png", ".gbapal");
 static const u32 sWirelessLinkDisplayGfx[] = INCGFX_U32("graphics/link/wireless_display.png", ".4bpp.smol");
-static const u32 sWirelessLinkDisplayTilemap[] = INCBIN_U32("graphics/link/wireless_display.bin.smolTM");
+static const u32 sWirelessLinkDisplayTilemap[] = INCGFX_U32("graphics/link/wireless_display.bin", ".smolTM");
 static const u16 sLinkTestDigitsPal[] = INCGFX_U16("graphics/link/test_digits.png", ".gbapal");
 static const u16 sLinkTestDigitsGfx[] = INCGFX_U16("graphics/link/test_digits.png", ".4bpp");
 static const u8 sUnusedTransparentWhite[] = _("{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}{COLOR WHITE}");
@@ -2283,20 +2283,6 @@ static void SendRecvDone(void)
     else if (gLink.isMaster)
     {
         REG_TM3CNT_H |= TIMER_ENABLE;
-    }
-}
-
-void ResetSendBuffer(void)
-{
-    u8 i;
-    u8 j;
-
-    gLink.sendQueue.count = 0;
-    gLink.sendQueue.pos = 0;
-    for (i = 0; i < CMD_LENGTH; i++)
-    {
-        for (j = 0; j < QUEUE_CAPACITY; j++)
-            gLink.sendQueue.data[i][j] = LINKCMD_NONE;
     }
 }
 

@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Low Kick's damage varies based on the target's weight", s16 damage)
 {
-    u32 species, weight;
+    enum Species species;
+    u32 weight;
 
     PARAMETRIZE { species = SPECIES_CUBONE;     weight = 65;   } //   0.1 - 9.9 kg   (20 power)
     PARAMETRIZE { species = SPECIES_SANDSHREW;  weight = 120;  } //  10.0 - 24.9 kg  (40 power)

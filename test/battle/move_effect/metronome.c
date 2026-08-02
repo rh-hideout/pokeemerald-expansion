@@ -58,6 +58,6 @@ SINGLE_BATTLE_TEST("Metronome's called multi-hit move hits multiple times")
         MESSAGE("Waggling a finger let it use Rock Blast!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_BLAST, player);
         HP_BAR(opponent);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
     }
 }

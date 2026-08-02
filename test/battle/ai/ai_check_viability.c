@@ -268,7 +268,9 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
 
 AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
-    u32 status1_0, status1_1, partnerAbility, move;
+    u32 status1_0, status1_1;
+    enum Ability partnerAbility;
+    enum Move move;
 
     PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
@@ -467,7 +469,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
@@ -489,7 +491,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
@@ -553,7 +555,9 @@ AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
 
 AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
 {
-    u32 species, fieldStatus, ability;
+    enum Species species;
+    enum Move fieldStatus;
+    enum Ability ability;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
 
     PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
@@ -601,7 +605,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
 
 AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     bool32 expectBoost = FALSE;
 

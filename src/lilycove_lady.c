@@ -34,7 +34,7 @@ static EWRAM_DATA struct LilycoveLadyFavor *sFavorLadyPtr = NULL;
 static EWRAM_DATA struct LilycoveLadyQuiz *sQuizLadyPtr = NULL;
 static EWRAM_DATA struct LilycoveLadyContest *sContestLadyPtr = NULL;
 
-extern EWRAM_DATA u16 gSpecialVar_ItemId;
+extern EWRAM_DATA enum Item gSpecialVar_ItemId;
 
 u8 GetLilycoveLadyId(void)
 {
@@ -93,31 +93,12 @@ void ResetLilycoveLadyForRecordMix(void)
     }
 }
 
-// Unused
-void InitLilycoveLadyRandomly(void)
-{
-    u8 lady = Random() % LILYCOVE_LADY_COUNT;
-
-    switch (lady)
-    {
-    case LILYCOVE_LADY_QUIZ:
-        InitLilycoveQuizLady();
-        break;
-    case LILYCOVE_LADY_FAVOR:
-        InitLilycoveFavorLady();
-        break;
-    case LILYCOVE_LADY_CONTEST:
-        InitLilycoveContestLady();
-        break;
-    }
-}
-
 void Script_GetLilycoveLadyId(void)
 {
     gSpecialVar_Result = GetLilycoveLadyId();
 }
 
-static u8 GetNumAcceptedItems(const u16 *itemsArray)
+static u8 GetNumAcceptedItems(const enum Item *itemsArray)
 {
     u8 numItems;
 

@@ -6229,7 +6229,7 @@ TEST("Compression test: Mew fastSmol")
 TEST("Compression test: tilemap small smolTM")
 {
     static const u16 origFile[] = INCBIN_U16("test/compression/tilemap.bin");
-    static const u32 compFile[] = INCBIN_U32("test/compression/tilemap.bin.smolTM");
+    static const u32 compFile[] = INCGFX_U32("test/compression/tilemap.bin", ".smolTM");
 
     bool32 areEqual = DecompressTilemapPrintResults(compFile, origFile, "Tilemap", COMPRESSION_SMOL_TILEMAP, sizeof(compFile));
     EXPECT_EQ(areEqual, TRUE);
@@ -6256,7 +6256,7 @@ TEST("Compression test: tilemap small fastLZ")
 TEST("Compression test: tilemap large smolTM")
 {
     static const u16 origFile[] = INCBIN_U16("test/compression/tilemapLarge.bin");
-    static const u32 compFile[] = INCBIN_U32("test/compression/tilemapLarge.bin.smolTM");
+    static const u32 compFile[] = INCGFX_U32("test/compression/tilemapLarge.bin", ".smolTM");
 
     bool32 areEqual = DecompressTilemapPrintResults(compFile, origFile, "Tilemap", COMPRESSION_SMOL_TILEMAP, sizeof(compFile));
     EXPECT_EQ(areEqual, TRUE);
@@ -6283,7 +6283,7 @@ TEST("Compression test: tilemap large fastLZ")
 TEST("Compression test: tilemap small smolTM VRAM")
 {
     static const u16 origFile[] = INCBIN_U16("test/compression/tilemap.bin");
-    static const u32 compFile[] = INCBIN_U32("test/compression/tilemap.bin.smolTM");
+    static const u32 compFile[] = INCGFX_U32("test/compression/tilemap.bin", ".smolTM");
 
     bool32 areEqual = DecompressTilemapPrintResultsVram(compFile, origFile, "Tilemap", COMPRESSION_SMOL_TILEMAP, sizeof(compFile));
     EXPECT_EQ(areEqual, TRUE);
@@ -6313,7 +6313,7 @@ TEST("Compression test: tilemap small fastLZ VRAM")
 TEST("Compression test: tilemap large smolTM VRAM")
 {
     static const u16 origFile[] = INCBIN_U16("test/compression/tilemapLarge.bin");
-    static const u32 compFile[] = INCBIN_U32("test/compression/tilemapLarge.bin.smolTM");
+    static const u32 compFile[] = INCGFX_U32("test/compression/tilemapLarge.bin", ".smolTM");
 
     bool32 areEqual = DecompressTilemapPrintResultsVram(compFile, origFile, "Tilemap", COMPRESSION_SMOL_TILEMAP, sizeof(compFile));
     EXPECT_EQ(areEqual, TRUE);

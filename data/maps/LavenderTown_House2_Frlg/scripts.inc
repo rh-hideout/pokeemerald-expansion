@@ -12,7 +12,6 @@ LavenderTown_House2_EventScript_NameRater::
 LavenderTown_House2_EventScript_ChooseMon::
 	msgbox LavenderTown_House2_Text_CritiqueWhichMonsNickname
 	special ChoosePartyMon
-	waitstate
 	goto_if_lt VAR_0x8004, PARTY_SIZE, LavenderTown_House2_EventScript_CheckCanRateMon
 	goto_if_ge VAR_0x8004, PARTY_SIZE, LavenderTown_House2_EventScript_DontRateNickname
 	end

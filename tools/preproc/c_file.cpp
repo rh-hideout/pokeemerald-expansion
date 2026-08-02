@@ -36,26 +36,26 @@
 CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr)
 {
     if (isStdin)
-        m_filename = std::string{"<stdin>/"}.append(filenameCStr);
+        m_location.filename = std::string{"<stdin>/"}.append(filenameCStr);
     else
-        m_filename = std::string(filenameCStr);
+        m_location.filename = std::string(filenameCStr);
+    m_location.lineNum = 1;
+    m_location.acceptLineMarker = isStdin;
 
     m_buffer = ReadFileToBuffer(filenameCStr, isStdin, &m_size);
 
     m_pos = 0;
-    m_lineNum = 1;
     m_isStdin = isStdin;
     m_graphicsRoot = graphicsRootCStr;
     if (m_graphicsRoot.empty()) m_graphicsRoot = "./";
     if (m_graphicsRoot[m_graphicsRoot.length() - 1] != '/') m_graphicsRoot.push_back('/');
 }
 
-CFile::CFile(CFile&& other) : m_filename(std::move(other.m_filename))
+CFile::CFile(CFile&& other) : m_location(std::move(other.m_location))
 {
     m_buffer = other.m_buffer;
     m_pos = other.m_pos;
     m_size = other.m_size;
-    m_lineNum = other.m_lineNum;
     m_isStdin = other.m_isStdin;
 
     other.m_buffer = NULL;
@@ -92,6 +92,66 @@ void CFile::Preproc()
 
     while (m_pos < m_size)
     {
+        if (m_location.acceptLineMarker)
+        {
+            if (m_buffer[m_pos] == '#')
+            {
+                long hashPos = m_pos;
+
+                long startPos;
+                long lineNum;
+                std::string filename;
+
+                m_pos++;
+
+                if (m_buffer[m_pos] != ' ')
+                    goto linemarker_error;
+                m_pos++;
+
+                startPos = m_pos;
+                if (!IsAsciiDigit(m_buffer[m_pos]))
+                    goto linemarker_error;
+                do
+                    m_pos++;
+                while (IsAsciiDigit(m_buffer[m_pos]));
+                lineNum = atol(&m_buffer[startPos]);
+
+                if (m_buffer[m_pos] != ' ')
+                    goto linemarker_error;
+                m_pos++;
+
+                if (m_buffer[m_pos] != '"')
+                    goto linemarker_error;
+                m_pos++;
+
+                startPos = m_pos;
+                while (m_pos < m_size && m_buffer[m_pos] != '"')
+                    m_pos++;
+                filename = std::string(&m_buffer[startPos], m_pos - startPos);
+
+                if (m_buffer[m_pos] != '"')
+                    goto linemarker_error;
+                m_pos++;
+
+                while (m_pos < m_size && m_buffer[m_pos] != '\n')
+                    m_pos++;
+                if (m_buffer[m_pos] != '\n')
+                    goto linemarker_error;
+                m_pos++;
+
+                m_location.lineNum = lineNum - 1;
+                m_location.filename = std::move(filename);
+linemarker_error:
+                m_location.acceptLineMarker = false;
+                // Re-parse this line so that it's available to cc1.
+                m_pos = hashPos;
+            }
+            else if (!IsAsciiWhitespace(m_buffer[m_pos]))
+            {
+                m_location.acceptLineMarker = false;
+            }
+        }
+
         if (stringChar)
         {
             if (m_buffer[m_pos] == stringChar)
@@ -109,7 +169,7 @@ void CFile::Preproc()
             else
             {
                 if (m_buffer[m_pos] == '\n')
-                    m_lineNum++;
+                    Newline();
                 putchar(m_buffer[m_pos]);
                 m_pos++;
             }
@@ -129,7 +189,7 @@ void CFile::Preproc()
             putchar(c);
 
             if (c == '\n')
-                m_lineNum++;
+                Newline();
             else if (c == '"')
                 stringChar = '"';
             else if (c == '\'')
@@ -176,7 +236,7 @@ bool CFile::ConsumeNewline()
     if (m_buffer[m_pos] == '\r' && m_buffer[m_pos + 1] == '\n')
     {
         m_pos += 2;
-        m_lineNum++;
+        Newline();
         putchar('\n');
         return true;
     }
@@ -184,12 +244,18 @@ bool CFile::ConsumeNewline()
     if (m_buffer[m_pos] == '\n')
     {
         m_pos++;
-        m_lineNum++;
+        Newline();
         putchar('\n');
         return true;
     }
 
     return false;
+}
+
+void CFile::Newline()
+{
+    m_location.lineNum++;
+    m_location.acceptLineMarker = m_isStdin;
 }
 
 void CFile::SkipWhitespace()
@@ -243,7 +309,7 @@ std::vector<unsigned char> CFile::ConvertString()
 void CFile::TryConvertString()
 {
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
     bool noTerminator = false;
 
     if (m_buffer[m_pos] != '_' || (m_pos > 0 && IsIdentifierChar(m_buffer[m_pos - 1])))
@@ -262,7 +328,7 @@ void CFile::TryConvertString()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -293,7 +359,7 @@ static std::uint64_t fnv1a(const std::vector<unsigned char>& bytes)
 void CFile::TryConvertCompoundString()
 {
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
     std::string ident = "COMPOUND_STRING";
 
     if ((m_pos > 0 && IsIdentifierChar(m_buffer[m_pos - 1])) || !CheckIdentifier(ident))
@@ -306,7 +372,7 @@ void CFile::TryConvertCompoundString()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -425,7 +491,7 @@ void CFile::TryConvertIncbin()
     int size = incbinType < 3 ? 1 << incbinType : 4;
 
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
 
     m_pos += idents[incbinType].length();
 
@@ -434,7 +500,7 @@ void CFile::TryConvertIncbin()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
 
@@ -507,7 +573,7 @@ void CFile::TryConvertIncgfx()
     int size = incgfxType < 3 ? 1 << incgfxType : 4;
 
     long oldPos = m_pos;
-    long oldLineNum = m_lineNum;
+    auto oldLocation = m_location;
 
     m_pos += idents[incgfxType].length();
 
@@ -515,7 +581,7 @@ void CFile::TryConvertIncgfx()
     if (m_buffer[m_pos] != '(')
     {
         m_pos = oldPos;
-        m_lineNum = oldLineNum;
+        m_location = oldLocation;
         return;
     }
     m_pos++;
@@ -594,7 +660,7 @@ void CFile::ReportDiagnostic(const char* type, const char* format, std::va_list 
     const int bufferSize = 1024;
     char buffer[bufferSize];
     std::vsnprintf(buffer, bufferSize, format, args);
-    std::fprintf(stderr, "%s:%ld: %s: %s\n", m_filename.c_str(), m_lineNum, type, buffer);
+    std::fprintf(stderr, "%s:%ld: %s: %s\n", m_location.filename.c_str(), m_location.lineNum, type, buffer);
 }
 
 #define DO_REPORT(type)                   \

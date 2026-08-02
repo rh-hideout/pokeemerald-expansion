@@ -44,7 +44,7 @@ static const u16 sDiplomaPalettes[][16] =
     INCGFX_U16("graphics/diploma/hoenn.pal", ".gbapal"),
 };
 
-static const u32 sDiplomaTilemap[] = INCBIN_U32("graphics/diploma/tilemap.bin.smolTM");
+static const u32 sDiplomaTilemap[] = INCGFX_U32("graphics/diploma/tilemap.bin", ".smolTM");
 static const u32 sDiplomaTiles[] = INCGFX_U32("graphics/diploma/tiles.png", ".4bpp.smol");
 
 void CB2_ShowDiploma(void)

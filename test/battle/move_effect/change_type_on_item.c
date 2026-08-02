@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user holds")
 {
-    u16 species;
+    enum Species species;
     enum Item item;
 
     PARAMETRIZE { species = SPECIES_CHARIZARD; item = ITEM_DOUSE_DRIVE; }

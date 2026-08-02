@@ -8,8 +8,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Eviolite boosts Defense and Sp. Def for unevolved Pokemon", s16 damage)
 {
-    u16 move;
-    u32 item;
+    enum Move move;
+    enum Item item;
 
     PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_EVIOLITE; }
     PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_NONE; }
@@ -34,8 +34,8 @@ SINGLE_BATTLE_TEST("Eviolite boosts Defense and Sp. Def for unevolved Pokemon", 
 
 SINGLE_BATTLE_TEST("Eviolite does not boost Defense or Sp. Def for evolved Pokemon", s16 damage)
 {
-    u16 move;
-    u32 item;
+    enum Move move;
+    enum Item item;
 
     PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_EVIOLITE; }
     PARAMETRIZE { move = MOVE_SCRATCH;   item = ITEM_NONE; }
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Eviolite does not boost Defense or Sp. Def for evolved Pokem
 
 SINGLE_BATTLE_TEST("Eviolite uses original species after Transform", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_EVIOLITE; }
     PARAMETRIZE { item = ITEM_NONE; }

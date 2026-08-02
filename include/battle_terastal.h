@@ -3,6 +3,7 @@
 
 void ActivateTera(enum BattlerId battler);
 void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler);
+bool32 IsTeraOrbCharged(void);
 bool32 CanTerastallize(enum BattlerId battler);
 enum Type GetBattlerTeraType(enum BattlerId battler);
 void ExpendTypeStellarBoost(enum BattlerId battler, enum Type type);

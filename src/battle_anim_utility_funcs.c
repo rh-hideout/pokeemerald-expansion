@@ -97,7 +97,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
     for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         if (battler != animBattlers[0] && battler != animBattlers[1] && IsBattlerSpriteVisible(battler))
-            selectedPalettes |= 0x10000 << GetSpritePalIdxByBattler(battler);
+            selectedPalettes |= 0x10000 << battler;
     }
 
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
@@ -744,12 +744,6 @@ void AnimTask_GetAttackerSide(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void AnimTask_GetTargetSide(u8 taskId)
-{
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimTarget);
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 {
     gBattleAnimArgs[ARG_RET_ID] = BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget;
@@ -768,7 +762,7 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
+void StartMonScrollingBgMask(u8 taskId, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
     enum Species species;
     u8 spriteId, spriteId2;
@@ -889,15 +883,9 @@ static void UpdateMonScrollingBgMask(u8 taskId)
     }
 }
 
-void AnimTask_GetBattleEnvironment(u8 taskId)
-{
-    gBattleAnimArgs[0] = gBattleEnvironment;
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetFieldTerrain(u8 taskId)
 {
-    gBattleAnimArgs[0] = gFieldStatuses & STATUS_FIELD_TERRAIN_ANY;
+    gBattleAnimArgs[0] = gFieldTimers.terrain;
     DestroyAnimVisualTask(taskId);
 }
 
@@ -1061,15 +1049,6 @@ static void AnimTask_WaitAndRestoreVisibility(u8 taskId)
 void AnimTask_IsDoubleBattle(u8 taskId)
 {
     gBattleAnimArgs[7] = (IsDoubleBattle() && !IsContest());
-    DestroyAnimVisualTask(taskId);
-}
-
-void AnimTask_CanBattlerSwitch(u8 taskId)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        gBattleAnimArgs[ARG_RET_ID] = FALSE;
-    else
-        gBattleAnimArgs[ARG_RET_ID] = CanBattlerSwitch(GetAnimBattlerId(gBattleAnimArgs[0]));
     DestroyAnimVisualTask(taskId);
 }
 

@@ -1,5 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
+#include "battle_ai_main.h"
+#include "battle_ai_util.h"
 
 AI_SINGLE_BATTLE_TEST("AI gets baited by Protect Switch tactics") // This behavior is to be fixed.
 {
@@ -71,8 +73,45 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_REVIVAL_BLESSING); }
     } SCENE {
-        MESSAGE("The opposing Audino used Revival Blessing!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponent);
         MESSAGE("Pidgey was revived and is ready to fight again!");
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival Blessing")
+{
+    struct BattlePokemon *user = NULL;
+    enum Move move1, move2, move3;
+    PARAMETRIZE { user = opponentLeft, move1 = MOVE_REVIVAL_BLESSING, move2 = MOVE_CELEBRATE, move3 = MOVE_CELEBRATE; }
+    PARAMETRIZE { user = playerRight, move1 = MOVE_CELEBRATE, move2 = MOVE_REVIVAL_BLESSING, move3 = MOVE_CELEBRATE; }
+    PARAMETRIZE { user = opponentRight, move1 = MOVE_CELEBRATE, move2 = MOVE_CELEBRATE, move3 = MOVE_REVIVAL_BLESSING; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_REVIVAL_BLESSING) == EFFECT_REVIVAL_BLESSING);
+        PLAYER(SPECIES_CLEFABLE);
+        PLAYER(SPECIES_CLEFABLE) { HP(0); }
+        PLAYER(SPECIES_CLEFABLE);
+        PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
+        PARTNER(SPECIES_CLEFAIRY);
+        PARTNER(SPECIES_CLEFAIRY);
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); }
+        OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
+        OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
+    } SCENE {
+        if (user == opponentLeft) {
+            MESSAGE("The opposing Wobbuffet used Revival Blessing!");
+            MESSAGE("But it failed!");
+        } else if (user == playerRight) {
+            MESSAGE("Clefairy used Revival Blessing!");
+            MESSAGE("But it failed!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponentRight);
+            MESSAGE("Wynaut was revived and is ready to fight again!");
+        }
     }
 }
 
@@ -151,7 +190,7 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 
 AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not see previous Pokémon's ability after player uses a pivot move when choosing a post-KO switch")
 {
-    u32 testAbility;
+    enum Ability testAbility;
     PARAMETRIZE { testAbility = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { testAbility = ABILITY_VOLT_ABSORB; }
     GIVEN {
@@ -681,6 +720,51 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Eject Pack will send out Ace M
 }
 
 // General AI_FLAG_SMART_MON_CHOICES behaviour
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Move data does not spill over between switch-in candidates")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(IsBattleMoveStatus(MOVE_CELEBRATE));
+        ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_WOBBUFFET) { HP(80); MaxHP(80); Speed(50); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_MAGIKARP) { HP(1); Speed(10); Moves(MOVE_SPLASH); }
+        OPPONENT(SPECIES_ABRA) { HP(30); MaxHP(30); Speed(40); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(200); MaxHP(200); Speed(60); Moves(MOVE_CELEBRATE); Item(ITEM_ASSAULT_VEST); }
+        OPPONENT(SPECIES_MAGIKARP) { Speed(30); Moves(MOVE_SPLASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_SEND_OUT(opponent, 3); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switchin move data is reset before recalculation")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_DRAGON_RAGE); }
+    } THEN {
+        enum BattlerId battlerAtk = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerDef = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+        u32 moveIndex = 0;
+        EXPECT_GT(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
+        EXPECT_GT(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT_GT(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
+
+        gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = TRUE;
+        gAiLogicData->moveLimitations[battlerAtk] |= 1u << moveIndex;
+        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+
+        EXPECT_EQ(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
+        EXPECT_EQ(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT_EQ(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
+        EXPECT(!gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex]);
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculation checks whether incoming damage is less than recurring healing to avoid an infinite loop")
 {
     GIVEN {
@@ -1107,7 +1191,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it can't d
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has been Toxic'd for at least two turns 50% of the time with more than 1/3 HP remaining with good switchin")
 {
-    u32 species = SPECIES_NONE, odds = 0;
+    enum Species species = SPECIES_NONE;
+    u32 odds = 0;
     PARAMETRIZE { species = SPECIES_ZIGZAGOON, odds = 0; }
     PARAMETRIZE { species = SPECIES_HARIYAMA, odds = SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE; }
     PASSES_RANDOMLY(odds, 100, RNG_AI_SWITCH_BADLY_POISONED);
@@ -1435,7 +1520,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Inti
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target blocks or punishes Attack drops")
 {
-    u32 Species = SPECIES_NONE;
+    enum Species Species = SPECIES_NONE;
     enum Ability ability;
     PARAMETRIZE { Species = SPECIES_TENTACRUEL; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { Species = SPECIES_BRAVIARY; ability = ABILITY_DEFIANT; }
@@ -1611,7 +1696,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and oppon
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 2 stages with good switchin candidate 50% of the time")
 {
-    u32 aiSpecies = SPECIES_NONE;
+    enum Species aiSpecies = SPECIES_NONE;
     enum Move aiMove = MOVE_NONE, move = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);
@@ -1633,7 +1718,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attac
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 3+ stages")
 {
-    u32 aiSpecies = SPECIES_NONE;
+    enum Species aiSpecies = SPECIES_NONE;
     enum Move aiMove = MOVE_NONE, move = MOVE_NONE, move2 = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);

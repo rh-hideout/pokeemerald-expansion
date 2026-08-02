@@ -26,9 +26,8 @@
 #define P_NIDORAN_M_DITTO_BREED        GEN_LATEST                // Since Gen 5, when Nidoran♂ breeds with Ditto it can produce Nidoran♀ offspring. Before, it would only yield male offspring. This change also applies to Volbeat.
 #define P_INCENSE_BREEDING             GEN_LATEST                // Since Gen 9, cross-generation Baby Pokémon don't require Incense being held by the parents to be obtained via breeding.
 #define P_EGG_HATCH_LEVEL              GEN_LATEST                // Since Gen 4, Pokémon will hatch from Eggs at level 1 instead of 5.
-#define P_BALL_INHERITING              GEN_LATEST                // Since Gen 6, Eggs from the Day Care will inherit the Poké Ball from their mother. From Gen 7 onwards, the father can pass it down as well, as long as it's of the same species as the mother.
-#define P_TM_INHERITANCE               GEN_LATEST                // Since Gen 6, the father no longer passes down TMs to the baby.
-#define P_MOTHER_EGG_MOVE_INHERITANCE  GEN_LATEST                // Since Gen 6, the mother can also pass down Egg Moves.
+#define P_BALL_INHERITANCE             GEN_LATEST                // Since Gen 6, Eggs from the Day Care will inherit the Poké Ball from their mother. From Gen 7 onwards, the father can pass it down as well, as long as it's of the same species as the mother.
+#define P_MOVE_INHERITANCE             GEN_LATEST                // Prior to Gen 6, Eggs would inherit Egg moves from their father, TM moves from their father, level-up moves shared by both parents in that order. In Gen 6 and higher, Eggs would inherit level-up moves shared by both parents, Egg moves from their father, Egg moves from their mother in that order.
 #define P_NATURE_INHERITANCE           GEN_LATEST                // In Gen 3, Everstone grants Ditto and mothers a 50% chance to pass on Nature. Since Gen 4, anyone can pass on a Nature. Since Gen 5, the chance is 100%.
 #define P_ABILITY_INHERITANCE          GEN_LATEST                // In B2W2, a female Pokémon has an 80% chance of passing down their Ability if bred with a male. Since Gen 6, the chance is 80% for regular Ability and 60% for Hidden Ability, and anyone can pass down their Abilities if bred with Ditto. NOTE: BW's effect: 60% chance to pass down HA and random for regular Ability has been omitted.
 #define P_EGG_MOVE_TRANSFER            GEN_LATEST                // Starting in Gen 8, if two Pokémon of the same species are together in the Day Care, one knows an Egg Move, and the other has an empty slot, the other Pokémon will receive the Egg Move in the empty slot. In Gen 9, if a Pokémon holds a Mirror Herb, it will receive Egg Moves from the other regardless of species.
@@ -80,5 +79,12 @@
 // Sound related settings
 #define P_MODIFIED_MEGA_CRIES            P_MEGA_EVOLUTIONS  // If TRUE, will use the extra separate Mega Cries (approx. 3% space of ROM). if FALSE, will use the same cry for all Mega Evolutions except modified with P_MODIFIED_MEGA_CRY_MODE. By default, this is set based on if mega evolutions are enabled.
 #define P_MODIFIED_MEGA_CRY_MODE         CRY_MODE_HIGH_PITCH
+
+// Pokédex
+#define DONT_SKIP_GAPS                   0              // Does not skip any gaps in the Pokédex.
+#define SKIP_GAPS_EXCEPT_ONE             1              // Skips all gaps in the Pokédex other than one blank entry in between seen entries.
+#define SKIP_GAPS_EXCEPT_BEFORE_AFTER    2              // Skips all gaps in the Pokédex other than one before and after seen entries. Most similar to whats seen in Pokémon SV.
+#define SKIP_ALL_GAPS                    3              // Skips all gaps in the Pokédex.
+#define P_SKIP_POKEDEX_GAPS              DONT_SKIP_GAPS // Pokémon SV skip large gaps in the Pokédex.
 
 #endif // GUARD_CONFIG_POKEMON_H

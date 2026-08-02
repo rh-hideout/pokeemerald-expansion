@@ -71,7 +71,7 @@ DOUBLE_BATTLE_TEST("Reflect Damage: Counter is affected by Protect effects if it
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, move); MOVE(playerLeft, MOVE_COUNTER); }
-        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 0)); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); MOVE(playerLeft, MOVE_COUNTER); }
+        TURN { MOVE(opponentRight, MOVE_INSTRUCT, target: opponentLeft, WITH_RNG(RNG_PROTECT_FAIL, 1)); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); MOVE(playerLeft, MOVE_COUNTER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, playerLeft);

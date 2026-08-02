@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 
 
 DOUBLE_BATTLE_TEST("Mold Breaker will deactivate if user faints")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_STEEL_BEAM; }
     PARAMETRIZE { move = MOVE_POUND; }

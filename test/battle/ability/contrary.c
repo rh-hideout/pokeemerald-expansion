@@ -234,7 +234,7 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
-        MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
+        MESSAGE("A sticky web has been laid out on the ground on the opposing side!");
         MESSAGE("2 sent out Snivy!");
         MESSAGE("The opposing Snivy was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
