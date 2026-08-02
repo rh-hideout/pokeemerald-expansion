@@ -2234,7 +2234,7 @@ bool32 IsBattlerDamagedByStatus(enum BattlerId battler)
 
 static bool32 ShouldAvoidProtectingAgainstPartnerMove(enum BattlerId battler, enum Move protectMove)
 {
-    enum BattlerId partner = BATTLE_PARTNER(battler);
+    enum BattlerId partner = GetPartnerBattler(battler);
     enum Move partnerMove;
 
     if (!IsDoubleBattle()
