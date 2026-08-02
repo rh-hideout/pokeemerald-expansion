@@ -4190,7 +4190,7 @@ static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon mon = gParties[B_TRAINER_PLAYER][i];
+        struct Pokemon mon = gParties[trainer][i];
 
         if (!GetMonData(&mon, MON_DATA_SPECIES) || GetMonData(&mon, MON_DATA_IS_EGG))
             continue;
@@ -4253,7 +4253,7 @@ static bool32 NoAliveMonsForOpponent(void)
     if (DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_A))
         return FALSE;
 
-    if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+    if (!BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
         return TRUE;
 
     return (!DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_B));
