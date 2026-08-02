@@ -9126,25 +9126,25 @@ void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
 
 void TryRestoreHeldItems(void)
 {
+    if (!B_TRAINERS_KNOCK_OFF_ITEMS && B_RESTORE_HELD_BATTLE_ITEMS < GEN_9)
+        return;
+
     bool32 returnNPCItems = B_RETURN_STOLEN_NPC_ITEMS >= GEN_5 && gBattleTypeFlags & BATTLE_TYPE_TRAINER;
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        // Check if held items should be restored after battle based on generation
-        if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9
-         || gBattleStruct->itemLost[B_TRAINER_PLAYER][i].stolen
-         || returnNPCItems)
+        if (gBattleStruct->itemLost[B_TRAINER_PLAYER][i].stolen || returnNPCItems)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_TRAINER_PLAYER][i].originalItem;
+            u32 lostItem = gBattleStruct->itemLost[B_TRAINER_PLAYER][i].originalItem;
             bool32 isHeldItemBerry = GetItemPocket(lostItem) == POCKET_BERRIES;
 
-            // Check if the lost item is a berry and the mon is not holding it
-            if (isHeldItemBerry && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
+            if ((isHeldItemBerry || lostItem == ITEM_NONE) && !returnNPCItems)
                 continue;
 
-            // Check if the lost item should be restored
-            if (returnNPCItems && !isHeldItemBerry)
-                SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &lostItem);
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
+                continue;
+
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &lostItem);
         }
     }
 }
