@@ -2962,6 +2962,9 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     {
         for (j = 0; j != FIELD_MOVES_COUNT; j++)
         {
+            if (!FieldMove_IsVisible(j))
+                continue;
+
             if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
             {
                 AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
@@ -4095,70 +4098,64 @@ static void CursorCb_FieldMove(u8 taskId)
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
     if (MenuHelpers_IsLinkActive() == TRUE || InUnionRoom() == TRUE)
     {
-        if (fieldMove == FIELD_MOVE_MILK_DRINK || fieldMove == FIELD_MOVE_SOFT_BOILED)
-            DisplayPartyMenuStdMessage(PARTY_MSG_CANT_USE_HERE);
-        else
-            DisplayPartyMenuStdMessage(FieldMove_GetPartyMsgID(fieldMove));
-
+        DisplayPartyMenuStdMessage(PARTY_MSG_CANT_USE_HERE);
         gTasks[taskId].func = Task_CancelAfterAorBPress;
+        return;
     }
+
+    if (!IsFieldMoveUnlocked(fieldMove))
+    {
+        DisplayPartyMenuMessage(FieldMove_GetLockedMessage(fieldMove), TRUE);
+        gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+    }
+    else if (SetUpFieldMove(fieldMove) == TRUE)
+    {
+        switch (fieldMove)
+        {
+        case FIELD_MOVE_MILK_DRINK:
+        case FIELD_MOVE_SOFT_BOILED:
+            ChooseMonForSoftboiled(taskId);
+            break;
+        case FIELD_MOVE_TELEPORT:
+            mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum);
+            GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
+            StringExpandPlaceholders(gStringVar4, gText_ReturnToHealingSpot);
+            DisplayFieldMoveExitAreaMessage(taskId);
+            sPartyMenuInternal->data[0] = fieldMove;
+            break;
+        case FIELD_MOVE_DIG:
+            mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->escapeWarp.mapGroup, gSaveBlock1Ptr->escapeWarp.mapNum);
+            GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
+            StringExpandPlaceholders(gStringVar4, gText_EscapeFromHere);
+            DisplayFieldMoveExitAreaMessage(taskId);
+            sPartyMenuInternal->data[0] = fieldMove;
+            break;
+        case FIELD_MOVE_FLY:
+            gPartyMenu.exitCallback = CB2_OpenFlyMap;
+            Task_ClosePartyMenu(taskId);
+            break;
+        default:
+            gPartyMenu.exitCallback = CB2_ReturnToField;
+            Task_ClosePartyMenu(taskId);
+            break;
+        }
+    }
+    // Cant use Field Move
     else
     {
-        // All field moves before WATERFALL are HMs.
-        if (!IsFieldMoveUnlocked(fieldMove))
+        switch (fieldMove)
         {
-            DisplayPartyMenuMessage(gText_CantUseUntilNewBadge, TRUE);
-            gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+        case FIELD_MOVE_SURF:
+            DisplayCantUseSurfMessage();
+            break;
+        case FIELD_MOVE_FLASH:
+            DisplayCantUseFlashMessage();
+            break;
+        default:
+            DisplayPartyMenuStdMessage(FieldMove_GetPartyMsgID(fieldMove));
+            break;
         }
-        else if (SetUpFieldMove(fieldMove) == TRUE)
-        {
-            switch (fieldMove)
-            {
-            case FIELD_MOVE_MILK_DRINK:
-            case FIELD_MOVE_SOFT_BOILED:
-                ChooseMonForSoftboiled(taskId);
-                break;
-            case FIELD_MOVE_TELEPORT:
-                mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum);
-                GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
-                StringExpandPlaceholders(gStringVar4, gText_ReturnToHealingSpot);
-                DisplayFieldMoveExitAreaMessage(taskId);
-                sPartyMenuInternal->data[0] = fieldMove;
-                break;
-            case FIELD_MOVE_DIG:
-                mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->escapeWarp.mapGroup, gSaveBlock1Ptr->escapeWarp.mapNum);
-                GetMapNameGeneric(gStringVar1, mapHeader->regionMapSectionId);
-                StringExpandPlaceholders(gStringVar4, gText_EscapeFromHere);
-                DisplayFieldMoveExitAreaMessage(taskId);
-                sPartyMenuInternal->data[0] = fieldMove;
-                break;
-            case FIELD_MOVE_FLY:
-                gPartyMenu.exitCallback = CB2_OpenFlyMap;
-                Task_ClosePartyMenu(taskId);
-                break;
-            default:
-                gPartyMenu.exitCallback = CB2_ReturnToField;
-                Task_ClosePartyMenu(taskId);
-                break;
-            }
-        }
-        // Cant use Field Move
-        else
-        {
-            switch (fieldMove)
-            {
-            case FIELD_MOVE_SURF:
-                DisplayCantUseSurfMessage();
-                break;
-            case FIELD_MOVE_FLASH:
-                DisplayCantUseFlashMessage();
-                break;
-            default:
-                DisplayPartyMenuStdMessage(FieldMove_GetPartyMsgID(fieldMove));
-                break;
-            }
-            gTasks[taskId].func = Task_CancelAfterAorBPress;
-        }
+        gTasks[taskId].func = Task_CancelAfterAorBPress;
     }
 }
 
@@ -5869,7 +5866,10 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
             gPartyMenuUseExitCallback = FALSE;
             DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
             ScheduleBgCopyTilemapToVram(2);
-            gTasks[taskId].func = task;
+            if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+            else
+                gTasks[taskId].func = task;
         }
     }
     else
@@ -5901,12 +5901,14 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
         else
         {
             PlaySE(SE_USE_ITEM);
-            gPartyMenuUseExitCallback = FALSE;
             ConvertIntToDecimalStringN(gStringVar2, sExpCandyExperienceTable[holdEffectParam - 1], STR_CONV_MODE_LEFT_ALIGN, 6);
             StringExpandPlaceholders(gStringVar4, gText_PkmnGainedExp);
             DisplayPartyMenuMessage(gStringVar4, FALSE);
             ScheduleBgCopyTilemapToVram(2);
-            gTasks[taskId].func = task;
+            if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+            else
+                gTasks[taskId].func = task;
         }
     }
 }

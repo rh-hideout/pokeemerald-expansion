@@ -7183,7 +7183,7 @@ static void Cmd_updatestatusicon(void)
     {
         for (battler = gBattleControllerExecFlags; battler < gBattlersCount; battler++)
         {
-            if (!(gAbsentBattlerFlags & (1u << battler)))
+            if (IsBattlerAlive(battler))
             {
                 BtlController_EmitStatusIconUpdate(battler, B_COMM_TO_CONTROLLER, gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
@@ -7194,7 +7194,7 @@ static void Cmd_updatestatusicon(void)
     else if (cmd->battler == BS_ATTACKER_WITH_PARTNER)
     {
         battler = gBattlerAttacker;
-        if (!(gAbsentBattlerFlags & (1u << battler)))
+        if (IsBattlerAlive(battler))
         {
             BtlController_EmitStatusIconUpdate(battler, B_COMM_TO_CONTROLLER, gBattleMons[battler].status1);
             MarkBattlerForControllerExec(battler);
@@ -7202,7 +7202,7 @@ static void Cmd_updatestatusicon(void)
         if ((IsDoubleBattle()))
         {
             battler = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
-            if (!(gAbsentBattlerFlags & (1u << battler)))
+            if (IsBattlerAlive(battler))
             {
                 BtlController_EmitStatusIconUpdate(battler, B_COMM_TO_CONTROLLER, gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
@@ -7243,8 +7243,9 @@ static void Cmd_setfocusenergy(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
-    if ((effect == EFFECT_DRAGON_CHEER && (!(IsDoubleBattle()) || (gAbsentBattlerFlags & (1u << battler))))
-         || gBattleMons[battler].volatiles.dragonCheer || gBattleMons[battler].volatiles.focusEnergy)
+    if ((effect == EFFECT_DRAGON_CHEER && (!IsDoubleBattle() || !IsBattlerAlive(battler)))
+     || gBattleMons[battler].volatiles.dragonCheer
+     || gBattleMons[battler].volatiles.focusEnergy)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FOCUS_ENERGY_FAILED;
