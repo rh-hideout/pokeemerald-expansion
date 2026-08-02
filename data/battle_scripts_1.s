@@ -140,7 +140,7 @@ BattleScript_ToxicThread::
 	goto BattleScript_MoveEnd
 
 BattleScript_SwaggerConfusion::
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
+	seteffectprimary BS_ATTACKER, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
 	trymovestatchanges
 	goto BattleScript_MoveEnd
 
