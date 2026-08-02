@@ -3721,7 +3721,7 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
         return FALSE;
 
     // Don't apply chargeTurnOnly effects here
-    if (additionalEffect->onChargeTurnOnly)
+    if (additionalEffect->onChargeTurnOnly || gProtectStructs[battlerAtk].chargingTurn)
         return FALSE;
 
     return TRUE;
@@ -4547,6 +4547,14 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
         return result;
     }
 
+    if (!gSpecialStatuses[cv->battlerAtk].multiHitOn
+     && gMultiHitCounter == 0)
+    {
+        gBattleStruct->eventState.moveEndBlock = 0;
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
     enum MoveTarget target = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
 
     while (gBattleStruct->eventState.moveEndBlock < MULTIHIT_BLOCK_COUNT)
@@ -4564,6 +4572,7 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
         case MULTIHIT_BLOCK_DECREMENT_HIT:
             if (gMultiHitCounter)
             {
+                gSpecialStatuses[cv->battlerAtk].multiHitOn = TRUE;
                 gMultiHitCounter--;
                 if (gSpecialStatuses[cv->battlerAtk].parentalBondState)
                     gSpecialStatuses[cv->battlerAtk].parentalBondState--;
@@ -4591,7 +4600,6 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
             {
                 gMultiHitCounter = 0;
                 gSpecialStatuses[cv->battlerAtk].parentalBondState = PARENTAL_BOND_OFF;
-                gSpecialStatuses[cv->battlerAtk].multiHitOn = FALSE;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -4612,7 +4620,6 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
                 gBattleScripting.animTargetsHit = 0;
                 gBattleScripting.moveendState = 0;
                 gBattleStruct->eventState.moveEndBlock = 0;
-                gSpecialStatuses[cv->battlerAtk].multiHitOn = TRUE;
                 gSpecialStatuses[cv->battlerDef].resultMessagePrinted = FALSE;
                 gSpecialStatuses[cv->battlerDef].critMessagePrinted = FALSE;
                 gSpecialStatuses[cv->battlerDef].protectMessagePrinted = FALSE;
