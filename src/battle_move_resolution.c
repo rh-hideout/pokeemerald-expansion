@@ -3971,7 +3971,7 @@ static enum MoveEndResult MoveEndAbilitiesAttacker(struct BattleCalcValues *cv)
         enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
         gBattleStruct->eventState.moveEndBattler++;
 
-        if (battlerDef == cv->battlerAtk)
+        if (battlerDef == cv->battlerAtk || !IsBattlerAlly(battlerDef, cv->battlerDef))
             continue;
 
         // Exclusively here the defender is passed instead of the ability user
@@ -5840,7 +5840,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ABILITIES_TARGET_ALLIED_SIDE] = MoveEndAbilitiesTarget,
     [MOVEEND_RESIST_BERRY_MESSAGE_ALLIED_SIDE] = MoveEndResistBerryMessage,
     [MOVEEND_FORM_CHANGE_ON_HIT_ALLIED_SIDE] = MoveEndFormChangeOnHit,
-    [MOVEEND_ABILITIES_ATTACKER] = MoveEndAbilitiesAttacker,
+    [MOVEEND_ABILITIES_ATTACKER_ALLIED_SIDE] = MoveEndAbilitiesAttacker,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES_ALLIED_SIDE] = MoveEndStatusImmunityAbilities,
     [MOVEEND_ATTACKER_INVISIBLE] = MoveEndAttackerInvisible,
     [MOVEEND_ATTACKER_VISIBLE] = MoveEndAttackerVisible,
@@ -5865,6 +5865,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ABILITIES_TARGET_OPPOSING_SIDE] = MoveEndAbilitiesTarget,
     [MOVEEND_RESIST_BERRY_MESSAGE_OPPOSING_SIDE] = MoveEndResistBerryMessage,
     [MOVEEND_FORM_CHANGE_ON_HIT_OPPOSING_SIDE] = MoveEndFormChangeOnHit,
+    [MOVEEND_ABILITIES_ATTACKER_OPPOSING_SIDE] = MoveEndAbilitiesAttacker,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES_OPPOSING_SIDE] = MoveEndStatusImmunityAbilities,
     [MOVEEND_TARGET_VISIBLE_OPPOSING_SIDE] = MoveEndTargetVisible,
     [MOVEEND_ITEM_EFFECTS_TARGET_OPPOSING_SIDE] = MoveEndItemEffectsTarget,
