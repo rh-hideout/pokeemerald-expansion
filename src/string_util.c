@@ -877,7 +877,7 @@ u8 GetExtCtrlCodeLength(u8 code)
         [EXT_CTRL_CODE_ENG]                    = 1,
         [EXT_CTRL_CODE_PAUSE_MUSIC]            = 1,
         [EXT_CTRL_CODE_RESUME_MUSIC]           = 1,
-        [EXT_CTRL_CODE_SPEAKER]                = 1,
+        [EXT_CTRL_CODE_SPEAKER]                = 2,
         [EXT_CTRL_CODE_ACCENT]                 = 2,
         [EXT_CTRL_CODE_BACKGROUND]             = 2,
         [EXT_CTRL_CODE_TEXT_COLORS]            = 4,
