@@ -3135,8 +3135,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_PASTEL_VEIL:
             if (shouldAbilityTrigger)
             {
-                SaveBattlerTarget(gBattlerTarget);
-                gBattlerTarget = battler;
+                gEffectBattler = battler;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_PASTEL_VEIL;
                 BattleScriptCall(BattleScript_PastelVeilActivates);
                 effect++;

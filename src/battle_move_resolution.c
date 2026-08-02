@@ -3757,6 +3757,7 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
             // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(cv->battlerAtk, effectBattler, additionalEffect)
              && ShouldApplyAfterHitEffects(cv->battlerAtk, effectBattler)
+             && (additionalEffect->effect != MOVE_EFFECT_STAT_MINUS || !additionalEffect->self)
              && (effectBattler == cv->battlerAtk) == additionalEffect->self)
             {
                 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
@@ -3786,6 +3787,53 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleScripting.moveEffect = 0;
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
+static enum MoveEndResult MoveEndAdditionalEffectsLowerStatsAttacker(struct BattleCalcValues *cv)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
+
+    if (IsBattleMoveStatus(cv->move))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+
+    if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
+    {
+        u32 percentChance;
+        struct SetEffect se = {0};
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+
+        // Various checks for if this move effect can be applied this turn
+        if (CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
+         && ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
+         && (additionalEffect->effect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
+        {
+            percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+
+            // Activate effect if it's primary (chance == 0) or if RNGesus says so
+            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+            {
+                se.additionalEffect = additionalEffect;
+                se.moveEffect = additionalEffect->moveEffect;
+                se.script = gBattlescriptCurrInstr;
+                se.effectBattler = cv->battlerAtk;
+                se.primary = percentChance == 0;
+                se.certain = percentChance >= 100;
+                se.onSide = additionalEffect->onSide; // TODO
+                SetMoveEffect(cv, &se);
+            }
+        }
+
+        gBattleStruct->additionalEffectsCounter++;
+        return MOVEEND_RESULT_RUN_SCRIPT; // try to run effect script if possible
+    }
+
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleScripting.moveEffect = 0;
     gBattleScripting.moveendState++;
@@ -4646,15 +4694,11 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
         }
 
         if (result != MOVEEND_RESULT_CONTINUE)
-            break;
+            return result;
     }
 
-    if (result == MOVEEND_RESULT_CONTINUE)
-    {
-        gBattleStruct->eventState.moveEndBlock = 0;
-        gBattleScripting.moveendState++;
-    }
-
+    gBattleStruct->eventState.moveEndBlock = 0;
+    gBattleScripting.moveendState++;
     return result;
 }
 
@@ -5841,7 +5885,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_SET_VALUES] = MoveEndSetValues,
     [MOVEEND_QUEUE_DANCER_TOXIC_CHAIN] = MoveEndQueueDancerToxicChain,
     [MOVEEND_SUBSTITUTE_BLOCK_ALLIED_SIDE] = MoveEndSubstituteBlock,
-    [MOVEEND_MOVE_HEAVY_RECOIL_ALLIED_SIDE] = MoveEndMoveHeavyRecoil,
+    [MOVEEND_MOVE_HEAVY_RECOIL] = MoveEndMoveHeavyRecoil,
     [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE] = MoveEndEndureDamageMessage,
@@ -5872,6 +5916,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_OPPOSING_SIDE] = MoveEndEndureDamageMessage,
     [MOVEEND_PROTECT_LIKE_EFFECT_OPPOSING_SIDE] = MoveEndProtectLikeEffect,
     [MOVEEND_ADDITIONAL_EFFECTS_OPPOSING_SIDE] = MoveEndAdditionalEffects,
+    [MOVEEND_ADDITIONAL_EFFECTS_LOWER_STATS_ATTACKER] = MoveEndAdditionalEffectsLowerStatsAttacker,
     [MOVEEND_ABSORB_OPPOSING_SIDE] = MoveEndAbsorb,
     [MOVEEND_RAGE_OPPOSING_SIDE] = MoveEndRage,
     [MOVEEND_BEAK_BLAST_OPPOSING_SIDE] = MoveEndBeakBlast,

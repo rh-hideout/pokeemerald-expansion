@@ -154,7 +154,7 @@ enum MoveEndState
     MOVEEND_SET_VALUES,
     MOVEEND_QUEUE_DANCER_TOXIC_CHAIN,
     MOVEEND_SUBSTITUTE_BLOCK_ALLIED_SIDE,
-    MOVEEND_MOVE_HEAVY_RECOIL_ALLIED_SIDE, // Explosion, Steel Beam and similar moves
+    MOVEEND_MOVE_HEAVY_RECOIL, // Explosion, Steel Beam and similar moves
     MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE, // Multi-target and single-target
     MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE, // Crit message, then target couldn't protect itself for each target
     MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE, // Endure, False Swipe/Hold Back, Sturdy, Focus Sash/Focus Band, Friendship, in that order
@@ -185,6 +185,7 @@ enum MoveEndState
     MOVEEND_ENDURE_DAMAGE_MESSAGE_OPPOSING_SIDE, // Endure, False Swipe/Hold Back, Sturdy, Focus Sash/Focus Band, Friendship, in that order
     MOVEEND_PROTECT_LIKE_EFFECT_OPPOSING_SIDE,
     MOVEEND_ADDITIONAL_EFFECTS_OPPOSING_SIDE,
+    MOVEEND_ADDITIONAL_EFFECTS_LOWER_STATS_ATTACKER,
     MOVEEND_ABSORB_OPPOSING_SIDE,
     MOVEEND_RAGE_OPPOSING_SIDE,
     MOVEEND_BEAK_BLAST_OPPOSING_SIDE,

@@ -1611,6 +1611,7 @@ BattleScript_FaintAttackerForExplosion::
 BattleScript_MaxHp50Recoil::
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	tryfaintmon BS_ATTACKER
 	return
 
 BattleScript_StatUp::
@@ -4363,28 +4364,28 @@ BattleScript_CurseTurnDmg::
 	volatileanimation BS_ATTACKER, VOLATILE_CURSED
 	goto BattleScript_DoTurnDmg
 
-BattleScript_TargetPRLZHeal::
+BattleScript_BattlerParalyzeHeal::
 	printstring STRINGID_PKMNHEALEDPARALYSIS
-	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_TARGET
-	return
-
-BattleScript_TargetWokeUp::
-	printstring STRINGID_TARGETWOKEUP
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	return
 
-BattleScript_TargetBurnHeal::
-	printstring STRINGID_PKMNBURNHEALED
+BattleScript_BattlerWokeUp::
+	printstring STRINGID_BATTLERWOKEUP
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_TARGET
+	updatestatusicon BS_EFFECT_BATTLER
 	return
 
-BattleScript_TargetPoisonHealed::
+BattleScript_BattlerBurnHeal::
+	printstring STRINGID_PKMNBURNHEALED
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_EFFECT_BATTLER
+	return
+
+BattleScript_BattlerPoisonHealed::
 	printstring STRINGID_PKMNHEALEDPOISON
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_TARGET
+	updatestatusicon BS_EFFECT_BATTLER
 	return
 
 BattleScript_MoveEffectSleep::
@@ -5969,6 +5970,8 @@ BattleScript_DoesntAffectScripting::
 BattleScript_PastelVeilActivates::
 	setbyte gBattleCommunication, 0
 	setbyte gBattleCommunication + 1, 0
+	savetarget
+	copybyte gBattlerTarget, gEffectBattler
 BattleScript_PastelVeil_TryCurePoison:
 	jumpifstatus BS_TARGET, STATUS1_POISON | STATUS1_TOXIC_POISON, BattleScript_PastelVeilCurePoison
 	goto BattleScript_PastelVeilLoopIncrement
@@ -5977,6 +5980,7 @@ BattleScript_PastelVeilCurePoison:
 	call BattleScript_AbilityPopUp
 	setbyte gBattleCommunication + 1, 1
 BattleScript_PastelVeilCurePoisonNoPopUp: @ Only show Pastel Veil pop up once if it cures two mons
+	copybyte gEffectBattler, gBattlerTarget
 	printfromtable gSwitchInAbilityStringIds
 	waitmessage B_WAIT_TIME_LONG
 	curestatus BS_TARGET

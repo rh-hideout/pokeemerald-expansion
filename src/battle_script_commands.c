@@ -2936,14 +2936,14 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
             switch (argStatus)
             {
             case STATUS1_PARALYSIS:
-                gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
+                gBattlescriptCurrInstr = BattleScript_BattlerParalyzeHeal;
                 break;
             case STATUS1_SLEEP:
                 TryDeactivateSleepClause(GetBattlerSide(effectBattler), gBattlerPartyIndexes[effectBattler]);
-                gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
+                gBattlescriptCurrInstr = BattleScript_BattlerWokeUp;
                 break;
             case STATUS1_BURN:
-                gBattlescriptCurrInstr = BattleScript_TargetBurnHeal;
+                gBattlescriptCurrInstr = BattleScript_BattlerBurnHeal;
                 break;
             case STATUS1_FREEZE:
                 gBattlescriptCurrInstr = BattleScript_BattlerDefrosted;
@@ -2954,7 +2954,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
             case STATUS1_POISON:
             case STATUS1_TOXIC_POISON:
             case STATUS1_PSN_ANY:
-                gBattlescriptCurrInstr = BattleScript_TargetPoisonHealed;
+                gBattlescriptCurrInstr = BattleScript_BattlerPoisonHealed;
                 break;
             }
         }
@@ -13884,7 +13884,7 @@ void BS_TryWakeBattlersUproar(void)
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
             MarkBattlerForControllerExec(battler);
 
-            BattleScriptCall(BattleScript_TargetWokeUp);
+            BattleScriptCall(BattleScript_BattlerWokeUp);
             return;
         }
     }
