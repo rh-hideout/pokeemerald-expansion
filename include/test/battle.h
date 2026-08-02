@@ -1052,6 +1052,7 @@ struct moveWithPP {
 #define Shadow(isShadow) Shadow_(__LINE__, isShadow)
 #define Shiny(isShiny) Shiny_(__LINE__, isShiny)
 #define Environment(environment) Environment_(__LINE__, environment)
+#define SetSavedPlayerParty(partySize) SetSavedPlayerParty_(partySize)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void SetVarForTest(u32 sourceLine, u16 varId, u16 value);
@@ -1062,6 +1063,8 @@ void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species);
 void ClosePokemon(u32 sourceLine);
+void SetSavedPlayerParty_(u32 partySize);
+void ClearSavedPlayerParty(void);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);

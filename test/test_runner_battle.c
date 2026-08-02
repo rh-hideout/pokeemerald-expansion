@@ -2068,6 +2068,7 @@ static void CB2_BattleTest_NextParameter(void)
         SetMainCallback2(CB2_TestRunner);
         ClearFlagAfterTest();
         ClearVarAfterTest();
+        ClearSavedPlayerParty();
     }
     else
     {
@@ -2136,6 +2137,7 @@ static void BattleTest_TearDown(void *data)
     // aborted unexpectedly.
     ClearFlagAfterTest();
     ClearVarAfterTest();
+    ClearSavedPlayerParty();
     TestFreeConfigData();
     if (!STATE->hasTornDownBattle)
     {
@@ -2377,6 +2379,32 @@ void ClosePokemon(u32 sourceLine)
     data = DATA.isShiny;
     SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     DATA.currentMon = NULL;
+}
+
+void SetSavedPlayerParty_(u32 partyCount)
+{
+    u8 battlePartyCount = DATA.partySizes[B_TRAINER_PLAYER];
+    struct Pokemon wobb = {0};
+
+    CreateMon(&wobb, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0));
+
+    memset(gSaveBlock1Ptr->playerParty, 0, sizeof(gSaveBlock1Ptr->playerParty));
+    *GetSavedPlayerPartyCount() = partyCount;
+
+
+    for (u32 i = 0; i < partyCount; i++)
+    {
+        if (i < battlePartyCount)
+            memcpy(&gSaveBlock1Ptr->playerParty[i], &DATA.recordedBattle.parties[B_TRAINER_PLAYER][i], sizeof(struct Pokemon));
+        else
+            memcpy(&gSaveBlock1Ptr->playerParty[i], &wobb, sizeof(struct Pokemon));
+    }
+}
+
+void ClearSavedPlayerParty(void)
+{
+    memset(gSaveBlock1Ptr->playerParty, 0, sizeof(gSaveBlock1Ptr->playerParty));
+    *GetSavedPlayerPartyCount() = 0;
 }
 
 static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
