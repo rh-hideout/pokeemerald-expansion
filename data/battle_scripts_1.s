@@ -1790,6 +1790,7 @@ BattleScript_RecoilIfMiss::
 	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_RecoilEnd
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	tryfaintmon BS_ATTACKER
 BattleScript_RecoilEnd:
 	return
 
@@ -5469,6 +5470,7 @@ BattleScript_LifeOrbActivates::
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	printstring STRINGID_LOSTSOMEOFITSHP
 	waitmessage B_WAIT_TIME_LONG
+	tryfaintmon BS_ATTACKER
 	return
 
 BattleScript_ItemHealHP_Ret::

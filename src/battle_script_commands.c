@@ -1836,7 +1836,6 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
 {
     switch (moveEffect)
     {
-    case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_BUG_BITE:
     case MOVE_EFFECT_FLAME_BURST:
     case MOVE_EFFECT_STEALTH_ROCK:
