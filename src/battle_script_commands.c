@@ -2048,7 +2048,6 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
         if (IsOnPlayerSide(battlerAtk) && gSpecialStatuses[battlerAtk].parentalBondState != PARENTAL_BOND_2ND_HIT)
         {
             u16 payday = gPaydayMoney;
-            enum MoveTarget moveTarget = GetBattlerMoveTargetType(battlerAtk, gCurrentMove);
             gPaydayMoney += (gBattleMons[battlerAtk].level * 5);
             if (payday > gPaydayMoney)
                 gPaydayMoney = 0xFFFF;
