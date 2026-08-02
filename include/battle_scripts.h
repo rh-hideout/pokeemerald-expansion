@@ -180,6 +180,7 @@ extern const u8 BattleScript_AbilityNoSpecificStatLoss[];
 extern const u8 BattleScript_ItemNoStatLoss[];
 extern const u8 BattleScript_OwnTempoPrevents[];
 extern const u8 BattleScript_OwnTempoPreventsRet[];
+extern const u8 BattleScript_SwaggerOwnTempoPrevents[];
 extern const u8 BattleScript_StickyHoldActivates[];
 extern const u8 BattleScript_StickyHoldActivatesRet[];
 extern const u8 BattleScript_ColorChangeActivates[];

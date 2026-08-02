@@ -144,9 +144,15 @@ BattleScript_SwaggerConfusion::
 	trymovestatchanges
 	goto BattleScript_MoveEnd
 
+BattleScript_SwaggerOwnTempoPrevents::
+	call BattleScript_OwnTempoPreventsRet
+	trymovestatchanges
+	goto BattleScript_MoveEnd
+
 BattleScript_NoRetreatMessage::
 	printstring STRINGID_CANTESCAPEDUETOUSEDMOVE
 	waitmessage B_WAIT_TIME_LONG
+	trymovestatchanges
 	goto BattleScript_MoveEnd
 
 BattleScript_AutotomizeMessage::
