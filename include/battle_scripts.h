@@ -108,7 +108,7 @@ extern const u8 BattleScript_KnockedOff[];
 extern const u8 BattleScript_MoveUsedIsImprisoned[];
 extern const u8 BattleScript_SelectingImprisonedMove[];
 extern const u8 BattleScript_SelectingImprisonedMoveInPalace[];
-extern const u8 BattleScript_GrudgeTakesPp[];
+extern const u8 BattleScript_GrudgeTakesPP[];
 extern const u8 BattleScript_MagicBounce[];
 extern const u8 BattleScript_MagicCoat[];
 extern const u8 BattleScript_MagicCoatPrankster[];

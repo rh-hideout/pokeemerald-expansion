@@ -336,7 +336,7 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
      || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
      || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
     {
-        MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
+        MarkTrainerSlideAsPlayed(GetPartnerBattler(battler), slideId);
     }
 
     MarkTrainerSlideAsPlayed(battler, slideId);

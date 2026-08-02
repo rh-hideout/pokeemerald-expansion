@@ -4682,7 +4682,7 @@ void AnimTask_HelpingHandAttackerMovement(u8 taskId)
         if (IsDoubleBattle() == TRUE)
         {
             int attackerX = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-            int partnerX = GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X);
+            int partnerX = GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X);
             if (attackerX > partnerX)
                 task->data[14] = 1;
             else
