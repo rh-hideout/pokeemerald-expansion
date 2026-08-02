@@ -45,7 +45,7 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
 
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv);
 static bool32 ShouldPrintCritMessage(enum BattlerId battler);
-static bool32 ShouldPrintProtectMessage(enum BattlerId battler, enum Ability abilityAtk);
+static bool32 ShouldPrintProtectMessage(enum BattlerId battler);
 static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battler1, enum BattlerId battler2, enum BattlerId battlerAtk);
 
 // Stat change moves
@@ -3213,7 +3213,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 break;
             case SUBSTITUTE_BLOCK_BYPASS_PROTECT_MESSAGE:
-                if (ShouldPrintProtectMessage(battlerDef, cv->abilities[cv->battlerAtk]))
+                if (ShouldPrintProtectMessage(battlerDef))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 break;
             case SUBSTITUTE_BLOCK_SUBSTITUTE_DISAPPEARS:
@@ -3460,7 +3460,7 @@ static enum MoveEndResult MoveEndEffectivenessMessage(struct BattleCalcValues *c
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static bool32 GetProtectBypassMethod(enum BattlerId battlerDef, enum Ability abilityAtk)
+static bool32 GetProtectBypassMethod(enum BattlerId battlerDef)
 {
     if (IsBattlerUnaffectedByMove(battlerDef))
         return PROTECT_BYPASS_NONE;
@@ -3494,12 +3494,12 @@ static bool32 ShouldPrintCritMessage(enum BattlerId battler)
     return TRUE;
 }
 
-static bool32 ShouldPrintProtectMessage(enum BattlerId battler, enum Ability abilityAtk)
+static bool32 ShouldPrintProtectMessage(enum BattlerId battler)
 {
-    if (!gSpecialStatuses[battler].protectMessagePrinted)
+    if (gSpecialStatuses[battler].protectMessagePrinted)
         return FALSE;
 
-    switch (GetProtectBypassMethod(battler, abilityAtk))
+    switch (GetProtectBypassMethod(battler))
     {
     case PROTECT_BYPASS_ABILITY_IGNORES:
         BattleScriptCall(BattleScript_UnseenFist);
@@ -3534,7 +3534,7 @@ static enum MoveEndResult MoveEndCritProtectMessage(struct BattleCalcValues *cv)
         if (ShouldPrintCritMessage(battlerDef))
             return MOVEEND_RESULT_RUN_SCRIPT;
 
-        if (ShouldPrintProtectMessage(battlerDef, cv->abilities[cv->battlerAtk]))
+        if (ShouldPrintProtectMessage(battlerDef))
             return MOVEEND_RESULT_RUN_SCRIPT;
 
         gBattleStruct->eventState.moveEndBattler++;
