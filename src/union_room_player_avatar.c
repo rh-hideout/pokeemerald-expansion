@@ -426,7 +426,7 @@ void SetTilesAroundUnionRoomPlayersPassable(void)
     }
 }
 
-static u8 GetNewFacingDirectionForUnionRoomPlayer(u32 memberId, u32 leaderId, struct RfuGameData *gameData)
+static enum Direction GetNewFacingDirectionForUnionRoomPlayer(u32 memberId, u32 leaderId, struct RfuGameData *gameData)
 {
     if (memberId) // If not leader
         return sMemberFacingDirections[memberId];

@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the target has no item")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_POTION; }
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon with the
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, player);
         NOT MESSAGE("Wobbuffet corroded the opposing Wobbuffet's Potion!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
-        MESSAGE("The opposing Muk's Sticky Hold made Corrosive Gas ineffective!");
+        MESSAGE("The opposing Muk's item cannot be removed!");
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_POISON_BARB);
     }
@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
 {
     // Check it affects all targets in all possible configurations.
     u32 j, k, l;
-    u16 itemOpponentLeft, itemOpponentRight, itemPlayerLeft;
+    enum Item itemOpponentLeft, itemOpponentRight, itemPlayerLeft;
 
     for (j = 0; j < 2; j++) {
         for (k = 0; k < 2; k++) {

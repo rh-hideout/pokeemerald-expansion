@@ -9,10 +9,6 @@ static const struct SpriteTemplate sInvisibleSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 sSpriteDimensions[3][4][2] =
@@ -78,7 +74,7 @@ static const u16 sCrc16Table[] =
     0x7BC7, 0x6A4E, 0x58D5, 0x495C, 0x3DE3, 0x2C6A, 0x1EF1, 0x0F78,
 };
 
-const u8 gMiscBlank_Gfx[] = INCBIN_U8("graphics/interface/blank.4bpp");
+const u8 gMiscBlank_Gfx[] = INCGFX_U8("graphics/interface/blank.png", ".4bpp");
 
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *))
 {
@@ -241,4 +237,15 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor)
                                       g + (((data2->g - g) * coeff) >> 4),
                                       b + (((data2->b - b) * coeff) >> 4));
     }
+}
+
+s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
+{
+    s32 newValue = currentVal - delta;
+    if (newValue > highestVal)
+        newValue = highestVal;
+    else if (newValue < lowestVal)
+        newValue = lowestVal;
+
+    return newValue;
 }

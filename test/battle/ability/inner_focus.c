@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Inner Focus doesn't prevent intimidate (Gen3-7)")
     s16 turnTwoHit;
 
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_7);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_SHED_SKIN); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_ZUBAT) { Ability(ABILITY_INNER_FOCUS); }
@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Inner Focus doesn't prevent intimidate (Gen3-7)")
         HP_BAR(player, captureDamage: &turnOneHit);
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Ekans's Intimidate cuts the opposing Zubat's Attack!");
+        MESSAGE("The opposing Zubat's Attack fell!");
         // Turn 2
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Inner Focus prevents intimidate (Gen8+)")
     s16 turnTwoHit;
 
     GIVEN {
-        WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
+        WITH_CONFIG(B_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_SHED_SKIN); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_ZUBAT) { Ability(ABILITY_INNER_FOCUS); }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Inner Focus prevents intimidate (Gen8+)")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent); }
         ABILITY_POPUP(opponent, ABILITY_INNER_FOCUS);
-        MESSAGE("The opposing Zubat's Inner Focus prevents stat loss!");
+        MESSAGE("The opposing Zubat's Attack was not lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);

@@ -678,6 +678,74 @@ static const union AnimCmd sAnim_RunEast[] =
     ANIMCMD_JUMP(0),
 };
 
+static const union AnimCmd sAnim_RunSouthFrlg[] = {
+    ANIMCMD_FRAME(9, 5),
+    ANIMCMD_FRAME(10, 3),
+    ANIMCMD_FRAME(9, 5),
+    ANIMCMD_FRAME(11, 3),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RunNorthFrlg[] = {
+    ANIMCMD_FRAME(12, 5),
+    ANIMCMD_FRAME(13, 3),
+    ANIMCMD_FRAME(12, 5),
+    ANIMCMD_FRAME(14, 3),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RunWestFrlg[] = {
+    ANIMCMD_FRAME(15, 5),
+    ANIMCMD_FRAME(16, 3),
+    ANIMCMD_FRAME(15, 5),
+    ANIMCMD_FRAME(17, 3),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RunEastFrlg[] = {
+    ANIMCMD_FRAME(15, 5, .hFlip = TRUE),
+    ANIMCMD_FRAME(16, 3, .hFlip = TRUE),
+    ANIMCMD_FRAME(15, 5, .hFlip = TRUE),
+    ANIMCMD_FRAME(17, 3, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_SpinSouth[] = {
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_FRAME(2, 2, .hFlip = TRUE),
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_LOOP(1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_SpinNorth[] = {
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_FRAME(2, 2, .hFlip = TRUE),
+    ANIMCMD_LOOP(1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_SpinWest[] = {
+    ANIMCMD_FRAME(2, 2, .hFlip = TRUE), // Starts by facing East?
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_FRAME(2, 2),
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_LOOP(1),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_SpinEast[] = {
+    ANIMCMD_FRAME(2, 2), // Starts by facing West?
+    ANIMCMD_FRAME(0, 2),
+    ANIMCMD_FRAME(2, 2, .hFlip = TRUE),
+    ANIMCMD_FRAME(1, 2),
+    ANIMCMD_LOOP(1),
+    ANIMCMD_END,
+};
+
 static const union AnimCmd sAnim_FieldMove[] =
 {
     ANIMCMD_FRAME(0, 4),
@@ -685,6 +753,37 @@ static const union AnimCmd sAnim_FieldMove[] =
     ANIMCMD_FRAME(2, 4),
     ANIMCMD_FRAME(3, 4),
     ANIMCMD_FRAME(4, 8),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_VSSeeker[] = {
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_LOOP(0),
+    ANIMCMD_FRAME(7, 4),
+    ANIMCMD_FRAME(8, 4),
+    ANIMCMD_LOOP(6),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_VSSeekerBike[] = {
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_LOOP(0),
+    ANIMCMD_FRAME(4, 4),
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_LOOP(6),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(0, 4),
     ANIMCMD_END,
 };
 
@@ -1352,10 +1451,14 @@ static const union AnimCmd *const sAnimTable_BrendanMayNormal[] = {
     [ANIM_STD_GO_FASTEST_NORTH] = sAnim_GoFastestNorth,
     [ANIM_STD_GO_FASTEST_WEST] = sAnim_GoFastestWest,
     [ANIM_STD_GO_FASTEST_EAST] = sAnim_GoFastestEast,
-    [ANIM_RUN_SOUTH] = sAnim_RunSouth,
-    [ANIM_RUN_NORTH] = sAnim_RunNorth,
-    [ANIM_RUN_WEST] = sAnim_RunWest,
-    [ANIM_RUN_EAST] = sAnim_RunEast,
+    [ANIM_RUN_SOUTH] = (IS_FRLG ? sAnim_RunSouthFrlg : sAnim_RunSouth),
+    [ANIM_RUN_NORTH] = (IS_FRLG ? sAnim_RunNorthFrlg : sAnim_RunNorth),
+    [ANIM_RUN_WEST] = (IS_FRLG ? sAnim_RunWestFrlg : sAnim_RunWest),
+    [ANIM_RUN_EAST] = (IS_FRLG ? sAnim_RunEastFrlg : sAnim_RunEast),
+    [ANIM_SPIN_SOUTH] = sAnim_SpinSouth,
+    [ANIM_SPIN_NORTH] = sAnim_SpinNorth,
+    [ANIM_SPIN_WEST] = sAnim_SpinWest,
+    [ANIM_SPIN_EAST] = sAnim_SpinEast,
 };
 
 static const union AnimCmd *const sAnimTable_AcroBike[] = {
@@ -1535,4 +1638,16 @@ static const struct StepAnimTable sStepAnimTables[] = {
         .animPos = {1, 3, 0, 2},
     },
     {},
+};
+
+static const union AnimCmd *const sAnimTable_RedGreenFieldMove[] = {
+    sAnim_FieldMove,
+};
+
+static const union AnimCmd *const sAnimTable_RedGreenVSSeeker[] = {
+    sAnim_VSSeeker,
+};
+
+static const union AnimCmd *const sAnimTable_RedGreenVSSeekerBike[] = {
+    sAnim_VSSeekerBike,
 };

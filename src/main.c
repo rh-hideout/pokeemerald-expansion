@@ -36,9 +36,9 @@ static void IntrDummy(void);
 extern void gInitialMainCB2(void);
 extern void CB2_FlashNotDetectedScreen(void);
 
-const u8 gGameVersion = GAME_VERSION;
+const enum GameVersion gGameVersion = GAME_VERSION;
 
-const u8 gGameLanguage = GAME_LANGUAGE; // English
+const enum Language gGameLanguage = GAME_LANGUAGE; // English
 
 const char BuildDateTime[] = "2005 02 21 11:10";
 
@@ -94,8 +94,8 @@ void AgbMain(void)
     *(vu16 *)BG_PLTT = RGB_WHITE; // Set the backdrop to white on startup
     InitGpuRegManager();
     REG_WAITCNT = WAITCNT_PREFETCH_ENABLE
-	        | WAITCNT_WS0_S_1 | WAITCNT_WS0_N_3
-	        | WAITCNT_WS1_S_1 | WAITCNT_WS1_N_3;
+            | WAITCNT_WS0_S_1 | WAITCNT_WS0_N_3
+            | WAITCNT_WS1_S_1 | WAITCNT_WS1_N_3;
     InitKeys();
     InitIntrHandlers();
     m4aSoundInit();

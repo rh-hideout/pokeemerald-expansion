@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
+    ASSUME_STAT_CHANGE(MOVE_TICKLE, attack: -1, defense: -1);
 }
 
 SINGLE_BATTLE_TEST("Tickle reduces the target's Attack and Defense by 1 stage each")
@@ -19,5 +19,22 @@ SINGLE_BATTLE_TEST("Tickle reduces the target's Attack and Defense by 1 stage ea
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Tickle is blocked by Substitute (Gen4+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TICKLE, MOVE_CELEBRATE); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_TICKLE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TICKLE, player);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
 }

@@ -22,6 +22,7 @@ struct FieldInput
     u8 dpadDirection;
 };
 
+void GetPlayerPosition(struct MapPosition *);
 void FieldClearPlayerInput(struct FieldInput *pStruct);
 void FieldGetPlayerInput(struct FieldInput *pStruct, u16 keys, u16 heldKeys);
 int ProcessPlayerFieldInput(struct FieldInput *pStruct);
@@ -30,10 +31,13 @@ const u8 *GetObjectEventScriptPointerPlayerFacing(void);
 bool8 TryDoDiveWarp(struct MapPosition *position, u16 metatileBehavior);
 int SetCableClubWarp(void);
 u8 TrySetDiveWarp(void);
-const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, u8 direction);
+const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatileBehavior, enum Direction direction);
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position);
 void ClearPoisonStepCounter(void);
 void CancelSignPostMessageBox(struct FieldInput *input);
+void HandleBoulderFallThroughHole(struct ObjectEvent *object);
+void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
+bool8 TryStartStepBasedScript(struct MapPosition *, u16, enum Direction);
 
 #define NOT_SIGNPOST 0
 #define WALK_AWAY_SIGNPOST_FRAMES 6

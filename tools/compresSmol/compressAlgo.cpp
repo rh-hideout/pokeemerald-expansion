@@ -725,7 +725,7 @@ bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned sh
             if (loNibbles[i] != checkLoNibbles[i])
             {
                 fprintf(stderr, "LO Mismatch\n");
-                break;
+                return false;
             }
         }
     }
@@ -739,7 +739,7 @@ bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned sh
             if (symNibbles[i] != checkSymNibbles[i])
             {
                 fprintf(stderr, "Symbol Mismatch\n");
-                break;
+                return false;
             }
         }
     }
@@ -757,6 +757,12 @@ bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned sh
     }
     if (bitstream.size() % 32 != 0)
         tANSbits.push_back(currInt);
+
+    if (tANSbits.size() > (1 << 13) - 1)
+    {
+        fprintf(stderr, "tANS bit vector too long, %zu\n", tANSbits.size());
+        return false;
+    }
 
     pOutput->headers = getNewHeaders(mode, imageBytes, pSymVec->size(), currState, tANSbits.size(), pLoVec->size());
     pOutput->tANSbits = tANSbits;
@@ -1156,12 +1162,12 @@ CompressedImage processImage(std::string fileName, InputSettings settings)
     std::vector<unsigned char> input;
     if (!readFileAsUC(fileName, &input))
     {
-        fprintf(stderr, "Compression failure\n");
+        fprintf(stderr, "ERROR: Couldn't read file %s\n", fileName.c_str());
         return image;
     }
     if (!processImageData(&input, &image, settings, fileName))
     {
-        fprintf(stderr, "Fail\n");
+        fprintf(stderr, "ERROR: No valid compression could be generated for image %s\n", fileName.c_str());
     }
     return image;
 }
@@ -1177,10 +1183,6 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
 {
     CompressionMode someMode;
     bool hasImage = false;
-    bool byteFail = false;
-    bool copyFail = false;
-    bool compressionFail = false;
-    bool uIntConversionFail = false;
 
     std::vector<unsigned short> usBase(pInput->size() / 2);
     memcpy(usBase.data(), pInput->data(), pInput->size());
@@ -1194,26 +1196,36 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
         std::vector<ShortCopy> shortCopies;
         if (!getShortCopies(&usBase, minCodeLength, &shortCopies))
         {
-            copyFail = true;
-            printf("ERROR: %zu\n", minCodeLength);
+            fprintf(stderr, "WARNING: Couldn't generate copy-vector for code-length %zu\n", minCodeLength);
             continue;
         }
 
         std::vector<ShortCompressionInstruction> shortInstructions;
         if (!getShortInstructions(&shortCopies, &shortInstructions, &usBase))
         {
-            printf("ERROR\n");
-            return false;
+            fprintf(stderr, "WARNING: Couldn't generate compression instructions for code-length %zu\n", minCodeLength);
+            continue;
         }
 
         std::vector<unsigned char> loVec;
         std::vector<unsigned short> symVec;
         getLosFromInstructions(&shortInstructions, &loVec);
         getSymsFromInstructions(&shortInstructions, &symVec);
+        if (loVec.size() > (1 << 13) - 1)
+        {
+            fprintf(stderr, "WARNING: LO vector too long for code-length == %zu. Trying again\n", minCodeLength);
+            continue;
+        }
+
+        if (symVec.size() > (1 << 14) - 1)
+        {
+            fprintf(stderr, "WARNING: Symbol vector too long for code-length == %zu. Trying again\n", minCodeLength);
+            continue;
+        }
+
         if (!verifyBytesShort(&loVec, &symVec, &usBase))
         {
-            byteFail = true;
-            printf("Byte veri\n");
+            fprintf(stderr, "WARNING: Byte veficication failed for code-length == %zu. Trying again\n", minCodeLength);
             continue;
         }
 
@@ -1243,6 +1255,8 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
                 settings.canEncodeSyms = true;
             }
         }
+
+        bool foundAnyMode = false;
         for (CompressionMode currMode : modesToUse)
         {
             CompressedImage currImg;
@@ -1264,13 +1278,13 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
                 continue;
             if (!fillCompressVec(&loVec, &symVec, mode, pInput->size(), fileName, &currImg))
             {
-                printf("ERROR\n");
+                fprintf(stderr, "WARNING: Couldn't fill compression vectors for mode %u for minCodeLength %zu\n", mode, minCodeLength);
+                continue;
             }
 
             if (!verifyCompressionShort(&currImg, &usBase))
             {
-                compressionFail = true;
-                printf("ERROR\n");
+                fprintf(stderr, "WARNING: Couldn't verify compression for mode %u for minCodeLength %zu\n", mode, minCodeLength);
                 continue;
             }
             std::vector<unsigned int> uiVec;
@@ -1279,10 +1293,10 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
             readRawDataVecs(&uiVec, &decodedImage);
             if (!compareVectorsShort(&decodedImage, &usBase))
             {
-                uIntConversionFail = true;
-                printf("ERROR\n");
+                fprintf(stderr, "WARNING: Couldn't verify compression for mode %u for minCodeLength %zu\n", mode, minCodeLength);
                 continue;
             }
+            foundAnyMode = true;
             currImg.compressedSize = uiVec.size() * 4;
             if (!hasImage)
             {
@@ -1305,7 +1319,13 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
                 someMode = mode;
             }
         }
+
+        if (!foundAnyMode)
+        {
+            fprintf(stderr, "WARNING: No valid mode for minCodeLength %zu found\n", minCodeLength);
+        }
     }
+
     pImage->mode = someMode;
     pImage->fileName = fileName;
     pImage->rawNumBytes = pInput->size();
@@ -1315,16 +1335,8 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
     }
     else
     {
-        fprintf(stderr, "Failed to compress image %s\nErrors: ", fileName.c_str());
-        if (copyFail)
-            fprintf(stderr, "CopyProcessing ");
-        if (byteFail)
-            fprintf(stderr, "ByteConversion ");
-        if (compressionFail)
-            fprintf(stderr, "Compression ");
-        if (uIntConversionFail)
-            fprintf(stderr, "uIntConversion ");
-        printf("\n");
+        pImage->isValid = false;
+        return false;
     }
 
     return true;

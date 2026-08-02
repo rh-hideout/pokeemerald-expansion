@@ -58,6 +58,7 @@ u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode);
 void SetTextModeAndHideBgs(void);
 bool32 IsInvalidBg(u32 bg);
 int BgTileAllocOp(int bg, int offset, int count, int mode);
+int BgTileAllocOpUnchecked(int bg, int offset, int count, int mode);
 void ResetBgsAndClearDma3BusyFlags(u32 leftoverFireRedLeafGreenVariable);
 void InitBgsFromTemplates(u32 bgMode, const struct BgTemplate *templates, u8 numTemplates);
 void InitBgFromTemplate(const struct BgTemplate *template);

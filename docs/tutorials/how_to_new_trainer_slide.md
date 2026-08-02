@@ -47,7 +47,7 @@ enum TrainerSlideType
 {
     TRAINER_SLIDE_BEFORE_FIRST_TURN,
     TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT,
-+   TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT, // Each Trainer Slide has a unqiue id. 
++   TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT, // Each Trainer Slide has a unqiue id.
     TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT,
     TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE,
     TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN,
@@ -82,7 +82,7 @@ bool32 IsTrainerSlideInitialized(enum TrainerSlideType);
 ```diff
      return IsTrainerSlideInitialized(slideId);
  }
- 
+
 +static bool32 ShouldRunTrainerSlideEnemyLandsFirstCriticalHit(enum TrainerSlideType slideId)
 +{
 +    return IsTrainerSlideInitialized(slideId);
@@ -110,7 +110,7 @@ The function that determines if a Slide should play has different function for m
 ```diff
      InitalizeTrainerSlide(slideId);
  }
- 
+
 +void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(u32 target)
 +{
 +    enum TrainerSlideType slideId = TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT;
@@ -149,10 +149,10 @@ In `BattleTurnPassed`, most Trainer Slides are checked to see if they should run
 ```diff
          {
              PrepareStringBattle(STRINGID_CRITICALHIT, gBattlerAttacker);
- 
+
 +            TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(gBattlerTarget);
              TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(gBattlerTarget);
- 
+
              gBattleCommunication[MSG_DISPLAY] = 1;
 ```
 
@@ -162,7 +162,7 @@ The actual usage of `TryInitializeTrainerSlideEnemyLandsFirstCriticalHit` is add
 ```diff
      }
  }
- 
+
 +SINGLE_BATTLE_TEST("Trainer Slide: Enemy Lands First Critical Hit")
 +{
 +    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT;

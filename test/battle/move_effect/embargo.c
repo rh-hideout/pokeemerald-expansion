@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Embargo blocks an affected Pokémon's trainer from using ite
 
 WILD_BATTLE_TEST("Embargo doesn't block held item effects that affect experience gain", s32 exp)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_LUCKY_EGG; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -91,7 +91,7 @@ WILD_BATTLE_TEST("Embargo doesn't block held item effects that affect effort val
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
         finalHPEVAmount = (GetMonData(&PLAYER_PARTY[0], MON_DATA_HP_EV) + gItemsInfo[ITEM_POWER_WEIGHT].holdEffectParam + gSpeciesInfo[SPECIES_CATERPIE].evYield_HP);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), finalHPEVAmount);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), finalHPEVAmount);
     }
 }
 
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Embargo negates a held item's Speed reduction")
 //         MESSAGE("Wild Wobbuffet fell asleep!");
 //     } THEN {
 //         initialFriendship = GetMonData(&PLAYER_PARTY[0], MON_DATA_FRIENDSHIP);
-//         finalFriendship = GetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP);
+//         finalFriendship = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_FRIENDSHIP);
 //         EXPECT_EQ(finalFriendship, initialFriendship + 2);
 //     }
 // }

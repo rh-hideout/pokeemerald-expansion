@@ -3,8 +3,11 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
-    ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_COUNTER);
+    ASSUME(GetMoveEffect(MOVE_SHELL_SIDE_ARM) == EFFECT_SHELL_SIDE_ARM);
+    ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE);
+    ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_COUNTER) == (1u << DAMAGE_CATEGORY_PHYSICAL));
+    ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_REFLECT_DAMAGE);
+    ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_MIRROR_COAT) == (1u << DAMAGE_CATEGORY_SPECIAL));
 }
 
 SINGLE_BATTLE_TEST("Shell Side Arm can be countered if it is physical")
@@ -40,7 +43,7 @@ SINGLE_BATTLE_TEST("Shell Side Arm can be mirror coated if it is special")
 DOUBLE_BATTLE_TEST("Shell Side Arm does not change category mid-turn")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); Defense(100); SpDefense(120); }

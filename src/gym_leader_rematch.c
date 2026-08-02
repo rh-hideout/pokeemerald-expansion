@@ -42,6 +42,25 @@ void UpdateGymLeaderRematch(void)
     }
 }
 
+s32 GetCurrentGymLeaderRematchLevel(void)
+{
+    u32 i, j;
+    u32 maxLevel = REMATCHES_COUNT;
+    if (!FlagGet(FLAG_SYS_GAME_CLEAR))
+        return 0;
+    for (i = REMATCH_SPECIAL_TRAINER_START; i < REMATCH_ELITE_FOUR_ENTRIES; i++)
+    {
+        for (j = 0; j < REMATCHES_COUNT; j++)
+        {
+            if (!HasTrainerBeenFought(gRematchTable[i].trainerIds[j]))
+                break;
+        }
+        if (maxLevel > j)
+            j = maxLevel;
+    }
+    return maxLevel;
+}
+
 static void UpdateGymLeaderRematchFromArray(const u16 *data, size_t size, u32 maxRematch)
 {
 #if FREE_MATCH_CALL == FALSE

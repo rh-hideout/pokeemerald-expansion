@@ -33,7 +33,6 @@ static u8 sSelectedStory;
 
 COMMON_DATA struct BardSong gBardSong = {0};
 
-static EWRAM_DATA u16 sUnusedPitchTableIndex = 0;
 static EWRAM_DATA struct MauvilleManStoryteller *sStorytellerPtr = NULL;
 static EWRAM_DATA u8 sStorytellerWindowId = 0;
 
@@ -621,7 +620,6 @@ static void Task_BardSong(u8 taskId)
         break;
     case BARD_STATE_GET_WORD:
     {
-        struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
         u8 *str = &gStringVar4[task->tCharIndex];
         u16 wordLen = 0;
 
@@ -634,12 +632,6 @@ static void Task_BardSong(u8 taskId)
             str++;
             wordLen++;
         }
-
-        // sUnusedPitchTableIndex is never read. For debugging perhaps, or one of the other languages.
-        if (!task->tUseNewSongLyrics)
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->songLyrics[task->tLyricsIndex]);
-        else
-            sUnusedPitchTableIndex = WORD_TO_PITCH_TABLE_INDEX(bard->newSongLyrics[task->tLyricsIndex]);
 
         gBardSong.length /= wordLen;
         if (gBardSong.length <= 0)
@@ -786,7 +778,7 @@ void SanitizeMauvilleOldManForRuby(union OldMan *oldMan)
     }
 }
 
-static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, u32 language1, u32 language2, u32 language3)
+static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, enum Language language1, enum Language language2, enum Language language3)
 {
     s32 i;
 
@@ -851,7 +843,7 @@ static void UNUSED SetMauvilleOldManLanguage(union OldMan *oldMan, u32 language1
     }
 }
 
-void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, u32 version, u32 language)
+void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, enum Language language)
 {
     u8 playerName[PLAYER_NAME_LENGTH + 1];
     s32 i;
@@ -874,7 +866,7 @@ void SanitizeReceivedEmeraldOldMan(union OldMan *oldMan, u32 version, u32 langua
     }
 }
 
-void SanitizeReceivedRubyOldMan(union OldMan *oldMan, u32 version, u32 language)
+void SanitizeReceivedRubyOldMan(union OldMan *oldMan, enum GameVersion version, enum Language language)
 {
     bool32 isRuby = (version == VERSION_SAPPHIRE || version == VERSION_RUBY);
 

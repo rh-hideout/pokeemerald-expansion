@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20%", s16 damage)
 {
-    u32 move, ability;
+    enum Move move;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_BULLET_PUNCH; ability = ABILITY_IRON_FIST; }
     PARAMETRIZE { move = MOVE_BULLET_PUNCH; ability = ABILITY_BLAZE; }
     PARAMETRIZE { move = MOVE_SCRATCH;      ability = ABILITY_IRON_FIST; }

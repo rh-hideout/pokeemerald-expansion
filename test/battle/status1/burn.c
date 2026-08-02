@@ -7,13 +7,13 @@ ASSUMPTIONS
     ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
 }
 
-SINGLE_BATTLE_TEST("Burn deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per turn")
+SINGLE_BATTLE_TEST("Burn deals 1/8th damage (Gen2-6) or 1/16th (Gen1 and Gen7+) per turn")
 {
     u32 j, config, value;
     PARAMETRIZE { config = GEN_7; value = 16; }
     PARAMETRIZE { config = GEN_6; value = 8; }
     GIVEN {
-        WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
+        WITH_CONFIG(B_BURN_DAMAGE, config);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -72,26 +72,5 @@ SINGLE_BATTLE_TEST("Will-O-Wisp can't burn a fire type")
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
             STATUS_ICON(opponent, burn: TRUE);
         }
-    }
-}
-
-AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
-{
-    u32 species;
-    enum Ability ability;
-
-    PARAMETRIZE { species = SPECIES_BUIZEL; ability = ABILITY_WATER_VEIL; }
-    PARAMETRIZE { species = SPECIES_DEWPIDER; ability = ABILITY_WATER_BUBBLE; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_ARCTIBAX; ability = ABILITY_THERMAL_EXCHANGE; }
-    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
-    PARAMETRIZE { species = SPECIES_CHARMANDER; ability = ABILITY_BLAZE; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_WILL_O_WISP); }
-    } WHEN {
-        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_WILL_O_WISP); } // Both get -10
     }
 }

@@ -46,12 +46,10 @@
 	.endm
 
 	@ Defines an object event template for map data, to be used by a clone object. Mirrors the struct layout of ObjectEventTemplate in include/global.fieldmap.h
-	@ NOTE: The handling for this type of event does not exist in Emerald by default; it is exclusive to FRLG.
 	.macro clone_event index:req, gfx:req, x:req, y:req, target_local_id:req, target_map_id:req
 	.byte \index
-	.byte \gfx
+	.2byte \gfx
 	.byte OBJ_KIND_CLONE
-	.space 1  @ Padding
 	.2byte \x, \y
 	.byte \target_local_id
 	.space 3  @ Padding
@@ -91,17 +89,12 @@
 	@ Defines a generic background event for map data. Mirrors the struct layout of BgEvent in include/global.fieldmap.h
 	@ 'kind' is any BG_EVENT_* constant (see include/constants/event_bg.h).
 	@ 'arg6' and 'arg7' are used differently depending on the bg event type. See macros below
-	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req, arg7
+	.macro bg_event x:req, y:req, elevation:req, kind:req, arg6:req
 	.2byte \x, \y
 	.byte \elevation
 	.byte \kind
 	.space 2  @ Padding
-	.if \kind != BG_EVENT_HIDDEN_ITEM
-		.4byte \arg6
-	.else
-		.2byte \arg6
-		.2byte \arg7
-	.endif
+	.4byte \arg6
 	inc _num_signs
 	.endm
 
@@ -111,11 +104,17 @@
 	.endm
 
 	@ Defines a background hidden item event for map data
-	.macro bg_hidden_item_event x:req, y:req, elevation:req, item:req, flag:req
+	.macro bg_hidden_item_event x:req, y:req, elevation:req, item:req, flag:req, quantity=1, underfoot=FALSE
 	.if \flag < FLAG_HIDDEN_ITEMS_START
 	.error "Hidden Item flag \flag is too small. Must be >= FLAG_HIDDEN_ITEMS_START."
 	.endif
-	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item, ((\flag) - FLAG_HIDDEN_ITEMS_START)
+	.if \item >= (1 << 12)
+	.error "quantity \quantity too large"
+	.endif
+	.if \quantity >= (1 << 7)
+	.error "quantity \quantity too large"
+	.endif
+	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item | (((\flag) - FLAG_HIDDEN_ITEMS_START) << 11)| (\quantity << 24) | (\underfoot << 31)
 	.endm
 
 	@ Defines a background secret base event for map data

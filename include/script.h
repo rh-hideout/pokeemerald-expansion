@@ -11,7 +11,8 @@ struct ScriptContext
     u8 stackDepth;
     u8 mode;
     u8 comparisonResult;
-    bool8 breakOnTrainerBattle;
+    bool8 breakOnTrainerBattle:1;
+    bool8 waitAfterCallNative:1;
     u8 (*nativePtr)(void);
     const u8 *scriptPtr;
     const u8 *stack[20];
@@ -31,6 +32,7 @@ void ScriptJump(struct ScriptContext *ctx, const u8 *ptr);
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr);
 void ScriptReturn(struct ScriptContext *ctx);
 u16 ScriptReadHalfword(struct ScriptContext *ctx);
+u16 ScriptPeekHalfword(struct ScriptContext *ctx);
 u32 ScriptReadWord(struct ScriptContext *ctx);
 u32 ScriptPeekWord(struct ScriptContext *ctx);
 void LockPlayerFieldControls(void);
@@ -61,6 +63,9 @@ const u8 *GetRamScript(u8 objectId, const u8 *script);
 bool32 ValidateSavedRamScript(void);
 u8 *GetSavedRamScriptIfValid(void);
 void InitRamScript_NoObjectEvent(u8 *script, u16 scriptSize);
+
+bool32 Script_MatchesCallNative(const u8 *script, void *funcPtr, bool32 requestEffects);
+bool32 Script_MatchesSpecial(const u8 *script, void *funcPtr);
 
 // srccmd.h
 void SetMovingNpcId(u16 npcId);

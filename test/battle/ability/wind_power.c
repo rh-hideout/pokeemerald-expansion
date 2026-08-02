@@ -3,23 +3,22 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_NUZZLE));
+    ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
     ASSUME(GetMoveType(MOVE_NUZZLE) == TYPE_ELECTRIC);
-    ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
     ASSUME(!IsWindMove(MOVE_SCRATCH));
-    ASSUME(!IsBattleMoveStatus(MOVE_AIR_CUTTER));
-    ASSUME(GetMoveTarget(MOVE_AIR_CUTTER) == MOVE_TARGET_BOTH);
+    ASSUME(GetMoveCategory(MOVE_AIR_CUTTER) != DAMAGE_CATEGORY_STATUS);
+    ASSUME(GetMoveTarget(MOVE_AIR_CUTTER) == TARGET_BOTH);
     ASSUME(IsWindMove(MOVE_AIR_CUTTER));
-    ASSUME(!IsBattleMoveStatus(MOVE_PETAL_BLIZZARD));
-    ASSUME(GetMoveTarget(MOVE_PETAL_BLIZZARD) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveCategory(MOVE_PETAL_BLIZZARD) != DAMAGE_CATEGORY_STATUS);
+    ASSUME(GetMoveTarget(MOVE_PETAL_BLIZZARD) == TARGET_FOES_AND_ALLY);
     ASSUME(IsWindMove(MOVE_PETAL_BLIZZARD));
-    ASSUME(!IsWindMove(MOVE_SCRATCH));
 }
 
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move")
 {
     s16 dmgBefore, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_AIR_CUTTER; }
@@ -64,7 +63,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind move")
 {
     s16 dmgBefore, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_AIR_CUTTER; }
@@ -109,7 +108,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a wind move")
 {
     s16 dmgCharged, dmgAfter;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_AIR_CUTTER; }
@@ -255,6 +254,45 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used")
             ABILITY_POPUP(playerLeft, ABILITY_WIND_POWER);
             MESSAGE("Being hit by Tailwind charged Wattrel with power!");
 
+            ABILITY_POPUP(playerRight, ABILITY_WIND_POWER);
+            MESSAGE("Being hit by Tailwind charged Wattrel with power!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Wind Power displays its message before fainting when triggered")
+{
+    GIVEN {
+        PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AIR_CUTTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AIR_CUTTER, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_WIND_POWER);
+        MESSAGE("Being hit by Air Cutter charged Wattrel with power!");
+        MESSAGE("Wattrel fainted!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tailwind does not trigger Wind Power on an absent ally battler")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_TAILWIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        HP_BAR(playerRight);
+        MESSAGE("Wattrel fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+        NONE_OF {
             ABILITY_POPUP(playerRight, ABILITY_WIND_POWER);
             MESSAGE("Being hit by Tailwind charged Wattrel with power!");
         }

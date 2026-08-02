@@ -6,6 +6,7 @@
 #include "ereader_helpers.h"
 #include "event_data.h"
 #include "event_scripts.h"
+#include "frontier_util.h"
 #include "fieldmap.h"
 #include "field_message_box.h"
 #include "international_string_util.h"
@@ -201,7 +202,7 @@ static const u16 *const *const sPrizeListSets[] =
     sPrizeLists2
 };
 
-static const u16 sEReader_Pal[] = INCBIN_U16("graphics/trainer_hill/ereader.gbapal");
+static const u16 sEReader_Pal[] = INCGFX_U16("graphics/trainer_hill/ereader.pal", ".gbapal");
 static const u8 sRecordWinColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
 static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_MODES] =
@@ -262,7 +263,7 @@ static const u8 *const sModeStrings[NUM_TRAINER_HILL_MODES] =
 static const struct ObjectEventTemplate sTrainerObjectEventTemplate =
 {
     .graphicsId = OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
-    .elevation = 3,
+    .elevation = ELEVATION_DEFAULT,
     .movementType = MOVEMENT_TYPE_LOOK_AROUND,
     .movementRangeX = 1,
     .movementRangeY = 1,
@@ -445,7 +446,7 @@ static void GetOwnerState(void)
 static void GiveChallengePrize(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    u16 itemId = GetPrizeItemId();
+    enum Item itemId = GetPrizeItemId();
 
     if (sHillData->challenge.numFloors != NUM_TRAINER_HILL_FLOORS || gSaveBlock1Ptr->trainerHill.receivedPrize)
     {
@@ -715,7 +716,7 @@ static u16 GetMapDataForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floor
 
     impassable = (sHillData->floors[floorId].map.collisionData[y] >> (15 - x) & 1);
     metatileId = sHillData->floors[floorId].map.metatileData[floorWidth * y + x] + NUM_METATILES_IN_PRIMARY;
-    elevation = PACK_ELEVATION(3);
+    elevation = PACK_ELEVATION(ELEVATION_DEFAULT);
 
     return PACK_COLLISION(impassable) | elevation | PACK_METATILE(metatileId);
 }
@@ -895,7 +896,7 @@ static void ShowTrainerHillPostBattleText(void)
     ShowFieldMessageFromBuffer();
 }
 
-static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
+static void CreateNPCTrainerHillParty(u16 trainerId, enum BattleTrainer trainer)
 {
     u8 trId, level;
     s32 i, floorId, partySlot;
@@ -907,10 +908,10 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
     SetUpDataStruct();
     level = GetHighestLevelInPlayerParty();
     floorId = GetFloorId();
-    for (i = firstMonId, partySlot = 0; i < firstMonId + PARTY_SIZE / 2; i++, partySlot++)
+    for (i = 0, partySlot = 0; i < MULTI_PARTY_SIZE; i++, partySlot++)
     {
         u8 id = sTrainerPartySlots[trId][partySlot];
-        struct Pokemon *mon = &gEnemyParty[i];
+        struct Pokemon *mon = &gParties[trainer][i];
 
         CreateBattleTowerMon(mon, &sHillData->floors[floorId].trainers[trId].mons[id]);
         SetTrainerHillMonLevel(mon, level);
@@ -922,14 +923,14 @@ static void CreateNPCTrainerHillParty(u16 trainerId, u8 firstMonId)
 void FillHillTrainerParty(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
 }
 
 void FillHillTrainersParties(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, 0);
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, PARTY_SIZE / 2);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B);
 }
 
 // This function is unused, but my best guess is
@@ -961,7 +962,7 @@ u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
 
     SetMonData(mon, MON_DATA_EXP, &exp);

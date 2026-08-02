@@ -4,7 +4,7 @@
 
 ## 1.- Autogenerating a changelog for the `master` branch.
  *Requires Write access to the repo.*
- 
+
 If the changelog you're making is for a minor version (Eg. 1.3.0), make sure to sync the `upcoming` branch with `master` before starting. Keep in mind that if there are unreleased changes in `master`, they should be made into a patch version released alongside minor version.
 - Go to https://github.com/rh-hideout/pokeemerald-expansion/releases.
 - Press the option "Draft a new release".
@@ -178,7 +178,7 @@ With this, the repo is ready again to receive new PRs.
         - Requires role to post in #announcements channel.
     - [Team Aqua's Hideout](https://discord.gg/team-aqua-s-hideout-976252009114140682)
         - Requires role to post in #romhacking-updates channel.
-    - [What a Hack!](https://discord.gg/whack-a-hack-292436944670162955) 
+    - [What a Hack!](https://discord.gg/whack-a-hack-292436944670162955)
         - Announcements are done in Spanish, but not the changelogs themselves.
         - Requires role to ping "Decompilaciones" role.
     - [pret](https://discord.gg/R4c3FA95dP)

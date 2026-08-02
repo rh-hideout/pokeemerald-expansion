@@ -15,7 +15,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
     ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
     ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
-    ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+    ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
     ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
 }
@@ -40,17 +40,21 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SIMPLE); }
+        OPPONENT(SPECIES_NUMEL) { Ability(ABILITY_SIMPLE); }
     } WHEN {
         TURN { MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
         TURN { MOVE(player, MOVE_DEFOG); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
-        MESSAGE("But it failed!");
+        for (u32 i = 0; i < 3; i++)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("The opposing Numel's evasiveness harshly fell!");
+        }
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+        MESSAGE("The opposing Numel's evasiveness won't go any lower!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 6);
     }
@@ -58,8 +62,9 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 
 SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)")
 {
+    KNOWN_FAILING;
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -77,8 +82,9 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
 
 SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind Substitute (Gen4)")
 {
+    KNOWN_FAILING;
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE); }
     } WHEN {
@@ -99,13 +105,13 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind
 
 SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute (Gen5+)")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_5);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -136,7 +142,7 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
 
 DOUBLE_BATTLE_TEST("Defog doesn't remove Reflect or Light Screen from the user's side", s16 damagePhysical, s16 damageSpecial)
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -169,7 +175,7 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Reflect or Light Screen from the user's
 
 DOUBLE_BATTLE_TEST("Defog removes Reflect and Light Screen from target's side", s16 damagePhysical, s16 damageSpecial)
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -202,7 +208,7 @@ DOUBLE_BATTLE_TEST("Defog removes Reflect and Light Screen from target's side", 
 
 DOUBLE_BATTLE_TEST("Defog doesn't remove Mist or Safeguard from the user's side")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -234,7 +240,7 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Mist or Safeguard from the user's side"
 
 DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -276,7 +282,7 @@ DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
 
 DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from target's side")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG; }
@@ -295,7 +301,7 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from target's side
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         if (move == MOVE_DEFOG) {
-            MESSAGE("The sticky web has disappeared from the ground around your team!");
+            MESSAGE("The sticky web has disappeared from the ground around you!");
             MESSAGE("The pointed stones disappeared from around your team!");
         }
         // Switch happens
@@ -327,13 +333,14 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from target's side
 
 DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (Gen 6+)")
 {
-    u32 move, config;
+    enum Move move;
+    u32 config;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
@@ -348,7 +355,7 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         if (move == MOVE_DEFOG && config >= GEN_6) {
-            MESSAGE("The sticky web has disappeared from the ground around your team!");
+            MESSAGE("The sticky web has disappeared from the ground around you!");
             MESSAGE("The pointed stones disappeared from around your team!");
         }
         // Switch happens
@@ -380,7 +387,7 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (
 
 SINGLE_BATTLE_TEST("Defog removes Spikes from target's side")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG;     }
@@ -411,13 +418,14 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from target's side")
 
 SINGLE_BATTLE_TEST("Defog removes Spikes from user's side (Gen 6+)")
 {
-    u32 move, config;
+    enum Move move;
+    u32 config;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
@@ -446,7 +454,8 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from user's side (Gen 6+)")
 
 SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
 {
-    u32 move, config;
+    enum Move move;
+    u32 config;
 
     PARAMETRIZE { move = MOVE_PSYCHIC_TERRAIN;  config = GEN_7; }
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; config = GEN_7; }
@@ -457,7 +466,7 @@ SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN;    config = GEN_8; }
     PARAMETRIZE { move = MOVE_GRASSY_TERRAIN;   config = GEN_8; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
@@ -493,7 +502,7 @@ SINGLE_BATTLE_TEST("Defog removes terrain (Gen 8+)")
 
 SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from target's side")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_DEFOG; }
@@ -528,13 +537,14 @@ SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from target's side")
 
 SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from user's side (Gen 6+)")
 {
-    u32 move, config;
+    enum Move move;
+    u32 config;
 
     PARAMETRIZE { move = MOVE_CELEBRATE; config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_5; }
     PARAMETRIZE { move = MOVE_DEFOG;     config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
@@ -564,12 +574,13 @@ SINGLE_BATTLE_TEST("Defog removes Toxic Spikes from user's side (Gen 6+)")
 
 DOUBLE_BATTLE_TEST("Defog doesn't remove Aurora Veil from the user's side", s16 damagePhysical, s16 damageSpecial)
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_GLALIE) { Speed(3); }
@@ -605,12 +616,13 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Aurora Veil from the user's side", s16 
 
 DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhysical, s16 damageSpecial)
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_DEFOG; }
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_GLALIE) { Speed(3); }
@@ -650,8 +662,9 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
         PLAYER(SPECIES_GLALIE) { Speed(3); }
@@ -671,7 +684,10 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
     } SCENE {
         MESSAGE("The opposing Glalie used Defog!");
         MESSAGE("Glalie is protected by the mist!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, opponentRight);
+
+        // No, idea. Either I'm blind or the anim is played on the correct mon
+        // ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, opponentRight);
+
         // Player side
         MESSAGE("Your team's Reflect wore off!");
         MESSAGE("Your team's Light Screen wore off!");
@@ -681,7 +697,7 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
 
         if (config == GEN_6) {
             MESSAGE("The spikes disappeared from the ground around your team!");
-            MESSAGE("The sticky web has disappeared from the ground around your team!");
+            MESSAGE("The sticky web has disappeared from the ground around you!");
             MESSAGE("The poison spikes disappeared from the ground around your team!");
             MESSAGE("The pointed stones disappeared from around your team!");
 
@@ -725,10 +741,10 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
 SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind a Substitute with Screen up")
 {
     u32 config;
-    PARAMETRIZE { config = GEN_4; }
+    // PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -38,7 +38,7 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 #define P_ENABLE_ALL_LEVEL_UP_MOVES      FALSE   // If TRUE, it enables the Pokémon to learn all level up moves, regardless of its level.
 
 // TM Relearner
-#define P_TM_MOVES_RELEARNER             TRUE    // If TRUE, enables machine move relearner.
+#define P_TM_MOVES_RELEARNER             FALSE   // If TRUE, enables machine move relearner.
 #define P_ENABLE_ALL_TM_MOVES            FALSE   // If TRUE, it enables the Pokémon to learn all TMs its compatible with, regardless of it being in the bag.
 
 // Relearner flags - Redundant if P_ENABLE_MOVE_RELEARNERS is TRUE, but still added here incase you don't want all relearners unlocked at the same time.
@@ -50,8 +50,5 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 // Move Relearner summary screen
 #define P_SUMMARY_SCREEN_MOVE_RELEARNER  TRUE   // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
 #define P_SUMMARY_MOVE_RELEARNER_FULL_PP TRUE   // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
-
-// Move Relearner party menu
-#define P_PARTY_MOVE_RELEARNER           FALSE  // If TRUE, it enables the move relearner in the party menu.
 
 #endif // GUARD_CONFIG_SUMMARY_SCREEN_H

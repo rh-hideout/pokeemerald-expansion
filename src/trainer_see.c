@@ -15,6 +15,7 @@
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
@@ -25,7 +26,7 @@
 // this file's functions
 static u8 CheckTrainer(u8 objectEventId);
 static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj);
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, u8 direction);
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction);
 static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range);
 static void Task_RunTrainerSeeFuncList(u8 taskId);
 static void Task_EndTrainerApproach(u8 taskId);
@@ -39,6 +40,7 @@ static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 ran
 static bool8 TrainerSeeIdle(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 TrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
+static bool8 TrainerTurnToFacePlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 PlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitPlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
@@ -62,13 +64,14 @@ COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 EWRAM_DATA u8 gApproachingTrainerId = 0;
 
 // const rom data
-static const u8 sEmotion_ExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_exclamation.4bpp");
-static const u8 sEmotion_QuestionMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_question.4bpp");
-static const u8 sEmotion_HeartGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_heart.4bpp");
-static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_double_exclamation.4bpp");
-static const u8 sEmotion_XGfx[] = INCBIN_U8("graphics/field_effects/pics/emote_x.4bpp");
+static const u16 sGfx_Emoticons[] = INCGFX_U16("graphics/misc/emoticons.png", ".4bpp", "-mwidth 2 -mheight 2");
+static const u8 sEmotion_ExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_exclamation.png", ".4bpp");
+static const u8 sEmotion_QuestionMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_question.png", ".4bpp");
+static const u8 sEmotion_HeartGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_heart.png", ".4bpp");
+static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCGFX_U8("graphics/field_effects/pics/emotion_double_exclamation.png", ".4bpp");
+static const u8 sEmotion_XGfx[] = INCGFX_U8("graphics/field_effects/pics/emote_x.png", ".4bpp");
 // HGSS emote graphics ripped by Lemon on The Spriters Resource: https://www.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/sheet/30497/
-static const u8 sEmotion_Gfx[] = INCBIN_U8("graphics/misc/emotes.4bpp");
+static const u8 sEmotion_Gfx[] = INCGFX_U8("graphics/misc/emotes.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 static u8 (*const sDirectionalApproachDistanceFuncs[])(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y) =
 {
@@ -82,6 +85,7 @@ enum {
     TRSEE_NONE,
     TRSEE_EXCLAMATION,
     TRSEE_EXCLAMATION_WAIT,
+    TRSEE_TURN_TO_FACE_PLAYER,
     TRSEE_MOVE_TO_PLAYER,
     TRSEE_PLAYER_FACE,
     TRSEE_PLAYER_FACE_WAIT,
@@ -98,6 +102,7 @@ static bool8 (*const sTrainerSeeFuncList[])(u8 taskId, struct Task *task, struct
     [TRSEE_NONE]                 = TrainerSeeIdle,
     [TRSEE_EXCLAMATION]          = TrainerExclamationMark,
     [TRSEE_EXCLAMATION_WAIT]     = WaitTrainerExclamationMark,
+    [TRSEE_TURN_TO_FACE_PLAYER]  = TrainerTurnToFacePlayer,
     [TRSEE_MOVE_TO_PLAYER]       = TrainerMoveToPlayer,
     [TRSEE_PLAYER_FACE]          = PlayerFaceApproachingTrainer,
     [TRSEE_PLAYER_FACE_WAIT]     = WaitPlayerFaceApproachingTrainer,
@@ -132,6 +137,81 @@ static const struct OamData sOamData_Icons =
     .priority = 1,
     .paletteNum = 0,
     .affineParam = 0,
+};
+
+static const struct SpriteFrameImage sSpriteImages_Emoticons[] = {
+    {sGfx_Emoticons + 0x000, 0x80},
+    {sGfx_Emoticons + 0x040, 0x80},
+    {sGfx_Emoticons + 0x080, 0x80},
+
+    {sGfx_Emoticons + 0x180, 0x80},
+    {sGfx_Emoticons + 0x1C0, 0x80},
+    {sGfx_Emoticons + 0x200, 0x80},
+
+    {sGfx_Emoticons + 0x0C0, 0x80},
+    {sGfx_Emoticons + 0x100, 0x80},
+    {sGfx_Emoticons + 0x140, 0x80},
+
+    {sGfx_Emoticons + 0x240, 0x80},
+    {sGfx_Emoticons + 0x280, 0x80},
+    {sGfx_Emoticons + 0x2C0, 0x80},
+
+    {sGfx_Emoticons + 0x300, 0x80},
+    {sGfx_Emoticons + 0x340, 0x80},
+    {sGfx_Emoticons + 0x380, 0x80},
+};
+
+static const union AnimCmd sAnimCmd_ExclamationMark1[] = {
+    ANIMCMD_FRAME( 0,  4),
+    ANIMCMD_FRAME( 1,  4),
+    ANIMCMD_FRAME( 2, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnimCmd_DoubleExclMark[] = {
+    ANIMCMD_FRAME( 6,  4),
+    ANIMCMD_FRAME( 7,  4),
+    ANIMCMD_FRAME( 8, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnimCmd_X[] = {
+    ANIMCMD_FRAME( 3,  4),
+    ANIMCMD_FRAME( 4,  4),
+    ANIMCMD_FRAME( 5, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnimCmd_SmileyFace[] = {
+    ANIMCMD_FRAME( 9,  4),
+    ANIMCMD_FRAME(10,  4),
+    ANIMCMD_FRAME(11, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd sAnimCmd_QuestionMark[] = {
+    ANIMCMD_FRAME(12,  4),
+    ANIMCMD_FRAME(13,  4),
+    ANIMCMD_FRAME(14, 52),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_Emoticons[] = {
+    sAnimCmd_ExclamationMark1,
+    sAnimCmd_DoubleExclMark,
+    sAnimCmd_X,
+    sAnimCmd_SmileyFace,
+    sAnimCmd_QuestionMark
+};
+
+static const struct SpriteTemplate sSpriteTemplate_Emoticons = {
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_RED,
+    .oam = &sOamData_Icons,
+    .anims = sSpriteAnimTable_Emoticons,
+    .images = sSpriteImages_Emoticons,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_TrainerIcons
 };
 
 static const struct SpriteFrameImage sSpriteImageTable_ExclamationQuestionMark[] =
@@ -331,7 +411,6 @@ static const struct SpriteTemplate sSpriteTemplate_ExclamationQuestionMark =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_ExclamationQuestionMark,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -342,7 +421,6 @@ static const struct SpriteTemplate sSpriteTemplate_HeartIcon =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_HeartIcon,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -353,7 +431,6 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Emotes,
     .images = sSpriteImageTable_Emotes,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -416,8 +493,35 @@ bool8 CheckForTrainersWantingBattle(void)
 
         if (gNoOfApproachingTrainers > 1)
             break;
-        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and cant have a double battle
+        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and can't have a double battle
             break;
+    }
+
+
+    if (InBattlePyramid_() || InTrainerHillChallenge())
+    {
+        u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
+
+        if (gNoOfApproachingTrainers > 0)
+        {
+            ResetTrainerOpponentIds();
+            InitTrainerBattleParameter();
+
+            gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
+            gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
+            BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
+            if (gNoOfApproachingTrainers > 1)
+            {
+                gApproachingTrainerId++;
+                gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
+                gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
+                BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
+                gApproachingTrainerId = 0;
+            }
+            ScriptContext_SetupScript(EventScript_StartTrainerApproach);
+            LockPlayerFieldControls();
+            return TRUE;
+        }
     }
 
     if (gNoOfApproachingTrainers == 1)
@@ -604,12 +708,12 @@ static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 ran
         return 0;
 }
 
-static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, u8 direction)
+static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction)
 {
     s16 x, y;
     u8 rangeX, rangeY;
     u8 i;
-    u8 collision;
+    enum Collision collision;
 
     if (approachDistance == 0)
         return 0;
@@ -698,7 +802,7 @@ static bool8 TrainerSeeIdle(u8 taskId, struct Task *task, struct ObjectEvent *tr
 // TRSEE_EXCLAMATION
 static bool8 TrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
-    u8 direction;
+    enum Direction direction;
 
     ObjectEventGetLocalIdAndMap(trainerObj, &gFieldEffectArguments[0], &gFieldEffectArguments[1], &gFieldEffectArguments[2]);
     FieldEffectStart(FLDEFF_EXCLAMATION_MARK_ICON);
@@ -717,7 +821,7 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
     }
     else
     {
-        task->tFuncId++; // TRSEE_MOVE_TO_PLAYER
+        task->tFuncId++; // TRSEE_TURN_TO_FACE_PLAYER
         if (trainerObj->movementType == MOVEMENT_TYPE_TREE_DISGUISE || trainerObj->movementType == MOVEMENT_TYPE_MOUNTAIN_DISGUISE)
             task->tFuncId = TRSEE_REVEAL_DISGUISE;
         if (trainerObj->movementType == MOVEMENT_TYPE_BURIED)
@@ -726,21 +830,30 @@ static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct Obj
     }
 }
 
+// TRSEE_TURN_TO_FACE_PLAYER
+static bool8 TrainerTurnToFacePlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
+{
+    if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
+    {
+        ObjectEventSetHeldMovement(trainerObj, MOVEMENT_ACTION_FACE_PLAYER);
+
+        if (!task->tTrainerRange)
+            task->tFuncId = TRSEE_PLAYER_FACE;
+        else
+            task->tFuncId++; // TRSEE_MOVE_TO_PLAYER
+    }
+    return FALSE;
+}
+
 // TRSEE_MOVE_TO_PLAYER
 static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
     {
-        if (task->tTrainerRange)
-        {
+        if (task->tTrainerRange--)
             ObjectEventSetHeldMovement(trainerObj, GetWalkNormalMovementAction(trainerObj->facingDirection));
-            task->tTrainerRange--;
-        }
         else
-        {
-            ObjectEventSetHeldMovement(trainerObj, MOVEMENT_ACTION_FACE_PLAYER);
-            task->tFuncId++; // TRSEE_PLAYER_FACE
-        }
+            task->tFuncId++;
     }
     return FALSE;
 }
@@ -1012,6 +1125,16 @@ u8 FldEff_XIcon(void)
         SetIconSpriteData(sprite, FLDEFF_X_ICON, 3);
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_ExclamationQuestionMark, sprite);
     }
+
+    return 0;
+}
+
+u8 FldEff_SmileyFaceIcon(void)
+{
+    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_Emoticons, 0, 0, 0x53);
+
+    if (spriteId != MAX_SPRITES)
+        SetIconSpriteData(&gSprites[spriteId], FLDEFF_SMILEY_FACE_ICON, 3);
 
     return 0;
 }
