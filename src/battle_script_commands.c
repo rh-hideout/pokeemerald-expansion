@@ -4202,7 +4202,7 @@ static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
             if (trainer == B_TRAINER_PLAYER && gBattleStruct->arenaLostPlayerMons & (1u << i))
                 continue;
 
-            if (trainer == B_TRAINER_OPPONENT_A && gBattleStruct->gBattleStruct->arenaLostOpponentMons & (1u << i))
+            if (trainer == B_TRAINER_OPPONENT_A && gBattleStruct->arenaLostOpponentMons & (1u << i))
                 continue;
         }
 
@@ -4219,7 +4219,7 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
         return TRUE;
     if (AreMultiPartiesFullTeams())
         return TRUE;
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (gSelectedOrderFromParty[i] <= MULTI_PARTY_SIZE)
             continue;
@@ -4256,7 +4256,7 @@ static bool32 NoAliveMonsForOpponent(void)
     if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
         return TRUE;
 
-    return (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
+    return (!DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_B));
 }
 
 bool32 NoAliveMonsForEitherParty(void)
