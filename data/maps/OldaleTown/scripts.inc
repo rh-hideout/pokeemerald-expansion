@@ -3,12 +3,59 @@ OldaleTown_MapScripts::
 	.byte 0
 
 OldaleTown_OnTransition:
-	call Common_EventScript_SetupRivalGfxId
+	call OldaleTown_EventScript_SetupCounterpartGfx
 	setflag FLAG_VISITED_OLDALE_TOWN
 	call_if_unset FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_BlockWestEntrance
 	call_if_unset FLAG_RECEIVED_POTION_OLDALE, OldaleTown_EventScript_MoveMartEmployee
 	call_if_set FLAG_ADVENTURE_STARTED, OldaleTown_EventScript_SetOldaleState
 	end
+
+@ =============================================================================
+@ DYNAMIC COUNTERPART GRAPHICS
+@ The Oldale counterpart object must use OBJ_EVENT_GFX_VAR_0.
+@ =============================================================================
+
+OldaleTown_EventScript_SetupCounterpartGfx:
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, OldaleTown_SetCounterpartBrendan
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, OldaleTown_SetCounterpartMay
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, OldaleTown_SetCounterpartCeleste
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, OldaleTown_SetCounterpartHiiro
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, OldaleTown_SetCounterpartAleciya
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, OldaleTown_SetCounterpartAster
+
+	@ Safe fallback.
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartBrendan:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartMay:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartCeleste:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartHiiro:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartAleciya:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+	return
+
+
+OldaleTown_SetCounterpartAster:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+	return
 
 @ This script seems pointless because nothing uses VAR_OLDALE_TOWN_STATE
 OldaleTown_EventScript_SetOldaleState::
@@ -254,20 +301,37 @@ OldaleTown_EventScript_RivalTrigger3::
 	end
 
 OldaleTown_EventScript_ShowRivalMessage::
-	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, OldaleTown_EventScript_ShowMayMessage
-	goto_if_eq VAR_RESULT, FEMALE, OldaleTown_EventScript_ShowBrendanMessage
-	end
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_COMPANION, OldaleTown_EventScript_ShowCompanionMessage
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_RIVAL, OldaleTown_EventScript_ShowRivalRouteMessage
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_MENTOR, OldaleTown_EventScript_ShowMentorMessage
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_FOIL, OldaleTown_EventScript_ShowFoilMessage
+	goto OldaleTown_EventScript_ShowUnknownMessage
 
-OldaleTown_EventScript_ShowMayMessage::
-	msgbox OldaleTown_Text_MayLetsGoBack, MSGBOX_DEFAULT
-	goto OldaleTown_EventScript_RivalFinish
-	end
 
-OldaleTown_EventScript_ShowBrendanMessage::
-	msgbox OldaleTown_Text_BrendanLetsGoBack, MSGBOX_DEFAULT
+OldaleTown_EventScript_ShowCompanionMessage:
+	msgbox OldaleTown_Text_CompanionLetsGoBack, MSGBOX_DEFAULT
 	goto OldaleTown_EventScript_RivalFinish
-	end
+
+
+OldaleTown_EventScript_ShowRivalRouteMessage:
+	msgbox OldaleTown_Text_RivalLetsGoBack, MSGBOX_DEFAULT
+	goto OldaleTown_EventScript_RivalFinish
+
+
+OldaleTown_EventScript_ShowMentorMessage:
+	msgbox OldaleTown_Text_MentorLetsGoBack, MSGBOX_DEFAULT
+	goto OldaleTown_EventScript_RivalFinish
+
+
+OldaleTown_EventScript_ShowFoilMessage:
+	msgbox OldaleTown_Text_FoilLetsGoBack, MSGBOX_DEFAULT
+	goto OldaleTown_EventScript_RivalFinish
+
+
+OldaleTown_EventScript_ShowUnknownMessage:
+	msgbox OldaleTown_Text_UnknownLetsGoBack, MSGBOX_DEFAULT
+	goto OldaleTown_EventScript_RivalFinish
+
 
 OldaleTown_EventScript_RivalFinish::
 	closemessage
@@ -381,15 +445,32 @@ OldaleTown_Text_FinishedSketchingFootprints:
 	.string "But it turns out they were only my\n"
 	.string "own footprints…$"
 
-OldaleTown_Text_MayLetsGoBack:
-	.string "OAK'S GRANDCHILD: {PLAYER}{KUN}!\n"
-	.string "Over here!\l"
-	.string "Let's hurry home!$"
+OldaleTown_Text_CompanionLetsGoBack:
+	.string "{RIVAL}: There you are!\n"
+	.string "Come on..let's head back together.$"
 
-OldaleTown_Text_BrendanLetsGoBack:
-	.string "OAK'S GRANDCHILD: I'm heading back to my dad's\n"
-	.string "LAB now.\l"
-	.string "{PLAYER}, you should hustle back, too.$"
+
+OldaleTown_Text_RivalLetsGoBack:
+	.string "{RIVAL}: Finally.\n"
+	.string "I was starting to think you got lost.\p"
+	.string "Come on. Let's get back to the LAB.$"
+
+
+OldaleTown_Text_MentorLetsGoBack:
+	.string "{RIVAL}: Good. You made it back.\n"
+	.string "The PROF is waiting for us at the LAB.$"
+
+
+OldaleTown_Text_FoilLetsGoBack:
+	.string "{RIVAL}: Oh. You survived.\p"
+	.string "I suppose we should go back before\n"
+	.string "the PROF sends someone looking.$"
+
+
+OldaleTown_Text_UnknownLetsGoBack:
+	.string "{RIVAL}: You're back.\n"
+	.string "We should return to the LAB.$"
+
 
 OldaleTown_Text_TownSign:
 	.string "OLDALE TOWN\n"

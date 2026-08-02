@@ -711,10 +711,10 @@ PetalburgCity_Text_AreYouRookieTrainer:
 	.string "is in the town.$"
 
 PetalburgCity_Text_ThisIsPetalburgGym:
-	.string "See? This is PETALBURG CITY's GYM.$"
+	.string "See? This is PETALBURG CITY's SHRINE.$"
 
 PetalburgCity_Text_ThisIsGymSign:
-	.string "This is the GYM's sign. Look for it\n"
+	.string "This is the SHRINE's sign. Look for it\n"
 	.string "whenever you're looking for a GYM.$"
 
 PetalburgCity_Text_WaterReflection:
@@ -731,9 +731,9 @@ PetalburgCity_Text_FullPartyExplanation:
 	.string "BOX over a PC connection.$"
 
 PetalburgCity_Text_GymSign:
-	.string "PETALBURG CITY POKéMON GYM\n"
-	.string "LEADER: NORMAN\l"
-	.string "“A man in pursuit of power!”$"
+	.string "PETALBURG CITY SHRINE\n"
+	.string "KEEPER: ERICA\l"
+
 
 PetalburgCity_Text_CitySign:
 	.string "PETALBURG CITY\n"

@@ -20,12 +20,60 @@ LittlerootTown_ProfessorBirchsLab_MapScripts::
 	@ 5: Received pokedex
 
 LittlerootTown_ProfessorBirchsLab_OnTransition:
-	call Common_EventScript_SetupRivalGfxId
+	call LittlerootTown_ProfessorBirchsLab_EventScript_SetupCounterpartGfx
 	call ProfBirch_EventScript_UpdateLocation
 	goto_if_ge VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 6, LittlerootTown_ProfessorBirchsLab_EventScript_SetAfterJohtoStarterLayout
 	goto_if_ge VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 4, LittlerootTown_ProfessorBirchsLab_EventScript_SetJohtoStarterLayout
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 3, LittlerootTown_ProfessorBirchsLab_EventScript_CheckReadyForJohtoStarter
 	end
+
+@ =============================================================================
+@ DYNAMIC COUNTERPART GRAPHICS
+@ The lab counterpart object must use OBJ_EVENT_GFX_VAR_0.
+@ =============================================================================
+
+LittlerootTown_ProfessorBirchsLab_EventScript_SetupCounterpartGfx:
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, LittlerootTown_ProfessorBirchsLab_SetCounterpartBrendan
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, LittlerootTown_ProfessorBirchsLab_SetCounterpartMay
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, LittlerootTown_ProfessorBirchsLab_SetCounterpartCeleste
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, LittlerootTown_ProfessorBirchsLab_SetCounterpartHiiro
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, LittlerootTown_ProfessorBirchsLab_SetCounterpartAleciya
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, LittlerootTown_ProfessorBirchsLab_SetCounterpartAster
+
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartBrendan:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartMay:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartCeleste:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartHiiro:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartAleciya:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_SetCounterpartAster:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+	return
+
+
 
 LittlerootTown_ProfessorBirchsLab_EventScript_CheckReadyForJohtoStarter::
 	specialvar VAR_RESULT, HasAllHoennMons
@@ -513,8 +561,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GivePokedex::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls
-	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls
+	call LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartGivePokeBalls
 	setvar VAR_BIRCH_LAB_STATE, 5
 	setflag FLAG_ADVENTURE_STARTED
 	setvar VAR_OLDALE_TOWN_STATE, 1
@@ -522,6 +569,56 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GivePokedex::
 	setvar VAR_LITTLEROOT_TOWN_STATE, 3
 	releaseall
 	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartGivePokeBalls:
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_COMPANION, LittlerootTown_ProfessorBirchsLab_EventScript_CompanionGivePokeBalls
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_RIVAL, LittlerootTown_ProfessorBirchsLab_EventScript_RivalGivePokeBalls
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_MENTOR, LittlerootTown_ProfessorBirchsLab_EventScript_MentorGivePokeBalls
+	goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_FOIL, LittlerootTown_ProfessorBirchsLab_EventScript_FoilGivePokeBalls
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_CompanionGivePokeBalls
+
+
+LittlerootTown_ProfessorBirchsLab_EventScript_CompanionGivePokeBalls:
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_CompanionGivePokeBalls, MSGBOX_DEFAULT
+	giveitem ITEM_POKE_BALL, 5
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartNoRoomForPokeBalls
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_CompanionPokeBallAdvice, MSGBOX_DEFAULT
+	setvar VAR_RESULT, 0
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_EventScript_RivalGivePokeBalls:
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_RivalGivePokeBalls, MSGBOX_DEFAULT
+	giveitem ITEM_POKE_BALL, 5
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartNoRoomForPokeBalls
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_RivalPokeBallAdvice, MSGBOX_DEFAULT
+	setvar VAR_RESULT, 0
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_EventScript_MentorGivePokeBalls:
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_MentorGivePokeBalls, MSGBOX_DEFAULT
+	giveitem ITEM_POKE_BALL, 5
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartNoRoomForPokeBalls
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_MentorPokeBallAdvice, MSGBOX_DEFAULT
+	setvar VAR_RESULT, 0
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_EventScript_FoilGivePokeBalls:
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_FoilGivePokeBalls, MSGBOX_DEFAULT
+	giveitem ITEM_POKE_BALL, 5
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartNoRoomForPokeBalls
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_FoilPokeBallAdvice, MSGBOX_DEFAULT
+	setvar VAR_RESULT, 0
+	return
+
+
+LittlerootTown_ProfessorBirchsLab_EventScript_CounterpartNoRoomForPokeBalls:
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_CounterpartBagFull, MSGBOX_DEFAULT
+	return
+
+
 
 LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_MayGotPokedexTooTakeThese, MSGBOX_DEFAULT
@@ -990,3 +1087,55 @@ LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 	.string "we meet. I'll be waiting!\p"
 	.string "… … … … … …\n"
 	.string "… … … … … Click!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_CompanionGivePokeBalls:
+	.string "{RIVAL}: You got a POKéDEX too!\n"
+	.string "Then we really are doing this together.\p"
+	.string "Here..I saved these for you.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_CompanionPokeBallAdvice:
+	.string "{RIVAL}: Now we can both start building\n"
+	.string "our teams.\p"
+	.string "Tell me what you catch first, okay?$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_RivalGivePokeBalls:
+	.string "{RIVAL}: A POKéDEX already?\n"
+	.string "Don't let it make you overconfident.\p"
+	.string "You'll need these if you plan to\n"
+	.string "keep up with me.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_RivalPokeBallAdvice:
+	.string "{RIVAL}: Catch whatever you want.\n"
+	.string "Just make sure it can battle.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_MentorGivePokeBalls:
+	.string "{RIVAL}: A POKéDEX is only useful if\n"
+	.string "you continue observing and learning.\p"
+	.string "Take these. They will help.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_MentorPokeBallAdvice:
+	.string "{RIVAL}: Pay attention to more than\n"
+	.string "strength when choosing POKéMON.\p"
+	.string "Every species has something to teach.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_FoilGivePokeBalls:
+	.string "{RIVAL}: Apparently I'm supposed to\n"
+	.string "give you these.\p"
+	.string "Try not to waste all of them.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_FoilPokeBallAdvice:
+	.string "{RIVAL}: I suppose catching POKéMON\n"
+	.string "could make you less helpless.\p"
+	.string "Probably.$"
+
+
+LittlerootTown_ProfessorBirchsLab_Text_CounterpartBagFull:
+	.string "{RIVAL}: Your BAG is full.\n"
+	.string "Of course it is.$"

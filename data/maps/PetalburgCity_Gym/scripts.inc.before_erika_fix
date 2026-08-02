@@ -149,11 +149,6 @@ PetalburgCity_Gym_EventScript_BeginWallyTutorialEast::
 	goto PetalburgCity_Gym_EventScript_BeginWallyTutorial
 	end
 
-@ Restored compatibility helper for the southern approach.
-PetalburgCity_Gym_EventScript_WallyArriveSouth:
-	return
-
-
 PetalburgCity_Gym_EventScript_BeginWallyTutorial::
 	addobject LOCALID_PETALBURG_GYM_WALLY
 	playse SE_DOOR
@@ -1669,13 +1664,4 @@ PetalburgCity_Gym_Text_NormanRematchNeedTwoMons:
 	.string "capable of battle?\p"
 	.string "Sorry, but you'll have to come back\n"
 	.string "with at least two POKéMON.$"
-
-
-
-@ Compatibility text retained for untouched late-game shrine logic.
-PetalburgCity_Gym_Text_NormanGoToRustboro:
-	.string "ERIKA: Your journey should continue\n"
-	.string "toward Rustboro for now.\p"
-	.string "There is still much for you to see\n"
-	.string "before this Shrine opens to you.$"
 

@@ -343,12 +343,16 @@ Town_Library_EventScript_FaceDad:
 Town_Library_EventScript_GruntConversation::
     lockall
 
+    @ Quest fully complete: use permanent follow-up dialogue.
+    compare VAR_LIBRARY_BOOK_QUEST, 5
+    goto_if_eq Town_Library_EventScript_GruntsAfterMission
+
+    @ Original conversation only happens during state 1.
     compare VAR_LIBRARY_BOOK_QUEST, 1
     goto_if_ne Town_Library_EventScript_GruntConversation_End
 
     goto_if_set FLAG_LIBRARY_GRUNTS_HEARD, Town_Library_EventScript_GruntConversation_End
 
-    @ The player initially overhears the grunts talking to one another.
     msgbox Town_Library_Text_GruntBookClubOpening, MSGBOX_DEFAULT
     setflag FLAG_LIBRARY_GRUNTS_HEARD
 
@@ -357,6 +361,18 @@ Town_Library_EventScript_GruntConversation::
     goto_if_eq Town_Library_EventScript_SitWithGrunts
 
     goto Town_Library_EventScript_QuestionGruntsDirectly
+
+
+Town_Library_EventScript_GruntsAfterMission:
+    applymovement LOCALID_LIBRARY_AQUA_GRUNT, Town_Library_Movement_AquaFacePlayer
+    applymovement LOCALID_LIBRARY_MAGMA_GRUNT, Town_Library_Movement_MagmaFacePlayer
+    waitmovement 0
+
+    msgbox Town_Library_Text_AquaGruntAfterMission, MSGBOX_DEFAULT
+    msgbox Town_Library_Text_MagmaGruntAfterMission, MSGBOX_DEFAULT
+
+    releaseall
+    end
 
 
 Town_Library_EventScript_QuestionGruntsDirectly:
@@ -563,6 +579,18 @@ Town_Library_Text_BlaineSearchTown:
     .string "look around Littleroot.\p"
     .string "Bring the book back to me when\n"
     .string "you find it.$"
+
+Town_Library_Text_AquaGruntAfterMission:
+    .string "Strange...\p"
+    .string "Every historian agrees this is the\n"
+    .string "most important book ever written.\p"
+    .string "But nobody agrees on why.$"
+
+
+Town_Library_Text_MagmaGruntAfterMission:
+    .string "They say kingdoms have gone to war\n"
+    .string "over what's written inside.\p"
+    .string "I'm starting to see why.$"
 
 
 @ =============================================================================

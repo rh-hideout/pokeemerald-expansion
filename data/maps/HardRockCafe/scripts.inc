@@ -56,10 +56,19 @@ HardRockCafe_Counterpart::
     lock
     faceplayer
 
-    getplayerxy VAR_TEMP_0, VAR_TEMP_1
+    compare VAR_LIBRARY_BOOK_QUEST, 5
+    goto_if_eq HardRockCafe_EventScript_CounterpartAfterLibrary
 
+    getplayerxy VAR_TEMP_0, VAR_TEMP_1
     goto_if_eq VAR_TEMP_0, 8, HardRockCafe_CheckCorrectY
     goto HardRockCafe_CounterpartWrongSide
+
+    
+HardRockCafe_EventScript_CounterpartAfterLibrary:
+    msgbox HardRockCafe_Text_CounterpartPancakes, MSGBOX_DEFAULT
+    release
+    end
+
 
 HardRockCafe_CheckCorrectY:
     goto_if_eq VAR_TEMP_1, 15, HardRockCafe_CounterpartSceneStart
@@ -542,6 +551,11 @@ HardRockCafe_Text_CounterpartCookbookShock:
     .string "Wait.\p"
     .string "Everyone was panicking...\n"
     .string "over a cookbook?!$"
+
+HardRockCafe_Text_CounterpartPancakes:
+    .string "You know, pancakes are basically\n"
+    .string "just cake pretending to be breakfast.\p"
+    .string "That's why I trust them.$"
 
 HardRockCafe_BlaineArrival:
     clearflag FLAG_HIDE_HARD_ROCK_BLAINE
