@@ -366,37 +366,20 @@ static bool8 TextConditionUsesSecondBranch(u8 conditionId)
     }
 }
 
-static u8 GetExtCtrlCodeArgCountForPlaceholderExpansion(u8 code)
+static u8 GetExtCtrlCodeArgCount(u8 code)
 {
-    switch (code)
-    {
-    case EXT_CTRL_CODE_RESET_FONT:
-    case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
-    case EXT_CTRL_CODE_WAIT_SE:
-    case EXT_CTRL_CODE_FILL_WINDOW:
-    case EXT_CTRL_CODE_JPN:
-    case EXT_CTRL_CODE_ENG:
-    case EXT_CTRL_CODE_PAUSE_MUSIC:
-    case EXT_CTRL_CODE_RESUME_MUSIC:
-    case EXT_CTRL_CODE_CONDITION_ELSE:
-    case EXT_CTRL_CODE_CONDITION_END:
-        return 0;
-    case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-    case EXT_CTRL_CODE_TEXT_COLORS:
-        return 3;
-    case EXT_CTRL_CODE_PLAY_BGM:
-    case EXT_CTRL_CODE_PLAY_SE:
-        return 2;
-    default:
-        return 1;
-    }
+    u8 length = GetExtCtrlCodeLength(code);
+
+    // Codes missing from the lengths table are assumed to have one argument
+    // byte, matching the historical StringExpandPlaceholders default.
+    return length != 0 ? length - 1 : 1;
 }
 
 static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
 {
     const u8 *src = *srcPtr;
     u8 i;
-    u8 argCount = GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
+    u8 argCount = GetExtCtrlCodeArgCount(code);
 
     *dest++ = EXT_CTRL_CODE_BEGIN;
     *dest++ = code;
@@ -410,10 +393,17 @@ static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
 
 static void SkipExtCtrlCodeArgs(const u8 **srcPtr, u8 code)
 {
-    *srcPtr += GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
+    *srcPtr += GetExtCtrlCodeArgCount(code);
 }
 
-static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 stopAtEnd, u8 *stopCode)
+enum TextUntil
+{
+    UNTIL_EOS = 0,
+    UNTIL_COND_ELSE = (1 << 0),
+    UNTIL_COND_END = (1 << 1),
+};
+
+static void SkipPlaceholdersUntil(const u8 **srcPtr, u32 until, u8 *stopCode)
 {
     const u8 *src = *srcPtr;
 
@@ -436,13 +426,13 @@ static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 sto
                     u8 branchStopCode = 0;
 
                     src++;
-                    SkipPlaceholdersUntil(&src, TRUE, TRUE, &branchStopCode);
+                    SkipPlaceholdersUntil(&src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
                     if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
-                        SkipPlaceholdersUntil(&src, FALSE, TRUE, &branchStopCode);
+                        SkipPlaceholdersUntil(&src, UNTIL_COND_END, &branchStopCode);
                 }
                 break;
             case EXT_CTRL_CODE_CONDITION_ELSE:
-                if (stopAtElse)
+                if (until & UNTIL_COND_ELSE)
                 {
                     *stopCode = c;
                     *srcPtr = src;
@@ -450,7 +440,7 @@ static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 sto
                 }
                 break;
             case EXT_CTRL_CODE_CONDITION_END:
-                if (stopAtEnd)
+                if (until & UNTIL_COND_END)
                 {
                     *stopCode = c;
                     *srcPtr = src;
@@ -471,7 +461,7 @@ static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 sto
     }
 }
 
-static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, bool8 stopAtElse, bool8 stopAtEnd, u8 *stopCode)
+static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, u32 until, u8 *stopCode)
 {
     const u8 *src = *srcPtr;
 
@@ -486,7 +476,7 @@ static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, bool8 stopAtElse
         case PLACEHOLDER_BEGIN:
             placeholderId = *src++;
             expandedString = GetExpandedPlaceholder(placeholderId);
-            dest = ExpandPlaceholdersUntil(dest, &expandedString, FALSE, FALSE, stopCode);
+            dest = ExpandPlaceholdersUntil(dest, &expandedString, UNTIL_EOS, stopCode);
             break;
         case EXT_CTRL_CODE_BEGIN:
             c = *src++;
@@ -500,20 +490,20 @@ static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, bool8 stopAtElse
 
                     if (useSecondBranch)
                     {
-                        SkipPlaceholdersUntil(&src, TRUE, TRUE, &branchStopCode);
+                        SkipPlaceholdersUntil(&src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
                         if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
-                            dest = ExpandPlaceholdersUntil(dest, &src, FALSE, TRUE, &branchStopCode);
+                            dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_COND_END, &branchStopCode);
                     }
                     else
                     {
-                        dest = ExpandPlaceholdersUntil(dest, &src, TRUE, TRUE, &branchStopCode);
+                        dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
                         if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
-                            SkipPlaceholdersUntil(&src, FALSE, TRUE, &branchStopCode);
+                            SkipPlaceholdersUntil(&src, UNTIL_COND_END, &branchStopCode);
                     }
                 }
                 break;
             case EXT_CTRL_CODE_CONDITION_ELSE:
-                if (stopAtElse)
+                if (until & UNTIL_COND_ELSE)
                 {
                     *stopCode = c;
                     *srcPtr = src;
@@ -521,7 +511,7 @@ static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, bool8 stopAtElse
                 }
                 break;
             case EXT_CTRL_CODE_CONDITION_END:
-                if (stopAtEnd)
+                if (until & UNTIL_COND_END)
                 {
                     *stopCode = c;
                     *srcPtr = src;
@@ -549,7 +539,7 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
 {
     u8 stopCode;
 
-    dest = ExpandPlaceholdersUntil(dest, &src, FALSE, FALSE, &stopCode);
+    dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_EOS, &stopCode);
     *dest = EOS;
     return dest;
 }

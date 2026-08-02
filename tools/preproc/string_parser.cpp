@@ -110,7 +110,7 @@ std::string StringParser::ReadIdentifier()
     return std::string(&m_buffer[startPos], m_pos - startPos);
 }
 
-std::string StringParser::ReadConditionalBranch(char delimiter)
+std::string StringParser::ReadConditionalBranch(char delimiter, const std::string& conditionName)
 {
     std::string sequence;
 
@@ -124,19 +124,19 @@ std::string StringParser::ReadConditionalBranch(char delimiter)
         if (c == 0)
         {
             if (m_pos >= m_size)
-                RaiseError("unexpected EOF within checkgender expression");
+                RaiseError("unexpected EOF within %s expression", conditionName.c_str());
             else
-                RaiseError("unexpected null character within checkgender expression");
+                RaiseError("unexpected null character within %s expression", conditionName.c_str());
         }
 
         if (c == '"')
-            RaiseError("unexpected end of string within checkgender expression");
+            RaiseError("unexpected end of string within %s expression", conditionName.c_str());
 
         if (delimiter == '|' && c == '}')
-            RaiseError("expected '|' before end of checkgender expression");
+            RaiseError("expected '|' before end of %s expression", conditionName.c_str());
 
         if (delimiter == '}' && c == '|')
-            RaiseError("unexpected '|' within checkgender expression");
+            RaiseError("unexpected '|' within %s expression", conditionName.c_str());
 
         sequence += (c == '{') ? ReadBracketedConstants() : ReadCharOrEscape();
     }
@@ -154,10 +154,10 @@ std::string StringParser::ReadCheckgenderExpression()
 
     m_pos++; // Go past the colon.
 
-    std::string maleBranch = ReadConditionalBranch('|');
+    std::string maleBranch = ReadConditionalBranch('|', "checkgender");
     m_pos++; // Go past the pipe.
 
-    std::string femaleBranch = ReadConditionalBranch('}');
+    std::string femaleBranch = ReadConditionalBranch('}', "checkgender");
     m_pos++; // Go past the right curly bracket.
 
     sequence += condition;
@@ -207,10 +207,7 @@ std::string StringParser::ReadBracketedConstants()
             std::string sequence = g_charmap->Constant(constantName);
 
             if (sequence.length() == 0)
-            {
-                m_buffer[m_pos] = 0;
                 RaiseError("unknown constant '%s'", constantName.c_str());
-            }
 
             totalSequence += sequence;
         }

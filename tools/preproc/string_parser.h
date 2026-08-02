@@ -49,7 +49,7 @@ private:
     std::string ReadIdentifier();
     std::string ReadBracketedConstants();
     std::string ReadCheckgenderExpression();
-    std::string ReadConditionalBranch(char delimiter);
+    std::string ReadConditionalBranch(char delimiter, const std::string& conditionName);
     void SkipWhitespace();
     void SkipRestOfInteger(int radix);
     void RaiseError(const char* format, ...);
