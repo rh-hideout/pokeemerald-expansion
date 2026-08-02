@@ -4272,20 +4272,28 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
     return aiEffect;
 }
 
-// It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
+static bool32 ShouldConsiderSpecificPartnerMove(enum BattlerId battlerAtkPartner)
+{
+    return ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
+     || !IsThinkingBeforePartner(GetPartnerBattler(battlerAtkPartner), battlerAtkPartner));
+}
+
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
     if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
-      && partnerMove != MOVE_NONE)
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
     {
-        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
+        if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
+        && partnerMove != MOVE_NONE)
         {
-            return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
+            if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
+            {
+                return gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef;
+            }
+            return TRUE;
         }
-        return TRUE;
     }
     return FALSE;
 }
@@ -4296,17 +4304,22 @@ bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enu
     if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
-    enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
-    if (partnerMove != MOVE_NONE
-     && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
-     && (nonVolatileStatus == MOVE_EFFECT_POISON
-       || nonVolatileStatus == MOVE_EFFECT_TOXIC
-       || nonVolatileStatus == MOVE_EFFECT_SLEEP
-       || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
-       || nonVolatileStatus == MOVE_EFFECT_BURN
-       || partnerEffect == EFFECT_YAWN))
-        return TRUE;
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
+        enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
+        if (partnerMove != MOVE_NONE
+         && gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef
+         && (nonVolatileStatus == MOVE_EFFECT_POISON
+         || nonVolatileStatus == MOVE_EFFECT_TOXIC
+         || nonVolatileStatus == MOVE_EFFECT_SLEEP
+         || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
+         || nonVolatileStatus == MOVE_EFFECT_BURN
+         || partnerEffect == EFFECT_YAWN))
+        {
+            return TRUE;
+        }
+    }
     return FALSE;
 }
 
@@ -4318,8 +4331,7 @@ bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum BattleMoveEffe
 
     enum Move partnerMove = gAiLogicData->partnerMove;
 
-    if ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
-     || IsThinkingBeforePartner(battlerAtkPartner, GetPartnerBattler(battlerAtkPartner)))
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
     {
         return (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck);
     }
@@ -4335,8 +4347,7 @@ bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move moveCheck)
 
     enum Move partnerMove = gAiLogicData->partnerMove;
 
-    if ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
-     || IsThinkingBeforePartner(battlerAtkPartner, GetPartnerBattler(battlerAtkPartner)))
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
     {
         return (partnerMove != MOVE_NONE && partnerMove == moveCheck);
     }
@@ -4350,8 +4361,11 @@ bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum Battle
     if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
-        return TRUE;
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        if (partnerMove != MOVE_NONE && move == partnerMove && gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef)
+            return TRUE;
+    }
     return FALSE;
 }
 
@@ -4360,8 +4374,12 @@ bool32 PartnerMoveIsSameNoTarget(enum BattlerId battlerAtkPartner, enum Move mov
 {
     if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
-    if (partnerMove != MOVE_NONE && move == partnerMove)
-        return TRUE;
+
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        if (partnerMove != MOVE_NONE && move == partnerMove)
+            return TRUE;
+    }
     return FALSE;
 }
 

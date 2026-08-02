@@ -1960,9 +1960,24 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_CONFUSE:
     case EFFECT_SWAGGER:
-        if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
-        || !AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+        if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+        {
             ADJUST_SCORE(-10);
+        }
+        else
+        {
+            switch (GetMoveTarget(move))
+            {
+            case TARGET_SELECTED:
+                if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                break;
+            default:
+                if (PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), moveEffect))
+                    ADJUST_SCORE(-10);
+                break;
+            }
+        }
         break;
     case EFFECT_SUBSTITUTE:
         if (gBattleMons[battlerAtk].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
@@ -2062,7 +2077,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_STEALTH_ROCK:
         if (IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STEALTH_ROCK)
-          || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)) //Only one mon needs to set up Stealth Rocks
+          || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_STEALTH_ROCK)) //Only one mon needs to set up Stealth Rocks
             ADJUST_SCORE(-10);
         break;
     case EFFECT_TOXIC_SPIKES:
@@ -2074,7 +2089,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_STICKY_WEB:
         if (IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STICKY_WEB))
             ADJUST_SCORE(-10);
-        if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_STICKY_WEB))
             ADJUST_SCORE(-10); // only one mon needs to set up Sticky Web
         break;
     case EFFECT_FORESIGHT:
@@ -2102,7 +2117,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             {
                 ADJUST_SCORE(-10); //Both enemies are perish songed
             }
-            else if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+            else if (PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_PERISH_SONG))
             {
                 ADJUST_SCORE(-10);
             }
@@ -2156,7 +2171,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SAFEGUARD:
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_SAFEGUARD
-          || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_SAFEGUARD))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_PARTING_SHOT:
@@ -2293,13 +2308,13 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_MUD_SPORT:
         if (gFieldStatuses & STATUS_FIELD_MUDSPORT
           || gBattleMons[battlerAtk].volatiles.mudSport
-          || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_MUD_SPORT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_WATER_SPORT:
         if (gFieldStatuses & STATUS_FIELD_WATERSPORT
           || gBattleMons[battlerAtk].volatiles.waterSport
-          || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_WATER_SPORT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_STRENGTH_SAP:
@@ -2439,7 +2454,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HEAL_BELL:
-        if (!AnyPartyMemberStatused(battlerAtk, IsSoundMove(move)) || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (!AnyPartyMemberStatused(battlerAtk, IsSoundMove(move)) || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_HEAL_BELL))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_ENDURE:
@@ -2823,11 +2838,11 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_MAGIC_ROOM:
-        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_MAGIC_ROOM))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_WONDER_ROOM:
-        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_WONDER_ROOM))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_GRAVITY:
@@ -3017,7 +3032,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_LUCKY_CHANT:
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LUCKY_CHANT
-          || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+          || PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_LUCKY_CHANT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_MAGNET_RISE:
@@ -3098,7 +3113,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_TEATIME:
-        if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (PartnerMoveEffectIs(BATTLE_PARTNER(battlerAtk), EFFECT_TEATIME))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_DARK_VOID:

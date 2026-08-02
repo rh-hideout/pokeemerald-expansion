@@ -194,7 +194,7 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_DEEP_PARTNER_THINKING prevents poor selection of Magnet Rise")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: AI_FLAG_DEEP_PARTNER_THINKING prevents poor selection of Magnet Rise (normal order)")
 {
     u64 flags = 0;
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
