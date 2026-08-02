@@ -3757,7 +3757,7 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
             // Various checks for if this move effect can be applied this turn
             if (CanApplyAdditionalEffect(cv->battlerAtk, effectBattler, additionalEffect)
              && ShouldApplyAfterHitEffects(cv->battlerAtk, effectBattler)
-             && (additionalEffect->effect != MOVE_EFFECT_STAT_MINUS || !additionalEffect->self)
+             && (additionalEffect->moveEffect != MOVE_EFFECT_STAT_MINUS || !additionalEffect->self)
              && (effectBattler == cv->battlerAtk) == additionalEffect->self)
             {
                 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
@@ -3812,7 +3812,7 @@ static enum MoveEndResult MoveEndAdditionalEffectsLowerStatsAttacker(struct Batt
         // Various checks for if this move effect can be applied this turn
         if (CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
          && ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
-         && (additionalEffect->effect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
+         && (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
         {
             percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
 
