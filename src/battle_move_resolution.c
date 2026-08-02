@@ -5262,8 +5262,6 @@ static bool32 ShouldSkipStatChangeOnBattler(enum BattlerId battlerAtk, enum Batt
     // It is convenient to use targetsDone here but needs a hack for self target stat change moves
     bool32 isSelf = battlerAtk == battlerDef && gBattlerAttacker == gBattlerTarget;
 
-    if (!IsBattlerAlive(battlerDef))
-        return TRUE;
     if (!isSelf && gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
         return TRUE;
     if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
