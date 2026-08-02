@@ -4188,8 +4188,6 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
 
 static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
 {
-    u32 aliveMons = 0;
-
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon mon = gParties[B_TRAINER_PLAYER][i];
@@ -4218,6 +4216,8 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
     if (GetConfig(B_MULTI_BATTLE_WHITEOUT) <= GEN_3)
         return TRUE;
     if (AreMultiPartiesFullTeams())
+        return TRUE;
+    if (TESTING)
         return TRUE;
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
