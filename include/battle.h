@@ -597,6 +597,7 @@ struct BattleStruct
     u8 monToSwitchIntoId[MAX_BATTLERS_COUNT];
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
     u8 runTries;
+    u8 caughtMonPartyIndex;
     u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];
     u8 safariGoNearCounter;
     u8 safariPkblThrowCounter;
@@ -663,6 +664,7 @@ struct BattleStruct
     struct Illusion illusion[MAX_BATTLERS_COUNT];
     enum BattlerId soulheartBattlerId;
     struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
+    u16 wildItemStolen[PARTY_SIZE];
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     u8 redCardActivated :1;

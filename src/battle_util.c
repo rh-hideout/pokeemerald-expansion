@@ -9190,6 +9190,32 @@ void TryRestoreHeldItems(void)
     }
 }
 
+void TryAddStolenWildItemsToBag(void)
+{
+    u8 battleOutcome = gBattleOutcome & ~B_OUTCOME_LINK_BATTLE_RAN;
+    u8 caughtPartyIndex = PARTY_SIZE;
+
+    if (GetConfig(B_STEAL_WILD_ITEMS) < GEN_9)
+        return;
+    if (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
+        return;
+    if (battleOutcome == B_OUTCOME_LOST || battleOutcome == B_OUTCOME_DREW || battleOutcome == B_OUTCOME_FORFEITED)
+        return;
+
+    if (battleOutcome == B_OUTCOME_CAUGHT)
+        caughtPartyIndex = gBattleStruct->caughtMonPartyIndex;
+
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        enum Item stolenItem = gBattleStruct->wildItemStolen[i];
+
+        if (stolenItem == ITEM_NONE || i == caughtPartyIndex)
+            continue;
+
+        AddBagItem(stolenItem, 1);
+    }
+}
+
 bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, enum Item item)
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);

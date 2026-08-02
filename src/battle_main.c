@@ -3066,6 +3066,7 @@ static void BattleStartClearSetData(void)
     gLeveledUpInBattle = 0;
     gAbsentBattlerFlags = 0;
     gBattleStruct->runTries = 0;
+    gBattleStruct->caughtMonPartyIndex = PARTY_SIZE;
     gBattleStruct->safariGoNearCounter = 0;
     gBattleStruct->safariPkblThrowCounter = 0;
     gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
@@ -3096,6 +3097,7 @@ static void BattleStartClearSetData(void)
             gBattleStruct->itemLost[trainer][i].originalItem = GetMonData(&gParties[trainer][i], MON_DATA_HELD_ITEM);
             gPartyCriticalHits[i] = 0;
         }
+        gBattleStruct->wildItemStolen[i] = ITEM_NONE;
     }
 
     gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
@@ -5535,6 +5537,7 @@ static void HandleEndTurn_FinishBattle(void)
         FadeOutMapMusic(5);
         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE || B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
             TryRestoreHeldItems();
+        TryAddStolenWildItemsToBag();
 
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
