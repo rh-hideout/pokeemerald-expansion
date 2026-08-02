@@ -32,6 +32,7 @@
 #include "io_reg.h"
 #include "item.h"
 #include "item_icon.h"
+#include "line_break.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "load_save.h"
@@ -2498,7 +2499,7 @@ static void ResetScreenForMapLoad(void)
     ScanlineEffect_Stop();
 
     DmaClear16(3, PLTT + 2, PLTT_SIZE - 2);
-    DmaFillLarge16(3, 0, (void *)VRAM, VRAM_SIZE, 0x1000);
+    DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
     ResetOamRange(0, 128);
     LoadOam();
 }
@@ -3466,7 +3467,7 @@ static u8 GetLinkPlayerElevation(u8 linkPlayerId)
     return objEvent->currentElevation;
 }
 
-static s32 UNUSED GetLinkPlayerObjectStepTimer(u8 linkPlayerId)
+static s16 UNUSED GetLinkPlayerObjectStepTimer(u8 linkPlayerId)
 {
     u8 objEventId = gLinkPlayerObjectEvents[linkPlayerId].objEventId;
     struct ObjectEvent *objEvent = &gObjectEvents[objEventId];
@@ -3495,26 +3496,18 @@ static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
     u8 objEventId = linkPlayerObjEvent->objEventId;
     struct ObjectEvent *objEvent = &gObjectEvents[objEventId];
 
-    if (linkPlayerObjEvent->active)
+    if (!linkPlayerObjEvent->active)
+        return;
+
+    if (facing > FACING_FORCED_RIGHT)
     {
-        if (facing > FACING_FORCED_RIGHT)
-        {
-            objEvent->triggerGroundEffectsOnMove = TRUE;
-        }
-        else
-        {
-            // This is a hack to split this code onto two separate lines, without declaring a local variable.
-            // C++ style inline variables would be nice here.
-            #define TEMP sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](linkPlayerObjEvent, objEvent, facing)
-
-            sMovementStatusHandler[TEMP](linkPlayerObjEvent, objEvent);
-
-            // Clean up the hack.
-            #undef TEMP
-        }
+        objEvent->triggerGroundEffectsOnMove = TRUE;
+        return;
     }
-}
 
+    sMovementStatusHandler[sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](
+        linkPlayerObjEvent, objEvent, facing)](linkPlayerObjEvent, objEvent);
+}
 
 static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, enum Direction dir)
 {
@@ -3713,44 +3706,10 @@ static void DestroyItemIconSprite(void);
 
 static u8 ReformatItemDescription(enum Item item, u8 *dest)
 {
-    u8 count = 0;
-    u8 numLines = 1;
-    u8 maxChars = 32;
-    u8 *desc = (u8 *)GetItemDescription(item);
-
-    while (*desc != EOS)
-    {
-        if (count >= maxChars)
-        {
-            while (*desc != CHAR_SPACE && *desc != CHAR_NEWLINE)
-            {
-                *dest = *desc;  //finish word
-                dest++;
-                desc++;
-            }
-
-            *dest = CHAR_NEWLINE;
-            count = 0;
-            numLines++;
-            dest++;
-            desc++;
-            continue;
-        }
-
-        *dest = *desc;
-        if (*desc == CHAR_NEWLINE)
-        {
-            *dest = CHAR_SPACE;
-        }
-
-        dest++;
-        desc++;
-        count++;
-    }
-
-    // finish string
-    *dest = EOS;
-    return numLines;
+    StringCopy(dest, GetItemDescription(item));
+    StripLineBreaks(dest);
+    BreakStringAutomatic(dest, 196, 2, FONT_SMALL, HIDE_SCROLL_PROMPT);
+    return CountLineBreaks(dest) + 1;
 }
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)
