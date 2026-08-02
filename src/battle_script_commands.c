@@ -4186,116 +4186,77 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
     return CountAliveMonsForBattlerSide(battler) == 0;
 }
 
-bool32 NoAliveMonsForPlayer(void)
+static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
 {
-    // Test system does not have saved player party data that can be accessed
-    u32 maxIneligible = TESTING ? gPartiesCount[B_TRAINER_PLAYER] : PARTY_SIZE;
-    u32 HP_count = 0;
-    u32 ineligibleMonsCount = 0;
+    u32 aliveMons = 0;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3)
-            maxIneligible += gPartiesCount[B_TRAINER_PARTNER];
-        else if (!AreMultiPartiesFullTeams())
-            maxIneligible = 3;
-    }
-
-    // Get total HP for the player's party to determine if the player has lost
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon mon = gParties[B_TRAINER_PLAYER][i];
 
-        if (GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_IS_EGG)
-         && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
+        if (!GetMonData(&mon, MON_DATA_SPECIES) || GetMonData(&mon, MON_DATA_IS_EGG))
+            continue;
+
+        if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         {
-            HP_count += GetMonData(&mon, MON_DATA_HP);
+            if (trainer == B_TRAINER_PLAYER && gBattleStruct->arenaLostPlayerMons & (1u << i))
+                continue;
+
+            if (trainer == B_TRAINER_OPPONENT_A && gBattleStruct->gBattleStruct->arenaLostOpponentMons & (1u << i))
+                continue;
         }
 
-        if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3)
-        {
-            // Get the number of fainted mons or eggs (not empty slots) in the party.
-            if ((GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_HP))
-            || GetMonData(&mon, MON_DATA_IS_EGG))
-            {
-                ineligibleMonsCount++;
-            }
-        }
-    }
-
-    if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
-    {
-        if (HP_count == 0 && AreMultiPartiesFullTeams())
+        if (GetMonData(&mon, MON_DATA_HP) > 0)
             return TRUE;
-
-        // Get total HP for the partner's party
-        for (u32 i = 0; i < PARTY_SIZE; i++)
-        {
-            struct Pokemon mon = gParties[B_TRAINER_PARTNER][i];
-
-            if (GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_IS_EGG)
-             && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
-            {
-                HP_count += GetMonData(&mon, MON_DATA_HP);
-            }
-            // Get the number of fainted mons or eggs (not empty slots) in the party.
-            if ((GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_HP))
-             || GetMonData(&mon, MON_DATA_IS_EGG))
-            {
-                ineligibleMonsCount++;
-            }
-        }
-
-        if(!(gBattleTypeFlags & BATTLE_TYPE_ARENA || TESTING
-         || (gBattleTypeFlags & BATTLE_TYPE_MULTI && AreMultiPartiesFullTeams())))
-        {
-            for (u32 i = 0; i < PARTY_SIZE; i++)
-            {
-                if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
-                 || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
-                 || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
-                {
-                    ineligibleMonsCount++;
-                }
-            }
-
-            // If the total number of ineligible mons is more than the maximum, lose the battle.
-            if (ineligibleMonsCount >= maxIneligible)
-                return TRUE;
-        }
     }
 
-    return (HP_count == 0);
+    return FALSE;
+}
+
+static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
+{
+    if (GetConfig(B_MULTI_BATTLE_WHITEOUT) <= GEN_3)
+        return TRUE;
+    if (AreMultiPartiesFullTeams())
+        return TRUE;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (gSelectedOrderFromParty[i] <= MULTI_PARTY_SIZE)
+            continue;
+
+        struct Pokemon *fullPartyMon = GetSavedPlayerPartyMon(i);
+
+        if (!GetMonData(fullPartyMon, MON_DATA_SPECIES) || GetMonData(fullPartyMon, MON_DATA_IS_EGG))
+            continue;
+
+        if (GetMonData(fullPartyMon, MON_DATA_HP) > 0)
+            return FALSE;
+    }
+    return TRUE;
+}
+
+bool32 NoAliveMonsForPlayer(void)
+{
+    if (DoesPartyHaveBattleReadyMons(B_TRAINER_PLAYER))
+        return FALSE;
+
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)))
+        return TRUE;
+
+    if (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
+        return TRUE;
+    return WillPlayerWhiteOutIfPartnerWinsAlone();
 }
 
 static bool32 NoAliveMonsForOpponent(void)
 {
-    u32 i;
-    u32 HP_count = 0;
-
-    // Get total HP for the enemy's party to determine if the player has won
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_IS_EGG)
-         && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
-        {
-            HP_count += GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HP);
-        }
-    }
+    if (DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_A))
+        return FALSE;
 
     if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
-    {
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_IS_EGG)
-            && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
-            {
-                HP_count += GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_HP);
-            }
-        }
-    }
+        return TRUE;
 
-    return (HP_count == 0);
+    return (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
 }
 
 bool32 NoAliveMonsForEitherParty(void)
