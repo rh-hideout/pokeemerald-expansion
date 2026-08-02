@@ -18,6 +18,9 @@ IntroFall_OnFrame:
 
 IntroFall_EventScript_Begin:
     setvar VAR_TEMP_2, 1
+    setflag FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK
+    setflag FLAG_HIDE_COUNTERPART_ROUTE101_WALK
+    setvar VAR_LITTLEROOT_STORY, 0
     call IntroFall_Setup
     end
 

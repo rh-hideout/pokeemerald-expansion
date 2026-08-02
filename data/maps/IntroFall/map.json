@@ -2,10 +2,10 @@
   "id": "MAP_INTRO_FALL",
   "name": "IntroFall",
   "layout": "LAYOUT_INTRO_FALL",
-  "music": "MUS_PETALBURG_WOODS",
+  "music": "MUS_DUMMY",
   "region_map_section": "MAPSEC_SPECIAL_AREA",
   "requires_flash": false,
-  "weather": "WEATHER_SHADE",
+  "weather": "WEATHER_RAIN_THUNDERSTORM",
   "map_type": "MAP_TYPE_ROUTE",
   "allow_cycling": false,
   "allow_escaping": false,
@@ -91,7 +91,7 @@
       "x": 12,
       "y": 18,
       "elevation": 0,
-      "weather": "COORD_EVENT_WEATHER_SHADE"
+      "weather": "COORD_EVENT_WEATHER_RAIN_THUNDERSTORM"
     }
   ],
   "bg_events": []

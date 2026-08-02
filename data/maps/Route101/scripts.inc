@@ -1,70 +1,124 @@
+@ =============================================================================
+@ ROUTE 101 — MAP SCRIPTS
+@ =============================================================================
+
 Route101_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route101_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route101_OnFrame
 	.byte 0
 
+
 Route101_OnTransition:
 	call ProfBirch_EventScript_UpdateLocation
 	end
 
+
 Route101_OnFrame:
 	map_script_2 VAR_ROUTE101_STATE, 0, Route101_EventScript_HideMapNamePopup
+
+	@ The Littleroot escort has crossed into Route 101.
+	map_script_2 VAR_LITTLEROOT_STORY, 4, Route101_EventScript_EscortArrival
+
 	.2byte 0
+
+
+@ =============================================================================
+@ MAP NAME
+@ =============================================================================
 
 Route101_EventScript_HideMapNamePopup::
 	setflag FLAG_HIDE_MAP_NAME_POPUP
 	setvar VAR_ROUTE101_STATE, 1
 	end
 
+
+@ =============================================================================
+@ ESCORT ARRIVAL
+@
+@ The counterpart is no longer a separate Route 101 object.
+@ Their dialogue is delivered while they remain immediately behind/offscreen.
+@
+@ VAR_LITTLEROOT_STORY:
+@   4 = Player has entered Route 101 with the counterpart
+@   5 = Route 101 scene has started
+@ =============================================================================
+
+Route101_EventScript_EscortArrival::
+	lockall
+
+	@ Prevent this ON_FRAME event from firing again.
+	setvar VAR_LITTLEROOT_STORY, 5
+
+	@ Position Oak and Zigzagoon immediately.
+	@ This prevents Oak from briefly appearing at his ordinary map position.
+	setobjectxy LOCALID_ROUTE101_BIRCH, 0, 15
+	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 0, 16
+
+	msgbox Route101_Text_CounterpartBeginsExplainingBrock, MSGBOX_DEFAULT
+	closemessage
+
+	applymovement LOCALID_PLAYER, Route101_Movement_PlayerHearsOak
+	waitmovement 0
+
+	msgbox Route101_Text_CounterpartHearsTrouble, MSGBOX_DEFAULT
+	closemessage
+
+	@ Continue directly into Oak's rescue while control remains locked.
+	goto Route101_EventScript_StartBirchRescue_FromEscort
+
+
+@ =============================================================================
+@ OAK RESCUE
+@
+@ There are two valid entry points:
+@
+@ 1. From the custom escort scene:
+@       Route101_EventScript_StartBirchRescue_FromEscort
+@
+@ 2. From the original map trigger:
+@       Route101_EventScript_StartBirchRescue
+@
+@ Both continue into one shared rescue body.
+@ =============================================================================
+
+Route101_EventScript_StartBirchRescue_FromEscort:
+	playbgm MUS_HELP, TRUE
+	goto Route101_EventScript_StartBirchRescue_Main
+
+
 Route101_EventScript_StartBirchRescue::
 	lockall
 	playbgm MUS_HELP, TRUE
-	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
-	closemessage
+
+	@ The original trigger may reach this script without the escort setup.
 	setobjectxy LOCALID_ROUTE101_BIRCH, 0, 15
 	setobjectxy LOCALID_ROUTE101_ZIGZAGOON, 0, 16
+
+
+Route101_EventScript_StartBirchRescue_Main:
+	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+	closemessage
+
 	applymovement LOCALID_PLAYER, Route101_Movement_EnterScene
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchRunAway1
 	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonChase1
 	waitmovement 0
+
 	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonChaseInCircles
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchRunInCircles
 	waitmovement 0
+
 	applymovement LOCALID_ROUTE101_BIRCH, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
+
 	applymovement LOCALID_ROUTE101_ZIGZAGOON, Route101_Movement_ZigzagoonFaceBirch
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchFaceZigzagoon
 	waitmovement 0
+
 	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
 	closemessage
+
 	setvar VAR_ROUTE101_STATE, 2
-	releaseall
-	end
-
-Route101_EventScript_PreventExitSouth::
-	lockall
-	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_PLAYER, Route101_Movement_PreventExitSouth
-	waitmovement 0
-	releaseall
-	end
-
-Route101_EventScript_PreventExitWest::
-	lockall
-	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_PLAYER, Route101_Movement_PreventExitWest
-	waitmovement 0
-	releaseall
-	end
-
-Route101_EventScript_PreventExitNorth::
-	lockall
-	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_PLAYER, Route101_Movement_PreventExitNorth
-	waitmovement 0
 	releaseall
 	end
 
@@ -72,13 +126,6 @@ Route101_Movement_PreventExitSouth:
 	walk_up
 	step_end
 
-Route101_Movement_PreventExitWest:
-	walk_right
-	step_end
-
-Route101_Movement_PreventExitNorth:
-	walk_down
-	step_end
 
 Route101_Movement_ZigzagoonChaseInCircles:
 	walk_fast_up
@@ -133,8 +180,6 @@ Route101_Movement_ZigzagoonFaceBirch:
 	step_end
 
 Route101_Movement_EnterScene:
-	walk_fast_up
-	walk_fast_up
 	walk_fast_up
 	walk_fast_up
 	walk_in_place_faster_left
@@ -203,6 +248,11 @@ Route101_Movement_Unused2:
 	walk_up
 	step_end
 
+
+Route101_Movement_PlayerHearsOak:
+	walk_in_place_faster_left
+	step_end
+
 Route101_EventScript_Youngster::
 	msgbox Route101_Text_TakeTiredPokemonToPokeCenter, MSGBOX_NPC
 	end
@@ -235,6 +285,7 @@ Route101_EventScript_BirchsBag::
 	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
 	setvar VAR_BIRCH_LAB_STATE, 2
 	setvar VAR_ROUTE101_STATE, 3
+	setvar VAR_COUNTERPART_HOME_EVENT, 3
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, Route101_EventScript_HideMayInBedroom
@@ -295,4 +346,15 @@ Route101_Text_WildPokemonInTallGrass:
 Route101_Text_RouteSign:
 	.string "ROUTE 101\n"
 	.string "{UP_ARROW} OLDALE TOWN$"
+
+Route101_Text_CounterpartBeginsExplainingBrock:
+	.string "Brock is kind of a big deal\n"
+	.string "around here.\p"
+	.string "He's actually..$"
+
+
+Route101_Text_CounterpartHearsTrouble:
+	.string "...\p"
+	.string "Wait.\p"
+	.string "Was that Gramps?$"
 

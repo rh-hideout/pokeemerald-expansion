@@ -31,12 +31,82 @@ LittlerootTown_MapScripts::
 LittlerootTown_OnTransition:
     setflag FLAG_VISITED_LITTLEROOT_TOWN
     setflag FLAG_HIDE_HARD_ROCK_BLAINE
-    
+
+    call LittlerootTown_SetCounterpartGuideGraphics
+    call LittlerootTown_UpdateCounterpartGuideVisibility
+
     call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_HideMapNamePopup
     call_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_EventScript_LeftLabAfterDexUpgrade
 
     end
 
+@ =============================================================================
+@ COUNTERPART GUIDE VISIBILITY
+@
+@ VAR_LITTLEROOT_STORY:
+@   0–2 = Hidden
+@   3   = Visible for the escort
+@   4+  = Hidden after leaving Littleroot
+@ =============================================================================
+
+LittlerootTown_UpdateCounterpartGuideVisibility:
+    @ Hidden is the default condition.
+    setflag FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK
+
+    @ Only state 3 should show the outside counterpart.
+    goto_if_eq VAR_LITTLEROOT_STORY, 3, LittlerootTown_ShowCounterpartGuide
+
+    return
+
+
+LittlerootTown_ShowCounterpartGuide:
+    clearflag FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK
+    return
+
+@ =============================================================================
+@ OUTSIDE COUNTERPART GRAPHICS
+@ =============================================================================
+
+LittlerootTown_SetCounterpartGuideGraphics:
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, LittlerootTown_SetGuideBrendan
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, LittlerootTown_SetGuideMay
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, LittlerootTown_SetGuideCeleste
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, LittlerootTown_SetGuideHiiro
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, LittlerootTown_SetGuideAleciya
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, LittlerootTown_SetGuideAster
+
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+
+LittlerootTown_SetGuideBrendan:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+
+LittlerootTown_SetGuideMay:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_MAY_NORMAL
+    return
+
+
+LittlerootTown_SetGuideCeleste:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_LEXY_NORMAL
+    return
+
+
+LittlerootTown_SetGuideHiiro:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_JUSTIN_NORMAL
+    return
+
+
+LittlerootTown_SetGuideAleciya:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_MAAM_NORMAL
+    return
+
+
+LittlerootTown_SetGuideAster:
+    setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_SIR_NORMAL
+    return
 
 LittlerootTown_EventScript_HideMapNamePopup:
     setflag FLAG_HIDE_MAP_NAME_POPUP
@@ -54,7 +124,49 @@ LittlerootTown_EventScript_LeftLabAfterDexUpgrade:
 
 LittlerootTown_OnFrame:
     map_script_2 VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_BeginDexUpgradeScene
+    map_script_2 VAR_LITTLEROOT_STORY, 3, LittlerootTown_EventScript_StartCounterpartEscort
     .2byte 0
+
+@ =============================================================================
+@ COUNTERPART ESCORT — LITTLEROOT
+@
+@ 3 = Player has left the counterpart's house
+@ 4 = Player and counterpart are entering Route 101
+@ =============================================================================
+
+LittlerootTown_EventScript_StartCounterpartEscort:
+    lockall
+
+    @ Advance immediately so the on-frame script cannot repeat.
+    setvar VAR_LITTLEROOT_STORY, 4
+
+    delay 15
+
+    msgbox LittlerootTown_Text_CounterpartFollowMe, MSGBOX_DEFAULT
+    closemessage
+
+    applymovement LOCALID_LITTLEROOT_COUNTERPART_GUIDE, LittlerootTown_Movement_CounterpartToRoute101
+    applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerToRoute101
+    waitmovement 0
+
+    @ Prepare the Route 101 counterpart copy before changing maps.
+    setflag FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK
+    clearflag FLAG_HIDE_COUNTERPART_ROUTE101_WALK
+
+    @ Advance the story so Route 101 knows to begin its scene.
+    setvar VAR_LITTLEROOT_STORY, 4
+
+    @ Player crosses the actual north connection naturally.
+    applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerEnterRoute101
+    waitmovement 0
+
+    releaseall
+    end
+
+LittlerootTown_Movement_PlayerEnterRoute101:
+    walk_up
+    walk_up
+    step_end
 
 
 @ =============================================================================
@@ -513,6 +625,85 @@ LittlerootTown_Movement_PushPlayerBackFromRoute:
     unlock_facing_direction
     step_end
 
+LittlerootTown_Movement_CounterpartToRoute101:
+ 
+    walk_down
+    walk_down
+
+    walk_right
+    walk_right
+    walk_right
+
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    
+
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_up
+    walk_up
+    walk_left
+    walk_up
+    face_right
+    step_end
+
+
+LittlerootTown_Movement_PlayerToRoute101:
+
+    delay_16
+
+    walk_down
+    walk_down
+
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    
+
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_up
+    walk_up
+    step_end
 
 @ =============================================================================
 @ TOWN SIGNS
@@ -813,6 +1004,10 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
     .string "I have something important to\n"
     .string "show you at the LAB.\p"
     .string "Come with me.$"
+
+LittlerootTown_Text_CounterpartFollowMe:
+    .string "Come on.\p"
+    .string "I'll explain on the way.$"
 
 
 LittlerootTown_EventScript_GiveRunningShoesTrigger2::

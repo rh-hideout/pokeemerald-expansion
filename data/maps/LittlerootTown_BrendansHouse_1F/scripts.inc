@@ -158,13 +158,9 @@ LittlerootTown_BrendansHouse_1F_EventScript_OfferHelp:
 
 
 LittlerootTown_BrendansHouse_1F_EventScript_AcceptHelp:
-    setvar VAR_COUNTERPART_HOME_EVENT, 2
-
-    msgbox LittlerootTown_BrendansHouse_1F_Text_LetsGo, MSGBOX_DEFAULT
-
-    @ Route 101 exit choreography will replace this ending later.
-    release
-    end
+    @ The initial acceptance and the later reminder both use
+    @ the same departure setup.
+    goto LittlerootTown_BrendansHouse_1F_EventScript_LeaveForRoute101
 
 
 LittlerootTown_BrendansHouse_1F_EventScript_ReadyReminder:
@@ -180,11 +176,21 @@ LittlerootTown_BrendansHouse_1F_EventScript_ReadyReminder:
 
 
 LittlerootTown_BrendansHouse_1F_EventScript_LeaveForRoute101:
+    @ Marks the invitation as accepted.
+    setvar VAR_COUNTERPART_HOME_EVENT, 2
+
+    @ State 3 tells Littleroot's ON_FRAME table to begin
+    @ the outside escort when the player exits this house.
+    setvar VAR_LITTLEROOT_STORY, 3
+
+    @ Reveal the separate counterpart object placed outside
+    @ in Littleroot.
+    clearflag FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK
+
     msgbox LittlerootTown_BrendansHouse_1F_Text_LetsGo, MSGBOX_DEFAULT
 
-    @ Add the actual walk/warp sequence here once we choose
-    @ the counterpart's standing position and exterior route.
-
+    @ For now, the player exits through the normal doorway.
+    @ Littleroot's ON_FRAME script takes over after the map loads.
     release
     end
 
@@ -493,6 +499,7 @@ PlayersHouse_1F_Text_WhatColorDidTheySay:
 PlayersHouse_1F_Text_StillUnknownPokemon:
 	.string "MOM: Well, isn't that something!\n"
 	.string "There are still unknown POKéMON.$"
+
 
 @ Temporary compatibility alias for the current Porymap object.
 CounterpartHouse_Counterpart::
