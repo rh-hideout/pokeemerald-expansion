@@ -10860,6 +10860,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
                     break;
                 case IF_DEFEAT_X_WITH_ITEMS:
                     if (gBattlerAttacker != gBattlerFainted
+                     && IsBattlerTurnDamaged(gBattlerFainted, EXCLUDING_SUBSTITUTES)
                      && GetMonData(monFainted, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                      && GetMonData(monFainted, MON_DATA_HELD_ITEM) == evolutions[i].params[j].arg2)
                         SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);

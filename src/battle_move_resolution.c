@@ -4245,6 +4245,29 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
     return result;
 }
 
+static enum MoveEndResult MoveEndFaintAttacker(struct BattleCalcValues *cv)
+{
+    if (!IsBattlerAlive(cv->battlerAtk) && !gBattleStruct->battlerState[cv->battlerAtk].notOnField)
+    {
+        if (gBattleMons[cv->battlerAtk].volatiles.neutralizingGas)
+        {
+            gBattleMons[cv->battlerAtk].volatiles.neutralizingGas = FALSE;
+            if (!IsNeutralizingGasOnField())
+            {
+                BattleScriptCall(BattleScript_NeutralizingGasExits);
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            }
+        }
+
+        SetValuesOnFaint(cv->battlerAtk);
+        BattleScriptCall(BattleScript_FaintBattler);
+        return MOVEEND_RESULT_RUN_SCRIPT;
+    }
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
 {
     if (!IsOnPlayerSide(cv->battlerAtk))
@@ -5826,6 +5849,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ITEM_EFFECTS_ATTACKER_1_ALLIED_SIDE] = MoveEndItemEffectsAttacker1,
     [MOVEEND_SYMBIOSIS_ALLIED_SIDE] = MoveEndSymbiosis,
     [MOVEEND_FAINT_BLOCK_ALLIED_SIDE] = MoveEndFaintBlock,
+    [MOVEEND_FAINT_ATTACKER_ALLIED_SIDE] = MoveEndFaintAttacker,
     [MOVEEND_UPDATE_LAST_MOVES_ALLIED_SIDE] = MoveEndUpdateLastMoves,
     [MOVEEND_MIRROR_MOVE_ALLIED_SIDE] = MoveEndMirrorMove,
     [MOVEEND_SET_VALUES_FOR_OPPOSING_SIDE] = MoveEndSetValuesForOpposingSide,
@@ -5847,6 +5871,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_ITEM_EFFECTS_ATTACKER_1_OPPOSING_SIDE] = MoveEndItemEffectsAttacker1,
     [MOVEEND_SYMBIOSIS_OPPOSING_SIDE] = MoveEndSymbiosis,
     [MOVEEND_FAINT_BLOCK_OPPOSING_SIDE] = MoveEndFaintBlock,
+    [MOVEEND_FAINT_ATTACKER_OPPOSING_SIDE] = MoveEndFaintAttacker,
     [MOVEEND_UPDATE_LAST_MOVES_OPPOSING_SIDE] = MoveEndUpdateLastMoves,
     [MOVEEND_MIRROR_MOVE_OPPOSING_SIDE] = MoveEndMirrorMove,
     [MOVEEND_NEXT_TARGET] = MoveEndNextTarget,
