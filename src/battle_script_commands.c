@@ -2053,17 +2053,8 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
             if (payday > gPaydayMoney)
                 gPaydayMoney = 0xFFFF;
 
-            // For a move that hits multiple targets (i.e. Make it Rain)
-            // we only want to print the message on the final hit
-            if (!(NumAffectedSpreadMoveTargets() > 1 && GetNextTarget(moveTarget, TRUE) != MAX_BATTLERS_COUNT))
-            {
-                BattleScriptPush(battleScript);
-                gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
-            }
-            else
-            {
-                gBattlescriptCurrInstr = battleScript;
-            }
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
         }
         else
         {
