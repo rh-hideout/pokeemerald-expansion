@@ -1929,7 +1929,7 @@ void CheckROMSize(struct ScriptContext *ctx)
 
 static void DebugSelectionStep_UpdateWeather(u8 taskId, u8 digits, u32 min, u32 max)
 {
-    while (gTasks[taskId].tInput > 14 && gTasks[taskId].tInput < 20)
+    if (gTasks[taskId].tInput == WEATHER_ABNORMAL)
     {
         if (JOY_NEW(DPAD_DOWN))
             gTasks[taskId].tInput--;
@@ -1954,7 +1954,7 @@ static const struct DebugSelectionStep sWeatherSelectionStep = {
     .stepUpdate = DebugSelectionStep_UpdateWeather,
     .stepConfirm = DebugSelectionStep_GenericInputConfirm,
     .minValue = WEATHER_NONE,
-    .maxValue = WEATHER_COUNT - 1,
+    .maxValue = WEATHER_DYNAMIC - 1,
     .digits = 2
 };
 
@@ -3161,10 +3161,9 @@ UPDATE_GENERIC_INPUT(Quantity, Quantity)
 static bool32 DebugSelection_GiveItem_Complete(u8 taskId)
 {
     AddBagItem(DebugSelection_GetData(taskId, 0), DebugSelection_GetData(taskId, 1));
-    gTasks[taskId].tStep = 0;
-    gTasks[taskId].tStepsDataIndex = 0;
-    DebugSelection_SetData(taskId, 1, 0);
-    return FALSE;
+    DebugSelectionStep_ReturnToGiveMenu(taskId);
+    PlaySE(SE_SUCCESS);
+    return TRUE;
 }
 
 static const struct DebugSelectionStep sItemSelectionStep = {
@@ -3195,6 +3194,7 @@ static bool32 DebugSelection_GiveSimplePokemon_OnComplete(u8 taskId)
 {
     ScriptGiveMon(DebugSelection_GetData(taskId, 0), DebugSelection_GetData(taskId, 1), ITEM_NONE);
     DebugSelectionStep_ReturnToGiveMenu(taskId);
+    PlaySE(SE_SUCCESS);
     return TRUE;
 }
 
@@ -3484,6 +3484,7 @@ static bool32 DebugSelection_GiveEggPokemon_OnComplete(u8 taskId)
 {
     ScriptGiveEgg(DebugSelection_GetData(taskId, 0));
     DebugSelectionStep_ReturnToGiveMenu(taskId);
+    PlaySE(SE_SUCCESS);
     return TRUE;
 }
 
@@ -3517,9 +3518,9 @@ static void DebugSelectionStep_UpdateDecoration(u8 taskId, u8 digits, u32 min, u
 static bool32 DebugSelection_GiveDecoration_Complete(u8 taskId)
 {
     DecorationAdd(DebugSelection_GetData(taskId, 0));
-    gTasks[taskId].tStep = 0;
-    gTasks[taskId].tStepsDataIndex = 0;
-    return FALSE;
+    DebugSelectionStep_ReturnToGiveMenu(taskId);
+    PlaySE(SE_SUCCESS);
+    return TRUE;
 }
 
 static const struct DebugSelectionStep sDecorationSelectionStep = {
