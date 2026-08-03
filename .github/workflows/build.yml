@@ -74,7 +74,7 @@ jobs:
             tools/patchelf/patchelf
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
 
-      - name: Run tests
+      - name: Build and run tests
         env:
           GAME_VERSION: EMERALD
           TEST: 1
