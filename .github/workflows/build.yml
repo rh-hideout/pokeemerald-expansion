@@ -54,7 +54,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
 
-      - name: Build ROM (Release)
+      - name: Build release ROM
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) release
