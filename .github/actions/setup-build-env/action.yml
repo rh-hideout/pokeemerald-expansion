@@ -1,0 +1,40 @@
+name: 'Setup Build Environment'
+description: 'Installs apt packages and caches build tools'
+inputs:
+  cache-key-prefix:
+    description: 'Prefix for the cache key'
+    required: false
+    default: 'tools'
+  extra-tools:
+    description: 'Extra tools to cache'
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Install and cache apt packages
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+        version: 1.0
+
+    - name: Cache build tools
+      uses: actions/cache@v4
+      with:
+        path: |
+          tools/bin2c/bin2c
+          tools/gbafix/gbafix
+          tools/gbagfx/gbagfx
+          tools/jsonproc/jsonproc
+          tools/mapjson/mapjson
+          tools/mid2agb/mid2agb
+          tools/preproc/preproc
+          tools/ramscrgen/ramscrgen
+          tools/rsfont/rsfont
+          tools/scaninc/scaninc
+          tools/trainerproc/trainerproc
+          tools/compresSmol/compresSmol
+          tools/compresSmol/compresSmolTilemap
+          tools/wav2agb/wav2agb
+          ${{ inputs.extra-tools }}
+        key: ${{ inputs.cache-key-prefix }}-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
