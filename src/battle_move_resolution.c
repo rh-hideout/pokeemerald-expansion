@@ -2341,7 +2341,6 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
         if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
             continue;
 
-
         if (DoesMoveMissTarget(cv))
         {
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
@@ -2351,10 +2350,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
              && !isMultiHitOn)
                 gBattleStruct->blunderPolicy = TRUE;
 
-            if (isSmartTarget && smartTargetState == INITIAL_STATE
-             && !IsAffectedByFollowMe(cv->battlerAtk, GetBattlerSide(cv->battlerDef), cv->move)
-             && CanTargetPartner(cv->battlerAtk, cv->battlerDef)
-             && !IsBattlerUnaffectedByMove(BATTLE_PARTNER(cv->battlerDef)))
+            if (isSmartTarget && smartTargetState == INITIAL_STATE)
             {
                 smartTargetState = MISSED_FIRST_TARGET;
                 gBattlerTarget = BATTLE_PARTNER(cv->battlerDef); // Smart target to partner if miss
