@@ -9195,15 +9195,12 @@ void TryRestoreHeldItems(void)
         if (gBattleStruct->itemLost[B_TRAINER_PLAYER][i].stolen || returnNPCItems)
         {
             u32 lostItem = gBattleStruct->itemLost[B_TRAINER_PLAYER][i].originalItem;
-            bool32 isHeldItemBerry = GetItemPocket(lostItem) == POCKET_BERRIES;
 
-            if ((isHeldItemBerry || lostItem == ITEM_NONE) && !returnNPCItems)
-                continue;
+            if (GetItemPocket(lostItem) == POCKET_BERRIES && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
+                lostItem = ITEM_NONE;
 
-            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
-                continue;
-
-            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &lostItem);
+            if ((lostItem != ITEM_NONE || returnNPCItems) && GetItemPocket(lostItem) != POCKET_BERRIES)
+                SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM, &lostItem);
         }
     }
 }
