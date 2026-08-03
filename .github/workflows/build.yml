@@ -28,8 +28,10 @@ jobs:
         include:
           - version: EMERALD
             target: all
+            
           - version: FIRERED
             target: firered
+
           - version: LEAFGREEN
             target: leafgreen
     steps:
@@ -77,7 +79,6 @@ jobs:
       - name: Build and run tests
         env:
           GAME_VERSION: EMERALD
-          TEST: 1
         run: make -j$(nproc) check
 
   # Gate job: satisfies the "build" branch protection rule.
