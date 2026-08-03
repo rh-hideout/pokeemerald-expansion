@@ -1,4 +1,4 @@
-name: 'Setup Build Environment'
+name: 'Setup build environment'
 description: 'Installs apt packages and caches build tools'
 inputs:
   cache-key-prefix:
