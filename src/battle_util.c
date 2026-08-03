@@ -8547,7 +8547,7 @@ void ActivateMegaEvolution(enum BattlerId battler)
         gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
         gBattleMainFunc = ActivateMegaEvolution_ContinueAfterSlide;
 
-        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsgEnd3);
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
         return;
     }
     enum Ability ability = GetBattlerAbility(battler);

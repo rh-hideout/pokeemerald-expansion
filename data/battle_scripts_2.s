@@ -315,17 +315,13 @@ BattleScript_TrainerPartnerSlideMsgEnd2::
 	call BattleScript_TrainerPartnerSlideMsgRet
 	end2
 
-BattleScript_TrainerSlideMsgRet::
+BattleScript_TrainerSlideMsg::
 	trainerslidein BS_SCRIPTING
 	handletrainerslidemsg BS_SCRIPTING, PRINT_SLIDE_MESSAGE
 	waitstate
 	trainerslideout BS_SCRIPTING
 	waitstate
 	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
-	return
-
-BattleScript_TrainerSlideMsgEnd3::
-	call BattleScript_TrainerSlideMsgRet
 	end3
 
 BattleScript_GhostBallDodge::

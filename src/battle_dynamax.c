@@ -193,7 +193,7 @@ void ActivateDynamax(enum BattlerId battler)
         gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
         gBattleMainFunc = ActivateDynamax_ContinueAfterSlide;
 
-        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsgEnd3);
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
         return;
     }
     // Set appropriate use flags.
