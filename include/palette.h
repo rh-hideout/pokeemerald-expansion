@@ -77,7 +77,7 @@ struct PaletteFadeControl
     bool32 softwareFadeFinishing:1;
     bool32 objPaletteToggle:1;
     u32 deltaY:4; // rate of change of blend coefficient
-    u32 simultaneousFade:1; // instead of alternating between fading sptite and bg, fade both simultaneously (to avoid visual inconstitencies in rare scenarios)
+    u32 simultaneousFade:1; // instead of alternating between fading sptite and bg, fade both simultaneously (to avoid visual inconsistencies in rare scenarios)
     u32 padding:14;
 };
 

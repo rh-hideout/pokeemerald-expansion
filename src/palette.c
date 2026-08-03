@@ -304,7 +304,7 @@ static u8 UpdateTimeOfDayPaletteFade(void)
     return PALETTE_FADE_STATUS_ACTIVE;
 }
 
-static u32 UpdateNormalPaletteFade_Alternate()
+static u32 UpdateNormalPaletteFade_Alternate(void)
 {
     u16 paletteOffset;
     u32 selectedPalettes;
@@ -378,7 +378,7 @@ static u32 UpdateNormalPaletteFade_Alternate()
     return PALETTE_FADE_STATUS_ACTIVE;
 }
 
-static u32 UpdateNormalPaletteFade_Simultaneous()
+static u32 UpdateNormalPaletteFade_Simultaneous(void)
 {
     u16 paletteOffset;
     u32 selectedPalettes;
@@ -455,13 +455,9 @@ static u32 UpdateNormalPaletteFade(void)
         return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
 
     if (gPaletteFade.simultaneousFade)
-    {
         return UpdateNormalPaletteFade_Simultaneous();
-    }
     else
-    {
         return UpdateNormalPaletteFade_Alternate();
-    }
 }
 
 void InvertPlttBuffer(u32 selectedPalettes)
