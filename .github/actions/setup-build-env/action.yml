@@ -17,6 +17,7 @@ runs:
       with:
         packages: binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
         version: 1.0
+        execute_install_scripts: true
 
     - name: Cache build tools
       uses: actions/cache@v4
