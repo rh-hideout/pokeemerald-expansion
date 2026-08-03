@@ -77,8 +77,6 @@ jobs:
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
 
       - name: Build and run tests
-        env:
-          GAME_VERSION: EMERALD
         run: make -j$(nproc) check
 
   # Gate job: satisfies the "build" branch protection rule.
