@@ -26,15 +26,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Emerald
+          - version: EMERALD
             target: all
-            version: EMERALD
-          - name: Firered
+          - version: FIRERED
             target: firered
-            version: FIRERED
-          - name: Leafgreen
+          - version: LEAFGREEN
             target: leafgreen
-            version: LEAFGREEN
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -42,7 +39,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
 
-      - name: ROM (${{ matrix.name }})
+      - name: Build ROM (${{ matrix.version }})
         env:
           GAME_VERSION: ${{ matrix.version }}
         run: make ${{ matrix.target }} -j$(nproc) -O
@@ -57,7 +54,7 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
 
-      - name: Release
+      - name: Build ROM (Release)
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) release
@@ -77,7 +74,7 @@ jobs:
             tools/patchelf/patchelf
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
 
-      - name: Test
+      - name: Run tests
         env:
           GAME_VERSION: EMERALD
           TEST: 1
