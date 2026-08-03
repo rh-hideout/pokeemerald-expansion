@@ -4628,6 +4628,14 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
+        case MULTIHIT_BLOCK_SMART_EFFECTIVENESS_MESSAGE:
+            if (target == TARGET_SMART) // Dragon Darts shows this after every hit
+            {
+                if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv->battlerDef, cv->battlerAtk))
+                    result = MOVEEND_RESULT_RUN_SCRIPT;
+            }
+            gBattleStruct->eventState.moveEndBlock++;
+            break;
         case MULTIHIT_BLOCK_SMART_REDIRECTION:
             if (gMultiHitCounter
              && target == TARGET_SMART
@@ -4652,7 +4660,7 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
             gBattleStruct->eventState.moveEndBlock++;
             break;
         case MULTIHIT_BLOCK_EFFECTIVENESS_MESSAGE:
-            if (gMultiHitCounter == 0 || target == TARGET_SMART) // Dragon Darts shows this after every hit
+            if (gMultiHitCounter == 0 && target != TARGET_SMART)
             {
                 if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv->battlerDef, cv->battlerAtk))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
