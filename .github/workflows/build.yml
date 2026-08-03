@@ -28,7 +28,7 @@ jobs:
         include:
           - version: EMERALD
             target: all
-            
+
           - version: FIRERED
             target: firered
 
@@ -44,7 +44,7 @@ jobs:
       - name: Build ROM (${{ matrix.version }})
         env:
           GAME_VERSION: ${{ matrix.version }}
-        run: make ${{ matrix.target }} -j$(nproc) -O
+        run: make ${{ matrix.target }} -j$(nproc) debug
 
   release:
     if: github.actor != 'allcontributors[bot]'
