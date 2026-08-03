@@ -841,7 +841,7 @@ static const s16 sBattlerHealthboxCoords[BATTLE_COORDS_COUNT][MAX_BATTLERS_COUNT
     [BATTLE_COORDS_SINGLES] =
     {
         [B_POSITION_PLAYER_LEFT]   = { 158, 88 },
-        [B_POSITION_OPPONENT_LEFT] = { 44,  30 },
+        [B_POSITION_OPPONENT_LEFT] = { 44,  (B_HP_PERCENTAGE_DISPLAY ? 22 : 30)},
     },
     [BATTLE_COORDS_DOUBLES] =
     {
@@ -2931,8 +2931,8 @@ static const struct SpriteSheet sSpriteSheet_MoveInfoWindow =
 
 #define LAST_USED_BALL_X_F    14
 #define LAST_USED_BALL_X_0    -14
-#define LAST_USED_BALL_Y      ((B_HP_PERCENTAGE_DISPLAY || IsDoubleBattle()) ? 78 : 68)
-#define LAST_USED_BALL_Y_BNC  ((B_HP_PERCENTAGE_DISPLAY || IsDoubleBattle()) ? 76 : 66)
+#define LAST_USED_BALL_Y      (IsDoubleBattle() ? 78 : 68)
+#define LAST_USED_BALL_Y_BNC  (IsDoubleBattle() ? 76 : 66)
 
 #define LAST_BALL_WIN_X_F       (LAST_USED_BALL_X_F - 0)
 #define LAST_BALL_WIN_X_0       (LAST_USED_BALL_X_0 - 0)
