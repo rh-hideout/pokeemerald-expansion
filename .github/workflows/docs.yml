@@ -12,7 +12,7 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup mdBook
@@ -24,7 +24,7 @@ jobs:
           cd docs
           mdbook build
       - name: Check if Pages is enabled
-        uses: octokit/request-action@v2.x
+        uses: octokit/request-action@v3.x
         id: check_pages
         continue-on-error: true
         with:
@@ -32,13 +32,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
         if: steps.check_pages.outcome == 'success'
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: 'docs/book'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         if: steps.check_pages.outcome == 'success'

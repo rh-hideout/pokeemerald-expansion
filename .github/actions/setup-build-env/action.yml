@@ -13,14 +13,14 @@ runs:
   using: "composite"
   steps:
     - name: Install and cache apt packages
-      uses: awalsh128/cache-apt-pkgs-action@latest
+      uses: awalsh128/cache-apt-pkgs-action@v1.6.3
       with:
         packages: binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
         version: 1.0
         execute_install_scripts: true
 
     - name: Cache build tools
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: |
           tools/bin2c/bin2c
