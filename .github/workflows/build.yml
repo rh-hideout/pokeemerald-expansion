@@ -25,17 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [emerald, firered, leafgreen]
+        build: [emerald, firered, leafgreen]
         goal: [release, debug, '']
-        exclude:
-          - target: firered
-            goal: release
-          - target: firered
-            goal: debug
-          - target: leafgreen
-            goal: release
-          - target: leafgreen
-            goal: debug
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -43,8 +34,8 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
 
-      - name: Build ROM (${{ matrix.target }})
-        run: make ${{ matrix.target }} -j$(nproc) ${{ matrix.goal }}
+      - name: Build ROM (${{ matrix.build }})
+        run: make ${{ matrix.goal }} -j$(nproc) BUILD=${{ matrix.build }}
 
   # release:
   #   if: github.actor != 'allcontributors[bot]'
