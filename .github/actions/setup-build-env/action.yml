@@ -39,6 +39,3 @@ runs:
           tools/wav2agb/wav2agb
           ${{ inputs.extra-tools }}
         key: ${{ inputs.cache-key-prefix }}-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
-        restore-keys: |
-          ${{ inputs.cache-key-prefix }}-${{ runner.os }}-
-          ${{ inputs.cache-key-prefix }}-
