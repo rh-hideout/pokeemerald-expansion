@@ -19,7 +19,7 @@ env:
   DEPRECATED_ERROR: 1
 
 jobs:
-  build-roms:
+  build:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
     strategy:
