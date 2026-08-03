@@ -5264,7 +5264,7 @@ static bool32 ShouldSkipStatChangeOnBattler(enum BattlerId battlerAtk, enum Batt
 
     if (!isSelf && gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
         return TRUE;
-    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_INVALID_TARGET)
         return TRUE;
 
     return FALSE;
