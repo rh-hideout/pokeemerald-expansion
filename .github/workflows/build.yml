@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         build: [emerald, firered, leafgreen]
-        goal: [release, debug, '']
+        goal: ['', debug, release]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -34,27 +34,16 @@ jobs:
       - name: Setup build environment
         uses: ./.github/actions/setup-build-env
 
-      - name: Build ROM (${{ matrix.build }})
+      - name: Build ROM
         run: make ${{ matrix.goal }} -j$(nproc) BUILD=${{ matrix.build }}
-
-  # release:
-  #   if: github.actor != 'allcontributors[bot]'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v7
-
-  #     - name: Setup build environment
-  #       uses: ./.github/actions/setup-build-env
-
-  #     - name: Build release ROM
-  #       env:
-  #         GAME_VERSION: EMERALD
-  #       run: make -j$(nproc) release
 
   test:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [emerald, firered, leafgreen]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -68,7 +57,7 @@ jobs:
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
 
       - name: Build and run tests
-        run: make -j$(nproc) check
+        run: make check -j$(nproc) BUILD=${{ matrix.build }}
 
   # Gate job: satisfies the "build" branch protection rule.
   # Passes only when all parallel build/test jobs succeed.
