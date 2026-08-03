@@ -8532,8 +8532,24 @@ bool32 CanUltraBurst(enum BattlerId battler)
     return FALSE;
 }
 
+static void ActivateMegaEvolution_ContinueAfterSlide(void)
+{
+    gBattleResources->battleCallbackStack->size--;
+    gBattleMainFunc = gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size];
+    ActivateMegaEvolution(gBattleScripting.battler);
+}
+
 void ActivateMegaEvolution(enum BattlerId battler)
 {
+    if (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_MEGA_EVOLUTION))
+    {
+        gBattleScripting.battler = battler;
+        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
+        gBattleMainFunc = ActivateMegaEvolution_ContinueAfterSlide;
+
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsgEnd3);
+        return;
+    }
     enum Ability ability = GetBattlerAbility(battler);
     gLastUsedItem = gBattleMons[battler].item;
     SetActiveGimmick(battler, GIMMICK_MEGA);
