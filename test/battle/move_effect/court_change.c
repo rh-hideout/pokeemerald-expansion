@@ -6,6 +6,22 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
 }
 
+SINGLE_BATTLE_TEST("Court Change swaps entry hazard counts together with the hazard queues")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(opponent, MOVE_COURT_CHANGE); }
+    } THEN {
+        EXPECT_EQ(gBattleStruct->hazardsQueue[B_SIDE_PLAYER][0], HAZARDS_TOXIC_SPIKES);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[B_SIDE_OPPONENT][0], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->numHazards[B_SIDE_PLAYER], 1);
+        EXPECT_EQ(gBattleStruct->numHazards[B_SIDE_OPPONENT], 0);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the opponent")
 {
     GIVEN {
