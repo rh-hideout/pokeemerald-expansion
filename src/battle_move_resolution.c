@@ -2300,8 +2300,10 @@ static bool32 CanRedirectToPartner(enum BattlerId battlerAtk, enum BattlerId bat
 {
     enum BattlerId partner = BATTLE_PARTNER(battlerDef);
 
+    if (GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
+        return FALSE;
+
     if (!IsAffectedByFollowMe(battlerAtk, GetBattlerSide(battlerDef), move)
-     && GetBattlerMoveTargetType(battlerAtk, move) == TARGET_SMART
      && CanTargetPartner(battlerAtk, battlerDef)
      && !IsBattlerUnaffectedByMove(partner))
         return TRUE;
