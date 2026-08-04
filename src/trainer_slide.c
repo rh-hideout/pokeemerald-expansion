@@ -276,6 +276,9 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
     if (!IsDoubleBattle() && (battler > B_BATTLER_1))
         return TRAINER_SLIDE_TARGET_NONE;
 
+    if (GetBattlerTrainer(battler) == B_TRAINER_PLAYER)
+        return TRAINER_SLIDE_TARGET_NONE;
+
     SetTrainerSlideParameters(battler, &lastId, &trainerId, &retValue);
     if (IsSpecialTrainer(trainerId))
         return TRAINER_SLIDE_TARGET_NONE;
@@ -331,13 +334,9 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
     if (shouldRun == FALSE)
         return TRAINER_SLIDE_TARGET_NONE;
 
-    // Prevents slides triggering twice in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
-    if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
-     || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
-     || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
-    {
+    // Prevents slides triggering twice in single-trainer doubles
+    if (GetBattlerTrainer(battler) == GetBattlerTrainer(GetPartnerBattler(battler)))
         MarkTrainerSlideAsPlayed(GetPartnerBattler(battler), slideId);
-    }
 
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
