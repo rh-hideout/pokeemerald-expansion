@@ -175,12 +175,6 @@ Debug_EventScript_CheckEVs_End::
 Debug_EventScript_Text_AllEVs:
 	.string "EVs: HP{CLEAR_TO 55}{HIGHLIGHT LIGHT_GREEN}ATK{CLEAR_TO 85}{HIGHLIGHT TRANSPARENT}DEF{CLEAR_TO 115}{HIGHLIGHT LIGHT_GREEN}SPEED{CLEAR_TO 145}{HIGHLIGHT TRANSPARENT}SPATK{CLEAR_TO 175}{HIGHLIGHT LIGHT_GREEN}SPDEF{CLEAR_TO 205}{HIGHLIGHT TRANSPARENT}\n{STR_VAR_2}$"
 
-Debug_EventScript_Text_OffensiveEVs:
-	.string "ATK EVs: {STR_VAR_1}, SPATK EVs: {STR_VAR_2}, SPEED EVs: {STR_VAR_3}$"
-
-Debug_EventScript_Text_DefensiveEVs:
-	.string "HP EVs: {STR_VAR_1}, DEF EVs: {STR_VAR_2}, SPDEF EVs: {STR_VAR_3}$"
-
 Debug_EventScript_CheckIVs::
 	lockall
 	getpartysize
@@ -195,12 +189,6 @@ Debug_EventScript_CheckIVs_End::
 
 Debug_EventScript_Text_AllIVs:
 	.string "IVs: HP{CLEAR_TO 55}{HIGHLIGHT LIGHT_RED}ATK{CLEAR_TO 85}{HIGHLIGHT TRANSPARENT}DEF{CLEAR_TO 115}{HIGHLIGHT LIGHT_RED}SPEED{CLEAR_TO 145}{HIGHLIGHT TRANSPARENT}SPATK{CLEAR_TO 175}{HIGHLIGHT LIGHT_RED}SPDEF{CLEAR_TO 205}{HIGHLIGHT TRANSPARENT}\n{STR_VAR_2}$"
-
-Debug_EventScript_Text_OffensiveIVs:
-	.string "ATK IVs: {STR_VAR_1}, SPATK IVs: {STR_VAR_2}, SPEED IVs: {STR_VAR_3}$"
-
-Debug_EventScript_Text_DefensiveIVs:
-	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
 	release
