@@ -606,16 +606,16 @@ void Script_GetChosenMonEVs(void)
 
 void Script_GetChosenMonIVs(void)
 {
-    StringCopy(gStringVar2, COMPOUND_STRING("{CLEAR_TO 25}"));
+    StringCopy(gStringVar3, COMPOUND_STRING("{CLEAR_TO 25}"));
     for (u32 i = MON_DATA_HP_IV; i <= MON_DATA_SPDEF_IV; i++)
     {
         ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], i), STR_CONV_MODE_LEADING_ZEROS, 2);
-        StringAppend(gStringVar2, gStringVar1);
+        StringAppend(gStringVar3, gStringVar1);
 
         if (i % 2 == 1)
-            StringAppend(gStringVar2, COMPOUND_STRING("      {HIGHLIGHT TRANSPARENT}"));
+            StringAppend(gStringVar3, COMPOUND_STRING("      {HIGHLIGHT TRANSPARENT}"));
         else
-            StringAppend(gStringVar2, COMPOUND_STRING("      {HIGHLIGHT LIGHT_RED}"));
+            StringAppend(gStringVar3, COMPOUND_STRING("      {HIGHLIGHT LIGHT_RED}"));
     }
 }
 
