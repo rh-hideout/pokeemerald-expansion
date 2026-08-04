@@ -469,28 +469,58 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
 #undef PARSE_FLAG
 
-void Script_GetChosenMonOffensiveEVs(void)
+void Script_GetChosenMonEVs(void)
+{
+    StringCopy(gStringVar2, COMPOUND_STRING("{CLEAR_TO 25}"));
+    for (u32 i = MON_DATA_HP_EV; i <= MON_DATA_SPDEF_EV; i++)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], i), STR_CONV_MODE_LEADING_ZEROS, 3);// store a number string in strvar1
+        StringAppend(gStringVar2, gStringVar1);// add to strvar2
+
+        if (i % 2 == 1)// colour is inserted after numbered entries
+            StringAppend(gStringVar2, COMPOUND_STRING("    {HIGHLIGHT LIGHT_GREEN}"));
+        else
+            StringAppend(gStringVar2, COMPOUND_STRING("    {HIGHLIGHT TRANSPARENT}"));
+    }
+}
+
+void Script_GetChosenMonIVs(void)
+{
+    StringCopy(gStringVar2, COMPOUND_STRING("{CLEAR_TO 25}"));
+    for (u32 i = MON_DATA_HP_IV; i <= MON_DATA_SPDEF_IV; i++)
+    {
+        ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], i), STR_CONV_MODE_LEADING_ZEROS, 2);
+        StringAppend(gStringVar2, gStringVar1);
+
+        if (i % 2 == 1)
+            StringAppend(gStringVar2, COMPOUND_STRING("      {HIGHLIGHT TRANSPARENT}"));
+        else
+            StringAppend(gStringVar2, COMPOUND_STRING("      {HIGHLIGHT LIGHT_RED}"));
+    }
+}
+
+void Script_GetChosenMonOffensiveEVs(void)// unused
 {
     ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_ATK_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPATK_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar3, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPEED_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
 }
 
-void Script_GetChosenMonDefensiveEVs(void)
+void Script_GetChosenMonDefensiveEVs(void)// unused
 {
     ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_HP_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_DEF_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar3, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPDEF_EV), STR_CONV_MODE_LEFT_ALIGN, 3);
 }
 
-void Script_GetChosenMonOffensiveIVs(void)
+void Script_GetChosenMonOffensiveIVs(void)// unused
 {
     ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_ATK_IV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPATK_IV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar3, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPEED_IV), STR_CONV_MODE_LEFT_ALIGN, 3);
 }
 
-void Script_GetChosenMonDefensiveIVs(void)
+void Script_GetChosenMonDefensiveIVs(void)// unused
 {
     ConvertIntToDecimalStringN(gStringVar1, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_HP_IV), STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_DEF_IV), STR_CONV_MODE_LEFT_ALIGN, 3);
