@@ -4141,12 +4141,24 @@ static enum MoveEndResult MoveEndItemEffectsAttacker1(struct BattleCalcValues *c
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum HoldEffect holdEffect = cv->holdEffects[cv->battlerAtk];
+    
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    {
+        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+        gBattleStruct->eventState.moveEndBattler++;
 
-    if (ItemBattleEffects(cv->battlerAtk, cv->battlerDef, holdEffect, IsOnAttackerAfterHitActivation)
-     || ItemBattleEffects(cv->battlerAtk, cv->battlerDef, holdEffect, IsOnStatusChangeActivation)
-     || ItemBattleEffects(cv->battlerAtk, cv->battlerDef, holdEffect, IsOnHpThresholdActivation))
+        if (ShouldSkipBattlerForMoveEnd(battlerDef, cv))
+            continue;
+
+        if (ItemBattleEffects(gBattlerAttacker, battlerDef, holdEffect, IsOnAttackerAfterHitActivation))
+            return MOVEEND_RESULT_RUN_SCRIPT;
+    }
+
+    if (ItemBattleEffects(gBattlerAttacker, gBattlerAttacker, holdEffect, IsOnStatusChangeActivation)
+     || ItemBattleEffects(gBattlerAttacker, gBattlerAttacker, holdEffect, IsOnHpThresholdActivation))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
+    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return result;
 }
@@ -4155,7 +4167,8 @@ static enum MoveEndResult MoveEndSymbiosis(struct BattleCalcValues *cv)
 {
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (ShouldSkipBattlerForMoveEnd(battlerDef, cv))
+        if ((battlerDef != cv->battlerAtk || !IsBattlerAlly(battlerDef, cv->battlerDef))
+         && ShouldSkipBattlerForMoveEnd(battlerDef, cv))
             continue;
 
         if ((gSpecialStatuses[battlerDef].berryReduced
