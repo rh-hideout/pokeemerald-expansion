@@ -10655,7 +10655,7 @@ bool32 IsAnyTargetAffected(void)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_INVALID_TARGET)
+        if (battler != gBattlerAttacker && gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_INVALID_TARGET)
             continue;
 
         if (!IsBattlerUnaffectedByMove(battler))
