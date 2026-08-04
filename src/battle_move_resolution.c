@@ -925,8 +925,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         if (IsDoubleBattle() && moveTarget == TARGET_RANDOM)
         {
             cv->battlerDef = SetRandomTarget(cv->battlerAtk);
-            if (gAbsentBattlerFlags & (1u << cv->battlerAtk)
-                && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
+            if (!IsBattlerAlive(cv->battlerAtk) && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
             {
                 cv->battlerDef = GetPartnerBattler(cv->battlerDef);
             }
@@ -968,8 +967,12 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (!ShouldCheckTargetMoveFailure(cv->battlerAtk, battlerDef, cv->move, moveTarget))
+        if (!ShouldCheckTargetMoveFailure(cv->battlerAtk, battlerDef, cv->move, moveTarget)
+         || (moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef)))
+        {
             gBattleStruct->battlerState[cv->battlerAtk].targetsDone[battlerDef] = TRUE;
+            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_INVALID_TARGET;
+        }
     }
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
@@ -1141,6 +1144,7 @@ static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
             if (!IsBattlerAlive(gBattlerTarget))
                 gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
             gBattleStruct->battlerState[cv->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
+            gBattleStruct->moveResultFlags[gBattlerTarget] = 0;
             BattleScriptCall(BattleScript_BideAttack);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
         }
@@ -1166,9 +1170,7 @@ static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
 
 static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
-        return TRUE;
-    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_INVALID_TARGET))
         return TRUE;
     if (GetConfig(B_CHECK_USER_FAILURE) >= GEN_5 && battlerAtk == battlerDef)
         return TRUE;
@@ -1365,16 +1367,8 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
         switch (cv->moveEffect)
         {
         case EFFECT_FLING:
-            if (!IsBattlerAlive(battlerDef)) // Edge case for removing a mon's item when there is no target available after using Fling.
-            {
-                battleScript = BattleScript_FlingFailConsumeItem;
-            }
-            else
-            {
-                numAffectedTargets++;
-                continue;
-            }
-            break;
+            numAffectedTargets++;
+            continue;
         case EFFECT_FUTURE_SIGHT:
             if (gBattleStruct->futureSight[battlerDef].counter > 0)
             {
@@ -1502,10 +1496,19 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
 
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
-    if (battleScript != NULL && numAffectedTargets == 0)
+    if (numAffectedTargets == 0)
     {
-        gBattlescriptCurrInstr = battleScript;
-        return CANCELER_RESULT_FAILURE;
+        if (battleScript == NULL && cv->moveEffect == EFFECT_FLING)
+        {
+            // Edge case for removing a mon's item when there is no target available after using Fling.
+            gBattlescriptCurrInstr = BattleScript_FlingFailConsumeItem;
+            return CANCELER_RESULT_FAILURE;
+        }
+        else if (battleScript != NULL)
+        {
+            gBattlescriptCurrInstr = battleScript;
+            return CANCELER_RESULT_FAILURE;
+        }
     }
 
     return CANCELER_RESULT_SUCCESS;
@@ -2306,6 +2309,23 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
     return FALSE;
 }
 
+static bool32 CanRedirectToPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    enum BattlerId partner = BATTLE_PARTNER(battlerDef);
+
+    if (GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SMART)
+        return FALSE;
+
+    if (!IsAffectedByFollowMe(battlerAtk, GetBattlerSide(battlerDef), move)
+     && CanTargetPartner(battlerAtk, battlerDef)
+     && !IsBattlerUnaffectedByMove(partner))
+        return TRUE;
+
+    gBattleStruct->battlerState[battlerAtk].targetsDone[partner] = TRUE;
+    gBattleStruct->moveResultFlags[partner] |= MOVE_RESULT_INVALID_TARGET;
+    return FALSE;
+}
+
 static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 {
     enum SmartTargetState {
@@ -2321,7 +2341,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
         return CANCELER_RESULT_SUCCESS;
 
     enum SmartTargetState smartTargetState = INITIAL_STATE;
-    bool32 isSmartTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move) == TARGET_SMART;
+    bool32 isSmartTarget = CanRedirectToPartner(cv->battlerAtk, cv->battlerDef, cv->move);
     bool32 isMultiHitOn = gSpecialStatuses[cv->battlerAtk].multiHitOn;
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
@@ -2345,11 +2365,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
              && !isMultiHitOn)
                 gBattleStruct->blunderPolicy = TRUE;
 
-            if (isSmartTarget
-             && smartTargetState == INITIAL_STATE
-             && !IsAffectedByFollowMe(cv->battlerAtk, GetBattlerSide(cv->battlerDef), cv->move)
-             && CanTargetPartner(cv->battlerAtk, cv->battlerDef)
-             && !IsBattlerUnaffectedByMove(BATTLE_PARTNER(cv->battlerDef)))
+            if (isSmartTarget && smartTargetState == INITIAL_STATE)
             {
                 smartTargetState = MISSED_FIRST_TARGET;
                 gBattlerTarget = BATTLE_PARTNER(cv->battlerDef); // Smart target to partner if miss
@@ -2407,6 +2423,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
     if (!IsAnyTargetAffected())
     {
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
     }
@@ -2544,9 +2561,7 @@ static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum Battler
 {
     if (gBattleStruct->numSpreadTargets == 0 && battlerDef != gBattlerTarget)
         return TRUE;
-    if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
-        return TRUE;
-    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
+    if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_INVALID_TARGET))
         return TRUE;
     return FALSE;
 }
@@ -6038,7 +6053,7 @@ static bool32 ShouldSkipStatChangeOnBattler(enum BattlerId battlerAtk, enum Batt
     // It is convenient to use targetsDone here but needs a hack for self target stat change moves
     bool32 isSelf = battlerAtk == battlerDef && gBattlerAttacker == gBattlerTarget;
 
-    if (!isSelf && gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
+    if (!isSelf && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_INVALID_TARGET)
         return TRUE;
     if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
         return TRUE;
@@ -6056,9 +6071,7 @@ static bool32 ShouldSkipStatChangeResolution(enum BattlerId battlerAtk)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->battlerState[battlerAtk].targetsDone[battler])
-            numUnaffectedTargets++;
-        else if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+        if (gBattleStruct->moveResultFlags[battler] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_INVALID_TARGET))
             numUnaffectedTargets++;
     }
 
