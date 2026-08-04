@@ -129,8 +129,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         .wonTexts = {
             COMPOUND_STRING(
                 "Ahahaha! Aren't you embarrassed?\n"
-                "Everyone's watching!"),                              //Silver
-            COMPOUND_STRING("My DOME ACE title isn't just for show!") //Gold
+                "Everyone's watching!"),                                //Silver
+            COMPOUND_STRING("My [Dome Ace] title isn't just for show!") //Gold
         },
         .battledBit = {1 << 2, 1 << 3},
         .streakAppearances = {4, 9, 5, 0},
@@ -152,8 +152,8 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
         },
         .wonTexts = {
             COMPOUND_STRING(
-                "Your POKéMON are wimpy because\n"
-                "you're wimpy as a TRAINER!"),           //Silver
+                "Your [Pokémon] are wimpy because\n"
+                "you're wimpy as a [Trainer]!"),         //Silver
             COMPOUND_STRING(
                 "Gwahahaha!\n"
                 "My brethren, we have nothing to fear!") //Gold
