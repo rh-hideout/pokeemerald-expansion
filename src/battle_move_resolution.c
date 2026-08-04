@@ -3120,7 +3120,12 @@ enum CancelerResult DoAttackCanceler(void)
 
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
-    gBattleScripting.savedDmg += gBattleStruct->moveDamage[gBattlerTarget]; // Probably will remove savedDmg
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    {
+        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+        gBattleStruct->eventState.moveEndBattler++;
+        gBattleScripting.savedDmg += gBattleStruct->moveDamage[battlerDef];
+    }
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
     gBattleScripting.moveendState++;
@@ -4477,7 +4482,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
 
     gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
 
-    if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn)
+    if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn || !IsBattleMoveStatus(cv->move))
     {
         // unable to use move
     }
@@ -4489,7 +4494,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
             gBattleScripting.moveendState = 0;
 
-            if (IsStatChangeMove(cv->move) || !IsBattleMoveStatus(cv->move))
+            if (IsStatChangeMove(cv->move))
                 return MOVEEND_RESULT_CONTINUE;
             else
                 BattleScriptPush(GetMoveBattleScript(cv->move));
@@ -4508,7 +4513,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget; // Fix for moxie spread moves
             gBattleScripting.moveendState = 0;
 
-            if (IsStatChangeMove(cv->move) || !IsBattleMoveStatus(cv->move))
+            if (IsStatChangeMove(cv->move))
                 return MOVEEND_RESULT_CONTINUE;
             else
                 BattleScriptPush(GetMoveBattleScript(cv->move));
