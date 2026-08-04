@@ -1198,28 +1198,28 @@ bool32 IsWeatherAlphaBlend(void)
 }
 
 static const u8 sWeatherNames[WEATHER_COUNT][24] = {
-    [WEATHER_NONE]               = _("NONE"),
-    [WEATHER_SUNNY_CLOUDS]       = _("SUNNY CLOUDS"),
-    [WEATHER_SUNNY]              = _("SUNNY"),
-    [WEATHER_RAIN]               = _("RAIN"),
-    [WEATHER_SNOW]               = _("SNOW"),
-    [WEATHER_RAIN_THUNDERSTORM]  = _("RAIN THUNDERSTORM"),
-    [WEATHER_FOG_HORIZONTAL]     = _("FOG HORIZONTAL"),
-    [WEATHER_VOLCANIC_ASH]       = _("VOLCANIC ASH"),
-    [WEATHER_SANDSTORM]          = _("SANDSTORM"),
-    [WEATHER_FOG_DIAGONAL]       = _("FOG DIAGONAL"),
-    [WEATHER_UNDERWATER]         = _("UNDERWATER"),
-    [WEATHER_SHADE]              = _("SHADE"),
-    [WEATHER_DROUGHT]            = _("DROUGHT"),
-    [WEATHER_DOWNPOUR]           = _("DOWNPOUR"),
-    [WEATHER_UNDERWATER_BUBBLES] = _("UNDERWATER BUBBLES"),
-    [WEATHER_ABNORMAL]           = _("ABNORMAL(NOT WORKING)"),
-    [WEATHER_ROUTE119_CYCLE]     = _("ROUTE119 CYCLE"),
-    [WEATHER_ROUTE123_CYCLE]     = _("ROUTE123 CYCLE"),
-    [WEATHER_FOG]                = _("FOG"),
+    [WEATHER_NONE]               = _("[None]"),
+    [WEATHER_SUNNY_CLOUDS]       = _("[Sunny Clouds]"),
+    [WEATHER_SUNNY]              = _("[Sunny]"),
+    [WEATHER_RAIN]               = _("[Rain]"),
+    [WEATHER_SNOW]               = _("[Snow]"),
+    [WEATHER_RAIN_THUNDERSTORM]  = _("[Rain Thunderstorm]"),
+    [WEATHER_FOG_HORIZONTAL]     = _("[Fog Horizontal]"),
+    [WEATHER_VOLCANIC_ASH]       = _("[Volcanic Ash]"),
+    [WEATHER_SANDSTORM]          = _("[Sandstorm]"),
+    [WEATHER_FOG_DIAGONAL]       = _("[Fog Diagonal]"),
+    [WEATHER_UNDERWATER]         = _("[Underwater]"),
+    [WEATHER_SHADE]              = _("[Shade]"),
+    [WEATHER_DROUGHT]            = _("[Drought]"),
+    [WEATHER_DOWNPOUR]           = _("[Downpour]"),
+    [WEATHER_UNDERWATER_BUBBLES] = _("[Underwater Bubbles]"),
+    [WEATHER_ABNORMAL]           = _("[Abnormal (not working)]"),
+    [WEATHER_ROUTE119_CYCLE]     = _("[Route 199 Cycle]"),
+    [WEATHER_ROUTE123_CYCLE]     = _("[Route 123 Cycle]"),
+    [WEATHER_FOG]                = _("[Fog]"),
 };
 
-static const u8 sDebugText_WeatherNotDefined[] = _("NOT DEFINED!!!");
+static const u8 sDebugText_WeatherNotDefined[] = _("[Not Defined]!!!");
 const u8 *GetWeatherName(u32 weatherId)
 {
     if (sWeatherNames[weatherId][0] != 0)
