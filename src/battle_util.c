@@ -10674,7 +10674,7 @@ bool32 IsAnyTargetAffected(void)
                 if (battler == gBattlerAttacker)
                     continue;
             }
-            else // check a single target
+            else // check a single targe
             {
                 if (battler != gBattlerTarget)
                     continue;

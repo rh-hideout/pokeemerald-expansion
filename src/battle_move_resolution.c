@@ -4484,7 +4484,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
 
     if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn || !IsBattleMoveStatus(cv->move))
     {
-        // unable to use move
+        // go to next state
     }
     else if (moveTarget == TARGET_USER_AND_ALLY)
     {
