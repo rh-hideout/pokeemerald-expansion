@@ -30,7 +30,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_REPETITION_NOT_BORING] =
     {
-        .description = COMPOUND_STRING("Can be repeatedly used\nwithout boring the JUDGE."),
+        .description = COMPOUND_STRING("Can be repeatedly used\nwithout boring the [Judge]."),
         .effectType = CONTEST_EFFECT_TYPE_APPEAL,
         .appeal = 30,
         .jam = 0,
@@ -70,7 +70,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_FRONT_MON] =
     {
-        .description = COMPOUND_STRING("Slightly startles the\nPOKéMON in front."),
+        .description = COMPOUND_STRING("Slightly startles the\n[Pokémon] in front."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 30,
         .jam = 20,
@@ -87,9 +87,9 @@ const struct ContestEffect gContestEffects[] =
     [CONTEST_EFFECT_STARTLE_PREV_MON] =
     {
         #if C_UPDATED_MOVE_EFFECTS >= GEN_6
-        .description = COMPOUND_STRING("Startles the last Pokémon\nto act before the user."),
+        .description = COMPOUND_STRING("Startles the last [Pokémon]\nto act before the user."),
         #else
-        .description = COMPOUND_STRING("Startles the POKéMON that\nappealed before the user."),
+        .description = COMPOUND_STRING("Startles the [Pokémon] that\nappealed before the user."),
         #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 20,
@@ -99,9 +99,9 @@ const struct ContestEffect gContestEffects[] =
     [CONTEST_EFFECT_STARTLE_PREV_MONS] =
     {
         #if C_UPDATED_MOVE_EFFECTS >= GEN_6
-        .description = COMPOUND_STRING("Startles all of the Pokémon\nto act before the user."),
+        .description = COMPOUND_STRING("Startles all of the [Pokémon]\nto act before the user."),
         #else
-        .description = COMPOUND_STRING("Startles all POKéMON that\nhave done their appeals."),
+        .description = COMPOUND_STRING("Startles all [Pokémon] that\nhave done their appeals."),
         #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
@@ -110,7 +110,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON] =
     {
-        .description = COMPOUND_STRING("Badly startles the\nPOKéMON in front."),
+        .description = COMPOUND_STRING("Badly startles the\n[Pokémon] in front."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 10,
         .jam = 40,
@@ -126,7 +126,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_PREV_MON_2] =
     {
-        .description = COMPOUND_STRING("Startles the POKéMON that\nappealed before the user."),
+        .description = COMPOUND_STRING("Startles the [Pokémon] that\nappealed before the user."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 30,
         .jam = 20,
@@ -134,7 +134,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_PREV_MONS_2] =
     {
-        .description = COMPOUND_STRING("Startles all POKéMON that\nhave done their appeals."),
+        .description = COMPOUND_STRING("Startles all [Pokémon] that\nhave done their appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 30,
         .jam = 10,
@@ -145,7 +145,7 @@ const struct ContestEffect gContestEffects[] =
         #if C_UPDATED_MOVE_EFFECTS >= GEN_6
         .description = COMPOUND_STRING("Makes audience expect\nlittle of other contestants."),
         #else
-        .description = COMPOUND_STRING("Shifts the JUDGE's\nattention from others."),
+        .description = COMPOUND_STRING("Shifts the [Judge]'s\nattention from others."),
         #endif
         .effectType = CONTEST_EFFECT_TYPE_WORSEN,
         .appeal = 30,
@@ -154,7 +154,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION] =
     {
-        .description = COMPOUND_STRING("Startles the POKéMON that\nhas the JUDGE's attention."),
+        .description = COMPOUND_STRING("Startles the [Pokémon] that\nhas the [Judge]'s attention."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -170,7 +170,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL] =
     {
-        .description = COMPOUND_STRING("Startles POKéMON that\nmade a same-type appeal."),
+        .description = COMPOUND_STRING("Startles [Pokémon] that\nmade a same-type appeal."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -178,7 +178,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_COOL_APPEAL] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON\nthat made COOL appeals."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon]\nthat made [Cool] appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -186,7 +186,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_BEAUTY_APPEAL] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON\nthat made BEAUTY appeals."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon]\nthat made [Beauty] appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -194,7 +194,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_CUTE_APPEAL] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON\nthat made CUTE appeals."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon]\nthat made [Cute] appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -202,7 +202,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_SMART_APPEAL] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON\nthat made SMART appeals."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon]\nthat made [Smart] appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -210,7 +210,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_MONS_TOUGH_APPEAL] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON\nthat made TOUGH appeals."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon]\nthat made [Tough] appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
@@ -218,7 +218,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_MAKE_FOLLOWING_MON_NERVOUS] =
     {
-        .description = COMPOUND_STRING("Makes one POKéMON after\nthe user nervous."),
+        .description = COMPOUND_STRING("Makes one [Pokémon] after\nthe user nervous."),
         .effectType = CONTEST_EFFECT_TYPE_WORSEN,
         .appeal = 20,
         .jam = 0,
@@ -227,9 +227,9 @@ const struct ContestEffect gContestEffects[] =
     [CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS] =
     {
         #if C_UPDATED_MOVE_EFFECTS >= GEN_6
-        .description = COMPOUND_STRING("Makes the remaining\nPokémon nervous."),
+        .description = COMPOUND_STRING("Makes the remaining\n[Pokémon] nervous."),
         #else
-        .description = COMPOUND_STRING("Makes all POKéMON after\nthe user nervous."),
+        .description = COMPOUND_STRING("Makes all [Pokémon] after\nthe user nervous."),
         #endif
         .effectType = CONTEST_EFFECT_TYPE_WORSEN,
         .appeal = 20,
@@ -246,7 +246,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_BADLY_STARTLES_MONS_IN_GOOD_CONDITION] =
     {
-        .description = COMPOUND_STRING("Badly startles POKéMON in\ngood condition."),
+        .description = COMPOUND_STRING("Badly startles [Pokémon] in\ngood condition."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 30,
         .jam = 10,
@@ -323,7 +323,7 @@ const struct ContestEffect gContestEffects[] =
     [CONTEST_EFFECT_AFFECTED_BY_PREV_APPEAL] =
     {
         #if C_UPDATED_MOVE_EFFECTS >= GEN_6
-        .description = COMPOUND_STRING("Affected by how well the\nprevious Pokémon's move went."),
+        .description = COMPOUND_STRING("Affected by how well the\nprevious [Pokémon]'s move went."),
         #else
         .description = COMPOUND_STRING("Affected by how well the\nappeal in front goes."),
         #endif
@@ -390,7 +390,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST] =
     {
-        .description = COMPOUND_STRING("An appeal that excites the\naudience in any CONTEST."),
+        .description = COMPOUND_STRING("An appeal that excites the\naudience in any [Contest]."),
         .effectType = CONTEST_EFFECT_TYPE_SPECIAL_APPEAL,
         .appeal = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? 20 : 10,
         .jam = 0,
@@ -398,7 +398,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS] =
     {
-        .description = COMPOUND_STRING("Badly startles all POKéMON\nthat made good appeals."),
+        .description = COMPOUND_STRING("Badly startles all [Pokémon]\nthat made good appeals."),
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 10,
