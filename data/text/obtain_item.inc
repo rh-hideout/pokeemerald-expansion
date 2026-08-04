@@ -2,22 +2,22 @@ gText_ObtainedTheItem::
 	.string "Obtained the {STR_VAR_2}!$"
 
 gText_TheBagIsFull::
-	.string "The BAG is full…$"
+	.string "The [Bag] is full…$"
 
 gText_PutItemInPocket::
 	.string "{PLAYER} put away the {STR_VAR_2}\n"
-	.string "in the {STR_VAR_3} POCKET.$"
+	.string "in the {STR_VAR_3} [Pocket].$"
 
 gText_PlayerFoundOneItem::
 	.string "{PLAYER} found one {STR_VAR_2}!$"
 
 gText_TooBadBagIsFull::
 	.string "Too bad!\n"
-	.string "The BAG is full…$"
+	.string "The [Bag] is full…$"
 
 gText_PlayerPutItemInBag::
 	.string "{PLAYER} put away the {STR_VAR_2}\n"
-	.string "in the BAG.$"
+	.string "in the [Bag].$"
 
 gText_ObtainedTheDecor::
 	.string "Obtained the {STR_VAR_2}!$"
@@ -37,8 +37,8 @@ gText_PlayerFoundItems::
 	.string "{PLAYER} found {STR_VAR_1} {STR_VAR_2}!$"
 
 gText_PutCoinsAwayInCoinCase::
-	.string "{PLAYER} put the COINS away in\n"
-	.string "the COIN CASE.$"
+	.string "{PLAYER} put the [Coins] away in\n"
+	.string "the [Coin Case].$"
 
 gText_FoundXCoins::
 	.string "{PLAYER} found\n"
@@ -50,7 +50,7 @@ gText_FoundXItems::
 
 gText_CoinCaseIsFull::
 	.string "Too bad!\n"
-	.string "The COIN CASE is full…$"
+	.string "The [Coin Case] is full…$"
 
 gText_NothingToPutThemIn::
 	.string "Too bad!\n"
