@@ -846,7 +846,14 @@ const u8 *GetItemEffect(enum Item itemId)
 
 enum HoldEffect GetItemHoldEffect(enum Item itemId)
 {
-    return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
+    if (itemId == ITEM_ENIGMA_BERRY_E_READER)
+    #if FREE_ENIGMA_BERRY == FALSE
+        return gSaveBlock1Ptr->enigmaBerry.holdEffect;
+    #else
+        return 0;
+    #endif //FREE_ENIGMA_BERRY
+    else
+        return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
 }
 
 u32 GetItemHoldEffectParam(enum Item itemId)
