@@ -9013,6 +9013,8 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
         return FALSE;
     else if (move == MOVE_NONE)
         return TRUE;
+    else if (IsBattleMoveStatus(move) && battlerAtk == battlerDef)
+        return FALSE;
     else if (MoveIgnoresSubstitute(move))
         return FALSE;
     else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
