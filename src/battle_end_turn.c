@@ -269,13 +269,6 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
 
-        // Set targets
-        for (u32 i = 0; i < gBattlersCount; i++)
-        {
-            if (i != battler)
-                gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
-        }
-
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))

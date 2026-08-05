@@ -971,7 +971,11 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
          || (moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef)))
         {
             gBattleStruct->battlerState[cv->battlerAtk].targetsDone[battlerDef] = TRUE;
-            gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_INVALID_TARGET;
+            if (cv->battlerAtk != battlerDef
+             || (moveTarget != TARGET_USER
+              && moveTarget != TARGET_USER_AND_ALLY
+              && moveTarget != TARGET_USER_OR_ALLY))
+                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_INVALID_TARGET;
         }
     }
     gBattleStruct->eventState.atkCancelerBattler = 0;

@@ -1319,7 +1319,7 @@ static void Cmd_datahpupdate(void)
 static void Cmd_critmessage(void)
 {
     CMD_ARGS();
-
+    // To be removed
     if (gBattleControllerExecFlags == 0)
     {
         if (gSpecialStatuses[gBattlerTarget].criticalHit && !IsBattlerUnaffectedByMove(gBattlerTarget))
