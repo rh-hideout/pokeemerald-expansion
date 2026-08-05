@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
+#include "constants/battle_set_effect.h"
+
 enum BattleScriptOpcode
 {
     B_SCR_OP_ATTACKCANCELER,
@@ -351,14 +353,6 @@ enum BattleScriptOpcode
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
-
-enum SetMoveEffectFlags
-{
-    NO_FLAGS          = 0,
-    EFFECT_PRIMARY    = (1 << 0),
-    EFFECT_CERTAIN    = (1 << 1),
-    EFFECT_ON_SIDE    = (1 << 2),
-};
 
 enum SwitchInCases
 {
