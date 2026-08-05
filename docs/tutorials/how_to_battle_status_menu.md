@@ -1,9 +1,7 @@
 ## How to use the battle status menu
 
 The Battle Info is a replica from modern games. 
-It shows the current snapshot of the battle. 
-That includes Pokémon's stat stages, volatile conditions, 
-Ability / Item for the player side, and field statuses.
+It displays each Pokemon's stat stages, volatile conditions, abilities and items for the player side, and field statuses.
 
 -- TODO: explain the enums and description
 ### How to add new field statuses or volatiles to the menu
