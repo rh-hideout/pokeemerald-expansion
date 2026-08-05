@@ -684,92 +684,91 @@ static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-#define checkFailure TRUE
-#define skipFailure FALSE
 static bool32 IsSingleTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerDef != gBattlerTarget)
-        return skipFailure;
-    return checkFailure;
+        return SKIP_FAILURE;
+    return CHECK_FAILURE;
 }
 
 static bool32 IsSmartTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (!IsBattlerAlly(gBattlerTarget, battlerDef) || battlerAtk == battlerDef)
-        return skipFailure;
-    return checkFailure;
+    if (battlerAtk == battlerDef)
+        return SKIP_FAILURE_SELF;
+    if (!IsBattlerAlly(gBattlerTarget, battlerDef) || !IsBattlerAlive(battlerDef))
+        return SKIP_FAILURE;
+    return CHECK_FAILURE;
 }
 
 static bool32 IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef == BATTLE_PARTNER(battlerAtk) || battlerAtk == battlerDef)
-    {
-        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
-        return skipFailure;
-    }
-    return checkFailure;
+    if (IsBattlerAlly(battlerAtk, battlerDef))
+        return SKIP_FAILURE;
+    return CHECK_FAILURE;
 }
 
 static bool32 IsTargetingSelf(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return skipFailure;
+    if (battlerAtk == battlerDef)
+        return SKIP_FAILURE_SELF;
+    return SKIP_FAILURE;
 }
 
 static bool32 IsTargetingAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef != BATTLE_PARTNER(battlerAtk))
-    {
-        gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
-        return skipFailure;
-    }
-    return checkFailure;
+    if (battlerDef != BATTLE_PARTNER(battlerAtk) || !IsBattlerAlive(battlerDef))
+        return SKIP_FAILURE;
+    return CHECK_FAILURE;
 }
 
 static bool32 IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef != BATTLE_PARTNER(battlerAtk))
+    if (IsBattlerAlly(battlerAtk, battlerDef))
     {
-        if (battlerDef != battlerAtk) // Don't set result flags for user
-            gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
-        return skipFailure;
+        if (battlerDef == battlerAtk)
+            return SKIP_FAILURE_SELF;
+
+        if (!IsBattlerAlive(battlerDef))
+            return SKIP_FAILURE;
+
+        return CHECK_FAILURE;
     }
-    return checkFailure;
+    return SKIP_FAILURE;
 }
 
 static bool32 IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerDef == battlerAtk)
-        return skipFailure;
+        return battlerAtk == gBattlerTarget ? SKIP_FAILURE_SELF : SKIP_FAILURE;
 
-    if (battlerDef == gBattlerTarget)
-        return checkFailure;
+    if (battlerDef == gBattlerTarget && IsBattlerAlive(battlerDef))
+        return CHECK_FAILURE;
 
-    gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
-    return skipFailure;
+    return SKIP_FAILURE;
 }
 
 static bool32 IsTargetingFoesAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerAtk == battlerDef)
-        return skipFailure;  // Don't set result flags for user
-    return checkFailure;
+    if (battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
+        return SKIP_FAILURE;
+    return CHECK_FAILURE;
 }
 
 static bool32 IsTargetingField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return skipFailure;
+    return SKIP_FAILURE;
 }
 
 static bool32 IsTargetingOpponentsField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (IsBattlerAlly(battlerDef, BATTLE_OPPOSITE(battlerAtk)))
-        return checkFailure;
-    return skipFailure;
+        return CHECK_FAILURE;
+    return SKIP_FAILURE;
 }
 
 static bool32 IsTargetingAllBattlers(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return checkFailure;
+    return CHECK_FAILURE;
 }
 
 // ShouldCheckFailureOnTarget
@@ -792,16 +791,14 @@ static bool32 (*const sShouldCheckTargetMoveFailure[])(enum BattlerId battlerAtk
     [TARGET_ALL_BATTLERS] = IsTargetingAllBattlers,
 };
 
-static bool32 ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum MoveTarget moveTarget)
+static enum CheckTargetFailure ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum MoveTarget moveTarget)
 {
     // For Bounced moves
     if (IsBattlerUnaffectedByMove(battlerDef))
-        return skipFailure;
+        return SKIP_FAILURE;
 
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
 }
-#undef checkFailure
-#undef skipFailure
 
 static inline bool32 IsSmartTargetMoveConsecutiveHit(enum BattlerId battlerAtk, enum Move move)
 {
@@ -967,15 +964,13 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (!ShouldCheckTargetMoveFailure(cv->battlerAtk, battlerDef, cv->move, moveTarget)
-         || (moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef)))
+        enum CheckTargetFailure result = ShouldCheckTargetMoveFailure(cv->battlerAtk, battlerDef, cv->move, moveTarget);
+
+        if (result != CHECK_FAILURE)
         {
             gBattleStruct->battlerState[cv->battlerAtk].targetsDone[battlerDef] = TRUE;
-            if (cv->battlerAtk != battlerDef
-             || (moveTarget != TARGET_USER
-              && moveTarget != TARGET_USER_AND_ALLY
-              && moveTarget != TARGET_USER_OR_ALLY))
-                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_INVALID_TARGET;
+            if (result != SKIP_FAILURE_SELF)
+                gBattleStruct->moveResultFlags[battlerDef] |= (MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_INVALID_TARGET);
         }
     }
     gBattleStruct->eventState.atkCancelerBattler = 0;
@@ -1174,6 +1169,8 @@ static enum CancelerResult CancelerBide(struct BattleCalcValues *cv)
 
 static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
+    if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
+        return TRUE;
     if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_INVALID_TARGET))
         return TRUE;
     if (GetConfig(B_CHECK_USER_FAILURE) >= GEN_5 && battlerAtk == battlerDef)
@@ -2564,6 +2561,8 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (gBattleStruct->numSpreadTargets == 0 && battlerDef != gBattlerTarget)
+        return TRUE;
+    if (gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
         return TRUE;
     if (gBattleStruct->moveResultFlags[battlerDef] & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_INVALID_TARGET))
         return TRUE;
