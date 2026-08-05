@@ -684,14 +684,14 @@ static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 IsSingleTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsSingleTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerDef != gBattlerTarget)
         return SKIP_FAILURE;
     return CHECK_FAILURE;
 }
 
-static bool32 IsSmartTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsSmartTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerAtk == battlerDef)
         return SKIP_FAILURE_SELF;
@@ -700,28 +700,28 @@ static bool32 IsSmartTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef
     return CHECK_FAILURE;
 }
 
-static bool32 IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (IsBattlerAlly(battlerAtk, battlerDef))
         return SKIP_FAILURE;
     return CHECK_FAILURE;
 }
 
-static bool32 IsTargetingSelf(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingSelf(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerAtk == battlerDef)
         return SKIP_FAILURE_SELF;
     return SKIP_FAILURE;
 }
 
-static bool32 IsTargetingAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerDef != BATTLE_PARTNER(battlerAtk) || !IsBattlerAlive(battlerDef))
         return SKIP_FAILURE;
     return CHECK_FAILURE;
 }
 
-static bool32 IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (IsBattlerAlly(battlerAtk, battlerDef))
     {
@@ -736,7 +736,7 @@ static bool32 IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId b
     return SKIP_FAILURE;
 }
 
-static bool32 IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerDef == battlerAtk)
         return battlerAtk == gBattlerTarget ? SKIP_FAILURE_SELF : SKIP_FAILURE;
@@ -747,32 +747,32 @@ static bool32 IsTargetingSelfOrAlly(enum BattlerId battlerAtk, enum BattlerId ba
     return SKIP_FAILURE;
 }
 
-static bool32 IsTargetingFoesAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingFoesAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
         return SKIP_FAILURE;
     return CHECK_FAILURE;
 }
 
-static bool32 IsTargetingField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     return SKIP_FAILURE;
 }
 
-static bool32 IsTargetingOpponentsField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingOpponentsField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (IsBattlerAlly(battlerDef, BATTLE_OPPOSITE(battlerAtk)))
         return CHECK_FAILURE;
     return SKIP_FAILURE;
 }
 
-static bool32 IsTargetingAllBattlers(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static enum CheckTargetFailure IsTargetingAllBattlers(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     return CHECK_FAILURE;
 }
 
 // ShouldCheckFailureOnTarget
-static bool32 (*const sShouldCheckTargetMoveFailure[])(enum BattlerId battlerAtk, enum BattlerId battlerDef) =
+static enum CheckTargetFailure (*const sShouldCheckTargetMoveFailure[])(enum BattlerId battlerAtk, enum BattlerId battlerDef) =
 {
     [TARGET_NONE] = IsTargetingField,
     [TARGET_SELECTED] = IsSingleTarget,
