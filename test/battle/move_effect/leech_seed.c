@@ -106,6 +106,34 @@ SINGLE_BATTLE_TEST("Leech Seeded recovers health through Substitute")
     }
 }
 
+SINGLE_BATTLE_TEST("Leech Seeded is blocked by Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Leech Seeded's accuracy is 90%")
+{
+    PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
+    }
+}
+
 TO_DO_BATTLE_TEST("Leech Seed doesn't affect already seeded targets")
 TO_DO_BATTLE_TEST("Leech Seed's effect is paused until a new battler replaces the original user's position") // Faint, can't be replaced, then revived.
 TO_DO_BATTLE_TEST("Leech Seed's effect pause still prevents it from being seeded again")

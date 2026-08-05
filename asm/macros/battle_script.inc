@@ -3,10 +3,6 @@
 	.byte B_SCR_OP_ATTACKCANCELER
 	.endm
 
-	.macro accuracycheck
-	.byte B_SCR_OP_ACCURACYCHECK
-	.endm
-
 	.macro printattackstring
 	.byte B_SCR_OP_PRINTATTACKSTRING
 	.endm
@@ -1025,11 +1021,6 @@
 	.macro settypebasedhalvers failInstr:req
 	.byte B_SCR_OP_SETTYPEBASEDHALVERS
 	.4byte \failInstr
-	.endm
-
-	.macro jumpifsubstituteblocks jumpInstr:req
-	.byte B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS
-	.4byte \jumpInstr
 	.endm
 
 	.macro tryrecycleitem failInstr:req

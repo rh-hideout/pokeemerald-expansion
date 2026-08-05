@@ -2262,6 +2262,153 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static bool32 IsMoveParentalBondAffected(struct BattleCalcValues *cv)
+{
+    if (cv->abilities[cv->battlerAtk] != ABILITY_PARENTAL_BOND
+     || gBattleStruct->numSpreadTargets > 1
+     || IsMoveParentalBondBanned(cv->move)
+     || IsBattleMoveStatus(cv->move)
+     || gBattleMoveEffects[cv->moveEffect].twoTurnEffect
+     || cv->moveEffect == EFFECT_OHKO
+     || GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE
+     || cv->move == MOVE_STRUGGLE)
+        return FALSE;
+    return TRUE;
+}
+
+static void SetPossibleNewSmartTarget(u32 move)
+{
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget)
+     || !CanTargetPartner(gBattlerAttacker, gBattlerTarget)
+     || IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), move)
+     || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
+        return;
+
+    enum BattlerId partner = BATTLE_PARTNER(gBattlerTarget);
+    if (!IsBattlerUnaffectedByMove(partner))
+        gBattlerTarget = partner;
+}
+
+static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
+{
+    if (holdEffect == HOLD_EFFECT_LOADED_DICE)
+        gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
+    else if (GetConfig(B_MULTI_HIT_CHANCE) >= GEN_5)
+        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 7, 7, 3, 3); // 35%: 2 hits, 35%: 3 hits, 15% 4 hits, 15% 5 hits.
+    else
+        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
+}
+
+static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
+{
+    if (IsBattleMoveStatus(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
+    SetPossibleNewSmartTarget(cv->move);
+
+    if (IsBattlerUnaffectedByMove(gBattlerTarget))
+    {
+        gMultiHitCounter = 0;
+    }
+    else if (IsMultiHitMove(cv->move))
+    {
+        if (cv->moveEffect == EFFECT_SPECIES_POWER_OVERRIDE
+         && gBattleMons[cv->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(cv->move))
+        {
+            gMultiHitCounter = GetMoveSpeciesPowerOverride_NumOfHits(cv->move);
+        }
+        else if (cv->abilities[cv->battlerAtk] == ABILITY_SKILL_LINK)
+        {
+            gMultiHitCounter = 5;
+        }
+        else
+        {
+            SetRandomMultiHitCounter(cv->holdEffects[cv->battlerAtk]);
+        }
+
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+    }
+    else if (GetMoveStrikeCount(cv->move) > 1)
+    {
+        if (GetMoveEffect(cv->move) == EFFECT_POPULATION_BOMB
+         && cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_LOADED_DICE
+         && cv->abilities[cv->battlerAtk] != ABILITY_SKILL_LINK)
+        {
+            gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
+        }
+        else
+        {
+            gMultiHitCounter = GetMoveStrikeCount(cv->move);
+        }
+
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 3, 0)
+    }
+    else if (cv->moveEffect == EFFECT_BEAT_UP)
+    {
+        struct Pokemon* party = GetBattlerParty(cv->battlerAtk);
+        int i;
+        gBattleStruct->beatUpSlot = 0;
+        gMultiHitCounter = 0;
+        memset(gBattleStruct->beatUpSpecies, 0xFF, sizeof(gBattleStruct->beatUpSpecies));
+
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
+            if (species != SPECIES_NONE
+             && GetMonData(&party[i], MON_DATA_HP)
+             && !GetMonData(&party[i], MON_DATA_IS_EGG)
+             && !GetMonData(&party[i], MON_DATA_STATUS))
+            {
+                if (GetConfig(B_BEAT_UP) >= GEN_5)
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
+                else
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
+                gMultiHitCounter++;
+            }
+        }
+
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+    }
+    else if (IsMoveParentalBondAffected(cv))
+    {
+        gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_1ST_HIT;
+        gMultiHitCounter = 2;
+        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+    }
+    else
+    {
+        gMultiHitCounter = 0;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
+{
+    if (!IsBattleMoveStatus(cv->move)
+     || IsStatChangeMove(cv->move)
+     || (cv->moveEffect == EFFECT_TRANSFORM && GetConfig(B_TRANSFORM_SUBSTITUTE_FAIL) < GEN_5))
+        return CANCELER_RESULT_SUCCESS;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
+            continue;
+
+        if (IsSubstituteProtected(cv->battlerAtk, battler, cv->abilities[cv->battlerAtk], cv->move))
+            gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+    }
+
+    if (!IsAnyTargetAffected())
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 moveEffect)
 {
     if (gSpecialStatuses[battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
@@ -2300,6 +2447,12 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
 
 static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 {
+    if (IsStatChangeMove(cv->move))
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
     enum SmartTargetState {
         INITIAL_STATE,
         MISSED_FIRST_TARGET,
@@ -2407,132 +2560,6 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 IsMoveParentalBondAffected(struct BattleCalcValues *cv)
-{
-    if (cv->abilities[cv->battlerAtk] != ABILITY_PARENTAL_BOND
-     || gBattleStruct->numSpreadTargets > 1
-     || IsMoveParentalBondBanned(cv->move)
-     || IsBattleMoveStatus(cv->move)
-     || gBattleMoveEffects[cv->moveEffect].twoTurnEffect
-     || cv->moveEffect == EFFECT_OHKO
-     || GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE
-     || cv->move == MOVE_STRUGGLE)
-        return FALSE;
-    return TRUE;
-}
-
-static void SetPossibleNewSmartTarget(u32 move)
-{
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget)
-     || !CanTargetPartner(gBattlerAttacker, gBattlerTarget)
-     || IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), move)
-     || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
-        return;
-
-    enum BattlerId partner = BATTLE_PARTNER(gBattlerTarget);
-    if (!IsBattlerUnaffectedByMove(partner))
-        gBattlerTarget = partner;
-}
-
-static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
-{
-    if (holdEffect == HOLD_EFFECT_LOADED_DICE)
-        gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 5);
-    else if (GetConfig(B_MULTI_HIT_CHANCE) >= GEN_5)
-        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 7, 7, 3, 3); // 35%: 2 hits, 35%: 3 hits, 15% 4 hits, 15% 5 hits.
-    else
-        gMultiHitCounter = RandomWeighted(RNG_HITS, 0, 0, 3, 3, 1, 1); // 37.5%: 2 hits, 37.5%: 3 hits, 12.5% 4 hits, 12.5% 5 hits.
-}
-
-static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
-{
-    // Skip everything else if it's a status move
-    // This is as long as status moves are still handled with scripts
-    if (GetBattleMoveCategory(cv->move) == DAMAGE_CATEGORY_STATUS)
-    {
-        gBattleStruct->eventState.atkCanceler = CANCELER_END;
-        return CANCELER_RESULT_END;
-    }
-
-    SetPossibleNewSmartTarget(cv->move);
-
-    if (IsBattlerUnaffectedByMove(gBattlerTarget))
-    {
-        gMultiHitCounter = 0;
-    }
-    else if (IsMultiHitMove(cv->move))
-    {
-        if (cv->moveEffect == EFFECT_SPECIES_POWER_OVERRIDE
-         && gBattleMons[cv->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(cv->move))
-        {
-            gMultiHitCounter = GetMoveSpeciesPowerOverride_NumOfHits(cv->move);
-        }
-        else if (cv->abilities[cv->battlerAtk] == ABILITY_SKILL_LINK)
-        {
-            gMultiHitCounter = 5;
-        }
-        else
-        {
-            SetRandomMultiHitCounter(cv->holdEffects[cv->battlerAtk]);
-        }
-
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
-    }
-    else if (GetMoveStrikeCount(cv->move) > 1)
-    {
-        if (GetMoveEffect(cv->move) == EFFECT_POPULATION_BOMB
-         && cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_LOADED_DICE
-         && cv->abilities[cv->battlerAtk] != ABILITY_SKILL_LINK)
-        {
-            gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
-        }
-        else
-        {
-            gMultiHitCounter = GetMoveStrikeCount(cv->move);
-        }
-
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 3, 0)
-    }
-    else if (cv->moveEffect == EFFECT_BEAT_UP)
-    {
-        struct Pokemon* party = GetBattlerParty(cv->battlerAtk);
-        int i;
-        gBattleStruct->beatUpSlot = 0;
-        gMultiHitCounter = 0;
-        memset(gBattleStruct->beatUpSpecies, 0xFF, sizeof(gBattleStruct->beatUpSpecies));
-
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-             && GetMonData(&party[i], MON_DATA_HP)
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && !GetMonData(&party[i], MON_DATA_STATUS))
-            {
-                if (GetConfig(B_BEAT_UP) >= GEN_5)
-                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
-                else
-                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
-                gMultiHitCounter++;
-            }
-        }
-
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
-    }
-    else if (IsMoveParentalBondAffected(cv))
-    {
-        gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_1ST_HIT;
-        gMultiHitCounter = 2;
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
-    }
-    else
-    {
-        gMultiHitCounter = 0;
-    }
-
-    return CANCELER_RESULT_SUCCESS;
-}
-
 static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (gBattleStruct->numSpreadTargets == 0 && battlerDef != gBattlerTarget)
@@ -2546,6 +2573,12 @@ static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum Battler
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
+    if (IsBattleMoveStatus(cv->move))
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
     struct SetEffect se = {0};
 
@@ -3064,7 +3097,10 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
+
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
+    [CANCELER_SUBSTITUTE] = CancelerSubstitute,
+
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
     [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
     [CANCELER_DAMAGE_CALC] = CancelerDamageCalc,

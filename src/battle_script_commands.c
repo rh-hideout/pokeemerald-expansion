@@ -78,19 +78,18 @@
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
-// For example accuracycheck is defined as:
+// For example trainerslidein is defined as:
 //
-//     .macro accuracycheck failInstr:req, move:req
-//     .byte 0x1
-//     .4byte \failInstr
-//     .2byte \move
+//     .macro trainerslidein position:req
+//     .byte B_SCR_OP_TRAINERSLIDEIN
+//     .byte \position
 //     .endm
 //
 // Which corresponds to:
 //
-//     CMD_ARGS(const u8 *failInstr, u16 move);
+//      CMD_ARGS(u8 position);
 //
-// The arguments can be accessed as cmd->failInstr and cmd->move.
+// The arguments can be accessed as cmd->position
 // gBattlescriptCurrInstr = cmd->nextInstr; advances to the next instruction.
 #define CMD_ARGS(...) const struct __attribute__((packed)) { u8 opcode; RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) const u8 nextInstr[0]; } *const cmd UNUSED = (const void *)gBattlescriptCurrInstr
 #define NATIVE_ARGS(...) CMD_ARGS(void (*func)(void), ##__VA_ARGS__)
@@ -350,7 +349,6 @@ static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, 
 static u32 GetPossibleNextTarget(u32 currTarget);
 
 static void Cmd_attackcanceler(void);
-static void Cmd_accuracycheck(void);
 static void Cmd_printattackstring(void);
 static void Cmd_printselectionstringfromtable(void);
 static void Cmd_typecalc(void);
@@ -534,7 +532,6 @@ static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_pickup(void);
 static void Cmd_settypebasedhalvers(void);
-static void Cmd_jumpifsubstituteblocks(void);
 static void Cmd_tryrecycleitem(void);
 static void Cmd_settypetoenvironment(void);
 static void Cmd_snatchsetbattlers(void);
@@ -565,7 +562,6 @@ static void Cmd_callnative(void);
 void (*const gBattleScriptingCommandsTable[])(void) =
 {
     [B_SCR_OP_ATTACKCANCELER]                        = Cmd_attackcanceler,
-    [B_SCR_OP_ACCURACYCHECK]                         = Cmd_accuracycheck,
     [B_SCR_OP_PRINTATTACKSTRING]                     = Cmd_printattackstring,
     [B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE]         = Cmd_printselectionstringfromtable,
     [B_SCR_OP_TYPECALC]                              = Cmd_typecalc,
@@ -749,7 +745,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFHASNOHP]                         = Cmd_jumpifhasnohp,
     [B_SCR_OP_PICKUP]                                = Cmd_pickup,
     [B_SCR_OP_SETTYPEBASEDHALVERS]                   = Cmd_settypebasedhalvers,
-    [B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS]                = Cmd_jumpifsubstituteblocks,
     [B_SCR_OP_TRYRECYCLEITEM]                        = Cmd_tryrecycleitem,
     [B_SCR_OP_SETTYPETOENVIRONMENT]                  = Cmd_settypetoenvironment,
     [B_SCR_OP_SNATCHSETBATTLERS]                     = Cmd_snatchsetbattlers,
@@ -814,6 +809,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1047,48 +1044,6 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
         return TRUE;
 
     return FALSE;
-}
-
-
-static void Cmd_accuracycheck(void)
-{
-    CMD_ARGS();
-
-    if ((GetMovePower(gCurrentMove) > 0) // Only used for non damage moves (damaging moves are handled in move resolution)
-     || ShouldSkipFRLGAccuracyCheck()
-     || IsMaxMove(gCurrentMove)
-     || IsZMove(gCurrentMove))
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    struct BattleCalcValues cv = {0};
-    cv.move = gCurrentMove;
-    cv.battlerAtk = gBattlerAttacker;
-    cv.battlerDef = gBattlerTarget;
-    cv.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
-    cv.abilities[gBattlerTarget] = GetBattlerAbility(gBattlerTarget);
-    cv.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);
-    cv.holdEffects[gBattlerTarget] = GetBattlerHoldEffect(gBattlerTarget);
-
-    if (DoesMoveMissTarget(&cv))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        if (cv.holdEffects[gBattlerAttacker] == HOLD_EFFECT_BLUNDER_POLICY)
-            gBattleStruct->blunderPolicy = TRUE;
-    }
-
-    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED)
-    {
-        gLastLandedMoves[gBattlerTarget] = 0;
-        gLastHitByType[gBattlerTarget] = 0;
-        gBattlescriptCurrInstr = BattleScript_MoveMissed;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 static void Cmd_printattackstring(void)
@@ -7275,7 +7230,6 @@ static void Cmd_transformdataexecution(void)
     if ((GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2 && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
         || (GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2 && gBattleMons[gBattlerTarget].volatiles.transformed)
         || (GetConfig(B_TRANSFORM_USER_FAIL) >= GEN_5 && gBattleMons[gBattlerAttacker].volatiles.transformed)
-        || (GetConfig(B_TRANSFORM_SUBSTITUTE_FAIL) >= GEN_5 && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
         || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
@@ -9052,16 +9006,6 @@ bool32 DoesIceFaceBlockMove(enum BattlerId battler, enum Move move)
         return FALSE;
     else
         return TRUE;
-}
-
-static void Cmd_jumpifsubstituteblocks(void)
-{
-    CMD_ARGS(const u8 *jumpInstr);
-
-    if (DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_tryrecycleitem(void)
