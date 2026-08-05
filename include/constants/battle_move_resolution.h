@@ -11,13 +11,6 @@ enum Obedience
     DISOBEYS_RANDOM_MOVE,
 };
 
-enum CheckTargetFailure
-{
-    SKIP_FAILURE,
-    CHECK_FAILURE,
-    SKIP_FAILURE_SELF, // Only set if user should actually be targeted
-};
-
 enum CancelerResult
 {
     CANCELER_RESULT_SUCCESS,
