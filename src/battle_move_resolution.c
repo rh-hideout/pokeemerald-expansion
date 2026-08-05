@@ -2301,9 +2301,6 @@ static void SetRandomMultiHitCounter(enum HoldEffect holdEffect)
 
 static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 {
-    if (IsBattleMoveStatus(cv->move))
-        return CANCELER_RESULT_SUCCESS;
-
     SetPossibleNewSmartTarget(cv->move);
 
     if (IsBattlerUnaffectedByMove(gBattlerTarget))
@@ -3097,10 +3094,8 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
-
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_SUBSTITUTE] = CancelerSubstitute,
-
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
     [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
     [CANCELER_DAMAGE_CALC] = CancelerDamageCalc,
