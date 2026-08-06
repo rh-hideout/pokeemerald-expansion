@@ -414,7 +414,6 @@ static u8 PickWildMonNature(enum Species species)
 
 static void CreateWildMonInSlot(enum Species species, u8 level, u32 slot)
 {
-    ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][slot], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][slot]);
@@ -589,7 +588,7 @@ const struct WildPokemonInfo *GetWildPokemonInfo(enum WildEncounterType encounte
     return gWildMonHeaders[headerId].encounterTypes[timeOfDay][encounterType];
 }
 
-static void GenerateStandardWildmons(const struct WildPokemonInfo *wildPokemonInfo, enum WildEncounterType encounterType, u32 minLevel)
+static void GenerateStandardWildMons(const struct WildPokemonInfo *wildPokemonInfo, enum WildEncounterType encounterType, u32 minLevel)
 {
     GenerateWildMon(wildPokemonInfo, encounterType, minLevel, 0);
     if (CheckForDoubleWildBattle())
@@ -647,7 +646,7 @@ bool32 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
     else if (encounterType == WILD_LAND_MONS && CheckForMassOutbreakEncounter())
         GenerateMassOutbreakMon(minLevel);
     else
-        GenerateStandardWildmons(wildPokemonInfo, encounterType, minLevel);
+        GenerateStandardWildMons(wildPokemonInfo, encounterType, minLevel);
 
     if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
         return FALSE;
@@ -665,7 +664,7 @@ static bool32 TryRockSmashWildEncounter(void)
     if (!WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE))
         return FALSE;
 
-    GenerateStandardWildmons(wildPokemonInfo, WILD_ROCK_SMASH_MONS, FALSE);
+    GenerateStandardWildMons(wildPokemonInfo, WILD_ROCK_SMASH_MONS, FALSE);
     if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
         return FALSE;
     BattleSetup_StartWildBattle();
@@ -704,6 +703,7 @@ void FishingWildEncounter(u8 rod)
     enum TimeOfDay timeOfDay;
 
     gIsFishingEncounter = TRUE;
+    ZeroEnemyPartyMons();
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (CheckFeebasAtCoords(x, y) == TRUE)
     {
