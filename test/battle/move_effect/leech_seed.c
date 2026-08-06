@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Leech Seeded recovers health through Substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Leech Seeded is blocked by Substitute")
+SINGLE_BATTLE_TEST("Leech Seed is blocked by Substitute")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
