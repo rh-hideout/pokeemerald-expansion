@@ -290,8 +290,8 @@ TEST("(Pokerus) Test UpdatePartyPokerusTime general behavior")
 {
     u32 enabled = 0;
     u32 strain = 0; 
-    s32 daysLeft = 0;
-    s32 daysPassed = 0;
+    u16 daysLeft = 0;
+    u16 daysPassed = 0;
     for (u32 i = 0; i < 16; i++)
     {
         for (u32 j = 0; j < 16; j++)

@@ -116,8 +116,6 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 
 void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
 {
-    u8 heldItem[2];
-
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
@@ -125,18 +123,10 @@ void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
-    if (item)
-    {
-        heldItem[0] = item;
-        heldItem[1] = item >> 8;
-        SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, heldItem);
-    }
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, &item);
 }
 void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item item1, enum Species species2, u8 level2, enum Item item2)
 {
-    u8 heldItem1[2];
-    u8 heldItem2[2];
-
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species1,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
@@ -144,12 +134,7 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species1, level1, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
-    if (item1)
-    {
-        heldItem1[0] = item1;
-        heldItem1[1] = item1 >> 8;
-        SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, heldItem1);
-    }
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM, &item1);
 
     personality = GetMonPersonality(species2,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species2),
@@ -157,12 +142,7 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][1], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][1]);
-    if (item2)
-    {
-        heldItem2[0] = item2;
-        heldItem2[1] = item2 >> 8;
-        SetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_HELD_ITEM, heldItem2);
-    }
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_HELD_ITEM, &item2);
 }
 
 void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
@@ -479,15 +459,9 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
 u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
 {
     struct Pokemon mon;
-    u8 heldItem[2];
 
     CreateRandomMon(&mon, species, level);
-    if (item)
-    {
-        heldItem[0] = item;
-        heldItem[1] = item >> 8;
-        SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
-    }
+    SetMonData(&mon, MON_DATA_HELD_ITEM, &item);
 
     return GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
 }

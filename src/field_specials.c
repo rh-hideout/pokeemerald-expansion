@@ -1640,7 +1640,7 @@ u8 GetLeadMonIndex(void)
 
 enum Species ScriptGetPartyMonSpecies(void)
 {
-    return GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
+    return GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG);
 }
 
 enum Species ScriptGetSelectedMonSpecies(void)
@@ -3496,7 +3496,7 @@ bool8 IsDestinationBoxFull(void)
     {
         for (i = 0; i < IN_BOX_COUNT; i++)
         {
-            if (GetBoxMonData(GetBoxedMonPtr(box, i), MON_DATA_SPECIES, 0) == SPECIES_NONE)
+            if (GetBoxMonData(GetBoxedMonPtr(box, i), MON_DATA_SPECIES) == SPECIES_NONE)
             {
                 if (GetPCBoxToSendMon() != box)
                     FlagClear(FLAG_SHOWN_BOX_WAS_FULL_MESSAGE);
@@ -4944,7 +4944,7 @@ bool8 DoesPlayerPartyContainSpecies(void)
     u8 i;
     for (i = 0; i < partyCount; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) == gSpecialVar_0x8004)
             return TRUE;
     }
     return FALSE;
@@ -5639,8 +5639,8 @@ bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
     u8 i;
     for (i = 0; i < playerCount; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004
-            && GetPlayerIDAsU32() == GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_OT_ID, NULL))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) == gSpecialVar_0x8004
+            && GetPlayerIDAsU32() == GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_OT_ID))
             return TRUE;
     }
     return FALSE;
@@ -5740,8 +5740,8 @@ void UpdateTrainerCardPhotoIcons(void)
     partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
-        species[i] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG, NULL);
-        personality[i] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY, NULL);
+        species[i] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
+        personality[i] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
     }
     VarSet(VAR_TRAINER_CARD_MON_ICON_1, SpeciesToMailSpecies(species[0], personality[0]));
     VarSet(VAR_TRAINER_CARD_MON_ICON_2, SpeciesToMailSpecies(species[1], personality[1]));
