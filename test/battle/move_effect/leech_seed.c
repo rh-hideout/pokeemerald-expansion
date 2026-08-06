@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Leech Seed is blocked by Substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Leech Seeded's accuracy is 90%")
+SINGLE_BATTLE_TEST("Leech Seed's accuracy is 90%")
 {
     PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
     GIVEN {
