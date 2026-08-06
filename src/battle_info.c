@@ -162,6 +162,10 @@ static void OverviewComputeRowLayout(s16 *outXs);
 static void OverviewCreateCards(void);
 static void OverviewDrawCards(void);
 static void OverviewDrawCard(struct BattleInfoCard *card);
+static void PrintMonAndGender(struct BattleInfoCard *card, struct Pokemon *mon, enum Species species, u32 contentYOffset);
+static void CreateGimmickIndicator(struct BattleInfoCard *card, u32 iconCenterY);
+static void CreateMonAndStatusInon(struct BattleInfoCard *card, enum Species species, u32 personality, u32 contentYOffset);
+static void CreateHpBar(struct BattleInfoCard *card, u32 contentYOffset);
 static void OverviewSetBgTile(s16 x, s16 y, u16 tileNum, u16 attrs);
 static void OverviewFillBgRect(s16 x, s16 y, s16 width, s16 height, u16 tileNum, u16 attrs);
 static void BackdropLoadBaseTilemap(void);
@@ -1890,7 +1894,6 @@ static void DetailRefreshHeader(void)
 
     DetailDrawWindowFrame(windowId);
     s32 genderX = WindowWidthPx(windowId) - 2 - B_INFO_GENDER_W;
-
     u8 maxLevelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
 
     ConvertIntToDecimalStringN(maxLevelText + 2, 999, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -1902,8 +1905,6 @@ static void DetailRefreshHeader(void)
     u8 monName[POKEMON_NAME_LENGTH + 1];
     GetMonData(GetBattlerMon(GetSelectedBattler()), MON_DATA_NICKNAME, monName);
     u32 maxNameWidth = max(levelX - 4, 16);
-
-
     u32 nameFont = GetFontIdToFit(monName, FONT_NORMAL, 0, maxNameWidth);
 
     AddTextPrinterParameterized4(windowId, nameFont, 2, 2, 0, 0, sTextColor_BattleInfo_Default,
@@ -1923,6 +1924,7 @@ static void DetailRefreshHeader(void)
     {
         DetailDestroyTeraTypeIndicator();
     }
+
     DetailRefreshGimmickIndicator();
 
     u8 levelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
@@ -2669,7 +2671,7 @@ static void DetailRefreshEffectsWindow(void)
             if (rowIndex >= sData->activeEffectsCount)
                 break;
 
-            DisplayRow(windowId, row, rowIndex, fractionYOffset );
+            DisplayRow(windowId, row, rowIndex, fractionYOffset);
         }
     }
 
@@ -2974,88 +2976,104 @@ static void OverviewDrawCards(void)
 
 static void OverviewDrawCard(struct BattleInfoCard *card)
 {
-    u32 windowId = (card->y == B_INFO_ROW_Y_ENEMY) ? WIN_ROW_ENEMY : WIN_ROW_PLAYER;
-    u8 nameFont;
-    const u8 *gimmickIndicatorData;
-    u32 gimmickIndicatorPalTag;
-    struct SpriteTemplate gimmickTemplate;
-    struct SpriteSheet gimmickSheet;
-    s16 localX = card->x;
-    s16 localY = card->y;
-    s16 contentYOffset = (card->y == B_INFO_ROW_Y_ENEMY) ? -2 : 0;
-    s16 maxNameWidth;
-    s16 iconCenterX;
-    s16 iconCenterY;
-
+    s32 contentYOffset = (card->y == B_INFO_ROW_Y_ENEMY) ? -2 : 0;
     struct Pokemon *mon = GetBattlerMon(card->battler);
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
+    PrintMonAndGender(card, mon, species, contentYOffset);
+    CreateGimmickIndicator(card, card->y + 28 + contentYOffset);
+    CreateMonAndStatusInon(card, species, GetMonData(mon, MON_DATA_PERSONALITY), contentYOffset);
+    CreateHpBar(card, contentYOffset);
+}
+
+static void PrintMonAndGender(struct BattleInfoCard *card, struct Pokemon *mon, enum Species species, u32 contentYOffset)
+{
+    u32 windowId = (card->y == B_INFO_ROW_Y_ENEMY) ? WIN_ROW_ENEMY : WIN_ROW_PLAYER;
     u32 gender = GetMonGender(mon);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
-    u32 ailment = GetAilmentFromBattler(card->battler);
+    bool32 hasGender = gender == MON_MALE || gender == MON_FEMALE;
+    u32 localX = card->x;
+    u32 localY = card->y;
+
+    u32 row = (windowId == WIN_ROW_ENEMY) ? B_INFO_ROW_Y_ENEMY : B_INFO_ROW_Y_PLAYER;
+    localY -= (row / 8) * 8;
+
+    u32 maxNameWidth = B_INFO_CARD_W - 6;
+    maxNameWidth -= hasGender ? B_INFO_GENDER_W + 4 : 0;
+
     u8 name[POKEMON_NAME_LENGTH + 1];
     GetMonData(mon, MON_DATA_NICKNAME, name);
 
-    if (windowId == WIN_ROW_ENEMY)
-        localY -= (B_INFO_ROW_Y_ENEMY / 8) * 8;
-    else
-        localY -= (B_INFO_ROW_Y_PLAYER / 8) * 8;
-
-    maxNameWidth = B_INFO_CARD_W - 6;
-    if (gender == MON_MALE || gender == MON_FEMALE)
-        maxNameWidth -= B_INFO_GENDER_W + 4;
-
-    nameFont = GetFontIdToFit(name, FONT_NORMAL, 0, maxNameWidth);
-
     FillWindowPixelRect(windowId, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT), localX, localY, B_INFO_CARD_W, B_INFO_CARD_H);
 
-    AddTextPrinterParameterized4(windowId, nameFont, localX + 6, localY + 2 + contentYOffset, 0, 0,
-                                 sTextColor_BattleInfo_OverviewDefault, TEXT_SKIP_DRAW, name);
+    struct PrintText text = {
+        .windowId = windowId,
+        .speed = TEXT_SKIP_DRAW,
+    };
 
-    if (gender == MON_MALE || gender == MON_FEMALE)
+    text.font = GetFontIdToFit(name, FONT_NORMAL, 0, maxNameWidth);
+    text.top = localY + 2 + contentYOffset;
+    text.left = localX + 6;
+    text.color = sTextColor_BattleInfo_OverviewDefault;
+    text.string = name;
+    PrintTextOnWindow(&text);
+
+    if (hasGender)
     {
         u8 genderSymbol[2];
-        const u8 *colors = (gender == MON_MALE) ? sTextColor_BattleInfo_Male : sTextColor_BattleInfo_Female;
-        u8 genderX = localX + B_INFO_CARD_W - B_INFO_GENDER_W - 2;
-        u8 genderY = localY + 2 + contentYOffset;
-
         genderSymbol[0] = (gender == MON_MALE) ? CHAR_MALE : CHAR_FEMALE;
         genderSymbol[1] = EOS;
 
-        AddTextPrinterParameterized4(windowId, FONT_SMALL, genderX, genderY, 0, 0, colors, TEXT_SKIP_DRAW, genderSymbol);
+        text.font = FONT_SMALL,
+        text.top = localY + 2 + contentYOffset,
+        text.left = localX + B_INFO_CARD_W - B_INFO_GENDER_W - 2,
+        text.color = (gender == MON_MALE) ? sTextColor_BattleInfo_Male : sTextColor_BattleInfo_Female,
+        text.string = genderSymbol,
+        PrintTextOnWindow(&text);
     }
 
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
+}
 
-    iconCenterX = card->x + (B_INFO_CARD_W / 2);
-    iconCenterY = card->y + 28 + contentYOffset;
+static void CreateGimmickIndicator(struct BattleInfoCard *card, u32 iconCenterY)
+{
+    u32 gimmickIndicatorPalTag;
+    const u8 *gimmickIndicatorData = GetGimmickIndicatorData(card->battler, &gimmickIndicatorPalTag);
+
+    if (gimmickIndicatorData == NULL || gimmickIndicatorPalTag == TAG_NONE)
+        return;
+
+    card->gimmickSpriteId = SPRITE_NONE;
+    u32 gimmickTileTag = B_INFO_OVERVIEW_GIMMICK_TILE_TAG_BASE + card->battler;
+
+    struct SpriteTemplate gimmickTemplate;
+    gimmickTemplate = sSpriteTemplate_BattleInfoDetailGimmick;
+    gimmickTemplate.tileTag = gimmickTileTag;
+    gimmickTemplate.paletteTag = gimmickIndicatorPalTag;
+
+    struct SpriteSheet gimmickSheet;
+    gimmickSheet.data = gimmickIndicatorData;
+    gimmickSheet.size = B_INFO_DETAIL_GIMMICK_GFX_SIZE;
+    gimmickSheet.tag = gimmickTileTag;
+    LoadSpriteSheet(&gimmickSheet);
+
+    s32 x = card->x + (B_INFO_DETAIL_GIMMICK_W / 2) + 5;
+    s32 y = iconCenterY - (B_INFO_DETAIL_GIMMICK_H / 2) - 3;
+    card->gimmickSpriteId = CreateSprite(&gimmickTemplate, x, y, 0);
+
+    if (card->gimmickSpriteId != SPRITE_NONE)
+        gSprites[card->gimmickSpriteId].oam.priority = 0;
+}
+
+static void CreateMonAndStatusInon(struct BattleInfoCard *card, enum Species species, u32 personality, u32 contentYOffset)
+{
+    s32 iconCenterX = card->x + (B_INFO_CARD_W / 2);
+    s32 iconCenterY = card->y + 28 + contentYOffset;
 
     card->monIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, iconCenterX, iconCenterY, 0, personality);
     gSprites[card->monIconSpriteId].oam.priority = 0;
 
-    card->gimmickSpriteId = SPRITE_NONE;
-
-    gimmickIndicatorData = GetGimmickIndicatorData(card->battler, &gimmickIndicatorPalTag);
-    if (gimmickIndicatorData != NULL && gimmickIndicatorPalTag != TAG_NONE)
-    {
-        u32 gimmickTileTag = B_INFO_OVERVIEW_GIMMICK_TILE_TAG_BASE + card->battler;
-        gimmickTemplate = sSpriteTemplate_BattleInfoDetailGimmick;
-        gimmickTemplate.tileTag = gimmickTileTag;
-        gimmickTemplate.paletteTag = gimmickIndicatorPalTag;
-
-        gimmickSheet.data = gimmickIndicatorData;
-        gimmickSheet.size = B_INFO_DETAIL_GIMMICK_GFX_SIZE;
-        gimmickSheet.tag = gimmickTileTag;
-        LoadSpriteSheet(&gimmickSheet);
-
-        card->gimmickSpriteId = CreateSprite(&gimmickTemplate,
-                                             card->x + (B_INFO_DETAIL_GIMMICK_W / 2) + 5,
-                                             iconCenterY - (B_INFO_DETAIL_GIMMICK_H / 2) - 3, 0);
-        if (card->gimmickSpriteId != SPRITE_NONE)
-            gSprites[card->gimmickSpriteId].oam.priority = 0;
-    }
-
+    u32 ailment = GetAilmentFromBattler(card->battler);
     if (ailment != AILMENT_NONE && ailment != AILMENT_PKRS)
     {
         s16 statusX = iconCenterX + 13;
@@ -3065,7 +3083,10 @@ static void OverviewDrawCard(struct BattleInfoCard *card)
         StartSpriteAnim(&gSprites[card->statusSpriteId], ailment - 1);
         gSprites[card->statusSpriteId].oam.priority = 0;
     }
+}
 
+static void CreateHpBar(struct BattleInfoCard *card, u32 contentYOffset)
+{
     card->hpBarSpriteId = CreateHpBarSprite(B_INFO_HP_BAR_TILE_TAG_BASE + card->battler, card->x - 16, card->y + 46 + contentYOffset);
     CreateHpBarEndcaps(&card->hpBarLeftEndcapSpriteId, &card->hpBarRightEndcapSpriteId);
     DrawHpBarSprite(card);
@@ -3346,15 +3367,26 @@ static void OverviewDrawLabels(void)
     labelY -= 2;
     labelY = max(labelY, 0);
 
+    struct PrintText text = {
+        .font = FONT_SMALL,
+        .color = sTextColor_BattleInfo_Default,
+        .speed = TEXT_SKIP_DRAW,
+        .top = labelY,
+    };
+
     FillWindowPixelBuffer(WIN_LABEL_TOP, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT));
-    AddTextPrinterParameterized4(WIN_LABEL_TOP, FONT_SMALL, enemyLabelX, labelY, 0, 0,
-                                 sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, enemyLabel);
+    text.windowId = WIN_LABEL_TOP;
+    text.left = enemyLabelX;
+    text.string = enemyLabel;
+    PrintTextOnWindow(&text);
     PutWindowTilemap(WIN_LABEL_TOP);
     CopyWindowToVram(WIN_LABEL_TOP, COPYWIN_FULL);
 
     FillWindowPixelBuffer(WIN_LABEL_BOTTOM, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT));
-    AddTextPrinterParameterized4(WIN_LABEL_BOTTOM, FONT_SMALL, playerLabelX, labelY, 0, 0,
-                                 sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, playerLabel);
+    text.windowId = WIN_LABEL_BOTTOM;
+    text.left = playerLabelX;
+    text.string = playerLabel;
+    PrintTextOnWindow(&text);
     PutWindowTilemap(WIN_LABEL_BOTTOM);
     CopyWindowToVram(WIN_LABEL_BOTTOM, COPYWIN_FULL);
 }
