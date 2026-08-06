@@ -2286,20 +2286,6 @@ static void SendRecvDone(void)
     }
 }
 
-void ResetSendBuffer(void)
-{
-    u8 i;
-    u8 j;
-
-    gLink.sendQueue.count = 0;
-    gLink.sendQueue.pos = 0;
-    for (i = 0; i < CMD_LENGTH; i++)
-    {
-        for (j = 0; j < QUEUE_CAPACITY; j++)
-            gLink.sendQueue.data[i][j] = LINKCMD_NONE;
-    }
-}
-
 void ResetRecvBuffer(void)
 {
     u8 i;

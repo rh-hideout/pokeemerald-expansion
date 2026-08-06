@@ -45,14 +45,11 @@ bool32 InitWindowsChecked(const struct WindowTemplate *templates, s32 staticSize
         }
     }
 
-    assertf(terminated, "%p is missing DUMMY_WIN_TEMPLATE terminator", templates)
-    {
-        return FALSE;
-    }
+    fatal_assertf(terminated, "%p is missing DUMMY_WIN_TEMPLATE terminator", templates);
 
     bool32 initialized = InitWindowsUnchecked(templates);
-    assertf(initialized, "Could not initialize windows");
-    return initialized;
+    fatal_assertf(initialized, "Could not initialize windows");
+    return TRUE;
 }
 
 bool32 InitWindowsUnchecked(const struct WindowTemplate *templates)

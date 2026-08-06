@@ -821,18 +821,6 @@ static mapsec_u8_t MatchCall_GetMapSec_Birch(match_call_t matchCall)
     return MAPSEC_NONE;
 }
 
-bool32 MatchCall_IsRematchable(u32 idx)
-{
-    match_call_t matchCall;
-    u32 i;
-
-    if (idx >= ARRAY_COUNT(sMatchCallHeaders))
-        return 0;
-    matchCall = sMatchCallHeaders[idx];
-    i = MatchCallGetFunctionIndex(matchCall);
-    return sMatchCall_IsRematchableFunctions[i](matchCall);
-}
-
 static bool32 MatchCall_IsRematchable_NPC(match_call_t matchCall)
 {
     return FALSE;

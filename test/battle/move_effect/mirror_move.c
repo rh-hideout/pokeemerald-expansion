@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Mirror Move's called powder move fails against Grass Types")
         PLAYER(SPECIES_ODDISH);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_STUN_SPORE); MOVE(opponent, MOVE_MIRROR_MOVE); }
+        TURN { MOVE(player, MOVE_STUN_SPORE); MOVE(opponent, MOVE_MIRROR_MOVE, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
         STATUS_ICON(opponent, paralysis: TRUE);
@@ -91,11 +91,11 @@ SINGLE_BATTLE_TEST("Mirror Move's called multi-hit move hits multiple times")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
         HP_BAR(opponent);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
         MESSAGE("The opposing Wobbuffet used Mirror Move!");
         MESSAGE("The opposing Wobbuffet used Bullet Seed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
         HP_BAR(player);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
     }
 }

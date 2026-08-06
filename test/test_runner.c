@@ -7,6 +7,7 @@
 #include "malloc.h"
 #include "random.h"
 #include "task.h"
+#include "union_room_chat.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
@@ -179,7 +180,7 @@ void TestRunner_CheckMemory(void)
         {
             if (gTasks[i].isActive)
             {
-                Test_MgbaPrintf(":L%s:%d: %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
+                Test_MgbaPrintf("%s:%d: %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
                 gTestRunnerState.result = TEST_RESULT_FAIL;
 
                 if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
@@ -298,7 +299,7 @@ top:
         }
 
         Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
-        Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename);
+        Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename, SourceLine(0));
         gTestRunnerState.result = TEST_RESULT_PASS;
         gTestRunnerState.expectedResult = TEST_RESULT_PASS;
         gTestRunnerState.expectLeaks = FALSE;
@@ -457,6 +458,9 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
+            case TEST_RESULT_FLAKY:
+                result = "FLAKY";
+                break;
             default:
                 result = "UNKNOWN";
                 break;
@@ -603,7 +607,7 @@ static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32
         if (gFunctionTestRunnerState->rngList[i].tag == tag)
         {
             if (reject && reject(gFunctionTestRunnerState->rngList[i].value))
-                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "WITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
             return gFunctionTestRunnerState->rngList[i].value;
         }
     }
@@ -650,7 +654,7 @@ static const void* FunctionTest_RandomElementArray(enum RandomTag tag, const voi
                 if (element == gFunctionTestRunnerState->rngList[i].value)
                     return (const u8 *)array + size * index;
             }
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
         }
     }
 
@@ -727,7 +731,7 @@ static void Intr_Timer2(void)
             if (gTestRunnerState.state == STATE_RUN_TEST)
                 gTestRunnerState.state = STATE_REPORT_RESULT;
             gTestRunnerState.result = TEST_RESULT_TIMEOUT;
-            Test_MgbaPrintf(":L%s:%d: TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
+            Test_MgbaPrintf("%s:%d: TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
             ReinitCallbacks();
             IRQ_LR = ((uintptr_t)JumpToAgbMainLoop & ~1) + 4;
         }
@@ -759,7 +763,7 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
      && gTestRunnerState.expectedResult == TEST_RESULT_FAIL
      && result == TEST_RESULT_FAIL)
     {
-        Test_MgbaPrintf(":L%s:%d: Expected failure in block from line %d, but failed on line %d",
+        Test_MgbaPrintf("%s:%d: Expected failure in block from line %d, but failed on line %d",
          gTestRunnerState.test->filename, stopLine,
          gTestRunnerState.expectedFailLine, stopLine);
     }
@@ -776,6 +780,8 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
                 const void *return0 = __builtin_return_address(0);
                 Test_MgbaPrintf("in %p\nin %p", return1, return0);
             }
+            // TODO: If 'fmt' starts with ':', insert a space to prevent
+            // Hydra interpreting it as a command.
             va_list va;
             va_start(va, fmt);
             MgbaVPrintf_(fmt, va);
@@ -821,14 +827,19 @@ static s32 MgbaPutchar_(s32 i, s32 c)
 }
 
 // Bare-bones, supports:
+// - %c: print an ASCII character.
+// - %C: print a GF-encoded character.
 // - %s, %.*s: print an ASCII string.
 // - %S, %.*S: print a GF-encoded string.
+// - %U: print a GF-encoded upper-case string.
 // - %d: print a signed integer.
 // - %q: print a Q20.12 fixed-point number.
 // - %p: print a pointer (which mgba-rom-test-hydra will convert into a
 //   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
+    extern char mini_pchar_decode(u8);
+
     s32 i = 0;
     s32 n;
     s32 c, d;
@@ -854,6 +865,14 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
             {
             case '%':
                 i = MgbaPutchar_(i, '%');
+                break;
+            case 'c':
+                c = va_arg(va, int);
+                i = MgbaPutchar_(i, c);
+                break;
+            case 'C':
+                c = va_arg(va, unsigned);
+                i = MgbaPutchar_(i, mini_pchar_decode(c));
                 break;
             case 'd':
                 d = va_arg(va, int);
@@ -955,9 +974,31 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS && n-- > 0)
                         i = MgbaPutchar_(i, mini_pchar_decode(c));
+                }
+                break;
+            case 'U':
+                pokeS = va_arg(va, const u8 *);
+                bool32 wasUnderscore = FALSE;
+                while (*pokeS != EOS)
+                {
+                    u8 c = *pokeS++;
+                    if (CHAR_a <= c && c <= CHAR_z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(gCaseToggleTable[c]));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (CHAR_A <= c && c <= CHAR_Z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (!wasUnderscore)
+                    {
+                        i = MgbaPutchar_(i, '_');
+                        wasUnderscore = TRUE;
+                    }
                 }
                 break;
             }
@@ -1069,7 +1110,7 @@ u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*rejec
         while (reject(default_))
         {
             if (default_ == lo)
-                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
             default_--;
         }
     }
@@ -1081,7 +1122,7 @@ u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weight
     while (weights[n-1] == 0)
     {
         if (n == 1)
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
         n--;
     }
     return n-1;
@@ -1121,5 +1162,5 @@ void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
         }
     }
     if (i == RIGGED_RNG_COUNT)
-        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, "%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }
