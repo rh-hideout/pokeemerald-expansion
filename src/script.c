@@ -81,8 +81,19 @@ void StopScript(struct ScriptContext *ctx)
     ctx->scriptPtr = NULL;
 }
 
+static u32 CrashStackContext_Script(const void *ctx_, const void **addresses, u32 maxAddresses)
+{
+    const struct ScriptContext *ctx = ctx_;
+    u32 i = 0;
+    addresses[i++] = ctx->scriptPtr; // WARNING: ScriptReadX advances this.
+    for (; i < ctx->stackDepth && i < maxAddresses; i++)
+        addresses[i] = ctx->stack[ctx->stackDepth - i];
+    return i;
+}
+
 bool8 RunScriptCommand(struct ScriptContext *ctx)
 {
+    ScopedCrashStackContext(CrashStackContext_Script, ctx);
     switch (ctx->mode)
     {
     case SCRIPT_MODE_STOPPED:
@@ -568,6 +579,7 @@ static bool32 Script_IsEffectInstrumentedCommand(ScrCmdFunc func)
  * See https://gcc.gnu.org/onlinedocs/gcc/Nonlocal-Gotos.html */
 static bool32 RunScriptImmediatelyUntilEffect_InternalLoop(struct ScriptContext *ctx)
 {
+    ScopedCrashStackContext(CrashStackContext_Script, ctx);
     if (__builtin_setjmp(gScriptEffectContext->breakTo) == 0)
     {
         while (TRUE)

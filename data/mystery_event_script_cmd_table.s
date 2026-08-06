@@ -1,3 +1,5 @@
+        .include "asm/macros.inc"
+
 	.section script_data, "aw", %progbits
 
 	.align 2

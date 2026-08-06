@@ -15,3 +15,15 @@
 	.include "asm/macros/battle_frontier/battle_pyramid.inc"
 	.include "asm/macros/battle_frontier/battle_tower.inc"
 	.include "asm/macros/battle_frontier/frontier_util.inc"
+
+	#include "constants/postlink.h"
+
+	.macro postlink_entry address:req, type:req, flags:req, priority:req
+	.pushsection .postlink.elf, "R", %progbits
+	.byte \type
+	.byte \flags
+	.byte \priority
+	.byte 0
+	.4byte \address
+	.popsection
+	.endm
