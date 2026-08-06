@@ -40,6 +40,61 @@
 #include "constants/songs.h"
 #include "constants/pokemon.h"
 
+struct PrintText
+{
+    u8 windowId;
+    u8 font;
+    u8 left;
+    u8 top;
+    u8 letterSpacing;
+    u8 lineSpacing;
+    const u8 *color;
+    s8 speed;
+    const u8 *string;
+};
+
+struct MonPic
+{
+    enum Species species;
+    u32 isShiny:1;
+    u32 personality:30;
+    u32 isFrontPic:1;
+    s16 left;
+    s16 top;
+    u8 paletteSlot;
+    u16 paletteTag;
+};
+
+static void PrintTextOnWindow(struct PrintText *text)
+{
+    AddTextPrinterParameterized4(
+        text->windowId,
+        text->font,
+        text->left,
+        text->top,
+        text->letterSpacing,
+        text->lineSpacing,
+        text->color,
+        text->speed,
+        text->string
+    );
+}
+
+#include "trainer_pokemon_sprites.h"
+static u32 CreateMonSprite(struct MonPic *pic)
+{
+    return CreateMonPicSprite(
+                pic->species,
+                pic->isShiny,
+                pic->personality,
+                pic->isFrontPic,
+                pic->left,
+                pic->top,
+                pic->paletteSlot,
+                pic->paletteTag
+            );
+}
+
 struct BattleInfo
 {
     u8 label;
@@ -144,6 +199,8 @@ static void DetailRefreshGimmickIndicator(void);
 static void DetailDestroyTeraTypeIndicator(void);
 static void DetailRefreshTeraTypeIndicator(void);
 static void DetailRefreshItemAbilityWindow(void);
+static void PrintHeldItemText(struct PrintText text, enum BattlerId battler);
+static void PrintAbilityText(struct PrintText text, enum BattlerId battler);
 static void DetailRefreshHeader(void);
 static void DetailRefreshIcon(void);
 static void DetailRefreshTypeIcons(void);
@@ -1623,8 +1680,6 @@ static void DetailDrawLRButtonGlyphs(void)
     u32 itemWindowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
     u32 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
 
-    s32 glyphHeight = 12;
-
     u32 itemWindowWidth = WindowWidthPx(itemWindowId);
     u32 itemWindowHeight = GetWindowAttribute(itemWindowId, WINDOW_HEIGHT) * 8;
     s32 rGlyphWidth = GetKeypadIconWidth(CHAR_R_BUTTON);
@@ -1635,29 +1690,36 @@ static void DetailDrawLRButtonGlyphs(void)
     s32 itemAbsTop = GetWindowAttribute(itemWindowId, WINDOW_TILEMAP_TOP) * 8;
     s32 statsAbsTop = GetWindowAttribute(statsWindowId, WINDOW_TILEMAP_TOP) * 8;
 
-    s32 itemY = itemWindowHeight - glyphHeight - 1;
+    s32 itemY = itemWindowHeight - KEYPAD_ICON_HEIGHT - 1;
     itemY -= 5;
-    if (itemY < 1)
-        itemY = 1;
+    itemY = max(itemY, 1);
 
     s32 alignedAbsY = itemAbsTop + itemY;
     s32 statsY = alignedAbsY - statsAbsTop;
     statsY -= 1;
-    if (statsY < 0)
-        statsY = 0;
+    statsY = max(statsY, 0);
 
     s32 statsX = 1;
     s32 itemX = itemWindowWidth - rGlyphWidth - 2;
-    if (itemX < 1)
-        itemX = 1;
+    itemX = max(itemX, 1);
     itemY -= 1;
-    if (itemY < 0)
-        itemY = 0;
+    itemY = max(itemY, 0);
 
-    AddTextPrinterParameterized4(statsWindowId, FONT_SHORT_NARROW, statsX, statsY, 0, 0,
-                                 sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, sText_BattleInfo_DetailLButtonGlyph);
-    AddTextPrinterParameterized4(itemWindowId, FONT_SHORT_NARROW, itemX, itemY, 0, 0,
-                                 sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, sText_BattleInfo_DetailRButtonGlyph);
+    struct PrintText text = {
+        .windowId = statsWindowId,
+        .font = FONT_SHORT_NARROW,
+        .color = sTextColor_BattleInfo_Default,
+        .speed = TEXT_SKIP_DRAW,
+        .string = sText_BattleInfo_DetailLButtonGlyph,
+    };
+
+    text.left = statsX;
+    text.top = statsY;
+    PrintTextOnWindow(&text);
+
+    text.left = itemX;
+    text.top = itemY;
+    PrintTextOnWindow(&text);
 }
 
 static void DetailDestroyTeraTypeIndicator(void)
@@ -1766,33 +1828,18 @@ static void DetailRefreshItemAbilityWindow(void)
     u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     u32 statsWindowId = sData->windowIds[WIN_DETAIL_STATS];
 
-    u8 sText_BattleInfo_None[] = _("None");
-    const u8 *itemText = sText_BattleInfo_None;
-    const u8 *abilityText = sText_BattleInfo_None;
-
     if (IsOnPlayerSide(battler) || B_INFO_OPPOSING_INFORMATION)
     {
-        enum Item heldItem = gBattleMons[battler].item;
-        enum Ability ability = gBattleMons[battler].ability;
+        struct PrintText text = {
+            .windowId = windowId,
+            .font = FONT_SHORT_NARROW,
+            .color = sTextColor_BattleInfo_Default,
+            .speed = TEXT_SKIP_DRAW,
+            .left = 50,
+        };
 
-        if (heldItem != ITEM_NONE)
-            itemText = GetItemName(heldItem);
-        if (ability != ABILITY_NONE)
-            abilityText = gAbilitiesInfo[ability].name;
-
-        s32 maxValueWidth = (B_INFO_DETAIL_ITEM_WIN_W * 8) - 6;
-
-        u32 itemFont = GetFontIdToFit(itemText, FONT_SMALL, 0, maxValueWidth);
-        u32 abilityFont = GetFontIdToFit(abilityText, FONT_SMALL, 0, maxValueWidth);
-
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 33, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, COMPOUND_STRING("Held Item"));
-        AddTextPrinterParameterized4(windowId, itemFont, 50, 43, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, itemText);
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROW, 50, 56, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, COMPOUND_STRING("Ability"));
-        AddTextPrinterParameterized4(windowId, abilityFont, 50, 66, 0, 0, sTextColor_BattleInfo_Default,
-                                     TEXT_SKIP_DRAW, abilityText);
+        PrintHeldItemText(text, battler);
+        PrintAbilityText(text, battler);
     }
 
     DetailDrawLRButtonGlyphs();
@@ -1801,6 +1848,38 @@ static void DetailRefreshItemAbilityWindow(void)
     PutWindowTilemap(statsWindowId);
     CopyWindowToVram(statsWindowId, COPYWIN_FULL);
 }
+
+#define MAX_VALUE_WIDTH (B_INFO_DETAIL_ITEM_WIN_W * 8) - 6
+static void PrintHeldItemText(struct PrintText text, enum BattlerId battler)
+{
+    text.top = 33;
+    text.string = COMPOUND_STRING("Held Item");
+    PrintTextOnWindow(&text);
+
+    enum Item heldItem = gBattleMons[battler].item;
+    const u8 *string = (heldItem != ITEM_NONE) ? GetItemName(heldItem) : COMPOUND_STRING("None");
+
+    text.font = GetFontIdToFit(string, FONT_SMALL, 0, MAX_VALUE_WIDTH);
+    text.top = 43;
+    text.string = string;
+    PrintTextOnWindow(&text);
+}
+
+static void PrintAbilityText(struct PrintText text, enum BattlerId battler)
+{
+    text.top = 56;
+    text.string = COMPOUND_STRING("Ability");
+    PrintTextOnWindow(&text);
+
+    enum Ability ability = gBattleMons[battler].ability;
+    const u8 *string = (ability != ABILITY_NONE) ? gAbilitiesInfo[ability].name : COMPOUND_STRING("None");
+
+    text.font = GetFontIdToFit(string, FONT_SMALL, 0, MAX_VALUE_WIDTH);
+    text.top = 66;
+    text.string = string;
+    PrintTextOnWindow(&text);
+}
+#undef MAX_VALUE_WIDTH
 
 static void DetailRefreshHeader(void)
 {

@@ -14,6 +14,8 @@ STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 31
 // loaded at once but not copied to vram yet.
 #define TEXT_SKIP_DRAW 0xFF
 
+#define KEYPAD_ICON_HEIGHT 12
+
 enum {
     FONT_SMALL,
     FONT_NORMAL,
