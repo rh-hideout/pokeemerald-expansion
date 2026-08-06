@@ -1489,7 +1489,7 @@ static void Task_GiveExpWithExpBar(u8 taskId)
         enum BattlerId battler = gTasks[taskId].tExpTask_battler;
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monId];
 
-        newExpPoints = MoveBattleBar(battler, gHealthboxSpriteIds[battler], EXP_BAR, 0);
+        newExpPoints = MoveBattleBar(battler, gHealthboxSpriteIds[battler], EXP_BAR);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
         if (newExpPoints == -1) // The bar has been filled with given exp points.
         {
