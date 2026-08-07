@@ -8,8 +8,18 @@
 #include "text_window.h"
 #include "script.h"
 #include "field_name_box.h"
+#include "constants/dialogue_styles.h"
+
+#define DIALOGUE_STYLE_SLOW_TEXT_DELAY 12
+#define DIALOGUE_STYLE_FAST_TEXT_DELAY 1
+#define DIALOGUE_STYLE_SLOW_TEXT_MODIFIER 1
+#define DIALOGUE_STYLE_FAST_TEXT_MODIFIER 3
+#define DIALOGUE_STYLE_SLOW_SCROLL_SPEED 1
+#define DIALOGUE_STYLE_FAST_SCROLL_SPEED 6
+#define DIALOGUE_STYLE_SCROLL_DELAY_NONE 0
 
 static EWRAM_DATA u8 sFieldMessageBoxMode = 0;
+static EWRAM_DATA u8 sFieldMessageDialogueStyle = DIALOGUE_STYLE_DEFAULT;
 EWRAM_DATA u8 gWalkAwayFromSignpostTimer = 0;
 
 static void ExpandStringAndStartDrawFieldMessage(const u8 *, bool32);
@@ -18,10 +28,99 @@ static void StartDrawFieldMessage(void);
 void InitFieldMessageBox(void)
 {
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+    ClearFieldMessageDialogueStyle();
     gTextFlags.canABSpeedUpPrint = FALSE;
     gTextFlags.useAlternateDownArrow = FALSE;
     gTextFlags.autoScroll = FALSE;
     gTextFlags.forceMidTextSpeed = FALSE;
+}
+
+void SetFieldMessageDialogueStyle(u8 style)
+{
+    if (style >= DIALOGUE_STYLE_COUNT)
+        style = DIALOGUE_STYLE_DEFAULT;
+    sFieldMessageDialogueStyle = style;
+}
+
+void ClearFieldMessageDialogueStyle(void)
+{
+    sFieldMessageDialogueStyle = DIALOGUE_STYLE_DEFAULT;
+}
+
+u8 GetFieldMessageDialogueStyle(void)
+{
+    return sFieldMessageDialogueStyle;
+}
+
+u32 GetFieldMessageTextSpeedDelay(void)
+{
+    switch (sFieldMessageDialogueStyle)
+    {
+    case DIALOGUE_STYLE_SLOW:
+    case DIALOGUE_STYLE_SLOW_TEXT:
+        return DIALOGUE_STYLE_SLOW_TEXT_DELAY;
+    case DIALOGUE_STYLE_FAST:
+    case DIALOGUE_STYLE_FAST_TEXT:
+        return DIALOGUE_STYLE_FAST_TEXT_DELAY;
+    default:
+        return GetPlayerTextSpeedDelay();
+    }
+}
+
+u32 GetFieldMessageTextSpeedModifier(void)
+{
+    switch (sFieldMessageDialogueStyle)
+    {
+    case DIALOGUE_STYLE_FAST:
+    case DIALOGUE_STYLE_FAST_TEXT:
+        return DIALOGUE_STYLE_FAST_TEXT_MODIFIER;
+    case DIALOGUE_STYLE_SLOW:
+    case DIALOGUE_STYLE_SLOW_TEXT:
+        return DIALOGUE_STYLE_SLOW_TEXT_MODIFIER;
+    default:
+        return GetPlayerTextSpeedModifier();
+    }
+}
+
+u32 GetFieldMessageTextScrollSpeed(void)
+{
+    switch (sFieldMessageDialogueStyle)
+    {
+    case DIALOGUE_STYLE_SLOW:
+        return DIALOGUE_STYLE_SLOW_SCROLL_SPEED;
+    case DIALOGUE_STYLE_FAST:
+        return DIALOGUE_STYLE_FAST_SCROLL_SPEED;
+    default:
+        return GetPlayerTextScrollSpeed();
+    }
+}
+
+u32 GetFieldMessageTextScrollDelay(void)
+{
+    switch (sFieldMessageDialogueStyle)
+    {
+    case DIALOGUE_STYLE_SLOW:
+    case DIALOGUE_STYLE_FAST:
+        return DIALOGUE_STYLE_SCROLL_DELAY_NONE;
+    default:
+        return GetPlayerTextSpeedModifier();
+    }
+}
+
+bool32 IsFieldMessageTextSpeedInstant(void)
+{
+    if (sFieldMessageDialogueStyle == DIALOGUE_STYLE_DEFAULT)
+        return IsPlayerTextSpeedInstant();
+    return FALSE;
+}
+
+void ApplyFieldMessageTextPrinterProfile(void)
+{
+    SetTextPrinterSpeedProfile(
+        GetFieldMessageTextSpeedModifier(),
+        IsFieldMessageTextSpeedInstant(),
+        GetFieldMessageTextScrollSpeed(),
+        GetFieldMessageTextScrollDelay());
 }
 
 #define tState data[0]
