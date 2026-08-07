@@ -864,7 +864,6 @@
     "PalletTown_Frlg",
     "ViridianCity_Frlg",
     "PewterCity_Frlg",
-    "CeruleanCity_Frlg",
     "LavenderTown_Frlg",
     "VermilionCity_Frlg",
     "CeladonCity_Frlg",
@@ -947,18 +946,7 @@
     "PewterCity_PokemonCenter_2F_Frlg",
     "PewterCity_House2_Frlg"
   ],
-  "gMapGroup_IndoorCerulean_Frlg": [
-    "CeruleanCity_House1_Frlg",
-    "CeruleanCity_House2_Frlg",
-    "CeruleanCity_House3_Frlg",
-    "CeruleanCity_PokemonCenter_1F_Frlg",
-    "CeruleanCity_PokemonCenter_2F_Frlg",
-    "CeruleanCity_Gym_Frlg",
-    "CeruleanCity_BikeShop_Frlg",
-    "CeruleanCity_Mart_Frlg",
-    "CeruleanCity_House4_Frlg",
-    "CeruleanCity_House5_Frlg"
-  ],
+  "gMapGroup_IndoorCerulean_Frlg": [],
   "gMapGroup_IndoorLavender_Frlg": [
     "LavenderTown_PokemonCenter_1F_Frlg",
     "LavenderTown_PokemonCenter_2F_Frlg",
@@ -1167,6 +1155,17 @@
     "PokemonMansion_1F_Frlg",
     "PokemonMansion_2F_Frlg",
     "PokemonMansion_3F_Frlg",
-    "PokemonMansion_B1F_Frlg"
+    "PokemonMansion_B1F_Frlg",
+    "CeruleanCity_Frlg",
+    "CeruleanCity_House1_Frlg",
+    "CeruleanCity_House2_Frlg",
+    "CeruleanCity_House3_Frlg",
+    "CeruleanCity_PokemonCenter_1F_Frlg",
+    "CeruleanCity_PokemonCenter_2F_Frlg",
+    "CeruleanCity_Gym_Frlg",
+    "CeruleanCity_BikeShop_Frlg",
+    "CeruleanCity_Mart_Frlg",
+    "CeruleanCity_House4_Frlg",
+    "CeruleanCity_House5_Frlg"
   ]
 }

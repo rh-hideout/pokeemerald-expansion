@@ -3,7 +3,6 @@
   "name": "CeruleanCity_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -12,7 +11,6 @@
   "allow_escaping": false,
   "allow_running": true,
   "show_map_name": true,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
@@ -39,7 +37,6 @@
   "object_events": [
     {
       "local_id": "LOCALID_CERULEAN_POLICEMAN",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 31,
       "y": 12,
@@ -49,12 +46,11 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Policeman",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CERULEAN_GRUNT",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
       "x": 33,
       "y": 6,
@@ -64,11 +60,10 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Grunt",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_HIDE_CERULEAN_ROCKET"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_FRLG",
       "x": 16,
       "y": 21,
@@ -78,11 +73,10 @@
       "movement_range_y": 3,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_LittleBoy",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN",
       "x": 9,
       "y": 23,
@@ -92,12 +86,11 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_BaldingMan",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CERULEAN_SLOWBRO",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_SLOWBRO",
       "x": 32,
       "y": 29,
@@ -107,12 +100,11 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Slowbro",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CERULEAN_LASS",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
       "x": 33,
       "y": 29,
@@ -122,11 +114,10 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Lass",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 34,
       "y": 22,
@@ -136,12 +127,11 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Youngster",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CERULEAN_RIVAL",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BLUE",
       "x": 22,
       "y": 0,
@@ -151,11 +141,10 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_HIDE_CERULEAN_RIVAL"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 26,
       "y": 32,
@@ -165,7 +154,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "EventScript_CutTree",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_TEMP_13"
     },
     {
@@ -178,7 +167,6 @@
     },
     {
       "local_id": "LOCALID_CERULEAN_WOMAN",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
       "x": 12,
       "y": 30,
@@ -188,12 +176,11 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_Woman",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CERULEAN_CAVE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "x": 1,
       "y": 13,
@@ -203,7 +190,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_EventScript_CeruleanCaveGuard",
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_HIDE_CERULEAN_CAVE_GUARD"
     }
   ],
@@ -315,7 +302,7 @@
       "elevation": 3,
       "var": "VAR_MAP_SCENE_CERULEAN_CITY_RIVAL",
       "var_value": "0",
-      "script": "CeruleanCity_EventScript_RivalTriggerLeft"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "trigger",
@@ -324,7 +311,7 @@
       "elevation": 3,
       "var": "VAR_MAP_SCENE_CERULEAN_CITY_RIVAL",
       "var_value": "0",
-      "script": "CeruleanCity_EventScript_RivalTriggerMid"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "trigger",
@@ -333,7 +320,7 @@
       "elevation": 3,
       "var": "VAR_MAP_SCENE_CERULEAN_CITY_RIVAL",
       "var_value": "0",
-      "script": "CeruleanCity_EventScript_RivalTriggerRight"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "trigger",
@@ -342,7 +329,7 @@
       "elevation": 3,
       "var": "VAR_MAP_SCENE_CERULEAN_CITY_ROCKET",
       "var_value": "0",
-      "script": "CeruleanCity_EventScript_GruntTriggerTop"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "trigger",
@@ -351,7 +338,7 @@
       "elevation": 3,
       "var": "VAR_MAP_SCENE_CERULEAN_CITY_ROCKET",
       "var_value": "0",
-      "script": "CeruleanCity_EventScript_GruntTriggerBottom"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     }
   ],
   "bg_events": [
@@ -361,7 +348,7 @@
       "y": 25,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_EventScript_CitySign"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -369,7 +356,7 @@
       "y": 21,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_EventScript_GymSign"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -377,7 +364,7 @@
       "y": 28,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_EventScript_BikeShopSign"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -385,7 +372,7 @@
       "y": 32,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_EventScript_TrainerTips"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "hidden_item",
@@ -393,7 +380,7 @@
       "y": 7,
       "elevation": 3,
       "item": "ITEM_RARE_CANDY",
-      "flag": "FLAG_HIDDEN_ITEM_CERULEAN_CITY_RARE_CANDY",
+      "flag": "FLAG_HIDDEN_ITEMS_START",
       "quantity": 1,
       "underfoot": false
     },
@@ -403,7 +390,7 @@
       "y": 25,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -411,7 +398,7 @@
       "y": 27,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -419,7 +406,9 @@
       "y": 26,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_Frlg_EventScript_NpcPlaceholder"
     }
-  ]
+  ],
+  "floor_number": 0,
+  "region": "REGION_KANTO"
 }

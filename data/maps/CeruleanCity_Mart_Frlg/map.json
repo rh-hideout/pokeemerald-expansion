@@ -27,7 +27,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Mart_EventScript_Clerk",
+      "script": "CeruleanCity_Mart_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -41,7 +41,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Mart_EventScript_Woman",
+      "script": "CeruleanCity_Mart_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -55,7 +55,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Mart_EventScript_Youngster",
+      "script": "CeruleanCity_Mart_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     }
   ],

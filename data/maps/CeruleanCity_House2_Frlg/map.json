@@ -27,7 +27,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_House2_EventScript_Hiker",
+      "script": "CeruleanCity_House2_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -41,7 +41,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_House2_EventScript_Lass",
+      "script": "CeruleanCity_House2_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     }
   ],
@@ -83,7 +83,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_House2_EventScript_WallHole"
+      "script": "CeruleanCity_House2_Frlg_EventScript_NpcPlaceholder"
     }
   ]
 }

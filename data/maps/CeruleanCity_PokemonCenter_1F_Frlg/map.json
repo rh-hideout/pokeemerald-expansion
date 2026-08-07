@@ -28,7 +28,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_Nurse",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -42,7 +42,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_Gentleman",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -56,7 +56,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_Rocker",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -70,7 +70,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_Youngster",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -84,7 +84,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_Lass",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -98,7 +98,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_PokemonJournalMisty",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_HIDE_POSTGAME_GOSSIPERS"
     },
     {
@@ -112,7 +112,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_PokemonCenter_1F_EventScript_PokemonJournalMisty",
+      "script": "CeruleanCity_PokemonCenter_1F_Frlg_EventScript_NpcPlaceholder",
       "flag": "FLAG_HIDE_POSTGAME_GOSSIPERS"
     }
   ],

@@ -75,6 +75,8 @@
 #include "constants/vars.h"
 #include "constants/weather.h"
 #include "constants/speaker_names.h"
+
+
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
@@ -602,6 +604,23 @@ gStdScripts_End::
 	.include "data/maps/Route119_House/scripts.inc"
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
 
+
+@ Cerulean scripts used by the Emerald build
+	.include "data/maps/CeruleanCave_1F_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCave_2F_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCave_B1F_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_BikeShop_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_Gym_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_House1_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_House2_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_House3_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_House4_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_House5_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_Mart_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_PokemonCenter_1F_Frlg/scripts.inc"
+	.include "data/maps/CeruleanCity_PokemonCenter_2F_Frlg/scripts.inc"
+
 .if IS_FRLG
 
 @ FRLG scripts
@@ -682,9 +701,6 @@ gStdScripts_End::
 	.include "data/maps/SafariZone_North_RestHouse_Frlg/scripts.inc"
 	.include "data/maps/SafariZone_West_RestHouse_Frlg/scripts.inc"
 	.include "data/maps/SafariZone_SecretHouse_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCave_1F_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCave_2F_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCave_B1F_Frlg/scripts.inc"
 	.include "data/maps/PokemonLeague_LoreleisRoom_Frlg/scripts.inc"
 	.include "data/maps/PokemonLeague_BrunosRoom_Frlg/scripts.inc"
 	.include "data/maps/PokemonLeague_AgathasRoom_Frlg/scripts.inc"
@@ -795,7 +811,6 @@ gStdScripts_End::
 	.include "data/maps/NavelRock_Harbor_Frlg/scripts.inc"
 	.include "data/maps/PalletTown_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_Frlg/scripts.inc"
-		.include "data/maps/CeruleanCity_Frlg/scripts.inc"
 	.include "data/maps/LavenderTown_Frlg/scripts.inc"
 	.include "data/maps/VermilionCity_Frlg/scripts.inc"
 	.include "data/maps/CeladonCity_Frlg/scripts.inc"
@@ -863,16 +878,6 @@ gStdScripts_End::
 	.include "data/maps/ViridianCity_Mart_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_PokemonCenter_1F_Frlg/scripts.inc"
 	.include "data/maps/ViridianCity_PokemonCenter_2F_Frlg/scripts.inc"
-									.include "data/maps/CeruleanCity_House1_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_House2_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_House3_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_PokemonCenter_1F_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_PokemonCenter_2F_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_Gym_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_BikeShop_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_Mart_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_House4_Frlg/scripts.inc"
-	.include "data/maps/CeruleanCity_House5_Frlg/scripts.inc"
 	.include "data/maps/LavenderTown_PokemonCenter_1F_Frlg/scripts.inc"
 	.include "data/maps/LavenderTown_PokemonCenter_2F_Frlg/scripts.inc"
 	.include "data/maps/LavenderTown_VolunteerPokemonHouse_Frlg/scripts.inc"

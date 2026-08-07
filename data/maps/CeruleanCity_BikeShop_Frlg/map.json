@@ -27,7 +27,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_BikeShop_EventScript_Clerk",
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -41,7 +41,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_BikeShop_EventScript_Youngster",
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     },
     {
@@ -55,7 +55,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_BikeShop_EventScript_Woman",
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder",
       "flag": "0"
     }
   ],
@@ -90,7 +90,7 @@
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -98,7 +98,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -106,7 +106,7 @@
       "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -114,7 +114,7 @@
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -122,7 +122,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -130,7 +130,7 @@
       "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -138,7 +138,7 @@
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     },
     {
       "type": "sign",
@@ -146,7 +146,7 @@
       "y": 8,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_NpcPlaceholder"
     }
   ]
 }
