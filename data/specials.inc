@@ -557,10 +557,8 @@ gSpecials::
 	def_special ObjectEventInteractionBerryHasWeed
 	def_special ObjectEventInteractionBerryHasPests
 	def_special CanWaterBerryPlot
-	def_special Script_GetChosenMonOffensiveEVs
-	def_special Script_GetChosenMonDefensiveEVs
-	def_special Script_GetChosenMonOffensiveIVs
-	def_special Script_GetChosenMonDefensiveIVs
+	def_special Script_GetChosenMonEVs
+	def_special Script_GetChosenMonIVs
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special EnterCode
 	def_special GetCodeFeedback
