@@ -68,10 +68,9 @@ enum TransitionType
 };
 
 // this file's functions
-static void DoBattlePikeWildBattle(void);
 static void DoSafariBattle(void);
 static void DoGhostBattle(void);
-static void DoStandardWildBattle(bool32 isDouble);
+static void DoStandardWildBattle(void);
 static void CB2_EndWildBattle(void);
 static void CB2_EndScriptedWildBattle(void);
 static void CB2_EndMarowakBattle(void);
@@ -96,6 +95,7 @@ static void DoTrainerBattle(void);
 
 EWRAM_DATA TrainerBattleParameter gTrainerBattleParameter = {0};
 EWRAM_DATA u16 gPartnerTrainerId = 0;
+EWRAM_DATA u32 gBattleTypeFlags = 0;
 EWRAM_DATA static u8 *sTrainerBattleEndScript = NULL;
 EWRAM_DATA static bool8 sShouldCheckTrainerBScript = FALSE;
 EWRAM_DATA static u8 sNoOfPossibleTrainerRetScripts = 0;
@@ -340,12 +340,7 @@ void BattleSetup_StartWildBattle(void)
     else if (CheckSilphScopeInPokemonTower(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         DoGhostBattle();
     else
-        DoStandardWildBattle(FALSE);
-}
-
-void BattleSetup_StartDoubleWildBattle(void)
-{
-    DoStandardWildBattle(TRUE);
+        DoStandardWildBattle();
 }
 
 void BattleSetup_StartMultiBattle(void)
@@ -382,30 +377,16 @@ void BattleSetup_StartMultiBattle(void)
     }
 }
 
-
-void BattleSetup_StartBattlePikeWildBattle(void)
-{
-    DoBattlePikeWildBattle();
-}
-
-static void DoStandardWildBattle(bool32 isDouble)
+static void DoStandardWildBattle(void)
 {
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndWildBattle;
-    gBattleTypeFlags = 0;
     if (IsNPCFollowerWildBattle())
-    {
         gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
-    }
-    else if (isDouble)
-        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
-    {
-        VarSet(VAR_TEMP_E, 0);
-        gBattleTypeFlags |= BATTLE_TYPE_PYRAMID;
-    }
+    if (gBattleTypeFlags & BATTLE_TYPE_PYRAMID)
+        VarSet(VAR_TEMP_PLAYING_PYRAMID_MUSIC, 0);
     CreateBattleStartTask(GetWildBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
@@ -432,20 +413,6 @@ void DoStandardWildBattle_Debug(void)
     //TryUpdateGymLeaderRematchFromWild();
 }
 
-void BattleSetup_StartRoamerBattle(void)
-{
-    LockPlayerFieldControls();
-    FreezeObjectEvents();
-    StopPlayerAvatar();
-    gMain.savedCallback = CB2_EndWildBattle;
-    gBattleTypeFlags = BATTLE_TYPE_ROAMER;
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
-    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
-    IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    IncrementDailyWildBattles();
-    TryUpdateGymLeaderRematchFromWild();
-}
-
 static void DoSafariBattle(void)
 {
     LockPlayerFieldControls();
@@ -467,20 +434,6 @@ static void DoGhostBattle(void)
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_NICKNAME, gText_Ghost);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_WILD_BATTLES);
-}
-
-static void DoBattlePikeWildBattle(void)
-{
-    LockPlayerFieldControls();
-    FreezeObjectEvents();
-    StopPlayerAvatar();
-    gMain.savedCallback = CB2_EndWildBattle;
-    gBattleTypeFlags = BATTLE_TYPE_PIKE;
-    CreateBattleStartTask(GetWildBattleTransition(), 0);
-    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
-    IncrementGameStat(GAME_STAT_WILD_BATTLES);
-    IncrementDailyWildBattles();
-    TryUpdateGymLeaderRematchFromWild();
 }
 
 static void DoTrainerBattle(void)
