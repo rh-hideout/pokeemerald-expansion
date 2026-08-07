@@ -57,7 +57,6 @@
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
 - [Changelog](./CHANGELOG.md)
     - [1.16.x]()
-        - [Version 1.16.3](changelogs/1.16.x/1.16.3.md)
         - [Version 1.16.2](changelogs/1.16.x/1.16.2.md)
         - [Version 1.16.1](changelogs/1.16.x/1.16.1.md)
         - [Version 1.16.0](changelogs/1.16.x/1.16.0.md)
