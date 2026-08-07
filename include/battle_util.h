@@ -35,7 +35,8 @@ struct DamageContext
     u32 abilityBlocked:1;
     u32 runScript:1;  // Used during actual combat where scripts have to be run / flags need to be set
     u32 terrain:4;
-    u32 padding:18;
+    u32 useStoredTypeEffectiveness:1;
+    u32 padding:17;
 };
 
 // Helper struct to keep the arg list small and prevent constant recalculations of abilities/hold effects.

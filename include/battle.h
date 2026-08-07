@@ -135,9 +135,9 @@ struct SpecialStatus
     // End of byte
     u8 parentalBondState:2;
     u8 multiHitOn:1;
-    u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
+    u8 padding1:1;
     // End of byte
     enum QueuedSwitch queuedSwitch;
     struct StatStages statStageQueue[NUM_BATTLE_STATS];
@@ -145,6 +145,7 @@ struct SpecialStatus
     u8 statStageAmount:4;
     u8 statStageAmount2:4;
     // End of byte
+    uq4_12_t storedTypeEffectiveness;
 };
 
 struct SideTimer
@@ -723,7 +724,8 @@ struct BattleStruct
     u32 dancerSavedAttacker:3;
     u32 dancerSavedTarget:3;
     u32 statChangeBattler:3;
-    u32 padding5:5;
+    u32 overworldWeatherPresent:1;
+    u32 padding5:4;
     u8 statChangeMoveAnim:1;
     u8 tidyUpActivates:1;
     u8 positiveAnimPlayed:1;
@@ -732,7 +734,6 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
-    u8 overworldWeatherPresent:1;
 };
 
 struct AiBattleData

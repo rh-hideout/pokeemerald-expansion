@@ -2207,6 +2207,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 continue;
 
             ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
+            gSpecialStatuses[cv->battlerDef].storedTypeEffectiveness = ctx.typeEffectivenessModifier;
 
             if (ctx.abilityBlocked)
             {
@@ -2237,11 +2238,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
                 TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
-            }
-            else if (ctx.typeEffectivenessModifier > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(&ctx))
-            {
-                gSpecialStatuses[ctx.battlerDef].distortedTypeMatchups = TRUE;
-                gSpecialStatuses[ctx.battlerDef].teraShellAbilityDone = TRUE;
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
@@ -2606,6 +2602,7 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
         .terrain = gFieldTimers.terrain,
         .randomFactor = TRUE,
         .updateFlags = TRUE,
+        .useStoredTypeEffectiveness = TRUE,
     };
 
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
