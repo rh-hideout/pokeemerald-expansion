@@ -57,10 +57,8 @@ COMMON_DATA void (*gCB2_AfterEvolution)(void) = NULL;
 static void Task_EvolutionScene(u8 taskId);
 static void Task_TradeEvolutionScene(u8 taskId);
 static void CB2_EvolutionSceneUpdate(void);
-static void CB2_TradeEvolutionSceneUpdate(void);
 static void EvoDummyFunc(void);
 static void VBlankCB_EvolutionScene(void);
-static void VBlankCB_TradeEvolutionScene(void);
 static void EvoScene_DoMonAnimAndCry(u8 monSpriteId, enum Species speciesId);
 static bool32 EvoScene_IsMonAnimFinished(u8 monSpriteId);
 static void StartBgAnimation(bool8 isLink);
@@ -410,7 +408,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
     case 1:
         ResetPaletteFade();
         SetHBlankCallback(EvoDummyFunc);
-        SetVBlankCallback(VBlankCB_TradeEvolutionScene);
+        SetVBlankCallback(VBlankCB_EvolutionScene);
         gMain.state++;
         break;
     case 2:
@@ -462,7 +460,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         InitTradeSequenceBgGpuRegs();
         ShowBg(0);
         ShowBg(1);
-        SetMainCallback2(CB2_TradeEvolutionSceneUpdate);
+        SetMainCallback2(CB2_EvolutionSceneUpdate);
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG0_ON | DISPCNT_BG1_ON | DISPCNT_OBJ_1D_MAP);
         break;
     }
@@ -526,20 +524,11 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
 
     gTextFlags.useAlternateDownArrow = TRUE;
 
-    SetVBlankCallback(VBlankCB_TradeEvolutionScene);
-    SetMainCallback2(CB2_TradeEvolutionSceneUpdate);
+    SetVBlankCallback(VBlankCB_EvolutionScene);
+    SetMainCallback2(CB2_EvolutionSceneUpdate);
 }
 
 static void CB2_EvolutionSceneUpdate(void)
-{
-    AnimateSprites();
-    BuildOamBuffer();
-    RunTextPrinters();
-    UpdatePaletteFade();
-    RunTasks();
-}
-
-static void CB2_TradeEvolutionSceneUpdate(void)
 {
     AnimateSprites();
     BuildOamBuffer();
@@ -1391,7 +1380,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
             }
             break;
         case T_MVSTATE_HANDLE_MOVE_SELECT:
-            if (!gPaletteFade.active && gMain.callback2 == CB2_TradeEvolutionSceneUpdate)
+            if (!gPaletteFade.active && gMain.callback2 == CB2_EvolutionSceneUpdate)
             {
                 var = GetMoveSlotToReplace();
                 if (var == MAX_MON_MOVES)
@@ -1478,23 +1467,6 @@ static void EvoDummyFunc(void)
 }
 
 static void VBlankCB_EvolutionScene(void)
-{
-    SetGpuReg(REG_OFFSET_BG0HOFS, gBattle_BG0_X);
-    SetGpuReg(REG_OFFSET_BG0VOFS, gBattle_BG0_Y);
-    SetGpuReg(REG_OFFSET_BG1HOFS, gBattle_BG1_X);
-    SetGpuReg(REG_OFFSET_BG1VOFS, gBattle_BG1_Y);
-    SetGpuReg(REG_OFFSET_BG2HOFS, gBattle_BG2_X);
-    SetGpuReg(REG_OFFSET_BG2VOFS, gBattle_BG2_Y);
-    SetGpuReg(REG_OFFSET_BG3HOFS, gBattle_BG3_X);
-    SetGpuReg(REG_OFFSET_BG3VOFS, gBattle_BG3_Y);
-
-    LoadOam();
-    ProcessSpriteCopyRequests();
-    TransferPlttBuffer();
-    ScanlineEffect_InitHBlankDmaTransfer();
-}
-
-static void VBlankCB_TradeEvolutionScene(void)
 {
     SetGpuReg(REG_OFFSET_BG0HOFS, gBattle_BG0_X);
     SetGpuReg(REG_OFFSET_BG0VOFS, gBattle_BG0_Y);
