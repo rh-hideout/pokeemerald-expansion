@@ -3,7 +3,6 @@
   "name": "RustboroCity",
   "layout": "LAYOUT_RUSTBORO_CITY",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -244,6 +243,19 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RustboroCity_EventScript_Boy1",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_AZUMARILL",
+      "x": 28,
+      "y": 40,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -329,6 +341,13 @@
       "y": 46,
       "elevation": 0,
       "dest_map": "MAP_RUSTBORO_CITY_HOUSE3",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 33,
+      "y": 46,
+      "elevation": 0,
+      "dest_map": "MAP_CERULEAN_CITY",
       "dest_warp_id": "0"
     }
   ],
@@ -526,8 +545,8 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 23,
-      "y": 19,
+      "x": 22,
+      "y": 20,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RustboroCity_EventScript_GymSign"
@@ -604,5 +623,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RustboroCity_EventScript_CuttersHouseSign"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }
