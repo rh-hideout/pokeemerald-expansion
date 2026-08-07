@@ -28,6 +28,8 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect);
 static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     gBattlescriptCurrInstr = se->script;
+
+    assertf(se->moveEffect != MOVE_EFFECT_FLORAL_HEALING, "no effect assigned to MOVE_EFFECT_FLORAL_HEALING");
 }
 
 static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -578,11 +580,6 @@ static void HandleSetEffectSyrupBomb(struct BattleCalcValues *cv, struct SetEffe
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_SyrupBombActivates;
     }
-}
-
-// TODO: The constant here is being used an an argument field. It should probably just use the move itself.
-static void HandleSetEffectFloralHealing(struct BattleCalcValues *cv, struct SetEffect *se)
-{
 }
 
 static void HandleSetEffectSecretPower(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1348,7 +1345,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TRAP_BOTH] = HandleSetEffectTrapBoth,
     [MOVE_EFFECT_ROUND] = HandleSetEffectRound,
     [MOVE_EFFECT_SYRUP_BOMB] = HandleSetEffectSyrupBomb,
-    [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectFloralHealing,
+    [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectNone,
     [MOVE_EFFECT_SECRET_POWER] = HandleSetEffectSecretPower,
     [MOVE_EFFECT_PSYCHIC_NOISE] = HandleSetEffectPsychicNoise,
     [MOVE_EFFECT_TERA_BLAST] = HandleSetEffectTeraBlast,
@@ -1518,9 +1515,6 @@ static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, e
         return FALSE;
 
     if (moveEffect != MOVE_EFFECT_BUG_BITE && IgnoreTargetingForMoveEffect(moveEffect))
-        return FALSE;
-
-    if (moveEffect == MOVE_EFFECT_CORE_ENFORCER)
         return FALSE;
 
     if (moveEffect == MOVE_EFFECT_BREAK_SCREEN)
