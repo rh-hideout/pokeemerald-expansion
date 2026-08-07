@@ -78,6 +78,7 @@ AI_MULTI_BATTLE_TEST("Trick Room does not fail if the chosen AI target has faint
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_WYNAUT) { Speed(4); Moves(MOVE_MEMENTO); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_TRICK_ROOM); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_MEMENTO); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_MEMENTO); }
@@ -88,6 +89,7 @@ AI_MULTI_BATTLE_TEST("Trick Room does not fail if the chosen AI target has faint
             EXPECT_MOVE(opponentRight, MOVE_MEMENTO);
             EXPECT_MOVE(opponentLeft, MOVE_MEMENTO);
             EXPECT_MOVE(playerRight, MOVE_TRICK_ROOM); // Sets controller to AI
+            SEND_OUT(playerLeft, 1);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, playerLeft);
