@@ -3,7 +3,6 @@
   "name": "SaffronCity_Frlg",
   "layout": "LAYOUT_SAFFRON_CITY",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -356,9 +355,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -433,5 +430,9 @@
       "script": "SaffronCity_EventScript_TrainerFanClubSign"
     }
   ],
-  "connections_no_include": true
+  "connections_no_include": true,
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

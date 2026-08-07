@@ -3,7 +3,6 @@
   "name": "PokemonTower_1F_Frlg",
   "layout": "LAYOUT_POKEMON_TOWER_1F",
   "music": "MUS_RG_POKE_TOWER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_TOWER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -118,5 +117,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

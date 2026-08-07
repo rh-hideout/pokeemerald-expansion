@@ -3,7 +3,6 @@
   "name": "OneIsland_KindleRoad_EmberSpa_Frlg",
   "layout": "LAYOUT_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_EMBER_SPA",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -121,7 +120,9 @@
       "script": "OneIsland_KindleRoad_EmberSpa_EventScript_SpaHeal"
     }
   ],
-  "bg_events": [
-
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

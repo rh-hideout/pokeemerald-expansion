@@ -3,7 +3,6 @@
   "name": "Route114_FossilManiacsHouse",
   "layout": "LAYOUT_ROUTE114_FOSSIL_MANIACS_HOUSE",
   "music": "MUS_FALLARBOR",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_114",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -86,5 +85,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Route114_FossilManiacsHouse_EventScript_Bookshelf"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

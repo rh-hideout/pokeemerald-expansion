@@ -3,7 +3,6 @@
   "name": "RecordCorner_Frlg",
   "layout": "LAYOUT_RECORD_CORNER_FRLG",
   "music": "MUS_RG_POKE_CENTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SPECIAL_AREA",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -99,5 +98,9 @@
       "script": "RecordCorner_EventScript_Spot3"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

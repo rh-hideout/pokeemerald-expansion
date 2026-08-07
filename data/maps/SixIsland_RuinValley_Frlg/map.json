@@ -3,7 +3,6 @@
   "name": "SixIsland_RuinValley_Frlg",
   "layout": "LAYOUT_SIX_ISLAND_RUIN_VALLEY",
   "music": "MUS_RG_SEVII_ROUTE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_RUIN_VALLEY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -271,9 +270,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -283,5 +280,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SixIsland_RuinValley_EventScript_DottedHoleDoor"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

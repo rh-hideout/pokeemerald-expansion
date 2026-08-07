@@ -3,7 +3,6 @@
   "name": "Route121_SafariZoneEntrance",
   "layout": "LAYOUT_ROUTE121_SAFARI_ZONE_ENTRANCE",
   "music": "MUS_FORTREE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_121",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -105,5 +104,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route121_SafariZoneEntrance_EventScript_TrainerTipSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

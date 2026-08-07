@@ -3,7 +3,6 @@
   "name": "MauvilleCity_BikeShop",
   "layout": "LAYOUT_MAUVILLE_CITY_BIKE_SHOP",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MAUVILLE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -76,5 +75,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MauvilleCity_BikeShop_EventScript_AcroBikeHandbook"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

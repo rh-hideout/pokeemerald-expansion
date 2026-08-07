@@ -3,7 +3,6 @@
   "name": "CeladonCity_DepartmentStore_Roof_Frlg",
   "layout": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF",
   "music": "MUS_RG_POKE_CENTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -88,5 +87,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeladonCity_DepartmentStore_Roof_EventScript_VendingMachine"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

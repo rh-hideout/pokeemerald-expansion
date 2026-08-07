@@ -3,7 +3,6 @@
   "name": "CeruleanCity_BikeShop_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_BIKE_SHOP",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -148,5 +147,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeruleanCity_BikeShop_EventScript_Bicycle"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

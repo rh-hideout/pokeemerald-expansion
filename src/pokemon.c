@@ -71,7 +71,6 @@
 #include "constants/layouts.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
-#include "constants/regions.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"
@@ -4411,11 +4410,11 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             }
             break;
         case IF_REGION:
-            if (GetCurrentRegion() == params[i].arg1)
+            if (GetCurrentPokemonRegion() == params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_NOT_REGION:
-            if (GetCurrentRegion() != params[i].arg1)
+            if (GetCurrentPokemonRegion() != params[i].arg1)
                 currentCondition = TRUE;
             break;
         case CONDITIONS_END:
@@ -5221,7 +5220,7 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_PYRAMID_KING:
             return MUS_VS_FRONTIER_BRAIN;
         default:
-            if (GetCurrentRegion() == REGION_KANTO)
+            if (IS_FRLG)
                 return MUS_RG_VS_TRAINER;
             else
                 return MUS_VS_TRAINER;
@@ -5229,7 +5228,7 @@ u16 GetBattleBGM(void)
     }
     else
     {
-        if (GetCurrentRegion() == REGION_KANTO)
+        if (IS_FRLG)
             return MUS_RG_VS_WILD;
         else
             return MUS_VS_WILD;
@@ -6649,14 +6648,14 @@ bool32 IsSpeciesRegionalForm(enum Species species)
         || gSpeciesInfo[species].isPaldeanForm;
 }
 
-bool32 IsSpeciesRegionalFormFromRegion(enum Species species, enum Region region)
+bool32 IsSpeciesRegionalFormFromRegion(enum Species species, enum PokemonRegion region)
 {
     switch (region)
     {
-    case REGION_ALOLA:  return gSpeciesInfo[species].isAlolanForm;
-    case REGION_GALAR:  return gSpeciesInfo[species].isGalarianForm;
-    case REGION_HISUI:  return gSpeciesInfo[species].isHisuianForm;
-    case REGION_PALDEA: return gSpeciesInfo[species].isPaldeanForm;
+    case POKEMON_REGION_ALOLA:  return gSpeciesInfo[species].isAlolanForm;
+    case POKEMON_REGION_GALAR:  return gSpeciesInfo[species].isGalarianForm;
+    case POKEMON_REGION_HISUI:  return gSpeciesInfo[species].isHisuianForm;
+    case POKEMON_REGION_PALDEA: return gSpeciesInfo[species].isPaldeanForm;
     default:            return FALSE;
     }
 }
@@ -6673,7 +6672,7 @@ bool32 SpeciesHasRegionalForm(enum Species species)
     return FALSE;
 }
 
-enum Species GetRegionalFormByRegion(enum Species species, enum Region region)
+enum Species GetRegionalFormByRegion(enum Species species, enum PokemonRegion region)
 {
     u32 formId = 0;
     enum Species firstFoundSpecies = 0;
@@ -6695,9 +6694,10 @@ enum Species GetRegionalFormByRegion(enum Species species, enum Region region)
     return species;
 }
 
-bool32 IsSpeciesForeignRegionalForm(enum Species species, enum Region currentRegion)
+bool32 IsSpeciesForeignRegionalForm(enum Species species, enum PokemonRegion currentRegion)
 {
-    for (enum Region i = 0; i < REGIONS_COUNT; i++)
+    u32 i;
+    for (i = 0; i < POKEMON_REGIONS_COUNT; i++)
     {
         if (currentRegion != i && IsSpeciesRegionalFormFromRegion(species, i))
             return TRUE;

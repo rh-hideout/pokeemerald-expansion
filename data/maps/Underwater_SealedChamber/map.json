@@ -3,7 +3,6 @@
   "name": "Underwater_SealedChamber",
   "layout": "LAYOUT_UNDERWATER_SEALED_CHAMBER",
   "music": "MUS_UNDERWATER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
   "requires_flash": false,
   "weather": "WEATHER_UNDERWATER_BUBBLES",
@@ -34,5 +33,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Underwater_SealedChamber_EventScript_Braille"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

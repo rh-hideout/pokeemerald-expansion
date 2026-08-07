@@ -3,7 +3,6 @@
   "name": "RecordCorner",
   "layout": "LAYOUT_RECORD_CORNER",
   "music": "MUS_EVER_GRANDE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_DYNAMIC",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -97,5 +96,8 @@
       "script": "EventScript_RecordCenter_Spot3"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

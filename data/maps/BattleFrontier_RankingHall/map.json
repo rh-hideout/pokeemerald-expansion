@@ -3,7 +3,6 @@
   "name": "BattleFrontier_RankingHall",
   "layout": "LAYOUT_BATTLE_FRONTIER_RANKING_HALL",
   "music": "MUS_LILYCOVE_MUSEUM",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -169,5 +168,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "BattleFrontier_RankingHall_EventScript_PalaceArenaPyramidRecordsSIgn"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

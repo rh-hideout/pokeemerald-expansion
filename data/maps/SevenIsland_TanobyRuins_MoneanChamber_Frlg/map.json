@@ -3,7 +3,6 @@
   "name": "SevenIsland_TanobyRuins_MoneanChamber_Frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER",
   "music": "MUS_RG_SEVII_DUNGEON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_MONEAN_CHAMBER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -15,9 +14,7 @@
   "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_INDOOR_1",
   "connections": 0,
-  "object_events": [
-
-  ],
+  "object_events": [],
   "warp_events": [
     {
       "x": 11,
@@ -27,10 +24,10 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

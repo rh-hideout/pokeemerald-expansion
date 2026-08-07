@@ -3,7 +3,6 @@
   "name": "FiveIsland_LostCave_Room11_Frlg",
   "layout": "LAYOUT_FIVE_ISLAND_LOST_CAVE_ROOM11",
   "music": "MUS_RG_SEVII_CAVE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_LOST_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_FOG_HORIZONTAL",
@@ -41,5 +40,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

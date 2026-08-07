@@ -3,7 +3,6 @@
   "name": "BattleFrontier_BattlePyramidTop",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP",
   "music": "MUS_NONE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -56,5 +55,8 @@
       "script": "BattleFrontier_BattlePyramidTop_EventScript_BattleBrandon"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

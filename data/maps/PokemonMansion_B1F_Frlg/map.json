@@ -3,7 +3,6 @@
   "name": "PokemonMansion_B1F_Frlg",
   "layout": "LAYOUT_POKEMON_MANSION_B1F",
   "music": "MUS_RG_POKE_MANSION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_MANSION",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -146,5 +145,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

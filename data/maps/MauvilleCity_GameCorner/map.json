@@ -3,7 +3,6 @@
   "name": "MauvilleCity_GameCorner",
   "layout": "LAYOUT_MAUVILLE_CITY_GAME_CORNER",
   "music": "MUS_GAME_CORNER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_MAUVILLE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -382,5 +381,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Roulette_EventScript_Table2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

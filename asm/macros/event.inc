@@ -2865,6 +2865,13 @@
 	giveitem VAR_RESULT
 	.endm
 
+	@ Writes the name of the region to the specified buffer.
+	.macro bufferregionname stringVarId:req, regionMapId=REGION_MAP_UNKNOWN
+	callnative ScrCmd_bufferregionname
+	stringvar \stringVarId
+	.2byte \regionMapId
+	.endm
+
 @ VS Seeker
 	.macro vsseeker_rematchid rematchId:req
 	callnative NativeVsSeekerRematchId, requests_effects=1

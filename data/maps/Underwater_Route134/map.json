@@ -3,7 +3,6 @@
   "name": "Underwater_Route134",
   "layout": "LAYOUT_UNDERWATER_ROUTE134",
   "music": "MUS_UNDERWATER",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_UNDERWATER_SEALED_CHAMBER",
   "requires_flash": false,
   "weather": "WEATHER_UNDERWATER_BUBBLES",
@@ -25,5 +24,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

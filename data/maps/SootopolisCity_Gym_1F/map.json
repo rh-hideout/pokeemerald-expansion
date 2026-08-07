@@ -3,7 +3,6 @@
   "name": "SootopolisCity_Gym_1F",
   "layout": "LAYOUT_SOOTOPOLIS_CITY_GYM_1F",
   "music": "MUS_GYM",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -83,5 +82,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "SootopolisCity_Gym_1F_EventScript_RightGymStatue"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "VermilionCity_Gym_Frlg",
   "layout": "LAYOUT_VERMILION_CITY_GYM",
   "music": "MUS_RG_GYM",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VERMILION_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -248,5 +247,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "VermilionCity_Gym_EventScript_TrashCan15"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

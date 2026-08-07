@@ -3,7 +3,6 @@
   "name": "SevenIsland_SevaultCanyon_Entrance_Frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE",
   "music": "MUS_RG_SEVII_ROUTE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CANYON_ENTRANCE",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -120,12 +119,8 @@
       "target_map": "MAP_SEVEN_ISLAND"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -145,5 +140,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }
