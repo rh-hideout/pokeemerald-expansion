@@ -125,6 +125,7 @@ SINGLE_BATTLE_TEST("Leech Seed's accuracy is 90%")
 {
     PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
     GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_LEECH_SEED) == 90);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
