@@ -226,6 +226,17 @@ struct SimulatedDamage
     u16 random;
 };
 
+struct FutureStatChanges 
+{
+    s8 atk;
+    s8 def;
+    s8 spAtk;
+    s8 spDef;
+    s8 speed;
+    s8 accuracy;
+    s8 evasion;
+};
+
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
 struct AiLogicData
 {
@@ -244,6 +255,8 @@ struct AiLogicData
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
+    u8 turnOrder[MAX_BATTLERS_COUNT];
+    struct FutureStatChanges aiStatChanges[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
