@@ -95,7 +95,7 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
         TURN {  SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
         MESSAGE("Terapagos is storing energy!");
-        MESSAGE("Terapagos terastallized into the Stellar type!");
+        MESSAGE("Terapagos Terastallized into the Stellar type!");
         NOT ABILITY_POPUP(playerRight, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Terapagos used Celebrate!");
     }

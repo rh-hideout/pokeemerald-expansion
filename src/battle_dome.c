@@ -917,49 +917,49 @@ static const u8 *const sBattleDomeOpponentStyleTexts[NUM_BATTLE_STYLES] =
 // The third line of text on a trainers info card. It that gives information about their party's stat spread (based on their Pokémon's effort values and Nature).
 static const u8 *const sBattleDomeOpponentStatsTexts[] =
 {
-    COMPOUND_STRING("Emphasizes HP and ATTACK."),              // DOME_TEXT_TWO_GOOD_STATS and DOME_TEXT_HP start here
-    COMPOUND_STRING("Emphasizes HP and DEFENSE."),
-    COMPOUND_STRING("Emphasizes HP and SPEED."),
-    COMPOUND_STRING("Emphasizes HP and SP. ATTACK."),
-    COMPOUND_STRING("Emphasizes HP and SP. DEFENSE."),
-    COMPOUND_STRING("Emphasizes ATTACK and DEFENSE."),         // DOME_TEXT_ATK starts here
-    COMPOUND_STRING("Emphasizes ATTACK and SPEED."),
-    COMPOUND_STRING("Emphasizes ATTACK and SP. ATTACK."),
-    COMPOUND_STRING("Emphasizes ATTACK and SP. DEFENSE."),
-    COMPOUND_STRING("Emphasizes DEFENSE and SPEED."),          // DOME_TEXT_DEF starts here
-    COMPOUND_STRING("Emphasizes DEFENSE and SP. ATTACK."),
-    COMPOUND_STRING("Emphasizes DEFENSE and SP. DEFENSE."),
-    COMPOUND_STRING("Emphasizes SPEED and SP. ATTACK."),       // DOME_TEXT_SPEED starts here
-    COMPOUND_STRING("Emphasizes SPEED and SP. DEFENSE."),
-    COMPOUND_STRING("Emphasizes SP. ATTACK and SP. DEFENSE."), // DOME_TEXT_SPATK starts here
-    COMPOUND_STRING("Emphasizes HP."),                         // DOME_TEXT_ONE_GOOD_STAT starts here
-    COMPOUND_STRING("Emphasizes ATTACK."),
-    COMPOUND_STRING("Emphasizes DEFENSE."),
-    COMPOUND_STRING("Emphasizes SPEED."),
-    COMPOUND_STRING("Emphasizes SP. ATTACK."),
-    COMPOUND_STRING("Emphasizes SP. DEFENSE."),
-    COMPOUND_STRING("Neglects HP and ATTACK."),                // DOME_TEXT_TWO_BAD_STATS starts here
-    COMPOUND_STRING("Neglects HP and DEFENSE."),
-    COMPOUND_STRING("Neglects HP and SPEED."),
-    COMPOUND_STRING("Neglects HP and SP. ATTACK."),
-    COMPOUND_STRING("Neglects HP and SP. DEFENSE."),
-    COMPOUND_STRING("Neglects ATTACK and DEFENSE."),
-    COMPOUND_STRING("Neglects ATTACK and SPEED."),
-    COMPOUND_STRING("Neglects ATTACK and SP. ATTACK."),
-    COMPOUND_STRING("Neglects ATTACK and SP. DEFENSE."),
-    COMPOUND_STRING("Neglects DEFENSE and SPEED."),
-    COMPOUND_STRING("Neglects DEFENSE and SP. ATTACK."),
-    COMPOUND_STRING("Neglects DEFENSE and SP. DEFENSE."),
-    COMPOUND_STRING("Neglects SPEED and SP. ATTACK."),
-    COMPOUND_STRING("Neglects SPEED and SP. DEFENSE."),
-    COMPOUND_STRING("Neglects SP. ATTACK and SP. DEFENSE."),
-    COMPOUND_STRING("Neglects HP."),                           // DOME_TEXT_ONE_BAD_STAT starts here
-    COMPOUND_STRING("Neglects ATTACK."),
-    COMPOUND_STRING("Neglects DEFENSE."),
-    COMPOUND_STRING("Neglects SPEED."),
-    COMPOUND_STRING("Neglects SP. ATTACK."),
-    COMPOUND_STRING("Neglects SP. DEFENSE."),
-    [DOME_TEXT_WELL_BALANCED] = COMPOUND_STRING("Raises POKéMON in a well-balanced way."),
+    COMPOUND_STRING("Emphasizes HP and [Attack]."),                // DOME_TEXT_TWO_GOOD_STATS and DOME_TEXT_HP start here
+    COMPOUND_STRING("Emphasizes HP and [Defense]."),
+    COMPOUND_STRING("Emphasizes HP and [Speed]."),
+    COMPOUND_STRING("Emphasizes HP and [Sp. Attack]."),
+    COMPOUND_STRING("Emphasizes HP and [Sp. Defense]."),
+    COMPOUND_STRING("Emphasizes [Attack] and [Defense]."),         // DOME_TEXT_ATK starts here
+    COMPOUND_STRING("Emphasizes [Attack] and [Speed]."),
+    COMPOUND_STRING("Emphasizes [Attack] and [Sp. Attack]."),
+    COMPOUND_STRING("Emphasizes [Attack] and [Sp. Defense]."),
+    COMPOUND_STRING("Emphasizes [Defense] and [Speed]."),          // DOME_TEXT_DEF starts here
+    COMPOUND_STRING("Emphasizes [Defense] and [Sp. Attack]."),
+    COMPOUND_STRING("Emphasizes [Defense] and [Sp. Defense]."),
+    COMPOUND_STRING("Emphasizes [Speed] and [Sp. Attack]."),       // DOME_TEXT_SPEED starts here
+    COMPOUND_STRING("Emphasizes [Speed] and [Sp. Defense]."),
+    COMPOUND_STRING("Emphasizes [Sp. Attack] and [Sp. Defense]."), // DOME_TEXT_SPATK starts here
+    COMPOUND_STRING("Emphasizes HP."),                             // DOME_TEXT_ONE_GOOD_STAT starts here
+    COMPOUND_STRING("Emphasizes [Attack]."),
+    COMPOUND_STRING("Emphasizes [Defense]."),
+    COMPOUND_STRING("Emphasizes [Speed]."),
+    COMPOUND_STRING("Emphasizes [Sp. Attack]."),
+    COMPOUND_STRING("Emphasizes [Sp. Defense]."),
+    COMPOUND_STRING("Neglects HP and [Attack]."),                  // DOME_TEXT_TWO_BAD_STATS starts here
+    COMPOUND_STRING("Neglects HP and [Defense]."),
+    COMPOUND_STRING("Neglects HP and [Speed]."),
+    COMPOUND_STRING("Neglects HP and [Sp. Attack]."),
+    COMPOUND_STRING("Neglects HP and [Sp. Defense]."),
+    COMPOUND_STRING("Neglects [Attack] and [Defense]."),
+    COMPOUND_STRING("Neglects [Attack] and [Speed]."),
+    COMPOUND_STRING("Neglects [Attack] and [Sp. Attack]."),
+    COMPOUND_STRING("Neglects [Attack] and [Sp. Defense]."),
+    COMPOUND_STRING("Neglects [Defense] and [Speed]."),
+    COMPOUND_STRING("Neglects [Defense] and [Sp. Attack]."),
+    COMPOUND_STRING("Neglects [Defense] and [Sp. Defense]."),
+    COMPOUND_STRING("Neglects [Speed] and [Sp. Attack]."),
+    COMPOUND_STRING("Neglects [Speed] and [Sp. Defense]."),
+    COMPOUND_STRING("Neglects [Sp. Attack] and [Sp. Defense]."),
+    COMPOUND_STRING("Neglects HP."),                               // DOME_TEXT_ONE_BAD_STAT starts here
+    COMPOUND_STRING("Neglects [Attack]."),
+    COMPOUND_STRING("Neglects [Defense]."),
+    COMPOUND_STRING("Neglects [Speed]."),
+    COMPOUND_STRING("Neglects [Sp. Attack]."),
+    COMPOUND_STRING("Neglects [Sp. Defense]."),
+    [DOME_TEXT_WELL_BALANCED] = COMPOUND_STRING("Raises [Pokémon] in a well-balanced way."),
 };
 
 static const u8 sInfoTrainerMonX[FRONTIER_PARTY_SIZE] = {104, 136, 104};

@@ -49,15 +49,15 @@ static void PrintOakText_ForPetesSake(enum BattlerId battler);
 static void PrintOakTextWithMainBgDarkened(enum BattlerId battler, const u8 *text, u8 delay);
 static void HandleInputChooseAction(enum BattlerId battler);
 
-static const u8 sText_ForPetesSake[] = _("OAK: Oh, for Pete's sake…\nSo pushy, as always.\p{B_PLAYER_NAME}.\pYou've never had a POKéMON battle\nbefore, have you?\pA POKéMON battle is when TRAINERS\npit their POKéMON against each\lother.\p");
-static const u8 sText_HowDissapointing[] = _("OAK: Hm…\nHow disappointing…\pIf you win, you earn prize money,\nand your POKéMON grow.\pBut if you lose, {B_PLAYER_NAME}, you end\nup paying prize money…\pHowever, since you had no warning\nthis time, I'll pay for you.\pBut things won't be this way once\nyou step outside these doors.\pThat's why you must strengthen your\nPOKéMON by battling wild POKéMON.\p");
-static const u8 sText_InflictingDamageIsKey[] = _("OAK: Inflicting damage on the foe\nis the key to any battle.\p");
-static const u8 sText_KeepAnEyeOnHP[] = _("OAK: Keep your eyes on your\nPOKéMON's HP.\pIt will faint if the HP drops to\n“0.”\p");
-static const u8 sText_LoweringStats[] = _("OAK: Lowering the foe's stats\nwill put you at an advantage.\p");
-static const u8 sText_OakNoRunningFromATrainer[] = _("OAK: No! There's no running away\nfrom a TRAINER POKéMON battle!\p");
-static const u8 sText_TheTrainerThat[] = _("The TRAINER that makes the other\nTRAINER's POKéMON faint by lowering\ltheir HP to “0,” wins.\p");
+static const u8 sText_ForPetesSake[] = _("[Oak]: Oh, for Pete's sake…\nSo pushy, as always.\p{B_PLAYER_NAME}.\pYou've never had a [Pokémon] battle\nbefore, have you?\pA [Pokémon] battle is when [Trainers]\npit their [Pokémon] against each\lother.\p");
+static const u8 sText_HowDissapointing[] = _("[Oak]: Hm…\nHow disappointing…\pIf you win, you earn prize money,\nand your [Pokémon] grow.\pBut if you lose, {B_PLAYER_NAME}, you end\nup paying prize money…\pHowever, since you had no warning\nthis time, I'll pay for you.\pBut things won't be this way once\nyou step outside these doors.\pThat's why you must strengthen your\n[Pokémon] by battling wild [Pokémon].\p");
+static const u8 sText_InflictingDamageIsKey[] = _("[Oak]: Inflicting damage on the foe\nis the key to any battle.\p");
+static const u8 sText_KeepAnEyeOnHP[] = _("[Oak]: Keep your eyes on your\n[Pokémon]'s HP.\pIt will faint if the HP drops to\n“0.”\p");
+static const u8 sText_LoweringStats[] = _("[Oak]: Lowering the foe's stats\nwill put you at an advantage.\p");
+static const u8 sText_OakNoRunningFromATrainer[] = _("[Oak]: No! There's no running away\nfrom a [Trainer Pokémon] battle!\p");
+static const u8 sText_TheTrainerThat[] = _("The [Trainer] that makes the other\n[Trainer]'s [Pokémon] faint by lowering\ltheir HP to “0,” wins.\p");
 static const u8 sText_TryBattling[] = _("But rather than talking about it,\nyou'll learn more from experience.\pTry battling and see for yourself.\p");
-static const u8 sText_WinEarnsPrizeMoney[] = _("OAK: Hm! Excellent!\pIf you win, you earn prize money,\nand your POKéMON will grow!\pBattle other TRAINERS and make\nyour POKéMON strong!\p");
+static const u8 sText_WinEarnsPrizeMoney[] = _("[Oak]: Hm! Excellent!\pIf you win, you earn prize money,\nand your [Pokémon] will grow!\pBattle other [Trainers] and make\nyour [Pokémon] strong!\p");
 static const u8 gText_WhatWillOldManDo[] = _("What will the\nold man do?");
 
 static void (*const sOakOldManBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
