@@ -2589,7 +2589,6 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
     }
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
-    struct SetEffect se = {0};
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
@@ -3830,7 +3829,7 @@ static enum MoveEndResult MoveEndAdditionalEffectsLowerStatsAttacker(struct Batt
         if (!CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
          || !ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
          || !(additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
-            continue;
+            return MOVEEND_RESULT_BREAK; // recall the same state
 
         TryTriggerAdditionalEffect(cv, additionalEffect, cv->battlerAtk);
 
