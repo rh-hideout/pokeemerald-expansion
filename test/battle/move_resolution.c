@@ -23,14 +23,14 @@ DOUBLE_BATTLE_TEST("Moves hitting into Substitute and non-Substitute trigger eff
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         SUB_HIT(substituteUser);
         if (substituteUserBattlerPosition == B_POSITION_OPPONENT_LEFT) {
-            MESSAGE("The substitute took damage for the opposing Wobbuffet!");
             MESSAGE("A critical hit on the opposing Wobbuffet!");
+            MESSAGE("The substitute took damage for the opposing Wobbuffet!");
             MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
             MESSAGE("A critical hit on the opposing Wynaut!");
             MESSAGE("The opposing Wynaut's Air Balloon popped!");
         } else {
-            MESSAGE("The substitute took damage for the opposing Wynaut!");
             MESSAGE("A critical hit on the opposing Wynaut!");
+            MESSAGE("The substitute took damage for the opposing Wynaut!");
             MESSAGE("The opposing Wynaut's Air Balloon popped!");
             MESSAGE("A critical hit on the opposing Wobbuffet!");
             MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
