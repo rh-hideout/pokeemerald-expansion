@@ -406,11 +406,6 @@ static void CreateHealthboxSprite(enum BattlerId battler)
         else
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
 
-        if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_RIGHT || GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
-            DummyBattleInterfaceFunc(gHealthboxSpriteIds[battler], TRUE);
-        else
-            DummyBattleInterfaceFunc(gHealthboxSpriteIds[battler], FALSE);
-
         if (gBattleStruct->victoryCatchState != VICTORY_CATCH_START)
         {
             // Hide HP boxes to stop the player from seeing the 1 HP hack and for cinematic purposes
