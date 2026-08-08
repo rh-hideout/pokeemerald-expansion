@@ -2,6 +2,7 @@
 #define GUARD_GRAPHICS_H
 
 // overworld
+#include "global.h"
 extern const u8 gSignpostWindow_Gfx[];
 extern const u8 gMessageBox_Gfx[];
 extern const u16 gMessageBox_Pal[];
@@ -2032,7 +2033,14 @@ extern const u32 gBattleInterface_BallStatusBarGfx[];
 extern const u8 gBattleInterface_BallDisplayGfx[];
 extern const u16 gBattleInterface_BallStatusBarPal[];
 extern const u16 gBattleInterface_BallDisplayPal[];
-extern const u8 gHealthboxElementsGfxTable[][32];
+
+extern const Tile4BPP gBattleHpBarGfx[];
+extern const Tile4BPP gBattleExpBarGfx[];
+extern const Tile4BPP gBattleStatusGfx[];
+extern const Tile4BPP gBattleBallDisplay[];
+extern const Tile4BPP gHealthBoxMisc[];
+extern const Tile4BPP gHealthBoxCaughtBall[];
+extern const Tile4BPP gHealthBoxFrameEnd[];
 
 extern const u16 gNamingScreenMenu_Pal[6][16];
 extern const u32 gNamingScreenMenu_Gfx[];

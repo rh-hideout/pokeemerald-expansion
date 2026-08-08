@@ -1,4 +1,5 @@
 #include "global.h"
+#include "gba/macro.h"
 #include "util.h"
 #include "sprite.h"
 #include "palette.h"
@@ -237,4 +238,17 @@ s32 SubtractClamped(s32 min, s32 max, s32 value, s32 delta)
 s32 AddClamped(s32 min, s32 max, s32 value, s32 delta)
 {
     return Clamp(min, max, value + delta);
+}
+
+void CopyTiles(const Tile4BPP* src, Tile4BPP* dest, u32 count)
+{
+    CpuCopy32(src, dest, count*sizeof(Tile4BPP));
+}
+
+void FillTiles(const Tile4BPP *src, Tile4BPP *dest, u32 count)
+{
+    while (count--)
+    {
+        *dest++ = *src;
+    }
 }
