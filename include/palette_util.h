@@ -79,5 +79,7 @@ void RouletteFlash_Reset(struct RouletteFlashUtil *flash);
 u8 RouletteFlash_Add(struct RouletteFlashUtil *flash, u8 id, const struct RouletteFlashSettings *settings);
 void RouletteFlash_Stop(struct RouletteFlashUtil *flash, u16 flags);
 void RouletteFlash_Enable(struct RouletteFlashUtil *flash, u16 flags);
+void ReplacePalIndexInTile(Tile4BPP *tile, u32 old, u32 new);
+void ReplacePalIndexInTiles(Tile4BPP *tiles, u32 count, u32 old, u32 new);
 
 #endif // GUARD_PALETTE_UTIL_H

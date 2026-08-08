@@ -27,5 +27,7 @@ void DoBgAffineSet(struct BgAffineDstData *dest, u32 texX, u32 texY, s16 scrX, s
 void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output);
 s32 SubtractClamped(s32 min, s32 max, s32 value, s32 delta);
 s32 AddClamped(s32 min, s32 max, s32 value, s32 delta);
+void CopyTiles(const Tile4BPP* src, Tile4BPP* dest, u32 count);
+void FillTiles(const Tile4BPP *src, Tile4BPP *dest, u32 count);
 
 #endif // GUARD_UTIL_H
