@@ -130,6 +130,11 @@ struct SpecialStatus
     u8 breaksThroughProtectFully:1; // Unseen Fist, Piercing Drill
     u8 berryReducedMessagePrinted:1;
     // End of byte
+    u8 resultMessagePrinted:1;
+    u8 critMessagePrinted:1;
+    u8 protectMessagePrinted:1;
+    u8 padding:5;
+
     u8 gemParam:7;
     u8 gemBoost:1;
     // End of byte
@@ -531,7 +536,9 @@ struct BattlerState
     u16 notOnField:1;
     u16 originalBattlerPartyId:4;
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
-    u16 padding:8;
+    u16 toxicChainActivates:1;
+    u16 substituteBlocked:1;
+    u16 padding:6;
     // End of Word
 };
 
@@ -642,10 +649,8 @@ struct BattleStruct
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
     u8 fickleBeamBoosted:1;
-    u8 unused2:1;
-    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 unused1:1;
+    u8 unused1:3;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];

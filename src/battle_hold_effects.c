@@ -517,7 +517,7 @@ static enum ItemEffect TryLifeOrb(enum BattlerId battlerAtk)
 
     if (!gBattleStruct->unableToUseMove
      && gBattleStruct->battlerState[battlerAtk].originalBattlerPartyId == PARTY_SIZE
-     && (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES) || gBattleScripting.savedDmg > 0)
+     && IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 10);
