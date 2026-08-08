@@ -201,6 +201,18 @@ void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool3
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
 
+static void SetBattleBgs(void)
+{
+    gBattle_BG0_X = 0;
+    gBattle_BG0_Y = 0;
+    gBattle_BG1_X = 0;
+    gBattle_BG1_Y = 0;
+    gBattle_BG2_X = 0;
+    gBattle_BG2_Y = 0;
+    gBattle_BG3_X = 256;
+    gBattle_BG3_Y = 0;
+}
+
 void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
@@ -223,14 +235,7 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
 
     ResetPaletteFade();
 
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gBattle_BG1_X = 0;
-    gBattle_BG1_Y = 0;
-    gBattle_BG2_X = 0;
-    gBattle_BG2_Y = 0;
-    gBattle_BG3_X = 256;
-    gBattle_BG3_Y = 0;
+    SetBattleBgs();
 
     gBattleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
 
@@ -330,14 +335,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
 
     ResetPaletteFade();
 
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gBattle_BG1_X = 0;
-    gBattle_BG1_Y = 0;
-    gBattle_BG2_X = 0;
-    gBattle_BG2_Y = 0;
-    gBattle_BG3_X = 256;
-    gBattle_BG3_Y = 0;
+    SetBattleBgs();
 
     gBattleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
 
@@ -392,14 +390,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         ResetSpriteData();
         FreeAllSpritePalettes();
         gReservedSpritePaletteCount = 4;
-        gBattle_BG0_X = 0;
-        gBattle_BG0_Y = 0;
-        gBattle_BG1_X = 0;
-        gBattle_BG1_Y = 0;
-        gBattle_BG2_X = 0;
-        gBattle_BG2_Y = 0;
-        gBattle_BG3_X = 256;
-        gBattle_BG3_Y = 0;
+        SetBattleBgs();
         gMain.state++;
         break;
     case 1:
@@ -511,14 +502,7 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
     gTasks[id].tEvoWasStopped = FALSE;
     gTasks[id].tPartyId = partyId;
 
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gBattle_BG1_X = 0;
-    gBattle_BG1_Y = 0;
-    gBattle_BG2_X = 0;
-    gBattle_BG2_Y = 0;
-    gBattle_BG3_X = 256;
-    gBattle_BG3_Y = 0;
+    SetBattleBgs();
 
     gTextFlags.useAlternateDownArrow = TRUE;
 
