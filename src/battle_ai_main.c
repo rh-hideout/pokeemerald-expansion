@@ -792,48 +792,38 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 }
 #undef BYPASSES_ACCURACY_CALC
 
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain)
+void SimulateAiMovesData(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
-    struct AiCalcValues aiCalc = {
-        .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
-        .gimmickDef = GIMMICK_NONE,
-        .weather = weather,
-        .terrain = terrain,
-    };
-
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         struct SimulatedDamage dmg = {0};
-        aiCalc.typeEffectiveness = Q_4_12(0.0);
-        aiCalc.move = moves[moveIndex];
+        aiCalc->typeEffectiveness = Q_4_12(0.0);
+        aiCalc->move = moves[moveIndex];
 
-        // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
-        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc.typeEffectiveness;
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
-        aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
-
-        if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
+        if (IsMoveUnusable(moveIndex, aiCalc->move, moveLimitations))
+        {
+            // Move data is reused for consecutive switch-in candidates, so reset every slot before skipping unusable moves.
+            aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
+            aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = Q_4_12(0.0);
+            aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
+            aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
             continue;
+        }
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc.move);
+        dmg = AI_CalcDamage(aiCalc, battlerAtk, battlerDef);
+        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc->move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc.typeEffectiveness;
+        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc->typeEffectiveness;
     }
 }
 
-static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, u32 battlersCount, u32 weather)
+static void SetUpTargetForDamageCalc(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, enum BattlerId battlerAtk, u32 battlersCount)
 {
-    SaveBattlerData(battlerAtk);
-    SetBattlerData(battlerAtk);
-
-    // Simulate dmg for both ai controlled mons and for player controlled mons.
     for (enum BattlerId battlerDef = 0; battlerDef < battlersCount; battlerDef++)
     {
         if (battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
@@ -841,10 +831,75 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId bat
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
+        SimulateAiMovesData(aiCalc, aiData, battlerAtk, battlerDef);
         RestoreBattlerData(battlerDef);
     }
-    RestoreBattlerData(battlerAtk);
+}
+
+static void SetUpAttackerForDamageCalc(struct AiCalcValues *aiCalc, struct AiLogicData *aiData, u32 battlersCount)
+{
+    for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
+    {
+        if (!IsBattlerAlive(battlerAtk))
+            continue;
+
+        SaveBattlerData(battlerAtk);
+        SetBattlerData(battlerAtk);
+        SetUpTargetForDamageCalc(aiCalc, aiData, battlerAtk, battlersCount);
+        RestoreBattlerData(battlerAtk);
+    }
+}
+
+static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersCount)
+{
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetWeather(),
+        .terrain = gFieldTimers.terrain,
+    };
+
+    // Form Change might overwrite abilities
+    enum Ability storedAbilities[MAX_BATTLERS_COUNT] = { ABILITY_NONE };
+    enum Species currSpecies[MAX_BATTLERS_COUNT] = { SPECIES_NONE };
+    enum Gimmick gimmick[MAX_BATTLERS_COUNT] = { GIMMICK_NONE };
+
+    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
+    {
+        if (!GetConfig(SHOULD_CALC_DMG_WITH_FORM_CHANGE))
+            break;
+
+        if (!IsBattlerAlive(battler) || GetActiveGimmick(battler) != GIMMICK_NONE)
+            continue;
+
+        currSpecies[battler] = gBattleMons[battler].species;
+        storedAbilities[battler] = aiData->abilities[battler];
+        gimmick[battler] = AI_TryGimmick(battler, storedAbilities[battler], gBattleStruct->gimmick.usableGimmick[battler]);
+
+        if (gimmick[battler] == GIMMICK_Z_MOVE)
+            aiCalc.considerZMove |= 1u << battler;
+        else if (gimmick[battler] != GIMMICK_NONE)
+            SetActiveGimmick(battler, gimmick[battler]);
+
+        // Recalc values after form change.
+        if (currSpecies[battler] != gBattleMons[battler].species)
+        {
+            aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
+            aiCalc.weather = AI_GetSwitchinWeather(battler);
+            aiCalc.terrain = AI_GetSwitchinTerrain(battler);
+        }
+    }
+
+    SetUpAttackerForDamageCalc(&aiCalc, aiData, battlersCount);
+
+    // Revert gimmick and restore changes values
+    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
+    {
+        if (gimmick[battler] != GIMMICK_NONE)
+        {
+            SetActiveGimmick(battler, GIMMICK_NONE);
+            TryBattleFormChange(battler, FORM_CHANGE_END_BATTLE, gBattleMons[battler].ability);
+        }
+        aiData->abilities[battler] = storedAbilities[battler];
+    }
 }
 
 void SetAiLogicDataForTurn(struct AiLogicData *aiData)
@@ -869,15 +924,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         SetBattlerAiData(battler, aiData);
     }
 
-    u32 weather = AI_GetWeather(); // Needs SetBattlerAiData
-
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
-    {
-        if (!IsBattlerAlive(battler))
-            continue;
-
-        SetBattlerAiMovesData(aiData, battler, battlersCount, weather);
-    }
+    SetUpBattlersForDamageCalc(aiData, battlersCount);
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
@@ -1192,7 +1239,14 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     gBattleMons[battlerDef] = switchinCandidate;
     gAiThinkingStruct->saved[battlerDef].saved = TRUE;
     SetBattlerAiData(battlerDef, aiData);
-    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetWeather(),
+        .terrain = gFieldTimers.terrain,
+    };
+
+    SimulateAiMovesData(&aiCalc, aiData, battlerAtk, battlerDef);
+
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
     // Regular processing with new battler
