@@ -3411,12 +3411,10 @@ static bool32 BattleTypeAllowsExp(void)
         return TRUE;
 }
 
-static u32 GetMonHoldEffect(struct Pokemon *mon)
+static enum HoldEffect GetMonHoldEffect(struct Pokemon *mon)
 {
     enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
-    enum HoldEffect holdEffect = GetItemHoldEffect(item);
-
-    return holdEffect;
+    return GetItemHoldEffect(item);
 }
 
 static enum BattlerId GetBattlerFromPlayerPartyId(u32 partyId)

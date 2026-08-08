@@ -838,7 +838,7 @@ const u8 *GetItemEffect(enum Item itemId)
     #if FREE_ENIGMA_BERRY == FALSE
         return gSaveBlock1Ptr->enigmaBerry.itemEffect;
     #else
-        return 0;
+        return NULL;
     #endif //FREE_ENIGMA_BERRY
     else
         return gItemsInfo[SanitizeItemId(itemId)].effect;
@@ -850,7 +850,7 @@ enum HoldEffect GetItemHoldEffect(enum Item itemId)
     #if FREE_ENIGMA_BERRY == FALSE
         return gSaveBlock1Ptr->enigmaBerry.holdEffect;
     #else
-        return 0;
+        return HOLD_EFFECT_NONE;
     #endif //FREE_ENIGMA_BERRY
     else
         return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
