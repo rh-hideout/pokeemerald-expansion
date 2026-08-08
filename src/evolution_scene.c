@@ -893,6 +893,8 @@ static void Task_EvolutionScene(u8 taskId)
     case EVOSTATE_BEFORE_END:
         if (!sEvoStructPtr->isTradeEvo)
         {
+            StopMapMusic();
+            Overworld_PlaySpecialMapMusic();
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         }
         gTasks[taskId].tState++;
