@@ -47,7 +47,6 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv);
 static bool32 ShouldPrintCritMessage(enum BattlerId battler);
 static bool32 ShouldPrintProtectMessage(enum BattlerId battler);
-static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battler1, enum BattlerId battler2, enum BattlerId battlerAtk);
 
 // Stat change moves
 static bool32 TryBellyDrum(enum BattlerId battler);
@@ -3205,6 +3204,125 @@ static enum MoveEndResult MoveEndQueueDancerToxicChain(struct BattleCalcValues *
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static bool32 ShouldPrintEffectivenessMessageForFlag(enum BattlerId battler1, enum BattlerId battler2, u32 moveResultFlag)
+{
+    if (gBattleStruct->moveResultFlags[battler1] & moveResultFlag && !gSpecialStatuses[battler1].resultMessagePrinted)
+    {
+        if (IsDoubleSpreadMove())
+        {
+            if (battler2 != battler1 && gBattleStruct->moveResultFlags[battler2] & moveResultFlag)
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TWO_TARGETS;
+                gSpecialStatuses[battler2].resultMessagePrinted = TRUE;
+            }
+            else
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_OF_TWO_TARGETS;
+            }
+        }
+        else
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
+        }
+    }
+    else if (gBattleStruct->moveResultFlags[battler2] & moveResultFlag && !gSpecialStatuses[battler2].resultMessagePrinted)
+    {
+        battler1 = battler2;
+        if (IsDoubleSpreadMove())
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_OF_TWO_TARGETS;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
+    }
+    else
+    {
+        return FALSE;
+    }
+
+    gSpecialStatuses[battler1].resultMessagePrinted = TRUE;
+    gBattleScripting.battler = battler1;
+
+    return TRUE;
+}
+
+static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battler1, enum BattlerId battler2, enum BattlerId battlerAtk)
+{
+    // No effect -> Extremely effective -> super effective -> not very effective -> mostly ineffective
+    if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_DOESNT_AFFECT_FOE))
+    {
+        if (gSpecialStatuses[battler1].resultMessagePrinted)
+            TryInitializeTrainerSlideMonUnaffected(battler1, battlerAtk);
+        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
+            TryInitializeTrainerSlideMonUnaffected(battler2, battlerAtk);
+        BattleScriptCall(BattleScript_PrintNoEffectMessage);
+        return TRUE;
+    }
+    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_EXTREMELY_EFFECTIVE))
+    {
+        if (gSpecialStatuses[battler1].resultMessagePrinted)
+            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler1, battlerAtk);
+        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
+            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler2, battlerAtk);
+
+        BattleScriptCall(BattleScript_PrintExtremelyEffectiveMessage);
+        return TRUE;
+    }
+    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_SUPER_EFFECTIVE))
+    {
+        if (gSpecialStatuses[battler1].resultMessagePrinted)
+            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler1, battlerAtk);
+        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
+            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler2, battlerAtk);
+
+        BattleScriptCall(BattleScript_PrintSuperEffectiveMessage);
+        return TRUE;
+    }
+    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_NOT_VERY_EFFECTIVE))
+    {
+        BattleScriptCall(BattleScript_PrintNotVeryEffectiveMessage);
+        return TRUE;
+    }
+    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_MOSTLY_INEFFECTIVE))
+    {
+        BattleScriptCall(BattleScript_PrintMostlyIneffectiveMessage);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static enum MoveEndResult MoveEndEffectivenessMessage(struct BattleCalcValues *cv)
+{
+    enum BattlerId battler1 = cv->battlerDef;
+    enum BattlerId battler2 = GetPartnerBattler(cv->battlerDef);
+    bool32 anyValidBattler = FALSE;
+
+    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler1)
+     || gSpecialStatuses[battler1].resultMessagePrinted
+     || gBattleStruct->battlerState[battler1].substituteBlocked)
+        battler1 = battler2;
+    else
+        anyValidBattler = TRUE;
+    
+    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler2)
+     || gSpecialStatuses[battler2].resultMessagePrinted
+     || gBattleStruct->battlerState[battler2].substituteBlocked)
+        battler2 = battler1;
+    else
+        anyValidBattler = TRUE;
+
+    // No battlers on this side were affected or is multi hit move
+    if (!anyValidBattler || (gMultiHitCounter != 0 && GetBattlerMoveTargetType(cv->battlerAtk, cv->move) != TARGET_SMART))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+
+    if (ShouldPrintEffectivenessMessage(battler1, battler2, cv->battlerAtk))
+        return MOVEEND_RESULT_RUN_SCRIPT;
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -3230,13 +3348,6 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                 gBattleScripting.battler = battlerDef;
                 BattleScriptCall(BattleScript_SubstituteTookDamage);
                 result = MOVEEND_RESULT_RUN_SCRIPT;
-                break;
-            case SUBSTITUTE_BLOCK_EFFECTIVENESS_MESSAGE:
-                if (ShouldPrintEffectivenessMessage(battlerDef, battlerDef, cv->battlerAtk)) // Always prints individual effectiveness messages
-                {
-                    result = MOVEEND_RESULT_RUN_SCRIPT;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
-                }
                 break;
             case SUBSTITUTE_BLOCK_CRIT_MESSAGE:
                 if (ShouldPrintCritMessage(battlerDef))
@@ -3355,124 +3466,6 @@ static enum MoveEndResult MoveEndMoveHeavyRecoil(struct BattleCalcValues *cv)
     return result;
 }
 
-static bool32 ShouldPrintEffectivenessMessageForFlag(enum BattlerId battler1, enum BattlerId battler2, u32 moveResultFlag)
-{
-    if (gBattleStruct->moveResultFlags[battler1] & moveResultFlag && !gSpecialStatuses[battler1].resultMessagePrinted)
-    {
-        if (IsDoubleSpreadMove())
-        {
-            if (battler2 != battler1 && gBattleStruct->moveResultFlags[battler2] & moveResultFlag)
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TWO_TARGETS;
-                gSpecialStatuses[battler2].resultMessagePrinted = TRUE;
-            }
-            else
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_OF_TWO_TARGETS;
-            }
-        }
-        else
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
-        }
-    }
-    else if (gBattleStruct->moveResultFlags[battler2] & moveResultFlag && !gSpecialStatuses[battler2].resultMessagePrinted)
-    {
-        battler1 = battler2;
-        if (IsDoubleSpreadMove())
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_OF_TWO_TARGETS;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
-    }
-    else
-    {
-        return FALSE;
-    }
-
-    gSpecialStatuses[battler1].resultMessagePrinted = TRUE;
-    gBattleScripting.battler = battler1;
-
-    return TRUE;
-}
-
-static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battler1, enum BattlerId battler2, enum BattlerId battlerAtk)
-{
-    // No effect -> Extremely effective -> super effective -> not very effective -> mostly ineffective
-    if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_DOESNT_AFFECT_FOE))
-    {
-        if (gSpecialStatuses[battler1].resultMessagePrinted)
-            TryInitializeTrainerSlideMonUnaffected(battler1, battlerAtk);
-        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
-            TryInitializeTrainerSlideMonUnaffected(battler2, battlerAtk);
-        BattleScriptCall(BattleScript_PrintNoEffectMessage);
-        return TRUE;
-    }
-    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_EXTREMELY_EFFECTIVE))
-    {
-        if (gSpecialStatuses[battler1].resultMessagePrinted)
-            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler1, battlerAtk);
-        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
-            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler2, battlerAtk);
-
-        BattleScriptCall(BattleScript_PrintExtremelyEffectiveMessage);
-        return TRUE;
-    }
-    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_SUPER_EFFECTIVE))
-    {
-        if (gSpecialStatuses[battler1].resultMessagePrinted)
-            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler1, battlerAtk);
-        if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
-            TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(battler2, battlerAtk);
-
-        BattleScriptCall(BattleScript_PrintSuperEffectiveMessage);
-        return TRUE;
-    }
-    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_NOT_VERY_EFFECTIVE))
-    {
-        BattleScriptCall(BattleScript_PrintNotVeryEffectiveMessage);
-        return TRUE;
-    }
-    else if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_MOSTLY_INEFFECTIVE))
-    {
-        BattleScriptCall(BattleScript_PrintMostlyIneffectiveMessage);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static enum MoveEndResult MoveEndEffectivenessMessage(struct BattleCalcValues *cv)
-{
-    enum BattlerId battler1 = cv->battlerDef;
-    enum BattlerId battler2 = GetPartnerBattler(cv->battlerDef);
-    bool32 anyValidBattler = FALSE;
-
-    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler1)
-     || gSpecialStatuses[battler1].resultMessagePrinted
-     || gBattleStruct->battlerState[battler1].substituteBlocked)
-        battler1 = battler2;
-    else
-        anyValidBattler = TRUE;
-    
-    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler2)
-     || gSpecialStatuses[battler2].resultMessagePrinted
-     || gBattleStruct->battlerState[battler2].substituteBlocked)
-        battler2 = battler1;
-    else
-        anyValidBattler = TRUE;
-
-    if (!anyValidBattler) // No battlers on this side were affected
-    {
-        gBattleScripting.moveendState++;
-        return MOVEEND_RESULT_CONTINUE;
-    }
-
-    if (gMultiHitCounter == 0 && ShouldPrintEffectivenessMessage(battler1, battler2, cv->battlerAtk))
-        return MOVEEND_RESULT_RUN_SCRIPT;
-
-    gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
-}
-
 static bool32 GetProtectBypassMethod(enum BattlerId battlerDef)
 {
     if (IsBattlerUnaffectedByMove(battlerDef))
@@ -3494,7 +3487,7 @@ static bool32 ShouldPrintCritMessage(enum BattlerId battler)
     if (!gSpecialStatuses[battler].criticalHit || gSpecialStatuses[battler].critMessagePrinted)
         return FALSE;
 
-    if (IsDoubleSpreadMove() && IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)) // Single target message is used when Substitute blocks
+    if (IsDoubleSpreadMove())
         BattleScriptCall(BattleScript_CriticalHitMessageMultiTarget);
     else
         BattleScriptCall(BattleScript_CriticalHitMessage);
@@ -4641,14 +4634,6 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
                 if (gSpecialStatuses[cv->battlerAtk].parentalBondState)
                     gSpecialStatuses[cv->battlerAtk].parentalBondState--;
                 gBattleScripting.multihitString[4]++;
-            }
-            gBattleStruct->eventState.moveEndBlock++;
-            break;
-        case MULTIHIT_BLOCK_SMART_EFFECTIVENESS_MESSAGE:
-            if (target == TARGET_SMART) // Dragon Darts shows this after every hit
-            {
-                if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv->battlerDef, cv->battlerAtk))
-                    result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -5908,9 +5893,10 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
 {
     [MOVEEND_SET_VALUES] = MoveEndSetValues,
     [MOVEEND_QUEUE_DANCER_TOXIC_CHAIN] = MoveEndQueueDancerToxicChain,
+    [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessage,
+    [MOVEEND_EFFECTIVENESS_MESSAGE_OPPOSING_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_SUBSTITUTE_BLOCK_ALLIED_SIDE] = MoveEndSubstituteBlock,
     [MOVEEND_MOVE_HEAVY_RECOIL] = MoveEndMoveHeavyRecoil,
-    [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE] = MoveEndEndureDamageMessage,
     [MOVEEND_PROTECT_LIKE_EFFECT_ALLIED_SIDE] = MoveEndProtectLikeEffect,
@@ -5935,7 +5921,6 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_MIRROR_MOVE_ALLIED_SIDE] = MoveEndMirrorMove,
     [MOVEEND_SET_VALUES_FOR_OPPOSING_SIDE] = MoveEndSetValuesForOpposingSide,
     [MOVEEND_SUBSTITUTE_BLOCK_OPPOSING_SIDE] = MoveEndSubstituteBlock,
-    [MOVEEND_EFFECTIVENESS_MESSAGE_OPPOSING_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_CRIT_PROTECT_MESSAGE_OPPOSING_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_OPPOSING_SIDE] = MoveEndEndureDamageMessage,
     [MOVEEND_PROTECT_LIKE_EFFECT_OPPOSING_SIDE] = MoveEndProtectLikeEffect,
