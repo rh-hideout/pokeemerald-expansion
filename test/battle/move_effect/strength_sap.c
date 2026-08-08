@@ -141,7 +141,25 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
     }
 }
 
-TO_DO_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at +6 Atk")
+SINGLE_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at +6 Atk")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
+        PLAYER(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, opponent);
+        HP_BAR(opponent);
+    }
+}
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {

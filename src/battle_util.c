@@ -7745,7 +7745,10 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
 
 static inline s32 DoMoveDamageCalc(struct DamageContext *ctx)
 {
-    ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
+    if (ctx->useStoredTypeEffectiveness)
+        ctx->typeEffectivenessModifier = gSpecialStatuses[ctx->battlerDef].storedTypeEffectiveness;
+    else
+        ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
 
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return 0;
@@ -8101,11 +8104,14 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
             mod = UQ_4_12(1.0);
     }
 
-    if (gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups || (ctx->aiCalc && mod > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(ctx)))
+    if (mod > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(ctx))
     {
         mod = UQ_4_12(0.5);
         if (ctx->updateFlags)
+        {
+            gSpecialStatuses[ctx->battlerDef].teraShellAbilityDone = TRUE;
             RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
+        }
     }
 
     *modifier = uq4_12_multiply(*modifier, mod);
