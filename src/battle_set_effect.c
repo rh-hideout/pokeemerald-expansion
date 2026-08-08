@@ -313,7 +313,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
             gBattlescriptCurrInstr = BattleScript_BattlerParalyzeHeal;
             break;
         case STATUS1_SLEEP:
-            TryDeactivateSleepClause(GetBattlerSide(se->effectBattler), gBattlerPartyIndexes[effectBattler]);
+            TryDeactivateSleepClause(GetBattlerSide(se->effectBattler), gBattlerPartyIndexes[se->effectBattler]);
             gBattlescriptCurrInstr = BattleScript_BattlerWokeUp;
             break;
         case STATUS1_BURN:
