@@ -6186,7 +6186,7 @@ static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x,
     else
         StringCopy(gStringVar3, gText_ThreeQuestionMarks); //show questionmarks instead of name
     StringExpandPlaceholders(gStringVar3, sText_EVO_Name); //evolution mon name
-    PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset*base_i + numLines); //evolution mon name
+    PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset * base_i + numLines); //evolution mon name
 }
 
 static void HandleTargetSpeciesPrintIcon(u8 taskId, enum Species targetSpecies, u8 base_i, u8 iterations)
