@@ -3229,7 +3229,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
             case SUBSTITUTE_BLOCK_EFFECTIVENESS_MESSAGE:
             {
                 enum BattlerId partnerDef = BATTLE_PARTNER(battlerDef);
-                if (ShouldSkipBattlerForMoveEnd(partnerDef, cv) || gBattleStruct->battlerState[partnerDef].resultMessagePrinted)
+                if (ShouldSkipBattlerForMoveEnd(partnerDef, cv) || gSpecialStatuses[partnerDef].resultMessagePrinted)
                     partnerDef = battlerDef;
 
                 if (ShouldPrintEffectivenessMessage(battlerDef, partnerDef, cv->battlerAtk))
@@ -4646,14 +4646,6 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
                 if (gSpecialStatuses[cv->battlerAtk].parentalBondState)
                     gSpecialStatuses[cv->battlerAtk].parentalBondState--;
                 gBattleScripting.multihitString[4]++;
-            }
-            gBattleStruct->eventState.moveEndBlock++;
-            break;
-        case MULTIHIT_BLOCK_SMART_EFFECTIVENESS_MESSAGE:
-            if (target == TARGET_SMART) // Dragon Darts shows this after every hit
-            {
-                if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv->battlerDef, cv->battlerAtk))
-                    result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
