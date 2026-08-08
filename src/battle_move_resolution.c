@@ -3289,10 +3289,44 @@ static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battler1, enum Batt
     return FALSE;
 }
 
-static enum MoveEndResult MoveEndEffectivenessMessage(struct BattleCalcValues *cv)
+static enum MoveEndResult MoveEndEffectivenessMessageAlliedSide(struct BattleCalcValues *cv)
 {
-    enum BattlerId battler1 = cv->battlerDef;
-    enum BattlerId battler2 = GetPartnerBattler(cv->battlerDef);
+    enum BattlerId battler1 = cv->battlerAtk;
+    enum BattlerId battler2 = GetPartnerBattler(battler1);
+    bool32 anyValidBattler = FALSE;
+
+    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler1)
+     || gSpecialStatuses[battler1].resultMessagePrinted
+     || gBattleStruct->battlerState[battler1].substituteBlocked)
+        battler1 = battler2;
+    else
+        anyValidBattler = TRUE;
+    
+    if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler2)
+     || gSpecialStatuses[battler2].resultMessagePrinted
+     || gBattleStruct->battlerState[battler2].substituteBlocked)
+        battler2 = battler1;
+    else
+        anyValidBattler = TRUE;
+
+    // No battlers on this side were affected or is multi hit move
+    if (!anyValidBattler || (gMultiHitCounter != 0 && GetBattlerMoveTargetType(cv->battlerAtk, cv->move) != TARGET_SMART))
+    {
+        gBattleScripting.moveendState++;
+        return MOVEEND_RESULT_CONTINUE;
+    }
+
+    if (ShouldPrintEffectivenessMessage(battler1, battler2, cv->battlerAtk))
+        return MOVEEND_RESULT_RUN_SCRIPT;
+
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
+static enum MoveEndResult MoveEndEffectivenessMessageOpposingSide(struct BattleCalcValues *cv)
+{
+    enum BattlerId battler1 = LEFT_FOE(cv->battlerAtk);
+    enum BattlerId battler2 = GetPartnerBattler(battler1);
     bool32 anyValidBattler = FALSE;
 
     if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler1)
@@ -5893,8 +5927,8 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
 {
     [MOVEEND_SET_VALUES] = MoveEndSetValues,
     [MOVEEND_QUEUE_DANCER_TOXIC_CHAIN] = MoveEndQueueDancerToxicChain,
-    [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessage,
-    [MOVEEND_EFFECTIVENESS_MESSAGE_OPPOSING_SIDE] = MoveEndEffectivenessMessage,
+    [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessageAlliedSide,
+    [MOVEEND_EFFECTIVENESS_MESSAGE_OPPOSING_SIDE] = MoveEndEffectivenessMessageOpposingSide,
     [MOVEEND_SUBSTITUTE_BLOCK_ALLIED_SIDE] = MoveEndSubstituteBlock,
     [MOVEEND_MOVE_HEAVY_RECOIL] = MoveEndMoveHeavyRecoil,
     [MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE] = MoveEndCritProtectMessage,
