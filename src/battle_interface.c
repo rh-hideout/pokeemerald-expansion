@@ -611,7 +611,6 @@ static const union TextColor sHealthBoxTextColor =
 
 // data fields for healthbar
 #define hBar_HealthBoxSpriteId      data[5]
-#define hBar_Data6                  data[6]
 
 // This function is here to cover a specific case - one player's mon in a 2 vs 1 double battle. In this scenario - display singles layout.
 // The same goes for a 2 vs 1 where opponent has only one Pokémon.
@@ -629,7 +628,6 @@ enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
 
 u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
 {
-    s16 data6 = 0;
     u8 healthboxLeftSpriteId, healthboxRightSpriteId;
     u8 healthbarSpriteId;
     struct Sprite *healthBarSpritePtr;
@@ -664,7 +662,6 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
                 gSprites[healthboxRightSpriteId].oam.tileNum += 32;
             }
 
-            data6 = 2;
         }
         gSprites[healthboxLeftSpriteId].oam.affineParam = healthboxRightSpriteId;
 
@@ -678,13 +675,11 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
         {
             healthboxLeftSpriteId = CreateSprite(&sHealthboxPlayerSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
             healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxPlayerSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            data6 = 1;
         }
         else
         {
             healthboxLeftSpriteId = CreateSprite(&sHealthboxOpponentSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
             healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxOpponentSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            data6 = 2;
         }
         gSprites[healthboxLeftSpriteId].oam.affineParam = healthboxRightSpriteId;
 
@@ -710,7 +705,6 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     gSprites[healthboxRightSpriteId].invisible = TRUE;
 
     healthBarSpritePtr->hBar_HealthBoxSpriteId = healthboxLeftSpriteId;
-    healthBarSpritePtr->hBar_Data6 = data6;
     healthBarSpritePtr->invisible = TRUE;
 
     CreateIndicatorSprite(battler);
@@ -750,27 +744,16 @@ static const u8 *GetHealthboxElementGfxPtr(u8 elementId)
 // Syncs the position of healthbar accordingly with the healthbox.
 static void SpriteCB_HealthBar(struct Sprite *sprite)
 {
-    u8 healthboxSpriteId = sprite->hBar_HealthBoxSpriteId;
+    u32 healthboxSpriteId = sprite->hBar_HealthBoxSpriteId;
+    struct Sprite* healthboxSprite = &gSprites[healthboxSpriteId];
+    enum BattlerId battler = healthboxSprite->hMain_Battler;
 
-    switch (sprite->hBar_Data6)
-    {
-    case 0:
-        sprite->x = gSprites[healthboxSpriteId].x + 16;
-        sprite->y = gSprites[healthboxSpriteId].y;
-        break;
-    case 1:
-        sprite->x = gSprites[healthboxSpriteId].x + 16;
-        sprite->y = gSprites[healthboxSpriteId].y;
-        break;
-    case 2:
-    default:
-        sprite->x = gSprites[healthboxSpriteId].x + 8;
-        sprite->y = gSprites[healthboxSpriteId].y;
-        break;
-    }
+    s32 xOffset = IsOnPlayerSide(battler) ? 16 : 8;
 
-    sprite->x2 = gSprites[healthboxSpriteId].x2;
-    sprite->y2 = gSprites[healthboxSpriteId].y2;
+    sprite->x = healthboxSprite->x + xOffset;
+    sprite->y = healthboxSprite->y;
+    sprite->x2 = healthboxSprite->x2;
+    sprite->y2 = healthboxSprite->y2;
 }
 
 static void SpriteCB_HealthBoxOther(struct Sprite *sprite)
