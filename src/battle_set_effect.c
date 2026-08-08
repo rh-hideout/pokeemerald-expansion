@@ -183,7 +183,6 @@ static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect 
     if (IsOnPlayerSide(cv->battlerAtk))
     {
         u16 payday = gPaydayMoney;
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
         gPaydayMoney += (gBattleMons[cv->battlerAtk].level * 5);
         if (payday > gPaydayMoney)
             gPaydayMoney = 0xFFFF;
@@ -314,7 +313,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
             gBattlescriptCurrInstr = BattleScript_BattlerParalyzeHeal;
             break;
         case STATUS1_SLEEP:
-            TryDeactivateSleepClause(GetBattlerSide(effectBattler), gBattlerPartyIndexes[effectBattler]);
+            TryDeactivateSleepClause(GetBattlerSide(se->effectBattler), gBattlerPartyIndexes[effectBattler]);
             gBattlescriptCurrInstr = BattleScript_BattlerWokeUp;
             break;
         case STATUS1_BURN:
