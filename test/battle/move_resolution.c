@@ -19,7 +19,7 @@ DOUBLE_BATTLE_TEST("Moves hitting into Substitute and non-Substitute trigger eff
     } WHEN {
         TURN { MOVE(substituteUser, MOVE_SUBSTITUTE); MOVE(playerLeft, MOVE_SURF, criticalHit: TRUE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, substituteUser);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         SUB_HIT(substituteUser);
         if (substituteUserBattlerPosition == B_POSITION_OPPONENT_LEFT) {
