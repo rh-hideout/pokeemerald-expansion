@@ -3747,7 +3747,8 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
     bool32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
     bool32 isPrimary = percentChance == 0;
 
-    if (isPrimary || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+    // RNG tag is RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter - 1 because it's incremented before this function is called
+    if (isPrimary || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter - 1, percentChance))
     {
         if (!additionalEffect->self)
             cv->battlerDef = effectBattler; // For SetMoveEffect, will be restored to previous value when run again
