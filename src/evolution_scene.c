@@ -635,10 +635,14 @@ static s32 UIWaitConfirmation(void)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
+        HandleBattleWindow(YESNOBOX_X_Y, WINDOW_CLEAR);
         return sEvoCursorPos;
     }
     if (JOY_NEW(B_BUTTON))
+    {
+        HandleBattleWindow(YESNOBOX_X_Y, WINDOW_CLEAR);
         return MENU_B_PRESSED;
+    }
     if (JOY_NEW(DPAD_UP) || JOY_NEW(DPAD_DOWN))
     {
         PlaySE(SE_SELECT);
