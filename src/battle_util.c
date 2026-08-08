@@ -7744,7 +7744,10 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
 
 static inline s32 DoMoveDamageCalc(struct DamageContext *ctx)
 {
-    ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
+    if (ctx->useStoredTypeEffectiveness)
+        ctx->typeEffectivenessModifier = gSpecialStatuses[ctx->battlerDef].storedTypeEffectiveness;
+    else
+        ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
 
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return 0;
@@ -8100,11 +8103,14 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
             mod = UQ_4_12(1.0);
     }
 
-    if (gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups || (ctx->aiCalc && mod > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(ctx)))
+    if (mod > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(ctx))
     {
         mod = UQ_4_12(0.5);
         if (ctx->updateFlags)
+        {
+            gSpecialStatuses[ctx->battlerDef].teraShellAbilityDone = TRUE;
             RecordAbilityBattle(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
+        }
     }
 
     *modifier = uq4_12_multiply(*modifier, mod);
@@ -10647,10 +10653,35 @@ bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk, enum SubCheck subCheck)
 
 bool32 IsAnyTargetAffected(void)
 {
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+    bool32 isSpreadMove = IsSpreadMove(moveTarget);
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_INVALID_TARGET)
+        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NOT_PRESENT)
             continue;
+
+        switch (moveTarget)
+        {
+        case TARGET_ALL_BATTLERS: // check all battlers
+            break;
+        case TARGET_USER_AND_ALLY: // only check allied battlers
+            if (!IsBattlerAlly(gBattlerAttacker, battler))
+                continue;
+            break;
+        default:
+            if (isSpreadMove) // check all battlers except attacker (flags are set for non-targeted battlers)
+            {
+                if (battler == gBattlerAttacker)
+                    continue;
+            }
+            else // check a single target
+            {
+                if (battler != gBattlerTarget)
+                    continue;
+            }
+            break;
+        }
 
         if (!IsBattlerUnaffectedByMove(battler))
             return TRUE;
