@@ -188,17 +188,8 @@ static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect 
         if (payday > gPaydayMoney)
             gPaydayMoney = 0xFFFF;
 
-        // For a move that hits multiple targets (i.e. Make it Rain)
-        // we only want to print the message on the final hit
-        if (!(NumAffectedSpreadMoveTargets() > 1 && GetNextTarget(moveTarget, TRUE) != MAX_BATTLERS_COUNT))
-        {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
-        }
-        else
-        {
-            gBattlescriptCurrInstr = se->script;
-        }
+        BattleScriptPush(se->script);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
     }
     else
     {
@@ -320,14 +311,14 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
         switch (argStatus)
         {
         case STATUS1_PARALYSIS:
-            gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
+            gBattlescriptCurrInstr = BattleScript_BattlerParalyzeHeal;
             break;
         case STATUS1_SLEEP:
-            TryDeactivateSleepClause(GetBattlerSide(se->effectBattler), gBattlerPartyIndexes[se->effectBattler]);
-            gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
+            TryDeactivateSleepClause(GetBattlerSide(effectBattler), gBattlerPartyIndexes[effectBattler]);
+            gBattlescriptCurrInstr = BattleScript_BattlerWokeUp;
             break;
         case STATUS1_BURN:
-            gBattlescriptCurrInstr = BattleScript_TargetBurnHeal;
+            gBattlescriptCurrInstr = BattleScript_BattlerBurnHeal;
             break;
         case STATUS1_FREEZE:
             gBattlescriptCurrInstr = BattleScript_BattlerDefrosted;
@@ -338,7 +329,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
         case STATUS1_POISON:
         case STATUS1_TOXIC_POISON:
         case STATUS1_PSN_ANY:
-            gBattlescriptCurrInstr = BattleScript_TargetPoisonHealed;
+            gBattlescriptCurrInstr = BattleScript_BattlerPoisonHealed;
             break;
         }
     }
