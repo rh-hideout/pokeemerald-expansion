@@ -59,9 +59,15 @@ BattleScript_ItemRestoreHPRet:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_ItemNoEffect::
+	cancelitemusage
+	printstring STRINGID_ITEMHADNOEFFECT
+	waitmessage B_WAIT_TIME_LONG
+	end
+
 BattleScript_ItemRestoreHP::
 	call BattleScript_UseItemMessage
-	itemrestorehp BattleScript_ItemRestoreHPEnd, BattleScript_ItemRestoreHP_Battler
+	itemrestorehp BattleScript_ItemNoEffect, BattleScript_ItemRestoreHP_Battler
 	call BattleScript_ItemRestoreHP_Party
 	goto BattleScript_ItemRestoreHPEnd
 
@@ -91,7 +97,7 @@ BattleScript_ItemRestoreHP_SendOutRevivedBattler:
 BattleScript_ItemCureStatus::
 	call BattleScript_UseItemMessage
 BattleScript_ItemCureStatusAfterItemMsg:
-	itemcurestatus BattleScript_ItemCureStatusEnd, BattleScript_CureStatus_Battler
+	itemcurestatus BattleScript_ItemNoEffect, BattleScript_CureStatus_Battler
 	printfromtable gPartyCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ItemCureStatusEnd:
@@ -116,7 +122,8 @@ BattleScript_ItemHealAndCureStatusEnd::
 
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
-    itemincreasestat
+	itemincreasestat BattleScript_ItemNoEffect
+	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
 	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
 
@@ -141,7 +148,7 @@ BattleScript_PokeFluteEnd::
 
 BattleScript_ItemSetMist::
 	call BattleScript_UseItemMessage
-	setmist
+	setmist BattleScript_ItemNoEffect
 	playmoveanimation MOVE_MIST
 	waitanimation
 	printfromtable gMistUsedStringIds
@@ -150,9 +157,9 @@ BattleScript_ItemSetMist::
 
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
-	itemincreasestat
-	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
-	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
+	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
+	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ItemNoEffect
+	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ItemNoEffect
 	setfocusenergy BS_ATTACKER
 	playmoveanimation MOVE_FOCUS_ENERGY
 	waitanimation
@@ -163,7 +170,7 @@ BattleScript_ItemSetFocusEnergy::
 
 BattleScript_ItemRestorePP::
 	call BattleScript_UseItemMessage
-	itemrestorepp
+	itemrestorepp BattleScript_ItemNoEffect
 	printstring STRINGID_ITEMRESTOREDSPECIESPP
 	waitmessage B_WAIT_TIME_LONG
 	end

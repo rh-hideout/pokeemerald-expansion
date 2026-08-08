@@ -1738,7 +1738,7 @@ BattleScript_RecoilEnd:
 
 BattleScript_EffectMist::
 	attackcanceler
-	setmist
+	setmist BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	printfromtable gMistUsedStringIds

@@ -263,4 +263,20 @@ SINGLE_BATTLE_TEST("Revive keeps Mimikyu Busted forms and Eiscue Noice in their 
     }
 }
 
-TO_DO_BATTLE_TEST("Revive won't restore a battler's HP if it hasn't fainted")
+SINGLE_BATTLE_TEST("Max Revive has no effect if the target is alive")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { USE_ITEM(player, ITEM_MAX_REVIVE, partyIndex: 1); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_MAX_REVIVE, 1));
+        EXPECT_EQ(gParties[B_TRAINER_PLAYER]->hp, 1);
+    }
+}
