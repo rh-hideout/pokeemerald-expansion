@@ -45,7 +45,11 @@ static inline u32 _SFC32_Next(struct Sfc32State *state)
 
 static inline u32 LocalRandom32(rng_value_t *val)
 {
+#if TESTING
+    return 0;
+#else
     return _SFC32_Next(val);
+#endif
 }
 
 static inline u16 LocalRandom(rng_value_t *val)
