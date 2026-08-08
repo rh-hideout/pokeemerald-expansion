@@ -3236,10 +3236,6 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 GetBattlerNick(gBattlerTarget, text);
                 toCpy = text;
                 break;
-            case B_TXT_DEF_PARTNER_NAME: // partner target name
-                GetBattlerNick(BATTLE_PARTNER(gBattlerTarget), text);
-                toCpy = text;
-                break;
             case B_TXT_EFF_NAME_WITH_PREFIX: // effect battler name with prefix
                 HANDLE_NICKNAME_STRING_CASE(gEffectBattler)
                 break;

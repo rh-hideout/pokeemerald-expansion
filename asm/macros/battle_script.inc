@@ -20,10 +20,6 @@
 	.byte B_SCR_OP_TYPECALC
 	.endm
 
-	.macro multihitresultmessage
-	.byte B_SCR_OP_MULTIHITRESULTMESSAGE
-	.endm
-
 	.macro attackanimation
 	.byte B_SCR_OP_ATTACKANIMATION
 	.endm
@@ -43,16 +39,8 @@
     .byte \assuranceDouble
 	.endm
 
-	.macro critmessage
-	.byte B_SCR_OP_CRITMESSAGE
-	.endm
-
 	.macro effectivenesssound
 	.byte B_SCR_OP_EFFECTIVENESSSOUND
-	.endm
-
-	.macro resultmessage
-	.byte B_SCR_OP_RESULTMESSAGE
 	.endm
 
 	.macro printstring id:req

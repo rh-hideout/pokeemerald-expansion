@@ -42,6 +42,7 @@ static enum Move GetMeFirstMove(void);
 // Move End functions shared by Substitute Block
 static bool32 ShouldApplyAfterHitEffects(enum BattlerId battlerAtk, enum BattlerId effectBattler);
 static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, const struct AdditionalEffect *additionalEffect);
+static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct AdditionalEffect *additionalEffect, enum BattlerId effectBattler);
 
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv);
 static bool32 ShouldPrintCritMessage(enum BattlerId battler);
@@ -2577,27 +2578,15 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
                 continue;
 
             bool32 isSelf = gEffectBattler == cv->battlerAtk;
+
             if (isSelf != additionalEffect->self)
                 continue;
 
             if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler))
                 continue;
 
-            u32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+            TryTriggerAdditionalEffect(cv, additionalEffect, gEffectBattler);
 
-            // Activate effect if it's primary (chance == 0) or if RNGesus says so
-            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-            {
-                se.additionalEffect = additionalEffect;
-                se.moveEffect = additionalEffect->moveEffect;
-                se.script = gBattlescriptCurrInstr;
-                se.effectBattler = additionalEffect->self ? cv->battlerAtk : cv->battlerDef;
-                se.primary = percentChance == 0;
-                se.certain = percentChance >= 100;
-                se.onSide = additionalEffect->onSide; // TODO
-
-                SetMoveEffect(cv, &se);
-            }
             return CANCELER_RESULT_RUN_SCRIPT; // We don't know if a script should be run or not so try
         }
 
@@ -2605,6 +2594,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
         gBattleStruct->additionalEffectsCounter = 0;
     }
 
+    cv->battlerDef = gBattlerTarget;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->eventState.atkCancelerBattler = 0;
     return CANCELER_RESULT_SUCCESS;
@@ -3244,34 +3234,17 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                  && !IsBattleMoveStatus(cv->move)
                  && battlerDef != cv->battlerAtk)
                 {
-                    u32 percentChance;
-                    struct SetEffect se = {0};
                     const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+                    gBattleStruct->additionalEffectsCounter++;
 
                     // Various checks for if this move effect can be applied this turn
-                    if (CanApplyAdditionalEffect(cv->battlerAtk, battlerDef, additionalEffect)
-                     && ShouldApplyAfterHitEffects(cv->battlerAtk, battlerDef)
-                     && !additionalEffect->self) // handled in MoveEndAdditionalEffects
-                    {
-                        percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+                    if (!CanApplyAdditionalEffect(cv->battlerAtk, battlerDef, additionalEffect)
+                     || !ShouldApplyAfterHitEffects(cv->battlerAtk, battlerDef)
+                     || additionalEffect->self) // handled in MoveEndAdditionalEffects
+                        continue;
+                    
+                    TryTriggerAdditionalEffect(cv, additionalEffect, battlerDef);
 
-                        // Activate effect if it's primary (chance == 0) or if RNGesus says so
-                        if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-                        {
-                            cv->battlerDef = battlerDef; // For SetMoveEffect, will be restored to previous value when moveend is run again
-
-                            se.additionalEffect = additionalEffect;
-                            se.moveEffect = additionalEffect->moveEffect;
-                            se.script = gBattlescriptCurrInstr;
-                            se.effectBattler = battlerDef;
-                            se.primary = percentChance == 0;
-                            se.certain = percentChance >= 100;
-                            se.onSide = additionalEffect->onSide; // TODO
-                            SetMoveEffect(cv, &se);
-                        }
-                    }
-
-                    gBattleStruct->additionalEffectsCounter++;
                     return MOVEEND_RESULT_RUN_SCRIPT; // try to run effect script if possible and don't increment block state
                 }
                 gBattleStruct->additionalEffectsCounter = 0;
@@ -3740,6 +3713,28 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
     return TRUE;
 }
 
+static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct AdditionalEffect *additionalEffect, enum BattlerId effectBattler)
+{
+    struct SetEffect se = {0};
+
+    bool32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+    bool32 isPrimary = percentChance == 0;
+
+    if (isPrimary || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+    {
+        if (!additionalEffect->self)
+            cv->battlerDef = effectBattler; // For SetMoveEffect, will be restored to previous value when run again
+        se.additionalEffect = additionalEffect;
+        se.moveEffect = additionalEffect->moveEffect;
+        se.script = gBattlescriptCurrInstr;
+        se.effectBattler = effectBattler; 
+        se.primary = isPrimary;
+        se.certain = percentChance >= 100;
+        se.onSide = additionalEffect->onSide;
+        SetMoveEffect(cv, &se);
+    }
+}
+
 static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
 {
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
@@ -3763,36 +3758,18 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter
          && (!ShouldSkipBattlerForMoveEnd(effectBattler, cv) || effectBattler == cv->battlerAtk))
         {
-            u32 percentChance;
-            struct SetEffect se = {0};
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+            gBattleStruct->additionalEffectsCounter++;
 
             // Various checks for if this move effect can be applied this turn
-            if (CanApplyAdditionalEffect(cv->battlerAtk, effectBattler, additionalEffect)
-             && ShouldApplyAfterHitEffects(cv->battlerAtk, effectBattler)
-             && (additionalEffect->moveEffect != MOVE_EFFECT_STAT_MINUS || !additionalEffect->self)
-             && (effectBattler == cv->battlerAtk) == additionalEffect->self)
-            {
-                percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+            if (!CanApplyAdditionalEffect(cv->battlerAtk, effectBattler, additionalEffect)
+             || !ShouldApplyAfterHitEffects(cv->battlerAtk, effectBattler)
+             || (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self)
+             || (effectBattler == cv->battlerAtk) != additionalEffect->self)
+                continue;
 
-                // Activate effect if it's primary (chance == 0) or if RNGesus says so
-                if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-                {
-                    if (!additionalEffect->self)
-                        cv->battlerDef = effectBattler; // For SetMoveEffect, will be restored to previous value when moveend is run again
+            TryTriggerAdditionalEffect(cv, additionalEffect, effectBattler);
 
-                    se.additionalEffect = additionalEffect;
-                    se.moveEffect = additionalEffect->moveEffect;
-                    se.script = gBattlescriptCurrInstr;
-                    se.effectBattler = effectBattler;
-                    se.primary = percentChance == 0;
-                    se.certain = percentChance >= 100;
-                    se.onSide = additionalEffect->onSide; // TODO
-                    SetMoveEffect(cv, &se);
-                }
-            }
-
-            gBattleStruct->additionalEffectsCounter++;
             return MOVEEND_RESULT_RUN_SCRIPT; // try to run effect script if possible
         }
         gBattleStruct->eventState.moveEndBattler++;
@@ -3818,32 +3795,17 @@ static enum MoveEndResult MoveEndAdditionalEffectsLowerStatsAttacker(struct Batt
 
     if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
     {
-        u32 percentChance;
-        struct SetEffect se = {0};
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+        gBattleStruct->additionalEffectsCounter++;
 
         // Various checks for if this move effect can be applied this turn
-        if (CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
-         && ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
-         && (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
-        {
-            percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+        if (!CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
+         || !ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
+         || !(additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
+            continue;
 
-            // Activate effect if it's primary (chance == 0) or if RNGesus says so
-            if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-            {
-                se.additionalEffect = additionalEffect;
-                se.moveEffect = additionalEffect->moveEffect;
-                se.script = gBattlescriptCurrInstr;
-                se.effectBattler = cv->battlerAtk;
-                se.primary = percentChance == 0;
-                se.certain = percentChance >= 100;
-                se.onSide = additionalEffect->onSide; // TODO
-                SetMoveEffect(cv, &se);
-            }
-        }
+        TryTriggerAdditionalEffect(cv, additionalEffect, cv->battlerAtk);
 
-        gBattleStruct->additionalEffectsCounter++;
         return MOVEEND_RESULT_RUN_SCRIPT; // try to run effect script if possible
     }
 

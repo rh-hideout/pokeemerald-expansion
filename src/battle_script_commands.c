@@ -354,14 +354,11 @@ static void Cmd_accuracycheck(void);
 static void Cmd_printattackstring(void);
 static void Cmd_printselectionstringfromtable(void);
 static void Cmd_typecalc(void);
-static void Cmd_multihitresultmessage(void);
 static void Cmd_attackanimation(void);
 static void Cmd_waitanimation(void);
 static void Cmd_healthbarupdate(void);
 static void Cmd_datahpupdate(void);
-static void Cmd_critmessage(void);
 static void Cmd_effectivenesssound(void);
-static void Cmd_resultmessage(void);
 static void Cmd_printstring(void);
 static void Cmd_printselectionstring(void);
 static void Cmd_waitmessage(void);
@@ -569,14 +566,11 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_PRINTATTACKSTRING]                     = Cmd_printattackstring,
     [B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE]         = Cmd_printselectionstringfromtable,
     [B_SCR_OP_TYPECALC]                              = Cmd_typecalc,
-    [B_SCR_OP_MULTIHITRESULTMESSAGE]                 = Cmd_multihitresultmessage,
     [B_SCR_OP_ATTACKANIMATION]                       = Cmd_attackanimation,
     [B_SCR_OP_WAITANIMATION]                         = Cmd_waitanimation,
     [B_SCR_OP_HEALTHBARUPDATE]                       = Cmd_healthbarupdate,
     [B_SCR_OP_DATAHPUPDATE]                          = Cmd_datahpupdate,
-    [B_SCR_OP_CRITMESSAGE]                           = Cmd_critmessage,
     [B_SCR_OP_EFFECTIVENESSSOUND]                    = Cmd_effectivenesssound,
-    [B_SCR_OP_RESULTMESSAGE]                         = Cmd_resultmessage,
     [B_SCR_OP_PRINTSTRING]                           = Cmd_printstring,
     [B_SCR_OP_PRINTSELECTIONSTRING]                  = Cmd_printselectionstring,
     [B_SCR_OP_WAITMESSAGE]                           = Cmd_waitmessage,
@@ -814,6 +808,9 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_38]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_39]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_43]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1144,35 +1141,6 @@ static void Cmd_typecalc(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_multihitresultmessage(void)
-{
-    // To be removed
-    CMD_ARGS();
-
-    if (gBattleControllerExecFlags)
-        return;
-
-    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
-     && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_ENDURED))
-    {
-        if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_STURDIED)
-        {
-            gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
-            BattleScriptCall(BattleScript_SturdiedMsg);
-            return;
-        }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
-        {
-            gLastUsedItem = gBattleMons[gBattlerTarget].item;
-            gPotentialItemEffectBattler = gBattlerTarget;
-            gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
-            BattleScriptCall(BattleScript_HangedOnMsg);
-            return;
-        }
-    }
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_attackanimation(void)
 {
     CMD_ARGS();
@@ -1316,28 +1284,6 @@ static void Cmd_datahpupdate(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_critmessage(void)
-{
-    CMD_ARGS();
-    // To be removed
-    if (gBattleControllerExecFlags == 0)
-    {
-        if (gSpecialStatuses[gBattlerTarget].criticalHit && !IsBattlerUnaffectedByMove(gBattlerTarget))
-        {
-            if (IsDoubleSpreadMove())
-                PrepareStringBattle(STRINGID_CRITICALHITONDEF, gBattlerTarget);
-            else
-                PrepareStringBattle(STRINGID_CRITICALHIT, gBattlerAttacker);
-
-            TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(gBattlerTarget);
-            TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(gBattlerTarget);
-
-            gBattleCommunication[MSG_DISPLAY] = 1;
-        }
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_effectivenesssound(void)
 {
     CMD_ARGS();
@@ -1370,179 +1316,6 @@ static inline bool32 ShouldRelyOnTwoFoesMessage(u32 moveResult)
     return gBattlerTarget == BATTLE_PARTNER(oppositeTarget)
         && gBattleStruct->moveResultFlags[oppositeTarget] & moveResult
         && !(gBattleStruct->moveResultFlags[oppositeTarget] & MOVE_RESULT_AVOIDED_ATTACK);
-}
-
-static void Cmd_resultmessage(void)
-{
-    // To be removed
-    CMD_ARGS();
-
-    enum StringID stringId = 0;
-    u32 *moveResultFlags = &gBattleStruct->moveResultFlags[gBattlerTarget];
-    enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
-
-    if (gBattleControllerExecFlags)
-        return;
-
-    if (gSpecialStatuses[gBattlerTarget].resultMessagePrinted)
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    if (*moveResultFlags & MOVE_RESULT_MISSED && !(*moveResultFlags & MOVE_RESULT_DOESNT_AFFECT_FOE))
-    {
-        gBattleCommunication[MSG_DISPLAY] = 1;
-        stringId = STRINGID_PKMNAVOIDEDATTACK;
-    }
-    else
-    {
-        gBattleCommunication[MSG_DISPLAY] = 1;
-        switch (*moveResultFlags & ~MOVE_RESULT_MISSED)
-        {
-        case MOVE_RESULT_EXTREMELY_EFFECTIVE:
-            if (IsDoubleSpreadMove())
-            {
-                if (ShouldPrintTwoFoesMessage(MOVE_RESULT_EXTREMELY_EFFECTIVE))
-                    stringId = STRINGID_EXTREMELYEFFECTIVETWOFOES;
-                else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_EXTREMELY_EFFECTIVE))
-                    stringId = 0; // Was handled or will be handled as a double string
-                else
-                    stringId = STRINGID_EXTREMELYEFFECTIVEONDEF;
-            }
-            else if (!gMultiHitCounter)  // Don't print effectiveness on each hit in a multi hit attack
-            {
-                stringId = STRINGID_EXTREMELYEFFECTIVE;
-            }
-            if (stringId == STRINGID_EXTREMELYEFFECTIVE
-                 || stringId == STRINGID_EXTREMELYEFFECTIVEONDEF
-                 || stringId == STRINGID_EXTREMELYEFFECTIVETWOFOES)
-                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(gBattlerTarget, gBattlerAttacker);
-            if (stringId == STRINGID_EXTREMELYEFFECTIVETWOFOES || stringId == STRINGID_EXTREMELYEFFECTIVEONDEF)
-                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(BATTLE_PARTNER(gBattlerTarget), gBattlerAttacker);
-            break;
-        case MOVE_RESULT_SUPER_EFFECTIVE:
-            if (IsDoubleSpreadMove())
-            {
-                if (ShouldPrintTwoFoesMessage(MOVE_RESULT_SUPER_EFFECTIVE))
-                    stringId = STRINGID_SUPEREFFECTIVETWOFOES;
-                else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_SUPER_EFFECTIVE))
-                    stringId = 0; // Was handled or will be handled as a double string
-                else
-                    stringId = STRINGID_SUPEREFFECTIVEONDEF;
-            }
-            else if (!gMultiHitCounter || target == TARGET_SMART)  // Don't print effectiveness on each hit in a multi hit attack
-            {
-                stringId = STRINGID_SUPEREFFECTIVE;
-            }
-            if (stringId == STRINGID_SUPEREFFECTIVE
-                 || stringId == STRINGID_SUPEREFFECTIVEONDEF
-                 || stringId == STRINGID_SUPEREFFECTIVETWOFOES)
-                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(gBattlerTarget, gBattlerAttacker);
-            if (stringId == STRINGID_SUPEREFFECTIVETWOFOES || stringId == STRINGID_SUPEREFFECTIVEONDEF)
-                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(BATTLE_PARTNER(gBattlerTarget),gBattlerAttacker);
-            break;
-        case MOVE_RESULT_MOSTLY_INEFFECTIVE:
-            if (IsDoubleSpreadMove())
-            {
-                if (ShouldPrintTwoFoesMessage(MOVE_RESULT_MOSTLY_INEFFECTIVE))
-                    stringId = STRINGID_MOSTLYINEFFECTIVETWOFOES;
-                else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_MOSTLY_INEFFECTIVE))
-                    stringId = 0; // Was handled or will be handled as a double string
-                else
-                    stringId = STRINGID_MOSTLYINEFFECTIVEONDEF; // Needs a string
-            }
-            else if (!gMultiHitCounter)
-            {
-                stringId = STRINGID_MOSTLYINEFFECTIVE;
-            }
-            break;
-        case MOVE_RESULT_NOT_VERY_EFFECTIVE:
-            if (IsDoubleSpreadMove())
-            {
-                if (ShouldPrintTwoFoesMessage(MOVE_RESULT_NOT_VERY_EFFECTIVE))
-                    stringId = STRINGID_NOTVERYEFFECTIVETWOFOES;
-                else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_NOT_VERY_EFFECTIVE))
-                    stringId = 0; // Was handled or will be handled as a double string
-                else
-                    stringId = STRINGID_NOTVERYEFFECTIVEONDEF; // Needs a string
-            }
-            else if (!gMultiHitCounter || target == TARGET_SMART)
-            {
-                stringId = STRINGID_NOTVERYEFFECTIVE;
-            }
-            break;
-        case MOVE_RESULT_ONE_HIT_KO:
-            stringId = STRINGID_ONEHITKO;
-            break;
-        case MOVE_RESULT_FOE_ENDURED:
-            stringId = STRINGID_PKMNENDUREDHIT;
-            break;
-        case MOVE_RESULT_FAILED:
-            stringId = STRINGID_BUTITFAILED;
-            break;
-        case MOVE_RESULT_DOESNT_AFFECT_FOE: // Might still be used by non damage moves so kept in
-            TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, gBattlerAttacker);
-            stringId = STRINGID_ITDOESNTAFFECT;
-            break;
-        case MOVE_RESULT_FOE_HUNG_ON:
-            gLastUsedItem = gBattleMons[gBattlerTarget].item;
-            gPotentialItemEffectBattler = gBattlerTarget;
-            *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
-            BattleScriptCall(BattleScript_HangedOnMsg);
-            return;
-        default:
-            if (*moveResultFlags & MOVE_RESULT_ONE_HIT_KO)
-            {
-                *moveResultFlags &= ~MOVE_RESULT_ONE_HIT_KO;
-                *moveResultFlags &= ~MOVE_RESULT_SUPER_EFFECTIVE;
-                *moveResultFlags &= ~MOVE_RESULT_NOT_VERY_EFFECTIVE;
-                *moveResultFlags &= ~MOVE_RESULT_EXTREMELY_EFFECTIVE;
-                *moveResultFlags &= ~MOVE_RESULT_MOSTLY_INEFFECTIVE;
-                BattleScriptCall(BattleScript_OneHitKOMsg);
-                return;
-            }
-            else if (*moveResultFlags & MOVE_RESULT_STURDIED)
-            {
-                *moveResultFlags &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
-                BattleScriptCall(BattleScript_SturdiedMsg);
-                return;
-            }
-            else if (*moveResultFlags & MOVE_RESULT_FOE_ENDURED)
-            {
-                *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
-                BattleScriptCall(BattleScript_EnduredMsg);
-                return;
-            }
-            else if (*moveResultFlags & MOVE_RESULT_FOE_HUNG_ON)
-            {
-                gLastUsedItem = gBattleMons[gBattlerTarget].item;
-                gPotentialItemEffectBattler = gBattlerTarget;
-                *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
-                BattleScriptCall(BattleScript_HangedOnMsg);
-                return;
-            }
-            else if (*moveResultFlags & MOVE_RESULT_FAILED)
-            {
-                stringId = STRINGID_BUTITFAILED;
-            }
-            else if (B_AFFECTION_MECHANICS == TRUE && (*moveResultFlags & MOVE_RESULT_FOE_ENDURED_AFFECTION))
-            {
-                *moveResultFlags &= ~MOVE_RESULT_FOE_ENDURED_AFFECTION;
-                BattleScriptCall(BattleScript_AffectionBasedEndurance);
-                return;
-            }
-        }
-    }
-    if (stringId)
-    {
-        PrepareStringBattle(stringId, gBattlerAttacker);
-        gSpecialStatuses[gBattlerTarget].resultMessagePrinted = TRUE;
-    }
-    else
-        gBattleCommunication[MSG_DISPLAY] = 0;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_printstring(void)
