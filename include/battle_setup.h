@@ -56,6 +56,7 @@ extern const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES];
 
 extern TrainerBattleParameter gTrainerBattleParameter;
 extern u16 gPartnerTrainerId;
+extern u32 gBattleTypeFlags;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
@@ -82,9 +83,6 @@ extern u16 gPartnerTrainerId;
         battleParameter->params.cannotBattleText)
 
 void BattleSetup_StartWildBattle(void);
-void BattleSetup_StartDoubleWildBattle(void);
-void BattleSetup_StartBattlePikeWildBattle(void);
-void BattleSetup_StartRoamerBattle(void);
 void StartWallyTutorialBattle(void);
 void BattleSetup_StartScriptedWildBattle(void);
 void BattleSetup_StartScriptedDoubleWildBattle(void);

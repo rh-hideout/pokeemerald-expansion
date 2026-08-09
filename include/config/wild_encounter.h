@@ -5,6 +5,9 @@
 #define WE_VANILLA_RANDOM           TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
 #define WE_FLAG_NO_ENCOUNTER        0       // If this flag is set, wild encounters will be disabled.
 
+#define WE_SKIP_ENCOUNTER_ON_NEW_METATILE_CHANCE 40 // When you first step on a different type of metatile, you get WE_SKIP_ENCOUNTER_ON_NEW_METATILE_CHANCE % chance to fully skip the encounter check
+#define WE_STEPS_WITHOUT_ENCOUNTER_AFTER_BATTLE   4 // The number of steps after battle (trainer or wild) where you can't get a wild battle
+
 // Double Wild Battles
 #define WE_DOUBLE_WILD_CHANCE            0          // % chance of encountering two Pokémon in a Wild Encounter.
 #define WE_DOUBLE_WILD_REQUIRE_2_MONS    FALSE      // If set to TRUE, Wild Double Battles will default to Single Battles when the player only has 1 usable Pokémon, ignoring WE_DOUBLE_WILD_CHANCE and WE_FLAG_FORCE_DOUBLE_WILD.
