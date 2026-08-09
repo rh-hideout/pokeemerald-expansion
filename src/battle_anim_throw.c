@@ -490,26 +490,27 @@ const struct SpriteTemplate sSafariRockSpriteTemplate =
 extern const struct SpriteTemplate gWishStarSpriteTemplate;
 extern const struct SpriteTemplate gMiniTwinklingStarSpriteTemplate;
 
+#define hMain_HealthBarSpriteId     data[5]
 void LoadHealthboxPalsForLevelUp(u8 *paletteId1, u8 *paletteId2, enum BattlerId battler)
 {
     u8 healthBoxSpriteId;
-    u8 spriteId1, spriteId2;
+    u8 healthBoxRightSpriteId, healthBarSpriteId;
     u16 offset1, offset2;
 
     healthBoxSpriteId = gHealthboxSpriteIds[battler];
-    spriteId1 = gSprites[healthBoxSpriteId].oam.affineParam;
-    spriteId2 = gSprites[healthBoxSpriteId].data[5];
+    healthBoxRightSpriteId = GetHealthboxRightSpriteId(healthBoxSpriteId);
+    healthBarSpriteId = gSprites[healthBoxSpriteId].hMain_HealthBarSpriteId;
     *paletteId1 = AllocSpritePalette(TAG_HEALTHBOX_PALS_1);
     *paletteId2 = AllocSpritePalette(TAG_HEALTHBOX_PALS_2);
 
     offset1 = OBJ_PLTT_ID(gSprites[healthBoxSpriteId].oam.paletteNum);
-    offset2 = OBJ_PLTT_ID(gSprites[spriteId2].oam.paletteNum);
+    offset2 = OBJ_PLTT_ID(gSprites[healthBarSpriteId].oam.paletteNum);
     LoadPalette(&gPlttBufferUnfaded[offset1], OBJ_PLTT_ID(*paletteId1), PLTT_SIZE_4BPP);
     LoadPalette(&gPlttBufferUnfaded[offset2], OBJ_PLTT_ID(*paletteId2), PLTT_SIZE_4BPP);
 
     gSprites[healthBoxSpriteId].oam.paletteNum = *paletteId1;
-    gSprites[spriteId1].oam.paletteNum = *paletteId1;
-    gSprites[spriteId2].oam.paletteNum = *paletteId2;
+    gSprites[healthBoxRightSpriteId].oam.paletteNum = *paletteId1;
+    gSprites[healthBarSpriteId].oam.paletteNum = *paletteId2;
 }
 
 void AnimTask_LoadHealthboxPalsForLevelUp(u8 taskId)
@@ -522,20 +523,20 @@ void AnimTask_LoadHealthboxPalsForLevelUp(u8 taskId)
 void FreeHealthboxPalsForLevelUp(enum BattlerId battler)
 {
     u8 healthBoxSpriteId;
-    u8 spriteId1, spriteId2;
+    u8 healthBoxRightSpriteId, healthBarSpriteId;
     u8 paletteId1, paletteId2;
 
     healthBoxSpriteId = gHealthboxSpriteIds[battler];
-    spriteId1 = gSprites[healthBoxSpriteId].oam.affineParam;
-    spriteId2 = gSprites[healthBoxSpriteId].data[5];
+    healthBoxRightSpriteId = GetHealthboxRightSpriteId(healthBoxSpriteId);
+    healthBarSpriteId = gSprites[healthBoxSpriteId].hMain_HealthBarSpriteId;
 
     FreeSpritePaletteByTag(TAG_HEALTHBOX_PALS_1);
     FreeSpritePaletteByTag(TAG_HEALTHBOX_PALS_2);
     paletteId1 = IndexOfSpritePaletteTag(TAG_HEALTHBOX_PAL);
     paletteId2 = IndexOfSpritePaletteTag(TAG_HEALTHBAR_PAL);
     gSprites[healthBoxSpriteId].oam.paletteNum = paletteId1;
-    gSprites[spriteId1].oam.paletteNum = paletteId1;
-    gSprites[spriteId2].oam.paletteNum = paletteId2;
+    gSprites[healthBoxRightSpriteId].oam.paletteNum = paletteId1;
+    gSprites[healthBarSpriteId].oam.paletteNum = paletteId2;
 }
 
 void AnimTask_FreeHealthboxPalsForLevelUp(u8 taskId)
