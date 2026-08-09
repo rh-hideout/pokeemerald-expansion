@@ -132,7 +132,10 @@ struct TextPrinter
     u8 minLetterSpacing;
 
     u8 textSpeed;
-    u8 padding[3];
+    u8 textSpeedModifier:5;
+    bool8 isInstantText:1;
+    u8 scrollSpeed;
+    u8 scrollDelay;
 
     struct TextPrinter *nextPrinter;
 
@@ -232,6 +235,8 @@ u32 GetPlayerTextSpeedDelay(void);
 u32 GetPlayerTextSpeedModifier(void);
 u32 GetPlayerTextScrollSpeed(void);
 bool32 IsPlayerTextSpeedInstant(void);
+void SetTextPrinterSpeedProfile(u8 textSpeedModifier, bool8 isInstantText, u8 scrollSpeed, u8 scrollDelay);
+void ClearTextPrinterSpeedProfile(void);
 
 u8 CreateTextCursorSprite(u8 sheetId, u16 x, u16 y, u8 priority, u8 subpriority);
 void DestroyTextCursorSprite(u8 spriteId);

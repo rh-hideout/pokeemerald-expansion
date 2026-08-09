@@ -910,6 +910,17 @@
 	.4byte \text
 	.endm
 
+	@ Sets the dialogue style used by subsequent field messages.
+	.macro setdialoguestyle style:req
+	.byte SCR_OP_SETDIALOGUESTYLE
+	.byte \style
+	.endm
+
+	@ Restores field messages to the player's configured text speed.
+	.macro cleardialoguestyle
+	.byte SCR_OP_CLEARDIALOGUESTYLE
+	.endm
+
 	@ Closes the current message box.
 	.macro closemessage
 	.byte SCR_OP_CLOSEMESSAGE
@@ -2132,10 +2143,24 @@
 	YES = 1
 	NO  = 0
 
+	@ Dialogue styles
+	DIALOGUE_STYLE_DEFAULT   = 0
+	DIALOGUE_STYLE_SLOW      = 1
+	DIALOGUE_STYLE_FAST      = 2
+	DIALOGUE_STYLE_SLOW_TEXT = 3
+	DIALOGUE_STYLE_FAST_TEXT = 4
+
 	@ Buffers the given text and calls the relevant standard message script (see gStdScripts).
 	.macro msgbox text:req, type=MSGBOX_DEFAULT
 	loadword 0, \text
 	callstd \type
+	.endm
+
+	@ Buffers the given text, applies a field-message dialogue style for that message, then clears it.
+	.macro msgboxstyle text:req, type:req, style:req
+	setdialoguestyle \style
+	msgbox \text, \type
+	cleardialoguestyle
 	.endm
 
 	@ Gives 'amount' of the specified 'item' to the player and prints a message with fanfare.

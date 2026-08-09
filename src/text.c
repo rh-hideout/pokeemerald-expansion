@@ -57,6 +57,11 @@ static void FreeFinishedTextPrinters(void);
 static void SpriteCB_TextCursor(struct Sprite *sprite);
 
 static EWRAM_DATA struct TextPrinter *sFirstTextPrinter = NULL;
+static EWRAM_DATA bool8 sUseTextPrinterSpeedProfile = FALSE;
+static EWRAM_DATA u8 sTextPrinterSpeedModifier = 0;
+static EWRAM_DATA bool8 sTextPrinterIsInstantText = FALSE;
+static EWRAM_DATA u8 sTextPrinterScrollSpeed = 0;
+static EWRAM_DATA u8 sTextPrinterScrollDelay = 0;
 
 static EWRAM_DATA u16 sFontHalfRowLookupTable[0x100];
 static EWRAM_DATA union TextColor sLastTextColor;
@@ -355,6 +360,20 @@ bool32 IsPlayerTextSpeedInstant(void)
     return GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT;
 }
 
+void SetTextPrinterSpeedProfile(u8 textSpeedModifier, bool8 isInstantText, u8 scrollSpeed, u8 scrollDelay)
+{
+    sUseTextPrinterSpeedProfile = TRUE;
+    sTextPrinterSpeedModifier = textSpeedModifier != 0 ? textSpeedModifier : 1;
+    sTextPrinterIsInstantText = isInstantText;
+    sTextPrinterScrollSpeed = scrollSpeed != 0 ? scrollSpeed : 1;
+    sTextPrinterScrollDelay = scrollDelay;
+}
+
+void ClearTextPrinterSpeedProfile(void)
+{
+    sUseTextPrinterSpeedProfile = FALSE;
+}
+
 void DeactivateAllTextPrinters(void)
 {
     struct TextPrinter *currentPrinter = sFirstTextPrinter;
@@ -478,6 +497,20 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.printerTemplate = *printerTemplate;
     sTempTextPrinter.callback = callback;
     sTempTextPrinter.textSpeed = speed;
+    if (sUseTextPrinterSpeedProfile)
+    {
+        sTempTextPrinter.textSpeedModifier = sTextPrinterSpeedModifier;
+        sTempTextPrinter.isInstantText = sTextPrinterIsInstantText;
+        sTempTextPrinter.scrollSpeed = sTextPrinterScrollSpeed;
+        sTempTextPrinter.scrollDelay = sTextPrinterScrollDelay;
+    }
+    else
+    {
+        sTempTextPrinter.textSpeedModifier = GetPlayerTextSpeedModifier();
+        sTempTextPrinter.isInstantText = IsPlayerTextSpeedInstant();
+        sTempTextPrinter.scrollSpeed = GetPlayerTextScrollSpeed();
+        sTempTextPrinter.scrollDelay = GetPlayerTextSpeedModifier();
+    }
 
     if (printerTemplate->type == SPRITE_TEXT_PRINTER)
     {
@@ -531,67 +564,65 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
 void RunTextPrinters(void)
 {
-    bool32 isInstantText = IsPlayerTextSpeedInstant();
-    u32 textRepeats = GetPlayerTextSpeedModifier();
-
     if (gDisableTextPrinters)
         return;
 
     u32 numPrinters = GetNumTextPrinters();
-
     struct TextPrinter *currentPrinter = sFirstTextPrinter;
+    u32 numEmpty = 0;
 
-    do
+    while (currentPrinter != NULL)
     {
-        u32 numEmpty = 0;
-        while (currentPrinter != NULL)
+        if (currentPrinter->active)
         {
-            if (currentPrinter->active)
+            bool32 isInstantText = currentPrinter->isInstantText;
+            u32 textRepeats = currentPrinter->textSpeedModifier != 0 ? currentPrinter->textSpeedModifier : 1;
+
+            for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
             {
-                for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
+                u32 renderState = RenderFont(currentPrinter);
+                switch (renderState)
                 {
-                    u32 renderState = RenderFont(currentPrinter);
-                    switch (renderState)
+                case RENDER_PRINT:
+                    switch (currentPrinter->printerTemplate.type)
                     {
-                    case RENDER_PRINT:
-                        switch (currentPrinter->printerTemplate.type)
-                        {
-                        case WINDOW_TEXT_PRINTER:
-                            CopyWindowToVram(currentPrinter->printerTemplate.windowId, COPYWIN_GFX);
-                            break;
-                        case SPRITE_TEXT_PRINTER:
-                            break;
-                        }
+                    case WINDOW_TEXT_PRINTER:
+                        CopyWindowToVram(currentPrinter->printerTemplate.windowId, COPYWIN_GFX);
                         break;
-                    case RENDER_UPDATE:
-                        if (currentPrinter->callback != NULL)
-                            currentPrinter->callback(&currentPrinter->printerTemplate, renderState);
-                        isInstantText = FALSE;
-                        break;
-                    case RENDER_FINISH:
-                        currentPrinter->active = FALSE;
-                        currentPrinter->isInUse = FALSE;
-                        isInstantText = FALSE;
+                    case SPRITE_TEXT_PRINTER:
                         break;
                     }
-
-                    if (!currentPrinter->active)
-                        break;
+                    break;
+                case RENDER_UPDATE:
+                    if (currentPrinter->callback != NULL)
+                        currentPrinter->callback(&currentPrinter->printerTemplate, renderState);
+                    isInstantText = FALSE;
+                    break;
+                case RENDER_FINISH:
+                    currentPrinter->active = FALSE;
+                    currentPrinter->isInUse = FALSE;
+                    isInstantText = FALSE;
+                    break;
                 }
+
+                if (!currentPrinter->active)
+                    break;
             }
-            else
-            {
-                numEmpty++;
-            }
-            currentPrinter = currentPrinter->nextPrinter;
+        }
+        else
+        {
+            numEmpty++;
         }
 
-        if (numEmpty == numPrinters)
-        {
-            FreeFinishedTextPrinters();
-            return;
-        }
-    } while (isInstantText);
+        currentPrinter = currentPrinter->nextPrinter;
+    }
+
+    if (numEmpty == numPrinters)
+    {
+        FreeFinishedTextPrinters();
+        return;
+    }
+
     FreeFinishedTextPrinters();
 }
 
@@ -1216,7 +1247,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 
-            textPrinter->utilityCounter = 8 * GetPlayerTextSpeedModifier();
+            textPrinter->utilityCounter = 8 * textPrinter->textSpeedModifier;
             textPrinter->downArrowYPosIdx++;
         }
     }
@@ -1333,7 +1364,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     switch (textPrinter->state)
     {
     case RENDER_STATE_HANDLE_CHAR:
-        if ((JOY_HELD(A_BUTTON | B_BUTTON) && textPrinter->hasPrintBeenSpedUp) || IsPlayerTextSpeedInstant())
+        if ((JOY_HELD(A_BUTTON | B_BUTTON) && textPrinter->hasPrintBeenSpedUp) || textPrinter->isInstantText)
             textPrinter->delayCounter = 0;
 
         if (textPrinter->delayCounter && textPrinter->textSpeed)
@@ -1644,8 +1675,8 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            u32 scrollSpeed = GetPlayerTextScrollSpeed();
-            u32 speedModifier = GetPlayerTextSpeedModifier();
+            u32 scrollSpeed = textPrinter->scrollSpeed;
+            u32 scrollDelay = textPrinter->scrollDelay;
 
             if (textPrinter->utilityCounter != 0)
             {
@@ -1664,8 +1695,8 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 textPrinter->scrollDistance -= scrollSpeed;
             }
 
-            if (speedModifier > 1)
-                textPrinter->utilityCounter = speedModifier;
+            if (scrollDelay > 1)
+                textPrinter->utilityCounter = scrollDelay;
             else
                 textPrinter->utilityCounter = 0;
 
