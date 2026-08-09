@@ -304,3 +304,24 @@ SINGLE_BATTLE_TEST("Using X items in battle where Pokemon was met raises Friends
             EXPECT_EQ(player->friendship, (ITEM_FRIENDSHIP_MAPSEC_BONUS + X_ITEM_FRIENDSHIP_INCREASE));
     }
 }
+
+SINGLE_BATTLE_TEST("X Attack has not effect if the target already has +6 ATK")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        ASSUME(gItemsInfo[ITEM_X_ATTACK].battleUsage == EFFECT_ITEM_INCREASE_STAT);
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_X_ATTACK, 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
+        TURN { USE_ITEM(player, ITEM_X_ATTACK); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_X_ATTACK, 1));
+    }
+}

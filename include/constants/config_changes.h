@@ -218,6 +218,7 @@
     F(B_FRIEND_BALL_MODIFIER,      friendBallModifier,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SERENE_GRACE_BOOST,        sereneGraceBoost,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) \
+    F(B_SELECT_NO_EFFECT_ITEMS,    selectNoEffectItems,     (u32, GEN_COUNT - 1)) \
     /* Weather settings */ \
     F(B_ABILITY_WEATHER,           abilityWeather,          (u32, GEN_COUNT - 1)) \
     F(B_SANDSTORM_SPDEF_BOOST,     sandstormSpDefBoost,     (u32, GEN_COUNT - 1)) \
