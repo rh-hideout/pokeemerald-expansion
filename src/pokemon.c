@@ -1687,7 +1687,10 @@ enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u3
             for (u32 j = 0; j < MAX_MON_MOVES; j++)
             {
                 if (formChanges[i].param2 == GetMonData(mon, MON_DATA_MOVE1 + j))
-                    return MOVE_NONE;
+                {
+                    sLearningMoveTableID++;
+                    return MON_ALREADY_KNOWS_MOVE;
+                }
             }
         }
     }
