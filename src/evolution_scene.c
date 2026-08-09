@@ -509,10 +509,10 @@ enum {
     EVOSTATE_WAIT_CYCLE_MON_SPRITE,
     EVOSTATE_SPARKLE_CIRCLE,
     EVOSTATE_SPARKLE_SPRAY,
-    EVOSTATE_EVO_SOUND,
     EVOSTATE_RESTORE_SCREEN,
     EVOSTATE_EVO_MON_ANIM,
     EVOSTATE_SET_MON_EVOLVED,
+    EVOSTATE_RESTORE_BGM,
     EVOSTATE_TRY_LEARN_MOVE,
     EVOSTATE_BEFORE_END,
     EVOSTATE_END,
@@ -717,18 +717,12 @@ static void Task_EvolutionScene(u8 taskId)
             gTasks[taskId].tState++;
         }
         break;
-    case EVOSTATE_EVO_SOUND:
+    case EVOSTATE_RESTORE_SCREEN: // stop music, return screen to pre-fade state
         if (!gTasks[sEvoGraphicsTaskId].isActive)
         {
-            PlaySE(SE_EXP);
-            gTasks[taskId].tState++;
-        }
-        break;
-    case EVOSTATE_RESTORE_SCREEN: // stop music, return screen to pre-fade state
-        if (IsSEPlaying())
-        {
             memcpy(&gPlttBufferUnfaded[BG_PLTT_ID(2)], sEvoStructPtr->savedPalette, sizeof(sEvoStructPtr->savedPalette));
-            //m4aMPlayAllStop();
+            m4aMPlayStop(&gMPlayInfo_BGM);
+            PlaySE(SE_EXP);
             if (sEvoStructPtr->isTradeEvo)
             {
                 Free(sBgAnimPal);
@@ -742,7 +736,7 @@ static void Task_EvolutionScene(u8 taskId)
         }
         break;
     case EVOSTATE_EVO_MON_ANIM:
-        if (!gPaletteFade.active)
+        if (!gPaletteFade.active && !IsSEPlaying())
         {
             EvoScene_DoMonAnimAndCry(sEvoStructPtr->postEvoSpriteId, gTasks[taskId].tPostEvoSpecies);
             gTasks[taskId].tState++;
@@ -754,10 +748,7 @@ static void Task_EvolutionScene(u8 taskId)
             u32 zero = 0;
             StringExpandPlaceholders(gStringVar4, gText_CongratsPkmnEvolved);
             PrintEvolutionText(gStringVar4);
-            if (sEvoStructPtr->isTradeEvo)
-                PlayFanfare(MUS_EVOLVED);
-            else
-                PlayBGM(MUS_EVOLVED);
+            PlayFanfare(MUS_EVOLVED);
             gTasks[taskId].tState++;
             SetMonData(mon, MON_DATA_SPECIES, (void *)(&gTasks[taskId].tPostEvoSpecies));
             SetMonData(mon, MON_DATA_EVOLUTION_TRACKER, &zero);
@@ -768,8 +759,15 @@ static void Task_EvolutionScene(u8 taskId)
             IncrementGameStat(GAME_STAT_EVOLVED_POKEMON);
         }
         break;
+    case EVOSTATE_RESTORE_BGM:
+        if (IsFanfareTaskInactive())
+        {
+            m4aMPlayContinue(&gMPlayInfo_BGM);
+            gTasks[taskId].tState++;
+        }
+        break;
     case EVOSTATE_TRY_LEARN_MOVE:
-        if (!IsTextPrinterActiveOnWindow(0) && IsFanfareTaskInactive())
+        if (!IsTextPrinterActiveOnWindow(0))
         {
             var = MonTryLearningNewMoveEvolution(mon, gTasks[taskId].tLearnsFirstMove);
             if (var == MOVE_NONE)
