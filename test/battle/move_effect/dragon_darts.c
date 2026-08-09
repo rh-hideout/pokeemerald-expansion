@@ -204,6 +204,29 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is f
     }
 }
 
+DOUBLE_BATTLE_TEST("Dragon Darts checks the unchosen target for accuracy")
+{
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_DRAGON_DARTS) == 100);
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        NOT HP_BAR(opponentRight);
+    } THEN {
+        EXPECT_LT(opponentLeft->hp, opponentLeft->maxHP);
+        EXPECT_EQ(opponentRight->hp, opponentRight->maxHP);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
 {
     struct BattlePokemon *chosenTarget = NULL;

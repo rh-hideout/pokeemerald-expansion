@@ -2192,10 +2192,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
-        if (isSmartTarget)
-            cv->battlerDef = gBattlerTarget;
-        else
-            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
+        cv->battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
 
         gBattleStruct->eventState.atkCancelerBattler++;
 
