@@ -40,134 +40,146 @@
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
     // These are indexes into the tables, which are filled with 8x8 square pixel data.
-    HEALTHBOX_GFX_0, //hp bar [black section]
-    HEALTHBOX_GFX_1, //hp bar "H"
-    HEALTHBOX_GFX_2, //hp bar "P"
+    HEALTHBOX_GFX_HP_BAR_BLACK, //hp bar [black section]
+    HEALTHBOX_GFX_HP_BAR_H, //hp bar "H"
+    HEALTHBOX_GFX_HP_BAR_P, //hp bar "P"
+
     HEALTHBOX_GFX_HP_BAR_GREEN, //hp bar [0 pixels]
-    HEALTHBOX_GFX_4,  //hp bar [1 pixels]
-    HEALTHBOX_GFX_5,  //hp bar [2 pixels]
-    HEALTHBOX_GFX_6,  //hp bar [3 pixels]
-    HEALTHBOX_GFX_7,  //hp bar [4 pixels]
-    HEALTHBOX_GFX_8,  //hp bar [5 pixels]
-    HEALTHBOX_GFX_9,  //hp bar [6 pixels]
-    HEALTHBOX_GFX_10, //hp bar [7 pixels]
-    HEALTHBOX_GFX_11, //hp bar [8 pixels]
-    HEALTHBOX_GFX_12, //exp bar [0 pixels]
-    HEALTHBOX_GFX_13, //exp bar [1 pixels]
-    HEALTHBOX_GFX_14, //exp bar [2 pixels]
-    HEALTHBOX_GFX_15, //exp bar [3 pixels]
-    HEALTHBOX_GFX_16, //exp bar [4 pixels]
-    HEALTHBOX_GFX_17, //exp bar [5 pixels]
-    HEALTHBOX_GFX_18, //exp bar [6 pixels]
-    HEALTHBOX_GFX_19, //exp bar [7 pixels]
-    HEALTHBOX_GFX_20, //exp bar [8 pixels]
-    HEALTHBOX_GFX_STATUS_PSN_BATTLER0,  //status psn "(P"
-    HEALTHBOX_GFX_22,                   //status psn "SN"
-    HEALTHBOX_GFX_23,                   //status psn "|)"
-    HEALTHBOX_GFX_STATUS_PRZ_BATTLER0,  //status prz
-    HEALTHBOX_GFX_25,
-    HEALTHBOX_GFX_26,
-    HEALTHBOX_GFX_STATUS_SLP_BATTLER0,  //status slp
-    HEALTHBOX_GFX_28,
-    HEALTHBOX_GFX_29,
-    HEALTHBOX_GFX_STATUS_FRZ_BATTLER0,  //status frz
-    HEALTHBOX_GFX_31,
-    HEALTHBOX_GFX_32,
-    HEALTHBOX_GFX_STATUS_BRN_BATTLER0,  //status brn
-    HEALTHBOX_GFX_34,
-    HEALTHBOX_GFX_35,
-    HEALTHBOX_GFX_STATUS_FRB_BATTLER0,  //status frb
-    HEALTHBOX_GFX_116,
-    HEALTHBOX_GFX_117,
-    HEALTHBOX_GFX_36, //misc [Black section]
-    HEALTHBOX_GFX_37, //misc [Black section]
-    HEALTHBOX_GFX_38, //misc [Black section]
-    HEALTHBOX_GFX_39, //misc [Blank Health Window?]
-    HEALTHBOX_GFX_40, //misc [Blank Health Window?]
-    HEALTHBOX_GFX_41, //misc [Blank Health Window?]
-    HEALTHBOX_GFX_42, //misc [Blank Health Window?]
-    HEALTHBOX_GFX_43, //misc [Top of Health Window?]
-    HEALTHBOX_GFX_44, //misc [Top of Health Window?]
-    HEALTHBOX_GFX_45, //misc [Top of Health Window?]
-    HEALTHBOX_GFX_46, //misc [Blank Health Window?]
+    HEALTHBOX_GFX_HP_BAR_GREEN_1PX,  //hp bar [1 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_2PX,  //hp bar [2 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_3PX,  //hp bar [3 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_4PX,  //hp bar [4 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_5PX,  //hp bar [5 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_6PX,  //hp bar [6 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_7PX, //hp bar [7 pixels]
+    HEALTHBOX_GFX_HP_BAR_GREEN_8PX, //hp bar [8 pixels]
+
     HEALTHBOX_GFX_HP_BAR_YELLOW, //hp bar yellow [0 pixels]
-    HEALTHBOX_GFX_48, //hp bar yellow [1 pixels]
-    HEALTHBOX_GFX_49, //hp bar yellow [2 pixels]
-    HEALTHBOX_GFX_50, //hp bar yellow [3 pixels]
-    HEALTHBOX_GFX_51, //hp bar yellow [4 pixels]
-    HEALTHBOX_GFX_52, //hp bar yellow [5 pixels]
-    HEALTHBOX_GFX_53, //hp bar yellow [6 pixels]
-    HEALTHBOX_GFX_54, //hp bar yellow [7 pixels]
-    HEALTHBOX_GFX_55, //hp bar yellow [8 pixels]
-    HEALTHBOX_GFX_HP_BAR_RED,  //hp bar red [0 pixels]
-    HEALTHBOX_GFX_57, //hp bar red [1 pixels]
-    HEALTHBOX_GFX_58, //hp bar red [2 pixels]
-    HEALTHBOX_GFX_59, //hp bar red [3 pixels]
-    HEALTHBOX_GFX_60, //hp bar red [4 pixels]
-    HEALTHBOX_GFX_61, //hp bar red [5 pixels]
-    HEALTHBOX_GFX_62, //hp bar red [6 pixels]
-    HEALTHBOX_GFX_63, //hp bar red [7 pixels]
-    HEALTHBOX_GFX_64, //hp bar red [8 pixels]
-    HEALTHBOX_GFX_65, //hp bar frame end
+    HEALTHBOX_GFX_HP_BAR_YELLOW_1PX,  //hp bar yellow [1 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_2PX,  //hp bar yellow [2 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_3PX,  //hp bar yellow [3 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_4PX,  //hp bar yellow [4 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_5PX,  //hp bar yellow [5 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_6PX,  //hp bar yellow [6 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_7PX, //hp bar yellow [7 pixels]
+    HEALTHBOX_GFX_HP_BAR_YELLOW_8PX, //hp bar yellow [8 pixels]
+
+    HEALTHBOX_GFX_HP_BAR_RED, //hp bar red [0 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_1PX,  //hp bar red [1 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_2PX,  //hp bar red [2 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_3PX,  //hp bar red [3 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_4PX,  //hp bar red [4 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_5PX,  //hp bar red [5 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_6PX,  //hp bar red [6 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_7PX, //hp bar red [7 pixels]
+    HEALTHBOX_GFX_HP_BAR_RED_8PX, //hp bar red [8 pixels]
+    
+    HEALTHBOX_HP_BAR_FRAME_END, //hp bar frame end
+
+    HEALTHBOX_GFX_EXP_BAR, //exp bar [0 pixels]
+    HEALTHBOX_GFX_EXP_BAR_1PX, //exp bar [1 pixels]
+    HEALTHBOX_GFX_EXP_BAR_2PX, //exp bar [2 pixels]
+    HEALTHBOX_GFX_EXP_BAR_3PX, //exp bar [3 pixels]
+    HEALTHBOX_GFX_EXP_BAR_4PX, //exp bar [4 pixels]
+    HEALTHBOX_GFX_EXP_BAR_5PX, //exp bar [5 pixels]
+    HEALTHBOX_GFX_EXP_BAR_6PX, //exp bar [6 pixels]
+    HEALTHBOX_GFX_EXP_BAR_7PX, //exp bar [7 pixels]
+    HEALTHBOX_GFX_EXP_BAR_8PX, //exp bar [8 pixels]
+
+    HEALTHBOX_GFX_BLACK_UNUSED_1, //misc [Black section]
+    HEALTHBOX_GFX_BLACK_UNUSED_2, //misc [Black section]
+    HEALTHBOX_GFX_BLACK_UNUSED_3, //misc [Black section]
+    HEALTHBOX_GFX_BLANK_STATUS_WINDOW, //misc [Blank Health Window?]
+    HEALTHBOX_GFX_BLANK_UNUSED_1, //misc [Blank Health Window?]
+    HEALTHBOX_GFX_BLANK_UNUSED_2, //misc [Blank Health Window?]
+    HEALTHBOX_GFX_BLANK_UNUSED_3, //misc [Blank Health Window?]
+    HEALTHBOX_GFX_TOP_UNUSED_1, //misc [Top of Health Window?]
+    HEALTHBOX_GFX_TOP_UNUSED_2, //misc [Top of Health Window?]
+    HEALTHBOX_GFX_TOP_UNUSED_3, //misc [Top of Health Window?]
+    HEALTHBOX_GFX_BLANK_UNUSED_4, //misc [Blank Health Window?]
+
     HEALTHBOX_GFX_STATUS_BALL, // Full
     HEALTHBOX_GFX_STATUS_BALL_EMPTY,
     HEALTHBOX_GFX_STATUS_BALL_FAINTED,
     HEALTHBOX_GFX_STATUS_BALL_STATUSED,
     HEALTHBOX_GFX_STATUS_BALL_CAUGHT,
-    HEALTHBOX_GFX_STATUS_PSN_BATTLER1, //status2 "PSN"
-    HEALTHBOX_GFX_72,
-    HEALTHBOX_GFX_73,
-    HEALTHBOX_GFX_STATUS_PRZ_BATTLER1, //status2 "PRZ"
-    HEALTHBOX_GFX_75,
-    HEALTHBOX_GFX_76,
-    HEALTHBOX_GFX_STATUS_SLP_BATTLER1, //status2 "SLP"
-    HEALTHBOX_GFX_78,
-    HEALTHBOX_GFX_79,
-    HEALTHBOX_GFX_STATUS_FRZ_BATTLER1, //status2 "FRZ"
-    HEALTHBOX_GFX_81,
-    HEALTHBOX_GFX_82,
-    HEALTHBOX_GFX_STATUS_BRN_BATTLER1, //status2 "BRN"
-    HEALTHBOX_GFX_84,
-    HEALTHBOX_GFX_85,
-    HEALTHBOX_GFX_STATUS_FRB_BATTLER1, //status2 "FRB"
-    HEALTHBOX_GFX_118,
-    HEALTHBOX_GFX_119,
-    HEALTHBOX_GFX_STATUS_PSN_BATTLER2, //status3 "PSN"
-    HEALTHBOX_GFX_87,
-    HEALTHBOX_GFX_88,
-    HEALTHBOX_GFX_STATUS_PRZ_BATTLER2, //status3 "PRZ"
-    HEALTHBOX_GFX_90,
-    HEALTHBOX_GFX_91,
-    HEALTHBOX_GFX_STATUS_SLP_BATTLER2, //status3 "SLP"
-    HEALTHBOX_GFX_93,
-    HEALTHBOX_GFX_94,
-    HEALTHBOX_GFX_STATUS_FRZ_BATTLER2, //status3 "FRZ"
-    HEALTHBOX_GFX_96,
-    HEALTHBOX_GFX_97,
-    HEALTHBOX_GFX_STATUS_BRN_BATTLER2, //status3 "BRN"
-    HEALTHBOX_GFX_99,
-    HEALTHBOX_GFX_100,
-    HEALTHBOX_GFX_STATUS_FRB_BATTLER2, //status3 "FRB"
-    HEALTHBOX_GFX_120,
-    HEALTHBOX_GFX_121,
-    HEALTHBOX_GFX_STATUS_PSN_BATTLER3, //status4 "PSN"
-    HEALTHBOX_GFX_102,
-    HEALTHBOX_GFX_103,
-    HEALTHBOX_GFX_STATUS_PRZ_BATTLER3, //status4 "PRZ"
-    HEALTHBOX_GFX_105,
-    HEALTHBOX_GFX_106,
-    HEALTHBOX_GFX_STATUS_SLP_BATTLER3, //status4 "SLP"
-    HEALTHBOX_GFX_108,
-    HEALTHBOX_GFX_109,
-    HEALTHBOX_GFX_STATUS_FRZ_BATTLER3, //status4 "FRZ"
-    HEALTHBOX_GFX_111,
-    HEALTHBOX_GFX_112,
-    HEALTHBOX_GFX_STATUS_BRN_BATTLER3, //status4 "BRN"
-    HEALTHBOX_GFX_114,
-    HEALTHBOX_GFX_115,
-    HEALTHBOX_GFX_STATUS_FRB_BATTLER3, //status4 "FRB"
-    HEALTHBOX_GFX_122,
-    HEALTHBOX_GFX_123,
+
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER0,  // status psn "(P"
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER0_1,// status psn "SN"
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER0_2,// status psn "|)"
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER0,  // status prz
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER0_1,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER0_2,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER0,  // status slp
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER0_1,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER0_2,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER0,  // status frz
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER0_1,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER0_2,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER0,  // status brn
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER0_1,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER0_2,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER0,  // status frb
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER0_1,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER0_2,
+
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER1,  // status2 "PSN"
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER1_2,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER1,  // status2 "PRZ"
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER1_2,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER1,  // status2 "SLP"
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER1_2,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER1,  // status2 "FRZ"
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER1_2,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER1,  // status2 "BRN"
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER1_2,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER1,  // status2 "FRB"
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER1_1,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER1_2,
+
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER2,  // status3 "PSN"
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER2_2,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER2,  // status3 "PRZ"
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER2_2,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER2,  // status3 "SLP"
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER2_2,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER2,  // status3 "FRZ"
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER2_2,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER2,  // status3 "BRN"
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER2_2,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER2,  // status3 "FRB"
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER2_1,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER2_2,
+
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER3,  // status4 "PSN"
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_PSN_BATTLER3_2,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER3,  // status4 "PRZ"
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_PRZ_BATTLER3_2,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER3,  // status4 "SLP"
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_SLP_BATTLER3_2,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER3,  // status4 "FRZ"
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_FRZ_BATTLER3_2,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER3,  // status4 "BRN"
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_BRN_BATTLER3_2,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER3,  // status4 "FRB"
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER3_1,
+    HEALTHBOX_GFX_STATUS_FRB_BATTLER3_2,
+
     HEALTHBOX_GFX_PLAYER_FRAME_END,
     HEALTHBOX_GFX_PLAYER_FRAME_END_BAR,
     HEALTHBOX_GFX_OPPONENT_FRAME_END,
@@ -196,8 +208,8 @@ static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *);
 static u8 GetStatusIconForBattlerId(u8, enum BattlerId);
 static s32 CalcNewBarValue(s32, s32, s32, s32 *, u8, u16);
 static u8 GetScaledExpFraction(s32, s32, s32, u8);
-static void MoveBattleBarGraphically(enum BattlerId, u8);
-static u8 CalcBarFilledPixels(s32, s32, s32, s32 *, u8 *, u8);
+static void MoveBattleBarGraphically(enum BattlerId, enum BattleBarType);
+static u8 CalcBarFilledPixels(struct BattleBarInfo*, u8 *, u8);
 
 static void SpriteCb_AbilityPopUp(struct Sprite *);
 static void Task_FreeAbilityPopUpGfx(u8);
@@ -682,7 +694,7 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     healthBarSpritePtr->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
     healthBarSpritePtr->oam.priority = 1;
 
-    CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_1), (void *)(OBJ_VRAM0 + healthBarSpritePtr->oam.tileNum * TILE_SIZE_4BPP), 64);
+    CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_BLACK),OBJ_TILE(healthBarSpritePtr->oam.tileNum), 2 * sizeof(Tile4BPP));
 
     gSprites[healthboxLeftSpriteId].hMain_HealthBarSpriteId = healthbarSpriteId;
     gSprites[healthboxLeftSpriteId].hMain_Battler = battler;
@@ -1893,13 +1905,13 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     }
     else
     {
-        statusGfxPtr = GetHealthboxElementGfxPtr(HEALTHBOX_GFX_39);
+        statusGfxPtr = GetHealthboxElementGfxPtr(HEALTHBOX_GFX_BLANK_STATUS_WINDOW);
 
         for (i = 0; i < 3; i++)
             CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder + i) * TILE_SIZE_4BPP), 32);
 
         if (B_HP_PERCENTAGE_DISPLAY || !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_1), (void *)(OBJ_VRAM0 + gSprites[healthBarSpriteId].oam.tileNum * TILE_SIZE_4BPP), 64);
+            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_H), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum), 2 * sizeof(Tile4BPP));
 
         TryAddPokeballIconToHealthbox(healthboxSpriteId, TRUE);
         return;
@@ -1915,8 +1927,8 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     {
         if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
         {
-            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_0), (void *)(OBJ_VRAM0 + gSprites[healthBarSpriteId].oam.tileNum * TILE_SIZE_4BPP), 32);
-            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_65), (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 1) * TILE_SIZE_4BPP), 32);
+            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_BLACK), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum), sizeof(Tile4BPP));
+            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_HP_BAR_FRAME_END), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum + 1), sizeof(Tile4BPP));
         }
     }
     TryAddPokeballIconToHealthbox(healthboxSpriteId, (B_HP_PERCENTAGE_DISPLAY && GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES));
@@ -2149,13 +2161,37 @@ s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 
     return currentBarValue;
 }
 
-static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
+static u32 GetHealthBarColour(s32 maxValue, s32 currValue)
 {
-    u8 array[8];
+    u32 barElementId;
+    switch (GetHPBarLevel(currValue, maxValue))
+    {
+    case HP_BAR_FULL:
+    case HP_BAR_GREEN:
+        barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+        break;
+    case HP_BAR_YELLOW:
+        barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
+        break;
+    default:
+    case HP_BAR_RED:
+        if (maxValue > 1) // handling for wonder guard
+            barElementId = HEALTHBOX_GFX_HP_BAR_RED;
+        else
+            barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
+        break;
+    }
+    return barElementId;
+}
+
+static void MoveBattleBarGraphically(enum BattlerId battler, enum BattleBarType whichBar)
+{
+    u8 pixelsArray[8]; // Holds the number of filled pixels for each bar tile
     u8 level;
     u8 barElementId;
     u8 i;
     s32 currValue, maxValue;
+    struct BattleBarInfo *bar = &gBattleSpritesDataPtr->battleBars[battler];
 
     switch (whichBar)
     {
@@ -2163,76 +2199,48 @@ static void MoveBattleBarGraphically(enum BattlerId battler, u8 whichBar)
         if (B_HPBAR_COLOR_THRESHOLD < GEN_5)
         {
             maxValue = B_HEALTHBAR_PIXELS;
-            currValue = CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                                array, B_HEALTHBAR_PIXELS / 8);
+            currValue = CalcBarFilledPixels(bar, pixelsArray, B_HEALTHBAR_PIXELS / 8);
         }
         else
         {
-            CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                                gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                                gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                                &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                                array, B_HEALTHBAR_PIXELS / 8);
+            CalcBarFilledPixels(bar, pixelsArray, B_HEALTHBAR_PIXELS / 8);
 
-            maxValue = gBattleSpritesDataPtr->battleBars[battler].maxValue;
-            currValue = gBattleSpritesDataPtr->battleBars[battler].currValue;
+            maxValue = bar->maxValue;
+            currValue = bar->currValue;
 
+            // This is for animating by a fraction of the HP
             if (maxValue < B_HEALTHBAR_PIXELS)
                 currValue = Q_24_8_TO_INT(currValue);
         }
 
-        switch (GetHPBarLevel(currValue, maxValue))
-        {
-        case HP_BAR_FULL:
-        case HP_BAR_GREEN:
-            barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-            break;
-        case HP_BAR_YELLOW:
-            barElementId = HEALTHBOX_GFX_HP_BAR_YELLOW;
-            break;
-        default:
-        case HP_BAR_RED:
-            if (maxValue > 1) // handling for wonder guard
-                barElementId = HEALTHBOX_GFX_HP_BAR_RED;
-            else
-                barElementId = HEALTHBOX_GFX_HP_BAR_GREEN;
-            break;
-        }
+        barElementId = GetHealthBarColour(maxValue, currValue);
 
         for (i = 0; i < 6; i++)
         {
-            u8 healthbarSpriteId = gSprites[gBattleSpritesDataPtr->battleBars[battler].healthboxSpriteId].hMain_HealthBarSpriteId;
-            if (i < 2)
-                CpuCopy32(GetHealthboxElementGfxPtr(barElementId) + array[i] * 32,
-                          (void *)(OBJ_VRAM0 + (gSprites[healthbarSpriteId].oam.tileNum + 2 + i) * TILE_SIZE_4BPP), 32);
-            else
-                CpuCopy32(GetHealthboxElementGfxPtr(barElementId) + array[i] * 32,
-                          (void *)(OBJ_VRAM0 + 64 + (i + gSprites[healthbarSpriteId].oam.tileNum) * TILE_SIZE_4BPP), 32);
+            u8 healthbarSpriteId = gSprites[bar->healthboxSpriteId].hMain_HealthBarSpriteId;
+            tile *src = (tile *)GetHealthboxElementGfxPtr(barElementId) + pixelsArray[i];
+            tile *dest = &tile_mem_obj[gSprites[healthbarSpriteId].oam.tileNum + i + 2];
+            *dest = *src;
         }
+
         break;
+
     case EXP_BAR:
-        CalcBarFilledPixels(gBattleSpritesDataPtr->battleBars[battler].maxValue,
-                    gBattleSpritesDataPtr->battleBars[battler].oldValue,
-                    gBattleSpritesDataPtr->battleBars[battler].receivedValue,
-                    &gBattleSpritesDataPtr->battleBars[battler].currValue,
-                    array, B_EXPBAR_PIXELS / 8);
+        CalcBarFilledPixels(bar, pixelsArray, B_EXPBAR_PIXELS / 8);
         level = GetMonData(GetBattlerMon(battler), MON_DATA_LEVEL);
+
         if (level >= MAX_LEVEL)
-        {
-            for (i = 0; i < 8; i++)
-                array[i] = 0;
-        }
+            memset(pixelsArray, 0, sizeof(pixelsArray));
+
         for (i = 0; i < 8; i++)
         {
-            if (i < 4)
-                CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_12) + array[i] * 32,
-                          (void *)(OBJ_VRAM0 + (gSprites[gBattleSpritesDataPtr->battleBars[battler].healthboxSpriteId].oam.tileNum + 0x24 + i) * TILE_SIZE_4BPP), 32);
-            else
-                CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_12) + array[i] * 32,
-                          (void *)(OBJ_VRAM0 + 0xB80 + (i + gSprites[gBattleSpritesDataPtr->battleBars[battler].healthboxSpriteId].oam.tileNum) * TILE_SIZE_4BPP), 32);
+            u32 firstTile = gSprites[bar->healthboxSpriteId].oam.tileNum;
+            u32 offset = (i < 4) ? 36 : 92;
+
+            tile *src = (tile *)GetHealthboxElementGfxPtr(HEALTHBOX_GFX_EXP_BAR) + pixelsArray[i];
+            tile *dest = &tile_mem_obj[firstTile + offset + i];
+
+            *dest = *src;
         }
         break;
     }
@@ -2312,8 +2320,13 @@ static s32 CalcNewBarValue(s32 maxValue, s32 oldValue, s32 receivedValue, s32 *c
     return ret;
 }
 
-static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32 *currValue, u8 *pixelsArray, u8 scale)
+static u8 CalcBarFilledPixels(struct BattleBarInfo* bar, u8 *pixelsArray, u8 scale)
 {
+    s32 maxValue = bar->maxValue;
+    s32 oldValue = bar->oldValue;
+    s32 receivedValue = bar->receivedValue;
+    s32* currValue = &bar->currValue;
+
     u8 pixels, filledPixels, totalPixels;
     u8 i;
 

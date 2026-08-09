@@ -18,7 +18,7 @@ enum
     HP_BOTH
 };
 
-enum
+enum BattleBarType
 {
     HEALTH_BAR,
     EXP_BAR
