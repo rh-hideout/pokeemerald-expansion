@@ -11,7 +11,6 @@
 #include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
-#include "constants/regions.h"
 #include "constants/region_map_sections.h"
 #include "constants/map_groups.h"
 #include "constants/battle.h"
@@ -972,8 +971,8 @@ void UpdateDaysPassedSinceFormChange(u16 days);
 void TrySetDayLimitToFormChange(struct Pokemon *mon);
 enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
-enum Species GetRegionalFormByRegion(enum Species species, enum Region region);
-bool32 IsSpeciesForeignRegionalForm(enum Species species, enum Region currentRegion);
+enum Species GetRegionalFormByRegion(enum Species species, enum PokemonRegion region);
+bool32 IsSpeciesForeignRegionalForm(enum Species species, enum PokemonRegion currentRegion);
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
 bool8 ShouldSkipFriendshipChange(void);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);

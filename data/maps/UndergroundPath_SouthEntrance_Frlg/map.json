@@ -3,7 +3,6 @@
   "name": "UndergroundPath_SouthEntrance_Frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_UNDERGROUND_PATH",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -61,10 +60,10 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

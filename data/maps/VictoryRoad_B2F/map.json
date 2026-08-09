@@ -3,7 +3,6 @@
   "name": "VictoryRoad_B2F",
   "layout": "LAYOUT_VICTORY_ROAD_B2F",
   "music": "MUS_VICTORY_ROAD",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_VICTORY_ROAD",
   "requires_flash": true,
   "weather": "WEATHER_NONE",
@@ -155,5 +154,8 @@
       "item": "ITEM_MAX_REPEL",
       "flag": "FLAG_HIDDEN_ITEM_VICTORY_ROAD_B2F_MAX_REPEL"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

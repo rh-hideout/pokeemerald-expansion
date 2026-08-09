@@ -3,7 +3,6 @@
   "name": "CeladonCity_Condominiums_Roof_Frlg",
   "layout": "LAYOUT_CELADON_CITY_CONDOMINIUMS_ROOF",
   "music": "MUS_RG_CELADON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -57,5 +56,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeladonCity_Condominiums_Roof_EventScript_Sign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "LittlerootTown_BrendansHouse_2F",
   "layout": "LAYOUT_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F",
   "music": "MUS_LITTLEROOT",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -269,5 +268,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PlayersHouse_2F_EventScript_GameCube"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

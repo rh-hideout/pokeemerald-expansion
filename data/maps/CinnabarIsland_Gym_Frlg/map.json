@@ -3,7 +3,6 @@
   "name": "CinnabarIsland_Gym_Frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND_GYM",
   "music": "MUS_RG_GYM",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CINNABAR_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -294,5 +293,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "CinnabarIsland_Gym_EventScript_BlaineFujiPhoto"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

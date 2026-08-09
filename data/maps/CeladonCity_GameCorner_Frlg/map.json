@@ -3,7 +3,6 @@
   "name": "CeladonCity_GameCorner_Frlg",
   "layout": "LAYOUT_CELADON_CITY_GAME_CORNER",
   "music": "MUS_RG_GAME_CORNER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -516,5 +515,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_EAST",
       "script": "CeladonCity_GameCorner_EventScript_PhotoPrinter"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "SafariZone_North_Frlg",
   "layout": "LAYOUT_SAFARI_ZONE_NORTH_FRLG",
   "music": "MUS_EVOLUTION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_KANTO_SAFARI_ZONE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -152,9 +151,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -196,5 +193,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SafariZone_North_EventScript_RestHouseSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

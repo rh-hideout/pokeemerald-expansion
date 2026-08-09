@@ -3,7 +3,6 @@
   "name": "SkyPillar_2F",
   "layout": "LAYOUT_SKY_PILLAR_2F",
   "music": "MUS_MT_CHIMNEY",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SKY_PILLAR",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -32,5 +31,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

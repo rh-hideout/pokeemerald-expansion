@@ -3,7 +3,6 @@
   "name": "Route12_FishingHouse_Frlg",
   "layout": "LAYOUT_HOUSE4_FRLG",
   "music": "MUS_RG_CELADON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_12",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -64,5 +63,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route12_FishingHouse_EventScript_MagikarpRecordSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

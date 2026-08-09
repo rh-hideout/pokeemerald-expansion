@@ -67,7 +67,6 @@ void write_text_file(string filepath, string text) {
     out_file.close();
 }
 
-
 string json_to_string(const Json &data, const string &field = "", bool silent = false) {
     const Json value = !field.empty() ? data[field] : data;
     string output = "";
@@ -175,26 +174,19 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.byte " << floor_number << "\n";
 
-    if (!map_data["night_music"].is_null())
-        text << "\t.2byte " << json_to_string(map_data, "night_music") << "\n";
-    else
-        text << "\t.2byte MUS_NONE\n";
+    text << "\t.2byte MUS_NONE\n";
 
-    if (version == "ruby")
-        text << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
-    else if (version == "emerald" || version == "firered")
-    {
-        text << "\tmap_header_flags "
-             << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
-             << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
-             << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
-             << "show_map_name=" << json_to_string(map_data, "show_map_name") << ", ";
-        if (map_data.object_items().find("write_specialvar_iseffect") != map_data.object_items().end())
-            text << "write_specialvar_iseffect=" << json_to_string(map_data, "write_specialvar_iseffect") << ", ";
-        else
-            text  << "write_specialvar_iseffect=FALSE" << ", ";
-        text << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
-    }
+    string write_specialvar_iseffect = json_to_string(map_data, "write_specialvar_iseffect", true);
+    if (write_specialvar_iseffect.empty())
+        write_specialvar_iseffect = "FALSE";
+
+    text << "\tmap_header_flags "
+         << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
+         << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
+         << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
+         << "show_map_name=" << json_to_string(map_data, "show_map_name") << ", "
+         << "write_specialvar_iseffect=" << write_specialvar_iseffect << ", "
+         << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";
 
@@ -602,7 +594,7 @@ Json parse_required_map_defines(void) {
     return json_data;
 }
 
-string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &valid_map_ids) {
+string generate_map_constants_text(string groups_filepath, Json groups_data, vector<string> &invalid_maps, vector<string> &valid_map_ids) {
     string file_dir = file_parent(groups_filepath) + sep;
 
     string guard_name = "CONSTANTS_MAP_GROUPS";
@@ -610,8 +602,6 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     ostringstream mapCountText;
 
     text << get_include_guard_start(guard_name) << get_generated_warning("data/maps/map_groups.json", false);
-
-    text << "//\n// DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/map_groups.json\n//\n\n";
 
     text << "enum\n{\n";
 
@@ -621,6 +611,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
         vector<string> map_ids;
+        vector<bool> map_disabled;
         size_t max_length = 0;
 
         int map_count = 0; //DEBUG
@@ -636,13 +627,30 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
             valid_map_ids.push_back(id);
             if (id.length() > max_length)
                 max_length = id.length();
-            map_count++; //DEBUG
+            string map_name_str = json_to_string(map_name);
+            auto it = find(invalid_maps.begin(), invalid_maps.end(), map_name_str);
+            if (it != invalid_maps.end()) {
+                map_disabled.push_back(true);
+            } else {
+                map_count++; //DEBUG
+                map_disabled.push_back(false);
+            }
         }
 
         int map_id_num = 0;
+        int counter = 0;
         for (string map_id : map_ids) {
+            if (map_disabled[counter++] == true)
+                continue;
             text << "    " << map_id << string(max_length - map_id.length(), ' ')
                  << " = (" << map_id_num++ << " | (" << group_num << " << 8)),\n";
+        }
+        counter = 0;
+        for (string map_id : map_ids) {
+            if (map_disabled[counter++] == false)
+                continue;
+            text << "    " << map_id << string(max_length - map_id.length(), ' ')
+                 << " = (" << map_id_num++ << " | (" << group_num << " << 8)), // DISABLED\n";
         }
 
         text << "\n";
@@ -723,6 +731,18 @@ void clean_heal_locations(vector<string> &valid_map_ids)
     write_text_file("src/data/heal_locations.json", new_json.str());
 }
 
+bool is_build_version_compatible(Json build_version)
+{
+    if (build_version.type() == Json::Type::NUL)
+        return true;
+
+    for (auto &build : build_version.array_items()) {
+        if (build.string_value() == version)
+            return true;
+    }
+    return false;
+}
+
 // Output paths are directories with trailing path separators
 void process_groups(string groups_filepath, vector<string> &map_filepaths, string output_asm, string output_c) {
     output_asm = strip_trailing_separator(output_asm); // Remove separator if existing.
@@ -740,18 +760,8 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         if (map_data == Json())
             FATAL_ERROR("Failed to read '%s' while processing groups: %s\n", filepath.c_str(), err.c_str());
 
-        string region = json_to_string(map_data, "region", true);
-
-        if (region.empty()) {
-            if (version == "emerald")
-                region = "REGION_HOENN";
-            else if (version == "firered")
-                region = "REGION_KANTO";
-        }
-        string map_name = json_to_string(map_data, "name");
-
-        if ((version == "emerald" && region != "REGION_HOENN")
-         || (version == "firered" && region != "REGION_KANTO")) {
+        if (!is_build_version_compatible(map_data["build_version"])) {
+            string map_name = json_to_string(map_data, "name");
             invalid_maps.push_back(map_name);
         }
     }
@@ -763,7 +773,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm);
-    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
+    string map_header_text = generate_map_constants_text(groups_filepath, groups_data, invalid_maps, valid_map_ids);
 
     clean_heal_locations(valid_map_ids);
     write_text_file(output_asm + sep + "groups.inc", groups_text);
@@ -771,6 +781,13 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     write_text_file(output_asm + sep + "headers.inc", headers_text);
     write_text_file(output_asm + sep + "events.inc", events_text);
     write_text_file(output_c + sep + "map_groups.h", map_header_text);
+}
+
+bool get_layout_rules(const Json &data, string layout_name) {
+    const Json value = data["frlg_layout_rules"];
+    if (value.type() == Json::Type::BOOL)
+        return value.bool_value();
+    FATAL_ERROR("%s is missing `frlg_layout_rules` value in `data/layouts/layouts.json`\n", layout_name.c_str());
 }
 
 string generate_layout_headers_text(Json layouts_data) {
@@ -782,46 +799,37 @@ string generate_layout_headers_text(Json layouts_data) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
 
-        if (layout_version.empty()) {
-            if (version == "emerald")
-                layout_version = "emerald";
-            else if (version == "firered")
-                layout_version = "frlg";
-        }
-        if ((version == "emerald" && layout_version != "emerald")
-         || (version == "firered" && layout_version != "frlg"))
+        if (!is_build_version_compatible(layout["build_version"]))
             continue;
-        string layoutName = json_to_string(layout, "name");
-        string border_label = layoutName + "_Border";
-        string blockdata_label = layoutName + "_Blockdata";
+
+        string layout_name = json_to_string(layout, "name");
+        string border_label = layout_name + "_Border";
+        string blockdata_label = layout_name + "_Blockdata";
         text << border_label << "::\n"
              << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n"
              << blockdata_label << "::\n"
              << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n"
              << "\t.align 2\n"
-             << layoutName << "::\n"
+             << layout_name << "::\n"
              << "\t.4byte " << json_to_string(layout, "width") << "\n"
              << "\t.4byte " << json_to_string(layout, "height") << "\n"
              << "\t.4byte " << border_label << "\n"
              << "\t.4byte " << blockdata_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
-        if (layout_version == "frlg")
-            text << "\t.byte TRUE\n";
-        else
-            text << "\t.byte FALSE\n";
-
-        if (layout_version == "frlg")
+        bool frlg_layout_rules = get_layout_rules(layout, layout_name);
+        if (frlg_layout_rules)
         {
-            text << "\t.byte " << json_to_string(layout, "border_width") << "\n"
+            text << "\t.byte TRUE\n"
+                 << "\t.byte " << json_to_string(layout, "border_width") << "\n"
                  << "\t.byte " << json_to_string(layout, "border_height") << "\n"
                  << "\t.byte 0\n";
         }
         else
         {
-            text << "\t.2byte 0\n"
+            text << "\t.byte FALSE\n"
+                 << "\t.2byte 0\n"
                  << "\t.byte 0\n";
         }
         text << "\n";
@@ -841,20 +849,16 @@ string generate_layouts_table_text(Json layouts_data) {
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty()) {
-            if (version == "emerald")
-                layout_version = "emerald";
-            else if (version == "firered")
-                layout_version = "frlg";
-        }
-        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
+
+        if (!is_build_version_compatible(layout["build_version"]))
+        {
             text << "\t.4byte NULL\n";
-        } else {
-            string layout_name = json_to_string(layout, "name", true);
-            if (layout_name.empty()) layout_name = "NULL";
-            text << "\t.4byte " << layout_name << "\n";
+            continue;
         }
+
+        string layout_name = json_to_string(layout, "name", true);
+        if (layout_name.empty()) layout_name = "NULL";
+        text << "\t.4byte " << layout_name << "\n";
     }
 
     return text.str();
@@ -942,8 +946,6 @@ int main(int argc, char *argv[]) {
 
     char *version_arg = argv[2];
     version = string(version_arg);
-    if (version != "emerald" && version != "ruby" && version != "firered")
-        FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', or 'ruby'.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

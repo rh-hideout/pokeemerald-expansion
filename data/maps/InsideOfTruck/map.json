@@ -3,7 +3,6 @@
   "name": "InsideOfTruck",
   "layout": "LAYOUT_INSIDE_OF_TRUCK",
   "music": "MUS_NONE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_INSIDE_OF_TRUCK",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -151,5 +150,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "InsideOfTruck_EventScript_MovingBox"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

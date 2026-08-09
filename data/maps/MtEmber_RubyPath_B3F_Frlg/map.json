@@ -3,7 +3,6 @@
   "name": "MtEmber_RubyPath_B3F_Frlg",
   "layout": "LAYOUT_MT_EMBER_RUBY_PATH_B3F",
   "music": "MUS_RG_SEVII_CAVE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_MT_EMBER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -182,5 +181,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

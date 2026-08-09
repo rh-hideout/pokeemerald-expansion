@@ -3,7 +3,6 @@
   "name": "RocketHideout_Elevator_Frlg",
   "layout": "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
   "music": "MUS_RG_ROCKET_HIDEOUT",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROCKET_HIDEOUT",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -42,5 +41,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RocketHideout_Elevator_EventScript_FloorSelect"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

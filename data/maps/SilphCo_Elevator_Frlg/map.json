@@ -3,7 +3,6 @@
   "name": "SilphCo_Elevator_Frlg",
   "layout": "LAYOUT_SILPH_CO_ELEVATOR",
   "music": "MUS_RG_SILPH",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SILPH_CO",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -35,5 +34,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SilphCo_Elevator_EventScript_FloorSelect"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "ViridianForest_Frlg",
   "layout": "LAYOUT_VIRIDIAN_FOREST",
   "music": "MUS_RG_VIRIDIAN_FOREST",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VIRIDIAN_FOREST",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -215,9 +214,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -287,5 +284,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

@@ -31,6 +31,7 @@
 #include "pokemon_summary_screen.h"
 #include "region_map.h"
 #include "pokemon.h"
+#include "regions.h"
 #include "reset_rtc_screen.h"
 #include "rtc.h"
 #include "scanline_effect.h"
@@ -1450,7 +1451,7 @@ bool32 TryLoadAreaScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
         gMain.state = 0;
@@ -3780,7 +3781,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
                     break;
                 case IF_IN_MAPSEC:
                     StringAppend(gStringVar4, COMPOUND_STRING("in "));
-                    StringCopy(gStringVar2, gRegionMapEntries[evolutions[i].params[j].arg1].name);
+                    StringCopy(gStringVar2, gMapSections[evolutions[i].params[j].arg1].name);
                     StringAppend(gStringVar4, gStringVar2);
                     break;
                 case IF_IN_MAP:
@@ -3818,23 +3819,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
                     else if (condition == IF_NOT_REGION)
                         StringAppend(gStringVar4, COMPOUND_STRING("out of "));
 
-                    switch ((enum Region)evolutions[i].params[j].arg1)
-                    {
-                    case REGION_NONE:
-                    case REGIONS_COUNT:
-                        StringAppend(gStringVar4, COMPOUND_STRING("???"));
-                        break;
-                    case REGION_KANTO: StringAppend(gStringVar4, COMPOUND_STRING("Kanto")); break;
-                    case REGION_JOHTO: StringAppend(gStringVar4, COMPOUND_STRING("Johto")); break;
-                    case REGION_HOENN: StringAppend(gStringVar4, COMPOUND_STRING("Hoenn")); break;
-                    case REGION_SINNOH: StringAppend(gStringVar4, COMPOUND_STRING("Sinnoh")); break;
-                    case REGION_UNOVA: StringAppend(gStringVar4, COMPOUND_STRING("Unova")); break;
-                    case REGION_KALOS: StringAppend(gStringVar4, COMPOUND_STRING("Kalos")); break;
-                    case REGION_ALOLA: StringAppend(gStringVar4, COMPOUND_STRING("Alola")); break;
-                    case REGION_GALAR: StringAppend(gStringVar4, COMPOUND_STRING("Galar")); break;
-                    case REGION_HISUI: StringAppend(gStringVar4, COMPOUND_STRING("Hisui")); break;
-                    case REGION_PALDEA: StringAppend(gStringVar4, COMPOUND_STRING("Paldea")); break;
-                    }
+                    StringAppend(gStringVar4, GetPokemonRegionName(evolutions[i].params[j].arg1));
                     break;
                 }
                 // Gen 8

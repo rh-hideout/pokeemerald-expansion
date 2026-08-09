@@ -3,7 +3,6 @@
   "name": "LavenderTown_House2_Frlg",
   "layout": "LAYOUT_HOUSE5_FRLG",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_LAVENDER_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -55,5 +54,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

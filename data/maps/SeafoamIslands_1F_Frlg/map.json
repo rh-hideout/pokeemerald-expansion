@@ -3,7 +3,6 @@
   "name": "SeafoamIslands_1F_Frlg",
   "layout": "LAYOUT_SEAFOAM_ISLANDS_1F",
   "music": "MUS_RG_VIRIDIAN_FOREST",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SEAFOAM_ISLANDS",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -110,10 +109,10 @@
       "dest_warp_id": "10"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

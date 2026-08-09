@@ -55,6 +55,8 @@
   - [How to use Overworld Wild Encounters](tutorials/how_to_overworld_wild_encounters.md)
   - [How to use Dynamic Weather](tutorials/how_to_dynamic_weather.md)
   - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)
+  - [How to create new region maps (Part 1: Graphics)](tutorials/how_to_region_map.md)
+  - [How to create new region maps (Part 2: Game Data)](tutorials/how_to_multi_region.md)
   - [How to use dynamic trainer battle scripts](tutorials/how_to_dynamic_trainer_script.md)
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
 - [Changelog](./CHANGELOG.md)

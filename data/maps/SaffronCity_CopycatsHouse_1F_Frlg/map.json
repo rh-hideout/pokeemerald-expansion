@@ -3,7 +3,6 @@
   "name": "SaffronCity_CopycatsHouse_1F_Frlg",
   "layout": "LAYOUT_SAFFRON_CITY_COPYCATS_HOUSE_1F",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -90,5 +89,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

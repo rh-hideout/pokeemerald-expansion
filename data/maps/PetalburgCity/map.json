@@ -3,7 +3,6 @@
   "name": "PetalburgCity",
   "layout": "LAYOUT_PETALBURG_CITY",
   "music": "MUS_PETALBURG",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_PETALBURG_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -332,5 +331,8 @@
       "item": "ITEM_RARE_CANDY",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_CITY_RARE_CANDY"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

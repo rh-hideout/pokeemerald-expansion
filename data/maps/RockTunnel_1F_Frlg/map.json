@@ -3,7 +3,6 @@
   "name": "RockTunnel_1F_Frlg",
   "layout": "LAYOUT_ROCK_TUNNEL_1F",
   "music": "MUS_RG_MT_MOON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROCK_TUNNEL",
   "requires_flash": true,
   "weather": "WEATHER_NONE",
@@ -211,5 +210,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RockTunnel_1F_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

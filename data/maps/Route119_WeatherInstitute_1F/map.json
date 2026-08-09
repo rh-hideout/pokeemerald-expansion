@@ -3,7 +3,6 @@
   "name": "Route119_WeatherInstitute_1F",
   "layout": "LAYOUT_ROUTE119_WEATHER_INSTITUTE_1F",
   "music": "MUS_RUSTBORO",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_119",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -139,5 +138,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route119_WeatherInstitute_1F_EventScript_Bed"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

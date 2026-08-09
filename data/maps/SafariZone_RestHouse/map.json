@@ -3,7 +3,6 @@
   "name": "SafariZone_RestHouse",
   "layout": "LAYOUT_SAFARI_ZONE_REST_HOUSE",
   "music": "MUS_SAFARI_ZONE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SAFARI_ZONE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -72,5 +71,8 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

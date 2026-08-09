@@ -3,7 +3,6 @@
   "name": "ThreeIsland_Port_Frlg",
   "layout": "LAYOUT_THREE_ISLAND_PORT",
   "music": "MUS_RG_ROUTE3",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_THREE_ISLE_PORT",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -88,10 +87,10 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

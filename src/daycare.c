@@ -908,6 +908,14 @@ static void AlterEggSpeciesWithIncenseItem(enum Species *species, struct DayCare
 
 STATIC_ASSERT(P_SCATTERBUG_LINE_FORM_BREED == SPECIES_SCATTERBUG_ICY_SNOW || (P_SCATTERBUG_LINE_FORM_BREED >= SPECIES_SCATTERBUG_POLAR && P_SCATTERBUG_LINE_FORM_BREED <= SPECIES_SCATTERBUG_POKEBALL), ScatterbugLineFormBreedMustBeAValidScatterbugForm);
 
+enum PokemonRegion GetDaycareRegion(struct DayCare *daycare)
+{
+    if (IS_FRLG)
+        return POKEMON_REGION_KANTO;
+    else
+        return POKEMON_REGION_HOENN;
+}
+
 static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parentSlots)
 {
     u32 i;
@@ -915,7 +923,7 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
     enum Species eggSpecies;
     bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
     bool32 motherEggSpecies, fatherEggSpecies;
-    enum Region currentRegion = GetCurrentRegion();
+    enum PokemonRegion currentRegion = GetDaycareRegion(daycare);
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {

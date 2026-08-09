@@ -3,7 +3,6 @@
   "name": "SevenIsland_TrainerTower_Frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_TRAINER_TOWER",
   "music": "MUS_RG_SEVII_ROUTE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_TRAINER_TOWER",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -60,9 +59,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -110,5 +107,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SevenIsland_TrainerTower_EventScript_TrainerTowerAheadSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }
