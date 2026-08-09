@@ -792,16 +792,19 @@ static void Task_EvolutionScene(u8 taskId)
         }
         break;
     case EVOSTATE_BEFORE_END:
-        if (!sEvoStructPtr->isTradeEvo)
+        if (!IsTextPrinterActiveOnWindow(0))
         {
-            StopMapMusic();
-            Overworld_PlaySpecialMapMusic();
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
+            if (!sEvoStructPtr->isTradeEvo)
+            {
+                StopMapMusic();
+                Overworld_PlaySpecialMapMusic();
+                BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
+            }
+            gTasks[taskId].tState++;
         }
-        gTasks[taskId].tState++;
         break;
     case EVOSTATE_END:
-        if (!gPaletteFade.active && !IsTextPrinterActiveOnWindow(0))
+        if (!gPaletteFade.active)
         {
             if (!gTasks[taskId].tEvoWasStopped)
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, mon);
