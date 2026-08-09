@@ -62,6 +62,7 @@
 #include "window.h"
 #include "list_menu.h"
 #include "malloc.h"
+#include "bxpy.h"
 #include "battle.h"
 #include "constants/comparison_operators.h"
 #include "constants/event_objects.h"
@@ -3376,5 +3377,22 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
         msg = (u8 *)ctx->data[0];
 
     gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
+    return FALSE;
+}
+
+bool8 ScrCmd_bringxpicky(struct ScriptContext *ctx)
+{
+    enum BXPYBattleTypes battleType = ScriptReadHalfword(ctx);
+    u32 bringSize = ScriptReadHalfword(ctx);
+    u32 pickSize = ScriptReadHalfword(ctx);
+    u32 trainerA = VarGet(ScriptReadHalfword(ctx));
+    const u8 *loseTextA = (const u8 *)ScriptReadWord(ctx);
+    u32 trainerB = VarGet(ScriptReadHalfword(ctx));
+    const u8 *loseTextB = (const u8 *)ScriptReadWord(ctx);
+    u32 partner = VarGet(ScriptReadHalfword(ctx));
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+
+    BXPY_Init(battleType, bringSize, pickSize, trainerA, loseTextA, trainerB, loseTextB, partner);
     return FALSE;
 }
