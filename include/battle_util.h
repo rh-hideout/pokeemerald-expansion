@@ -104,9 +104,10 @@ struct DamageContext
     u32 unused:2;
     u32 fieldStatuses;
 
-    enum Move move:13;
-    enum Move chosenMove:13; // May be different to 'move', e.g. for Z moves.
-    enum Type moveType:6;
+    enum Move move;
+    enum Move chosenMove; // For Trump Card and Me First
+    enum Move baseMove; // For z-moves and dynamax-moves
+    enum Type moveType;
 
     uq4_12_t typeEffectivenessModifier;
     enum Ability abilities[MAX_BATTLERS_COUNT];

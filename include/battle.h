@@ -662,6 +662,7 @@ struct BattleStruct
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
+    enum Move baseMove; // z-move / dynamax base move
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;

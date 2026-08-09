@@ -209,6 +209,7 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             struct DamageContext dmgCtx = {0};
             dmgCtx.battlerAtk = dmgCtx.battlerDef = cv->battlerAtk;
             dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
+            dmgCtx.baseMove = gBattleStruct->baseMove;
             dmgCtx.moveType = TYPE_MYSTERY;
             dmgCtx.isCrit = FALSE;
             dmgCtx.randomFactor = FALSE;
@@ -401,7 +402,7 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 gBattlerTarget = gBattlerAttacker;
                 struct DamageContext dmgCtx = {0};
                 dmgCtx.battlerAtk = dmgCtx.battlerDef = cv->battlerAtk;
-                dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
+                dmgCtx.move = dmgCtx.chosenMove = dmgCtx.baseMove = MOVE_NONE;
                 dmgCtx.moveType = TYPE_MYSTERY;
                 dmgCtx.isCrit = FALSE;
                 dmgCtx.randomFactor = FALSE;
@@ -1942,6 +1943,7 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->battlerDef = cv->battlerDef;
     ctx->move = cv->move;
     ctx->chosenMove = gChosenMove;
+    ctx->baseMove = gBattleStruct->baseMove;
     ctx->moveType = GetBattleMoveType(cv->move);
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;

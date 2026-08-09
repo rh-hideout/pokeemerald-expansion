@@ -494,7 +494,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
         enum BattlerId opposingPartner = GetPartnerBattler(switchContext->opposingBattler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            ctx.move = ctx.chosenMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            ctx.move = ctx.chosenMove = ctx.baseMove = gBattleMons[switchContext->battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
             // Check if move is bad in the context of both opposing battlers
             if (!IsMoveBad(&ctx, moveIndex))
@@ -518,7 +518,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
     {
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            ctx.move = ctx.chosenMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            ctx.move = ctx.chosenMove = ctx.baseMove = gBattleMons[switchContext->battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
             if (!IsMoveBad(&ctx, moveIndex))
                 return FALSE;
@@ -838,7 +838,7 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
     ctx.battlerAtk = battlerAtk;
-    ctx.move = ctx.chosenMove = move;
+    ctx.move = ctx.chosenMove = ctx.baseMove = move;
     ctx.moveType = moveType;
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
@@ -1174,7 +1174,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchAiContext *switchContext)
     struct DamageContext ctx = {0};
     ctx.battlerAtk = switchContext->battler;
     ctx.battlerDef = switchContext->opposingBattler;
-    ctx.move = ctx.chosenMove = choicedMove;
+    ctx.move = ctx.chosenMove = ctx.baseMove = choicedMove;
     ctx.moveType = GetBattleMoveType(choicedMove);
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
     ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];

@@ -474,6 +474,7 @@ void HandleAction_UseMove(void)
 
     // Set dynamic move type.
     SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
+    gBattleStruct->baseMove = gCurrentMove;
 
     // check Z-Move used
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(gCurrentMove) && !IsZMove(gCurrentMove))
@@ -3113,7 +3114,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                             ctx.battlerAtk = i;
                             ctx.battlerDef = battler;
-                            ctx.move = ctx.chosenMove = move;
+                            ctx.move = ctx.chosenMove = ctx.baseMove = move;
                             ctx.moveType = moveType;
                             ctx.isAnticipation = TRUE;
                             modifier = CalcTypeEffectivenessMultiplier(&ctx);
@@ -6174,10 +6175,10 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     u32 weight, hpFraction, speed;
 
     if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
-        return GetZMovePower(gCurrentMove);
+        return GetZMovePower(ctx->baseMove);
 
     if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
-        return GetMaxMovePower(move);
+        return GetMaxMovePower(ctx->baseMove, ctx->move);
 
     switch (moveEffect)
     {
@@ -6397,9 +6398,6 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_BEAT_UP:
         if (GetConfig(B_BEAT_UP) >= GEN_5)
             basePower = CalcBeatUpPower();
-        break;
-    case EFFECT_MAX_MOVE:
-        basePower = GetMaxMovePower(GetBattlerChosenMove(battlerAtk));
         break;
     case EFFECT_RAGE_FIST:
         basePower += 50 * GetBattlerPartyState(battlerAtk)->timesGotHit;
@@ -8138,28 +8136,22 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
     *modifier = uq4_12_multiply(*modifier, mod);
 }
 
-static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Type moveType, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t resultingModifier, enum Species illusionSpecies)
+static inline void TryNoticeIllusionInTypeEffectiveness(struct DamageContext *ctx, uq4_12_t resultingModifier, enum Species illusionSpecies)
 {
     // Check if the type effectiveness would've been different if the Pokémon really had the types as the disguise.
     uq4_12_t presumedModifier = UQ_4_12(1.0);
 
-    struct DamageContext ctx = {0};
-    ctx.battlerAtk = battlerAtk;
-    ctx.battlerDef = battlerDef;
-    ctx.move = ctx.chosenMove = move;
-    ctx.moveType = moveType;
-    ctx.updateFlags = FALSE;
-    ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
-    ctx.abilities[ctx.battlerDef] = ABILITY_ILLUSION;
-    ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
-    ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(battlerDef);
+    struct DamageContext illusionContext = *ctx;
 
-    MulByTypeEffectiveness(&ctx, &presumedModifier, GetSpeciesType(illusionSpecies, 0));
+    illusionContext.abilities[illusionContext.battlerDef] = ABILITY_ILLUSION;
+    illusionContext.typeEffectivenessModifier = presumedModifier;
+
+    MulByTypeEffectiveness(&illusionContext, &presumedModifier, GetSpeciesType(illusionSpecies, 0));
     if (GetSpeciesType(illusionSpecies, 1) != GetSpeciesType(illusionSpecies, 0))
-        MulByTypeEffectiveness(&ctx, &presumedModifier, GetSpeciesType(illusionSpecies, 1));
+        MulByTypeEffectiveness(&illusionContext, &presumedModifier, GetSpeciesType(illusionSpecies, 1));
 
     if (presumedModifier != resultingModifier)
-        RecordAbilityBattle(ctx.battlerDef, ABILITY_ILLUSION);
+        RecordAbilityBattle(illusionContext.battlerDef, ABILITY_ILLUSION);
 }
 
 void UpdateMoveResultFlags(uq4_12_t modifier, u32 *resultFlags)
@@ -8201,7 +8193,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
 
     if (ctx->updateFlags && (illusionSpecies = GetIllusionMonSpecies(ctx->battlerDef)))
-        TryNoticeIllusionInTypeEffectiveness(ctx->move, ctx->moveType, ctx->battlerAtk, ctx->battlerDef, modifier, illusionSpecies);
+        TryNoticeIllusionInTypeEffectiveness(ctx, modifier, illusionSpecies);
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
     bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
@@ -8300,7 +8292,7 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(enum Move move, enum Species sp
     if (move != MOVE_STRUGGLE && moveType != TYPE_MYSTERY)
     {
         struct DamageContext ctx = {0};
-        ctx.move = ctx.chosenMove = move;
+        ctx.move = ctx.chosenMove = ctx.baseMove = move;
         ctx.moveType = moveType;
         ctx.updateFlags = FALSE;
         ctx.abilities[B_BATTLER_0] = abilityDef;
@@ -8343,7 +8335,7 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 
     struct DamageContext ctx = {0};
     ctx.abilities[B_BATTLER_0] = GetMonAbility(mon);
-    ctx.move = ctx.chosenMove = MOVE_POUND;
+    ctx.move = ctx.chosenMove = ctx.baseMove = MOVE_POUND;
     ctx.moveType = moveType;
     ctx.updateFlags = FALSE;
 

@@ -1148,6 +1148,7 @@ static void Cmd_damagecalc(void)
     ctx.battlerAtk = gBattlerAttacker;
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
+    ctx.baseMove = gBattleStruct->baseMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
     ctx.weather = GetWeather();
     ctx.fieldStatuses = gFieldStatuses;
@@ -1198,6 +1199,7 @@ static void Cmd_typecalc(void)
     ctx.battlerDef = gBattlerTarget;
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
+    ctx.baseMove = gBattleStruct->baseMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
     ctx.updateFlags = TRUE;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(gBattlerAttacker);
@@ -5970,6 +5972,7 @@ static void Cmd_jumptocalledmove(void)
     else
         gChosenMove = gCurrentMove = gCalledMove;
 
+    gBattleStruct->baseMove = gCurrentMove;
     ResetValuesForCalledMove();
 
     gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
@@ -7851,7 +7854,7 @@ static void Cmd_mimicattackcopy(void)
 static void Cmd_setcalledmove(void)
 {
     CMD_ARGS();
-    gCurrentMove = gCalledMove;
+    gCurrentMove = gBattleStruct->baseMove = gCalledMove;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

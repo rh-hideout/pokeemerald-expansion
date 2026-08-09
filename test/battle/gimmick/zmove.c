@@ -820,6 +820,27 @@ ONE_VS_TWO_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 1v2")
     }
 }
 
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Move power is based on the base move", s16 damage)
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_MEGA_KICK; }
+
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_SCRATCH) == 40);
+        ASSUME(GetMovePower(MOVE_MEGA_KICK) == 120);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_GT(results[1].damage, results[0].damage);
+    }
+}
+
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary")

@@ -1757,7 +1757,7 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
 
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
-        pwr = GetMaxMovePower(move);
+        pwr = GetMaxMovePower(move, move);
         move = GetMaxMove(battler, move);
         acc = 0;
     }
