@@ -3233,10 +3233,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                     partnerDef = battlerDef;
 
                 if (ShouldPrintEffectivenessMessage(battlerDef, partnerDef, cv->battlerAtk))
-                {
                     result = MOVEEND_RESULT_RUN_SCRIPT;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ONE_TARGET;
-                }
                 break;
             }
             case SUBSTITUTE_BLOCK_CRIT_MESSAGE:
