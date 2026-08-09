@@ -213,6 +213,29 @@ static void SetBattleBgs(void)
     gBattle_BG3_Y = 0;
 }
 
+static void EvoScene_InitGraphics_Standard(void)
+{
+    CpuFill32(0, (void *)(VRAM), VRAM_SIZE);
+
+    ResetPaletteFade();
+    ResetSpriteData();
+    FreeAllSpritePalettes();
+    gReservedSpritePaletteCount = 4;
+
+    gBattleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
+    InitBattleBgsVideo();
+    SetBattleBgs();
+    LoadBattleTextboxAndBackground();
+
+    SetGpuReg(REG_OFFSET_MOSAIC, 0);
+    SetGpuReg(REG_OFFSET_WIN0H, 0);
+    SetGpuReg(REG_OFFSET_WIN0V, 0);
+    SetGpuReg(REG_OFFSET_WIN1H, 0);
+    SetGpuReg(REG_OFFSET_WIN1V, 0);
+    SetGpuReg(REG_OFFSET_WININ, 0);
+    SetGpuReg(REG_OFFSET_WINOUT, 0);
+}
+
 static u8 LoadEvoPokemonSprite(enum Species species, bool32 isShiny, u32 personality, u32 slot)
 {
     u8 id;
@@ -233,60 +256,47 @@ static u8 LoadEvoPokemonSprite(enum Species species, bool32 isShiny, u32 persona
     return id;
 }
 
+static void EvolutionScene_FadeIn(void)
+{
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG_ALL_ON | DISPCNT_OBJ_1D_MAP);
+    ShowBg(0);
+    ShowBg(1);
+    ShowBg(2);
+    ShowBg(3);
+
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
+    SetHBlankCallback(EvoDummyFunc);
+    SetVBlankCallback(VBlankCB_EvolutionScene);
+    SetMainCallback2(CB2_EvolutionSceneUpdate);
+}
+
 void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    enum Species currSpecies;
-    u32 personality;
-    bool32 isShiny;
     u8 id;
 
-    SetHBlankCallback(NULL);
-    SetVBlankCallback(NULL);
-    CpuFill32(0, (void *)(VRAM), VRAM_SIZE);
-
-    SetGpuReg(REG_OFFSET_MOSAIC, 0);
-    SetGpuReg(REG_OFFSET_WIN0H, 0);
-    SetGpuReg(REG_OFFSET_WIN0V, 0);
-    SetGpuReg(REG_OFFSET_WIN1H, 0);
-    SetGpuReg(REG_OFFSET_WIN1V, 0);
-    SetGpuReg(REG_OFFSET_WININ, 0);
-    SetGpuReg(REG_OFFSET_WINOUT, 0);
-
-    ResetPaletteFade();
-
-    SetBattleBgs();
-
-    gBattleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
-
-    InitBattleBgsVideo();
-    LoadBattleTextboxAndBackground();
-    ResetSpriteData();
     ScanlineEffect_Stop();
+    m4aMPlayAllStop();
     ResetTasks();
-    FreeAllSpritePalettes();
+    EvoScene_InitGraphics_Standard();
 
-    gReservedSpritePaletteCount = 4;
+    AllocateMonSpritesGfx();
+    LoadEvoSparkleSpriteAndPal();
 
     sEvoStructPtr = AllocZeroed(sizeof(struct EvoInfo));
     sEvoStructPtr->isTradeEvo = FALSE;
-    AllocateMonSpritesGfx();
 
     GetMonData(mon, MON_DATA_NICKNAME, name);
     StringCopy_Nickname(gStringVar1, name);
     StringCopy(gStringVar2, GetSpeciesName(postEvoSpecies));
 
-    currSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY);
-
+    enum Species currSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
     sEvoStructPtr->preEvoSpriteId = LoadEvoPokemonSprite(currSpecies, isShiny, personality, 0);
-    gSprites[sEvoStructPtr->preEvoSpriteId].invisible = TRUE;
 
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
     gSprites[sEvoStructPtr->postEvoSpriteId].invisible = TRUE;
-
-    LoadEvoSparkleSpriteAndPal();
 
     sEvoStructPtr->evoTaskId = id = CreateTask(Task_EvolutionScene, 0);
     gTasks[id].tState = 0;
@@ -299,64 +309,21 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
 
     memcpy(&sEvoStructPtr->savedPalette, &gPlttBufferUnfaded[BG_PLTT_ID(2)], sizeof(sEvoStructPtr->savedPalette));
 
-    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG_ALL_ON | DISPCNT_OBJ_1D_MAP);
-
-    SetHBlankCallback(EvoDummyFunc);
-    SetVBlankCallback(VBlankCB_EvolutionScene);
-    m4aMPlayAllStop();
-    SetMainCallback2(CB2_EvolutionSceneUpdate);
+    EvolutionScene_FadeIn();
 }
 
 static void CB2_EvolutionSceneLoadGraphics(void)
 {
-    u8 id;
-    enum Species postEvoSpecies;
-    u32 personality;
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gTasks[sEvoStructPtr->evoTaskId].tPartyId];
-    bool32 isShiny;
 
-    postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    EvoScene_InitGraphics_Standard();
 
-    SetHBlankCallback(NULL);
-    SetVBlankCallback(NULL);
-    CpuFill32(0, (void *)(VRAM), VRAM_SIZE);
-
-    SetGpuReg(REG_OFFSET_MOSAIC, 0);
-    SetGpuReg(REG_OFFSET_WIN0H, 0);
-    SetGpuReg(REG_OFFSET_WIN0V, 0);
-    SetGpuReg(REG_OFFSET_WIN1H, 0);
-    SetGpuReg(REG_OFFSET_WIN1V, 0);
-    SetGpuReg(REG_OFFSET_WININ, 0);
-    SetGpuReg(REG_OFFSET_WINOUT, 0);
-
-    ResetPaletteFade();
-
-    SetBattleBgs();
-
-    gBattleEnvironment = BATTLE_ENVIRONMENT_PLAIN;
-
-    InitBattleBgsVideo();
-    LoadBattleTextboxAndBackground();
-    ResetSpriteData();
-    FreeAllSpritePalettes();
-    gReservedSpritePaletteCount = 4;
-
+    enum Species postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
+    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
 
-    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_BG_ALL_ON | DISPCNT_OBJ_1D_MAP);
-
-    SetHBlankCallback(EvoDummyFunc);
-    SetVBlankCallback(VBlankCB_EvolutionScene);
-    SetMainCallback2(CB2_EvolutionSceneUpdate);
-
-    BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
-
-    ShowBg(0);
-    ShowBg(1);
-    ShowBg(2);
-    ShowBg(3);
+    EvolutionScene_FadeIn();
 }
 
 static void CB2_TradeEvolutionSceneLoadGraphics(void)
@@ -432,39 +399,33 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
 void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 preEvoSpriteId, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    enum Species currSpecies;
-    u32 personality;
     u8 id;
-    bool32 isShiny;
-
-    GetMonData(mon, MON_DATA_NICKNAME, name);
-    StringCopy_Nickname(gStringVar1, name);
-    StringCopy(gStringVar2, GetSpeciesName(postEvoSpecies));
 
     gAffineAnimsDisabled = TRUE;
-
-    currSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    personality = GetMonData(mon, MON_DATA_PERSONALITY);
-    isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    SetBattleBgs();
+    LoadEvoSparkleSpriteAndPal();
 
     sEvoStructPtr = AllocZeroed(sizeof(struct EvoInfo));
     sEvoStructPtr->isTradeEvo = TRUE;
     sEvoStructPtr->preEvoSpriteId = preEvoSpriteId;
 
+    GetMonData(mon, MON_DATA_NICKNAME, name);
+    StringCopy_Nickname(gStringVar1, name);
+    StringCopy(gStringVar2, GetSpeciesName(postEvoSpecies));
+
+    enum Species currSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
     gSprites[sEvoStructPtr->postEvoSpriteId].invisible = TRUE;
 
-    LoadEvoSparkleSpriteAndPal();
-
     sEvoStructPtr->evoTaskId = id = CreateTask(Task_EvolutionScene, 0);
-    gTasks[id].tState = 1; // EVOSTATE_INTRO_MSG
+    gTasks[id].tState = 0; // EVOSTATE_INTRO_MSG
     gTasks[id].tPreEvoSpecies = currSpecies;
     gTasks[id].tPostEvoSpecies = postEvoSpecies;
     gTasks[id].tLearnsFirstMove = TRUE;
     gTasks[id].tEvoWasStopped = FALSE;
     gTasks[id].tPartyId = partyId;
-
-    SetBattleBgs();
 
     gTextFlags.useAlternateDownArrow = TRUE;
 
@@ -538,7 +499,6 @@ static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpeci
 
 // States for the main switch in Task_EvolutionScene
 enum {
-    EVOSTATE_FADE_IN,
     EVOSTATE_INTRO_MSG,
     EVOSTATE_INTRO_MON_ANIM,
     EVOSTATE_INTRO_SOUND,
@@ -680,15 +640,6 @@ static void Task_EvolutionScene(u8 taskId)
 
     switch (gTasks[taskId].tState)
     {
-    case EVOSTATE_FADE_IN:
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
-        gSprites[sEvoStructPtr->preEvoSpriteId].invisible = FALSE;
-        gTasks[taskId].tState++;
-        ShowBg(0);
-        ShowBg(1);
-        ShowBg(2);
-        ShowBg(3);
-        break;
     case EVOSTATE_INTRO_MSG:
         if (!gPaletteFade.active)
         {
