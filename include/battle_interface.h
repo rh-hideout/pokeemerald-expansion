@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_INTERFACE_H
 
 #include "battle_controllers.h"
+#include "gba/defines.h"
 
 // used for sBattlerCoords and sBattlerHealthboxCoords
 enum BattleCoordTypes
@@ -107,6 +108,11 @@ enum
     HEALTHBOX_SAFARI_ALL_TEXT,
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
+
+static ALWAYS_INLINE u32 GetHealthboxRightSpriteId(u32 leftSpriteId)
+{
+    return gSprites[leftSpriteId].oam.affineParam;
+}
 
 enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler);
 u8 CreateBattlerHealthboxSprites(enum BattlerId battler);

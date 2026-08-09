@@ -45,7 +45,7 @@
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
     // These are indexes into the tables, which are filled with 8x8 square pixel data.
-    HEALTHBOX_GFX_HP_BAR_BLACK, //hp bar [black section]
+    HEALTHBOX_GFX_HP_BAR_START, //hp bar [black section]
     HEALTHBOX_GFX_HP_BAR_H, //hp bar "H"
     HEALTHBOX_GFX_HP_BAR_P, //hp bar "P"
 
@@ -192,6 +192,8 @@ enum
 };
 
 static const u8 *GetHealthboxElementGfxPtr(u8);
+
+static u32 CreateHealthBoxSprite(enum BattlerId battler);
 
 static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, s16 maxHp);
 static void UpdateStatusIconInHealthbox(u8);
@@ -626,69 +628,60 @@ enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
         return BATTLE_COORDS_SINGLES;
 }
 
+static u32 CreateHealthBoxSprite(enum BattlerId battler)
+{
+    struct Coords16 pos = { DISPLAY_WIDTH, DISPLAY_HEIGHT };
+    u32 templateId;
+    const struct SpriteTemplate *templ;
+    bool32 isLarge;
+
+    if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES)
+    {
+        templateId = GetBattlerPosition(battler) / 2;
+        isLarge = FALSE;
+    }
+    else
+    {
+        templateId = 0;
+        isLarge = IsOnPlayerSide(battler) || B_HP_PERCENTAGE_DISPLAY;
+    }
+
+    if (IsOnPlayerSide(battler))
+        templ = &sHealthboxPlayerSpriteTemplates[templateId];
+    else
+        templ = &sHealthboxOpponentSpriteTemplates[templateId];
+
+    u32 left = CreateSprite(templ, pos.x, pos.y, 1);
+    u32 right = CreateSpriteAtEnd(templ, pos.x, pos.y, 1);
+
+    //NOTE: GF Stores the right spriteId in the left
+    //sprite's affineParam. This field should be accessed
+    //with the GetHealthboxRightSpriteId function
+    gSprites[left].oam.affineParam = right;
+    gSprites[right].hOther_HealthBoxSpriteId = left;
+    gSprites[right].callback = SpriteCB_HealthBoxOther;
+
+    if (isLarge)
+    {
+        gSprites[left].oam.shape = SPRITE_SHAPE(64x64);
+        gSprites[right].oam.shape = SPRITE_SHAPE(64x64);
+        gSprites[right].oam.tileNum += 64;
+    }
+    else
+    {
+        gSprites[right].oam.tileNum += 32;
+    }
+
+    return left;
+}
+
 u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
 {
-    u8 healthboxLeftSpriteId, healthboxRightSpriteId;
     u8 healthbarSpriteId;
     struct Sprite *healthBarSpritePtr;
 
-    switch (GetBattlerCoordsIndex(battler))
-    {
-    default:
-    case BATTLE_COORDS_SINGLES:
-    {
-        if (IsOnPlayerSide(battler))
-        {
-            healthboxLeftSpriteId = CreateSprite(&sHealthboxPlayerSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxPlayerSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-
-            gSprites[healthboxLeftSpriteId].oam.shape = ST_OAM_SQUARE;
-            gSprites[healthboxRightSpriteId].oam.shape = ST_OAM_SQUARE;
-            gSprites[healthboxRightSpriteId].oam.tileNum += 64;
-        }
-        else
-        {
-            healthboxLeftSpriteId = CreateSprite(&sHealthboxOpponentSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxOpponentSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-
-            if (B_HP_PERCENTAGE_DISPLAY)
-            {
-                gSprites[healthboxLeftSpriteId].oam.shape = ST_OAM_SQUARE;
-                gSprites[healthboxRightSpriteId].oam.shape = ST_OAM_SQUARE;
-                gSprites[healthboxRightSpriteId].oam.tileNum += 64;
-            }
-            else
-            {
-                gSprites[healthboxRightSpriteId].oam.tileNum += 32;
-            }
-
-        }
-        gSprites[healthboxLeftSpriteId].oam.affineParam = healthboxRightSpriteId;
-
-        gSprites[healthboxRightSpriteId].hOther_HealthBoxSpriteId = healthboxLeftSpriteId;
-        gSprites[healthboxRightSpriteId].callback = SpriteCB_HealthBoxOther;
-        break;
-    }
-    case BATTLE_COORDS_DOUBLES:
-    {
-        if (IsOnPlayerSide(battler))
-        {
-            healthboxLeftSpriteId = CreateSprite(&sHealthboxPlayerSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxPlayerSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-        }
-        else
-        {
-            healthboxLeftSpriteId = CreateSprite(&sHealthboxOpponentSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-            healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxOpponentSpriteTemplates[GetBattlerPosition(battler) / 2], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
-        }
-        gSprites[healthboxLeftSpriteId].oam.affineParam = healthboxRightSpriteId;
-
-        gSprites[healthboxRightSpriteId].hOther_HealthBoxSpriteId = healthboxLeftSpriteId;
-        gSprites[healthboxRightSpriteId].oam.tileNum += 32;
-        gSprites[healthboxRightSpriteId].callback = SpriteCB_HealthBoxOther;
-        break;
-    }
-    }
+    u32 healthboxLeftSpriteId = CreateHealthBoxSprite(battler);
+    u32 healthboxRightSpriteId = GetHealthboxRightSpriteId(healthboxLeftSpriteId);
 
     healthbarSpriteId = CreateSpriteAtEnd(&sHealthbarSpriteTemplates[gBattlerPositions[battler]], 140, 60, 0);
     healthBarSpritePtr = &gSprites[healthbarSpriteId];
@@ -696,7 +689,7 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     healthBarSpritePtr->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
     healthBarSpritePtr->oam.priority = 1;
 
-    CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_BLACK),OBJ_TILE(healthBarSpritePtr->oam.tileNum), 2 * sizeof(Tile4BPP));
+    CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_START),OBJ_TILE(healthBarSpritePtr->oam.tileNum), 2 * sizeof(Tile4BPP));
 
     gSprites[healthboxLeftSpriteId].hMain_HealthBarSpriteId = healthbarSpriteId;
     gSprites[healthboxLeftSpriteId].hMain_Battler = battler;
@@ -780,7 +773,7 @@ void SetHealthboxSpriteInvisible(u8 healthboxSpriteId)
 {
     gSprites[healthboxSpriteId].invisible = TRUE;
     gSprites[gSprites[healthboxSpriteId].hMain_HealthBarSpriteId].invisible = TRUE;
-    gSprites[gSprites[healthboxSpriteId].oam.affineParam].invisible = TRUE;
+    gSprites[GetHealthboxRightSpriteId(healthboxSpriteId)].invisible = TRUE;
     UpdateIndicatorVisibilityAndType(healthboxSpriteId, TRUE);
 }
 
@@ -788,7 +781,7 @@ void SetHealthboxSpriteVisible(u8 healthboxSpriteId)
 {
     gSprites[healthboxSpriteId].invisible = FALSE;
     gSprites[gSprites[healthboxSpriteId].hMain_HealthBarSpriteId].invisible = FALSE;
-    gSprites[gSprites[healthboxSpriteId].oam.affineParam].invisible = FALSE;
+    gSprites[GetHealthboxRightSpriteId(healthboxSpriteId)].invisible = FALSE;
     UpdateIndicatorVisibilityAndType(healthboxSpriteId, FALSE);
 }
 
@@ -819,7 +812,7 @@ void UpdateOamPriorityInAllHealthboxes(u8 priority, bool32 hideHPBoxes)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         u8 healthboxLeftSpriteId = gHealthboxSpriteIds[i];
-        u8 healthboxRightSpriteId = gSprites[gHealthboxSpriteIds[i]].oam.affineParam;
+        u8 healthboxRightSpriteId = GetHealthboxRightSpriteId(gHealthboxSpriteIds[i]);
         u8 healthbarSpriteId = gSprites[gHealthboxSpriteIds[i]].hMain_HealthBarSpriteId;
 
         gSprites[healthboxLeftSpriteId].oam.priority = priority;
@@ -870,7 +863,7 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
 {
     u8 text[16];
     enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
-    u32 spriteId = gSprites[healthboxSpriteId].oam.affineParam;
+    u32 spriteId = GetHealthboxRightSpriteId(healthboxSpriteId);
 
     // Don't print Lv char if mon has a gimmick with an indicator active.
     if (GetIndicatorPalTag(battler) != TAG_NONE)
@@ -917,7 +910,7 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     *txtPtr++ = CHAR_SLASH;
     txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
 
-    u32 spriteId2 = gSprites[spriteId].oam.affineParam;
+    u32 spriteId2 = GetHealthboxRightSpriteId(spriteId);
 
     //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
     //  and set up temporary values with what's needed
@@ -954,7 +947,7 @@ static void PrintHPPercentageOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u3
     *txtPtr++ = CHAR_PERCENT;
     *txtPtr = EOS;
 
-    u32 spriteId2 = gSprites[spriteId].oam.affineParam;
+    u32 spriteId2 = GetHealthboxRightSpriteId(spriteId);
 
     //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
     //  and set up temporary values with what's needed
@@ -1606,7 +1599,7 @@ static void SpriteCB_StatusSummaryBalls_OnSwitchout(struct Sprite *sprite)
 
 void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 {
-    u32 healthboxSpriteId2 = gSprites[healthboxSpriteId].oam.affineParam;
+    u32 healthboxSpriteId2 = GetHealthboxRightSpriteId(healthboxSpriteId);
     u8 nickname[POKEMON_NAME_LENGTH + 1];
     void *ptr;
     enum Species species;
@@ -1779,7 +1772,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     {
         if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
         {
-            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_BLACK), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum), sizeof(Tile4BPP));
+            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_HP_BAR_START), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum), sizeof(Tile4BPP));
             CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_HP_BAR_FRAME_END), OBJ_TILE(gSprites[healthBarSpriteId].oam.tileNum + 1), sizeof(Tile4BPP));
         }
     }
@@ -1858,7 +1851,7 @@ static u8 GetStatusIconForBattlerId(u8 statusElementId, enum BattlerId battler)
 
 static void UpdateSafariBallsTextOnHealthbox(u8 healthboxSpriteId)
 {
-    u32 healthboxSpriteId2 = gSprites[healthboxSpriteId].oam.affineParam;
+    u32 healthboxSpriteId2 = GetHealthboxRightSpriteId(healthboxSpriteId);
 
     s16 savedValue1 = gSprites[healthboxSpriteId].data[1];
     s16 savedValue2 = gSprites[healthboxSpriteId2].data[1];
@@ -1876,7 +1869,7 @@ static void UpdateLeftNoOfBallsTextOnHealthbox(u8 healthboxSpriteId)
     u8 text[16];
     u8 *txtPtr;
 
-    u32 healthboxSpriteId2 = gSprites[healthboxSpriteId].oam.affineParam;
+    u32 healthboxSpriteId2 = GetHealthboxRightSpriteId(healthboxSpriteId);
 
     s16 savedValue1 = gSprites[healthboxSpriteId].data[1];
     s16 savedValue2 = gSprites[healthboxSpriteId2].data[1];
