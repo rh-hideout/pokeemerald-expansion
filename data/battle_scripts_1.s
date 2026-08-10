@@ -673,11 +673,8 @@ BattleScript_MoveEffectHaze::
 	return
 
 BattleScript_MoveEffectLeechSeed::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
-	printstring STRINGID_PKMNSEEDED
+	printfromtable gLeechSeedStringIds
 	waitmessage B_WAIT_TIME_LONG
-	restoretarget
 	return
 
 BattleScript_MoveEffectScreens::
@@ -1688,11 +1685,6 @@ BattleScript_EffectAuroraVeil::
 	setauroraveil
 	goto BattleScript_PrintReflectLightScreenSafeguardString
 
-BattleScript_EffectLightScreen::
-	attackcanceler
-	setlightscreen
-	goto BattleScript_PrintReflectLightScreenSafeguardString
-
 BattleScript_EffectRest::
 	attackcanceler
 	jumpifstatus BS_ATTACKER, STATUS1_SLEEP, BattleScript_RestIsAlreadyAsleep
@@ -1793,9 +1785,6 @@ BattleScript_EffectTransform::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectReflect::
-	attackcanceler
-	setreflect
 BattleScript_PrintReflectLightScreenSafeguardString::
 	attackanimation
 	waitanimation
@@ -1897,15 +1886,10 @@ BattleScript_EffectMimic::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectLeechSeed::
+BattleScript_EffectStatusMoveEffect::
 	attackcanceler
 	pause B_WAIT_TIME_SHORT
-BattleScript_DoLeechSeed::
-	setseeded
-	attackanimation
-	waitanimation
-	printfromtable gLeechSeedStringIds
-	waitmessage B_WAIT_TIME_LONG
+	setadditionaleffects
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectDoNothing::

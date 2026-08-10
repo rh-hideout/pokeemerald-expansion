@@ -48,6 +48,8 @@ struct BattleCalcValues
     enum BattleMoveEffects moveEffect:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
+    u32 onlyChecking:1;
+    u32 isStatusMove:1;
 };
 
 void HandleAction_ThrowBall(void);

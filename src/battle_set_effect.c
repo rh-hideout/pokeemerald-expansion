@@ -713,30 +713,101 @@ static void HandleSetEffectHaze(struct BattleCalcValues *cv, struct SetEffect *s
 
 static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!IS_BATTLER_OF_TYPE(se->effectBattler, TYPE_GRASS) && !gBattleMons[se->effectBattler].volatiles.leechSeed)
+    if (IsBattlerUnaffectedByMove(se->effectBattler) || gBattleMons[se->effectBattler].volatiles.leechSeed)
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_MISS;
+        se->effectFailed = TRUE;
+    }
+    else if (IS_BATTLER_OF_TYPE(se->effectBattler, TYPE_GRASS))
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_FAIL;
+        se->effectFailed = TRUE;
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed && !cv->isStatusMove)
+        return;
+
+    if (!se->effectFailed)
     {
         gBattleMons[se->effectBattler].volatiles.leechSeed = LEECHSEEDED_BY(cv->battlerAtk);
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectLeechSeed;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
     }
+
+    BattleScriptPush(se->script);
+    gBattlescriptCurrInstr = BattleScript_MoveEffectLeechSeed;
 }
 
 static void HandleSetEffectReflect(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (TrySetReflect(se->effectBattler))
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (gSideStatuses[side] & SIDE_STATUS_REFLECT)
     {
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectScreens;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
+        se->effectFailed = TRUE;
     }
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed && !cv->isStatusMove)
+        return;
+
+    if (!se->effectFailed)
+    {
+        gSideStatuses[side] |= SIDE_STATUS_REFLECT;
+
+        if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+            gSideTimers[side].reflectTimer = 8;
+        else
+            gSideTimers[side].reflectTimer = 5;
+
+        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, se->effectBattler) == 2)
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_SINGLE;
+    }
+
+    BattleScriptPush(se->script);
+    gBattlescriptCurrInstr = BattleScript_MoveEffectScreens;
 }
 
 static void HandleSetEffectLightScreen(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (TrySetLightScreen(se->effectBattler))
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN)
     {
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectScreens;
+        se->effectFailed = TRUE;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
     }
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed && !cv->isStatusMove)
+        return;
+
+    if (!se->effectFailed)
+    {
+        gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
+
+        if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+            gSideTimers[side].lightscreenTimer = 8;
+        else
+            gSideTimers[side].lightscreenTimer = 5;
+
+        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, se->effectBattler) == 2)
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_SINGLE;
+    }
+
+    BattleScriptPush(se->script);
+    gBattlescriptCurrInstr = BattleScript_MoveEffectScreens;
 }
 
 static void HandleSetEffectSaltCure(struct BattleCalcValues *cv, struct SetEffect *se)

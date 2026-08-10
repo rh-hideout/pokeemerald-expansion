@@ -125,7 +125,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_LIGHT_SCREEN] =
     {
-        .battleScript = BattleScript_EffectLightScreen,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -211,7 +211,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_REFLECT] =
     {
-        .battleScript = BattleScript_EffectReflect,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -247,7 +247,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_LEECH_SEED] =
     {
-        .battleScript = BattleScript_EffectLeechSeed,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
         .encourageEncore = TRUE,

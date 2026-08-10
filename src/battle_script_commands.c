@@ -459,8 +459,6 @@ static void Cmd_setatkhptozero(void);
 static void Cmd_jumpifnexttargetvalid(void);
 static void Cmd_tryhealhalfhealth(void);
 static void Cmd_setfieldweather(void);
-static void Cmd_setreflect(void);
-static void Cmd_setseeded(void);
 static void Cmd_manipulatedamage(void);
 static void Cmd_trysetrest(void);
 static void Cmd_jumpifuproarwakes(void);
@@ -472,8 +470,6 @@ static void Cmd_initmultihitstring(void);
 static void Cmd_forcerandomswitch(void);
 static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
-static void Cmd_setlightscreen(void);
-static void Cmd_tryKO(void);
 static void Cmd_checknonvolatiletrigger(void);
 static void Cmd_animatewildpokemonafterfailedpokeball(void);
 static void Cmd_tryinfatuating(void);
@@ -672,8 +668,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFNEXTTARGETVALID]                 = Cmd_jumpifnexttargetvalid,
     [B_SCR_OP_TRYHEALHALFHEALTH]                     = Cmd_tryhealhalfhealth,
     [B_SCR_OP_SETFIELDWEATHER]                       = Cmd_setfieldweather,
-    [B_SCR_OP_SETREFLECT]                            = Cmd_setreflect,
-    [B_SCR_OP_SETSEEDED]                             = Cmd_setseeded,
     [B_SCR_OP_MANIPULATEDAMAGE]                      = Cmd_manipulatedamage,
     [B_SCR_OP_TRYSETREST]                            = Cmd_trysetrest,
     [B_SCR_OP_JUMPIFUPROARWAKES]                     = Cmd_jumpifuproarwakes,
@@ -685,8 +679,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_FORCERANDOMSWITCH]                     = Cmd_forcerandomswitch,
     [B_SCR_OP_TRYCONVERSIONTYPECHANGE]               = Cmd_tryconversiontypechange,
     [B_SCR_OP_GIVEPAYDAYMONEY]                       = Cmd_givepaydaymoney,
-    [B_SCR_OP_SETLIGHTSCREEN]                        = Cmd_setlightscreen,
-    [B_SCR_OP_TRYKO]                                 = Cmd_tryKO,
     [B_SCR_OP_CHECKNONVOLATILETRIGGER]               = Cmd_checknonvolatiletrigger,
     [B_SCR_OP_ANIMATEWILDPOKEMONAFTERFAILEDPOKEBALL] = Cmd_animatewildpokemonafterfailedpokeball,
     [B_SCR_OP_TRYINFATUATING]                        = Cmd_tryinfatuating,
@@ -809,6 +801,11 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_43]                             = Cmd_dummy,
+    [B_SCR_OP_SETSEEDED]                             = Cmd_dummy,
+    [B_SCR_OP_SETLIGHTSCREEN]                        = Cmd_dummy,
+    [B_SCR_OP_SETREFLECT]                            = Cmd_dummy,
+
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1614,48 +1611,6 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
     TrySaveExchangedItem(itemBattler, gLastUsedItem);
 }
 
-bool32 TrySetReflect(enum BattlerId battler)
-{
-    enum BattleSide side = GetBattlerSide(battler);
-    if (!(gSideStatuses[side] & SIDE_STATUS_REFLECT))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_REFLECT;
-        if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].reflectTimer = 8;
-        else
-            gSideTimers[side].reflectTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_SINGLE;
-
-        return TRUE;
-    }
-    return FALSE;
-}
-
-bool32 TrySetLightScreen(enum BattlerId battler)
-{
-    enum BattleSide side = GetBattlerSide(battler);
-    if (!(gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
-        if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].lightscreenTimer = 8;
-        else
-            gSideTimers[side].lightscreenTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_SINGLE;
-
-        return TRUE;
-    }
-    return FALSE;
-}
-
 void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
 {
     if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
@@ -1809,6 +1764,7 @@ static void Cmd_setadditionaleffects(void)
         cv.move = gCurrentMove;
         cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
         cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+        cv.isStatusMove = IsBattleMoveStatus(cv.move);
 
         struct SetEffect se = {0};
 
@@ -5227,41 +5183,6 @@ static void Cmd_setfieldweather(void)
         BattleScriptCall(BattleScript_FailOnPrimalWeather);
 }
 
-static void Cmd_setreflect(void)
-{
-    CMD_ARGS();
-    if (!TrySetReflect(gBattlerAttacker))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_setseeded(void)
-{
-    CMD_ARGS();
-
-    if (IsBattlerUnaffectedByMove(gBattlerTarget) || gBattleMons[gBattlerTarget].volatiles.leechSeed)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_MISS;
-    }
-    else if (IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_GRASS))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_FAIL;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.leechSeed = LEECHSEEDED_BY(gBattlerAttacker);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_manipulatedamage(void)
 {
     CMD_ARGS(u8 mode);
@@ -5743,23 +5664,6 @@ static void Cmd_givepaydaymoney(void)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-static void Cmd_setlightscreen(void)
-{
-    CMD_ARGS();
-
-    if (!TrySetLightScreen(gBattlerAttacker))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_tryKO(void)
-{
 }
 
 static void Cmd_checknonvolatiletrigger(void)

@@ -659,14 +659,6 @@
 	.byte B_SCR_OP_SETFIELDWEATHER
 	.endm
 
-	.macro setreflect
-	.byte B_SCR_OP_SETREFLECT
-	.endm
-
-	.macro setseeded
-	.byte B_SCR_OP_SETSEEDED
-	.endm
-
 	.macro manipulatedamage mode:req
 	.byte B_SCR_OP_MANIPULATEDAMAGE
 	.byte \mode
@@ -727,15 +719,6 @@
 
 	.macro givepaydaymoney
 	.byte B_SCR_OP_GIVEPAYDAYMONEY
-	.endm
-
-	.macro setlightscreen
-	.byte B_SCR_OP_SETLIGHTSCREEN
-	.endm
-
-	.macro tryKO failInstr:req
-	.byte B_SCR_OP_TRYKO
-	.4byte \failInstr
 	.endm
 
 	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
