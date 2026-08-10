@@ -255,3 +255,27 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after an ally's Cheek Pouch activates")
         EXPECT_EQ(playerRight->item, ITEM_NONE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Opposing Symbiosis ignores the player's stolen-item record")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        ASSUME(GetItemHoldEffect(ITEM_ROOM_SERVICE) == HOLD_EFFECT_ROOM_SERVICE);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROOM_SERVICE); }
+        OPPONENT(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_KNOCK_OFF, target: playerLeft); }
+        TURN { MOVE(playerRight, MOVE_TRICK_ROOM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ABILITY_POPUP(opponentRight, ABILITY_SYMBIOSIS);
+    } THEN {
+        EXPECT_EQ(opponentLeft->item, ITEM_POTION);
+        EXPECT_EQ(opponentRight->item, ITEM_NONE);
+    }
+}

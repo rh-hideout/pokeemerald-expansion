@@ -136,7 +136,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
     {
         if (GetConfig(B_UPROAR) < GEN_5 && UproarWakeUpCheck(cv->battlerAtk))
         {
-            TryDeactivateSleepClause(GetBattlerSide(cv->battlerAtk), gBattlerPartyIndexes[cv->battlerAtk]);
+            TryDeactivateSleepClause(cv->battlerAtk, gBattlerPartyIndexes[cv->battlerAtk]);
             gBattleMons[cv->battlerAtk].status1 &= ~STATUS1_SLEEP;
             gBattleMons[cv->battlerAtk].volatiles.nightmare = FALSE;
             gEffectBattler = cv->battlerAtk;
@@ -176,7 +176,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleCalcValues *cv)
             }
             else
             {
-                TryDeactivateSleepClause(GetBattlerSide(cv->battlerAtk), gBattlerPartyIndexes[cv->battlerAtk]);
+                TryDeactivateSleepClause(cv->battlerAtk, gBattlerPartyIndexes[cv->battlerAtk]);
                 gBattleMons[cv->battlerAtk].volatiles.nightmare = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
                 result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -669,7 +669,7 @@ static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
 {
     if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING)
     {
-        enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(cv->battlerAtk));
+        enum Move partnerMove = GetBattlerChosenMove(GetPartnerBattler(cv->battlerAtk));
 
         if (GetPledgeComboMove(cv->move) == partnerMove)
             gCurrentMove = GetPledgeResultMove(cv->move);
@@ -703,7 +703,7 @@ static bool32 IsSmartTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef
 
 static bool32 IsTargetingBothFoes(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef == BATTLE_PARTNER(battlerAtk) || battlerAtk == battlerDef)
+    if (battlerDef == GetPartnerBattler(battlerAtk) || battlerAtk == battlerDef)
     {
         gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
         return skipFailure;
@@ -718,7 +718,7 @@ static bool32 IsTargetingSelf(enum BattlerId battlerAtk, enum BattlerId battlerD
 
 static bool32 IsTargetingAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef != BATTLE_PARTNER(battlerAtk))
+    if (battlerDef != GetPartnerBattler(battlerAtk))
     {
         gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
         return skipFailure;
@@ -728,7 +728,7 @@ static bool32 IsTargetingAlly(enum BattlerId battlerAtk, enum BattlerId battlerD
 
 static bool32 IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (battlerDef != BATTLE_PARTNER(battlerAtk))
+    if (battlerDef != GetPartnerBattler(battlerAtk))
     {
         if (battlerDef != battlerAtk) // Don't set result flags for user
             gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_DOESNT_AFFECT_FOE;
@@ -763,7 +763,7 @@ static bool32 IsTargetingField(enum BattlerId battlerAtk, enum BattlerId battler
 
 static bool32 IsTargetingOpponentsField(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (IsBattlerAlly(battlerDef, BATTLE_OPPOSITE(battlerAtk)))
+    if (IsBattlerAlly(battlerDef, GetOppositeBattler(battlerAtk)))
         return checkFailure;
     return skipFailure;
 }
@@ -844,7 +844,7 @@ bool32 IsAffectedByFollowMe(enum BattlerId battlerAtk, enum BattleSide defSide, 
 static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum MoveTarget moveTarget)
 {
     u32 redirectorOrderNum = MAX_BATTLERS_COUNT;
-    enum BattleSide side = BATTLE_OPPOSITE(GetBattlerSide(cv->battlerAtk));
+    enum BattleSide side = (GetBattlerSide(cv->battlerAtk) ^ BIT_SIDE);
 
     if (cv->moveEffect == EFFECT_REFLECT_DAMAGE)
     {
@@ -911,7 +911,7 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
 
 static bool32 WasOriginalTargetAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveTarget moveTarget)
 {
-    if (!gProtectStructs[BATTLE_PARTNER(battlerAtk)].usedAllySwitch)
+    if (!gProtectStructs[GetPartnerBattler(battlerAtk)].usedAllySwitch)
         return FALSE;
 
     if ((moveTarget == TARGET_ALLY || moveTarget == TARGET_USER_OR_ALLY) && battlerAtk == battlerDef)
@@ -936,7 +936,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         }
         else if (IsDoubleBattle() && moveTarget == TARGET_ALLY && !IsBattlerAlly(cv->battlerDef, cv->battlerAtk))
         {
-            cv->battlerDef = BATTLE_PARTNER(cv->battlerAtk);
+            cv->battlerDef = GetPartnerBattler(cv->battlerAtk);
         }
         else if (IsDoubleBattle() && moveTarget == TARGET_FOES_AND_ALLY)
         {
@@ -961,7 +961,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
               && IsDoubleBattle()
               && (!IsBattlerAlly(cv->battlerAtk, cv->battlerDef)))
         {
-            cv->battlerDef = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(cv->battlerDef)));
+            cv->battlerDef = GetPartnerBattler(cv->battlerDef);
         }
     }
 
@@ -1563,7 +1563,7 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
         if (!IsBattlerAlive(battler) || IsBattlerAlly(cv->battlerAtk, battler))
             continue;
         if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler)
-         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(cv->battlerAtk, BATTLE_PARTNER(battler)))) // either battler or partner is affected
+         && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(cv->battlerAtk, GetPartnerBattler(battler)))) // either battler or partner is affected
             continue;
 
         ability = cv->abilities[battler];
@@ -1605,7 +1605,7 @@ static enum CancelerResult CancelerExplodingDamp(struct BattleCalcValues *cv)
 
 static bool32 CanPledgeComboAttackHappen(struct BattleCalcValues *cv)
 {
-    enum BattlerId partner = BATTLE_PARTNER(cv->battlerAtk);
+    enum BattlerId partner = GetPartnerBattler(cv->battlerAtk);
     enum Move partnerMove = GetBattlerChosenMove(partner);
 
     if (gBattleStruct->pledgeState != PLEDGE_COMBO_NONE)
@@ -1965,11 +1965,11 @@ static bool32 NoTargetPresent(enum BattlerId battler, enum Move move, enum MoveT
         break;
     case TARGET_BOTH:
     case TARGET_SMART:
-        if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerTarget)))
+        if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(GetPartnerBattler(gBattlerTarget)))
             return TRUE;
         break;
     case TARGET_FOES_AND_ALLY:
-        if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerTarget)) && !IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)))
+        if (!IsBattlerAlive(gBattlerTarget) && !IsBattlerAlive(GetPartnerBattler(gBattlerTarget)) && !IsBattlerAlive(GetPartnerBattler(gBattlerAttacker)))
             return TRUE;
         break;
     default:
@@ -2296,7 +2296,7 @@ static void SetPossibleNewSmartTarget(u32 move)
      || GetBattlerMoveTargetType(gBattlerAttacker, move) != TARGET_SMART)
         return;
 
-    enum BattlerId partner = BATTLE_PARTNER(gBattlerTarget);
+    enum BattlerId partner = GetPartnerBattler(gBattlerTarget);
     if (!IsBattlerUnaffectedByMove(partner))
         gBattlerTarget = partner;
 }
@@ -2503,10 +2503,10 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
              && smartTargetState == INITIAL_STATE
              && !IsAffectedByFollowMe(cv->battlerAtk, GetBattlerSide(cv->battlerDef), cv->move)
              && CanTargetPartner(cv->battlerAtk, cv->battlerDef)
-             && !IsBattlerUnaffectedByMove(BATTLE_PARTNER(cv->battlerDef)))
+             && !IsBattlerUnaffectedByMove(GetPartnerBattler(cv->battlerDef)))
             {
                 smartTargetState = MISSED_FIRST_TARGET;
-                gBattlerTarget = BATTLE_PARTNER(cv->battlerDef); // Smart target to partner if miss
+                gBattlerTarget = GetPartnerBattler(cv->battlerDef); // Smart target to partner if miss
             }
 
             if (!isMultiHitOn)
@@ -4176,14 +4176,16 @@ static enum MoveEndResult MoveEndSymbiosis(struct BattleCalcValues *cv)
          && ShouldSkipBattlerForMoveEnd(battlerDef, cv))
             continue;
 
+        enum BattlerId partnerDef = GetPartnerBattler(battlerDef);
+
         if ((gSpecialStatuses[battlerDef].berryReduced
           || (GetConfig(B_SYMBIOSIS_GEMS) >= GEN_7 && gSpecialStatuses[battlerDef].gemBoost))
-         && TryTriggerSymbiosis(battlerDef, BATTLE_PARTNER(battlerDef)))
+         && TryTriggerSymbiosis(battlerDef, partnerDef))
         {
-            BestowItem(BATTLE_PARTNER(battlerDef), battlerDef);
-            gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battlerDef)].ability;
+            BestowItem(partnerDef, battlerDef);
+            gLastUsedAbility = gBattleMons[partnerDef].ability;
             gEffectBattler = battlerDef;
-            gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battlerDef);
+            gBattleScripting.battler = gBattlerAbility = partnerDef;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
             return MOVEEND_RESULT_RUN_SCRIPT;
@@ -4488,7 +4490,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
     }
     else if (moveTarget == TARGET_USER_AND_ALLY)
     {
-        enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
+        enum BattlerId partner = GetPartnerBattler(gBattlerAttacker);
         if (partner != gBattlerTarget && IsBattlerAlive(partner))
         {
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
@@ -4651,9 +4653,9 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
              && target == TARGET_SMART
              && !IsAffectedByFollowMe(cv->battlerAtk, GetBattlerSide(cv->battlerDef), cv->move)
              && CanTargetPartner(cv->battlerAtk, cv->battlerDef)
-             && !IsBattlerUnaffectedByMove(BATTLE_PARTNER(cv->battlerDef)))
+             && !IsBattlerUnaffectedByMove(GetPartnerBattler(cv->battlerDef)))
             {
-                gBattlerTarget = cv->battlerDef = BATTLE_PARTNER(cv->battlerDef); // Target the partner in doubles for second hit.
+                gBattlerTarget = cv->battlerDef = GetPartnerBattler(cv->battlerDef); // Target the partner in doubles for second hit.
             }
             gBattleStruct->eventState.moveEndBlock++;
             break;
@@ -4895,8 +4897,6 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                     break;
 
-                enum BattleSide side = GetBattlerSide(battlerDef);
-
                 if (cv->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                 {
                     gBattlerAbility = battlerDef;
@@ -4917,7 +4917,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                     BtlController_EmitSetMonData(battlerDef, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
                     MarkBattlerForControllerExec(battlerDef);
                     // Mark item as stolen so it will be restored after battle
-                    gBattleStruct->itemLost[side][gBattlerPartyIndexes[battlerDef]].stolen = TRUE;
+                    gBattleStruct->itemLost[GetBattlerTrainer(battlerDef)][gBattlerPartyIndexes[battlerDef]].stolen = TRUE;
                 }
                 else
                 {
@@ -5842,7 +5842,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
 
         if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))
         {
-            enum BattlerId partner = BATTLE_PARTNER(i);
+            enum BattlerId partner = GetPartnerBattler(i);
             gBattleStruct->battlerState[i].commanderSpecies = SPECIES_NONE;
             if (gBattleMons[partner].volatiles.semiInvulnerable == STATE_COMMANDER)
                 gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
@@ -6240,7 +6240,7 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
         {
             u32 status = gBattleMons[cv->battlerAtk].status1;
             if (status & STATUS1_SLEEP)
-                TryDeactivateSleepClause(GetBattlerSide(cv->battlerAtk), gBattlerPartyIndexes[cv->battlerAtk]);
+                TryDeactivateSleepClause(cv->battlerAtk, gBattlerPartyIndexes[cv->battlerAtk]);
 
             if (status & STATUS1_PARALYSIS)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;

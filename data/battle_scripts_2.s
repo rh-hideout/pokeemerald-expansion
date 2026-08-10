@@ -316,6 +316,15 @@ BattleScript_TrainerPartnerSlideMsgEnd::
 	call BattleScript_TrainerPartnerSlideMsgRet
 	end
 
+BattleScript_TrainerSlideMsg::
+	trainerslidein BS_SCRIPTING
+	handletrainerslidemsg BS_SCRIPTING, PRINT_SLIDE_MESSAGE
+	waitstate
+	trainerslideout BS_SCRIPTING
+	waitstate
+	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
+	end3
+
 BattleScript_GhostBallDodge::
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_ITDODGEDBALL

@@ -84,18 +84,6 @@ enum __attribute__((packed)) BattleTrainer
     MAX_BATTLE_TRAINERS,
 };
 
-// These macros can be used with either battler ID or positions to get the partner or the opposite mon
-#define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
-#define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)
-
-// Left and right are determined by how they're referred to in tests and everywhere else.
-// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
-#define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
-#define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
-
-#define LEFT_ALLY(battler) (battler & BIT_SIDE)
-#define RIGHT_ALLY(battler) ((battler & BIT_SIDE) | BIT_FLANK)
-
 enum BattleSide
 {
     B_SIDE_PLAYER = 0,
@@ -182,6 +170,7 @@ enum BattleSide
 // If a new STATUS1 is added here, it should also be added to
 // sCompressedStatuses in src/pokemon.c or else it will be lost outside
 // of battle.
+// Stored in gBattleMons[n].status1, which is u32
 #define STATUS1_NONE             0
 #define STATUS1_SLEEP            (1 << 0 | 1 << 1 | 1 << 2) // First 3 bits (Number of turns to sleep)
 #define STATUS1_SLEEP_TURN(num)  ((num) << 0) // Just for readability (or if rearranging statuses)
@@ -400,7 +389,8 @@ enum QueuedSwitch
 #define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28)) // Also uses bits 29, 30 and 31
 
-// Per-side statuses that affect an entire party
+// Per-side statuses that affect an entire party.
+// These select from gSideStatuses[n], which is a u32.
 #define SIDE_STATUS_REFLECT                 (1 << 0)
 #define SIDE_STATUS_LIGHTSCREEN             (1 << 1)
 #define SIDE_STATUS_SAFEGUARD               (1 << 2)
@@ -484,6 +474,7 @@ enum BattleTerrain
 #define MOVE_RESULT_LOW_EFFECTIVENESS      (MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE)
 #define MOVE_RESULT_INVALID_TARGET         (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_NOT_PRESENT)
 
+// These select from gBattleWeather, which is a u16.
 enum BattleWeather
 {
     BATTLE_WEATHER_NONE,

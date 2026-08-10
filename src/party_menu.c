@@ -2261,23 +2261,20 @@ u8 GetMonAilment(struct Pokemon *mon)
 
 static void SetPartyMonsAllowedInMinigame(void)
 {
-    s16 *ptr;
-
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_MINIGAME)
     {
         u8 i;
 
-        ptr = &gPartyMenu.data1;
         gPartyMenu.data1 = 0;
         if (gSpecialVar_0x8005 == 0)
         {
             for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
-                *ptr += IsMonAllowedInPokemonJump(&gParties[B_TRAINER_PLAYER][i]) << i;
+                gPartyMenu.data1 += IsMonAllowedInPokemonJump(&gParties[B_TRAINER_PLAYER][i]) << i;
         }
         else
         {
             for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
-                *ptr += IsMonAllowedInDodrioBerryPicking(&gParties[B_TRAINER_PLAYER][i]) << i;
+                gPartyMenu.data1 += IsMonAllowedInDodrioBerryPicking(&gParties[B_TRAINER_PLAYER][i]) << i;
         }
     }
 }
@@ -5602,17 +5599,16 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task)
 static void Task_LearnedMove(u8 taskId)
 {
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
-    s16 *move = &gPartyMenu.data1;
     enum Item item = gSpecialVar_ItemId;
 
-    if (move[1] == 0)
+    if (gPartyMenu.learnMoveState == 0)
     {
         AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
         if (!GetItemImportance(item))
             RemoveBagItem(item, 1);
     }
     GetMonNickname(mon, gStringVar1);
-    StringCopy(gStringVar2, GetMoveName(move[0]));
+    StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
     StringExpandPlaceholders(gStringVar4, gText_PkmnLearnedMove3);
     DisplayPartyMenuMessage(gStringVar4, TRUE);
     ScheduleBgCopyTilemapToVram(2);
@@ -5632,13 +5628,13 @@ static void Task_LearnNextMoveOrClosePartyMenu(u8 taskId)
 {
     if (IsFanfareTaskInactive() && ((JOY_NEW(A_BUTTON)) || (JOY_NEW(B_BUTTON))))
     {
-        if (gPartyMenu.learnMoveState == 1)
+        if (gPartyMenu.data1 == 1)
         {
             Task_TryLearningNextMove(taskId);
         }
         else
         {
-            if (gPartyMenu.learnMoveState == 2) // never occurs
+            if (gPartyMenu.data1 == 2) // never occurs
                 gSpecialVar_Result = TRUE;
             Task_ClosePartyMenu(taskId);
         }
@@ -7047,16 +7043,14 @@ enum ItemEffectType GetItemEffectType(enum Item item)
 static void TryTutorSelectedMon(u8 taskId)
 {
     struct Pokemon *mon;
-    s16 *move;
 
     if (!gPaletteFade.active)
     {
         mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
-        move = &gPartyMenu.data1;
         GetMonNickname(mon, gStringVar1);
         gPartyMenu.data1 = gSpecialVar_0x8005;
         StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
-        move[1] = 2;
+        gPartyMenu.learnMoveState = 2;
         switch (CanTeachMove(mon, gPartyMenu.data1))
         {
         case CANNOT_LEARN_MOVE:
@@ -7569,7 +7563,7 @@ static bool8 TrySwitchInPokemon(void)
         StringExpandPlaceholders(gStringVar4, gText_EggCantBattle);
         return FALSE;
     }
-    if (BattlersShareParty(gBattlerInMenuId, BATTLE_PARTNER(gBattlerInMenuId))
+    if (BattlersShareParty(gBattlerInMenuId, GetPartnerBattler(gBattlerInMenuId))
      && battlePartyId == gBattleStruct->prevSelectedPartySlot)
     {
         GetMonNickname(&party[partySlot], gStringVar1);
