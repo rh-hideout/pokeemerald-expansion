@@ -103,6 +103,7 @@ static void DrawHealthBarTiles(enum BattlerId);
 static void DrawExpBarTiles(enum BattlerId);
 static u32 GetHealthBarColour(s32, s32);
 static u8 CalcBarFilledPixels(const struct BattleBarInfo*, u8 *, u8);
+static bool32 ShouldShowHealthbar(enum BattlerId battler);
 
 static void SpriteCb_AbilityPopUp(struct Sprite *);
 static void Task_FreeAbilityPopUpGfx(u8);
@@ -575,7 +576,8 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     healthBarSpritePtr->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
     healthBarSpritePtr->oam.priority = 1;
 
-    CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_START], SpriteTile(healthBarSpritePtr), 2);
+    if (ShouldShowHealthbar(battler))
+        CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_START], SpriteTile(healthBarSpritePtr), 2);
 
     gSprites[healthboxLeftSpriteId].hMain_HealthBarSpriteId = healthbarSpriteId;
     gSprites[healthboxLeftSpriteId].hMain_Battler = battler;
@@ -848,6 +850,14 @@ static void PrintHPPercentageOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u3
 
     gSprites[spriteId].data[1] = savedValue1;
     gSprites[spriteId2].data[1] = savedValue2;
+}
+
+static bool32 ShouldShowHealthbar(enum BattlerId battler)
+{
+    enum BattleCoordTypes coords = GetBattlerCoordsIndex(battler);
+    bool32 onlyNumbers = !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars;
+
+    return coords == BATTLE_COORDS_SINGLES || onlyNumbers;
 }
 
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
@@ -1635,7 +1645,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
             Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileNumAdder;
             FillTiles((Tile4BPP*)statusGfxPtr, dest, 3);
 
-        if (B_HP_PERCENTAGE_DISPLAY || !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
+        if (ShouldShowHealthbar(battler))
             CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_LABEL], SpriteTile(healthBarSprite), 2);
 
         TryAddPokeballIconToHealthbox(healthboxSpriteId, TRUE);
@@ -1805,7 +1815,7 @@ s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar)
     if (whichBar == EXP_BAR)
         DrawExpBarTiles(battler);
 
-    if (whichBar == HEALTH_BAR && !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
+    if (whichBar == HEALTH_BAR && ShouldShowHealthbar(battler))
         DrawHealthBarTiles(battler);
 
     if (currentBarValue == -1)
