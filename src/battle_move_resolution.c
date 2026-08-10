@@ -4276,7 +4276,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
                     BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].pp[moveIndex]), &gBattleMons[cv->battlerAtk].pp[moveIndex]);
                     MarkBattlerForControllerExec(cv->battlerAtk);
                     PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[cv->battlerAtk].moves[moveIndex])
-                    BattleScriptCall(BattleScript_GrudgeTakesPp);
+                    BattleScriptCall(BattleScript_GrudgeTakesPP);
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 }
                 gBattleStruct->eventState.moveEndBlock++;
