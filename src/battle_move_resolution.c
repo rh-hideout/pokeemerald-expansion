@@ -3228,7 +3228,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
             {
             case SUBSTITUTE_BLOCK_EFFECTIVENESS_MESSAGE:
             {
-                enum BattlerId partnerDef = BATTLE_PARTNER(battlerDef);
+                enum BattlerId partnerDef = GetPartnerBattler(battlerDef);
                 if (ShouldSkipBattlerForMoveEnd(partnerDef, cv) || gSpecialStatuses[partnerDef].resultMessagePrinted)
                     partnerDef = battlerDef;
 
@@ -4467,7 +4467,7 @@ static enum MoveEndResult MoveEndSetValuesForOpposingSide(struct BattleCalcValue
 {
     if (!IsBattleMoveStatus(cv->move))
     {
-        cv->battlerDef = LEFT_FOE(cv->battlerAtk);
+        cv->battlerDef = GetBattlerLeftFoe(cv->battlerAtk);
         gBattleScripting.moveendState++;
     }
     else
@@ -6004,7 +6004,7 @@ enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endSta
         if (gBattleScripting.moveendState < MOVEEND_SET_VALUES_FOR_OPPOSING_SIDE)
             cv.battlerDef = cv.battlerAtk;
         else
-            cv.battlerDef = LEFT_FOE(cv.battlerAtk);
+            cv.battlerDef = GetBattlerLeftFoe(cv.battlerAtk);
     }
 
     do
