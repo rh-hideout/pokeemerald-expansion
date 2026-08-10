@@ -28713,491 +28713,491 @@ const u32 gMonBackPic_FortuneLadyEveryWater[] = INCGFX_U32("graphics/pokemon/For
 const u16 gMonShinyPalette_FortuneLadyEveryWater[] = INCGFX_U16("graphics/pokemon/FortuneLadyEveryWater/shiny.pal", ".gbapal");
 const u8 gMonIcon_FortuneLadyEveryWater[] = INCGFX_U8("graphics/pokemon/FortuneLadyEveryWater/icon.png", ".4bpp");
 
-const u32 gMonFrontPic_FrogTheJam[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_FrogTheJam[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_FrogTheJam[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_FrogTheJam[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_FrogTheJam[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_FrostAndFlameDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_FrostAndFlameDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_FrostAndFlameDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_FrostAndFlameDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_FrostAndFlameDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_FrozenFitzgerald[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_FrozenFitzgerald[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_FrozenFitzgerald[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_FrozenFitzgerald[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_FrozenFitzgerald[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GaiaKnightTheForceOfEarth[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GaiaKnightTheForceOfEarth[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GaiaKnightTheForceOfEarth[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GaiaKnightTheForceOfEarth[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GaiaKnightTheForceOfEarth[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GaiaTheDragonChampion[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GaiaTheDragonChampion[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GaiaTheDragonChampion[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GaiaTheDragonChampion[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GaiaTheDragonChampion[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GaiaTheFierceKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GaiaTheFierceKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GaiaTheFierceKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GaiaTheFierceKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GaiaTheFierceKnight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Gameciel[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Gameciel[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Gameciel[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Gameciel[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Gameciel[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Gandora[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Gandora[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Gandora[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Gandora[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Gandora[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GateGuardian[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GateGuardian[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GateGuardian[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GateGuardian[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GateGuardian[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GateGuardianThunderWind[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GateGuardianThunderWind[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GateGuardianThunderWind[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GateGuardianThunderWind[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GateGuardianThunderWind[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GearfriedTheIronKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GearfriedTheIronKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GearfriedTheIronKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GearfriedTheIronKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GearfriedTheIronKnight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GearfriedTheSwordmaster[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GearfriedTheSwordmaster[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GearfriedTheSwordmaster[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GearfriedTheSwordmaster[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GearfriedTheSwordmaster[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GeminiElf[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GeminiElf[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GeminiElf[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GeminiElf[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GeminiElf[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GhostrickWitch[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GhostrickWitch[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GhostrickWitch[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GhostrickWitch[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GhostrickWitch[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GiantRex[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GiantRex[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GiantRex[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GiantRex[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GiantRex[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GiantSoldierOfSteel[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GiantSoldierOfSteel[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GiantSoldierOfSteel[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GiantSoldierOfSteel[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GiantSoldierOfSteel[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GiantSoldierOfStone[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GiantSoldierOfStone[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GiantSoldierOfStone[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GiantSoldierOfStone[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GiantSoldierOfStone[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GilfordTheLightning[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GilfordTheLightning[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GilfordTheLightning[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GilfordTheLightning[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GilfordTheLightning[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GlowNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GlowNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GlowNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GlowNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GlowNeos[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Gokibore[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Gokibore[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Gokibore[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Gokibore[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Gokibore[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Gokipole[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Gokipole[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Gokipole[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Gokipole[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Gokipole[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GracefulDice[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GracefulDice[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GracefulDice[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GracefulDice[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GracefulDice[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GrandNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GrandNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GrandNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GrandNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GrandNeos[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GrandTikiElder[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GrandTikiElder[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GrandTikiElder[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GrandTikiElder[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GrandTikiElder[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GreatMammothOfGoldfine[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GreatMammothOfGoldfine[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GreatMammothOfGoldfine[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GreatMammothOfGoldfine[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GreatMammothOfGoldfine[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_GuardianEatos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_GuardianEatos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_GuardianEatos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_GuardianEatos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_GuardianEatos[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Hamon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Hamon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Hamon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Hamon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Hamon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HappyLover[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HappyLover[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HappyLover[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HappyLover[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HappyLover[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HarpiesPetDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HarpiesPetDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HarpiesPetDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HarpiesPetDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HarpiesPetDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HarpieBrother[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HarpieBrother[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HarpieBrother[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HarpieBrother[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HarpieBrother[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HarpieLady[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HarpieLady[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HarpieLady[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HarpieLady[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HarpieLady[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HarpieLadySisters[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HarpieLadySisters[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HarpieLadySisters[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HarpieLadySisters[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HarpieLadySisters[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HarpieQueen[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HarpieQueen[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HarpieQueen[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HarpieQueen[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HarpieQueen[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HeavyMetalKing[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HeavyMetalKing[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HeavyMetalKing[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HeavyMetalKing[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HeavyMetalKing[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HeliosDuoMegistus[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HeliosDuoMegistus[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HeliosDuoMegistus[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HeliosDuoMegistus[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HeliosDuoMegistus[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HeliosThePrimordialSun[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HeliosThePrimordialSun[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HeliosThePrimordialSun[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HeliosThePrimordialSun[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HeliosThePrimordialSun[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HeliosTriceMegistus[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HeliosTriceMegistus[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HeliosTriceMegistus[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HeliosTriceMegistus[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HeliosTriceMegistus[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Hermos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Hermos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Hermos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Hermos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Hermos[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HitotsuMeGiant[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HitotsuMeGiant[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HitotsuMeGiant[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HitotsuMeGiant[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HitotsuMeGiant[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Honest[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Honest[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Honest[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Honest[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Honest[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HonestNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HonestNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HonestNeos[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HonestNeos[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HonestNeos[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HorusLevelEight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HorusLevelEight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HorusLevelEight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HorusLevelEight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HorusLevelEight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HorusLevelFoue[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HorusLevelFoue[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HorusLevelFoue[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HorusLevelFoue[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HorusLevelFoue[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HorusLevelSix[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HorusLevelSix[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HorusLevelSix[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HorusLevelSix[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HorusLevelSix[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HumanoidSlime[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HumanoidSlime[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HumanoidSlime[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HumanoidSlime[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HumanoidSlime[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HumanoidWormDrake[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HumanoidWormDrake[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HumanoidWormDrake[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HumanoidWormDrake[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HumanoidWormDrake[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HundredEyesDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HundredEyesDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HundredEyesDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HundredEyesDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HundredEyesDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_HungryBurger[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_HungryBurger[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_HungryBurger[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_HungryBurger[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_HungryBurger[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Hyozanryu[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Hyozanryu[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Hyozanryu[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Hyozanryu[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Hyozanryu[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_IllusionistFacelessMage[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_IllusionistFacelessMage[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_IllusionistFacelessMage[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_IllusionistFacelessMage[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_IllusionistFacelessMage[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_IllusionistFacelessMagician[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_IllusionistFacelessMagician[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_IllusionistFacelessMagician[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_IllusionistFacelessMagician[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_IllusionistFacelessMagician[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InfernityArchfiend[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InfernityArchfiend[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InfernityArchfiend[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InfernityArchfiend[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InfernityArchfiend[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InfernityDoomArchfiend[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InfernityDoomArchfiend[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InfernityDoomArchfiend[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InfernityDoomArchfiend[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InfernityDoomArchfiend[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InfernoWing[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InfernoWing[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InfernoWing[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InfernoWing[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InfernoWing[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InjectionFairyLily[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InjectionFairyLily[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InjectionFairyLily[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InjectionFairyLily[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InjectionFairyLily[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Inpachi[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Inpachi[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Inpachi[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Inpachi[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Inpachi[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InsectKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InsectKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InsectKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InsectKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InsectKnight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InsectPrincess[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InsectPrincess[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InsectPrincess[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InsectPrincess[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InsectPrincess[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_InsectQueen[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_InsectQueen[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_InsectQueen[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_InsectQueen[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_InsectQueen[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JacksKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JacksKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JacksKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JacksKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JacksKnight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JerryBeansMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JerryBeansMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JerryBeansMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JerryBeansMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JerryBeansMan[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Jinzo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Jinzo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Jinzo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Jinzo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Jinzo[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JinzoReturner[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JinzoReturner[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JinzoReturner[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JinzoReturner[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JinzoReturner[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JiraiGumo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JiraiGumo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JiraiGumo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JiraiGumo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JiraiGumo[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JudgeMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JudgeMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JudgeMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JudgeMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JudgeMan[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JudgmentDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JudgmentDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JudgmentDragon[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JudgmentDragon[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JudgmentDragon[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Junkuriboh[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Junkuriboh[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Junkuriboh[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Junkuriboh[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Junkuriboh[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JunkArcher[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JunkArcher[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JunkArcher[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JunkArcher[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JunkArcher[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JunkDestroyer[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JunkDestroyer[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JunkDestroyer[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JunkDestroyer[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JunkDestroyer[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JunkSpeeder[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JunkSpeeder[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JunkSpeeder[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JunkSpeeder[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JunkSpeeder[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JunkSynchron[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JunkSynchron[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JunkSynchron[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JunkSynchron[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JunkSynchron[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_JunkWarrior[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_JunkWarrior[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_JunkWarrior[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_JunkWarrior[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_JunkWarrior[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KairyuShin[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KairyuShin[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KairyuShin[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KairyuShin[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KairyuShin[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KarateMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KarateMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KarateMan[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KarateMan[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KarateMan[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_Keldo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_Keldo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_Keldo[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_Keldo[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_Keldo[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KeldoTheSacredProtector[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KeldoTheSacredProtector[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KeldoTheSacredProtector[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KeldoTheSacredProtector[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KeldoTheSacredProtector[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KillerNeedle[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KillerNeedle[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KillerNeedle[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KillerNeedle[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KillerNeedle[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KingsKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KingsKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KingsKnight[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KingsKnight[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KingsKnight[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KingOfD[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KingOfD[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KingOfD[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KingOfD[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KingOfD[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KingOfTheFeralImps[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KingOfTheFeralImps[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KingOfTheFeralImps[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KingOfTheFeralImps[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KingOfTheFeralImps[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
-
-const u32 gMonFrontPic_KingOfTheSkullServants[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
-const u16 gMonPalette_KingOfTheSkullServants[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
-const u32 gMonBackPic_KingOfTheSkullServants[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/back.png", ".4bpp.smol");
-const u16 gMonShinyPalette_KingOfTheSkullServants[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/shiny.pal", ".gbapal");
-const u8 gMonIcon_KingOfTheSkullServants[] = INCGFX_U8("graphics/pokemon/BlueEyesUltimateDragon/icon.png", ".4bpp");
+const u32 gMonFrontPic_FrogTheJam[] = INCGFX_U32("graphics/pokemon/FrogTheJam/front.png", ".4bpp.smol");
+const u16 gMonPalette_FrogTheJam[] = INCGFX_U16("graphics/pokemon/FrogTheJam/normal.pal", ".gbapal");
+const u32 gMonBackPic_FrogTheJam[] = INCGFX_U32("graphics/pokemon/FrogTheJam/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_FrogTheJam[] = INCGFX_U16("graphics/pokemon/FrogTheJam/shiny.pal", ".gbapal");
+const u8 gMonIcon_FrogTheJam[] = INCGFX_U8("graphics/pokemon/FrogTheJam/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_FrostAndFlameDragon[] = INCGFX_U32("graphics/pokemon/FrostAndFlameDragon/front.png", ".4bpp.smol");
+const u16 gMonPalette_FrostAndFlameDragon[] = INCGFX_U16("graphics/pokemon/FrostAndFlameDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_FrostAndFlameDragon[] = INCGFX_U32("graphics/pokemon/FrostAndFlameDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_FrostAndFlameDragon[] = INCGFX_U16("graphics/pokemon/FrostAndFlameDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_FrostAndFlameDragon[] = INCGFX_U8("graphics/pokemon/FrostAndFlameDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_FrozenFitzgerald[] = INCGFX_U32("graphics/pokemon/FrozenFitzgerald/front.png", ".4bpp.smol");
+const u16 gMonPalette_FrozenFitzgerald[] = INCGFX_U16("graphics/pokemon/FrozenFitzgerald/normal.pal", ".gbapal");
+const u32 gMonBackPic_FrozenFitzgerald[] = INCGFX_U32("graphics/pokemon/FrozenFitzgerald/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_FrozenFitzgerald[] = INCGFX_U16("graphics/pokemon/FrozenFitzgerald/shiny.pal", ".gbapal");
+const u8 gMonIcon_FrozenFitzgerald[] = INCGFX_U8("graphics/pokemon/FrozenFitzgerald/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GaiaKnightTheForceOfEarth[] = INCGFX_U32("graphics/pokemon/GaiaKnightTheForceOfEarth/front.png", ".4bpp.smol");
+const u16 gMonPalette_GaiaKnightTheForceOfEarth[] = INCGFX_U16("graphics/pokemon/GaiaKnightTheForceOfEarth/normal.pal", ".gbapal");
+const u32 gMonBackPic_GaiaKnightTheForceOfEarth[] = INCGFX_U32("graphics/pokemon/GaiaKnightTheForceOfEarth/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GaiaKnightTheForceOfEarth[] = INCGFX_U16("graphics/pokemon/GaiaKnightTheForceOfEarth/shiny.pal", ".gbapal");
+const u8 gMonIcon_GaiaKnightTheForceOfEarth[] = INCGFX_U8("graphics/pokemon/GaiaKnightTheForceOfEarth/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GaiaTheDragonChampion[] = INCGFX_U32("graphics/pokemon/GaiaTheDragonChampion/front.png", ".4bpp.smol");
+const u16 gMonPalette_GaiaTheDragonChampion[] = INCGFX_U16("graphics/pokemon/GaiaTheDragonChampion/normal.pal", ".gbapal");
+const u32 gMonBackPic_GaiaTheDragonChampion[] = INCGFX_U32("graphics/pokemon/GaiaTheDragonChampion/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GaiaTheDragonChampion[] = INCGFX_U16("graphics/pokemon/GaiaTheDragonChampion/shiny.pal", ".gbapal");
+const u8 gMonIcon_GaiaTheDragonChampion[] = INCGFX_U8("graphics/pokemon/GaiaTheDragonChampion/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GaiaTheFierceKnight[] = INCGFX_U32("graphics/pokemon/GaiaTheFierceKnight/front.png", ".4bpp.smol");
+const u16 gMonPalette_GaiaTheFierceKnight[] = INCGFX_U16("graphics/pokemon/GaiaTheFierceKnight/normal.pal", ".gbapal");
+const u32 gMonBackPic_GaiaTheFierceKnight[] = INCGFX_U32("graphics/pokemon/GaiaTheFierceKnight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GaiaTheFierceKnight[] = INCGFX_U16("graphics/pokemon/GaiaTheFierceKnight/shiny.pal", ".gbapal");
+const u8 gMonIcon_GaiaTheFierceKnight[] = INCGFX_U8("graphics/pokemon/GaiaTheFierceKnight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Gameciel[] = INCGFX_U32("graphics/pokemon/Gameciel/front.png", ".4bpp.smol");
+const u16 gMonPalette_Gameciel[] = INCGFX_U16("graphics/pokemon/Gameciel/normal.pal", ".gbapal");
+const u32 gMonBackPic_Gameciel[] = INCGFX_U32("graphics/pokemon/Gameciel/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Gameciel[] = INCGFX_U16("graphics/pokemon/Gameciel/shiny.pal", ".gbapal");
+const u8 gMonIcon_Gameciel[] = INCGFX_U8("graphics/pokemon/Gameciel/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Gandora[] = INCGFX_U32("graphics/pokemon/Gandora/front.png", ".4bpp.smol");
+const u16 gMonPalette_Gandora[] = INCGFX_U16("graphics/pokemon/Gandora/normal.pal", ".gbapal");
+const u32 gMonBackPic_Gandora[] = INCGFX_U32("graphics/pokemon/Gandora/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Gandora[] = INCGFX_U16("graphics/pokemon/Gandora/shiny.pal", ".gbapal");
+const u8 gMonIcon_Gandora[] = INCGFX_U8("graphics/pokemon/Gandora/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GateGuardian[] = INCGFX_U32("graphics/pokemon/GateGuardian/front.png", ".4bpp.smol");
+const u16 gMonPalette_GateGuardian[] = INCGFX_U16("graphics/pokemon/GateGuardian/normal.pal", ".gbapal");
+const u32 gMonBackPic_GateGuardian[] = INCGFX_U32("graphics/pokemon/GateGuardian/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GateGuardian[] = INCGFX_U16("graphics/pokemon/GateGuardian/shiny.pal", ".gbapal");
+const u8 gMonIcon_GateGuardian[] = INCGFX_U8("graphics/pokemon/GateGuardian/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GateGuardianThunderWind[] = INCGFX_U32("graphics/pokemon/GateGuardianThunderWind/front.png", ".4bpp.smol");
+const u16 gMonPalette_GateGuardianThunderWind[] = INCGFX_U16("graphics/pokemon/GateGuardianThunderWind/normal.pal", ".gbapal");
+const u32 gMonBackPic_GateGuardianThunderWind[] = INCGFX_U32("graphics/pokemon/GateGuardianThunderWind/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GateGuardianThunderWind[] = INCGFX_U16("graphics/pokemon/GateGuardianThunderWind/shiny.pal", ".gbapal");
+const u8 gMonIcon_GateGuardianThunderWind[] = INCGFX_U8("graphics/pokemon/GateGuardianThunderWind/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GearfriedTheIronKnight[] = INCGFX_U32("graphics/pokemon/GearfriedTheIronKnight/front.png", ".4bpp.smol");
+const u16 gMonPalette_GearfriedTheIronKnight[] = INCGFX_U16("graphics/pokemon/GearfriedTheIronKnight/normal.pal", ".gbapal");
+const u32 gMonBackPic_GearfriedTheIronKnight[] = INCGFX_U32("graphics/pokemon/GearfriedTheIronKnight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GearfriedTheIronKnight[] = INCGFX_U16("graphics/pokemon/GearfriedTheIronKnight/shiny.pal", ".gbapal");
+const u8 gMonIcon_GearfriedTheIronKnight[] = INCGFX_U8("graphics/pokemon/GearfriedTheIronKnight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GearfriedTheSwordmaster[] = INCGFX_U32("graphics/pokemon/GearfriedTheSwordmaster/front.png", ".4bpp.smol");
+const u16 gMonPalette_GearfriedTheSwordmaster[] = INCGFX_U16("graphics/pokemon/GearfriedTheSwordmaster/normal.pal", ".gbapal");
+const u32 gMonBackPic_GearfriedTheSwordmaster[] = INCGFX_U32("graphics/pokemon/GearfriedTheSwordmaster/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GearfriedTheSwordmaster[] = INCGFX_U16("graphics/pokemon/GearfriedTheSwordmaster/shiny.pal", ".gbapal");
+const u8 gMonIcon_GearfriedTheSwordmaster[] = INCGFX_U8("graphics/pokemon/GearfriedTheSwordmaster/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GeminiElf[] = INCGFX_U32("graphics/pokemon/GeminiElf/front.png", ".4bpp.smol");
+const u16 gMonPalette_GeminiElf[] = INCGFX_U16("graphics/pokemon/GeminiElf/normal.pal", ".gbapal");
+const u32 gMonBackPic_GeminiElf[] = INCGFX_U32("graphics/pokemon/GeminiElf/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GeminiElf[] = INCGFX_U16("graphics/pokemon/GeminiElf/shiny.pal", ".gbapal");
+const u8 gMonIcon_GeminiElf[] = INCGFX_U8("graphics/pokemon/GeminiElf/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GhostrickWitch[] = INCGFX_U32("graphics/pokemon/GhostrickWitch/front.png", ".4bpp.smol");
+const u16 gMonPalette_GhostrickWitch[] = INCGFX_U16("graphics/pokemon/GhostrickWitch/normal.pal", ".gbapal");
+const u32 gMonBackPic_GhostrickWitch[] = INCGFX_U32("graphics/pokemon/GhostrickWitch/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GhostrickWitch[] = INCGFX_U16("graphics/pokemon/GhostrickWitch/shiny.pal", ".gbapal");
+const u8 gMonIcon_GhostrickWitch[] = INCGFX_U8("graphics/pokemon/GhostrickWitch/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GiantRex[] = INCGFX_U32("graphics/pokemon/GiantRex/front.png", ".4bpp.smol");
+const u16 gMonPalette_GiantRex[] = INCGFX_U16("graphics/pokemon/GiantRex/normal.pal", ".gbapal");
+const u32 gMonBackPic_GiantRex[] = INCGFX_U32("graphics/pokemon/GiantRex/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GiantRex[] = INCGFX_U16("graphics/pokemon/GiantRex/shiny.pal", ".gbapal");
+const u8 gMonIcon_GiantRex[] = INCGFX_U8("graphics/pokemon/GiantRex/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GiantSoldierOfSteel[] = INCGFX_U32("graphics/pokemon/GiantSoldierOfSteel/front.png", ".4bpp.smol");
+const u16 gMonPalette_GiantSoldierOfSteel[] = INCGFX_U16("graphics/pokemon/GiantSoldierOfSteel/normal.pal", ".gbapal");
+const u32 gMonBackPic_GiantSoldierOfSteel[] = INCGFX_U32("graphics/pokemon/GiantSoldierOfSteel/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GiantSoldierOfSteel[] = INCGFX_U16("graphics/pokemon/GiantSoldierOfSteel/shiny.pal", ".gbapal");
+const u8 gMonIcon_GiantSoldierOfSteel[] = INCGFX_U8("graphics/pokemon/GiantSoldierOfSteel/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GiantSoldierOfStone[] = INCGFX_U32("graphics/pokemon/GiantSoldierOfStone/front.png", ".4bpp.smol");
+const u16 gMonPalette_GiantSoldierOfStone[] = INCGFX_U16("graphics/pokemon/GiantSoldierOfStone/normal.pal", ".gbapal");
+const u32 gMonBackPic_GiantSoldierOfStone[] = INCGFX_U32("graphics/pokemon/GiantSoldierOfStone/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GiantSoldierOfStone[] = INCGFX_U16("graphics/pokemon/GiantSoldierOfStone/shiny.pal", ".gbapal");
+const u8 gMonIcon_GiantSoldierOfStone[] = INCGFX_U8("graphics/pokemon/GiantSoldierOfStone/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GilfordTheLightning[] = INCGFX_U32("graphics/pokemon/GilfordTheLightning/front.png", ".4bpp.smol");
+const u16 gMonPalette_GilfordTheLightning[] = INCGFX_U16("graphics/pokemon/GilfordTheLightning/normal.pal", ".gbapal");
+const u32 gMonBackPic_GilfordTheLightning[] = INCGFX_U32("graphics/pokemon/GilfordTheLightning/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GilfordTheLightning[] = INCGFX_U16("graphics/pokemon/GilfordTheLightning/shiny.pal", ".gbapal");
+const u8 gMonIcon_GilfordTheLightning[] = INCGFX_U8("graphics/pokemon/GilfordTheLightning/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GlowNeos[] = INCGFX_U32("graphics/pokemon/GlowNeos/front.png", ".4bpp.smol");
+const u16 gMonPalette_GlowNeos[] = INCGFX_U16("graphics/pokemon/GlowNeos/normal.pal", ".gbapal");
+const u32 gMonBackPic_GlowNeos[] = INCGFX_U32("graphics/pokemon/GlowNeos/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GlowNeos[] = INCGFX_U16("graphics/pokemon/GlowNeos/shiny.pal", ".gbapal");
+const u8 gMonIcon_GlowNeos[] = INCGFX_U8("graphics/pokemon/GlowNeos/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Gokibore[] = INCGFX_U32("graphics/pokemon/Gokibore/front.png", ".4bpp.smol");
+const u16 gMonPalette_Gokibore[] = INCGFX_U16("graphics/pokemon/Gokibore/normal.pal", ".gbapal");
+const u32 gMonBackPic_Gokibore[] = INCGFX_U32("graphics/pokemon/Gokibore/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Gokibore[] = INCGFX_U16("graphics/pokemon/Gokibore/shiny.pal", ".gbapal");
+const u8 gMonIcon_Gokibore[] = INCGFX_U8("graphics/pokemon/Gokibore/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Gokipole[] = INCGFX_U32("graphics/pokemon/Gokipole/front.png", ".4bpp.smol");
+const u16 gMonPalette_Gokipole[] = INCGFX_U16("graphics/pokemon/Gokipole/normal.pal", ".gbapal");
+const u32 gMonBackPic_Gokipole[] = INCGFX_U32("graphics/pokemon/Gokipole/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Gokipole[] = INCGFX_U16("graphics/pokemon/Gokipole/shiny.pal", ".gbapal");
+const u8 gMonIcon_Gokipole[] = INCGFX_U8("graphics/pokemon/Gokipole/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GracefulDice[] = INCGFX_U32("graphics/pokemon/GracefulDice/front.png", ".4bpp.smol");
+const u16 gMonPalette_GracefulDice[] = INCGFX_U16("graphics/pokemon/GracefulDice/normal.pal", ".gbapal");
+const u32 gMonBackPic_GracefulDice[] = INCGFX_U32("graphics/pokemon/GracefulDice/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GracefulDice[] = INCGFX_U16("graphics/pokemon/GracefulDice/shiny.pal", ".gbapal");
+const u8 gMonIcon_GracefulDice[] = INCGFX_U8("graphics/pokemon/GracefulDice/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GrandNeos[] = INCGFX_U32("graphics/pokemon/GrandNeos/front.png", ".4bpp.smol");
+const u16 gMonPalette_GrandNeos[] = INCGFX_U16("graphics/pokemon/GrandNeos/normal.pal", ".gbapal");
+const u32 gMonBackPic_GrandNeos[] = INCGFX_U32("graphics/pokemon/GrandNeos/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GrandNeos[] = INCGFX_U16("graphics/pokemon/GrandNeos/shiny.pal", ".gbapal");
+const u8 gMonIcon_GrandNeos[] = INCGFX_U8("graphics/pokemon/GrandNeos/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GrandTikiElder[] = INCGFX_U32("graphics/pokemon/GrandTikiElder/front.png", ".4bpp.smol");
+const u16 gMonPalette_GrandTikiElder[] = INCGFX_U16("graphics/pokemon/GrandTikiElder/normal.pal", ".gbapal");
+const u32 gMonBackPic_GrandTikiElder[] = INCGFX_U32("graphics/pokemon/GrandTikiElder/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GrandTikiElder[] = INCGFX_U16("graphics/pokemon/GrandTikiElder/shiny.pal", ".gbapal");
+const u8 gMonIcon_GrandTikiElder[] = INCGFX_U8("graphics/pokemon/GrandTikiElder/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GreatMammothOfGoldfine[] = INCGFX_U32("graphics/pokemon/GreatMammothOfGoldfine/front.png", ".4bpp.smol");
+const u16 gMonPalette_GreatMammothOfGoldfine[] = INCGFX_U16("graphics/pokemon/GreatMammothOfGoldfine/normal.pal", ".gbapal");
+const u32 gMonBackPic_GreatMammothOfGoldfine[] = INCGFX_U32("graphics/pokemon/GreatMammothOfGoldfine/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GreatMammothOfGoldfine[] = INCGFX_U16("graphics/pokemon/GreatMammothOfGoldfine/shiny.pal", ".gbapal");
+const u8 gMonIcon_GreatMammothOfGoldfine[] = INCGFX_U8("graphics/pokemon/GreatMammothOfGoldfine/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_GuardianEatos[] = INCGFX_U32("graphics/pokemon/GuardianEatos/front.png", ".4bpp.smol");
+const u16 gMonPalette_GuardianEatos[] = INCGFX_U16("graphics/pokemon/GuardianEatos/normal.pal", ".gbapal");
+const u32 gMonBackPic_GuardianEatos[] = INCGFX_U32("graphics/pokemon/GuardianEatos/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_GuardianEatos[] = INCGFX_U16("graphics/pokemon/GuardianEatos/shiny.pal", ".gbapal");
+const u8 gMonIcon_GuardianEatos[] = INCGFX_U8("graphics/pokemon/GuardianEatos/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Hamon[] = INCGFX_U32("graphics/pokemon/Hamon/front.png", ".4bpp.smol");
+const u16 gMonPalette_Hamon[] = INCGFX_U16("graphics/pokemon/Hamon/normal.pal", ".gbapal");
+const u32 gMonBackPic_Hamon[] = INCGFX_U32("graphics/pokemon/Hamon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Hamon[] = INCGFX_U16("graphics/pokemon/Hamon/shiny.pal", ".gbapal");
+const u8 gMonIcon_Hamon[] = INCGFX_U8("graphics/pokemon/Hamon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HappyLover[] = INCGFX_U32("graphics/pokemon/HappyLover/front.png", ".4bpp.smol");
+const u16 gMonPalette_HappyLover[] = INCGFX_U16("graphics/pokemon/HappyLover/normal.pal", ".gbapal");
+const u32 gMonBackPic_HappyLover[] = INCGFX_U32("graphics/pokemon/HappyLover/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HappyLover[] = INCGFX_U16("graphics/pokemon/HappyLover/shiny.pal", ".gbapal");
+const u8 gMonIcon_HappyLover[] = INCGFX_U8("graphics/pokemon/HappyLover/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HarpiesPetDragon[] = INCGFX_U32("graphics/pokemon/HarpiesPetDragon/front.png", ".4bpp.smol");
+const u16 gMonPalette_HarpiesPetDragon[] = INCGFX_U16("graphics/pokemon/HarpiesPetDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_HarpiesPetDragon[] = INCGFX_U32("graphics/pokemon/HarpiesPetDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HarpiesPetDragon[] = INCGFX_U16("graphics/pokemon/HarpiesPetDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_HarpiesPetDragon[] = INCGFX_U8("graphics/pokemon/HarpiesPetDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HarpieBrother[] = INCGFX_U32("graphics/pokemon/HarpieBrother/front.png", ".4bpp.smol");
+const u16 gMonPalette_HarpieBrother[] = INCGFX_U16("graphics/pokemon/HarpieBrother/normal.pal", ".gbapal");
+const u32 gMonBackPic_HarpieBrother[] = INCGFX_U32("graphics/pokemon/HarpieBrother/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HarpieBrother[] = INCGFX_U16("graphics/pokemon/HarpieBrother/shiny.pal", ".gbapal");
+const u8 gMonIcon_HarpieBrother[] = INCGFX_U8("graphics/pokemon/HarpieBrother/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HarpieLady[] = INCGFX_U32("graphics/pokemon/HarpieLady/front.png", ".4bpp.smol");
+const u16 gMonPalette_HarpieLady[] = INCGFX_U16("graphics/pokemon/HarpieLady/normal.pal", ".gbapal");
+const u32 gMonBackPic_HarpieLady[] = INCGFX_U32("graphics/pokemon/HarpieLady/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HarpieLady[] = INCGFX_U16("graphics/pokemon/HarpieLady/shiny.pal", ".gbapal");
+const u8 gMonIcon_HarpieLady[] = INCGFX_U8("graphics/pokemon/HarpieLady/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HarpieLadySisters[] = INCGFX_U32("graphics/pokemon/HarpieLadySisters/front.png", ".4bpp.smol");
+const u16 gMonPalette_HarpieLadySisters[] = INCGFX_U16("graphics/pokemon/HarpieLadySisters/normal.pal", ".gbapal");
+const u32 gMonBackPic_HarpieLadySisters[] = INCGFX_U32("graphics/pokemon/HarpieLadySisters/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HarpieLadySisters[] = INCGFX_U16("graphics/pokemon/HarpieLadySisters/shiny.pal", ".gbapal");
+const u8 gMonIcon_HarpieLadySisters[] = INCGFX_U8("graphics/pokemon/HarpieLadySisters/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HarpieQueen[] = INCGFX_U32("graphics/pokemon/HarpieQueen/front.png", ".4bpp.smol");
+const u16 gMonPalette_HarpieQueen[] = INCGFX_U16("graphics/pokemon/HarpieQueen/normal.pal", ".gbapal");
+const u32 gMonBackPic_HarpieQueen[] = INCGFX_U32("graphics/pokemon/HarpieQueen/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HarpieQueen[] = INCGFX_U16("graphics/pokemon/HarpieQueen/shiny.pal", ".gbapal");
+const u8 gMonIcon_HarpieQueen[] = INCGFX_U8("graphics/pokemon/HarpieQueen/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HeavyMetalKing[] = INCGFX_U32("graphics/pokemon/HeavyMetalKing/front.png", ".4bpp.smol");
+const u16 gMonPalette_HeavyMetalKing[] = INCGFX_U16("graphics/pokemon/HeavyMetalKing/normal.pal", ".gbapal");
+const u32 gMonBackPic_HeavyMetalKing[] = INCGFX_U32("graphics/pokemon/HeavyMetalKing/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HeavyMetalKing[] = INCGFX_U16("graphics/pokemon/HeavyMetalKing/shiny.pal", ".gbapal");
+const u8 gMonIcon_HeavyMetalKing[] = INCGFX_U8("graphics/pokemon/HeavyMetalKing/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HeliosDuoMegistus[] = INCGFX_U32("graphics/pokemon/HeliosDuoMegistus/front.png", ".4bpp.smol");
+const u16 gMonPalette_HeliosDuoMegistus[] = INCGFX_U16("graphics/pokemon/HeliosDuoMegistus/normal.pal", ".gbapal");
+const u32 gMonBackPic_HeliosDuoMegistus[] = INCGFX_U32("graphics/pokemon/HeliosDuoMegistus/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HeliosDuoMegistus[] = INCGFX_U16("graphics/pokemon/HeliosDuoMegistus/shiny.pal", ".gbapal");
+const u8 gMonIcon_HeliosDuoMegistus[] = INCGFX_U8("graphics/pokemon/HeliosDuoMegistus/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HeliosThePrimordialSun[] = INCGFX_U32("graphics/pokemon/HeliosThePrimordialSun/front.png", ".4bpp.smol");
+const u16 gMonPalette_HeliosThePrimordialSun[] = INCGFX_U16("graphics/pokemon/HeliosThePrimordialSun/normal.pal", ".gbapal");
+const u32 gMonBackPic_HeliosThePrimordialSun[] = INCGFX_U32("graphics/pokemon/HeliosThePrimordialSun/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HeliosThePrimordialSun[] = INCGFX_U16("graphics/pokemon/HeliosThePrimordialSun/shiny.pal", ".gbapal");
+const u8 gMonIcon_HeliosThePrimordialSun[] = INCGFX_U8("graphics/pokemon/HeliosThePrimordialSun/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HeliosTriceMegistus[] = INCGFX_U32("graphics/pokemon/HeliosTriceMegistus/front.png", ".4bpp.smol");
+const u16 gMonPalette_HeliosTriceMegistus[] = INCGFX_U16("graphics/pokemon/HeliosTriceMegistus/normal.pal", ".gbapal");
+const u32 gMonBackPic_HeliosTriceMegistus[] = INCGFX_U32("graphics/pokemon/HeliosTriceMegistus/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HeliosTriceMegistus[] = INCGFX_U16("graphics/pokemon/HeliosTriceMegistus/shiny.pal", ".gbapal");
+const u8 gMonIcon_HeliosTriceMegistus[] = INCGFX_U8("graphics/pokemon/HeliosTriceMegistus/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Hermos[] = INCGFX_U32("graphics/pokemon/Hermos/front.png", ".4bpp.smol");
+const u16 gMonPalette_Hermos[] = INCGFX_U16("graphics/pokemon/Hermos/normal.pal", ".gbapal");
+const u32 gMonBackPic_Hermos[] = INCGFX_U32("graphics/pokemon/Hermos/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Hermos[] = INCGFX_U16("graphics/pokemon/Hermos/shiny.pal", ".gbapal");
+const u8 gMonIcon_Hermos[] = INCGFX_U8("graphics/pokemon/Hermos/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HitotsuMeGiant[] = INCGFX_U32("graphics/pokemon/HitotsuMeGiant/front.png", ".4bpp.smol");
+const u16 gMonPalette_HitotsuMeGiant[] = INCGFX_U16("graphics/pokemon/HitotsuMeGiant/normal.pal", ".gbapal");
+const u32 gMonBackPic_HitotsuMeGiant[] = INCGFX_U32("graphics/pokemon/HitotsuMeGiant/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HitotsuMeGiant[] = INCGFX_U16("graphics/pokemon/HitotsuMeGiant/shiny.pal", ".gbapal");
+const u8 gMonIcon_HitotsuMeGiant[] = INCGFX_U8("graphics/pokemon/HitotsuMeGiant/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Honest[] = INCGFX_U32("graphics/pokemon/Honest/front.png", ".4bpp.smol");
+const u16 gMonPalette_Honest[] = INCGFX_U16("graphics/pokemon/Honest/normal.pal", ".gbapal");
+const u32 gMonBackPic_Honest[] = INCGFX_U32("graphics/pokemon/Honest/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Honest[] = INCGFX_U16("graphics/pokemon/Honest/shiny.pal", ".gbapal");
+const u8 gMonIcon_Honest[] = INCGFX_U8("graphics/pokemon/Honest/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HonestNeos[] = INCGFX_U32("graphics/pokemon/HonestNeos/front.png", ".4bpp.smol");
+const u16 gMonPalette_HonestNeos[] = INCGFX_U16("graphics/pokemon/HonestNeos/normal.pal", ".gbapal");
+const u32 gMonBackPic_HonestNeos[] = INCGFX_U32("graphics/pokemon/HonestNeos/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HonestNeos[] = INCGFX_U16("graphics/pokemon/HonestNeos/shiny.pal", ".gbapal");
+const u8 gMonIcon_HonestNeos[] = INCGFX_U8("graphics/pokemon/HonestNeos/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HorusLevelEight[] = INCGFX_U32("graphics/pokemon/HorusLevelEight/front.png", ".4bpp.smol");
+const u16 gMonPalette_HorusLevelEight[] = INCGFX_U16("graphics/pokemon/HorusLevelEight/normal.pal", ".gbapal");
+const u32 gMonBackPic_HorusLevelEight[] = INCGFX_U32("graphics/pokemon/HorusLevelEight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HorusLevelEight[] = INCGFX_U16("graphics/pokemon/HorusLevelEight/shiny.pal", ".gbapal");
+const u8 gMonIcon_HorusLevelEight[] = INCGFX_U8("graphics/pokemon/HorusLevelEight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HorusLevelFour[] = INCGFX_U32("graphics/pokemon/HorusLevelFour/front.png", ".4bpp.smol");
+const u16 gMonPalette_HorusLevelFour[] = INCGFX_U16("graphics/pokemon/HorusLevelFour/normal.pal", ".gbapal");
+const u32 gMonBackPic_HorusLevelFour[] = INCGFX_U32("graphics/pokemon/HorusLevelFour/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HorusLevelFour[] = INCGFX_U16("graphics/pokemon/HorusLevelFour/shiny.pal", ".gbapal");
+const u8 gMonIcon_HorusLevelFour[] = INCGFX_U8("graphics/pokemon/HorusLevelFour/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HorusLevelSix[] = INCGFX_U32("graphics/pokemon/HorusLevelSix/front.png", ".4bpp.smol");
+const u16 gMonPalette_HorusLevelSix[] = INCGFX_U16("graphics/pokemon/HorusLevelSix/normal.pal", ".gbapal");
+const u32 gMonBackPic_HorusLevelSix[] = INCGFX_U32("graphics/pokemon/HorusLevelSix/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HorusLevelSix[] = INCGFX_U16("graphics/pokemon/HorusLevelSix/shiny.pal", ".gbapal");
+const u8 gMonIcon_HorusLevelSix[] = INCGFX_U8("graphics/pokemon/HorusLevelSix/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HumanoidSlime[] = INCGFX_U32("graphics/pokemon/HumanoidSlime/front.png", ".4bpp.smol");
+const u16 gMonPalette_HumanoidSlime[] = INCGFX_U16("graphics/pokemon/HumanoidSlime/normal.pal", ".gbapal");
+const u32 gMonBackPic_HumanoidSlime[] = INCGFX_U32("graphics/pokemon/HumanoidSlime/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HumanoidSlime[] = INCGFX_U16("graphics/pokemon/HumanoidSlime/shiny.pal", ".gbapal");
+const u8 gMonIcon_HumanoidSlime[] = INCGFX_U8("graphics/pokemon/HumanoidSlime/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HumanoidWormDrake[] = INCGFX_U32("graphics/pokemon/HumanoidWormDrake/front.png", ".4bpp.smol");
+const u16 gMonPalette_HumanoidWormDrake[] = INCGFX_U16("graphics/pokemon/HumanoidWormDrake/normal.pal", ".gbapal");
+const u32 gMonBackPic_HumanoidWormDrake[] = INCGFX_U32("graphics/pokemon/HumanoidWormDrake/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HumanoidWormDrake[] = INCGFX_U16("graphics/pokemon/HumanoidWormDrake/shiny.pal", ".gbapal");
+const u8 gMonIcon_HumanoidWormDrake[] = INCGFX_U8("graphics/pokemon/HumanoidWormDrake/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HundredEyesDragon[] = INCGFX_U32("graphics/pokemon/HundredEyesDragon/front.png", ".4bpp.smol");
+const u16 gMonPalette_HundredEyesDragon[] = INCGFX_U16("graphics/pokemon/HundredEyesDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_HundredEyesDragon[] = INCGFX_U32("graphics/pokemon/HundredEyesDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HundredEyesDragon[] = INCGFX_U16("graphics/pokemon/HundredEyesDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_HundredEyesDragon[] = INCGFX_U8("graphics/pokemon/HundredEyesDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_HungryBurger[] = INCGFX_U32("graphics/pokemon/HungryBurger/front.png", ".4bpp.smol");
+const u16 gMonPalette_HungryBurger[] = INCGFX_U16("graphics/pokemon/HungryBurger/normal.pal", ".gbapal");
+const u32 gMonBackPic_HungryBurger[] = INCGFX_U32("graphics/pokemon/HungryBurger/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_HungryBurger[] = INCGFX_U16("graphics/pokemon/HungryBurger/shiny.pal", ".gbapal");
+const u8 gMonIcon_HungryBurger[] = INCGFX_U8("graphics/pokemon/HungryBurger/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Hyozanryu[] = INCGFX_U32("graphics/pokemon/Hyozanryu/front.png", ".4bpp.smol");
+const u16 gMonPalette_Hyozanryu[] = INCGFX_U16("graphics/pokemon/Hyozanryu/normal.pal", ".gbapal");
+const u32 gMonBackPic_Hyozanryu[] = INCGFX_U32("graphics/pokemon/Hyozanryu/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Hyozanryu[] = INCGFX_U16("graphics/pokemon/Hyozanryu/shiny.pal", ".gbapal");
+const u8 gMonIcon_Hyozanryu[] = INCGFX_U8("graphics/pokemon/Hyozanryu/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_IllusionistFacelessMage[] = INCGFX_U32("graphics/pokemon/IllusionistFacelessMage/front.png", ".4bpp.smol");
+const u16 gMonPalette_IllusionistFacelessMage[] = INCGFX_U16("graphics/pokemon/IllusionistFacelessMage/normal.pal", ".gbapal");
+const u32 gMonBackPic_IllusionistFacelessMage[] = INCGFX_U32("graphics/pokemon/IllusionistFacelessMage/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_IllusionistFacelessMage[] = INCGFX_U16("graphics/pokemon/IllusionistFacelessMage/shiny.pal", ".gbapal");
+const u8 gMonIcon_IllusionistFacelessMage[] = INCGFX_U8("graphics/pokemon/IllusionistFacelessMage/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_IllusionistFacelessMagician[] = INCGFX_U32("graphics/pokemon/IllusionistFacelessMagician/front.png", ".4bpp.smol");
+const u16 gMonPalette_IllusionistFacelessMagician[] = INCGFX_U16("graphics/pokemon/IllusionistFacelessMagician/normal.pal", ".gbapal");
+const u32 gMonBackPic_IllusionistFacelessMagician[] = INCGFX_U32("graphics/pokemon/IllusionistFacelessMagician/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_IllusionistFacelessMagician[] = INCGFX_U16("graphics/pokemon/IllusionistFacelessMagician/shiny.pal", ".gbapal");
+const u8 gMonIcon_IllusionistFacelessMagician[] = INCGFX_U8("graphics/pokemon/IllusionistFacelessMagician/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InfernityArchfiend[] = INCGFX_U32("graphics/pokemon/InfernityArchfiend/front.png", ".4bpp.smol");
+const u16 gMonPalette_InfernityArchfiend[] = INCGFX_U16("graphics/pokemon/InfernityArchfiend/normal.pal", ".gbapal");
+const u32 gMonBackPic_InfernityArchfiend[] = INCGFX_U32("graphics/pokemon/InfernityArchfiend/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InfernityArchfiend[] = INCGFX_U16("graphics/pokemon/InfernityArchfiend/shiny.pal", ".gbapal");
+const u8 gMonIcon_InfernityArchfiend[] = INCGFX_U8("graphics/pokemon/InfernityArchfiend/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InfernityDoomArchfiend[] = INCGFX_U32("graphics/pokemon/InfernityDoomArchfiend/front.png", ".4bpp.smol");
+const u16 gMonPalette_InfernityDoomArchfiend[] = INCGFX_U16("graphics/pokemon/InfernityDoomArchfiend/normal.pal", ".gbapal");
+const u32 gMonBackPic_InfernityDoomArchfiend[] = INCGFX_U32("graphics/pokemon/InfernityDoomArchfiend/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InfernityDoomArchfiend[] = INCGFX_U16("graphics/pokemon/InfernityDoomArchfiend/shiny.pal", ".gbapal");
+const u8 gMonIcon_InfernityDoomArchfiend[] = INCGFX_U8("graphics/pokemon/InfernityDoomArchfiend/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InfernoWing[] = INCGFX_U32("graphics/pokemon/InfernoWing/front.png", ".4bpp.smol");
+const u16 gMonPalette_InfernoWing[] = INCGFX_U16("graphics/pokemon/InfernoWing/normal.pal", ".gbapal");
+const u32 gMonBackPic_InfernoWing[] = INCGFX_U32("graphics/pokemon/InfernoWing/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InfernoWing[] = INCGFX_U16("graphics/pokemon/InfernoWing/shiny.pal", ".gbapal");
+const u8 gMonIcon_InfernoWing[] = INCGFX_U8("graphics/pokemon/InfernoWing/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InjectionFairyLily[] = INCGFX_U32("graphics/pokemon/InjectionFairyLily/front.png", ".4bpp.smol");
+const u16 gMonPalette_InjectionFairyLily[] = INCGFX_U16("graphics/pokemon/InjectionFairyLily/normal.pal", ".gbapal");
+const u32 gMonBackPic_InjectionFairyLily[] = INCGFX_U32("graphics/pokemon/InjectionFairyLily/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InjectionFairyLily[] = INCGFX_U16("graphics/pokemon/InjectionFairyLily/shiny.pal", ".gbapal");
+const u8 gMonIcon_InjectionFairyLily[] = INCGFX_U8("graphics/pokemon/InjectionFairyLily/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Inpachi[] = INCGFX_U32("graphics/pokemon/Inpachi/front.png", ".4bpp.smol");
+const u16 gMonPalette_Inpachi[] = INCGFX_U16("graphics/pokemon/Inpachi/normal.pal", ".gbapal");
+const u32 gMonBackPic_Inpachi[] = INCGFX_U32("graphics/pokemon/Inpachi/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Inpachi[] = INCGFX_U16("graphics/pokemon/Inpachi/shiny.pal", ".gbapal");
+const u8 gMonIcon_Inpachi[] = INCGFX_U8("graphics/pokemon/Inpachi/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InsectKnight[] = INCGFX_U32("graphics/pokemon/InsectKnight/front.png", ".4bpp.smol");
+const u16 gMonPalette_InsectKnight[] = INCGFX_U16("graphics/pokemon/InsectKnight/normal.pal", ".gbapal");
+const u32 gMonBackPic_InsectKnight[] = INCGFX_U32("graphics/pokemon/InsectKnight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InsectKnight[] = INCGFX_U16("graphics/pokemon/InsectKnight/shiny.pal", ".gbapal");
+const u8 gMonIcon_InsectKnight[] = INCGFX_U8("graphics/pokemon/InsectKnight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InsectPrincess[] = INCGFX_U32("graphics/pokemon/InsectPrincess/front.png", ".4bpp.smol");
+const u16 gMonPalette_InsectPrincess[] = INCGFX_U16("graphics/pokemon/InsectPrincess/normal.pal", ".gbapal");
+const u32 gMonBackPic_InsectPrincess[] = INCGFX_U32("graphics/pokemon/InsectPrincess/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InsectPrincess[] = INCGFX_U16("graphics/pokemon/InsectPrincess/shiny.pal", ".gbapal");
+const u8 gMonIcon_InsectPrincess[] = INCGFX_U8("graphics/pokemon/InsectPrincess/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_InsectQueen[] = INCGFX_U32("graphics/pokemon/InsectQueen/front.png", ".4bpp.smol");
+const u16 gMonPalette_InsectQueen[] = INCGFX_U16("graphics/pokemon/InsectQueen/normal.pal", ".gbapal");
+const u32 gMonBackPic_InsectQueen[] = INCGFX_U32("graphics/pokemon/InsectQueen/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_InsectQueen[] = INCGFX_U16("graphics/pokemon/InsectQueen/shiny.pal", ".gbapal");
+const u8 gMonIcon_InsectQueen[] = INCGFX_U8("graphics/pokemon/InsectQueen/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JacksKnight[] = INCGFX_U32("graphics/pokemon/JacksKnight/front.png", ".4bpp.smol");
+const u16 gMonPalette_JacksKnight[] = INCGFX_U16("graphics/pokemon/JacksKnight/normal.pal", ".gbapal");
+const u32 gMonBackPic_JacksKnight[] = INCGFX_U32("graphics/pokemon/JacksKnight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JacksKnight[] = INCGFX_U16("graphics/pokemon/JacksKnight/shiny.pal", ".gbapal");
+const u8 gMonIcon_JacksKnight[] = INCGFX_U8("graphics/pokemon/JacksKnight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JerryBeansMan[] = INCGFX_U32("graphics/pokemon/JerryBeansMan/front.png", ".4bpp.smol");
+const u16 gMonPalette_JerryBeansMan[] = INCGFX_U16("graphics/pokemon/JerryBeansMan/normal.pal", ".gbapal");
+const u32 gMonBackPic_JerryBeansMan[] = INCGFX_U32("graphics/pokemon/JerryBeansMan/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JerryBeansMan[] = INCGFX_U16("graphics/pokemon/JerryBeansMan/shiny.pal", ".gbapal");
+const u8 gMonIcon_JerryBeansMan[] = INCGFX_U8("graphics/pokemon/JerryBeansMan/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Jinzo[] = INCGFX_U32("graphics/pokemon/Jinzo/front.png", ".4bpp.smol");
+const u16 gMonPalette_Jinzo[] = INCGFX_U16("graphics/pokemon/Jinzo/normal.pal", ".gbapal");
+const u32 gMonBackPic_Jinzo[] = INCGFX_U32("graphics/pokemon/Jinzo/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Jinzo[] = INCGFX_U16("graphics/pokemon/Jinzo/shiny.pal", ".gbapal");
+const u8 gMonIcon_Jinzo[] = INCGFX_U8("graphics/pokemon/Jinzo/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JinzoReturner[] = INCGFX_U32("graphics/pokemon/JinzoReturner/front.png", ".4bpp.smol");
+const u16 gMonPalette_JinzoReturner[] = INCGFX_U16("graphics/pokemon/JinzoReturner/normal.pal", ".gbapal");
+const u32 gMonBackPic_JinzoReturner[] = INCGFX_U32("graphics/pokemon/JinzoReturner/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JinzoReturner[] = INCGFX_U16("graphics/pokemon/JinzoReturner/shiny.pal", ".gbapal");
+const u8 gMonIcon_JinzoReturner[] = INCGFX_U8("graphics/pokemon/JinzoReturner/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JiraiGumo[] = INCGFX_U32("graphics/pokemon/JiraiGumo/front.png", ".4bpp.smol");
+const u16 gMonPalette_JiraiGumo[] = INCGFX_U16("graphics/pokemon/JiraiGumo/normal.pal", ".gbapal");
+const u32 gMonBackPic_JiraiGumo[] = INCGFX_U32("graphics/pokemon/JiraiGumo/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JiraiGumo[] = INCGFX_U16("graphics/pokemon/JiraiGumo/shiny.pal", ".gbapal");
+const u8 gMonIcon_JiraiGumo[] = INCGFX_U8("graphics/pokemon/JiraiGumo/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JudgeMan[] = INCGFX_U32("graphics/pokemon/JudgeMan/front.png", ".4bpp.smol");
+const u16 gMonPalette_JudgeMan[] = INCGFX_U16("graphics/pokemon/JudgeMan/normal.pal", ".gbapal");
+const u32 gMonBackPic_JudgeMan[] = INCGFX_U32("graphics/pokemon/JudgeMan/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JudgeMan[] = INCGFX_U16("graphics/pokemon/JudgeMan/shiny.pal", ".gbapal");
+const u8 gMonIcon_JudgeMan[] = INCGFX_U8("graphics/pokemon/JudgeMan/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JudgmentDragon[] = INCGFX_U32("graphics/pokemon/JudgmentDragon/front.png", ".4bpp.smol");
+const u16 gMonPalette_JudgmentDragon[] = INCGFX_U16("graphics/pokemon/JudgmentDragon/normal.pal", ".gbapal");
+const u32 gMonBackPic_JudgmentDragon[] = INCGFX_U32("graphics/pokemon/JudgmentDragon/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JudgmentDragon[] = INCGFX_U16("graphics/pokemon/JudgmentDragon/shiny.pal", ".gbapal");
+const u8 gMonIcon_JudgmentDragon[] = INCGFX_U8("graphics/pokemon/JudgmentDragon/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Junkuriboh[] = INCGFX_U32("graphics/pokemon/Junkuriboh/front.png", ".4bpp.smol");
+const u16 gMonPalette_Junkuriboh[] = INCGFX_U16("graphics/pokemon/Junkuriboh/normal.pal", ".gbapal");
+const u32 gMonBackPic_Junkuriboh[] = INCGFX_U32("graphics/pokemon/Junkuriboh/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Junkuriboh[] = INCGFX_U16("graphics/pokemon/Junkuriboh/shiny.pal", ".gbapal");
+const u8 gMonIcon_Junkuriboh[] = INCGFX_U8("graphics/pokemon/Junkuriboh/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JunkArcher[] = INCGFX_U32("graphics/pokemon/JunkArcher/front.png", ".4bpp.smol");
+const u16 gMonPalette_JunkArcher[] = INCGFX_U16("graphics/pokemon/JunkArcher/normal.pal", ".gbapal");
+const u32 gMonBackPic_JunkArcher[] = INCGFX_U32("graphics/pokemon/JunkArcher/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JunkArcher[] = INCGFX_U16("graphics/pokemon/JunkArcher/shiny.pal", ".gbapal");
+const u8 gMonIcon_JunkArcher[] = INCGFX_U8("graphics/pokemon/JunkArcher/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JunkDestroyer[] = INCGFX_U32("graphics/pokemon/JunkDestroyer/front.png", ".4bpp.smol");
+const u16 gMonPalette_JunkDestroyer[] = INCGFX_U16("graphics/pokemon/JunkDestroyer/normal.pal", ".gbapal");
+const u32 gMonBackPic_JunkDestroyer[] = INCGFX_U32("graphics/pokemon/JunkDestroyer/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JunkDestroyer[] = INCGFX_U16("graphics/pokemon/JunkDestroyer/shiny.pal", ".gbapal");
+const u8 gMonIcon_JunkDestroyer[] = INCGFX_U8("graphics/pokemon/JunkDestroyer/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JunkSpeeder[] = INCGFX_U32("graphics/pokemon/JunkSpeeder/front.png", ".4bpp.smol");
+const u16 gMonPalette_JunkSpeeder[] = INCGFX_U16("graphics/pokemon/JunkSpeeder/normal.pal", ".gbapal");
+const u32 gMonBackPic_JunkSpeeder[] = INCGFX_U32("graphics/pokemon/JunkSpeeder/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JunkSpeeder[] = INCGFX_U16("graphics/pokemon/JunkSpeeder/shiny.pal", ".gbapal");
+const u8 gMonIcon_JunkSpeeder[] = INCGFX_U8("graphics/pokemon/JunkSpeeder/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JunkSynchron[] = INCGFX_U32("graphics/pokemon/JunkSynchron/front.png", ".4bpp.smol");
+const u16 gMonPalette_JunkSynchron[] = INCGFX_U16("graphics/pokemon/JunkSynchron/normal.pal", ".gbapal");
+const u32 gMonBackPic_JunkSynchron[] = INCGFX_U32("graphics/pokemon/JunkSynchron/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JunkSynchron[] = INCGFX_U16("graphics/pokemon/JunkSynchron/shiny.pal", ".gbapal");
+const u8 gMonIcon_JunkSynchron[] = INCGFX_U8("graphics/pokemon/JunkSynchron/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_JunkWarrior[] = INCGFX_U32("graphics/pokemon/JunkWarrior/front.png", ".4bpp.smol");
+const u16 gMonPalette_JunkWarrior[] = INCGFX_U16("graphics/pokemon/JunkWarrior/normal.pal", ".gbapal");
+const u32 gMonBackPic_JunkWarrior[] = INCGFX_U32("graphics/pokemon/JunkWarrior/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_JunkWarrior[] = INCGFX_U16("graphics/pokemon/JunkWarrior/shiny.pal", ".gbapal");
+const u8 gMonIcon_JunkWarrior[] = INCGFX_U8("graphics/pokemon/JunkWarrior/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KairyuShin[] = INCGFX_U32("graphics/pokemon/KairyuShin/front.png", ".4bpp.smol");
+const u16 gMonPalette_KairyuShin[] = INCGFX_U16("graphics/pokemon/KairyuShin/normal.pal", ".gbapal");
+const u32 gMonBackPic_KairyuShin[] = INCGFX_U32("graphics/pokemon/KairyuShin/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KairyuShin[] = INCGFX_U16("graphics/pokemon/KairyuShin/shiny.pal", ".gbapal");
+const u8 gMonIcon_KairyuShin[] = INCGFX_U8("graphics/pokemon/KairyuShin/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KarateMan[] = INCGFX_U32("graphics/pokemon/KarateMan/front.png", ".4bpp.smol");
+const u16 gMonPalette_KarateMan[] = INCGFX_U16("graphics/pokemon/KarateMan/normal.pal", ".gbapal");
+const u32 gMonBackPic_KarateMan[] = INCGFX_U32("graphics/pokemon/KarateMan/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KarateMan[] = INCGFX_U16("graphics/pokemon/KarateMan/shiny.pal", ".gbapal");
+const u8 gMonIcon_KarateMan[] = INCGFX_U8("graphics/pokemon/KarateMan/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_Keldo[] = INCGFX_U32("graphics/pokemon/Keldo/front.png", ".4bpp.smol");
+const u16 gMonPalette_Keldo[] = INCGFX_U16("graphics/pokemon/Keldo/normal.pal", ".gbapal");
+const u32 gMonBackPic_Keldo[] = INCGFX_U32("graphics/pokemon/Keldo/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_Keldo[] = INCGFX_U16("graphics/pokemon/Keldo/shiny.pal", ".gbapal");
+const u8 gMonIcon_Keldo[] = INCGFX_U8("graphics/pokemon/Keldo/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KeldoTheSacredProtector[] = INCGFX_U32("graphics/pokemon/KeldoTheSacredProtector/front.png", ".4bpp.smol");
+const u16 gMonPalette_KeldoTheSacredProtector[] = INCGFX_U16("graphics/pokemon/KeldoTheSacredProtector/normal.pal", ".gbapal");
+const u32 gMonBackPic_KeldoTheSacredProtector[] = INCGFX_U32("graphics/pokemon/KeldoTheSacredProtector/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KeldoTheSacredProtector[] = INCGFX_U16("graphics/pokemon/KeldoTheSacredProtector/shiny.pal", ".gbapal");
+const u8 gMonIcon_KeldoTheSacredProtector[] = INCGFX_U8("graphics/pokemon/KeldoTheSacredProtector/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KillerNeedle[] = INCGFX_U32("graphics/pokemon/KillerNeedle/front.png", ".4bpp.smol");
+const u16 gMonPalette_KillerNeedle[] = INCGFX_U16("graphics/pokemon/KillerNeedle/normal.pal", ".gbapal");
+const u32 gMonBackPic_KillerNeedle[] = INCGFX_U32("graphics/pokemon/KillerNeedle/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KillerNeedle[] = INCGFX_U16("graphics/pokemon/KillerNeedle/shiny.pal", ".gbapal");
+const u8 gMonIcon_KillerNeedle[] = INCGFX_U8("graphics/pokemon/KillerNeedle/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KingsKnight[] = INCGFX_U32("graphics/pokemon/KingsKnight/front.png", ".4bpp.smol");
+const u16 gMonPalette_KingsKnight[] = INCGFX_U16("graphics/pokemon/KingsKnight/normal.pal", ".gbapal");
+const u32 gMonBackPic_KingsKnight[] = INCGFX_U32("graphics/pokemon/KingsKnight/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KingsKnight[] = INCGFX_U16("graphics/pokemon/KingsKnight/shiny.pal", ".gbapal");
+const u8 gMonIcon_KingsKnight[] = INCGFX_U8("graphics/pokemon/KingsKnight/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KingOfD[] = INCGFX_U32("graphics/pokemon/KingOfD/front.png", ".4bpp.smol");
+const u16 gMonPalette_KingOfD[] = INCGFX_U16("graphics/pokemon/KingOfD/normal.pal", ".gbapal");
+const u32 gMonBackPic_KingOfD[] = INCGFX_U32("graphics/pokemon/KingOfD/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KingOfD[] = INCGFX_U16("graphics/pokemon/KingOfD/shiny.pal", ".gbapal");
+const u8 gMonIcon_KingOfD[] = INCGFX_U8("graphics/pokemon/KingOfD/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KingOfTheFeralImps[] = INCGFX_U32("graphics/pokemon/KingOfTheFeralImps/front.png", ".4bpp.smol");
+const u16 gMonPalette_KingOfTheFeralImps[] = INCGFX_U16("graphics/pokemon/KingOfTheFeralImps/normal.pal", ".gbapal");
+const u32 gMonBackPic_KingOfTheFeralImps[] = INCGFX_U32("graphics/pokemon/KingOfTheFeralImps/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KingOfTheFeralImps[] = INCGFX_U16("graphics/pokemon/KingOfTheFeralImps/shiny.pal", ".gbapal");
+const u8 gMonIcon_KingOfTheFeralImps[] = INCGFX_U8("graphics/pokemon/KingOfTheFeralImps/icon.png", ".4bpp");
+
+const u32 gMonFrontPic_KingOfTheSkullServants[] = INCGFX_U32("graphics/pokemon/KingOfTheSkullServants/front.png", ".4bpp.smol");
+const u16 gMonPalette_KingOfTheSkullServants[] = INCGFX_U16("graphics/pokemon/KingOfTheSkullServants/normal.pal", ".gbapal");
+const u32 gMonBackPic_KingOfTheSkullServants[] = INCGFX_U32("graphics/pokemon/KingOfTheSkullServants/back.png", ".4bpp.smol");
+const u16 gMonShinyPalette_KingOfTheSkullServants[] = INCGFX_U16("graphics/pokemon/KingOfTheSkullServants/shiny.pal", ".gbapal");
+const u8 gMonIcon_KingOfTheSkullServants[] = INCGFX_U8("graphics/pokemon/KingOfTheSkullServants/icon.png", ".4bpp");
 
 const u32 gMonFrontPic_KingOfYamimakai[] = INCGFX_U32("graphics/pokemon/BlueEyesUltimateDragon/front.png", ".4bpp.smol");
 const u16 gMonPalette_KingOfYamimakai[] = INCGFX_U16("graphics/pokemon/BlueEyesUltimateDragon/normal.pal", ".gbapal");
