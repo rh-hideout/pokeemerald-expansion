@@ -4787,10 +4787,33 @@ static void PopulateArrayWithBattlers(enum BattlerId *battlers)
         battlers[i] = i;
 }
 
+static bool32 TryTrainerSlideGimmick(enum BattlerId battler)
+{
+    bool32 doSlide = TRUE;
+    if (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_GIMMICK))
+        gBattleScripting.battler = battler;
+    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), TRAINER_SLIDE_OPPONENT_GIMMICK))
+        gBattleScripting.battler = GetBattlerLeftFoe(battler);
+    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), TRAINER_SLIDE_OPPONENT_GIMMICK))
+        gBattleScripting.battler = GetBattlerRightFoe(battler);
+    else
+        doSlide = FALSE;
+    if (doSlide)
+    {
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static bool32 TryActivateGimmick(enum BattlerId battler)
 {
     if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && !(gProtectStructs[battler].noValidMoves))
     {
+        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE && TryTrainerSlideGimmick(battler))
+        {
+            return TRUE;
+        }
         gBattlerAttacker = gBattleScripting.battler = battler;
         gBattleStruct->gimmick.toActivate &= ~(1u << battler);
         if (gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].ActivateGimmick != NULL)
@@ -5020,6 +5043,10 @@ static void RunTurnActionsFunctions(void)
                 return;
         }
     }
+
+    // Z-move slides appear right before move instead of at the beginning of turn like other gimmicks
+    if (GetActiveGimmick(gBattlerByTurnOrder[gCurrentTurnActionNumber]) == GIMMICK_Z_MOVE && TryTrainerSlideGimmick(gBattlerByTurnOrder[gCurrentTurnActionNumber]))
+        return;
 
     sTurnActionsFuncsTable[gCurrentActionFuncId]();
 

@@ -3937,7 +3937,6 @@ BattleScript_PowerConstruct::
 
 BattleScript_UltraBurst::
 	flushtextbox
-	trytrainerslidezmovemsg
 	printstring STRINGID_ULTRABURSTREACTING
 	waitmessage B_WAIT_TIME_LONG
 	handleformchange BS_SCRIPTING, 0
@@ -5774,7 +5773,6 @@ BattleScript_JabocaRowapBerryActivate_Dmg:
 @ z moves / effects
 BattleScript_ZMoveActivateDamaging::
 	flushtextbox
-	trytrainerslidezmovemsg
 	printstring STRINGID_ZPOWERSURROUNDS
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
 	printstring STRINGID_ZMOVEUNLEASHED
@@ -5783,7 +5781,6 @@ BattleScript_ZMoveActivateDamaging::
 
 BattleScript_ZMoveActivateStatus::
 	flushtextbox
-	trytrainerslidezmovemsg
 	printstring STRINGID_ZPOWERSURROUNDS
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
 	setzeffect

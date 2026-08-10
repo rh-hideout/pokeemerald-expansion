@@ -399,14 +399,8 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
             shouldRun = ShouldRunTrainerSlideLastLowHp(lastId, battler, slideId);
             break;
         case TRAINER_SLIDE_BEFORE_FIRST_TURN:
-        case TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION:
-        case TRAINER_SLIDE_ATTACKER_Z_MOVE:
-        case TRAINER_SLIDE_ATTACKER_DYNAMAX:
-        case TRAINER_SLIDE_ATTACKER_TERA:
-        case TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION:
-        case TRAINER_SLIDE_OPPONENT_Z_MOVE:
-        case TRAINER_SLIDE_OPPONENT_DYNAMAX:
-        case TRAINER_SLIDE_OPPONENT_TERA:
+        case TRAINER_SLIDE_ATTACKER_GIMMICK:
+        case TRAINER_SLIDE_OPPONENT_GIMMICK:
             shouldRun = TRUE;
             break;
         default:
