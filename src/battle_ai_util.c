@@ -4275,7 +4275,7 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
 static bool32 ShouldConsiderSpecificPartnerMove(enum BattlerId battlerAtkPartner)
 {
     return ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
-     || !IsThinkingBeforePartner(GetPartnerBattler(battlerAtkPartner), battlerAtkPartner));
+         || !IsThinkingBeforePartner(GetPartnerBattler(battlerAtkPartner), battlerAtkPartner));
 }
 
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)

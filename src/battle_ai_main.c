@@ -49,6 +49,7 @@ struct ChosenAction
 static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk);
+static struct ChosenAction ChooseMoveOrAction_DoublesDeep(enum BattlerId battlerAtk);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
@@ -488,8 +489,15 @@ static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler)
 {
     if (IsDoubleBattle())
     {
-        SetAllyMove(battler);
-        return ChooseMoveOrAction_Doubles(battler);
+        if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
+        {
+            return ChooseMoveOrAction_DoublesDeep(battler);
+        }
+        else
+        {
+            SetAllyMove(battler);
+            return ChooseMoveOrAction_Doubles(battler);
+        }
     }
     return ChooseMoveOrAction_Singles(battler);
 }
@@ -1089,56 +1097,6 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     u32 mostViableTargetsNo;
     u32 mostViableMovesNo;
     s32 mostMovePoints;
-    enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
-
-    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_DEEP_PARTNER_THINKING)
-    {    
-        if (IsThinkingBeforePartner(battlerAtk, battlerPartner) && !gAiLogicData->partnerMoveSimulation) // Default to normal move selection if not
-        {
-            enum Move mostViableMove = MOVE_NONE;
-            enum BattlerId mostViableTarget = B_BATTLER_0;
-            s32 comboBestScore = 0;
-            enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
-            enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
-
-            BattleAI_DeepPartnerThinking(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
-            s32 tempFinalScore[MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
-            for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
-            {
-                gAiLogicData->partnerMove = partnerBestMoves[i];
-                gAiBattleData->chosenTarget[battlerPartner] = partnerBestTargets[i];
-                gAiLogicData->partnerMoveSimulation = TRUE;
-                struct ChosenAction interimAction = ChooseMoveOrAction_Doubles(battlerAtk);
-                gAiLogicData->partnerMoveSimulation = FALSE;
-
-                if (comboBestScore < gAiThinkingStruct->score[interimAction.moveIndex])
-                {
-                    comboBestScore = gAiThinkingStruct->score[interimAction.moveIndex];
-                    mostViableMove = gBattleMons[battlerAtk].moves[interimAction.moveIndex];
-                    mostViableTarget = interimAction.target;
-
-                    // Store scores found when testing best move
-                    memcpy(tempFinalScore, gAiBattleData->finalScore[battlerAtk], sizeof(gAiBattleData->finalScore[battlerAtk]));
-                }
-            }
-
-            memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(tempFinalScore));
-
-            #if TESTING
-            // For now, only taking the first found highest score
-            gBattleTestRunnerState->data.trial.scoreTieCount = 1;
-            gBattleTestRunnerState->data.trial.targetTieCount = 1;
-            #endif
-
-            struct ChosenAction chosen = {0};
-            chosen.target = mostViableTarget;
-            chosen.moveIndex = GetMoveIndex(battlerAtk, mostViableMove);
-            return chosen;
-        }
-    }
-
-    if (!gAiLogicData->partnerMoveSimulation)
-        gAiLogicData->partnerMove = GetAIChosenMove(battlerPartner);
 
     for (enum BattlerId battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
     {
@@ -1223,6 +1181,56 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     chosen.target = mostViableTargetsArray[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_TARGET, 0, mostViableTargetsNo - 1)];
     chosen.moveIndex = actionOrMoveIndex[chosen.target];
 
+    return chosen;
+}
+
+static struct ChosenAction ChooseMoveOrAction_DoublesDeep(enum BattlerId battlerAtk)
+{
+    enum Move mostViableMove = MOVE_NONE;
+    enum BattlerId mostViableTarget = B_BATTLER_0;
+    s32 comboBestScore = 0;
+    enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
+    enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
+    enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
+
+    if (!IsThinkingBeforePartner(battlerAtk, battlerPartner))
+    {
+        gAiLogicData->partnerMove = GetAIChosenMove(battlerPartner);
+        return ChooseMoveOrAction_Doubles(battlerAtk);
+    }
+
+    BattleAI_DeepPartnerThinking(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
+    s32 tempFinalScore[MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
+    for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
+    {
+        gAiLogicData->partnerMove = partnerBestMoves[i];
+        gAiBattleData->chosenTarget[battlerPartner] = partnerBestTargets[i];
+        gAiLogicData->partnerMoveSimulation = TRUE;
+        struct ChosenAction interimAction = ChooseMoveOrAction_Doubles(battlerAtk);
+        gAiLogicData->partnerMoveSimulation = FALSE;
+
+        if (comboBestScore < gAiThinkingStruct->score[interimAction.moveIndex])
+        {
+            comboBestScore = gAiThinkingStruct->score[interimAction.moveIndex];
+            mostViableMove = gBattleMons[battlerAtk].moves[interimAction.moveIndex];
+            mostViableTarget = interimAction.target;
+
+            // Store scores found when testing best move
+            memcpy(tempFinalScore, gAiBattleData->finalScore[battlerAtk], sizeof(gAiBattleData->finalScore[battlerAtk]));
+        }
+    }
+
+    memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(tempFinalScore));
+
+    #if TESTING
+    // For now, only taking the first found highest score
+    gBattleTestRunnerState->data.trial.scoreTieCount = 1;
+    gBattleTestRunnerState->data.trial.targetTieCount = 1;
+    #endif
+
+    struct ChosenAction chosen = {0};
+    chosen.target = mostViableTarget;
+    chosen.moveIndex = GetMoveIndex(battlerAtk, mostViableMove);
     return chosen;
 }
 
