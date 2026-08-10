@@ -1494,7 +1494,7 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
     } WHEN {
         if (hp == 60)
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE);
@@ -1502,11 +1502,34 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
         }
         else
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL);
             }
         }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses the best Z-Moves.")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_SCRATCH, MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_HEADBUTT, gimmick: GIMMICK_Z_MOVE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses the best Max Move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_HEADBUTT); DynamaxLevel(10); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_HEADBUTT, gimmick: GIMMICK_DYNAMAX); }
     }
 }
