@@ -852,6 +852,14 @@ static void PrintHPPercentageOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u3
     gSprites[spriteId2].data[1] = savedValue2;
 }
 
+static bool32 ShouldShowHealthbar(enum BattlerId battler)
+{
+    enum BattleCoordTypes coords = GetBattlerCoordsIndex(battler);
+    bool32 onlyNumbers = !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars;
+
+    return coords == BATTLE_COORDS_SINGLES || onlyNumbers;
+}
+
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
 {
     enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
