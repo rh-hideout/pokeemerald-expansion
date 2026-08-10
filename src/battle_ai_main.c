@@ -3749,13 +3749,11 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 }
                 break;
             case EFFECT_BEAT_UP:
-                DebugPrintf("1");
                 if (ShouldBeatUpForJustified(battlerAtk, battlerAtkPartner, move, moveType, wouldPartnerFaint, aiData)
                  || ShouldBeatUpForRageFist(battlerAtk, battlerAtkPartner, move, wouldPartnerFaint, aiData))
                 {
                     if (isFriendlyFireOK)
                     {
-                    DebugPrintf("2");
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
