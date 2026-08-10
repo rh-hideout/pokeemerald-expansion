@@ -218,7 +218,7 @@ struct HpAndStatus
     u32 status;
 };
 
-struct MovePpInfo
+struct MovePPInfo
 {
     enum Move moves[MAX_MON_MOVES];
     u8 pp[MAX_MON_MOVES];
@@ -228,8 +228,8 @@ struct MovePpInfo
 struct ChooseMoveStruct
 {
     enum Move moves[MAX_MON_MOVES];
-    u8 currentPp[MAX_MON_MOVES];
-    u8 maxPp[MAX_MON_MOVES];
+    u8 currentPP[MAX_MON_MOVES];
+    u8 maxPP[MAX_MON_MOVES];
     enum Species species;
     enum Type monTypes[3];
     struct ZMoveData zmove;
@@ -333,7 +333,7 @@ void BtlController_EmitPrintString(enum BattlerId battler, u32 bufferId, enum St
 void BtlController_EmitPrintSelectionString(enum BattlerId battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitChooseAction(enum BattlerId battler, u32 bufferId, u8 action, enum Item itemId);
 void BtlController_EmitYesNoBox(enum BattlerId battler, u32 bufferId);
-void BtlController_EmitChooseMove(enum BattlerId battler, u32 bufferId, bool8 isDoubleBattle, bool8 NoPpNumber, struct ChooseMoveStruct *movePpData);
+void BtlController_EmitChooseMove(enum BattlerId battler, u32 bufferId, bool8 isDoubleBattle, bool8 noPPNumber, struct ChooseMoveStruct *movePPData);
 void BtlController_EmitChooseItem(enum BattlerId battler, u32 bufferId, u8 *battlePartyOrder);
 void BtlController_EmitChoosePokemon(enum BattlerId battler, u32 bufferId, u8 caseId, u8 slotId, enum Ability abilityId, enum BattlerId battlerPreventingSwitchout, u8 *data);
 void BtlController_EmitHealthBarUpdate(enum BattlerId battler, u32 bufferId, u16 hpValue);

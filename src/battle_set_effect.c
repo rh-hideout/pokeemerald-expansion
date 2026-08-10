@@ -239,7 +239,7 @@ static void HandleSetEffectStatChange(struct BattleCalcValues *cv, struct SetEff
 
         SetStatChange(se->effectBattler, stat, stage);
         if (se->additionalEffect->onSide)
-            SetStatChange(BATTLE_PARTNER(se->effectBattler), stat, stage);
+            SetStatChange(GetPartnerBattler(se->effectBattler), stat, stage);
     }
 
     BattleScriptPush(se->script);
@@ -323,7 +323,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
             gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
             break;
         case STATUS1_SLEEP:
-            TryDeactivateSleepClause(GetBattlerSide(se->effectBattler), gBattlerPartyIndexes[se->effectBattler]);
+            TryDeactivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
             gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
             break;
         case STATUS1_BURN:
@@ -378,7 +378,7 @@ static void HandleSetEffectClearSmog(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectFlameBurst(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum BattlerId partner = BATTLE_PARTNER(se->effectBattler);
+    enum BattlerId partner = GetPartnerBattler(se->effectBattler);
 
     if (IsBattlerAlive(partner)
      && !IsSemiInvulnerable(partner, CHECK_ALL)
@@ -402,7 +402,7 @@ static void HandleSetEffectFeint(struct BattleCalcValues *cv, struct SetEffect *
         gBattleMons[se->effectBattler].volatiles.consecutiveMoveUses = 0;
         removeProtect = TRUE;
     }
-    enum BattlerId partner = BATTLE_PARTNER(se->effectBattler);
+    enum BattlerId partner = GetPartnerBattler(se->effectBattler);
     if (GetProtectType(gProtectStructs[partner].protected) == PROTECT_TYPE_SIDE)
     {
         gProtectStructs[partner].protected = PROTECT_NONE;
@@ -1026,7 +1026,7 @@ static void HandleSetEffectCritPlusSide(struct BattleCalcValues *cv, struct SetE
     if (gBattleMons[se->effectBattler].volatiles.bonusCritStages < 3)
         gBattleMons[se->effectBattler].volatiles.bonusCritStages++;
 
-    enum BattlerId partner = BATTLE_PARTNER(se->effectBattler);
+    enum BattlerId partner = GetPartnerBattler(se->effectBattler);
     if (gBattleMons[partner].volatiles.bonusCritStages < 3)
         gBattleMons[partner].volatiles.bonusCritStages++;
 

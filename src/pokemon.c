@@ -1759,7 +1759,7 @@ u32 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
     case BATTLE_ALIVE_EXCEPT_BATTLER_SIDE:
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != battler && i != BATTLE_PARTNER(battler) && IsBattlerAlive(i))
+            if (i != battler && i != GetPartnerBattler(battler) && IsBattlerAlive(i))
                 aliveMonCount++;
         }
         break;
@@ -1777,7 +1777,7 @@ u32 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
 
 u8 GetDefaultMoveTarget(enum BattlerId battlerId)
 {
-    u8 opposing = BATTLE_OPPOSITE(GetBattlerSide(battlerId));
+    u8 opposing = GetBattlerLeftFoe(battlerId);
 
     if (!IsDoubleBattle())
         return GetBattlerAtPosition(opposing);
@@ -1786,7 +1786,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
         u8 position;
 
         if ((Random() & 1) == 0)
-            position = BATTLE_PARTNER(opposing);
+            position = GetPartnerPosition(opposing);
         else
             position = opposing;
 
@@ -1795,7 +1795,7 @@ u8 GetDefaultMoveTarget(enum BattlerId battlerId)
     else
     {
         if (!IsBattlerAlive(opposing))
-            return GetBattlerAtPosition(BATTLE_PARTNER(opposing));
+            return GetBattlerAtPosition((enum BattlerPosition)GetPartnerBattler(opposing));
         else
             return GetBattlerAtPosition(opposing);
     }
@@ -1996,7 +1996,6 @@ u32 GetMonData2(struct Pokemon *mon, s32 field)
 {
     return GetMonData3(mon, field, NULL);
 }
-
 
 union EvolutionTracker
 {
@@ -3033,7 +3032,7 @@ u8 CalculatePartyCount(enum BattleTrainer trainer)
 
 u8 CalculatePartyCountOfSide(enum BattlerId battler)
 {
-    return CalculatePartyCount(GetBattlerTrainer(battler)) + (BattleSideHasTwoTrainers(battler & BIT_SIDE) ? CalculatePartyCount(BATTLE_PARTNER(battler)) : 0);
+    return CalculatePartyCount(GetBattlerTrainer(battler)) + (BattleSideHasTwoTrainers(battler & BIT_SIDE) ? CalculatePartyCount(GetBattlerTrainer(GetPartnerBattler(battler))) : 0);
 }
 
 u8 CalculatePlayerPartyCount(void)
@@ -3949,14 +3948,13 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId bat
             gBattleMons[battler].status1 &= ~healMask;
             if ((healMask & STATUS1_SLEEP))
             {
-                u32 battlerSide = GetBattlerSide(battler);
                 struct Pokemon *party = GetBattlerParty(battler);
 
                 for (u32 i = 0; i < PARTY_SIZE; i++)
                 {
                     if (&party[i] == mon)
                     {
-                        TryDeactivateSleepClause(battlerSide, i);
+                        TryDeactivateSleepClause(battler, i);
                         break;
                     }
                 }

@@ -259,7 +259,8 @@ struct AiLogicData
     u32 partnerMoveSimulation:1;
     u32 reverseBattlerLogicOrder:1;
     u32 dragonDartsHitsBothTarget:4;
-    u32 padding2:13;
+    u32 battlerMovesScored:4; // Bitmask of battlers that have completed move scoring this turn, so a battler can check whether its ally has already committed to a chosen move regardless of AI processing order
+    u32 padding2:9;
 };
 
 struct AiThinkingStruct
@@ -502,6 +503,13 @@ struct FutureSight
     u16 partyIndex:3;
 };
 
+struct SleepClause
+{
+    enum BattleTrainer trainer:3;
+    u8 partyIndex:3;
+    u8 padding:2;
+};
+
 struct BattlerState
 {
     u8 targetsDone[MAX_BATTLERS_COUNT];
@@ -695,7 +703,7 @@ struct BattleStruct
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     u32 stellarBoostFlags[MAX_BATTLE_TRAINERS]; // bitfield
-    u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
+    struct SleepClause monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 pursuitStoredSwitch:4; // Stored id for the Pursuit target's switch (value between 0 and PARTY_SIZE included)
     s32 battlerExpReward;
@@ -1104,6 +1112,14 @@ struct Pokemon *GetBattlerParty(enum BattlerId battler);
 struct Pokemon *GetTrainerParty(enum BattleTrainer trainer);
 struct Pokemon* GetBattlerMon(enum BattlerId battler);
 
+enum BattlerId GetBattlerAtPosition(enum BattlerPosition position);
+enum BattlerId GetPartnerBattler(enum BattlerId battler);
+enum BattlerId GetOppositeBattler(enum BattlerId battler);
+enum BattlerPosition GetPartnerPosition(enum BattlerPosition position);
+enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
+enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
+enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
+
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
     if (battler >= gBattlersCount)
@@ -1143,27 +1159,6 @@ static inline enum BattlerPosition GetBattlerPosition(enum BattlerId battler)
     return gBattlerPositions[battler];
 }
 
-static inline enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
-{
-    enum BattlerId battler;
-    for (battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (GetBattlerPosition(battler) == position)
-            break;
-    }
-    return battler;
-}
-
-static inline enum BattlerId GetPartnerBattler(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(battler)));
-}
-
-static inline enum BattlerId GetOppositeBattler(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
-}
-
 static inline enum BattleSide GetBattlerSide(enum BattlerId battler)
 {
     return GetBattlerPosition(battler) & BIT_SIDE;
@@ -1177,11 +1172,6 @@ static inline bool32 IsOnPlayerSide(enum BattlerId battler)
 static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
-}
-
-static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
-{
-    return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
 }
 
 static inline bool32 IsDoubleBattle(void)

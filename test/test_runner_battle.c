@@ -373,6 +373,16 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
@@ -384,6 +394,7 @@ static void StartBattle(void)
         gMain.savedCallback = CB2_BattleTest_NextParameter;
     else
         gMain.savedCallback = CB2_TestRunner;
+    ResetTestInventory();
     SetMainCallback2(CB2_InitBattle);
 
     STATE->checkProgressParameter = 0;
@@ -2153,16 +2164,6 @@ static inline rng_value_t MakeRngValue(const u16 seed)
     return result;
 }
 
-static void ResetTestInventory()
-{
-    ClearBag();
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
-    {
-        if (DATA.inventory[i].itemId != ITEM_NONE)
-            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
-    }
-}
-
 static void CB2_BattleTest_NextTrial(void)
 {
     TearDownBattle();
@@ -2951,7 +2952,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
          || moveTarget == TARGET_FOES_AND_ALLY
          || moveTarget == TARGET_OPPONENTS_FIELD)
         {
-            target = BATTLE_OPPOSITE(battlerId);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
         {
@@ -2961,7 +2962,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
 
-            target = BATTLE_OPPOSITE(battlerId);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_USER
               || moveTarget == TARGET_ALL_BATTLERS
@@ -2972,7 +2973,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
         }
         else if (moveTarget == TARGET_ALLY)
         {
-            target = BATTLE_PARTNER(battlerId);
+            target = (battlerId ^ BIT_FLANK);
         }
         else
         {
@@ -3239,7 +3240,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-        target = BATTLE_OPPOSITE(battlerId);
+        target = (battlerId ^ BIT_SIDE);
     }
     else
     {

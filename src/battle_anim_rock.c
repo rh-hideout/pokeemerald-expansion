@@ -677,7 +677,7 @@ void AnimTask_Rollout(u8 taskId)
     var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;
 
     rolloutCounter = GetRolloutCounter();
@@ -724,7 +724,7 @@ void AnimTask_TectonicRageRollout(u8 taskId)
     var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;
 
     task->data[8] = 48 - (rolloutCounter * 8);  //rollout speed
