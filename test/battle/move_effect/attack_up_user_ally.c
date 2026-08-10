@@ -61,14 +61,14 @@ DOUBLE_BATTLE_TEST("Howl raises user's and partner's Attack by 1 stage", s16 dam
     }
 }
 
-DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
+DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof but doesn't fail on user with Soundproof")
 {
     s16 damage[2];
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HOWL) == TARGET_USER_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_EXPLOUD) { Speed(15); Ability(ABILITY_SOUNDPROOF); }
         PLAYER(SPECIES_VOLTORB) { Speed(10); Ability(ABILITY_SOUNDPROOF); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); }
@@ -79,18 +79,49 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &damage[0]);
 
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_SOUNDPROOF);
+            MESSAGE("It doesn't affect Exploud…");
+        }
         ABILITY_POPUP(playerRight, ABILITY_SOUNDPROOF);
         MESSAGE("It doesn't affect Voltorb…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Attack rose!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Wynaut's Attack rose!");
-        }
+        MESSAGE("Exploud's Attack rose!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &damage[1]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Howl ignores user's Substitute and partner's Substitute is ignored from Champions onwards")
+{
+    bool32 isChampionsOnwards = B_UPDATED_MOVE_FLAGS >= GEN_CHAMPIONS;
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_HOWL) == TARGET_USER_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(13); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(12); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SUBSTITUTE); MOVE(playerRight, MOVE_SUBSTITUTE); }
+        TURN { MOVE(playerLeft, MOVE_HOWL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        if (isChampionsOnwards)
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        else
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        if (isChampionsOnwards)
+            EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        else
+            EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
