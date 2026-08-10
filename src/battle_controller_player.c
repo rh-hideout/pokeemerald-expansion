@@ -1602,7 +1602,6 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
         CloseMainBattleScreen();
-        CB2_BagMenuFromBattle();
         if (gBattleStruct->victoryCatchState == VICTORY_CATCH_OPEN_BAG)
             CB2_ChooseBall();
         else
