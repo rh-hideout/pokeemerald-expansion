@@ -4591,6 +4591,7 @@ static enum MoveResult StatChangeCanAnyChange(struct BattleCalcValues *cv)
             gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
     }
 
+    cv->battlerDef = gBattlerTarget;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->statChangeBattler = 0;
 
@@ -4606,14 +4607,16 @@ static enum MoveResult StatChangeAccuracy(struct BattleCalcValues *cv)
          || cv->battlerAtk == battler)
             continue;
 
+        cv->battlerDef = battler;
         if (DoesMoveMissTarget(cv))
         {
-            if (cv->holdEffects[gBattlerAttacker] == HOLD_EFFECT_BLUNDER_POLICY)
+            if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY)
                 gBattleStruct->blunderPolicy = TRUE;
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_MISSED;
         }
     }
 
+    cv->battlerDef = gBattlerTarget;
     return MOVE_RESULT_CONTINUE;
 }
 
@@ -4850,6 +4853,7 @@ static enum MoveResult StatChangeTryChange(struct BattleCalcValues *cv)
         }
     }
 
+    cv->battlerDef = gBattlerTarget;
     return MOVE_RESULT_DONE;
 }
 
