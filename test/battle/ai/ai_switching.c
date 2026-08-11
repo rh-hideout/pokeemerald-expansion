@@ -1893,6 +1893,37 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if Palafin-Zero isn't trans
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin-Hero does not switch to activate Zero to Hero again (Single)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_HERO) { Ability(ABILITY_ZERO_TO_HERO); Moves(MOVE_JET_PUNCH); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_JET_PUNCH); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin-Hero does not switch to activate Zero to Hero again (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_HERO) { Ability(ABILITY_ZERO_TO_HERO); Moves(MOVE_JET_PUNCH); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentLeft, MOVE_JET_PUNCH);
+            EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+        }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Switch AI: Palafin uses Flip Turn when faster to transform (Single)")
 {
     GIVEN {
@@ -1958,14 +1989,15 @@ AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches when slower even with Fl
 
 AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Single)")
 {
+    enum Species palafinAbsorbSpecies;
     enum Ability palafinAbsorbAbility;
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_GASTRODON; palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_VAPOREON;  palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_PARASECT;  palafinAbsorbAbility = ABILITY_DRY_SKIN; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_GLISCOR) { Speed(10); Ability(palafinAbsorbAbility); }
+        PLAYER(palafinAbsorbSpecies) { Speed(10); Ability(palafinAbsorbAbility); }
         OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
         OPPONENT(SPECIES_GLISCOR) { Speed(8); }
     } WHEN {
@@ -1975,14 +2007,15 @@ AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities in
 
 AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Doubles)")
 {
+    enum Species palafinAbsorbSpecies;
     enum Ability palafinAbsorbAbility;
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_GASTRODON; palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_VAPOREON;  palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_PARASECT;  palafinAbsorbAbility = ABILITY_DRY_SKIN; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_GLISCOR) { Speed(5); Ability(palafinAbsorbAbility); Moves(MOVE_CELEBRATE); }
+        PLAYER(palafinAbsorbSpecies) { Speed(5); Ability(palafinAbsorbAbility); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_GLISCOR) { Speed(4); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
         OPPONENT(SPECIES_GLISCOR) { Speed(1); Moves(MOVE_CELEBRATE); }
