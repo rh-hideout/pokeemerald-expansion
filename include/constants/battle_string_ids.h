@@ -825,18 +825,6 @@ enum SandstormHailSnowStringID
     B_MSG_HAIL,
 };
 
-// gReflectLightScreenSafeguardStringIds
-enum ReflectLightScreenSafeguardStringID
-{
-    B_MSG_SIDE_STATUS_FAILED,
-    B_MSG_SET_REFLECT_SINGLE,
-    B_MSG_SET_REFLECT_DOUBLE,
-    B_MSG_SET_LIGHTSCREEN_SINGLE,
-    B_MSG_SET_LIGHTSCREEN_DOUBLE,
-    B_MSG_SET_SAFEGUARD,
-    B_MSG_SET_AURORA_VEIL,
-};
-
 // gProtectLikeUsedStringIds
 enum ProtectLikeUsedStringID
 {

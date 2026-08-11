@@ -2681,10 +2681,10 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             // if (!CanApplyAdditionalEffect(additionalEffect))
             //     continue;
 
-            if (isSelf != additionalEffect->self)
-                continue;
+            bool32 shouldSkipSelf = isSelf != additionalEffect->self;
+            bool32 shouldSkipTarget = !isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler);
 
-            if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler))
+            if (shouldSkipSelf || shouldSkipTarget)
             {
                 targetAvoidedMove[battler] = TRUE;
                 continue;

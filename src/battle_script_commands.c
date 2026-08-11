@@ -495,7 +495,6 @@ static void Cmd_setvolatile(void);
 static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
 static void Cmd_setembargo(void);
-static void Cmd_setsafeguard(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_copyfoestats(void);
@@ -704,7 +703,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
-    [B_SCR_OP_SETSAFEGUARD]                          = Cmd_setsafeguard,
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_COPYFOESTATS]                          = Cmd_copyfoestats,
@@ -802,9 +800,10 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_43]                             = Cmd_dummy,
-    [B_SCR_OP_SETSEEDED]                             = Cmd_dummy,
-    [B_SCR_OP_SETLIGHTSCREEN]                        = Cmd_dummy,
-    [B_SCR_OP_SETREFLECT]                            = Cmd_dummy,
+    [B_SCR_OP_UNUSED_44]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_45]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_46]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_47]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -6524,25 +6523,6 @@ static void Cmd_setembargo(void)
     }
 }
 
-static void Cmd_setsafeguard(void)
-{
-    CMD_ARGS();
-
-    if (gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_SAFEGUARD)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-    else
-    {
-        gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_SAFEGUARD;
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].safeguardTimer = 5;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SAFEGUARD;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_jumpifnopursuitswitchdmg(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
@@ -11648,33 +11628,6 @@ void BS_TryTrainerSlideMsgLastOn(void)
     default:
         break;
     }
-}
-
-// Potential bug with failing message and missed result on wrong battler
-void BS_SetAuroraVeil(void)
-{
-    NATIVE_ARGS();
-    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
-    if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-    }
-    else
-    {
-        gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
-        if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 8;
-        else
-            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_AURORA_VEIL;
-    }
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryThirdType(void)

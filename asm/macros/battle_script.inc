@@ -844,10 +844,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setsafeguard
-	.byte B_SCR_OP_SETSAFEGUARD
-	.endm
-
 	.macro jumpifnopursuitswitchdmg jumpInstr:req
 	.byte B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG
 	.4byte \jumpInstr
@@ -1898,10 +1894,6 @@
 	.macro trytrainerslidemsglaston battler:req
 	callnative BS_TryTrainerSlideMsgLastOn
 	.byte \battler
-	.endm
-
-	.macro setauroraveil
-	callnative BS_SetAuroraVeil
 	.endm
 
 	.macro trythirdtype failInstr:req

@@ -1241,6 +1241,12 @@ static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
     return FALSE;
 }
 
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler)
+{
+    PrepareStringBattle(stringId, battler);
+    gBattleCommunication[MSG_DISPLAY] = 1; // 1 / 0 should have constants. can't think of names
+}
+
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
 {
     switch (stringId)
