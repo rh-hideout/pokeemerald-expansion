@@ -206,10 +206,10 @@
     {
       "local_id": "LOCALID_RUSTBORO_RIVAL",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
-      "x": 16,
-      "y": 50,
+      "x": 19,
+      "y": 21,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -256,11 +256,39 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_RUSTBORO_MISTY",
+      "graphics_id": "OBJ_EVENT_GFX_MISTY",
+      "x": 18,
+      "y": 20,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_RUSTBORO_CITY_RIVAL"
+    },
+    {
+      "local_id": "LOCALID_RUSTBORO_ROXANNE",
+      "graphics_id": "OBJ_EVENT_GFX_ROXANNE",
+      "x": 19,
+      "y": 20,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_RUSTBORO_CITY_RIVAL"
     }
   ],
   "warp_events": [
     {
-      "x": 27,
+      "x": 28,
       "y": 19,
       "elevation": 0,
       "dest_map": "MAP_RUSTBORO_CITY_GYM",
@@ -347,20 +375,11 @@
       "x": 33,
       "y": 46,
       "elevation": 0,
-      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_map": "MAP_MISTYS_HOUSE",
       "dest_warp_id": "0"
     }
   ],
   "coord_events": [
-    {
-      "type": "trigger",
-      "x": 23,
-      "y": 20,
-      "elevation": 3,
-      "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
-      "script": "RustboroCity_EventScript_StolenGoodsTrigger0"
-    },
     {
       "type": "trigger",
       "x": 23,
@@ -540,12 +559,30 @@
       "var": "VAR_RUSTBORO_CITY_STATE",
       "var_value": "7",
       "script": "RustboroCity_EventScript_RivalTrigger7"
+    },
+    {
+      "type": "trigger",
+      "x": 20,
+      "y": 22,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "NULL"
+    },
+    {
+      "type": "trigger",
+      "x": 12,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_RUSTBORO_CITY_STATE",
+      "var_value": "7",
+      "script": "RustboroCity_EventScript_NoticeMistyGroup"
     }
   ],
   "bg_events": [
     {
       "type": "sign",
-      "x": 22,
+      "x": 23,
       "y": 20,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",

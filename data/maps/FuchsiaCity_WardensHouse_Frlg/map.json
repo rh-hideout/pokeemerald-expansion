@@ -23,11 +23,11 @@
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "FuchsiaCity_WardensHouse_EventScript_Warden",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -41,7 +41,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "EventScript_StrengthBoulder",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -51,12 +51,12 @@
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "FuchsiaCity_WardensHouse_EventScript_ItemRareCandy",
-      "flag": "FLAG_HIDE_FUCHSIA_CITY_WARDENS_HOUSE_RARE_CANDY"
+      "script": "NULL",
+      "flag": "0"
     },
     {
       "type": "object",
@@ -64,13 +64,13 @@
       "x": 4,
       "y": 1,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "FuchsiaCity_WardensHouse_EventScript_PokemonJournalKoga",
-      "flag": "FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL"
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -97,38 +97,5 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 4,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "FuchsiaCity_WardensHouse_EventScript_DisplaySign2"
-    },
-    {
-      "type": "sign",
-      "x": 4,
-      "y": 4,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "FuchsiaCity_WardensHouse_EventScript_DisplaySign1"
-    },
-    {
-      "type": "sign",
-      "x": 5,
-      "y": 4,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "FuchsiaCity_WardensHouse_EventScript_DisplaySign1"
-    },
-    {
-      "type": "sign",
-      "x": 6,
-      "y": 4,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "FuchsiaCity_WardensHouse_EventScript_DisplaySign2"
-    }
-  ]
+  "bg_events": []
 }

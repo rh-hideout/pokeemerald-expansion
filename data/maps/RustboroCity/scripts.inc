@@ -1,15 +1,55 @@
 RustboroCity_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, RustboroCity_OnTransition
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, RustboroCity_OnFrame
-	.byte 0
+    map_script MAP_SCRIPT_ON_LOAD, RustboroCity_SetCounterpartGraphics
+    map_script MAP_SCRIPT_ON_TRANSITION, RustboroCity_OnTransition
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, RustboroCity_OnFrame
+    .byte 0
 
 RustboroCity_OnTransition:
 	setflag FLAG_VISITED_RUSTBORO_CITY
-	call Common_EventScript_SetupRivalGfxId
+    call_if_eq VAR_RUSTBORO_CITY_STATE, 0, RustboroCity_EventScript_ArmDevonGoods
 	call_if_eq VAR_RUSTBORO_CITY_STATE, 6, RustboroCity_EventScript_HideMapNamePopup
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
 	goto_if_eq VAR_RUSTBORO_CITY_STATE, 6, RustboroCity_EventScript_PositionScientistForExit
 	end
+
+RustboroCity_EventScript_ArmDevonGoods::
+    setvar VAR_RUSTBORO_CITY_STATE, 1
+    return
+
+RustboroCity_SetCounterpartGraphics:
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, RustboroCity_SetCounterpartBrendan
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, RustboroCity_SetCounterpartMay
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, RustboroCity_SetCounterpartLexy
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, RustboroCity_SetCounterpartJustin
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, RustboroCity_SetCounterpartMaam
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, RustboroCity_SetCounterpartSir
+
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+	return
+
+RustboroCity_SetCounterpartBrendan:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+	return
+
+RustboroCity_SetCounterpartMay:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAY_NORMAL
+	return
+
+RustboroCity_SetCounterpartLexy:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+	return
+
+RustboroCity_SetCounterpartJustin:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+	return
+
+RustboroCity_SetCounterpartMaam:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+	return
+
+RustboroCity_SetCounterpartSir:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+	return
 
 RustboroCity_EventScript_PositionScientistForExit::
 	goto_if_eq VAR_TEMP_0, 11, RustboroCity_EventScript_PositionScientistLeftExit
@@ -94,10 +134,320 @@ RustboroCity_EventScript_MatchCallTutorial::
 	playse SE_EXIT
 	removeobject LOCALID_RUSTBORO_SCIENTIST
 	setflag FLAG_HIDE_RUSTBORO_CITY_SCIENTIST
-	setvar VAR_RUSTBORO_CITY_STATE, 7
-	clearflag FLAG_HIDE_MAP_NAME_POPUP
-	releaseall
-	end
+    setvar VAR_RUSTBORO_CITY_STATE, 7
+    clearflag FLAG_HIDE_MAP_NAME_POPUP
+    releaseall
+    end
+
+RustboroCity_EventScript_MistyRoxanneIntro::
+    lockall
+
+\
+    @ =========================================================
+    @ COUNTERPART GREETS PLAYER
+    @ Player and counterpart face each other.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_CounterpartFancyMeeting, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_PlayerWaiting, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_CounterpartSocializing, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ COUNTERPART INTRODUCES MISTY + ROXANNE
+    @ Player looks at counterpart while counterpart speaks.
+    @ =========================================================
+
+    msgbox RustboroCity_Text_CounterpartMetThem, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY REACTS TO THE PANCAKE CLAIM
+    @ Player + counterpart look toward cousins.
+    @ Misty faces downward toward them.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyPancakes, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ COUNTERPART FIRES BACK
+    @ Player looks back at counterpart.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    waitmovement 0
+
+    msgbox RustboroCity_Text_CounterpartPancakes, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY EXPLAINS HARD ROCK / ROXANNE
+    @ Misty and Roxanne face each other.
+    @ Player/counterpart look up at them.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyRoxanneIntro, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ ROXANNE EXPLAINS THE BROCK CONNECTION
+    @ =========================================================
+
+    msgbox RustboroCity_Text_RoxanneBrock, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY HYPES HER LITTLE COUSIN
+    @ =========================================================
+
+    msgbox RustboroCity_Text_MistyBrainiac, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ ROXANNE CORRECTS / EXPANDS
+    @ =========================================================
+
+    msgbox RustboroCity_Text_RoxanneShrineLeader, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ COUSIN BANTER
+    @ They are already facing each other.
+    @ =========================================================
+
+    msgbox RustboroCity_Text_MistyHumble, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_RoxanneTalk, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ COUNTERPART: "...SO ANYWAY. PANCAKES."
+    @ Everyone's attention shifts downward toward counterpart.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_CounterpartAnyway, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY STARTS MISSION BUSINESS
+    @ Player + counterpart look at Misty.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyProblem, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyBuilding, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ ROXANNE: "SOMETHING YOU NEGLECTED TO EXPLAIN..."
+    @ Cousins face each other again.
+    @ =========================================================
+
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_RoxanneSomething, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyDetails, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY ACTUALLY GIVES THE MISSION
+    @ Attention returns to player + counterpart.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyNeedFavor, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ ROXANNE CALLS MISTY OUT
+    @ =========================================================
+
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_RoxanneYouCouldGo, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyCould, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_RoxanneBut, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyNope, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ PLAYER: "WHY US?"
+    @ Player looks directly at Misty.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_PlayerWhyUs, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyAskedNicely, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_PlayerNotAnswer, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistySureIs, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ ROXANNE COMMENTS ON MISTY'S "REASON"
+    @ =========================================================
+
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_RoxanneReason, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyThanksRoxie, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_RoxanneNotGood, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY GIVES FINAL DIRECTIONS
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    applymovement LOCALID_RUSTBORO_ROXANNE, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyDirections, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_PlayerWillWe, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyYep, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ COUNTERPART TELLS PLAYER TO GO AHEAD
+    @ Player + counterpart face each other.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceRight
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox RustboroCity_Text_CounterpartLooseEnds, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_PlayerWhere, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_CounterpartPause, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ MISTY: "GO."
+    @ Player looks back at Misty.
+    @ =========================================================
+
+    applymovement LOCALID_PLAYER, RustboroCity_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, RustboroCity_Movement_FaceDown
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyGo, MSGBOX_DEFAULT
+    closemessage
+
+
+    @ =========================================================
+    @ SCENE COMPLETE
+    @ IMPORTANT: advance Rustboro OUT of state 7 so this
+    @ conversation cannot replay every time we talk to counterpart.
+    @ =========================================================
+
+    setflag FLAG_MET_RIVAL_RUSTBORO
+    setvar VAR_ROUTE104_STATE, 2
+    setvar VAR_RUSTBORO_CITY_STATE, 9
+
+    releaseall
+    end
+
+RustboroCity_EventScript_NoticeMistyGroup::
+    lockall
+    msgbox RustboroCity_Text_WhatsGoingOnOverThere, MSGBOX_DEFAULT
+    setvar VAR_RUSTBORO_CITY_STATE, 8
+    releaseall
+    end
 
 RustboroCity_Movement_ScientistWalkInPlaceDown:
 	walk_in_place_down
@@ -455,6 +805,7 @@ RustboroCity_Movement_EmployeeApproachPlayerFar:
 	walk_in_place_faster_down
 	step_end
 
+
 RustboroCity_EventScript_DevonEmployee1::
 	lock
 	faceplayer
@@ -669,11 +1020,21 @@ RustboroCity_EventScript_EmployeeFacePlayerRight::
 	return
 
 RustboroCity_EventScript_Rival::
-	lockall
-	call_if_unset FLAG_MET_RIVAL_RUSTBORO, RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_FacePlayer
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+    lock
+
+    @ If the mission intro has not happened yet,
+    @ DO NOT face the player first.
+    
+
+    @ Normal post-intro interaction
+    lock
+    faceplayer
+
+    goto_if_eq VAR_RUSTBORO_CITY_STATE, 8, RustboroCity_EventScript_MistyRoxanneIntro
+
+    msgbox RustboroCity_Text_CounterpartAfterIntroduction, MSGBOX_DEFAULT
+    release
+    end
 
 RustboroCity_EventScript_PlayRivalMusic::
 	checkplayergender
@@ -690,132 +1051,28 @@ RustboroCity_EventScript_PlayBrendanMusic::
 	return
 
 RustboroCity_EventScript_RivalTrigger0::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer0
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger1::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer1
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger2::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer2
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger3::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer3
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger4::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer4
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger5::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer5
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger6::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer6
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalTrigger7::
-	lockall
-	call RustboroCity_EventScript_PlayRivalMusic
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	playse SE_PIN
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_RivalApproachPlayer7
-	waitmovement 0
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	goto RustboroCity_EventScript_RivalEncounter
+	end
 
 RustboroCity_EventScript_RivalEncounter::
 	checkplayergender
@@ -1007,6 +1264,22 @@ RustboroCity_Movement_RivalApproachPlayer7:
 	walk_right
 	walk_down
 	step_end
+
+RustboroCity_Movement_FaceUp:
+    walk_in_place_up
+    step_end
+
+RustboroCity_Movement_FaceDown:
+    walk_in_place_down
+    step_end
+
+RustboroCity_Movement_FaceLeft:
+    walk_in_place_left
+    step_end
+
+RustboroCity_Movement_FaceRight:
+    walk_in_place_right
+    step_end
 
 RustboroCity_EventScript_Boy1::
 	msgbox RustboroCity_Text_YouCanHave2On2Battle, MSGBOX_NPC
@@ -1288,3 +1561,152 @@ RustboroCity_Text_YouCanHave2On2Battle:
 	.string "they'll both challenge you.\p"
 	.string "Don't you think it'd be cool if you\n"
 	.string "could beat two TRAINERS by yourself?$"
+
+RustboroCity_Text_WhatsGoingOnOverThere:
+    .string "{PLAYER}: Okay...\p"
+    .string "What is going on over there?$"
+
+RustboroCity_Text_CounterpartFancyMeeting:
+    .string "OAK'S GRANDCHILD: Hey!\n"
+    .string "Fancy meeting you here.$"
+
+RustboroCity_Text_PlayerWaiting:
+    .string "{PLAYER}: You've been standing here\n"
+    .string "forever.$"
+
+RustboroCity_Text_CounterpartSocializing:
+    .string "OAK'S GRANDCHILD: I've been socializing.\p"
+    .string "Try it sometime.$"
+
+RustboroCity_Text_CounterpartMetThem:
+    .string "OAK'S GRANDCHILD: Oh!\n"
+    .string "That's MISTY and ROXANNE.\p"
+    .string "I met them at HARD ROCK CAFE.\p"
+    .string "We bonded over pancakes.$"
+
+RustboroCity_Text_MistyPancakes:
+    .string "MISTY: YOU bonded over pancakes.$"
+
+RustboroCity_Text_CounterpartPancakes:
+    .string "OAK'S GRANDCHILD: You had pancakes too!$"
+
+RustboroCity_Text_MistyRoxanneIntro:
+    .string "MISTY: That's not why I was there.\p"
+    .string "I was introducing my little cousin\n"
+    .string "to an old friend of mine.$"
+
+RustboroCity_Text_RoxanneBrock:
+    .string "ROXANNE: BROCK.\p"
+    .string "He and I share an affinity for\n"
+    .string "ROCK-type POKéMON.$"
+
+RustboroCity_Text_MistyBrainiac:
+    .string "MISTY: See?\p"
+    .string "My little cousin's a brainiac.$"
+
+RustboroCity_Text_RoxanneShrineLeader:
+    .string "ROXANNE: I'm the SHRINE LEADER of\n"
+    .string "RUSTBORO.\p"
+    .string "I would hope I'm knowledgeable.$"
+
+RustboroCity_Text_MistyHumble:
+    .string "MISTY: And humble.$"
+
+RustboroCity_Text_RoxanneTalk:
+    .string "ROXANNE: You're one to talk.$"
+
+RustboroCity_Text_CounterpartAnyway:
+    .string "OAK'S GRANDCHILD: ...So anyway.\p"
+    .string "Pancakes.$"
+
+RustboroCity_Text_MistyProblem:
+    .string "MISTY: Actually, since you're here...\p"
+    .string "I've got a little problem.$"
+
+RustboroCity_Text_MistyBuilding:
+    .string "MISTY: I rent out a building here in\n"
+    .string "RUSTBORO.\p"
+    .string "Someone got inside without\n"
+    .string "permission.\p"
+    .string "Nothing's missing...\p"
+    .string "But they used something inside.$"
+
+RustboroCity_Text_RoxanneSomething:
+    .string "ROXANNE: Something you have neglected\n"
+    .string "to explain to either of them.$"
+
+RustboroCity_Text_MistyDetails:
+    .string "MISTY: Details.$"
+
+RustboroCity_Text_MistyNeedFavor:
+    .string "MISTY: I need you two to follow them.\p"
+    .string "Find out where they went and what\n"
+    .string "they're doing.\p"
+    .string "And if they're causing trouble...\p"
+    .string "Stop them.$"
+
+RustboroCity_Text_RoxanneYouCouldGo:
+    .string "ROXANNE: You could go yourself.$"
+
+RustboroCity_Text_MistyCould:
+    .string "MISTY: I could.$"
+
+RustboroCity_Text_RoxanneBut:
+    .string "ROXANNE: ...But you're not going to.$"
+
+RustboroCity_Text_MistyNope:
+    .string "MISTY: Nope!$"
+
+RustboroCity_Text_PlayerWhyUs:
+    .string "{PLAYER}: Why us?$"
+
+RustboroCity_Text_MistyAskedNicely:
+    .string "MISTY: Because I asked nicely.$"
+
+RustboroCity_Text_PlayerNotAnswer:
+    .string "{PLAYER}: That's not an answer.$"
+
+RustboroCity_Text_MistySureIs:
+    .string "MISTY: Sure it is.$"
+
+RustboroCity_Text_RoxanneReason:
+    .string "ROXANNE: She usually has a reason.$"
+
+RustboroCity_Text_MistyThanksRoxie:
+    .string "MISTY: Thank you, Roxie.$"
+
+RustboroCity_Text_RoxanneNotGood:
+    .string "ROXANNE: I didn't say it was a GOOD\n"
+    .string "reason.$"
+
+RustboroCity_Text_MistyDirections:
+    .string "MISTY: Just head inside my place.\p"
+    .string "You'll know what to do when you\n"
+    .string "get there.$"
+
+RustboroCity_Text_PlayerWillWe:
+    .string "{PLAYER}: ...Will we?$"
+
+RustboroCity_Text_MistyYep:
+    .string "MISTY: Yep!$"
+
+RustboroCity_Text_CounterpartLooseEnds:
+    .string "OAK'S GRANDCHILD: Yeah, yeah.\n"
+    .string "You go ahead.\p"
+    .string "I've gotta tie up a couple loose\n"
+    .string "ends here first.\p"
+    .string "I'll meet you over there.$"
+
+RustboroCity_Text_PlayerWhere:
+    .string "{PLAYER}: Over where?$"
+
+RustboroCity_Text_CounterpartPause:
+    .string "OAK'S GRANDCHILD: ...\p"
+    .string "Good question.$"
+
+RustboroCity_Text_MistyGo:
+    .string "MISTY: GO.$"
+
+RustboroCity_Text_CounterpartAfterIntroduction:
+    .string "OAK'S GRANDCHILD: Go ahead.\p"
+    .string "I'll catch up.$"

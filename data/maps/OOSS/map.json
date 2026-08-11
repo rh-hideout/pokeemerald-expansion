@@ -1,0 +1,67 @@
+{
+  "id": "MAP_OOSS",
+  "name": "OOSS",
+  "layout": "LAYOUT_OOSS",
+  "music": "MUS_VERDANTURF",
+  "region_map_section": "MAPSEC_ROUTE_116",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_GLOOM",
+      "graphics_id": "OBJ_EVENT_GFX_SHINY_GLOOM",
+      "x": 7,
+      "y": 1,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_OW_WILD_ENCOUNTER",
+      "trainer_sight_or_berry_tree_id": "20",
+      "script": "OOSS_EventScript_ShinyGloom",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 9,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE116",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 8,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE116",
+      "dest_warp_id": "4"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 9,
+      "y": 3,
+      "elevation": 0,
+      "item": "ITEM_LEAF_STONE",
+      "flag": "FLAG_HIDDEN_ITEMS_START"
+    },
+    {
+      "type": "hidden_item",
+      "x": 5,
+      "y": 3,
+      "elevation": 0,
+      "item": "ITEM_SUN_STONE",
+      "flag": "FLAG_HIDDEN_ITEMS_START"
+    }
+  ]
+}

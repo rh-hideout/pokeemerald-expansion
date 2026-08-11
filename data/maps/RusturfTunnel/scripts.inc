@@ -419,24 +419,24 @@ RusturfTunnel_EventScript_Mike::
 	end
 
 RusturfTunnel_Text_ComeAndGetSome:
-	.string "What, are you coming?\n"
-	.string "Come and get some, then!$"
+	.string "C'mon man, back off!\n"
+	.string "I got bills!$"
 
 RusturfTunnel_Text_Peeko:
 	.string "PEEKO: Pii pihyoh!$"
 
 RusturfTunnel_Text_GruntIntro:
-	.string "Grah, keelhaul it all!\p"
-	.string "That hostage POKéMON turned out to\n"
-	.string "be worthless!\p"
-	.string "And to think I made a getaway…\n"
-	.string "In this tunnel to nowhere!\p"
-	.string "Hey! You!\n"
-	.string "So you want to battle me?$"
+	.string "OMG you AGAIN?!\p"
+	.string "I'm just trying to do a job!\n"
+	.string "you know I need money\p"
+	.string "for books!\n"
+	.string "This tunnel goes nowhere!\p"
+	.string "I guess..\n"
+	.string "We gotta battle now..$"
 
 RusturfTunnel_Text_GruntDefeat:
 	.string "Urrrggh! My career in crime comes to\n"
-	.string "a dead end!$"
+	.string "a dead end..AGAIN!$"
 
 RusturfTunnel_Text_GruntTakePackage:
 	.string "This is plain not right…\p"

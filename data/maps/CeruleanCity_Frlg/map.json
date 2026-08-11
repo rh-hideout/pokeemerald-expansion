@@ -20,16 +20,16 @@
       "x": 31,
       "y": 12,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "CeruleanCity_Frlg_EventScript_Officer",
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_CERULEAN_GRUNT",
+      "local_id": "LOCALID_CERULEAN_ROCKET_GRUNT",
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
       "x": 33,
       "y": 6,
@@ -39,8 +39,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0"
+      "script": "CeruleanCity_Frlg_EventScript_RocketGrunt",
+      "flag": "FLAG_HIDE_CERULEAN_ROCKET_GRUNT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_FRLG",
@@ -143,13 +143,13 @@
       "y": 18,
       "target_local_id": "LOCALID_ROUTE9_CUT_TREE",
       "target_map": "MAP_ROUTE9",
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "flag": "0",
       "movement_range_x": 0,
       "movement_range_y": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "script": "NULL",
-      "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "flag": "0"
+      "trainer_type": "TRAINER_TYPE_NONE"
     },
     {
       "local_id": "LOCALID_CERULEAN_WOMAN",
@@ -177,6 +177,20 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_COUNTERPART_CERULEAN",
+      "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "x": 32,
+      "y": 12,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeruleanCity_Frlg_EventScript_Counterpart",
       "flag": "0"
     }
   ],
@@ -281,7 +295,24 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 20,
+      "y": 12,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "CeruleanCity_Frlg_EventScript_LibrarySign"
+    },
+    {
+      "type": "sign",
+      "x": 11,
+      "y": 28,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "CeruleanCity_Frlg_EventScript_EvilLabSign"
+    }
+  ],
   "floor_number": 0,
   "region": "REGION_KANTO"
 }

@@ -22,12 +22,12 @@
       "x": 5,
       "y": 10,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
-      "movement_range_x": 2,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeladonCity_DepartmentStore_2F_EventScript_Lass",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -37,11 +37,11 @@
       "y": 8,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 3,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeladonCity_DepartmentStore_2F_EventScript_ClerkItems",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -50,12 +50,12 @@
       "x": 1,
       "y": 6,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-      "movement_range_x": 3,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -64,13 +64,13 @@
       "x": 11,
       "y": 6,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeladonCity_DepartmentStore_2F_EventScript_Woman",
-      "flag": "FLAG_HIDE_POSTGAME_GOSSIPERS"
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -97,14 +97,5 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 4,
-      "y": 1,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "CeladonCity_DepartmentStore_2F_EventScript_FloorSign"
-    }
-  ]
+  "bg_events": []
 }

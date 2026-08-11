@@ -14,18 +14,7 @@
   "show_map_name": true,
   "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": [
-    {
-      "map": "MAP_ROUTE1",
-      "offset": 0,
-      "direction": "up"
-    },
-    {
-      "map": "MAP_ROUTE21_NORTH",
-      "offset": 0,
-      "direction": "down"
-    }
-  ],
+  "connections": null,
   "object_events": [
     {
       "local_id": "LOCALID_PALLET_SIGN_LADY",
@@ -34,12 +23,12 @@
       "x": 3,
       "y": 10,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 4,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "PalletTown_EventScript_SignLady",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -49,12 +38,12 @@
       "x": 13,
       "y": 17,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 6,
-      "movement_range_y": 2,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "PalletTown_EventScript_FatMan",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -64,13 +53,13 @@
       "x": 10,
       "y": 8,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_UP",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_OAK_IN_PALLET_TOWN"
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -96,75 +85,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 12,
-      "y": 1,
-      "elevation": 3,
-      "var": "VAR_MAP_SCENE_PALLET_TOWN_OAK",
-      "var_value": "0",
-      "script": "PalletTown_EventScript_OakTriggerLeft"
-    },
-    {
-      "type": "trigger",
-      "x": 13,
-      "y": 1,
-      "elevation": 3,
-      "var": "VAR_MAP_SCENE_PALLET_TOWN_OAK",
-      "var_value": "0",
-      "script": "PalletTown_EventScript_OakTriggerRight"
-    },
-    {
-      "type": "trigger",
-      "x": 13,
-      "y": 2,
-      "elevation": 3,
-      "var": "VAR_TEMP_2",
-      "var_value": "1",
-      "script": "PalletTown_EventScript_SignLadyTrigger"
-    }
-  ],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 16,
-      "y": 16,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_EventScript_OaksLabSign"
-    },
-    {
-      "type": "sign",
-      "x": 4,
-      "y": 7,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_EventScript_PlayersHouseSign"
-    },
-    {
-      "type": "sign",
-      "x": 13,
-      "y": 7,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_EventScript_RivalsHouseSign"
-    },
-    {
-      "type": "sign",
-      "x": 9,
-      "y": 11,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_EventScript_TownSign"
-    },
-    {
-      "type": "sign",
-      "x": 5,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_EventScript_TrainerTips"
-    }
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

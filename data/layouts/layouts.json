@@ -1281,7 +1281,7 @@
       "id": "LAYOUT_ROUTE104_PRETTY_PETAL_FLOWER_SHOP",
       "name": "Route104_PrettyPetalFlowerShop_Layout",
       "width": 15,
-      "height": 9,
+      "height": 11,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PrettyPetalFlowerShop",
       "border_filepath": "data/layouts/Route104_PrettyPetalFlowerShop/border.bin",
@@ -1481,7 +1481,7 @@
       "width": 48,
       "height": 44,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Rustboro",
+      "secondary_tileset": "gTileset_PrettyPetalFlowerShop",
       "border_filepath": "data/layouts/PetalburgWoods/border.bin",
       "blockdata_filepath": "data/layouts/PetalburgWoods/map.bin",
       "layout_version": "emerald"
@@ -9405,6 +9405,26 @@
       "secondary_tileset": "gTileset_BattleArena",
       "border_filepath": "data/layouts/HardRockCafe/border.bin",
       "blockdata_filepath": "data/layouts/HardRockCafe/map.bin"
+    },
+    {
+      "id": "LAYOUT_OOSS",
+      "name": "OOSS_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Mossdeep",
+      "border_filepath": "data/layouts/OOSS/border.bin",
+      "blockdata_filepath": "data/layouts/OOSS/map.bin"
+    },
+    {
+      "id": "LAYOUT_MISTYS_HOUSE",
+      "name": "MistysHouse_Layout",
+      "width": 15,
+      "height": 15,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_HoennBuilding",
+      "border_filepath": "data/layouts/MistysHouse/border.bin",
+      "blockdata_filepath": "data/layouts/MistysHouse/map.bin"
     }
   ]
 }

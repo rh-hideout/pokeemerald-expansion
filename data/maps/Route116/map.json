@@ -3,7 +3,6 @@
   "name": "Route116",
   "layout": "LAYOUT_ROUTE116",
   "music": "MUS_ROUTE104",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_116",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -93,8 +92,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
-      "x": 13,
-      "y": 17,
+      "x": 11,
+      "y": 15,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_ROTATE_CLOCKWISE",
       "movement_range_x": 0,
@@ -119,8 +118,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 10,
-      "y": 17,
+      "x": 19,
+      "y": 14,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -250,8 +249,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
-      "x": 28,
-      "y": 8,
+      "x": 18,
+      "y": 4,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
@@ -316,8 +315,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
-      "x": 33,
-      "y": 8,
+      "x": 28,
+      "y": 16,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
@@ -330,7 +329,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2",
       "x": 33,
-      "y": 5,
+      "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -416,17 +415,17 @@
       "dest_warp_id": "2"
     },
     {
-      "x": 59,
-      "y": 13,
+      "x": 9,
+      "y": 0,
       "elevation": 0,
-      "dest_map": "MAP_TERRA_CAVE_ENTRANCE",
+      "dest_map": "MAP_OOSS",
       "dest_warp_id": "0"
     },
     {
-      "x": 79,
-      "y": 6,
+      "x": 10,
+      "y": 0,
       "elevation": 0,
-      "dest_map": "MAP_TERRA_CAVE_ENTRANCE",
+      "dest_map": "MAP_OOSS",
       "dest_warp_id": "0"
     }
   ],
@@ -512,8 +511,8 @@
     },
     {
       "type": "hidden_item",
-      "x": 22,
-      "y": 9,
+      "x": 42,
+      "y": 8,
       "elevation": 3,
       "item": "ITEM_SUPER_POTION",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_116_SUPER_POTION"
@@ -526,5 +525,6 @@
       "item": "ITEM_BLACK_GLASSES",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_116_BLACK_GLASSES"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

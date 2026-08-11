@@ -93,3 +93,106 @@ Route104_PrettyPetalFlowerShop_EventScript_AlreadyReceivedBerry::
 	msgbox Route104_PrettyPetalFlowerShop_Text_MachineMixesBerries, MSGBOX_DEFAULT
 	release
 	end
+
+Route104_PrettyPetalFlowerShop_EventScript_Xie::
+	lock
+	faceplayer
+	setvar VAR_0x8004, LOCALID_XIE
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinEncounter
+	end
+
+
+Route104_PrettyPetalFlowerShop_EventScript_Sol::
+	lock
+	faceplayer
+	setvar VAR_0x8004, LOCALID_SOL
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinEncounter
+	end
+
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinEncounter::
+	goto_if_set FLAG_MET_TWIN_FLOWER_SHOP, Route104_PrettyPetalFlowerShop_EventScript_TwinAlreadyMet
+
+	msgbox Route104_PrettyPetalFlowerShop_Text_TwinQuestion, MSGBOX_DEFAULT
+
+	multichoice 0, 0, MULTICHOICE_TWIN_FIRST_ENCOUNTER, FALSE
+
+	switch VAR_RESULT
+	case 0, Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceKnowYou
+	case 1, Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceHelpYou
+	case 2, Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceQuestionMarks
+
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceQuestionMarks
+	end
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceKnowYou::
+	addvar VAR_CURIOSITY, 1
+	msgbox Route104_PrettyPetalFlowerShop_Text_TwinResponseKnowYou, MSGBOX_DEFAULT
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinLeave
+	end
+
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceHelpYou::
+	addvar VAR_COMPASSION, 1
+	msgbox Route104_PrettyPetalFlowerShop_Text_TwinResponseHelpYou, MSGBOX_DEFAULT
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinLeave
+	end
+
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinChoiceQuestionMarks::
+	addvar VAR_PERSPECTIVE, 1
+	msgbox Route104_PrettyPetalFlowerShop_Text_TwinResponseQuestionMarks, MSGBOX_DEFAULT
+	goto Route104_PrettyPetalFlowerShop_EventScript_TwinLeave
+	end
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinLeave::
+	setflag FLAG_MET_TWIN_FLOWER_SHOP
+	closemessage
+
+	applymovement VAR_0x8004, Route104_PrettyPetalFlowerShop_Movement_TwinLeave
+	waitmovement 0
+	removeobject VAR_0x8004
+
+	msgbox Route104_PrettyPetalFlowerShop_Text_PlayerHairThought, MSGBOX_DEFAULT
+
+	release
+	end
+
+
+Route104_PrettyPetalFlowerShop_EventScript_TwinAlreadyMet::
+	removeobject VAR_0x8004
+	release
+	end
+
+Route104_PrettyPetalFlowerShop_Text_TwinQuestion:
+	.string "...?$"
+
+
+Route104_PrettyPetalFlowerShop_Text_TwinResponseKnowYou:
+	.string "...I was about to ask you\n"
+	.string "the same thing.$"
+
+
+Route104_PrettyPetalFlowerShop_Text_TwinResponseHelpYou:
+	.string "No...\n"
+	.string "I don't think so, anyway.$"
+
+
+Route104_PrettyPetalFlowerShop_Text_TwinResponseQuestionMarks:
+	.string "...\p"
+	.string "Yeah.\n"
+	.string "That's about where I'm at too.$"
+
+
+Route104_PrettyPetalFlowerShop_Text_PlayerHairThought:
+	.string "...\p"
+	.string "I kinda like their hair?\p"
+	.string "Weird.\n"
+	.string "Okay..?$"
+
+Route104_PrettyPetalFlowerShop_Movement_TwinLeave:
+	walk_right
+	walk_down
+	walk_down
+	walk_down
+	step_end

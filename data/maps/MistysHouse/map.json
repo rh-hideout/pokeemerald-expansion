@@ -1,0 +1,42 @@
+{
+  "id": "MAP_MISTYS_HOUSE",
+  "name": "MistysHouse",
+  "layout": "LAYOUT_MISTYS_HOUSE",
+  "music": "MUS_RUSTBORO",
+  "region_map_section": "MAPSEC_RUSTBORO_CITY",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 6,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_RUSTBORO_CITY",
+      "dest_warp_id": "12"
+    },
+    {
+      "x": 6,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 7,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_RUSTBORO_CITY",
+      "dest_warp_id": "12"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

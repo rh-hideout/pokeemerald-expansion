@@ -2,11 +2,10 @@
   "id": "MAP_PETALBURG_WOODS",
   "name": "PetalburgWoods",
   "layout": "LAYOUT_PETALBURG_WOODS",
-  "music": "MUS_PETALBURG_WOODS",
-  "region": "REGION_HOENN",
+  "music": "MUS_RG_VERMILLION",
   "region_map_section": "MAPSEC_PETALBURG_WOODS",
   "requires_flash": false,
-  "weather": "WEATHER_SHADE",
+  "weather": "WEATHER_SUNNY",
   "map_type": "MAP_TYPE_ROUTE",
   "allow_cycling": true,
   "allow_escaping": false,
@@ -262,16 +261,16 @@
     },
     {
       "type": "hidden_item",
-      "x": 39,
-      "y": 35,
+      "x": 41,
+      "y": 34,
       "elevation": 3,
       "item": "ITEM_POTION",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_POTION"
     },
     {
       "type": "hidden_item",
-      "x": 26,
-      "y": 6,
+      "x": 45,
+      "y": 13,
       "elevation": 3,
       "item": "ITEM_TINY_MUSHROOM",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_TINY_MUSHROOM_1"
@@ -287,7 +286,7 @@
     {
       "type": "hidden_item",
       "x": 4,
-      "y": 19,
+      "y": 17,
       "elevation": 3,
       "item": "ITEM_POKE_BALL",
       "flag": "FLAG_HIDDEN_ITEM_PETALBURG_WOODS_POKE_BALL"
@@ -300,5 +299,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign2"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

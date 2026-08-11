@@ -3,7 +3,6 @@
   "name": "CeruleanCity_BikeShop_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_BIKE_SHOP",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,17 +11,30 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [
     {
-      "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_MAN",
-      "x": 9,
+      "local_id": "LOCALID_CERULEAN_LAB_ROCKET",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "x": 7,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_JAMES",
+      "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
+      "x": 7,
       "y": 3,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -31,12 +43,12 @@
       "flag": "0"
     },
     {
-      "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
-      "x": 9,
-      "y": 7,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "local_id": "LOCALID_COUNTERPART_CERULEAN_LAB",
+      "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "x": 6,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -45,17 +57,17 @@
       "flag": "0"
     },
     {
-      "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
-      "x": 5,
+      "local_id": "LOCALID_LAB_MAGICARP",
+      "graphics_id": "OBJ_EVENT_GFX_SHINY_MAGIKARP",
+      "x": 10,
       "y": 5,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_ShinyMagikarp",
       "flag": "0"
     }
   ],
@@ -82,6 +94,18 @@
       "dest_warp_id": "5"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 5,
+      "y": 7,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "CeruleanCity_BikeShop_Frlg_EventScript_EnterLab"
+    }
+  ],
+  "bg_events": [],
+  "floor_number": 0,
+  "region": "REGION_KANTO"
 }

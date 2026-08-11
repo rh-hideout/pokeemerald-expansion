@@ -22,12 +22,12 @@
       "x": 6,
       "y": 8,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Doduo",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -37,11 +37,11 @@
       "y": 6,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Doll",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -51,11 +51,11 @@
       "y": 2,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Doll",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -64,12 +64,12 @@
       "x": 9,
       "y": 6,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Copycat",
+      "script": "NULL",
       "flag": "0"
     }
   ],
@@ -83,32 +83,5 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 1,
-      "y": 1,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Computer"
-    },
-    {
-      "type": "sign",
-      "x": 3,
-      "y": 5,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "SaffronCity_CopycatsHouse_2F_EventScript_Game"
-    },
-    {
-      "type": "hidden_item",
-      "x": 2,
-      "y": 1,
-      "elevation": 0,
-      "item": "ITEM_NUGGET",
-      "flag": "FLAG_HIDDEN_ITEM_SAFFRON_CITY_COPYCATS_HOUSE_2F_NUGGET",
-      "quantity": 1,
-      "underfoot": false
-    }
-  ]
+  "bg_events": []
 }

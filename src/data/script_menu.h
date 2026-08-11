@@ -1157,6 +1157,14 @@ static const u8 sText_OfCourse[] = _("Of course!");
 static const u8 sText_IGuess[] = _("I guess...");
 static const u8 sText_NahImGood[] = _("Nah, I'm good.");
 
+
+static const struct MenuAction sMultichoiceList_TwinFirstEncounter[] =
+{
+    { COMPOUND_STRING("Do I know you?") },
+    { COMPOUND_STRING("Can I help you?") },
+    { COMPOUND_STRING("???") },
+};
+
 static const struct MenuAction sMultichoiceList_LibraryHelpBlaine[] =
 {
     { sText_OfCourse },
@@ -1173,7 +1181,21 @@ static const struct MenuAction  sMultichoiceList_CounterpartBookResponse[] =
 };
 
 
-static const struct MultichoiceListStruct sMultichoiceLists[] =
+static const struct MenuAction sMultichoiceList_CeruleanFirstResponse[] =
+{
+    { COMPOUND_STRING("Are they okay?") },
+    { COMPOUND_STRING("What did they see?") },
+    { COMPOUND_STRING("Let's go after them.") },
+};
+
+static const struct MenuAction sMultichoiceList_CeruleanLibraryOldMan[] =
+{
+    { COMPOUND_STRING("Are you sure?") },
+    { COMPOUND_STRING("Where did he go?") },
+    { COMPOUND_STRING("Books, huh?") },
+};
+
+const struct MultichoiceListStruct sMultichoiceLists[] =
 {
     [MULTI_BRINEY_ON_DEWFORD]          = MULTICHOICE(MultichoiceList_BrineyOnDewford),
     [MULTI_PC]                         = MULTICHOICE(MultichoiceList_Exit),
@@ -1339,6 +1361,9 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
     [MULTICHOICE_LIBRARY_HELP_BLAINE]                  = MULTICHOICE(sMultichoiceList_LibraryHelpBlaine),
     [MULTICHOICE_COUNTERPART_BOOK_RESPONSE]            = MULTICHOICE(sMultichoiceList_CounterpartBookResponse),
+    [MULTICHOICE_TWIN_FIRST_ENCOUNTER] = MULTICHOICE(sMultichoiceList_TwinFirstEncounter),
+    [MULTICHOICE_CERULEAN_LIBRARY_OLD_MAN] = MULTICHOICE(sMultichoiceList_CeruleanLibraryOldMan),
+    [MULTICHOICE_CERULEAN_FIRST_RESPONSE] = MULTICHOICE(sMultichoiceList_CeruleanFirstResponse),
     
 };
 

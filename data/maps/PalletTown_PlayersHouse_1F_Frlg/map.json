@@ -23,12 +23,12 @@
       "x": 8,
       "y": 4,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "PalletTown_PlayersHouse_1F_EventScript_Mom",
+      "script": "NULL",
       "flag": "0"
     }
   ],
@@ -63,14 +63,5 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 6,
-      "y": 1,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PalletTown_PlayersHouse_1F_EventScript_TV"
-    }
-  ]
+  "bg_events": []
 }

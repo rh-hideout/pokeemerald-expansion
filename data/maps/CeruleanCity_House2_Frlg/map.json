@@ -3,7 +3,6 @@
   "name": "CeruleanCity_House2_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_HOUSE2",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,12 +11,10 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
       "x": 1,
       "y": 2,
@@ -27,11 +24,10 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "CeruleanCity_House2_Frlg_EventScript_Hiker",
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
       "x": 7,
       "y": 6,
@@ -41,7 +37,21 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "CeruleanCity_House2_Frlg_EventScript_Daughter",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_COUNTERPART_CERULEANHOUSE2",
+      "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+      "x": 6,
+      "y": 6,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeruleanCity_House2_Frlg_EventScript_Counterpart",
       "flag": "0"
     }
   ],
@@ -76,5 +86,7 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "floor_number": 0,
+  "region": "REGION_KANTO"
 }

@@ -23,11 +23,11 @@
       "y": 2,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "VermilionCity_Gym_EventScript_LtSurge",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -37,11 +37,11 @@
       "y": 11,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
-      "script": "VermilionCity_Gym_EventScript_Baily",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -51,11 +51,11 @@
       "y": 13,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
-      "script": "VermilionCity_Gym_EventScript_Dwayne",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -65,11 +65,11 @@
       "y": 17,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "VermilionCity_Gym_EventScript_GymGuy",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -78,12 +78,12 @@
       "x": 7,
       "y": 8,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
-      "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
-      "script": "VermilionCity_Gym_EventScript_Tucker",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
       "flag": "0"
     }
   ],
@@ -111,142 +111,5 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [
-    {
-      "type": "sign",
-      "x": 3,
-      "y": 17,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_GymStatue"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 17,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_GymStatue"
-    },
-    {
-      "type": "sign",
-      "x": 1,
-      "y": 10,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan1"
-    },
-    {
-      "type": "sign",
-      "x": 3,
-      "y": 10,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan2"
-    },
-    {
-      "type": "sign",
-      "x": 5,
-      "y": 10,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan3"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 10,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan4"
-    },
-    {
-      "type": "sign",
-      "x": 9,
-      "y": 10,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan5"
-    },
-    {
-      "type": "sign",
-      "x": 1,
-      "y": 12,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan6"
-    },
-    {
-      "type": "sign",
-      "x": 3,
-      "y": 12,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan7"
-    },
-    {
-      "type": "sign",
-      "x": 5,
-      "y": 12,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan8"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 12,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan9"
-    },
-    {
-      "type": "sign",
-      "x": 9,
-      "y": 12,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan10"
-    },
-    {
-      "type": "sign",
-      "x": 1,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan11"
-    },
-    {
-      "type": "sign",
-      "x": 3,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan12"
-    },
-    {
-      "type": "sign",
-      "x": 5,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan13"
-    },
-    {
-      "type": "sign",
-      "x": 7,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan14"
-    },
-    {
-      "type": "sign",
-      "x": 9,
-      "y": 14,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "VermilionCity_Gym_EventScript_TrashCan15"
-    }
-  ]
+  "bg_events": []
 }

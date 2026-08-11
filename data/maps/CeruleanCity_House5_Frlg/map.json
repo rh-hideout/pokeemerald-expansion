@@ -3,7 +3,6 @@
   "name": "CeruleanCity_House5_Frlg",
   "layout": "LAYOUT_CERULEAN_CITY_HOUSE5",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -12,17 +11,41 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": null,
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2",
       "x": 7,
       "y": 4,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeruleanCity_House5_Frlg_EventScript_Librarian",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
+      "x": 9,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NORMAL",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeruleanCity_House5_Frlg_EventScript_James",
+      "flag": "FLAG_HIDE_CERULEAN_AQUA_GRUNT"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BOOKS",
+      "x": 9,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
@@ -41,5 +64,7 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "floor_number": 0,
+  "region": "REGION_KANTO"
 }

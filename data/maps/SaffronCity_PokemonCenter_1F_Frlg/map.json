@@ -24,11 +24,11 @@
       "y": 2,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_Nurse",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -37,12 +37,12 @@
       "x": 14,
       "y": 6,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_Gentleman",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -51,12 +51,12 @@
       "x": 4,
       "y": 4,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_Woman",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -65,12 +65,12 @@
       "x": 9,
       "y": 6,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_Youngster",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -79,13 +79,13 @@
       "x": 2,
       "y": 1,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_PokemonJournalSabrina",
-      "flag": "FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS"
+      "script": "NULL",
+      "flag": "0"
     },
     {
       "type": "object",
@@ -93,13 +93,13 @@
       "x": 3,
       "y": 1,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "SaffronCity_PokemonCenter_1F_EventScript_PokemonJournalSabrina",
-      "flag": "FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS"
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [

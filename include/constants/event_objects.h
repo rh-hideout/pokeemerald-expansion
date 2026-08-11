@@ -463,6 +463,10 @@ enum
     OBJ_EVENT_GFX_BOOKS,
     OBJ_EVENT_GFX_FOOD,
 
+    OBJ_EVENT_GFX_SOL,
+
+    OBJ_EVENT_GFX_XIE,
+
     NUM_OBJ_EVENT_GFX,
 };
 
@@ -507,6 +511,9 @@ enum
 #define OBJ_EVENT_GFX_SPECIES_SHINY(name)           (SPECIES_##name + OBJ_EVENT_MON + OBJ_EVENT_MON_SHINY)
 #define OBJ_EVENT_GFX_SPECIES_FEMALE(name)          (SPECIES_##name + OBJ_EVENT_MON + OBJ_EVENT_MON_FEMALE)
 #define OBJ_EVENT_GFX_SPECIES_SHINY_FEMALE(name)    (SPECIES_##name + OBJ_EVENT_MON + OBJ_EVENT_MON_SHINY + OBJ_EVENT_MON_FEMALE)
+
+#define OBJ_EVENT_GFX_SHINY_GLOOM                    OBJ_EVENT_GFX_SPECIES_SHINY(GLOOM)
+#define OBJ_EVENT_GFX_SHINY_MAGIKARP OBJ_EVENT_GFX_SPECIES_SHINY(MAGIKARP)
 
 #define OW_SPECIES(x) ((x)->graphicsId & OBJ_EVENT_MON_SPECIES_MASK)
 #define OW_SHINY(x) ((x)->graphicsId & OBJ_EVENT_MON_SHINY)
@@ -623,6 +630,8 @@ enum
 #define OBJ_EVENT_PAL_TAG_SIR                     0x1136
 #define OBJ_EVENT_PAL_TAG_MAAM                    0x1137
 #define OBJ_EVENT_PAL_TAG_BUTTERFLY               0x1138
+#define OBJ_EVENT_PAL_TAG_SOL                       0x113B
+#define OBJ_EVENT_PAL_TAG_XIE                       0x113C
 #define OBJ_EVENT_PAL_TAG_BOOKS                   0x1139
 #define OBJ_EVENT_PAL_TAG_FOOD                    0x113A
 

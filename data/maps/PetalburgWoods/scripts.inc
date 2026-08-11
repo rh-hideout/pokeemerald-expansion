@@ -85,6 +85,7 @@ PetalburgWoods_EventScript_DevonResearcherPostBattle::
 	applymovement LOCALID_PETALBURG_WOODS_GRUNT, PetalburgWoods_Movement_AquaRunAway
 	waitmovement 0
 	removeobject LOCALID_PETALBURG_WOODS_GRUNT
+    msgbox PetalburgWoods_Text_GruntSeemsFamiliar, MSGBOX_DEFAULT
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox PetalburgWoods_Text_ThatWasAwfullyClose, MSGBOX_DEFAULT
@@ -341,23 +342,30 @@ PetalburgWoods_Text_YouHaveToHelpMe:
 
 PetalburgWoods_Text_NoOneCrossesTeamAqua:
 	.string "Hunh? What do you think you're doing?\n"
-	.string "What, you're going to protect him?\p"
+	.string "I got a job to do, man!\p"
 	.string "No one who crosses TEAM AQUA\n"
-	.string "gets any mercy, not even a kid!\p"
+	.string "gets any mercy, not even..you!\p"
 	.string "Come on and battle me!$"
 
 PetalburgWoods_Text_YoureKiddingMe:
-	.string "You're kidding me! You're tough!$"
+	.string "I should've known.. You're tough!$"
 
 PetalburgWoods_Text_YouveGotSomeNerve:
 	.string "Grrr… You've got some nerve\n"
-	.string "meddling with TEAM AQUA!\l"
+	.string "getting in the way!\l"
 	.string "Come on and battle me again!\p"
 	.string "I wish I could say that, but I'm out of\n"
 	.string "POKéMON…\p"
 	.string "And, hey, we of TEAM AQUA are also\n"
-	.string "after something in RUSTBORO.\p"
-	.string "I'll let you go today!$"
+	.string "after some things in RUSTBORO.\n"
+	.string "I'm off to read my\p"
+	.string "emotional support book.$"
+
+PetalburgWoods_Text_GruntSeemsFamiliar:
+	.string "That guy...\n"
+	.string "He seems... familiar?\p"
+	.string "Oh well.\n"
+	.string "A bad guy's a bad guy!$"
 
 PetalburgWoods_Text_ThatWasAwfullyClose:
 	.string "Whew…\n"
@@ -368,8 +376,8 @@ PetalburgWoods_Text_ThatWasAwfullyClose:
 	.string "my thanks!$"
 
 PetalburgWoods_Text_TeamAquaAfterSomethingInRustboro:
-	.string "Didn't that TEAM AQUA thug say\n"
-	.string "they were after something in\l"
+	.string "Didn't that TEAM AQUA guy say\n"
+	.string "they were after some things in\l"
 	.string "RUSTBORO, too?$"
 
 PetalburgWoods_Text_ICantBeWastingTime:
@@ -470,4 +478,6 @@ PetalburgWoods_Text_TrainerTipsPP:
 	.string "make moves during battle.\p"
 	.string "If a POKéMON runs out of PP, it must be\n"
 	.string "taken to a POKéMON CENTER.$"
+
+
 
