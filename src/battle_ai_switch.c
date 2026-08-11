@@ -1490,26 +1490,26 @@ bool32 ShouldSwitchIfAllScoresBad(struct SwitchAiContext *switchContext)
 
 bool32 ShouldStayInToUseMove(struct SwitchAiContext *switchContext)
 {
-    enum Move aiMove;
-    enum BattleMoveEffects aiMoveEffect;
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
-        aiMoveEffect = GetMoveEffect(aiMove);
-        if (aiMoveEffect == EFFECT_REVIVAL_BLESSING || IsSwitchOutEffect(aiMoveEffect))
-        {
-            // Palafin should not stay in for a hit escape move if it can't use it effectively (slower or no target)
-            if (gBattleMons[switchContext->battler].species == SPECIES_PALAFIN_ZERO
-             && gAiLogicData->abilities[switchContext->battler] == ABILITY_ZERO_TO_HERO
-             && aiMoveEffect == EFFECT_HIT_ESCAPE
-             && !CanPalafinZeroSafelyUseHitEscape(switchContext->battler, aiMove))
-                continue;
+        enum Move move = gBattleMons[switchContext->battler].moves[moveIndex];
+        enum BattleMoveEffects effect = GetMoveEffect(move);
 
-            if (gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
-                || (IsDoubleBattle() && gAiBattleData->finalScore[switchContext->battler][GetPartnerBattler(switchContext->opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
-                return TRUE;
-        }
+        if (effect != EFFECT_REVIVAL_BLESSING && !IsSwitchOutEffect(effect))
+            continue;
+
+        // An unsafe hit escape move must not override Palafin-Zero's hard-switch decision.
+        if (effect == EFFECT_HIT_ESCAPE
+         && gBattleMons[switchContext->battler].species == SPECIES_PALAFIN_ZERO
+         && gAiLogicData->abilities[switchContext->battler] == ABILITY_ZERO_TO_HERO
+         && !CanPalafinZeroSafelyUseHitEscape(switchContext->battler, move))
+            continue;
+
+        if (gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
+         || (IsDoubleBattle() && gAiBattleData->finalScore[switchContext->battler][GetPartnerBattler(switchContext->opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
+            return TRUE;
     }
+
     return FALSE;
 }
 
