@@ -40,8 +40,8 @@ DOUBLE_BATTLE_TEST("Moves hitting all other battlers print effectiveness message
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         MESSAGE("It's super effective on Charmander!");
-        MESSAGE("It's not very effective on Squirtle.");
-        MESSAGE("It's mostly ineffective on Ludicolo.");
+        MESSAGE("It's not very effective on the opposing Squirtle.");
+        MESSAGE("It's mostly ineffective on the opposing Ludicolo.");
     }
 }
 
