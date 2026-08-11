@@ -1806,7 +1806,7 @@ bool32 HandleFaintedMonActions(void)
                 if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_SIZE, PARTY_SIZE))
                     gAbsentBattlerFlags &= ~(1u << i);
             }
-            // fall through
+            [[fallthrough]];
         case FAINTED_ACTIONS_GIVE_EXP:
             do
             {
@@ -1850,7 +1850,7 @@ bool32 HandleFaintedMonActions(void)
             }
             gBattleStruct->eventState.faintedActionBattler = 0;
             gBattleStruct->eventState.faintedAction++;
-            // fall through
+            [[fallthrough]];
         case FAINTED_ACTIONS_HANDLE_FAINTED_MON:
             do
             {
@@ -3612,6 +3612,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (IsBattlerWeatherAffected(GetBattlerHoldEffect(battler), GetWeather(), B_WEATHER_SUN))
                     goto SOLAR_POWER_HP_DROP;
             // Dry Skin works similarly to Rain Dish in Rain
+                [[fallthrough]];
             case ABILITY_RAIN_DISH:
                 if (IsBattlerWeatherAffected(GetBattlerHoldEffect(battler), GetWeather(), B_WEATHER_RAIN)
                  && !IsBattlerAtMaxHp(battler)
@@ -4281,7 +4282,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_WIND_POWER:
             if (!IsWindMove(gCurrentMove))
                 break;
-            // fall through
+            [[fallthrough]];
         case ABILITY_ELECTROMORPHOSIS:
             if (!gBattleStruct->unableToUseMove && IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
             {
@@ -6334,7 +6335,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_FUSION_COMBO:
         if (move == gLastUsedMove)
             break;
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_ROUND:
         // don't double power due to previous turn's Round/Fusion move
         if (gCurrentTurnActionNumber != 0
@@ -8683,7 +8684,7 @@ static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges meth
     case FORM_CHANGE_END_BATTLE:
         if (IsBattlerPrimalReverted(battler))
             return TRUE;
-        // Fallthrough
+        [[fallthrough]];
     case FORM_CHANGE_FAINT:
         if (IsBattlerMegaEvolved(battler) || IsBattlerUltraBursted(battler) || IsBattlerInTeraForm(battler) || IsGigantamaxed(battler))
             return TRUE;

@@ -1127,6 +1127,7 @@ u32 GetTileMapIndexFromCoords(s32 x, s32 y, s32 screenSize, u32 screenWidth, u32
     case 3:
         if (y >= 0x20)
             y += 0x20;
+        [[fallthrough]];
     case 1:
         if (x >= 0x20)
         {

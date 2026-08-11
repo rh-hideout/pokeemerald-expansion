@@ -1087,8 +1087,10 @@ static u8 SetUpCopyrightScreen(void)
         GameCubeMultiBoot_Init(&gMultibootProgramStruct);
     // REG_DISPCNT needs to be overwritten the second time, because otherwise the intro won't show up on VBA 1.7.2 and John GBA Lite emulators.
     // The REG_DISPCNT overwrite is NOT needed in m-GBA, No$GBA, VBA 1.8.0, My Boy and Pizza Boy GBA emulators.
+        [[fallthrough]];
     case COPYRIGHT_EMULATOR_BLEND:
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
+        [[fallthrough]];
     default:
         UpdatePaletteFade();
         gMain.state++;
@@ -1486,7 +1488,7 @@ static void SpriteCB_Volbeat(struct Sprite *sprite)
         if (++sprite->sStateDelay < 180)
             break;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case VOLBEAT_ENTER:
         sprite->x -= 4;
         if (sprite->x == 60)
@@ -1531,7 +1533,7 @@ static void SpriteCB_Volbeat(struct Sprite *sprite)
         sprite->sSinYIdx = 0x80;
         sprite->sFig8Loops = 3;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case VOLBEAT_FIGURE_8:
         sprite->x2 = Sin((u8)sprite->sSinXIdx, 0x3C);
         sprite->y2 = Sin((u8)sprite->sSinYIdx, 0x14);
@@ -1675,7 +1677,7 @@ static void SpriteCB_Manectric(struct Sprite *sprite)
         sprite->sSinIdx = 0x80;
         sprite->sCosIdx = 0;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         if (sprite->x + sprite->x2 <= -32)
         {
@@ -2075,6 +2077,7 @@ static void Task_Scene3_Kyogre(u8 taskId)
         if (--tDelay != 0)
             break;
         tState++;
+        [[fallthrough]];
     case 1:
         tTrigIdx += 4;
         gTasks[taskId].tScreenX = 344 - Sin(tTrigIdx, 0x100);
@@ -2494,6 +2497,7 @@ static void SpriteCB_Lightning(struct Sprite *sprite)
     case 0:
         sprite->sPalIdx = 0x1C2;
         sprite->sState++;
+        [[fallthrough]];
     case 1:
         CpuCopy16(INTRO3_RAW_PTR(sprite->sPalIdx), &gPlttBufferFaded[BG_PLTT_ID(5) + 13], PLTT_SIZEOF(1));
         sprite->sPalIdx += 2;
@@ -2502,6 +2506,7 @@ static void SpriteCB_Lightning(struct Sprite *sprite)
         sprite->sPalIdx = 0x1CC;
         sprite->sDelay = 4;
         sprite->sState++;
+        [[fallthrough]];
     case 2:
         if (--sprite->sDelay == 0)
         {
@@ -3409,7 +3414,7 @@ static void SpriteCB_RayquazaOrb(struct Sprite *sprite)
         CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
         sprite->data[1] = 0;
         sprite->sState = 1;
-        //fall through
+        [[fallthrough]];
     case 1:
         sprite->data[7]++;
         if (sprite->data[7] & 1)

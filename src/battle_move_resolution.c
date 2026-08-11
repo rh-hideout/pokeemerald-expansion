@@ -2110,6 +2110,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_PSYCHIC_TERRAIN:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2129,6 +2130,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_PROTECT:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2152,6 +2154,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_BOUNCE:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2176,6 +2179,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             return CANCELER_RESULT_FAILURE;
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_TARGET_BLOCKED:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2195,6 +2199,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_EFFECTIVENESS:
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
@@ -2685,6 +2690,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case PRE_ANIM_TERA_SHELL:
         for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
         {
@@ -4103,7 +4109,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
     case EFFECT_RECOIL:
         if (gBattleStruct->moveDamage[cv->battlerDef] == 0)
             break;
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_CHLOROBLAST:
         if (IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES) && IsBattlerAlive(cv->battlerAtk))
         {
