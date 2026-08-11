@@ -4790,11 +4790,11 @@ static void PopulateArrayWithBattlers(enum BattlerId *battlers)
 static bool32 TryTrainerSlideGimmick(enum BattlerId battler)
 {
     bool32 doSlide = TRUE;
-    if (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_GIMMICK))
+    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].attackerSlideType))
         gBattleScripting.battler = battler;
-    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), TRAINER_SLIDE_OPPONENT_GIMMICK))
+    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
         gBattleScripting.battler = GetBattlerLeftFoe(battler);
-    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), TRAINER_SLIDE_OPPONENT_GIMMICK))
+    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
         gBattleScripting.battler = GetBattlerRightFoe(battler);
     else
         doSlide = FALSE;
