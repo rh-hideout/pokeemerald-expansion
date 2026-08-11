@@ -2756,7 +2756,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_EMBARGO:
         if (!IsBattlerItemEnabled(battlerAtk)
-          || gBattleMons[battlerDef].volatiles.embargo
+          || gBattleMons[battlerDef].volatiles.embargoTimer
           || PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
@@ -2776,7 +2776,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HEAL_BLOCK:
-        if (gBattleMons[battlerDef].volatiles.healBlock
+        if (gBattleMons[battlerDef].volatiles.healBlockTimer
           || PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
@@ -2805,7 +2805,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_HIT_ENEMY_HEAL_ALLY:    // pollen puff
         if (IsTargetingPartner(battlerAtk, battlerDef))
         {
-            if (gBattleMons[battlerDef].volatiles.healBlock)
+            if (gBattleMons[battlerDef].volatiles.healBlockTimer)
                 return 0; // cannot even select
             if (AI_BattlerAtMaxHp(battlerDef))
                 ADJUST_SCORE(-10);
@@ -6260,7 +6260,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
          || (moveType == TYPE_GROUND && gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_EARTH_EATER)
          || (moveType == TYPE_WATER && (gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_DRY_SKIN || gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_WATER_ABSORB)))
         {
-            if (gBattleMons[battlerDef].volatiles.healBlock)
+            if (gBattleMons[battlerDef].volatiles.healBlockTimer)
                 return 0;
 
             if (CanTargetFaintAi(GetBattlerLeftFoe(battlerAtk), GetPartnerBattler(battlerAtk))
