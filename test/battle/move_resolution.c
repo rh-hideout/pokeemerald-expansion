@@ -23,14 +23,14 @@ DOUBLE_BATTLE_TEST("Moves hitting all other battlers activate all effects on all
     }
 }
 
-DOUBLE_BATTLE_TEST("Moves hitting all other battlers print effectiveness messages for allies, then opponents, from left to right")
+DOUBLE_BATTLE_TEST("Moves hitting all other battlers print effectiveness messages for allies, then opponents, from most effective to least")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         ASSUME(GetSpeciesType(SPECIES_CHARMANDER, 0) == TYPE_FIRE || GetSpeciesType(SPECIES_CHARMANDER, 1) == TYPE_FIRE);
         ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 0) == TYPE_WATER || GetSpeciesType(SPECIES_SQUIRTLE, 1) == TYPE_WATER);
-        ASSUME(GetSpeciesType(SPECIES_LUDICOLO, 0) == TYPE_WATER && GetSpeciesType(SPECIES_CHARMANDER, 1) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_LUDICOLO, 0) == TYPE_WATER && GetSpeciesType(SPECIES_LUDICOLO, 1) == TYPE_GRASS);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CHARMANDER);
         OPPONENT(SPECIES_LUDICOLO);
@@ -40,8 +40,8 @@ DOUBLE_BATTLE_TEST("Moves hitting all other battlers print effectiveness message
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         MESSAGE("It's super effective on Charmander!");
-        MESSAGE("It's mostly ineffective on Ludicolo.");
         MESSAGE("It's not very effective on Squirtle.");
+        MESSAGE("It's mostly ineffective on Ludicolo.");
     }
 }
 
