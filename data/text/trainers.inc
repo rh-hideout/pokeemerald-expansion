@@ -2626,7 +2626,7 @@ Route118_Text_ChesterDefeat:
 
 Route118_Text_ChesterPostBattle:
 	.string "If they'd get stronger, they'd be able\n"
-	.string "to fly more freely…$"
+	.string "to [Fly] more freely…$"
 
 Route118_Text_BarnyIntro:
 	.string "I'm a [Fisherman], but also a [Trainer].\n"
@@ -4788,7 +4788,7 @@ VSSeeker_Text_BatteryNotChargedNeedXSteps::
 VSSeeker_Text_NoTrainersWithinRange::
 	.string "There are no Trainers within range\n"
 	.string "who can battle…\p"
-	.string "The [Vs] Seeker was turned off.{PAUSE_UNTIL_PRESS}$"
+	.string "The [VS Seeker] was turned off.{PAUSE_UNTIL_PRESS}$"
 
 VSSeeker_Text_TrainersNotReady::
 	.string "The other Trainers don't appear\n"

@@ -1103,7 +1103,7 @@ SmartShopper_Text_OutroNormal::
 	.string "See you on our next broadcast!$"
 
 SmartShopper_Text_IsVIP::
-	.string "[Clerk]: {STR_VAR_1} is a [Vip] customer,\n"
+	.string "[Clerk]: {STR_VAR_1} is a VIP customer,\n"
 	.string "no doubt about it.$"
 
 SmartShopper_Text_ClerkMax::
@@ -1124,7 +1124,7 @@ SmartShopper_Text_ClerkMax::
 	.string "[Clerk]: Oh, no, much more than that!\p"
 	.string "[Interviewer]: Oh, my goodness!\n"
 	.string "{STR_VAR_1} must be a special shopper!\p"
-	.string "[Clerk]: {STR_VAR_1} is a [Vip] customer,\n"
+	.string "[Clerk]: {STR_VAR_1} is a VIP customer,\n"
 	.string "no doubt about it.$"
 
 SmartShopper_Text_OutroMax::
@@ -1371,7 +1371,7 @@ gTVFindThatGamerText03::
 	.string "That's all for today!$"
 
 gTVBreakingNewsText00::
-	.string "[Breaking News Tv]!$"
+	.string "BREAKING NEWS TV!$"
 
 gTVBreakingNewsText01::
 	.string "Rare {STR_VAR_2} caught by\n"
@@ -1952,7 +1952,7 @@ gTVPokemonNewsBattleFrontierText10::
 	.string "The [Trainer] {STR_VAR_1} set a new\n"
 	.string "{STR_VAR_2}-win-streak record while\l"
 	.string "competing in the [Battle Arena]'s\l"
-	.string "Set [Ko] Tournaments.\p"
+	.string "Set KO Tournaments.\p"
 	.string "Here's to {STR_VAR_1}!$"
 
 gTVPokemonNewsBattleFrontierText11::
