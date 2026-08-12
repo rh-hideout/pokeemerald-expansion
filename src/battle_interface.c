@@ -1058,14 +1058,26 @@ UNUSED static void UpdateOpponentHpTextSingles(u32 healthboxSpriteId, s16 value,
 static bool32 ShouldShowHealthbar(enum BattlerId battler)
 {
     enum BattleCoordTypes coords = GetBattlerCoordsIndex(battler);
-    bool32 numbersOnly = !gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars;
+    bool32 showHpText = gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars;
+    bool32 isPlayer = IsOnPlayerSide(battler);
 
-    return coords == BATTLE_COORDS_SINGLES || numbersOnly;
+    if (coords == BATTLE_COORDS_SINGLES)
+    {
+        if (isPlayer)
+            return TRUE;
+        else
+            return B_HP_PERCENTAGE_DISPLAY || !showHpText;
+    }
+    else
+    {
+        return !showHpText;
+    }
 }
 
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp)
 {
     enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
+    u32 barSpriteId = gSprites[healthboxSpriteId].data[5];
     switch (GetBattlerCoordsIndex(battler))
     {
     default:
@@ -1082,9 +1094,20 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
         else // Opponent
         {
             if (B_HP_PERCENTAGE_DISPLAY)
+            {
                 PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16);
+            }
             else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);  // debug only
+            {
+                // Clears the end of the healthbar gfx.
+                CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_OPPONENT_FRAME_END),
+                          (void *)OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + 51) * TILE_SIZE_4BPP,
+                          TILE_SIZE_4BPP);
+
+                // Erases HP bar leftover.
+                FillHealthboxObject((void *)(OBJ_VRAM0) + (gSprites[barSpriteId].oam.tileNum * TILE_SIZE_4BPP), 0, 2);
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8); // debug only
+            }
         }
         break;
     }
