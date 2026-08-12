@@ -934,13 +934,13 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         {
             cv->battlerDef = cv->battlerAtk;
         }
-        else if (moveTarget == TARGET_USER_OR_ALLY && isDoubleBattle && !IsBattlerAlive(cv->battlerDef))
+        else if (isDoubleBattle && moveTarget == TARGET_USER_OR_ALLY && !IsBattlerAlive(cv->battlerDef))
         {
             cv->battlerDef = cv->battlerAtk;
         }
-        else if (!IsBattlerAlive(cv->battlerDef)
+        else if (isDoubleBattle
               && moveTarget != TARGET_OPPONENTS_FIELD
-              && isDoubleBattle
+              && !IsBattlerAlive(cv->battlerDef)
               && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
         {
             cv->battlerDef = GetPartnerBattler(cv->battlerDef);
