@@ -2112,6 +2112,7 @@ void TestRunner_Battle_AfterLastTurn(void)
             case QUEUED_MESSAGE_EVENT:
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Unmatched MESSAGE(\"%S\")", filename, line, event->as.message.pattern);
             // TODO: Handle all queued event types explicitly.
+            [[fallthrough]];
             default:
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Unmatched %s", filename, line, macro);
             }
@@ -2844,6 +2845,7 @@ void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32
                     {
                     case RECORDED_PARTY_INDEX:
                         Test_ExitWithResult(TEST_RESULT_INVALID, line, "%s:%d: %s not required (is the send out random?)", filename, line, actualMacro);
+                        [[fallthrough]];
                     default:
                         Test_ExitWithResult(TEST_RESULT_INVALID, line, "%s:%d: %s not required", filename, line, actualMacro);
                     }
@@ -2853,6 +2855,7 @@ void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32
                 {
                 case RECORDED_ACTION_TYPE:
                     Test_ExitWithResult(TEST_RESULT_INVALID, line, "%s:%d: Expected MOVE/SWITCH, got %s", filename, line, actualMacro);
+                    [[fallthrough]];
                 case RECORDED_PARTY_INDEX:
                     Test_ExitWithResult(TEST_RESULT_INVALID, line, "%s:%d: Expected SEND_OUT, got %s", filename, line, actualMacro);
                 }
