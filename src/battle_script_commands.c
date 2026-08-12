@@ -1755,7 +1755,7 @@ static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget))
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || IsBattleMoveStatus(gCurrentMove))
     {
         struct BattleCalcValues cv = {0};
         cv.battlerAtk = gBattlerAttacker;

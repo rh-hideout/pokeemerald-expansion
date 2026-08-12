@@ -2717,7 +2717,10 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (targetAvoidedMove[battler])
+        {
+            gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
             continue;
+        }
         moveFailed = FALSE;
     }
 

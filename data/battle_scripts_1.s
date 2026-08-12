@@ -1393,13 +1393,6 @@ BattleScript_TerrainPrevents::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_ImmunityProtectedRet::
-	call BattleScript_AbilityPopUp
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_ElectricTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_ELECTRICTERRAINPREVENTS
@@ -1414,20 +1407,12 @@ BattleScript_MistyTerrainPrevents::
 	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
-BattleScript_FlowerVeilProtectsRet::
+BattleScript_FlowerVeilProtects::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_FLOWERVEILPROTECTED
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_FlowerVeilProtects::
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_FLOWERVEILPROTECTEDTARGET
-	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
 
 BattleScript_SweetVeilProtectsRet::
 	pause B_WAIT_TIME_SHORT
@@ -1600,11 +1585,7 @@ BattleScript_AlreadyPoisoned::
 	pause B_WAIT_TIME_LONG
 	printstring STRINGID_PKMNALREADYPOISONED
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_ImmunityProtected::
-	call BattleScript_AbilityPopUp
-	goto BattleScript_DoesntAffectTargetAtkString
+	return
 
 BattleScript_EffectRest::
 	attackcanceler
@@ -1706,17 +1687,12 @@ BattleScript_EffectTransform::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_VoltAbsorbHeal:
-	copybyte gBattlerAbility, gBattlerTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_AbilityProtectedTarget @ Check if max hp
-	goto BattleScript_MoveHPDrain
-
 BattleScript_AlreadyParalyzed::
 	setalreadystatusedmoveattempt
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNISALREADYPARALYZED
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_PowerHerbActivation::
 	call BattleScript_ItemPopUp_AttackerNoFlush
@@ -2317,23 +2293,12 @@ BattleScript_EffectTorment::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectNonVolatileStatus::
-	attackcanceler
-	trynonvolatilestatus
-	attackanimation
-	waitanimation
-	setnonvolatilestatus TRIGGER_ON_MOVE
-	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_AlreadyBurned::
 	setalreadystatusedmoveattempt
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNALREADYHASBURN
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_FocusPunchLostFocus::
 	printstring STRINGID_PKMNLOSTFOCUS
@@ -2487,7 +2452,7 @@ BattleScript_PrintAbilityMadeIneffective::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectSkillSwap::
 	attackcanceler
@@ -3150,6 +3115,12 @@ BattleScript_WaterSportEnds::
 
 BattleScript_GravityEnds::
 	printstring STRINGID_GRAVITYENDS
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_SafeguardProtectedRet::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNUSEDSAFEGUARD
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -5756,13 +5727,6 @@ BattleScript_EjectItemActivates::
 BattleScript_EjectPackActivates_SendReplacement::
 	call BattleScript_EjectItemActivates
 	goto BattleScript_QueuedSwitchOpenPartyScreen
-
-BattleScript_DoesntAffectTargetAtkString::
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_NO_EFFECT
-	goto BattleScript_MoveEnd
 
 BattleScript_DoesntAffectScripting::
 	pause B_WAIT_TIME_SHORT

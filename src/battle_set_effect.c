@@ -32,25 +32,35 @@ static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *s
     assertf(se->moveEffect != MOVE_EFFECT_FLORAL_HEALING, "no effect assigned to MOVE_EFFECT_FLORAL_HEALING");
 }
 
+static bool32 CanSetNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se, enum ResultOption option)
+{
+    return CanSetNonVolatileStatus(
+                    cv->battlerAtk,
+                    se->effectBattler,
+                    cv->abilities[cv->battlerAtk],
+                    cv->abilities[se->effectBattler],
+                    se->moveEffect,
+                    option
+                );
+}
+
 static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsSafeguardProtected(cv->battlerAtk, se->effectBattler, cv->abilities[cv->battlerAtk]) && !se->primary)
+    bool32 isSafeguardProtected = !se->primary && IsSafeguardProtected(cv->battlerAtk, se->effectBattler, cv->abilities[cv->battlerAtk]);
+
+    se->effectFailed = isSafeguardProtected || !CanSetNonVolatile(cv, se, CHECK_TRIGGER);
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed && !cv->isStatusMove)
     {
-        gBattlescriptCurrInstr = se->script;
-    }
-    else if (CanSetNonVolatileStatus(
-                cv->battlerAtk,
-                se->effectBattler,
-                cv->abilities[cv->battlerAtk],
-                cv->abilities[se->effectBattler],
-                se->moveEffect,
-                CHECK_TRIGGER))
-    {
-        SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
+        BattleScriptCall(se->script);
+        CanSetNonVolatile(cv, se, RUN_SCRIPT);
     }
     else
     {
-        gBattlescriptCurrInstr = se->script;
+        SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
     }
 }
 
@@ -1533,10 +1543,6 @@ static void HandleSetEffectMagnetRise(struct BattleCalcValues *cv, struct SetEff
     }
 }
 
-static void HandleSetEffectSing(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectSupersonic(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
@@ -1549,43 +1555,11 @@ static void HandleSetEffectMist(struct BattleCalcValues *cv, struct SetEffect *s
 {
 }
 
-static void HandleSetEffectPoisonPowder(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectStunSpore(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectSleepPowder(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectThunderWave(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectHypnosis(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectConfuseRay(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
-static void HandleSetEffectGlare(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectPoisonGas(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectLovelyKiss(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectSpore(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1594,10 +1568,6 @@ static void HandleSetEffectSpiderWeb(struct BattleCalcValues *cv, struct SetEffe
 }
 
 static void HandleSetEffectMindReader(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectSweetKiss(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1626,10 +1596,6 @@ static void HandleSetEffectPainSplit(struct BattleCalcValues *cv, struct SetEffe
 }
 
 static void HandleSetEffectTorment(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectWillOWisp(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1662,10 +1628,6 @@ static void HandleSetEffectMudSport(struct BattleCalcValues *cv, struct SetEffec
 }
 
 static void HandleSetEffectOdorSleuth(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectGrassWhistle(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1738,10 +1700,6 @@ static void HandleSetEffectTrickRoom(struct BattleCalcValues *cv, struct SetEffe
 }
 
 static void HandleSetEffectLunarDance(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectDarkVoid(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1932,24 +1890,13 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_MAGNET_RISE] = HandleSetEffectMagnetRise,
 
 
-
-    [MOVE_EFFECT_SING] = HandleSetEffectSing,
     [MOVE_EFFECT_SUPERSONIC] = HandleSetEffectSupersonic,
     [MOVE_EFFECT_DISABLE] = HandleSetEffectDisable,
     [MOVE_EFFECT_MIST] = HandleSetEffectMist,
-    [MOVE_EFFECT_POISON_POWDER] = HandleSetEffectPoisonPowder,
-    [MOVE_EFFECT_STUN_SPORE] = HandleSetEffectStunSpore,
-    [MOVE_EFFECT_SLEEP_POWDER] = HandleSetEffectSleepPowder,
-    [MOVE_EFFECT_THUNDER_WAVE] = HandleSetEffectThunderWave,
-    [MOVE_EFFECT_HYPNOSIS] = HandleSetEffectHypnosis,
     [MOVE_EFFECT_CONFUSE_RAY] = HandleSetEffectConfuseRay,
-    [MOVE_EFFECT_GLARE] = HandleSetEffectGlare,
     [MOVE_EFFECT_POISON_GAS] = HandleSetEffectPoisonGas,
-    [MOVE_EFFECT_LOVELY_KISS] = HandleSetEffectLovelyKiss,
-    [MOVE_EFFECT_SPORE] = HandleSetEffectSpore,
     [MOVE_EFFECT_SPIDER_WEB] = HandleSetEffectSpiderWeb,
     [MOVE_EFFECT_MIND_READER] = HandleSetEffectMindReader,
-    [MOVE_EFFECT_SWEET_KISS] = HandleSetEffectSweetKiss,
     [MOVE_EFFECT_SPIKES] = HandleSetEffectSpikes,
     [MOVE_EFFECT_PERISH_SONG] = HandleSetEffectPerishSong,
     [MOVE_EFFECT_LOCK_ON] = HandleSetEffectLockOn,
@@ -1957,7 +1904,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_ATTRACT] = HandleSetEffectAttract,
     [MOVE_EFFECT_PAIN_SPLIT] = HandleSetEffectPainSplit,
     [MOVE_EFFECT_TORMENT] = HandleSetEffectTorment,
-    [MOVE_EFFECT_WILL_O_WISP] = HandleSetEffectWillOWisp,
     [MOVE_EFFECT_INGRAIN] = HandleSetEffectIngrain,
     [MOVE_EFFECT_RECYCLE] = HandleSetEffectRecycle,
     [MOVE_EFFECT_YAWN] = HandleSetEffectYawn,
@@ -1966,7 +1912,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TEETER_DANCE] = HandleSetEffectTeeterDance,
     [MOVE_EFFECT_MUD_SPORT] = HandleSetEffectMudSport,
     [MOVE_EFFECT_ODOR_SLEUTH] = HandleSetEffectOdorSleuth,
-    [MOVE_EFFECT_GRASS_WHISTLE] = HandleSetEffectGrassWhistle,
     [MOVE_EFFECT_BLOCK] = HandleSetEffectBlock,
     [MOVE_EFFECT_WATER_SPORT] = HandleSetEffectWaterSport,
     [MOVE_EFFECT_TAILWIND] = HandleSetEffectTailwind,
@@ -1985,7 +1930,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
     [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
     [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
-    [MOVE_EFFECT_DARK_VOID] = HandleSetEffectDarkVoid,
     [MOVE_EFFECT_GUARD_SPLIT] = HandleSetEffectGuardSplit,
     [MOVE_EFFECT_POWER_SPLIT] = HandleSetEffectPowerSplit,
     [MOVE_EFFECT_WONDER_ROOM] = HandleSetEffectWonderRoom,

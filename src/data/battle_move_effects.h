@@ -60,7 +60,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_NON_VOLATILE_STATUS] =
     {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // Handled within the battle TV functions
         .encourageEncore = TRUE,
     },
@@ -1667,7 +1667,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DARK_VOID] =
     {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
