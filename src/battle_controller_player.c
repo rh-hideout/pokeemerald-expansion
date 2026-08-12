@@ -368,7 +368,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (IsDoubleBattle()
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
-         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))
+         && !(gAbsentBattlerFlags & (1u << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
          && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
             // Return item to bag if partner had selected one (if consumable).
