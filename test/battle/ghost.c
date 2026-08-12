@@ -17,25 +17,25 @@ GHOST_BATTLE_TEST("Ghost battle: Player cannot use select moves")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSION, player);
         MESSAGE("Wobbuffet is too scared to move!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MON_SCARED, player);
-        MESSAGE("GHOST: Get out…… Get out……");
+        MESSAGE("[Ghost]: Get out…… Get out……");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_GHOST_GET_OUT, opponent);
 
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
         MESSAGE("Wobbuffet is too scared to move!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MON_SCARED, player);
-        MESSAGE("GHOST: Get out…… Get out……");
+        MESSAGE("[Ghost]: Get out…… Get out……");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_GHOST_GET_OUT, opponent);
 
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERSHOCK, player);
         MESSAGE("Wobbuffet is too scared to move!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MON_SCARED, player);
-        MESSAGE("GHOST: Get out…… Get out……");
+        MESSAGE("[Ghost]: Get out…… Get out……");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_GHOST_GET_OUT, opponent);
 
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
         MESSAGE("Wobbuffet is too scared to move!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MON_SCARED, player);
-        MESSAGE("GHOST: Get out…… Get out……");
+        MESSAGE("[Ghost]: Get out…… Get out……");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_GHOST_GET_OUT, opponent);
     }
 }
@@ -48,7 +48,7 @@ GHOST_BATTLE_TEST("Ghost battle: Intro plays correctly (no Silph Scope)")
     } WHEN {
         TURN {}
     } SCENE {
-        MESSAGE("The GHOST appeared! Darn! The GHOST can't be ID'd!");
+        MESSAGE("The [Ghost] appeared! Darn! The [Ghost] can't be ID'd!");
         MESSAGE("Go! Wobbuffet!");
     }
 }
@@ -65,10 +65,10 @@ GHOST_BATTLE_TEST("Ghost battle: Intro plays correctly (with Silph Scope)")
     } WHEN {
         TURN {}
     } SCENE {
-        MESSAGE("The GHOST appeared!");
-        MESSAGE("SILPH SCOPE unveiled the GHOST's identity!");
+        MESSAGE("The [Ghost] appeared!");
+        MESSAGE("[Silph Scope] unveiled the [Ghost]'s identity!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SILPH_SCOPED, opponent);
-        MESSAGE("The GHOST was MAROWAK!");
+        MESSAGE("The [Ghost] was [Marowak]!");
         MESSAGE("Go! Wobbuffet!");
     }
 }
