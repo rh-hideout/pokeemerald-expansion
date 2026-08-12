@@ -512,7 +512,6 @@ static void Cmd_tryswapitems(void);
 static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
 static void Cmd_settoxicspikes(void);
-static void Cmd_setgastroacid(void);
 static void Cmd_setyawn(void);
 static void Cmd_setroom(void);
 static void Cmd_tryswapabilities(void);
@@ -720,7 +719,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYCOPYABILITY]                        = Cmd_trycopyability,
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
     [B_SCR_OP_SETTOXICSPIKES]                        = Cmd_settoxicspikes,
-    [B_SCR_OP_SETGASTROACID]                         = Cmd_setgastroacid,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
     [B_SCR_OP_SETROOM]                               = Cmd_setroom,
     [B_SCR_OP_TRYSWAPABILITIES]                      = Cmd_tryswapabilities,
@@ -804,6 +802,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_45]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_46]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_47]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_48]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -7094,30 +7093,6 @@ static void Cmd_settoxicspikes(void)
         if (gSideTimers[targetSide].toxicSpikesAmount == 0)
             PushHazardTypeToQueue(targetSide, HAZARDS_TOXIC_SPIKES);
         gSideTimers[targetSide].toxicSpikesAmount++;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-static void Cmd_setgastroacid(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (GetBattlerHoldEffectIgnoreAbility(gBattlerTarget) == HOLD_EFFECT_ABILITY_SHIELD)
-    {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
-            gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
-
-        RemoveRuinAbilityFlags(gBattlerTarget);
-        gBattleMons[gBattlerTarget].volatiles.gastroAcid = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

@@ -2713,6 +2713,7 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     // only print a failure message if result flags have been set, otherwise ignore the failure message and handle effects that did not fail
     // loop through as normal and check effectFailed against the result flag. Also only print one failure message for everything
     // so break out if result failed has been set
+    // If the whole move failed print only the first failure message
     bool32 moveFailed = TRUE;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {

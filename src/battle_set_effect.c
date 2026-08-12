@@ -443,8 +443,30 @@ static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetE
      && gBattleStruct->battlerState[se->effectBattler].isFirstTurn != 2
      && !NoAliveMonsForEitherParty())
     {
+        if (gBattleMons[se->effectBattler].volatiles.gastroAcid
+         || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
+        {
+            se->effectFailed = TRUE;
+        }
+
+        if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
+        {
+            se->effectFailed = TRUE;
+            if (cv->onlyChecking)
+                RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
+        }
+
+        if (cv->onlyChecking || se->effectFailed)
+            return;
+
+        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
+            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
+
+        RemoveRuinAbilityFlags(se->effectBattler);
+        gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
+
         BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectCoreEnforcer;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectGastroAcid;
     }
 }
 
@@ -1657,6 +1679,40 @@ static void HandleSetEffectPowerTrick(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (gBattleMons[se->effectBattler].volatiles.gastroAcid
+     || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
+    {
+        se->effectFailed = TRUE;
+    }
+    else if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        se->effectFailed = TRUE;
+        if (cv->onlyChecking)
+            RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed)
+    {
+        if (!cv->isStatusMove)
+            return;
+        BattleScriptPush(se->script);
+        gBattlescriptCurrInstr = BattleScript_ButItFailedRet;
+    }
+    else
+    {
+        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
+            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
+
+        RemoveRuinAbilityFlags(se->effectBattler);
+        gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
+
+        BattleScriptPush(se->script);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectGastroAcid;
+    }
+
 }
 
 static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1918,7 +1974,9 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_PSYCHO_SHIFT] = HandleSetEffectPsychoShift,
     [MOVE_EFFECT_HEAL_BLOCK] = HandleSetEffectHealBlock,
     [MOVE_EFFECT_POWER_TRICK] = HandleSetEffectPowerTrick,
+
     [MOVE_EFFECT_GASTRO_ACID] = HandleSetEffectGastroAcid,
+
     [MOVE_EFFECT_LUCKY_CHANT] = HandleSetEffectLuckyChant,
     [MOVE_EFFECT_ME_FIRST] = HandleSetEffectMeFirst,
     [MOVE_EFFECT_COPYCAT] = HandleSetEffectCopycat,

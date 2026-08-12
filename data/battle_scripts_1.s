@@ -813,20 +813,6 @@ BattleScript_MoveEffectBugBite::
 	trysymbiosis BS_TARGET
 	return
 
-BattleScript_MoveEffectCoreEnforcer::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
-	setgastroacid BattleScript_CoreEnforcerRet
-	printstring STRINGID_PKMNSABILITYSUPPRESSED
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
-BattleScript_CoreEnforcerRet:
-	restoretarget
-	return
-
 BattleScript_PartingShotEscape::
 	call BattleScript_MoveSwitchPursuitRet
 	return
@@ -1227,19 +1213,14 @@ BattleScript_EffectStickyWeb::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectGastroAcid::
-	attackcanceler
-	jumpifvolatile BS_TARGET, VOLATILE_GASTRO_ACID, BattleScript_ButItFailed
-	setgastroacid BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectToxicSpikes::
 	attackcanceler

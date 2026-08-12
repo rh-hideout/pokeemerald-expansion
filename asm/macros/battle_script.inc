@@ -936,11 +936,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setgastroacid failInstr:req
-	.byte B_SCR_OP_SETGASTROACID
-	.4byte \failInstr
-	.endm
-
 	.macro setyawn failInstr:req
 	.byte B_SCR_OP_SETYAWN
 	.4byte \failInstr
