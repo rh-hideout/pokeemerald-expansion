@@ -308,15 +308,16 @@ enum BattleScriptOpcode
 #define TASK_ID                 1 // task Id and cursor position share the same field
 #define SPRITES_INIT_STATE1     1 // shares the Id as well
 #define SPRITES_INIT_STATE2     2
-#define MOVE_EFFECT_BYTE        3
-#define ACTIONS_CONFIRMED_COUNT 4
-#define MULTISTRING_CHOOSER     5
-#define MISS_TYPE               6
-#define MSG_DISPLAY             7
-#define BATTLE_COMMUNICATION_ENTRIES_COUNT  8
+#define ACTIONS_CONFIRMED_COUNT 3
+#define MULTISTRING_CHOOSER     4
+#define MSG_DISPLAY             5
+#define BATTLE_COMMUNICATION_ENTRIES_COUNT  6
 
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
-#define cMISS_TYPE           (gBattleCommunication + MISS_TYPE)
+
+// Used for MSG_DISPLAY
+#define MESSAGE_CONTINUE 0
+#define MESSAGE_WAIT     1
 
 // Battle Script defines for getting the wanted battler
 #define BS_TARGET                   0

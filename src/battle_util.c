@@ -540,7 +540,6 @@ void HandleAction_UseMove(void)
     ClearDamageCalcResults();
     ClearBothStatChangeQueues();
     gMultiHitCounter = 0;
-    gBattleCommunication[MISS_TYPE] = 0;
     gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE && gProtectStructs[gBattlerAttacker].palaceUnableToUseMove)
@@ -1239,6 +1238,12 @@ static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
         return TRUE;
 
     return FALSE;
+}
+
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler)
+{
+    PrepareStringBattle(stringId, battler);
+    gBattleCommunication[MSG_DISPLAY] = MESSAGE_WAIT;
 }
 
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)

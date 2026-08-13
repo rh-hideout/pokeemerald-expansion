@@ -1687,8 +1687,7 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
             gBattleMons[cv->battlerAtk].volatiles.usedProteanLibero = TRUE;
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
         gBattlerAbility = cv->battlerAtk;
-        PrepareStringBattle(STRINGID_EMPTYSTRING3, cv->battlerAtk);
-        gBattleCommunication[MSG_DISPLAY] = 1;
+        PrepareStringBattleWithWait(STRINGID_EMPTYSTRING3, cv->battlerAtk);
         BattleScriptCall(BattleScript_ProteanActivates);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
