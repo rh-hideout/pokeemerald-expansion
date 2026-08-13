@@ -40,6 +40,7 @@
 #include "constants/items.h"
 #include "caps.h"
 #include <stdint.h>
+#include <string.h>
 
 #define HEALTHBOX_BG_INDEX 2
 // Each colour has 9 tiles (0-8px filled)
@@ -788,74 +789,50 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
 #define HP_MAX_DIGITS 4
 #define HP_RIGHT_SPRITE_CHARS 6
 
-static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, s8 xOffset, s8 yOffset)
+static void PrintHpOnHealthbox(u32 leftSpriteId, s16 currHp, s16 maxHp, u32 bgColor, s8 xOffset, s8 yOffset, bool32 usePercent)
 {
-    u32 width;
     u8 text[2 * HP_MAX_DIGITS + 2], *txtPtr;
 
-    // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
-    // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one
-    txtPtr = ConvertIntToDecimalStringN(text, currHp, STR_CONV_MODE_RIGHT_ALIGN, HP_MAX_DIGITS);
-    *txtPtr++ = CHAR_SLASH;
-    txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
-
-    u32 spriteId2 = GetHealthboxRightSpriteId(spriteId);
-
-    //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
-    //  and set up temporary values with what's needed
-    s16 savedValue1 = gSprites[spriteId].data[1];
-    s16 savedValue2 = gSprites[spriteId2].data[1];
-    gSprites[spriteId].data[1] = spriteId2;
-    gSprites[spriteId2].data[1] = SPRITE_NONE;
-
-    //  Clear out old text first
-    FillSpriteRectColor(spriteId, xOffset + 40, yOffset + 8, 56, 8, bgColor);
-
-    width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
-    if (width < 32)
-        AddSpriteTextPrinterParameterized6(spriteId2, HP_FONT, xOffset + 32 - width, yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
-    else
-        AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, xOffset + 64 - (width - 32), yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
-
-    gSprites[spriteId].data[1] = savedValue1;
-    gSprites[spriteId2].data[1] = savedValue2;
-}
-
-
-static void PrintHPPercentageOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, s8 xOffset, s8 yOffset)
-{
-    u32 width;
-    u8 text[HP_MAX_DIGITS + 2], *txtPtr;
     s32 percent = max((currHp * 100) / maxHp, 1);
     if (currHp == 0)
         percent = 0;
 
     // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
     // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one
-    txtPtr = ConvertIntToDecimalStringN(text, percent, STR_CONV_MODE_RIGHT_ALIGN, HP_MAX_DIGITS);
-    *txtPtr++ = CHAR_PERCENT;
-    *txtPtr = EOS;
+    if (usePercent)
+    {
+        txtPtr = ConvertIntToDecimalStringN(text, percent, STR_CONV_MODE_RIGHT_ALIGN, HP_MAX_DIGITS);
+        *txtPtr++ = CHAR_PERCENT;
+        *txtPtr = EOS;
+    }
+    else
+    {
+        txtPtr = ConvertIntToDecimalStringN(text, currHp, STR_CONV_MODE_RIGHT_ALIGN, HP_MAX_DIGITS);
+        *txtPtr++ = CHAR_SLASH;
+        txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
+    }
 
-    u32 spriteId2 = GetHealthboxRightSpriteId(spriteId);
+    u32 rightSpriteId = GetHealthboxRightSpriteId(leftSpriteId);
 
     //  Don't assume that healthbox sprites don't have data in the fields used for sprite printing
     //  and set up temporary values with what's needed
-    s16 savedValue1 = gSprites[spriteId].data[1];
-    s16 savedValue2 = gSprites[spriteId2].data[1];
-    gSprites[spriteId].data[1] = spriteId2;
-    gSprites[spriteId2].data[1] = SPRITE_NONE;
+    s16 savedValue1 = gSprites[leftSpriteId].data[1];
+    s16 savedValue2 = gSprites[rightSpriteId].data[1];
+    gSprites[leftSpriteId].data[1] = rightSpriteId;
+    gSprites[rightSpriteId].data[1] = SPRITE_NONE;
 
     //  Clear out old text first
-    FillSpriteRectColor(spriteId, xOffset + 40, yOffset + 8, 56, 8, bgColor);
+    FillSpriteRectColor(leftSpriteId, xOffset + 40, yOffset + 8, 56, 8, bgColor);
 
-    width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
+    u32 width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
     if (width < 32)
-        AddSpriteTextPrinterParameterized6(spriteId2, HP_FONT, xOffset + 32 - width, yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
+        AddSpriteTextPrinterParameterized6(rightSpriteId, HP_FONT, xOffset + 32 - width, yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
     else
-        AddSpriteTextPrinterParameterized6(spriteId, HP_FONT, xOffset + 64 - (width - 32), yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
+        AddSpriteTextPrinterParameterized6(leftSpriteId, HP_FONT, xOffset + 64 - (width - 32), yOffset + 5, 0, 0, sHealthBoxTextColor, 0, text);
 
-    gSprites[spriteId].data[1] = savedValue1;
-    gSprites[spriteId2].data[1] = savedValue2;
+    // Restore scratch data
+    gSprites[leftSpriteId].data[1] = savedValue1;
+    gSprites[rightSpriteId].data[1] = savedValue2;
 }
 
 static bool32 ShouldShowHealthbar(enum BattlerId battler)
@@ -880,14 +857,14 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
     {
         if (IsOnPlayerSide(battler)) // Player
         {
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16);
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16, FALSE);
         }
         else // Opponent
         {
             if (B_HP_PERCENTAGE_DISPLAY)
-                PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16);
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
             else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);  // debug only
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE);  // debug only
         }
         break;
     }
@@ -904,7 +881,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, 
     {
         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
         {
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 8);
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 8, FALSE);
 
             // Clears the end of the healthbar gfx.
             const Tile4BPP *src = &gHealthBoxFrameEnd[BUI_PLAYER_FRAME_END];
@@ -920,9 +897,9 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, 
         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
         {
             if (B_HP_PERCENTAGE_DISPLAY)
-                PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, TRUE);
             else 
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8); // debug only
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
 
             // Clears the end of the healthbar gfx.
             const Tile4BPP *src = &gHealthBoxFrameEnd[BUI_OPPONENT_FRAME_END];
