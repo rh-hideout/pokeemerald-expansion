@@ -132,4 +132,41 @@ SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
     }
 }
 
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
+SINGLE_BATTLE_TEST("Cursed Body cannot disable Max Moves")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_AQUA_JET) == TYPE_WATER);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); MaxHP(500); HP(500); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AQUA_JET, gimmick: GIMMICK_DYNAMAX, WITH_RNG(RNG_CURSED_BODY, 1)); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Geyser!");
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+            MESSAGE("Wobbuffet's Max Geyser was disabled!");
+        }
+    } THEN {
+        u32 disabledMove = player->volatiles.disabledMove;
+        EXPECT_EQ(disabledMove, MOVE_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_AQUA_JET) == TYPE_WATER);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WATERIUM_Z); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); MaxHP(500); HP(500); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AQUA_JET, gimmick: GIMMICK_Z_MOVE, WITH_RNG(RNG_CURSED_BODY, 1)); }
+        TURN { MOVE(player, MOVE_AQUA_JET); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYDRO_VORTEX, player);
+        ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        MESSAGE("Wobbuffet's Hydro Vortex was disabled!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
+    }
+}

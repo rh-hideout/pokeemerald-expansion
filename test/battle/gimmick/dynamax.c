@@ -335,7 +335,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can have their ability changed or
     }
 }
 
-// Max Moves don't make contact, so Cursed Body doesn't need to be tested, but it is coded for.
+// See also "Cursed Body cannot disable Max Moves" in test/battle/ability/cursed_body.c.
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon's Max Moves cannot be disabled")
 {
     GIVEN {
