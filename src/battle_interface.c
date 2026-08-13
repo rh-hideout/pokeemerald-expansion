@@ -515,6 +515,8 @@ enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
         return BATTLE_COORDS_SINGLES;
 }
 
+//INFO: We can't use subsprites for the Healthboxes because
+//we don't have a way to print text across them.
 static u32 CreateHealthBoxSprite(enum BattlerId battler)
 {
     struct Coords16 pos = { DISPLAY_WIDTH, DISPLAY_HEIGHT };
@@ -543,9 +545,13 @@ static u32 CreateHealthBoxSprite(enum BattlerId battler)
 
     //NOTE: GF Stores the right spriteId in the left
     //sprite's affineParam. This field should be accessed
-    //with the GetHealthboxRightSpriteId function
+    //with the GetHealthboxRightSpriteId function.
     gSprites[left].oam.affineParam = right;
     gSprites[right].hOther_HealthBoxSpriteId = left;
+
+    //NOTE: This callback syncs the right sprite's position
+    //with the left sprite each frame. This allows as to treat
+    //it as an extension of the left sprite in many cases.
     gSprites[right].callback = SpriteCB_HealthBoxOther;
 
     if (isLarge)
