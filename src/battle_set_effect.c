@@ -668,20 +668,35 @@ static void HandleSetEffectSecretPower(struct BattleCalcValues *cv, struct SetEf
 
 static void HandleSetEffectPsychicNoise(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum BattlerId battler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL);
+    enum BattlerId battler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL); // TODO: Create a new func that uses an array as input
 
-    if (battler)
+    if (gBattleMons[se->effectBattler].volatiles.healBlockTimer)
     {
-        gBattlerAbility = battler - 1;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking && !cv->isStatusMove)
+        {
+            BattleScriptPush(se->script);
+            gBattlescriptCurrInstr = BattleScript_ButItFailedRet;
+        }
     }
-    else if (!gBattleMons[se->effectBattler].volatiles.healBlockTimer)
+    else if (battler)
     {
-        gBattleMons[se->effectBattler].volatiles.healBlockTimer = 2;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectPsychicNoise;
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking)
+        {
+            gBattlerAbility = battler - 1;
+            BattleScriptPush(se->script);
+            gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
+        }
     }
+
+    if (cv->onlyChecking)
+        return;
+
+    gBattleMons[se->effectBattler].volatiles.healBlockTimer = 2;
+    BattleScriptPush(se->script);
+    PrepareStringBattleWithWait(STRINGID_PKMNPREVENTEDFROMHEALING, se->effectBattler);
+    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
 }
 
 static void HandleSetEffectTeraBlast(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1505,7 +1520,7 @@ static void HandleSetEffectAquaRing(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectEmbargo(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    TryEffectVolatile(cv, se, VOLATILE_EMBARGO, B_EMBARGO_TIMER, STRINGID_PKMNCANTUSEITEMSANYMORE);
+    TryEffectVolatile(cv, se, VOLATILE_EMBARGO_TIMER, B_EMBARGO_TIMER, STRINGID_PKMNCANTUSEITEMSANYMORE);
 }
 
 static void HandleSetEffectMiracleEye(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1666,10 +1681,6 @@ static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffec
 }
 
 static void HandleSetEffectPsychoShift(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectHealBlock(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1972,7 +1983,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_WATER_SPORT] = HandleSetEffectWaterSport,
     [MOVE_EFFECT_TAILWIND] = HandleSetEffectTailwind,
     [MOVE_EFFECT_PSYCHO_SHIFT] = HandleSetEffectPsychoShift,
-    [MOVE_EFFECT_HEAL_BLOCK] = HandleSetEffectHealBlock,
     [MOVE_EFFECT_POWER_TRICK] = HandleSetEffectPowerTrick,
 
     [MOVE_EFFECT_GASTRO_ACID] = HandleSetEffectGastroAcid,

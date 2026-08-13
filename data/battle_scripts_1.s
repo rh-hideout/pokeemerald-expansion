@@ -279,14 +279,6 @@ BattleScript_EffectShedTail::
 	switchinevents
 	goto BattleScript_MoveEnd
 
-BattleScript_MoveEffectPsychicNoise::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
-	printstring STRINGID_PKMNPREVENTEDFROMHEALING
-	waitmessage B_WAIT_TIME_LONG
-	restoretarget
-	return
-
 BattleScript_EffectDoodle::
 	attackcanceler
 	trycopyability BS_ATTACKER, BattleScript_ButItFailed
@@ -1321,17 +1313,6 @@ BattleScript_EffectRoost::
 	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp
 	setroost
 	goto BattleScript_HealTarget
-
-BattleScript_EffectHealBlock::
-	attackcanceler
-	jumpifvolatile BS_TARGET, VOLATILE_HEAL_BLOCK_TIMER, BattleScript_ButItFailed
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	setvolatile BS_TARGET, VOLATILE_HEAL_BLOCK_TIMER, B_HEAL_BLOCK_TIMER
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNPREVENTEDFROMHEALING
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectHitEscape::
 	jumpiffainted BS_TARGET, FALSE, BattleScript_HitEscapeSwitch
