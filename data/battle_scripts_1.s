@@ -1743,16 +1743,6 @@ BattleScript_EffectHappyHour::
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_HAPPY_HOUR
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectDisable::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	disablelastusedattack BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNMOVEWASDISABLED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectEncore::
 	attackcanceler
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects

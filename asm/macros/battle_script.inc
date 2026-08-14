@@ -768,11 +768,6 @@
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
 
-	.macro disablelastusedattack failInstr:req
-	.byte B_SCR_OP_DISABLELASTUSEDATTACK
-	.4byte \failInstr
-	.endm
-
 	.macro trysetencore failInstr:req
 	.byte B_SCR_OP_TRYSETENCORE
 	.4byte \failInstr

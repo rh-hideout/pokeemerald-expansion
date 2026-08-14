@@ -283,7 +283,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DISABLE] =
     {
-        .battleScript = BattleScript_EffectDisable,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
     },

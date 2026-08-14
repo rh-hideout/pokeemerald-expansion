@@ -13,6 +13,7 @@
 #include "battle_dynamax.h"
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
+#include "constants/global.h"
 #include "item.h"
 #include "pokemon.h"
 #include "util.h"
@@ -1661,6 +1662,51 @@ static void HandleSetEffectSupersonic(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum BattlerId aromaVeilBattler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL);
+
+    u32 moveIndex = 0;
+    for (moveIndex = 0; moveIndex <= MAX_MON_MOVES; moveIndex++)
+    {
+        if (gBattleMons[se->effectBattler].moves[moveIndex] == gLastMoves[se->effectBattler])
+            break;
+    }
+
+    if (gBattleMons[se->effectBattler].volatiles.disabledMove == MOVE_NONE
+        && moveIndex != MAX_MON_MOVES
+        && gBattleMons[se->effectBattler].pp[moveIndex] != 0)
+    {
+        if (cv->onlyChecking)
+            return;
+
+        gBattleMons[se->effectBattler].volatiles.disabledMove = gBattleMons[se->effectBattler].moves[moveIndex];
+
+        if (B_DISABLE_TURNS >= GEN_5)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = B_DISABLE_TIMER;
+        else if (B_DISABLE_TURNS >= GEN_4)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
+        else
+            gBattleMons[se->effectBattler].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
+
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[se->effectBattler].moves[moveIndex])
+        PrepareStringBattleWithWait(STRINGID_PKMNMOVEWASDISABLED, se->effectBattler);
+        gBattlescriptCurrInstr = se->script;
+    }
+    else if (aromaVeilBattler)
+    {
+        if (cv->onlyChecking)
+            return;
+
+        gBattlerAbility = aromaVeilBattler - 1;
+        BattleScriptPushAndSet(se->script, BattleScript_AromaVeilProtectsRet);
+    }
+    else
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking && cv->isStatusMove)
+        {
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        }
+    }
 }
 
 static void HandleSetEffectMist(struct BattleCalcValues *cv, struct SetEffect *se)

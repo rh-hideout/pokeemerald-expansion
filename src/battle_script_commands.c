@@ -480,7 +480,6 @@ static void Cmd_transformdataexecution(void);
 static void Cmd_setsubstitute(void);
 static void Cmd_mimicattackcopy(void);
 static void Cmd_setcalledmove(void);
-static void Cmd_disablelastusedattack(void);
 static void Cmd_trysetencore(void);
 static void Cmd_painsplitdmgcalc(void);
 static void Cmd_settypetorandomresistance(void);
@@ -684,7 +683,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
     [B_SCR_OP_MIMICATTACKCOPY]                       = Cmd_mimicattackcopy,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
-    [B_SCR_OP_DISABLELASTUSEDATTACK]                 = Cmd_disablelastusedattack,
     [B_SCR_OP_TRYSETENCORE]                          = Cmd_trysetencore,
     [B_SCR_OP_PAINSPLITDMGCALC]                      = Cmd_painsplitdmgcalc,
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
@@ -5971,37 +5969,6 @@ static void Cmd_setcalledmove(void)
     CMD_ARGS();
     gCurrentMove = gCalledMove;
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_disablelastusedattack(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    s32 i;
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])
-            break;
-    }
-    if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
-        && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
-    {
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i])
-
-        gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
-        if (B_DISABLE_TURNS >= GEN_5)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
-        else if (B_DISABLE_TURNS >= GEN_4)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
-        else
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
 }
 
 static void Cmd_trysetencore(void)
