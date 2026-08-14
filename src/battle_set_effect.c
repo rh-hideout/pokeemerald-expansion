@@ -1693,6 +1693,30 @@ static void HandleSetEffectMeanLook(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectAttract(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum BattlerId armovaVeilBattler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL);
+
+    if (gBattleMons[se->effectBattler].volatiles.infatuation || !AreBattlersOfOppositeGender(gBattlerAttacker, se->effectBattler))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (armovaVeilBattler)
+    {
+        SetEffectFail(BattleScript_AromaVeilProtectsRet);
+        gBattlerAbility = armovaVeilBattler - 1;
+    }
+    else if (cv->abilities[se->effectBattler] == ABILITY_OBLIVIOUS)
+    {
+        SetEffectFailReturn;
+        gBattlerAbility = se->effectBattler;
+        gLastUsedAbility = ABILITY_OBLIVIOUS;
+        BattleScriptPushAndSet(se->script, BattleScript_NotAffectedAbilityPopUp);
+        RecordAbilityBattle(se->effectBattler, ABILITY_OBLIVIOUS);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[se->effectBattler].volatiles.infatuation = INFATUATED_WITH(cv->battlerAtk);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectAttract);
+    }
 }
 
 static void HandleSetEffectPainSplit(struct BattleCalcValues *cv, struct SetEffect *se)

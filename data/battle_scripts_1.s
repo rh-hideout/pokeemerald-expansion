@@ -1947,16 +1947,11 @@ BattleScript_TryDestinyKnotAttacker:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectAttract::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	tryinfatuating BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectAttract::
 	printstring STRINGID_PKMNFELLINLOVE
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotAttacker
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_PresentHeal::
 	attackcanceler
