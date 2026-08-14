@@ -10277,7 +10277,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .magicCoatAffected = B_UPDATED_MOVE_FLAGS >= GEN_5,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_EMBARGO,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_CUTE,

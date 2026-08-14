@@ -21,6 +21,7 @@
 #include "string_util.h"
 #include "config/battle.h"
 
+static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript);
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
 static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect);
@@ -673,11 +674,8 @@ static void HandleSetEffectPsychicNoise(struct BattleCalcValues *cv, struct SetE
     if (gBattleMons[se->effectBattler].volatiles.healBlockTimer)
     {
         se->effectFailed = TRUE;
-        if (!cv->onlyChecking && !cv->isStatusMove)
-        {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_ButItFailedRet;
-        }
+        if (!cv->onlyChecking && cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
     }
     else if (battler)
     {
@@ -685,18 +683,16 @@ static void HandleSetEffectPsychicNoise(struct BattleCalcValues *cv, struct SetE
         if (!cv->onlyChecking)
         {
             gBattlerAbility = battler - 1;
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
+            BattleScriptPushAndSet(se->script, BattleScript_AromaVeilProtectsRet);
         }
     }
 
-    if (cv->onlyChecking)
+    if (cv->onlyChecking || se->effectFailed)
         return;
 
     gBattleMons[se->effectBattler].volatiles.healBlockTimer = 2;
-    BattleScriptPush(se->script);
     PrepareStringBattleWithWait(STRINGID_PKMNPREVENTEDFROMHEALING, se->effectBattler);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectTeraBlast(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2129,6 +2125,12 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     se.certain = effectFlags & EFFECT_CERTAIN;
 
     SetMoveEffect(&cv, &se);
+}
+
+static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript)
+{
+    BattleScriptPush(currentScript);
+    gBattlescriptCurrInstr = effectScript;
 }
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) // Currently only used to determine move effects which happen even if the move's defined effectbattler is fainted
