@@ -473,20 +473,6 @@ BattleScript_EffectRevivalBlessingSendOut:
 	switchinevents
 	goto BattleScript_MoveEnd
 
-BattleScript_MoveEffectStealthRock::
-	setstealthrock BattleScript_MoveEffectStealthRockRet
-	printfromtable gDmgHazardsStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_MoveEffectStealthRockRet:
-	return
-
-BattleScript_MoveEffectSpikes::
-	trysetspikes BattleScript_MoveEffectSpikesRet
-	printfromtable gDmgHazardsStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_MoveEffectSpikesRet:
-	return
-
 BattleScript_EffectTeatime::
 	attackcanceler
 	checkteatimetargets BattleScript_ButItFailed
@@ -1187,15 +1173,6 @@ BattleScript_EffectTelekinesis::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectStealthRock::
-	attackcanceler
-	setstealthrock BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_POINTEDSTONESFLOAT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectStickyWeb::
 	attackcanceler
 	setstickyweb BattleScript_ButItFailed
@@ -1213,15 +1190,6 @@ BattleScript_MoveEffectGastroAcid::
 	flushtextbox
 	tryendneutralizinggas
 	return
-
-BattleScript_EffectToxicSpikes::
-	attackcanceler
-	settoxicspikes BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_POISONSPIKESSCATTERED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectTrickRoom::
 	attackcanceler
@@ -1935,15 +1903,6 @@ BattleScript_EffectEndure::
 	attackanimation
 	waitanimation
 	printfromtable gProtectLikeUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectSpikes::
-	attackcanceler
-	trysetspikes BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_SPIKESSCATTERED
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -3349,7 +3308,6 @@ BattleScript_WindPowerActivates::
 BattleScript_ToxicDebrisActivates::
 	call BattleScript_AbilityPopUp
 	pause B_WAIT_TIME_SHORT
-	settoxicspikes BattleScript_ToxicDebrisRet
 	printstring STRINGID_POISONSPIKESSCATTERED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ToxicDebrisRet:

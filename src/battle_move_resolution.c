@@ -2665,7 +2665,10 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     if (!cv->isStatusMove)
         return CANCELER_RESULT_SUCCESS;
 
-    bool32 targetAvoidedMove[MAX_BATTLERS_COUNT] = {0};
+    bool32 targetAvoidedMove[MAX_BATTLERS_COUNT];
+    for (u32 i = 0; i < gBattlersCount; i++)
+        targetAvoidedMove[i] = TRUE;
+
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
     cv->onlyChecking = TRUE;
 
@@ -2682,16 +2685,10 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             //     continue;
 
             bool32 shouldSkipSelf = isSelf != additionalEffect->self;
-            bool32 shouldSkipTarget = !isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler);
+            bool32 shouldSkipTarget = !isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler);
 
             if (shouldSkipSelf || shouldSkipTarget)
-            {
-                targetAvoidedMove[battler] = TRUE;
                 continue;
-            }
-
-            if (additionalEffect->moveEffect == MOVE_EFFECT_NONE)
-                break;
 
             se.additionalEffect = additionalEffect;
             se.moveEffect = additionalEffect->moveEffect;
@@ -2701,7 +2698,8 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             se.certain = TRUE;
             se.onSide = additionalEffect->onSide;
             SetMoveEffect(cv, &se);
-            targetAvoidedMove[battler] = se.effectFailed ? TRUE : se.effectFailed;
+            if (!se.effectFailed)
+                targetAvoidedMove[battler] = FALSE;
         }
     }
 
@@ -2719,7 +2717,7 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     {
         if (targetAvoidedMove[battler])
         {
-            gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
+            // gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
             continue;
         }
         moveFailed = FALSE;
@@ -4437,8 +4435,8 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
              && IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES)
              && IsBattlerAlive(cv->battlerAtk))
             {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
-                BattleScriptCall(BattleScript_MoveEffectStealthRock);
+                PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, battlerDef);
+                BattleScriptCall(BattleScript_MoveEffectSetStatus);
                 gBattleStruct->eventState.moveEndBattler = 0;
                 gBattleScripting.moveendState++;
                 return MOVEEND_RESULT_RUN_SCRIPT;
@@ -4457,8 +4455,11 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 }
                 else
                 {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SPIKESSCATTERED;
-                    BattleScriptCall(BattleScript_MoveEffectSpikes);
+                    if (gSideTimers[side].spikesAmount == 0) // Add only once to the queue
+                        PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+                    gSideTimers[side].spikesAmount++;
+                    PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, battlerDef);
+                    BattleScriptCall(BattleScript_MoveEffectSetStatus);
                     gBattleStruct->eventState.moveEndBattler = 0;
                     gBattleScripting.moveendState++;
                     return MOVEEND_RESULT_RUN_SCRIPT;

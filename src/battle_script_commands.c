@@ -490,7 +490,6 @@ static void Cmd_settailwind(void);
 static void Cmd_tryspiteppreduce(void);
 static void Cmd_healpartystatus(void);
 static void Cmd_cursetarget(void);
-static void Cmd_trysetspikes(void);
 static void Cmd_setvolatile(void);
 static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
@@ -511,12 +510,10 @@ static void Cmd_trysethelpinghand(void);
 static void Cmd_tryswapitems(void);
 static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
-static void Cmd_settoxicspikes(void);
 static void Cmd_setyawn(void);
 static void Cmd_setroom(void);
 static void Cmd_tryswapabilities(void);
 static void Cmd_tryimprison(void);
-static void Cmd_setstealthrock(void);
 static void Cmd_trysetvolatile(void);
 static void Cmd_trysetmagiccoat(void);
 static void Cmd_trysetsnatch(void);
@@ -697,7 +694,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSPITEPPREDUCE]                      = Cmd_tryspiteppreduce,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
     [B_SCR_OP_CURSETARGET]                           = Cmd_cursetarget,
-    [B_SCR_OP_TRYSETSPIKES]                          = Cmd_trysetspikes,
     [B_SCR_OP_SETVOLATILE]                           = Cmd_setvolatile,
     [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
@@ -718,12 +714,10 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSWAPITEMS]                          = Cmd_tryswapitems,
     [B_SCR_OP_TRYCOPYABILITY]                        = Cmd_trycopyability,
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
-    [B_SCR_OP_SETTOXICSPIKES]                        = Cmd_settoxicspikes,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
     [B_SCR_OP_SETROOM]                               = Cmd_setroom,
     [B_SCR_OP_TRYSWAPABILITIES]                      = Cmd_tryswapabilities,
     [B_SCR_OP_TRYIMPRISON]                           = Cmd_tryimprison,
-    [B_SCR_OP_SETSTEALTHROCK]                        = Cmd_setstealthrock,
     [B_SCR_OP_TRYSETVOLATILE]                        = Cmd_trysetvolatile,
     [B_SCR_OP_TRYSETMAGICCOAT]                       = Cmd_trysetmagiccoat,
     [B_SCR_OP_TRYSETSNATCH]                          = Cmd_trysetsnatch,
@@ -803,6 +797,9 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_46]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_47]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_48]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_49]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_50]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_51]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -1767,6 +1764,7 @@ static void Cmd_setadditionaleffects(void)
         struct SetEffect se = {0};
 
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+
         SetToxicChainPriority();
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
@@ -6441,25 +6439,6 @@ static void Cmd_cursetarget(void)
     }
 }
 
-static void Cmd_trysetspikes(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    enum BattleSide targetSide = GetBattlerSide(GetOppositeBattler(gBattlerAttacker));
-
-    if (gSideTimers[targetSide].spikesAmount == 3)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gSideTimers[targetSide].spikesAmount == 0) // Add only once to the queue
-            PushHazardTypeToQueue(targetSide, HAZARDS_SPIKES);
-        gSideTimers[targetSide].spikesAmount++;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_setvolatile(void)
 {
     CMD_ARGS(u8 battler, u8 _volatile, u8 value);
@@ -7079,24 +7058,6 @@ static void Cmd_trywish(void)
     }
 }
 
-static void Cmd_settoxicspikes(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (gSideTimers[targetSide].toxicSpikesAmount >= 2)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gSideTimers[targetSide].toxicSpikesAmount == 0)
-            PushHazardTypeToQueue(targetSide, HAZARDS_TOXIC_SPIKES);
-        gSideTimers[targetSide].toxicSpikesAmount++;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_setyawn(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -7250,22 +7211,6 @@ static void Cmd_tryimprison(void)
         }
         if (battler == gBattlersCount) // In Generation 3 games, Imprison fails if the user doesn't share any moves with any of the foes.
             gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-static void Cmd_setstealthrock(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (IsHazardOnSide(targetSide, HAZARDS_STEALTH_ROCK))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        PushHazardTypeToQueue(targetSide, HAZARDS_STEALTH_ROCK);
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

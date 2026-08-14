@@ -816,11 +816,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysetspikes failInstr:req
-	.byte B_SCR_OP_TRYSETSPIKES
-	.4byte \failInstr
-	.endm
-
 	.macro setvolatile battler:req, volatile:req, value=TRUE
 	.byte B_SCR_OP_SETVOLATILE
 	.byte \battler
@@ -931,11 +926,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settoxicspikes failInstr:req
-	.byte B_SCR_OP_SETTOXICSPIKES
-	.4byte \failInstr
-	.endm
-
 	.macro setyawn failInstr:req
 	.byte B_SCR_OP_SETYAWN
 	.4byte \failInstr
@@ -952,11 +942,6 @@
 
 	.macro tryimprison failInstr:req
 	.byte B_SCR_OP_TRYIMPRISON
-	.4byte \failInstr
-	.endm
-
-	.macro setstealthrock failInstr:req
-	.byte B_SCR_OP_SETSTEALTHROCK
 	.4byte \failInstr
 	.endm
 

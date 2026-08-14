@@ -1279,15 +1279,31 @@ static void HandleSetEffectSteelsurge(struct BattleCalcValues *cv, struct SetEff
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_MoveEffectSteelsurge;
     }
+
+    PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectStealthRock(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!IsHazardOnSide(GetBattlerSide(se->effectBattler), HAZARDS_STEALTH_ROCK))
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK))
+        se->effectFailed = TRUE;
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed)
     {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectStealthRock;
+        if (cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+    }
+    else
+    {
+        PushHazardTypeToQueue(side, HAZARDS_STEALTH_ROCK);
+        PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
 
@@ -1441,8 +1457,7 @@ static void HandleSetEffectSpeedSwap(struct BattleCalcValues *cv, struct SetEffe
     gBattleMons[cv->battlerAtk].volatiles.speedSwapped = TRUE;
     gBattleMons[se->effectBattler].volatiles.speedSwapped = TRUE;
     PrepareStringBattleWithWait(STRINGID_ATTACKERSWITCHEDSTATWITHTARGET, se->effectBattler);
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectSafeguard(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1469,8 +1484,7 @@ static void HandleSetEffectSafeguard(struct BattleCalcValues *cv, struct SetEffe
         PrepareStringBattleWithWait(STRINGID_PKMNCOVEREDBYVEIL, se->effectBattler);
     }
 
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 // For generic (simple) volatiles
@@ -1495,8 +1509,7 @@ static void TryEffectVolatile(struct BattleCalcValues *cv, struct SetEffect *se,
         PrepareStringBattleWithWait(string, se->effectBattler);
     }
 
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectLaserFocus(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1576,6 +1589,56 @@ static void HandleSetEffectMagnetRise(struct BattleCalcValues *cv, struct SetEff
     }
 }
 
+static void HandleSetEffectToxicSpikes(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (gSideTimers[side].toxicSpikesAmount >= 2)
+        se->effectFailed = TRUE;
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed)
+    {
+        if (cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+    }
+    else
+    {
+        if (gSideTimers[side].toxicSpikesAmount == 0) // Add only once to the queue
+            PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
+        gSideTimers[side].toxicSpikesAmount++;
+        PrepareStringBattleWithWait(STRINGID_POISONSPIKESSCATTERED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
+}
+
+static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (gSideTimers[side].spikesAmount == 3)
+        se->effectFailed = TRUE;
+
+    if (cv->onlyChecking)
+        return;
+
+    if (se->effectFailed)
+    {
+        if (cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+    }
+    else
+    {
+        if (gSideTimers[side].spikesAmount == 0) // Add only once to the queue
+            PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+        gSideTimers[side].spikesAmount++;
+        PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
+}
+
 static void HandleSetEffectSupersonic(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
@@ -1592,19 +1655,11 @@ static void HandleSetEffectConfuseRay(struct BattleCalcValues *cv, struct SetEff
 {
 }
 
-static void HandleSetEffectPoisonGas(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectSpiderWeb(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
 static void HandleSetEffectMindReader(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1703,10 +1758,8 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
 
     if (se->effectFailed)
     {
-        if (!cv->isStatusMove)
-            return;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_ButItFailedRet;
+        if (cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
     }
     else
     {
@@ -1715,9 +1768,7 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
 
         RemoveRuinAbilityFlags(se->effectBattler);
         gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
-
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectGastroAcid;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
     }
 
 }
@@ -1743,10 +1794,6 @@ static void HandleSetEffectGuardSwap(struct BattleCalcValues *cv, struct SetEffe
 }
 
 static void HandleSetEffectWorrySeed(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectToxicSpikes(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -1951,16 +1998,15 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_FORESIGHT] = HandleSetEffectForesight,
     [MOVE_EFFECT_GRUDGE] = HandleSetEffectGrudge,
     [MOVE_EFFECT_MAGNET_RISE] = HandleSetEffectMagnetRise,
-
+    [MOVE_EFFECT_TOXIC_SPIKES] = HandleSetEffectToxicSpikes,
+    [MOVE_EFFECT_SPIKES] = HandleSetEffectSpikes,
 
     [MOVE_EFFECT_SUPERSONIC] = HandleSetEffectSupersonic,
+    [MOVE_EFFECT_CONFUSE_RAY] = HandleSetEffectConfuseRay,
     [MOVE_EFFECT_DISABLE] = HandleSetEffectDisable,
     [MOVE_EFFECT_MIST] = HandleSetEffectMist,
-    [MOVE_EFFECT_CONFUSE_RAY] = HandleSetEffectConfuseRay,
-    [MOVE_EFFECT_POISON_GAS] = HandleSetEffectPoisonGas,
     [MOVE_EFFECT_SPIDER_WEB] = HandleSetEffectSpiderWeb,
     [MOVE_EFFECT_MIND_READER] = HandleSetEffectMindReader,
-    [MOVE_EFFECT_SPIKES] = HandleSetEffectSpikes,
     [MOVE_EFFECT_PERISH_SONG] = HandleSetEffectPerishSong,
     [MOVE_EFFECT_LOCK_ON] = HandleSetEffectLockOn,
     [MOVE_EFFECT_MEAN_LOOK] = HandleSetEffectMeanLook,
@@ -1989,7 +2035,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_POWER_SWAP] = HandleSetEffectPowerSwap,
     [MOVE_EFFECT_GUARD_SWAP] = HandleSetEffectGuardSwap,
     [MOVE_EFFECT_WORRY_SEED] = HandleSetEffectWorrySeed,
-    [MOVE_EFFECT_TOXIC_SPIKES] = HandleSetEffectToxicSpikes,
     [MOVE_EFFECT_HEART_SWAP] = HandleSetEffectHeartSwap,
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
     [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
