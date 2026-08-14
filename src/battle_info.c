@@ -174,6 +174,9 @@ static void Overview_ComputeHeaderLayout(s16 labelWidth, u8 *outTextLenTiles, s1
 static void Overview_DrawStatusCard(s16 x, s16 y, bool8 isActive, bool8 isBottomRow);
 static void Overview_DrawHeaderBox(u16 *tilemap, s16 x, s16 y, u8 textLenTiles);
 static void Overview_DrawBackground(void);
+static void Overview_DrawEnemyHeaderBox();
+static void Overview_DrawPlayerHeaderBox();
+static void Overview_DrawHeaderBoxHelper(u32 labelWidth, u32 top);
 static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool8 isActive);
 static void Overview_UpdateCardSelectionHighlight(u8 oldSelectedIndex);
 static void Overview_DrawLabels(void);
@@ -219,6 +222,8 @@ static void Detail_RefreshStatPips(void);
 static s32 Detail_GetStatRowTextY(u32 row);
 static void Detail_SetStatPipSpriteGraphic(u32 spriteId, u16 tileTag);
 static void Detail_CycleBattler(s8 direction);
+static void Detail_PreviousBattler(void);
+static void Detail_NextBattler(void);
 static void Detail_InitEffectsList(void);
 static void Detail_BuildActiveEffectsForBattler(void);
 static void TryAddActiveWeather(enum BattleInfoLabels label, enum BattleSide side);
@@ -257,6 +262,7 @@ static void Detail_RefreshDescriptionWindow(void);
 static void Detail_RefreshEffectsSection(void);
 static void Detail_RefreshEffectsScrollbar(void);
 static void Detail_DestroyEffectsCursor(void);
+static void Detail_DestroyIconSprite(void);
 static void Detail_DestroyEffectsScrollbar(void);
 static void Detail_UpdateEffectsCursor(void);
 static void Detail_UpdateScrollbarLane(bool8 hasScrollbar);
@@ -1426,8 +1432,10 @@ static void Overview_Enter(void)
 static void Overview_Exit(void)
 {
     if (sData->cursorSpriteId != SPRITE_NONE)
+    {
         DestroySprite(&gSprites[sData->cursorSpriteId]);
-    sData->cursorSpriteId = SPRITE_NONE;
+        sData->cursorSpriteId = SPRITE_NONE;
+    }
 
     for (u32 i = 0; i < GetCardCount(); i++)
         DestroyOverviewCardSprites(&sData->cards[i], FALSE);
@@ -1494,15 +1502,10 @@ static void Detail_Exit(void)
     Detail_DestroyStatPips();
     Detail_DestroyEffectsScrollbar();
     Detail_DestroyEffectsCursor();
+    Detail_DestroyIconSprite();
     sData->activeEffectsCount = 0;
     sData->effectsCursor = 0;
     sData->effectsScroll = 0;
-
-    if (sData->iconSpriteId != SPRITE_NONE)
-    {
-        FreeAndDestroyMonIconSprite(&gSprites[sData->iconSpriteId]);
-        sData->iconSpriteId = SPRITE_NONE;
-    }
 
     FillBgTilemapBufferRect(B_INFO_TEXT_BG, 0, 0, 0, B_INFO_TILEMAP_WIDTH, B_INFO_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
@@ -1537,8 +1540,7 @@ static void Detail_DestroyWindows(void)
         if (windowId == WINDOW_NONE)
             continue;
 
-        if (i == WIN_DETAIL_ITEM_ABILITY
-         && windowId == mergedInfoWindowId)
+        if (i == WIN_DETAIL_ITEM_ABILITY && windowId == mergedInfoWindowId)
         {
             sData->windowIds[i] = WINDOW_NONE;
             continue;
@@ -1559,57 +1561,43 @@ static void Detail_DrawStaticWindows(void)
     u32 windowId;
 
     windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
-    if (windowId != WINDOW_NONE)
-    {
-        Detail_DrawWindowFrame(windowId);
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
+    Detail_DrawWindowFrame(windowId);
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 
     windowId = sData->windowIds[WIN_DETAIL_STATS];
-    if (windowId != WINDOW_NONE)
+    Detail_DrawWindowFrame(windowId);
+    for (u32 i = 0; i < B_INFO_DETAIL_STAT_ROW_COUNT; i++)
     {
-        Detail_DrawWindowFrame(windowId);
-        for (u32 i = 0; i < B_INFO_DETAIL_STAT_ROW_COUNT; i++)
-        {
-            AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROW, 2,
-                                         Detail_GetStatRowTextY(i), 0, 0,
-                                         sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW,
-                                         sBattleInfoDetailStatLabels[i]);
-        }
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
+        AddTextPrinterParameterized4(
+            windowId, FONT_SMALL_NARROW, 2,
+            Detail_GetStatRowTextY(i), 0, 0,
+            sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW,
+            sBattleInfoDetailStatLabels[i]
+        );
     }
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 
     Detail_DrawLRButtonGlyphs();
+
     windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
-    if (windowId != WINDOW_NONE)
-    {
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+
     windowId = sData->windowIds[WIN_DETAIL_STATS];
-    if (windowId != WINDOW_NONE)
-    {
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 
     windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
-    if (windowId != WINDOW_NONE)
-    {
-        Detail_DrawWindowFrame(windowId);
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
+    Detail_DrawWindowFrame(windowId);
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 
     windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
-    if (windowId != WINDOW_NONE)
-    {
-        Detail_DrawWindowFrame(windowId);
-        PutWindowTilemap(windowId);
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
+    Detail_DrawWindowFrame(windowId);
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
 static void Detail_DestroyHpBar(void)
@@ -1650,14 +1638,21 @@ static void Detail_RefreshHpBar(void)
         return;
     }
 
-    UpdateHpBarTilesWithWidth(sData->hpBarSpriteId, hp, maxHp,
-                              B_INFO_DETAIL_HEALTHBAR_PIXELS, B_INFO_DETAIL_HP_BAR_SEGMENTS);
+    UpdateHpBarTilesWithWidth(
+        sData->hpBarSpriteId,
+        hp,
+        maxHp,
+        B_INFO_DETAIL_HEALTHBAR_PIXELS,
+        B_INFO_DETAIL_HP_BAR_SEGMENTS
+    );
 
     sprite->invisible = FALSE;
-    UpdateHpBarEndcaps(sData->hpBarLeftEndcapSpriteId,
-                       sData->hpBarRightEndcapSpriteId,
-                       21, 70,
-                       B_INFO_DETAIL_HP_BAR_SEGMENTS);
+    UpdateHpBarEndcaps(
+        sData->hpBarLeftEndcapSpriteId,
+        sData->hpBarRightEndcapSpriteId,
+        21, 70,
+        B_INFO_DETAIL_HP_BAR_SEGMENTS
+    );
 }
 
 static void Detail_DestroyStatusIcon(void)
@@ -1990,11 +1985,7 @@ static void Detail_RefreshIcon(void)
     enum Species species;
     u32 personality;
 
-    if (sData->iconSpriteId != SPRITE_NONE)
-    {
-        FreeAndDestroyMonIconSprite(&gSprites[sData->iconSpriteId]);
-        sData->iconSpriteId = SPRITE_NONE;
-    }
+    Detail_DestroyIconSprite();
 
     mon = GetBattlerMon(GetSelectedBattler());
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
@@ -2172,25 +2163,10 @@ static void Detail_CycleBattler(s8 direction)
     Detail_DestroyGimmickIndicator();
     Detail_DestroyTeraTypeIndicator();
 
-    u32 cardCount = GetCardCount();
-
     if (direction < 0)
-    {
-        do {
-            if (sData->selectedCard == 0)
-                sData->selectedCard = cardCount - 1;
-            else
-                sData->selectedCard--;
-        } while (!CanViewCard(GetSelectedBattler()));
-    }
+        Detail_PreviousBattler();
     else
-    {
-        do {
-            sData->selectedCard++;
-            if (sData->selectedCard >= cardCount)
-                sData->selectedCard = 0;
-        } while (!CanViewCard(GetSelectedBattler()));
-    }
+        Detail_NextBattler();
 
     Detail_RefreshIcon();
     Detail_RefreshHpBar();
@@ -2200,6 +2176,25 @@ static void Detail_CycleBattler(s8 direction)
     Detail_RefreshItemAbilityWindow();
     Detail_RefreshStatPips();
     Detail_InitEffectsList();
+}
+
+static void Detail_PreviousBattler(void)
+{
+    do {
+        if (sData->selectedCard == 0)
+            sData->selectedCard = GetCardCount() - 1;
+        else
+            sData->selectedCard--;
+    } while (!CanViewCard(GetSelectedBattler()));
+}
+
+static void Detail_NextBattler(void)
+{
+    do {
+        sData->selectedCard++;
+        if (sData->selectedCard >= GetCardCount())
+            sData->selectedCard = 0;
+    } while (!CanViewCard(GetSelectedBattler()));
 }
 
 static void Detail_InitEffectsList(void)
@@ -2630,12 +2625,24 @@ static void Detail_CopyTextToFit(u8 *dst, const u8 *src, u8 fontId, s16 maxWidth
 
 static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
 {
-    u32 y = 16 + row * 12;
+    u32 top = 16 + row * 12;
     const struct BattleInfo *entry = &sData->activeEffects[index];
     const struct BattleInfoEffectData *effectData = &sBattleInfoEffects[entry->label];
 
+    struct PrintText text = {
+        .windowId = windowId,
+        .color = sTextColor_BattleInfo_Default,
+        .speed = TEXT_SKIP_DRAW,
+    };
+
     if (index == sData->effectsCursor)
-        AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, 2, y, 0, 0, sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, gText_SelectorArrow2);
+    {
+        text.font = FONT_SMALL_NARROWER;
+        text.left = 2;
+        text.top = top;
+        text.string = gText_SelectorArrow2;
+        PrintTextOnWindow(&text);
+    }
 
     struct Durations duration = {0};
     bool32 hasFraction = Detail_GetDisplayedDuration(entry, B_SIDE_PLAYER, &duration);
@@ -2643,14 +2650,14 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
     if (hasFraction || entry->stackCount > 0)
     {
         u32 textLength = hasFraction ? 24 : 8;
-        u8 text[textLength];
+        u8 fractionText[textLength];
         u8 nameBuffer[64];
 
-        u8 *stackPtr = text;
+        u8 *stackPtr = fractionText;
 
         if (hasFraction)
         {
-            Detail_BuildTurnFractionText(text, duration.remaining, duration.total);
+            Detail_BuildTurnFractionText(fractionText, duration.remaining, duration.total);
         }
         else if (entry->stackCount > 0)
         {
@@ -2660,7 +2667,7 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
         }
 
         s32 windowWidth = WindowWidthPx(windowId);
-        s32 fractionWidth = GetStringWidth(FONT_SMALL_NARROWER, text, 0);
+        s32 fractionWidth = GetStringWidth(FONT_SMALL_NARROWER, fractionText, 0);
 
         s32 fractionX = windowWidth - 6 - 2 - fractionWidth;
         fractionX = max(fractionX, 10);
@@ -2670,17 +2677,25 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
 
         Detail_CopyTextToFit(nameBuffer, effectData->name, FONT_SHORT_NARROWER, maxNameWidth);
 
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, 10, y, 0, 0,
-                                     sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, nameBuffer);
+        text.font = FONT_SHORT_NARROWER;
+        text.left = 10;
+        text.top = top;
+        text.string = nameBuffer;
+        PrintTextOnWindow(&text);
 
-        s32 fractionY = y + fractionYOffset;
-        AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, fractionX, fractionY, 0, 0,
-                                     sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, text);
+        text.font = FONT_SMALL_NARROWER;
+        text.left = fractionX;
+        text.top = top + fractionYOffset;
+        text.string = fractionText;
+        PrintTextOnWindow(&text);
     }
     else
     {
-        AddTextPrinterParameterized4(windowId, FONT_SHORT_NARROWER, 10, y, 0, 0,
-                                     sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, effectData->name);
+        text.font = FONT_SHORT_NARROWER;
+        text.left = 10;
+        text.top = top;
+        text.string = effectData->name;
+        PrintTextOnWindow(&text);
     }
 }
 
@@ -2915,6 +2930,14 @@ static void Detail_DestroyEffectsCursor(void)
         return;
     DestroySprite(&gSprites[sData->cursorSpriteId]);
     sData->cursorSpriteId = SPRITE_NONE;
+}
+
+static void Detail_DestroyIconSprite(void)
+{
+    if (sData->iconSpriteId == SPRITE_NONE)
+        return;
+    FreeAndDestroyMonIconSprite(&gSprites[sData->iconSpriteId]);
+    sData->iconSpriteId = SPRITE_NONE;
 }
 
 static void Detail_DestroyEffectsScrollbar(void)
@@ -3319,29 +3342,26 @@ static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool8
 {
     s32 cardTileX = card->x / 8;
     s32 cardTileY = card->y / 8;
-    Overview_FillBgRect(cardTileX, cardTileY,
-                       B_INFO_CARD_TILE_W, B_INFO_CARD_TILE_H, B_INFO_BG_TILE_FILL, 0);
+    Overview_FillBgRect(
+        cardTileX,
+        cardTileY,
+        B_INFO_CARD_TILE_W,
+        B_INFO_CARD_TILE_H,
+        B_INFO_BG_TILE_FILL,
+        0
+    );
     Overview_DrawStatusCard(cardTileX, cardTileY, isActive, card->y == B_INFO_ROW_Y_PLAYER);
 }
 
 static void Overview_DrawBackground(void)
 {
-    s16 enemyLabelWidth;
-    s16 playerLabelWidth;
-    u8 enemyTextLenTiles;
-    u8 playerTextLenTiles;
-    s16 enemyHeaderX;
-    s16 playerHeaderX;
-    s16 enemyHeaderWidth;
-    s16 playerHeaderWidth;
-
     CpuCopy16(sBattleInfoMenuOverviewBaseTilemap, sData->bg1Tilemap,
               B_INFO_TILEMAP_WIDTH * B_INFO_TILEMAP_HEIGHT * sizeof(u16));
 
     struct TileCoords {
         s16 top;
         s16 height;
-    }tileCoords[] = {
+    } tileCoords[] = {
         { B_INFO_ROW_Y_ENEMY / 8, B_INFO_CARD_TILE_H },
         { B_INFO_ROW_Y_PLAYER / 8, B_INFO_CARD_TILE_H },
         { 0, B_INFO_LABEL_TILE_H },
@@ -3362,15 +3382,32 @@ static void Overview_DrawBackground(void)
     for (u32 i = 0; i < GetCardCount(); i++)
         Overview_DrawCardBackground(&sData->cards[i], i == sData->selectedCard);
 
-    enemyLabelWidth = GetStringWidth(FONT_SMALL, GetPrimaryOpponentTrainerName(), 0);
-    playerLabelWidth = GetStringWidth(FONT_SMALL, GetPlayerSideTrainerName(), 0);
-    Overview_ComputeHeaderLayout(enemyLabelWidth, &enemyTextLenTiles, &enemyHeaderX, &enemyHeaderWidth);
-    Overview_ComputeHeaderLayout(playerLabelWidth, &playerTextLenTiles, &playerHeaderX, &playerHeaderWidth);
-
-    Overview_DrawHeaderBox(sData->bg1Tilemap, enemyHeaderX, 0, enemyTextLenTiles);
-    Overview_DrawHeaderBox(sData->bg1Tilemap, playerHeaderX, B_INFO_LABEL_BOTTOM_TILE_TOP, playerTextLenTiles);
+    Overview_DrawEnemyHeaderBox();
+    Overview_DrawPlayerHeaderBox();
 
     CopyBgTilemapBufferToVram(B_INFO_BACKDROP_BG);
+}
+
+static void Overview_DrawEnemyHeaderBox()
+{
+    u32 labelWidth = GetStringWidth(FONT_SMALL, GetPrimaryOpponentTrainerName(), 0);
+    Overview_DrawHeaderBoxHelper(labelWidth, 0);
+}
+
+static void Overview_DrawPlayerHeaderBox()
+{
+    u32 labelWidth = GetStringWidth(FONT_SMALL, GetPlayerSideTrainerName(), 0);
+    Overview_DrawHeaderBoxHelper(labelWidth, B_INFO_LABEL_BOTTOM_TILE_TOP);
+}
+
+static void Overview_DrawHeaderBoxHelper(u32 labelWidth, u32 top)
+{
+    u8 textLenTiles = 0;
+    s16 headerX = 0;
+    s16 headerWidth = 0;
+
+    Overview_ComputeHeaderLayout(labelWidth , &textLenTiles, &headerX, &headerWidth);
+    Overview_DrawHeaderBox(sData->bg1Tilemap, headerX, top, textLenTiles);
 }
 
 static void Overview_UpdateCardSelectionHighlight(u8 oldSelectedIndex)
@@ -3491,10 +3528,7 @@ static void DestroyOverviewCardSprites(struct BattleInfoCard *card, bool8 freeHp
 
 static void BattleInfoDestroy(void)
 {
-    if (sData->cursorSpriteId != SPRITE_NONE)
-        DestroySprite(&gSprites[sData->cursorSpriteId]);
-    sData->cursorSpriteId = SPRITE_NONE;
-
+    Detail_DestroyEffectsCursor();
     Detail_DestroyWindows();
     Detail_DestroyHpBar();
     Detail_DestroyStatusIcon();
@@ -3503,17 +3537,10 @@ static void BattleInfoDestroy(void)
     Detail_DestroyTypeIcons();
     Detail_DestroyStatPips();
     Detail_DestroyEffectsScrollbar();
-
-    if (sData->iconSpriteId != SPRITE_NONE)
-    {
-        FreeAndDestroyMonIconSprite(&gSprites[sData->iconSpriteId]);
-        sData->iconSpriteId = SPRITE_NONE;
-    }
+    Detail_DestroyIconSprite();
 
     for (u32 i = 0; i < GetCardCount(); i++)
-    {
         DestroyOverviewCardSprites(&sData->cards[i], TRUE);
-    }
 
     RemoveWindow(WIN_LABEL_TOP);
     RemoveWindow(WIN_LABEL_BOTTOM);
