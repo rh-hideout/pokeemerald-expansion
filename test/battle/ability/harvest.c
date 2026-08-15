@@ -112,7 +112,33 @@ SINGLE_BATTLE_TEST("Harvest restores a Berry consumed by Natural Gift")
     }
 }
 
-TO_DO_BATTLE_TEST("Harvest only works once per turn"); // Check for berries that are consumed immediately, like Pecha Berry
+SINGLE_BATTLE_TEST("Harvest only works once per turn")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
+        ASSUME(GetMoveEffect(MOVE_TOXIC_THREAD) == EFFECT_TOXIC_THREAD);
+        PLAYER(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Item(ITEM_PECHA_BERRY); Status1(STATUS1_POISON); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_THREAD); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        STATUS_ICON(opponent, poison: FALSE);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_THREAD, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+
+        ABILITY_POPUP(opponent, ABILITY_HARVEST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        STATUS_ICON(opponent, poison: FALSE);
+        NOT ABILITY_POPUP(opponent, ABILITY_HARVEST);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry when destroyed by Incinerate")
 {

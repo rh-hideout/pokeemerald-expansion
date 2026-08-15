@@ -124,7 +124,7 @@ u16 StringLength(const u8 *str)
 
 u16 StringLineLength(const u8 *str)
 {
-    u16 i = 0, length = 0;
+    u16 length = 0;
 
     while (str[length] != EOS)
     {
@@ -135,7 +135,6 @@ u16 StringLineLength(const u8 *str)
         case CHAR_NEWLINE:
             return length;
         default:
-            i++;
             length++;
             break;
         }
@@ -829,4 +828,20 @@ bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
     }
 
     return FALSE;
+}
+
+u8* const GetStringVar(u8 index)
+{
+    switch (index)
+    {
+    case 0:
+        return gStringVar1;
+    case 1:
+        return gStringVar2;
+    case 2:
+        return gStringVar3;
+    default:
+        errorf("Incorrect StringVar index: %d", index);
+        return gStringVar1;
+    }
 }

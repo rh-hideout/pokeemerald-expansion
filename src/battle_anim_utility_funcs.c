@@ -86,11 +86,11 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
         break;
     case ANIM_PLAYER_RIGHT:
         selectedPalettes = 0;
-        animBattlers[0] = BATTLE_PARTNER(gBattleAnimAttacker);
+        animBattlers[0] = GetPartnerBattler(gBattleAnimAttacker);
         break;
     case ANIM_OPPONENT_RIGHT:
         selectedPalettes = 0;
-        animBattlers[0] = BATTLE_PARTNER(gBattleAnimTarget);
+        animBattlers[0] = GetPartnerBattler(gBattleAnimTarget);
         break;
     }
 
@@ -280,9 +280,9 @@ void AnimTask_DrawFallingWhiteLinesOnAttacker(u8 taskId)
         if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_RIGHT
          || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT)
         {
-            if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)) == TRUE)
+            if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)) == TRUE)
             {
-                gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].oam.priority -= 1;
+                gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].oam.priority -= 1;
                 ((struct BgCnt *)&bg1Cnt)->priority = 1;
                 SetGpuReg(REG_OFFSET_BG1CNT, bg1Cnt);
                 var0 = 1;
@@ -347,7 +347,7 @@ static void AnimTask_DrawFallingWhiteLinesOnAttacker_Step(u8 taskId)
             GetBattleAnimBg1Data(&animBgData);
             ClearBattleAnimBg(animBgData.bgId);
             if (gTasks[taskId].data[6] == 1)
-                gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].oam.priority++;
+                gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].oam.priority++;
 
             gBattle_BG1_Y = 0;
             DestroyAnimVisualTask(taskId);
@@ -394,7 +394,7 @@ static void StatsChangeAnimation_Step1(u8 taskId)
     else
         sAnimStatsChangeData->battler1 = gBattleAnimTarget;
 
-    sAnimStatsChangeData->battler2 = BATTLE_PARTNER(sAnimStatsChangeData->battler1);
+    sAnimStatsChangeData->battler2 = GetPartnerBattler(sAnimStatsChangeData->battler1);
     if (IsContest() || (sAnimStatsChangeData->aMultipleBattlers && !IsBattlerSpriteVisible(sAnimStatsChangeData->battler2)))
         sAnimStatsChangeData->aMultipleBattlers = FALSE;
 
@@ -746,7 +746,7 @@ void AnimTask_GetAttackerSide(u8 taskId)
 
 void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 {
-    gBattleAnimArgs[ARG_RET_ID] = BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget;
+    gBattleAnimArgs[ARG_RET_ID] = GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget;
     DestroyAnimVisualTask(taskId);
 }
 
@@ -771,7 +771,7 @@ void StartMonScrollingBgMask(u8 taskId, u16 scrollSpeed, enum BattlerId battler,
     enum BattlerId battler2;
 
     spriteId2 = 0;
-    battler2 = BATTLE_PARTNER(battler);
+    battler2 = GetPartnerBattler(battler);
 
     if (IsContest() || (includePartner && !IsBattlerSpriteVisible(battler2)))
         includePartner = FALSE;
@@ -885,7 +885,7 @@ static void UpdateMonScrollingBgMask(u8 taskId)
 
 void AnimTask_GetFieldTerrain(u8 taskId)
 {
-    gBattleAnimArgs[0] = gFieldStatuses & STATUS_FIELD_TERRAIN_ANY;
+    gBattleAnimArgs[0] = gFieldTimers.terrain;
     DestroyAnimVisualTask(taskId);
 }
 
@@ -1063,6 +1063,6 @@ void AnimTask_SetInvisible(u8 taskId)
 
 void AnimTask_SetAnimTargetToAttackerOpposite(u8 taskId)
 {
-    gBattleAnimTarget = BATTLE_OPPOSITE(gBattleAnimAttacker);
+    gBattleAnimTarget = GetOppositeBattler(gBattleAnimAttacker);
     DestroyAnimVisualTask(taskId);
 }

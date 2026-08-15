@@ -346,7 +346,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by only confusio
         MESSAGE("Wobbuffet's Lum Berry snapped it out of its confusion!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
-        EXPECT(player->volatiles.confusionTurns == 0);
+        EXPECT(player->volatiles.confusionTimer == 0);
     }
 }
 
@@ -393,6 +393,6 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
         MESSAGE("Wobbuffet's Lum Berry snapped it out of its confusion!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
-        EXPECT(player->volatiles.confusionTurns == 0);
+        EXPECT(player->volatiles.confusionTimer == 0);
     }
 }

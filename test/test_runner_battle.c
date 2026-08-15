@@ -373,6 +373,16 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
@@ -384,6 +394,7 @@ static void StartBattle(void)
         gMain.savedCallback = CB2_BattleTest_NextParameter;
     else
         gMain.savedCallback = CB2_TestRunner;
+    ResetTestInventory();
     SetMainCallback2(CB2_InitBattle);
 
     STATE->checkProgressParameter = 0;
@@ -877,7 +888,7 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
             if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.ability.ability == ABILITY_NONE)
                 Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
             else
-                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
+                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%U)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
         }
         break;
     case QUEUE_GROUP_NONE_OF:
@@ -902,6 +913,81 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
                 continue;
 
             if (TryAbilityPopUp(queuedEvent, event->groupSize, battlerId, ability) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
+static s32 TryItemPopUp(s32 i, s32 n, enum BattlerId battlerId, enum Item item)
+{
+    struct QueuedItemEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_ITEM_POPUP_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.item;
+
+        if (event->battlerId == battlerId
+         && (event->item == ITEM_NONE || event->item == item))
+            return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordItemPopUp(enum BattlerId battlerId, enum Item item)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryItemPopUp(DATA.trial.queuedEvent, event->groupSize, battlerId, item) != -1)
+        {
+            DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_ITEM_POPUP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.item.item == ITEM_NONE)
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s, ITEM_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[item].name);
+        }
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryItemPopUp(queuedEvent, event->groupSize, battlerId, item)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Matched ITEM_POPUP", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryItemPopUp(queuedEvent, event->groupSize, battlerId, item) != -1)
                 DATA.trial.queuedEvent = queuedEvent + event->groupSize;
         } while (FALSE);
         break;
@@ -967,11 +1053,11 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
                 if (animId == MOVE_CELEBRATE)
                     ; // TODO: Only if implicit. Difficult to know if it's an action or, e.g. Mirror Move.
                 else if (checkAttacker && checkTarget)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
                 else if (checkAttacker)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
                 else
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
             }
             else if (animType < ARRAY_COUNT(sAnimTypeNames))
             {
@@ -1962,6 +2048,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
     [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
     [QUEUED_EFFECTIVENESS_EVENT] = "EFFECTIVENESS_SE",
+    [QUEUED_ITEM_POPUP_EVENT] = "ITEM_POPUP",
 };
 
 static void TearDownBattle(void)
@@ -2075,16 +2162,6 @@ static inline rng_value_t MakeRngValue(const u16 seed)
             _SFC32_Next(&result);
     }
     return result;
-}
-
-static void ResetTestInventory()
-{
-    ClearBag();
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
-    {
-        if (DATA.inventory[i].itemId != ITEM_NONE)
-            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
-    }
 }
 
 static void CB2_BattleTest_NextTrial(void)
@@ -2875,7 +2952,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
          || moveTarget == TARGET_FOES_AND_ALLY
          || moveTarget == TARGET_OPPONENTS_FIELD)
         {
-            target = BATTLE_OPPOSITE(battlerId);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
         {
@@ -2885,7 +2962,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
 
-            target = BATTLE_OPPOSITE(battlerId);
+            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
         }
         else if (moveTarget == TARGET_USER
               || moveTarget == TARGET_ALL_BATTLERS
@@ -2896,7 +2973,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
         }
         else if (moveTarget == TARGET_ALLY)
         {
-            target = BATTLE_PARTNER(battlerId);
+            target = (battlerId ^ BIT_FLANK);
         }
         else
         {
@@ -3163,7 +3240,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-        target = BATTLE_OPPOSITE(battlerId);
+        target = (battlerId ^ BIT_SIDE);
     }
     else
     {
@@ -3464,6 +3541,28 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
         .as = { .ability = {
             .battlerId = battlerId,
             .ability = ctx.ability,
+        }},
+    };
+}
+
+void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext ctx)
+{
+    enum BattlerId battlerId = battler - gBattleMons;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
+    INVALID_IF(!STATE->runScene, "ITEMN_POPUP outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, "%s:%d: ITEM exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_ITEM_POPUP_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .item = {
+            .battlerId = battlerId,
+            .item = ctx.item,
         }},
     };
 }

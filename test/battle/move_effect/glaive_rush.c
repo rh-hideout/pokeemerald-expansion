@@ -22,6 +22,23 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful moves targeted at the user do n
     }
 }
 
+SINGLE_BATTLE_TEST("If Glaive Rush is successful OHKO moves targeted at the user do not check accuracy")
+{
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_FISSURE) == 30);
+        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_FISSURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
+        HP_BAR(player, hp: 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("If Glaive Rush is successful, moves targeted at the user deal double damage")
 {
     s16 glaiveRushEffectedDmg;

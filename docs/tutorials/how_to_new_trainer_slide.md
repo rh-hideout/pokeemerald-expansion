@@ -149,13 +149,13 @@ The function to check if this slide SHOULD be initalized is added to the bottom 
 ### `src/battle_main.c`
 
 ```diff
-         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
+         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd : BattleScript_TrainerBSlideMsgEnd);
      else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT)))
-         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
+         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd : BattleScript_TrainerBSlideMsgEnd);
 +    else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT)))
-+        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
++        BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd : BattleScript_TrainerBSlideMsgEnd);
      else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT)))
-         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
+         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd : BattleScript_TrainerBSlideMsgEnd);
      else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE)))
 diff --git a/src/battle_script_commands.c b/src/battle_script_commands.c
 ```

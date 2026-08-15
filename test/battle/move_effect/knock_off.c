@@ -444,6 +444,23 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
     }
 }
 
+SINGLE_BATTLE_TEST("Knock Off is boosted against targets with Sticky Hold", s16 damage)
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_STENCH; }
+    PARAMETRIZE { ability = ABILITY_STICKY_HOLD; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MUK) { MaxHP(100); Item(ITEM_MASTER_BALL); Ability(ability); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.0), results[1].damage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consumed")
 {
     GIVEN {
@@ -524,8 +541,60 @@ SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a non-Para
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        NOT MESSAGE("Great Tust knocked off the opposing Wobbuffet's Booster Energy!");
+        NOT MESSAGE("Great Tusk knocked off the opposing Wobbuffet's Booster Energy!");
     } THEN {
         EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does not remove items that can change the form of the Knock Off user (Gen9-)", s16 damage)
+{
+    enum Item item;
+    
+    PARAMETRIZE { item = ITEM_MASTER_BALL; }
+    PARAMETRIZE { item = ITEM_MALAMARITE; }
+
+    GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_REMOVAL, GEN_9);
+        PLAYER(SPECIES_MALAMAR);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Malamar knocked off the opposing Wobbuffet's Malamarite!");
+    } THEN {
+        if (item == ITEM_MALAMARITE)
+        {
+            EXPECT(opponent->item == ITEM_MALAMARITE);
+        }
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.5), results[0].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off remove items that can change the form of the Knock Off user (Champions)", s16 damage)
+{
+    enum Item item;
+    
+    PARAMETRIZE { item = ITEM_MASTER_BALL; }
+    PARAMETRIZE { item = ITEM_MALAMARITE; }
+
+    GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_REMOVAL, GEN_CHAMPIONS);
+        PLAYER(SPECIES_MALAMAR);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        if (item == ITEM_MASTER_BALL)
+        {
+            MESSAGE("Malamar knocked off the opposing Wobbuffet's Master Ball!");
+        } else {
+            MESSAGE("Malamar knocked off the opposing Wobbuffet's Malamarite!");
+        }
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.0), results[0].damage);
     }
 }

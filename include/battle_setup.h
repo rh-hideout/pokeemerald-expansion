@@ -34,7 +34,7 @@ typedef union PACKED TrainerBattleParameter
         u8 continueScript:1;
         u8 facePlayer:1;
         u8 earlyRival:1;
-        u8 padding:1;
+        u8 skipFlagCheck:1;
         u8 objEventLocalIdA;
         u16 opponentA;
         u8 *introTextA;

@@ -54,5 +54,6 @@ void ConvertInternationalString(u8 *s, enum Language language);
 void StripExtCtrlCodes(u8 *str);
 u8 *StringCopyUppercase(u8 *dest, const u8 *src);
 bool32 DoesStringProperlyTerminate(const u8 *str, u32 last);
+u8* const GetStringVar(u8 index);
 
 #endif // GUARD_STRING_UTIL_H

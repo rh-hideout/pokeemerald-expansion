@@ -71,14 +71,15 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
-        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        MESSAGE("The opposing Raichu's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
+
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
@@ -107,11 +108,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
-        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        MESSAGE("The opposing Sandslash's Chilan Berry lessened the damage it took!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
@@ -266,11 +267,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
-        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 
@@ -290,11 +293,15 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     } SCENE {
         MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
-        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
-        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
+
+        MESSAGE("The opposing Wobbuffet's Chilan Berry lessened the damage it took!");
+        MESSAGE("The opposing Wynaut's Chilan Berry lessened the damage it took!");
     }
 }
 
@@ -547,5 +554,136 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of a
         MESSAGE("Wynaut avoided the attack!");
         MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("The opposing Wynaut avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_COTTON_SPORE) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(SPECIES_WHIMSICOTT) { Speed(3); Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_AGGRON) { Defense(1); Speed(4); }
+        OPPONENT(SPECIES_HERACROSS) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_MEMENTO, target: playerRight);
+            MOVE(playerLeft, MOVE_EARTHQUAKE);
+        }
+        TURN {
+            MOVE(playerRight, MOVE_COTTON_SPORE);
+            MOVE(playerLeft, MOVE_PSYCHIC_TERRAIN);
+        }
+        TURN {
+            MOVE(playerRight, MOVE_COTTON_SPORE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        NONE_OF {
+            EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
+            HP_BAR(opponentLeft);
+            MESSAGE("It's extremely effective on the opposing Aggron!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, playerRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Aggron's Speed harshly fell!");
+        }
+        MESSAGE("Whimsicott used Cotton Spore!");
+        NONE_OF {
+            MESSAGE("The opposing Aggron is protected by the Psychic Terrain!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Aggron's Speed harshly fell!");
+            MESSAGE("But it failed!");
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Unseen Fist)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_BRUTAL_SWING) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_URSHIFU) { Attack(1); Speed(4); Ability(ABILITY_UNSEEN_FIST); }
+        PLAYER(SPECIES_URSHIFU) { Attack(1); Speed(3); Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_PROTECT);
+            MOVE(opponentRight, MOVE_PROTECT);
+            MOVE(playerLeft, MOVE_BRUTAL_SWING);
+            MOVE(playerRight, MOVE_BRUTAL_SWING);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BRUTAL_SWING, playerRight);
+        NOT MESSAGE("It's super effective on the opposing Wobbuffet and Wynaut!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Absorb Abilities)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(3); }
+        OPPONENT(SPECIES_GASTRODON) { HP(1); Speed(2); Ability(ABILITY_STORM_DRAIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_SURF);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerRight);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_STORM_DRAIN);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Missing Moves)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Item(ITEM_BRIGHTPOWDER); }
+        PLAYER(SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); Item(ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_EARTHQUAKE, hit: FALSE);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet avoided the attack!");
+        NOT MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("The opposing Wynaut avoided the attack!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Magic Bounce)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_GROWL) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(3); }
+        OPPONENT(SPECIES_HATTERENE) { HP(1); Speed(2); Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_GROWL);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, playerRight);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
     }
 }

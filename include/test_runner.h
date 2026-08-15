@@ -14,6 +14,7 @@ extern const bool8 gTestRunnerSkipIsFail;
 enum Gimmick;
 
 void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability ability);
+void TestRunner_Battle_RecordItemPopUp(enum BattlerId battlerId, enum Item item);
 void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId);
 void TestRunner_Battle_RecordHP(enum BattlerId battlerId, u32 oldHP, u32 newHP);
 void TestRunner_Battle_RecordSubHit(enum BattlerId battlerId, u32 damage, bool32 broke);
@@ -39,6 +40,7 @@ void TestRunner_Battle_RecordEffectivenessSound(u32 battlerId, u32 soundId);
 #else
 
 #define TestRunner_Battle_RecordAbilityPopUp(...) (void)0
+#define TestRunner_Battle_RecordItemPopUp(...) (void)0
 #define TestRunner_Battle_RecordAnimation(...) (void)0
 #define TestRunner_Battle_RecordHP(...) (void)0
 #define TestRunner_Battle_RecordSubHit(...) (void)0

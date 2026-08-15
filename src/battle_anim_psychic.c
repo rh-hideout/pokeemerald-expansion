@@ -529,7 +529,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2, FALSE);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2 ^ var0, FALSE);
     }
@@ -582,7 +582,7 @@ static void AnimDefensiveWall_Step1(struct Sprite *sprite)
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
-    battler = BATTLE_PARTNER(battler);
+    battler = GetPartnerBattler(battler);
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
@@ -635,7 +635,7 @@ static void AnimDefensiveWall_Step4(struct Sprite *sprite)
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
 
-            battler = BATTLE_PARTNER(battlerCopy);
+            battler = GetPartnerBattler(battlerCopy);
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
         }
@@ -658,7 +658,7 @@ static void AnimDefensiveWall_Step5(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2 ^ var0);
     }

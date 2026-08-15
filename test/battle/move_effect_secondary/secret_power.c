@@ -9,7 +9,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Secret Power inflicts paralysis in Electric Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -24,7 +25,8 @@ SINGLE_BATTLE_TEST("Secret Power inflicts paralysis in Electric Terrain")
 SINGLE_BATTLE_TEST("Secret Power inflicts sleep in Grassy Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -39,7 +41,8 @@ SINGLE_BATTLE_TEST("Secret Power inflicts sleep in Grassy Terrain")
 SINGLE_BATTLE_TEST("Secret Power lowers Speed in Psychic Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -56,7 +59,8 @@ SINGLE_BATTLE_TEST("Secret Power lowers Speed in Psychic Terrain")
 SINGLE_BATTLE_TEST("Secret Power lowers Sp. Atk in Misty Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_MISTY_TERRAIN) == B_TERRAIN_MISTY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

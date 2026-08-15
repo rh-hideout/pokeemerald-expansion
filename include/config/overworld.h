@@ -163,4 +163,7 @@
 #define OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLES     FALSE // If TRUE, use daily seed to compute mirage island chance and lottery corner tickets.
                                                           // This has a side effect of removing the deterministic/anti save scumming aspect of the mirage island randomisation
 
+// Script Config
+#define OW_CHECK_FOR_TOTAL_EVS TRUE        // If FALSE, givemon and createmon will not check for total EVs when generating a new Pokemon
+
 #endif // GUARD_CONFIG_OVERWORLD_H
