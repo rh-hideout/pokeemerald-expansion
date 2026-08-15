@@ -64,6 +64,11 @@ CeruleanCity_Frlg_EventScript_Counterpart::
 	applymovement LOCALID_COUNTERPART_CERULEAN, Common_Movement_FacePlayer
 	waitmovement 0
 
+	goto_if_set FLAG_CERULEAN_COUNTERPART_BRIEFED, CeruleanCity_Frlg_EventScript_CounterpartRepeat
+
+	applymovement LOCALID_COUNTERPART_CERULEAN, Common_Movement_FacePlayer
+	waitmovement 0
+
 	msgbox CeruleanCity_Frlg_Text_GuestOfHonor, MSGBOX_DEFAULT
 	closemessage
 
@@ -124,6 +129,16 @@ CeruleanCity_Frlg_EventScript_ResponseResolve:
 
 CeruleanCity_Frlg_EventScript_Continue:
 	msgbox CeruleanCity_Frlg_Text_CheckHouse, MSGBOX_DEFAULT
+	closemessage
+
+	setflag FLAG_CERULEAN_COUNTERPART_BRIEFED
+
+	releaseall
+	end
+
+
+CeruleanCity_Frlg_EventScript_CounterpartRepeat:
+	msgbox CeruleanCity_Frlg_Text_CounterpartRepeat, MSGBOX_DEFAULT
 	closemessage
 
 	releaseall
@@ -206,6 +221,12 @@ CeruleanCity_Frlg_Text_CheckHouse:
 	.string "Let's check out the house.$"
 
 
+CeruleanCity_Frlg_Text_CounterpartRepeat:
+	.string "OAK'S GRANDCHILD: Come on.\p"
+	.string "We already know where they went.\p"
+	.string "Let's check out that house.$"
+
+
 CeruleanCity_Frlg_Text_Officer:
 	.string "OFFICER: Your friend says MISTY\n"
 	.string "sent you two.\p"
@@ -263,3 +284,162 @@ CeruleanCity_Frlg_Text_RocketComplaining:
 
 CeruleanCity_Frlg_Text_LibrarySign:
     .string "CERULEAN LIBRARY$"
+
+@ ============================================================
+@ GARY / OAK FAMILY FORESHADOW
+@ ============================================================
+
+CeruleanCity_Frlg_EventScript_Gary::
+    lock
+    faceplayer
+
+    msgbox CeruleanCity_Frlg_Text_GaryIntro, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_PlayerGaryThought, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_PlayerAskOak, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_GaryOakReaction, MSGBOX_DEFAULT
+    closemessage
+
+	applymovement LOCALID_CERULEAN_RIVAL, CeruleanCity_Frlg_Movement_GaryLeaves
+    waitmovement 0
+
+    setflag FLAG_HIDE_CERULEAN_GARY
+    removeobject LOCALID_CERULEAN_RIVAL
+
+    release
+    end
+
+
+
+CeruleanCity_Frlg_Text_GaryIntro:
+    .string "GARY: Huh?\p"
+    .string "I've never seen you around here\n"
+    .string "before.\p"
+    .string "And trust me...\n"
+    .string "I'd remember.$"
+
+
+CeruleanCity_Frlg_Text_PlayerGaryThought:
+    .string "{PLAYER}:...Somehow, this particular flavor\n"
+    .string "of arrogance feels familiar.\p"
+    .string "...Sigh.$"
+
+
+CeruleanCity_Frlg_Text_PlayerAskOak:
+    .string "{PLAYER}: You remind me of someone.\p"
+    .string "Are you an OAK?$"
+
+
+CeruleanCity_Frlg_Text_GaryOakReaction:
+    .string "GARY: ...What?\p"
+    .string "How do YOU know that?\p"
+    .string "Who even are you?\p"
+    .string "{PLAYER}: ...It's complicated.\p"
+    .string "GARY: Yeah. Whatever.\p"
+    .string "I've got better things to do than\n"
+    .string "stand around talking to weirdos.\p"
+    .string "Smell ya later!$"
+
+CeruleanCity_Frlg_Movement_GaryLeaves:
+    walk_right
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+	walk_down
+	walk_down
+    walk_down
+    step_end
+
+@ ============================================================
+@ CERULEAN OVERWORLD NPC CLEANUP
+@ ============================================================
+
+CeruleanCity_Frlg_EventScript_LittleBoy::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_LittleBoy, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_BaldingMan::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_BaldingMan, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_Youngster::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_Youngster, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_Woman::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_Woman, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_Lass::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_Lass, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_Slowbro::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_Slowbro, MSGBOX_DEFAULT
+    release
+    end
+
+CeruleanCity_Frlg_EventScript_CaveGuard::
+    lock
+    faceplayer
+    msgbox CeruleanCity_Frlg_Text_CaveGuard, MSGBOX_DEFAULT
+    release
+    end
+
+
+CeruleanCity_Frlg_Text_LittleBoy:
+    .string "That house up there has been weird\n"
+    .string "all day.$"
+
+
+CeruleanCity_Frlg_Text_BaldingMan:
+    .string "People keep saying something strange\n"
+    .string "happened near the northern houses.$"
+
+
+CeruleanCity_Frlg_Text_Youngster:
+    .string "CERULEAN'S usually way less weird\n"
+    .string "than this.$"
+
+
+CeruleanCity_Frlg_Text_Woman:
+    .string "You look like you're searching for\n"
+    .string "someone.\p"
+    .string "Good luck.$"
+
+
+CeruleanCity_Frlg_Text_Lass:
+    .string "SLOWBRO and I are just staying out\n"
+    .string "of everybody's business.$"
+
+
+CeruleanCity_Frlg_Text_Slowbro:
+    .string "SLOWBRO: ...Brooo.$"
+
+
+CeruleanCity_Frlg_Text_CaveGuard:
+    .string "The cave ahead isn't open to\n"
+    .string "visitors right now.$"

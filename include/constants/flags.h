@@ -86,10 +86,10 @@
 #define FLAG_MET_TWIN_FLOWER_SHOP    0x42 // Unused Flag
 #define FLAG_HIDE_CERULEAN_AQUA_GRUNT    0x43
 #define FLAG_HIDE_CERULEAN_ROCKET_GRUNT  0x44
-#define FLAG_UNUSED_0x045    0x45 // Unused Flag
-#define FLAG_UNUSED_0x046    0x46 // Unused Flag
-#define FLAG_UNUSED_0x047    0x47 // Unused Flag
-#define FLAG_UNUSED_0x048    0x48 // Unused Flag
+#define FLAG_CERULEAN_LAB_COMPLETE       0x45
+#define FLAG_CERULEAN_LIBRARIAN_BOOK_SEEN 0x46
+#define FLAG_HIDE_CERULEAN_GARY 0x47
+#define FLAG_CERULEAN_COUNTERPART_BRIEFED 0x48
 #define FLAG_UNUSED_0x049    0x49 // Unused Flag
 #define FLAG_UNUSED_0x04A    0x4A // Unused Flag
 #define FLAG_UNUSED_0x04B    0x4B // Unused Flag

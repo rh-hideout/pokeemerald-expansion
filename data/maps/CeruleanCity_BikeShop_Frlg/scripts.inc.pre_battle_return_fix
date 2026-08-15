@@ -54,25 +54,6 @@ CeruleanCity_BikeShop_Frlg_SetMagikarp:
 
 
 @ ============================================================
-@ CERULEAN -> EVIL LAB ENTRANCE
-@
-@ Assign this script to the TWO Cerulean exterior coord triggers
-@ at the lab entrance. This bypasses destination warp IDs entirely
-@ and always places the player at x=5, y=8 inside the lab.
-@
-@ IMPORTANT:
-@ - Lab mission trigger stays at (5,7)
-@ - Entrance/spawn is (5,8)
-@ - Exit trigger stays at (5,9)
-@ ============================================================
-
-CeruleanCity_Frlg_EventScript_EnterEvilLab::
-    warp MAP_CERULEAN_CITY_BIKE_SHOP, 5, 8
-    waitstate
-    end
-
-
-@ ============================================================
 @ ENTRY CUTSCENE
 @
 @ THIS is the script for the trigger near the entrance.
@@ -87,13 +68,14 @@ CeruleanCity_Frlg_EventScript_EnterEvilLab::
 
 CeruleanCity_BikeShop_Frlg_EventScript_EnterLab::
 
-    goto_if_set FLAG_CERULEAN_LAB_COMPLETE, CeruleanCity_BikeShop_Frlg_EventScript_LabAlreadyComplete
+     goto_if_set FLAG_CERULEAN_LAB_COMPLETE, CeruleanCity_BikeShop_Frlg_EventScript_LabAlreadyComplete
     lockall
 
     applymovement LOCALID_PLAYER, CeruleanCity_BikeShop_Frlg_Movement_WalkToLab
     waitmovement 0
 
     goto CeruleanCity_BikeShop_Frlg_EventScript_LabIntro
+
 
 @ ============================================================
 @ SECRET LAB INTRO
@@ -222,56 +204,32 @@ CeruleanCity_BikeShop_Frlg_EventScript_StartBattle:
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleBrendan:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_BRENDAN
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleMay:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_MAY
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleCeleste:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_CELESTE
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleHiiro:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_HIIRO
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleAleciya:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_ALECIYA
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 
 CeruleanCity_BikeShop_Frlg_EventScript_BattleAster:
     multi_2_vs_2 TRAINER_CERULEAN_ROCKET_GRUNT, CeruleanCity_BikeShop_Frlg_Text_RocketDefeated, TRAINER_CERULEAN_JAMES, CeruleanCity_BikeShop_Frlg_Text_JamesDefeated, PARTNER_ASTER
-    switch VAR_RESULT
-    case 1, CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
-    fadescreen FADE_TO_BLACK
-    special SetCB2WhiteOut
-    end
+    goto CeruleanCity_BikeShop_Frlg_EventScript_AfterBattleWin
 
 @ ============================================================
 @ POST-BATTLE
@@ -341,7 +299,7 @@ CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit:
 
     removeobject LOCALID_CERULEAN_LAB_ROCKET
     removeobject LOCALID_JAMES
-    removeobject LOCALID_LAB_MAGICARP
+    removeobject LOCALID_LAB_MAGIKARP
 
     fadescreen FADE_FROM_BLACK
 
@@ -576,16 +534,4 @@ CeruleanCity_BikeShop_Frlg_Text_JamesDefeated:
 @ ============================================================
 
 CeruleanCity_BikeShop_Frlg_EventScript_LabAlreadyComplete:
-    end
-
-
-@ ============================================================
-@ LAB EXIT
-@ Scripted exit bypasses broken native FRLG Bike Shop warp.
-@ Referenced by map coord events, so this MUST be global (::).
-@ ============================================================
-
-CeruleanCity_BikeShop_Frlg_EventScript_ExitLab::
-    warp MAP_CERULEAN_CITY, 13, 28
-    waitstate
     end

@@ -71,7 +71,29 @@
       "flag": "FLAG_HIDE_CERULEAN_ROCKET_GRUNT"
     }
   ],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 4,
+      "y": 9,
+      "elevation": 3,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 5,
+      "y": 8,
+      "elevation": 3,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 6,
+      "y": 9,
+      "elevation": 3,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "5"
+    }
+  ],
   "coord_events": [
     {
       "type": "trigger",
@@ -81,15 +103,6 @@
       "var": "VAR_TEMP_0",
       "var_value": "0",
       "script": "CeruleanCity_BikeShop_Frlg_EventScript_EnterLab"
-    },
-    {
-      "type": "trigger",
-      "x": 5,
-      "y": 8,
-      "elevation": 0,
-      "var": "VAR_TEMP_0",
-      "var_value": "0",
-      "script": "CeruleanCity_BikeShop_Frlg_EventScript_ExitLab"
     }
   ],
   "bg_events": [],

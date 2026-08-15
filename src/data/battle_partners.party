@@ -42,3 +42,147 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Protect
 - Solar Beam
 - Dragon Claw
+
+=== PARTNER_BRENDAN ===
+Name: BRENDAN
+Class: Pkmn Trainer 1
+Pic: Brendan
+Gender: Male
+Music: Male
+AI: Basic Trainer
+
+Marshtomp
+Level: 18
+
+Porygon
+Level: 17
+
+Sentret
+Level: 17
+
+
+=== PARTNER_MAY ===
+Name: MAY
+Class: Pkmn Trainer 1
+Pic: May
+Gender: Female
+Music: Female
+AI: Basic Trainer
+
+Combusken
+Level: 18
+
+Sunflora
+Level: 17
+
+Feebas
+Level: 17
+
+
+=== PARTNER_HIIRO ===
+Name: HIIRO
+Class: Pkmn Trainer 1
+Pic: Brendan
+Gender: Male
+Music: Male
+AI: Basic Trainer
+
+Haunter
+Level: 18
+
+Frogadier
+Level: 17
+
+Vibrava
+Level: 17
+
+
+=== PARTNER_CELESTE ===
+Name: CELESTE
+Class: Pkmn Trainer 1
+Pic: May
+Gender: Female
+Music: Female
+AI: Basic Trainer
+
+Eevee
+Level: 18
+
+Flaaffy
+Level: 17
+
+Quilava
+Level: 17
+
+
+=== PARTNER_ASTER ===
+Name: ASTER
+Class: Pkmn Trainer 1
+Pic: Wally
+Gender: Male
+Music: Male
+AI: Basic Trainer
+
+Tyrogue
+Level: 18
+
+Pikachu
+Level: 17
+
+Croconaw
+Level: 17
+
+
+=== PARTNER_ALECIYA ===
+Name: ALECIYA
+Class: Pkmn Trainer 1
+Pic: May
+Gender: Female
+Music: Female
+AI: Basic Trainer
+
+Hatenna
+Level: 18
+
+Emolga
+Level: 17
+
+Floragato
+Level: 17
+
+
+=== PARTNER_XIE ===
+Name: XIE
+Class: Pkmn Trainer 1
+Pic: Brendan
+Gender: Male
+Music: Male
+AI: Basic Trainer
+
+Absol
+Level: 18
+
+Clefairy
+Level: 17
+
+Fletchinder
+Level: 17
+
+
+=== PARTNER_SOL ===
+Name: SOL
+Class: Pkmn Trainer 1
+Pic: May
+Gender: Female
+Music: Female
+AI: Basic Trainer
+
+Snorunt
+Level: 18
+
+Umbreon
+Level: 17
+
+Shuckle
+Level: 17
+

@@ -16930,3 +16930,38 @@ Tyrogue
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
+=== TRAINER_CERULEAN_JAMES ===
+Name: JAMES
+Class: Team Aqua
+Pic: Aqua Grunt M
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Flapple
+Level: 18
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Seviper
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+
+=== TRAINER_CERULEAN_ROCKET_GRUNT ===
+Name: GRUNT
+Class: Pkmn Trainer 1
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Male
+Double Battle: No
+AI: Check Bad Move
+
+Wobbuffet
+Level: 18
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Thievul
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+

@@ -52,7 +52,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_LittleBoy",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -65,7 +65,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_BaldingMan",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -79,7 +79,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_Slowbro",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -93,7 +93,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_Lass",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -106,7 +106,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_Youngster",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -120,8 +120,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_Gary",
-      "flag": "FLAG_HIDE_CERULEAN_GARY"
+      "script": "NULL",
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
@@ -162,7 +162,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_Woman",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -176,7 +176,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "CeruleanCity_Frlg_EventScript_CaveGuard",
+      "script": "NULL",
       "flag": "0"
     },
     {
@@ -231,13 +231,6 @@
       "dest_warp_id": "1"
     },
     {
-      "x": 13,
-      "y": 28,
-      "elevation": 3,
-      "dest_map": "MAP_CERULEAN_CITY_BIKE_SHOP",
-      "dest_warp_id": "1"
-    },
-    {
       "x": 29,
       "y": 28,
       "elevation": 0,
@@ -273,13 +266,6 @@
       "dest_warp_id": "3"
     },
     {
-      "x": 14,
-      "y": 28,
-      "elevation": 3,
-      "dest_map": "MAP_CERULEAN_CITY_BIKE_SHOP",
-      "dest_warp_id": "1"
-    },
-    {
       "x": 23,
       "y": 28,
       "elevation": 0,
@@ -296,6 +282,20 @@
     {
       "x": 6,
       "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_CERULEAN_CITY",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 14,
+      "y": 29,
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY",
       "dest_warp_id": "0"

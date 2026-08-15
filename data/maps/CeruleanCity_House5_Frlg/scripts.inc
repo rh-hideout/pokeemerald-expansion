@@ -10,6 +10,16 @@ CeruleanCity_House5_Frlg_EventScript_Librarian::
     lock
     faceplayer
 
+    @ If the special book callback already happened,
+    @ use the permanent repeat line.
+    goto_if_set FLAG_CERULEAN_LIBRARIAN_BOOK_SEEN, CeruleanCity_House5_Frlg_EventScript_LibrarianRepeat
+
+    @ If the player has the Mysterious Book,
+    @ trigger the special Cerulean callback.
+    checkitem ITEM_MYSTERIOUS_BOOK, 1
+    goto_if_eq VAR_RESULT, TRUE, CeruleanCity_House5_Frlg_EventScript_LibrarianBookCallback
+
+    @ Otherwise use the normal original interaction.
     msgbox CeruleanCity_House5_Frlg_Text_LibrarianWelcome, MSGBOX_DEFAULT
     closemessage
 
@@ -44,6 +54,37 @@ CeruleanCity_House5_Frlg_EventScript_AskBooks:
     release
     end
 
+
+@ ============================================================
+@ LIBRARIAN - MYSTERIOUS BOOK CALLBACK
+@ ============================================================
+
+CeruleanCity_House5_Frlg_EventScript_LibrarianBookCallback:
+    msgbox CeruleanCity_House5_Frlg_Text_LibrarianBookNotice, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_House5_Frlg_Text_PlayerBookOrigin, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_House5_Frlg_Text_LibrarianLittleroot, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_House5_Frlg_Text_LibrarianBlaine, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_House5_Frlg_Text_PlayerDoesntKnow, MSGBOX_DEFAULT
+    closemessage
+
+    setflag FLAG_CERULEAN_LIBRARIAN_BOOK_SEEN
+
+    release
+    end
+
+
+CeruleanCity_House5_Frlg_EventScript_LibrarianRepeat:
+    msgbox CeruleanCity_House5_Frlg_Text_LibrarianRepeat, MSGBOX_DEFAULT
+    release
+    end
 
 @ ============================================================
 @ JAMES / TEAM AQUA BOOK GREMLIN
@@ -164,3 +205,42 @@ CeruleanCity_House5_Frlg_Text_JamesRocketGuy:
 CeruleanCity_House5_Frlg_Text_JamesEscape:
     .string "JAMES: Anyway...\p"
     .string "SO LONG, SUCKERRRRR!$"
+
+CeruleanCity_House5_Frlg_Text_LibrarianBookNotice:
+    .string "LIBRARIAN: That book...\p"
+    .string "It has a rather peculiar cover.\p"
+    .string "Do you mind if I ask where you\n"
+    .string "got it?$"
+
+
+CeruleanCity_House5_Frlg_Text_PlayerBookOrigin:
+    .string "{PLAYER}: Oh, this?\p"
+    .string "Someone gave it to me at BLAINE'S\n"
+    .string "LIBRARY back home in LITTLEROOT.$"
+
+
+CeruleanCity_House5_Frlg_Text_LibrarianLittleroot:
+    .string "LIBRARIAN: ...\p"
+    .string "LITTLEROOT?\p"
+    .string "Where's that?$"
+
+
+CeruleanCity_House5_Frlg_Text_LibrarianBlaine:
+    .string "LIBRARIAN: Wait...\p"
+    .string "Did you say BLAINE?\p"
+    .string "As in BLAINE, the CINNABAR ISLAND\n"
+    .string "GYM LEADER?!\p"
+    .string "Since when does BLAINE have a\n"
+    .string "LIBRARY?!$"
+
+
+CeruleanCity_House5_Frlg_Text_PlayerDoesntKnow:
+    .string "...You don't know how to answer\n"
+    .string "any of those questions.\p"
+    .string "You decide it's probably best\n"
+    .string "to leave.$"
+
+
+CeruleanCity_House5_Frlg_Text_LibrarianRepeat:
+    .string "LIBRARIAN: BLAINE'S LIBRARY...\p"
+    .string "I'll have to look into that.$"
