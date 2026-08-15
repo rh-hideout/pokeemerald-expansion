@@ -5594,6 +5594,10 @@ u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget)
     case TARGET_OPPONENTS_FIELD:
         targetBattler = GetBattlerLeftFoe(gBattlerAttacker);
         break;
+    case TARGET_USER_OR_ALLY:
+        if (!IsBattlerAlive(GetPartnerBattler(gBattlerAttacker)))
+            targetBattler = gBattlerAttacker;
+        break;
     case TARGET_USER:
     default:
         targetBattler = gBattlerAttacker;
