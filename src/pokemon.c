@@ -1794,32 +1794,6 @@ u8 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
     return retVal;
 }
 
-u8 GetDefaultMoveTarget(enum BattlerId battlerId)
-{
-    u8 opposing = GetBattlerLeftFoe(battlerId);
-
-    if (!IsDoubleBattle())
-        return GetBattlerAtPosition(opposing);
-    if (CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battlerId) > 1)
-    {
-        u8 position;
-
-        if ((Random() & 1) == 0)
-            position = GetPartnerPosition(opposing);
-        else
-            position = opposing;
-
-        return GetBattlerAtPosition(position);
-    }
-    else
-    {
-        if ((gAbsentBattlerFlags & (1u << opposing)))
-            return GetBattlerAtPosition(GetPartnerPosition(opposing));
-        else
-            return GetBattlerAtPosition(opposing);
-    }
-}
-
 u8 GetMonGender(struct Pokemon *mon)
 {
     return GetBoxMonGender(&mon->box);

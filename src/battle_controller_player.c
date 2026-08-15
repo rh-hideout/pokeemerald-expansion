@@ -703,10 +703,11 @@ void HandleInputChooseMove(enum BattlerId battler)
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
+        enum BattlerId partner = GetPartnerBattler(battler);
         if (isUserOrAlly)
             gMultiUsePlayerCursor = battler;
         else if (moveTarget == TARGET_ALLY)
-            gMultiUsePlayerCursor = GetPartnerBattler(battler);
+            gMultiUsePlayerCursor = partner;
         else
             gMultiUsePlayerCursor = GetBattlerLeftFoe(battler);
 
@@ -714,16 +715,16 @@ void HandleInputChooseMove(enum BattlerId battler)
         {
             if (!CanSelectBattler(moveTarget))
                 canSelectTarget = 1; // either selected or user
-            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(GetPartnerBattler(battler)))
+            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(partner))
                 canSelectTarget = 1;
 
             if (moveInfo->currentPP[gMoveSelectionCursor[battler]] == 0)
             {
                 canSelectTarget = 0;
             }
-            else if (isUserOrAlly && CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battler) <= 1)
+            else if (isUserOrAlly && !IsBattlerAlive(partner))
             {
-                gMultiUsePlayerCursor = GetDefaultMoveTarget(battler);
+                gMultiUsePlayerCursor = battler;
                 canSelectTarget = 0;
             }
 
