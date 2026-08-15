@@ -690,9 +690,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
 {
     [CONTEST_CATEGORY_COOL] =
     {
-        .name = COMPOUND_STRING("COOL"),
+        .name = COMPOUND_STRING("[Cool]"),
         .condition = COMPOUND_STRING("coolness"),
-        .generic = COMPOUND_STRING("COOL Move"),
+        .generic = COMPOUND_STRING("[Cool] Move"),
         .negativeTrait = COMPOUND_STRING("shyness"),
         .ribbon = MON_DATA_COOL_RIBBON,
         .imageEffect = IMAGE_EFFECT_OUTLINE_COLORED,
@@ -709,9 +709,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
 
     [CONTEST_CATEGORY_BEAUTY] =
     {
-        .name = COMPOUND_STRING("BEAUTY"),
+        .name = COMPOUND_STRING("[Beauty]"),
         .condition = COMPOUND_STRING("beauty"),
-        .generic = COMPOUND_STRING("BEAUTY Move"),
+        .generic = COMPOUND_STRING("[Beauty] Move"),
         .negativeTrait = COMPOUND_STRING("anxiety"),
         .ribbon = MON_DATA_BEAUTY_RIBBON,
         .imageEffect = IMAGE_EFFECT_SHIMMER,
@@ -728,9 +728,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
 
     [CONTEST_CATEGORY_CUTE] =
     {
-        .name = COMPOUND_STRING("CUTE"),
+        .name = COMPOUND_STRING("[Cute]"),
         .condition = COMPOUND_STRING("cuteness"),
-        .generic = COMPOUND_STRING("CUTE Move"),
+        .generic = COMPOUND_STRING("[Cute] Move"),
         .negativeTrait = COMPOUND_STRING("laziness"),
         .ribbon = MON_DATA_CUTE_RIBBON,
         .imageEffect = IMAGE_EFFECT_POINTILLISM,
@@ -747,9 +747,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
 
     [CONTEST_CATEGORY_SMART] =
     {
-        .name = COMPOUND_STRING("SMART"),
+        .name = COMPOUND_STRING("[Smart]"),
         .condition = COMPOUND_STRING("smartness"),
-        .generic = COMPOUND_STRING("SMART Move"),
+        .generic = COMPOUND_STRING("[Smart] Move"),
         .negativeTrait = COMPOUND_STRING("hesitancy"),
         .ribbon = MON_DATA_SMART_RIBBON,
         .imageEffect = IMAGE_EFFECT_CHARCOAL,
@@ -766,9 +766,9 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
 
     [CONTEST_CATEGORY_TOUGH] =
     {
-        .name = COMPOUND_STRING("TOUGH"),
+        .name = COMPOUND_STRING("[Tough]"),
         .condition = COMPOUND_STRING("toughness"),
-        .generic = COMPOUND_STRING("TOUGH Move"),
+        .generic = COMPOUND_STRING("[Tough] Move"),
         .negativeTrait = COMPOUND_STRING("fear"),
         .ribbon = MON_DATA_TOUGH_RIBBON,
         .imageEffect = IMAGE_EFFECT_GRAYSCALE_LIGHT,
