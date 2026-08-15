@@ -1681,7 +1681,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 
         // Sky Drop fails if target already left the field
-        if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_NONE || gBattleMons[cv->battlerAtk].skyDropTarget == 0)
+        if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable == STATE_NONE || gBattleMons[cv->battlerAtk].volatiles.skyDropTarget == 0)
         {
             gBattleMons[cv->battlerAtk].volatiles.skyDropTarget = 0;
             gBattlescriptCurrInstr = BattleScript_SkyDropNoTarget;
