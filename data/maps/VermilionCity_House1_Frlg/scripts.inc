@@ -33,7 +33,7 @@ VermilionCity_House1_EventScript_NoRoomForOldRod::
 	end
 
 VermilionCity_House1_Text_ImFishingGuruDoYouLikeToFish::
-	.string "I'm the FISHING GURU!\p"
+	.string "I'm the [Fishing Guru]!\p"
 	.string "I simply looove fishing!\n"
 	.string "I can't bear to go without.\p"
 	.string "Tell me, do you like to fish?$"
@@ -44,8 +44,8 @@ VermilionCity_House1_Text_TakeThisAndFish::
 	.string "Take this and fish, young friend!$"
 
 VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru::
-	.string "{PLAYER} received an OLD ROD from\n"
-	.string "the FISHING GURU.$"
+	.string "{PLAYER} received an [Old Rod] from\n"
+	.string "the [Fishing Guru].$"
 
 VermilionCity_House1_Text_FishingIsAWayOfLife::
 	.string "Fishing is a way of life!\n"
@@ -65,4 +65,3 @@ VermilionCity_House1_Text_NoRoomForNiceGift::
 	.string "Oh, no!\p"
 	.string "I had a nice gift for you, but you\n"
 	.string "have no room for it!$"
-
