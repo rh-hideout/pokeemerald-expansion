@@ -121,7 +121,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeruleanCity_Frlg_EventScript_Gary",
-      "flag": "FLAG_HIDE_CERULEAN_GARY"
+      "flag": "FLAG_HIDE_CERULEAN_RIVAL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
@@ -154,7 +154,7 @@
     {
       "local_id": "LOCALID_CERULEAN_WOMAN",
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
-      "x": 12,
+      "x": 9,
       "y": 30,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -319,6 +319,24 @@
       "var": "VAR_TEMP_0",
       "var_value": "0",
       "script": "CeruleanCity_Frlg_EventScript_EnterEvilLab"
+    },
+    {
+      "type": "trigger",
+      "x": 13,
+      "y": 29,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "CeruleanCity_Frlg_EventScript_CeruleanFinale"
+    },
+    {
+      "type": "trigger",
+      "x": 14,
+      "y": 29,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "CeruleanCity_Frlg_EventScript_CeruleanFinale"
     }
   ],
   "bg_events": [

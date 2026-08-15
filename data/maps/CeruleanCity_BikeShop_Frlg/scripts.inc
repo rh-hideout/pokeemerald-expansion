@@ -304,7 +304,7 @@ CeruleanCity_BikeShop_Frlg_EventScript_KeepCarpy:
     msgbox CeruleanCity_BikeShop_Frlg_Text_JamesThankYou, MSGBOX_DEFAULT
     closemessage
 
-    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit
+    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExitAllowed
 
 
 @ ============================================================
@@ -325,12 +325,22 @@ CeruleanCity_BikeShop_Frlg_EventScript_TakeCarpy:
     msgbox CeruleanCity_BikeShop_Frlg_Text_JamesGrabCarpy, MSGBOX_DEFAULT
     closemessage
 
-    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit
+    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExitStolen
 
 
 @ ============================================================
 @ CARPY + GRUNTS EXIT
 @ ============================================================
+
+CeruleanCity_BikeShop_Frlg_EventScript_CarpyExitAllowed:
+    setvar VAR_TEMP_1, 1
+    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit
+
+
+CeruleanCity_BikeShop_Frlg_EventScript_CarpyExitStolen:
+    setvar VAR_TEMP_1, 0
+    goto CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit
+
 
 CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit:
     fadescreen FADE_TO_BLACK
@@ -345,11 +355,35 @@ CeruleanCity_BikeShop_Frlg_EventScript_CarpyExit:
 
     fadescreen FADE_FROM_BLACK
 
+    goto_if_eq VAR_TEMP_1, 1, CeruleanCity_BikeShop_Frlg_EventScript_CarpyAllowedReaction
+
     msgbox CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyGone, MSGBOX_DEFAULT
     closemessage
 
-    releaseall
-    end
+    msgbox CeruleanCity_BikeShop_Frlg_Text_PlayerYep, MSGBOX_DEFAULT
+    closemessage
+
+    goto CeruleanCity_BikeShop_Frlg_EventScript_PrepareGoodbye
+
+
+CeruleanCity_BikeShop_Frlg_EventScript_CarpyAllowedReaction:
+    msgbox CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyAllowed, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_BikeShop_Frlg_Text_PlayerYep, MSGBOX_DEFAULT
+    closemessage
+
+    goto CeruleanCity_BikeShop_Frlg_EventScript_PrepareGoodbye
+
+
+CeruleanCity_BikeShop_Frlg_EventScript_PrepareGoodbye:
+    @ After the grunts disappear, turn toward each other.
+    applymovement LOCALID_COUNTERPART_CERULEAN_LAB, Common_Movement_FaceDown
+    applymovement LOCALID_PLAYER, CeruleanCity_BikeShop_Frlg_Movement_FaceUp
+    waitmovement 0
+
+    goto CeruleanCity_BikeShop_Frlg_EventScript_CounterpartGoodbye
+
 
 @ ============================================================
 @ TEXT - BATTLE / CARPY
@@ -395,6 +429,13 @@ CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyGone:
 
 CeruleanCity_BikeShop_Frlg_Text_PlayerYep:
     .string "{PLAYER}: ...Yep.$"
+
+
+CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyAllowed:
+    .string "OAK'S GRANDCHILD: ...\p"
+    .string "Did they seriously just run off\n"
+    .string "with that MAGIKARP?\p"
+    .string "...You DID say they could have it.$"
 
 
 @ ============================================================
@@ -589,3 +630,76 @@ CeruleanCity_BikeShop_Frlg_EventScript_ExitLab::
     warp MAP_CERULEAN_CITY, 13, 28
     waitstate
     end
+
+@ ============================================================
+@ CERULEAN LAB FINALE
+@ ============================================================
+
+CeruleanCity_BikeShop_Frlg_EventScript_CounterpartGoodbye::
+    msgbox CeruleanCity_BikeShop_Frlg_Text_CounterpartBack, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_BikeShop_Frlg_Text_CounterpartHandleSomething, MSGBOX_DEFAULT
+    closemessage
+
+    goto_if_set FLAG_HIDE_CERULEAN_RIVAL, CeruleanCity_BikeShop_Frlg_EventScript_LeaveAfterGary
+
+    goto CeruleanCity_BikeShop_Frlg_EventScript_LeaveWithoutGary
+
+
+CeruleanCity_BikeShop_Frlg_EventScript_LeaveAfterGary:
+    applymovement LOCALID_COUNTERPART_CERULEAN_LAB, CeruleanCity_BikeShop_Frlg_Movement_CounterpartLeaves
+    waitmovement 0
+
+    setflag FLAG_HIDE_CERULEAN_LAB_COUNTERPART
+    removeobject LOCALID_COUNTERPART_CERULEAN_LAB
+
+    msgbox CeruleanCity_BikeShop_Frlg_Text_GaryThought, MSGBOX_DEFAULT
+    closemessage
+
+    releaseall
+    end
+
+
+CeruleanCity_BikeShop_Frlg_EventScript_LeaveWithoutGary:
+    applymovement LOCALID_COUNTERPART_CERULEAN_LAB, CeruleanCity_BikeShop_Frlg_Movement_CounterpartLeaves
+    waitmovement 0
+
+    setflag FLAG_HIDE_CERULEAN_LAB_COUNTERPART
+    removeobject LOCALID_COUNTERPART_CERULEAN_LAB
+
+    releaseall
+    end
+
+
+CeruleanCity_BikeShop_Frlg_Movement_CounterpartLeaves:
+    walk_right
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    step_end
+
+
+CeruleanCity_BikeShop_Frlg_Text_CounterpartBack:
+    .string "OAK'S GRANDCHILD: Well...\p"
+    .string "I guess we should get back.$"
+
+
+CeruleanCity_BikeShop_Frlg_Text_CounterpartHandleSomething:
+    .string "OAK'S GRANDCHILD: Actually...\p"
+    .string "There's something I need to handle\n"
+    .string "first.\p"
+    .string "I'll meet you back at MISTY'S\n"
+    .string "house.$"
+
+
+CeruleanCity_BikeShop_Frlg_Text_GaryThought:
+    .string "{PLAYER}: ...They must be going\n"
+    .string "back to talk to that guy from the\l"
+    .string "bridge.\p"
+    .string "Better stay out of it.\p"
+    .string "They're... a LOT.$"

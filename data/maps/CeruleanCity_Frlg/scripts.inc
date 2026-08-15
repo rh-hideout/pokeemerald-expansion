@@ -308,7 +308,7 @@ CeruleanCity_Frlg_EventScript_Gary::
 	applymovement LOCALID_CERULEAN_RIVAL, CeruleanCity_Frlg_Movement_GaryLeaves
     waitmovement 0
 
-    setflag FLAG_HIDE_CERULEAN_GARY
+    setflag FLAG_HIDE_CERULEAN_RIVAL
     removeobject LOCALID_CERULEAN_RIVAL
 
     release
@@ -443,3 +443,92 @@ CeruleanCity_Frlg_Text_Slowbro:
 CeruleanCity_Frlg_Text_CaveGuard:
     .string "The cave ahead isn't open to\n"
     .string "visitors right now.$"
+
+
+
+@ ============================================================
+@ CERULEAN EXTERIOR FINALE
+@ ============================================================
+
+CeruleanCity_Frlg_EventScript_CeruleanFinale::
+    lockall
+
+    goto_if_unset FLAG_CERULEAN_LAB_COMPLETE, CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd
+    goto_if_set FLAG_CERULEAN_MISSION_COMPLETE, CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd
+
+    clearflag FLAG_HIDE_CERULEAN_FINALE_DUO
+
+    applymovement LOCALID_PLAYER, Common_Movement_FaceDown
+    waitmovement 0
+
+    msgbox CeruleanCity_Frlg_Text_FinaleMistyWhatHappened, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_FinalePlayerExplains, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_FinaleReaction, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox CeruleanCity_Frlg_Text_FinaleRewardLeadIn, MSGBOX_DEFAULT
+    closemessage
+
+    warp MAP_MISTYS_HOUSE, 6, 13
+    waitstate
+
+    releaseall
+    end
+
+
+CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd:
+    releaseall
+    end
+
+
+CeruleanCity_Frlg_EventScript_FinaleMisty::
+    msgbox CeruleanCity_Frlg_Text_FinaleMistyIdle, MSGBOX_NPC
+    end
+
+
+CeruleanCity_Frlg_EventScript_FinaleRoxanne::
+    msgbox CeruleanCity_Frlg_Text_FinaleRoxanneIdle, MSGBOX_NPC
+    end
+
+
+CeruleanCity_Frlg_Text_FinaleMistyWhatHappened:
+    .string "MISTY: THERE you are!\p"
+    .string "What happened in there?$"
+
+
+CeruleanCity_Frlg_Text_FinalePlayerExplains:
+    .string "{PLAYER}: It's... a long story.\p"
+    .string "There was a ROCKET GRUNT,\n"
+    .string "JAMES, an experiment...\p"
+    .string "and they left with a shiny\n"
+    .string "MAGIKARP.$"
+
+
+CeruleanCity_Frlg_Text_FinaleReaction:
+    .string "MISTY: ...\p"
+    .string "ROXANNE: ...\p"
+    .string "MISTY: Yeah, okay.\p"
+    .string "There was absolutely no way we\n"
+    .string "could've expected that.\p"
+    .string "ROXANNE: Agreed.$"
+
+
+CeruleanCity_Frlg_Text_FinaleRewardLeadIn:
+    .string "MISTY: But you handled it.\p"
+    .string "ROXANNE: And successfully, from\n"
+    .string "the sound of it.\p"
+    .string "MISTY: Which means you earned\n"
+    .string "your reward.\p"
+    .string "Come on. Let's get back.$"
+
+
+CeruleanCity_Frlg_Text_FinaleMistyIdle:
+    .string "MISTY: Let's get back.$"
+
+
+CeruleanCity_Frlg_Text_FinaleRoxanneIdle:
+    .string "ROXANNE: We should return.$"
