@@ -10967,25 +10967,6 @@ void BS_TryElectrify(void)
     }
 }
 
-void BS_TrySoak(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum Type types[3];
-    GetBattlerTypes(gBattlerTarget, FALSE, types);
-    enum Type typeToSet = GetMoveArgType(gCurrentMove);
-    if ((types[0] == typeToSet && types[1] == typeToSet)
-     || GetActiveGimmick(gBattlerTarget) == GIMMICK_TERA)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        SET_BATTLER_TYPE(gBattlerTarget, typeToSet);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, typeToSet);
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_HandleFormChange(void)
 {
     NATIVE_ARGS(u8 battler, u8 caseId, bool8 bufferSpeciesName);

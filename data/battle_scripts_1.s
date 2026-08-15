@@ -929,16 +929,13 @@ BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	return
 
-BattleScript_EffectSoak::
+BattleScript_MoveEffectOverwriteType::
 	attackcanceler
-	jumpifability BS_TARGET, ABILITY_MULTITYPE, BattleScript_ButItFailed
-	jumpifability BS_TARGET, ABILITY_RKS_SYSTEM, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-	trysoak BattleScript_ButItFailed
 	printstring STRINGID_TARGETCHANGEDTYPE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectReflectType::
 	attackcanceler

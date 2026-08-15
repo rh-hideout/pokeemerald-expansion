@@ -1796,11 +1796,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysoak failInstr:req
-	callnative BS_TrySoak
-	.4byte \failInstr
-	.endm
-
 	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE
 	callnative BS_HandleFormChange
 	.byte \battler

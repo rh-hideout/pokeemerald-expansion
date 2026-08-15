@@ -13,7 +13,9 @@
 #include "battle_dynamax.h"
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
+#include "constants/abilities.h"
 #include "constants/global.h"
+#include "gba/defines.h"
 #include "item.h"
 #include "pokemon.h"
 #include "util.h"
@@ -1919,8 +1921,35 @@ static void HandleSetEffectMagicRoom(struct BattleCalcValues *cv, struct SetEffe
 {
 }
 
-static void HandleSetEffectSoak(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (cv->abilities[se->effectBattler] == ABILITY_MULTITYPE
+        || cv->abilities[se->effectBattler] == ABILITY_RKS_SYSTEM)
+    {
+        se->effectFailed = TRUE;
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        enum Type types[3];
+        GetBattlerTypes(se->effectBattler, FALSE, types);
+        enum Type typeToSet = se->additionalEffect->argument.type;
+
+        if ((types[0] == typeToSet && types[1] == typeToSet) 
+            || GetActiveGimmick(se->effectBattler) == GIMMICK_TERA)
+        {
+            se->effectFailed = TRUE;
+
+            if (!cv->onlyChecking && cv->isStatusMove)
+                BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        }
+        else
+        {
+            SET_BATTLER_TYPE(se->effectBattler, typeToSet);
+            PREPARE_TYPE_BUFFER(gBattleTextBuff1, typeToSet);
+            BattleScriptPushAndSet(se->script, BattleScript_MoveEffectOverwriteType);
+        }
+    }
 }
 
 static void HandleSetEffectSimpleBeam(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1964,10 +1993,6 @@ static void HandleSetEffectFairyLock(struct BattleCalcValues *cv, struct SetEffe
 }
 
 static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectMagicPowder(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -2130,7 +2155,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_WONDER_ROOM] = HandleSetEffectWonderRoom,
     [MOVE_EFFECT_TELEKINESIS] = HandleSetEffectTelekinesis,
     [MOVE_EFFECT_MAGIC_ROOM] = HandleSetEffectMagicRoom,
-    [MOVE_EFFECT_SOAK] = HandleSetEffectSoak,
+    [MOVE_EFFECT_OVERWRITE_TYPE] = HandleSetEffectOverwriteType,
     [MOVE_EFFECT_SIMPLE_BEAM] = HandleSetEffectSimpleBeam,
     [MOVE_EFFECT_ENTRAINMENT] = HandleSetEffectEntrainment,
     [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
@@ -2142,7 +2167,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_ELECTRIFY] = HandleSetEffectElectrify,
     [MOVE_EFFECT_FAIRY_LOCK] = HandleSetEffectFairyLock,
     [MOVE_EFFECT_PURIFY] = HandleSetEffectPurify,
-    [MOVE_EFFECT_MAGIC_POWDER] = HandleSetEffectMagicPowder,
+    [MOVE_EFFECT_MAGIC_POWDER] = HandleSetEffectOverwriteType,
     [MOVE_EFFECT_TEATIME] = HandleSetEffectTeatime,
     [MOVE_EFFECT_OCTOLOCK] = HandleSetEffectOctolock,
     [MOVE_EFFECT_COURT_CHANGE] = HandleSetEffectCourtChange,

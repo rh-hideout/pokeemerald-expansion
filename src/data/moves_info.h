@@ -8,6 +8,7 @@
 #include "constants/hold_effects.h"
 #include "constants/moves.h"
 #include "constants/contest.h"
+#include "constants/pokemon.h"
 #include "move.h"
 
 // Gen 4+ Contest data comes from URPG's Contest MoveDex.
@@ -13187,7 +13188,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Sprays water at the foe,\n"
             "changing it to a Water-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_OVERWRITE_TYPE,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -13197,6 +13198,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .type = TYPE_WATER },
         .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_OVERWRITE_TYPE,
+            .argument = { .type = TYPE_WATER },
+        }),
         .magicCoatAffected = TRUE,
         .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -18614,7 +18619,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Magic powder changes the\n"
             "target into a Psychic-type."),
-        .effect = EFFECT_SOAK,
+        .effect = EFFECT_OVERWRITE_TYPE,
         .power = 0,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
@@ -18623,6 +18628,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .type = TYPE_PSYCHIC },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_OVERWRITE_TYPE,
+            .argument = { .type = TYPE_PSYCHIC },
+        }),
         .magicCoatAffected = TRUE,
         .powderMove = TRUE,
         .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,

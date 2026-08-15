@@ -657,7 +657,7 @@ extern const u8 BattleScript_EffectTopsyTurvy[];
 extern const u8 BattleScript_EffectTerrain[];
 extern const u8 BattleScript_EffectElectrify[];
 extern const u8 BattleScript_EffectReflectType[];
-extern const u8 BattleScript_EffectSoak[];
+extern const u8 BattleScript_MoveEffectOverwriteType[];
 extern const u8 BattleScript_TryHitSwitchTarget[];
 extern const u8 BattleScript_HitSwitchTargetDynamaxed[];
 extern const u8 BattleScript_AbilityPreventsPhasingOutRet[];
