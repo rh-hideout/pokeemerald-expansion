@@ -15,7 +15,7 @@ BattleFrontier_Lounge4_EventScript_Man::
 
 BattleFrontier_Lounge4_Text_WonderIfInterviewsAiring:
 	.string "I wonder if they'll be airing interviews\n"
-	.string "with tough TRAINERS today?$"
+	.string "with tough [Trainers] today?$"
 
 BattleFrontier_Lounge4_Text_IfIOpenedRestaurantHere:
 	.string "If I opened a restaurant here,\n"
@@ -27,4 +27,3 @@ BattleFrontier_Lounge4_Text_NeedBreatherAfterBattles:
 	.string "some intense battles…\p"
 	.string "But even now, I never take a break\n"
 	.string "from plotting strategy and combos.$"
-
