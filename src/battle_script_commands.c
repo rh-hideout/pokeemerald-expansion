@@ -10852,22 +10852,6 @@ void BS_PlayMoveAnimation(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetLuckyChant(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
-    if (!(gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_LUCKY_CHANT;
-        gSideTimers[side].luckyChantTimer = 5;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
 void BS_SetLastUsedAbility(void)
 {
     NATIVE_ARGS();

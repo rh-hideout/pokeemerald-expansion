@@ -1014,15 +1014,6 @@ BattleScript_EffectHealPulse::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectLuckyChant::
-	attackcanceler
-	setluckychant BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_SHIELDEDFROMCRITICALHITS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectHealingWish::
 	attackcanceler
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed

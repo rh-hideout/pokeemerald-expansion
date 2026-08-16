@@ -14,6 +14,7 @@
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
 #include "constants/abilities.h"
+#include "constants/battle.h"
 #include "constants/battle_script_commands.h"
 #include "constants/battle_set_effect.h"
 #include "constants/battle_string_ids.h"
@@ -1886,6 +1887,25 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+    bool32 luckyChantActive = gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT;
+
+    if(luckyChantActive)
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking && cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailed);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
+        gSideStatuses[side] |= SIDE_STATUS_LUCKY_CHANT;
+        PrepareStringBattleWithWait(STRINGID_SHIELDEDFROMCRITICALHITS, se->effectBattler);
+        gSideTimers[side].luckyChantTimer = 5;
+        gBattlescriptCurrInstr = se->script;
+    }
 }
 
 static void HandleSetEffectPowerSwap(struct BattleCalcValues *cv, struct SetEffect *se)

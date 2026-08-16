@@ -650,7 +650,6 @@ extern const u8 BattleScript_EffectHeartSwap[];
 extern const u8 BattleScript_EffectPowerSplit[];
 extern const u8 BattleScript_EffectGuardSplit[];
 extern const u8 BattleScript_EffectStickyWeb[];
-extern const u8 BattleScript_EffectLuckyChant[];
 extern const u8 BattleScript_EffectHealPulse[];
 extern const u8 BattleScript_EffectQuash[];
 extern const u8 BattleScript_EffectIonDeluge[];
