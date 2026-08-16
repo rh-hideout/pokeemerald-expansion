@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was poisoned by a damaging move")
@@ -72,7 +73,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer does not trigger when poison came from Pois
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         ASSUME(GetMoveArgType(MOVE_SOAK) == TYPE_WATER);
         ASSUME(GetSpeciesType(SPECIES_SKRELP, 0) == TYPE_POISON || GetSpeciesType(SPECIES_SKRELP, 1) == TYPE_POISON);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); }

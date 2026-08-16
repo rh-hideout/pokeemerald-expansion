@@ -283,7 +283,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DISABLE] =
     {
-        .battleScript = BattleScript_EffectDisable,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
     },
@@ -495,7 +495,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ATTRACT] =
     {
-        .battleScript = BattleScript_EffectAttract,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
         .encourageEncore = TRUE,
@@ -700,7 +700,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_OVERWRITE_ABILITY] =
     {
-        .battleScript = BattleScript_EffectOverwriteAbility,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1085,7 +1085,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TAILWIND] =
     {
-        .battleScript = BattleScript_EffectTailwind,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1196,7 +1196,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_LUCKY_CHANT] =
     {
-        .battleScript = BattleScript_EffectLuckyChant,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1209,7 +1209,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ENTRAINMENT] =
     {
-        .battleScript = BattleScript_EffectEntrainment,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1276,9 +1276,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_SOAK] =
+    [EFFECT_OVERWRITE_TYPE] =
     {
-        .battleScript = BattleScript_EffectSoak,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

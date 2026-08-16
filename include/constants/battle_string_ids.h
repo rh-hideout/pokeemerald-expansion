@@ -1222,4 +1222,13 @@ enum BreakScreensStringID
     B_MSG_BREAK_AURORA_VEIL,
 };
 
+
+// gAbilityChangeStringIds
+enum AbilityChangeStringID
+{
+    B_MSG_ABILITY_SUPPRESSED,
+    B_MSG_ABILITY_ACQUIRED_PKMN,
+    B_MSG_ABILITY_ACQUIRED_ATTACKER,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_STRING_IDS_H

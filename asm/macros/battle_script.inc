@@ -768,11 +768,6 @@
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
 
-	.macro disablelastusedattack failInstr:req
-	.byte B_SCR_OP_DISABLELASTUSEDATTACK
-	.4byte \failInstr
-	.endm
-
 	.macro trysetencore failInstr:req
 	.byte B_SCR_OP_TRYSETENCORE
 	.4byte \failInstr
@@ -794,11 +789,6 @@
 
 	.macro copymovepermanently failInstr:req
 	.byte B_SCR_OP_COPYMOVEPERMANENTLY
-	.4byte \failInstr
-	.endm
-
-	.macro settailwind failInstr:req
-	.byte B_SCR_OP_SETTAILWIND
 	.4byte \failInstr
 	.endm
 
@@ -1783,11 +1773,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryentrainment failInstr:req
-	callnative BS_TryEntrainment
-	.4byte \failInstr
-	.endm
-
 	.macro setlastusedability
 	callnative BS_SetLastUsedAbility
 	.endm
@@ -1798,11 +1783,6 @@
 
 	.macro tryelectrify failInstr:req
 	callnative BS_TryElectrify
-	.4byte \failInstr
-	.endm
-
-	.macro trysoak failInstr:req
-	callnative BS_TrySoak
 	.4byte \failInstr
 	.endm
 

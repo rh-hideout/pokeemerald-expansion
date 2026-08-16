@@ -929,16 +929,13 @@ BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
 	return
 
-BattleScript_EffectSoak::
+BattleScript_MoveEffectOverwriteType::
 	attackcanceler
-	jumpifability BS_TARGET, ABILITY_MULTITYPE, BattleScript_ButItFailed
-	jumpifability BS_TARGET, ABILITY_RKS_SYSTEM, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-	trysoak BattleScript_ButItFailed
 	printstring STRINGID_TARGETCHANGEDTYPE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectReflectType::
 	attackcanceler
@@ -1017,29 +1014,6 @@ BattleScript_EffectHealPulse::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectEntrainment::
-	attackcanceler
-	tryentrainment BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	switchinabilities BS_TARGET
-	printstring STRINGID_PKMNACQUIREDABILITY
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectLuckyChant::
-	attackcanceler
-	setluckychant BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_SHIELDEDFROMCRITICALHITS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectHealingWish::
 	attackcanceler
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
@@ -1093,21 +1067,15 @@ BattleScript_EffectHealingWishRestore:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectOverwriteAbility::
-	attackcanceler
-	tryoverwriteability BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	copybyte gBattlerAbility, gBattlerTarget
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_TARGET
-	printstring STRINGID_PKMNACQUIREDABILITY
+BattleScript_MoveEffectOverwriteAbility::
+	switchinabilities BS_EFFECT_BATTLER
+	printfromtable gAbilityChangeStringIds
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectPowerSplit::
 	attackcanceler
@@ -1224,17 +1192,7 @@ BattleScript_EffectMagicRoom::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTailwind::
-	attackcanceler
-	settailwind BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_TAILWINDBLEW
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_TryTailwindAbilitiesLoop
-	goto BattleScript_MoveEnd
-
-BattleScript_TryTailwindAbilitiesLoop:
+BattleScript_TryTailwindAbilitiesLoop::
 	savetarget
 	setbyte gBattlerTarget, 0
 BattleScript_TryTailwindAbilitiesLoop_Iter:
@@ -1743,16 +1701,6 @@ BattleScript_EffectHappyHour::
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_HAPPY_HOUR
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectDisable::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	disablelastusedattack BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNMOVEWASDISABLED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectEncore::
 	attackcanceler
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
@@ -1947,16 +1895,11 @@ BattleScript_TryDestinyKnotAttacker:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectAttract::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	tryinfatuating BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectAttract::
 	printstring STRINGID_PKMNFELLINLOVE
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotAttacker
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_PresentHeal::
 	attackcanceler
@@ -4236,7 +4179,7 @@ BattleScript_AbilityPopUpScripting:
 	copybyte gBattlerAbility, sBATTLER
 	goto BattleScript_AbilityPopUp
 
-BattleScript_AbilityPopUpOverwriteThenNormal:
+BattleScript_AbilityPopUpOverwriteThenNormal::
 	setbyte sFIXED_ABILITY_POPUP, TRUE
 	showabilitypopup
 	pause B_WAIT_TIME_SHORT
@@ -4765,12 +4708,8 @@ BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	recordability BS_TARGET
 	recordability BS_ATTACKER
-	printstring STRINGID_ATTACKERACQUIREDABILITY
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
+	setbyte cMULTISTRING_CHOOSER, B_MSG_ABILITY_ACQUIRED_ATTACKER
+	call BattleScript_MoveEffectOverwriteAbility
 	return
 
 BattleScript_WanderingSpiritActivates::
