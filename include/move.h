@@ -51,6 +51,7 @@ struct AdditionalEffect
         enum BrokeProtectionStringID brokeProtect:8;
         u8 absorbPercentage;
         enum Type type:8;
+        enum Ability overwriteAbility:16;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect

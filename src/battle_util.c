@@ -11161,3 +11161,14 @@ bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
 {
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
 }
+
+bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
+{
+    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
+        return FALSE;
+
+    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
+    gBattlerAbility = battler;
+    gLastUsedItem = gBattleMons[battler].item;
+    return TRUE;
+}

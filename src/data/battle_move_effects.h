@@ -700,7 +700,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_OVERWRITE_ABILITY] =
     {
-        .battleScript = BattleScript_EffectOverwriteAbility,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },

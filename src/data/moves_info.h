@@ -1,5 +1,6 @@
 #include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
+#include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_script_commands.h"
@@ -10664,6 +10665,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .overwriteAbility = ABILITY_INSOMNIA },
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_OVERWRITE_ABILITY,
+            .argument = { .overwriteAbility = ABILITY_INSOMNIA },
+        }),
         .magicCoatAffected = TRUE,
         .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_BEAUTY,
@@ -13361,6 +13366,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .overwriteAbility = ABILITY_SIMPLE },
         .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_OVERWRITE_ABILITY,
+            .argument = {.overwriteAbility = ABILITY_SIMPLE},
+        }),
         .magicCoatAffected = TRUE,
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_CUTE,

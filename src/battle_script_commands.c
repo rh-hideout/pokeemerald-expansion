@@ -342,7 +342,6 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
 static void RemoveAllWeather(void);
 static void RemoveAllTerrains(void);
 static void ResetValuesForCalledMove(void);
-static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
 static u32 GetPossibleNextTarget(u32 currTarget);
 
@@ -6959,17 +6958,6 @@ static void Cmd_tryswapitems(void)
             }
         }
     }
-}
-
-static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
-{
-    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
-        return FALSE;
-
-    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
-    gBattlerAbility = battler;
-    gLastUsedItem = gBattleMons[battler].item;
-    return TRUE;
 }
 
 // Role Play, Doodle

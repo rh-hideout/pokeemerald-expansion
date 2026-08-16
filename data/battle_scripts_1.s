@@ -1090,21 +1090,15 @@ BattleScript_EffectHealingWishRestore:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectOverwriteAbility::
-	attackcanceler
-	tryoverwriteability BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	copybyte gBattlerAbility, gBattlerTarget
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_TARGET
-	printstring STRINGID_PKMNACQUIREDABILITY
+BattleScript_MoveEffectOverwriteAbility::
+	switchinabilities BS_EFFECT_BATTLER
+	printfromtable gAbilityChangeStringIds
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectPowerSplit::
 	attackcanceler
@@ -4218,7 +4212,7 @@ BattleScript_AbilityPopUpScripting:
 	copybyte gBattlerAbility, sBATTLER
 	goto BattleScript_AbilityPopUp
 
-BattleScript_AbilityPopUpOverwriteThenNormal:
+BattleScript_AbilityPopUpOverwriteThenNormal::
 	setbyte sFIXED_ABILITY_POPUP, TRUE
 	showabilitypopup
 	pause B_WAIT_TIME_SHORT

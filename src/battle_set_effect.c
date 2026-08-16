@@ -14,6 +14,8 @@
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
 #include "constants/abilities.h"
+#include "constants/battle_set_effect.h"
+#include "constants/battle_string_ids.h"
 #include "constants/global.h"
 #include "gba/defines.h"
 #include "item.h"
@@ -1881,8 +1883,42 @@ static void HandleSetEffectGuardSwap(struct BattleCalcValues *cv, struct SetEffe
 {
 }
 
-static void HandleSetEffectWorrySeed(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum Ability *abilityEb = &cv->abilities[se->effectBattler];
+    enum Ability overwriteAbility = se->additionalEffect->argument.overwriteAbility;
+
+    if (gAbilitiesInfo[*abilityEb].cantBeOverwritten || *abilityEb == overwriteAbility)
+    {
+        SetEffectFailReturn;
+
+        RecordAbilityBattle(se->effectBattler, *abilityEb);
+        BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+    }
+    else if (CanAbilityShieldActivateForBattler(se->effectBattler))
+    {
+        SetEffectFail(BattleScript_AbilityShieldProtects);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
+        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
+            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
+
+        RemoveAbilityFlags(se->effectBattler);
+
+        gBattleScripting.abilityPopupOverwrite = *abilityEb;
+        gBattleMons[se->effectBattler].ability = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = overwriteAbility;
+        gBattlerAbility = se->effectBattler;
+
+        RecordAbilityBattle(se->effectBattler, gBattleMons[se->effectBattler].ability);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_ACQUIRED_PKMN;
+        BattleScriptPush(se->script);
+        BattleScriptPush(BattleScript_MoveEffectOverwriteAbility);
+        BattleScriptSet(BattleScript_AbilityPopUpOverwriteThenNormal);
+    }
 }
 
 static void HandleSetEffectHeartSwap(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1950,10 +1986,6 @@ static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct Set
             BattleScriptPushAndSet(se->script, BattleScript_MoveEffectOverwriteType);
         }
     }
-}
-
-static void HandleSetEffectSimpleBeam(struct BattleCalcValues *cv, struct SetEffect *se)
-{
 }
 
 static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2145,7 +2177,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_COPYCAT] = HandleSetEffectCopycat,
     [MOVE_EFFECT_POWER_SWAP] = HandleSetEffectPowerSwap,
     [MOVE_EFFECT_GUARD_SWAP] = HandleSetEffectGuardSwap,
-    [MOVE_EFFECT_WORRY_SEED] = HandleSetEffectWorrySeed,
+    [MOVE_EFFECT_OVERWRITE_ABILITY] = HandleSetEffectOverwriteAbility,
     [MOVE_EFFECT_HEART_SWAP] = HandleSetEffectHeartSwap,
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
     [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
@@ -2156,7 +2188,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TELEKINESIS] = HandleSetEffectTelekinesis,
     [MOVE_EFFECT_MAGIC_ROOM] = HandleSetEffectMagicRoom,
     [MOVE_EFFECT_OVERWRITE_TYPE] = HandleSetEffectOverwriteType,
-    [MOVE_EFFECT_SIMPLE_BEAM] = HandleSetEffectSimpleBeam,
     [MOVE_EFFECT_ENTRAINMENT] = HandleSetEffectEntrainment,
     [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
     [MOVE_EFFECT_QUASH] = HandleSetEffectQuash,
