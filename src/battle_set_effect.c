@@ -21,6 +21,22 @@
 #include "string_util.h"
 #include "config/battle.h"
 
+#define SetEffectFail(failScript, ...) \
+    do \
+    { \
+        se->effectFailed = TRUE; \
+        if (!cv->onlyChecking __VA_OPT__(&& __VA_ARGS__))\
+            BattleScriptPushAndSet(se->script, failScript); \
+    } while (0)
+
+#define SetEffectFailReturn \
+    do \
+    { \
+        se->effectFailed = TRUE; \
+        if (cv->onlyChecking) \
+            return; \
+    } while (0)
+
 static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript);
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
