@@ -1917,7 +1917,7 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_ACQUIRED_PKMN;
         BattleScriptPush(se->script);
         BattleScriptPush(BattleScript_MoveEffectOverwriteAbility);
-        BattleScriptSet(BattleScript_AbilityPopUpOverwriteThenNormal);
+        gBattlescriptCurrInstr = BattleScript_AbilityPopUpOverwriteThenNormal;
     }
 }
 

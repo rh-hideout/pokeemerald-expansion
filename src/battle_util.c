@@ -1341,11 +1341,6 @@ void BattleScriptPop(void)
         gBattlescriptCurrInstr = gBattleResources->battleScriptsStack->ptr[--gBattleResources->battleScriptsStack->size];
 }
 
-void BattleScriptSet(const u8* bsPtr)
-{
-    gBattlescriptCurrInstr = bsPtr;
-}
-
 void BattleScriptExecute(const u8 *BS_ptr)
 {
     gBattlescriptCurrInstr = BS_ptr;

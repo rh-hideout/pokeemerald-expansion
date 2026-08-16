@@ -88,7 +88,6 @@ void BattleScriptPush(const u8 *bsPtr);
 void BattleScriptPushCursor(void);
 void BattleScriptCall(const u8 *bsPtr);
 void BattleScriptPop(void);
-void BattleScriptSet(const u8* bsPtr);
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler);
 u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u32 check);
 bool32 AreAllMovesUnusable(enum BattlerId battler);
