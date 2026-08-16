@@ -118,8 +118,7 @@ static bool8 (*const sTrainerSeeFuncList2[])(u8 taskId, struct Task *task, struc
 {
     RevealBuriedTrainer,
     PopOutOfAshBuriedTrainer,
-    JumpInPlaceBuriedTrainer,
-    WaitRevealBuriedTrainer,
+    JumpInPlaceBuriedTrainer
 };
 
 static const struct OamData sOamData_Icons =
@@ -986,17 +985,18 @@ static void Task_SetBuriedTrainerMovement(u8 taskId)
         ObjectEventClearHeldMovement(objEvent);
         task->data[7]++;
     }
-    sTrainerSeeFuncList2[task->tFuncId](taskId, task, objEvent);
-    if (task->tFuncId == ((int)ARRAY_COUNT(sTrainerSeeFuncList2) - 1) && !FieldEffectActiveListContains(FLDEFF_ASH_PUFF))
+    if (task->tFuncId < ARRAY_COUNT(sTrainerSeeFuncList2))
+    {
+        sTrainerSeeFuncList2[task->tFuncId](taskId, task, objEvent);
+    }
+    else if (!FieldEffectActiveListContains(FLDEFF_ASH_PUFF))
     {
         SetTrainerMovementType(objEvent, GetTrainerFacingDirectionMovementType(objEvent->facingDirection));
         TryOverrideTemplateCoordsForObjectEvent(objEvent, GetTrainerFacingDirectionMovementType(objEvent->facingDirection));
         DestroyTask(taskId);
+        return;
     }
-    else
-    {
-        objEvent->heldMovementFinished = 0;
-    }
+    objEvent->heldMovementFinished = 0;
 }
 
 // Called when a buried Trainer has the reveal_trainer movement applied, from direct interaction
