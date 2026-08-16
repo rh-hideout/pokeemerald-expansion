@@ -1888,14 +1888,6 @@ static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEff
 {
 }
 
-static void HandleSetEffectMeFirst(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectCopycat(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectPowerSwap(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
@@ -2242,8 +2234,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_GASTRO_ACID] = HandleSetEffectGastroAcid,
 
     [MOVE_EFFECT_LUCKY_CHANT] = HandleSetEffectLuckyChant,
-    [MOVE_EFFECT_ME_FIRST] = HandleSetEffectMeFirst,
-    [MOVE_EFFECT_COPYCAT] = HandleSetEffectCopycat,
     [MOVE_EFFECT_POWER_SWAP] = HandleSetEffectPowerSwap,
     [MOVE_EFFECT_GUARD_SWAP] = HandleSetEffectGuardSwap,
     [MOVE_EFFECT_OVERWRITE_ABILITY] = HandleSetEffectOverwriteAbility,
