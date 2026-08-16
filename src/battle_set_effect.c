@@ -37,7 +37,7 @@
             BattleScriptPushAndSet(se->script, failScript); \
     } while (0)
 
-#define SetEffectFailReturn \
+#define SetEffectFailAndCheckReturn \
     do \
     { \
         se->effectFailed = TRUE; \
@@ -1710,9 +1710,7 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
     {
         se->effectFailed = TRUE;
         if (!cv->onlyChecking && cv->isStatusMove)
-        {
             BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
-        }
     }
 }
 
@@ -1759,7 +1757,7 @@ static void HandleSetEffectAttract(struct BattleCalcValues *cv, struct SetEffect
     }
     else if (cv->abilities[se->effectBattler] == ABILITY_OBLIVIOUS)
     {
-        SetEffectFailReturn;
+        SetEffectFailAndCheckReturn;
         gBattlerAbility = se->effectBattler;
         gLastUsedAbility = ABILITY_OBLIVIOUS;
         BattleScriptPushAndSet(se->script, BattleScript_NotAffectedAbilityPopUp);
@@ -1923,8 +1921,7 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
 
     if (gAbilitiesInfo[*abilityEb].cantBeOverwritten || *abilityEb == overwriteAbility)
     {
-        SetEffectFailReturn;
-
+        SetEffectFailAndCheckReturn;
         RecordAbilityBattle(se->effectBattler, *abilityEb);
         BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
     }
@@ -1941,7 +1938,6 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
             gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
 
         RemoveAbilityFlags(se->effectBattler);
-
         gBattleScripting.abilityPopupOverwrite = *abilityEb;
         gBattleMons[se->effectBattler].ability = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = overwriteAbility;
         gBattlerAbility = se->effectBattler;
@@ -1993,9 +1989,8 @@ static void HandleSetEffectMagicRoom(struct BattleCalcValues *cv, struct SetEffe
 static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (cv->abilities[se->effectBattler] == ABILITY_MULTITYPE
-        || cv->abilities[se->effectBattler] == ABILITY_RKS_SYSTEM)
+     || cv->abilities[se->effectBattler] == ABILITY_RKS_SYSTEM)
     {
-        se->effectFailed = TRUE;
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else
@@ -2004,8 +1999,8 @@ static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct Set
         GetBattlerTypes(se->effectBattler, FALSE, types);
         enum Type typeToSet = se->additionalEffect->argument.type;
 
-        if ((types[0] == typeToSet && types[1] == typeToSet) 
-            || GetActiveGimmick(se->effectBattler) == GIMMICK_TERA)
+        if ((types[0] == typeToSet && types[1] == typeToSet)
+         || GetActiveGimmick(se->effectBattler) == GIMMICK_TERA)
         {
             se->effectFailed = TRUE;
 
@@ -2032,7 +2027,6 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
         if (!cv->onlyChecking)
         {
             RecordAbilityBattle(cv->battlerAtk, *srcAbility);
-
             if (cv->isStatusMove)
                 BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
         }
@@ -2043,7 +2037,6 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
         if (!cv->onlyChecking)
         {
             RecordAbilityBattle(cv->battlerAtk, *destAbility);
-
             if (cv->isStatusMove)
                 BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
         }
