@@ -14,9 +14,11 @@
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
 #include "constants/abilities.h"
+#include "constants/battle_script_commands.h"
 #include "constants/battle_set_effect.h"
 #include "constants/battle_string_ids.h"
 #include "constants/global.h"
+#include "constants/script_menu.h"
 #include "gba/defines.h"
 #include "item.h"
 #include "pokemon.h"
@@ -2009,6 +2011,54 @@ static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct Set
 
 static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    const enum Ability *srcAbility = &gBattleMons[cv->battlerAtk].ability;
+    enum Ability *destAbility = &gBattleMons[se->effectBattler].ability;
+
+    if (gAbilitiesInfo[*srcAbility].cantBeCopied)
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking)
+        {
+            RecordAbilityBattle(cv->battlerAtk, *srcAbility);
+
+            if (cv->isStatusMove)
+                BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        }
+    }
+    else if (gAbilitiesInfo[*destAbility].cantBeOverwritten)
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking)
+        {
+            RecordAbilityBattle(cv->battlerAtk, *destAbility);
+
+            if (cv->isStatusMove)
+                BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        }
+    }
+    else if (CanAbilityShieldActivateForBattler(se->effectBattler))
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking)
+            BattleScriptPushAndSet(se->script, BattleScript_AbilityShieldProtects);
+    }
+    else
+    {
+        bool32 isDynamaxed = GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX;
+        if (*destAbility == *srcAbility || isDynamaxed)
+        {
+            se->effectFailed = TRUE;
+            if (!cv->onlyChecking && cv->isStatusMove)
+                BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        }
+        else
+        {
+            RemoveAbilityFlags(se->effectBattler);
+            *destAbility = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = *srcAbility;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_ACQUIRED_PKMN;
+            BattleScriptPushAndSet(se->script, BattleScript_MoveEffectOverwriteAbility);
+        }
+    }
 }
 
 static void HandleSetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se)

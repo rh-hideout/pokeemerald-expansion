@@ -1773,11 +1773,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryentrainment failInstr:req
-	callnative BS_TryEntrainment
-	.4byte \failInstr
-	.endm
-
 	.macro setlastusedability
 	callnative BS_SetLastUsedAbility
 	.endm

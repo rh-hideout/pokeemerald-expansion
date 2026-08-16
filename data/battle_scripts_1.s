@@ -1014,20 +1014,6 @@ BattleScript_EffectHealPulse::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectEntrainment::
-	attackcanceler
-	tryentrainment BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	switchinabilities BS_TARGET
-	printstring STRINGID_PKMNACQUIREDABILITY
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectLuckyChant::
 	attackcanceler
 	setluckychant BattleScript_ButItFailed
