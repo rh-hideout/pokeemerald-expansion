@@ -783,10 +783,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setalwayshitflag
-	.byte B_SCR_OP_SETALWAYSHITFLAG
-	.endm
-
 	.macro copymovepermanently failInstr:req
 	.byte B_SCR_OP_COPYMOVEPERMANENTLY
 	.4byte \failInstr

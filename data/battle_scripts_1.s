@@ -1716,15 +1716,6 @@ BattleScript_EffectConversion2::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectLockOn::
-	attackcanceler
-	setalwayshitflag
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNTOOKAIM
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectSketch::
 	attackcanceler
 	copymovepermanently BattleScript_ButItFailed

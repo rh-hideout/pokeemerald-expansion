@@ -584,7 +584,6 @@ extern const u8 BattleScript_EffectHappyHour[];
 extern const u8 BattleScript_EffectEncore[];
 extern const u8 BattleScript_EffectPainSplit[];
 extern const u8 BattleScript_EffectConversion2[];
-extern const u8 BattleScript_EffectLockOn[];
 extern const u8 BattleScript_EffectSketch[];
 extern const u8 BattleScript_EffectSpite[];
 extern const u8 BattleScript_EffectHealBell[];

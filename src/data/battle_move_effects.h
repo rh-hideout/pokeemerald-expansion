@@ -338,7 +338,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_LOCK_ON] =
     {
-        .battleScript = BattleScript_EffectLockOn,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .encourageEncore = TRUE,
     },

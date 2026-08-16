@@ -482,7 +482,6 @@ static void Cmd_setcalledmove(void);
 static void Cmd_trysetencore(void);
 static void Cmd_painsplitdmgcalc(void);
 static void Cmd_settypetorandomresistance(void);
-static void Cmd_setalwayshitflag(void);
 static void Cmd_copymovepermanently(void);
 static void Cmd_tryspiteppreduce(void);
 static void Cmd_healpartystatus(void);
@@ -683,7 +682,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSETENCORE]                          = Cmd_trysetencore,
     [B_SCR_OP_PAINSPLITDMGCALC]                      = Cmd_painsplitdmgcalc,
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
-    [B_SCR_OP_SETALWAYSHITFLAG]                      = Cmd_setalwayshitflag,
     [B_SCR_OP_COPYMOVEPERMANENTLY]                   = Cmd_copymovepermanently,
     [B_SCR_OP_TRYSPITEPPREDUCE]                      = Cmd_tryspiteppreduce,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
@@ -6124,23 +6122,6 @@ static void Cmd_settypetorandomresistance(void)
         }
 
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-
-static void Cmd_setalwayshitflag(void)
-{
-    CMD_ARGS();
-
-    if (gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit == 0)
-    {
-        gBattleMons[gBattlerAttacker].volatiles.lockOn = 2;
-        gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit = gBattlerTarget + 1;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
     }
 }
 

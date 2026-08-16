@@ -1739,16 +1739,25 @@ static void HandleSetEffectSpiderWeb(struct BattleCalcValues *cv, struct SetEffe
 {
 }
 
-static void HandleSetEffectMindReader(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectPerishSong(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
 static void HandleSetEffectLockOn(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    bool32 isLockedOn = gBattleMons[cv->battlerAtk].volatiles.battlerWithSureHit != 0;
+
+    if (isLockedOn)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else {
+        gBattleMons[cv->battlerAtk].volatiles.lockOn = 2;
+        gBattleMons[cv->battlerAtk].volatiles.battlerWithSureHit = se->effectBattler + 1;
+        PrepareStringBattleWithWait(STRINGID_PKMNTOOKAIM, se->effectBattler);
+        gBattlescriptCurrInstr = se->script;
+    }
+
 }
 
 static void HandleSetEffectMeanLook(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2263,7 +2272,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_DISABLE] = HandleSetEffectDisable,
     [MOVE_EFFECT_MIST] = HandleSetEffectMist,
     [MOVE_EFFECT_SPIDER_WEB] = HandleSetEffectSpiderWeb,
-    [MOVE_EFFECT_MIND_READER] = HandleSetEffectMindReader,
     [MOVE_EFFECT_PERISH_SONG] = HandleSetEffectPerishSong,
     [MOVE_EFFECT_LOCK_ON] = HandleSetEffectLockOn,
     [MOVE_EFFECT_MEAN_LOOK] = HandleSetEffectMeanLook,
