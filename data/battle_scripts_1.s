@@ -4741,12 +4741,8 @@ BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	recordability BS_TARGET
 	recordability BS_ATTACKER
-	printstring STRINGID_ATTACKERACQUIREDABILITY
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
+	setbyte cMULTISTRING_CHOOSER, B_MSG_ABILITY_ACQUIRED_ATTACKER
+	call BattleScript_MoveEffectOverwriteAbility
 	return
 
 BattleScript_WanderingSpiritActivates::
