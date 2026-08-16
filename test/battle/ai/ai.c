@@ -1494,7 +1494,7 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
     } WHEN {
         if (hp == 60)
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE);
@@ -1502,7 +1502,7 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
         }
         else
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL);
