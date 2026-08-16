@@ -1819,6 +1819,25 @@ static void HandleSetEffectWaterSport(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    u32 side = GetBattlerSide(se->effectBattler);
+
+    if (!(gSideStatuses[side] & SIDE_STATUS_TAILWIND))
+    {
+        if (cv->onlyChecking)
+            return;
+
+        gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
+        gSideTimers[side].tailwindTimer = (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3);
+        gBattlescriptCurrInstr = se->script;
+        PrepareStringBattleWithWait(STRINGID_TAILWINDBLEW, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_TryTailwindAbilitiesLoop);
+    }
+    else
+    {
+        se->effectFailed = TRUE;
+        if (!cv->onlyChecking && cv->isStatusMove)
+            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+    }
 }
 
 static void HandleSetEffectPsychoShift(struct BattleCalcValues *cv, struct SetEffect *se)

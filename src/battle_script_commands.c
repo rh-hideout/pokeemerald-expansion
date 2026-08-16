@@ -484,7 +484,6 @@ static void Cmd_painsplitdmgcalc(void);
 static void Cmd_settypetorandomresistance(void);
 static void Cmd_setalwayshitflag(void);
 static void Cmd_copymovepermanently(void);
-static void Cmd_settailwind(void);
 static void Cmd_tryspiteppreduce(void);
 static void Cmd_healpartystatus(void);
 static void Cmd_cursetarget(void);
@@ -687,7 +686,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
     [B_SCR_OP_SETALWAYSHITFLAG]                      = Cmd_setalwayshitflag,
     [B_SCR_OP_COPYMOVEPERMANENTLY]                   = Cmd_copymovepermanently,
-    [B_SCR_OP_SETTAILWIND]                           = Cmd_settailwind,
     [B_SCR_OP_TRYSPITEPPREDUCE]                      = Cmd_tryspiteppreduce,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
     [B_SCR_OP_CURSETARGET]                           = Cmd_cursetarget,
@@ -797,6 +795,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_49]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_50]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_51]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_52]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -6192,24 +6191,6 @@ static void Cmd_copymovepermanently(void)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-static void Cmd_settailwind(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 side = GetBattlerSide(gBattlerAttacker);
-
-    if (!(gSideStatuses[side] & SIDE_STATUS_TAILWIND))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
-        gSideTimers[side].tailwindTimer = (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3);
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
     {

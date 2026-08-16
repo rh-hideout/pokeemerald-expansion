@@ -10115,6 +10115,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_BOOST_CRITS },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_TAILWIND,
+            .self = TRUE,
+        }),
         .snatchAffected = TRUE,
         .windMove = TRUE,
         .ignoresProtect = TRUE,

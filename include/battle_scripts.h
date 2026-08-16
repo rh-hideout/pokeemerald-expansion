@@ -638,6 +638,7 @@ extern const u8 BattleScript_PledgeWaitingForPartner[];
 extern const u8 BattleScript_EffectRoost[];
 extern const u8 BattleScript_EffectGravity[];
 extern const u8 BattleScript_EffectTailwind[];
+extern const u8 BattleScript_TryTailwindAbilitiesLoop[];
 extern const u8 BattleScript_EffectTrickRoom[];
 extern const u8 BattleScript_EffectWonderRoom[];
 extern const u8 BattleScript_EffectMagicRoom[];

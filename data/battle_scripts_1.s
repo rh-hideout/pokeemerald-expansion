@@ -1215,17 +1215,7 @@ BattleScript_EffectMagicRoom::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTailwind::
-	attackcanceler
-	settailwind BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_TAILWINDBLEW
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_TryTailwindAbilitiesLoop
-	goto BattleScript_MoveEnd
-
-BattleScript_TryTailwindAbilitiesLoop:
+BattleScript_TryTailwindAbilitiesLoop::
 	savetarget
 	setbyte gBattlerTarget, 0
 BattleScript_TryTailwindAbilitiesLoop_Iter:

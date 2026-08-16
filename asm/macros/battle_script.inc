@@ -792,11 +792,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settailwind failInstr:req
-	.byte B_SCR_OP_SETTAILWIND
-	.4byte \failInstr
-	.endm
-
 	.macro tryspiteppreduce failInstr:req
 	.byte B_SCR_OP_TRYSPITEPPREDUCE
 	.4byte \failInstr
