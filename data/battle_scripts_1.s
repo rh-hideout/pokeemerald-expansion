@@ -842,15 +842,6 @@ BattleScript_MoveEffectFlameBurst::
 	tryfaintmon BS_EFFECT_BATTLER
 	return
 
-BattleScript_EffectPowerTrick::
-	attackcanceler
-	powertrick
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSWITCHEDATKANDDEF
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectPsychoShift::
 	attackcanceler
 	jumpifstatus BS_ATTACKER, STATUS1_ANY, BattleScript_EffectPsychoShiftCanWork
@@ -1521,15 +1512,6 @@ BattleScript_RecoilIfMiss::
 BattleScript_RecoilEnd:
 	return
 
-BattleScript_EffectMist::
-	attackcanceler
-	setmist
-	attackanimation
-	waitanimation
-	printfromtable gMistUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectFocusEnergy::
 	attackcanceler
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
@@ -2147,16 +2129,6 @@ BattleScript_EffectSwallow::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTorment::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	settorment BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSUBJECTEDTOTORMENT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_AlreadyBurned::
 	setalreadystatusedmoveattempt
 	pause B_WAIT_TIME_SHORT
@@ -2229,15 +2201,6 @@ BattleScript_EffectWish::
 	trywish BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectIngrain::
-	attackcanceler
-	trysetvolatile BS_ATTACKER, VOLATILE_ROOT, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNPLANTEDROOTS
-	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectMagicCoat::

@@ -885,11 +885,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settorment failInstr:req
-	.byte B_SCR_OP_SETTORMENT
-	.4byte \failInstr
-	.endm
-
 	.macro settaunt failInstr:req
 	.byte B_SCR_OP_SETTAUNT
 	.4byte \failInstr
@@ -1824,10 +1819,6 @@
 	.macro curestatus battler:req
 	callnative BS_CureStatus
 	.byte \battler
-	.endm
-
-	.macro powertrick
-	callnative BS_PowerTrick
 	.endm
 
 	.macro tryafteryou failInstr:req

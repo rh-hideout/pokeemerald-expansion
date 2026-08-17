@@ -1518,7 +1518,7 @@ static void TryEffectVolatile(struct BattleCalcValues *cv, struct SetEffect *se,
     {
         se->effectFailed = TRUE;
         if (!cv->onlyChecking)
-            PrepareStringBattleWithWait(string, se->effectBattler);
+            PrepareStringBattleWithWait(STRINGID_BUTITFAILED, se->effectBattler);
     }
 
     if (cv->onlyChecking)
@@ -1716,6 +1716,19 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectMist(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (gSideTimers[side].mistTimer)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gSideTimers[side].mistTimer = 5;
+        gSideStatuses[side] |= SIDE_STATUS_MIST;
+        PrepareStringBattleWithWait(STRINGID_PKMNSHROUDEDINMIST, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
 }
 
 static void HandleSetEffectConfuseRay(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1776,10 +1789,29 @@ static void HandleSetEffectPainSplit(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectTorment(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum BattlerId aromaVeilBattler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL);
+
+    if (gBattleMons[se->effectBattler].volatiles.torment
+     || GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (aromaVeilBattler)
+    {
+        SetEffectFail(BattleScript_AromaVeilProtectsRet);
+        gBattlerAbility = aromaVeilBattler - 1;
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[se->effectBattler].volatiles.torment = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNSUBJECTEDTOTORMENT, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
 }
 
 static void HandleSetEffectIngrain(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    TryEffectVolatile(cv, se, VOLATILE_ROOT, TRUE, STRINGID_PKMNPLANTEDROOTS);
 }
 
 static void HandleSetEffectRecycle(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1847,6 +1879,14 @@ static void HandleSetEffectPsychoShift(struct BattleCalcValues *cv, struct SetEf
 
 static void HandleSetEffectPowerTrick(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (cv->onlyChecking)
+        return;
+
+    u32 temp;
+    gBattleMons[se->effectBattler].volatiles.powerTrick = !gBattleMons[se->effectBattler].volatiles.powerTrick;
+    SWAP(gBattleMons[se->effectBattler].attack, gBattleMons[se->effectBattler].defense, temp);
+    PrepareStringBattleWithWait(STRINGID_PKMNSWITCHEDATKANDDEF, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
