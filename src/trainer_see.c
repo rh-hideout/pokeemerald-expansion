@@ -1066,7 +1066,7 @@ u8 FldEff_QuestionMarkIcon(void)
     {
         // Use follower emotes
         u8 emotion = gFieldEffectArguments[7];
-        spriteId = CreateSpriteAtEnd(&sSpriteTemplate_Emote, 0, 0, 0x52);
+        spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_Emote, 0, 0, 0x52);
         if (spriteId == MAX_SPRITES)
             return 0;
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_EMOTE, emotion); // Set animation based on emotion
