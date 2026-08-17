@@ -1325,6 +1325,10 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
 
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
 #define DYNAMAX_BYPASS_CHECK    (!IsGimmickSelected(battler, GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+// gimmick.toActivate is only set after this runs, so the chosen gimmick has to
+// be read back from the controller's return value.
+#define Z_MOVE_SELECTED         ((gBattleResources->bufferB[battler][2] & RET_GIMMICK) && gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE)
+#define Z_MOVE_BYPASS_CHECK     (!Z_MOVE_SELECTED && GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
 
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 {
@@ -1336,7 +1340,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetConfig(B_ENCORE_TARGET) >= GEN_5
-     && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
+     && DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
         gCurrentMove = gBattleMons[battler].volatiles.encoredMove;
@@ -1353,7 +1357,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         return limitations;
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.disabledMove == move && move != MOVE_NONE)
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && gBattleMons[battler].volatiles.disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
         gCurrentMove = move;
@@ -1369,7 +1373,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
     {
         CancelMultiTurnMoves(battler);
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1384,7 +1388,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE
+    if (Z_MOVE_BYPASS_CHECK
      && gBattleMons[battler].volatiles.tauntTimer != 0
      && IsBattleMoveStatus(move)
      && (GetConfig(B_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
@@ -1405,7 +1409,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1420,7 +1424,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && GetImprisonedMovesCount(battler, move))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && GetImprisonedMovesCount(battler, move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1435,7 +1439,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsGravityPreventingMove(move))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && IsGravityPreventingMove(move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1450,7 +1454,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsHealBlockPreventingMove(battler, move))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && IsHealBlockPreventingMove(battler, move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1465,7 +1469,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && IsBelchPreventingMove(battler, move))
+    if (DYNAMAX_BYPASS_CHECK && Z_MOVE_BYPASS_CHECK && IsBelchPreventingMove(battler, move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
