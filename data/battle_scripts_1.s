@@ -1086,41 +1086,6 @@ BattleScript_EffectGuardSplit::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectHeartSwap::
-	attackcanceler
-	swapstatstages STAT_ATK
-	swapstatstages STAT_DEF
-	swapstatstages STAT_SPEED
-	swapstatstages STAT_SPATK
-	swapstatstages STAT_SPDEF
-	swapstatstages STAT_EVASION
-	swapstatstages STAT_ACC
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSWITCHEDSTATCHANGES
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectPowerSwap::
-	attackcanceler
-	swapstatstages STAT_ATK
-	swapstatstages STAT_SPATK
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSWITCHEDSTATCHANGES
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectGuardSwap::
-	attackcanceler
-	swapstatstages STAT_DEF
-	swapstatstages STAT_SPDEF
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSWITCHEDSTATCHANGES
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTelekinesis::
 	attackcanceler
 	settelekinesis BattleScript_ButItFailed

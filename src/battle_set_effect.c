@@ -19,6 +19,7 @@
 #include "constants/battle_set_effect.h"
 #include "constants/battle_string_ids.h"
 #include "constants/global.h"
+#include "constants/pokemon.h"
 #include "constants/script_menu.h"
 #include "gba/defines.h"
 #include "item.h"
@@ -1961,12 +1962,32 @@ static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEff
     }
 }
 
-static void HandleSetEffectPowerSwap(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectStatSwap(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-}
+    struct StatField sf = se->additionalEffect->argument.statField;
 
-static void HandleSetEffectGuardSwap(struct BattleCalcValues *cv, struct SetEffect *se)
-{
+    const struct
+    {
+        bool8 stat;
+        u8 enumerator;
+    } stats[] = {
+        { sf.atk,     STAT_ATK     },
+        { sf.def,     STAT_DEF     },
+        { sf.spatk,   STAT_SPATK   },
+        { sf.spdef,   STAT_SPDEF   },
+        { sf.speed,   STAT_SPEED   },
+        { sf.acc,     STAT_ACC     },
+        { sf.evasion, STAT_EVASION },
+    };
+
+    for (u8 i = 0; i < ARRAY_COUNT(stats); i++)
+    {
+        if (stats[i].stat)
+            SwapStatStages(cv->battlerAtk, se->effectBattler, stats[i].enumerator);
+    }
+
+    PrepareStringBattleWithWait(STRINGID_PKMNSWITCHEDSTATCHANGES, se->effectBattler);
+    gBattlescriptCurrInstr = se->script;
 }
 
 static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2003,10 +2024,6 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
         BattleScriptPush(BattleScript_MoveEffectOverwriteAbility);
         gBattlescriptCurrInstr = BattleScript_AbilityPopUpOverwriteThenNormal;
     }
-}
-
-static void HandleSetEffectHeartSwap(struct BattleCalcValues *cv, struct SetEffect *se)
-{
 }
 
 static void HandleSetEffectSwitcheroo(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2298,10 +2315,8 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_GASTRO_ACID] = HandleSetEffectGastroAcid,
 
     [MOVE_EFFECT_LUCKY_CHANT] = HandleSetEffectLuckyChant,
-    [MOVE_EFFECT_POWER_SWAP] = HandleSetEffectPowerSwap,
-    [MOVE_EFFECT_GUARD_SWAP] = HandleSetEffectGuardSwap,
+    [MOVE_EFFECT_STAT_SWAP] = HandleSetEffectStatSwap,
     [MOVE_EFFECT_OVERWRITE_ABILITY] = HandleSetEffectOverwriteAbility,
-    [MOVE_EFFECT_HEART_SWAP] = HandleSetEffectHeartSwap,
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
     [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
     [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,

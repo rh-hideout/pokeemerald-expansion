@@ -31,7 +31,24 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define STAT_FIELD(stat) .stat = 1,
+#define STATS(...) {.statField = (const struct StatField){RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
+#define STAT_SWAP_OFFENSIVE STATS(atk, spatk)
+#define STAT_SWAP_DEFENSIVE STATS(def, spdef)
+#define STAT_SWAP_ALL       STATS(atk, def, spatk, spdef, speed, acc, evasion)
+
 #define MAX_RANDOM_ADDITIONAL_EFFECTS   3
+
+struct PACKED StatField
+{
+    u8 atk : 1;
+    u8 def : 1;
+    u8 spatk : 1;
+    u8 spdef : 1;
+    u8 speed : 1;
+    u8 acc : 1;
+    u8 evasion : 1;
+};
 
 struct AdditionalEffect
 {
@@ -52,6 +69,7 @@ struct AdditionalEffect
         u8 absorbPercentage;
         enum Type type:8;
         enum Ability overwriteAbility:16;
+        struct StatField statField;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect

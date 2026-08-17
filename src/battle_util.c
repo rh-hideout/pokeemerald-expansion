@@ -11167,3 +11167,10 @@ bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
     gLastUsedItem = gBattleMons[battler].item;
     return TRUE;
 }
+
+void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
+{
+    s8 *atkStatStage = &gBattleMons[battlerAtk].statStages[stat];
+    s8 *defStatStage = &gBattleMons[battlerDef].statStages[stat];
+    Swap(*atkStatStage, *defStatStage);
+}

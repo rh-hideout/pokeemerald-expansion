@@ -1157,21 +1157,21 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_POWER_SWAP] =
     {
-        .battleScript = BattleScript_EffectPowerSwap,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
 
     [EFFECT_GUARD_SWAP] =
     {
-        .battleScript = BattleScript_EffectGuardSwap,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
 
     [EFFECT_HEART_SWAP] =
     {
-        .battleScript = BattleScript_EffectHeartSwap,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
