@@ -4889,6 +4889,11 @@ void AnimTask_CycleMagicalLeafPal(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!TryLoadPal(ANIM_TAG_LEAF) || !TryLoadPal(ANIM_TAG_RAZOR_LEAF))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
         task->data[8] = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_LEAF));
         task->data[12] = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_RAZOR_LEAF));
         task->data[0]++;
@@ -7303,8 +7308,12 @@ void AnimPoisonJabProjectile(struct Sprite *sprite)
 
 void AnimTask_BlendNightSlash(u8 taskId)
 {
-    int paletteOffset = IndexOfSpritePaletteTag(ANIM_TAG_SLASH) * 16 + 256;
-    BlendPalette(paletteOffset, 16, 6, RGB_RED);
+    if (!TryLoadPal(ANIM_TAG_SLASH))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+    BlendPalette(OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_SLASH)), 16, 6, RGB_RED);
     DestroyAnimVisualTask(taskId);
 }
 

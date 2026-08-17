@@ -1148,6 +1148,7 @@ static void Cmd_damagecalc(void)
     ctx.battlerAtk = gBattlerAttacker;
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
+    ctx.baseMove = gBattleStruct->baseMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
     ctx.weather = GetWeather();
     ctx.fieldStatuses = gFieldStatuses;
@@ -1198,6 +1199,7 @@ static void Cmd_typecalc(void)
     ctx.battlerDef = gBattlerTarget;
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
+    ctx.baseMove = gBattleStruct->baseMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
     ctx.updateFlags = TRUE;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(gBattlerAttacker);
@@ -3287,7 +3289,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
                 break;
             case STATUS1_SLEEP:
-                TryDeactivateSleepClause(GetBattlerSide(effectBattler), gBattlerPartyIndexes[effectBattler]);
+                TryDeactivateSleepClause(effectBattler, gBattlerPartyIndexes[effectBattler]);
                 gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
                 break;
             case STATUS1_BURN:
@@ -4186,116 +4188,77 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
     return CountAliveMonsForBattlerSide(battler) == 0;
 }
 
-bool32 NoAliveMonsForPlayer(void)
+static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
 {
-    // Test system does not have saved player party data that can be accessed
-    u32 maxIneligible = TESTING ? gPartiesCount[B_TRAINER_PLAYER] : PARTY_SIZE;
-    u32 HP_count = 0;
-    u32 ineligibleMonsCount = 0;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3)
-            maxIneligible += gPartiesCount[B_TRAINER_PARTNER];
-        else if (!AreMultiPartiesFullTeams())
-            maxIneligible = 3;
-    }
-
-    // Get total HP for the player's party to determine if the player has lost
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon mon = gParties[B_TRAINER_PLAYER][i];
+        struct Pokemon mon = gParties[trainer][i];
 
-        if (GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_IS_EGG)
-         && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
+        if (!GetMonData(&mon, MON_DATA_SPECIES) || GetMonData(&mon, MON_DATA_IS_EGG))
+            continue;
+
+        if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         {
-            HP_count += GetMonData(&mon, MON_DATA_HP);
+            if (trainer == B_TRAINER_PLAYER && gBattleStruct->arenaLostPlayerMons & (1u << i))
+                continue;
+
+            if (trainer == B_TRAINER_OPPONENT_A && gBattleStruct->arenaLostOpponentMons & (1u << i))
+                continue;
         }
 
-        if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3)
-        {
-            // Get the number of fainted mons or eggs (not empty slots) in the party.
-            if ((GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_HP))
-            || GetMonData(&mon, MON_DATA_IS_EGG))
-            {
-                ineligibleMonsCount++;
-            }
-        }
-    }
-
-    if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
-    {
-        if (HP_count == 0 && AreMultiPartiesFullTeams())
+        if (GetMonData(&mon, MON_DATA_HP) > 0)
             return TRUE;
-
-        // Get total HP for the partner's party
-        for (u32 i = 0; i < PARTY_SIZE; i++)
-        {
-            struct Pokemon mon = gParties[B_TRAINER_PARTNER][i];
-
-            if (GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_IS_EGG)
-             && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostPlayerMons & (1u << i))))
-            {
-                HP_count += GetMonData(&mon, MON_DATA_HP);
-            }
-            // Get the number of fainted mons or eggs (not empty slots) in the party.
-            if ((GetMonData(&mon, MON_DATA_SPECIES) && !GetMonData(&mon, MON_DATA_HP))
-             || GetMonData(&mon, MON_DATA_IS_EGG))
-            {
-                ineligibleMonsCount++;
-            }
-        }
-
-        if(!(gBattleTypeFlags & BATTLE_TYPE_ARENA || TESTING
-         || (gBattleTypeFlags & BATTLE_TYPE_MULTI && AreMultiPartiesFullTeams())))
-        {
-            for (u32 i = 0; i < PARTY_SIZE; i++)
-            {
-                if (!GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_SPECIES)
-                 || !GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HP)
-                 || GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_IS_EGG))
-                {
-                    ineligibleMonsCount++;
-                }
-            }
-
-            // If the total number of ineligible mons is more than the maximum, lose the battle.
-            if (ineligibleMonsCount >= maxIneligible)
-                return TRUE;
-        }
     }
 
-    return (HP_count == 0);
+    return FALSE;
+}
+
+static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
+{
+    if (GetConfig(B_MULTI_BATTLE_WHITEOUT) <= GEN_3)
+        return TRUE;
+    if (AreMultiPartiesFullTeams())
+        return TRUE;
+    if (TESTING)
+        return FALSE;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (gSelectedOrderFromParty[i] <= MULTI_PARTY_SIZE)
+            continue;
+
+        struct Pokemon *fullPartyMon = GetSavedPlayerPartyMon(i);
+
+        if (!GetMonData(fullPartyMon, MON_DATA_SPECIES) || GetMonData(fullPartyMon, MON_DATA_IS_EGG))
+            continue;
+
+        if (GetMonData(fullPartyMon, MON_DATA_HP) > 0)
+            return FALSE;
+    }
+    return TRUE;
+}
+
+bool32 NoAliveMonsForPlayer(void)
+{
+    if (DoesPartyHaveBattleReadyMons(B_TRAINER_PLAYER))
+        return FALSE;
+
+    if (!(gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)))
+        return TRUE;
+
+    if (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
+        return TRUE;
+    return WillPlayerWhiteOutIfPartnerWinsAlone();
 }
 
 static bool32 NoAliveMonsForOpponent(void)
 {
-    u32 i;
-    u32 HP_count = 0;
+    if (DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_A))
+        return FALSE;
 
-    // Get total HP for the enemy's party to determine if the player has won
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_IS_EGG)
-         && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
-        {
-            HP_count += GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HP);
-        }
-    }
+    if (!BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
+        return TRUE;
 
-    if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
-    {
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) && !GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_IS_EGG)
-            && (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !(gBattleStruct->arenaLostOpponentMons & (1u << i))))
-            {
-                HP_count += GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_HP);
-            }
-        }
-    }
-
-    return (HP_count == 0);
+    return (!DoesPartyHaveBattleReadyMons(B_TRAINER_OPPONENT_B));
 }
 
 bool32 NoAliveMonsForEitherParty(void)
@@ -6009,6 +5972,7 @@ static void Cmd_jumptocalledmove(void)
     else
         gChosenMove = gCurrentMove = gCalledMove;
 
+    gBattleStruct->baseMove = gCurrentMove;
     ResetValuesForCalledMove();
 
     gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
@@ -7890,7 +7854,7 @@ static void Cmd_mimicattackcopy(void)
 static void Cmd_setcalledmove(void)
 {
     CMD_ARGS();
-    gCurrentMove = gCalledMove;
+    gCurrentMove = gBattleStruct->baseMove = gCalledMove;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -8338,7 +8302,7 @@ static void Cmd_healpartystatus(void)
             if (!(isSoundMove && ability == ABILITY_SOUNDPROOF))
             {
                 toHeal |= (1 << i);
-                TryDeactivateSleepClause(GetBattlerSide(gBattlerAttacker), i);
+                TryDeactivateSleepClause(gBattlerAttacker, i);
             }
         }
     }
@@ -8763,7 +8727,7 @@ static void Cmd_curestatuswithmove(void)
     if (shouldHeal)
     {
         if (status & STATUS1_SLEEP)
-            TryDeactivateSleepClause(GetBattlerSide(gBattlerAttacker), gBattlerPartyIndexes[gBattlerAttacker]);
+            TryDeactivateSleepClause(gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
 
         if (status & STATUS1_PARALYSIS)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
@@ -9339,7 +9303,7 @@ static void Cmd_switchoutabilities(void)
     {
     case ABILITY_NATURAL_CURE:
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
-            TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+            TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
 
         gBattleMons[battler].status1 = 0;
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE,
@@ -10206,7 +10170,7 @@ static void Cmd_givecaughtmon(void)
                     GetMonNickname(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId], gStringVar2);
                     StringCopy(gStringVar1, GetBoxNamePtr(GetPCBoxToSendMon()));
                     ZeroMonData(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId]);
-                    gBattleStruct->itemLost[B_SIDE_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
+                    gBattleStruct->itemLost[B_TRAINER_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWAPPED_INTO_PARTY;
                     gSelectedMonPartyId = PARTY_SIZE;
                     gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
@@ -10224,7 +10188,7 @@ static void Cmd_givecaughtmon(void)
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
+            u16 lostItem = gBattleStruct->itemLost[B_TRAINER_OPPONENT_A][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
             if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
                 SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
         }
@@ -10724,14 +10688,14 @@ static void Cmd_tryconfusionafterskydrop(void)
 {
     CMD_ARGS(u8 battler);
     enum BattlerId faintBattler = GetBattlerForBattleScript(cmd->battler);
-    enum BattlerId skyDropTarget = gBattleMons[faintBattler].volatiles.skyDropTarget - 1;
+    enum BattlerId skyDropTarget = gBattleMons[faintBattler].volatiles.skyDropTarget;
     bool32 shouldConfuse = FALSE;
 
-    if (gBattleMons[faintBattler].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER)
+    if (gBattleMons[faintBattler].volatiles.semiInvulnerable != STATE_SKY_DROP_ATTACKER || !skyDropTarget)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    else if (gBattleMons[skyDropTarget].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
+    else if (gBattleMons[--skyDropTarget].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
     {
         BtlController_EmitSpriteInvisibility(skyDropTarget, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(skyDropTarget);
@@ -11578,63 +11542,6 @@ void BS_TryTrainerSlideZMoveMsg(void)
         BattleScriptPush(cmd->nextInstr);
 
         switch (gBattlerAttacker)
-        {
-        case B_POSITION_OPPONENT_LEFT:
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-            break;
-        case B_POSITION_PLAYER_RIGHT:
-            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-            break;
-        case B_POSITION_OPPONENT_RIGHT:
-            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-            break;
-        default:
-            break;
-        }
-    }
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryTrainerSlideMegaEvolutionMsg(void)
-{
-    NATIVE_ARGS();
-    s32 shouldSlide;
-
-    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_MEGA_EVOLUTION)))
-    {
-        gBattleScripting.battler = gBattlerAttacker;
-        BattleScriptPush(cmd->nextInstr);
-
-        switch (gBattlerAttacker)
-        {
-        case B_POSITION_OPPONENT_LEFT:
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-            break;
-        case B_POSITION_PLAYER_RIGHT:
-            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-            break;
-        case B_POSITION_OPPONENT_RIGHT:
-            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-            break;
-        default:
-            break;
-        }
-    }
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryTrainerSlideDynamaxMsg(void)
-{
-    NATIVE_ARGS();
-    s32 shouldSlide;
-
-    if ((shouldSlide = ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_DYNAMAX)))
-    {
-        BattleScriptPush(cmd->nextInstr);
-
-        switch (gBattleScripting.battler)
         {
         case B_POSITION_OPPONENT_LEFT:
             gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
@@ -13305,7 +13212,7 @@ void BS_CureStatus(void)
     u32 status = gBattleMons[battler].status1;
 
     if (status & STATUS1_SLEEP)
-        TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+        TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
 
     if (status & STATUS1_PARALYSIS)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
@@ -13882,7 +13789,7 @@ void BS_TryWakeBattlersUproar(void)
 
         if (IsBattlerAlive(battler) && gBattleMons[battler].status1 & STATUS1_SLEEP && !hasSoundproof)
         {
-            TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+            TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
             gBattleMons[battler].status1 = 0;
             gEffectBattler = battler;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);

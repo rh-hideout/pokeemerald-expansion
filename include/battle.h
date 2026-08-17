@@ -252,7 +252,8 @@ struct AiLogicData
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
-    u32 padding2:19;
+    u32 battlerMovesScored:4; // Bitmask of battlers that have completed move scoring this turn, so a battler can check whether its ally has already committed to a chosen move regardless of AI processing order
+    u32 padding2:15;
 };
 
 struct AiThinkingStruct
@@ -495,6 +496,13 @@ struct FutureSight
     u16 partyIndex:3;
 };
 
+struct SleepClause
+{
+    enum BattleTrainer trainer:3;
+    u8 partyIndex:3;
+    u8 padding:2;
+};
+
 struct BattlerState
 {
     u8 targetsDone[MAX_BATTLERS_COUNT];
@@ -654,6 +662,7 @@ struct BattleStruct
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
+    enum Move baseMove; // z-move / dynamax base move
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
@@ -690,7 +699,7 @@ struct BattleStruct
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
     u32 stellarBoostFlags[MAX_BATTLE_TRAINERS]; // bitfield
-    u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
+    struct SleepClause monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects

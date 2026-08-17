@@ -494,7 +494,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
         enum BattlerId opposingPartner = GetPartnerBattler(switchContext->opposingBattler);
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            ctx.move = ctx.chosenMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            ctx.move = ctx.chosenMove = ctx.baseMove = gBattleMons[switchContext->battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
             // Check if move is bad in the context of both opposing battlers
             if (!IsMoveBad(&ctx, moveIndex))
@@ -518,7 +518,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
     {
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            ctx.move = ctx.chosenMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            ctx.move = ctx.chosenMove = ctx.baseMove = gBattleMons[switchContext->battler].moves[moveIndex];
             ctx.moveType = GetBattleMoveType(ctx.move);
             if (!IsMoveBad(&ctx, moveIndex))
                 return FALSE;
@@ -811,7 +811,7 @@ static bool32 ShouldSwitchIfBadlyStatused(struct SwitchAiContext *switchContext)
     return FALSE;
 }
 
-static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move move)
+static bool32 CanPalafinZeroSafelyUseHitEscape(enum BattlerId battlerAtk, enum Move move)
 {
     u32 moveIndex;
     bool32 hasValidTarget = FALSE;
@@ -838,7 +838,7 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
     ctx.battlerAtk = battlerAtk;
-    ctx.move = ctx.chosenMove = move;
+    ctx.move = ctx.chosenMove = ctx.baseMove = move;
     ctx.moveType = moveType;
     ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
@@ -1028,14 +1028,19 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext
 
     case ABILITY_ZERO_TO_HERO:
     {
-        enum Move hitEscapeMove = MOVE_NONE;
+        u32 moveIndex;
 
-        if (GetBattlerMoveIndexWithEffect(switchContext->battler, EFFECT_HIT_ESCAPE) < MAX_MON_MOVES)
-            hitEscapeMove = gBattleMons[switchContext->battler].moves[GetBattlerMoveIndexWithEffect(switchContext->battler, EFFECT_HIT_ESCAPE)];
-
-        // Prefer to use a hit escape move if Palafin will move first and can hit
-        if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(switchContext->battler, hitEscapeMove))
+        // Hero Form has already activated Zero to Hero.
+        if (gBattleMons[switchContext->battler].species != SPECIES_PALAFIN_ZERO)
             return FALSE;
+
+        moveIndex = GetBattlerMoveIndexWithEffect(switchContext->battler, EFFECT_HIT_ESCAPE);
+
+        // Prefer a safe hit escape move over switching directly.
+        if (moveIndex < MAX_MON_MOVES && CanPalafinZeroSafelyUseHitEscape(switchContext->battler, gBattleMons[switchContext->battler].moves[moveIndex]))
+            return FALSE;
+
+        // No safe pivot is available, so switch directly to transform.
         break;
     }
 
@@ -1174,7 +1179,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchAiContext *switchContext)
     struct DamageContext ctx = {0};
     ctx.battlerAtk = switchContext->battler;
     ctx.battlerDef = switchContext->opposingBattler;
-    ctx.move = ctx.chosenMove = choicedMove;
+    ctx.move = ctx.chosenMove = ctx.baseMove = choicedMove;
     ctx.moveType = GetBattleMoveType(choicedMove);
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
     ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
@@ -1485,26 +1490,26 @@ bool32 ShouldSwitchIfAllScoresBad(struct SwitchAiContext *switchContext)
 
 bool32 ShouldStayInToUseMove(struct SwitchAiContext *switchContext)
 {
-    enum Move aiMove;
-    enum BattleMoveEffects aiMoveEffect;
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
-        aiMoveEffect = GetMoveEffect(aiMove);
-        if (aiMoveEffect == EFFECT_REVIVAL_BLESSING || IsSwitchOutEffect(aiMoveEffect))
-        {
-            // Palafin should not stay in for a hit escape move if it can't use it effectively (slower or no target)
-            if (gBattleMons[switchContext->battler].species == SPECIES_PALAFIN_ZERO
-             && gAiLogicData->abilities[switchContext->battler] == ABILITY_ZERO_TO_HERO
-             && aiMoveEffect == EFFECT_HIT_ESCAPE
-             && !GetHitEscapeTransformState(switchContext->battler, aiMove))
-                continue;
+        enum Move move = gBattleMons[switchContext->battler].moves[moveIndex];
+        enum BattleMoveEffects effect = GetMoveEffect(move);
 
-            if (gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
-                || (IsDoubleBattle() && gAiBattleData->finalScore[switchContext->battler][GetPartnerBattler(switchContext->opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
-                return TRUE;
-        }
+        if (effect != EFFECT_REVIVAL_BLESSING && !IsSwitchOutEffect(effect))
+            continue;
+
+        // An unsafe hit escape move must not override Palafin-Zero's hard-switch decision.
+        if (effect == EFFECT_HIT_ESCAPE
+         && gBattleMons[switchContext->battler].species == SPECIES_PALAFIN_ZERO
+         && gAiLogicData->abilities[switchContext->battler] == ABILITY_ZERO_TO_HERO
+         && !CanPalafinZeroSafelyUseHitEscape(switchContext->battler, move))
+            continue;
+
+        if (gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
+         || (IsDoubleBattle() && gAiBattleData->finalScore[switchContext->battler][GetPartnerBattler(switchContext->opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
+            return TRUE;
     }
+
     return FALSE;
 }
 
