@@ -196,7 +196,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CONFUSE] =
     {
-        .battleScript = BattleScript_EffectConfuse,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
         .encourageEncore = TRUE,

@@ -91,15 +91,40 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
 
 static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!CanBeConfused(cv->battlerAtk, se->effectBattler))
+    enum Ability effectAbility = cv->abilities[se->effectBattler];
+    enum Ability atkAbility = cv->abilities[cv->battlerAtk];
+    enum HoldEffect effectHoldEffect = cv->holdEffects[se->effectBattler];
+
+    if (effectAbility == ABILITY_OWN_TEMPO)
     {
+        SetEffectFailAndCheckReturn;
+        gBattlerAbility = se->effectBattler;
+        BattleScriptPushAndSet(se->script, BattleScript_OwnTempoPreventsRet);
+        BattleScriptCall(BattleScript_AbilityPopUp);
+    }
+    else if (gBattleMons[se->effectBattler].volatiles.confusionTimer > 0)
+    {
+        SetEffectFailAndCheckReturn;
+        gBattleStruct->battlerState[gBattlerAttacker].alreadyStatusedMoveAttempt = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNALREADYCONFUSED, se->effectBattler);
+        gBattlescriptCurrInstr = se->script;
+    }
+    else if (IsMistyTerrainAffected(se->effectBattler, effectAbility, effectHoldEffect, gFieldTimers.terrain))
+    {
+        SetEffectFailAndCheckReturn;
+        PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
+        gBattlescriptCurrInstr = se->script;
+    }
+    else if (IsSafeguardProtected(cv->battlerAtk, se->effectBattler, atkAbility))
+    {
+        SetEffectFailAndCheckReturn;
+        PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
         gBattlescriptCurrInstr = se->script;
     }
     else
     {
         gBattleMons[se->effectBattler].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectConfusion;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectConfusion);
     }
 }
 
@@ -1663,10 +1688,6 @@ static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect 
     }
 }
 
-static void HandleSetEffectSupersonic(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattlerId aromaVeilBattler = IsAbilityOnSide(se->effectBattler, ABILITY_AROMA_VEIL);
@@ -1726,10 +1747,6 @@ static void HandleSetEffectMist(struct BattleCalcValues *cv, struct SetEffect *s
         PrepareStringBattleWithWait(STRINGID_PKMNSHROUDEDINMIST, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-}
-
-static void HandleSetEffectConfuseRay(struct BattleCalcValues *cv, struct SetEffect *se)
-{
 }
 
 static void HandleSetEffectSpiderWeb(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1833,10 +1850,6 @@ static void HandleSetEffectImprison(struct BattleCalcValues *cv, struct SetEffec
 }
 
 static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectTeeterDance(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -2260,8 +2273,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TOXIC_SPIKES] = HandleSetEffectToxicSpikes,
     [MOVE_EFFECT_SPIKES] = HandleSetEffectSpikes,
 
-    [MOVE_EFFECT_SUPERSONIC] = HandleSetEffectSupersonic,
-    [MOVE_EFFECT_CONFUSE_RAY] = HandleSetEffectConfuseRay,
     [MOVE_EFFECT_DISABLE] = HandleSetEffectDisable,
     [MOVE_EFFECT_MIST] = HandleSetEffectMist,
     [MOVE_EFFECT_SPIDER_WEB] = HandleSetEffectSpiderWeb,
@@ -2276,7 +2287,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_YAWN] = HandleSetEffectYawn,
     [MOVE_EFFECT_IMPRISON] = HandleSetEffectImprison,
     [MOVE_EFFECT_REFRESH] = HandleSetEffectRefresh,
-    [MOVE_EFFECT_TEETER_DANCE] = HandleSetEffectTeeterDance,
     [MOVE_EFFECT_MUD_SPORT] = HandleSetEffectMudSport,
     [MOVE_EFFECT_ODOR_SLEUTH] = HandleSetEffectOdorSleuth,
     [MOVE_EFFECT_BLOCK] = HandleSetEffectBlock,
