@@ -1520,11 +1520,11 @@ static void Scene2_CreateMonSprites(struct IntroSequenceData * this)
     this->scene2GengarSprite = NULL;
     this->scene2NidorinoSprite = NULL;
 
-    spriteId = CreateSprite(&sSpriteTemplate_Scene2_Nidorino, 168, 80, 11);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene2_Nidorino, 168, 80, 11);
     if (spriteId != MAX_SPRITES)
         this->scene2NidorinoSprite = &gSprites[spriteId];
 
-    spriteId = CreateSprite(&sSpriteTemplate_Scene2_Gengar, 72, 80, 12);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene2_Gengar, 72, 80, 12);
     if (spriteId != MAX_SPRITES)
         this->scene2GengarSprite = &gSprites[spriteId];
 }
@@ -1664,7 +1664,7 @@ static bool8 Scene3_IsGengarMidBounce(void)
 // The small clump of grass that passes by in the foreground during the fight
 static void Scene3_CreateGrassSprite(struct IntroSequenceData * this)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_Grass, 296, 112, 7);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Grass, 296, 112, 7);
     if (spriteId != MAX_SPRITES)
     {
         this->scene3GrassSprite = &gSprites[spriteId];
@@ -1862,7 +1862,7 @@ static void Scene3_CreateGengarSprite(struct IntroSequenceData * this)
     {
         int x = (i & 1) * 48 + 49;
         int y = (i / 2) * 64 + 72;
-        u8 spriteId = CreateSprite(&sSpriteTemplate_Scene3_Gengar, x, y, 8);
+        u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene3_Gengar, x, y, 8);
         if (spriteId != MAX_SPRITES)
         {
             StartSpriteAnim(&gSprites[spriteId], i);
@@ -1950,7 +1950,7 @@ static void GFScene_LoadGfxCreateStar(void)
     sStarSparklesYprecision = 5;
     if (sStarSparklesRngSeed == 0)
         sStarSparklesRngSeed = 354128453;
-    spriteId = CreateSprite(&sSpriteTemplate_Star, 248, 55, 0);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Star, 248, 55, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].sStar_BaseX = 248 << 4;
@@ -1983,7 +1983,7 @@ static void GFScene_CreateStarSparkle(s16 x, s16 y, u16 random)
     y += yMod;
     if (x > 0 && x < DISPLAY_WIDTH)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_SparklesSmall, x, y, 1);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_SparklesSmall, x, y, 1);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sSmSparkleStar_BaseX = x << sStarSparklesXprecision;
@@ -2199,8 +2199,8 @@ static void Scene3_Task_GengarAttack(u8 taskId)
 
 static void Scene3_CreateGengarSwipeSprites(void)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_GengarSwipe, 132, 78, 6); // Implicitly ANIM_SWIPE_TOP
-    spriteId = CreateSprite(&sSpriteTemplate_GengarSwipe, 132, 118, 6);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_GengarSwipe, 132, 78, 6); // Implicitly ANIM_SWIPE_TOP
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_GengarSwipe, 132, 118, 6);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x16);
@@ -2588,7 +2588,7 @@ static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed)
     // Only one of each pair will be visible at a time.
     for (i = 0; i < 2; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_NidorinoRecoilDust, x - 22, y + 24, 10);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_NidorinoRecoilDust, x - 22, y + 24, 10);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sSpeedX = (seed % 13) + 8;

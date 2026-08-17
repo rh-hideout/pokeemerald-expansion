@@ -1126,7 +1126,7 @@ static void LoadAndCreateUpDownSprites(void)
     {
         if (sInfo->enhancements[i] != 0)
         {
-            u16 spriteId = CreateSprite(&sSpriteTemplate_UpDown, sUpDownCoordsOnGraph[i][0], sUpDownCoordsOnGraph[i][1], 0);
+            u16 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_UpDown, sUpDownCoordsOnGraph[i][0], sUpDownCoordsOnGraph[i][1], 0);
             if (spriteId != MAX_SPRITES)
             {
                 if (sInfo->enhancements[i] != 0) // Always true here
@@ -1223,7 +1223,7 @@ static void UpdateMonPic(u8 loadId)
         spritePal.data = sMenu->partyPalettes[loadId];
         sMenu->curMonPalette = LoadSpritePalette(&spritePal);
         sMenu->curMonSheet = LoadSpriteSheet(&spriteSheet);
-        spriteId = CreateSprite(&spriteTemplate, 38, 104, 0);
+        spriteId = CreateSpriteUnchecked(&spriteTemplate, 38, 104, 0);
         sMenu->curMonSpriteId = spriteId;
         if (spriteId == MAX_SPRITES)
         {
@@ -1263,7 +1263,7 @@ static void LoadAndCreateSelectionIcons(void)
     // Fill Poké Ball selection icons up to number in party
     for (i = 0; i < sMenu->info.numSelections - 1; i++)
     {
-        spriteId = CreateSprite(&spriteTemplate, 226, (i * 20) + 8, 0);
+        spriteId = CreateSpriteUnchecked(&spriteTemplate, 226, (i * 20) + 8, 0);
         if (spriteId != MAX_SPRITES)
         {
             sMenu->selectionIconSpriteIds[i] = spriteId;
@@ -1280,7 +1280,7 @@ static void LoadAndCreateSelectionIcons(void)
     spriteTemplate.tileTag = TAG_CONDITION_BALL_PLACEHOLDER;
     for (; i < PARTY_SIZE; i++)
     {
-        spriteId = CreateSprite(&spriteTemplate, 230, (i * 20) + 8, 0);
+        spriteId = CreateSpriteUnchecked(&spriteTemplate, 230, (i * 20) + 8, 0);
         if (spriteId != MAX_SPRITES)
         {
             sMenu->selectionIconSpriteIds[i] = spriteId;
@@ -1295,7 +1295,7 @@ static void LoadAndCreateSelectionIcons(void)
     // Add cancel selection icon at bottom
     spriteTemplate.tileTag = TAG_CONDITION_CANCEL;
     spriteTemplate.callback = SpriteCB_SelectionIconCancel;
-    spriteId = CreateSprite(&spriteTemplate, 222, (i * 20) + 8, 0);
+    spriteId = CreateSpriteUnchecked(&spriteTemplate, 222, (i * 20) + 8, 0);
     if (spriteId != MAX_SPRITES)
     {
         sMenu->selectionIconSpriteIds[i] = spriteId;
@@ -1630,7 +1630,7 @@ static void CreateConditionSprite(void)
 
     for (i = 0, xDiff = 64, xStart = -96; i < 2; i++)
     {
-        u8 spriteId = CreateSprite(template, i * xDiff + xStart, yStart, 0);
+        u8 spriteId = CreateSpriteUnchecked(template, i * xDiff + xStart, yStart, 0);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sSpeed = speed;

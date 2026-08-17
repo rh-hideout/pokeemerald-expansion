@@ -1018,7 +1018,7 @@ void DoSecretBaseGlitterMatSparkle(void)
 
     SetSpritePosToOffsetMapCoords(&x, &y, 8, 4);
 
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_SPARKLE], x, y, 0);
+    spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_SPARKLE], x, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].coordOffsetEnabled = TRUE;
@@ -1295,7 +1295,7 @@ u8 CreateRecordMixingLights(void)
 
     LoadSpritePalette(&sSpritePalette_RecordMixLights);
 
-    spriteId = CreateSprite(&sSpriteTemplate_RecordMixLights, 0, 0, 82);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_RecordMixLights, 0, 0, 82);
 
     if (spriteId == MAX_SPRITES)
     {

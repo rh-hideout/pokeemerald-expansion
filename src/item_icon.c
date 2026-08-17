@@ -111,7 +111,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
         CpuCopy16(&gItemIconSpriteTemplate, spriteTemplate, sizeof(*spriteTemplate));
         spriteTemplate->tileTag = tilesTag;
         spriteTemplate->paletteTag = paletteTag;
-        spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+        spriteId = CreateSpriteUnchecked(spriteTemplate, 0, 0, 0);// This will need a pretty extensive check
 
         FreeItemIconTemporaryBuffers();
         Free(spriteTemplate);
