@@ -41,7 +41,7 @@ enum
     WIN_ROW_PLAYER,
 };
 
-enum CursorDiraction
+enum CursorDirection
 {
     B_INFO_CURSOR_LEFT,
     B_INFO_CURSOR_RIGHT,
