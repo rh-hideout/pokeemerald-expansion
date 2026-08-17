@@ -439,7 +439,7 @@ static void HandleSetEffectThroatChop(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD)
+    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD || gSpecialStatuses[se->effectBattler].berryReduced)
         return;
 
     if (gItemsInfo[gBattleMons[se->effectBattler].item].pocket == POCKET_BERRIES
