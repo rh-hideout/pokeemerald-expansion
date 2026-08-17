@@ -3687,6 +3687,25 @@ static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct Ba
     return FALSE;
 }
 
+static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
+{
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    {
+        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+        gBattleStruct->eventState.moveEndBattler++;
+
+        if (ShouldSkipBattlerForMoveEnd(battlerDef, cv) || IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
+            continue;
+
+        if (ShouldApplyProtectLikeEffects(battlerDef, cv))
+            return MOVEEND_RESULT_RUN_SCRIPT;
+    }
+
+    gBattleStruct->eventState.moveEndBattler = 0;
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static bool32 ShouldApplyAfterHitEffects(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
     if (gBattleStruct->unableToUseMove)
@@ -5830,6 +5849,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_EFFECTIVENESS_MESSAGE_ALLIED_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE] = MoveEndEndureDamageMessage,
+    [MOVEEND_PROTECT_LIKE_EFFECTS_ALLIED_SIDE] = MoveEndProtectLikeEffect,
     [MOVEEND_ADDITIONAL_EFFECTS_ALLIED_SIDE] = MoveEndAdditionalEffects,
     [MOVEEND_ABSORB_ALLIED_SIDE] = MoveEndAbsorb,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES_ALLIED_SIDE] = MoveEndStatusImmunityAbilities,
@@ -5848,6 +5868,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_EFFECTIVENESS_MESSAGE_OPPOSING_SIDE] = MoveEndEffectivenessMessage,
     [MOVEEND_CRIT_PROTECT_MESSAGE_OPPOSING_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_OPPOSING_SIDE] = MoveEndEndureDamageMessage,
+    [MOVEEND_PROTECT_LIKE_EFFECTS_ALLIED_SIDE] = MoveEndProtectLikeEffect,
     [MOVEEND_ADDITIONAL_EFFECTS_OPPOSING_SIDE] = MoveEndAdditionalEffects,
     [MOVEEND_ADDITIONAL_EFFECTS_LOWER_STATS_ATTACKER] = MoveEndAdditionalEffectsLowerStatsAttacker,
     [MOVEEND_ABSORB_OPPOSING_SIDE] = MoveEndAbsorb,
