@@ -1985,7 +1985,7 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
         gBattlerAbility = se->effectBattler;
 
         RecordAbilityBattle(se->effectBattler, gBattleMons[se->effectBattler].ability);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_ACQUIRED_PKMN;
+        PrepareStringBattleWithWait(STRINGID_PKMNACQUIREDABILITY, se->effectBattler);
         BattleScriptPush(se->script);
         BattleScriptPush(BattleScript_MoveEffectOverwriteAbility);
         gBattlescriptCurrInstr = BattleScript_AbilityPopUpOverwriteThenNormal;
@@ -2102,7 +2102,7 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
         {
             RemoveAbilityFlags(se->effectBattler);
             *destAbility = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = *srcAbility;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_ACQUIRED_PKMN;
+            PrepareStringBattleWithWait(STRINGID_PKMNACQUIREDABILITY, se->effectBattler);
             BattleScriptPushAndSet(se->script, BattleScript_MoveEffectOverwriteAbility);
         }
     }

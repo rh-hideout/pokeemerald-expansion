@@ -1060,8 +1060,6 @@ BattleScript_EffectHealingWishRestore:
 
 BattleScript_MoveEffectOverwriteAbility::
 	switchinabilities BS_EFFECT_BATTLER
-	printfromtable gAbilityChangeStringIds
-	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
@@ -4662,7 +4660,8 @@ BattleScript_MummyActivates::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	recordability BS_TARGET
 	recordability BS_ATTACKER
-	setbyte cMULTISTRING_CHOOSER, B_MSG_ABILITY_ACQUIRED_ATTACKER
+	printstring STRINGID_ATTACKERACQUIREDABILITY
+	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_MoveEffectOverwriteAbility
 	return
 
