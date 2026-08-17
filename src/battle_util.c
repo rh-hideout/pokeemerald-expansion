@@ -1243,7 +1243,7 @@ static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
 void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler)
 {
     PrepareStringBattle(stringId, battler);
-    gBattleCommunication[MSG_DISPLAY] = MESSAGE_WAIT;
+    gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_WAIT;
 }
 
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)

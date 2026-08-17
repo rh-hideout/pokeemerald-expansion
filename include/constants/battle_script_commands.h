@@ -318,8 +318,8 @@ enum BattleScriptOpcode
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
 
 // Used for MSG_DISPLAY
-#define MESSAGE_CONTINUE 0
-#define MESSAGE_WAIT     1
+#define MSG_DISPLAY_CONTINUE 0
+#define MSG_DISPLAY_WAIT     1
 
 // Battle Script defines for getting the wanted battler
 #define BS_TARGET                   0
