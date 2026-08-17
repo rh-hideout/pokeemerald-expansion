@@ -41,7 +41,7 @@
     do \
     { \
         se->effectFailed = TRUE; \
-        if (cv->onlyChecking) \
+        if (cv->onlyChecking)\
             return; \
     } while (0)
 
@@ -1700,17 +1700,14 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
     }
     else if (aromaVeilBattler)
     {
-        if (cv->onlyChecking)
-            return;
+        SetEffectFailAndCheckReturn;
 
         gBattlerAbility = aromaVeilBattler - 1;
         BattleScriptPushAndSet(se->script, BattleScript_AromaVeilProtectsRet);
     }
     else
     {
-        se->effectFailed = TRUE;
-        if (!cv->onlyChecking && cv->isStatusMove)
-            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
 }
 
@@ -1876,9 +1873,7 @@ static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffec
     }
     else
     {
-        se->effectFailed = TRUE;
-        if (!cv->onlyChecking && cv->isStatusMove)
-            BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
 }
 
@@ -1939,9 +1934,7 @@ static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEff
 
     if(luckyChantActive)
     {
-        se->effectFailed = TRUE;
-        if (!cv->onlyChecking && cv->isStatusMove)
-            BattleScriptPushAndSet(se->script, BattleScript_ButItFailed);
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else
     {
