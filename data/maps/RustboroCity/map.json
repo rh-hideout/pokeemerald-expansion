@@ -269,7 +269,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_RUSTBORO_CITY_RIVAL"
+      "flag": "FLAG_HIDE_RUSTBORO_CITY_MISTY"
     },
     {
       "local_id": "LOCALID_RUSTBORO_ROXANNE",
@@ -283,7 +283,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_RUSTBORO_CITY_RIVAL"
+      "flag": "FLAG_HIDE_RUSTBORO_CITY_ROXANNE"
     }
   ],
   "warp_events": [

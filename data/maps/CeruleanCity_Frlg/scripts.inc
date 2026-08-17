@@ -453,8 +453,8 @@ CeruleanCity_Frlg_Text_CaveGuard:
 CeruleanCity_Frlg_EventScript_CeruleanFinale::
     lockall
 
-    goto_if_unset FLAG_CERULEAN_LAB_COMPLETE, CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd
     goto_if_set FLAG_CERULEAN_MISSION_COMPLETE, CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd
+    goto_if_unset FLAG_CERULEAN_LAB_COMPLETE, CeruleanCity_Frlg_EventScript_CeruleanFinaleEnd
 
     clearflag FLAG_HIDE_CERULEAN_FINALE_DUO
 
@@ -473,7 +473,7 @@ CeruleanCity_Frlg_EventScript_CeruleanFinale::
     msgbox CeruleanCity_Frlg_Text_FinaleRewardLeadIn, MSGBOX_DEFAULT
     closemessage
 
-    warp MAP_MISTYS_HOUSE, 6, 13
+    warp MAP_MISTYS_HOUSE, 6, 4
     waitstate
 
     releaseall

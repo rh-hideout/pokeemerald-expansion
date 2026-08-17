@@ -6,6 +6,7 @@ RustboroCity_MapScripts::
 
 RustboroCity_OnTransition:
 	setflag FLAG_VISITED_RUSTBORO_CITY
+        call_if_set FLAG_CERULEAN_MISSION_COMPLETE, RustboroCity_EventScript_HideCeruleanGroup
     call_if_eq VAR_RUSTBORO_CITY_STATE, 0, RustboroCity_EventScript_ArmDevonGoods
 	call_if_eq VAR_RUSTBORO_CITY_STATE, 6, RustboroCity_EventScript_HideMapNamePopup
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
@@ -14,6 +15,14 @@ RustboroCity_OnTransition:
 
 RustboroCity_EventScript_ArmDevonGoods::
     setvar VAR_RUSTBORO_CITY_STATE, 1
+    return
+
+
+
+RustboroCity_EventScript_HideCeruleanGroup::
+    setflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
+    setflag FLAG_HIDE_RUSTBORO_CITY_MISTY
+    setflag FLAG_HIDE_RUSTBORO_CITY_ROXANNE
     return
 
 RustboroCity_SetCounterpartGraphics:
