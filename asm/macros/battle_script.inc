@@ -51,13 +51,15 @@
 	.byte B_SCR_OP_RESULTMESSAGE
 	.endm
 
-	.macro printstring id:req
+	.macro printstring id:req, battler=BS_ATTACKER
 	.byte B_SCR_OP_PRINTSTRING
 	.2byte \id
+	.byte \battler
+
 	.endm
 
-	.macro printsavedstring
-	printstring 0
+	.macro printsavedstring battler=BS_ATTACKER
+	printstring 0, \battler
 	.endm
 
 	.macro printselectionstring id:req
@@ -874,11 +876,6 @@
 
 	.macro setforcedtarget
 	.byte B_SCR_OP_SETFORCEDTARGET
-	.endm
-
-	.macro curestatuswithmove failInstr:req
-	.byte B_SCR_OP_CURESTATUSWITHMOVE
-	.4byte \failInstr
 	.endm
 
 	.macro settaunt failInstr:req

@@ -622,7 +622,7 @@ extern const u8 BattleScript_EffectRecycle[];
 extern const u8 BattleScript_EffectYawn[];
 extern const u8 BattleScript_EffectSkillSwap[];
 extern const u8 BattleScript_EffectImprison[];
-extern const u8 BattleScript_EffectRefresh[];
+extern const u8 BattleScript_MoveEffectRefresh[];
 extern const u8 BattleScript_EffectSnatch[];
 extern const u8 BattleScript_EffectHitEscape[];
 extern const u8 BattleScript_PartingShotEscape[];

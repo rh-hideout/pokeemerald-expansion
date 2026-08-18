@@ -2266,15 +2266,10 @@ BattleScript_EffectImprison::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRefresh::
-	attackcanceler
-	curestatuswithmove BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printfromtable gCureStatusStringIds
-	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_ATTACKER
-	goto BattleScript_MoveEnd
+BattleScript_MoveEffectRefresh::
+	printsavedstring BS_EFFECT_BATTLER
+	updatestatusicon BS_EFFECT_BATTLER
+	return
 
 BattleScript_EffectSnatch::
 	attackcanceler

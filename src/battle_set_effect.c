@@ -1852,6 +1852,50 @@ static void HandleSetEffectImprison(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    // curestatuswithmove BattleScript_ButItFailed
+    // printfromtable gCureStatusStringIds
+    // waitmessage B_WAIT_TIME_LONG
+    // updatestatusicon BS_ATTACKER
+    // goto BattleScript_MoveEnd
+
+    enum StringID cureString = STRINGID_EMPTYSTRING3;
+
+    u32 status = gBattleMons[se->effectBattler].status1;
+    u32 shouldHeal = status & STATUS1_CAN_MOVE;
+
+    if (!shouldHeal)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
+        if (status & STATUS1_SLEEP)
+            TryDeactivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
+
+        if (status & STATUS1_PARALYSIS)
+            cureString = STRINGID_SCRCUREDPARALYSIS;
+        else if (status & STATUS1_POISON || status & STATUS1_TOXIC_POISON)
+            cureString = STRINGID_SCRCUREDPOISON;
+        else if (status & STATUS1_BURN)
+            cureString = STRINGID_SCRCUREDBURN;
+        else if (status & STATUS1_SLEEP)
+            cureString = STRINGID_SCRCUREDSLEEP;
+        else if (status & STATUS1_FREEZE)
+            cureString = STRINGID_PKMNWASDEFROSTED;
+        else if (status & STATUS1_FROSTBITE)
+            cureString = STRINGID_PKMNFROSTBITEHEALED;
+
+        gBattleMons[se->effectBattler].status1 = 0;
+        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);
+        MarkBattlerForControllerExec(se->effectBattler);
+        gBattleScripting.savedStringId = cureString;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectRefresh);
+
+    }
+
 }
 
 static void HandleSetEffectMudSport(struct BattleCalcValues *cv, struct SetEffect *se)
