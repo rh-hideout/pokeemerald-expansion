@@ -464,7 +464,7 @@ u32 CreateSpriteAtEndUnchecked(const struct SpriteTemplate *template, s16 x, s16
 
 u32 CreateInvisibleSprite(void (*callback)(struct Sprite *))
 {
-    u32 index = CreateSprite(&gDummySpriteTemplate, 0, 0, 31);
+    u32 index = CreateSprite(&gDummySpriteTemplate, 0, 0, 31);//This is not unchecked because CreateInvisibleSprite is only used in places that have no handler for when it returns MAX_SPRITES
 
     if (index == MAX_SPRITES)
     {
