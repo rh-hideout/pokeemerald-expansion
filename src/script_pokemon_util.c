@@ -387,7 +387,10 @@ u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
     struct Pokemon mon;
     u8 heldItem[2];
 
-    CreateRandomMon(&mon, species, level);
+    CreateMonWithOrigin(&mon, species, level, Random32(), OTID_STRUCT_PLAYER_ID, GIFTMON_ORIGIN);
+    SetBoxMonIVs(&mon.box, USE_RANDOM_IVS);
+    CalculateMonStats(&mon);
+    GiveMonInitialMoveset(&mon);
     if (item)
     {
         heldItem[0] = item;

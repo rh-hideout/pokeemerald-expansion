@@ -1,7 +1,9 @@
 #include "global.h"
 #include "battle.h"
+#include "config_changes.h"
 #include "egg_hatch.h"
 #include "event_data.h"
+#include "item.h"
 #include "new_game.h"
 #include "pokemon.h"
 #include "test/overworld_script.h"
@@ -108,6 +110,29 @@ TEST("Shininess set on an Egg persists after hatching")
     ScriptHatchMon();
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
+}
+
+TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
+{
+    u32 personality;
+
+    ZeroPlayerPartyMons();
+    ClearBag();
+    SetConfig(CONFIG_NO_SHINIES_WITHOUT_POKEBALLS, TRUE);
+
+    SeedRng(0);
+    personality = GetMonPersonality(SPECIES_CASTFORM_NORMAL, MON_GENDER_RANDOM, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    SetTrainerId(personality, gSaveBlock2Ptr->playerTrainerId);
+
+    EXPECT_EQ(ComputePlayerShinyOdds(personality, personality), FALSE);
+
+    SeedRng(0);
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_CASTFORM_NORMAL, 25, nature=NATURE_RANDOM, gender=MON_GENDER_RANDOM, hpIv=0, atkIv=0, defIv=0, speedIv=0, spAtkIv=0, spDefIv=0;
+    );
+
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY), personality);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
 }
 
