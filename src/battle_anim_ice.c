@@ -1530,7 +1530,7 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
         battlerY = sHailCoordData[hailStructId].y;
     }
     spriteX = battlerX - ((battlerY + 8) / 2);
-    id = CreateSprite(&gHailParticleSpriteTemplate, spriteX, -8, 18);
+    id = CreateSpriteUnchecked(&gHailParticleSpriteTemplate, spriteX, -8, 18);
     if (id == MAX_SPRITES)
     {
         return FALSE;

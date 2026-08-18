@@ -695,7 +695,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         // Add icons for occupied slots
         for (i = 0; i < GetMonListCount() - 1; i++)
         {
-            spriteId = CreateSprite(&sprTemplate, 226, (i * 20) + 8, 0);
+            spriteId = CreateSpriteUnchecked(&sprTemplate, 226, (i * 20) + 8, 0);
             if (spriteId != MAX_SPRITES)
             {
                 menu->partyPokeballSpriteIds[i] = spriteId;
@@ -713,7 +713,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         sprTemplate.callback = SpriteCallbackDummy;
         for (; i < PARTY_SIZE; i++)
         {
-            spriteId = CreateSprite(&sprTemplate, 230, (i * 20) + 8, 0);
+            spriteId = CreateSpriteUnchecked(&sprTemplate, 230, (i * 20) + 8, 0);
             if (spriteId != MAX_SPRITES)
             {
                 menu->partyPokeballSpriteIds[i] = spriteId;
@@ -728,7 +728,7 @@ static void CreateMonMarkingsOrPokeballIndicators(void)
         // Add cancel icon
         sprTemplate.tileTag = TAG_CONDITION_CANCEL;
         sprTemplate.callback = HighlightCurrentPartyIndexPokeball;
-        spriteId = CreateSprite(&sprTemplate, 222, (i * 20) + 8, 0);
+        spriteId = CreateSpriteUnchecked(&sprTemplate, 222, (i * 20) + 8, 0);
         if (spriteId != MAX_SPRITES)
         {
             menu->partyPokeballSpriteIds[i] = spriteId;
