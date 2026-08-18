@@ -2946,42 +2946,50 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
     else
     {
         enum MoveTarget moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == TARGET_RANDOM
-         || moveTarget == TARGET_BOTH
-         || moveTarget == TARGET_DEPENDS
-         || moveTarget == TARGET_FOES_AND_ALLY
-         || moveTarget == TARGET_OPPONENTS_FIELD)
+        switch (moveTarget)
         {
-            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
-        }
-        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
-        {
+        case TARGET_RANDOM:
+        case TARGET_BOTH:
+        case TARGET_DEPENDS:
+        case TARGET_FOES_AND_ALLY:
+        case TARGET_OPPONENTS_FIELD:
+        case TARGET_USER:
+        case TARGET_ALL_BATTLERS:
+        case TARGET_FIELD:
+        case TARGET_USER_AND_ALLY:
+        case TARGET_ALLY:
+            break;
+        case TARGET_SELECTED:
+        case TARGET_SMART:
+        case TARGET_OPPONENT:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
-
-            target = ((battlerId ^ BIT_SIDE)); // Note: this could be bugged under Ally Switch, but Getters do not work here
-        }
-        else if (moveTarget == TARGET_USER
-              || moveTarget == TARGET_ALL_BATTLERS
-              || moveTarget == TARGET_FIELD
-              || moveTarget == TARGET_USER_AND_ALLY)
-        {
-            target = battlerId;
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            target = (battlerId ^ BIT_FLANK);
-        }
-        else
-        {
+            break;
+        default:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID("%S requires explicit target", GetMoveName(moveId));
             }
+            break;
+        }
+
+        switch (moveTarget)
+        {
+        case TARGET_USER:
+        case TARGET_USER_OR_ALLY:
+        case TARGET_USER_AND_ALLY:
+            target = battlerId;
+            break;
+        case TARGET_ALLY:
+            target = battlerId ^ BIT_FLANK;
+            break;
+        default:
+            target = (battlerId & BIT_SIDE) ^ BIT_SIDE;
+            break;
         }
     }
     return target;
@@ -3126,7 +3134,8 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     if (!ctx.explicitAllowed || ctx.allowed)
     {
         PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, moveSlot);
-        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET, target);
+        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET,
+                          ctx.explicitTarget ? target : RECORDED_TARGET_DEFAULT);
     }
 
     if (ctx.explicitPartyIndex)

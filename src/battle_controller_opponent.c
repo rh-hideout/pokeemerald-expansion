@@ -468,13 +468,9 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         } while (move == MOVE_NONE);
 
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
-        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
+        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_ALLY)
         {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetPartnerBattler(battler) << 8));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetDefaultSelectionTarget(battler, moveTarget) << 8));
         }
         else if (IsDoubleBattle())
         {

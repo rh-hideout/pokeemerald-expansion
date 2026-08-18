@@ -1119,6 +1119,7 @@ enum BattlerPosition GetPartnerPosition(enum BattlerPosition position);
 enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
 enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
 enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
+enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {

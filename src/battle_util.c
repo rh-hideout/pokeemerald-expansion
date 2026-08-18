@@ -120,6 +120,21 @@ enum BattlerId GetBattlerRightFoe(enum BattlerId battler)
     return GetPartnerBattler(GetBattlerLeftFoe(battler));
 }
 
+enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget)
+{
+    switch (moveTarget)
+    {
+    case TARGET_USER:
+    case TARGET_USER_OR_ALLY:
+    case TARGET_USER_AND_ALLY:
+        return battler;
+    case TARGET_ALLY:
+        return GetPartnerBattler(battler);
+    default:
+        return GetBattlerLeftFoe(battler);
+    }
+}
+
 static const u8 sPkblToEscapeFactor[][3] = {
     {
         [B_MSG_MON_CURIOUS]    = 0,

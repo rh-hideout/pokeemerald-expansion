@@ -703,12 +703,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
-        if (isUserOrAlly)
-            gMultiUsePlayerCursor = battler;
-        else if (moveTarget == TARGET_ALLY)
-            gMultiUsePlayerCursor = GetPartnerBattler(battler);
-        else
-            gMultiUsePlayerCursor = GetBattlerLeftFoe(battler);
+        gMultiUsePlayerCursor = GetDefaultSelectionTarget(battler, moveTarget);
 
         if (gBattleResources->bufferA[battler][1]) // a double battle
         {

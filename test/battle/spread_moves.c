@@ -466,7 +466,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         TURN { MOVE(opponentRight, MOVE_ICY_WIND); MOVE(playerLeft, MOVE_ROCK_SLIDE); SEND_OUT(playerRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponentRight);
-        EFFECTIVENESS_SE(playerRight, SE_SUPER_EFFECTIVE); // SE against sandslash
+        EFFECTIVENESS_SE(playerLeft, SE_SUPER_EFFECTIVE); // SE against sandslash
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
 
@@ -490,8 +490,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
-        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
         MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wynaut hung on using its Focus Sash!");

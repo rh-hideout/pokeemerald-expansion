@@ -267,6 +267,11 @@ static void RecordedPartnerHandleChooseMove(enum BattlerId battler)
 {
     u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
     u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
+    if (target == RECORDED_TARGET_DEFAULT)
+    {
+        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
+        target = GetDefaultSelectionTarget(battler, GetMoveTarget(moveInfo->moves[moveIndex]));
+    }
     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
 
     BtlController_Complete(battler);
