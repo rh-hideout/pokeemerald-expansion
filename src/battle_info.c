@@ -158,7 +158,8 @@ static void Detail_Exit(void);
 static void Detail_HandleInput(u8 taskId);
 static void Detail_CreateWindows(void);
 static void Detail_DestroyWindows(void);
-static void Detail_DrawStaticWindows(void);
+static void Detail_DrawStatLabels(void);
+static void Detail_DrawItemAbilityWindow(void);
 static const u8 *GetGimmickIndicatorData(enum BattlerId battler, u32 *palTag);
 static void Detail_DestroyHpBar(void);
 static void Detail_RefreshHpBar(void);
@@ -232,7 +233,7 @@ static void Detail_UpdateScrollbarLane(bool32 hasScrollbar);
 static void Detail_SetDescriptionPlaceholder(enum BattleInfoLabels  label);
 static void Detail_FormatDescriptionText(enum BattleInfoLabels  label, u8 *dst);
 static void Detail_ClampTextLines(u8 *text, u32 maxLines);
-static void Detail_DrawWindowFrame(u32 windowId);
+static void Detail_ResetWithTransparentTextColor(u32 windowId);
 static const u8 *GetPrimaryOpponentTrainerName(void);
 static const u8 *GetPlayerSideTrainerName(void);
 static u32 GetOpponentTrainerCount(void);
@@ -1439,7 +1440,8 @@ static void Detail_Enter(void)
     FillBgTilemapBufferRect(B_INFO_TEXT_BG, 0, 0, 0, B_INFO_TILEMAP_WIDTH, B_INFO_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
     Detail_CreateWindows();
-    Detail_DrawStaticWindows();
+    Detail_DrawStatLabels();
+    Detail_DrawItemAbilityWindow();
     Detail_InitEffectsList();
     Detail_CreateStatPips();
     Detail_RefreshStatPips();
@@ -1485,7 +1487,7 @@ static void Detail_CreateWindows(void)
 
         sData->windowIds[i] = AddWindow(&sBattleInfoDetailWindowTemplates[i]);
         if (sData->windowIds[i] != WINDOW_NONE)
-            Detail_DrawWindowFrame(sData->windowIds[i]);
+            Detail_ResetWithTransparentTextColor(sData->windowIds[i]);
     }
 
     sData->windowIds[WIN_DETAIL_ITEM_ABILITY] = sData->windowIds[WIN_DETAIL_HEADER];
@@ -1518,17 +1520,10 @@ static void Detail_DestroyWindows(void)
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
 }
 
-static void Detail_DrawStaticWindows(void)
+static void Detail_DrawStatLabels(void)
 {
-    u32 windowId;
-
-    windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
-    Detail_DrawWindowFrame(windowId);
-    PutWindowTilemap(windowId);
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-
-    windowId = sData->windowIds[WIN_DETAIL_STATS];
-    Detail_DrawWindowFrame(windowId);
+    u32 windowId = sData->windowIds[WIN_DETAIL_STATS];
+    Detail_ResetWithTransparentTextColor(windowId);
     for (u32 i = 0; i < B_INFO_DETAIL_STAT_ROW_COUNT; i++)
     {
         AddTextPrinterParameterized4(
@@ -1540,20 +1535,13 @@ static void Detail_DrawStaticWindows(void)
     }
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
+}
 
+static void Detail_DrawItemAbilityWindow(void)
+{
+    u32 windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
+    Detail_ResetWithTransparentTextColor(windowId);
     Detail_DrawLRButtonGlyphs();
-
-    windowId = sData->windowIds[WIN_DETAIL_ITEM_ABILITY];
-    PutWindowTilemap(windowId);
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-
-    windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
-    Detail_DrawWindowFrame(windowId);
-    PutWindowTilemap(windowId);
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-
-    windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
-    Detail_DrawWindowFrame(windowId);
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
@@ -1838,7 +1826,7 @@ static void Detail_RefreshHeader(void)
     u32 windowId = sData->windowIds[WIN_DETAIL_HEADER];
     struct Pokemon *mon = GetBattlerMon(GetSelectedBattler());
 
-    Detail_DrawWindowFrame(windowId);
+    Detail_ResetWithTransparentTextColor(windowId);
     s32 genderX = WindowWidthPx(windowId) - 2 - B_INFO_GENDER_W;
     u8 maxLevelText[2] = { CHAR_EXTRA_SYMBOL, CHAR_LV_2 };
 
@@ -2648,7 +2636,7 @@ static void Detail_RefreshEffectsWindow(void)
     if (GetFontAttribute(FONT_SMALL_NARROWER, FONTATTR_MAX_LETTER_HEIGHT) < 12)
         fractionYOffset = (12 - GetFontAttribute(FONT_SMALL_NARROWER, FONTATTR_MAX_LETTER_HEIGHT)) / 2;
 
-    Detail_DrawWindowFrame(windowId);
+    Detail_ResetWithTransparentTextColor(windowId);
     AddTextPrinterParameterized4(windowId, FONT_NARROWER, 2, 2, 0, 0, sTextColor_BattleInfo_Default,
                                  TEXT_SKIP_DRAW, COMPOUND_STRING("Active States and Effects"));
 
@@ -2817,7 +2805,7 @@ static void Detail_RefreshDescriptionWindow(void)
     u32 windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
     u32 descFont = FONT_SMALL_NARROWER;
 
-    Detail_DrawWindowFrame(windowId);
+    Detail_ResetWithTransparentTextColor(windowId);
 
     if (sData->activeEffectsCount == 0 || sData->effectsCursor >= sData->activeEffectsCount)
     {
@@ -2871,7 +2859,7 @@ static void Detail_DestroyIconSprite(void)
     sData->iconSpriteId = SPRITE_NONE;
 }
 
-static void Detail_DrawWindowFrame(u32 windowId)
+static void Detail_ResetWithTransparentTextColor(u32 windowId)
 {
     FillWindowPixelBuffer(windowId, PIXEL_FILL(B_INFO_TEXT_COLOR_TRANSPARENT));
 }
