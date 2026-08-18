@@ -342,8 +342,8 @@ static enum CancelerResult CancelerVolatileBlocked(struct BattleCalcValues *cv)
         gBattlescriptCurrInstr = BattleScript_MoveUsedHealBlockPrevents;
         result = CANCELER_RESULT_FAILURE;
     }
-    // A damaging Z-Move has already replaced the chosen move, so Gravity has to
-    // be judged on the move it was derived from.
+    // Dynamax executes a Max Move, which is not Gravity-banned even when its base
+    // move is, so only a Z-Move has to be judged on the move it replaced.
     else if (IsGravityPreventingMove(GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE ? gBattleStruct->baseMove : cv->move))
     {
         gBattleScripting.battler = cv->battlerAtk;

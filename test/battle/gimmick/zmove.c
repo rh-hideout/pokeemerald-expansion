@@ -841,7 +841,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Move power is based on the base move", s16 damage
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Taunt")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Taunt")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
@@ -858,7 +858,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Taunt")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Tormented")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Tormented")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TORMENT) == EFFECT_TORMENT);
@@ -875,7 +875,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Tormented")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Disabled")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Disabled")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
@@ -892,7 +892,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Disabled")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Encored")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Encored")
 {
     GIVEN {
         WITH_CONFIG(B_ENCORE_TARGET, GEN_5);
@@ -910,7 +910,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Encored")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Imprisoned")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Imprisoned")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_IMPRISON) == EFFECT_IMPRISON);
@@ -927,7 +927,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected while Imprisoned")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Heal Block")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Heal Block")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
@@ -944,7 +944,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Heal Block")
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected and executed under Throat Chop")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected and executed under Throat Chop")
 {
     GIVEN {
         ASSUME(IsSoundMove(MOVE_GROWL));
@@ -960,7 +960,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected and executed under Throat C
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Gravity but Gravity still prevents execution")
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Gravity but Gravity still prevents execution")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
@@ -977,7 +977,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves can be selected under Gravity but Gravity s
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Belch can be selected without eating a Berry")
+SINGLE_BATTLE_TEST("Z-Move: Z-Belch can be selected without eating a Berry")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BELCH) == EFFECT_BELCH);

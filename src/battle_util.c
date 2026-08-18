@@ -1323,12 +1323,12 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
     return !GetBattlerPartyState(battler)->ateBerry;
 }
 
+// gimmick.toActivate is only set after this runs, so the gimmick chosen for this
+// action has to be read back from the controller's return value.
+#define GIMMICK_SELECTED(chosen)    ((gBattleResources->bufferB[battler][2] & RET_GIMMICK) && gBattleStruct->gimmick.usableGimmick[battler] == (chosen))
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
-#define DYNAMAX_BYPASS_CHECK    (!IsGimmickSelected(battler, GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
-// gimmick.toActivate is only set after this runs, so the chosen gimmick has to
-// be read back from the controller's return value.
-#define Z_MOVE_SELECTED         ((gBattleResources->bufferB[battler][2] & RET_GIMMICK) && gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE)
-#define Z_MOVE_BYPASS_CHECK     (!Z_MOVE_SELECTED && GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
+#define DYNAMAX_BYPASS_CHECK    (!GIMMICK_SELECTED(GIMMICK_DYNAMAX) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+#define Z_MOVE_BYPASS_CHECK     (!GIMMICK_SELECTED(GIMMICK_Z_MOVE) && GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
 
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 {
