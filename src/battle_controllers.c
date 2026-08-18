@@ -115,6 +115,12 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
     if (IsAiVsAiBattle())
         return TRUE;
 
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED
+     && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER
+     && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+     && GetBattlerPosition(battlerId) == B_POSITION_PLAYER_RIGHT)
+        return TRUE;
+
     return FALSE;
 }
 
