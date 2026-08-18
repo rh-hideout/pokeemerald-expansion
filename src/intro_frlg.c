@@ -2199,7 +2199,7 @@ static void Scene3_Task_GengarAttack(u8 taskId)
 
 static void Scene3_CreateGengarSwipeSprites(void)
 {
-    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_GengarSwipe, 132, 78, 6); // Implicitly ANIM_SWIPE_TOP
+    u8 spriteId = CreateSprite(&sSpriteTemplate_GengarSwipe, 132, 78, 6); // Implicitly ANIM_SWIPE_TOP
     spriteId = CreateSpriteUnchecked(&sSpriteTemplate_GengarSwipe, 132, 118, 6);
     if (spriteId != MAX_SPRITES)
     {

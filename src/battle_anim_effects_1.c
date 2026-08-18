@@ -4560,7 +4560,10 @@ void AnimTask_LeafBlade(u8 taskId)
     task->data[8] = task->data[7] - task->data[9] + task->data[6];
     task->data[2] = CreateSpriteUnchecked(&gLeafBladeSpriteTemplate, task->data[8], task->data[9], task->data[4]);
     if (task->data[2] == MAX_SPRITES)
+    {
         DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     gSprites[task->data[2]].data[0] = 10;
     gSprites[task->data[2]].data[1] = task->data[8];
