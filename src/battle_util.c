@@ -1326,7 +1326,7 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
 static bool32 IsGimmickChosenForAction(enum BattlerId battler, enum Gimmick gimmick)
 {
     return (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
-        && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
+         && gBattleStruct->gimmick.usableGimmick[battler] == gimmick;
 }
 
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
