@@ -110,6 +110,7 @@ static void SpriteCB_BounceEffect(struct Sprite *sprite);
 static void BattleStartClearSetData(void);
 static void DoBattleIntro(void);
 static void TryDoEventsBeforeFirstTurn(void);
+static void SetAiBattlerLogicOrder(void);
 static void HandleTurnActionSelectionState(void);
 static void RunTurnActionsFunctions(void);
 static void SetActionsAndBattlersTurnOrder(void);
@@ -3833,6 +3834,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         AssignUsableGimmicks();
         SetShellSideArmCategory();
         SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
+        SetAiBattlerLogicOrder();
         gBattleMainFunc = HandleTurnActionSelectionState;
         ResetSentPokesToOpponentValue();
 
@@ -3947,6 +3949,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
+    SetAiBattlerLogicOrder();
     SetBattleCallback(HandleTurnActionSelectionState);
 
     return FALSE;
@@ -4068,16 +4071,20 @@ enum
     STATE_SELECTION_SCRIPT_MAY_RUN
 };
 
+static void SetAiBattlerLogicOrder(void)
+{
+    gBattleStruct->reverseBattlerLogicOrder = IsDoubleBattle()
+                                             && RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, GetConfig(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE));
+}
+
 static void HandleTurnActionSelectionState(void)
 {
     s32 i;
 
-    bool32 reverseBattlerLogicOrder = RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, GetConfig(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE)) && IsDoubleBattle();
-
     gBattleCommunication[ACTIONS_CONFIRMED_COUNT] = 0;
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        enum BattlerId battler = reverseBattlerLogicOrder ? GetPartnerBattler(battlerIndex) : battlerIndex;
+        enum BattlerId battler = gBattleStruct->reverseBattlerLogicOrder ? GetPartnerBattler(battlerIndex) : battlerIndex;
         enum BattlerPosition position = GetBattlerPosition(battler);
         switch (gBattleCommunication[battler])
         {
