@@ -1651,6 +1651,15 @@ static void PrintStatsScreenTextSmall(u8 windowId, const u8* str, u8 left, u8 to
 
     AddTextPrinterParameterized4(windowId, 0, left, top, 0, 0, color, 0, str);
 }
+static void PrintStatsScreenTextSmallToFit(u8 windowId, const u8* str, u8 left, u8 top, u32 width)
+{
+    u8 color[3];
+    color[0] = TEXT_COLOR_TRANSPARENT;
+    color[1] = TEXT_DYNAMIC_COLOR_6;
+    color[2] = TEXT_COLOR_LIGHT_GRAY;
+
+    AddTextPrinterParameterized4(windowId, GetFontIdToFit(str, FONT_SMALL, 0, width), left, top, 0, 0, color, 0, str);
+}
 static void PrintStatsScreenTextSmallNarrower(u8 windowId, const u8* str, u8 left, u8 top)
 {
     u8 color[3];
@@ -2681,21 +2690,23 @@ static void PrintStatsScreen_Left(u8 taskId)
     {
         u32 catchRate = sPokedexView->sPokemonStats.catchRate;
         enum GrowthRate growthRate = sPokedexView->sPokemonStats.growthRate;
+        const u8 *catchRateText;
 
         //Catch rate
         PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate, base_x, base_y + base_y_offset*base_i);
         if (catchRate <= 10)
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_Legend, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_Legend;
         else if (catchRate <= 70)
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_VeryHard, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_VeryHard;
         else if (catchRate <= 100)
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_Difficult, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_Difficult;
         else if (catchRate <= 150)
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_Medium, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_Medium;
         else if (catchRate <= 200)
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_Relaxed, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_Relaxed;
         else
-            PrintStatsScreenTextSmall(WIN_STATS_LEFT, sText_Stats_CatchRate_Easy, base_x + x_offset_column, base_y + base_y_offset*base_i);
+            catchRateText = sText_Stats_CatchRate_Easy;
+        PrintStatsScreenTextSmallToFit(WIN_STATS_LEFT, catchRateText, base_x + x_offset_column, base_y + base_y_offset*base_i, total_x - base_x - x_offset_column);
         base_i++;
 
         //Growth rate
