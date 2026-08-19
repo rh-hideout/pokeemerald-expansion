@@ -23,6 +23,7 @@
 #include "constants/script_menu.h"
 #include "gba/defines.h"
 #include "item.h"
+#include "ow_abilities.h"
 #include "pokemon.h"
 #include "util.h"
 #include "move.h"
@@ -50,6 +51,7 @@ static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScri
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
 static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect);
+static inline enum MoveEffect GetSynchronizeEffect(u32 status);
 
 static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *se)
 {
@@ -1968,6 +1970,62 @@ static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectPsychoShift(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    u32 attackerStatus = gBattleMons[cv->battlerAtk].status1;
+    u32 effectStatus = gBattleMons[se->effectBattler].status1;
+
+    enum Ability attackerAbility = cv->abilities[cv->battlerAtk];
+    enum Ability effectAbility = cv->abilities[se->effectBattler];
+
+    enum BattleSide effectSide = GetBattlerSide(se->effectBattler);
+
+    enum StringID statusString = GetStatus1String(attackerStatus);
+    enum MoveEffect synchronizeEffect = GetSynchronizeEffect(attackerStatus);
+
+    bool32 canSetNonVolatile = CanSetNonVolatileStatus(cv->battlerAtk, se->effectBattler,
+                                                       attackerAbility, effectAbility,
+                                                       synchronizeEffect, CHECK_TRIGGER);
+
+    bool32 shouldFail = effectStatus & STATUS1_ANY
+                     || !(attackerStatus & STATUS1_ANY)
+                     || IsSafeguardProtected(cv->battlerAtk, se->effectBattler, attackerAbility)
+                     || !canSetNonVolatile;
+
+    bool32 triggerSleepClause = IsSleepClauseActiveForSide(effectSide)
+                             && (attackerStatus & STATUS1_SLEEP);
+
+    // Actually activate the effect
+
+    if (shouldFail)
+    {
+        if (triggerSleepClause)
+            SetEffectFail(BattleScript_SleepClausePrevents, cv->isStatusMove);
+        else
+            SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
+        gBattleMons[se->effectBattler].status1 = attackerStatus & STATUS1_ANY;
+
+        BtlController_EmitSetMonData(
+            se->effectBattler,
+            B_COMM_TO_CONTROLLER,
+            REQUEST_STATUS_BATTLE,
+            0,
+            sizeof(effectStatus),
+            &gBattleMons[se->effectBattler].status1);
+
+        MarkBattlerForControllerExec(se->effectBattler);
+
+        gBattleScripting.savedStringId = statusString;
+
+        TryActivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
+        TrySynchronizeActivation(cv->battlerAtk, se->effectBattler, synchronizeEffect);
+
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectPsychoShift);
+    }
 }
 
 static void HandleSetEffectPowerTrick(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2608,4 +2666,34 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
     default:
         return FALSE;
     }
+}
+
+static inline enum MoveEffect GetSynchronizeEffect(u32 status)
+{
+    if (status & STATUS1_POISON)
+    {
+        return MOVE_EFFECT_POISON;
+    }
+    else if (status & STATUS1_TOXIC_POISON)
+    {
+        return MOVE_EFFECT_TOXIC;
+    }
+    else if (status & STATUS1_BURN)
+    {
+        return MOVE_EFFECT_BURN;
+    }
+    else if (status & STATUS1_PARALYSIS)
+    {
+        return MOVE_EFFECT_PARALYSIS;
+    }
+    else if (status & STATUS1_SLEEP)
+    {
+        return MOVE_EFFECT_SLEEP;
+    }
+    else if (status & STATUS1_FROSTBITE)
+    {
+        return MOVE_EFFECT_FREEZE_OR_FROSTBITE;
+    }
+
+    return MOVE_EFFECT_NONE;
 }

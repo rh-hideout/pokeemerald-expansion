@@ -1353,7 +1353,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PSYCHO_SHIFT] =
     {
-        .battleScript = BattleScript_EffectPsychoShift,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

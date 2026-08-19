@@ -657,7 +657,7 @@ extern const u8 BattleScript_EffectDefog[];
 extern const u8 BattleScript_EffectMemento[];
 
 extern const u8 BattleScript_EffectHitEnemyHealAlly[];
-extern const u8 BattleScript_EffectPsychoShift[];
+extern const u8 BattleScript_MoveEffectPsychoShift[];
 extern const u8 BattleScript_EffectAfterYou[];
 extern const u8 BattleScript_EffectBestow[];
 extern const u8 BattleScript_EffectThirdType[];

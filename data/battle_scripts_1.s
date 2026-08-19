@@ -837,28 +837,22 @@ BattleScript_MoveEffectFlameBurst::
 	tryfaintmon BS_EFFECT_BATTLER
 	return
 
-BattleScript_EffectPsychoShift::
-	attackcanceler
-	jumpifstatus BS_ATTACKER, STATUS1_ANY, BattleScript_EffectPsychoShiftCanWork
-	goto BattleScript_ButItFailed
-BattleScript_EffectPsychoShiftCanWork:
-	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_ButItFailed
-	jumpifsafeguard BattleScript_SafeguardProtected
-	trypsychoshift BattleScript_ButItFailed, BattleScript_SleepClauseBlocked
-	attackanimation
-	waitanimation
-	copybyte gEffectBattler, gBattlerTarget
-	printfromtable gStatusConditionsStringIds
+BattleScript_MoveEffectPsychoShift::
+	printsavedstring BS_EFFECT_BATTLER
 	waitmessage B_WAIT_TIME_LONG
-	statusanimation BS_TARGET
-	updatestatusicon BS_TARGET
+	statusanimation BS_EFFECT_BATTLER
+	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
 	trysynchronize
+	call BattleScript_CureStatusAttacker
+	return
+
+BattleScript_CureStatusAttacker:
 	curestatus BS_ATTACKER
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_ATTACKER
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_ItDoesntAffectScrTarget::
 	printstring STRINGID_ITDOESNTAFFECTSCR
