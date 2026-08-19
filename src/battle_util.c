@@ -3375,7 +3375,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         continue;
                     SetStatChange(i, STAT_ATK, -1);
                 }
-                BattleScriptCall(BattleScript_IntimidateActivates); // Sets a flag to check for intim failure. Similar abilities should use BattleScript_AbilityActivates.
+                BattleScriptCall(BattleScript_IntimidateActivates); // Sets a flag to check for intim failure. Similar abilities should use BattleScript_AbilityStatChange.
                 effect++;
             }
             break;
