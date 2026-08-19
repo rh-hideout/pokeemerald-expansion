@@ -1,6 +1,8 @@
 #ifndef GUARD_SPRITE_H
 #define GUARD_SPRITE_H
 
+#include "global.h"
+#include "gba/defines.h"
 #define OAM_MATRIX_COUNT 32
 #define MAX_SPRITES 64
 #define SPRITE_NONE 0xFF
@@ -270,6 +272,11 @@ extern s16 gSpriteCoordOffsetX;
 extern s16 gSpriteCoordOffsetY;
 extern struct OamMatrix gOamMatrices[OAM_MATRIX_COUNT];
 extern bool8 gAffineAnimsDisabled;
+
+static inline Tile4BPP* SpriteTile(struct Sprite* sprite)
+{
+    return OBJ_TILE(sprite->oam.tileNum);
+}
 
 void ResetSpriteData(void);
 void AnimateSprites(void);

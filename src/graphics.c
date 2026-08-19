@@ -711,21 +711,26 @@ const u16 gBattleInterface_BallStatusBarPal[] = INCGFX_U16("graphics/battle_inte
 
 const u16 gBattleInterface_BallDisplayPal[] = INCGFX_U16("graphics/battle_interface/ball_display.png", ".gbapal");
 
-const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
-                                                  "graphics/battle_interface/expbar.4bpp",
-                                                  "graphics/battle_interface/status.4bpp",
-                                                  "graphics/battle_interface/misc.4bpp",
-                                                  "graphics/battle_interface/hpbar_anim.4bpp",
-                                                  "graphics/battle_interface/misc_frameend.4bpp",
-                                                  "graphics/battle_interface/ball_display.4bpp",
-                                                  "graphics/battle_interface/ball_caught_indicator.4bpp",
-                                                  "graphics/battle_interface/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
-                                                  "graphics/battle_interface/status3.4bpp",
-                                                  "graphics/battle_interface/status4.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_player_frameend.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_player_frameend_bar.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_opponent_frameend.4bpp",
-                                                  "graphics/battle_interface/healthbox_doubles_opponent_frameend_bar.4bpp");
+
+const Tile4BPP gBattleHpBarGfx[] = INCGFX_U32("graphics/battle_interface/healthbar.png", ".4bpp");
+const Tile4BPP gBattleExpBarGfx[] = INCGFX_U32("graphics/battle_interface/expbar.png", ".4bpp");
+const Tile4BPP gBattleStatusGfx[] = INCGFX_U32("graphics/battle_interface/status.png", ".4bpp");
+const Tile4BPP gBattleBallDisplay[] = INCGFX_U32("graphics/battle_interface/ball_display.png", ".4bpp");
+const Tile4BPP gHealthBoxMisc[] = INCGFX_U32("graphics/battle_interface/misc.png", ".4bpp");
+const Tile4BPP gHealthBoxCaughtBall[] = INCGFX_U32("graphics/battle_interface/ball_caught_indicator.png", ".4bpp");
+
+const Tile4BPP sHealthBoxFrameEndPlayer      = INCGFX_U32("graphics/battle_interface/healthbox_doubles_player_frameend.png", ".4bpp");
+const Tile4BPP sHealthBoxFrameEndPlayerBar   = INCGFX_U32("graphics/battle_interface/healthbox_doubles_player_frameend_bar.png", ".4bpp");
+const Tile4BPP sHealthBoxFrameEndOpponent    = INCGFX_U32("graphics/battle_interface/healthbox_doubles_opponent_frameend.png", ".4bpp");
+const Tile4BPP sHealthBoxFrameEndOpponentBar = INCGFX_U32("graphics/battle_interface/healthbox_doubles_opponent_frameend_bar.png", ".4bpp");
+
+const Tile4BPP gHealthBoxFrameEnd[] = {
+    sHealthBoxFrameEndPlayer,
+    sHealthBoxFrameEndPlayerBar,
+    sHealthBoxFrameEndOpponent,
+    sHealthBoxFrameEndOpponentBar,
+};
+
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCGFX_U32("graphics/battle_interface/unused_window3.png", ".4bpp.smol");
 const u32 gBattleInterfaceGfx_UnusedWindow4[] = INCGFX_U32("graphics/battle_interface/unused_window4.png", ".4bpp.smol");
 

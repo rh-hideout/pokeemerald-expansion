@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_INTERFACE_H
 
 #include "battle_controllers.h"
+#include "gba/defines.h"
 
 // used for sBattlerCoords and sBattlerHealthboxCoords
 enum BattleCoordTypes
@@ -18,7 +19,7 @@ enum
     HP_BOTH
 };
 
-enum
+enum BattleBarType
 {
     HEALTH_BAR,
     EXP_BAR
@@ -108,22 +109,26 @@ enum
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
 
+static ALWAYS_INLINE u32 GetHealthboxRightSpriteId(u32 leftSpriteId)
+{
+    return gSprites[leftSpriteId].oam.affineParam;
+}
+
 enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler);
 u8 CreateBattlerHealthboxSprites(enum BattlerId battler);
 u8 CreateSafariPlayerHealthboxSprites(void);
 void SetBattleBarStruct(enum BattlerId battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue);
 void SetHealthboxSpriteInvisible(u8 healthboxSpriteId);
 void SetHealthboxSpriteVisible(u8 healthboxSpriteId);
-void DummyBattleInterfaceFunc(u8 healthboxSpriteId, bool8 isDoubleBattleBattlerOnly);
 void UpdateOamPriorityInAllHealthboxes(u8 priority, bool32 hideHpBoxes);
 void InitBattlerHealthboxCoords(enum BattlerId battler);
 void GetBattlerHealthboxCoords(enum BattlerId battler, s16 *x, s16 *y);
-void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp, s16 maxHp);
+void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp);
 void SwapHpBarsWithHpText(void);
 u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *partyInfo, bool8 skipPlayer, bool8 isBattleStart);
 void Task_HidePartyStatusSummary(u8 taskId);
 void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elementId);
-s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 unused);
+s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar);
 u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale);
 u8 GetHPBarLevel(s16 hp, s16 maxhp);
 bool32 IsAnyAbilityPopUpActive(void);
