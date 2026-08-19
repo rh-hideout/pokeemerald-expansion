@@ -960,7 +960,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
                 gLastUsedAbility = ABILITY_SWEET_VEIL;
                 gBattlerAbility = gBattleScripting.battler;
                 RecordAbilityBattle(gBattleScripting.battler, ABILITY_SWEET_VEIL);
-                BattleScriptCall(BattleScript_ImmunityProtectedRet);
+                BattleScriptCall(BattleScript_AbilityProtectedTarget);
             }
             else
             {

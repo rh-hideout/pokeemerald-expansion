@@ -182,7 +182,7 @@
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 #define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
 #define B_MOVE_EFFECTS_BEFORE_MOVES     GEN_LATEST // In Champions, Beak Blast will work when Encored into from a different move
-                                                   // Additionally, the charging animation will occur 
+                                                   // Additionally, the charging animation will occur
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.

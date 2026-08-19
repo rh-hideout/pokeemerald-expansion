@@ -342,7 +342,6 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
 static void RemoveAllWeather(void);
 static void RemoveAllTerrains(void);
 static void ResetValuesForCalledMove(void);
-static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
 static u32 GetPossibleNextTarget(u32 currTarget);
 
@@ -459,8 +458,6 @@ static void Cmd_setatkhptozero(void);
 static void Cmd_jumpifnexttargetvalid(void);
 static void Cmd_tryhealhalfhealth(void);
 static void Cmd_setfieldweather(void);
-static void Cmd_setreflect(void);
-static void Cmd_setseeded(void);
 static void Cmd_manipulatedamage(void);
 static void Cmd_trysetrest(void);
 static void Cmd_jumpifuproarwakes(void);
@@ -472,8 +469,6 @@ static void Cmd_initmultihitstring(void);
 static void Cmd_forcerandomswitch(void);
 static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
-static void Cmd_setlightscreen(void);
-static void Cmd_tryKO(void);
 static void Cmd_checknonvolatiletrigger(void);
 static void Cmd_animatewildpokemonafterfailedpokeball(void);
 static void Cmd_tryinfatuating(void);
@@ -484,22 +479,18 @@ static void Cmd_transformdataexecution(void);
 static void Cmd_setsubstitute(void);
 static void Cmd_mimicattackcopy(void);
 static void Cmd_setcalledmove(void);
-static void Cmd_disablelastusedattack(void);
 static void Cmd_trysetencore(void);
 static void Cmd_painsplitdmgcalc(void);
 static void Cmd_settypetorandomresistance(void);
 static void Cmd_setalwayshitflag(void);
 static void Cmd_copymovepermanently(void);
-static void Cmd_settailwind(void);
 static void Cmd_tryspiteppreduce(void);
 static void Cmd_healpartystatus(void);
 static void Cmd_cursetarget(void);
-static void Cmd_trysetspikes(void);
 static void Cmd_setvolatile(void);
 static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
 static void Cmd_setembargo(void);
-static void Cmd_setsafeguard(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_copyfoestats(void);
@@ -510,19 +501,15 @@ static void Cmd_selectfirstvalidtarget(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_setforcedtarget(void);
 static void Cmd_curestatuswithmove(void);
-static void Cmd_settorment(void);
 static void Cmd_settaunt(void);
 static void Cmd_trysethelpinghand(void);
 static void Cmd_tryswapitems(void);
 static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
-static void Cmd_settoxicspikes(void);
-static void Cmd_setgastroacid(void);
 static void Cmd_setyawn(void);
 static void Cmd_setroom(void);
 static void Cmd_tryswapabilities(void);
 static void Cmd_tryimprison(void);
-static void Cmd_setstealthrock(void);
 static void Cmd_trysetvolatile(void);
 static void Cmd_trysetmagiccoat(void);
 static void Cmd_trysetsnatch(void);
@@ -672,8 +659,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFNEXTTARGETVALID]                 = Cmd_jumpifnexttargetvalid,
     [B_SCR_OP_TRYHEALHALFHEALTH]                     = Cmd_tryhealhalfhealth,
     [B_SCR_OP_SETFIELDWEATHER]                       = Cmd_setfieldweather,
-    [B_SCR_OP_SETREFLECT]                            = Cmd_setreflect,
-    [B_SCR_OP_SETSEEDED]                             = Cmd_setseeded,
     [B_SCR_OP_MANIPULATEDAMAGE]                      = Cmd_manipulatedamage,
     [B_SCR_OP_TRYSETREST]                            = Cmd_trysetrest,
     [B_SCR_OP_JUMPIFUPROARWAKES]                     = Cmd_jumpifuproarwakes,
@@ -685,8 +670,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_FORCERANDOMSWITCH]                     = Cmd_forcerandomswitch,
     [B_SCR_OP_TRYCONVERSIONTYPECHANGE]               = Cmd_tryconversiontypechange,
     [B_SCR_OP_GIVEPAYDAYMONEY]                       = Cmd_givepaydaymoney,
-    [B_SCR_OP_SETLIGHTSCREEN]                        = Cmd_setlightscreen,
-    [B_SCR_OP_TRYKO]                                 = Cmd_tryKO,
     [B_SCR_OP_CHECKNONVOLATILETRIGGER]               = Cmd_checknonvolatiletrigger,
     [B_SCR_OP_ANIMATEWILDPOKEMONAFTERFAILEDPOKEBALL] = Cmd_animatewildpokemonafterfailedpokeball,
     [B_SCR_OP_TRYINFATUATING]                        = Cmd_tryinfatuating,
@@ -697,22 +680,18 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
     [B_SCR_OP_MIMICATTACKCOPY]                       = Cmd_mimicattackcopy,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
-    [B_SCR_OP_DISABLELASTUSEDATTACK]                 = Cmd_disablelastusedattack,
     [B_SCR_OP_TRYSETENCORE]                          = Cmd_trysetencore,
     [B_SCR_OP_PAINSPLITDMGCALC]                      = Cmd_painsplitdmgcalc,
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
     [B_SCR_OP_SETALWAYSHITFLAG]                      = Cmd_setalwayshitflag,
     [B_SCR_OP_COPYMOVEPERMANENTLY]                   = Cmd_copymovepermanently,
-    [B_SCR_OP_SETTAILWIND]                           = Cmd_settailwind,
     [B_SCR_OP_TRYSPITEPPREDUCE]                      = Cmd_tryspiteppreduce,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
     [B_SCR_OP_CURSETARGET]                           = Cmd_cursetarget,
-    [B_SCR_OP_TRYSETSPIKES]                          = Cmd_trysetspikes,
     [B_SCR_OP_SETVOLATILE]                           = Cmd_setvolatile,
     [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
-    [B_SCR_OP_SETSAFEGUARD]                          = Cmd_setsafeguard,
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_COPYFOESTATS]                          = Cmd_copyfoestats,
@@ -723,19 +702,15 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_SETFORCEDTARGET]                       = Cmd_setforcedtarget,
     [B_SCR_OP_CURESTATUSWITHMOVE]                    = Cmd_curestatuswithmove,
-    [B_SCR_OP_SETTORMENT]                            = Cmd_settorment,
     [B_SCR_OP_SETTAUNT]                              = Cmd_settaunt,
     [B_SCR_OP_TRYSETHELPINGHAND]                     = Cmd_trysethelpinghand,
     [B_SCR_OP_TRYSWAPITEMS]                          = Cmd_tryswapitems,
     [B_SCR_OP_TRYCOPYABILITY]                        = Cmd_trycopyability,
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
-    [B_SCR_OP_SETTOXICSPIKES]                        = Cmd_settoxicspikes,
-    [B_SCR_OP_SETGASTROACID]                         = Cmd_setgastroacid,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
     [B_SCR_OP_SETROOM]                               = Cmd_setroom,
     [B_SCR_OP_TRYSWAPABILITIES]                      = Cmd_tryswapabilities,
     [B_SCR_OP_TRYIMPRISON]                           = Cmd_tryimprison,
-    [B_SCR_OP_SETSTEALTHROCK]                        = Cmd_setstealthrock,
     [B_SCR_OP_TRYSETVOLATILE]                        = Cmd_trysetvolatile,
     [B_SCR_OP_TRYSETMAGICCOAT]                       = Cmd_trysetmagiccoat,
     [B_SCR_OP_TRYSETSNATCH]                          = Cmd_trysetsnatch,
@@ -809,6 +784,18 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_40]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_41]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_42]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_43]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_44]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_45]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_46]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_47]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_48]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_49]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_50]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_51]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_52]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_53]                             = Cmd_dummy,
+
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -1614,48 +1601,6 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
     TrySaveExchangedItem(itemBattler, gLastUsedItem);
 }
 
-bool32 TrySetReflect(enum BattlerId battler)
-{
-    enum BattleSide side = GetBattlerSide(battler);
-    if (!(gSideStatuses[side] & SIDE_STATUS_REFLECT))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_REFLECT;
-        if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].reflectTimer = 8;
-        else
-            gSideTimers[side].reflectTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_DOUBLE;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_REFLECT_SINGLE;
-
-        return TRUE;
-    }
-    return FALSE;
-}
-
-bool32 TrySetLightScreen(enum BattlerId battler)
-{
-    enum BattleSide side = GetBattlerSide(battler);
-    if (!(gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
-        if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[side].lightscreenTimer = 8;
-        else
-            gSideTimers[side].lightscreenTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, battler) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_DOUBLE;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_LIGHTSCREEN_SINGLE;
-
-        return TRUE;
-    }
-    return FALSE;
-}
-
 void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
 {
     if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
@@ -1801,7 +1746,7 @@ static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget))
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || IsBattleMoveStatus(gCurrentMove))
     {
         struct BattleCalcValues cv = {0};
         cv.battlerAtk = gBattlerAttacker;
@@ -1809,10 +1754,12 @@ static void Cmd_setadditionaleffects(void)
         cv.move = gCurrentMove;
         cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
         cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+        cv.isStatusMove = IsBattleMoveStatus(cv.move);
 
         struct SetEffect se = {0};
 
         u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+
         SetToxicChainPriority();
         if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
         {
@@ -5227,41 +5174,6 @@ static void Cmd_setfieldweather(void)
         BattleScriptCall(BattleScript_FailOnPrimalWeather);
 }
 
-static void Cmd_setreflect(void)
-{
-    CMD_ARGS();
-    if (!TrySetReflect(gBattlerAttacker))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_setseeded(void)
-{
-    CMD_ARGS();
-
-    if (IsBattlerUnaffectedByMove(gBattlerTarget) || gBattleMons[gBattlerTarget].volatiles.leechSeed)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_MISS;
-    }
-    else if (IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_GRASS))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_FAIL;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.leechSeed = LEECHSEEDED_BY(gBattlerAttacker);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_manipulatedamage(void)
 {
     CMD_ARGS(u8 mode);
@@ -5745,23 +5657,6 @@ static void Cmd_givepaydaymoney(void)
     }
 }
 
-static void Cmd_setlightscreen(void)
-{
-    CMD_ARGS();
-
-    if (!TrySetLightScreen(gBattlerAttacker))
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_tryKO(void)
-{
-}
-
 static void Cmd_checknonvolatiletrigger(void)
 {
     CMD_ARGS(u16 nonVolatile, const u8 *failInstr);
@@ -6073,37 +5968,6 @@ static void Cmd_setcalledmove(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_disablelastusedattack(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    s32 i;
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])
-            break;
-    }
-    if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
-        && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
-    {
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].moves[i])
-
-        gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
-        if (B_DISABLE_TURNS >= GEN_5)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
-        else if (B_DISABLE_TURNS >= GEN_4)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
-        else
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
 static void Cmd_trysetencore(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -6333,24 +6197,6 @@ static void Cmd_copymovepermanently(void)
     }
 }
 
-static void Cmd_settailwind(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 side = GetBattlerSide(gBattlerAttacker);
-
-    if (!(gSideStatuses[side] & SIDE_STATUS_TAILWIND))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
-        gSideTimers[side].tailwindTimer = (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3);
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
 static void Cmd_tryspiteppreduce(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -6539,25 +6385,6 @@ static void Cmd_cursetarget(void)
     }
 }
 
-static void Cmd_trysetspikes(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    enum BattleSide targetSide = GetBattlerSide(GetOppositeBattler(gBattlerAttacker));
-
-    if (gSideTimers[targetSide].spikesAmount == 3)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gSideTimers[targetSide].spikesAmount == 0) // Add only once to the queue
-            PushHazardTypeToQueue(targetSide, HAZARDS_SPIKES);
-        gSideTimers[targetSide].spikesAmount++;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_setvolatile(void)
 {
     CMD_ARGS(u8 battler, u8 _volatile, u8 value);
@@ -6618,25 +6445,6 @@ static void Cmd_setembargo(void)
         gBattleMons[gBattlerTarget].volatiles.embargoTimer = B_EMBARGO_TIMER;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-static void Cmd_setsafeguard(void)
-{
-    CMD_ARGS();
-
-    if (gSideStatuses[GetBattlerSide(gBattlerAttacker)] & SIDE_STATUS_SAFEGUARD)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SIDE_STATUS_FAILED;
-    }
-    else
-    {
-        gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_SAFEGUARD;
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].safeguardTimer = 5;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SAFEGUARD;
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_jumpifnopursuitswitchdmg(void)
@@ -6942,22 +6750,6 @@ static void Cmd_curestatuswithmove(void)
     }
 }
 
-static void Cmd_settorment(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gBattleMons[gBattlerTarget].volatiles.torment == TRUE
-        || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.torment = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_settaunt(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -7132,17 +6924,6 @@ static void Cmd_tryswapitems(void)
     }
 }
 
-static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
-{
-    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
-        return FALSE;
-
-    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
-    gBattlerAbility = battler;
-    gLastUsedItem = gBattleMons[battler].item;
-    return TRUE;
-}
-
 // Role Play, Doodle
 static void Cmd_trycopyability(void)
 {
@@ -7193,48 +6974,6 @@ static void Cmd_trywish(void)
     else
     {
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-static void Cmd_settoxicspikes(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (gSideTimers[targetSide].toxicSpikesAmount >= 2)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gSideTimers[targetSide].toxicSpikesAmount == 0)
-            PushHazardTypeToQueue(targetSide, HAZARDS_TOXIC_SPIKES);
-        gSideTimers[targetSide].toxicSpikesAmount++;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-static void Cmd_setgastroacid(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (GetBattlerHoldEffectIgnoreAbility(gBattlerTarget) == HOLD_EFFECT_ABILITY_SHIELD)
-    {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
-            gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
-
-        RemoveRuinAbilityFlags(gBattlerTarget);
-        gBattleMons[gBattlerTarget].volatiles.gastroAcid = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 
@@ -7391,22 +7130,6 @@ static void Cmd_tryimprison(void)
         }
         if (battler == gBattlersCount) // In Generation 3 games, Imprison fails if the user doesn't share any moves with any of the foes.
             gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-static void Cmd_setstealthrock(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (IsHazardOnSide(targetSide, HAZARDS_STEALTH_ROCK))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        PushHazardTypeToQueue(targetSide, HAZARDS_STEALTH_ROCK);
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 
@@ -11012,56 +10735,6 @@ void BS_PlayMoveAnimation(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetLuckyChant(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
-    if (!(gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT))
-    {
-        gSideStatuses[side] |= SIDE_STATUS_LUCKY_CHANT;
-        gSideTimers[side].luckyChantTimer = 5;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-void BS_TryEntrainment(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeCopied)
-    {
-        RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten)
-    {
-        RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        BattleScriptCall(BattleScript_AbilityShieldProtects);
-    }
-    else
-    {
-        if (gBattleMons[gBattlerTarget].ability == gBattleMons[gBattlerAttacker].ability
-            || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else
-        {
-            RemoveAbilityFlags(gBattlerTarget);
-            gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = gBattleMons[gBattlerAttacker].ability;
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-}
-
 void BS_SetLastUsedAbility(void)
 {
     NATIVE_ARGS();
@@ -11092,25 +10765,6 @@ void BS_TryElectrify(void)
     else
     {
         gBattleMons[gBattlerTarget].volatiles.electrified = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-void BS_TrySoak(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum Type types[3];
-    GetBattlerTypes(gBattlerTarget, FALSE, types);
-    enum Type typeToSet = GetMoveArgType(gCurrentMove);
-    if ((types[0] == typeToSet && types[1] == typeToSet)
-     || GetActiveGimmick(gBattlerTarget) == GIMMICK_TERA)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        SET_BATTLER_TYPE(gBattlerTarget, typeToSet);
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, typeToSet);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -11323,15 +10977,6 @@ void BS_CureStatus(void)
     gBattleMons[battler].status1 = 0;
     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
     MarkBattlerForControllerExec(battler);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_PowerTrick(void)
-{
-    NATIVE_ARGS();
-    u32 temp;
-    gBattleMons[gBattlerAttacker].volatiles.powerTrick = !gBattleMons[gBattlerAttacker].volatiles.powerTrick;
-    SWAP(gBattleMons[gBattlerAttacker].attack, gBattleMons[gBattlerAttacker].defense, temp);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -11644,33 +11289,6 @@ void BS_TryTrainerSlideMsgLastOn(void)
     default:
         break;
     }
-}
-
-// Potential bug with failing message and missed result on wrong battler
-void BS_SetAuroraVeil(void)
-{
-    NATIVE_ARGS();
-    enum BattleSide side = GetBattlerSide(gBattlerAttacker);
-    if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL)
-    {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-    }
-    else
-    {
-        gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
-        if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_LIGHT_CLAY)
-            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 8;
-        else
-            gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = 5;
-
-        if (IsDoubleBattle() && CountAliveMonsInBattle(BATTLE_ALIVE_SIDE, gBattlerAttacker) == 2)
-            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = 5;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_AURORA_VEIL;
-    }
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryThirdType(void)

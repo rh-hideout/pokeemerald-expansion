@@ -2,6 +2,8 @@
 #define GUARD_MOVES_H
 
 #include "config_changes.h"
+#include "constants/abilities.h"
+#include "constants/pokemon.h"
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_factory.h"
@@ -48,6 +50,8 @@ struct AdditionalEffect
         enum WrappedStringID wrapped:8;
         enum BrokeProtectionStringID brokeProtect:8;
         u8 absorbPercentage;
+        enum Type type:8;
+        enum Ability overwriteAbility:16;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect
@@ -746,7 +750,7 @@ static inline enum Type GetMoveArgType(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SOAK
+    assertf(effect == EFFECT_OVERWRITE_TYPE
          || effect == EFFECT_TWO_TYPED_MOVE
          || effect == EFFECT_THIRD_TYPE
          || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG

@@ -2566,12 +2566,6 @@ static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum Battler
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
-    if (IsBattleMoveStatus(cv->move))
-    {
-        gBattleStruct->eventState.atkCanceler = CANCELER_END;
-        return CANCELER_RESULT_END;
-    }
-
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
     struct SetEffect se = {0};
 
@@ -2623,6 +2617,9 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
 
 static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 {
+    if (IsBattleMoveStatus(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     struct DamageContext ctx = {
         .battlerAtk = cv->battlerAtk,
         .move = cv->move,
@@ -2663,8 +2660,83 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
 }
 
 
+static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
+{
+    if (!cv->isStatusMove)
+        return CANCELER_RESULT_SUCCESS;
+
+    bool32 targetAvoidedMove[MAX_BATTLERS_COUNT];
+    for (u32 i = 0; i < gBattlersCount; i++)
+        targetAvoidedMove[i] = TRUE;
+
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
+    cv->onlyChecking = TRUE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        bool32 isSelf = cv->battlerAtk == battler;
+
+        for (u32 i = 0; i < numAdditionalEffects; i++)
+        {
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, i);
+            struct SetEffect se = {0};
+
+            // if (!CanApplyAdditionalEffect(additionalEffect))
+            //     continue;
+
+            bool32 shouldSkipSelf = isSelf != additionalEffect->self;
+            bool32 shouldSkipTarget = !isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler);
+
+            if (shouldSkipSelf || shouldSkipTarget)
+                continue;
+
+            se.additionalEffect = additionalEffect;
+            se.moveEffect = additionalEffect->moveEffect;
+            se.script = gBattlescriptCurrInstr;
+            se.effectBattler = cv->battlerDef = battler;
+            se.primary = TRUE;
+            se.certain = TRUE;
+            se.onSide = additionalEffect->onSide;
+            SetMoveEffect(cv, &se);
+            if (!se.effectFailed)
+                targetAvoidedMove[battler] = FALSE;
+        }
+    }
+
+    cv->onlyChecking = FALSE;
+    cv->battlerDef = gBattlerTarget;
+
+    // TODO: need to properly handle result flags. either set them after failure has been proccessed or process the failure while the result flags are already set
+    // if one effect fails while the other doesn,t a failure message will still be played. Which means result flags have to be set here.
+    // only print a failure message if result flags have been set, otherwise ignore the failure message and handle effects that did not fail
+    // loop through as normal and check effectFailed against the result flag. Also only print one failure message for everything
+    // so break out if result failed has been set
+    // If the whole move failed print only the first failure message
+    bool32 moveFailed = TRUE;
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (targetAvoidedMove[battler])
+        {
+            // gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
+            continue;
+        }
+        moveFailed = FALSE;
+    }
+
+    if (moveFailed)
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *cv)
 {
+    if (IsBattleMoveStatus(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     switch (gBattleStruct->eventState.moveEndBlock)
     {
     case PRE_ANIM_STRONG_WINDS:
@@ -2809,6 +2881,12 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(struct BattleCalcV
 
 static enum CancelerResult CancelerEffectivenessSound(struct BattleCalcValues *cv)
 {
+    if (IsBattleMoveStatus(cv->move))
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
+    }
+
     u32 moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(cv);
 
     switch (moveResultFlags)
@@ -3096,6 +3174,9 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
     [CANCELER_PRE_ATTACK_MOVE_EFFECT] = CancelerPreAttackMoveEffect,
     [CANCELER_DAMAGE_CALC] = CancelerDamageCalc,
+
+    [CANCELER_STATUS_EFFECTS] = CancelerStatusEffects,
+
     [CANCELER_PRE_ANIM_ACTIVATIONS] = CancelerPreAnimActivations,
     [CANCELER_MOVE_ANIMATION] = CancelerMoveAnimation,
     [CANCELER_EFFECTIVENESS_SOUND] = CancelerEffectivenessSound,
@@ -3116,6 +3197,8 @@ enum CancelerResult DoAttackCanceler(void)
     };
 
     cv.moveEffect = GetMoveEffect(cv.move);
+    cv.isStatusMove = IsBattleMoveStatus(cv.move);
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         cv.abilities[battler] = GetBattlerAbility(battler);
@@ -4352,8 +4435,8 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
              && IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES)
              && IsBattlerAlive(cv->battlerAtk))
             {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
-                BattleScriptCall(BattleScript_MoveEffectStealthRock);
+                PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, battlerDef);
+                BattleScriptCall(BattleScript_MoveEffectSetStatus);
                 gBattleStruct->eventState.moveEndBattler = 0;
                 gBattleScripting.moveendState++;
                 return MOVEEND_RESULT_RUN_SCRIPT;
@@ -4372,8 +4455,11 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 }
                 else
                 {
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SPIKESSCATTERED;
-                    BattleScriptCall(BattleScript_MoveEffectSpikes);
+                    if (gSideTimers[side].spikesAmount == 0) // Add only once to the queue
+                        PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+                    gSideTimers[side].spikesAmount++;
+                    PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, battlerDef);
+                    BattleScriptCall(BattleScript_MoveEffectSetStatus);
                     gBattleStruct->eventState.moveEndBattler = 0;
                     gBattleScripting.moveendState++;
                     return MOVEEND_RESULT_RUN_SCRIPT;

@@ -606,7 +606,7 @@ static bool32 IsFlowerVeilBlocked(struct BattleCalcValues *cv, struct StatChange
 
     if (!st->onlyChecking)
     {
-        st->script = BattleScript_FlowerVeilProtectsRet;
+        st->script = BattleScript_FlowerVeilProtects;
         gBattleScripting.battler = cv->battlerDef;
         gBattlerAbility = flowerVeilBattler;
         gLastUsedAbility = ABILITY_FLOWER_VEIL;

@@ -48,6 +48,8 @@ struct BattleCalcValues
     enum BattleMoveEffects moveEffect:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
+    u32 onlyChecking:1;
+    u32 isStatusMove:1;
 };
 
 void HandleAction_ThrowBall(void);
@@ -78,6 +80,7 @@ void MarkBattlerReceivedLinkData(enum BattlerId battler);
 void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(enum BattlerId battler);
 void UpdateSentPokesToOpponentValue(enum BattlerId battler);
@@ -310,5 +313,6 @@ bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
+bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_UTIL_H

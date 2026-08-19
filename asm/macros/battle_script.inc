@@ -659,14 +659,6 @@
 	.byte B_SCR_OP_SETFIELDWEATHER
 	.endm
 
-	.macro setreflect
-	.byte B_SCR_OP_SETREFLECT
-	.endm
-
-	.macro setseeded
-	.byte B_SCR_OP_SETSEEDED
-	.endm
-
 	.macro manipulatedamage mode:req
 	.byte B_SCR_OP_MANIPULATEDAMAGE
 	.byte \mode
@@ -729,15 +721,6 @@
 	.byte B_SCR_OP_GIVEPAYDAYMONEY
 	.endm
 
-	.macro setlightscreen
-	.byte B_SCR_OP_SETLIGHTSCREEN
-	.endm
-
-	.macro tryKO failInstr:req
-	.byte B_SCR_OP_TRYKO
-	.4byte \failInstr
-	.endm
-
 	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
 	.byte B_SCR_OP_CHECKNONVOLATILETRIGGER
 	.2byte \nonVolatile
@@ -785,11 +768,6 @@
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
 
-	.macro disablelastusedattack failInstr:req
-	.byte B_SCR_OP_DISABLELASTUSEDATTACK
-	.4byte \failInstr
-	.endm
-
 	.macro trysetencore failInstr:req
 	.byte B_SCR_OP_TRYSETENCORE
 	.4byte \failInstr
@@ -814,11 +792,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settailwind failInstr:req
-	.byte B_SCR_OP_SETTAILWIND
-	.4byte \failInstr
-	.endm
-
 	.macro tryspiteppreduce failInstr:req
 	.byte B_SCR_OP_TRYSPITEPPREDUCE
 	.4byte \failInstr
@@ -830,11 +803,6 @@
 
 	.macro cursetarget failInstr:req
 	.byte B_SCR_OP_CURSETARGET
-	.4byte \failInstr
-	.endm
-
-	.macro trysetspikes failInstr:req
-	.byte B_SCR_OP_TRYSETSPIKES
 	.4byte \failInstr
 	.endm
 
@@ -859,10 +827,6 @@
 	.macro setembargo failInstr:req
 	.byte B_SCR_OP_SETEMBARGO
 	.4byte \failInstr
-	.endm
-
-	.macro setsafeguard
-	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
 
 	.macro jumpifnopursuitswitchdmg jumpInstr:req
@@ -921,11 +885,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settorment failInstr:req
-	.byte B_SCR_OP_SETTORMENT
-	.4byte \failInstr
-	.endm
-
 	.macro settaunt failInstr:req
 	.byte B_SCR_OP_SETTAUNT
 	.4byte \failInstr
@@ -952,16 +911,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settoxicspikes failInstr:req
-	.byte B_SCR_OP_SETTOXICSPIKES
-	.4byte \failInstr
-	.endm
-
-	.macro setgastroacid failInstr:req
-	.byte B_SCR_OP_SETGASTROACID
-	.4byte \failInstr
-	.endm
-
 	.macro setyawn failInstr:req
 	.byte B_SCR_OP_SETYAWN
 	.4byte \failInstr
@@ -978,11 +927,6 @@
 
 	.macro tryimprison failInstr:req
 	.byte B_SCR_OP_TRYIMPRISON
-	.4byte \failInstr
-	.endm
-
-	.macro setstealthrock failInstr:req
-	.byte B_SCR_OP_SETSTEALTHROCK
 	.4byte \failInstr
 	.endm
 
@@ -1824,11 +1768,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryentrainment failInstr:req
-	callnative BS_TryEntrainment
-	.4byte \failInstr
-	.endm
-
 	.macro setlastusedability
 	callnative BS_SetLastUsedAbility
 	.endm
@@ -1839,11 +1778,6 @@
 
 	.macro tryelectrify failInstr:req
 	callnative BS_TryElectrify
-	.4byte \failInstr
-	.endm
-
-	.macro trysoak failInstr:req
-	callnative BS_TrySoak
 	.4byte \failInstr
 	.endm
 
@@ -1887,10 +1821,6 @@
 	.byte \battler
 	.endm
 
-	.macro powertrick
-	callnative BS_PowerTrick
-	.endm
-
 	.macro tryafteryou failInstr:req
 	callnative BS_TryAfterYou
 	.4byte \failInstr
@@ -1915,10 +1845,6 @@
 	.macro trytrainerslidemsglaston battler:req
 	callnative BS_TryTrainerSlideMsgLastOn
 	.byte \battler
-	.endm
-
-	.macro setauroraveil
-	callnative BS_SetAuroraVeil
 	.endm
 
 	.macro trythirdtype failInstr:req

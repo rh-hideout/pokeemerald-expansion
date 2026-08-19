@@ -1241,6 +1241,12 @@ static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
     return FALSE;
 }
 
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler)
+{
+    PrepareStringBattle(stringId, battler);
+    gBattleCommunication[MSG_DISPLAY] = 1; // 1 / 0 should have constants. can't think of names
+}
+
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
 {
     switch (stringId)
@@ -5278,19 +5284,19 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         }
         else if (abilityAtk != ABILITY_CORROSION && IS_BATTLER_ANY_TYPE(battlerDef, TYPE_POISON, TYPE_STEEL))
         {
-            battleScript = BattleScript_NotAffected;
+            battleScript = BattleScript_DoesntAffectScripting;
         }
         else if ((sideBattler = IsAbilityOnSide(battlerDef, ABILITY_PASTEL_VEIL)))
         {
             abilityAffected = TRUE;
             battlerDef = sideBattler - 1;
             abilityDef = ABILITY_PASTEL_VEIL;
-            battleScript = BattleScript_ImmunityProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         else if (abilityDef == ABILITY_IMMUNITY)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_ImmunityProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         break;
     case MOVE_EFFECT_PARALYSIS:
@@ -5300,16 +5306,16 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         }
         else if (GetConfig(B_PARALYZE_ELECTRIC) >= GEN_6 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ELECTRIC))
         {
-            battleScript = BattleScript_NotAffected;
+            battleScript = BattleScript_DoesntAffectScripting;
         }
         else if (option == RUN_SCRIPT && IsBattlerUnaffectedByMove(battlerDef))
         {
-            battleScript = BattleScript_ButItFailed;
+            battleScript = BattleScript_ButItFailedRet;
         }
         else if (abilityDef == ABILITY_LIMBER)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_ImmunityProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         break;
     case MOVE_EFFECT_BURN:
@@ -5319,17 +5325,17 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         }
         else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_FIRE))
         {
-            battleScript = BattleScript_NotAffected;
+            battleScript = BattleScript_DoesntAffectScripting;
         }
         else if (abilityDef == ABILITY_WATER_VEIL || abilityDef == ABILITY_WATER_BUBBLE)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_ImmunityProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         else if (abilityDef == ABILITY_THERMAL_EXCHANGE)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         break;
     case MOVE_EFFECT_SLEEP:
@@ -5343,18 +5349,18 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         }
         else if (!gBattleStruct->sleepClauseNotBlocked && CanSleepDueToSleepClause(battlerAtk, battlerDef, option))
         {
-            battleScript = BattleScript_SleepClauseBlocked;
+            battleScript = BattleScript_SleepClauseBlocked; // TODO
         }
         else if (IsElectricTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldTimers.terrain))
         {
-            battleScript = BattleScript_ElectricTerrainPrevents;
+            battleScript = BattleScript_ElectricTerrainPrevents; // TODO
         }
         else if ((sideBattler = IsAbilityOnSide(battlerDef, ABILITY_SWEET_VEIL)))
         {
             abilityAffected = TRUE;
             battlerDef = sideBattler - 1;
             abilityDef = ABILITY_SWEET_VEIL;
-            battleScript = BattleScript_ImmunityProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         }
         else if (abilityDef == ABILITY_VITAL_SPIRIT || abilityDef == ABILITY_INSOMNIA)
         {
@@ -5370,12 +5376,12 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         }
         else if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE) || IsBattlerWeatherAffected(GetBattlerHoldEffect(battlerDef), GetWeather(), B_WEATHER_SUN))
         {
-            battleScript = BattleScript_NotAffected;
+            battleScript = BattleScript_DoesntAffectScripting;
         }
         else if (abilityDef == ABILITY_MAGMA_ARMOR)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_NotAffected;
+            battleScript = BattleScript_DoesntAffectScripting;
         }
         break;
     default:
@@ -5390,21 +5396,21 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
      || abilityDef == ABILITY_PURIFYING_SALT)
     {
         abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        battleScript = BattleScript_AbilityProtectedTarget;
     }
     else if (IsMistyTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), gFieldTimers.terrain))
     {
-        battleScript = BattleScript_MistyTerrainPrevents;
+        battleScript = BattleScript_MistyTerrainPrevents; // TODO
     }
     else if (IsLeafGuardProtected(battlerDef, abilityDef))
     {
         abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        battleScript = BattleScript_AbilityProtectedTarget;
     }
     else if (IsShieldsDownProtected(battlerDef, abilityDef))
     {
         abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        battleScript = BattleScript_AbilityProtectedTarget;
     }
     else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
     {
@@ -5415,11 +5421,11 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
     }
     else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
     {
-        battleScript = BattleScript_SafeguardProtected;
+        battleScript = BattleScript_SafeguardProtectedRet;
     }
     else if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
     {
-        battleScript = BattleScript_ButItFailed;
+        battleScript = BattleScript_ButItFailedRet;
     }
 
     if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
@@ -5434,8 +5440,8 @@ static bool32 IsNonVolatileStatusBlocked(enum BattlerId battlerDef, enum Ability
     {
         if (option == RUN_SCRIPT)
         {
-            if (battleScript != BattleScript_NotAffected)
-                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
+            // if (battleScript != BattleScript_NotAffected)
+            //     gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
 
             gBattleScripting.battler = battlerDef;
             if (abilityAffected)
@@ -11133,4 +11139,15 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
 {
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
+}
+
+bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
+{
+    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
+        return FALSE;
+
+    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
+    gBattlerAbility = battler;
+    gLastUsedItem = gBattleMons[battler].item;
+    return TRUE;
 }
