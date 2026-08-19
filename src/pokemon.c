@@ -13,6 +13,7 @@
 #include "battle_z_move.h"
 #include "caps.h"
 #include "config_changes.h"
+#include "wild_encounter.h"
 #include "data.h"
 #include "daycare.h"
 #include "dexnav.h"
@@ -91,7 +92,6 @@ struct SpeciesItem
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
 static u16 CalculateBoxMonChecksumDecrypt(struct BoxPokemon *boxMon);
 static u16 CalculateBoxMonChecksumReencrypt(struct BoxPokemon *boxMon);
-static void CreateBoxMonInternal(struct BoxPokemon *boxMon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, enum GeneratedMonOrigin origin);
 static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType);
 static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
@@ -851,19 +851,14 @@ void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level,
     GiveMonInitialMoveset(mon);
 }
 
-void CreateMonWithOrigin(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, enum GeneratedMonOrigin origin)
+void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
 {
     u32 mail;
     ZeroMonData(mon);
-    CreateBoxMonInternal(&mon->box, species, level, personality, trainerId, origin);
+    CreateBoxMon(&mon->box, species, level, personality, trainerId);
     SetMonData(mon, MON_DATA_LEVEL, &level);
     mail = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &mail);
-}
-
-void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
-{
-    CreateMonWithOrigin(mon, species, level, personality, trainerId, UNDEFINED_MON_ORIGIN);
 }
 
 void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, u8 fixedIV)
@@ -873,7 +868,12 @@ void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 p
     CalculateMonStats(mon);
 }
 
-static bool32 ComputePlayerShinyOddsInternal(u32 personality, u32 value, enum GeneratedMonOrigin origin)
+static bool32 RequiresPokeBallForShiny(enum GeneratedMonOrigin origin)
+{
+    return origin == WILDMON_ORIGIN || origin == STATIC_WILDMON_ORIGIN;
+}
+
+bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 {
     if (FlagGet(P_FLAG_FORCE_NO_SHINY))
         return FALSE;
@@ -884,7 +884,7 @@ static bool32 ComputePlayerShinyOddsInternal(u32 personality, u32 value, enum Ge
     if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
 
-    if (origin != GIFTMON_ORIGIN && GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && !HasAtLeastOnePokeBall())
+    if (RequiresPokeBallForShiny(ENCOUNTER_ORIGIN(gEncounterType)) && GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && !HasAtLeastOnePokeBall())
         return FALSE;
 
     u32 totalRerolls = 0;
@@ -907,11 +907,6 @@ static bool32 ComputePlayerShinyOddsInternal(u32 personality, u32 value, enum Ge
     }
 
     return GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
-}
-
-bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
-{
-    return ComputePlayerShinyOddsInternal(personality, value, WILDMON_ORIGIN);
 }
 
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
@@ -980,11 +975,6 @@ void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect)
 
 void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId)
 {
-    CreateBoxMonInternal(boxMon, species, level, personality, trainerId, UNDEFINED_MON_ORIGIN);
-}
-
-static void CreateBoxMonInternal(struct BoxPokemon *boxMon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId trainerId, enum GeneratedMonOrigin origin)
-{
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
     u32 value;
     u16 checksum;
@@ -1005,7 +995,7 @@ static void CreateBoxMonInternal(struct BoxPokemon *boxMon, enum Species species
     else // Player is the OT
     {
         value = READ_OTID_FROM_SAVE;
-        isShiny = ComputePlayerShinyOddsInternal(personality, value, origin);
+        isShiny = ComputePlayerShinyOdds(personality, value);
     }
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
@@ -6957,7 +6947,9 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
     enum Species species = ResolveSpecies(monTemplate->species);
     u8 level = ResolveLevel(monTemplate->level);
     u32 personality = ResolvePersonality(species, monTemplate->gender, monTemplate->nature, monTemplate->origin);
-    CreateMonWithOrigin(mon, species, level, personality, OTID_STRUCT_PLAYER_ID, monTemplate->origin);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, monTemplate->origin);
+    CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
 
     enum Item heldItem = ResolveHeldItem(monTemplate->heldItem);
     SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);

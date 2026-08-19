@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "config_changes.h"
+#include "wild_encounter.h"
 #include "egg_hatch.h"
 #include "event_data.h"
 #include "item.h"
@@ -125,7 +126,9 @@ TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
     personality = GetMonPersonality(SPECIES_CASTFORM_NORMAL, MON_GENDER_RANDOM, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
     SetTrainerId(personality, gSaveBlock2Ptr->playerTrainerId);
 
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     EXPECT_EQ(ComputePlayerShinyOdds(personality, personality), FALSE);
+    gEncounterType = ENCOUNTER_TYPE_NONE;
 
     SeedRng(0);
     RUN_OVERWORLD_SCRIPT(
