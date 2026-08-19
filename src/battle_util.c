@@ -3368,14 +3368,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger && !IsOpposingSideEmpty(battler))
             {
                 gEffectBattler = battler;
-                gBattleStruct->intimidateActivated = TRUE;
+                gBattleStruct->intimidateActivated = TRUE; // Intim specific
                 for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
                     if (IsBattlerAlly(battler, i) || !IsBattlerAlive(i))
                         continue;
                     SetStatChange(i, STAT_ATK, -1);
                 }
-                BattleScriptCall(BattleScript_IntimidateActivates);
+                BattleScriptCall(BattleScript_IntimidateActivates); // Sets a flag to check for intim failure. Similar abilities should use BattleScript_AbilityActivates.
                 effect++;
             }
             break;
