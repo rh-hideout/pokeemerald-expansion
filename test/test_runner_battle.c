@@ -268,11 +268,39 @@ static bool32 Test_BattlersShareParty(enum BattlerId battlerId1, enum BattlerId 
     return Test_GetBattlerTrainer(battlerId1) == Test_GetBattlerTrainer(battlerId2);
 }
 
+static void InitTestBattlers(const struct BattleTest *test)
+{
+    switch (test->type)
+    {
+    case BATTLE_TEST_SINGLES:
+    case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
+    case BATTLE_TEST_AI_SINGLES:
+        STATE->battlersCount = 2;
+        break;
+    case BATTLE_TEST_DOUBLES:
+    case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_MULTI:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWO_VS_ONE:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
+        STATE->battlersCount = MAX_BATTLERS_COUNT;
+        break;
+    }
+
+    gBattlersCount = STATE->battlersCount;
+    for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+        gBattlerPositions[battler] = battler < gBattlersCount ? battler : B_POSITION_ABSENT;
+}
+
 static u32 BattleTest_EstimateCost(void *data)
 {
     u32 cost;
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     STATE->runRandomly = TRUE;
     ResetStartingStatuses();
     InvokeTestFunction(test);
@@ -290,6 +318,7 @@ static void BattleTest_SetUp(void *data)
 {
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -298,25 +327,6 @@ static void BattleTest_SetUp(void *data)
         Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "OOM: STATE (%d) + STATE->results (%d) too big for sBackupMapData (%d)", sizeof(*STATE), test->resultsSize * STATE->parameters, sizeof(sBackupMapData));
     STATE->results = (void *)((char *)sBackupMapData + sizeof(struct BattleTestRunnerState));
     memset(STATE->results, 0, test->resultsSize * STATE->parameters);
-    switch (test->type)
-    {
-    case BATTLE_TEST_SINGLES:
-    case BATTLE_TEST_WILD:
-    case BATTLE_TEST_GHOST:
-    case BATTLE_TEST_AI_SINGLES:
-        STATE->battlersCount = 2;
-        break;
-    case BATTLE_TEST_DOUBLES:
-    case BATTLE_TEST_AI_DOUBLES:
-    case BATTLE_TEST_MULTI:
-    case BATTLE_TEST_AI_MULTI:
-    case BATTLE_TEST_TWO_VS_ONE:
-    case BATTLE_TEST_AI_TWO_VS_ONE:
-    case BATTLE_TEST_ONE_VS_TWO:
-    case BATTLE_TEST_AI_ONE_VS_TWO:
-        STATE->battlersCount = 4;
-        break;
-    }
     STATE->hasTornDownBattle = FALSE;
 }
 
@@ -412,6 +422,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    InitTestBattlers(test);
     TestInitConfigData();
 
     DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS;
@@ -2977,20 +2988,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
             break;
         }
 
-        switch (moveTarget)
-        {
-        case TARGET_USER:
-        case TARGET_USER_OR_ALLY:
-        case TARGET_USER_AND_ALLY:
-            target = battlerId;
-            break;
-        case TARGET_ALLY:
-            target = battlerId ^ BIT_FLANK;
-            break;
-        default:
-            target = (battlerId & BIT_SIDE) ^ BIT_SIDE;
-            break;
-        }
+        target = GetDefaultSelectionTarget(battlerId, moveTarget);
     }
     return target;
 }
