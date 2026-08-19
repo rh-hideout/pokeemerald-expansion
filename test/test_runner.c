@@ -16,6 +16,7 @@
 #define TIMEOUT_SECONDS 60
 
 void CB2_TestRunner(void);
+void ReinitCallbacks(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
@@ -562,9 +563,16 @@ void Test_ExpectFail(u32 failLine)
     }
 }
 
+static void FunctionTest_ResetGlobalVariables(void)
+{
+    ReinitCallbacks();
+    gBattleTypeFlags = 0;
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    FunctionTest_ResetGlobalVariables();
     TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
@@ -581,11 +589,6 @@ static void FunctionTest_Run(void *data)
         gFunctionTestRunnerState->parameters = 0;
         function();
     } while (++gFunctionTestRunnerState->runParameter < gFunctionTestRunnerState->parameters);
-}
-
-static void FunctionTest_ResetGlobalVariables(void)
-{
-    gBattleTypeFlags = 0;
 }
 
 static void FunctionTest_TearDown(void *data)
