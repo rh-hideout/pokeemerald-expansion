@@ -1046,26 +1046,6 @@ BattleScript_MoveEffectOverwriteAbility::
 	tryendneutralizinggas
 	return
 
-BattleScript_EffectPowerSplit::
-	attackcanceler
-	averagestats STAT_ATK
-	averagestats STAT_SPATK
-	attackanimation
-	waitanimation
-	printstring STRINGID_SHAREDITSPOWER
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectGuardSplit::
-	attackcanceler
-	averagestats STAT_DEF
-	averagestats STAT_SPDEF
-	attackanimation
-	waitanimation
-	printstring STRINGID_SHAREDITSGUARD
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTelekinesis::
 	attackcanceler
 	settelekinesis BattleScript_ButItFailed

@@ -11179,6 +11179,26 @@ void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum S
     Swap(*atkStatStage, *defStatStage);
 }
 
+u16 *GetBattlerStatPtr(struct BattlePokemon *battler, enum Stat stat)
+{
+    switch (stat)
+    {
+    case STAT_ATK:   return &battler->attack;
+    case STAT_DEF:   return &battler->defense;
+    case STAT_SPATK: return &battler->spAttack;
+    case STAT_SPDEF: return &battler->spDefense;
+    default:         return NULL;
+    }
+}
+
+void AverageBattlerStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
+{
+    u16 *attackerStat = GetBattlerStatPtr(&gBattleMons[battlerAtk], stat);
+    u16 *defenderStat = GetBattlerStatPtr(&gBattleMons[battlerDef], stat);
+    u16 avg = (*attackerStat + *defenderStat) / 2;
+    *attackerStat = *defenderStat = avg;
+}
+
 #define TYPE_HALVER(...) (struct TypeBasedHalverInfo){__VA_ARGS__}
 struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
 {

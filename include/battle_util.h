@@ -317,5 +317,7 @@ bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);
 struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type);
 enum StringID GetStatus1String(u32 status1);
+u16 *GetBattlerStatPtr(struct BattlePokemon *battler, enum Stat stat);
+void AverageBattlerStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);
 
 #endif // GUARD_BATTLE_UTIL_H

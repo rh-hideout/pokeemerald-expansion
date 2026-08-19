@@ -1177,13 +1177,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_POWER_SPLIT] =
     {
-        .battleScript = BattleScript_EffectPowerSplit,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_GUARD_SPLIT] =
     {
-        .battleScript = BattleScript_EffectGuardSplit,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

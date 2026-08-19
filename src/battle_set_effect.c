@@ -2171,12 +2171,42 @@ static void HandleSetEffectLunarDance(struct BattleCalcValues *cv, struct SetEff
 {
 }
 
-static void HandleSetEffectGuardSplit(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectAverageStats(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-}
+    if (cv->onlyChecking)
+        return;
 
-static void HandleSetEffectPowerSplit(struct BattleCalcValues *cv, struct SetEffect *se)
-{
+    struct StatField sf = se->additionalEffect->argument.statField;
+
+    const struct
+    {
+        bool8 stat;
+        u8 enumerator;
+    } stats[] = {
+        { sf.atk,     STAT_ATK     },
+        { sf.def,     STAT_DEF     },
+        { sf.spatk,   STAT_SPATK   },
+        { sf.spdef,   STAT_SPDEF   },
+        { sf.speed,   STAT_SPEED   },
+        { sf.acc,     STAT_ACC     },
+        { sf.evasion, STAT_EVASION },
+    };
+
+    for (u32 i = 0; i < ARRAY_COUNT(stats); i++)
+    {
+        if (stats[i].stat)
+            AverageBattlerStats(cv->battlerAtk, se->effectBattler, stats[i].enumerator);
+    }
+
+    enum StringID effectString = STRINGID_EMPTYSTRING3;
+
+    if (sf.def && sf.spdef)
+        effectString = STRINGID_SHAREDITSGUARD;
+    else if (sf.atk && sf.spatk)
+        effectString = STRINGID_SHAREDITSPOWER;
+
+    PrepareStringBattleWithWait(effectString, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectWonderRoom(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2452,8 +2482,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
     [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
     [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
-    [MOVE_EFFECT_GUARD_SPLIT] = HandleSetEffectGuardSplit,
-    [MOVE_EFFECT_POWER_SPLIT] = HandleSetEffectPowerSplit,
+    [MOVE_EFFECT_AVERAGE_STATS] = HandleSetEffectAverageStats,
     [MOVE_EFFECT_WONDER_ROOM] = HandleSetEffectWonderRoom,
     [MOVE_EFFECT_TELEKINESIS] = HandleSetEffectTelekinesis,
     [MOVE_EFFECT_MAGIC_ROOM] = HandleSetEffectMagicRoom,
