@@ -1,9 +1,11 @@
 #include "global.h"
+#include "assertf.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_anim_scripts.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
+#include "battle_main.h"
 #include "battle_pyramid.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
@@ -14,6 +16,8 @@
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "config_changes.h"
+#include "constants/battle.h"
+#include "move.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -11173,4 +11177,20 @@ void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum S
     s8 *atkStatStage = &gBattleMons[battlerAtk].statStages[stat];
     s8 *defStatStage = &gBattleMons[battlerDef].statStages[stat];
     Swap(*atkStatStage, *defStatStage);
+}
+
+#define TYPE_HALVER(...) (struct TypeBasedHalverInfo){__VA_ARGS__}
+struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
+{
+    switch(type)
+    {
+        case TYPE_FIRE:
+            return TYPE_HALVER(STATUS_FIELD_WATERSPORT, VOLATILE_WATER_SPORT, STRINGID_FIREWEAKENED);
+        case TYPE_ELECTRIC:
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+        default:
+            errorf("Type (%s) does not have a halver", gTypesInfo[type].name);
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+
+    }
 }

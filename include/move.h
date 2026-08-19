@@ -116,6 +116,12 @@ enum TerrainGroundCheck
     GROUND_CHECK_TARGET,
 };
 
+struct TypeBasedHalverInfo {
+    u32 statusField;
+    enum Volatile voaltileStatus;
+    enum StringID effectString;
+};
+
 struct MoveInfo
 {
     const u8 *name;

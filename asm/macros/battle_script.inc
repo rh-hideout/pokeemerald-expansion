@@ -955,11 +955,6 @@
 	.byte B_SCR_OP_PICKUP
 	.endm
 
-	.macro settypebasedhalvers failInstr:req
-	.byte B_SCR_OP_SETTYPEBASEDHALVERS
-	.4byte \failInstr
-	.endm
-
 	.macro tryrecycleitem failInstr:req
 	.byte B_SCR_OP_TRYRECYCLEITEM
 	.4byte \failInstr

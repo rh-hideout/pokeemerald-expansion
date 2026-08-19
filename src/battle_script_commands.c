@@ -514,7 +514,6 @@ static void Cmd_trysetsnatch(void);
 static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_pickup(void);
-static void Cmd_settypebasedhalvers(void);
 static void Cmd_tryrecycleitem(void);
 static void Cmd_settypetoenvironment(void);
 static void Cmd_snatchsetbattlers(void);
@@ -713,7 +712,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SWITCHOUTABILITIES]                    = Cmd_switchoutabilities,
     [B_SCR_OP_JUMPIFHASNOHP]                         = Cmd_jumpifhasnohp,
     [B_SCR_OP_PICKUP]                                = Cmd_pickup,
-    [B_SCR_OP_SETTYPEBASEDHALVERS]                   = Cmd_settypebasedhalvers,
     [B_SCR_OP_TRYRECYCLEITEM]                        = Cmd_tryrecycleitem,
     [B_SCR_OP_SETTYPETOENVIRONMENT]                  = Cmd_settypetoenvironment,
     [B_SCR_OP_SNATCHSETBATTLERS]                     = Cmd_snatchsetbattlers,
@@ -792,6 +790,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_52]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_53]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_54]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_55]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -7266,67 +7265,6 @@ static void Cmd_pickup(void)
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-// Water and Mud Sport
-static void Cmd_settypebasedhalvers(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    bool8 worked = FALSE;
-
-    if (!gBattleStruct->isSkyBattle)
-    {
-        if (GetMoveEffect(gCurrentMove) == EFFECT_MUD_SPORT)
-        {
-            if (B_SPORT_TURNS >= GEN_6)
-            {
-                if (!(gFieldStatuses & STATUS_FIELD_MUDSPORT))
-                {
-                    gFieldStatuses |= STATUS_FIELD_MUDSPORT;
-                    gFieldTimers.mudSportTimer = 5;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_ELECTRIC;
-                    worked = TRUE;
-                }
-            }
-            else
-            {
-                if (!gBattleMons[gBattlerAttacker].volatiles.mudSport)
-                {
-                    gBattleMons[gBattlerAttacker].volatiles.mudSport = TRUE;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_ELECTRIC;
-                    worked = TRUE;
-                }
-            }
-        }
-        else // Water Sport
-        {
-            if (B_SPORT_TURNS >= GEN_6)
-            {
-                if (!(gFieldStatuses & STATUS_FIELD_WATERSPORT))
-                {
-                    gFieldStatuses |= STATUS_FIELD_WATERSPORT;
-                    gFieldTimers.waterSportTimer = 5;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_FIRE;
-                    worked = TRUE;
-                }
-            }
-            else
-            {
-                if (!gBattleMons[gBattlerAttacker].volatiles.waterSport)
-                {
-                    gBattleMons[gBattlerAttacker].volatiles.waterSport = TRUE;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_FIRE;
-                    worked = TRUE;
-                }
-            }
-        }
-    }
-
-    if (worked)
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    else
-        gBattlescriptCurrInstr = cmd->failInstr;
 }
 
 bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move)

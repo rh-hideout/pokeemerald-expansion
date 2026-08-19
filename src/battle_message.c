@@ -1252,12 +1252,6 @@ const u16 gAbsorbDrainStringIds[] =
     [B_MSG_ABSORB_OOZE] = STRINGID_ITSUCKEDLIQUIDOOZE
 };
 
-const u16 gSportsUsedStringIds[] =
-{
-    [B_MSG_WEAKEN_ELECTRIC] = STRINGID_ELECTRICITYWEAKENED,
-    [B_MSG_WEAKEN_FIRE]     = STRINGID_FIREWEAKENED
-};
-
 const u16 gPartyStatusHealStringIds[] =
 {
     [B_MSG_BELL]                     = STRINGID_BELLCHIMED,

@@ -2286,16 +2286,6 @@ BattleScript_EffectStruggle::
 	incrementgamestat GAME_STAT_USED_STRUGGLE
 	goto BattleScript_EffectHit
 
-BattleScript_EffectMudSport::
-BattleScript_EffectWaterSport::
-	attackcanceler
-	settypebasedhalvers BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printfromtable gSportsUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectCamouflage::
 	attackcanceler
 	settypetoenvironment BattleScript_ButItFailed

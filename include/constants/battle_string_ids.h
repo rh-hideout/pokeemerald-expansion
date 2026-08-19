@@ -928,13 +928,6 @@ enum ItemSwapStringID
     B_MSG_ITEM_SWAP_BOTH,
 };
 
-// gSportsUsedStringIds
-enum SportsUsedStringID
-{
-    B_MSG_WEAKEN_ELECTRIC,
-    B_MSG_WEAKEN_FIRE,
-};
-
 // gCaughtMonStringIds
 enum CaughtMonStringID
 {

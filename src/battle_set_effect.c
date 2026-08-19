@@ -1898,8 +1898,36 @@ static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect
 
 }
 
-static void HandleSetEffectMudSport(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    struct TypeBasedHalverInfo halver = GetTypeBasedHalverInfo(se->additionalEffect->argument.type);
+
+    bool32 shouldSet = GetConfig(B_SPORT_TURNS) >= GEN_6
+                         ? !(gFieldStatuses & halver.statusField)
+                         : !GetBattlerVolatile(se->effectBattler, halver.voaltileStatus);
+
+    if (gBattleStruct->isSkyBattle || !shouldSet)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
+        if (GetConfig(B_SPORT_TURNS) >= GEN_6)
+        {
+            gFieldStatuses |= halver.statusField;
+            gFieldTimers.mudSportTimer = 5;
+            PrepareStringBattleWithWait(halver.effectString, se->effectBattler);
+            gBattlescriptCurrInstr = se->script;
+        }
+        else
+        {
+            TryEffectVolatile(cv, se, halver.voaltileStatus, TRUE, halver.effectString);
+            gBattlescriptCurrInstr = se->script;
+        }
+    }
 }
 
 static void HandleSetEffectOdorSleuth(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1907,10 +1935,6 @@ static void HandleSetEffectOdorSleuth(struct BattleCalcValues *cv, struct SetEff
 }
 
 static void HandleSetEffectBlock(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectWaterSport(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -2348,10 +2372,9 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_YAWN] = HandleSetEffectYawn,
     [MOVE_EFFECT_IMPRISON] = HandleSetEffectImprison,
     [MOVE_EFFECT_REFRESH] = HandleSetEffectRefresh,
-    [MOVE_EFFECT_MUD_SPORT] = HandleSetEffectMudSport,
+    [MOVE_EFFECT_TYPE_HALVER] = HandleSetEffectTypeHalver,
     [MOVE_EFFECT_ODOR_SLEUTH] = HandleSetEffectOdorSleuth,
     [MOVE_EFFECT_BLOCK] = HandleSetEffectBlock,
-    [MOVE_EFFECT_WATER_SPORT] = HandleSetEffectWaterSport,
     [MOVE_EFFECT_TAILWIND] = HandleSetEffectTailwind,
     [MOVE_EFFECT_PSYCHO_SHIFT] = HandleSetEffectPsychoShift,
     [MOVE_EFFECT_POWER_TRICK] = HandleSetEffectPowerTrick,
@@ -2579,4 +2602,3 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
         return FALSE;
     }
 }
-

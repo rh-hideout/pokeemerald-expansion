@@ -315,5 +315,6 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
 bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);
+struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type);
 
 #endif // GUARD_BATTLE_UTIL_H
