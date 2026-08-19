@@ -253,7 +253,8 @@ struct AiLogicData
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
     u32 battlerMovesScored:4; // Bitmask of battlers that have completed move scoring this turn, so a battler can check whether its ally has already committed to a chosen move regardless of AI processing order
-    u32 padding2:15;
+    u32 reverseBattlerLogicOrder:1;
+    u32 padding2:14;
 };
 
 struct AiThinkingStruct
@@ -645,7 +646,7 @@ struct BattleStruct
     u8 unused2:1;
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 reverseBattlerLogicOrder:1;
+    u8 unused1:1;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
