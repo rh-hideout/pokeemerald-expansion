@@ -12,8 +12,19 @@ enum WildPokemonArea {
     WILD_AREA_WATER,
     WILD_AREA_ROCKS,
     WILD_AREA_FISHING,
-    WILD_AREA_HIDDEN
+    WILD_AREA_HIDDEN,
+    WILD_AREA_NONE
 };
+
+// Low nibble holds the enum WildPokemonArea the encounter came from, high nibble
+// the enum GeneratedMonOrigin of the Pokémon being generated. Either half can be
+// set on its own, so they are cleared separately: the area when the encounter
+// ends, the origin once the Pokémon has been created.
+#define ENCOUNTER_AREA(type)            ((enum WildPokemonArea)((type) & 0xF))
+#define ENCOUNTER_ORIGIN(type)          ((enum GeneratedMonOrigin)((type) >> 4))
+#define SET_ENCOUNTER_AREA(type, area)  ((type) = ((type) & 0xF0) | ((area) & 0xF))
+#define SET_ENCOUNTER_ORIGIN(type, o)   ((type) = ((type) & 0x0F) | (((o) & 0xF) << 4))
+#define ENCOUNTER_TYPE_NONE             (WILD_AREA_NONE | (UNDEFINED_MON_ORIGIN << 4))
 
 struct WildPokemon
 {
@@ -49,8 +60,7 @@ extern const struct WildPokemonHeader gWildMonHeaders[];
 extern const struct WildPokemonHeader gBattlePikeWildMonHeaders[];
 extern const struct WildPokemonHeader gBattlePyramidWildMonHeaders[];
 extern const struct WildPokemon gWildFeebas;
-extern bool8 gIsFishingEncounter;
-extern bool8 gIsSurfingEncounter;
+extern u8 gEncounterType;
 extern u8 gChainFishingDexNavStreak;
 
 u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area);

@@ -7880,7 +7880,8 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         break;
     case BALL_DIVE:
         if (GetCurrentMapType() == MAP_TYPE_UNDERWATER
-            || (B_DIVE_BALL_MODIFIER >= GEN_4 && (gIsFishingEncounter || gIsSurfingEncounter)))
+            || (B_DIVE_BALL_MODIFIER >= GEN_4 && (ENCOUNTER_AREA(gEncounterType) == WILD_AREA_FISHING
+                                           || ENCOUNTER_AREA(gEncounterType) == WILD_AREA_WATER)))
         {
             ball->multiplier = 350;
         }
@@ -7920,7 +7921,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             ball->multiplier = 200;
         break;
     case BALL_LURE:
-        if (gIsFishingEncounter)
+        if (ENCOUNTER_AREA(gEncounterType) == WILD_AREA_FISHING)
         {
             if (B_LURE_BALL_MODIFIER >= GEN_8)
                 ball->multiplier = 400;
