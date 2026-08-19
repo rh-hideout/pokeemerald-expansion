@@ -16,7 +16,8 @@
 #define TIMEOUT_SECONDS 60
 
 void CB2_TestRunner(void);
-void ReinitCallbacks(void);
+static void ReinitCallbacks(void);
+static void ResetGlobalVariables(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
@@ -332,6 +333,7 @@ top:
         gTestRunnerState.state = STATE_REPORT_RESULT;
         gPersistentTestRunnerState.state = CURRENT_TEST_STATE_RUN;
         gPersistentTestRunnerState.expectCrash = FALSE;
+        ResetGlobalVariables();
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
@@ -563,7 +565,7 @@ void Test_ExpectFail(u32 failLine)
     }
 }
 
-static void FunctionTest_ResetGlobalVariables(void)
+static void ResetGlobalVariables(void)
 {
     ReinitCallbacks();
     gBattleTypeFlags = 0;
@@ -572,7 +574,6 @@ static void FunctionTest_ResetGlobalVariables(void)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
-    FunctionTest_ResetGlobalVariables();
     TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
@@ -594,7 +595,6 @@ static void FunctionTest_Run(void *data)
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
-    FunctionTest_ResetGlobalVariables();
     TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
@@ -718,7 +718,7 @@ static NAKED void JumpToAgbMainLoop(void)
          .pool");
 }
 
-void ReinitCallbacks(void)
+static void ReinitCallbacks(void)
 {
     gMain.callback1 = NULL;
     SetMainCallback2(CB2_TestRunner);
