@@ -15404,6 +15404,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 1,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+        .moveEffect = MOVE_EFFECT_ION_DELUGE,
+        .self = TRUE,
+        }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,

@@ -643,7 +643,6 @@ extern const u8 BattleScript_EffectGuardSplit[];
 extern const u8 BattleScript_EffectStickyWeb[];
 extern const u8 BattleScript_EffectHealPulse[];
 extern const u8 BattleScript_EffectQuash[];
-extern const u8 BattleScript_EffectIonDeluge[];
 extern const u8 BattleScript_EffectTopsyTurvy[];
 extern const u8 BattleScript_EffectTerrain[];
 extern const u8 BattleScript_EffectElectrify[];

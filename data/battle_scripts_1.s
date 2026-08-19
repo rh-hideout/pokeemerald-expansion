@@ -640,11 +640,6 @@ BattleScript_ButHoopaCantUseIt::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_MoveEffectIonDeluge::
-	printstring STRINGID_IONDELUGEON
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_MoveEffectHaze::
 	printstring STRINGID_STATCHANGESGONE
 	waitmessage B_WAIT_TIME_LONG
@@ -971,15 +966,6 @@ BattleScript_EffectTopsyTurvyWorks:
 	waitanimation
 	invertstatstages
 	printstring STRINGID_TOPSYTURVYSWITCHEDSTATS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectIonDeluge::
-	attackcanceler
-	orword gFieldStatuses, STATUS_FIELD_ION_DELUGE
-	attackanimation
-	waitanimation
-	printstring STRINGID_IONDELUGEON
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 

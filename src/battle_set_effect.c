@@ -788,11 +788,18 @@ static void HandleSetEffectOrderUp(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectIonDeluge(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!(gFieldStatuses & STATUS_FIELD_ION_DELUGE))
+    if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE))
     {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        if (cv->onlyChecking)
+            return;
+
         gFieldStatuses |= STATUS_FIELD_ION_DELUGE;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectIonDeluge;
+        PrepareStringBattleWithWait(STRINGID_IONDELUGEON, se->effectBattler);
+        gBattlescriptCurrInstr = se->script;
     }
 }
 
