@@ -118,7 +118,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED
      && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER
      && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-     && GetBattlerPosition(battlerId) == B_POSITION_PLAYER_RIGHT)
+     && battlerId == B_BATTLER_2)
         return TRUE;
 
     return FALSE;
