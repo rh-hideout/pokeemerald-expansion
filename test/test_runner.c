@@ -565,6 +565,7 @@ void Test_ExpectFail(u32 failLine)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    gBattleTypeFlags = 0;
     TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
