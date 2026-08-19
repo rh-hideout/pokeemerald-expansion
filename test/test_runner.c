@@ -565,7 +565,6 @@ void Test_ExpectFail(u32 failLine)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
-    gBattleTypeFlags = 0;
     TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
@@ -584,9 +583,15 @@ static void FunctionTest_Run(void *data)
     } while (++gFunctionTestRunnerState->runParameter < gFunctionTestRunnerState->parameters);
 }
 
+static void FunctionTest_ResetGlobalVariables(void)
+{
+    gBattleTypeFlags = 0;
+}
+
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
+    FunctionTest_ResetGlobalVariables();
     TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
