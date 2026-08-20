@@ -445,7 +445,7 @@ static bool32 RunMinigameCountdownDigitsAnim(u8 spriteId)
     case 0:
         SetSpriteMatrixAnchor(sprite, NO_ANCHOR, 26);
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (sprite->sTimer == 0)
             PlaySE(SE_BALL_BOUNCE_2);
@@ -553,6 +553,7 @@ static void SpriteCB_Start(struct Sprite *sprite)
         sYSpeed = 64;
         sY = sprite->y2 << 4;
         sState++;
+        [[fallthrough]];
     case 1:
         sY += sYSpeed;
         sYSpeed++;

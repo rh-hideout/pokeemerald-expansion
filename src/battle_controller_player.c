@@ -2295,7 +2295,7 @@ static void PlayerHandleLinkStandbyMsg(enum BattlerId battler)
     {
     case LINK_STANDBY_MSG_STOP_BOUNCE:
         PrintLinkStandbyMsg();
-        // fall through
+        [[fallthrough]];
     case LINK_STANDBY_STOP_BOUNCE_ONLY:
         EndBounceEffect(battler, BOUNCE_HEALTHBOX);
         EndBounceEffect(battler, BOUNCE_MON);

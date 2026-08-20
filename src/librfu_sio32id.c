@@ -111,7 +111,7 @@ static s32 Sio32IDMain(void)
         else
         {
             gRfuSIO32Id.state = 2;
-            // fallthrough
+            [[fallthrough]];
         }
     default:
         return gRfuSIO32Id.lastId;

@@ -2246,7 +2246,7 @@ static void Cmd_getexp(void)
             *expMonId = gBattleStruct->expGettersOrder[0];
             gBattleStruct->expSentInMons = sentInBits;
         }
-        // fall through
+        [[fallthrough]];
     case 2: // set exp value to the poke in expgetter_id and print message
         if (gBattleControllerExecFlags == 0)
         {
@@ -3610,7 +3610,7 @@ static void Cmd_switchhandleorder(void)
             RecordedBattle_SetBattlerAction(battler, gBattleResources->bufferB[battler][1]);
             gBattleStruct->recordedActionSet |= 1u << battler;
         }
-        // fall through
+        [[fallthrough]];
     case 3:
         gBattleCommunication[0] = gBattleResources->bufferB[battler][1];
         gBattleStruct->monToSwitchIntoId[battler] = gBattleResources->bufferB[battler][1];
