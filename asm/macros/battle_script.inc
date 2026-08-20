@@ -51,13 +51,15 @@
 	.byte B_SCR_OP_RESULTMESSAGE
 	.endm
 
-	.macro printstring id:req
+	.macro printstring id:req, battler=BS_ATTACKER
 	.byte B_SCR_OP_PRINTSTRING
 	.2byte \id
+	.byte \battler
+
 	.endm
 
-	.macro printsavedstring
-	printstring 0
+	.macro printsavedstring battler=BS_ATTACKER
+	printstring 0, \battler
 	.endm
 
 	.macro printselectionstring id:req
@@ -783,10 +785,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setalwayshitflag
-	.byte B_SCR_OP_SETALWAYSHITFLAG
-	.endm
-
 	.macro copymovepermanently failInstr:req
 	.byte B_SCR_OP_COPYMOVEPERMANENTLY
 	.4byte \failInstr
@@ -880,11 +878,6 @@
 	.byte B_SCR_OP_SETFORCEDTARGET
 	.endm
 
-	.macro curestatuswithmove failInstr:req
-	.byte B_SCR_OP_CURESTATUSWITHMOVE
-	.4byte \failInstr
-	.endm
-
 	.macro settaunt failInstr:req
 	.byte B_SCR_OP_SETTAUNT
 	.4byte \failInstr
@@ -914,10 +907,6 @@
 	.macro setyawn failInstr:req
 	.byte B_SCR_OP_SETYAWN
 	.4byte \failInstr
-	.endm
-
-	.macro setroom
-	.byte B_SCR_OP_SETROOM
 	.endm
 
 	.macro tryswapabilities failInstr:req
@@ -960,11 +949,6 @@
 
 	.macro pickup
 	.byte B_SCR_OP_PICKUP
-	.endm
-
-	.macro settypebasedhalvers failInstr:req
-	.byte B_SCR_OP_SETTYPEBASEDHALVERS
-	.4byte \failInstr
 	.endm
 
 	.macro tryrecycleitem failInstr:req
@@ -1176,11 +1160,6 @@
 	.byte \battler
 	.byte \terrainFlags
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryreflecttype failInstr:req
-	callnative BS_TryReflectType
-	.4byte \failInstr
 	.endm
 
 	@ Used to active a different Max Move effects.

@@ -1,9 +1,11 @@
 #include "global.h"
+#include "assertf.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_anim_scripts.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
+#include "battle_main.h"
 #include "battle_pyramid.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
@@ -14,6 +16,8 @@
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "config_changes.h"
+#include "constants/battle.h"
+#include "move.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -11166,4 +11170,80 @@ bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
     gBattlerAbility = battler;
     gLastUsedItem = gBattleMons[battler].item;
     return TRUE;
+}
+
+void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
+{
+    s8 *atkStatStage = &gBattleMons[battlerAtk].statStages[stat];
+    s8 *defStatStage = &gBattleMons[battlerDef].statStages[stat];
+    Swap(*atkStatStage, *defStatStage);
+}
+
+u16 *GetBattlerStatPtr(struct BattlePokemon *battler, enum Stat stat)
+{
+    switch (stat)
+    {
+    case STAT_ATK:   return &battler->attack;
+    case STAT_DEF:   return &battler->defense;
+    case STAT_SPATK: return &battler->spAttack;
+    case STAT_SPDEF: return &battler->spDefense;
+    default:         return NULL;
+    }
+}
+
+void AverageBattlerStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
+{
+    u16 *attackerStat = GetBattlerStatPtr(&gBattleMons[battlerAtk], stat);
+    u16 *defenderStat = GetBattlerStatPtr(&gBattleMons[battlerDef], stat);
+    u16 avg = (*attackerStat + *defenderStat) / 2;
+    *attackerStat = *defenderStat = avg;
+}
+
+#define TYPE_HALVER(...) (struct TypeBasedHalverInfo){__VA_ARGS__}
+struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
+{
+    switch(type)
+    {
+        case TYPE_FIRE:
+            return TYPE_HALVER(STATUS_FIELD_WATERSPORT, VOLATILE_WATER_SPORT, STRINGID_FIREWEAKENED);
+        case TYPE_ELECTRIC:
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+        default:
+            errorf("Type (%s) does not have a halver", gTypesInfo[type].name);
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+
+    }
+}
+
+enum StringID GetStatus1String(u32 status1)
+{
+    if (status1 & STATUS1_POISON)
+    {
+        return STRINGID_PKMNWASPOISONED;
+    }
+    else if (status1 & STATUS1_TOXIC_POISON)
+    {
+        return STRINGID_PKMNBADLYPOISONED;
+    }
+    else if (status1 & STATUS1_BURN)
+    {
+        return STRINGID_PKMNWASBURNED;
+    }
+    else if (status1 & STATUS1_PARALYSIS)
+    {
+        return STRINGID_PKMNWASPARALYZED;
+    }
+    else if (status1 & STATUS1_SLEEP)
+    {
+        return STRINGID_PKMNFELLASLEEP;
+    }
+    else if (status1 & STATUS1_FROSTBITE)
+    {
+        return STRINGID_PKMNGOTFROSTBITE;
+    }
+    else
+    {
+        errorf("No status1 set");
+        return STRINGID_EMPTYSTRING3;
+    }
 }
