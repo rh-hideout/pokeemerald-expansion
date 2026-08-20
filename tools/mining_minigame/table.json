@@ -1,0 +1,150 @@
+{
+    "items": [
+        {
+            "id": "MININGID_HEART_SCALE",
+            "path": "./graphics/mining_minigame/items/heart_scale.4bpp"
+        },
+        {
+            "id": "MININGID_STAR_PIECE",
+            "path": "./graphics/mining_minigame/items/star_piece.4bpp"
+        },
+        {
+            "id": "MININGID_RED_SHARD",
+            "path": "./graphics/mining_minigame/items/red_shard.4bpp"
+        },
+        {
+            "id": "MININGID_REVIVE",
+            "path": "./graphics/mining_minigame/items/revive.4bpp"
+        },
+        {
+            "id": "MININGID_LIGHT_CLAY",
+            "path": "./graphics/mining_minigame/items/light_clay.4bpp"
+        },
+        {
+            "id": "MININGID_HEAT_ROCK",
+            "path": "./graphics/mining_minigame/items/heat_rock.4bpp"
+        },
+        {
+            "id": "MININGID_DAMP_ROCK",
+            "path": "./graphics/mining_minigame/items/damp_rock.4bpp"
+        },
+        {
+            "id": "MININGID_BLUE_SHARD",
+            "path": "./graphics/mining_minigame/items/blue_shard.4bpp"
+        },
+        {
+            "id": "MININGID_OVAL_STONE",
+            "path": "./graphics/mining_minigame/items/oval_stone.4bpp"
+        },
+        {
+            "id": "MININGID_EVER_STONE",
+            "path": "./graphics/mining_minigame/items/ever_stone.4bpp"
+        },
+        {
+            "id": "MININGID_HARD_STONE",
+            "path": "./graphics/mining_minigame/items/hard_stone.4bpp"
+        },
+        {
+            "id": "MININGID_REVIVE_MAX",
+            "path": "./graphics/mining_minigame/items/revive_max.4bpp"
+        },
+        {
+            "id": "MININGID_IRON_BALL",
+            "path": "./graphics/mining_minigame/items/iron_ball.4bpp"
+        },
+        {
+            "id": "MININGID_ICY_ROCK",
+            "path": "./graphics/mining_minigame/items/icy_rock.4bpp"
+        },
+        {
+            "id": "MININGID_SMOOTH_ROCK",
+            "path": "./graphics/mining_minigame/items/smooth_rock.4bpp"
+        },
+        {
+            "id": "MININGID_YELLOW_SHARD",
+            "path": "./graphics/mining_minigame/items/yellow_shard.4bpp"
+        },
+        {
+            "id": "MININGID_GREEN_SHARD",
+            "path": "./graphics/mining_minigame/items/green_shard.4bpp"
+        },
+        {
+            "id": "MININGID_LEAF_STONE",
+            "path": "./graphics/mining_minigame/items/leaf_stone.4bpp"
+        },
+        {
+            "id": "MININGID_FIRE_STONE",
+            "path": "./graphics/mining_minigame/items/fire_stone.4bpp"
+        },
+        {
+            "id": "MININGID_WATER_STONE",
+            "path": "./graphics/mining_minigame/items/water_stone.4bpp"
+        },
+        {
+            "id": "MININGID_THUNDER_STONE",
+            "path": "./graphics/mining_minigame/items/thunder_stone.4bpp"
+        },
+        {
+            "id": "MININGID_MOON_STONE",
+            "path": "./graphics/mining_minigame/items/moon_stone.4bpp"
+        },
+        {
+            "id": "MININGID_SUN_STONE",
+            "path": "./graphics/mining_minigame/items/sun_stone.4bpp"
+        },
+        {
+            "id": "MININGID_ODD_KEY_STONE",
+            "path": "./graphics/mining_minigame/items/odd_key_stone.4bpp"
+        },
+        {
+            "id": "MININGID_SKULL_FOSSIL",
+            "path": "./graphics/mining_minigame/items/skull_fossil.4bpp"
+        },
+        {
+            "id": "MININGID_ARMOR_FOSSIL",
+            "path": "./graphics/mining_minigame/items/armor_fossil.4bpp"
+        }
+    ],
+    "stones": [
+        {
+            "id": "MININGID_STONE_2x2",
+            "path": "./graphics/mining_minigame/stones/stone_2x2.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_3x3",
+            "path": "./graphics/mining_minigame/stones/stone_3x3.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_1x4",
+            "path": "./graphics/mining_minigame/stones/stone_1x4.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_4x1",
+            "path": "./graphics/mining_minigame/stones/stone_4x1.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_2x4",
+            "path": "./graphics/mining_minigame/stones/stone_2x4.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_4x2",
+            "path": "./graphics/mining_minigame/stones/stone_4x2.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_SNAKE1",
+            "path": "./graphics/mining_minigame/stones/stone_snake1.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_SNAKE2",
+            "path": "./graphics/mining_minigame/stones/stone_snake2.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_MUSHROOM1",
+            "path": "./graphics/mining_minigame/stones/stone_mushroom1.4bpp"
+        },
+        {
+            "id": "MININGID_STONE_MUSHROOM2",
+            "path": "./graphics/mining_minigame/stones/stone_mushroom2.4bpp"
+        }
+    ]
+}
