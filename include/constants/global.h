@@ -93,6 +93,18 @@ enum __attribute__((packed)) PartyMon
     PARTY_MON_CANCEL,
 };
 
+// A position within the in-battle party order, not an identity; the Pokémon
+// occupying a given slot changes as the order is permuted. See gBattlePartyCurrentOrder.
+enum __attribute__((packed)) PartyBattleSlot
+{
+    PARTY_BATTLE_SLOT_0,
+    PARTY_BATTLE_SLOT_1,
+    PARTY_BATTLE_SLOT_2,
+    PARTY_BATTLE_SLOT_3,
+    PARTY_BATTLE_SLOT_4,
+    PARTY_BATTLE_SLOT_5,
+};
+
 #define MULTI_PARTY_SIZE (PARTY_SIZE / 2)
 #define FRONTIER_PARTY_SIZE         3
 #define FRONTIER_DOUBLES_PARTY_SIZE 4
