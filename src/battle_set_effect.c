@@ -13,6 +13,7 @@
 #include "battle_dynamax.h"
 #include "battle_gimmick.h"
 #include "battle_terastal.h"
+#include "config_changes.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/battle_script_commands.h"
@@ -1828,6 +1829,26 @@ static void HandleSetEffectLockOn(struct BattleCalcValues *cv, struct SetEffect 
 
 static void HandleSetEffectMeanLook(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+
+    bool32 alreadyTrapped = gBattleMons[se->effectBattler].volatiles.escapePrevention;
+    bool32 canGhostsEscape = (GetConfig(B_GHOSTS_ESCAPE) < GEN_6
+                             && IS_BATTLER_OF_TYPE(se->effectBattler, TYPE_GHOST));
+
+    if (alreadyTrapped || canGhostsEscape)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        return;
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+
+    gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
+    gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
+
+    PrepareStringBattleWithWait( STRINGID_TARGETCANTESCAPENOW, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectAttract(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2732,6 +2753,7 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
     case MOVE_EFFECT_REMOVE_STATUS:
     case MOVE_EFFECT_RECOIL_HP_25:
     case MOVE_EFFECT_PREVENT_ESCAPE:
+    case MOVE_EFFECT_MEAN_LOOK:
     case MOVE_EFFECT_WRAP:
         return TRUE;
     default:

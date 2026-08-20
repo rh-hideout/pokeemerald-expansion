@@ -1697,19 +1697,6 @@ BattleScript_MoveEffectAromatherapy::
 	waitstate
 	return
 
-BattleScript_EffectMeanLook::
-	attackcanceler
-	jumpifvolatile BS_TARGET, VOLATILE_ESCAPE_PREVENTION, BattleScript_ButItFailed
-	jumpifgenconfiglowerthan CONFIG_B_GHOSTS_ESCAPE, GEN_6, BattleScript_EffectMeanLookGen5
-	jumpiftype BS_TARGET, TYPE_GHOST, BattleScript_ButItFailed
-BattleScript_EffectMeanLookGen5:
-	attackanimation
-	waitanimation
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PREVENT_ESCAPE
-	printstring STRINGID_TARGETCANTESCAPENOW
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectNightmare::
 	attackcanceler
 	jumpifvolatile BS_TARGET, VOLATILE_NIGHTMARE, BattleScript_ButItFailed

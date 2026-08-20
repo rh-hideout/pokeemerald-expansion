@@ -588,7 +588,6 @@ extern const u8 BattleScript_EffectSketch[];
 extern const u8 BattleScript_EffectSpite[];
 extern const u8 BattleScript_EffectHealBell[];
 extern const u8 BattleScript_MoveEffectAromatherapy[];
-extern const u8 BattleScript_EffectMeanLook[];
 extern const u8 BattleScript_EffectNightmare[];
 extern const u8 BattleScript_EffectCurse[];
 extern const u8 BattleScript_EffectHealingWish[];

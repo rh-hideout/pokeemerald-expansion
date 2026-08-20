@@ -400,7 +400,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MEAN_LOOK] =
     {
-        .battleScript = BattleScript_EffectMeanLook,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
         .encourageEncore = TRUE,
