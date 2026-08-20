@@ -1106,19 +1106,19 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TRICK_ROOM] =
     {
-        .battleScript = BattleScript_EffectTrickRoom,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_WONDER_ROOM] =
     {
-        .battleScript = BattleScript_EffectWonderRoom,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_MAGIC_ROOM] =
     {
-        .battleScript = BattleScript_EffectMagicRoom,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

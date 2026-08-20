@@ -1,4 +1,5 @@
 #include "global.h"
+#include "assertf.h"
 #include "battle.h"
 #include "battle_set_effect.h"
 #include "battle_util.h"
@@ -2234,8 +2235,64 @@ static void HandleSetEffectSwitcheroo(struct BattleCalcValues *cv, struct SetEff
 {
 }
 
-static void HandleSetEffectTrickRoom(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectSetRoom(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum StringID roomString;
+    enum StringID roomEndString;
+    u32 roomStatus;
+    u8 *timer;
+
+    if(cv->onlyChecking)
+        return;
+
+    enum BattleRoom roomType = se->additionalEffect->argument.roomType;
+
+    switch (roomType)
+    {
+    case B_ROOM_MAGIC:
+        roomString = STRINGID_HELDITEMSLOSEEFFECTS;
+        roomEndString = STRINGID_MAGICROOMENDS;
+        roomStatus = STATUS_FIELD_MAGIC_ROOM;
+        timer = &gFieldTimers.magicRoomTimer;
+        break;
+    case B_ROOM_TRICK:
+        roomString = STRINGID_PKMNTWISTEDDIMENSIONS;
+        roomEndString = STRINGID_TRICKROOMENDS;
+        roomStatus = STATUS_FIELD_TRICK_ROOM;
+        timer = &gFieldTimers.trickRoomTimer;
+        break;
+    case B_ROOM_WONDER:
+        roomString = STRINGID_SWAPSDEFANDSPDEFOFALLPOKEMON;
+        roomEndString = STRINGID_WONDERROOMENDS;
+        roomStatus = STATUS_FIELD_WONDER_ROOM;
+        timer = &gFieldTimers.wonderRoomTimer;
+        break;
+    default:
+        errorf("Invalid argument for roomType: %d", roomType);
+        roomString = STRINGID_EMPTYSTRING3;
+        roomEndString = STRINGID_EMPTYSTRING3;
+        timer = NULL;
+        roomStatus = 0;
+        break;
+    }
+
+    if (gFieldStatuses & roomStatus)
+    {
+        gFieldStatuses &= ~roomStatus;
+        *timer = 0;
+        PrepareStringBattleWithWait(roomEndString, se->effectBattler);
+    }
+    else
+    {
+        gFieldStatuses |= roomStatus;
+        *timer = 5;
+        PrepareStringBattleWithWait(roomString, se->effectBattler);
+    }
+
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+
+    if (roomType == B_ROOM_TRICK)
+        BattleScriptCall(BattleScript_TryRoomServiceLoop);
 }
 
 static void HandleSetEffectLunarDance(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2280,15 +2337,7 @@ static void HandleSetEffectAverageStats(struct BattleCalcValues *cv, struct SetE
     BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
-static void HandleSetEffectWonderRoom(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectTelekinesis(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectMagicRoom(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
 
@@ -2588,12 +2637,10 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_STAT_SWAP] = HandleSetEffectStatSwap,
     [MOVE_EFFECT_OVERWRITE_ABILITY] = HandleSetEffectOverwriteAbility,
     [MOVE_EFFECT_SWITCHEROO] = HandleSetEffectSwitcheroo,
-    [MOVE_EFFECT_TRICK_ROOM] = HandleSetEffectTrickRoom,
+    [MOVE_EFFECT_SET_ROOM] = HandleSetEffectSetRoom,
     [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
     [MOVE_EFFECT_AVERAGE_STATS] = HandleSetEffectAverageStats,
-    [MOVE_EFFECT_WONDER_ROOM] = HandleSetEffectWonderRoom,
     [MOVE_EFFECT_TELEKINESIS] = HandleSetEffectTelekinesis,
-    [MOVE_EFFECT_MAGIC_ROOM] = HandleSetEffectMagicRoom,
     [MOVE_EFFECT_OVERWRITE_TYPE] = HandleSetEffectOverwriteType,
     [MOVE_EFFECT_ENTRAINMENT] = HandleSetEffectEntrainment,
     [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,

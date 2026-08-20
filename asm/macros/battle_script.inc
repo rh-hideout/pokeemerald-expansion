@@ -909,10 +909,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setroom
-	.byte B_SCR_OP_SETROOM
-	.endm
-
 	.macro tryswapabilities failInstr:req
 	.byte B_SCR_OP_TRYSWAPABILITIES
 	.4byte \failInstr

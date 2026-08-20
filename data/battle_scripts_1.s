@@ -1064,17 +1064,7 @@ BattleScript_MoveEffectGastroAcid::
 	tryendneutralizinggas
 	return
 
-BattleScript_EffectTrickRoom::
-	attackcanceler
-	setroom
-	attackanimation
-	waitanimation
-	printfromtable gRoomsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_TryRoomServiceLoop
-	goto BattleScript_MoveEnd
-
-BattleScript_TryRoomServiceLoop:
+BattleScript_TryRoomServiceLoop::
 	savetarget
 	setbyte gBattlerTarget, 0
 BattleScript_RoomServiceLoop:
@@ -1086,16 +1076,6 @@ BattleScript_RoomServiceLoop_NextBattler:
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_RoomServiceLoop
 	restoretarget
 	return
-
-BattleScript_EffectWonderRoom::
-BattleScript_EffectMagicRoom::
-	attackcanceler
-	setroom
-	attackanimation
-	waitanimation
-	printfromtable gRoomsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_TryTailwindAbilitiesLoop::
 	savetarget

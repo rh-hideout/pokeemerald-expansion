@@ -435,6 +435,13 @@ enum BattleTerrain
     B_TERRAIN_COUNT,
 };
 
+enum BattleRoom
+{
+    B_ROOM_MAGIC,
+    B_ROOM_TRICK,
+    B_ROOM_WONDER,
+};
+
 // Field affecting statuses.
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
 #define STATUS_FIELD_TRICK_ROOM                     (1 << 1)

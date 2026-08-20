@@ -70,6 +70,7 @@ struct AdditionalEffect
         enum Type type:8;
         enum Ability overwriteAbility:16;
         struct StatField statField;
+        enum BattleRoom roomType:8;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect
