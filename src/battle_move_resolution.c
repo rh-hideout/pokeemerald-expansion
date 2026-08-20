@@ -1673,7 +1673,8 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
     u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
     u32 isMoveWeatherAffected = GetMoveTwoTurnAttackWeather(cv->move);
 
-    return (attackerWeather & isMoveWeatherAffected) || (weather & isMoveWeatherAffected);
+    return (attackerWeather & isMoveWeatherAffected)
+        || IsBattlerWeatherAffected(cv->holdEffects[cv->battlerAtk], weather, isMoveWeatherAffected);
 }
 
 static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
