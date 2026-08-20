@@ -142,6 +142,7 @@ MULTI_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner stil
         OPPONENT_B(SPECIES_DRAGONAIR);
         OPPONENT_B(SPECIES_DRAGONAIR);
         OPPONENT_B(SPECIES_DRAGONAIR);
+        SetSavedPlayerParty(6);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_DRAGON_RAGE, target:playerLeft);
@@ -183,6 +184,7 @@ TWO_VS_ONE_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner
         OPPONENT_A(SPECIES_DRAGONITE);
         OPPONENT_A(SPECIES_DRAGONITE);
         OPPONENT_A(SPECIES_DRAGONITE);
+        SetSavedPlayerParty(6);
     } WHEN {
         TURN {
             MOVE(opponentLeft, MOVE_DRAGON_RAGE, target:playerLeft);

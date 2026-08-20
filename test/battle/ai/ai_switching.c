@@ -2542,20 +2542,20 @@ AI_MULTI_BATTLE_TEST("AI will not switch out if the opposite battler is absent a
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(41); Speed(1); }
-        PARTNER(SPECIES_DRAKLOAK) { HP(41); MaxHP(100); Speed(4); Item(ITEM_LIFE_ORB); Moves(MOVE_DRAGON_RAGE, MOVE_SHADOW_BALL); }
-        PARTNER(SPECIES_DRAGAPULT) { Speed(4); Moves(MOVE_SHADOW_BALL); }
-        OPPONENT_A(SPECIES_CYCLIZAR) { HP(41); MaxHP(100); Speed(3); Item(ITEM_LIFE_ORB); Moves(MOVE_BODY_SLAM, MOVE_DRAGON_RAGE); }
-        OPPONENT_A(SPECIES_DRAMPA) { Speed(3); Moves(MOVE_BODY_SLAM); }
-        OPPONENT_B(SPECIES_WYNAUT) { Speed(2); HP(41); }
+        PLAYER(SPECIES_DRAKLOAK) { HP(41); MaxHP(100); Speed(4); Item(ITEM_LIFE_ORB); Moves(MOVE_DRAGON_RAGE, MOVE_SHADOW_BALL); }
+        PLAYER(SPECIES_DRAGAPULT) { Speed(4); Moves(MOVE_SHADOW_BALL, MOVE_DRAGON_RAGE); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(41); Speed(1); }
+        OPPONENT_A(SPECIES_WYNAUT) { Speed(2); HP(41); }
+        OPPONENT_B(SPECIES_CYCLIZAR) { HP(41); MaxHP(100); Speed(3); Item(ITEM_LIFE_ORB); Moves(MOVE_BODY_SLAM, MOVE_DRAGON_RAGE); }
+        OPPONENT_B(SPECIES_DRAMPA) { Speed(3); Moves(MOVE_BODY_SLAM); }
     } WHEN {
         TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft);
-            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight);
+            EXPECT_MOVE(opponentRight, MOVE_BODY_SLAM, target: playerRight);
+            MOVE(playerLeft, MOVE_SHADOW_BALL, target: opponentLeft);
         }
         TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_DRAGON_RAGE, target: playerRight);
-            EXPECT_MOVE(playerRight, MOVE_DRAGON_RAGE, target: opponentLeft);
+            EXPECT_MOVE(opponentRight, MOVE_DRAGON_RAGE, target: playerLeft);
+            MOVE(playerLeft, MOVE_DRAGON_RAGE, target: opponentRight);
         }
     }
 }
