@@ -4221,7 +4221,7 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
         return TRUE;
     if (TESTING)
         return FALSE;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < ARRAY_COUNT(gSelectedOrderFromParty); i++)
     {
         if (gSelectedOrderFromParty[i] <= MULTI_PARTY_SIZE)
             continue;
