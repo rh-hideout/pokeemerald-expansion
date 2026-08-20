@@ -166,19 +166,14 @@ Debug_EventScript_CheckEVs::
 	goto_if_eq VAR_RESULT, 0, Debug_NoPokemon
 	special ChoosePartyMon
 	goto_if_ge VAR_0x8004, PARTY_SIZE, Debug_EventScript_CheckEVs_End
-	callnative Script_GetChosenMonOffensiveEVs
-	msgbox Debug_EventScript_Text_OffensiveEVs, MSGBOX_DEFAULT
-	callnative Script_GetChosenMonDefensiveEVs
-	msgbox Debug_EventScript_Text_DefensiveEVs, MSGBOX_DEFAULT
+	callnative Script_GetChosenMonEVs
+	msgbox Debug_EventScript_Text_AllEVs, MSGBOX_DEFAULT
 Debug_EventScript_CheckEVs_End::
 	releaseall
 	end
 
-Debug_EventScript_Text_OffensiveEVs:
-	.string "ATK EVs: {STR_VAR_1}, SPATK EVs: {STR_VAR_2}, SPEED EVs: {STR_VAR_3}$"
-
-Debug_EventScript_Text_DefensiveEVs:
-	.string "HP EVs: {STR_VAR_1}, DEF EVs: {STR_VAR_2}, SPDEF EVs: {STR_VAR_3}$"
+Debug_EventScript_Text_AllEVs:
+	.string "EVs: HP{CLEAR_TO 55}{HIGHLIGHT LIGHT_GREEN}ATK{CLEAR_TO 85}{HIGHLIGHT TRANSPARENT}DEF{CLEAR_TO 115}{HIGHLIGHT LIGHT_GREEN}SPEED{CLEAR_TO 145}{HIGHLIGHT TRANSPARENT}SPATK{CLEAR_TO 175}{HIGHLIGHT LIGHT_GREEN}SPDEF{CLEAR_TO 205}{HIGHLIGHT TRANSPARENT}\n{STR_VAR_2}$"
 
 Debug_EventScript_CheckIVs::
 	lockall
@@ -186,19 +181,14 @@ Debug_EventScript_CheckIVs::
 	goto_if_eq VAR_RESULT, 0, Debug_NoPokemon
 	special ChoosePartyMon
 	goto_if_ge VAR_0x8004, PARTY_SIZE, Debug_EventScript_CheckIVs_End
-	callnative Script_GetChosenMonOffensiveIVs
-	msgbox Debug_EventScript_Text_OffensiveIVs, MSGBOX_DEFAULT
-	callnative Script_GetChosenMonDefensiveIVs
-	msgbox Debug_EventScript_Text_DefensiveIVs, MSGBOX_DEFAULT
+	callnative Script_GetChosenMonIVs
+	msgbox Debug_EventScript_Text_AllIVs, MSGBOX_DEFAULT
 Debug_EventScript_CheckIVs_End::
 	releaseall
 	end
 
-Debug_EventScript_Text_OffensiveIVs:
-	.string "ATK IVs: {STR_VAR_1}, SPATK IVs: {STR_VAR_2}, SPEED IVs: {STR_VAR_3}$"
-
-Debug_EventScript_Text_DefensiveIVs:
-	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
+Debug_EventScript_Text_AllIVs:
+	.string "IVs: HP{CLEAR_TO 55}{HIGHLIGHT LIGHT_RED}ATK{CLEAR_TO 85}{HIGHLIGHT TRANSPARENT}DEF{CLEAR_TO 115}{HIGHLIGHT LIGHT_RED}SPEED{CLEAR_TO 145}{HIGHLIGHT TRANSPARENT}SPATK{CLEAR_TO 175}{HIGHLIGHT LIGHT_RED}SPDEF{CLEAR_TO 205}{HIGHLIGHT TRANSPARENT}\n{STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
 	release
