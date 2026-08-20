@@ -110,19 +110,19 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
         SetEffectFailAndCheckReturn;
         gBattleStruct->battlerState[gBattlerAttacker].alreadyStatusedMoveAttempt = TRUE;
         PrepareStringBattleWithWait(STRINGID_PKMNALREADYCONFUSED, se->effectBattler);
-        gBattlescriptCurrInstr = se->script;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
     else if (IsMistyTerrainAffected(se->effectBattler, effectAbility, effectHoldEffect, gFieldTimers.terrain))
     {
         SetEffectFailAndCheckReturn;
         PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
-        gBattlescriptCurrInstr = se->script;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
     else if (IsSafeguardProtected(cv->battlerAtk, se->effectBattler, atkAbility))
     {
         SetEffectFailAndCheckReturn;
         PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
-        gBattlescriptCurrInstr = se->script;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
     else
     {
