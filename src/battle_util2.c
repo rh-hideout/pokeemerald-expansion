@@ -154,7 +154,7 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
             for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
                 gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
 
-            SwitchPartyMonSlots(GetPartyIdFromBattlePartyId(battlerPartyId), GetPartyIdFromBattlePartyId(switchInPartyId));
+            SwitchPartyMonSlots(GetBattleSlotFromBattlePartyId(battlerPartyId), GetBattleSlotFromBattlePartyId(switchInPartyId));
 
             for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
                 gBattleStruct->battlerPartyOrders[battlerId][i] = gBattlePartyCurrentOrder[i];

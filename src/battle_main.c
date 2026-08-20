@@ -3720,14 +3720,14 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
 void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2)
 {
     s32 i;
-    enum PartyMon partyId1, partyId2;
+    enum PartyBattleSlot slot1, slot2;
 
     for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = *(battler * 3 + i + (u8 *)(gBattleStruct->battlerPartyOrders));
 
-    partyId1 = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler]);
-    partyId2 = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler2]);
-    SwitchPartyMonSlots(partyId1, partyId2);
+    slot1 = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[battler]);
+    slot2 = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[battler2]);
+    SwitchPartyMonSlots(slot1, slot2);
 
     for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
     {
@@ -3739,19 +3739,19 @@ void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2)
 void SwitchPartyOrder(enum BattlerId battler)
 {
     s32 i;
-    enum PartyMon partyId1, partyId2;
+    enum PartyBattleSlot slot1, slot2;
 
     for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = *(battler * 3 + i + (u8 *)(gBattleStruct->battlerPartyOrders));
 
-    partyId1 = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler]);
-    partyId2 = GetPartyIdFromBattlePartyId(gBattleStruct->monToSwitchIntoId[battler]);
-    SwitchPartyMonSlots(partyId1, partyId2);
+    slot1 = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[battler]);
+    slot2 = GetBattleSlotFromBattlePartyId(gBattleStruct->monToSwitchIntoId[battler]);
+    SwitchPartyMonSlots(slot1, slot2);
 
-    if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId1)
-        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId2;
-    else if (gBattleStruct->battlerState[battler].originalBattlerPartyId == partyId2)
-        gBattleStruct->battlerState[battler].originalBattlerPartyId = partyId1;
+    if (gBattleStruct->battlerState[battler].originalBattlerPartyId == slot1)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = slot2;
+    else if (gBattleStruct->battlerState[battler].originalBattlerPartyId == slot2)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = slot1;
 
     if (IsDoubleBattle())
     {
