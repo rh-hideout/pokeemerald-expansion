@@ -801,7 +801,7 @@ static void HandleSetEffectIonDeluge(struct BattleCalcValues *cv, struct SetEffe
 
         gFieldStatuses |= STATUS_FIELD_ION_DELUGE;
         PrepareStringBattleWithWait(STRINGID_IONDELUGEON, se->effectBattler);
-        gBattlescriptCurrInstr = se->script;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
 
