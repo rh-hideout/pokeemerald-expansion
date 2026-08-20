@@ -9140,55 +9140,6 @@ void BS_JumpIfTerrainAffected(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryReflectType(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum Species targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species);
-    enum Type targetTypes[3];
-    GetBattlerTypes(gBattlerTarget, FALSE, targetTypes);
-
-    if (targetBaseSpecies == SPECIES_ARCEUS || targetBaseSpecies == SPECIES_SILVALLY)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (IS_BATTLER_TYPELESS(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (targetTypes[0] == TYPE_MYSTERY && targetTypes[1] == TYPE_MYSTERY && targetTypes[2] != TYPE_MYSTERY)
-    {
-        gBattleMons[gBattlerAttacker].types[0] = TYPE_NORMAL;
-        gBattleMons[gBattlerAttacker].types[1] = TYPE_NORMAL;
-        gBattleMons[gBattlerAttacker].types[2] = targetTypes[2];
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else if (targetTypes[0] == TYPE_MYSTERY && targetTypes[1] != TYPE_MYSTERY)
-    {
-        gBattleMons[gBattlerAttacker].types[0] = targetTypes[1];
-        gBattleMons[gBattlerAttacker].types[1] = targetTypes[1];
-        gBattleMons[gBattlerAttacker].types[2] = targetTypes[2];
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else if (targetTypes[0] != TYPE_MYSTERY && targetTypes[1] == TYPE_MYSTERY)
-    {
-        gBattleMons[gBattlerAttacker].types[0] = targetTypes[0];
-        gBattleMons[gBattlerAttacker].types[1] = targetTypes[0];
-        gBattleMons[gBattlerAttacker].types[2] = targetTypes[2];
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerAttacker].types[0] = targetTypes[0];
-        gBattleMons[gBattlerAttacker].types[1] = targetTypes[1];
-        gBattleMons[gBattlerAttacker].types[2] = targetTypes[2];
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_TrySetOctolock(void)
 {
     NATIVE_ARGS(const u8 *failInstr);

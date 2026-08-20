@@ -1166,11 +1166,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryreflecttype failInstr:req
-	callnative BS_TryReflectType
-	.4byte \failInstr
-	.endm
-
 	@ Used to active a different Max Move effects.
 	.macro setmaxmoveeffect
 	callnative BS_SetMaxMoveEffect

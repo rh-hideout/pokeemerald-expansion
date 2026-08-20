@@ -48,6 +48,14 @@
             return; \
     } while (0)
 
+#define SetBattlerTypes(battler, type1, ...) \
+    do \
+    { \
+        gBattleMons[battler].types[0] = type1; \
+        gBattleMons[battler].types[1] = DEFAULT(type1, __VA_ARGS__); \
+        gBattleMons[battler].types[2] = DEFAULT_2(TYPE_NONE, __VA_ARGS__); \
+    } while (0)
+
 static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript);
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
@@ -2374,6 +2382,43 @@ static void HandleSetEffectQuash(struct BattleCalcValues *cv, struct SetEffect *
 
 static void HandleSetEffectReflectType(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    enum Species targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[se->effectBattler].species);
+    enum Type targetTypes[3];
+    GetBattlerTypes(se->effectBattler, FALSE, targetTypes);
+
+    bool32 speciesTypeImmutable = targetBaseSpecies == SPECIES_ARCEUS
+                               || targetBaseSpecies == SPECIES_SILVALLY;
+
+    bool32 isTeraActive = GetActiveGimmick(cv->battlerAtk) == GIMMICK_TERA;
+
+    if (speciesTypeImmutable || isTeraActive || IS_BATTLER_TYPELESS(se->effectBattler))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        return;
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    if (targetTypes[0] == TYPE_MYSTERY && targetTypes[1] == TYPE_MYSTERY && targetTypes[2] != TYPE_MYSTERY)
+    {
+        SetBattlerTypes(cv->battlerAtk, TYPE_NORMAL, TYPE_NORMAL, targetTypes[2]);
+    }
+    else if (targetTypes[0] == TYPE_MYSTERY && targetTypes[1] != TYPE_MYSTERY)
+    {
+        SetBattlerTypes(cv->battlerAtk, targetTypes[1], targetTypes[1], targetTypes[2]);
+    }
+    else if (targetTypes[0] != TYPE_MYSTERY && targetTypes[1] == TYPE_MYSTERY)
+    {
+        SetBattlerTypes(cv->battlerAtk, targetTypes[0], targetTypes[0], targetTypes[2]);
+    }
+    else
+    {
+        SetBattlerTypes(cv->battlerAtk, targetTypes[0], targetTypes[1], targetTypes[2]);
+    }
+
+    PrepareStringBattleWithWait(STRINGID_REFLECTTARGETSTYPE, cv->battlerAtk);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect *se)
