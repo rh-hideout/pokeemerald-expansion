@@ -5942,7 +5942,8 @@ static s32 AI_CheckViability(enum BattlerId battlerAtk, enum BattlerId battlerDe
         }
     }
 
-    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_SELECTED
+    if (IsDoubleBattle()
+     && AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_SELECTED
      && !IsBattleMoveStatus(move)
      && gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1)
         ADJUST_SCORE(WEAK_EFFECT);
