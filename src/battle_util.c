@@ -1883,7 +1883,7 @@ bool32 HandleFaintedMonActions(void)
     return FALSE;
 }
 
-bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2)
+bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1, enum PartyMon partyIdBattlerOn2)
 {
     u32 i, playerId, flankId;
     s32 lastId = GetAILastPartyIndex(battler); // + 1
@@ -8693,7 +8693,7 @@ static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges meth
     return DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, method);
 }
 
-bool32 TryRevertPartyMonFormChange(u32 partyIndex)
+bool32 TryRevertPartyMonFormChange(enum PartyMon partyIndex)
 {
      bool32 changedForm = FALSE;
 
@@ -8845,7 +8845,7 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
     return SPECIES_NONE;
 }
 
-u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
+enum PartyMon GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
     // Find last alive non-egg Pokémon.
     for (s32 id = PARTY_SIZE - 1; id >= 0; id--)
@@ -9803,7 +9803,7 @@ enum Type GetBattleMoveType(enum Move move)
     return GetMoveType(move);
 }
 
-void TryActivateSleepClause(enum BattlerId battler, u32 indexInParty)
+void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
 {
     if (gBattleStruct->battlerState[battler].sleepClauseEffectExempt)
     {
@@ -9820,7 +9820,7 @@ void TryActivateSleepClause(enum BattlerId battler, u32 indexInParty)
     }
 }
 
-void TryDeactivateSleepClause(enum BattlerId battler, u32 indexInParty)
+void TryDeactivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
 {
     enum BattleSide side = GetBattlerSide(battler);
     struct SleepClause *monCausingSleepClause = &gBattleStruct->monCausingSleepClause[side];

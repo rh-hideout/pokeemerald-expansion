@@ -503,7 +503,7 @@ static void Task_FirstBattleEnterParty_RunPrinterMsg2(u8 taskId);
 static void Task_FirstBattleEnterParty_FadeNormal(u8 taskId);
 static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId);
 static u8 CombinedToIndividualPartyId(u8 index);
-static u8 IndividualToCombinedPartyId(u8 index, enum BattlerId battler);
+static enum PartyMon IndividualToCombinedPartyId(enum PartyMon index, enum BattlerId battler);
 
 static const u8 sText_askText[] = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?");
 static const u8 sText_doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
@@ -7736,7 +7736,7 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
         partyBattleOrder[i] = (partyIndexes[0 + (i * 2)] << 4) | partyIndexes[1 + (i * 2)];
 }
 
-void SwitchPartyOrderLinkMulti(enum BattlerId battler, u8 slot, u8 slot2)
+void SwitchPartyOrderLinkMulti(enum BattlerId battler, enum PartyMon slot, enum PartyMon slot2)
 {
     u8 partyIds[PARTY_SIZE];
     u8 tempSlot = 0;
@@ -7804,7 +7804,7 @@ void SwitchPartyMonSlots(u8 slot, u8 slot2)
     SetPartyIdAtBattleSlot(slot2, partyId);
 }
 
-u8 GetPartyIdFromBattlePartyId(u8 battlePartyId)
+enum PartyMon GetPartyIdFromBattlePartyId(enum PartyMon battlePartyId)
 {
     u8 i, j;
 
@@ -8595,7 +8595,7 @@ static u8 CombinedToIndividualPartyId(u8 index)
     return index;
 }
 
-static u8 IndividualToCombinedPartyId(u8 index, enum BattlerId battler)
+static enum PartyMon IndividualToCombinedPartyId(enum PartyMon index, enum BattlerId battler)
 {
     if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
         return index + MULTI_PARTY_SIZE;

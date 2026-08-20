@@ -123,13 +123,13 @@ void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
 }
 
-void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
+void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
 {
     if (IsOnPlayerSide(battler))
     {
         s32 i;
         u8 battlerPartyId = gBattlerPartyIndexes[battler];
-        u8 switchInPartyId = arg1;
+        enum PartyMon switchInPartyId = partyId;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]

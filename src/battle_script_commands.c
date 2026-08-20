@@ -2119,7 +2119,7 @@ static enum HoldEffect GetMonHoldEffect(struct Pokemon *mon)
     return GetItemHoldEffect(item);
 }
 
-static enum BattlerId GetBattlerFromPlayerPartyId(u32 partyId)
+static enum BattlerId GetBattlerFromPlayerPartyId(enum PartyMon partyId)
 {
     if (gBattlerPartyIndexes[B_BATTLER_0] == partyId && !(gAbsentBattlerFlags & 1))
         return B_BATTLER_0;
@@ -3354,7 +3354,7 @@ static void Cmd_jumpifcantswitch(void)
 // Opens the party screen to choose a new Pokémon to send out.
 // slotId is the Pokémon to replace.
 // Note that this is not used by the Switch action, only replacing fainted Pokémon or Baton Pass
-static void ChooseMonToSendOut(enum BattlerId battler, u8 slotId)
+static void ChooseMonToSendOut(enum BattlerId battler, enum PartyMon slotId)
 {
     gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
     gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
@@ -9219,7 +9219,7 @@ void BS_SetZEffect(void)
     SetZEffect(cmd->nextInstr); // Handles battle script jumping internally
 }
 
-u8 GetFirstFaintedPartyIndex(enum BattlerId battler)
+enum PartyMon GetFirstFaintedPartyIndex(enum BattlerId battler)
 {
     u32 i;
     u32 start = 0, end;
