@@ -458,7 +458,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PERISH_SONG] =
     {
-        .battleScript = BattleScript_EffectPerishSong,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 6,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
         .encourageEncore = TRUE,

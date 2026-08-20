@@ -593,7 +593,6 @@ extern const u8 BattleScript_EffectNightmare[];
 extern const u8 BattleScript_EffectCurse[];
 extern const u8 BattleScript_EffectHealingWish[];
 extern const u8 BattleScript_EffectProtect[];
-extern const u8 BattleScript_EffectPerishSong[];
 extern const u8 BattleScript_EffectEndure[];
 extern const u8 BattleScript_MoveEffectAttract[];
 extern const u8 BattleScript_PresentHeal[];

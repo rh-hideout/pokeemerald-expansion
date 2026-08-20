@@ -1765,6 +1765,48 @@ static void HandleSetEffectSpiderWeb(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectPerishSong(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    s32 notAffectedCount = 0;
+    bool32 affected[gBattlersCount];
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        bool32 isPerishImmune = gBattleMons[battler].volatiles.perishSong
+                             || IsBattlerUnaffectedByMove(battler)
+                             || BlocksPrankster(gCurrentMove, cv->battlerAtk, battler, TRUE)
+                             || gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER;
+
+        if (isPerishImmune)
+        {
+            notAffectedCount++;
+            affected[battler] = FALSE;
+        }
+        else
+        {
+            affected[battler] = TRUE;
+        }
+    }
+
+    if (notAffectedCount == gBattlersCount)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        return;
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (affected[battler])
+        {
+            gBattleMons[battler].volatiles.perishSong = TRUE;
+            gBattleMons[battler].volatiles.perishSongTimer = 3;
+        }
+
+    }
+
+    PrepareStringBattleWithWait(STRINGID_FAINTINTHREE, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectLockOn(struct BattleCalcValues *cv, struct SetEffect *se)
