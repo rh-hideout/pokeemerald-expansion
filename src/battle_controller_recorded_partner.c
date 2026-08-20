@@ -274,7 +274,7 @@ static void RecordedPartnerHandleChooseMove(enum BattlerId battler)
 
 static void RecordedPartnerHandleChoosePokemon(enum BattlerId battler)
 {
-    gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
+    gBattleStruct->monToSwitchIntoId[battler] = (enum PartyMon)RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
     BtlController_Complete(battler);

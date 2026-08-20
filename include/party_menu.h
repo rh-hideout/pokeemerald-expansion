@@ -56,7 +56,7 @@ struct PartyMenu
 
 extern struct PartyMenu gPartyMenu;
 extern bool8 gPartyMenuUseExitCallback;
-extern u8 gSelectedMonPartyId;
+extern enum PartyMon gSelectedMonPartyId;
 extern MainCallback gPostMenuFieldCallback;
 extern u8 gSelectedOrderFromParty[MAX_FRONTIER_PARTY_SIZE];
 extern u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2];
@@ -122,7 +122,7 @@ void OpenPartyMenuInBattle(u8 partyAction);
 void ChooseMonForInBattleItem(void);
 void BufferBattlePartyCurrentOrder(void);
 void BufferBattlePartyCurrentOrderBySide(enum BattlerId battler, u8 flankId);
-void SwitchPartyOrderLinkMulti(enum BattlerId battler, enum PartyMon slot, enum PartyMon slot2);
+void SwitchPartyOrderLinkMulti(enum BattlerId battler, enum PartyMon slot, u8 slot2);
 void SwitchPartyMonSlots(u8 slot, u8 slot2);
 enum PartyMon GetPartyIdFromBattlePartyId(enum PartyMon battlePartyId);
 void ShowPartyMenuToShowcaseMultiBattleParty(void);

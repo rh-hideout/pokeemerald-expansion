@@ -81,7 +81,7 @@ enum Language
 // party sizes
 #define PARTY_SIZE 6
 
-enum PartyMon
+enum __attribute__((packed)) PartyMon
 {
     PARTY_MON_0,
     PARTY_MON_1,
@@ -89,6 +89,8 @@ enum PartyMon
     PARTY_MON_3,
     PARTY_MON_4,
     PARTY_MON_5,
+    PARTY_MON_NONE = PARTY_SIZE,
+    PARTY_MON_CANCEL,
 };
 
 #define MULTI_PARTY_SIZE (PARTY_SIZE / 2)

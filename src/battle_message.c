@@ -3694,7 +3694,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
 
 static void IllusionNickHack(enum BattlerId battler, enum PartyMon partyId, u8 *dst)
 {
-    u32 id = PARTY_SIZE;
+    enum PartyMon id = PARTY_MON_NONE;
     struct Pokemon *party = GetBattlerParty(battler);
     struct Pokemon *mon = &party[partyId], *partnerMon;
 
@@ -3708,7 +3708,7 @@ static void IllusionNickHack(enum BattlerId battler, enum PartyMon partyId, u8 *
         id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
     }
 
-    if (id != PARTY_SIZE)
+    if (id != PARTY_MON_NONE)
         GetMonData(&party[id], MON_DATA_NICKNAME, dst);
     else
         GetMonData(mon, MON_DATA_NICKNAME, dst);

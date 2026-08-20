@@ -2304,7 +2304,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
         return FALSE;
 
     move = FieldMove_GetMoveId(fieldMove);
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
     {
         enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
         if (!species)
@@ -3261,7 +3261,7 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
-static bool32 EventEvolution(u32 partyIndex)
+static bool32 EventEvolution(enum PartyMon partyIndex)
 {
     bool32 canStopEvo = gSpecialVar_0x8000;
     enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
@@ -3283,7 +3283,7 @@ static void TriggerMultipleEvolutions_Repeatable(void)
         gSpecialVar_0x8006++;
 
     gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
-    for (u32 i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
+    for (enum PartyMon i = PARTY_MON_0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
         if (!(gTriedEvolving & (1u << i)))
         {
@@ -3312,13 +3312,13 @@ void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;
     }
-    assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    assertf(gSpecialVar_0x8004 < PARTY_MON_NONE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;
     }
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
-    EventEvolution(gSpecialVar_0x8004);
+    EventEvolution((enum PartyMon)gSpecialVar_0x8004);
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)

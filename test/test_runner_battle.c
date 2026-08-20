@@ -2395,7 +2395,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.battlerParty = trainer;
-    DATA.currentPartyIndex = *partySize;
+    DATA.currentPartyIndex = (enum PartyMon)*partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
@@ -2455,7 +2455,7 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, enum PartyMon partyIndex, enum Gimmick gimmick)
 {
     enum Gimmick currentGimmick = DATA.chosenGimmick[trainer][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)

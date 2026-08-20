@@ -77,10 +77,10 @@ struct SwitchAiContext
 typedef bool32 (*AiSwitchFunc)(struct SwitchAiContext*);
 extern AiSwitchFunc gDynamicAiSwitchFunc;
 
-u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
+enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
 bool32 ShouldSwitch(enum BattlerId battler);
 void ModifySwitchAfterMoveScoring(enum BattlerId battler);
-u32 AI_SelectRevivalBlessingMon(enum BattlerId battler);
+enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler);
 bool32 IsSwitchinValid(enum BattlerId battler);
 bool32 IsAceMon(enum BattlerId battler, enum PartyMon monPartyId);
 

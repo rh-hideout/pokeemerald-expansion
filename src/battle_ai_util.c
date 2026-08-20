@@ -2603,7 +2603,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
     enum Ability atkPartnerAbility = aiData->abilities[battlerAtkPartner];
 
     if (wouldPartnerFaint
-     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_SIZE)
+     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_MON_NONE)
         return FALSE;
 
     if (atkPartnerAbility != ABILITY_JUSTIFIED
@@ -2620,7 +2620,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
 bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, bool32 wouldPartnerFaint, struct AiLogicData *aiData)
 {
     if (wouldPartnerFaint
-     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_SIZE)
+     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_MON_NONE)
         return FALSE;
 
     if (IsBattleMoveStatus(move)
@@ -2651,7 +2651,7 @@ bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move,
     enum BattlerId partner = GetPartnerBattler(battlerAtk);
 
     if (!HasPartner(battlerAtk)
-     || gBattleStruct->monToSwitchIntoId[partner] != PARTY_SIZE
+     || gBattleStruct->monToSwitchIntoId[partner] != PARTY_MON_NONE
      || aiData->abilities[partner] != ABILITY_SPICY_SPRAY)
         return FALSE;
 
@@ -3496,7 +3496,7 @@ enum AIPivot ShouldPivot(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
 {
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY);
-    bool32 hasGoodSwitchin = gAiLogicData->mostSuitableMonId[battlerAtk] >= PARTY_SIZE ? FALSE : TRUE;
+    bool32 hasGoodSwitchin = gAiLogicData->mostSuitableMonId[battlerAtk] < PARTY_MON_NONE;
     // If AI should switch, it should pivot
     if (aiIsFaster)
     {
@@ -3878,7 +3878,7 @@ bool32 IsWakeupTurn(enum BattlerId battler)
 bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
 {
     struct Pokemon *party;
-    u32 battlerOnField1, battlerOnField2;
+    enum PartyMon battlerOnField1, battlerOnField2;
     bool32 hasStatusToCure = FALSE;
 
     party = GetBattlerParty(battlerId);
@@ -3910,7 +3910,7 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
         hasStatusToCure = TRUE;
 
     // Check inactive party mons' status
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (monIndex == battlerOnField1 || monIndex == battlerOnField2)
             continue;
@@ -4431,7 +4431,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
       && (CanTargetFaintAi(battlerDef, battlerAtk) || BattlerWillFaintFromSecondaryDamage(battlerAtk, gAiLogicData->abilities[battlerAtk])))
         return FALSE; // Don't heal if last mon and will faint
 
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         u32 currHp = GetMonData(&party[monIndex], MON_DATA_HP);
         u32 maxHp = GetMonData(&party[monIndex], MON_DATA_MAX_HP);
@@ -4513,7 +4513,8 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
 // party logic
 s32 CountUsablePartyMons(enum BattlerId battlerId)
 {
-    s32 battlerOnField1, battlerOnField2, ret;
+    enum PartyMon battlerOnField1, battlerOnField2;
+    s32 ret;
     struct Pokemon *party;
     party = GetBattlerParty(battlerId);
 
@@ -4530,7 +4531,7 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
 
     ret = 0;
     s32 lastId = GetAILastPartyIndex(battlerId); // + 1
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         if (monIndex != battlerOnField1 && monIndex != battlerOnField2
          && GetMonData(&party[monIndex], MON_DATA_HP) != 0
@@ -4556,7 +4557,7 @@ bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
 
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (monIndex != gBattlerPartyIndexes[battlerId]
          && GetMonData(&party[monIndex], MON_DATA_HP) != 0
@@ -5378,7 +5379,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
 
     // Check how many Pokémon we have that could tera
     int numPossibleTera = 0;
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
          && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE

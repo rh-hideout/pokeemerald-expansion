@@ -5177,7 +5177,7 @@ static enum MoveEndResult MoveEndPursuitNextAction(struct BattleCalcValues *cv)
         else if (IsBattlerAlive(gBattlerTarget))
         {
             gBattlerAttacker = gBattlerTarget;
-            if (gBattleStruct->pursuitStoredSwitch == PARTY_SIZE)
+            if (gBattleStruct->pursuitStoredSwitch == PARTY_MON_NONE)
                 gBattlescriptCurrInstr = BattleScript_MoveSwitchOpenPartyScreen;
             else
                 gBattlescriptCurrInstr = BattleScript_DoSwitchOut;
@@ -5878,18 +5878,18 @@ static enum Move GetAssistMove(void)
 
     party = GetBattlerParty(gBattlerAttacker);
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
         battlerByPartyId[i] = MAX_BATTLERS_COUNT;
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (!IsBattlerAlly(battler, gBattlerAttacker))
             continue;
 
-        if (gBattlerPartyIndexes[battler] < PARTY_SIZE)
+        if (gBattlerPartyIndexes[battler] < PARTY_MON_NONE)
             battlerByPartyId[gBattlerPartyIndexes[battler]] = battler;
     }
 
-    for (u32 monId = 0; monId < PARTY_SIZE; monId++)
+    for (enum PartyMon monId = PARTY_MON_0; monId < PARTY_MON_NONE; monId++)
     {
         if (monId == gBattlerPartyIndexes[gBattlerAttacker])
             continue;
