@@ -2390,6 +2390,18 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectElectrify(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (HasBattlerActedThisTurn(gBattlerTarget))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    gBattleMons[se->effectBattler].volatiles.electrified = TRUE;
+
+    PrepareStringBattleWithWait(STRINGID_TARGETELECTRIFIED, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectFairyLock(struct BattleCalcValues *cv, struct SetEffect *se)

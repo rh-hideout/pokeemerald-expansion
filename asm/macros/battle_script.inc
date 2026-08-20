@@ -1755,11 +1755,6 @@
 	callnative BS_InvertStatStages
 	.endm
 
-	.macro tryelectrify failInstr:req
-	callnative BS_TryElectrify
-	.4byte \failInstr
-	.endm
-
 	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE
 	callnative BS_HandleFormChange
 	.byte \battler

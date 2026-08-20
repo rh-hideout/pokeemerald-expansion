@@ -10651,20 +10651,6 @@ void BS_InvertStatStages(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryElectrify(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (HasBattlerActedThisTurn(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.electrified = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_HandleFormChange(void)
 {
     NATIVE_ARGS(u8 battler, u8 caseId, bool8 bufferSpeciesName);

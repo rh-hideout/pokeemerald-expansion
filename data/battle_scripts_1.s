@@ -917,15 +917,6 @@ BattleScript_MoveEffectOverwriteType::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectElectrify::
-	attackcanceler
-	tryelectrify BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_TARGETELECTRIFIED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTerrain::
 	attackcanceler
 	setterrain BattleScript_ButItFailed

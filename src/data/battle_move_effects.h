@@ -1265,7 +1265,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ELECTRIFY] =
     {
-        .battleScript = BattleScript_EffectElectrify,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
