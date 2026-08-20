@@ -2696,6 +2696,20 @@ bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     return bestMoveIsPhysical;
 }
 
+bool32 CritEspeciallyDesirable(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    if (gBattleMons[battlerDef].statStages[STAT_DEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerDef].statStages[STAT_SPDEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_ATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_SPATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    return FALSE;
+}
+
+
 bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     enum Move *moves = GetMovesArray(battlerId);
