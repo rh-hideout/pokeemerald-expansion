@@ -4329,20 +4329,28 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
     return aiEffect;
 }
 
-// It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
+static bool32 ShouldConsiderSpecificPartnerMove(enum BattlerId battlerAtkPartner)
+{
+    return ((gAiThinkingStruct->aiFlags[battlerAtkPartner] & AI_FLAG_DEEP_PARTNER_THINKING)
+         || !IsThinkingBeforePartner(GetPartnerBattler(battlerAtkPartner), battlerAtkPartner));
+}
+
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
-      && partnerMove != MOVE_NONE)
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
     {
-        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
+        if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
+        && partnerMove != MOVE_NONE)
         {
-            return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
+            if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
+            {
+                return gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef;
+            }
+            return TRUE;
         }
-        return TRUE;
     }
     return FALSE;
 }
@@ -4350,64 +4358,85 @@ bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum Batt
 //PARTNER_MOVE_EFFECT_IS_STATUS_SAME_TARGET
 bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
-    enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
-    if (partnerMove != MOVE_NONE
-     && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
-     && (nonVolatileStatus == MOVE_EFFECT_POISON
-       || nonVolatileStatus == MOVE_EFFECT_TOXIC
-       || nonVolatileStatus == MOVE_EFFECT_SLEEP
-       || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
-       || nonVolatileStatus == MOVE_EFFECT_BURN
-       || partnerEffect == EFFECT_YAWN))
-        return TRUE;
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
+        enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
+        if (partnerMove != MOVE_NONE
+         && gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef
+         && (nonVolatileStatus == MOVE_EFFECT_POISON
+         || nonVolatileStatus == MOVE_EFFECT_TOXIC
+         || nonVolatileStatus == MOVE_EFFECT_SLEEP
+         || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
+         || nonVolatileStatus == MOVE_EFFECT_BURN
+         || partnerEffect == EFFECT_YAWN))
+        {
+            return TRUE;
+        }
+    }
     return FALSE;
 }
 
 //PARTNER_MOVE_EFFECT_IS
-bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck)
+bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum BattleMoveEffects effectCheck)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck)
-        return TRUE;
+    enum Move partnerMove = gAiLogicData->partnerMove;
 
-    return FALSE;
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        return (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck);
+    }
+
+    return HasMoveWithEffect(battlerAtkPartner, effectCheck);
 }
 
 //PARTNER_MOVE_IS_TAILWIND_TRICKROOM
-bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum Move moveCheck)
+bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move moveCheck)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && partnerMove == moveCheck)
-        return TRUE;
-    return FALSE;
+    enum Move partnerMove = gAiLogicData->partnerMove;
+
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        return (partnerMove != MOVE_NONE && partnerMove == moveCheck);
+    }
+
+    return HasMove(battlerAtkPartner, moveCheck);
 }
 
 //PARTNER_MOVE_IS_SAME
 bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
-        return TRUE;
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        if (partnerMove != MOVE_NONE && move == partnerMove && gAiBattleData->chosenTarget[battlerAtkPartner] == battlerDef)
+            return TRUE;
+    }
     return FALSE;
 }
 
 //PARTNER_MOVE_IS_SAME_NO_TARGET
 bool32 PartnerMoveIsSameNoTarget(enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
-    if (partnerMove != MOVE_NONE && move == partnerMove)
-        return TRUE;
+
+    if (ShouldConsiderSpecificPartnerMove(battlerAtkPartner))
+    {
+        if (partnerMove != MOVE_NONE && move == partnerMove)
+            return TRUE;
+    }
     return FALSE;
 }
 
@@ -6621,7 +6650,6 @@ static bool32 WillPartnerActBeforeOrAfter(enum BattlerId battler, enum BattlerId
 bool32 ShouldUseFusionMove(enum BattlerId battler)
 {
     enum BattlerId partner = GetPartnerBattler(battler);
-    enum Move partnerMove = gAiLogicData->partnerMove;
 
     if (!IsBattlerAlive(partner))
         return FALSE;
@@ -6629,93 +6657,47 @@ bool32 ShouldUseFusionMove(enum BattlerId battler)
     if (!WillPartnerActBeforeOrAfter(battler, partner))
         return FALSE;
 
-    if (gAiLogicData->partnerMoveSimulation)
-        return HasMoveWithEffect(partner, EFFECT_FUSION_COMBO);
-
-    if (GetMoveEffect(partnerMove) == EFFECT_FUSION_COMBO)
-        return TRUE;
-
-    return FALSE;
+    return PartnerMoveEffectIs(partner, EFFECT_FUSION_COMBO);
 }
 
 bool32 ShouldUseRound(enum BattlerId battler, enum BattleMoveEffects moveEffect)
 {
     enum BattlerId partner = GetPartnerBattler(battler);
-    enum Move partnerMove = gAiLogicData->partnerMove;
 
     if (!IsBattlerAlive(partner))
         return FALSE;
 
-    // First battler check, so check moveset of partner
-    if (gAiLogicData->partnerMoveSimulation)
-        return HasMoveWithEffect(partner, moveEffect);
-
-    // Check if partner actually chose the combo move
-    if (GetMoveEffect(partnerMove) == moveEffect)
-        return TRUE;
-
-    return FALSE;
+    return PartnerMoveEffectIs(partner, moveEffect);
 }
 
 bool32 ShouldUsePledgeMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     enum BattlerId partner = GetPartnerBattler(battlerAtk);
-    enum Move partnerMove = gAiLogicData->partnerMove;
+    enum BattleSide atkSide = GetBattlerSide(battlerAtk);
+    enum BattleSide defSide = GetBattlerSide(battlerDef);
 
-    u32 atkSide = GetBattlerSide(battlerAtk);
-    u32 defSide = GetBattlerSide(battlerDef);
-
-    if (gAiLogicData->partnerMoveSimulation)
+    switch (move)
     {
-        switch (move)
-        {
-        case MOVE_GRASS_PLEDGE:
-            if (HasMove(partner, MOVE_FIRE_PLEDGE))
-                return gSideTimers[defSide].seaOfFireTimer == 0;
-            if (HasMove(partner, MOVE_WATER_PLEDGE))
-                return gSideTimers[defSide].swampTimer == 0;
-            break;
-        case MOVE_FIRE_PLEDGE:
-            if (HasMove(partner, MOVE_WATER_PLEDGE))
-                return gSideTimers[atkSide].rainbowTimer == 0;
-            if (HasMove(partner, MOVE_GRASS_PLEDGE))
-                return gSideTimers[defSide].seaOfFireTimer == 0;
-            break;
-        case MOVE_WATER_PLEDGE:
-            if (HasMove(partner, MOVE_GRASS_PLEDGE))
-                return gSideTimers[defSide].swampTimer == 0;
-            if (HasMove(partner, MOVE_FIRE_PLEDGE))
-                return gSideTimers[atkSide].rainbowTimer == 0;
-            break;
-        default:
-            break;
-        }
-    }
-    else if (GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
-    {
-        switch (move)
-        {
-        case MOVE_GRASS_PLEDGE:
-            if (partnerMove == MOVE_FIRE_PLEDGE)
-                return gSideTimers[defSide].seaOfFireTimer == 0;
-            if (partnerMove == MOVE_WATER_PLEDGE)
-                return gSideTimers[defSide].swampTimer == 0;
-            break;
-        case MOVE_FIRE_PLEDGE:
-            if (partnerMove == MOVE_WATER_PLEDGE)
-                return gSideTimers[atkSide].rainbowTimer == 0;
-            if (partnerMove == MOVE_GRASS_PLEDGE)
-                return gSideTimers[defSide].seaOfFireTimer == 0;
-            break;
-        case MOVE_WATER_PLEDGE:
-            if (partnerMove == MOVE_GRASS_PLEDGE)
-                return gSideTimers[defSide].swampTimer == 0;
-            if (partnerMove == MOVE_FIRE_PLEDGE)
-                return gSideTimers[atkSide].rainbowTimer == 0;
-            break;
-        default:
-            break;
-        }
+    case MOVE_GRASS_PLEDGE:
+        if (PartnerMoveIs(partner, MOVE_FIRE_PLEDGE))
+            return gSideTimers[defSide].seaOfFireTimer == 0;
+        if (PartnerMoveIs(partner, MOVE_WATER_PLEDGE))
+            return gSideTimers[defSide].swampTimer == 0;
+        break;
+    case MOVE_FIRE_PLEDGE:
+        if (PartnerMoveIs(partner, MOVE_WATER_PLEDGE))
+            return gSideTimers[atkSide].rainbowTimer == 0;
+        if (PartnerMoveIs(partner, MOVE_GRASS_PLEDGE))
+            return gSideTimers[defSide].seaOfFireTimer == 0;
+        break;
+    case MOVE_WATER_PLEDGE:
+        if (PartnerMoveIs(partner, MOVE_GRASS_PLEDGE))
+            return gSideTimers[defSide].swampTimer == 0;
+        if (PartnerMoveIs(partner, MOVE_FIRE_PLEDGE))
+            return gSideTimers[atkSide].rainbowTimer == 0;
+        break;
+    default:
+        break;
     }
 
     return FALSE;
