@@ -112,6 +112,7 @@ enum Ability GetBattlerAbilityIgnoreMoldBreaker(enum BattlerId battler);
 enum Ability GetBattlerAbilityNoAbilityShield(enum BattlerId battler);
 enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield);
 enum Ability GetBattlerAbility(enum BattlerId battler);
+bool32 IsAbilityOnSideWithArr(enum BattlerId effectBattler, enum Ability ability, enum Ability abilities[], enum BattlerId *abilityBattler);
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityOnField(enum Ability ability);
 u32 IsAbilityPreventingEscape(enum BattlerId battler);

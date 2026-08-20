@@ -73,6 +73,7 @@ const u8 *AbsorbedByDrainHpAbility(enum BattlerId battlerDef);
 const u8 *AbsorbedByStatIncreaseAbility(struct DamageContext *ctx, enum Stat statId, u32 statAmount);
 const u8 *AbsorbedByFlashFire(struct DamageContext *ctx);
 static bool32 IsCriticalHit(struct DamageContext *ctx);
+static bool32 IsAbilityOnFieldWithArr(enum Ability ability, enum Ability abilities[], enum BattlerId *battler);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -4940,6 +4941,37 @@ enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMold
     return gBattleMons[battler].ability;
 }
 
+static bool32 IsAbilityOnFieldWithArr(enum Ability ability, enum Ability abilities[], enum BattlerId *battler)
+{
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
+        if (abilities[i] == ability)
+        {
+            *battler = i;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+bool32 IsAbilityOnSideWithArr(enum BattlerId effectBattler, enum Ability ability, enum Ability abilities[], enum BattlerId *abilityBattler)
+{
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (!IsBattlerAlly(effectBattler, battler))
+            continue;
+
+        if (abilities[battler] == ability)
+        {
+            *abilityBattler = battler;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability)
 {
     if (IsBattlerAlive(battler) && GetBattlerAbility(battler) == ability)
@@ -6420,20 +6452,6 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     return basePower;
 }
 
-static bool32 DmgCalc_IsAbilityOnField(enum Ability ability, enum Ability abilities[], enum BattlerId *battler)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (abilities[i] == ability)
-        {
-            *battler = i;
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
 static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 {
     u32 holdEffectParamAtk;
@@ -6633,13 +6651,13 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
     // field abilities
     enum BattlerId fieldAbilityBattler = MAX_BATTLERS_COUNT;
-    if ((moveType == TYPE_DARK && DmgCalc_IsAbilityOnField(ABILITY_DARK_AURA, ctx->abilities, &fieldAbilityBattler))
-     || (moveType == TYPE_FAIRY && DmgCalc_IsAbilityOnField(ABILITY_FAIRY_AURA, ctx->abilities, &fieldAbilityBattler)))
+    if ((moveType == TYPE_DARK && IsAbilityOnFieldWithArr(ABILITY_DARK_AURA, ctx->abilities, &fieldAbilityBattler))
+     || (moveType == TYPE_FAIRY && IsAbilityOnFieldWithArr(ABILITY_FAIRY_AURA, ctx->abilities, &fieldAbilityBattler)))
     {
         if (ctx->updateFlags)
             RecordAbilityBattle(fieldAbilityBattler, ctx->abilities[fieldAbilityBattler]);
 
-        if (DmgCalc_IsAbilityOnField(ABILITY_AURA_BREAK, ctx->abilities, &fieldAbilityBattler))
+        if (IsAbilityOnFieldWithArr(ABILITY_AURA_BREAK, ctx->abilities, &fieldAbilityBattler))
         {
             if (ctx->updateFlags)
                 RecordAbilityBattle(fieldAbilityBattler, ctx->abilities[fieldAbilityBattler]);
