@@ -6199,6 +6199,7 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
         case FORM_CHANGE_BATTLE_SWITCH_IN:
         case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG:
+        case FORM_CHANGE_BATTLE_BOND:
             if (formChanges[i].param1 == ctx.ability)
                 targetSpecies = formChanges[i].targetSpecies;
             break;

@@ -4569,17 +4569,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 if (GetConfig(B_BATTLE_BOND) < GEN_9)
                 {
-                    // Can't use TryBattleFormChange as we can't test form change const data changes.
-                    struct Pokemon *mon = GetBattlerMon(battler);
-                    enum Species targetSpecies = SPECIES_GRENINJA_ASH;
-
                     gLastUsedAbility = ability;
                     GetBattlerPartyState(battler)->battleBondBoost = TRUE;
                     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
-                    GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
-                    SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
-                    gBattleMons[battler].species = targetSpecies;
-                    RecalcBattlerStats(battler, mon, FALSE);
+                    TryBattleFormChange(battler, FORM_CHANGE_BATTLE_BOND, ability);
                     BattleScriptCall(BattleScript_BattleBondActivatesOnMoveEndAttacker);
                     effect = TRUE;
                 }
