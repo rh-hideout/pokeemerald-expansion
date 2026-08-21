@@ -4830,7 +4830,7 @@ static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
     return TRUE;
 }
 
-static bool32 IsItemFlute(enum Item item)
+static bool32 IsMedicineFlute(enum Item item)
 {
     if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
         return TRUE;
@@ -4910,7 +4910,7 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     else
     {
         gPartyMenuUseExitCallback = TRUE;
-        if (IsItemFlute(item))
+        if (IsMedicineFlute(item))
             PlaySE(SE_GLASS_FLUTE);
         else
             PlaySE(SE_USE_ITEM);
