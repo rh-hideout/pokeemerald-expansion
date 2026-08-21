@@ -95,7 +95,7 @@ enum __attribute__((packed)) PartyMon
 
 // A position within the in-battle party order, not an identity; the Pokémon
 // occupying a given slot changes as the order is permuted. See gBattlePartyCurrentOrder.
-enum __attribute__((packed)) PartyBattleSlot
+enum PartyBattleSlot
 {
     PARTY_BATTLE_SLOT_0,
     PARTY_BATTLE_SLOT_1,
