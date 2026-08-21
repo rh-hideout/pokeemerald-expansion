@@ -217,7 +217,7 @@ EWRAM_DATA u8 gSelectedMonPartyId = 0;
 EWRAM_DATA MainCallback gPostMenuFieldCallback = NULL;
 static EWRAM_DATA u16 *sSlot1TilemapBuffer = 0; // for switching party slots
 static EWRAM_DATA u16 *sSlot2TilemapBuffer = 0; //
-EWRAM_DATA u8 gSelectedOrderFromParty[MAX_FRONTIER_PARTY_SIZE] = {0};
+EWRAM_DATA u8 gSelectedOrderFromParty[PARTY_SIZE] = {0};
 static EWRAM_DATA enum Item sPartyMenuItemId = 0;
 EWRAM_DATA u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2] = {0}; // bits 0-3 are the current pos of Slot 1, 4-7 are Slot 2, and so on
 static EWRAM_DATA u8 sInitialLevel = 0;
@@ -7414,7 +7414,7 @@ static u8 GetMaxBattleEntries(void)
     case FACILITY_UNION_ROOM:
         return UNION_ROOM_PARTY_SIZE;
     default: // Battle Frontier
-        return gSpecialVar_0x8005;
+        return min(gSpecialVar_0x8005, MAX_FRONTIER_PARTY_SIZE);
     }
 }
 
@@ -7427,7 +7427,7 @@ static u8 GetMinBattleEntries(void)
     case FACILITY_UNION_ROOM:
         return UNION_ROOM_PARTY_SIZE;
     default: // Battle Frontier
-        return gSpecialVar_0x8005;
+        return min(gSpecialVar_0x8005, MAX_FRONTIER_PARTY_SIZE);
     }
 }
 
