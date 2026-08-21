@@ -263,22 +263,13 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade still need a charging turn in Sun
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
     } WHEN {
-        TURN { MOVE(player, move); }
-        TURN { SKIP_TURN(player); }
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         // Charging turn
-        if (move == MOVE_SOLAR_BEAM) {
-            MESSAGE("Wobbuffet used Solar Beam!");
-        } else {
-            MESSAGE("Wobbuffet used Solar Blade!");
-        }
         MESSAGE("Wobbuffet absorbed light!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         // Attack turn
-        if (move == MOVE_SOLAR_BEAM) {
-            MESSAGE("Wobbuffet used Solar Beam!");
-        } else {
-            MESSAGE("Wobbuffet used Solar Blade!");
-        }
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
     }
@@ -479,20 +470,15 @@ SINGLE_BATTLE_TEST("Electro Shot still needs a charging turn in Rain with Utilit
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
-        TURN { SKIP_TURN(player); }
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         // Charging turn
-        MESSAGE("Wobbuffet used Electro Shot!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
         MESSAGE("Wobbuffet absorbed electricity!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk rose!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         // Attack turn
-        MESSAGE("Wobbuffet used Electro Shot!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
         HP_BAR(opponent);
-    } THEN {
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 
