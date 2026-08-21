@@ -4830,6 +4830,13 @@ static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
     return TRUE;
 }
 
+static bool32 IsItemFlute(enum Item item)
+{
+    if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
+        return TRUE;
+    return FALSE;
+}
+
 // Battle scripts called in HandleAction_UseItem
 void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
 {
@@ -4903,15 +4910,11 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     else
     {
         gPartyMenuUseExitCallback = TRUE;
-        if (GetItemConsumability(item))
-        {
-            PlaySE(SE_USE_ITEM);
-            ConsumeBagItem(item, 1);
-        }
-        else
-        {
+        if (IsItemFlute(item))
             PlaySE(SE_GLASS_FLUTE);
-        }
+        else
+            PlaySE(SE_USE_ITEM);
+        ConsumeBagItem(item, 1);
         SetPartyMonAilmentGfx(mon, &sPartyMenuBoxes[gPartyMenu.slotId]);
         if (gSprites[sPartyMenuBoxes[gPartyMenu.slotId].statusSpriteId].invisible)
             DisplayPartyPokemonLevelCheck(mon, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
