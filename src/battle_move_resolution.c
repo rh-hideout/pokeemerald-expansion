@@ -3697,6 +3697,8 @@ static enum MoveEndResult MoveEndAbilityEffectFoesFainted(struct BattleCalcValue
 
 static enum MoveEndResult MoveEndShellTrap(struct BattleCalcValues *cv)
 {
+    bool32 reordered = FALSE;
+
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (battlerDef == cv->battlerAtk || IsBattlerAlly(battlerDef, cv->battlerAtk))
@@ -3709,8 +3711,10 @@ static enum MoveEndResult MoveEndShellTrap(struct BattleCalcValues *cv)
          && gProtectStructs[battlerDef].physicalBattlerId == cv->battlerAtk)
         {
             gProtectStructs[battlerDef].shellTrap = TRUE;
-            if (IsDoubleBattle()) // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
-                ChangeOrderTargetAfterAttacker(); // In what order should 2 targets move that will activate a trap?
+            // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
+            // Only the first trapper is moved up; reordering each of them in turn would put the last one first.
+            if (IsDoubleBattle() && !reordered)
+                reordered = ChangeOrderTargetAfterAttacker(battlerDef);
         }
     }
 
@@ -4381,7 +4385,7 @@ static enum MoveEndResult MoveEndPursuitNextAction(struct BattleCalcValues *cv)
         u32 storedTarget = gBattlerTarget;
         if (SetTargetToNextPursuiter(gBattlerTarget))
         {
-            ChangeOrderTargetAfterAttacker();
+            ChangeOrderTargetAfterAttacker(gBattlerTarget);
             gBattleStruct->moveTarget[gBattlerTarget] = storedTarget;
             gBattlerTarget = storedTarget;
         }

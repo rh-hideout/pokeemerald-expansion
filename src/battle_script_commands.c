@@ -8468,7 +8468,7 @@ static void Cmd_jumpifnopursuitswitchdmg(void)
 
     if (SetTargetToNextPursuiter(gBattlerAttacker))
     {
-        ChangeOrderTargetAfterAttacker();
+        ChangeOrderTargetAfterAttacker(gBattlerTarget);
         gBattleStruct->battlerState[gBattlerAttacker].pursuitTarget = TRUE;
         gBattleStruct->pursuitStoredSwitch = gBattleStruct->monToSwitchIntoId[gBattlerAttacker];
         gSpecialStatuses[gBattlerAttacker].queuedSwitch = NO_QUEUED_SWITCH; // Don't send out replacement before Pursuits
@@ -13251,7 +13251,7 @@ void BS_PowerTrick(void)
 void BS_TryAfterYou(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    if (ChangeOrderTargetAfterAttacker())
+    if (ChangeOrderTargetAfterAttacker(gBattlerTarget))
     {
         gSpecialStatuses[gBattlerTarget].afterYou = 1;
         gBattlescriptCurrInstr = cmd->nextInstr;

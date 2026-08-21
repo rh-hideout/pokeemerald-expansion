@@ -407,7 +407,7 @@ void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect);
-bool32 ChangeOrderTargetAfterAttacker(void);
+bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef);
 void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);

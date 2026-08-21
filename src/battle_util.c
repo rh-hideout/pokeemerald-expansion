@@ -10821,13 +10821,13 @@ void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect)
 }
 
 // Return True if the order was changed, and false if the order was not changed(for example because the target would move after the attacker anyway).
-bool32 ChangeOrderTargetAfterAttacker(void)
+bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef)
 {
     u32 i;
     u8 data[MAX_BATTLERS_COUNT];
     u8 actionsData[MAX_BATTLERS_COUNT];
     u32 attackerTurnOrderNum = GetBattlerTurnOrderNum(gBattlerAttacker);
-    u32 targetTurnOrderNum = GetBattlerTurnOrderNum(gBattlerTarget);
+    u32 targetTurnOrderNum = GetBattlerTurnOrderNum(battlerDef);
 
     if (attackerTurnOrderNum > targetTurnOrderNum)
         return FALSE;
@@ -10841,14 +10841,14 @@ bool32 ChangeOrderTargetAfterAttacker(void)
     }
     if (attackerTurnOrderNum == 0 && targetTurnOrderNum == 2)
     {
-        gBattlerByTurnOrder[1] = gBattlerTarget;
+        gBattlerByTurnOrder[1] = battlerDef;
         gActionsByTurnOrder[1] = actionsData[2];
         gBattlerByTurnOrder[2] = data[1];
         gActionsByTurnOrder[2] = actionsData[1];
     }
     else if (attackerTurnOrderNum == 0 && targetTurnOrderNum == 3)
     {
-        gBattlerByTurnOrder[1] = gBattlerTarget;
+        gBattlerByTurnOrder[1] = battlerDef;
         gActionsByTurnOrder[1] = actionsData[3];
         gBattlerByTurnOrder[2] = data[1];
         gActionsByTurnOrder[2] = actionsData[1];
@@ -10857,7 +10857,7 @@ bool32 ChangeOrderTargetAfterAttacker(void)
     }
     else // attackerTurnOrderNum == 1, targetTurnOrderNum == 3
     {
-        gBattlerByTurnOrder[2] = gBattlerTarget;
+        gBattlerByTurnOrder[2] = battlerDef;
         gActionsByTurnOrder[2] = actionsData[3];
         gBattlerByTurnOrder[3] = data[2];
         gActionsByTurnOrder[3] = actionsData[2];

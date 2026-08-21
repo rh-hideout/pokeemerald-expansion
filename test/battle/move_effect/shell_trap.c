@@ -302,3 +302,26 @@ DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
     }
 }
 
+DOUBLE_BATTLE_TEST("Shell Trap activates immediately after its user is hit by a spread move")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_EARTHQUAKE);
+            MOVE(playerRight, MOVE_SHELL_TRAP);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
+
