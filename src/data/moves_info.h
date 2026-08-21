@@ -22102,6 +22102,147 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_MalignantChain,
     },
 
+    //Pokeduel Moves
+    [MOVE_DARK_MAGIC_ATTACK] =
+    {
+        .name = COMPOUND_STRING("Dark Magic Atk"),
+        .description = COMPOUND_STRING(
+            "The foe is attacked with\n"
+            "dark magic.\nMay lower\n"
+            "Sp.Def (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .spDef = 1,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_Psychic,
+    },
+
+    [MOVE_WHITE_LIGHTNING] =
+    {
+        .name = COMPOUND_STRING("White Lightning"),
+        .description = COMPOUND_STRING(
+            "A burst of lightning\n"
+            "that may paralyze the\n"
+            "foe (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_Thunderbolt,
+    },
+
+    [MOVE_SKYSCRAPER] =
+    {
+        .name = COMPOUND_STRING("Skyscraper"),
+        .description = COMPOUND_STRING(
+            "Sharply raises the\n"
+            "ATTACK of a HERO."),
+        .effect = EFFECT_STAT_CHANGE,
+        .power = 0,
+        .type = TYPE_NORMAL,
+        .accuracy = 0,
+        .pp = 20,
+        .target = TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .snatchAffected = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .attack = 2,
+        }),
+        .battleAnimScript = gBattleAnimMove_SwordsDance,
+    },
+
+    //TODO usable against higher levelled cards
+    [MOVE_OBLITERATE] =
+    {
+        .name = COMPOUND_STRING("Obliterate"),
+        .description = COMPOUND_STRING(
+            "The target is\n"
+            "obliterated if hit\n"
+            "(including higher\n"
+            "levelled cards)."),
+        .effect = EFFECT_OHKO,
+        .power = 1,
+        .type = TYPE_NORMAL,
+        .accuracy = 40,
+        .pp = 5,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .skyBattleBanned = TRUE,
+        .makesContact = TRUE,
+        .battleAnimScript = gBattleAnimMove_Fissure,
+    },
+
+    [MOVE_DARK_BURNING_ATTACK] =
+    {
+        .name = COMPOUND_STRING("Dark Burning Atk"),
+        .description = COMPOUND_STRING(
+            "Foe is hit with a\n"
+            "dark burning attack\n"
+            "that may burn (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 85,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        .battleAnimScript = gBattleAnimMove_Flamethrower,
+    },
+
+    [MOVE_BURST_STREAM_OF_DESTRUCTION] =
+    {
+        .name = COMPOUND_STRING("Burst Stream"),
+        .description = COMPOUND_STRING(
+            "The foe is hit with\n"
+            "a ferocious dragon blast."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+
+
+
+
+
+
+
+
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

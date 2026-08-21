@@ -5911,6 +5911,8 @@ static enum Move GetMetronomeMove(void)
 {
     enum Move move = MOVE_NONE;
 
+    u32 moveCount = MOVES_COUNT_POKEDUEL;
+/*
 #if B_METRONOME_MOVES >= GEN_9
     u32 moveCount = MOVES_COUNT_GEN9;
 #elif B_METRONOME_MOVES >= GEN_8
@@ -5930,7 +5932,7 @@ static enum Move GetMetronomeMove(void)
 #else
     u32 moveCount = MOVES_COUNT_GEN1;
 #endif
-
+*/
     move = RandomUniformExcept(RNG_METRONOME, 1, moveCount - 1, InvalidMetronomeMove);
     return move;
 }
