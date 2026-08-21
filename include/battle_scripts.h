@@ -633,7 +633,6 @@ extern const u8 BattleScript_EffectGravity[];
 extern const u8 BattleScript_EffectTailwind[];
 extern const u8 BattleScript_TryTailwindAbilitiesLoop[];
 extern const u8 BattleScript_MoveEffectGastroAcid[];
-extern const u8 BattleScript_EffectTelekinesis[];
 extern const u8 BattleScript_EffectPowerSplit[];
 extern const u8 BattleScript_EffectGuardSplit[];
 extern const u8 BattleScript_EffectHealPulse[];

@@ -1028,15 +1028,6 @@ BattleScript_MoveEffectOverwriteAbility::
 	tryendneutralizinggas
 	return
 
-BattleScript_EffectTelekinesis::
-	attackcanceler
-	settelekinesis BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_HURLEDINTOTHEAIR
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG

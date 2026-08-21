@@ -2250,6 +2250,24 @@ static void HandleSetEffectAverageStats(struct BattleCalcValues *cv, struct SetE
 
 static void HandleSetEffectTelekinesis(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    struct BattlePokemon *effectBattleMon = &gBattleMons[se->effectBattler];
+
+    bool32 telekinesisFailed = effectBattleMon->volatiles.telekinesis
+               || effectBattleMon->volatiles.root
+               || effectBattleMon->volatiles.smackDown
+               || gFieldStatuses & STATUS_FIELD_GRAVITY
+               || IsTelekinesisBannedSpecies(gBattleMons[gBattlerTarget].species);
+
+    if (telekinesisFailed)
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+
+    if (cv->onlyChecking)
+        return;
+
+    effectBattleMon->volatiles.telekinesis = TRUE;
+    effectBattleMon->volatiles.telekinesisTimer = B_TELEKINESIS_TIMER;
+    PrepareStringBattleWithWait(STRINGID_HURLEDINTOTHEAIR, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct SetEffect *se)

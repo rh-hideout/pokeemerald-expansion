@@ -526,7 +526,6 @@ static void Cmd_removeattackerstatus1(void);
 static void Cmd_finishaction(void);
 static void Cmd_finishturn(void);
 static void Cmd_trainerslideout(void);
-static void Cmd_settelekinesis(void);
 static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_setnonvolatilestatus(void);
@@ -722,7 +721,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_FINISHACTION]                          = Cmd_finishaction,
     [B_SCR_OP_FINISHTURN]                            = Cmd_finishturn,
     [B_SCR_OP_TRAINERSLIDEOUT]                       = Cmd_trainerslideout,
-    [B_SCR_OP_SETTELEKINESIS]                        = Cmd_settelekinesis,
     [B_SCR_OP_SWAPSTATSTAGES]                        = Cmd_swapstatstages,
     [B_SCR_OP_AVERAGESTATS]                          = Cmd_averagestats,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
@@ -790,6 +788,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_55]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_56]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_57]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_58]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -8233,26 +8232,6 @@ bool32 IsTelekinesisBannedSpecies(enum Species species)
     species = SanitizeSpeciesId(species);
 
     return gSpeciesInfo[species].isTelekinesisBanned;
-}
-
-static void Cmd_settelekinesis(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gBattleMons[gBattlerTarget].volatiles.telekinesis
-        || gBattleMons[gBattlerTarget].volatiles.root
-        || gBattleMons[gBattlerTarget].volatiles.smackDown
-        || gFieldStatuses & STATUS_FIELD_GRAVITY
-        || IsTelekinesisBannedSpecies(gBattleMons[gBattlerTarget].species))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.telekinesis = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.telekinesisTimer = B_TELEKINESIS_TIMER;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 static void Cmd_swapstatstages(void)

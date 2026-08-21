@@ -1003,11 +1003,6 @@
 	.byte \position
 	.endm
 
-	.macro settelekinesis failInstr:req
-	.byte B_SCR_OP_SETTELEKINESIS
-	.4byte \failInstr
-	.endm
-
 	.macro swapstatstages stat:req
 	.byte B_SCR_OP_SWAPSTATSTAGES
 	.byte \stat
