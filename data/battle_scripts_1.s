@@ -1037,15 +1037,6 @@ BattleScript_EffectTelekinesis::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectStickyWeb::
-	attackcanceler
-	setstickyweb BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_STICKYWEBUSED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG

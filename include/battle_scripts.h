@@ -636,7 +636,6 @@ extern const u8 BattleScript_MoveEffectGastroAcid[];
 extern const u8 BattleScript_EffectTelekinesis[];
 extern const u8 BattleScript_EffectPowerSplit[];
 extern const u8 BattleScript_EffectGuardSplit[];
-extern const u8 BattleScript_EffectStickyWeb[];
 extern const u8 BattleScript_EffectHealPulse[];
 extern const u8 BattleScript_EffectQuash[];
 extern const u8 BattleScript_EffectTopsyTurvy[];

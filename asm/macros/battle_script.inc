@@ -851,11 +851,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setstickyweb failInstr:req
-	.byte B_SCR_OP_SETSTICKYWEB
-	.4byte \failInstr
-	.endm
-
 	.macro selectfirstvalidtarget
 	.byte B_SCR_OP_SELECTFIRSTVALIDTARGET
 	.endm

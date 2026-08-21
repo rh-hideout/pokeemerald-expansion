@@ -2382,6 +2382,21 @@ static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect 
 
 static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    u8 effectSide = GetBattlerSide(se->effectBattler);
+
+    if (IsHazardOnSide(effectSide, HAZARDS_STICKY_WEB))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        PushHazardTypeToQueue(effectSide, HAZARDS_STICKY_WEB);
+        gSideTimers[effectSide].stickyWebBattlerId = cv->battlerAtk; // For Mirror Armor
+        gSideTimers[effectSide].stickyWebBattlerSide = GetBattlerSide(cv->battlerAtk); // For Court Change/Defiant - set this to the user's side
+
+        PrepareStringBattle(STRINGID_STICKYWEBUSED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
 }
 
 static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2732,6 +2747,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_SEA_OF_FIRE:
     case MOVE_EFFECT_SWAMP:
     case MOVE_EFFECT_ABSORB:
+    case MOVE_EFFECT_STICKY_WEB:
         return TRUE;
     default:
         return FALSE;
