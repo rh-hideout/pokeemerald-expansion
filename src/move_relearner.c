@@ -532,7 +532,7 @@ static void UIEndTask(u8 taskId)
     {
         enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
         if (!GetItemImportance(item))
-            RemoveBagItem(item, 1);
+            ConsumeBagItem(item, 1);
     }
     if (gRelearnMode == RELEARN_MODE_SCRIPT && gSpecialVar_Result == TRUE)
     {

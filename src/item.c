@@ -404,6 +404,14 @@ static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, enum Item i
     return totalQuantity >= count;
 }
 
+bool32 ConsumeBagItem(enum Item itemId, u16 count)
+{
+    if (!GetItemConsumability(itemId))
+        return TRUE;
+
+    return RemoveBagItem(itemId, count);
+}
+
 bool32 RemoveBagItem(enum Item itemId, u16 count)
 {
     itemId = SanitizeBagItemId(itemId);
