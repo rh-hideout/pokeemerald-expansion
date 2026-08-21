@@ -58,7 +58,7 @@ extern struct PartyMenu gPartyMenu;
 extern bool8 gPartyMenuUseExitCallback;
 extern u8 gSelectedMonPartyId;
 extern MainCallback gPostMenuFieldCallback;
-extern u8 gSelectedOrderFromParty[MAX_FRONTIER_PARTY_SIZE];
+extern u8 gSelectedOrderFromParty[PARTY_SIZE];
 extern u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2];
 
 extern const struct SpriteSheet gSpriteSheet_HeldItem;
