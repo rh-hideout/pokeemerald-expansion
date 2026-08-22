@@ -2596,7 +2596,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 
         spriteTemplate.tileTag += multiplayerId;
         spriteTemplate.paletteTag += multiplayerId;
-        spriteId = CreateSprite(&spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             jumpGfx->monSprites[multiplayerId] = &gSprites[spriteId];
@@ -2790,7 +2790,7 @@ static void SpriteCB_MonIntroBounce(struct Sprite *sprite)
 
 static void CreateStarSprite(struct PokemonJumpGfx *jumpGfx, s16 x, s16 y, u8 multiplayerId)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_Star, x, y, 1);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Star, x, y, 1);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].invisible = TRUE;

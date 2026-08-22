@@ -876,9 +876,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
-                    spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+                    spriteId = CreateSpriteUnchecked(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
                 else
-                    spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+                    spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
 
                 if (spriteId != MAX_SPRITES)
                 {
@@ -902,9 +902,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
     else
     {
         if (gAnimMoveIndex == MOVE_DARK_VOID)
-            spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+            spriteId = CreateSpriteUnchecked(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
         else
-            spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+            spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
 
         if (spriteId != MAX_SPRITES)
         {
@@ -1272,7 +1272,7 @@ void AnimTask_GrudgeFlames_Step(u8 taskId)
     case 0:
         for (i = 0; i < 6; i++)
         {
-            spriteId = CreateSprite(&gGrudgeFlameSpriteTemplate, task->data[9], task->data[10], task->data[6]);
+            spriteId = CreateSpriteUnchecked(&gGrudgeFlameSpriteTemplate, task->data[9], task->data[10], task->data[6]);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = taskId;
@@ -1423,7 +1423,7 @@ void AnimTask_PoltergeistItem(u8 taskId)
     StoreGfxTag(ANIM_TAG_ITEM_BAG);
     StorePalTag(ANIM_TAG_ITEM_BAG);
 
-    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem); // this skips the assertf but the later createsprite doesn't.
     gSprites[task->data[0]].x = x + 4;
     gSprites[task->data[0]].y = y + 4;
     gSprites[task->data[0]].data[0] = x + 4;
@@ -1478,7 +1478,7 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     baseY = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM);
     if (!IsContest())
     {
-        spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
+        spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
             x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -1498,7 +1498,7 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     }
     else
     {
-        spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
+        spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
             x = 48;

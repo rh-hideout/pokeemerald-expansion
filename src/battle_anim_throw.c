@@ -1475,7 +1475,7 @@ static void MakeCaptureStars(struct Sprite *sprite)
     LoadBallParticleGfx(BALL_MASTER);
     for (i = 0; i < ARRAY_COUNT(sCaptureStars); i++)
     {
-        u8 spriteId = CreateSprite(&sBallParticles[BALL_MASTER].spriteTemplate, sprite->x, sprite->y, subpriority);
+        u8 spriteId = CreateSpriteUnchecked(&sBallParticles[BALL_MASTER].spriteTemplate, sprite->x, sprite->y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sDuration = 24;
