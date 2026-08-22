@@ -2250,6 +2250,24 @@ static void HandleSetEffectAverageStats(struct BattleCalcValues *cv, struct SetE
 
 static void HandleSetEffectTelekinesis(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    struct BattlePokemon *effectBattleMon = &gBattleMons[se->effectBattler];
+
+    bool32 telekinesisFailed = effectBattleMon->volatiles.telekinesis
+               || effectBattleMon->volatiles.root
+               || effectBattleMon->volatiles.smackDown
+               || gFieldStatuses & STATUS_FIELD_GRAVITY
+               || IsTelekinesisBannedSpecies(gBattleMons[gBattlerTarget].species);
+
+    if (telekinesisFailed)
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+
+    if (cv->onlyChecking)
+        return;
+
+    effectBattleMon->volatiles.telekinesis = TRUE;
+    effectBattleMon->volatiles.telekinesisTimer = B_TELEKINESIS_TIMER;
+    PrepareStringBattleWithWait(STRINGID_HURLEDINTOTHEAIR, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectOverwriteType(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2382,6 +2400,21 @@ static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect 
 
 static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    u8 effectSide = GetBattlerSide(se->effectBattler);
+
+    if (IsHazardOnSide(effectSide, HAZARDS_STICKY_WEB))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        PushHazardTypeToQueue(effectSide, HAZARDS_STICKY_WEB);
+        gSideTimers[effectSide].stickyWebBattlerId = cv->battlerAtk; // For Mirror Armor
+        gSideTimers[effectSide].stickyWebBattlerSide = GetBattlerSide(cv->battlerAtk); // For Court Change/Defiant - set this to the user's side
+
+        PrepareStringBattle(STRINGID_STICKYWEBUSED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
 }
 
 static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2390,6 +2423,18 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectElectrify(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (HasBattlerActedThisTurn(gBattlerTarget))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+
+    if (cv->onlyChecking)
+        return;
+
+    gBattleMons[se->effectBattler].volatiles.electrified = TRUE;
+
+    PrepareStringBattleWithWait(STRINGID_TARGETELECTRIFIED, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectFairyLock(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2720,6 +2765,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_SEA_OF_FIRE:
     case MOVE_EFFECT_SWAMP:
     case MOVE_EFFECT_ABSORB:
+    case MOVE_EFFECT_STICKY_WEB:
         return TRUE;
     default:
         return FALSE;

@@ -851,11 +851,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setstickyweb failInstr:req
-	.byte B_SCR_OP_SETSTICKYWEB
-	.4byte \failInstr
-	.endm
-
 	.macro selectfirstvalidtarget
 	.byte B_SCR_OP_SELECTFIRSTVALIDTARGET
 	.endm
@@ -1006,11 +1001,6 @@
 	.macro trainerslideout position:req
 	.byte B_SCR_OP_TRAINERSLIDEOUT
 	.byte \position
-	.endm
-
-	.macro settelekinesis failInstr:req
-	.byte B_SCR_OP_SETTELEKINESIS
-	.4byte \failInstr
 	.endm
 
 	.macro swapstatstages stat:req
@@ -1753,11 +1743,6 @@
 
 	.macro invertstatstages
 	callnative BS_InvertStatStages
-	.endm
-
-	.macro tryelectrify failInstr:req
-	callnative BS_TryElectrify
-	.4byte \failInstr
 	.endm
 
 	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE

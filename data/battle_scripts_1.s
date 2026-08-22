@@ -917,15 +917,6 @@ BattleScript_MoveEffectOverwriteType::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectElectrify::
-	attackcanceler
-	tryelectrify BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_TARGETELECTRIFIED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTerrain::
 	attackcanceler
 	setterrain BattleScript_ButItFailed
@@ -1036,24 +1027,6 @@ BattleScript_MoveEffectOverwriteAbility::
 	flushtextbox
 	tryendneutralizinggas
 	return
-
-BattleScript_EffectTelekinesis::
-	attackcanceler
-	settelekinesis BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_HURLEDINTOTHEAIR
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectStickyWeb::
-	attackcanceler
-	setstickyweb BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_STICKYWEBUSED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED

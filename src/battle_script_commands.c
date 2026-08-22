@@ -495,7 +495,6 @@ static void Cmd_tryactivateitem(void);
 static void Cmd_copyfoestats(void);
 static void Cmd_rapidspinfree(void);
 static void Cmd_recoverbasedonsunlight(void);
-static void Cmd_setstickyweb(void);
 static void Cmd_selectfirstvalidtarget(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_setforcedtarget(void);
@@ -527,7 +526,6 @@ static void Cmd_removeattackerstatus1(void);
 static void Cmd_finishaction(void);
 static void Cmd_finishturn(void);
 static void Cmd_trainerslideout(void);
-static void Cmd_settelekinesis(void);
 static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_setnonvolatilestatus(void);
@@ -693,7 +691,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_COPYFOESTATS]                          = Cmd_copyfoestats,
     [B_SCR_OP_RAPIDSPINFREE]                         = Cmd_rapidspinfree,
     [B_SCR_OP_RECOVERBASEDONSUNLIGHT]                = Cmd_recoverbasedonsunlight,
-    [B_SCR_OP_SETSTICKYWEB]                          = Cmd_setstickyweb,
     [B_SCR_OP_SELECTFIRSTVALIDTARGET]                = Cmd_selectfirstvalidtarget,
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_SETFORCEDTARGET]                       = Cmd_setforcedtarget,
@@ -724,7 +721,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_FINISHACTION]                          = Cmd_finishaction,
     [B_SCR_OP_FINISHTURN]                            = Cmd_finishturn,
     [B_SCR_OP_TRAINERSLIDEOUT]                       = Cmd_trainerslideout,
-    [B_SCR_OP_SETTELEKINESIS]                        = Cmd_settelekinesis,
     [B_SCR_OP_SWAPSTATSTAGES]                        = Cmd_swapstatstages,
     [B_SCR_OP_AVERAGESTATS]                          = Cmd_averagestats,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
@@ -791,6 +787,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_54]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_55]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_56]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_57]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_58]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -6632,25 +6630,6 @@ static void Cmd_recoverbasedonsunlight(void)
     }
 }
 
-static void Cmd_setstickyweb(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-
-    if (IsHazardOnSide(targetSide, HAZARDS_STICKY_WEB))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        PushHazardTypeToQueue(targetSide, HAZARDS_STICKY_WEB);
-        gSideTimers[targetSide].stickyWebBattlerId = gBattlerAttacker; // For Mirror Armor
-        gSideTimers[targetSide].stickyWebBattlerSide = GetBattlerSide(gBattlerAttacker); // For Court Change/Defiant - set this to the user's side
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_selectfirstvalidtarget(void)
 {
     CMD_ARGS();
@@ -8253,26 +8232,6 @@ bool32 IsTelekinesisBannedSpecies(enum Species species)
     species = SanitizeSpeciesId(species);
 
     return gSpeciesInfo[species].isTelekinesisBanned;
-}
-
-static void Cmd_settelekinesis(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gBattleMons[gBattlerTarget].volatiles.telekinesis
-        || gBattleMons[gBattlerTarget].volatiles.root
-        || gBattleMons[gBattlerTarget].volatiles.smackDown
-        || gFieldStatuses & STATUS_FIELD_GRAVITY
-        || IsTelekinesisBannedSpecies(gBattleMons[gBattlerTarget].species))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.telekinesis = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.telekinesisTimer = B_TELEKINESIS_TIMER;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 static void Cmd_swapstatstages(void)
@@ -10649,20 +10608,6 @@ void BS_InvertStatStages(void)
             gBattleMons[gBattlerTarget].statStages[i] = DEFAULT_STAT_STAGE - (gBattleMons[gBattlerTarget].statStages[i] - DEFAULT_STAT_STAGE);
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryElectrify(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (HasBattlerActedThisTurn(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.electrified = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
 }
 
 void BS_HandleFormChange(void)
