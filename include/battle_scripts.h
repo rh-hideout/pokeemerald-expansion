@@ -571,7 +571,6 @@ extern const u8 BattleScript_EffectRest[];
 extern const u8 BattleScript_RestIsAlreadyAsleep[];
 extern const u8 BattleScript_InsomniaProtects[];
 extern const u8 BattleScript_RecoilIfMiss[];
-extern const u8 BattleScript_EffectFocusEnergy[];
 extern const u8 BattleScript_EffectConfuse[];
 extern const u8 BattleScript_EffectEvasionUp2[];
 extern const u8 BattleScript_EffectTransform[];

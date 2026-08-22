@@ -1367,16 +1367,6 @@ BattleScript_RecoilIfMiss::
 BattleScript_RecoilEnd:
 	return
 
-BattleScript_EffectFocusEnergy::
-	attackcanceler
-	jumpifvolatile BS_ATTACKER, VOLATILE_CRITICAL_HIT_BOOST, BattleScript_ButItFailed
-	setfocusenergy BS_TARGET
-	attackanimation
-	waitanimation
-	printfromtable gFocusEnergyUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectConfuse::
 	attackcanceler
 	jumpifability BS_TARGET, ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents

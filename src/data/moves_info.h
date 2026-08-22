@@ -3215,6 +3215,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_ACC_UP_1 },
         .argument = { .status = VOLATILE_CRITICAL_HIT_BOOST },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FOCUS_ENERGY,
+            .self = TRUE,
+        }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .snatchAffected = TRUE,

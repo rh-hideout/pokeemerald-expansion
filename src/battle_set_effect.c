@@ -2546,6 +2546,26 @@ static void HandleSetEffectSnowscape(struct BattleCalcValues *cv, struct SetEffe
 {
 }
 
+static void HandleSetEffectFocusEnergy(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].volatiles.criticalHitBoost)
+    {
+        se->replayFailure = TRUE;
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        if (GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3
+         || GetConfig(B_CRIT_CHANCE) == GEN_1)
+            gBattleMons[se->effectBattler].volatiles.criticalHitBoost = CRIT_BOOST_TWO_STAGES;
+        else
+            gBattleMons[se->effectBattler].volatiles.criticalHitBoost = CRIT_BOOST_ONE_STAGE;
+
+        PrepareStringBattleWithWait(STRINGID_PKMNGETTINGPUMPED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
+}
+
 static void HandleSetEffectDragonCheer(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (!IsDoubleBattle()
@@ -2689,6 +2709,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
     [MOVE_EFFECT_SNOWSCAPE] = HandleSetEffectSnowscape,
+    [MOVE_EFFECT_FOCUS_ENERGY] = HandleSetEffectFocusEnergy,
     [MOVE_EFFECT_DRAGON_CHEER] = HandleSetEffectDragonCheer,
 
 

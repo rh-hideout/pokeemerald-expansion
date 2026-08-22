@@ -188,7 +188,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FOCUS_ENERGY] =
     {
-        .battleScript = BattleScript_EffectFocusEnergy,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
