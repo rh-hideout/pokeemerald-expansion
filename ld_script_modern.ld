@@ -11,9 +11,8 @@ MEMORY
     ROM    (rx) : ORIGIN = 0x8000000, LENGTH = 32M
 }
 
-SECTIONS {
-
-
+SECTIONS
+{
     .ewram ORIGIN(EWRAM) : AT (__ewram_lma)
     ALIGN(4)
     {
@@ -103,7 +102,24 @@ SECTIONS {
         . = . + (__ewram_end - __ewram_start);
     } > ROM = 0
 
+    .postlink.gba :
+    ALIGN(4)
+    {
+        __postlink_symbols_start = .;
+        *(.postlink.gba.symtab);
+        __postlink_symbols_end = .;
+
+        __postlink_enums_start = .;
+        *(.postlink.gba.enumtab);
+        __postlink_enums_end = .;
+
+        *(.postlink.gba*);
+    } > ROM = 0
+
     __rom_end = .;
+
+    .postlink.elf 0 : { *(.postlink.elf) }
+    .postlink.elf.data 0 : { *(.postlink.elf*) }
 
     /* DWARF debug sections.
        Symbols in the DWARF debugging sections are relative to the beginning

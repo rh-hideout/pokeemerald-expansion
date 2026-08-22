@@ -9,6 +9,7 @@
 #include "data.h"
 #include "daycare.h"
 #include "debug.h"
+#include "debug_info.h"
 #include "decoration.h"
 #include "decoration_inventory.h"
 #include "event_data.h"
@@ -803,6 +804,33 @@ static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems);
 
 // *******************************
 // Functions universal
+static void CopySongNamePadded(u8 *dest, enum SongId songId, u8 padWith, u32 padTo)
+{
+    extern const u8 gWireless_ASCIItoRSETable[256];
+    POSTLINK_ENUMTAB(enum SongId, 255);
+    const struct Enum *enum_ = LookupEnum("SongId");
+    if (enum_ == NULL)
+        goto unavailable;
+    struct Enumerator enumerator;
+    if (!LookupEnumerator(enum_, songId, &enumerator))
+        goto unavailable;
+    u32 nameLength = EnumeratorName(&enumerator, (char *)dest, padTo + 1);
+    for (u32 i = 0; i < nameLength + 1 && i < padTo + 1; i++)
+    {
+        if (dest[i] == '_')
+            dest[i] = CHAR_SPACE;
+        else
+            dest[i] = gWireless_ASCIItoRSETable[dest[i]];
+    }
+    while (nameLength < padTo)
+        dest[nameLength++] = padWith;
+    dest[nameLength] = EOS;
+    return;
+
+unavailable:
+    StringCopyPadded(gStringVar1, sDebugText_Dashes, CHAR_SPACE, 35);
+}
+
 void Debug_ShowMainMenu(void)
 {
     sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
@@ -979,34 +1007,6 @@ static void Debug_HandleInput_Numeric(u8 taskId, s32 min, s32 max, u32 digits)
         gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
         if (gTasks[taskId].tInput < min)
             gTasks[taskId].tInput = min;
-    }
-    if (JOY_NEW(DPAD_LEFT))
-    {
-        if (gTasks[taskId].tDigit > 0)
-            gTasks[taskId].tDigit -= 1;
-    }
-    if (JOY_NEW(DPAD_RIGHT))
-    {
-        if (gTasks[taskId].tDigit < digits - 1)
-            gTasks[taskId].tDigit += 1;
-    }
-}
-
-enum SongType { SONG_SE, SONG_MUS };
-enum FindSongMode { SONG_FIRST_GE, SONG_FIRST_GT, SONG_LAST_LT };
-u32 FindSong(enum SongType, enum FindSongMode, u32 fromSongId);
-
-static void Debug_HandleInput_SongId(u8 taskId, enum SongType type, u32 digits)
-{
-    if (JOY_NEW(DPAD_UP))
-    {
-        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
-            gTasks[taskId].tInput = FindSong(type, SONG_FIRST_GT, gTasks[taskId].tInput);
-    }
-    if (JOY_NEW(DPAD_DOWN))
-    {
-        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
-            gTasks[taskId].tInput = FindSong(type, SONG_LAST_LT, gTasks[taskId].tInput);
     }
     if (JOY_NEW(DPAD_LEFT))
     {
@@ -3879,8 +3879,6 @@ static void DebugAction_PCBag_ClearBoxes(u8 taskId)
 
 // *******************************
 // Actions Sound
-static const u8 *const sSongNames[];
-
 #define tCurrentSong  data[5]
 
 static void DebugAction_Sound_SE(u8 taskId)
@@ -3901,14 +3899,14 @@ static void DebugAction_Sound_SE(u8 taskId)
 
     gTasks[taskId].func = DebugAction_Sound_SE_SelectId;
     gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = FindSong(SONG_SE, SONG_FIRST_GE, MUS_DUMMY);
+    gTasks[taskId].tInput = START_SE;
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
 
     // Display initial sound effect
     StringCopy(gStringVar2, gText_DigitIndicator[0]);
     ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
-    StringCopyPadded(gStringVar1, sSongNames[gTasks[taskId].tInput], CHAR_SPACE, 35);
+    CopySongNamePadded(gStringVar1, gTasks[taskId].tInput, CHAR_SPACE, 35);
     StringExpandPlaceholders(gStringVar4, sDebugText_Sound_SFX_ID);
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
@@ -3917,13 +3915,10 @@ static void DebugAction_Sound_SE_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
-        Debug_HandleInput_SongId(taskId, SONG_SE, DEBUG_NUMBER_DIGITS_ITEMS);
+        Debug_HandleInput_Numeric(taskId, START_SE, END_SE, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        const u8 *seName = sSongNames[gTasks[taskId].tInput];
-        if (seName == NULL)
-            seName = sDebugText_Dashes;
-        StringCopyPadded(gStringVar1, seName, CHAR_SPACE, 35);
+        CopySongNamePadded(gStringVar1, gTasks[taskId].tInput, CHAR_SPACE, 35);
         ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
         StringExpandPlaceholders(gStringVar4, sDebugText_Sound_SFX_ID);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
@@ -3965,14 +3960,14 @@ static void DebugAction_Sound_MUS(u8 taskId)
 
     gTasks[taskId].func = DebugAction_Sound_MUS_SelectId;
     gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = FindSong(SONG_MUS, SONG_FIRST_GE, MUS_DUMMY);
+    gTasks[taskId].tInput = START_MUS;
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
 
     // Display initial song
     StringCopy(gStringVar2, gText_DigitIndicator[0]);
     ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
-    StringCopyPadded(gStringVar1, sSongNames[gTasks[taskId].tInput], CHAR_SPACE, 35);
+    CopySongNamePadded(gStringVar1, gTasks[taskId].tInput, CHAR_SPACE, 35);
     StringExpandPlaceholders(gStringVar4, sDebugText_Sound_Music_ID);
     AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
@@ -3981,13 +3976,10 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
-        Debug_HandleInput_SongId(taskId, SONG_MUS, DEBUG_NUMBER_DIGITS_ITEMS);
+        Debug_HandleInput_Numeric(taskId, START_MUS, END_MUS, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        const u8 *bgmName = sSongNames[gTasks[taskId].tInput];
-        if (bgmName == NULL)
-            bgmName = sDebugText_Dashes;
-        StringCopyPadded(gStringVar1, bgmName, CHAR_SPACE, 35);
+        CopySongNamePadded(gStringVar1, gTasks[taskId].tInput, CHAR_SPACE, 35);
         ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
         StringExpandPlaceholders(gStringVar4, sDebugText_Sound_Music_ID);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
@@ -4050,566 +4042,6 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
 }
 
 #undef tCurrentSong
-
-
-#define SOUND_LIST_BGM              \
-    X(MUS_LITTLEROOT_TEST)          \
-    X(MUS_GSC_ROUTE38)              \
-    X(MUS_CAUGHT)                   \
-    X(MUS_VICTORY_WILD)             \
-    X(MUS_VICTORY_GYM_LEADER)       \
-    X(MUS_VICTORY_LEAGUE)           \
-    X(MUS_C_COMM_CENTER)            \
-    X(MUS_GSC_PEWTER)               \
-    X(MUS_C_VS_LEGEND_BEAST)        \
-    X(MUS_ROUTE101)                 \
-    X(MUS_ROUTE110)                 \
-    X(MUS_ROUTE120)                 \
-    X(MUS_PETALBURG)                \
-    X(MUS_OLDALE)                   \
-    X(MUS_GYM)                      \
-    X(MUS_SURF)                     \
-    X(MUS_PETALBURG_WOODS)          \
-    X(MUS_LEVEL_UP)                 \
-    X(MUS_HEAL)                     \
-    X(MUS_OBTAIN_BADGE)             \
-    X(MUS_OBTAIN_ITEM)              \
-    X(MUS_EVOLVED)                  \
-    X(MUS_OBTAIN_TMHM)              \
-    X(MUS_LILYCOVE_MUSEUM)          \
-    X(MUS_ROUTE122)                 \
-    X(MUS_OCEANIC_MUSEUM)           \
-    X(MUS_EVOLUTION_INTRO)          \
-    X(MUS_EVOLUTION)                \
-    X(MUS_MOVE_DELETED)             \
-    X(MUS_ENCOUNTER_GIRL)           \
-    X(MUS_ENCOUNTER_MALE)           \
-    X(MUS_ABANDONED_SHIP)           \
-    X(MUS_FORTREE)                  \
-    X(MUS_BIRCH_LAB)                \
-    X(MUS_B_TOWER_RS)               \
-    X(MUS_ENCOUNTER_SWIMMER)        \
-    X(MUS_CAVE_OF_ORIGIN)           \
-    X(MUS_OBTAIN_BERRY)             \
-    X(MUS_AWAKEN_LEGEND)            \
-    X(MUS_SLOTS_JACKPOT)            \
-    X(MUS_SLOTS_WIN)                \
-    X(MUS_TOO_BAD)                  \
-    X(MUS_ROULETTE)                 \
-    X(MUS_LINK_CONTEST_P1)          \
-    X(MUS_LINK_CONTEST_P2)          \
-    X(MUS_LINK_CONTEST_P3)          \
-    X(MUS_LINK_CONTEST_P4)          \
-    X(MUS_ENCOUNTER_RICH)           \
-    X(MUS_VERDANTURF)               \
-    X(MUS_RUSTBORO)                 \
-    X(MUS_POKE_CENTER)              \
-    X(MUS_ROUTE104)                 \
-    X(MUS_ROUTE119)                 \
-    X(MUS_CYCLING)                  \
-    X(MUS_POKE_MART)                \
-    X(MUS_LITTLEROOT)               \
-    X(MUS_MT_CHIMNEY)               \
-    X(MUS_ENCOUNTER_FEMALE)         \
-    X(MUS_LILYCOVE)                 \
-    X(MUS_DESERT)                   \
-    X(MUS_HELP)                     \
-    X(MUS_UNDERWATER)               \
-    X(MUS_VICTORY_TRAINER)          \
-    X(MUS_TITLE)                    \
-    X(MUS_INTRO)                    \
-    X(MUS_ENCOUNTER_MAY)            \
-    X(MUS_ENCOUNTER_INTENSE)        \
-    X(MUS_ENCOUNTER_COOL)           \
-    X(MUS_ROUTE113)                 \
-    X(MUS_ENCOUNTER_AQUA)           \
-    X(MUS_FOLLOW_ME)                \
-    X(MUS_ENCOUNTER_BRENDAN)        \
-    X(MUS_EVER_GRANDE)              \
-    X(MUS_ENCOUNTER_SUSPICIOUS)     \
-    X(MUS_VICTORY_AQUA_MAGMA)       \
-    X(MUS_CABLE_CAR)                \
-    X(MUS_GAME_CORNER)              \
-    X(MUS_DEWFORD)                  \
-    X(MUS_SAFARI_ZONE)              \
-    X(MUS_VICTORY_ROAD)             \
-    X(MUS_AQUA_MAGMA_HIDEOUT)       \
-    X(MUS_SAILING)                  \
-    X(MUS_MT_PYRE)                  \
-    X(MUS_SLATEPORT)                \
-    X(MUS_MT_PYRE_EXTERIOR)         \
-    X(MUS_SCHOOL)                   \
-    X(MUS_HALL_OF_FAME)             \
-    X(MUS_FALLARBOR)                \
-    X(MUS_SEALED_CHAMBER)           \
-    X(MUS_CONTEST_WINNER)           \
-    X(MUS_CONTEST)                  \
-    X(MUS_ENCOUNTER_MAGMA)          \
-    X(MUS_INTRO_BATTLE)             \
-    X(MUS_ABNORMAL_WEATHER)         \
-    X(MUS_WEATHER_GROUDON)          \
-    X(MUS_SOOTOPOLIS)               \
-    X(MUS_CONTEST_RESULTS)          \
-    X(MUS_HALL_OF_FAME_ROOM)        \
-    X(MUS_TRICK_HOUSE)              \
-    X(MUS_ENCOUNTER_TWINS)          \
-    X(MUS_ENCOUNTER_ELITE_FOUR)     \
-    X(MUS_ENCOUNTER_HIKER)          \
-    X(MUS_CONTEST_LOBBY)            \
-    X(MUS_ENCOUNTER_INTERVIEWER)    \
-    X(MUS_ENCOUNTER_CHAMPION)       \
-    X(MUS_CREDITS)                  \
-    X(MUS_END)                      \
-    X(MUS_B_FRONTIER)               \
-    X(MUS_B_ARENA)                  \
-    X(MUS_OBTAIN_B_POINTS)          \
-    X(MUS_REGISTER_MATCH_CALL)      \
-    X(MUS_B_PYRAMID)                \
-    X(MUS_B_PYRAMID_TOP)            \
-    X(MUS_B_PALACE)                 \
-    X(MUS_RAYQUAZA_APPEARS)         \
-    X(MUS_B_TOWER)                  \
-    X(MUS_OBTAIN_SYMBOL)            \
-    X(MUS_B_DOME)                   \
-    X(MUS_B_PIKE)                   \
-    X(MUS_B_FACTORY)                \
-    X(MUS_VS_RAYQUAZA)              \
-    X(MUS_VS_FRONTIER_BRAIN)        \
-    X(MUS_VS_MEW)                   \
-    X(MUS_B_DOME_LOBBY)             \
-    X(MUS_VS_WILD)                  \
-    X(MUS_VS_AQUA_MAGMA)            \
-    X(MUS_VS_TRAINER)               \
-    X(MUS_VS_GYM_LEADER)            \
-    X(MUS_VS_CHAMPION)              \
-    X(MUS_VS_REGI)                  \
-    X(MUS_VS_KYOGRE_GROUDON)        \
-    X(MUS_VS_RIVAL)                 \
-    X(MUS_VS_ELITE_FOUR)            \
-    X(MUS_VS_AQUA_MAGMA_LEADER)     \
-    X(MUS_RG_FOLLOW_ME)             \
-    X(MUS_RG_GAME_CORNER)           \
-    X(MUS_RG_ROCKET_HIDEOUT)        \
-    X(MUS_RG_GYM)                   \
-    X(MUS_RG_JIGGLYPUFF)            \
-    X(MUS_RG_INTRO_FIGHT)           \
-    X(MUS_RG_TITLE)                 \
-    X(MUS_RG_CINNABAR)              \
-    X(MUS_RG_LAVENDER)              \
-    X(MUS_RG_HEAL)                  \
-    X(MUS_RG_CYCLING)               \
-    X(MUS_RG_ENCOUNTER_ROCKET)      \
-    X(MUS_RG_ENCOUNTER_GIRL)        \
-    X(MUS_RG_ENCOUNTER_BOY)         \
-    X(MUS_RG_HALL_OF_FAME)          \
-    X(MUS_RG_VIRIDIAN_FOREST)       \
-    X(MUS_RG_MT_MOON)               \
-    X(MUS_RG_POKE_MANSION)          \
-    X(MUS_RG_CREDITS)               \
-    X(MUS_RG_ROUTE1)                \
-    X(MUS_RG_ROUTE24)               \
-    X(MUS_RG_ROUTE3)                \
-    X(MUS_RG_ROUTE11)               \
-    X(MUS_RG_VICTORY_ROAD)          \
-    X(MUS_RG_VS_GYM_LEADER)         \
-    X(MUS_RG_VS_TRAINER)            \
-    X(MUS_RG_VS_WILD)               \
-    X(MUS_RG_VS_CHAMPION)           \
-    X(MUS_RG_PALLET)                \
-    X(MUS_RG_OAK_LAB)               \
-    X(MUS_RG_OAK)                   \
-    X(MUS_RG_POKE_CENTER)           \
-    X(MUS_RG_SS_ANNE)               \
-    X(MUS_RG_SURF)                  \
-    X(MUS_RG_POKE_TOWER)            \
-    X(MUS_RG_SILPH)                 \
-    X(MUS_RG_FUCHSIA)               \
-    X(MUS_RG_CELADON)               \
-    X(MUS_RG_VICTORY_TRAINER)       \
-    X(MUS_RG_VICTORY_WILD)          \
-    X(MUS_RG_VICTORY_GYM_LEADER)    \
-    X(MUS_RG_VERMILLION)            \
-    X(MUS_RG_PEWTER)                \
-    X(MUS_RG_ENCOUNTER_RIVAL)       \
-    X(MUS_RG_RIVAL_EXIT)            \
-    X(MUS_RG_DEX_RATING)            \
-    X(MUS_RG_OBTAIN_KEY_ITEM)       \
-    X(MUS_RG_CAUGHT_INTRO)          \
-    X(MUS_RG_PHOTO)                 \
-    X(MUS_RG_GAME_FREAK)            \
-    X(MUS_RG_CAUGHT)                \
-    X(MUS_RG_NEW_GAME_INSTRUCT)     \
-    X(MUS_RG_NEW_GAME_INTRO)        \
-    X(MUS_RG_NEW_GAME_EXIT)         \
-    X(MUS_RG_POKE_JUMP)             \
-    X(MUS_RG_UNION_ROOM)            \
-    X(MUS_RG_NET_CENTER)            \
-    X(MUS_RG_MYSTERY_GIFT)          \
-    X(MUS_RG_BERRY_PICK)            \
-    X(MUS_RG_SEVII_CAVE)            \
-    X(MUS_RG_TEACHY_TV_SHOW)        \
-    X(MUS_RG_SEVII_ROUTE)           \
-    X(MUS_RG_SEVII_DUNGEON)         \
-    X(MUS_RG_SEVII_123)             \
-    X(MUS_RG_SEVII_45)              \
-    X(MUS_RG_SEVII_67)              \
-    X(MUS_RG_POKE_FLUTE)            \
-    X(MUS_RG_VS_DEOXYS)             \
-    X(MUS_RG_VS_MEWTWO)             \
-    X(MUS_RG_VS_LEGEND)             \
-    X(MUS_RG_ENCOUNTER_GYM_LEADER)  \
-    X(MUS_RG_ENCOUNTER_DEOXYS)      \
-    X(MUS_RG_TRAINER_TOWER)         \
-    X(MUS_RG_SLOW_PALLET)           \
-    X(MUS_RG_TEACHY_TV_MENU)
-
-#define SOUND_LIST_SE               \
-    X(SE_USE_ITEM)                  \
-    X(SE_PC_LOGIN)                  \
-    X(SE_PC_OFF)                    \
-    X(SE_PC_ON)                     \
-    X(SE_SELECT)                    \
-    X(SE_WIN_OPEN)                  \
-    X(SE_WALL_HIT)                  \
-    X(SE_DOOR)                      \
-    X(SE_EXIT)                      \
-    X(SE_LEDGE)                     \
-    X(SE_BIKE_BELL)                 \
-    X(SE_NOT_EFFECTIVE)             \
-    X(SE_EFFECTIVE)                 \
-    X(SE_SUPER_EFFECTIVE)           \
-    X(SE_BALL_OPEN)                 \
-    X(SE_FAINT)                     \
-    X(SE_FLEE)                      \
-    X(SE_SLIDING_DOOR)              \
-    X(SE_SHIP)                      \
-    X(SE_BANG)                      \
-    X(SE_PIN)                       \
-    X(SE_BOO)                       \
-    X(SE_BALL)                      \
-    X(SE_CONTEST_PLACE)             \
-    X(SE_A)                         \
-    X(SE_I)                         \
-    X(SE_U)                         \
-    X(SE_E)                         \
-    X(SE_O)                         \
-    X(SE_N)                         \
-    X(SE_SUCCESS)                   \
-    X(SE_FAILURE)                   \
-    X(SE_EXP)                       \
-    X(SE_BIKE_HOP)                  \
-    X(SE_SWITCH)                    \
-    X(SE_CLICK)                     \
-    X(SE_FU_ZAKU)                   \
-    X(SE_CONTEST_CONDITION_LOSE)    \
-    X(SE_LAVARIDGE_FALL_WARP)       \
-    X(SE_ICE_STAIRS)                \
-    X(SE_ICE_BREAK)                 \
-    X(SE_ICE_CRACK)                 \
-    X(SE_FALL)                      \
-    X(SE_UNLOCK)                    \
-    X(SE_WARP_IN)                   \
-    X(SE_WARP_OUT)                  \
-    X(SE_REPEL)                     \
-    X(SE_ROTATING_GATE)             \
-    X(SE_TRUCK_MOVE)                \
-    X(SE_TRUCK_STOP)                \
-    X(SE_TRUCK_UNLOAD)              \
-    X(SE_TRUCK_DOOR)                \
-    X(SE_BERRY_BLENDER)             \
-    X(SE_CARD)                      \
-    X(SE_SAVE)                      \
-    X(SE_BALL_BOUNCE_1)             \
-    X(SE_BALL_BOUNCE_2)             \
-    X(SE_BALL_BOUNCE_3)             \
-    X(SE_BALL_BOUNCE_4)             \
-    X(SE_BALL_TRADE)                \
-    X(SE_BALL_THROW)                \
-    X(SE_NOTE_C)                    \
-    X(SE_NOTE_D)                    \
-    X(SE_NOTE_E)                    \
-    X(SE_NOTE_F)                    \
-    X(SE_NOTE_G)                    \
-    X(SE_NOTE_A)                    \
-    X(SE_NOTE_B)                    \
-    X(SE_NOTE_C_HIGH)               \
-    X(SE_PUDDLE)                    \
-    X(SE_BRIDGE_WALK)               \
-    X(SE_ITEMFINDER)                \
-    X(SE_DING_DONG)                 \
-    X(SE_BALLOON_RED)               \
-    X(SE_BALLOON_BLUE)              \
-    X(SE_BALLOON_YELLOW)            \
-    X(SE_BREAKABLE_DOOR)            \
-    X(SE_MUD_BALL)                  \
-    X(SE_FIELD_POISON)              \
-    X(SE_ESCALATOR)                 \
-    X(SE_THUNDERSTORM)              \
-    X(SE_THUNDERSTORM_STOP)         \
-    X(SE_DOWNPOUR)                  \
-    X(SE_DOWNPOUR_STOP)             \
-    X(SE_RAIN)                      \
-    X(SE_RAIN_STOP)                 \
-    X(SE_THUNDER)                   \
-    X(SE_THUNDER2)                  \
-    X(SE_ELEVATOR)                  \
-    X(SE_LOW_HEALTH)                \
-    X(SE_EXP_MAX)                   \
-    X(SE_ROULETTE_BALL)             \
-    X(SE_ROULETTE_BALL2)            \
-    X(SE_TAILLOW_WING_FLAP)         \
-    X(SE_SHOP)                      \
-    X(SE_CONTEST_HEART)             \
-    X(SE_CONTEST_CURTAIN_RISE)      \
-    X(SE_CONTEST_CURTAIN_FALL)      \
-    X(SE_CONTEST_ICON_CHANGE)       \
-    X(SE_CONTEST_ICON_CLEAR)        \
-    X(SE_CONTEST_MONS_TURN)         \
-    X(SE_SHINY)                     \
-    X(SE_INTRO_BLAST)               \
-    X(SE_MUGSHOT)                   \
-    X(SE_APPLAUSE)                  \
-    X(SE_VEND)                      \
-    X(SE_ORB)                       \
-    X(SE_DEX_SCROLL)                \
-    X(SE_DEX_PAGE)                  \
-    X(SE_POKENAV_ON)                \
-    X(SE_POKENAV_OFF)               \
-    X(SE_DEX_SEARCH)                \
-    X(SE_EGG_HATCH)                 \
-    X(SE_BALL_TRAY_ENTER)           \
-    X(SE_BALL_TRAY_BALL)            \
-    X(SE_BALL_TRAY_EXIT)            \
-    X(SE_GLASS_FLUTE)               \
-    X(SE_M_THUNDERBOLT)             \
-    X(SE_M_THUNDERBOLT2)            \
-    X(SE_M_HARDEN)                  \
-    X(SE_M_NIGHTMARE)               \
-    X(SE_M_VITAL_THROW)             \
-    X(SE_M_VITAL_THROW2)            \
-    X(SE_M_BUBBLE)                  \
-    X(SE_M_BUBBLE2)                 \
-    X(SE_M_BUBBLE3)                 \
-    X(SE_M_RAIN_DANCE)              \
-    X(SE_M_CUT)                     \
-    X(SE_M_STRING_SHOT)             \
-    X(SE_M_STRING_SHOT2)            \
-    X(SE_M_ROCK_THROW)              \
-    X(SE_M_GUST)                    \
-    X(SE_M_GUST2)                   \
-    X(SE_M_DOUBLE_SLAP)             \
-    X(SE_M_DOUBLE_TEAM)             \
-    X(SE_M_RAZOR_WIND)              \
-    X(SE_M_ICY_WIND)                \
-    X(SE_M_THUNDER_WAVE)            \
-    X(SE_M_COMET_PUNCH)             \
-    X(SE_M_MEGA_KICK)               \
-    X(SE_M_MEGA_KICK2)              \
-    X(SE_M_CRABHAMMER)              \
-    X(SE_M_JUMP_KICK)               \
-    X(SE_M_FLAME_WHEEL)             \
-    X(SE_M_FLAME_WHEEL2)            \
-    X(SE_M_FLAMETHROWER)            \
-    X(SE_M_FIRE_PUNCH)              \
-    X(SE_M_TOXIC)                   \
-    X(SE_M_SACRED_FIRE)             \
-    X(SE_M_SACRED_FIRE2)            \
-    X(SE_M_EMBER)                   \
-    X(SE_M_TAKE_DOWN)               \
-    X(SE_M_BLIZZARD)                \
-    X(SE_M_BLIZZARD2)               \
-    X(SE_M_SCRATCH)                 \
-    X(SE_M_VICEGRIP)                \
-    X(SE_M_WING_ATTACK)             \
-    X(SE_M_FLY)                     \
-    X(SE_M_SAND_ATTACK)             \
-    X(SE_M_RAZOR_WIND2)             \
-    X(SE_M_BITE)                    \
-    X(SE_M_HEADBUTT)                \
-    X(SE_M_SURF)                    \
-    X(SE_M_HYDRO_PUMP)              \
-    X(SE_M_WHIRLPOOL)               \
-    X(SE_M_HORN_ATTACK)             \
-    X(SE_M_TAIL_WHIP)               \
-    X(SE_M_MIST)                    \
-    X(SE_M_POISON_POWDER)           \
-    X(SE_M_BIND)                    \
-    X(SE_M_DRAGON_RAGE)             \
-    X(SE_M_SING)                    \
-    X(SE_M_PERISH_SONG)             \
-    X(SE_M_PAY_DAY)                 \
-    X(SE_M_DIG)                     \
-    X(SE_M_DIZZY_PUNCH)             \
-    X(SE_M_SELF_DESTRUCT)           \
-    X(SE_M_EXPLOSION)               \
-    X(SE_M_ABSORB_2)                \
-    X(SE_M_ABSORB)                  \
-    X(SE_M_SCREECH)                 \
-    X(SE_M_BUBBLE_BEAM)             \
-    X(SE_M_BUBBLE_BEAM2)            \
-    X(SE_M_SUPERSONIC)              \
-    X(SE_M_BELLY_DRUM)              \
-    X(SE_M_METRONOME)               \
-    X(SE_M_BONEMERANG)              \
-    X(SE_M_LICK)                    \
-    X(SE_M_PSYBEAM)                 \
-    X(SE_M_FAINT_ATTACK)            \
-    X(SE_M_SWORDS_DANCE)            \
-    X(SE_M_LEER)                    \
-    X(SE_M_SWAGGER)                 \
-    X(SE_M_SWAGGER2)                \
-    X(SE_M_HEAL_BELL)               \
-    X(SE_M_CONFUSE_RAY)             \
-    X(SE_M_SNORE)                   \
-    X(SE_M_BRICK_BREAK)             \
-    X(SE_M_GIGA_DRAIN)              \
-    X(SE_M_PSYBEAM2)                \
-    X(SE_M_SOLAR_BEAM)              \
-    X(SE_M_PETAL_DANCE)             \
-    X(SE_M_TELEPORT)                \
-    X(SE_M_MINIMIZE)                \
-    X(SE_M_SKETCH)                  \
-    X(SE_M_SWIFT)                   \
-    X(SE_M_REFLECT)                 \
-    X(SE_M_BARRIER)                 \
-    X(SE_M_DETECT)                  \
-    X(SE_M_LOCK_ON)                 \
-    X(SE_M_MOONLIGHT)               \
-    X(SE_M_CHARM)                   \
-    X(SE_M_CHARGE)                  \
-    X(SE_M_STRENGTH)                \
-    X(SE_M_HYPER_BEAM)              \
-    X(SE_M_WATERFALL)               \
-    X(SE_M_REVERSAL)                \
-    X(SE_M_ACID_ARMOR)              \
-    X(SE_M_SANDSTORM)               \
-    X(SE_M_TRI_ATTACK)              \
-    X(SE_M_TRI_ATTACK2)             \
-    X(SE_M_ENCORE)                  \
-    X(SE_M_ENCORE2)                 \
-    X(SE_M_BATON_PASS)              \
-    X(SE_M_MILK_DRINK)              \
-    X(SE_M_ATTRACT)                 \
-    X(SE_M_ATTRACT2)                \
-    X(SE_M_MORNING_SUN)             \
-    X(SE_M_FLATTER)                 \
-    X(SE_M_SAND_TOMB)               \
-    X(SE_M_GRASSWHISTLE)            \
-    X(SE_M_SPIT_UP)                 \
-    X(SE_M_DIVE)                    \
-    X(SE_M_EARTHQUAKE)              \
-    X(SE_M_TWISTER)                 \
-    X(SE_M_SWEET_SCENT)             \
-    X(SE_M_YAWN)                    \
-    X(SE_M_SKY_UPPERCUT)            \
-    X(SE_M_STAT_INCREASE)           \
-    X(SE_M_HEAT_WAVE)               \
-    X(SE_M_UPROAR)                  \
-    X(SE_M_HAIL)                    \
-    X(SE_M_COSMIC_POWER)            \
-    X(SE_M_TEETER_DANCE)            \
-    X(SE_M_STAT_DECREASE)           \
-    X(SE_M_HAZE)                    \
-    X(SE_M_HYPER_BEAM2)             \
-    X(SE_RG_DOOR)                   \
-    X(SE_RG_CARD_FLIP)              \
-    X(SE_RG_CARD_FLIPPING)          \
-    X(SE_RG_CARD_OPEN)              \
-    X(SE_RG_BAG_CURSOR)             \
-    X(SE_RG_BAG_POCKET)             \
-    X(SE_RG_BALL_CLICK)             \
-    X(SE_RG_SHOP)                   \
-    X(SE_RG_SS_ANNE_HORN)           \
-    X(SE_RG_HELP_OPEN)              \
-    X(SE_RG_HELP_CLOSE)             \
-    X(SE_RG_HELP_ERROR)             \
-    X(SE_RG_DEOXYS_MOVE)            \
-    X(SE_RG_POKE_JUMP_SUCCESS)      \
-    X(SE_RG_POKE_JUMP_FAILURE)      \
-    X(SE_POKENAV_CALL)              \
-    X(SE_POKENAV_HANG_UP)           \
-    X(SE_ARENA_TIMEUP1)             \
-    X(SE_ARENA_TIMEUP2)             \
-    X(SE_PIKE_CURTAIN_CLOSE)        \
-    X(SE_PIKE_CURTAIN_OPEN)         \
-    X(SE_SUDOWOODO_SHAKE)
-
-// Create song list
-#define X(songId) [songId] = COMPOUND_STRING(#songId),
-static const u8 *const sSongNames[] =
-{
-SOUND_LIST_BGM
-SOUND_LIST_SE
-};
-#undef X
-
-u32 FindSong(enum SongType type, enum FindSongMode mode, u32 fromSongId)
-{
-    static const u8 sSEPrefix[] = _("SE_");
-    static const u8 sMUSPrefix[] = _("MUS_");
-    const u8 *prefix;
-    u32 prefixLength;
-    switch (type)
-    {
-    case SONG_SE:
-        prefix = sSEPrefix;
-        prefixLength = ARRAY_COUNT(sSEPrefix);
-        break;
-    case SONG_MUS:
-        prefix = sMUSPrefix;
-        prefixLength = ARRAY_COUNT(sMUSPrefix);
-        break;
-    default:
-        errorf("unknown song type: %d", type);
-        return MUS_DUMMY;
-    }
-
-    s32 direction;
-    u32 stopAfter;
-    u32 songId;
-    switch (mode)
-    {
-    case SONG_FIRST_GE:
-        direction = 1;
-        stopAfter = ARRAY_COUNT(sSongNames) - 1;
-        assertf(fromSongId <= stopAfter, "song ID not in sSongNames: %d", fromSongId)
-        {
-            return MUS_DUMMY;
-        }
-        songId = fromSongId;
-        break;
-    case SONG_FIRST_GT:
-        direction = 1;
-        stopAfter = ARRAY_COUNT(sSongNames) - 1;
-        if (fromSongId == stopAfter)
-            return fromSongId;
-        songId = fromSongId + 1;
-        break;
-    case SONG_LAST_LT:
-        direction = -1;
-        stopAfter = 0;
-        if (fromSongId == 0)
-            return fromSongId;
-        songId = fromSongId - 1;
-        break;
-    default:
-        errorf("unknown song search mode: %d", mode);
-        return MUS_DUMMY;
-    }
-
-    while (TRUE)
-    {
-        // Found a match.
-        if (sSongNames[songId] != NULL && StringCompareN(sSongNames[songId], prefix, prefixLength - 1) == 0)
-            return songId;
-
-        // No match in table.
-        if (songId == stopAfter)
-            return fromSongId;
-
-        songId += direction;
-    }
-}
 
 // *******************************
 // Actions BerryFunctions

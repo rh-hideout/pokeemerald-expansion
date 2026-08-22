@@ -37,6 +37,7 @@
 #include "gba/defines.h"
 #include "config/general.h"
 #include "constants/characters.h"
+#include "debug_info.h"
 #include "string_util.h"
 
 #ifndef NDEBUG
@@ -404,6 +405,31 @@ s32 mini_vpprintf(void *buf, const char *fmt, va_list va)
                 else
                 {
                     len = _putsEncoded(ptr, len, buf);
+                }
+                break;
+            case 'p': // address, symtab-decoded if possible.
+                ptr = va_arg(va, void*);
+                const struct Symbol *symbol = NULL;
+#if !TESTING
+                // mgba-rom-test-hydra has its own symbol table handling.
+                symbol = LookupAddress(ptr);
+#endif
+                if (symbol)
+                {
+                    bf[0] = '<';
+                    len = SymbolName(symbol, bf + 1, sizeof(bf - 2));
+                    bf[len] = '>';
+                    len = _putsAscii(bf, len, buf);
+                }
+                else
+                {
+                    bf[0] = '<';
+                    bf[1] = '0';
+                    bf[2] = 'x';
+                    len = mini_itoa((uintptr_t)ptr, 16, FALSE, TRUE, bf2);
+                    len = mini_pad(bf2, len, '0', 7, bf + 3);
+                    bf[3 + len] = '>';
+                    len = _putsAscii(bf, len + 4, buf);
                 }
                 break;
             default:
