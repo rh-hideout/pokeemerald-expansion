@@ -924,6 +924,10 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
                 cv->battlerDef = GetPartnerBattler(cv->battlerDef);
             }
         }
+        else if (moveTarget == TARGET_SELECTED && cv->battlerDef == cv->battlerAtk)
+        {
+            cv->battlerDef = SetRandomTarget(cv->battlerAtk);
+        }
         else if (moveTarget == TARGET_ALLY && !IsBattlerAlly(cv->battlerDef, cv->battlerAtk))
         {
             cv->battlerDef = GetPartnerBattler(cv->battlerAtk);

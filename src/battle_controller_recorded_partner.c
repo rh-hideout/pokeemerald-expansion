@@ -270,7 +270,7 @@ static void RecordedPartnerHandleChooseMove(enum BattlerId battler)
     if (target == RECORDED_TARGET_DEFAULT)
     {
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-        target = GetDefaultSelectionTarget(battler, GetMoveTarget(moveInfo->moves[moveIndex]));
+        target = GetDefaultSelectionTarget(battler, GetBattlerMoveSelectionTargetType(battler, moveInfo->moves[moveIndex]));
     }
     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
 

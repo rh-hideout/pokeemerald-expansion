@@ -3355,7 +3355,7 @@ void SetFinalChosenTarget(enum BattlerId battler, bool32 partner)
     enum BattlerId chosenTarget = gAiBattleData->chosenTarget[battler];
     u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
     u32 chosenMove = moveInfo->moves[chosenMoveIndex];
-    enum MoveTarget targetType = GetBattlerMoveTargetType(battler, chosenMove);
+    enum MoveTarget targetType = GetBattlerMoveSelectionTargetType(battler, chosenMove);
 
     switch (targetType)
     {
