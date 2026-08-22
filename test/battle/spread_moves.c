@@ -466,7 +466,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         TURN { MOVE(opponentRight, MOVE_ICY_WIND); MOVE(playerLeft, MOVE_ROCK_SLIDE); SEND_OUT(playerRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponentRight);
-        EFFECTIVENESS_SE(playerRight, SE_SUPER_EFFECTIVE); // SE against sandslash
+        EFFECTIVENESS_SE(playerLeft, SE_SUPER_EFFECTIVE); // SE against sandslash
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
 
