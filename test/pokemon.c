@@ -77,14 +77,13 @@ TEST("Terastallization type is reset to the default types when setting Tera Type
 
 TEST("Shininess independent from PID and OTID")
 {
-    u32 pid, otId, data;
+    u32 pid, otId;
     bool32 isShiny;
     struct Pokemon mon;
     PARAMETRIZE { pid = 0; otId = 0; }
     CreateMon(&mon, SPECIES_WOBBUFFET, 100, pid, OTID_STRUCT_PRESET(otId));
     isShiny = IsMonShiny(&mon);
-    data = !isShiny;
-    SetMonData(&mon, MON_DATA_IS_SHINY, &data);
+    SetMonData(&mon, MON_DATA_IS_SHINY, !isShiny);
     EXPECT_EQ(pid, GetMonData(&mon, MON_DATA_PERSONALITY));
     EXPECT_EQ(otId, GetMonData(&mon, MON_DATA_OT_ID));
     EXPECT_EQ(!isShiny, GetMonData(&mon, MON_DATA_IS_SHINY));
@@ -94,13 +93,11 @@ TEST("Shininess set on an Egg persists after hatching")
 {
     u32 personality = SHINY_ODDS;
     u32 trainerId = 0;
-    bool32 isShiny = TRUE;
-    bool8 isEgg = TRUE;
 
     SetTrainerId(trainerId, gSaveBlock2Ptr->playerTrainerId);
     CreateMon(&gParties[B_TRAINER_PLAYER][0], SPECIES_TOGEPI, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG, &isEgg);
-    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY, &isShiny);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG, TRUE);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY, TRUE);
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
 
@@ -113,11 +110,11 @@ TEST("Shininess set on an Egg persists after hatching")
 
 TEST("Hyper Training increases stats without affecting IVs")
 {
-    u32 data, hp, atk, def, speed, spatk, spdef, friendship = 0;
+    u32 hp, atk, def, speed, spatk, spdef;
     struct Pokemon mon;
     CreateMonWithIVs(&mon, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0), 3);
     // Consider B_FRIENDSHIP_BOOST.
-    SetMonData(&mon, MON_DATA_FRIENDSHIP, &friendship);
+    SetMonData(&mon, MON_DATA_FRIENDSHIP, 0);
     CalculateMonStats(&mon);
 
     hp = GetMonData(&mon, MON_DATA_HP);
@@ -127,13 +124,12 @@ TEST("Hyper Training increases stats without affecting IVs")
     spatk = GetMonData(&mon, MON_DATA_SPATK);
     spdef = GetMonData(&mon, MON_DATA_SPDEF);
 
-    data = TRUE;
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_HP, &data);
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_ATK, &data);
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_DEF, &data);
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPEED, &data);
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPATK, &data);
-    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPDEF, &data);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_HP, TRUE);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_ATK, TRUE);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_DEF, TRUE);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPEED, TRUE);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPATK, TRUE);
+    SetMonData(&mon, MON_DATA_HYPER_TRAINED_SPDEF, TRUE);
     CalculateMonStats(&mon);
 
     EXPECT_EQ(GetMonData(&mon, MON_DATA_HP_IV), 3);
@@ -176,11 +172,11 @@ TEST("Status1 round-trips through BoxPokemon")
 
 TEST("canhypertrain/hypertrain affect MON_DATA_HYPER_TRAINED_* and recalculate stats")
 {
-    u32 atk, friendship = 0;
+    u32 atk;
     CreateRandomMonWithIVs(&gParties[B_TRAINER_PLAYER][0], SPECIES_WOBBUFFET, 100, 0);
 
     // Consider B_FRIENDSHIP_BOOST.
-    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_FRIENDSHIP, &friendship);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_FRIENDSHIP, 0);
     CalculateMonStats(&gParties[B_TRAINER_PLAYER][0]);
 
     atk = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_ATK);
@@ -616,7 +612,7 @@ TEST("BoxPokemon encryption works")
     EXPECT_EQ(GetMonData(&mon, MON_DATA_SPECIES), SPECIES_TORCHIC);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_MARKINGS), 3);
     const u8 *actualNickname = COMPOUND_STRING("Testing mon");
-    u8 nickname[12];
+    u8 nickname[POKEMON_NAME_LENGTH + 1];
     GetMonData(&mon, MON_DATA_NICKNAME, nickname);
     u32 charIndex = 0;
     while (actualNickname[charIndex] != EOS)

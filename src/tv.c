@@ -1616,8 +1616,10 @@ static void InterviewAfter_PkmnFanClubOpinions(void)
     show->fanclubOpinions.friendshipHighNybble = GetMonData(&gParties[B_TRAINER_PLAYER][GetLeadMonIndex()], MON_DATA_FRIENDSHIP) >> 4;
     show->fanclubOpinions.questionAsked = gSpecialVar_0x8007;
     StringCopy(show->fanclubOpinions.playerName, gSaveBlock2Ptr->playerName);
-    GetMonData(&gParties[B_TRAINER_PLAYER][GetLeadMonIndex()], MON_DATA_NICKNAME10, show->fanclubOpinions.nickname);
-    StripExtCtrlCodes(show->fanclubOpinions.nickname);
+    u8 nickname[POKEMON_NAME_LENGTH + 1];
+    GetMonData(&gParties[B_TRAINER_PLAYER][GetLeadMonIndex()], MON_DATA_NICKNAME, nickname);
+    StripExtCtrlCodes(nickname);
+    memcpy(show->fanclubOpinions.nickname, nickname, sizeof(show->fanclubOpinions.nickname));
     show->fanclubOpinions.species = GetMonData(&gParties[B_TRAINER_PLAYER][GetLeadMonIndex()], MON_DATA_SPECIES);
     StorePlayerIdInNormalShow(show);
     show->fanclubOpinions.language = gGameLanguage;
@@ -2978,7 +2980,7 @@ static bool8 IsPartyMonNicknamedOrNotEnglish(u8 monIdx)
 
     pokemon = &gParties[B_TRAINER_PLAYER][monIdx];
     GetMonData(pokemon, MON_DATA_NICKNAME, gStringVar1);
-    language = GetMonData(pokemon, MON_DATA_LANGUAGE, &language);
+    language = GetMonData(pokemon, MON_DATA_LANGUAGE);
     if (language == GAME_LANGUAGE && !StringCompare(GetSpeciesName(GetMonData(pokemon, MON_DATA_SPECIES)), gStringVar1))
         return FALSE;
 

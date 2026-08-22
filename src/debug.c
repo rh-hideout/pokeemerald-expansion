@@ -3750,7 +3750,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
             if (!GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SANITY_HAS_SPECIES))
             {
                 StringCopy(speciesName, GetSpeciesName(species));
-                SetBoxMonData(&boxMon, MON_DATA_NICKNAME, &speciesName);
+                SetBoxMonData(&boxMon, MON_DATA_NICKNAME, speciesName);
                 SetBoxMonData(&boxMon, MON_DATA_SPECIES, &species);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;
@@ -4753,7 +4753,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tFriendship = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, (void *)&gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -4817,7 +4817,7 @@ static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, (void *)&gTasks[taskId].tInput);
         DebugNativeStep_CloseDebugWindow(taskId);
         return;
     }
@@ -4848,7 +4848,7 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tStrain = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, (void *)&gTasks[taskId].tInput);
         gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
         Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;

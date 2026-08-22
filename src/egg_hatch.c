@@ -310,7 +310,10 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
     enum Species species;
     u32 personality, pokerus;
     enum PokeBall ball;
-    u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter;
+    u8 i, friendship, markings;
+    bool32 isModernFatefulEncounter;
+    enum GameVersion gameMet;
+    enum Language language;
     bool32 isShiny;
     enum Move moves[MAX_MON_MOVES];
     u32 ivs[NUM_STATS];
@@ -723,7 +726,7 @@ static void CB2_EggHatch(void)
             GetMonNickname(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId], gStringVar3);
             species = GetMonData(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gender = GetMonGender(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId]);
-            personality = GetMonData(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId], MON_DATA_PERSONALITY, 0);
+            personality = GetMonData(&gParties[B_TRAINER_PLAYER][sEggHatchData->eggPartyId], MON_DATA_PERSONALITY);
             DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, EggHatchSetMonNickname);
             break;
         case 1: // No
