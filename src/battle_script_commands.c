@@ -504,7 +504,6 @@ static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
 static void Cmd_setyawn(void);
 static void Cmd_tryswapabilities(void);
-static void Cmd_tryimprison(void);
 static void Cmd_trysetvolatile(void);
 static void Cmd_trysetmagiccoat(void);
 static void Cmd_trysetsnatch(void);
@@ -697,7 +696,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
     [B_SCR_OP_TRYSWAPABILITIES]                      = Cmd_tryswapabilities,
-    [B_SCR_OP_TRYIMPRISON]                           = Cmd_tryimprison,
     [B_SCR_OP_TRYSETVOLATILE]                        = Cmd_trysetvolatile,
     [B_SCR_OP_TRYSETMAGICCOAT]                       = Cmd_trysetmagiccoat,
     [B_SCR_OP_TRYSETSNATCH]                          = Cmd_trysetsnatch,
@@ -5717,27 +5715,19 @@ static void Cmd_setfocusenergy(void)
 {
     CMD_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
-    if ((effect == EFFECT_DRAGON_CHEER && (!IsDoubleBattle() || !IsBattlerAlive(battler)))
-     || gBattleMons[battler].volatiles.dragonCheer
-     || gBattleMons[battler].volatiles.focusEnergy)
+    if (gBattleMons[battler].volatiles.criticalHitBoost)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FOCUS_ENERGY_FAILED;
-    }
-    else if (effect == EFFECT_DRAGON_CHEER && !IS_BATTLER_OF_TYPE(battler, TYPE_DRAGON))
-    {
-        gBattleMons[battler].volatiles.dragonCheer = TRUE;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_GETTING_PUMPED;
     }
     else
     {
         if (GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3
          || GetConfig(B_CRIT_CHANCE) == GEN_1)
-            gBattleMons[battler].volatiles.focusEnergy = TRUE;
+            gBattleMons[battler].volatiles.criticalHitBoost = CRIT_BOOST_TWO_STAGES;
         else
-            gBattleMons[battler].volatiles.dragonCheer = TRUE;
+            gBattleMons[battler].volatiles.criticalHitBoost = CRIT_BOOST_ONE_STAGE;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_GETTING_PUMPED;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -6429,8 +6419,7 @@ static void Cmd_copyfoestats(void)
     if (GetConfig(B_PSYCH_UP_CRIT_RATIO) >= GEN_6)
     {
         // Copy crit boosts (Focus Energy, Dragon Cheer, G-Max Chi Strike)
-        gBattleMons[gBattlerAttacker].volatiles.focusEnergy = gBattleMons[gBattlerTarget].volatiles.focusEnergy;
-        gBattleMons[gBattlerAttacker].volatiles.dragonCheer = gBattleMons[gBattlerTarget].volatiles.dragonCheer;
+        gBattleMons[gBattlerAttacker].volatiles.criticalHitBoost = gBattleMons[gBattlerTarget].volatiles.criticalHitBoost;
         gBattleMons[gBattlerAttacker].volatiles.bonusCritStages = gBattleMons[gBattlerTarget].volatiles.bonusCritStages;
     }
     gEffectBattler = gBattlerTarget;
@@ -6785,53 +6774,6 @@ static void Cmd_tryswapabilities(void)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-    }
-}
-
-static void Cmd_tryimprison(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gBattleMons[gBattlerAttacker].volatiles.imprison)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (B_IMPRISON >= GEN_5)
-    {
-        gBattleMons[gBattlerAttacker].volatiles.imprison = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        enum BattlerId battler;
-
-        for (battler = 0; battler < gBattlersCount; battler++)
-        {
-            if (!IsBattlerAlly(gBattlerAttacker, battler))
-            {
-                s32 attackerMoveId;
-                for (attackerMoveId = 0; attackerMoveId < MAX_MON_MOVES; attackerMoveId++)
-                {
-                    s32 i;
-                    for (i = 0; i < MAX_MON_MOVES; i++)
-                    {
-                        if (gBattleMons[gBattlerAttacker].moves[attackerMoveId] == gBattleMons[battler].moves[i]
-                            && gBattleMons[gBattlerAttacker].moves[attackerMoveId] != MOVE_NONE)
-                            break;
-                    }
-                    if (i != MAX_MON_MOVES)
-                        break;
-                }
-                if (attackerMoveId != MAX_MON_MOVES)
-                {
-                    gBattleMons[gBattlerAttacker].volatiles.imprison = TRUE;
-                    gBattlescriptCurrInstr = cmd->nextInstr;
-                    break;
-                }
-            }
-        }
-        if (battler == gBattlersCount) // In Generation 3 games, Imprison fails if the user doesn't share any moves with any of the foes.
-            gBattlescriptCurrInstr = cmd->failInstr;
     }
 }
 

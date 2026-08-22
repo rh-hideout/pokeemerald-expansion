@@ -67,5 +67,43 @@ SINGLE_BATTLE_TEST("Focus Energy multiplies crit chance by 4 with gen 1 crit cha
     }
 }
 
-TO_DO_BATTLE_TEST("Focus Energy fails if critical hit stage was already increased by Dragon Cheer")
-TO_DO_BATTLE_TEST("Baton Pass passes Focus Energy's effect");
+DOUBLE_BATTLE_TEST("Focus Energy fails if critical hit stage was already increased by Dragon Cheer")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(25); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_DRAGON_CHEER, target: playerRight);
+            MOVE(playerRight, MOVE_FOCUS_ENERGY);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerLeft);
+        MESSAGE("Wobbuffet is getting pumped!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, playerRight);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass passes Focus Energy's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ((u32)player->volatiles.criticalHitBoost, CRIT_BOOST_TWO_STAGES);
+    }
+}

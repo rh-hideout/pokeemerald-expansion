@@ -939,11 +939,10 @@ static enum ItemEffect CriticalHitRatioUp(enum BattlerId battler, enum Item item
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (!gBattleMons[battler].volatiles.focusEnergy
-     && !gBattleMons[battler].volatiles.dragonCheer
+    if (!gBattleMons[battler].volatiles.criticalHitBoost
      && HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), GetItemHoldEffectParam(itemId), itemId))
     {
-        gBattleMons[battler].volatiles.focusEnergy = TRUE;
+        gBattleMons[battler].volatiles.criticalHitBoost = CRIT_BOOST_TWO_STAGES;
         BattleScriptCall(BattleScript_BerryFocusEnergy);
         effect = ITEM_EFFECT_OTHER;
     }

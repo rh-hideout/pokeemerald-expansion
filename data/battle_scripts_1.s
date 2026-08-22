@@ -434,24 +434,11 @@ BattleScript_SaltCureExtraDamage::
 	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
 	return
 
-BattleScript_EffectCorrosiveGas::
-	attackcanceler
-	jumpifcantloseitem BattleScript_CorrosiveGasFail
-	attackanimation
-	waitanimation
-	jumpifability BS_TARGET, ABILITY_STICKY_HOLD, BattleScript_StickyHoldActivates
-	setlastuseditem BS_TARGET
+BattleScript_MoveEffectCorrosiveGas::
 	removeitem BS_TARGET
 	printstring STRINGID_PKMNITEMMELTED
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_CorrosiveGasFail:
-	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
-	printstring STRINGID_NOEFFECTONTARGET
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectRevivalBlessing::
 	attackcanceler
@@ -1371,17 +1358,6 @@ BattleScript_RecoilIfMiss::
 BattleScript_RecoilEnd:
 	return
 
-BattleScript_EffectFocusEnergy::
-	attackcanceler
-	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
-	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
-	setfocusenergy BS_TARGET
-	attackanimation
-	waitanimation
-	printfromtable gFocusEnergyUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectConfuse::
 	attackcanceler
 	jumpifability BS_TARGET, ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents
@@ -2115,15 +2091,6 @@ BattleScript_EffectSkillSwap_AfterAbilityPopUp:
 	switchinabilities BS_ATTACKER
 	switchinabilities BS_TARGET
 .endif
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectImprison::
-	attackcanceler
-	tryimprison BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSEALEDOPPONENTMOVE
-	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectRefresh::
