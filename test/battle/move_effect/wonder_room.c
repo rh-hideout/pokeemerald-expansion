@@ -1,77 +1,43 @@
 #include "global.h"
-#include "constants/battle.h"
-#include "constants/moves.h"
-#include "constants/species.h"
-#include "fpmath.h"
 #include "test/battle.h"
-#include "test/test.h"
 
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+    ASSUME(GetMoveCategory(MOVE_COVET) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
+    ASSUME(GetMovePower(MOVE_COVET) == GetMovePower(MOVE_SWIFT));
+    ASSUME(GetMoveType(MOVE_COVET) == GetMoveType(MOVE_SWIFT));
 }
 
-DOUBLE_BATTLE_TEST("Wonder room swaps the defense and special defense of all battlers")
+SINGLE_BATTLE_TEST("Wonder Room swaps Defense and Sp. Def for physical and special damage", s16 damage)
 {
-    s16 preDamage[4], postDamage[4];
+    bool32 useWonderRoom;
     enum Move move;
-    u32 def, spdef;
 
-    PARAMETRIZE(move = MOVE_COVET);
-    PARAMETRIZE(move = MOVE_SWIFT);
+    PARAMETRIZE { useWonderRoom = FALSE; move = MOVE_COVET; }
+    PARAMETRIZE { useWonderRoom = TRUE;  move = MOVE_COVET; }
+    PARAMETRIZE { useWonderRoom = FALSE; move = MOVE_SWIFT; }
+    PARAMETRIZE { useWonderRoom = TRUE;  move = MOVE_SWIFT; }
 
     GIVEN {
-        if (move == MOVE_COVET)
-        {
-            def = 200;
-            spdef = 100;
-        }
-        else
-        {
-            def = 100;
-            spdef = 200;
-        }
-
-        PLAYER(SPECIES_WOBBUFFET)   {Defense(def); SpDefense(spdef);}
-        PLAYER(SPECIES_WOBBUFFET)   {Defense(def); SpDefense(spdef);}
-        OPPONENT(SPECIES_WOBBUFFET) {Defense(def); SpDefense(spdef);}
-        OPPONENT(SPECIES_WOBBUFFET) {Defense(def); SpDefense(spdef);}
-
+        PLAYER(SPECIES_WOBBUFFET) { Attack(100); SpAttack(100); Speed(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(200); SpDefense(100); Speed(50); }
     } WHEN {
-        TURN {
-            MOVE(playerLeft,    move, target : opponentLeft),
-            MOVE(opponentLeft,  move, target : playerLeft),
-            MOVE(playerRight,   move, target : opponentRight),
-            MOVE(opponentRight, move, target : playerRight);
-            }
-        TURN { MOVE(playerLeft, MOVE_WONDER_ROOM); }
-
-        TURN {
-            MOVE(playerLeft,    move, target : opponentLeft),
-            MOVE(opponentLeft,  move, target : playerLeft),
-            MOVE(playerRight,   move, target : opponentRight),
-            MOVE(opponentRight, move, target : playerRight);
-            }
+        if (useWonderRoom)
+            TURN { MOVE(player, MOVE_WONDER_ROOM); }
+        TURN { MOVE(player, move); }
     } SCENE {
-
-        HP_BAR(opponentLeft,  captureDamage: &preDamage[2]);
-        HP_BAR(playerLeft,    captureDamage: &preDamage[0]);
-        HP_BAR(opponentRight, captureDamage: &preDamage[3]);
-        HP_BAR(playerRight,   captureDamage: &preDamage[1]);
-
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, playerLeft);
-        MESSAGE("It created a bizarre area in which Defense and Sp. Def stats are swapped!");
-
-        HP_BAR(opponentLeft,  captureDamage: &postDamage[2]);
-        HP_BAR(playerLeft,    captureDamage: &postDamage[0]);
-        HP_BAR(opponentRight, captureDamage: &postDamage[3]);
-        HP_BAR(playerRight,   captureDamage: &postDamage[1]);
-
-    } THEN {
-        for (u32 i = 0; i < 4; i++)
+        if (useWonderRoom)
         {
-            EXPECT_MUL_EQ(preDamage[i], Q_4_12(2.0), postDamage[i]);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, player);
+            MESSAGE("It created a bizarre area in which Defense and Sp. Def stats are swapped!");
         }
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[3].damage);
+        EXPECT_EQ(results[1].damage, results[2].damage);
+        EXPECT_LT(results[0].damage, results[1].damage);
     }
-
 }
