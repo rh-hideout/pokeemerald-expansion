@@ -787,7 +787,7 @@ struct BattleTestData
     u32 slowerThan[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     enum BattleTrainer battlerParty;
     u8 battlerTrainers;
-    u8 currentPartyIndex;
+    enum PartyMon currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
@@ -796,7 +796,7 @@ struct BattleTestData
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 forcedEnvironment;
 
-    u8 currentMonIndexes[MAX_BATTLERS_COUNT];
+    enum PartyMon currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
     u8 turns;
     u8 actionBattlers;
@@ -1180,7 +1180,7 @@ struct MoveContext
     u16 allowed:1;
     // End of word
     u16 explicitAllowed:1;
-    u16 partyIndex:3; // Used for moves where you select a party member without swiching, such as Revival Blessing
+    enum PartyMon partyIndex:3; // Used for moves where you select a party member without swiching, such as Revival Blessing
     u16 explicitPartyIndex:1;
     u16 notExpected:1; // Has effect only with EXPECT_MOVE
     u16 explicitNotExpected:1;
@@ -1194,7 +1194,7 @@ struct ItemContext
 {
     enum Item itemId;
     u16 explicitItemId:1;
-    u16 partyIndex;
+    enum PartyMon partyIndex;
     u16 explicitPartyIndex:1;
     enum Move move;
     u16 explicitMove:1;
@@ -1207,14 +1207,14 @@ void CloseTurn(u32 sourceLine);
 void Move(u32 sourceLine, struct BattlePokemon *, struct MoveContext);
 void ExpectMove(u32 sourceLine, struct BattlePokemon *, struct MoveContext);
 void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpected, struct FourMoves moves);
-void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex);
-void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex);
+void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex);
+void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex);
 void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValue, struct TestAIScoreStruct cmpCtx);
 void ForcedMove(u32 sourceLine, struct BattlePokemon *);
-void Switch(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
+void Switch(u32 sourceLine, struct BattlePokemon *, enum PartyMon partyIndex);
 void SkipTurn(u32 sourceLine, struct BattlePokemon *);
 void UseItem(u32 sourceLine, struct BattlePokemon *, struct ItemContext);
-void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
+void SendOut(u32 sourceLine, struct BattlePokemon *, enum PartyMon partyIndex);
 void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 
 /* Scene */

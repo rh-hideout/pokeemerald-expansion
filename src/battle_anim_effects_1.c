@@ -6653,7 +6653,7 @@ static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId 
 
 static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 temp;
+    enum PartyMon temp;
 
     // if used future sight on opposing side, properly track who used it
     if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0

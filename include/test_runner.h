@@ -24,7 +24,7 @@ void TestRunner_Battle_RecordStatus1(enum BattlerId battlerId, u32 status1);
 void TestRunner_Battle_RecordCatchChance(u32 catchChance);
 void TestRunner_Battle_AfterLastTurn(void);
 void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveId, u32 target, enum Gimmick gimmick);
-void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, u32 partyIndex);
+void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, enum PartyMon partyIndex);
 void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId);
 void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score);
 void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score);
@@ -32,8 +32,8 @@ void TestRunner_CheckMemory(void);
 
 void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32 recordIndex, u32 actionType);
 
-u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, u32 partyIndex);
-u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, u32 partyIndex);
+u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, enum PartyMon partyIndex);
+u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, enum PartyMon partyIndex);
 u32 TestRunner_Battle_GetForcedEnvironment(void);
 void TestRunner_Battle_RecordEffectivenessSound(u32 battlerId, u32 soundId);
 
