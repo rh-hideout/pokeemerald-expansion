@@ -2670,8 +2670,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
         targetAvoidedMove[i] = TRUE;
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
-    const struct AdditionalEffect *firstFailedEffect = NULL;
-    enum BattlerId firstFailedBattler = B_BATTLER_0;
     cv->onlyChecking = TRUE;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -2701,11 +2699,8 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             se.onSide = additionalEffect->onSide;
             SetMoveEffect(cv, &se);
             if (!se.effectFailed)
-                targetAvoidedMove[battler] = FALSE;
-            else if (se.replayFailure && firstFailedEffect == NULL)
             {
-                firstFailedEffect = additionalEffect;
-                firstFailedBattler = se.effectBattler;
+                targetAvoidedMove[battler] = FALSE;
             }
         }
     }
@@ -2713,41 +2708,16 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     cv->onlyChecking = FALSE;
     cv->battlerDef = gBattlerTarget;
 
-    // TODO: need to properly handle result flags. either set them after failure has been proccessed or process the failure while the result flags are already set
-    // if one effect fails while the other doesn,t a failure message will still be played. Which means result flags have to be set here.
-    // only print a failure message if result flags have been set, otherwise ignore the failure message and handle effects that did not fail
-    // loop through as normal and check effectFailed against the result flag. Also only print one failure message for everything
-    // so break out if result failed has been set
-    // If the whole move failed print only the first failure message
     bool32 moveFailed = TRUE;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (targetAvoidedMove[battler])
-        {
-            // gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_DOESNT_AFFECT_FOE;
             continue;
-        }
         moveFailed = FALSE;
     }
 
     if (moveFailed)
     {
-        if (firstFailedEffect != NULL)
-        {
-            struct SetEffect se = {
-                .script = BattleScript_MoveEnd,
-                .additionalEffect = firstFailedEffect,
-                .moveEffect = firstFailedEffect->moveEffect,
-                .effectBattler = firstFailedBattler,
-                .primary = TRUE,
-                .certain = TRUE,
-                .onSide = firstFailedEffect->onSide,
-            };
-
-            cv->battlerDef = firstFailedBattler;
-            cv->onlyChecking = FALSE;
-            SetMoveEffect(cv, &se);
-        }
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
     }
@@ -3243,6 +3213,7 @@ enum CancelerResult DoAttackCanceler(void)
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
     }
 
+    gBattleStruct->additionalEffectsCounter = 0;
     return result;
 }
 

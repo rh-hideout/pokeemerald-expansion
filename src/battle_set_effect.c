@@ -1063,43 +1063,58 @@ static void HandleSetEffectSwamp(struct BattleCalcValues *cv, struct SetEffect *
     gBattlescriptCurrInstr = BattleScript_TheSwampActivates;
 }
 
+static enum BattleWeather GetPreferredWeather(void)
+{
+    if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
+        return BATTLE_WEATHER_SNOW;
+    return BATTLE_WEATHER_HAIL;
+}
+
 static void HandleSetEffectWeather(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    u32 weather = 0, msg = 0;
+    enum BattleWeather weather = 0;
     switch (se->moveEffect)
     {
     case MOVE_EFFECT_SUN:
         weather = BATTLE_WEATHER_SUN;
-        msg = B_MSG_STARTED_SUNLIGHT;
         break;
     case MOVE_EFFECT_RAIN:
         weather = BATTLE_WEATHER_RAIN;
-        msg = B_MSG_STARTED_RAIN;
         break;
     case MOVE_EFFECT_SANDSTORM:
         weather = BATTLE_WEATHER_SANDSTORM;
-        msg = B_MSG_STARTED_SANDSTORM;
         break;
     case MOVE_EFFECT_HAIL:
-        if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
-        {
-            weather = BATTLE_WEATHER_SNOW;
-            msg = B_MSG_STARTED_SNOW;
-        }
-        else
-        {
-            weather = BATTLE_WEATHER_HAIL;
-            msg = B_MSG_STARTED_HAIL;
-        }
+        weather = GetPreferredWeather();
+        break;
+    case MOVE_EFFECT_SNOW:
+        weather = GetPreferredWeather();
         break;
     default:
         break;
     }
+
+    if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
+    {
+        SetEffectFail(BattleScript_FailOnPrimalWeather, cv->isStatusMove);
+    }
+
+    if (gBattleWeather & gBattleWeatherInfo[weather].flag)
+        se->effectFailed = TRUE;
+
+    if (gBattleStruct->overworldWeatherPresent)
+        se->effectFailed = TRUE;
+
+    if (cv->onlyChecking) return;
+
     if (TryChangeBattleWeather(cv->battlerAtk, weather, ABILITY_NONE) == WEATHER_FAILURE_SUCCESS)
     {
-        gBattleCommunication[MULTISTRING_CHOOSER] = msg;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectSetWeather;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetWeather);
+    }
+    else
+    {
+        if (cv->moveEffect == EFFECT_WEATHER_AND_SWITCH) return;
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
 }
 
@@ -1110,27 +1125,32 @@ static void HandleSetEffectTerrain(struct BattleCalcValues *cv, struct SetEffect
     {
     case MOVE_EFFECT_MISTY_TERRAIN:
         terrain = B_TERRAIN_MISTY;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
         break;
     case MOVE_EFFECT_GRASSY_TERRAIN:
         terrain = B_TERRAIN_GRASSY;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
         break;
     case MOVE_EFFECT_ELECTRIC_TERRAIN:
         terrain = B_TERRAIN_ELECTRIC;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
         break;
     case MOVE_EFFECT_PSYCHIC_TERRAIN:
         terrain = B_TERRAIN_PSYCHIC;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
     default:
         break;
     }
+
+    if (gBattleStruct->isSkyBattle || terrain == gFieldTimers.terrain)
+        se->effectFailed = TRUE;
+
+    if (cv->onlyChecking) return;
+
     if (TryChangeBattleTerrain(cv->battlerAtk, terrain))
     {
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectSetTerrain;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetTerrain);
+    }
+    else
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
 }
 
@@ -1884,7 +1904,6 @@ static void HandleSetEffectImprison(struct BattleCalcValues *cv, struct SetEffec
 
     if (gBattleMons[se->effectBattler].volatiles.imprison || !sharesMoveWithFoe)
     {
-        se->replayFailure = TRUE;
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
@@ -2688,7 +2707,6 @@ static void HandleSetEffectCorrosiveGas(struct BattleCalcValues *cv, struct SetE
 
     if (item == ITEM_NONE || !CanBattlerGetOrLoseItem(se->effectBattler, cv->battlerAtk, item))
     {
-        se->replayFailure = TRUE;
         SetEffectFailAndCheckReturn;
         PrepareStringBattleWithWait(STRINGID_NOEFFECTONTARGET, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
@@ -2726,21 +2744,15 @@ static void HandleSetEffectRevivalBlessing(struct BattleCalcValues *cv, struct S
 {
 }
 
-static void HandleSetEffectSnowscape(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectFocusEnergy(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (gBattleMons[se->effectBattler].volatiles.criticalHitBoost)
     {
-        se->replayFailure = TRUE;
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
     {
-        if (GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3
-         || GetConfig(B_CRIT_CHANCE) == GEN_1)
+        if (GetConfig(B_FOCUS_ENERGY_CRIT_RATIO) >= GEN_3 || GetConfig(B_CRIT_CHANCE) == GEN_1)
             gBattleMons[se->effectBattler].volatiles.criticalHitBoost = CRIT_BOOST_TWO_STAGES;
         else
             gBattleMons[se->effectBattler].volatiles.criticalHitBoost = CRIT_BOOST_ONE_STAGE;
@@ -2756,7 +2768,6 @@ static void HandleSetEffectDragonCheer(struct BattleCalcValues *cv, struct SetEf
      || !IsBattlerAlive(se->effectBattler)
      || gBattleMons[se->effectBattler].volatiles.criticalHitBoost)
     {
-        se->replayFailure = TRUE;
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
@@ -2884,23 +2895,22 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_PURIFY] = HandleSetEffectPurify,
     [MOVE_EFFECT_TEATIME] = HandleSetEffectTeatime,
     [MOVE_EFFECT_OCTOLOCK] = HandleSetEffectOctolock,
-
     [MOVE_EFFECT_COURT_CHANGE] = HandleSetEffectCourtChange,
+
     [MOVE_EFFECT_LIFE_DEW] = HandleSetEffectLifeDew,
     [MOVE_EFFECT_CORROSIVE_GAS] = HandleSetEffectCorrosiveGas,
     [MOVE_EFFECT_JUNGLE_HEALING] = HandleSetEffectJungleHealing,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
-    [MOVE_EFFECT_SNOWSCAPE] = HandleSetEffectSnowscape,
+
     [MOVE_EFFECT_FOCUS_ENERGY] = HandleSetEffectFocusEnergy,
     [MOVE_EFFECT_DRAGON_CHEER] = HandleSetEffectDragonCheer,
-
-
     [MOVE_EFFECT_SUN] = HandleSetEffectWeather,
     [MOVE_EFFECT_RAIN] = HandleSetEffectWeather,
     [MOVE_EFFECT_SANDSTORM] = HandleSetEffectWeather,
     [MOVE_EFFECT_HAIL] = HandleSetEffectWeather,
+    [MOVE_EFFECT_SNOW] = HandleSetEffectWeather,
     [MOVE_EFFECT_MISTY_TERRAIN] = HandleSetEffectTerrain,
     [MOVE_EFFECT_GRASSY_TERRAIN] = HandleSetEffectTerrain,
     [MOVE_EFFECT_ELECTRIC_TERRAIN] = HandleSetEffectTerrain,

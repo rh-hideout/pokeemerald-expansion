@@ -896,17 +896,6 @@ BattleScript_MoveEffectOverwriteType::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectTerrain::
-	attackcanceler
-	setterrain BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printfromtable gTerrainStringIds
-	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
-	call BattleScript_ActivateTerrainEffects
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTopsyTurvy::
 	attackcanceler
 	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_ATK, 6, BattleScript_EffectTopsyTurvyWorks
@@ -1747,15 +1736,6 @@ BattleScript_MegaSolActivatesTwoTurnMove::
 	pause B_WAIT_TIME_SHORT
 	return
 
-BattleScript_EffectWeather::
-	attackcanceler
-BattleScript_EffectWeatherSetWeather:
-	setfieldweather
-	attackanimation
-	waitanimation
-	call BattleScript_MoveWeatherChangeRet
-	goto BattleScript_MoveEnd
-
 BattleScript_ChillyReceptionMessage::
 	printstring STRINGID_PKMNTELLCHILLINGRECEPTIONJOKE
 	waitmessage B_WAIT_TIME_LONG
@@ -1763,15 +1743,15 @@ BattleScript_ChillyReceptionMessage::
 
 BattleScript_EffectWeatherAndSwitch::
 	attackcanceler
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeatherSetWeather
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeatherSetWeather
-	setfieldweather
-	clearmoveresultflags MOVE_RESULT_NO_EFFECT
-	attackanimation
-	waitanimation
-	call BattleScript_MoveWeatherChangeRet
+	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeatherAndSwitchTemp
+	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeatherAndSwitchTemp
+    setadditionaleffects
 	moveendall
 	goto BattleScript_MoveSwitch
+
+BattleScript_EffectWeatherAndSwitchTemp:
+    setadditionaleffects
+	goto BattleScript_MoveEnd
 
 BattleScript_MoveWeatherChangeRet::
 	printfromtable gMoveWeatherChangeStringIds
