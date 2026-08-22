@@ -1761,7 +1761,7 @@ static void HandleSetEffectLockOn(struct BattleCalcValues *cv, struct SetEffect 
         gBattleMons[cv->battlerAtk].volatiles.lockOn = 2;
         gBattleMons[cv->battlerAtk].volatiles.battlerWithSureHit = se->effectBattler + 1;
         PrepareStringBattleWithWait(STRINGID_PKMNTOOKAIM, se->effectBattler);
-        gBattlescriptCurrInstr = se->script;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 
 }
