@@ -2754,13 +2754,11 @@ void SpriteCB_HideAsMoveTarget(struct Sprite *sprite)
 
 bool32 ShouldHideBattler(enum BattlerId battler)
 {
-    SpriteCallback callback;
-
     if (!IsBattlerAlive(battler)
      || !gBattleSpritesDataPtr->healthBoxesData[battler].healthboxIsBouncing)
         return FALSE;
 
-    callback = gSprites[gBattlerSpriteIds[battler]].callback;
+    SpriteCallback callback = gSprites[gBattlerSpriteIds[battler]].callback;
     return callback == SpriteCB_ShowAsMoveTarget || callback == SpriteCB_BlinkVisible;
 }
 
