@@ -215,3 +215,23 @@ SINGLE_BATTLE_TEST("Synchronize can trigger again during the same attack if user
         STATUS_ICON(player, poison: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Synchronize won't activate on Synchronized status")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_POISON_GAS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+        ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+        NOT ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+    }
+}

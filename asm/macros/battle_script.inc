@@ -1105,8 +1105,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysynchronize
-	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.macro tryabilityonstatuschange
+	.byte B_SCR_OP_TRYABILITYONSTATUSCHANGE
 	.endm
 
 	.macro tryconfusionafterskydrop battler:req

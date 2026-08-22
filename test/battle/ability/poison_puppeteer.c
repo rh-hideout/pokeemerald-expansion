@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer does not trigger when poison came from Pois
     }
 }
 
-SINGLE_BATTLE_TEST("Poison Puppeteer confuses target (not user) after Flame Body also triggers")
+SINGLE_BATTLE_TEST("Poison Puppeteer confuses target (not user) before Flame Body also triggers")
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
@@ -114,13 +114,13 @@ SINGLE_BATTLE_TEST("Poison Puppeteer confuses target (not user) after Flame Body
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
 
-        ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        STATUS_ICON(player, burn: TRUE);
-
         ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
         NOT ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+
+        ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
+        STATUS_ICON(player, burn: TRUE);
     } THEN {
         EXPECT(player->status1 & STATUS1_BURN);
         EXPECT(opponent->status1 & STATUS1_POISON);
@@ -187,5 +187,50 @@ DOUBLE_BATTLE_TEST("Poison Puppeteer does not leak confusion to second target")
         EXPECT_EQ(opponentRight->status1, STATUS1_NONE);
         EXPECT(opponentLeft->volatiles.confusionTimer == 0);
         EXPECT(opponentRight->volatiles.confusionTimer == 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single move and activate in Speed order")
+{
+    u32 speedOpponent, speedPlayer;
+
+    PARAMETRIZE { speedOpponent = 10; speedPlayer = 1; }
+    PARAMETRIZE { speedOpponent = 1; speedPlayer = 10; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(speedPlayer); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(speedOpponent); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SOAK); } // Remove Pecharunt's Poison type
+        TURN { MOVE(player, MOVE_MORTAL_SPIN, WITH_RNG(RNG_FLAME_BODY, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+
+        if (speedOpponent > speedPlayer) {
+            ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+            STATUS_ICON(player, poison: TRUE);
+        }
+
+        ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+        NOT ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+
+        if (speedPlayer > speedOpponent) {
+            ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+            STATUS_ICON(player, poison: TRUE);
+        }
+    } THEN {
+        EXPECT(player->status1 & STATUS1_POISON);
+        EXPECT(opponent->status1 & STATUS1_POISON);
+        EXPECT(player->volatiles.confusionTimer == 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
     }
 }
