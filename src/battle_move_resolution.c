@@ -3722,7 +3722,7 @@ static enum MoveEndResult MoveEndShellTrap(struct BattleCalcValues *cv)
 
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            enum BattlerId battler = gBattlerByTurnOrder[i];
+            enum BattlerId battler = gBattlersBySpeed[i];
 
             if (shellTrapBattlerMask & (1u << battler))
                 shellTrapBattlers[numShellTrapBattlers++] = battler;
