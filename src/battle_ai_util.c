@@ -6606,16 +6606,20 @@ void AI_SetBattlerTurnOrder(u8 *aiTurnOrder)
 
 static bool32 WillPartnerActBeforeOrAfter(enum BattlerId battler, enum BattlerId partner)
 {
-    u8 aiTurnOrder[4] = {0};
+    u8 aiTurnOrder[MAX_BATTLERS_COUNT] = {0};
+    u32 battlerTurnOrder = MAX_BATTLERS_COUNT;
+    u32 partnerTurnOrder = MAX_BATTLERS_COUNT;
     AI_SetBattlerTurnOrder(aiTurnOrder);
 
-    battler = aiTurnOrder[battler];
-    partner = aiTurnOrder[partner];
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (aiTurnOrder[i] == battler)
+            battlerTurnOrder = i;
+        else if (aiTurnOrder[i] == partner)
+            partnerTurnOrder = i;
+    }
 
-    if (battler + 1 == partner || battler - 1 == partner)
-        return TRUE;
-
-    return FALSE;
+    return battlerTurnOrder + 1 == partnerTurnOrder || partnerTurnOrder + 1 == battlerTurnOrder;
 }
 
 bool32 ShouldUseFusionMove(enum BattlerId battler)
