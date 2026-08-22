@@ -1815,7 +1815,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId)
     if (gAiThinkingStruct->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
 
-    if (gBattleMons[battlerId].volatiles.embargo)
+    if (gBattleMons[battlerId].volatiles.embargoTimer)
         return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return HOLD_EFFECT_NONE;
@@ -3973,7 +3973,7 @@ bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         healAmount = 1;
     if (healAmount + currHP > maxHP)
         healAmount = maxHP - currHP;
-    if (gBattleMons[battlerAtk].volatiles.healBlock)
+    if (gBattleMons[battlerAtk].volatiles.healBlockTimer)
         healAmount = 0;
 
     if (gAiLogicData->abilities[battlerDef] == ABILITY_LIQUID_OOZE)
@@ -3997,7 +3997,7 @@ bool32 ShouldRecover(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY);
     if (healAmount + currHP > maxHP)
         healAmount = maxHP - currHP;
-    if (gBattleMons[battlerAtk].volatiles.healBlock)
+    if (gBattleMons[battlerAtk].volatiles.healBlockTimer)
         healAmount = 0;
 
     if (IsBattlerAtMaxHp(battlerAtk))
@@ -5662,7 +5662,7 @@ bool32 IsBattlerItemEnabled(enum BattlerId battler)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return FALSE;
-    if (gBattleMons[battler].volatiles.embargo)
+    if (gBattleMons[battler].volatiles.embargoTimer)
         return FALSE;
     if (gAiLogicData->abilities[battler] == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
@@ -6606,16 +6606,20 @@ void AI_SetBattlerTurnOrder(u8 *aiTurnOrder)
 
 static bool32 WillPartnerActBeforeOrAfter(enum BattlerId battler, enum BattlerId partner)
 {
-    u8 aiTurnOrder[4] = {0};
+    u8 aiTurnOrder[MAX_BATTLERS_COUNT] = {0};
+    u32 battlerTurnOrder = MAX_BATTLERS_COUNT;
+    u32 partnerTurnOrder = MAX_BATTLERS_COUNT;
     AI_SetBattlerTurnOrder(aiTurnOrder);
 
-    battler = aiTurnOrder[battler];
-    partner = aiTurnOrder[partner];
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (aiTurnOrder[i] == battler)
+            battlerTurnOrder = i;
+        else if (aiTurnOrder[i] == partner)
+            partnerTurnOrder = i;
+    }
 
-    if (battler + 1 == partner || battler - 1 == partner)
-        return TRUE;
-
-    return FALSE;
+    return battlerTurnOrder + 1 == partnerTurnOrder || partnerTurnOrder + 1 == battlerTurnOrder;
 }
 
 bool32 ShouldUseFusionMove(enum BattlerId battler)

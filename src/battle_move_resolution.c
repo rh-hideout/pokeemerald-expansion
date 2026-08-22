@@ -1330,7 +1330,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (GetItemPocket(gBattleMons[cv->battlerAtk].item) != POCKET_BERRIES
          || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
          || cv->abilities[cv->battlerAtk] == ABILITY_KLUTZ
-         || gBattleMons[cv->battlerAtk].volatiles.embargo)
+         || gBattleMons[cv->battlerAtk].volatiles.embargoTimer)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_BELCH:
@@ -1699,8 +1699,7 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
             gBattleMons[cv->battlerAtk].volatiles.usedProteanLibero = TRUE;
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
         gBattlerAbility = cv->battlerAtk;
-        PrepareStringBattle(STRINGID_EMPTYSTRING3, cv->battlerAtk);
-        gBattleCommunication[MSG_DISPLAY] = 1;
+        PrepareStringBattleWithWait(STRINGID_EMPTYSTRING3, cv->battlerAtk);
         BattleScriptCall(BattleScript_ProteanActivates);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }

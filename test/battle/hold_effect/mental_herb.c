@@ -101,7 +101,6 @@ SINGLE_BATTLE_TEST("Mental Herb cures Heal Block volatile status (Gen 5+)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is no longer prevented from healing!");
     } THEN {
-        EXPECT(player->volatiles.healBlock == FALSE);
         EXPECT(player->volatiles.healBlockTimer == 0);
     }
 }
@@ -179,7 +178,6 @@ DOUBLE_BATTLE_TEST("Mental Herb cures volatile statuses in the following order -
         EXPECT(playerLeft->volatiles.torment == FALSE);
         EXPECT(playerLeft->volatiles.disabledMove == MOVE_NONE);
         EXPECT(playerLeft->volatiles.disableTimer == 0);
-        EXPECT(playerLeft->volatiles.healBlock == FALSE);
         EXPECT(playerLeft->volatiles.healBlockTimer == 0);
         EXPECT(playerLeft->volatiles.encoredMove == MOVE_NONE);
         EXPECT(playerLeft->volatiles.encoreTimer == 0);

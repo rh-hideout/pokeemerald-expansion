@@ -3809,10 +3809,10 @@ static void HandleTurnActionSelectionState(void)
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI
                 || (position & BIT_FLANK) == B_FLANK_LEFT
-                || !IsBattlerAlive(GetBattlerAtPosition(GetPartnerPosition(position)))
+                || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerPosition(position))
                 || gBattleCommunication[GetBattlerAtPosition(GetPartnerPosition(position))] == STATE_WAIT_ACTION_CONFIRMED)
             {
-                if (!IsBattlerAlive(battler) || gBattleStruct->battlerState[battler].commandingDondozo)
+                if (gAbsentBattlerFlags & 1u << battler || gBattleStruct->battlerState[battler].commandingDondozo)
                 {
                     gChosenActionByBattler[battler] = B_ACTION_NOTHING_FAINTED;
                     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
@@ -4225,7 +4225,7 @@ static void HandleTurnActionSelectionState(void)
 
                 if (((gBattleTypeFlags & BATTLE_TYPE_MULTI) || !IsDoubleBattle())
                     || (position & BIT_FLANK) != B_FLANK_LEFT
-                    || !IsBattlerAlive(GetBattlerAtPosition(GetPartnerPosition(position))))
+                    || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerPosition(position)))
                 {
                     BtlController_EmitLinkStandbyMsg(battler, B_COMM_TO_CONTROLLER, LINK_STANDBY_MSG_STOP_BOUNCE, i);
                 }
@@ -4787,10 +4787,33 @@ static void PopulateArrayWithBattlers(enum BattlerId *battlers)
         battlers[i] = i;
 }
 
+static bool32 TryTrainerSlideGimmick(enum BattlerId battler)
+{
+    bool32 doSlide = TRUE;
+    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].attackerSlideType))
+        gBattleScripting.battler = battler;
+    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
+        gBattleScripting.battler = GetBattlerLeftFoe(battler);
+    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
+        gBattleScripting.battler = GetBattlerRightFoe(battler);
+    else
+        doSlide = FALSE;
+    if (doSlide)
+    {
+        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static bool32 TryActivateGimmick(enum BattlerId battler)
 {
     if ((gBattleStruct->gimmick.toActivate & (1u << battler)) && !(gProtectStructs[battler].noValidMoves))
     {
+        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE && TryTrainerSlideGimmick(battler))
+        {
+            return TRUE;
+        }
         gBattlerAttacker = gBattleScripting.battler = battler;
         gBattleStruct->gimmick.toActivate &= ~(1u << battler);
         if (gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].ActivateGimmick != NULL)
@@ -5020,6 +5043,10 @@ static void RunTurnActionsFunctions(void)
                 return;
         }
     }
+
+    // Z-move slides appear right before move instead of at the beginning of turn like other gimmicks
+    if (GetActiveGimmick(gBattlerByTurnOrder[gCurrentTurnActionNumber]) == GIMMICK_Z_MOVE && TryTrainerSlideGimmick(gBattlerByTurnOrder[gCurrentTurnActionNumber]))
+        return;
 
     sTurnActionsFuncsTable[gCurrentActionFuncId]();
 

@@ -332,7 +332,6 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Dynamax")
 
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
@@ -349,7 +348,6 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Tera")
 
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Mega Evolution")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION);
@@ -383,7 +381,6 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Z Move")
 
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Dynamax")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_DYNAMAX);
@@ -399,7 +396,6 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Dynamax")
 
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_TERA);
@@ -860,7 +856,6 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Dynamax")
 
 AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
@@ -882,7 +877,6 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Tera")
 
 AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Mega Evolution")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION);
@@ -926,7 +920,6 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Z Move")
 
 AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Dynamax")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_DYNAMAX);
@@ -947,7 +940,6 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Dynamax")
 
 AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_TERA);
@@ -1567,7 +1559,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Dynamax")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
@@ -1598,7 +1589,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Tera")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION);
@@ -1616,8 +1606,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
 
         NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer A: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
-        // Note: currently cannot activate 2 slides at the same time.
-        //MESSAGE("Trainer B: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Manectric has Mega Evolved into Mega Manectric!");
@@ -1634,10 +1623,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
         MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
 
-        NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
-        // Note: if it becomes possible to activate 2 slides at the same time, remove the player mega evolution and SCENE section and have both opponent messages here.
-        //MESSAGE("Trainer A: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("Trainer B: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerRight);
         MESSAGE("Aerodactyl has Mega Evolved into Mega Aerodactyl!");
@@ -1672,13 +1657,13 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Z Move")
     } SCENE {
         NONE_OF {
             MESSAGE("Trainer Partner: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-            // Ideally we would get both trainer A and B messages, however not currently possible
             MESSAGE("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         }
         MESSAGE("Trainer A: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
             MESSAGE("Trainer Partner: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-            MESSAGE("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         }
         MESSAGE("Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("Wobbuffet unleashes its full-force Z-Move!");
@@ -1691,14 +1676,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Z Move")
 
         NONE_OF {
             MESSAGE("Trainer Partner: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-            // If it ever becomes possible to get both trainer A and B messages, remove the player use of Z move and scene, and check for both messages here.
             MESSAGE("Trainer A: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         }
-        MESSAGE("Trainer B: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        NONE_OF {
-            MESSAGE("Trainer Partner: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-            MESSAGE("Trainer A: This message plays before the opponent activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        }
+
         MESSAGE("Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerRight);
@@ -1711,7 +1692,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Z Move")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Dynamax")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_DYNAMAX);
@@ -1737,7 +1717,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Dynamax")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Tera")
 {
-    KNOWN_FAILING;
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_TERA);
@@ -1754,8 +1733,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Tera")
             }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
-        // Ideally we would get both trainer A and B messages, however not currently possible
-        //MESSAGE("Trainer B: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
 
@@ -1763,7 +1741,6 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Tera")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentLeft);
 
-        MESSAGE("Trainer B: This message plays before the opponent activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerRight);
 

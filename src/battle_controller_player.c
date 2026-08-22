@@ -368,7 +368,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (IsDoubleBattle()
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
-         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))
+         && !(gAbsentBattlerFlags & (1u << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
          && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
             // Return item to bag if partner had selected one (if consumable).
@@ -1602,7 +1602,6 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
         CloseMainBattleScreen();
-        CB2_BagMenuFromBattle();
         if (gBattleStruct->victoryCatchState == VICTORY_CATCH_OPEN_BAG)
             CB2_ChooseBall();
         else
