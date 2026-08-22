@@ -280,14 +280,15 @@ DOUBLE_BATTLE_TEST("Shell Trap does not trigger when hit into Substitute")
     }
 }
 
-DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
+DOUBLE_BATTLE_TEST("Shell Trap activates for both opposing targets in speed order")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WYNAUT) { Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_SHELL_TRAP);
@@ -296,9 +297,8 @@ DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
-        // Order might be incorrect compared to vanilla
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
     }
 }
 
@@ -324,4 +324,3 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after its user is hit by a 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
     }
 }
-
