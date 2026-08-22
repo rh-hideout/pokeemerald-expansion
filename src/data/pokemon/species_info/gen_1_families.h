@@ -17640,7 +17640,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .palette = gMonPalette_TaurosPaldeaAqua,
         .shinyPalette = gMonShinyPalette_TaurosPaldeaAqua,
         .iconSprite = gMonIcon_TaurosPaldeaAqua,
-        .iconPalIndex = 0,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 7, SHADOW_SIZE_L)
         FOOTPRINT(Tauros)
