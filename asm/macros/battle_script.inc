@@ -909,11 +909,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryimprison failInstr:req
-	.byte B_SCR_OP_TRYIMPRISON
-	.4byte \failInstr
-	.endm
-
 	.macro trysetvolatile battler:req, _volatile:req, failInstr:req
 	.byte B_SCR_OP_TRYSETVOLATILE
 	.byte \battler

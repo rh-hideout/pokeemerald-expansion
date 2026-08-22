@@ -197,6 +197,13 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
+enum CriticalHitBoost
+{
+    CRIT_BOOST_NONE,
+    CRIT_BOOST_ONE_STAGE,
+    CRIT_BOOST_TWO_STAGES,
+};
+
 /* Volatile status ailments
  * These are removed after exiting the battle or switching
  *  Enum,                                   Type                           Type, max value, flags */
@@ -226,8 +233,7 @@ enum VolatileFlags
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
-    F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_CRITICAL_HIT_BOOST,          criticalHitBoost,              (enum CriticalHitBoost, CRIT_BOOST_TWO_STAGES), V_BATON_PASSABLE) \
     F(VOLATILE_BONUS_CRIT_STAGES,           bonusCritStages,               (u32, 4)) \
     F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (enum SemiInvulnerableState, SEMI_INVULNERABLE_COUNT)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \

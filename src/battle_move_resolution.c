@@ -2670,6 +2670,8 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
         targetAvoidedMove[i] = TRUE;
 
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
+    const struct AdditionalEffect *firstFailedEffect = NULL;
+    enum BattlerId firstFailedBattler = B_BATTLER_0;
     cv->onlyChecking = TRUE;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -2700,6 +2702,11 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             SetMoveEffect(cv, &se);
             if (!se.effectFailed)
                 targetAvoidedMove[battler] = FALSE;
+            else if (se.replayFailure && firstFailedEffect == NULL)
+            {
+                firstFailedEffect = additionalEffect;
+                firstFailedBattler = se.effectBattler;
+            }
         }
     }
 
@@ -2725,6 +2732,22 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     if (moveFailed)
     {
+        if (firstFailedEffect != NULL)
+        {
+            struct SetEffect se = {
+                .script = BattleScript_MoveEnd,
+                .additionalEffect = firstFailedEffect,
+                .moveEffect = firstFailedEffect->moveEffect,
+                .effectBattler = firstFailedBattler,
+                .primary = TRUE,
+                .certain = TRUE,
+                .onSide = firstFailedEffect->onSide,
+            };
+
+            cv->battlerDef = firstFailedBattler;
+            cv->onlyChecking = FALSE;
+            SetMoveEffect(cv, &se);
+        }
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
     }
