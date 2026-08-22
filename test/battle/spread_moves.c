@@ -549,3 +549,18 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of a
         MESSAGE("The opposing Wynaut avoided the attack!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Spread Moves: A missed multi-target stat move names the missed battler")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_STRING_SHOT) == TARGET_BOTH);
+        PLAYER(SPECIES_CATERPIE);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STRING_SHOT, hit: FALSE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+    }
+}
