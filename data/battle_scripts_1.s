@@ -549,15 +549,6 @@ BattleScript_ShellTrapFailed::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectCourtChange::
-	attackcanceler
-	swapsidestatuses
-	attackanimation
-	waitanimation
-	printstring STRINGID_COURTCHANGE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_BeakBlastSetUp::
 	flushtextbox
 	playanimation BS_SCRIPTING, B_ANIM_BEAK_BLAST_SETUP, NULL
@@ -616,15 +607,6 @@ BattleScript_RemoveItem::
 	removeitem BS_ATTACKER
 	return
 
-BattleScript_EffectOctolock::
-	attackcanceler
-	trysetoctolock BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_CANTESCAPEBECAUSEOFCURRENTMOVE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_PoltergeistMessage::
 	printstring STRINGID_ABOUTTOUSEPOLTERGEIST
 	waitmessage B_WAIT_TIME_LONG
@@ -652,6 +634,16 @@ BattleScript_MoveEffectLeechSeed::
 
 BattleScript_MoveEffectSetStatus::
 	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_MoveEffectTrick::
+	printstring STRINGID_PKMNSWITCHEDITEMS
+	waitmessage B_WAIT_TIME_LONG
+	printfromtable gItemSwapStringIds
+	waitmessage B_WAIT_TIME_LONG
+	tryactivateabilitywithabilityshield BS_EFFECT_BATTLER, TRUE
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
+	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_USABLE_AGAIN
 	return
 
 BattleScript_StuffCheeks::
@@ -2003,20 +1995,6 @@ BattleScript_EffectHelpingHand::
 	waitanimation
 	printstring STRINGID_PKMNREADYTOHELP
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectTrick::
-	attackcanceler
-	tryswapitems BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSWITCHEDITEMS
-	waitmessage B_WAIT_TIME_LONG
-	printfromtable gItemSwapStringIds
-	waitmessage B_WAIT_TIME_LONG
-	tryactivateabilitywithabilityshield BS_TARGET, TRUE
-	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
-	tryactivateitem BS_TARGET, ACTIVATION_ON_USABLE_AGAIN
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectRolePlay::
@@ -5657,12 +5635,6 @@ BattleScript_RecycleBerriesAlliesIncrement:
 	setallytonexttarget BattleScript_RecycleBerriesAlliesLoop
 BattleScript_RecycleBerriesAlliesEnd:
 	restoretarget
-	return
-
-BattleScript_MoveEffectSteelsurge::
-	setsteelsurge BattleScript_MoveEnd
-	printfromtable gDmgHazardsStringIds
-	waitmessage B_WAIT_TIME_LONG
 	return
 
 @@@ END MAX MOVES @@@

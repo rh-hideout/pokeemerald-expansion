@@ -500,11 +500,9 @@ static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_setforcedtarget(void);
 static void Cmd_settaunt(void);
 static void Cmd_trysethelpinghand(void);
-static void Cmd_tryswapitems(void);
 static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
 static void Cmd_setyawn(void);
-static void Cmd_setroom(void);
 static void Cmd_tryswapabilities(void);
 static void Cmd_tryimprison(void);
 static void Cmd_trysetvolatile(void);
@@ -527,7 +525,6 @@ static void Cmd_finishaction(void);
 static void Cmd_finishturn(void);
 static void Cmd_trainerslideout(void);
 static void Cmd_swapstatstages(void);
-static void Cmd_averagestats(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
 static void Cmd_trysynchronize(void);
@@ -696,7 +693,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETFORCEDTARGET]                       = Cmd_setforcedtarget,
     [B_SCR_OP_SETTAUNT]                              = Cmd_settaunt,
     [B_SCR_OP_TRYSETHELPINGHAND]                     = Cmd_trysethelpinghand,
-    [B_SCR_OP_TRYSWAPITEMS]                          = Cmd_tryswapitems,
     [B_SCR_OP_TRYCOPYABILITY]                        = Cmd_trycopyability,
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
@@ -722,7 +718,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_FINISHTURN]                            = Cmd_finishturn,
     [B_SCR_OP_TRAINERSLIDEOUT]                       = Cmd_trainerslideout,
     [B_SCR_OP_SWAPSTATSTAGES]                        = Cmd_swapstatstages,
-    [B_SCR_OP_AVERAGESTATS]                          = Cmd_averagestats,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
     [B_SCR_OP_TRY_SYNCHRONIZE]                       = Cmd_trysynchronize,
@@ -789,6 +784,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_56]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_57]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_58]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_59]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_60]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -4986,74 +4983,6 @@ u32 IsAbilityStatusProtected(enum BattlerId battler, enum Ability ability)
         || IsFlowerVeilProtected(battler);
 }
 
-#define COURTCHANGE_SWAP(status, structField, temp)                     \
-{                                                                       \
-    temp = gSideStatuses[B_SIDE_PLAYER];                                \
-    if (gSideStatuses[B_SIDE_OPPONENT] & status)                        \
-        gSideStatuses[B_SIDE_PLAYER] |= status;                         \
-    else                                                                \
-        gSideStatuses[B_SIDE_PLAYER] &= ~(status);                      \
-    if (temp & status)                                                  \
-        gSideStatuses[B_SIDE_OPPONENT] |= status;                       \
-    else                                                                \
-        gSideStatuses[B_SIDE_OPPONENT] &= ~(status);                    \
-    SWAP(sideTimerPlayer->structField, sideTimerOpp->structField, temp);\
-}                                                                       \
-
-#define UPDATE_COURTCHANGED_BATTLER(structField)\
-{                                               \
-    temp = sideTimerPlayer->structField;        \
-    sideTimerPlayer->structField = ((sideTimerOpp->structField) ^ BIT_SIDE);        \
-    sideTimerOpp->structField = (temp ^ BIT_SIDE);        \
-}                                               \
-
-void BS_CourtChangeSwapSideStatuses(void)
-{
-    NATIVE_ARGS();
-
-    struct SideTimer *sideTimerPlayer = &gSideTimers[B_SIDE_PLAYER];
-    struct SideTimer *sideTimerOpp = &gSideTimers[B_SIDE_OPPONENT];
-    u32 temp;
-
-    // Swap timers and statuses
-    COURTCHANGE_SWAP(SIDE_STATUS_REFLECT, reflectTimer, temp)
-    COURTCHANGE_SWAP(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, temp)
-    COURTCHANGE_SWAP(SIDE_STATUS_MIST, mistTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_SAFEGUARD, safeguardTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_TAILWIND, tailwindTimer, temp);
-    // Lucky Chant doesn't exist in gen 8, but seems like it should be affected by Court Change
-    COURTCHANGE_SWAP(SIDE_STATUS_LUCKY_CHANT, luckyChantTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_DAMAGE_NON_TYPES, damageNonTypesTimer, temp);
-    // Track Pledge effect side
-    COURTCHANGE_SWAP(SIDE_STATUS_RAINBOW, rainbowTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_SEA_OF_FIRE, seaOfFireTimer, temp);
-    COURTCHANGE_SWAP(SIDE_STATUS_SWAMP, swampTimer, temp);
-
-    // Hazards
-    u32 tempQueue[HAZARDS_MAX_COUNT] = {HAZARDS_NONE};
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        tempQueue[i] = gBattleStruct->hazardsQueue[B_SIDE_PLAYER][i];
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        gBattleStruct->hazardsQueue[B_SIDE_PLAYER][i] = gBattleStruct->hazardsQueue[B_SIDE_OPPONENT][i];
-    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
-        gBattleStruct->hazardsQueue[B_SIDE_OPPONENT][i] = tempQueue[i];
-    SWAP(gBattleStruct->numHazards[B_SIDE_PLAYER], gBattleStruct->numHazards[B_SIDE_OPPONENT], temp);
-    SWAP(sideTimerPlayer->spikesAmount, sideTimerOpp->spikesAmount, temp);
-    SWAP(sideTimerPlayer->toxicSpikesAmount, sideTimerOpp->toxicSpikesAmount, temp);
-
-    // Change battler IDs of swapped effects. Needed for the correct string when they expire
-    UPDATE_COURTCHANGED_BATTLER(stickyWebBattlerId);
-
-    // Track which side originally set the Sticky Web
-    SWAP(sideTimerPlayer->stickyWebBattlerSide, sideTimerOpp->stickyWebBattlerSide, temp);
-
-    // Swap what type set the Gigantamax damage over time effect
-    SWAP(sideTimerPlayer->damageNonTypesType, sideTimerOpp->damageNonTypesType, temp);
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_setprotectlike(void)
 {
     CMD_ARGS();
@@ -6735,118 +6664,6 @@ static void Cmd_trysethelpinghand(void)
     }
 }
 
-// Trick
-static void Cmd_tryswapitems(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    // opponent can't swap items with player in regular battles
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL
-        || (!IsOnPlayerSide(gBattlerAttacker)
-            && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
-                                  | BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_FRONTIER
-                                  | BATTLE_TYPE_SECRET_BASE
-                                  | BATTLE_TYPE_RECORDED_LINK
-                                  | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0)
-                                  ))))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        // You can't swap items if they were knocked off in regular battles
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
-                             | BATTLE_TYPE_EREADER_TRAINER
-                             | BATTLE_TYPE_FRONTIER
-                             | BATTLE_TYPE_SECRET_BASE
-                             | BATTLE_TYPE_RECORDED_LINK))
-            && (GetBattlerPartyState(gBattlerAttacker)->isKnockedOff || GetBattlerPartyState(gBattlerTarget)->isKnockedOff))
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        // can't swap if two Pokémon don't have an item
-        // or if either of them is an enigma berry or a mail
-        else if ((gBattleMons[gBattlerAttacker].item == ITEM_NONE && gBattleMons[gBattlerTarget].item == ITEM_NONE)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerAttacker].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        // check if ability prevents swapping
-        else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
-        {
-            gBattlescriptCurrInstr = BattleScript_StickyHoldActivates;
-            gBattlerAbility = gBattlerTarget;
-            gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
-            RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
-        }
-        // took a while, but all checks passed and items can be safely swapped
-        else
-        {
-            enum Item oldItemAtk, oldItemDef;
-
-            oldItemAtk = gBattleMons[gBattlerAttacker].item;
-            oldItemDef = gBattleMons[gBattlerTarget].item;
-
-            gBattleMons[gBattlerAttacker].item = oldItemDef;
-            gBattleMons[gBattlerTarget].item = oldItemAtk;
-
-            RecordItemEffectBattle(gBattlerAttacker, GetItemHoldEffect(oldItemDef));
-            RecordItemEffectBattle(gBattlerTarget, GetItemHoldEffect(oldItemAtk));
-
-            BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
-            MarkBattlerForControllerExec(gBattlerAttacker);
-
-            BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
-            MarkBattlerForControllerExec(gBattlerTarget);
-
-            if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
-                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-
-            if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS
-             && (!IsHoldEffectChoice(GetItemHoldEffect(oldItemDef))
-             || (GetConfig(B_MODERN_TRICK_CHOICE_LOCK) >= GEN_5)))
-            {
-                gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
-            }
-
-            gBattlescriptCurrInstr = cmd->nextInstr;
-
-            PREPARE_ITEM_BUFFER(gBattleTextBuff1, oldItemDef)
-            PREPARE_ITEM_BUFFER(gBattleTextBuff2, oldItemAtk)
-
-            if (!(IsBattlerAlly(gBattlerAttacker, gBattlerTarget) && IsPartnerMonFromSameTrainer(gBattlerAttacker)))
-            {
-                // if targeting your own side and you aren't in a multi battle, don't save items as stolen
-                if (IsOnPlayerSide(gBattlerAttacker))
-                    TrySaveExchangedItem(gBattlerAttacker, oldItemAtk);
-                if (IsOnPlayerSide(gBattlerTarget))
-                    TrySaveExchangedItem(gBattlerTarget, oldItemDef);
-            }
-
-            if (oldItemAtk != ITEM_NONE && oldItemDef != ITEM_NONE)
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_BOTH;  // attacker's item -> <- target's item
-            }
-            else if (oldItemAtk == ITEM_NONE && oldItemDef != ITEM_NONE)
-            {
-                CheckSetUnburden(gBattlerTarget);
-                gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_TAKEN; // nothing -> <- target's item
-            }
-            else
-            {
-                CheckSetUnburden(gBattlerAttacker);
-                gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ITEM_SWAP_GIVEN; // attacker's item -> <- nothing
-            }
-        }
-    }
-}
-
 // Role Play, Doodle
 static void Cmd_trycopyability(void)
 {
@@ -8248,30 +8065,6 @@ static void Cmd_swapstatstages(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static u16 *GetBattlerStat(struct BattlePokemon *battler, enum Stat stat)
-{
-    switch (stat)
-    {
-    case STAT_ATK:   return &battler->attack;
-    case STAT_DEF:   return &battler->defense;
-    case STAT_SPATK: return &battler->spAttack;
-    case STAT_SPDEF: return &battler->spDefense;
-    default:         return NULL;
-    }
-}
-
-static void Cmd_averagestats(void)
-{
-    CMD_ARGS(u8 stat);
-
-    u16 *stat1 = GetBattlerStat(&gBattleMons[gBattlerAttacker], cmd->stat);
-    u16 *stat2 = GetBattlerStat(&gBattleMons[gBattlerTarget], cmd->stat);
-    u16 avg = (*stat1 + *stat2) / 2;
-    *stat1 = *stat2 = avg;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS(u8 trigger);
@@ -9061,24 +8854,6 @@ void BS_JumpIfTerrainAffected(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TrySetOctolock(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-
-    if (gBattleMons[gBattlerTarget].volatiles.octolock)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.octolock = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.octolockedBy = gBattlerAttacker;
-        gBattleMons[gBattlerTarget].volatiles.escapePrevention = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.battlerPreventingEscape = gBattlerAttacker;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_TryTrainerSlideZMoveMsg(void)
 {
     NATIVE_ARGS();
@@ -9857,22 +9632,6 @@ void BS_TryRecycleBerry(void)
     else
     {
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-// Sets up sharp steel on the target's side.
-void BS_SetSteelsurge(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    u8 targetSide = GetBattlerSide(gBattlerTarget);
-    if (IsHazardOnSide(targetSide, HAZARDS_STEELSURGE))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        PushHazardTypeToQueue(targetSide, HAZARDS_STEELSURGE);
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

@@ -883,11 +883,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryswapitems failInstr:req
-	.byte B_SCR_OP_TRYSWAPITEMS
-	.4byte \failInstr
-	.endm
-
 	.macro trycopyability battler:req, failInstr:req
 	.byte B_SCR_OP_TRYCOPYABILITY
 	.byte \battler
@@ -1008,11 +1003,6 @@
 	.byte \stat
 	.endm
 
-	.macro averagestats stat:req
-	.byte B_SCR_OP_AVERAGESTATS
-	.byte \stat
-	.endm
-
 	.macro setnonvolatilestatus trigger:req
 	.byte B_SCR_OP_SETNONVOLATILESTATUS
 	.byte \trigger
@@ -1108,11 +1098,6 @@
 	callnative BS_TryRevertWeatherForm
 	.endm
 
-	.macro trysetoctolock failInstr:req
-	callnative BS_TrySetOctolock
-	.4byte \failInstr
-	.endm
-
 	.macro setzeffect
 	callnative BS_SetZEffect
 	.endm
@@ -1155,11 +1140,6 @@
 	@ Used to active a different Max Move effects.
 	.macro setmaxmoveeffect
 	callnative BS_SetMaxMoveEffect
-	.endm
-
-	.macro setsteelsurge, failInstr:req
-	callnative BS_SetSteelsurge
-	.4byte \failInstr
 	.endm
 
 	.macro trysetparalysis, ptr:req
@@ -1381,10 +1361,6 @@
 	callnative BS_JumpIfCanGigantamax
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro swapsidestatuses
-	callnative BS_CourtChangeSwapSideStatuses
 	.endm
 
 	.macro swapstats stat:req
