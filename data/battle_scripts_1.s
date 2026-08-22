@@ -435,7 +435,6 @@ BattleScript_SaltCureExtraDamage::
 	return
 
 BattleScript_MoveEffectCorrosiveGas::
-	setlastuseditem BS_TARGET
 	removeitem BS_TARGET
 	printstring STRINGID_PKMNITEMMELTED
 	waitmessage B_WAIT_TIME_LONG

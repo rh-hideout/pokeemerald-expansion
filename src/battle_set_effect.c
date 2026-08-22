@@ -2506,7 +2506,6 @@ static void HandleSetEffectCorrosiveGas(struct BattleCalcValues *cv, struct SetE
     {
         se->replayFailure = TRUE;
         SetEffectFailAndCheckReturn;
-        gBattleStruct->moveResultFlags[se->effectBattler] |= MOVE_RESULT_FAILED;
         PrepareStringBattleWithWait(STRINGID_NOEFFECTONTARGET, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
@@ -2522,6 +2521,7 @@ static void HandleSetEffectCorrosiveGas(struct BattleCalcValues *cv, struct SetE
     }
     else if (!cv->onlyChecking)
     {
+        gLastUsedItem = item;
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectCorrosiveGas);
     }
 }
