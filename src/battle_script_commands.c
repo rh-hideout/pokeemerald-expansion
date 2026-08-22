@@ -9479,7 +9479,7 @@ void BS_ItemRestorePP(void)
 void BS_TryRevertWeatherForm(void)
 {
     NATIVE_ARGS();
-    enum BattlerId battler = gBattlersBySpeed[gEffectBattler];
+    enum BattlerId battler = gBattlersBySpeed[gBattleScripting.speedOrderIndex];
     if (IsBattlerAlive(battler)
         && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER, GetBattlerAbility(battler)))
     {
@@ -9719,7 +9719,6 @@ void BS_TryAllySwitch(void)
 void BS_TryQuash(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    enum BattlerId i, j;
 
     // It's true if foe is faster, has a bigger priority, or switches
     if (HasBattlerActedThisTurn(gBattlerTarget))
@@ -9732,25 +9731,25 @@ void BS_TryQuash(void)
     gProtectStructs[gBattlerTarget].quash = TRUE;
 
     struct BattleCalcValues calcValues = {0};
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        calcValues.abilities[i] = GetBattlerAbility(i);
-        calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
+        calcValues.abilities[battler] = GetBattlerAbility(battler);
+        calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
     // this implementation assumes turn order is correct when using Quash
-    i = GetBattlerTurnOrderNum(gBattlerTarget);
-    for (j = i + 1; j < gBattlersCount; j++)
+    u32 turnOrderIndex = GetBattlerTurnOrderNum(gBattlerTarget);
+    for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
     {
-        calcValues.battlerAtk = gBattlerByTurnOrder[i];
-        calcValues.battlerDef = gBattlerByTurnOrder[j];
+        calcValues.battlerAtk = gBattlerByTurnOrder[turnOrderIndex];
+        calcValues.battlerDef = gBattlerByTurnOrder[otherTurnOrderIndex];
 
         // Gen 7- config makes target go last so that the order of quash targets is kept for the correct turn order
         // Gen 8+ config alters Turn Order of the target according to speed, dynamic speed should handle the rest
         if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(&calcValues, FALSE) == -1)
-            SwapTurnOrder(i, j);
+            SwapTurnOrder(turnOrderIndex, otherTurnOrderIndex);
         else
             break;
-        i++;
+        turnOrderIndex++;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

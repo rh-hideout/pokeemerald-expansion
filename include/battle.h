@@ -564,15 +564,15 @@ struct EventStates
 {
     enum EndTurnResolutionOrder endTurn:8;
     u32 endTurnBlock:8; // FirstEventBlock, SecondEventBlock, ThirdEventBlock
-    enum BattlerId endTurnBattler:4;
+    u32 endTurnBattler:4;
     u32 arenaTurn:8;
     enum BattleSide battlerSide:4;
-    enum BattlerId moveEndBattler:4;
+    u32 moveEndBattler:4;
     enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum CancelerState atkCanceler:8;
-    enum BattlerId atkCancelerBattler:4;
+    u32 atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
@@ -858,7 +858,7 @@ struct BattleScripting
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 unused_0x15;
+    u8 speedOrderIndex;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch.
     enum BattlerId battler;
     u8 animTurn;
