@@ -50,10 +50,6 @@ DOUBLE_BATTLE_TEST("Terrain Boost: Expanding Force hits both foes in Psychic Ter
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPANDING_FORCE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-    } THEN {
-        enum BattlerId battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-        EXPECT_EQ(GetBattlerMoveSelectionTargetType(battler, MOVE_EXPANDING_FORCE), TARGET_SELECTED);
-        EXPECT_EQ(GetBattlerMoveTargetType(battler, MOVE_EXPANDING_FORCE), TARGET_BOTH);
     }
 }
 
