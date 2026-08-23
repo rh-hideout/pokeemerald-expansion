@@ -812,10 +812,12 @@ static void HandleSetEffectIonDeluge(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectHaze(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (cv->onlyChecking) return;
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         TryResetBattlerStatChanges(battler);
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectHaze;
+    PrepareStringBattleWithWait(STRINGID_STATCHANGESGONE, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -979,7 +981,7 @@ static void HandleSetEffectFling(struct BattleCalcValues *cv, struct SetEffect *
         if (GetItemPocket(item) == POCKET_BERRIES)
         {
             BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
+            gBattlescriptCurrInstr = BattleScript_FlingConsumeBerry;
             return;
         }
 
@@ -1293,12 +1295,15 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
 
 static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!(gFieldStatuses & STATUS_FIELD_GRAVITY))
+    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
     {
         gFieldStatuses |= STATUS_FIELD_GRAVITY;
         gFieldTimers.gravityTimer = 5;
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_MoveEffectGravity;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGravity);
     }
 }
 
@@ -2825,7 +2830,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TERA_BLAST] = HandleSetEffectTeraBlast,
     [MOVE_EFFECT_ORDER_UP] = HandleSetEffectOrderUp,
     [MOVE_EFFECT_ION_DELUGE] = HandleSetEffectIonDeluge,
-    [MOVE_EFFECT_HAZE] = HandleSetEffectHaze,
+    [MOVE_EFFECT_HAZE] = HandleSetEffectHaze, // TODO
     [MOVE_EFFECT_LEECH_SEED] = HandleSetEffectLeechSeed,
     [MOVE_EFFECT_REFLECT] = HandleSetEffectReflect,
     [MOVE_EFFECT_LIGHT_SCREEN] = HandleSetEffectLightScreen,
@@ -2858,7 +2863,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_LOCK_ON] = HandleSetEffectLockOn,
     [MOVE_EFFECT_MEAN_LOOK] = HandleSetEffectMeanLook,
     [MOVE_EFFECT_ATTRACT] = HandleSetEffectAttract,
-    [MOVE_EFFECT_PAIN_SPLIT] = HandleSetEffectPainSplit,
     [MOVE_EFFECT_TORMENT] = HandleSetEffectTorment,
     [MOVE_EFFECT_INGRAIN] = HandleSetEffectIngrain,
     [MOVE_EFFECT_RECYCLE] = HandleSetEffectRecycle,
@@ -2877,35 +2881,50 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_OVERWRITE_ABILITY] = HandleSetEffectOverwriteAbility,
     [MOVE_EFFECT_TRICK] = HandleSetEffectTrick,
     [MOVE_EFFECT_SET_ROOM] = HandleSetEffectSetRoom,
-
-    [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
     [MOVE_EFFECT_AVERAGE_STATS] = HandleSetEffectAverageStats,
     [MOVE_EFFECT_TELEKINESIS] = HandleSetEffectTelekinesis,
-
     [MOVE_EFFECT_OVERWRITE_TYPE] = HandleSetEffectOverwriteType,
     [MOVE_EFFECT_ENTRAINMENT] = HandleSetEffectEntrainment,
-    [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
-    [MOVE_EFFECT_QUASH] = HandleSetEffectQuash,
     [MOVE_EFFECT_REFLECT_TYPE] = HandleSetEffectReflectType,
-    [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,
     [MOVE_EFFECT_STICKY_WEB] = HandleSetEffectStickyWeb,
-    [MOVE_EFFECT_TOPSY_TURVY] = HandleSetEffectTopsyTurvy,
     [MOVE_EFFECT_ELECTRIFY] = HandleSetEffectElectrify,
     [MOVE_EFFECT_FAIRY_LOCK] = HandleSetEffectFairyLock,
-    [MOVE_EFFECT_PURIFY] = HandleSetEffectPurify,
-    [MOVE_EFFECT_TEATIME] = HandleSetEffectTeatime,
     [MOVE_EFFECT_OCTOLOCK] = HandleSetEffectOctolock,
     [MOVE_EFFECT_COURT_CHANGE] = HandleSetEffectCourtChange,
-
-    [MOVE_EFFECT_LIFE_DEW] = HandleSetEffectLifeDew,
     [MOVE_EFFECT_CORROSIVE_GAS] = HandleSetEffectCorrosiveGas,
+    [MOVE_EFFECT_FOCUS_ENERGY] = HandleSetEffectFocusEnergy,
+    [MOVE_EFFECT_DRAGON_CHEER] = HandleSetEffectDragonCheer,
+
+    [MOVE_EFFECT_PAIN_SPLIT] = HandleSetEffectPainSplit,
+    [MOVE_EFFECT_TOPSY_TURVY] = HandleSetEffectTopsyTurvy,
+    [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,
+    [MOVE_EFFECT_QUASH] = HandleSetEffectQuash,
+    [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
+    [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
+    [MOVE_EFFECT_TEATIME] = HandleSetEffectTeatime,
+    [MOVE_EFFECT_PURIFY] = HandleSetEffectPurify,
+    [MOVE_EFFECT_LIFE_DEW] = HandleSetEffectLifeDew,
     [MOVE_EFFECT_JUNGLE_HEALING] = HandleSetEffectJungleHealing,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
 
-    [MOVE_EFFECT_FOCUS_ENERGY] = HandleSetEffectFocusEnergy,
-    [MOVE_EFFECT_DRAGON_CHEER] = HandleSetEffectDragonCheer,
+    // Quash
+    // Third Type
+    // Roost
+    // Restore and copies
+    // Spite
+    // Psych Up
+    // Nightmare
+    // Follow Me
+    // Taunt
+    // Helping Hand
+    // Recycle
+    // Camouflage
+    // Role Play
+    // Encore
+    // After You
+
     [MOVE_EFFECT_SUN] = HandleSetEffectWeather,
     [MOVE_EFFECT_RAIN] = HandleSetEffectWeather,
     [MOVE_EFFECT_SANDSTORM] = HandleSetEffectWeather,

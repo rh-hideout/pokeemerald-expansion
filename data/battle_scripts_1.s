@@ -561,7 +561,7 @@ BattleScript_FlingMessage::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectFlingConsumeBerry::
+BattleScript_FlingConsumeBerry::
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
 	consumeberry BS_TARGET, FALSE
 	setbyte sBERRY_OVERRIDE, 0
@@ -608,11 +608,6 @@ BattleScript_ButHoopaCantUseIt::
 	printstring STRINGID_BUTHOOPACANTUSEIT
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_MoveEffectHaze::
-	printstring STRINGID_STATCHANGESGONE
-	waitmessage B_WAIT_TIME_LONG
-	return
 
 BattleScript_MoveEffectLeechSeed::
 	printfromtable gLeechSeedStringIds
@@ -1029,15 +1024,6 @@ BattleScript_TryTailwindAbilitiesLoop_Increment:
 	restoretarget
 	return
 
-BattleScript_EffectGravity::
-	call BattleScript_EffectGravityInternal
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectGravityInternal:
-	attackcanceler
-	setgravity BattleScript_ButItFailed
-	attackanimation
-	waitanimation
 BattleScript_MoveEffectGravity::
 	printstring STRINGID_GRAVITYINTENSIFIED
 	waitmessage B_WAIT_TIME_LONG
@@ -1226,15 +1212,6 @@ BattleScript_StatDown::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectHaze::
-	attackcanceler
-	attackanimation
-	waitanimation
-	normalisebuffs
-	printstring STRINGID_STATCHANGESGONE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_SetUpBide::
 	attackanimation
 	waitanimation
@@ -1346,26 +1323,6 @@ BattleScript_RecoilIfMiss::
 	tryfaintmon BS_ATTACKER
 BattleScript_RecoilEnd:
 	return
-
-BattleScript_EffectConfuse::
-	attackcanceler
-	jumpifability BS_TARGET, ABILITY_OWN_TEMPO, BattleScript_OwnTempoPrevents
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_AlreadyConfused
-	jumpifterrainaffected BS_TARGET, B_TERRAIN_MISTY, BattleScript_MistyTerrainPrevents
-	jumpifsafeguard BattleScript_SafeguardProtected
-	attackanimation
-	waitanimation
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_AlreadyConfused::
-	setalreadystatusedmoveattempt
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNALREADYCONFUSED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectTransform::
 	attackcanceler

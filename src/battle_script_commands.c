@@ -439,7 +439,6 @@ static void Cmd_futuresighttargetfailure(void);
 static void Cmd_getpossiblenexttarget(void);
 static void Cmd_yesnobox(void);
 static void Cmd_cancelallactions(void);
-static void Cmd_setgravity(void);
 static void Cmd_removeitem(void);
 static void Cmd_atknameinbuff1(void);
 static void Cmd_drawlvlupbox(void);
@@ -462,7 +461,6 @@ static void Cmd_manipulatedamage(void);
 static void Cmd_trysetrest(void);
 static void Cmd_jumpifuproarwakes(void);
 static void Cmd_stockpiletohpheal(void);
-static void Cmd_normalisebuffs(void);
 static void Cmd_twoturnmoveschargestringandanimation(void);
 static void Cmd_trynonvolatilestatus(void);
 static void Cmd_initmultihitstring(void);
@@ -631,7 +629,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_GETPOSSIBLENEXTTARGET]                 = Cmd_getpossiblenexttarget,
     [B_SCR_OP_YESNOBOX]                              = Cmd_yesnobox,
     [B_SCR_OP_CANCELALLACTIONS]                      = Cmd_cancelallactions,
-    [B_SCR_OP_SETGRAVITY]                            = Cmd_setgravity,
     [B_SCR_OP_REMOVEITEM]                            = Cmd_removeitem,
     [B_SCR_OP_ATKNAMEINBUFF1]                        = Cmd_atknameinbuff1,
     [B_SCR_OP_DRAWLVLUPBOX]                          = Cmd_drawlvlupbox,
@@ -654,7 +651,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYSETREST]                            = Cmd_trysetrest,
     [B_SCR_OP_JUMPIFUPROARWAKES]                     = Cmd_jumpifuproarwakes,
     [B_SCR_OP_STOCKPILETOHPHEAL]                     = Cmd_stockpiletohpheal,
-    [B_SCR_OP_NORMALISEBUFFS]                        = Cmd_normalisebuffs,
     [B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION]  = Cmd_twoturnmoveschargestringandanimation,
     [B_SCR_OP_TRYNONVOLATILESTATUS]                  = Cmd_trynonvolatilestatus,
     [B_SCR_OP_INITMULTIHITSTRING]                    = Cmd_initmultihitstring,
@@ -784,6 +780,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_58]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_59]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_60]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_61]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_62]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -4285,22 +4283,6 @@ static void Cmd_cancelallactions(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_setgravity(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gFieldStatuses |= STATUS_FIELD_GRAVITY;
-        gFieldTimers.gravityTimer = 5;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static bool32 TryCheekPouch(enum BattlerId battler, enum Item itemId, const u8 *nextInstr)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES
@@ -5225,17 +5207,6 @@ bool32 TryResetBattlerStatChanges(enum BattlerId battler)
     }
 
     return ret;
-}
-
-// Haze
-static void Cmd_normalisebuffs(void)
-{
-    CMD_ARGS();
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        TryResetBattlerStatChanges(i);
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_twoturnmoveschargestringandanimation(void)

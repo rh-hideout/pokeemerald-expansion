@@ -575,11 +575,6 @@
 	.byte B_SCR_OP_CANCELALLACTIONS
 	.endm
 
-	.macro setgravity failInstr:req
-	.byte B_SCR_OP_SETGRAVITY
-	.4byte \failInstr
-	.endm
-
 	.macro removeitem battler:req
 	.byte B_SCR_OP_REMOVEITEM
 	.byte \battler
@@ -678,10 +673,6 @@
 	.macro stockpiletohpheal failInstr:req
 	.byte B_SCR_OP_STOCKPILETOHPHEAL
 	.4byte \failInstr
-	.endm
-
-	.macro normalisebuffs
-	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
 
 	.macro twoturnmoveschargestringandanimation
