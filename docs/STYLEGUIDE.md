@@ -234,7 +234,7 @@ assertf(true) // incorrect
     return NULL;
 ```
 
-The exception are small control flow statements
+The exceptions are small control flow statements
 
 ```c
 if (foo) 
@@ -249,6 +249,13 @@ if (foo) return; // correct
 assertf(true); // correct
 ```
 
+The other exception is return statements with values. Both versions are acceptable  
+```c
+if (foo) return something;
+
+if (foo) 
+    return something;
+```
 
 ### Control Structures
 
