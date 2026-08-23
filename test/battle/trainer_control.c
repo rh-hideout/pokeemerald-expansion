@@ -256,12 +256,17 @@ TEST("Trainer Party Pool picks a random lead and a random ace if tags exist in t
 
 TEST("Trainer Party Pool picks according to custom rules")
 {
+    u32 seed;
+    enum Species expectedWeatherSetter;
+    PARAMETRIZE { seed = 0; expectedWeatherSetter = SPECIES_TORKOAL; }
+    PARAMETRIZE { seed = 3; expectedWeatherSetter = SPECIES_VULPIX; }
+
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u32 currTrainer = 8;
     gBattleTypeFlags = BATTLE_TYPE_DOUBLE;
+    SeedRng(seed);
     CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer));
-    enum Species leadSpecies = GetMonData(&testParty[0], MON_DATA_SPECIES);
-    EXPECT(leadSpecies == SPECIES_TORKOAL || leadSpecies == SPECIES_VULPIX);  //  Lead + Weather Setter
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPECIES), expectedWeatherSetter);  //  Lead + Weather Setter
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_BULBASAUR);  //  Lead + Weather Abuser
     EXPECT(GetMonData(&testParty[2], MON_DATA_SPECIES) == SPECIES_EEVEE);      //  Anything else
     gBattleTypeFlags = 0;
