@@ -477,7 +477,6 @@ static void Cmd_transformdataexecution(void);
 static void Cmd_setsubstitute(void);
 static void Cmd_mimicattackcopy(void);
 static void Cmd_setcalledmove(void);
-static void Cmd_trysetencore(void);
 static void Cmd_painsplitdmgcalc(void);
 static void Cmd_settypetorandomresistance(void);
 static void Cmd_copymovepermanently(void);
@@ -667,7 +666,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
     [B_SCR_OP_MIMICATTACKCOPY]                       = Cmd_mimicattackcopy,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
-    [B_SCR_OP_TRYSETENCORE]                          = Cmd_trysetencore,
     [B_SCR_OP_PAINSPLITDMGCALC]                      = Cmd_painsplitdmgcalc,
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
     [B_SCR_OP_COPYMOVEPERMANENTLY]                   = Cmd_copymovepermanently,
@@ -782,6 +780,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_60]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_61]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_62]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_63]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -5866,71 +5865,6 @@ static void Cmd_setcalledmove(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_trysetencore(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    s32 i;
-
-    if (IsMaxMove(gLastMoves[gBattlerTarget]) && !(GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (gBattleMons[gBattlerTarget].moves[i] == gBattleStruct->dynamax.baseMoves[gBattlerTarget])
-                break;
-        }
-    }
-    else
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])
-                break;
-        }
-    }
-
-    if (gLastMoves[gBattlerTarget] == MOVE_NONE
-     || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
-     || IsMoveEncoreBanned(gLastMoves[gBattlerTarget])
-     || i == MAX_MON_MOVES
-     || gBattleMons[gBattlerTarget].pp[i] == 0
-     || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
-     || GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        gBattleMons[gBattlerTarget].volatiles.encoredMove = gBattleMons[gBattlerTarget].moves[i];
-        gBattleMons[gBattlerTarget].volatiles.encoredMovePos = i;
-
-        // If the target's selected move is not the same as the move being Encored into,
-        // the target will select a random opposing target
-        // Redirection such as Follow Me is already covered in HandleAction_UseMove of battle_util.c
-        if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerChosenMove(gBattlerTarget))
-            gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
-
-        u8 turns;
-        if (GetConfig(B_ENCORE_TURNS) >= GEN_5)
-        {
-            turns = B_ENCORE_TIMER; // 4 turns
-            if (!HasBattlerActedThisTurn(gBattlerTarget))
-                turns--; // If the target hasn't yet moved this turn, Encore lasts for only three turns.
-        }
-        else if (GetConfig(B_ENCORE_TURNS) >= GEN_4)
-        {
-            turns = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
-        }
-        else
-        {
-            turns = RandomUniform(RNG_ENCORE_TURNS, 2, 6);
-        }
-
-        gBattleMons[gBattlerTarget].volatiles.encoreTimer = turns;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_painsplitdmgcalc(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -6636,7 +6570,7 @@ static void Cmd_trysethelpinghand(void)
     }
 }
 
-// Role Play, Doodle
+// Doodle
 static void Cmd_trycopyability(void)
 {
     CMD_ARGS(u8 battler, const u8 *failInstr);
@@ -8999,45 +8933,6 @@ void BS_TryAllySwitch(void)
     }
 }
 
-void BS_TryQuash(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum BattlerId i, j;
-
-    // It's true if foe is faster, has a bigger priority, or switches
-    if (HasBattlerActedThisTurn(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-        return;
-    }
-
-    // If the above condition is not true, it means we are faster than the foe, so we can set the quash bit
-    gProtectStructs[gBattlerTarget].quash = TRUE;
-
-    struct BattleCalcValues calcValues = {0};
-    for (i = 0; i < gBattlersCount; i++)
-    {
-        calcValues.abilities[i] = GetBattlerAbility(i);
-        calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
-    }
-    // this implementation assumes turn order is correct when using Quash
-    i = GetBattlerTurnOrderNum(gBattlerTarget);
-    for (j = i + 1; j < gBattlersCount; j++)
-    {
-        calcValues.battlerAtk = gBattlerByTurnOrder[i];
-        calcValues.battlerDef = gBattlerByTurnOrder[j];
-
-        // Gen 7- config makes target go last so that the order of quash targets is kept for the correct turn order
-        // Gen 8+ config alters Turn Order of the target according to speed, dynamic speed should handle the rest
-        if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(&calcValues, FALSE) == -1)
-            SwapTurnOrder(i, j);
-        else
-            break;
-        i++;
-    }
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_RemoveWeather(void)
 {
     NATIVE_ARGS();
@@ -10503,20 +10398,6 @@ void BS_CureStatus(void)
     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
     MarkBattlerForControllerExec(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_TryAfterYou(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (ChangeOrderTargetAfterAttacker())
-    {
-        gSpecialStatuses[gBattlerTarget].afterYou = 1;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
 }
 
 void BS_TryBestow(void)

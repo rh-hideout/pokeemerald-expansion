@@ -757,15 +757,6 @@ BattleScript_ActivateSwitchInAbility::
 	switchinabilities BS_SCRIPTING
 	return
 
-BattleScript_EffectAfterYou::
-	attackcanceler
-	tryafteryou BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_KINDOFFER
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectFlameBurst::
 	printstring STRINGID_BURSTINGFLAMESHIT
 	waitmessage B_WAIT_TIME_LONG
@@ -868,15 +859,6 @@ BattleScript_EffectTopsyTurvyWorks:
 	waitanimation
 	invertstatstages
 	printstring STRINGID_TOPSYTURVYSWITCHEDSTATS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectQuash::
-	attackcanceler
-	tryquash BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_QUASHSUCCESS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -1427,16 +1409,11 @@ BattleScript_EffectHappyHour::
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_HAPPY_HOUR
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectEncore::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	trysetencore BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectEncore::
 	printstring STRINGID_PKMNGOTENCORE
 	waitmessage B_WAIT_TIME_LONG
 	trydomoveeffectsbeforemoves
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectPainSplit::
 	attackcanceler
@@ -1873,18 +1850,14 @@ BattleScript_EffectHelpingHand::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRolePlay::
-	attackcanceler
-	trycopyability BS_ATTACKER, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectRolePlay::
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectWish::
 	attackcanceler
