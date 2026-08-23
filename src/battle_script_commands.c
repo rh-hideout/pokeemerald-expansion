@@ -1731,11 +1731,24 @@ static void SetToxicChainPriority(void)
         gBattleStruct->toxicChainPriority = TRUE;
 }
 
+static bool32 ShouldAvoidStatusEffectOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    bool32 isSelf = battlerAtk == battlerDef && gBattlerAttacker == gBattlerTarget;
+
+    if (!isSelf && gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
+        return TRUE;
+    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_INVALID_TARGET)
+        return TRUE;
+    return FALSE;
+}
+
 static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || IsBattleMoveStatus(gCurrentMove))
+    bool32 tryStatusMoveActivation = IsBattleMoveStatus(gCurrentMove) && !ShouldAvoidStatusEffectOnBattler(gBattlerAttacker, gBattlerTarget);
+
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || tryStatusMoveActivation)
     {
         struct BattleCalcValues cv = {0};
         cv.battlerAtk = gBattlerAttacker;
@@ -1755,7 +1768,7 @@ static void Cmd_setadditionaleffects(void)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
 
             // Various checks for if this move effect can be applied this turn
-            if (CanApplyAdditionalEffect(additionalEffect) || IsBattleMoveStatus(gCurrentMove))
+            if (CanApplyAdditionalEffect(additionalEffect) || tryStatusMoveActivation)
             {
                 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect);
 

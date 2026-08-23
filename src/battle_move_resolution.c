@@ -2659,6 +2659,16 @@ static enum CancelerResult CancelerDamageCalc(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static bool32 ShouldAvoidStatusEffectOnBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    bool32 isSelf = battlerAtk == battlerDef && gBattlerAttacker == gBattlerTarget;
+
+    if (!isSelf && gBattleStruct->battlerState[battlerAtk].targetsDone[battlerDef])
+        return TRUE;
+    if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_INVALID_TARGET)
+        return TRUE;
+    return FALSE;
+}
 
 static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 {
@@ -2674,21 +2684,13 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        bool32 isSelf = cv->battlerAtk == battler;
+        if (ShouldAvoidStatusEffectOnBattler(cv->battlerAtk, battler))
+            continue;
 
         for (u32 i = 0; i < numAdditionalEffects; i++)
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, i);
             struct SetEffect se = {0};
-
-            // if (!CanApplyAdditionalEffect(additionalEffect))
-            //     continue;
-
-            bool32 shouldSkipSelf = isSelf != additionalEffect->self;
-            bool32 shouldSkipTarget = !isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battler);
-
-            if (shouldSkipSelf || shouldSkipTarget)
-                continue;
 
             se.additionalEffect = additionalEffect;
             se.moveEffect = additionalEffect->moveEffect;

@@ -57,6 +57,7 @@
         gBattleMons[battler].types[2] = DEFAULT_2(TYPE_NONE, __VA_ARGS__); \
     } while (0)
 
+static bool32 ShouldTryToApplyEffect(struct BattleCalcValues *cv, struct SetEffect *se);
 static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript);
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
@@ -380,7 +381,7 @@ static void HandleSetEffectGlaiveRush(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    u32 argStatus = GetMoveEffectArg_Status(gCurrentMove); // TODO: use the arg field in move effect
+    u32 argStatus = GetMoveEffectArg_Status(gCurrentMove);
     if ((gBattleMons[se->effectBattler].status1 & argStatus)
      && (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler])))
     {
@@ -1540,20 +1541,12 @@ static void TryEffectVolatile(struct BattleCalcValues *cv, struct SetEffect *se,
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
-
-    if (cv->onlyChecking)
-        return;
-
-    if (se->effectFailed && !cv->isStatusMove)
-        return;
-
-    if (!se->effectFailed)
+    else if (!cv->onlyChecking)
     {
         SetMonVolatile(se->effectBattler, _volatile, value);
         PrepareStringBattleWithWait(string, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-
-    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectLaserFocus(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2830,7 +2823,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TERA_BLAST] = HandleSetEffectTeraBlast,
     [MOVE_EFFECT_ORDER_UP] = HandleSetEffectOrderUp,
     [MOVE_EFFECT_ION_DELUGE] = HandleSetEffectIonDeluge,
-    [MOVE_EFFECT_HAZE] = HandleSetEffectHaze, // TODO
+    [MOVE_EFFECT_HAZE] = HandleSetEffectHaze,
     [MOVE_EFFECT_LEECH_SEED] = HandleSetEffectLeechSeed,
     [MOVE_EFFECT_REFLECT] = HandleSetEffectReflect,
     [MOVE_EFFECT_LIGHT_SCREEN] = HandleSetEffectLightScreen,
@@ -2976,33 +2969,42 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
 
 void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (ShouldTryToApplyEffect(cv, se))
+    {
+        gBattleScripting.battler = cv->battlerAtk;
+        gEffectBattler = se->effectBattler;
+        sSetEffectHandlers[se->moveEffect](cv, se);
+    }
+    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+}
+
+static bool32 ShouldTryToApplyEffect(struct BattleCalcValues *cv, struct SetEffect *se)
+{
     bool32 affectsUser = (cv->battlerAtk == se->effectBattler);
 
     if (gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_1ST_HIT
      && IsBattlerAlive(se->effectBattler)
      && IsFinalStrikeEffect(se->moveEffect))
-    {
-        gBattlescriptCurrInstr = se->script;
-        return;
-    }
+        return FALSE;
 
-    gBattleScripting.battler = cv->battlerAtk;
-    gEffectBattler = se->effectBattler;
+    if (cv->isStatusMove)
+        return TRUE;
 
     if (!se->primary && !affectsUser && IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
-        se->moveEffect = MOVE_EFFECT_NONE;
-    else if (!se->primary
-          && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
-          && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
-        se->moveEffect = MOVE_EFFECT_NONE;
-    else if (!IsBattlerAlive(se->effectBattler) && !IgnoreTargetingForMoveEffect(se->moveEffect))
-        se->moveEffect = MOVE_EFFECT_NONE;
-    else if (DoesSubstituteBlockMoveEffectOnTarget(cv->battlerAtk, se->effectBattler, se->moveEffect))
-        se->moveEffect = MOVE_EFFECT_NONE;
+        return FALSE;
 
-    sSetEffectHandlers[se->moveEffect](cv, se);
+    if (!se->primary
+     && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
+     && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
+        return FALSE;
 
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+    if (!IsBattlerAlive(se->effectBattler) && !IgnoreTargetingForMoveEffect(se->moveEffect))
+        return FALSE;
+
+    if (DoesSubstituteBlockMoveEffectOnTarget(cv->battlerAtk, se->effectBattler, se->moveEffect))
+        return FALSE;
+
+    return TRUE;
 }
 
 void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)

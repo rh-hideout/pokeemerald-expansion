@@ -10887,7 +10887,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_AQUA_RING,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -10917,7 +10916,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .gravityBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_MAGNET_RISE,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_CUTE,
@@ -11949,7 +11947,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SET_ROOM,
             .argument = {.roomType = B_ROOM_TRICK},
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .contestEffect = CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
@@ -12972,7 +12969,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SET_ROOM,
             .argument = {.roomType = B_ROOM_WONDER},
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .contestEffect = CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
@@ -13127,7 +13123,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SET_ROOM,
             .argument = {.roomType = B_ROOM_MAGIC},
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
@@ -15490,8 +15485,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
-        .moveEffect = MOVE_EFFECT_ION_DELUGE,
-        .self = TRUE,
+            .moveEffect = MOVE_EFFECT_ION_DELUGE,
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -15795,7 +15789,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_GRASSY_TERRAIN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_GrassyTerrain,
     },
@@ -15825,7 +15818,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_MISTY_TERRAIN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_MistyTerrain,
     },
@@ -16458,7 +16450,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ELECTRIC_TERRAIN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_ElectricTerrain,
     },
@@ -17283,7 +17274,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LASER_FOCUS,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS,
         .contestCategory = CONTEST_CATEGORY_COOL,
