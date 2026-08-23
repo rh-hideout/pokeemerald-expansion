@@ -207,13 +207,13 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
         TURN { MOVE(player, MOVE_MORTAL_SPIN); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, opponent); // Remove Pecharunt's Poison type
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, player); // Tailwind won't matter for ability activation order
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
 
+        // Tailwind won't matter for ability activation order
         if (speedOpponent > speedPlayer) {
             ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
@@ -224,6 +224,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
         NOT ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
 
+        // Tailwind won't matter for ability activation order
         if (speedPlayer > speedOpponent) {
             ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
