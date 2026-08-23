@@ -1510,3 +1510,31 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
         }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI calcs critical hit damage when a crit stage 3+ (Gen 6+)")
+{
+    enum Item item = ITEM_NONE;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_SCOPE_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_CRIT_CHANCE, GEN_6);
+        PLAYER(SPECIES_SHEDINJA);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FOCUS_ENERGY, MOVE_FROST_BREATH, MOVE_FREEZE_DRY); Item(item); }
+    } WHEN {
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_FOCUS_ENERGY); }
+        TURN {
+            if (item == ITEM_SCOPE_LENS)
+            {
+                EXPECT_MOVE(opponent, MOVE_FREEZE_DRY);
+            }
+            else
+            {
+                EXPECT_MOVE(opponent, MOVE_FROST_BREATH);
+            }
+        }
+    } 
+}

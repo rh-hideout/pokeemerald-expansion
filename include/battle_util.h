@@ -241,6 +241,7 @@ bool32 IsMoveMakingContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 bool32 IsBattlerGrounded(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, enum Move move);
 u32 GetBattlerWeight(enum BattlerId battler);
+u32 GetCriticalHitOdds(u32 critChance);
 s32 CalcCritChanceStage(struct DamageContext *ctx);
 s32 CalcCritChanceStageGen1(struct DamageContext *ctx);
 s32 CalculateMoveDamage(struct DamageContext *ctx);
