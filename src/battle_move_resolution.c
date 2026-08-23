@@ -5107,6 +5107,8 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->toxicChainPriority = FALSE;
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
     gBattleStruct->blunderPolicy = FALSE;
+    gBattleStruct->statusedBattler = 0;
+    gBattleStruct->statusInflicterBattler = 0;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
 

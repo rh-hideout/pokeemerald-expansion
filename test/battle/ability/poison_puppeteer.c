@@ -277,7 +277,7 @@ DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-vola
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_G_MAX_MALODOR, MOVE_EFFECT_POISON));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MALODOR, MOVE_EFFECT_POISON_SIDE));
         ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveTarget(MOVE_POISON_GAS) == TARGET_BOTH);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); Item(ITEM_LUM_BERRY); }

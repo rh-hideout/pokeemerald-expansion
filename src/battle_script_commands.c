@@ -8802,6 +8802,8 @@ static void Cmd_tryabilityonstatuschange(void)
     }
 
     gBattleStruct->synchronizeStatus = MOVE_EFFECT_NONE;
+    gBattleStruct->statusedBattler = 0;
+    gBattleStruct->statusInflicterBattler = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
