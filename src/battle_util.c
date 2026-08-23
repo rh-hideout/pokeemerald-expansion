@@ -4417,18 +4417,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                     effect++;
 
-                    BattleScriptPushCursor();
-
                     if (CanSetNonVolatileStatus(
                             battler,
                             gEffectBattler,
                             ability,
                             GetBattlerAbility(gEffectBattler),
                             gBattleScripting.moveEffect,
-                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT and remove else for #10696
-                        gBattlescriptCurrInstr = BattleScript_SynchronizeActivates;
-                    else
-                        gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
+                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT and turn into PushCursor and update currInstr for #10696
+                        BattleScriptCall(BattleScript_SynchronizeActivates);
                     break;
                 }
             }
