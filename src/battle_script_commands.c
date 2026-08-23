@@ -927,6 +927,12 @@ static bool32 ShouldSkipToMoveEnd(void)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
+    // temp fix: func will be deleted anyways
+    if (IsBattleMoveStatus(gCurrentMove) && gBattleStruct->moveResultFlags[gBattlerAttacker] & MOVE_RESULT_FAILED)
+    {
+        return FALSE;
+    }
+
     switch (moveTarget)
     {
     case TARGET_OPPONENTS_FIELD:
@@ -1745,9 +1751,10 @@ static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
+    bool32 moveFailed = gBattleStruct->moveResultFlags[gBattlerAttacker] & MOVE_RESULT_FAILED;
     bool32 tryStatusMoveActivation = IsBattleMoveStatus(gCurrentMove) && !ShouldAvoidStatusEffectOnBattler(gBattlerAttacker, gBattlerTarget);
 
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || tryStatusMoveActivation)
+    if (!IsBattlerUnaffectedByMove(gBattlerTarget) || tryStatusMoveActivation || moveFailed)
     {
         struct BattleCalcValues cv = {0};
         cv.battlerAtk = gBattlerAttacker;
@@ -1785,7 +1792,15 @@ static void Cmd_setadditionaleffects(void)
                 }
             }
 
-            gBattleStruct->additionalEffectsCounter++;
+            if (cv.isStatusMove && moveFailed)
+            {
+                gBattleStruct->moveResultFlags[gBattlerAttacker] &= ~MOVE_RESULT_FAILED;
+                gBattleStruct->additionalEffectsCounter = numAdditionalEffects;
+            }
+            else
+            {
+                gBattleStruct->additionalEffectsCounter++;
+            }
             return;
         }
     }

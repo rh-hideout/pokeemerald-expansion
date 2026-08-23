@@ -628,11 +628,6 @@ BattleScript_RestoreHpEffectBattler::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_MoveEffectJungleHealing::
-    call BattleScript_RestoreHpEffectBattler
-	return
-
-
 BattleScript_MoveEffectTrick::
 	printstring STRINGID_PKMNSWITCHEDITEMS
 	waitmessage B_WAIT_TIME_LONG
@@ -650,13 +645,6 @@ BattleScript_StuffCheeks::
 	removeitem BS_ATTACKER
     restorestatchangequeue
     return
-
-BattleScript_EffectJungleHealing::
-	attackcanceler
-	jumpifteamhealthy BattleScript_ButItFailed
-	pause B_WAIT_TIME_SHORT
-	setadditionaleffects
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectAllySwitch::
 	attackcanceler

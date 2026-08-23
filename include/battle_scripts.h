@@ -647,7 +647,6 @@ extern const u8 BattleScript_EffectShoreUp[];
 extern const u8 BattleScript_EffectFairyLock[];
 extern const u8 BattleScript_EffectAllySwitch[];
 extern const u8 BattleScript_MoveEffectEerieSpell[];
-extern const u8 BattleScript_EffectJungleHealing[];
 extern const u8 BattleScript_EffectStruggle[];
 extern const u8 BattleScript_StuffCheeks[];
 extern const u8 BattleScript_MoveEffectLeechSeed[];

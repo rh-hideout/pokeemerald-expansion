@@ -2675,6 +2675,7 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     if (!cv->isStatusMove)
         return CANCELER_RESULT_SUCCESS;
 
+    bool32 validTargets = 0;
     bool32 targetAvoidedMove[MAX_BATTLERS_COUNT];
     for (u32 i = 0; i < gBattlersCount; i++)
         targetAvoidedMove[i] = TRUE;
@@ -2686,6 +2687,8 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     {
         if (ShouldAvoidStatusEffectOnBattler(cv->battlerAtk, battler))
             continue;
+
+        validTargets |= 1u << battler;
 
         for (u32 i = 0; i < numAdditionalEffects; i++)
         {
@@ -2714,12 +2717,19 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (targetAvoidedMove[battler])
+        {
+            if (validTargets & 1u << battler)
+            {
+                gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_DOESNT_AFFECT_FOE;
+            }
             continue;
+        }
         moveFailed = FALSE;
     }
 
     if (moveFailed)
     {
+        gBattleStruct->moveResultFlags[cv->battlerAtk] = MOVE_RESULT_FAILED;
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
     }

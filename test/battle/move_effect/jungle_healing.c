@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_JUNGLE_HEALING) == EFFECT_JUNGLE_HEALING);
 }
 
-DOUBLE_BATTLE_TEST("Life Dew fails if user and partner are both at full hp")
+DOUBLE_BATTLE_TEST("Jungle Healing fails if user and partner are both at full hp")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -66,3 +66,20 @@ DOUBLE_BATTLE_TEST("Jungle Healing does not fail if at least one target can be h
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Jungle Healing will cure user and ally's non volatiles without healing hp")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_JUNGLE_HEALING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_JUNGLE_HEALING, playerLeft);
+        STATUS_ICON(playerLeft, none: TRUE);
+        STATUS_ICON(playerRight, none: TRUE);
+    }
+}
+

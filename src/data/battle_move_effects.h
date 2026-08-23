@@ -1518,7 +1518,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_JUNGLE_HEALING] =
     {
-        .battleScript = BattleScript_EffectJungleHealing,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },

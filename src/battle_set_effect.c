@@ -38,7 +38,9 @@
     { \
         se->effectFailed = TRUE; \
         if (!cv->onlyChecking __VA_OPT__(&& __VA_ARGS__))\
+        { \
             BattleScriptPushAndSet(se->script, failScript); \
+        } \
     } while (0)
 
 #define SetEffectFailAndCheckReturn \
