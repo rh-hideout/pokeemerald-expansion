@@ -858,7 +858,7 @@ struct BattleScripting
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 speedOrderIndex;
+    u8 unused_0x15;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch.
     enum BattlerId battler;
     u8 animTurn;
@@ -1037,6 +1037,7 @@ extern enum BattlerId gEffectBattler;
 extern enum BattlerId gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;
+extern u8 gBattleScriptIndex;
 extern const u8 *gBattlescriptCurrInstr;
 extern u8 gChosenActionByBattler[MAX_BATTLERS_COUNT];
 extern const u8 *gSelectionBattleScripts[MAX_BATTLERS_COUNT];

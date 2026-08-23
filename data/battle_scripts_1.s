@@ -24,12 +24,12 @@
 	.section script_data, "aw", %progbits
 
 BattleScript_TryRevertWeatherform:
-	setbyte sSPEED_ORDER_INDEX, 0
+	setbyte gBattleScriptIndex, 0
 	sortbattlers
 BattleScript_TryRevertWeatherformLoop:
 	tryrevertweatherform
-	addbyte sSPEED_ORDER_INDEX, 1
-	jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_TryRevertWeatherformLoop
+	addbyte gBattleScriptIndex, 1
+	jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_TryRevertWeatherformLoop
 	return
 
 BattleScript_FickleBeamMessage::
@@ -3263,13 +3263,13 @@ BattleScript_WonderRoomEnds::
 BattleScript_MagicRoomEnds::
 	printstring STRINGID_MAGICROOMENDS
 	waitmessage B_WAIT_TIME_LONG
-	setbyte sSPEED_ORDER_INDEX, 0
+	setbyte gBattleScriptIndex, 0
 	sortbattlers
 BattleScript_MagicRoomHealingItemsLoop:
-	copyarraywithindex gBattlerAttacker, gBattlersBySpeed, sSPEED_ORDER_INDEX, 1
+	copyarraywithindex gBattlerAttacker, gBattlersBySpeed, gBattleScriptIndex, 1
 	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
-	addbyte sSPEED_ORDER_INDEX, 1
-	jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_MagicRoomHealingItemsLoop
+	addbyte gBattleScriptIndex, 1
+	jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_MagicRoomHealingItemsLoop
 	return
 
 BattleScript_TerrainEnds::
@@ -4642,13 +4642,13 @@ BattleScript_ActivateWeatherAbilities:
 	saveattacker
 	savetarget
 	tryboosterenergy ON_WEATHER
-	setbyte sSPEED_ORDER_INDEX, 0
+	setbyte gBattleScriptIndex, 0
 	sortbattlers
 BattleScript_ActivateWeatherAbilities_Loop:
-	copyarraywithindex gBattlerTarget, gBattlersBySpeed, sSPEED_ORDER_INDEX, 1
+	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattleScriptIndex, 1
 	activateweatherchangeabilities BS_TARGET
-	addbyte sSPEED_ORDER_INDEX, 1
-	jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_ActivateWeatherAbilities_Loop
+	addbyte gBattleScriptIndex, 1
+	jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_ActivateWeatherAbilities_Loop
 	restoreattacker
 	restoretarget
 	return
@@ -4755,16 +4755,16 @@ BattleScript_ActivateTerrainEffects:
 	savetarget
 	tryboosterenergy ON_TERRAIN
 	resetterrainabilityflags
-	setbyte sSPEED_ORDER_INDEX, 0
+	setbyte gBattleScriptIndex, 0
 	sortbattlers
 BattleScript_ActivateTerrainSeed:
-	copyarraywithindex gBattlerTarget, gBattlersBySpeed, sSPEED_ORDER_INDEX, 1
+	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattleScriptIndex, 1
 	tryterrainseed BS_TARGET, BattleScript_ActivateTerrainAbility
 	removeitem BS_TARGET
 BattleScript_ActivateTerrainAbility:
 	activateterrainchangeabilities BS_TARGET
-	addbyte sSPEED_ORDER_INDEX, 1
-	jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_ActivateTerrainSeed
+	addbyte gBattleScriptIndex, 1
+	jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_ActivateTerrainSeed
 	restoreattacker
 	restoretarget
 	return
@@ -5698,14 +5698,14 @@ BattleScript_ActivateTeraformZeroEffects:
 	savetarget
 	tryboosterenergy ON_ANY
 	resetterrainabilityflags
-	setbyte sSPEED_ORDER_INDEX, 0
+	setbyte gBattleScriptIndex, 0
 	sortbattlers
 BattleScript_ActivateTeraformZeroLoop:
-	copyarraywithindex gBattlerTarget, gBattlersBySpeed, sSPEED_ORDER_INDEX, 1
+	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattleScriptIndex, 1
 	activateterrainchangeabilities BS_TARGET
 	activateweatherchangeabilities BS_TARGET
-	addbyte sSPEED_ORDER_INDEX, 1
-	jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_ActivateTeraformZeroLoop
+	addbyte gBattleScriptIndex, 1
+	jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_ActivateTeraformZeroLoop
 	restoreattacker
 	restoretarget
 BattleScript_ActivateTeraformZero_Ret:
@@ -5939,15 +5939,15 @@ BattleScript_NeutralizingGasExits::
     pause B_WAIT_TIME_SHORT
     printstring STRINGID_NEUTRALIZINGGASOVER
     waitmessage B_WAIT_TIME_LONG
-    setbyte sSPEED_ORDER_INDEX, 0
+    setbyte gBattleScriptIndex, 0
     sortbattlers
 BattleScript_NeutralizingGasExitsLoop:
-    copyarraywithindex gEffectBattler, gBattlersBySpeed, sSPEED_ORDER_INDEX, 1
+    copyarraywithindex gEffectBattler, gBattlersBySpeed, gBattleScriptIndex, 1
     jumpifabilitycantbereactivated BS_EFFECT_BATTLER, BattleScript_NeutralizingGasExitsLoopIncrement
     switchinabilities BS_EFFECT_BATTLER
 BattleScript_NeutralizingGasExitsLoopIncrement:
-    addbyte sSPEED_ORDER_INDEX, 1
-    jumpifbytenotequal sSPEED_ORDER_INDEX, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
+    addbyte gBattleScriptIndex, 1
+    jumpifbytenotequal gBattleScriptIndex, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
     restoretarget
     copybyte sBATTLER, sSAVED_BATTLER
     return
