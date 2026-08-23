@@ -4415,7 +4415,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattleScripting.battler = gBattlerAbility = battler; // battler originally inflicted by status
                     gBattleScripting.moveEffect = gBattleStruct->synchronizeStatus;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-                    effect++;
 
                     if (CanSetNonVolatileStatus(
                             battler,
@@ -4423,8 +4422,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                             ability,
                             GetBattlerAbility(gEffectBattler),
                             gBattleScripting.moveEffect,
-                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT and turn into PushCursor and update currInstr for #10696
+                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT, PushCursor and update currInstr for #10696
+                    {
                         BattleScriptCall(BattleScript_SynchronizeActivates);
+                        effect++;
+                    }
                     break;
                 }
             }
