@@ -4412,7 +4412,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     // fallthrough
                 default:
                     gEffectBattler = gBattleStruct->statusInflicterBattler; // battler that originally inflicted status
-                    gBattleScripting.battler = battler; // battler originally inflicted by status
+                    gBattleScripting.battler = gBattlerAbility = battler; // battler originally inflicted by status
                     gBattleScripting.moveEffect = gBattleStruct->synchronizeStatus;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                     effect++;
@@ -4425,8 +4425,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                             ability,
                             GetBattlerAbility(gEffectBattler),
                             gBattleScripting.moveEffect,
-                            RUN_SCRIPT))
+                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT and remove else for #10696
                         gBattlescriptCurrInstr = BattleScript_SynchronizeActivates;
+                    else
+                        gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
                     break;
                 }
             }
