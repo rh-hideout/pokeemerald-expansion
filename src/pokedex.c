@@ -2082,8 +2082,8 @@ void CreatePokedexList(u8 dexMode, u8 order)
     u32 vars[3]; //I have no idea why three regular variables are stored in an array, but whatever.
 #define temp_dexCount   vars[0]
 #define temp_isHoennDex vars[1]
-#define temp_dexNum     vars[2]
     s32 i, r5, r10;
+    enum NationalDexOrder temp_dexNum;
 
     sPokedexView->pokemonListCount = 0;
 
@@ -2372,13 +2372,13 @@ void CreateCaughtBall(bool16 owned, u8 x, u8 y, u16 unused)
         FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, 8, 16);
 }
 
-u8 CreateMonName(u16 num, u8 left, u8 top)
+u8 CreateMonName(enum NationalDexOrder num, u8 left, u8 top)
 {
     const u8 *str;
 
-    num = NationalPokedexNumToSpeciesForm(num);
-    if (num)
-        str = GetSpeciesName(num);
+    enum Species species = NationalPokedexNumToSpeciesForm(num);
+    if (species)
+        str = GetSpeciesName(species);
     else
         str = sText_TenDashes;
     PrintMonName(0, FONT_NARROW, str, left, top);
@@ -4517,9 +4517,8 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
 u16 GetNationalPokedexCount(u8 caseID)
 {
     u16 count = 0;
-    u16 i;
 
-    for (i = 0; i < NATIONAL_DEX_COUNT; i++)
+    for (enum NationalDexOrder i = 0; i < NATIONAL_DEX_COUNT; i++)
     {
         switch (caseID)
         {
@@ -4546,9 +4545,8 @@ u32 GetRegionalPokedexCount(u8 caseID)
 u16 GetHoennPokedexCount(u8 caseID)
 {
     u16 count = 0;
-    u16 i;
 
-    for (i = 0; i < HOENN_DEX_COUNT - 1; i++)
+    for (enum HoennDexOrder i = 0; i < HOENN_DEX_COUNT - 1; i++)
     {
         switch (caseID)
         {
@@ -4568,18 +4566,17 @@ u16 GetHoennPokedexCount(u8 caseID)
 u16 GetKantoPokedexCount(u8 caseID)
 {
     u16 count = 0;
-    u16 i;
 
-    for (i = 0; i < KANTO_DEX_COUNT - 1; i++)
+    for (enum KantoDexOrder i = 0; i < KANTO_DEX_COUNT - 1; i++)
     {
         switch (caseID)
         {
         case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(i + 1, FLAG_GET_SEEN))
+            if (GetSetPokedexFlag(KantoToNationalOrder(i + 1), FLAG_GET_SEEN))
                 count++;
             break;
         case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(i + 1, FLAG_GET_CAUGHT))
+            if (GetSetPokedexFlag(KantoToNationalOrder(i + 1), FLAG_GET_CAUGHT))
                 count++;
             break;
         }
@@ -4596,11 +4593,9 @@ bool16 HasAllRegionalMons(void)
 
 bool16 HasAllHoennMons(void)
 {
-    u32 i, j;
-
-    for (i = 0; i < HOENN_DEX_COUNT - 1; i++)
+    for (enum HoennDexOrder i = 0; i < HOENN_DEX_COUNT - 1; i++)
     {
-        j = HoennToNationalOrder(i + 1);
+        enum NationalDexOrder j = HoennToNationalOrder(i + 1);
         if (!(gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
             return FALSE;
     }
@@ -4609,12 +4604,10 @@ bool16 HasAllHoennMons(void)
 
 bool16 HasAllKantoMons(void)
 {
-    u32 i, j;
-
     // -1 excludes Mew
-    for (i = 0; i < KANTO_DEX_COUNT - 1; i++)
+    for (enum KantoDexOrder i = 0; i < KANTO_DEX_COUNT - 1; i++)
     {
-        j = KantoToNationalOrder(i + 1);
+        enum NationalDexOrder j = KantoToNationalOrder(i + 1);
         if (!(gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
             return FALSE;
     }
@@ -4623,11 +4616,9 @@ bool16 HasAllKantoMons(void)
 
 bool16 HasAllMons(void)
 {
-    u32 i, j;
-
-    for (i = 1; i < NATIONAL_DEX_COUNT + 1; i++)
+    for (enum NationalDexOrder i = 1; i < NATIONAL_DEX_COUNT + 1; i++)
     {
-        j = NationalPokedexNumToSpecies(i);
+        enum Species j = NationalPokedexNumToSpecies(i);
         if (!(gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired) && !GetSetPokedexFlag(i, FLAG_GET_CAUGHT))
             return FALSE;
     }
@@ -4695,19 +4686,19 @@ static void UNUSED UnusedPrintNum(u8 windowId, u16 num, u8 left, u8 top)
     PrintInfoSubMenuText(windowId, str, left, top);
 }
 
-u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
+u8 PrintCryScreenSpeciesName(u8 windowId, enum NationalDexOrder num, u8 left, u8 top)
 {
     u8 str[POKEMON_NAME_BUFFER_SIZE];
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(str); i++)
         str[i] = EOS;
-    num = NationalPokedexNumToSpeciesForm(num);
-    switch (num)
+    enum Species species = NationalPokedexNumToSpeciesForm(num);
+    switch (species)
     {
     default:
-        for (i = 0; GetSpeciesName(num)[i] != EOS && i < POKEMON_NAME_LENGTH; i++)
-            str[i] = GetSpeciesName(num)[i];
+        for (i = 0; GetSpeciesName(species)[i] != EOS && i < POKEMON_NAME_LENGTH; i++)
+            str[i] = GetSpeciesName(species)[i];
         WrapFontIdToFit(str, str + i, FONT_NORMAL, 60);
         break;
     case 0:
@@ -4883,28 +4874,28 @@ u16 CreateMonSpriteFromNationalDexNumber(enum NationalDexOrder nationalNum, s16 
     return CreateMonPicSprite(species, FALSE, GetPokedexMonPersonality(species), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
-u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
+u16 GetPokemonScaleFromNationalDexNumber(enum NationalDexOrder nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonScale;
+    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
+    return gSpeciesInfo[species].pokemonScale;
 }
 
-u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
+u16 GetPokemonOffsetFromNationalDexNumber(enum NationalDexOrder nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonOffset;
+    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
+    return gSpeciesInfo[species].pokemonOffset;
 }
 
-u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
+u16 GetTrainerScaleFromNationalDexNumber(enum NationalDexOrder nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerScale;
+    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
+    return gSpeciesInfo[species].trainerScale;
 }
 
-u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
+u16 GetTrainerOffsetFromNationalDexNumber(enum NationalDexOrder nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerOffset;
+    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
+    return gSpeciesInfo[species].trainerOffset;
 }
 
 u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)

@@ -105,7 +105,7 @@ enum
 
 struct PokedexListItem
 {
-    u16 dexNum;
+    enum NationalDexOrder dexNum;
     u16 seen:1;
     u16 owned:1;
 };
@@ -204,7 +204,7 @@ struct PokedexView
     struct EvoScreenData sEvoScreenData;
     struct FromScreenData sFormScreenData;
     enum Species formSpecies;
-    u16 originalSearchSelectionNum;
+    enum NationalDexOrder originalSearchSelectionNum;
     u16 moveSelected;
     u16 movesTotal;
     u16 numTeachableMoves;
@@ -242,7 +242,7 @@ void LoadPokedexBgPalette(bool8);
 void CreatePokedexList(u8, u8);
 void CreateMonDexNum(u16, u8, u8, u16);
 void CreateCaughtBall(u16, u8, u8, u16);
-u8 CreateMonName(u16, u8, u8);
+u8 CreateMonName(enum NationalDexOrder, u8, u8);
 void ClearMonListEntry(u8 x, u8 y, u16 unused);
 void CreateMonSpritesAtPos(u16, u16);
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
@@ -259,11 +259,11 @@ void Task_LoadSizeScreen(u8);
 void Task_HandleSizeScreenInput(u8);
 void Task_HandleCaughtMonPageInput(u8);
 void ResetOtherVideoRegisters(u16);
-u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
-u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum);
-u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum);
-u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum);
-u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum);
+u8 PrintCryScreenSpeciesName(u8, enum NationalDexOrder, u8, u8);
+u16 GetPokemonScaleFromNationalDexNumber(enum NationalDexOrder nationalNum);
+u16 GetPokemonOffsetFromNationalDexNumber(enum NationalDexOrder nationalNum);
+u16 GetTrainerScaleFromNationalDexNumber(enum NationalDexOrder nationalNum);
+u16 GetTrainerOffsetFromNationalDexNumber(enum NationalDexOrder nationalNum);
 u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
 void Task_SwitchToSearchMenuTopBar(u8);
 void HighlightSelectedSearchTopBarItem(u8);

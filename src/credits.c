@@ -1544,7 +1544,7 @@ static void DeterminePokemonToShow(void)
 {
     enum NationalDexOrder starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
     u16 page;
-    u16 dexNum;
+    enum NationalDexOrder dexNum;
     u16 j;
 
     // Go through the Pokédex, and anything that has gotten caught we put into our massive array.
