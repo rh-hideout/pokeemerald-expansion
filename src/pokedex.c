@@ -99,7 +99,7 @@ static void UpdateSelectedMonSpriteId(void);
 static bool8 TryDoInfoScreenScroll(void);
 static u8 ClearMonSprites(void);
 static u16 GetPokemonSpriteToDisplay(u16);
-static u32 CreatePokedexMonSprite(u16, s16, s16);
+static u32 CreatePokedexMonSprite(enum NationalDexOrder, s16, s16);
 static void CreateInterfaceSprites(u8);
 static void SpriteCB_Scrollbar(struct Sprite *sprite);
 static void SpriteCB_ScrollArrow(struct Sprite *sprite);
@@ -2696,7 +2696,7 @@ static u16 GetPokemonSpriteToDisplay(u16 index)
         return 0;
 }
 
-static u32 CreatePokedexMonSprite(u16 num, s16 x, s16 y)
+static u32 CreatePokedexMonSprite(enum NationalDexOrder num, s16 x, s16 y)
 {
     u8 i;
 
