@@ -761,11 +761,6 @@
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
 
-	.macro trysetencore failInstr:req
-	.byte B_SCR_OP_TRYSETENCORE
-	.4byte \failInstr
-	.endm
-
 	.macro painsplitdmgcalc failInstr:req
 	.byte B_SCR_OP_PAINSPLITDMGCALC
 	.4byte \failInstr
@@ -1232,11 +1227,6 @@
 	callnative BS_TryTidyUp
 	.byte \clear
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryquash failInstr:req
-	callnative BS_TryQuash
-	.4byte \failInstr
 	.endm
 
 	.macro removeweather
@@ -1745,11 +1735,6 @@
 	.macro curestatus battler:req
 	callnative BS_CureStatus
 	.byte \battler
-	.endm
-
-	.macro tryafteryou failInstr:req
-	callnative BS_TryAfterYou
-	.4byte \failInstr
 	.endm
 
 	.macro trybestow failInstr:req
