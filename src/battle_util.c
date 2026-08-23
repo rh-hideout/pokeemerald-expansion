@@ -4384,12 +4384,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         {
         case ABILITY_POISON_PUPPETEER:
             if (IsRestrictedAbility(battler, ABILITY_POISON_PUPPETEER)
-             && gBattleScripting.battler == battler // Is the battler that applied status
-             && gSpecialStatuses[gEffectBattler].poisonPuppeteer)
+             && gBattlerAttacker == battler // Is the battler that applied status
+             && gSpecialStatuses[gBattlerTarget].poisonPuppeteer)
             {
-                gSpecialStatuses[gEffectBattler].poisonPuppeteer = FALSE;
-                if (CanBeConfused(battler, gEffectBattler))
+                gSpecialStatuses[gBattlerTarget].poisonPuppeteer = FALSE;
+                if (CanBeConfused(battler, gBattlerTarget))
                 {
+                    gBattleScripting.battler = gBattlerAttacker;
+                    gEffectBattler = gBattlerTarget;
                     gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
@@ -4402,23 +4404,29 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 switch (gBattleStruct->synchronizeStatus)
                 {
-                case MOVE_EFFECT_NONE: // Couldn't set status on Synchronize target
-                    effect++;
-                    gBattlerAbility = battler;
-                    gSpecialStatuses[battler].synchronize = FALSE;
-                    BattleScriptCall(BattleScript_AbilityPopUp);
+                case MOVE_EFFECT_NONE:
                     break;
                 case MOVE_EFFECT_TOXIC:
                     if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5)
                         gBattleStruct->synchronizeStatus = MOVE_EFFECT_POISON;
                     // fallthrough
                 default:
-                    gEffectBattler = gBattleScripting.battler; // battler that originally inflicted status
+                    gEffectBattler = gBattlerAttacker; // battler that originally inflicted status
                     gBattleScripting.battler = battler; // battler originally inflicted by status
                     gBattleScripting.moveEffect = gBattleStruct->synchronizeStatus;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
                     effect++;
-                    BattleScriptCall(BattleScript_SynchronizeActivates);
+
+                    BattleScriptPushCursor();
+
+                    if (CanSetNonVolatileStatus(
+                            battler,
+                            gEffectBattler,
+                            ability,
+                            GetBattlerAbility(gEffectBattler),
+                            effect,
+                            RUN_SCRIPT))
+                        gBattlescriptCurrInstr = BattleScript_SynchronizeActivates;
                     break;
                 }
             }

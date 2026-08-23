@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
     }
 }
 
-SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it fails")
+SINGLE_BATTLE_TEST("Synchronize won't show the ability pop up if it fails")
 {
     GIVEN {
         WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
@@ -41,8 +41,9 @@ SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it
         ABILITY_POPUP(player, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        MESSAGE("It doesn't affect Pikachu…");
         NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
             STATUS_ICON(player, paralysis: TRUE);
         }
@@ -87,8 +88,8 @@ SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
-        ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
         NONE_OF {
+            ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
             STATUS_ICON(opponent, poison: TRUE);
         }

@@ -930,7 +930,11 @@ BattleScript_EffectPsychoShiftCanWork:
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
 	waitstate
+	saveattacker
+	savetarget
 	tryabilityonstatuschange
+	restoreattacker
+	restoretarget
 	curestatus BS_ATTACKER
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -4336,7 +4340,13 @@ BattleScript_UpdateEffectStatusIconRet::
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
 	trytriggerstatusform
+	saveattacker
+	savetarget
+	copybyte gBattlerAttacker, sBATTLER
+	copybyte gBattlerTarget, gEffectBattler
 	tryabilityonstatuschange
+	restoreattacker
+	restoretarget
 	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
 	flushtextbox
 	return
@@ -4437,6 +4447,7 @@ BattleScript_MoveEffectConfusion::
 	volatileanimation BS_EFFECT_BATTLER, VOLATILE_CONFUSION
 	printstring STRINGID_PKMNWASCONFUSED
 	waitmessage B_WAIT_TIME_LONG
+	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
 	return
 
 BattleScript_MoveEffectRecoilHP25::
@@ -5168,10 +5179,6 @@ BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
 	setnonvolatilestatus TRIGGER_ON_ABILITY
-	@ restore back battlers for Poison Puppeteer
-	copybyte sSAVED_BATTLER, sBATTLER
-	copybyte sBATTLER, gEffectBattler
-	copybyte gEffectBattler, sSAVED_BATTLER
 	return
 
 BattleScript_AbilityCuredStatus::
@@ -6006,13 +6013,13 @@ BattleScript_MoveEffectSpiteRet:
 
 BattleScript_EffectParalyzeSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_ParalyzeSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_ParalyzeSideIncrement
 	trysetparalysis BattleScript_ParalyzeSideIncrement
 BattleScript_ParalyzeSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_ParalyzeSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ParalyzeSideEnd
 	setallytonexttarget BattleScript_ParalyzeSideLoop
 BattleScript_ParalyzeSideEnd:
 	restoretarget
@@ -6020,13 +6027,13 @@ BattleScript_ParalyzeSideEnd:
 
 BattleScript_EffectPoisonSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_PoisonSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_PoisonSideIncrement
 	trysetpoison BattleScript_PoisonSideIncrement
 BattleScript_PoisonSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_PoisonSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonSideEnd
 	setallytonexttarget BattleScript_PoisonSideLoop
 BattleScript_PoisonSideEnd:
 	restoretarget
@@ -6034,13 +6041,13 @@ BattleScript_PoisonSideEnd:
 
 BattleScript_EffectPoisonParalyzeSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_PoisonParalyzeSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_PoisonParalyzeSideIncrement
 	trysetpoisonparalysis BattleScript_PoisonParalyzeSideIncrement
 BattleScript_PoisonParalyzeSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_PoisonParalyzeSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonParalyzeSideEnd
 	setallytonexttarget BattleScript_PoisonParalyzeSideLoop
 BattleScript_PoisonParalyzeSideEnd:
 	restoretarget
@@ -6048,13 +6055,13 @@ BattleScript_PoisonParalyzeSideEnd:
 
 BattleScript_EffectEffectSporeSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_EffectSporeSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_EffectSporeSideIncrement
 	tryseteffectspore BattleScript_EffectSporeSideIncrement
 BattleScript_EffectSporeSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_EffectSporeSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_EffectSporeSideEnd
 	setallytonexttarget BattleScript_EffectSporeSideLoop
 BattleScript_EffectSporeSideEnd:
 	restoretarget
@@ -6062,7 +6069,7 @@ BattleScript_EffectSporeSideEnd:
 
 BattleScript_EffectConfuseSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_ConfuseSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_ConfuseSideIncrement
@@ -6072,7 +6079,7 @@ BattleScript_ConfuseSidePrintMessage:
 	printstring STRINGID_PKMNWASCONFUSED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ConfuseSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_ConfuseSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ConfuseSideEnd
 	setallytonexttarget BattleScript_ConfuseSideLoop
 BattleScript_ConfuseSideEnd:
 	restoretarget
@@ -6085,7 +6092,7 @@ BattleScript_PrintCoinsScattered:
 
 BattleScript_EffectInfatuateSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_InfatuateSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_InfatuateSideIncrement
@@ -6095,7 +6102,7 @@ BattleScript_InfatuateSidePrintMessage:
 	printstring STRINGID_PKMNFELLINLOVE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_InfatuateSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_InfatuateSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_InfatuateSideEnd
 	setallytonexttarget BattleScript_InfatuateSideLoop
 BattleScript_InfatuateSideEnd:
 	restoretarget
@@ -6103,7 +6110,7 @@ BattleScript_InfatuateSideEnd:
 
 BattleScript_EffectTormentSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_TormentSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_TormentSideIncrement
@@ -6112,7 +6119,7 @@ BattleScript_TormentSidePrintMessage:
 	printstring STRINGID_PKMNSUBJECTEDTOTORMENT
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_TormentSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_TormentSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_TormentSideEnd
 	setallytonexttarget BattleScript_TormentSideLoop
 BattleScript_TormentSideEnd:
 	restoretarget
@@ -6125,7 +6132,7 @@ BattleScript_TormentEnds::
 
 BattleScript_EffectMeanLookSide::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_MeanLookSideLoop:
 	jumpifabsent BS_TARGET, BattleScript_MeanLookSideIncrement
@@ -6134,7 +6141,7 @@ BattleScript_MeanLookSidePrintMessage:
 	printstring STRINGID_TARGETCANTESCAPENOW
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_MeanLookSideIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_MeanLookSideEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_MeanLookSideEnd
 	setallytonexttarget BattleScript_MeanLookSideLoop
 BattleScript_MeanLookSideEnd:
 	restoretarget
@@ -6142,7 +6149,7 @@ BattleScript_MeanLookSideEnd:
 
 BattleScript_EffectRaiseCritAlliesAnim::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_RaiseCritAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
@@ -6150,7 +6157,7 @@ BattleScript_RaiseCritAlliesLoop:
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseCritAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_RaiseCritAlliesEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_RaiseCritAlliesEnd
 	setallytonexttarget BattleScript_RaiseCritAlliesLoop
 BattleScript_RaiseCritAlliesEnd:
 	restoretarget
@@ -6159,7 +6166,7 @@ BattleScript_RaiseCritAlliesEnd:
 BattleScript_EffectHealOneSixthAllies::
 	jumpifteamhealthy BattleScript_MoveEnd
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_HealOneSixthAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_HealOneSixthAlliesIncrement
@@ -6169,7 +6176,7 @@ BattleScript_HealOneSixthAlliesLoop:
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_HealOneSixthAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_HealOneSixthAlliesEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_HealOneSixthAlliesEnd
 	setallytonexttarget BattleScript_HealOneSixthAlliesLoop
 BattleScript_HealOneSixthAlliesEnd:
 	restoretarget
@@ -6177,7 +6184,7 @@ BattleScript_HealOneSixthAlliesEnd:
 
 BattleScript_EffectRecycleBerriesAllies::
 	savetarget
-	copybyte sSAVED_BATTLER, gEffectBattler
+	copybyte sBATTLER, gEffectBattler
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_RecycleBerriesAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RecycleBerriesAlliesIncrement
@@ -6187,7 +6194,7 @@ BattleScript_RecycleBerriesAlliesLoop:
 	waitmessage B_WAIT_TIME_LONG
 	swapattackerwithtarget
 BattleScript_RecycleBerriesAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, sSAVED_BATTLER, BattleScript_RecycleBerriesAlliesEnd
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_RecycleBerriesAlliesEnd
 	setallytonexttarget BattleScript_RecycleBerriesAlliesLoop
 BattleScript_RecycleBerriesAlliesEnd:
 	restoretarget

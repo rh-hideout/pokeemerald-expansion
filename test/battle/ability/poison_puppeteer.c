@@ -190,23 +190,27 @@ DOUBLE_BATTLE_TEST("Poison Puppeteer does not leak confusion to second target")
     }
 }
 
-SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single move and activate in Speed order")
+SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single move and activate in unmodified Speed order")
 {
     u32 speedOpponent, speedPlayer;
 
-    PARAMETRIZE { speedOpponent = 10; speedPlayer = 1; }
-    PARAMETRIZE { speedOpponent = 1; speedPlayer = 10; }
+    PARAMETRIZE { speedPlayer = 5; speedOpponent = 7; }
+    PARAMETRIZE { speedPlayer = 7; speedOpponent = 5; }
 
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(speedPlayer); }
         OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(speedOpponent); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_SOAK); } // Remove Pecharunt's Poison type
-        TURN { MOVE(player, MOVE_MORTAL_SPIN, WITH_RNG(RNG_FLAME_BODY, TRUE)); }
+        TURN { MOVE(opponent, MOVE_SOAK); MOVE(player, MOVE_TAILWIND); }
+        TURN { MOVE(player, MOVE_MORTAL_SPIN); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, opponent); // Remove Pecharunt's Poison type
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, player); // Tailwind won't matter for ability activation order
+
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
@@ -232,5 +236,37 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
         EXPECT(opponent->status1 & STATUS1_POISON);
         EXPECT(player->volatiles.confusionTimer == 0);
         EXPECT(opponent->volatiles.confusionTimer > 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status before Synchronize activation")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(1); Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SOAK); } // Remove Pecharunt's Poison type
+        TURN { MOVE(player, MOVE_MORTAL_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+
+        ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        STATUS_ICON(opponent, poison: FALSE);
+
+        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+    } THEN {
+        EXPECT(player->status1 & STATUS1_POISON);
+        EXPECT(!(opponent->status1 & STATUS1_POISON));
+        EXPECT(opponent->volatiles.confusionTimer == 0);
     }
 }

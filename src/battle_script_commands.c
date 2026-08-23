@@ -1667,29 +1667,17 @@ void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBa
      || effect == MOVE_EFFECT_BURN)
     {
         gSpecialStatuses[effectBattler].synchronize = TRUE;
-        gBattleScripting.savedBattler = effectBattler;
-
-        if (CanSetNonVolatileStatus(
-                effectBattler,
-                battlerAtk,
-                effectAbility,
-                GetBattlerAbility(battlerAtk),
-                effect,
-                CHECK_TRIGGER))
-        {
-            gBattleStruct->synchronizeStatus = effect;
-        }
-        else
-        {
-            gBattleStruct->synchronizeStatus = MOVE_EFFECT_NONE;
-        }
+        gBattleStruct->synchronizeStatus = effect;
+    }
+    else
+    {
+        gBattleStruct->synchronizeStatus = MOVE_EFFECT_NONE;
     }
 }
 
 void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
 {
     gEffectBattler = effectBattler;
-    gBattleScripting.battler = battlerAtk;
 
     if (effect == MOVE_EFFECT_SLEEP || effect == MOVE_EFFECT_FREEZE)
         CancelMultiTurnMoves(effectBattler);
@@ -8793,16 +8781,16 @@ static void Cmd_tryabilityonstatuschange(void)
 {
     CMD_ARGS();
 
-    if (gSpecialStatuses[gBattleScripting.battler].synchronize) // Don't activate on Synchronize activation
+    if (gSpecialStatuses[gBattlerAttacker].synchronize) // Don't activate on Synchronize activation
     {
-        gSpecialStatuses[gBattleScripting.battler].synchronize = FALSE;
+        gSpecialStatuses[gBattlerAttacker].synchronize = FALSE;
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        enum BattlerId battler = gBattlersBySpeed[i];
+        enum BattlerId battler = gBattlersByRawSpeed[i];
 
         if (AbilityBattleEffects(ABILITYEFFECT_ON_STATUS_CHANGE, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
             return;
@@ -11245,8 +11233,6 @@ void BS_TryPsychoShift(void)
         return;
     }
     gBattleMons[gBattlerTarget].status1 = gBattleMons[gBattlerAttacker].status1 & STATUS1_ANY;
-    gEffectBattler = gBattlerTarget;
-    gBattleScripting.battler = gBattlerAttacker;
 
     BtlController_EmitSetMonData(
         gBattlerTarget,
