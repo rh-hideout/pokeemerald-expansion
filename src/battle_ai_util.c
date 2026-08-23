@@ -2696,7 +2696,7 @@ bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     return bestMoveIsPhysical;
 }
 
-bool32 CritEspeciallyDesirable(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+bool32 ShouldBoostCritRate(enum BattlerId battlerAtk, enum BattlerId battlerDef)//This bool is currently indicating "are there stat changes I would bypass with a crit?". It is used to determine "should I boost crit rate?"
 {
     if (gBattleMons[battlerDef].statStages[STAT_DEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
          return TRUE;
