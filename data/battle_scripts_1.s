@@ -618,6 +618,21 @@ BattleScript_MoveEffectSetStatus::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_RestoreHpEffectBattler::
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_DOUBLE
+    saveattacker
+    copybyte gBattlerAttacker, gEffectBattler
+	printstring STRINGID_PKMNREGAINEDHEALTH
+    restoreattacker
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_MoveEffectJungleHealing::
+    call BattleScript_RestoreHpEffectBattler
+	return
+
+
 BattleScript_MoveEffectTrick::
 	printstring STRINGID_PKMNSWITCHEDITEMS
 	waitmessage B_WAIT_TIME_LONG
@@ -639,61 +654,9 @@ BattleScript_StuffCheeks::
 BattleScript_EffectJungleHealing::
 	attackcanceler
 	jumpifteamhealthy BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	copybyte gBattlerTarget, gBattlerAttacker
-	setbyte gBattleCommunication, 0
-JungleHealing_RestoreTargetHealth:
-	copybyte gBattlerAttacker, gBattlerTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_JungleHealing_TryCureStatus
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_JungleHealing_TryCureStatus:
-	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_JungleHealingCureStatus
-	goto BattleScript_JungleHealingTryRestoreAlly
-BattleScript_JungleHealingCureStatus:
-	curestatus BS_TARGET
-	updatestatusicon BS_TARGET
-	printfromtable gCureStatusStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_JungleHealingTryRestoreAlly:
-	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_MoveEnd
-	addbyte gBattleCommunication, 1
-	jumpifnoally BS_TARGET, BattleScript_MoveEnd
-	setallytonexttarget JungleHealing_RestoreTargetHealth
+	pause B_WAIT_TIME_SHORT
+	setadditionaleffects
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectLifeDew::
-	attackcanceler
-	jumpiffullhp BS_ATTACKER, BattleScript_EffectLifeDewCheckPartner
-	copybyte gBattlerTarget, gBattlerAttacker
-	attackanimation
-	waitanimation
-	call BattleScript_EffectLifeDewHealing
-	jumpifabsent BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
-	jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_EffectLifeDewEnd
-	setallytonexttarget BattleScript_EffectLifeDewNextTarget
-BattleScript_EffectLifeDewNextTarget:
-	call BattleScript_EffectLifeDewHealing
-BattleScript_EffectLifeDewEnd:
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectLifeDewCheckPartner:
-	jumpifabsent BS_ATTACKER_PARTNER, BattleScript_ButItFailed
-	jumpiffullhp BS_ATTACKER_PARTNER, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	setallytonexttarget BattleScript_EffectLifeDewNextTarget
-
-BattleScript_EffectLifeDewHealing:
-	tryhealquarterhealth BS_TARGET, BattleScript_EffectLifeDewEnd
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-	return
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
@@ -1266,7 +1229,7 @@ BattleScript_EffectRestoreHp::
 	waitanimation
 BattleScript_RestoreHp:
 	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd

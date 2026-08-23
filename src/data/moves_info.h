@@ -1491,7 +1491,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_MIST,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -3133,7 +3132,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LIGHT_SCREEN,
-            .self = TRUE,
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AVOID_STARTLE_ONCE : CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -3168,7 +3166,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_Haze,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_HAZE,
-            .self = TRUE,
         }),
         .validApprenticeMove = TRUE,
     },
@@ -3193,7 +3190,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_REFLECT,
-            .self = TRUE,
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AVOID_STARTLE_ONCE : CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -3221,7 +3217,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .status = VOLATILE_CRITICAL_HIT_BOOST },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FOCUS_ENERGY,
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -5622,7 +5617,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SANDSTORM,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_Sandstorm,
         .validApprenticeMove = TRUE,
@@ -6114,7 +6108,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SAFEGUARD,
-            .self = TRUE,
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_AVOID_STARTLE_ONCE : CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -6685,7 +6678,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RAIN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_RainDance,
         .validApprenticeMove = TRUE,
@@ -6715,7 +6707,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SUN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_SunnyDay,
         .validApprenticeMove = TRUE,
@@ -7215,7 +7206,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOW : MOVE_EFFECT_HAIL,
-            .self = TRUE,
         }),
         .battleAnimScript = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? gBattleAnimMove_Snowscape : gBattleAnimMove_Hail,
         .validApprenticeMove = TRUE,
@@ -7711,7 +7701,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_INGRAIN,
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -7997,7 +7986,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_2 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_IMPRISON,
-            .self = TRUE,
         }),
         .snatchAffected = B_UPDATED_MOVE_FLAGS >= GEN_5,
         .ignoresProtect = TRUE,
@@ -8399,7 +8387,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TYPE_HALVER,
-            .self = TRUE,
             .argument = {.type = TYPE_ELECTRIC},
         }),
         .ignoresProtect = TRUE,
@@ -9679,7 +9666,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TYPE_HALVER,
-            .self = TRUE,
             .argument = {.type = TYPE_FIRE},
         }),
         .ignoresProtect = TRUE,
@@ -10206,7 +10192,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_BOOST_CRITS },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TAILWIND,
-            .self = TRUE,
         }),
         .snatchAffected = TRUE,
         .windMove = TRUE,
@@ -10534,7 +10519,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = B_UPDATED_MOVE_FLAGS >= GEN_5,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POWER_TRICK,
-            .self = TRUE,
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -17412,7 +17396,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_PsychicTerrain,
     },
@@ -17822,7 +17805,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_AURORA_VEIL,
-            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -19403,7 +19385,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_WATER,
         .accuracy = 0,
         .pp = 10,
-        .target = TARGET_USER,
+        .target = TARGET_USER_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .snatchAffected = TRUE,
@@ -19411,6 +19393,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresSubstitute = TRUE,
         .mirrorMoveBanned = TRUE,
         .healingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_LIFE_DEW,
+        }),
         .metronomeBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -20028,7 +20013,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_GRASS,
         .accuracy = 0,
         .pp = 10,
-        .target = TARGET_USER,
+        .target = TARGET_USER_AND_ALLY,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .ignoresProtect = TRUE,
@@ -20036,6 +20021,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .healingMove = TRUE,
         .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_LIFE_DEW,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_CURE_NON_VOLATILE,
+        }),
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -21496,7 +21487,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOW : MOVE_EFFECT_HAIL,
-            .self = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_ChillyReception,
     },
@@ -21556,7 +21546,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOW : MOVE_EFFECT_HAIL,
-            .self = TRUE,
         }),
         .battleAnimScript = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? gBattleAnimMove_Hail : gBattleAnimMove_Snowscape,
     },

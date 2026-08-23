@@ -379,19 +379,18 @@ static void HandleSetEffectGlaiveRush(struct BattleCalcValues *cv, struct SetEff
     gBattlescriptCurrInstr = se->script;
 }
 
-static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetEffect *se)
+static void CureNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se, u32 status, bool32 canCureNonVolatile)
 {
-    u32 argStatus = GetMoveEffectArg_Status(gCurrentMove);
-    if ((gBattleMons[se->effectBattler].status1 & argStatus)
-     && (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler])))
+    if ((gBattleMons[se->effectBattler].status1 & status) && canCureNonVolatile)
     {
         gBattleScripting.battler = se->effectBattler;
-        gBattleMons[se->effectBattler].status1 &= ~(argStatus);
+        u32 currNonVolatile = gBattleMons[se->effectBattler].status1;
+        gBattleMons[se->effectBattler].status1 = STATUS1_NONE;
         BtlController_EmitSetMonData(se->effectBattler, 0, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[se->effectBattler].status1);
         MarkBattlerForControllerExec(se->effectBattler);
         BattleScriptPush(se->script);
 
-        switch (argStatus)
+        switch (currNonVolatile)
         {
         case STATUS1_PARALYSIS:
             gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
@@ -416,6 +415,14 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
             break;
         }
     }
+}
+static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (cv->onlyChecking) return;
+
+    bool32 canCureNonVolatile = (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]));
+    u32 argStatus = GetMoveEffectArg_Status(gCurrentMove);
+    CureNonVolatile(cv, se, argStatus, canCureNonVolatile);
 }
 
 static void HandleSetEffectThrash(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1529,9 +1536,8 @@ static void HandleSetEffectSafeguard(struct BattleCalcValues *cv, struct SetEffe
         gSideStatuses[side] |= SIDE_STATUS_SAFEGUARD;
         gSideTimers[side].safeguardTimer = 5;
         PrepareStringBattleWithWait(STRINGID_PKMNCOVEREDBYVEIL, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-
-    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 // For generic (simple) volatiles
@@ -2695,10 +2701,6 @@ static void HandleSetEffectCourtChange(struct BattleCalcValues *cv, struct SetEf
     BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
-static void HandleSetEffectLifeDew(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectCorrosiveGas(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum Item item = gBattleMons[se->effectBattler].item;
@@ -2726,8 +2728,29 @@ static void HandleSetEffectCorrosiveGas(struct BattleCalcValues *cv, struct SetE
     }
 }
 
-static void HandleSetEffectJungleHealing(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectLifeDew(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    if (gBattleMons[se->effectBattler].hp == gBattleMons[se->effectBattler].maxHP)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        SetHealAmount(se->effectBattler, GetNonDynamaxMaxHP(se->effectBattler) / 4); // TODO: The rounding here might be incorrect
+        BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
+    }
+}
+
+static void HandleSetEffectCureNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!(gBattleMons[se->effectBattler].status1 & STATUS1_ANY))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        CureNonVolatile(cv, se, STATUS1_ANY, TRUE);
+    }
 }
 
 static void HandleSetEffectPowerShift(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -2897,7 +2920,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TEATIME] = HandleSetEffectTeatime,
     [MOVE_EFFECT_PURIFY] = HandleSetEffectPurify,
     [MOVE_EFFECT_LIFE_DEW] = HandleSetEffectLifeDew,
-    [MOVE_EFFECT_JUNGLE_HEALING] = HandleSetEffectJungleHealing,
+    [MOVE_EFFECT_CURE_NON_VOLATILE] = HandleSetEffectCureNonVolatile,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
