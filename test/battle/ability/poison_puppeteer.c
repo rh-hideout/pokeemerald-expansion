@@ -165,7 +165,6 @@ SINGLE_BATTLE_TEST("Poison Puppeteer consumes its pending target after triggerin
 DOUBLE_BATTLE_TEST("Poison Puppeteer does not leak confusion to second target")
 {
     GIVEN {
-        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetSpeciesType(SPECIES_FERROSEED, 0) == TYPE_STEEL || GetSpeciesType(SPECIES_FERROSEED, 1) == TYPE_STEEL);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); }
@@ -198,7 +197,6 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
     PARAMETRIZE { speedPlayer = 7; speedOpponent = 5; }
 
     GIVEN {
-        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
@@ -242,7 +240,6 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
 SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status before Synchronize activation")
 {
     GIVEN {
-        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); }
@@ -268,5 +265,60 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status bef
         EXPECT(player->status1 & STATUS1_POISON);
         EXPECT(!(opponent->status1 & STATUS1_POISON));
         EXPECT(opponent->volatiles.confusionTimer == 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-volatile effects affecting multiple battlers")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_POISON_GAS; }
+    PARAMETRIZE { move = MOVE_G_MAX_MALODOR; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_G_MAX_MALODOR, MOVE_EFFECT_POISON));
+        ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveTarget(MOVE_POISON_GAS) == TARGET_BOTH);
+        PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(1); Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(1); Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SOAK, target: playerLeft); } // Remove Pecharunt's Poison type
+        TURN { MOVE(playerLeft, move, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponentLeft);
+        STATUS_ICON(opponentLeft, poison: TRUE);
+
+        ABILITY_POPUP(playerLeft, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        STATUS_ICON(opponentLeft, poison: FALSE);
+
+        ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+        STATUS_ICON(playerLeft, poison: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerLeft);
+        STATUS_ICON(playerLeft, poison: FALSE);
+
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponentRight);
+        STATUS_ICON(opponentRight, poison: TRUE);
+
+        ABILITY_POPUP(playerLeft, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
+        STATUS_ICON(opponentRight, poison: FALSE);
+
+        ABILITY_POPUP(opponentRight, ABILITY_SYNCHRONIZE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+        STATUS_ICON(playerLeft, poison: TRUE);
+    } THEN {
+        EXPECT(playerLeft->status1 & STATUS1_POISON);
+        EXPECT(!(opponentLeft->status1 & STATUS1_POISON));
+        EXPECT(opponentLeft->volatiles.confusionTimer == 0);
+        EXPECT(!(opponentRight->status1 & STATUS1_POISON));
+        EXPECT(opponentRight->volatiles.confusionTimer == 0);
     }
 }

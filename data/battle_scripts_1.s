@@ -930,11 +930,7 @@ BattleScript_EffectPsychoShiftCanWork:
 	statusanimation BS_TARGET
 	updatestatusicon BS_TARGET
 	waitstate
-	saveattacker
-	savetarget
 	tryabilityonstatuschange
-	restoreattacker
-	restoretarget
 	curestatus BS_ATTACKER
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -4340,13 +4336,7 @@ BattleScript_UpdateEffectStatusIconRet::
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
 	trytriggerstatusform
-	saveattacker
-	savetarget
-	copybyte gBattlerAttacker, sBATTLER
-	copybyte gBattlerTarget, gEffectBattler
 	tryabilityonstatuschange
-	restoreattacker
-	restoretarget
 	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
 	flushtextbox
 	return

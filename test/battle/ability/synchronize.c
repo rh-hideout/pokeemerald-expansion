@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Synchronize won't show the ability pop up if it fails")
         ABILITY_POPUP(player, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        MESSAGE("It doesn't affect Pikachu…");
+        // MESSAGE("It doesn't affect Pikachu…"); // Message depends on gBattlerTarget, will be changed in the future
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
