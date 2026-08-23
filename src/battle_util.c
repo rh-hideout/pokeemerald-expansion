@@ -4424,7 +4424,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                             gEffectBattler,
                             ability,
                             GetBattlerAbility(gEffectBattler),
-                            effect,
+                            gBattleScripting.moveEffect,
                             RUN_SCRIPT))
                         gBattlescriptCurrInstr = BattleScript_SynchronizeActivates;
                     break;

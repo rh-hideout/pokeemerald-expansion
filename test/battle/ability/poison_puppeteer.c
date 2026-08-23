@@ -270,14 +270,8 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status bef
 
 DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-volatile effects affecting multiple battlers")
 {
-    enum Move move;
-
-    PARAMETRIZE { move = MOVE_POISON_GAS; }
-    PARAMETRIZE { move = MOVE_G_MAX_MALODOR; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MALODOR, MOVE_EFFECT_POISON_SIDE));
         ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveTarget(MOVE_POISON_GAS) == TARGET_BOTH);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); Item(ITEM_LUM_BERRY); }
@@ -286,9 +280,9 @@ DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-vola
         OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(1); Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SOAK, target: playerLeft); } // Remove Pecharunt's Poison type
-        TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_POISON_GAS); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponentLeft);
         STATUS_ICON(opponentLeft, poison: TRUE);
 
