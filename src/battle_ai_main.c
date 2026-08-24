@@ -42,7 +42,7 @@
 
 struct ChosenAction
 {
-    u8 moveIndex;
+    enum MoveSlot moveIndex;
     enum BattlerId target;
 };
 
@@ -480,7 +480,7 @@ static void SetAllyMove(u32 battler)
     else
     {
         // Move for battler has already been calculated so set as partner move
-        u32 moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
+        enum MoveSlot moveIndex = gAiBattleData->chosenMoveIndex[partnerBattler];
         gAiLogicData->partnerMove = gBattleMons[partnerBattler].moves[moveIndex];
     }
 }
@@ -576,7 +576,7 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
     BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, GetOppositeBattler(battler) << 8);
 }
 
-u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
+enum MoveSlot BattleAI_ChooseMoveIndex(enum BattlerId battler)
 {
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
@@ -943,7 +943,7 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
 {
     u64 flags = gAiThinkingStruct->aiFlags[battlerAtk];
     gAiThinkingStruct->aiLogicId = 0;
-    gAiThinkingStruct->movesetIndex = 0;
+    gAiThinkingStruct->movesetIndex = MOVESLOT_0;
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battlerAtk);
@@ -970,7 +970,7 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
-    u8 consideredMoveArray[MAX_MON_MOVES];
+    enum MoveSlot consideredMoveArray[MAX_MON_MOVES];
     u32 numOfBestMoves;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     gAiLogicData->partnerMove = MOVE_NONE;   // no ally
@@ -1023,7 +1023,7 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     u8 mostViableTargetsArray[MAX_BATTLERS_COUNT];
     u8 actionOrMoveIndex[MAX_BATTLERS_COUNT];
     s32 mostViableMovesScores[MAX_MON_MOVES];
-    u8 mostViableMovesIndices[MAX_MON_MOVES];
+    enum MoveSlot mostViableMovesIndices[MAX_MON_MOVES];
     u32 mostViableTargetsNo;
     u32 mostViableMovesNo;
     s32 mostMovePoints;
@@ -1159,10 +1159,12 @@ static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enu
         {
             aiThink->score[aiThink->movesetIndex] = 0;
         }
+        if (aiThink->movesetIndex == MOVESLOT_3)
+            break;
         aiThink->movesetIndex++;
-    } while (aiThink->movesetIndex < MAX_MON_MOVES && !(aiThink->aiAction & AI_ACTION_DO_NOT_ATTACK));
+    } while (!(aiThink->aiAction & AI_ACTION_DO_NOT_ATTACK));
 
-    aiThink->movesetIndex = 0;
+    aiThink->movesetIndex = MOVESLOT_0;
 }
 
 void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -1260,10 +1262,12 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
         {
             aiThink->score[aiThink->movesetIndex] = 0;
         }
+        if (aiThink->movesetIndex == MOVESLOT_3)
+            break;
         aiThink->movesetIndex++;
-    } while (aiThink->movesetIndex < MAX_MON_MOVES && !(aiThink->aiAction & AI_ACTION_DO_NOT_ATTACK));
+    } while (!(aiThink->aiAction & AI_ACTION_DO_NOT_ATTACK));
 
-    aiThink->movesetIndex = 0;
+    aiThink->movesetIndex = MOVESLOT_0;
 
     // Restore original battler data and moves
     FreeRestoreBattleMons(savedBattleMons);
@@ -3070,7 +3074,7 @@ static s32 AI_GetWhichBattlerFasterOrTies(enum BattlerId battlerAtk, enum Battle
 
 static s32 AI_TryToFaint(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
-    u32 movesetIndex = gAiThinkingStruct->movesetIndex;
+    enum MoveSlot movesetIndex = gAiThinkingStruct->movesetIndex;
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY);
 
@@ -3951,7 +3955,7 @@ static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battler
     return score;
 }
 
-static enum MoveComparisonResult CompareMoveAccuracies(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveSlot1, u32 moveSlot2)
+static enum MoveComparisonResult CompareMoveAccuracies(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveSlot1, enum MoveSlot moveSlot2)
 {
     u32 acc1 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot1];
     u32 acc2 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot2];
@@ -3972,7 +3976,7 @@ static enum MoveComparisonResult CompareMoveSpeeds(enum BattlerId battlerAtk, en
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static enum MoveComparisonResult CompareGuaranteeFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u16 moveSlot1, u16 moveSlot2, u16 *moves)
+static enum MoveComparisonResult CompareGuaranteeFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveSlot1, enum MoveSlot moveSlot2, u16 *moves)
 {
     s32 dmg1, dmg2;
     bool32 guarantee1, guarantee2;
@@ -3993,7 +3997,7 @@ static enum MoveComparisonResult CompareGuaranteeFaintTarget(enum BattlerId batt
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static enum MoveComparisonResult CompareResistBerryEffects(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveSlot1, u32 moveSlot2)
+static enum MoveComparisonResult CompareResistBerryEffects(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveSlot1, enum MoveSlot moveSlot2)
 {
     // Check for resist berries in OHKOs
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_RESIST_BERRY)
@@ -4061,7 +4065,7 @@ static enum MoveComparisonResult CompareMoveTwoTurnEffect(enum BattlerId battler
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static inline bool32 ShouldUseSpreadDamageMove(enum BattlerId battlerAtk, enum Move move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
+static inline bool32 ShouldUseSpreadDamageMove(enum BattlerId battlerAtk, enum Move move, enum MoveSlot moveIndex, u32 hitsToFaintOpposingBattler)
 {
     enum BattlerId partnerBattler = GetPartnerBattler(battlerAtk);
     u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
@@ -4073,7 +4077,7 @@ static inline bool32 ShouldUseSpreadDamageMove(enum BattlerId battlerAtk, enum M
          && noOfHitsToFaintPartner < (friendlyFireThreshold * 2));
 }
 
-static bool32 ShouldCompareMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum Move move)
+static bool32 ShouldCompareMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum Move move)
 {
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return FALSE;
@@ -4098,19 +4102,19 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
     bool32 moveIsFaster[MAX_MON_MOVES];
 
-    for (u32 currId = 0; currId < MAX_MON_MOVES; currId++)
+    for (enum MoveSlot currId = MOVESLOT_0; currId < MAX_MON_MOVES; currId++)
     {
         moveComparisonScores[currId] = 0;
         if (!ShouldCompareMove(battlerAtk, battlerDef, currId, moves[currId]))
             continue;
-        for (u32 compareId = 0; compareId < MAX_MON_MOVES; compareId++)
+        for (enum MoveSlot compareId = MOVESLOT_0; compareId < MAX_MON_MOVES; compareId++)
         {
             if (moves[compareId] != MOVE_NONE && GetMovePower(moves[compareId]) != 0)
             {
                 noOfHits[compareId] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, compareId, AI_ATTACKING, CONSIDER_ENDURE);
                 moveIsFaster[compareId] = AI_IsFaster(battlerAtk, battlerDef, moves[compareId], predictedMove, CONSIDER_PRIORITY);
                 tempMoveScores[compareId] = AI_SCORE_DEFAULT;
-                if (ShouldUseSpreadDamageMove(battlerAtk,moves[compareId], compareId, noOfHits[compareId]))
+                if (ShouldUseSpreadDamageMove(battlerAtk, moves[compareId], compareId, noOfHits[compareId]))
                 {
                     noOfHits[compareId] = -1;
                 }
@@ -4145,7 +4149,7 @@ static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId ba
         // Current move requires the least hits to KO. Compare with other moves.
         if (leastHits == noOfHits[currId])
         {
-            for (u32 compareId = 0; compareId < MAX_MON_MOVES; compareId++)
+            for (enum MoveSlot compareId = MOVESLOT_0; compareId < MAX_MON_MOVES; compareId++)
             {
                 if (compareId == currId)
                     continue;
@@ -4293,7 +4297,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
 {
     // move data
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 movesetIndex = gAiThinkingStruct->movesetIndex;
+    enum MoveSlot movesetIndex = gAiThinkingStruct->movesetIndex;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][movesetIndex];
 
     s32 score = 0;
@@ -6173,7 +6177,7 @@ static s32 AI_AttacksPartner(enum BattlerId battlerAtk, enum BattlerId battlerDe
        && ((IsNaturalEnemy(gBattleMons[battlerAtk].species, gBattleMons[battlerDef].species) && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER)))
        || AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER))
     {
-        u32 movesetIndex = gAiThinkingStruct->movesetIndex;
+        enum MoveSlot movesetIndex = gAiThinkingStruct->movesetIndex;
 
         if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING))
             ADJUST_SCORE(BEST_EFFECT);

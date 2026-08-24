@@ -104,7 +104,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler);
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
 void ComputeAiBattlerDecisions(enum BattlerId battler);
-u32 BattleAI_ChooseMoveIndex(enum BattlerId battler);
+enum MoveSlot BattleAI_ChooseMoveIndex(enum BattlerId battler);
 void Ai_InitPartyStruct(void);
 void Ai_UpdateSwitchInData(enum BattlerId battler);
 void Ai_UpdateFaintData(enum BattlerId battler);

@@ -265,7 +265,7 @@ static void RecordedPartnerHandleChooseAction(enum BattlerId battler)
 
 static void RecordedPartnerHandleChooseMove(enum BattlerId battler)
 {
-    u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
+    enum MoveSlot moveIndex = (enum MoveSlot)RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
     u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
     if (target == RECORDED_TARGET_DEFAULT)
     {

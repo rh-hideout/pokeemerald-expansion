@@ -999,7 +999,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
 
     s32 ppToDeduct = 1;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-    u32 movePosition = gCurrMovePos;
+    enum MoveSlot movePosition = gCurrMovePos;
 
     if (gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
         movePosition = gChosenMovePos;
@@ -3668,7 +3668,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
              && cv->move != MOVE_STRUGGLE
              && cv->moveEffect != EFFECT_FUTURE_SIGHT)
             {
-                u32 moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
+                enum MoveSlot moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
 
                 gBattleMons[cv->battlerAtk].pp[moveIndex] = 0;
                 BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].pp[moveIndex]), &gBattleMons[cv->battlerAtk].pp[moveIndex]);
@@ -5940,7 +5940,8 @@ static enum Move GetSleepTalkMove(void)
 {
     enum Move move = MOVE_NONE;
 
-    u32 i, unusableMovesBits = 0, movePosition;
+    u32 i, unusableMovesBits = 0;
+    enum MoveSlot movePosition;
 
     if (GetBattlerAbility(gBattlerAttacker) != ABILITY_COMATOSE
      && !(gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP))
@@ -5961,7 +5962,7 @@ static enum Move GetSleepTalkMove(void)
     gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
     do
     {
-        movePosition = MOD(Random(), MAX_MON_MOVES);
+        movePosition = (enum MoveSlot)MOD(Random(), MAX_MON_MOVES);
     } while ((1u << movePosition) & unusableMovesBits);
 
     move = gBattleMons[gBattlerAttacker].moves[movePosition];

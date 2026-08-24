@@ -17,7 +17,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(void);
-static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot);
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveSlot moveSlot);
 static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
 static u32 GetTvPartyIndex(u32 battler);
 
@@ -1434,7 +1434,7 @@ u8 GetBattlerMoveSlotId(enum BattlerId battler, enum Move move)
     return i;
 }
 
-static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot)
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveSlot moveSlot)
 {
     if (weatherFlags & B_WEATHER_RAIN)
         AddMovePoints(PTS_RAIN, move, moveSlot, 0);

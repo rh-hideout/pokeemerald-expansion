@@ -214,7 +214,7 @@ void AssignUsableZMoves(enum BattlerId battler, enum Move *moves)
     }
 }
 
-bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
+bool32 TryChangeZTrigger(enum BattlerId battler, enum MoveSlot moveIndex)
 {
     bool32 viableZMove = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << moveIndex)) != 0;
 
