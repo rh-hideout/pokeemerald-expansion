@@ -896,13 +896,6 @@ enum TransformUsedStringID
     B_MSG_TRANSFORM_FAILED,
 };
 
-// gSubstituteUsedStringIds
-enum SubstituteUsedStringID
-{
-    B_MSG_SET_SUBSTITUTE,
-    B_MSG_SUBSTITUTE_FAILED,
-};
-
 // gPartyStatusHealStringIds
 enum PartyStatusHealStringID
 {

@@ -226,7 +226,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SUBSTITUTE] =
     {
-        .battleScript = BattleScript_EffectSubstitute,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
@@ -317,7 +317,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PAIN_SPLIT] =
     {
-        .battleScript = BattleScript_EffectPainSplit,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
     },
@@ -373,7 +373,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SPITE] =
     {
-        .battleScript = BattleScript_EffectSpite,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
@@ -742,7 +742,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FOLLOW_ME] =
     {
-        .battleScript = BattleScript_EffectFollowMe,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
@@ -770,7 +770,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_HELPING_HAND] =
     {
-        .battleScript = BattleScript_EffectHelpingHand,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
     },
 
@@ -821,7 +821,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_RECYCLE] =
     {
-        .battleScript = BattleScript_EffectRecycle,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -1411,7 +1411,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_THIRD_TYPE] =
     {
-        .battleScript = BattleScript_EffectThirdType,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1673,7 +1673,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TEATIME] =
     {
-        .battleScript = BattleScript_EffectTeatime,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1766,7 +1766,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SHED_TAIL] =
     {
-        .battleScript = BattleScript_EffectShedTail,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },

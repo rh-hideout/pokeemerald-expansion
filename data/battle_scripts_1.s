@@ -255,30 +255,6 @@ BattleScript_StatDidntChangeMessagePause::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectShedTail::
-	attackcanceler
-	waitstate
-	jumpifvolatile BS_ATTACKER, VOLATILE_SUBSTITUTE, BattleScript_AlreadyHasSubstitute
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
-	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
-	setsubstitute
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_SUBSTITUTE_FAILED, BattleScript_SubstituteString
-	attackanimation
-	waitanimation
-	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
-	printstring STRINGID_SHEDITSTAIL
-	waitmessage B_WAIT_TIME_LONG
-	moveendto MOVEEND_ATTACKER_VISIBLE
-	moveendfrom MOVEEND_TARGET_VISIBLE
-	call BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim
-	switchinanim BS_ATTACKER, FALSE, TRUE
-	waitstate
-	switchineffects BS_ATTACKER
-	switchinevents
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectDoodle::
 	attackcanceler
 	trycopyability BS_ATTACKER, BattleScript_ButItFailed
@@ -460,23 +436,12 @@ BattleScript_EffectRevivalBlessingSendOut:
 	switchinevents
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTeatime::
-	attackcanceler
-	checkteatimetargets BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	goto BattleScript_EffectTeatimeGetTarget
-BattleScript_EffectTeatimeNextTarget:
-	jumpifnoberry BS_TARGET, BattleScript_EffectTeatimeGetTarget
+BattleScript_MoveEffectTeatime::
 	setbyte sBERRY_OVERRIDE, TRUE @ override the requirements for eating berries
-	consumeberry BS_TARGET, TRUE @ consume the berry, then restore the item from changedItems
+	consumeberry BS_EFFECT_BATTLER, TRUE @ consume the berry, then restore the item from changedItems
 	setbyte sBERRY_OVERRIDE, FALSE
-	removeitem BS_TARGET
-	moveendcase MOVEEND_NEXT_TARGET
-BattleScript_EffectTeatimeGetTarget:
-	getpossiblenexttarget BattleScript_EffectTeatimeNextTarget
-	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_2
-	end
+	removeitem BS_EFFECT_BATTLER
+	return
 
 BattleScript_AffectionBasedEndurance::
 	playanimation BS_TARGET, B_ANIM_AFFECTION_HANGED_ON
@@ -609,13 +574,35 @@ BattleScript_ButHoopaCantUseIt::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_MoveEffectSetStatus::
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MoveEffectLeechSeed::
 	printfromtable gLeechSeedStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_MoveEffectSetStatus::
+BattleScript_MoveEffectSubstitute::
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
+	printstring STRINGID_PKMNMADESUBSTITUTE
 	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_MoveEffectShedTail::
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
+	printstring STRINGID_SHEDITSTAIL
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_ShedTailSwitch::
+	call BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim
+	switchinanim BS_ATTACKER, FALSE, TRUE
+	waitstate
+	switchineffects BS_ATTACKER
+	switchinevents
 	return
 
 BattleScript_RestoreHpEffectBattler::
@@ -719,15 +706,6 @@ BattleScript_MoveEffectFeint::
 	printfromtable gBrokeProtectionStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectThirdType::
-	attackcanceler
-	trythirdtype BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_THIRDTYPEADDED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectBestow::
 	attackcanceler
@@ -1324,27 +1302,11 @@ BattleScript_SkyDropNoTarget::
 	makevisible BS_ATTACKER
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectSubstitute::
-	attackcanceler
-	waitstate
-	jumpifvolatile BS_ATTACKER, VOLATILE_SUBSTITUTE, BattleScript_AlreadyHasSubstitute
-	setsubstitute
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_SUBSTITUTE_FAILED, BattleScript_SubstituteString
-	attackanimation
-	waitanimation
-	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
-BattleScript_SubstituteString::
-	pause B_WAIT_TIME_SHORT
-	printfromtable gSubstituteUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 BattleScript_AlreadyHasSubstitute::
-	setalreadystatusedmoveattempt
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNHASSUBSTITUTE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MoveUsedMustRecharge::
 	printstring STRINGID_PKMNMUSTRECHARGE
@@ -1403,11 +1365,7 @@ BattleScript_MoveEffectEncore::
 	trydomoveeffectsbeforemoves
 	return
 
-BattleScript_EffectPainSplit::
-	attackcanceler
-	painsplitdmgcalc BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectPainSplit::
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
 	healthbarupdate BS_TARGET
@@ -1441,15 +1399,6 @@ BattleScript_MoveEffectEerieSpell::
 	waitmessage B_WAIT_TIME_LONG
 	restoretarget
 	return
-
-BattleScript_EffectSpite::
-	attackcanceler
-	tryspiteppreduce BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNREDUCEDPP
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectHealBell::
 	attackcanceler
@@ -1810,15 +1759,6 @@ BattleScript_FocusPunchLostFocus::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectFollowMe::
-	attackcanceler
-	setforcedtarget
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNCENTERATTENTION
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectTaunt::
 	attackcanceler
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
@@ -1826,15 +1766,6 @@ BattleScript_EffectTaunt::
 	attackanimation
 	waitanimation
 	printstring STRINGID_PKMNFELLFORTAUNT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectHelpingHand::
-	attackcanceler
-	trysethelpinghand BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNREADYTOHELP
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -1860,15 +1791,6 @@ BattleScript_EffectMagicCoat::
 	attackanimation
 	waitanimation
 	printstring STRINGID_PKMNSHROUDEDITSELF
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectRecycle::
-	attackcanceler
-	tryrecycleitem BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_XFOUNDONEY
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -5265,16 +5187,6 @@ BattleScript_DamageNonTypesContinues::
 	effectivenesssound
 	hitanimation BS_ATTACKER
 	goto BattleScript_DoTurnDmg
-
-BattleScript_MoveEffectSpite::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
-	tryspiteppreduce BattleScript_MoveEffectSpiteRet
-	printstring STRINGID_PKMNREDUCEDPP
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_MoveEffectSpiteRet:
-	restoretarget
-	return
 
 BattleScript_EffectParalyzeSide::
 	savetarget

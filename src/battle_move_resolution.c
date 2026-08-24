@@ -2729,7 +2729,7 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     if (moveFailed)
     {
-        gBattleStruct->moveResultFlags[cv->battlerAtk] = MOVE_RESULT_FAILED;
+        gBattleStruct->statusMoveFailed = TRUE;
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
     }
@@ -4789,6 +4789,12 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
 
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_PartingShotEscape);
+        }
+    case EFFECT_SHED_TAIL:
+        if (!IsBattlerUnaffectedByMove(cv->battlerAtk))
+        {
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_ShedTailSwitch);
         }
         break;
     default:

@@ -1758,11 +1758,6 @@
 	.byte \battler
 	.endm
 
-	.macro trythirdtype failInstr:req
-	callnative BS_TryThirdType
-	.4byte \failInstr
-	.endm
-
 	.macro destroyabilitypopup
 	callnative BS_DestroyAbilityPopup
 	.endm
