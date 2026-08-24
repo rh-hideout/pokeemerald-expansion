@@ -928,7 +928,7 @@ static void ReloadMoveNames(enum BattlerId battler)
     else
     {
         gBattleStruct->zmove.viewing = FALSE;
-        MoveSelectionDestroyCursorAt((enum MoveSlot)battler);
+        MoveSelectionDestroyCursorAt(MOVESLOT_0);
         MoveSelectionDisplayMoveNames(battler);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
