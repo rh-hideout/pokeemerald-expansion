@@ -1,111 +1,228 @@
 SilphCo_2F_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, SilphCo_2F_OnLoad
-	.byte 0
+        .byte 0
 
-SilphCo_2F_OnLoad::
-	call_if_unset FLAG_SILPH_2F_DOOR_1, EventScript_Close2FDoor1
-	call_if_unset FLAG_SILPH_2F_DOOR_2, EventScript_Close2FDoor2
-	end
 
-SilphCo_2F_EventScript_ThunderWaveTutor::
-	goto EventScript_ThunderWaveTutor
-	end
+@ =============================================================================
+@ SILPH CO. 2F - LORELEI
+@ =============================================================================
 
-SilphCo_2F_EventScript_FloorSign::
-	msgbox SilphCo_2F_Text_FloorSign, MSGBOX_SIGN
-	end
+SilphCo_2F_Frlg_EventScript_Lorelei::
+        lock
+        faceplayer
 
-SilphCo_2F_EventScript_Connor::
-	trainerbattle_single TRAINER_SCIENTIST_CONNOR, SilphCo_2F_Text_ConnorIntro, SilphCo_2F_Text_ConnorDefeat
-	msgbox SilphCo_2F_Text_ConnorPostBattle, MSGBOX_AUTOCLOSE
-	end
+        goto_if_set FLAG_SILPH_LORELEI_MET, SilphCo_2F_Frlg_EventScript_LoreleiRepeat
 
-SilphCo_2F_EventScript_Jerry::
-	trainerbattle_single TRAINER_SCIENTIST_JERRY, SilphCo_2F_Text_JerryIntro, SilphCo_2F_Text_JerryDefeat
-	msgbox SilphCo_2F_Text_JerryPostBattle, MSGBOX_AUTOCLOSE
-	end
+        setflag FLAG_SILPH_LORELEI_MET
 
-SilphCo_2F_EventScript_Grunt1::
-	trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_23, SilphCo_2F_Text_Grunt1Intro, SilphCo_2F_Text_Grunt1Defeat
-	msgbox SilphCo_2F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
-	end
+        msgbox SilphCo_2F_Frlg_Text_PlayerFinallyPerson, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_EventScript_Grunt2::
-	trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_24, SilphCo_2F_Text_Grunt2Intro, SilphCo_2F_Text_Grunt2Defeat
-	msgbox SilphCo_2F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
-	end
+        msgbox SilphCo_2F_Frlg_Text_LoreleiStrangeGreeting, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_ConnorIntro::
-	.string "Help!\n"
-	.string "I'm a SILPH employee.$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerBuildingEmpty, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_ConnorDefeat::
-	.string "How did you know\n"
-	.string "I was a ROCKET?$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiWasnt, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_ConnorPostBattle::
-	.string "I work for both SILPH and TEAM\n"
-	.string "ROCKET.$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerWhatHappened, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_JerryIntro::
-	.string "It's off-limits here!\n"
-	.string "Go home!$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiSplit, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_JerryDefeat::
-	.string "You're good.$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerBothSides, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_JerryPostBattle::
-	.string "Can you solve the maze in here?\n"
-	.string "It's not easy, I tell you!$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiAgreement, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt1Intro::
-	.string "No kids are allowed in here!$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerSeenBefore, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt1Defeat::
-	.string "Tough!$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiNo, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt1PostBattle::
-	.string "Diamond-shaped tiles are teleport\n"
-	.string "blocks.\p"
-	.string "They're transporters for this\n"
-	.string "high-tech building.$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerDojo, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt2Intro::
-	.string "Hey, kid!\n"
-	.string "What are you wandering here for?$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiCareful, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt2Defeat::
-	.string "I goofed!$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerWhoAreYou, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_Grunt2PostBattle::
-	.string "SILPH CO. will be associated with\n"
-	.string "TEAM ROCKET!$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiName, MSGBOX_DEFAULT
+        closemessage
 
-Text_ThunderWaveTeach::
-	.string "Eeek!\n"
-	.string "No! Stop! Help!\p"
-	.string "Oh, you're not with TEAM ROCKET.\n"
-	.string "I'm sorry, I thought…\p"
-	.string "Will you forgive me if I teach\n"
-	.string "you the THUNDER WAVE technique?$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerWhyHere, MSGBOX_DEFAULT
+        closemessage
 
-Text_ThunderWaveDeclined::
-	.string "Oh…\n"
-	.string "But THUNDER WAVE is convenient…$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiWhatsLeft, MSGBOX_DEFAULT
+        closemessage
 
-Text_ThunderWaveWhichMon::
-	.string "Which POKéMON should I teach\n"
-	.string "THUNDER WAVE?$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerOfWhat, MSGBOX_DEFAULT
+        closemessage
 
-Text_ThunderWaveTaught::
-	.string "THUNDER WAVE causes paralysis in\n"
-	.string "the target POKéMON.\p"
-	.string "A paralyzed POKéMON may be unable\n"
-	.string "to move in battle.\p"
-	.string "It's an ELECTRIC-type move, so it\n"
-	.string "won't work on some POKéMON.$"
+        msgbox SilphCo_2F_Frlg_Text_LoreleiTwelve, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_2F_Text_FloorSign::
-	.string "SILPH CO. HEAD OFFICE\n"
-	.string "2F$"
+        msgbox SilphCo_2F_Frlg_Text_PlayerTwelve, MSGBOX_DEFAULT
+        closemessage
 
+        msgbox SilphCo_2F_Frlg_Text_LoreleiDidntSay, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_2F_Frlg_Text_PlayerKindaDid, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_2F_Frlg_Text_LoreleiPretend, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+SilphCo_2F_Frlg_EventScript_LoreleiRepeat::
+        msgbox SilphCo_2F_Frlg_Text_LoreleiRepeat, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+@ =============================================================================
+@ TEXT
+@ =============================================================================
+
+SilphCo_2F_Frlg_Text_PlayerFinallyPerson:
+        .string "{PLAYER}: Finally.\p"
+        .string "A person.$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiStrangeGreeting:
+        .string "LORELEI: ...That's an unusual\n"
+        .string "greeting.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerBuildingEmpty:
+        .string "{PLAYER}: Sorry.\p"
+        .string "This whole building is empty.$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiWasnt:
+        .string "LORELEI: It wasn't.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerWhatHappened:
+        .string "{PLAYER}: What happened?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiSplit:
+        .string "LORELEI: Silph depended on work\n"
+        .string "from both sides.\p"
+        .string "When the split happened, projects\n"
+        .string "stopped.\p"
+        .string "Contracts disappeared.\p"
+        .string "Eventually, the employees did too.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerBothSides:
+        .string "{PLAYER}: Both sides of what?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiAgreement:
+        .string "LORELEI: An agreement that stopped\n"
+        .string "being one.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerSeenBefore:
+        .string "{PLAYER}: ...I've seen you before.$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiNo:
+        .string "LORELEI: No.\p"
+        .string "You haven't.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerDojo:
+        .string "{PLAYER}: At the dojo--$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiCareful:
+        .string "LORELEI: I would be very careful\n"
+        .string "finishing that sentence.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerWhoAreYou:
+        .string "{PLAYER}: ...Who are you?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiName:
+        .string "LORELEI: Lorelei.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerWhyHere:
+        .string "{PLAYER}: Why are you still here?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiWhatsLeft:
+        .string "LORELEI: Someone should see what's\n"
+        .string "left.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerOfWhat:
+        .string "{PLAYER}: Left of what?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiTwelve:
+        .string "LORELEI: Twelve people can build\n"
+        .string "a great deal when they agree.\p"
+        .string "They can undo even more when\n"
+        .string "they don't.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerTwelve:
+        .string "{PLAYER}: ...The Twelve?$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiDidntSay:
+        .string "LORELEI: I didn't say that.$"
+
+
+SilphCo_2F_Frlg_Text_PlayerKindaDid:
+        .string "{PLAYER}: You kinda did.$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiPretend:
+        .string "LORELEI: Then pretend I didn't.$"
+
+
+SilphCo_2F_Frlg_Text_LoreleiRepeat:
+        .string "LORELEI: Still here?\p"
+        .string "If you're determined to keep\n"
+        .string "asking questions...\p"
+        .string "There are more floors.$"
+
+@ =============================================================================
+@ OPTIONAL ENVIRONMENTAL LORE
+@ =============================================================================
+
+SilphCo_2F_Frlg_EventScript_SuspendedProjects::
+        msgbox SilphCo_2F_Frlg_Text_SuspendedProjects, MSGBOX_SIGN
+        end
+
+SilphCo_2F_Frlg_EventScript_AuthorizationNote::
+        msgbox SilphCo_2F_Frlg_Text_AuthorizationNote, MSGBOX_SIGN
+        end
+
+SilphCo_2F_Frlg_Text_SuspendedProjects:
+        .string "Several project folders were\p"
+        .string "left behind.\p"
+        .string "Most are stamped: SUSPENDED.$"
+
+SilphCo_2F_Frlg_Text_AuthorizationNote:
+        .string "One folder is marked by hand:\p"
+        .string "PENDING AUTHORIZATION.\p"
+        .string "{PLAYER}: Authorization from who...?$"

@@ -727,11 +727,6 @@
     "RocketHideout_B3F_Frlg",
     "RocketHideout_B4F_Frlg",
     "RocketHideout_Elevator_Frlg",
-    "SilphCo_1F_Frlg",
-    "SilphCo_2F_Frlg",
-    "SilphCo_3F_Frlg",
-    "SilphCo_4F_Frlg",
-    "SilphCo_5F_Frlg",
     "SilphCo_6F_Frlg",
     "SilphCo_7F_Frlg",
     "SilphCo_8F_Frlg",
@@ -1160,6 +1155,11 @@
     "ViridianCity_Mart_Frlg",
     "ViridianCity_PokemonCenter_1F_Frlg",
     "ViridianCity_PokemonCenter_2F_Frlg",
-    "ViridianCity_School_Frlg"
+    "ViridianCity_School_Frlg",
+    "SilphCo_1F_Frlg",
+    "SilphCo_2F_Frlg",
+    "SilphCo_3F_Frlg",
+    "SilphCo_4F_Frlg",
+    "SilphCo_5F_Frlg"
   ]
 }

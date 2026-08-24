@@ -1,70 +1,277 @@
 SilphCo_3F_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, SilphCo_3F_OnLoad
-	.byte 0
+        map_script MAP_SCRIPT_ON_LOAD, SilphCo_3F_Frlg_SetStrangerGraphics
+        .byte 0
 
-SilphCo_3F_OnLoad::
-	call_if_unset FLAG_SILPH_3F_DOOR_1, EventScript_Close3FDoor1
-	call_if_unset FLAG_SILPH_3F_DOOR_2, EventScript_Close3FDoor2
-	end
 
-SilphCo_3F_EventScript_WorkerM::
-	lock
-	faceplayer
-	goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_3F_EventScript_WorkerMRocketsGone
-	msgbox SilphCo_3F_Text_WhatAmIToDo
-	release
-	end
+@ =============================================================================
+@ DYNAMIC FAMILIAR STRANGER
+@ =============================================================================
 
-SilphCo_3F_EventScript_WorkerMRocketsGone::
-	msgbox SilphCo_3F_Text_YouAndYourMonsSavedUs
-	release
-	end
+SilphCo_3F_Frlg_SetStrangerGraphics:
+        goto_if_set FLAG_HIDE_HOME_MOM, SilphCo_3F_Frlg_SetTiaGraphics
 
-SilphCo_3F_EventScript_FloorSign::
-	msgbox SilphCo_3F_Text_FloorSign, MSGBOX_SIGN
-	end
+        @ Mom/Tia raised PLAYER -> stranger is Elias.
+        setvar VAR_OBJ_GFX_ID_2, OBJ_EVENT_GFX_NORMAN
+        return
 
-SilphCo_3F_EventScript_Jose::
-	trainerbattle_single TRAINER_SCIENTIST_JOSE, SilphCo_3F_Text_JoseIntro, SilphCo_3F_Text_JoseDefeat
-	msgbox SilphCo_3F_Text_JosePostBattle, MSGBOX_AUTOCLOSE
-	end
 
-SilphCo_3F_EventScript_Grunt::
-	trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_25, SilphCo_3F_Text_GruntIntro, SilphCo_3F_Text_GruntDefeat
-	msgbox SilphCo_3F_Text_GruntPostBattle, MSGBOX_AUTOCLOSE
-	end
+SilphCo_3F_Frlg_SetTiaGraphics:
+        @ Dad/Elias raised PLAYER -> stranger is Tia.
+        setvar VAR_OBJ_GFX_ID_2, OBJ_EVENT_GFX_MOM
+        return
 
-SilphCo_3F_Text_WhatAmIToDo::
-	.string "I work for SILPH CO.\n"
-	.string "What am I to do?$"
 
-SilphCo_3F_Text_YouAndYourMonsSavedUs::
-	.string "{PLAYER}!\n"
-	.string "You and your POKéMON saved us!$"
+@ =============================================================================
+@ FAMILIAR STRANGER
+@ =============================================================================
 
-SilphCo_3F_Text_GruntIntro::
-	.string "Quit messing with us, kid!$"
+SilphCo_3F_Frlg_EventScript_FamiliarStranger::
+        lock
+        faceplayer
 
-SilphCo_3F_Text_GruntDefeat::
-	.string "I give up!$"
+        goto_if_set FLAG_SILPH_FAMILIAR_STRANGER_MET, SilphCo_3F_Frlg_EventScript_FamiliarStrangerRepeat
 
-SilphCo_3F_Text_GruntPostBattle::
-	.string "A hint? You can open doors with\n"
-	.string "a CARD KEY!$"
+        setflag FLAG_SILPH_FAMILIAR_STRANGER_MET
 
-SilphCo_3F_Text_JoseIntro::
-	.string "I support TEAM ROCKET more than\n"
-	.string "I support SILPH CO.!$"
+        msgbox SilphCo_3F_Frlg_Text_PlayerStares, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_3F_Text_JoseDefeat::
-	.string "You really got me!$"
+        msgbox SilphCo_3F_Frlg_Text_StrangerHelpYou, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_3F_Text_JosePostBattle::
-	.string "Humph…\p"
-	.string "TEAM ROCKET said that if I helped\n"
-	.string "them, they'd let me study POKéMON.$"
+        msgbox SilphCo_3F_Frlg_Text_PlayerKnowYou, MSGBOX_DEFAULT
+        closemessage
 
-SilphCo_3F_Text_FloorSign::
-	.string "SILPH CO. HEAD OFFICE\n"
-	.string "3F$"
+        msgbox SilphCo_3F_Frlg_Text_StrangerDontBelieveSo, MSGBOX_DEFAULT
+        closemessage
 
+        msgbox SilphCo_3F_Frlg_Text_PlayerRememberYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_StrangerFromWhere, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerDoesntKnow, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_StrangerPerhapsNot, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        msgbox SilphCo_3F_Frlg_Text_StrangerUncomfortable, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerWhoAreYou, MSGBOX_DEFAULT
+        closemessage
+
+        goto_if_set FLAG_HIDE_HOME_MOM, SilphCo_3F_Frlg_EventScript_TiaIntroduction
+        goto SilphCo_3F_Frlg_EventScript_EliasIntroduction
+
+
+SilphCo_3F_Frlg_EventScript_TiaIntroduction:
+        msgbox SilphCo_3F_Frlg_Text_TiaName, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerDoesntHelp, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerWhatDoYouDo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_TiaRecords, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerSecretary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_TiaNo, MSGBOX_DEFAULT
+        closemessage
+
+        goto SilphCo_3F_Frlg_EventScript_FamiliarStrangerFinish
+
+
+SilphCo_3F_Frlg_EventScript_EliasIntroduction:
+        msgbox SilphCo_3F_Frlg_Text_EliasName, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerDoesntHelp, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerWhatDoYouDo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_EliasAccess, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerSecurity, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_EliasNotExactly, MSGBOX_DEFAULT
+        closemessage
+
+
+SilphCo_3F_Frlg_EventScript_FamiliarStrangerFinish:
+        msgbox SilphCo_3F_Frlg_Text_PlayerWhySilph, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_StrangerLooseEnds, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_PlayerEveryoneSaysThat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_3F_Frlg_Text_StrangerMaybeListen, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+SilphCo_3F_Frlg_EventScript_FamiliarStrangerRepeat:
+        msgbox SilphCo_3F_Frlg_Text_StrangerRepeat, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+@ =============================================================================
+@ SHARED TEXT
+@ =============================================================================
+
+SilphCo_3F_Frlg_Text_PlayerStares:
+        .string "{PLAYER}: ...$"
+
+
+SilphCo_3F_Frlg_Text_StrangerHelpYou:
+        .string "???: Can I help you?$"
+
+
+SilphCo_3F_Frlg_Text_PlayerKnowYou:
+        .string "{PLAYER}: I know you.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerDontBelieveSo:
+        .string "???: I don't believe you do.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerRememberYou:
+        .string "{PLAYER}: No...\n"
+        .string "I remember you.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerFromWhere:
+        .string "???: From where?$"
+
+
+SilphCo_3F_Frlg_Text_PlayerDoesntKnow:
+        .string "{PLAYER}: I...\p"
+        .string "I don't know.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerPerhapsNot:
+        .string "???: Then perhaps you don't\n"
+        .string "remember me.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerUncomfortable:
+        .string "???: You're making this unusually\n"
+        .string "uncomfortable.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerWhoAreYou:
+        .string "{PLAYER}: Who ARE you?$"
+
+
+SilphCo_3F_Frlg_Text_PlayerDoesntHelp:
+        .string "{PLAYER}: ...That doesn't help.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerWhatDoYouDo:
+        .string "{PLAYER}: What do you even do here?$"
+
+
+SilphCo_3F_Frlg_Text_PlayerWhySilph:
+        .string "{PLAYER}: Then why are you at Silph?$"
+
+
+SilphCo_3F_Frlg_Text_StrangerLooseEnds:
+        .string "???: Loose ends.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerEveryoneSaysThat:
+        .string "{PLAYER}: Everybody here talks like\n"
+        .string "they're hiding something.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerMaybeListen:
+        .string "???: Perhaps you should listen\n"
+        .string "to that instinct.$"
+
+
+SilphCo_3F_Frlg_Text_StrangerRepeat:
+        .string "???: Still trying to remember me?\p"
+        .string "I wouldn't force it.$"
+
+
+@ =============================================================================
+@ TIA PATH
+@ =============================================================================
+
+SilphCo_3F_Frlg_Text_TiaName:
+        .string "TIA: Tia.$"
+
+
+SilphCo_3F_Frlg_Text_TiaRecords:
+        .string "TIA: I'm responsible for records.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerSecretary:
+        .string "{PLAYER}: Like a secretary?$"
+
+
+SilphCo_3F_Frlg_Text_TiaNo:
+        .string "TIA: ...No.$"
+
+
+@ =============================================================================
+@ ELIAS PATH
+@ =============================================================================
+
+SilphCo_3F_Frlg_Text_EliasName:
+        .string "ELIAS: Elias.$"
+
+
+SilphCo_3F_Frlg_Text_EliasAccess:
+        .string "ELIAS: I'm responsible for access.$"
+
+
+SilphCo_3F_Frlg_Text_PlayerSecurity:
+        .string "{PLAYER}: Like security?$"
+
+
+SilphCo_3F_Frlg_Text_EliasNotExactly:
+        .string "ELIAS: ...Not exactly.$"
+
+@ =============================================================================
+@ OPTIONAL ENVIRONMENTAL LORE
+@ =============================================================================
+
+SilphCo_3F_Frlg_EventScript_BookkeeperMemo::
+        msgbox SilphCo_3F_Frlg_Text_BookkeeperMemo, MSGBOX_SIGN
+        end
+
+SilphCo_3F_Frlg_EventScript_KeykeeperMemo::
+        msgbox SilphCo_3F_Frlg_Text_KeykeeperMemo, MSGBOX_SIGN
+        end
+
+SilphCo_3F_Frlg_Text_BookkeeperMemo:
+        .string "An internal notice reads:\p"
+        .string "ARCHIVAL MATERIALS REQUIRE\p"
+        .string "APPROVAL FROM THE BOOKKEEPER.$"
+
+SilphCo_3F_Frlg_Text_KeykeeperMemo:
+        .string "Another notice reads:\p"
+        .string "RESTRICTED ACCESS REQUIRES\p"
+        .string "THE KEEPER OF THE KEY.$"

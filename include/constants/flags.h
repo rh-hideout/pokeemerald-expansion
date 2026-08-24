@@ -68,16 +68,16 @@
 #define FLAG_COUNTERPART_BOOK_SCENE_DONE 0x2E
 #define FLAG_HIDE_HARD_ROCK_BLAINE    0x2F // Unused Flag
 #define FLAG_COUNTERPART_HOME_INVITE    0x30 // Unused Flag
-#define FLAG_UNUSED_0x033    0x33 // Unused Flag
-#define FLAG_UNUSED_0x034    0x34 // Unused Flag
-#define FLAG_UNUSED_0x035    0x35 // Unused Flag
-#define FLAG_UNUSED_0x036    0x36 // Unused Flag
-#define FLAG_UNUSED_0x037    0x37 // Unused Flag
-#define FLAG_UNUSED_0x038    0x38 // Unused Flag
-#define FLAG_UNUSED_0x039    0x39 // Unused Flag
-#define FLAG_UNUSED_0x03A    0x3A // Unused Flag
-#define FLAG_UNUSED_0x03B    0x3B // Unused Flag
-#define FLAG_UNUSED_0x03C    0x3C // Unused Flag
+#define FLAG_SEASHORE_HOUSE_INTRO_SEEN    0x33
+#define FLAG_SAFFRON_HISTORICAL_SABRINA_MET    0x34
+#define FLAG_SAFFRON_TWIN_SCENE_DONE          0x35
+#define FLAG_HIDE_SAFFRON_MEMORY_TWIN         0x36
+#define FLAG_HIDE_SAFFRON_PRESENT_SABRINA     0x37
+#define FLAG_SILPH_LORELEI_MET                 0x38
+#define FLAG_SILPH_FAMILIAR_STRANGER_MET       0x39
+#define FLAG_SILPH_PAST_MISTY_MET              0x3A
+#define FLAG_SILPH_GIOVANNI_MET                0x3B
+#define FLAG_HIDE_SAFFRON_FANCLUB_TWIN          0x3C
 #define FLAG_UNUSED_0x03D    0x3D // Unused Flag
 #define FLAG_UNUSED_0x03E    0x3E // Unused Flag
 #define FLAG_UNUSED_0x03F    0x3F // Unused Flag
@@ -96,7 +96,7 @@
 #define FLAG_HIDE_CERULEAN_LAB_COUNTERPART    0x4C
 #define FLAG_HIDE_RUSTBORO_CITY_MISTY     0x4D
 #define FLAG_HIDE_RUSTBORO_CITY_ROXANNE   0x4E
-#define FLAG_UNUSED_0x04F    0x4F // Unused Flag
+#define FLAG_EXP_ALL_ENABLED                0x4F // Permanent party-wide EXP reward from Misty
 
 // Scripts
 #define FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL  0x50
@@ -104,8 +104,8 @@
 #define FLAG_RESCUED_BIRCH                       0x52
 #define FLAG_LEGENDARIES_IN_SOOTOPOLIS           0x53
 
-#define FLAG_UNUSED_0x054                    0x54  // Unused Flag
-#define FLAG_UNUSED_0x055                    0x55  // Unused Flag
+#define FLAG_RUSTBORO_SHRINE_FINALE_DONE     0x54
+#define FLAG_GRANITE_CAVE_TWIN_SCENE_DONE    0x55
 
 #define FLAG_HIDE_CONTEST_POKE_BALL          0x56  // Always set after new game, object it hides is added directly
 #define FLAG_MET_RIVAL_MOM                   0x57
