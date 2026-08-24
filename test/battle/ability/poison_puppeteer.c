@@ -255,7 +255,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates even if Synchronize activation fa
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
 
-        MESSAGE("It doesn't affect the opposing Pecharunt…");
+        MESSAGE("It doesn't affect Pecharunt…");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
