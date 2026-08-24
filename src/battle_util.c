@@ -4427,6 +4427,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         BattleScriptCall(BattleScript_SynchronizeActivates);
                         effect++;
                     }
+                    else
+                    {
+                        gSpecialStatuses[battler].synchronize = FALSE;
+                    }
                     break;
                 }
             }

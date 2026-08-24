@@ -238,6 +238,41 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
     }
 }
 
+SINGLE_BATTLE_TEST("Poison Puppeteer activates even if Synchronize activation failed before it")
+{
+    KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd, so Poison Puppeteer doesn't activate; #10696
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(5); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(7); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MORTAL_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+
+        MESSAGE("It doesn't affect the opposing Pecharunt…");
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+            STATUS_ICON(player, poison: TRUE);
+        }
+
+        ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+        NOT ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_POISON));
+        EXPECT(opponent->status1 & STATUS1_POISON);
+        EXPECT(player->volatiles.confusionTimer == 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status before Synchronize activation")
 {
     GIVEN {
@@ -271,6 +306,9 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status bef
 
 DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-volatile effects affecting multiple battlers")
 {
+    // Not possible to test with G-Max Malodor for damaging moves,
+    // since Poison Puppeteer is exclusive to mons that already have it in their ability list
+    // and G-Max Malodor is exclusive to Gigantamax Garbodor.
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
         ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
