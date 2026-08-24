@@ -61,10 +61,10 @@ static void Mining_FreeResources(void);
 static void Mining_UpdateStressLevel(void);
 static void Mining_UpdateTerrain(void);
 static void Mining_DrawRandomTerrain(void);
-static void DoDrawRandomItem(u8 itemStateId, u8 itemId);
-static void DoDrawRandomStone(u8 itemId);
+static void DoDrawRandomItem(u32 itemStateId, u32 itemId);
+static void DoDrawRandomStone(u32 itemId);
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
-static bool32 DoesStoneFitInItemMap(u8 itemId);
+static bool32 DoesStoneFitInItemMap(u32 itemId);
 #endif
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId);
 static void Mining_CheckItemFound(void);
@@ -307,7 +307,7 @@ static const struct SpritePalette sSpritePal_Cursor[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_Buttons[] =
 {
-    {gButtonGfx, 8192 / 2 , TAG_BUTTONS},
+    {gButtonGfx, 4096 , TAG_BUTTONS},
     {NULL},
 };
 
@@ -331,13 +331,13 @@ static const struct CompressedSpriteSheet sSpriteSheet_HitEffectPickaxe[] =
 
 static const struct CompressedSpriteSheet sSpriteSheet_HitHammer[] =
 {
-    {gHitHammerGfx, 32 * 64 / 2 , TAG_HIT_HAMMER},
+    {gHitHammerGfx, 1024 , TAG_HIT_HAMMER},
     {NULL},
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_HitPickaxe[] =
 {
-    {gHitPickaxeGfx, 32 * 64 / 2 , TAG_HIT_PICKAXE},
+    {gHitPickaxeGfx, 1024 , TAG_HIT_PICKAXE},
     {NULL},
 };
 
@@ -1305,12 +1305,11 @@ static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
 
 static u32 MiningUtil_GetLeftValue(u32 itemId)
 {
-    u32 x, y;
     u32 left = 0;
 
-    for (x = 0; x < 4; x++)
+    for (u32 x = 0; x < 4; x++)
     {
-        for (y = 0; y < 4; y++)
+        for (u32 y = 0; y < 4; y++)
         {
             if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
@@ -1324,12 +1323,11 @@ static u32 MiningUtil_GetLeftValue(u32 itemId)
 
 static u32 MiningUtil_GetTopValue(u32 itemId)
 {
-    u32 x, y;
     u32 top = 0;
 
-    for (y = 0; y < 4; y++)
+    for (u32 y = 0; y < 4; y++)
     {
-        for (x = 0; x < 4; x++)
+        for (u32 x = 0; x < 4; x++)
         {
             if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
@@ -1399,7 +1397,7 @@ static void Mining_Init(MainCallback callback)
     u32 zones[4] = {0, 1, 2, 3};
 
     // Do the shuffle
-    for (u32 i = n - 1; i > 0; i--) 
+	for (u32 i = n - 1; i > 0; i--)
     {
         // Pick a random index from 0 to i (inclusive)
         u32 j = RANDOM(i + 1);
@@ -1709,7 +1707,6 @@ static void OverwriteTileDataInTilemapBuffer(u8 tile, u8 x, u8 y, u16 *tilemapBu
 
 static bool32 Mining_LoadBgGraphics(void)
 {
-    u32 i, j;
     u16 *tilemapBuf = GetBgTilemapBuffer(1);
     switch (sMiningUiState->loadGameState)
     {
@@ -1723,9 +1720,9 @@ static bool32 Mining_LoadBgGraphics(void)
         case 1:
             if (FreeTempTileDataBuffersIfPossible() != TRUE)
             {
-                for (i = 0; i < 32; i++)
+                for (u32 i = 0; i < 32; i++)
                 {
-                    for (j = 0; j < 32; j++)
+                    for (u32 j = 0; j < 32; j++)
                         OverwriteTileDataInTilemapBuffer(0, i, j, tilemapBuf, 2);
                 }
                 DecompressDataWithHeaderWram(gStressLevelAndTerrainTilemap, sMiningUiState->sBg2TilemapBuffer);
@@ -1923,7 +1920,7 @@ static void Task_MiningMainInput(u8 taskId)
 {
     if (gMain.newKeys & A_BUTTON && !sMiningUiState->shouldShake)
     {
-        u32 cursorPos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2) * 12;
+        u32 cursorPos = sMiningUiState->cursorX + (sMiningUiState->cursorY - 2) * 12;
         Mining_UpdateTerrain();
         Mining_UpdateStressLevel();
         ScheduleBgCopyTilemapToVram(2);
@@ -1968,22 +1965,22 @@ static void Task_MiningMainInput(u8 taskId)
         sMiningUiState->shouldShake = TRUE;
         CreateTask(MiningUi_Shake, 0);
     }
-    else if (gMain.newAndRepeatedKeys & DPAD_LEFT && sMiningUiState->cursorX > 0)
+    else if (gMain.newAndRepeatedKeys & DPAD_LEFT && sMiningUiState->cursorX > MINING_WALL_BORDER_X_LEFT)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].x -= 16;
         sMiningUiState->cursorX -= 1;
     }
-	else if (gMain.newAndRepeatedKeys & DPAD_RIGHT && sMiningUiState->cursorX < 11)
+	else if (gMain.newAndRepeatedKeys & DPAD_RIGHT && sMiningUiState->cursorX < MINING_WALL_BORDER_X_RIGHT)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].x += 16;
         sMiningUiState->cursorX += 1;
     }
-	else if (gMain.newAndRepeatedKeys & DPAD_UP && sMiningUiState->cursorY > 2)
+	else if (gMain.newAndRepeatedKeys & DPAD_UP && sMiningUiState->cursorY > MINING_WALL_BORDER_Y_UP)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].y -= 16;
         sMiningUiState->cursorY -= 1;
     }
-	else if (gMain.newAndRepeatedKeys & DPAD_DOWN && sMiningUiState->cursorY < 9)
+	else if (gMain.newAndRepeatedKeys & DPAD_DOWN && sMiningUiState->cursorY < MINING_WALL_BORDER_Y_DOWN)
     {
         gSprites[sMiningUiState->cursorSpriteIndex].y += 16;
         sMiningUiState->cursorY += 1;
@@ -1991,7 +1988,7 @@ static void Task_MiningMainInput(u8 taskId)
     else if (gMain.newAndRepeatedKeys & R_BUTTON)
     {
         StartSpriteAnim(&gSprites[sMiningUiState->bRedSpriteIndex], 1);
-        StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex],1);
+        StartSpriteAnim(&gSprites[sMiningUiState->bBlueSpriteIndex], 1);
         sMiningUiState->tool = RED_BUTTON;
         PlaySE(MINING_SE_TOOL_SWITCH);
     }
@@ -2015,174 +2012,174 @@ static void Task_MiningMainInput(u8 taskId)
     #endif
 }
 
-static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_0(u32 stressPosOffset, u16 *ptr)
 {
-    OverwriteTileDataInTilemapBuffer(0x07, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x08, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x09, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x0E, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x0F, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x14, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x07, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x08, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x09, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x0E, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x0F, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x14, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_1(u32 stressPosOffset, u16 *ptr)
 {
-    OverwriteTileDataInTilemapBuffer(0x17, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x18, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x1B, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x1C, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x1D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x22, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x23, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x17, 21 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x18, 22 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x1B, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x1C, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x1D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x22, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x23, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_2(u32 stressPosOffset, u16 *ptr)
 {
-    OverwriteTileDataInTilemapBuffer(0x27, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x28, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x29, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2A, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2B, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2C, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2E, 21 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2F, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x30, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x27, 20 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x28, 21 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x29, 22 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2A, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2B, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2C, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2E, 21 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2F, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x30, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_3(u32 stressPosOffset, u16 *ptr)
 {
     // Clean up 0x27, 0x28 and 0x29 from StressLevel_Draw_2
-    OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x00, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x00, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 21 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 22 - stressPosOffset * 3, 0, ptr, 0x01);
 
-    OverwriteTileDataInTilemapBuffer(0x31, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x32, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x33, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x34, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x35, 20 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x36, 21 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x37, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x30, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x31, 22 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x32, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x33, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x34, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x35, 20 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x36, 21 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x37, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x30, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_4(u32 stressPosOffset, u16 *ptr)
 {
     // The same clean up as StressLevel_Draw_3 but only used when the hammer is used
-    OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x00, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x00, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 21 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 22 - stressPosOffset * 3, 0, ptr, 0x01);
 
-    OverwriteTileDataInTilemapBuffer(0x38, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x39, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3A, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3B, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3C, 19 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3D, 20 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3E, 21 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3F, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x30, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x40, 19 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x41, 20 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x42, 21 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x38, 22 - stressPosOffset * 3, 0, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x39, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3A, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3B, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3C, 19 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3D, 20 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3E, 21 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3F, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x30, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x40, 19 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x41, 20 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x42, 21 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_5(u32 stressPosOffset, u16 *ptr)
 {
-    OverwriteTileDataInTilemapBuffer(0x43, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x44, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3B, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x45, 19 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x46, 20 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x47, 21 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3F, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x30, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x48, 19 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x49, 20 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x4A, 21 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x43, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x44, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3B, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x45, 19 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x46, 20 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x47, 21 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3F, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x30, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x48, 19 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x49, 20 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x4A, 21 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16 *ptr)
+static void StressLevel_Draw_6(u32 stressPosOffset, u16 *ptr)
 {
     // Clean up 0x48 and 0x49 from StressLevel_Draw_5
-    OverwriteTileDataInTilemapBuffer(0x00, 19 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 19 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 3, ptr, 0x01);
 
-    OverwriteTileDataInTilemapBuffer(0x07, 18 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x08, 19 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x09, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x44, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3B, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x2D, 23 - ofs * 4 + ofs2, 1, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x0E, 19 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x0F, 20 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x4B, 21 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x3F, 22 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x30, 23 - ofs * 4 + ofs2, 2, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x14, 20 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x4A, 21 - ofs * 4 + ofs2, 3, ptr, 0x01);
-    OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x07, 18 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x08, 19 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x09, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x44, 21 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3B, 22 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x2D, 23 - stressPosOffset * 3, 1, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x0E, 19 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x0F, 20 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x4B, 21 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x3F, 22 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x30, 23 - stressPosOffset * 3, 2, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x14, 20 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x4A, 21 - stressPosOffset * 3, 3, ptr, 0x01);
+    OverwriteTileDataInTilemapBuffer(0x26, 23 - stressPosOffset * 3, 3, ptr, 0x01);
 }
 
 // This function draws the individual frames of the stress level indicator
-static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16 *ptr)
+static void StressLevel_UpdateRelativeToFramePos(u32 stressPosOffset, u16 *ptr)
 {
     switch (sMiningUiState->stressLevelCount)
     {
         case 0:
-            StressLevel_Draw_0(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_0(stressPosOffset, ptr);
             if (sMiningUiState->tool == 1)
                 sMiningUiState->stressLevelCount++;
             sMiningUiState->stressLevelCount++;
             break;
         case 1:
-            StressLevel_Draw_1(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_1(stressPosOffset, ptr);
             if (sMiningUiState->tool == 1)
                 sMiningUiState->stressLevelCount++;
             sMiningUiState->stressLevelCount++;
             break;
         case 2:
-            StressLevel_Draw_2(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_2(stressPosOffset, ptr);
             if (sMiningUiState->tool == 1)
                 sMiningUiState->stressLevelCount++;
             sMiningUiState->stressLevelCount++;
             break;
         case 3:
-            StressLevel_Draw_3(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_3(stressPosOffset, ptr);
             if (sMiningUiState->tool == 1)
                 sMiningUiState->stressLevelCount++;
             sMiningUiState->stressLevelCount++;
             break;
         case 4:
-            StressLevel_Draw_4(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_4(stressPosOffset, ptr);
             if (sMiningUiState->tool == 1)
                 sMiningUiState->stressLevelCount++;
             sMiningUiState->stressLevelCount++;
             break;
         case 5:
-            StressLevel_Draw_5(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_5(stressPosOffset, ptr);
             sMiningUiState->stressLevelCount++;
             break;
         case 6:
-            StressLevel_Draw_6(offsetIn8, ofs2, ptr);
+            StressLevel_Draw_6(stressPosOffset, ptr);
             if (sMiningUiState->stressLevelPos == 7)
             {
-                OverwriteTileDataInTilemapBuffer(0x00, 18 - offsetIn8 * 4 + ofs2, 1, ptr, 0x01);
-                OverwriteTileDataInTilemapBuffer(0x00, 19 - offsetIn8 * 4 + ofs2, 1, ptr, 0x01);
-                OverwriteTileDataInTilemapBuffer(0x00, 20 - offsetIn8 * 4 + ofs2, 1, ptr, 0x01);
-                OverwriteTileDataInTilemapBuffer(0x00, 19 - offsetIn8 * 4 + ofs2, 2, ptr, 0x01);
-                OverwriteTileDataInTilemapBuffer(0x00, 20 - offsetIn8 * 4 + ofs2, 2, ptr, 0x01);
-                OverwriteTileDataInTilemapBuffer(0x00, 20 - offsetIn8 * 4 + ofs2, 3, ptr, 0x01);
-            }
+                OverwriteTileDataInTilemapBuffer(0x00, 18 - stressPosOffset * 3, 1, ptr, 0x01);
+                OverwriteTileDataInTilemapBuffer(0x00, 19 - stressPosOffset * 3, 1, ptr, 0x01);
+                OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 1, ptr, 0x01);
+                OverwriteTileDataInTilemapBuffer(0x00, 19 - stressPosOffset * 3, 2, ptr, 0x01);
+                OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 2, ptr, 0x01);
+                OverwriteTileDataInTilemapBuffer(0x00, 20 - stressPosOffset * 3, 3, ptr, 0x01);
+			}
             sMiningUiState->stressLevelCount = 1;
             sMiningUiState->stressLevelPos++;
             break;
@@ -2193,14 +2190,14 @@ static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16 *ptr
 static void Mining_UpdateStressLevel(void)
 {
 	u16 *ptr = GetBgTilemapBuffer(2);
-	StressLevel_UpdateRelativeToFramePos(sMiningUiState->stressLevelPos, sMiningUiState->stressLevelPos, ptr);
+	StressLevel_UpdateRelativeToFramePos(sMiningUiState->stressLevelPos, ptr);
 }
 
 // Draws a tile layer to the screen.
-static void Terrain_DrawLayerTileToScreen(u8 x, u8 y, u8 layer, u16* ptr)
+static void Terrain_DrawLayerTileToScreen(u32 x, u32 y, u32 layer, u16* ptr)
 {
-    u8 tileX = x * 2;
-    u8 tileY = y * 2;
+    u32 tileX = x * 2;
+    u32 tileY = y * 2;
 
     switch(layer)
     {
@@ -2262,11 +2259,11 @@ static struct SpriteTemplate CreatePaletteAndReturnTemplate(u32 TileTag, u32 Pal
 #define POS_OFFS_32X32 16
 #define POS_OFFS_64X64 32
 
-static void DrawItemSprite(u8 x, u8 y, u8 itemId, u32 itemNumPalTag, u32 itemStateId)
+static void DrawItemSprite(u32 x, u32 y, u32 itemId, u32 itemNumPalTag, u32 itemStateId)
 {
     struct SpriteTemplate gSpriteTemplate;
-    u8 posX = x * 16;
-    u8 posY = y * 16 + 32;
+    u32 posX = x * 16;
+    u32 posY = y * 16 + 32;
 
     switch(itemId)
     {
@@ -2335,13 +2332,11 @@ static void SetItemState(u32 posX, u32 posY, u32 x, u32 y, u32 itemStateId)
     sMiningUiState->itemMap[posX + x + (posY + y) * 12] = itemStateId;
 }
 
-static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
+static void OverwriteItemMapData(u32 posX, u32 posY, u32 itemStateId, u32 itemId)
 {
-    u32 x, y;
-
-    for (x = 0; x < 4; x++)
+    for (u32 x = 0; x < 4; x++)
     {
-        for (y = 0; y < 4; y++)
+        for (u32 y = 0; y < 4; y++)
         {
             if (sSpriteTileTable[itemId][x + y * 4] == 1)
                 SetItemState(posX, posY, x, y, itemStateId);
@@ -2354,7 +2349,7 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     posY + MiningUtil_GetTopValue(itemId) > yBorder
 #define IGNORE_COORDS 255
 
-static u32 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder)
+static u32 CheckIfItemCanBePlaced(u32 itemId, u32 posX, u32 posY, u32 xBorder, u32 yBorder)
 {
     for (u32 i = 1; i <= 4; i++)
     {
@@ -2364,7 +2359,7 @@ static u32 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yB
     return TRUE; // If it can be placed, return true
 }
 
-static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
+static void DoDrawRandomItem(u32 itemStateId, u32 itemId)
 {
     u32 y;
     u32 x;
@@ -2426,15 +2421,11 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
             isItemPlaced = TRUE;
             break;
         }
-        // If it hasn't placed an Item (we dont really need this, why am I not deleting this??? lol, we lowkey dont need this huh), just retry
-        if (y == yMax && !isItemPlaced)
-            y = yMin;
     }
 }
 
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 {
-    u32 dx, dy;
     u32 height = MiningUtil_GetTopValue(itemId) + 1;
     u32 width =  MiningUtil_GetLeftValue(itemId) + 1;
 
@@ -2444,9 +2435,9 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
     if ((y + height) > MINING_ZONE_HEIGHT)
         return FALSE;
 
-    for (dx = 0; dx < width; dx++)
+    for (u32 dx = 0; dx < width; dx++)
     {
-        for (dy = 0; dy < height; dy++)
+        for (u32 dy = 0; dy < height; dy++)
         {
             if (sMiningUiState->itemMap[x + dx + (y + dy) * MINING_ZONE_WIDTH] != 0)
                 return FALSE;
@@ -2457,16 +2448,14 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 
 
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
-static bool32 DoesStoneFitInItemMap(u8 itemId)
+static bool32 DoesStoneFitInItemMap(u32 itemId)
 {
-    u32 coordX, coordY;
-
     if (itemId == MININGID_NONE)
         return FALSE;
 
-    for (coordX = 0; coordX < MINING_ZONE_WIDTH; coordX++)
+    for (u32 coordX = 0; coordX < MINING_ZONE_WIDTH; coordX++)
     {
-        for (coordY = 0; coordY < MINING_ZONE_HEIGHT; coordY++)
+        for (u32 coordY = 0; coordY < MINING_ZONE_HEIGHT; coordY++)
         {
             if (CanStoneBePlacedAtXY(coordX, coordY, itemId))
                 return TRUE;
@@ -2476,7 +2465,7 @@ static bool32 DoesStoneFitInItemMap(u8 itemId)
 }
 #endif
 
-static void DoDrawRandomStone(u8 itemId)
+static void DoDrawRandomStone(u32 itemId)
 {
     u32 x = Random() % MINING_ZONE_WIDTH;
     u32 y = Random() % MINING_ZONE_HEIGHT;
@@ -2530,7 +2519,7 @@ static void Mining_CheckItemFound(void)
     }
 }
 
-static s16 RandRangeSigned(s16 min, s16 max)
+static s32 RandRangeSigned(s32 min, s32 max)
 {
     if (min == max)
         return min;
@@ -2538,7 +2527,7 @@ static s16 RandRangeSigned(s16 min, s16 max)
     return (Random() % (max - min)) + min;
 }
 
-static bool8 AtCornerOfRectangle(u8 row, u8 col, u8 baseRow, u8 baseCol, u8 finalRow, u8 finalCol)
+static bool32 AtCornerOfRectangle(u32 row, u32 col, u32 baseRow, u32 baseCol, u32 finalRow, u32 finalCol)
 {
     return (col == baseCol && row == baseRow)
         || (col == baseCol && row == finalRow)
@@ -2551,12 +2540,12 @@ static bool8 AtCornerOfRectangle(u8 row, u8 col, u8 baseRow, u8 baseCol, u8 fina
 // Credits - Skeli
 static void Mining_DrawRandomTerrain(void)
 {
-    u8 row1, row2, col1, col2, x, y;
-    u8 i, j, totalTimes;
-    s8 baseRow; // Rocks can go up to one row over on either top or bottom
-    s8 baseCol; // Rocks can go up to one col over on either left or right
-    s8 finalRow;
-    s8 finalCol, k, m;
+    u32 row1, row2, col1, col2, x, y;
+    u32 i, j, totalTimes;
+    s32 baseRow; // Rocks can go up to one row over on either top or bottom
+    s32 baseCol; // Rocks can go up to one col over on either left or right
+    s32 finalRow;
+    s32 finalCol, k, m;
     u16 *ptr = GetBgTilemapBuffer(2);
 
     // Start by placing blank layer 3 rocks
@@ -2624,22 +2613,18 @@ static void Mining_DrawRandomTerrain(void)
 
     // Using 'x', 'y' and 'i' to draw the right layer_tiles from layerMap to the screen.
     // Why 'y = 2'? Because we need to have a distance from the top of the screen, which is 32px -> 2 * 16
-    for (y = 2; y < 8 +2; y++)
+    for (y = 2; y < 8 + 2; y++)
     {
         for (x = 0; x < 12 && i < 96; x++, i++)
             Terrain_DrawLayerTileToScreen(x, y, sMiningUiState->layerMap[i], ptr);
     }
 }
 
-static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY)
+static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s32 ofsX, s32 ofsY)
 {
-    u8 i;
-    u8 tileX;
-    u8 tileY;
-
-    i = (sMiningUiState->cursorY - 2 + ofsY) * 12 + sMiningUiState->cursorX + ofsX; // It needs the `-2` because the cursorY value started at `2`
-    tileX = (sMiningUiState->cursorX + ofsX) * 2;
-    tileY = (sMiningUiState->cursorY + ofsY) * 2;
+    u32 i = (sMiningUiState->cursorY - 2 + ofsY) * 12 + sMiningUiState->cursorX + ofsX; // It needs the `-2` because the cursorY value started at `2`
+    u32 tileX = (sMiningUiState->cursorX + ofsX) * 2;
+    u32 tileY = (sMiningUiState->cursorY + ofsY) * 2;
     if (sMiningUiState->layerMap[i] < 6)
     {
         sMiningUiState->layerMap[i]++;
@@ -2686,33 +2671,34 @@ static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY)
     }
 }
 
-static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
+static u32 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
 {
-    u8 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2)*12;
+    u32 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY - 2) * 12;
 
     if (sMiningUiState->itemMap[pos] != MINING_ITEM_TILE_DUG_UP)
     {
-        if (sMiningUiState->cursorX != 0)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_LEFT)
             Terrain_UpdateLayerTileOnScreen(ptr, -1, 0);
 
-        if (sMiningUiState->cursorX != 11)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_RIGHT)
             Terrain_UpdateLayerTileOnScreen(ptr, 1, 0);
 
         // We have to add '2' to '7' and '0', because the cursor spawns at Y position 2
-        if (sMiningUiState->cursorY != 9)
+        if (sMiningUiState->cursorY != MINING_WALL_BORDER_Y_DOWN)
             Terrain_UpdateLayerTileOnScreen(ptr, 0, 1);
 
-        if (sMiningUiState->cursorY != 2)
+        if (sMiningUiState->cursorY != MINING_WALL_BORDER_Y_UP)
             Terrain_UpdateLayerTileOnScreen(ptr, 0, -1);
 
         // Center hit
-        Terrain_UpdateLayerTileOnScreen(ptr,0,0);
+        Terrain_UpdateLayerTileOnScreen(ptr, 0, 0);
         if (sMiningUiState->tool == BLUE_BUTTON)
         {
-            Terrain_UpdateLayerTileOnScreen(ptr,0,0);
+            Terrain_UpdateLayerTileOnScreen(ptr, 0, 0);
         }
         return 0;
-    } else
+    }
+	else
     {
         return 1;
     }
@@ -2727,16 +2713,16 @@ static void Terrain_Hammer_OverwriteTiles(u16* ptr)
     {
         // Corners
         // We have to add '2' to '7' and '0', because the cursor spawns at Y position 2
-        if (sMiningUiState->cursorX != 11 && sMiningUiState->cursorY != 9)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_RIGHT && sMiningUiState->cursorY != MINING_WALL_BORDER_Y_DOWN)
             Terrain_UpdateLayerTileOnScreen(ptr, 1, 1);
 
-        if (sMiningUiState->cursorX != 0 && sMiningUiState->cursorY != 9)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_LEFT && sMiningUiState->cursorY != MINING_WALL_BORDER_Y_DOWN)
             Terrain_UpdateLayerTileOnScreen(ptr, -1, 1);
 
-        if (sMiningUiState->cursorX != 11 && sMiningUiState->cursorY != 2)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_RIGHT && sMiningUiState->cursorY != MINING_WALL_BORDER_Y_UP)
             Terrain_UpdateLayerTileOnScreen(ptr, 1, -1);
 
-        if (sMiningUiState->cursorX != 0 && sMiningUiState->cursorY != 2)
+        if (sMiningUiState->cursorX != MINING_WALL_BORDER_X_LEFT && sMiningUiState->cursorY != MINING_WALL_BORDER_Y_UP)
             Terrain_UpdateLayerTileOnScreen(ptr, -1, -1);
 
         if (sMiningUiState->layerMap[pos] != 6)
@@ -2958,7 +2944,7 @@ static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId)
     if (itemId == ITEM_NONE)
         return;
 
-    if (AddBagItem(itemId,1))
+    if (AddBagItem(itemId, 1))
         return;
 
     PrintMessage(COMPOUND_STRING("Too bad!\nYour Bag is full!"));
@@ -3065,10 +3051,9 @@ static void PrintItemSuccess(u32 itemId)
 
 static u32 GetTotalNumberOfBuriedItems(void)
 {
-    u32 itemIndex = 0;
     u32 count = 0;
 
-    for (itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
+    for (u32 itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
         if (GetBuriedBagItemId(itemIndex))
             count++;
 
@@ -3079,10 +3064,9 @@ static u32 GetTotalNumberOfBuriedItems(void)
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static u32 GetNumberOfFoundItems(void)
 {
-    u32 itemIndex = 0;
     u32 count = 0;
 
-    for (itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
+    for (u32 itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
         if (GetBuriedItemStatus(itemIndex))
             count++;
 
@@ -3100,8 +3084,7 @@ static bool32 AreAllItemsFound(void)
 
 static void InitBuriedItems(void)
 {
-    u32 index = 0;
-    for (index = 0; index < MINING_MAX_NUM_BURIED_ITEMS; index++)
+    for (u32 index = 0; index < MINING_MAX_NUM_BURIED_ITEMS; index++)
     {
         SetBuriedItemsId(index, MININGID_NONE);
         SetBuriedItemStatus(index, FALSE);
