@@ -78,8 +78,8 @@
 #define FLAG_SILPH_PAST_MISTY_MET              0x3A
 #define FLAG_SILPH_GIOVANNI_MET                0x3B
 #define FLAG_HIDE_SAFFRON_FANCLUB_TWIN          0x3C
-#define FLAG_UNUSED_0x03D    0x3D // Unused Flag
-#define FLAG_UNUSED_0x03E    0x3E // Unused Flag
+#define FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE        0x3D
+#define FLAG_HIDE_SAFFRON_FANCLUB_SABRINA       0x3E
 #define FLAG_UNUSED_0x03F    0x3F // Unused Flag
 #define FLAG_HIDE_COUNTERPART_LITTLEROOT_WALK    0x40 // Unused Flag
 #define FLAG_HIDE_COUNTERPART_ROUTE101_WALK    0x41 // Unused Flag

@@ -1,182 +1,355 @@
+@ =============================================================================
+@ ROUTE 109 - SEASHORE HOUSE
+@
+@ Former vanilla Soda Pop battle house.
+@ Repurposed for custom Twelve / Six story.
+@
+@ Slateport lore state:
+@   3 = Parent has sent PLAYER here
+@   4 = Book/machine activated; Saffron memory entered
+@ =============================================================================
+
 Route109_SeashoreHouse_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, Route109_SeashoreHouse_OnTransition
-	.byte 0
+        map_script MAP_SCRIPT_ON_TRANSITION, Route109_SeashoreHouse_OnTransition
+        map_script MAP_SCRIPT_ON_FRAME_TABLE, Route109_SeashoreHouse_OnFrame
+        .byte 0
+
 
 Route109_SeashoreHouse_OnTransition:
-	setflag FLAG_LANDMARK_SEASHORE_HOUSE
-	end
+        setflag FLAG_LANDMARK_SEASHORE_HOUSE
+        end
 
-Route109_SeashoreHouse_EventScript_Owner::
-	lock
-	faceplayer
-	goto_if_set FLAG_RECEIVED_6_SODA_POP, Route109_SeashoreHouse_EventScript_AlreadyReceivedSodaPop
-	goto_if_set FLAG_DEFEATED_SEASHORE_HOUSE, Route109_SeashoreHouse_EventScript_DefeatedTrainers
-	goto_if_set FLAG_TEMP_2, Route109_SeashoreHouse_EventScript_AlreadyGaveIntroduction
-	msgbox Route109_SeashoreHouse_Text_SeashoreHouseIntro, MSGBOX_DEFAULT
-	setflag FLAG_TEMP_2
-	release
-	end
 
-Route109_SeashoreHouse_EventScript_AlreadyGaveIntroduction::
-	msgbox Route109_SeashoreHouse_Text_ShowMeSomeHotMatches, MSGBOX_DEFAULT
-	release
-	end
+Route109_SeashoreHouse_OnFrame:
+        map_script_2 VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 4, Route109_SeashoreHouse_EventScript_ReturnFromSaffron
+        .2byte 0
 
-Route109_SeashoreHouse_EventScript_DefeatedTrainers::
-	msgbox Route109_SeashoreHouse_Text_TakeTheseSodaPopBottles, MSGBOX_DEFAULT
-	giveitem ITEM_SODA_POP, 6
-	goto_if_eq VAR_RESULT, FALSE, Route109_SeashoreHouse_EventScript_BagFull
-	setflag FLAG_RECEIVED_6_SODA_POP
-	release
-	end
 
-Route109_SeashoreHouse_EventScript_BagFull::
-	msgbox Route109_SeashoreHouse_Text_BagFull, MSGBOX_DEFAULT
-	release
-	end
+@ =============================================================================
+@ BEACH HOUSE ENTRANCE REACTION
+@ =============================================================================
 
-Route109_SeashoreHouse_EventScript_AlreadyReceivedSodaPop::
-	showmoneybox 0, 0
-	msgbox Route109_SeashoreHouse_Text_WantToBuySodaPop, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, Route109_SeashoreHouse_EventScript_BuySodaPop
-	msgbox Route109_SeashoreHouse_Text_ThatsTooBad, MSGBOX_DEFAULT
-	hidemoneybox
-	release
-	end
+Route109_SeashoreHouse_EventScript_EntranceThought::
+        lockall
 
-Route109_SeashoreHouse_EventScript_BuySodaPop::
-	checkmoney 300
-	goto_if_eq VAR_RESULT, FALSE, Route109_SeashoreHouse_EventScript_NotEnoughMoney
-	checkitemspace ITEM_SODA_POP
-	goto_if_eq VAR_RESULT, FALSE, Route109_SeashoreHouse_EventScript_NotEnoughSpace
-	msgbox Route109_SeashoreHouse_Text_HereYouGo, MSGBOX_DEFAULT
-	removemoney 300
-	updatemoneybox
-.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
-	hidemoneybox
-	giveitem ITEM_SODA_POP
-.else
-	giveitem ITEM_SODA_POP
-	hidemoneybox
-.endif
-	release
-	end
+        @ The two entrance tiles share this script.
+        @ Once Casey has reacted, silently ignore the other one.
+        goto_if_set FLAG_SEASHORE_HOUSE_INTRO_SEEN, Route109_SeashoreHouse_EventScript_EntranceThoughtDone
 
-Route109_SeashoreHouse_EventScript_NotEnoughMoney::
-	msgbox Route109_SeashoreHouse_Text_NotEnoughMoney, MSGBOX_DEFAULT
-	hidemoneybox
-	release
-	end
+        setflag FLAG_SEASHORE_HOUSE_INTRO_SEEN
 
-Route109_SeashoreHouse_EventScript_NotEnoughSpace::
-	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
-	hidemoneybox
-	release
-	end
+        delay 15
 
-Route109_SeashoreHouse_EventScript_Dwayne::
-	trainerbattle_single TRAINER_DWAYNE, Route109_SeashoreHouse_Text_DwayneIntro, Route109_SeashoreHouse_Text_DwayneDefeated, Route109_SeashoreHouse_EventScript_CheckTrainersCompletion
-	msgbox Route109_SeashoreHouse_Text_DwaynePostBattle, MSGBOX_AUTOCLOSE
-	end
+        msgbox Route109_SeashoreHouse_Text_PlayerBeachHouse, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_EventScript_Johanna::
-	trainerbattle_single TRAINER_JOHANNA, Route109_SeashoreHouse_Text_JohannaIntro, Route109_SeashoreHouse_Text_JohannaDefeated, Route109_SeashoreHouse_EventScript_CheckTrainersCompletion
-	msgbox Route109_SeashoreHouse_Text_JohannaPostBattle, MSGBOX_AUTOCLOSE
-	end
+Route109_SeashoreHouse_EventScript_EntranceThoughtDone:
+        releaseall
+        end
 
-Route109_SeashoreHouse_EventScript_Simon::
-	trainerbattle_single TRAINER_SIMON, Route109_SeashoreHouse_Text_SimonIntro, Route109_SeashoreHouse_Text_SimonDefeated, Route109_SeashoreHouse_EventScript_CheckTrainersCompletion
-	msgbox Route109_SeashoreHouse_Text_SimonPostBattle, MSGBOX_AUTOCLOSE
-	end
 
-Route109_SeashoreHouse_EventScript_CheckTrainersCompletion::
-	goto_if_not_defeated TRAINER_DWAYNE, Route109_SeashoreHouse_EventScript_TrainersNotCompleted
-	goto_if_not_defeated TRAINER_JOHANNA, Route109_SeashoreHouse_EventScript_TrainersNotCompleted
-	goto_if_not_defeated TRAINER_SIMON, Route109_SeashoreHouse_EventScript_TrainersNotCompleted
-	setflag FLAG_DEFEATED_SEASHORE_HOUSE
-	release
-	end
+Route109_SeashoreHouse_Text_PlayerBeachHouse:
+        .string "{PLAYER}: ...A beach house.\p"
+        .string "This is where everyone wanted me\n"
+        .string "to go?\p"
+        .string "...Yeah. Not suspicious at all.$"
 
-Route109_SeashoreHouse_EventScript_TrainersNotCompleted::
-	release
-	end
 
-Route109_SeashoreHouse_Text_SeashoreHouseIntro:
-	.string "I'm the owner of the SEASHORE HOUSE.\n"
-	.string "But you can call me MR. SEA!\p"
-	.string "What I love above all is to see hot\n"
-	.string "POKéMON battles.\p"
-	.string "Let me see that your heart burns hot!\p"
-	.string "If you can defeat all the TRAINERS\n"
-	.string "here, I'll reward your efforts.$"
+@ =============================================================================
+@ THE MACHINE / BOOK REACTION
+@ =============================================================================
 
-Route109_SeashoreHouse_Text_ShowMeSomeHotMatches:
-	.string "Show me some hot matches!\p"
-	.string "I run this SEASHORE HOUSE just for\n"
-	.string "that reason alone!$"
+Route109_SeashoreHouse_EventScript_BookMachine::
+        lockall
 
-Route109_SeashoreHouse_Text_TakeTheseSodaPopBottles:
-	.string "You're scorching hot!\n"
-	.string "Those battles blazed!\l"
-	.string "I'm more than just satisfied!\p"
-	.string "As thanks for showing me your hot\n"
-	.string "streak, I want you to take these.\p"
-	.string "It's half a dozen bottles of SODA POP!$"
+        delay 20
 
-Route109_SeashoreHouse_Text_BagFull:
-	.string "Oh, but hey, your BAG's jammed full.\n"
-	.string "I'll hang on to these for you.$"
+        msgbox Route109_SeashoreHouse_Text_SomethingMovesInBag, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_Text_WantToBuySodaPop:
-	.string "Want to buy some SODA POP?\n"
-	.string "POKéMON love it!\p"
-	.string "Just ¥300 a bottle!\n"
-	.string "Buy some!$"
+        delay 15
 
-Route109_SeashoreHouse_Text_HereYouGo:
-	.string "Here you go!$"
+        msgbox Route109_SeashoreHouse_Text_PlayerConfused, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_Text_NotEnoughMoney:
-	.string "You don't have the money.$"
+        delay 10
 
-Route109_SeashoreHouse_Text_ThatsTooBad:
-	.string "No?\n"
-	.string "That's too bad.$"
+        msgbox Route109_SeashoreHouse_Text_BookWarm, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_Text_DwayneIntro:
-	.string "If you're looking for a battle in the\n"
-	.string "SEASHORE HOUSE, you'll find no\l"
-	.string "hotter TRAINER than me, matey!$"
+        playse SE_PIN
+        delay 20
 
-Route109_SeashoreHouse_Text_DwayneDefeated:
-	.string "That was a hot battle!\n"
-	.string "I can accept that loss, matey!$"
+        msgbox Route109_SeashoreHouse_Text_MachineResponds, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_Text_DwaynePostBattle:
-	.string "Whenever I'm in SLATEPORT, I enjoy\n"
-	.string "hot battles and ice-cold SODA POP!$"
+        delay 20
 
-Route109_SeashoreHouse_Text_JohannaIntro:
-	.string "Boring battles aren't worth the effort.\p"
-	.string "Fiery hot battles are what toughen up\n"
-	.string "TRAINERS and POKéMON!$"
+        msgbox Route109_SeashoreHouse_Text_PlayerOfCourse, MSGBOX_DEFAULT
+        closemessage
 
-Route109_SeashoreHouse_Text_JohannaDefeated:
-	.string "That's hot!$"
+        @ Retire the trigger before leaving.
+        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 4
 
-Route109_SeashoreHouse_Text_JohannaPostBattle:
-	.string "Whew, I'm all thirsty.\n"
-	.string "Maybe I'll have a SODA POP.$"
+        fadescreen FADE_TO_BLACK
+        delay 30
 
-Route109_SeashoreHouse_Text_SimonIntro:
-	.string "I'm going to show you how great\n"
-	.string "my POKéMON are, but don't cry!$"
+        @ Enter Saffron Dojo just above its normal exit.
+        warp MAP_SAFFRON_CITY_DOJO, 6, 13
 
-Route109_SeashoreHouse_Text_SimonDefeated:
-	.string "…I lost, but I won't cry…$"
+        waitstate
+        end
 
-Route109_SeashoreHouse_Text_SimonPostBattle:
-	.string "If one of my POKéMON knew the move\n"
-	.string "for carrying me across water on its\l"
-	.string "back, I could get rid of this inner tube.$"
 
+@ =============================================================================
+@ TEXT
+@ =============================================================================
+
+Route109_SeashoreHouse_Text_SomethingMovesInBag:
+        .string "Something shifts inside your BAG...$"
+
+
+Route109_SeashoreHouse_Text_PlayerConfused:
+        .string "{PLAYER}: ...?$"
+
+
+Route109_SeashoreHouse_Text_BookWarm:
+        .string "The strange book feels warm.\p"
+        .string "A faint light passes across its\n"
+        .string "cover.$"
+
+
+Route109_SeashoreHouse_Text_MachineResponds:
+        .string "A low hum fills the room.\p"
+        .string "The machine is responding to the\n"
+        .string "book...$"
+
+
+Route109_SeashoreHouse_Text_PlayerOfCourse:
+        .string "{PLAYER}: Oh, come ON.$"
+
+
+
+@ =============================================================================
+@ RETURN FROM SAFFRON
+@
+@ State 4 = PLAYER entered Saffron memory.
+@ The Fan Club completion flag proves the memory was actually completed.
+@ After this scene, state advances to 5 and the machine becomes dormant.
+@ =============================================================================
+
+Route109_SeashoreHouse_EventScript_ReturnFromSaffron::
+        goto_if_unset FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE, Route109_SeashoreHouse_EventScript_ReturnNotReady
+
+        lockall
+
+        delay 30
+
+        msgbox Route109_SeashoreHouse_Text_ReturnWhatHappened, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ReturnSaffron, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ReturnQuestions, MSGBOX_DEFAULT
+        closemessage
+
+        delay 20
+
+        msgbox Route109_SeashoreHouse_Text_PokenavRings, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        @ If MOM is hidden, DAD is the parent who raised PLAYER.
+        goto_if_set FLAG_HIDE_HOME_MOM, Route109_SeashoreHouse_EventScript_DadCall
+
+        goto Route109_SeashoreHouse_EventScript_MomCall
+
+
+Route109_SeashoreHouse_EventScript_MomCall:
+        msgbox Route109_SeashoreHouse_Text_MomBeachHouse, MSGBOX_DEFAULT
+        closemessage
+
+        goto Route109_SeashoreHouse_EventScript_ParentCallContinue
+
+
+Route109_SeashoreHouse_EventScript_DadCall:
+        msgbox Route109_SeashoreHouse_Text_DadBeachHouse, MSGBOX_DEFAULT
+        closemessage
+
+
+Route109_SeashoreHouse_EventScript_ParentCallContinue:
+        msgbox Route109_SeashoreHouse_Text_PlayerYesQuestion, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentAnd, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerMoreQuestions, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentGood, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerGood, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentJourney, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentFragments, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerThatsIt, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentForNow, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_ParentLoveYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerWait, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_CallEnds, MSGBOX_DEFAULT
+        closemessage
+
+        delay 15
+
+        msgbox Route109_SeashoreHouse_Text_PlayerEverybodyDoesThis, MSGBOX_DEFAULT
+        closemessage
+
+        @ Memory complete. Machine/stone is now dormant.
+        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 5
+
+        releaseall
+        end
+
+
+Route109_SeashoreHouse_EventScript_ReturnNotReady:
+        end
+
+
+@ =============================================================================
+@ DORMANT MACHINE
+@ =============================================================================
+
+Route109_SeashoreHouse_EventScript_DormantMachine::
+        lockall
+
+        delay 10
+
+        msgbox Route109_SeashoreHouse_Text_MachineDormant, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerMachineDormant, MSGBOX_DEFAULT
+        closemessage
+
+        releaseall
+        end
+
+
+@ =============================================================================
+@ RETURN TEXT
+@ =============================================================================
+
+Route109_SeashoreHouse_Text_ReturnWhatHappened:
+        .string "{PLAYER}: ...Okay.$"
+
+
+Route109_SeashoreHouse_Text_ReturnSaffron:
+        .string "{PLAYER}: I have absolutely no idea\n"
+        .string "what just happened.$"
+
+
+Route109_SeashoreHouse_Text_ReturnQuestions:
+        .string "{PLAYER}: Somehow I have MORE\n"
+        .string "questions than when I started.$"
+
+
+Route109_SeashoreHouse_Text_PokenavRings:
+        .string "Your POKENAV starts ringing...$"
+
+
+Route109_SeashoreHouse_Text_MomBeachHouse:
+        .string "MOM: So...\p"
+        .string "Did you pay the beach house\n"
+        .string "a visit?$"
+
+
+Route109_SeashoreHouse_Text_DadBeachHouse:
+        .string "DAD: So...\p"
+        .string "Did you pay the beach house\n"
+        .string "a visit?$"
+
+
+Route109_SeashoreHouse_Text_PlayerYesQuestion:
+        .string "{PLAYER}: Yes??$"
+
+
+Route109_SeashoreHouse_Text_ParentAnd:
+        .string "PARENT: And?$"
+
+
+Route109_SeashoreHouse_Text_PlayerMoreQuestions:
+        .string "{PLAYER}: I have MORE questions\n"
+        .string "now!$"
+
+
+Route109_SeashoreHouse_Text_ParentGood:
+        .string "PARENT: Good.$"
+
+
+Route109_SeashoreHouse_Text_PlayerGood:
+        .string "{PLAYER}: GOOD?!$"
+
+
+Route109_SeashoreHouse_Text_ParentJourney:
+        .string "PARENT: You'll learn more as\n"
+        .string "your journey continues.$"
+
+
+Route109_SeashoreHouse_Text_ParentFragments:
+        .string "PARENT: As you gain FRAGMENTS,\n"
+        .string "you'll understand more\p"
+        .string "about this world...\p"
+        .string "and the people around you.$"
+
+
+Route109_SeashoreHouse_Text_PlayerThatsIt:
+        .string "{PLAYER}: That's all you're\n"
+        .string "giving me?$"
+
+
+Route109_SeashoreHouse_Text_ParentForNow:
+        .string "PARENT: That's all I can say\n"
+        .string "for now.$"
+
+
+Route109_SeashoreHouse_Text_ParentLoveYou:
+        .string "PARENT: Love you! Bye!$"
+
+
+Route109_SeashoreHouse_Text_PlayerWait:
+        .string "{PLAYER}: Wait-$"
+
+
+Route109_SeashoreHouse_Text_CallEnds:
+        .string "...The call ends.$"
+
+
+Route109_SeashoreHouse_Text_PlayerEverybodyDoesThis:
+        .string "{PLAYER}: ...Everybody does this.$"
+
+
+Route109_SeashoreHouse_Text_MachineDormant:
+        .string "The stone is cold and still.\p"
+        .string "Nothing happens.$"
+
+
+Route109_SeashoreHouse_Text_PlayerMachineDormant:
+        .string "{PLAYER}: Yeah.\p"
+        .string "I think I've had enough of\n"
+        .string "that for now.$"

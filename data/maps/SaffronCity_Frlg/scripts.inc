@@ -81,6 +81,17 @@ SaffronCity_Frlg_EventScript_TwinSabrinaContinue:
         msgbox SaffronCity_Frlg_Text_PlayerMineToo, MSGBOX_DEFAULT
         closemessage
 
+        checkitem ITEM_MYSTERIOUS_BOOK, 1
+        goto_if_eq VAR_RESULT, TRUE, SaffronCity_Frlg_EventScript_TwinHasKey
+
+        checkitem ITEM_MYSTERIOUS_KEY, 1
+        goto_if_eq VAR_RESULT, TRUE, SaffronCity_Frlg_EventScript_TwinHasBook
+
+        @ Safety fallback for unusual/debug saves.
+        goto SaffronCity_Frlg_EventScript_TwinHasKey
+
+
+SaffronCity_Frlg_EventScript_TwinHasKey:
         msgbox SaffronCity_Frlg_Text_TwinKey, MSGBOX_DEFAULT
         closemessage
 
@@ -89,6 +100,22 @@ SaffronCity_Frlg_EventScript_TwinSabrinaContinue:
 
         msgbox SaffronCity_Frlg_Text_TwinHopedYouKnew, MSGBOX_DEFAULT
         closemessage
+
+        goto SaffronCity_Frlg_EventScript_AfterTwinArtifact
+
+
+SaffronCity_Frlg_EventScript_TwinHasBook:
+        msgbox SaffronCity_Frlg_Text_TwinBook, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerBookWhy, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinHopedYouKnew, MSGBOX_DEFAULT
+        closemessage
+
+
+SaffronCity_Frlg_EventScript_AfterTwinArtifact:
 
         @ PLAYER explains what the Dojo memory showed.
         msgbox SaffronCity_Frlg_Text_PlayerExplainsMonths, MSGBOX_DEFAULT
@@ -598,3 +625,12 @@ SaffronCity_Frlg_Text_Civilian10:
         .string "Somehow I've been walking all day.$"
 
 @ ===== SAFFRON CIVILIAN FLAVOR END =====
+
+
+SaffronCity_Frlg_Text_TwinBook:
+        .string "{STR_VAR_1}: I have this strange\n"
+        .string "book.$"
+
+
+SaffronCity_Frlg_Text_PlayerBookWhy:
+        .string "{PLAYER}: A book for what?$"
