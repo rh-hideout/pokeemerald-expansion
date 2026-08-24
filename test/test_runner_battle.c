@@ -3055,7 +3055,6 @@ void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *mo
 
         // Check multiple gimmick use.
         SetGimmick(sourceLine, Test_GetBattlerTrainer(battlerId), DATA.currentMonIndexes[battlerId], ctx->gimmick);
-        *moveSlot |= RET_GIMMICK;
     }
 }
 
@@ -3131,7 +3130,10 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     if (!ctx.explicitAllowed || ctx.allowed)
     {
-        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, moveSlot);
+        u32 recordedMoveSlot = moveSlot;
+        if (ctx.explicitGimmick && ctx.gimmick != GIMMICK_NONE)
+            recordedMoveSlot |= RET_GIMMICK;
+        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, recordedMoveSlot);
         PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET,
                           ctx.explicitTarget ? target : RECORDED_TARGET_DEFAULT);
     }
@@ -3179,7 +3181,7 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 
     id = DATA.expectedAiActionIndex[battlerId];
     DATA.expectedAiActions[battlerId][id].type = B_ACTION_USE_MOVE;
-    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << (moveSlot & ~RET_GIMMICK);
+    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << moveSlot;
     DATA.expectedAiActions[battlerId][id].target = target;
     DATA.expectedAiActions[battlerId][id].explicitTarget = ctx->explicitTarget;
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
