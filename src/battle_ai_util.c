@@ -1043,6 +1043,10 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
         if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) && noOfHitsToKo == 1)
             return TRUE;
         break;
+    case EFFECT_DRAGON_SWORD:
+         if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) && noOfHitsToKo == 1 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DRAGON))
+            return TRUE;
+        break;
     case EFFECT_PURSUIT:
         if (noOfHitsToKo == 1)
             return TRUE;

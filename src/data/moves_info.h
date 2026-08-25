@@ -22173,7 +22173,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_SwordsDance,
     },
 
-    //TODO usable against higher levelled cards
     [MOVE_OBLITERATE] =
     {
         .name = COMPOUND_STRING("Obliterate"),
@@ -22234,15 +22233,110 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_DragonPulse,
     },
 
+    [MOVE_DRAGON_SWORD] =
+    {
+        .name = COMPOUND_STRING("Dragon Sword"),
+        .description = COMPOUND_STRING(
+            "The foe is slain with\n"
+            "a dragon sword. If the\n"
+            "user KO's a Dragon,\n"
+            "its Atk is\nraised."),
+        .effect = EFFECT_DRAGON_SWORD,
+        .power = 90,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
 
+    [MOVE_SKYDIVE_SCORCHER] =
+    {
+        .name = COMPOUND_STRING("Skydive Scorcher"),
+        .description = COMPOUND_STRING(
+            "Attack from above.\n"
+            "High critical-hit ratio.\n"
+            "and may burn the foe\n"
+            "(10%). Hits flying foes."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_FIRE,
+        .accuracy = 95,
+        .pp = 10,
+        .criticalHitStage = 1,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .damagesAirborne = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
 
+    [MOVE_FLAME_SWORD] =
+    {
+        .name = COMPOUND_STRING("Flame Sword"),
+        .description = COMPOUND_STRING(
+            "Slash the foe with\n"
+            "a fiery sword that\n"
+            "may burn (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
 
+    [MOVE_CHAOS_BLADE] =
+    {
+        .name = COMPOUND_STRING("Chaos Blade"),
+        .description = COMPOUND_STRING(
+            "A giant blade slices\n"
+            "the foe which may\n"
+            "also lower foe's\n"
+            "speed. This move can\n"
+            "hit Ghost types."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .speed = 1,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .ignoreGhostImmunity = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
 
-
-
-
-
-
+    
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

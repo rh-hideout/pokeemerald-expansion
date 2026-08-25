@@ -8303,6 +8303,13 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         modifier = UQ_4_12(1.0);
     }
 
+    //Chaos Blade ignores Ghost Immunity
+    if (MoveIgnoresGhostImmunity(ctx->move)
+     && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GHOST))
+    {
+        modifier = UQ_4_12(1.0);
+    }
+
     // Iron Ball ignores type modifiers for flying-type mons if it is the only source of grounding
     if (GetConfig(B_IRON_BALL) >= GEN_5
         && ctx->moveType == TYPE_GROUND
@@ -10524,7 +10531,8 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
         return TRUE;
     }
 
-    if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
+    //Obliterate can hit higher levelled mons
+    if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level && cv->move != MOVE_OBLITERATE)
     {
         gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
         return TRUE;
