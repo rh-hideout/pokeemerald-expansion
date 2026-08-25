@@ -7637,6 +7637,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ROLE_PLAY,
+            .self = TRUE, // hack so doodle works correctly
         }),
         .ignoresProtect = TRUE,
         .ignoresSubstitute = TRUE,
@@ -21272,6 +21273,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .metronomeBanned = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ROLE_PLAY,
+            .self = TRUE, // hack so doodle works correctly
+            .onSide = TRUE,
+        }),
         .battleAnimScript = gBattleAnimMove_Doodle,
     },
 

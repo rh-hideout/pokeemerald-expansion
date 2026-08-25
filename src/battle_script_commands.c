@@ -493,7 +493,6 @@ static void Cmd_recoverbasedonsunlight(void);
 static void Cmd_selectfirstvalidtarget(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_settaunt(void);
-static void Cmd_trycopyability(void);
 static void Cmd_trywish(void);
 static void Cmd_setyawn(void);
 static void Cmd_trysetvolatile(void);
@@ -676,7 +675,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SELECTFIRSTVALIDTARGET]                = Cmd_selectfirstvalidtarget,
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_SETTAUNT]                              = Cmd_settaunt,
-    [B_SCR_OP_TRYCOPYABILITY]                        = Cmd_trycopyability,
     [B_SCR_OP_TRYWISH]                               = Cmd_trywish,
     [B_SCR_OP_SETYAWN]                               = Cmd_setyawn,
     [B_SCR_OP_TRYSETVOLATILE]                        = Cmd_trysetvolatile,
@@ -775,6 +773,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_67]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_68]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_69]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_70]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -1741,12 +1740,29 @@ static bool32 ShouldAvoidStatusEffectOnBattler(enum BattlerId battlerAtk, enum B
     return FALSE;
 }
 
+static bool32 IsSilentFailure(struct SetEffect *se, bool32 isStatusMove, bool32 moveFailed)
+{
+    if (!isStatusMove)
+        return TRUE;
+
+    if (moveFailed)
+        return FALSE;
+
+    if (se->additionalEffect->moveEffect == MOVE_EFFECT_ROLE_PLAY)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
     bool32 moveFailed = gBattleStruct->statusMoveFailed;
-    bool32 tryStatusMoveActivation = IsBattleMoveStatus(gCurrentMove) && !ShouldAvoidStatusEffectOnBattler(gBattlerAttacker, gBattlerTarget);
+    bool32 tryStatusMoveActivation = (IsBattleMoveStatus(gCurrentMove) && !ShouldAvoidStatusEffectOnBattler(gBattlerAttacker, gBattlerTarget))
+                                   || gBattleStruct->setEffectOnAlly;
 
     if (!IsBattlerUnaffectedByMove(gBattlerTarget) || tryStatusMoveActivation || moveFailed)
     {
@@ -1768,7 +1784,7 @@ static void Cmd_setadditionaleffects(void)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
 
             // Various checks for if this move effect can be applied this turn
-            if (CanApplyAdditionalEffect(additionalEffect) || tryStatusMoveActivation)
+            if (CanApplyAdditionalEffect(additionalEffect) || tryStatusMoveActivation || moveFailed)
             {
                 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect);
 
@@ -1779,9 +1795,14 @@ static void Cmd_setadditionaleffects(void)
                     se.moveEffect = additionalEffect->moveEffect;
                     se.script = gBattlescriptCurrInstr;
                     se.effectBattler = additionalEffect->self ? cv.battlerAtk : cv.battlerDef;
+                    if (gBattleStruct->setEffectOnAlly == 2)
+                    {
+                        se.effectBattler = GetPartnerBattler(se.effectBattler);
+                    }
                     se.primary = percentChance == 0;
                     se.certain = percentChance >= 100;
-                    se.onSide = additionalEffect->onSide; // TODO
+                    se.onSide = additionalEffect->onSide;
+                    se.silentFailure = IsSilentFailure(&se, cv.isStatusMove, moveFailed);
                     SetMoveEffect(&cv, &se);
                 }
             }
@@ -1791,14 +1812,20 @@ static void Cmd_setadditionaleffects(void)
                 gBattleStruct->statusMoveFailed = FALSE;
                 gBattleStruct->additionalEffectsCounter = numAdditionalEffects;
             }
+            else if (gBattleStruct->setEffectOnAlly == 1)
+            {
+                gBattleStruct->setEffectOnAlly = 2;
+            }
             else
             {
+                gBattleStruct->setEffectOnAlly = FALSE;
                 gBattleStruct->additionalEffectsCounter++;
             }
             return;
         }
     }
 
+    gBattleStruct->setEffectOnAlly = FALSE;
     gBattleStruct->statusMoveFailed = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleScripting.moveEffect = 0;
@@ -6455,39 +6482,6 @@ static void Cmd_settaunt(void)
     else
     {
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-// Doodle
-static void Cmd_trycopyability(void)
-{
-    CMD_ARGS(u8 battler, const u8 *failInstr);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum BattlerId partner = GetPartnerBattler(battler);
-    enum Ability defAbility = gBattleMons[gBattlerTarget].ability;
-    bool32 shouldConsiderPartner = IsBattlerAlive(partner) && GetMoveEffect(gCurrentMove) == EFFECT_DOODLE;
-
-    if (gBattleMons[battler].ability == defAbility
-      || defAbility == ABILITY_NONE
-      || gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed
-      || (shouldConsiderPartner && gAbilitiesInfo[gBattleMons[partner].ability].cantBeSuppressed)
-      || gAbilitiesInfo[defAbility].cantBeCopied)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (CanAbilityShieldActivateForBattler(battler) || (shouldConsiderPartner && CanAbilityShieldActivateForBattler(partner)))
-    {
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        BattleScriptCall(BattleScript_AbilityShieldProtects);
-    }
-    else
-    {
-        RemoveAbilityFlags(battler);
-        gBattleScripting.abilityPopupOverwrite = gBattleMons[battler].ability;
-        gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility = defAbility;
-        gLastUsedAbility = defAbility;
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

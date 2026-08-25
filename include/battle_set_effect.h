@@ -15,7 +15,7 @@ struct SetEffect
     u16 certain:1;
     u16 onSide:1;
     u16 effectFailed:1;
-    u16 replayFailure:1;
+    u16 silentFailure:1;
 };
 
 void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se);

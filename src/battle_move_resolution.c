@@ -2689,23 +2689,41 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             continue;
 
         validTargets |= 1u << battler;
+        bool32 isAllyAffected = FALSE;
 
-        for (u32 i = 0; i < numAdditionalEffects; i++)
+        u32 i = 0;
+        while (i < numAdditionalEffects)
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, i);
             struct SetEffect se = {0};
+            enum BattlerId partner = additionalEffect->self ? GetPartnerBattler(cv->battlerAtk)
+                                                            : GetPartnerBattler(battler);
 
             se.additionalEffect = additionalEffect;
             se.moveEffect = additionalEffect->moveEffect;
             se.script = gBattlescriptCurrInstr;
-            se.effectBattler = cv->battlerDef = battler;
+            cv->battlerDef = battler;
+            se.effectBattler = additionalEffect->self ? cv->battlerAtk : cv->battlerDef;
+            se.effectBattler = isAllyAffected ? partner : se.effectBattler;
             se.primary = TRUE;
             se.certain = TRUE;
             se.onSide = additionalEffect->onSide;
             SetMoveEffect(cv, &se);
-            if (!se.effectFailed)
+            if (!se.effectFailed) targetAvoidedMove[se.effectBattler] = FALSE;
+
+            bool32 shouldTryEffectOnAlly = additionalEffect->onSide
+                                        && !isAllyAffected
+                                        && IsBattlerAlive(partner)
+                                        && IsDoubleBattle();
+            if (shouldTryEffectOnAlly)
             {
-                targetAvoidedMove[battler] = FALSE;
+                gBattleStruct->setEffectOnAlly = 1;
+                isAllyAffected = TRUE;
+            }
+            else
+            {
+                isAllyAffected = FALSE;
+                i++;
             }
         }
     }
@@ -2729,6 +2747,7 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     if (moveFailed)
     {
+        DebugPrintf("failed?");
         gBattleStruct->statusMoveFailed = TRUE;
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;

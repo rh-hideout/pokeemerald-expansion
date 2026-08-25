@@ -255,31 +255,6 @@ BattleScript_StatDidntChangeMessagePause::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectDoodle::
-	attackcanceler
-	trycopyability BS_ATTACKER, BattleScript_ButItFailed
-	saveattacker
-	attackanimation
-	waitanimation
-	setbyte gBattleCommunication, 0
-	goto BattleScript_EffectDoodle_AfterCopy
-BattleScript_EffectDoodle_CopyAbility:
-	trycopyability BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
-BattleScript_EffectDoodle_AfterCopy:
-	copybyte gBattlerAbility, gBattlerAttacker
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_ATTACKER
-	printstring STRINGID_PKMNCOPIEDFOE
-	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_ATTACKER
-	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_EffectDoodleMoveEnd
-	addbyte gBattleCommunication, 1
-	jumpifnoally BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
-	setallytonextattacker BattleScript_EffectDoodle_CopyAbility
-BattleScript_EffectDoodleMoveEnd:
-	restoreattacker
-	goto BattleScript_MoveEnd
-
 BattleScript_SyrupBombActivates::
 	printstring STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP
 	waitmessage B_WAIT_TIME_LONG
@@ -1748,7 +1723,7 @@ BattleScript_MoveEffectRolePlay::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_ATTACKER
+	switchinabilities BS_EFFECT_BATTLER
 	return
 
 BattleScript_EffectWish::

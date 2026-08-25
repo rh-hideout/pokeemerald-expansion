@@ -657,7 +657,6 @@ extern const u8 BattleScript_MoveEffectCorrosiveGas[];
 extern const u8 BattleScript_MoveEffectSaltCure[];
 extern const u8 BattleScript_ChillyReceptionMessage[];
 extern const u8 BattleScript_EffectWeatherAndSwitch[];
-extern const u8 BattleScript_EffectDoodle[];
 extern const u8 BattleScript_EffectTidyUp[];
 extern const u8 BattleScript_GhostBallDodge[];
 extern const u8 BattleScript_GhostGetOutGetOut[];

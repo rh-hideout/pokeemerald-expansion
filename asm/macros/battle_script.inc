@@ -869,12 +869,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trycopyability battler:req, failInstr:req
-	.byte B_SCR_OP_TRYCOPYABILITY
-	.byte \battler
-	.4byte \failInstr
-	.endm
-
 	.macro trywish failInstr:req
 	.byte B_SCR_OP_TRYWISH
 	.4byte \failInstr

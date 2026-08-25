@@ -37,7 +37,7 @@
     do \
     { \
         se->effectFailed = TRUE; \
-        if (!cv->onlyChecking __VA_OPT__(&& __VA_ARGS__))\
+        if (!se->silentFailure && !cv->onlyChecking __VA_OPT__(&& __VA_ARGS__))\
         { \
             BattleScriptPushAndSet(se->script, failScript); \
         } \
@@ -2485,8 +2485,8 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum Ability sourceAbility = gBattleMons[se->effectBattler].ability;
-    enum Ability destAbility = gBattleMons[cv->battlerAtk].ability;
+    enum Ability sourceAbility = gBattleMons[cv->battlerDef].ability;
+    enum Ability destAbility = gBattleMons[se->effectBattler].ability;
 
     if (destAbility == sourceAbility
      || sourceAbility == ABILITY_NONE
@@ -2495,19 +2495,19 @@ static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffec
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
-    else if (CanAbilityShieldActivateForBattler(cv->battlerAtk))
+    else if (CanAbilityShieldActivateForBattler(se->effectBattler))
     {
         SetEffectFail(BattleScript_AbilityShieldProtects);
     }
     else if (!cv->onlyChecking)
     {
-        gBattlerAbility = cv->battlerAtk;
-        RemoveAbilityFlags(cv->battlerAtk);
+        gBattlerAbility = se->effectBattler;
+        RemoveAbilityFlags(se->effectBattler);
         gBattleScripting.abilityPopupOverwrite = destAbility;
-        gBattleMons[cv->battlerAtk].ability = gBattleMons[cv->battlerAtk].volatiles.overwrittenAbility = sourceAbility;
+        gBattleMons[se->effectBattler].ability = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = sourceAbility;
         gLastUsedAbility = sourceAbility;
-        RecordAbilityBattle(cv->battlerAtk, gLastUsedAbility);
         RecordAbilityBattle(se->effectBattler, gLastUsedAbility);
+        RecordAbilityBattle(cv->battlerDef, gLastUsedAbility);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectRolePlay);
     }
 }
