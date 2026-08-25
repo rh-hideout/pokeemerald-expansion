@@ -989,11 +989,6 @@
 	.byte \trigger
 	.endm
 
-	.macro tryoverwriteability failInstr:req
-	.byte B_SCR_OP_TRYOVERWRITEABILITY
-	.4byte \failInstr
-	.endm
-
 	.macro trysynchronize
 	.byte B_SCR_OP_TRY_SYNCHRONIZE
 	.endm
@@ -1490,11 +1485,6 @@
 	.macro setlastuseditem battler:req
 	callnative BS_SetLastUsedItem
 	.byte \battler
-	.endm
-
-	.macro trysetfairylock failInstr:req
-	callnative BS_TrySetFairyLock
-	.4byte \failInstr
 	.endm
 
 	.macro jumpiffullhp battler:req, jumpInstr:req

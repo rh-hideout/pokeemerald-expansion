@@ -625,6 +625,21 @@ BattleScript_MoveEffectTrick::
 	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_USABLE_AGAIN
 	return
 
+BattleScript_MoveEffectSkillSwap::
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUpOverwriteThenNormal
+	copybyte gBattlerAbility, gEffectBattler
+	copyhword sABILITY_OVERWRITE, gLastUsedAbility
+	call BattleScript_AbilityPopUpOverwriteThenNormal
+BattleScript_MoveEffectSkillSwapAfterAbilityPopUp::
+	printstring STRINGID_PKMNSWAPPEDABILITIES
+	waitmessage B_WAIT_TIME_LONG
+.if B_SKILL_SWAP >= GEN_4
+	switchinabilities BS_ATTACKER
+	switchinabilities BS_EFFECT_BATTLER
+.endif
+	return
+
 BattleScript_StuffCheeks::
 	attackanimation
 	waitanimation
@@ -641,15 +656,6 @@ BattleScript_EffectAllySwitch::
 	@ The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
 	allyswitchswapbattlers
 	printstring STRINGID_ALLYSWITCHPOSITION
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectFairyLock::
-	attackcanceler
-	trysetfairylock BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_NOONEWILLBEABLETORUNAWAY
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -1328,37 +1334,6 @@ BattleScript_EffectStatusMoveEffect::
 	setadditionaleffects
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectDoNothing::
-	attackcanceler
-	attackanimation
-	waitanimation
-	incrementgamestat GAME_STAT_USED_SPLASH
-	printstring STRINGID_BUTNOTHINGHAPPENED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectHoldHands::
-	attackcanceler
-	jumpifbyteequal gBattlerTarget, gBattlerAttacker, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectCelebrate::
-	attackcanceler
-	attackanimation
-	waitanimation
-	printstring STRINGID_CELEBRATEMESSAGE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectHappyHour::
-	attackcanceler
-	attackanimation
-	waitanimation
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_HAPPY_HOUR
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectEncore::
 	printstring STRINGID_PKMNGOTENCORE
 	waitmessage B_WAIT_TIME_LONG
@@ -1770,9 +1745,7 @@ BattleScript_EffectTaunt::
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectRolePlay::
-	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
@@ -1853,28 +1826,6 @@ BattleScript_PrintAbilityMadeIneffective::
 	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectSkillSwap::
-	attackcanceler
-	tryswapabilities BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	jumpiftargetally BattleScript_EffectSkillSwap_AfterAbilityPopUp
-	copybyte gBattlerAbility, gBattlerAttacker
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	copybyte gBattlerAbility, gBattlerTarget
-	copyhword sABILITY_OVERWRITE, gLastUsedAbility
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-BattleScript_EffectSkillSwap_AfterAbilityPopUp:
-	recordability BS_ATTACKER
-	recordability BS_TARGET
-	printstring STRINGID_PKMNSWAPPEDABILITIES
-	waitmessage B_WAIT_TIME_LONG
-.if B_SKILL_SWAP >= GEN_4
-	switchinabilities BS_ATTACKER
-	switchinabilities BS_TARGET
-.endif
-	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectRefresh::
 	printsavedstring BS_EFFECT_BATTLER

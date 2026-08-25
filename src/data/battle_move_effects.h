@@ -255,28 +255,28 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DO_NOTHING] =
     {
-        .battleScript = BattleScript_EffectDoNothing,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
 
     [EFFECT_HOLD_HANDS] =
     {
-        .battleScript = BattleScript_EffectHoldHands,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
 
     [EFFECT_CELEBRATE] =
     {
-        .battleScript = BattleScript_EffectCelebrate,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
 
     [EFFECT_HAPPY_HOUR] =
     {
-        .battleScript = BattleScript_EffectHappyHour,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
@@ -866,7 +866,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SKILL_SWAP] =
     {
-        .battleScript = BattleScript_EffectSkillSwap,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 6,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
@@ -1500,7 +1500,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FAIRY_LOCK] =
     {
-        .battleScript = BattleScript_EffectFairyLock,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
