@@ -11936,8 +11936,8 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
 {
     .baseHP        = 80,
     .baseAttack    = 115,
-    .baseDefense   = 80,
-    .baseSpAttack  = 55,
+    .baseDefense   = 85,
+    .baseSpAttack  = 50,
     .baseSpDefense = 70,
     .baseSpeed     = 95,
     .types = MON_TYPES(TYPE_FIGHTING),
