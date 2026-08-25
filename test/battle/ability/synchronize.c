@@ -178,9 +178,9 @@ DOUBLE_BATTLE_TEST("Synchronize will trigger on both targets")
         ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
         ABILITY_POPUP(opponentRight, ABILITY_SYNCHRONIZE);
     } THEN {
-        EXPECT_EQ(gBattleMons[B_BATTLER_0].status1, STATUS1_POISON);
-        EXPECT_EQ(gBattleMons[B_BATTLER_1].status1, STATUS1_NONE);
-        EXPECT_EQ(gBattleMons[B_BATTLER_3].status1, STATUS1_NONE);
+        EXPECT_EQ(playerLeft->status1, STATUS1_POISON);
+        EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(opponentRight->status1, STATUS1_NONE);
 
     }
 }
@@ -239,26 +239,34 @@ SINGLE_BATTLE_TEST("Synchronize won't activate on Synchronized status")
 DOUBLE_BATTLE_TEST("Synchronize activation won't spill over to next status on the same action")
 {
     GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetSpeciesType(SPECIES_METAGROSS, 0) == TYPE_STEEL || GetSpeciesType(SPECIES_METAGROSS, 1) == TYPE_STEEL);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
         PLAYER(SPECIES_METAGROSS) { Item(ITEM_LUM_BERRY); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
         OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }
         OPPONENT(SPECIES_PIKACHU) { Item(ITEM_LUM_BERRY); Ability(ABILITY_STATIC); }
     } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SOAK, target: opponentRight); MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
         TURN { MOVE(playerLeft, MOVE_MORTAL_SPIN); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         NONE_OF {
-            ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);    
+            ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
             STATUS_ICON(playerLeft, poison: TRUE);
         }
         ABILITY_POPUP(opponentRight, ABILITY_STATIC);
         NOT ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
+        ABILITY_POPUP(playerLeft, ABILITY_SYNCHRONIZE);
     } THEN {
-        EXPECT_EQ(gBattleMons[B_BATTLER_0].status1, STATUS1_NONE);
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(playerLeft->ability, ABILITY_SYNCHRONIZE);
+        EXPECT_EQ(opponentRight->status1, STATUS1_PARALYSIS);
     }
 }

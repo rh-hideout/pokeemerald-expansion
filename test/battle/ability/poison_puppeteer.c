@@ -243,8 +243,6 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates even if Synchronize activation fa
     KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd, so Poison Puppeteer doesn't activate; #10696
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(5); }
         OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(7); }
     } WHEN {
