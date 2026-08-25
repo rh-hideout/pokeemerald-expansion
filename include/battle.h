@@ -667,8 +667,10 @@ struct BattleStruct
     u8 presentBasePower;
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
+    u8 savedBattlerOrderIndex[5];
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
+    u8 savedBattlerOrderIndexCount;
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
@@ -676,7 +678,6 @@ struct BattleStruct
     const u8 *trainerSlideMsg;
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    enum BattlerId soulheartBattlerId;
     struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 redCardActivated :1;
@@ -1037,7 +1038,7 @@ extern enum BattlerId gEffectBattler;
 extern enum BattlerId gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;
-extern u8 gBattleScriptIndex;
+extern u8 gBattlerOrderIndex;
 extern const u8 *gBattlescriptCurrInstr;
 extern u8 gChosenActionByBattler[MAX_BATTLERS_COUNT];
 extern const u8 *gSelectionBattleScripts[MAX_BATTLERS_COUNT];

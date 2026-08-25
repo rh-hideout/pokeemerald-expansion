@@ -9095,6 +9095,27 @@ void RestoreTarget(void)
     gBattlerTarget = gBattleStruct->savedBattlerTarget[gBattleStruct->savedTargetCount];
 }
 
+static void SaveBattlerOrderIndex(void)
+{
+    assertf(gBattleStruct->savedBattlerOrderIndexCount < ARRAY_COUNT(gBattleStruct->savedBattlerOrderIndex), "Too many savedBattlerOrderIndexes")
+    {
+        return;
+    }
+
+    gBattleStruct->savedBattlerOrderIndex[gBattleStruct->savedBattlerOrderIndexCount++] = gBattlerOrderIndex;
+}
+
+static void RestoreBattlerOrderIndex(void)
+{
+    assertf(gBattleStruct->savedBattlerOrderIndexCount > 0, "No savedBattlerOrderIndexes")
+    {
+        return;
+    }
+
+    gBattleStruct->savedBattlerOrderIndexCount--;
+    gBattlerOrderIndex = gBattleStruct->savedBattlerOrderIndex[gBattleStruct->savedBattlerOrderIndexCount];
+}
+
 void BS_SaveTarget(void)
 {
     NATIVE_ARGS();
@@ -9120,6 +9141,20 @@ void BS_RestoreAttacker(void)
 {
     NATIVE_ARGS();
     RestoreAttacker();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_SaveBattlerOrderIndex(void)
+{
+    NATIVE_ARGS();
+    SaveBattlerOrderIndex();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_RestoreBattlerOrderIndex(void)
+{
+    NATIVE_ARGS();
+    RestoreBattlerOrderIndex();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -9479,7 +9514,7 @@ void BS_ItemRestorePP(void)
 void BS_TryRevertWeatherForm(void)
 {
     NATIVE_ARGS();
-    enum BattlerId battler = gBattlersBySpeed[gBattleScriptIndex];
+    enum BattlerId battler = gBattlersBySpeed[gBattlerOrderIndex];
     if (IsBattlerAlive(battler)
         && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER, GetBattlerAbility(battler)))
     {
@@ -10484,9 +10519,9 @@ void BS_TryFriskMessage(void)
 {
     NATIVE_ARGS();
 
-    while (gBattleScripting.battler < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        enum BattlerId battler = gBattleScripting.battler;
+        enum BattlerId battler = gBattlerOrderIndex;
 
         if (!IsBattlerAlly(gEffectBattler, battler)
          && IsBattlerAlive(battler)
@@ -10499,7 +10534,7 @@ void BS_TryFriskMessage(void)
         }
         else
         {
-            gBattleScripting.battler++;
+            gBattlerOrderIndex++;
         }
     }
 
@@ -10967,9 +11002,9 @@ void BS_TryActivateReceiver(void)
 void BS_TryActivateSoulheart(void)
 {
     NATIVE_ARGS();
-    while (gBattleStruct->soulheartBattlerId < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        gEffectBattler = gBattlerAbility = gBattleStruct->soulheartBattlerId++;
+        gEffectBattler = gBattlerAbility = gBattlerOrderIndex++;
         enum Ability ability = GetBattlerAbility(gBattlerAbility);
         if (ability == ABILITY_SOUL_HEART
             && IsBattlerAlive(gBattlerAbility)
@@ -10981,7 +11016,6 @@ void BS_TryActivateSoulheart(void)
             return;
         }
     }
-    gBattleStruct->soulheartBattlerId = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12056,9 +12090,9 @@ void BS_TryWakeBattlersUproar(void)
 {
     NATIVE_ARGS();
 
-    while (gBattleScripting.battler < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        enum BattlerId battler = gBattleScripting.battler++;
+        enum BattlerId battler = gBattlerOrderIndex++;
         bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && GetBattlerAbility(battler) == ABILITY_SOUNDPROOF;
 
         if (IsBattlerAlive(battler) && gBattleMons[battler].status1 & STATUS1_SLEEP && !hasSoundproof)

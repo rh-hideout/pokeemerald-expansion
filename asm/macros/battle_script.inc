@@ -1151,6 +1151,14 @@
 	callnative BS_RestoreAttacker
 	.endm
 
+	.macro savebattlerorderindex
+	callnative BS_SaveBattlerOrderIndex
+	.endm
+
+	.macro restorebattlerorderindex
+	callnative BS_RestoreBattlerOrderIndex
+	.endm
+
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
