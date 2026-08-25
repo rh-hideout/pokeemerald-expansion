@@ -660,14 +660,14 @@ void AnimSparkElectricity(struct Sprite *sprite)
         battler = gBattleAnimTarget;
         break;
     case ANIM_ATK_PARTNER:
-        if (!IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+        if (!IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
             battler = gBattleAnimAttacker;
         else
-            battler = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = GetPartnerBattler(gBattleAnimAttacker);
         break;
     case ANIM_DEF_PARTNER:
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
-            battler = BATTLE_PARTNER(gBattleAnimTarget);
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
+            battler = GetPartnerBattler(gBattleAnimTarget);
         else
             battler = gBattleAnimTarget;
         break;

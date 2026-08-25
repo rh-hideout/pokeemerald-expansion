@@ -61,14 +61,14 @@ DOUBLE_BATTLE_TEST("Howl raises user's and partner's Attack by 1 stage", s16 dam
     }
 }
 
-DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
+DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof but doesn't fail on user with Soundproof")
 {
     s16 damage[2];
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HOWL) == TARGET_USER_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_EXPLOUD) { Speed(15); Ability(ABILITY_SOUNDPROOF); }
         PLAYER(SPECIES_VOLTORB) { Speed(10); Ability(ABILITY_SOUNDPROOF); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); }
@@ -79,15 +79,16 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &damage[0]);
 
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_SOUNDPROOF);
+            MESSAGE("It doesn't affect Exploud…");
+        }
         ABILITY_POPUP(playerRight, ABILITY_SOUNDPROOF);
         MESSAGE("It doesn't affect Voltorb…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Attack rose!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Wynaut's Attack rose!");
-        }
+        MESSAGE("Exploud's Attack rose!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &damage[1]);
     } THEN {

@@ -219,6 +219,20 @@ SINGLE_BATTLE_TEST("GIVE_PLAYER_ITEM adds an item to bag")
     }
 }
 
+SINGLE_BATTLE_TEST("Failing MESSAGE check doesn't cause FLAKY tests when player uses an item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POTION, partyIndex: 0); }
+    } EXPECT_FAIL {
+        SCENE {
+            MESSAGE("Lorem Ipsum");
+        }
+    }
+}
+
 MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test")
 {
     GIVEN {

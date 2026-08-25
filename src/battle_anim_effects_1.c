@@ -2898,7 +2898,7 @@ const struct SpriteTemplate gChainBindingSpriteTemplate =
 // args[5] - another param for Sin
 static void AnimGrassKnot(struct Sprite *sprite)
 {
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
         gBattleAnimArgs[0] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);
@@ -4071,7 +4071,7 @@ void AnimTask_ShrinkTargetCopy(u8 taskId)
         gSprites[spriteId].oam.priority = GetBattlerSpriteBGPriority(gBattleAnimTarget);
         spriteId = GetAnimBattlerSpriteId(ANIM_DEF_PARTNER);
         gTasks[taskId].data[15] = gSprites[spriteId].oam.priority;
-        gSprites[spriteId].oam.priority = GetBattlerSpriteBGPriority(BATTLE_PARTNER(gBattleAnimTarget));
+        gSprites[spriteId].oam.priority = GetBattlerSpriteBGPriority(GetPartnerBattler(gBattleAnimTarget));
         gTasks[taskId].data[0] = cmd->unk0;
         gTasks[taskId].data[1] = cmd->unk1;
         gTasks[taskId].data[11] = 0x100;
@@ -4309,7 +4309,7 @@ static void AnimPresent(struct Sprite *sprite)
     InitSpritePosToAnimAttacker(sprite, FALSE);
     targetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     targetY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget)
     {
         sprite->data[6] = targetX;
         sprite->data[7] = targetY + 10;
@@ -4399,7 +4399,7 @@ static void AnimItemSteal(struct Sprite *sprite)
     InitSpritePosToAnimTarget(sprite, FALSE);
     attackerX = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
     attackerY = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
-    if (BATTLE_PARTNER(gBattleAnimTarget) == gBattleAnimAttacker)
+    if (GetPartnerBattler(gBattleAnimTarget) == gBattleAnimAttacker)
     {
         sprite->data[6] = attackerX;
         sprite->data[7] = attackerY + 10;
@@ -4889,6 +4889,11 @@ void AnimTask_CycleMagicalLeafPal(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!TryLoadPal(ANIM_TAG_LEAF) || !TryLoadPal(ANIM_TAG_RAZOR_LEAF))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
         task->data[8] = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_LEAF));
         task->data[12] = OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_RAZOR_LEAF));
         task->data[0]++;
@@ -5095,16 +5100,16 @@ static void AnimAirCutterSlice(struct Sprite *sprite)
     switch (cmd->unk3)
     {
     case 1:
-        x = GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X);
-        y = GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y);
+        x = GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X);
+        y = GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y);
         break;
     case 2:
         x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
         y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)))
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)))
         {
-            x = (GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X) + x) / 2;
-            y = (GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y) + y) / 2;
+            x = (GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X) + x) / 2;
+            y = (GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y) + y) / 2;
         }
         break;
     case 0:
@@ -5431,7 +5436,7 @@ static void AnimSparklingStars(struct Sprite *sprite)
     else
         battler = gBattleAnimTarget;
 
-    if (IsDoubleBattle() && IsBattlerSpriteVisible(BATTLE_PARTNER(battler)))
+    if (IsDoubleBattle() && IsBattlerSpriteVisible(GetPartnerBattler(battler)))
     {
         SetAverageBattlerPositions(battler, cmd->unk6, &sprite->x, &sprite->y);
         SetAnimSpriteInitialXOffset(sprite, cmd->unk0);
@@ -6594,7 +6599,7 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
 
 static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
+    u32 oppSide = GetBattlerSide(GetOppositeBattler(battlerAtk));
 
     // if we've set sticky web on the opposing side, need to swap stickyWebBattlerId for mirror armor
     TRY_SIDE_TIMER_BATTLER_ID_SWAP(battlerAtk, battlerPartner, oppSide, stickyWebBattlerId);
@@ -6606,8 +6611,8 @@ static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId batt
     u32 temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
-     || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
+    if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
+     || gBattleStruct->futureSight[GetBattlerRightFoe(battlerAtk)].counter > 0)
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
@@ -6687,7 +6692,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     struct Pokemon *party;
     u32 temp;
     enum BattlerId battlerAtk = gBattlerAttacker;
-    enum BattlerId battlerPartner = BATTLE_PARTNER(battlerAtk);
+    enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
 
     void *data = Alloc(0x200);
     if (data == NULL)
@@ -6779,7 +6784,7 @@ static void AnimTask_DoubleTeam_Step(u8 taskId)
 
         FreeSpritePaletteByTag(ANIM_TAG_BENT_SPOON);
         // Swap attacker and partner data-wise and visually
-        if (task->tIsAllySwitch && task->tBattlerId == BATTLE_PARTNER(gBattlerAttacker))
+        if (task->tIsAllySwitch && task->tBattlerId == GetPartnerBattler(gBattlerAttacker))
             gTasks[taskId].func = AnimTask_AllySwitchDataSwap;
         else
             DestroyAnimVisualTask(taskId);
@@ -6798,10 +6803,10 @@ static void AnimDoubleTeam(struct Sprite *sprite)
     {
         gTasks[sprite->sTaskId].tBlendSpritesCount--;
         // If Ally Switch - destroy the mon sprites, they'll be created again later.
-        if (gTasks[sprite->sTaskId].tIsAllySwitch && gTasks[sprite->sTaskId].tBattlerId == BATTLE_PARTNER(gBattlerAttacker))
+        if (gTasks[sprite->sTaskId].tIsAllySwitch && gTasks[sprite->sTaskId].tBattlerId == GetPartnerBattler(gBattlerAttacker))
         {
             DestroySprite(&gSprites[gBattlerSpriteIds[gBattlerAttacker]]);
-            DestroySprite(&gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattlerAttacker)]]);
+            DestroySprite(&gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattlerAttacker)]]);
         }
         DestroySpriteWithActiveSheet(sprite);
     }
@@ -6825,11 +6830,11 @@ void AnimTask_AllySwitchAttacker(u8 taskId)
 {
     PrepareDoubleTeamAnim(taskId, ANIM_ATTACKER, TRUE);
     gSprites[gBattlerSpriteIds[gBattlerAttacker]].invisible = TRUE;
-    gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattlerAttacker)]].invisible = TRUE;
+    gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattlerAttacker)]].invisible = TRUE;
     // Edge case: Partner's sprite is invisible(i.e. after using Dig).
-    if (gBattleSpritesDataPtr->battlerData[BATTLE_PARTNER(gBattlerAttacker)].invisible)
+    if (gBattleSpritesDataPtr->battlerData[GetPartnerBattler(gBattlerAttacker)].invisible)
     {
-        gBattleSpritesDataPtr->battlerData[BATTLE_PARTNER(gBattlerAttacker)].invisible = FALSE;
+        gBattleSpritesDataPtr->battlerData[GetPartnerBattler(gBattlerAttacker)].invisible = FALSE;
         gBattleSpritesDataPtr->battlerData[gBattlerAttacker].invisible = TRUE;
     }
 }
@@ -7303,8 +7308,12 @@ void AnimPoisonJabProjectile(struct Sprite *sprite)
 
 void AnimTask_BlendNightSlash(u8 taskId)
 {
-    int paletteOffset = IndexOfSpritePaletteTag(ANIM_TAG_SLASH) * 16 + 256;
-    BlendPalette(paletteOffset, 16, 6, RGB_RED);
+    if (!TryLoadPal(ANIM_TAG_SLASH))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+    BlendPalette(OBJ_PLTT_ID(IndexOfSpritePaletteTag(ANIM_TAG_SLASH)), 16, 6, RGB_RED);
     DestroyAnimVisualTask(taskId);
 }
 
