@@ -109,6 +109,20 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SlateportCity_OceanicMuseum_2F_EventScript_MuseumPatron3",
       "flag": "FLAG_HIDE_SLATEPORT_MUSEUM_POPULATION"
+    },
+    {
+      "local_id": "LOCALID_OCEANIC_MUSEUM_2F_SABRINA",
+      "graphics_id": "OBJ_EVENT_GFX_SABRINA",
+      "x": 6,
+      "y": 1,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0x0",
+      "flag": "FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_ARCHIE"
     }
   ],
   "warp_events": [

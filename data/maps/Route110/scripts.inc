@@ -9,10 +9,44 @@ Route110_OnResume:
 	end
 
 Route110_OnTransition:
-	call Common_EventScript_SetupRivalGfxId
+	call Route110_EventScript_SetupCounterpartGfx
 	call Common_EventScript_SetupRivalOnBikeGfxId
 	call_if_eq VAR_CYCLING_CHALLENGE_STATE, 1, Route110_EventScript_SaveCyclingMusic
 	end
+
+Route110_EventScript_SetupCounterpartGfx:
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, Route110_SetCounterpartBrendan
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, Route110_SetCounterpartMay
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, Route110_SetCounterpartCeleste
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, Route110_SetCounterpartHiiro
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, Route110_SetCounterpartAleciya
+	goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, Route110_SetCounterpartAster
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+Route110_SetCounterpartBrendan:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	return
+
+Route110_SetCounterpartMay:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+Route110_SetCounterpartCeleste:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+	return
+
+Route110_SetCounterpartHiiro:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+	return
+
+Route110_SetCounterpartAleciya:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+	return
+
+Route110_SetCounterpartAster:
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+	return
 
 Route110_EventScript_SaveCyclingMusic::
 	savebgm MUS_CYCLING
@@ -369,117 +403,202 @@ Route110_EventScript_RivalTrigger3::
 	end
 
 Route110_EventScript_RivalScene::
-	lockall
-	checkplayergender
-	call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayMayMusic
-	call_if_eq VAR_RESULT, FEMALE, Route110_EventScript_PlayBrendanMusic
-	applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_WalkInPlaceFasterDown
-	waitmovement 0
-	applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_ExclamationMark
-	waitmovement 0
-	applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_Delay48
-	waitmovement 0
-	delay 30
-	call_if_eq VAR_0x8008, 1, Route110_EventScript_RivalApproachPlayer1
-	call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalApproachPlayer2
-	call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalApproachPlayer3
-	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, Route110_EventScript_MayBattle
-	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_BrendanBattle
-	releaseall
-	end
+    lockall
+    checkplayergender
+    call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayMayMusic
+    call_if_eq VAR_RESULT, FEMALE, Route110_EventScript_PlayBrendanMusic
+    applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_WalkInPlaceFasterDown
+    waitmovement 0
+    applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_ExclamationMark
+    waitmovement 0
+    applymovement LOCALID_ROUTE110_RIVAL, Common_Movement_Delay48
+    waitmovement 0
+    delay 30
+    call_if_eq VAR_0x8008, 1, Route110_EventScript_RivalApproachPlayer1
+    call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalApproachPlayer2
+    call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalApproachPlayer3
+    goto Route110_EventScript_CounterpartPreBattle
+    end
 
 Route110_EventScript_PlayMayMusic::
-	playbgm MUS_ENCOUNTER_MAY, TRUE
-	return
+    playbgm MUS_ENCOUNTER_MAY, TRUE
+    return
 
 Route110_EventScript_PlayBrendanMusic::
-	playbgm MUS_ENCOUNTER_BRENDAN, TRUE
-	return
+    playbgm MUS_ENCOUNTER_BRENDAN, TRUE
+    return
 
-Route110_EventScript_MayBattle::
-	msgbox Route110_Text_MayLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route110_EventScript_MayBattleTreecko
-	case 1, Route110_EventScript_MayBattleTorchic
-	case 2, Route110_EventScript_MayBattleMudkip
-	end
+@ =============================================================================
+@ COUNTERPART ROUTE 110 - RELATIONSHIP DIALOGUE
+@ =============================================================================
 
-Route110_EventScript_MayBattleTreecko::
-	trainerbattle_no_intro TRAINER_MAY_ROUTE_110_TREECKO, Route110_Text_MayDefeated
-	goto Route110_EventScript_MayDefeated
-	end
+Route110_EventScript_CounterpartPreBattle::
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_COMPANION, Route110_EventScript_PreBattleCompanion
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_RIVAL, Route110_EventScript_PreBattleRival
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_MENTOR, Route110_EventScript_PreBattleMentor
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_FOIL, Route110_EventScript_PreBattleFoil
+    goto Route110_EventScript_PreBattleUnknown
+    end
 
-Route110_EventScript_MayBattleTorchic::
-	trainerbattle_no_intro TRAINER_MAY_ROUTE_110_TORCHIC, Route110_Text_MayDefeated
-	goto Route110_EventScript_MayDefeated
-	end
+Route110_EventScript_PreBattleCompanion::
+    msgbox Route110_Text_PreBattleCompanion, MSGBOX_DEFAULT
+    goto Route110_EventScript_CounterpartBattle
+    end
 
-Route110_EventScript_MayBattleMudkip::
-	trainerbattle_no_intro TRAINER_MAY_ROUTE_110_MUDKIP, Route110_Text_MayDefeated
-	goto Route110_EventScript_MayDefeated
-	end
+Route110_EventScript_PreBattleRival::
+    msgbox Route110_Text_PreBattleRival, MSGBOX_DEFAULT
+    goto Route110_EventScript_CounterpartBattle
+    end
 
-Route110_EventScript_MayDefeated::
-	msgbox Route110_Text_MayTakeThis, MSGBOX_DEFAULT
-	call Route110_EventScript_GiveItemfinder
-	msgbox Route110_Text_MayExplainItemfinder, MSGBOX_DEFAULT
-	goto Route110_EventScript_RivalExit
-	end
+Route110_EventScript_PreBattleMentor::
+    msgbox Route110_Text_PreBattleMentor, MSGBOX_DEFAULT
+    goto Route110_EventScript_CounterpartBattle
+    end
 
-Route110_EventScript_BrendanBattle::
-	msgbox Route110_Text_BrendanLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route110_EventScript_BrendanBattleTreecko
-	case 1, Route110_EventScript_BrendanBattleTorchic
-	case 2, Route110_EventScript_BrendanBattleMudkip
-	end
+Route110_EventScript_PreBattleFoil::
+    msgbox Route110_Text_PreBattleFoil, MSGBOX_DEFAULT
+    goto Route110_EventScript_CounterpartBattle
+    end
 
-Route110_EventScript_BrendanBattleTreecko::
-	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_TREECKO, Route110_Text_BrendanDefeated
-	goto Route110_EventScript_BrendanDefeated
-	end
+Route110_EventScript_PreBattleUnknown::
+    msgbox Route110_Text_PreBattleUnknown, MSGBOX_DEFAULT
+    goto Route110_EventScript_CounterpartBattle
+    end
 
-Route110_EventScript_BrendanBattleTorchic::
-	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_TORCHIC, Route110_Text_BrendanDefeated
-	goto Route110_EventScript_BrendanDefeated
-	end
+@ =============================================================================
+@ SIX-WAY IDENTITY BATTLE ROUTER
+@ =============================================================================
 
-Route110_EventScript_BrendanBattleMudkip::
-	trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_MUDKIP, Route110_Text_BrendanDefeated
-	goto Route110_EventScript_BrendanDefeated
-	end
+Route110_EventScript_CounterpartBattle::
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, Route110_EventScript_BattleBrendan
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, Route110_EventScript_BattleMay
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, Route110_EventScript_BattleCeleste
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, Route110_EventScript_BattleHiiro
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, Route110_EventScript_BattleAleciya
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, Route110_EventScript_BattleAster
+    goto Route110_EventScript_BattleCeleste
+    end
 
-Route110_EventScript_BrendanDefeated::
-	msgbox Route110_Text_BrendanTakeThis, MSGBOX_DEFAULT
-	call Route110_EventScript_GiveItemfinder
-	msgbox Route110_Text_BrendanExplainItemfinder, MSGBOX_DEFAULT
-	goto Route110_EventScript_RivalExit
-	end
+Route110_EventScript_BattleBrendan::
+    trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_MUDKIP, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+Route110_EventScript_BattleMay::
+    trainerbattle_no_intro TRAINER_MAY_ROUTE_110_MUDKIP, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+Route110_EventScript_BattleCeleste::
+    trainerbattle_no_intro TRAINER_MAY_ROUTE_110_TREECKO, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+Route110_EventScript_BattleHiiro::
+    trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_TREECKO, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+Route110_EventScript_BattleAleciya::
+    trainerbattle_no_intro TRAINER_MAY_ROUTE_110_TORCHIC, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+Route110_EventScript_BattleAster::
+    trainerbattle_no_intro TRAINER_BRENDAN_ROUTE_110_TORCHIC, Route110_Text_CounterpartDefeated
+    goto Route110_EventScript_CounterpartDefeated
+    end
+
+@ =============================================================================
+@ POST-BATTLE RELATIONSHIP DIALOGUE
+@ =============================================================================
+
+Route110_EventScript_CounterpartDefeated::
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_COMPANION, Route110_EventScript_PostBattleCompanion
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_RIVAL, Route110_EventScript_PostBattleRival
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_MENTOR, Route110_EventScript_PostBattleMentor
+    goto_if_eq VAR_COUNTERPART_RELATIONSHIP, RELATIONSHIP_FOIL, Route110_EventScript_PostBattleFoil
+    goto Route110_EventScript_PostBattleUnknown
+    end
+
+Route110_EventScript_PostBattleCompanion::
+    msgbox Route110_Text_PostBattleCompanion, MSGBOX_DEFAULT
+    goto Route110_EventScript_GiveCounterpartItem
+    end
+
+Route110_EventScript_PostBattleRival::
+    msgbox Route110_Text_PostBattleRival, MSGBOX_DEFAULT
+    goto Route110_EventScript_GiveCounterpartItem
+    end
+
+Route110_EventScript_PostBattleMentor::
+    msgbox Route110_Text_PostBattleMentor, MSGBOX_DEFAULT
+    goto Route110_EventScript_GiveCounterpartItem
+    end
+
+Route110_EventScript_PostBattleFoil::
+    msgbox Route110_Text_PostBattleFoil, MSGBOX_DEFAULT
+    goto Route110_EventScript_GiveCounterpartItem
+    end
+
+Route110_EventScript_PostBattleUnknown::
+    msgbox Route110_Text_PostBattleUnknown, MSGBOX_DEFAULT
+    goto Route110_EventScript_GiveCounterpartItem
+    end
+
+Route110_EventScript_GiveCounterpartItem::
+    msgbox Route110_Text_CounterpartTakeThis, MSGBOX_DEFAULT
+    call Route110_EventScript_GiveItemfinder
+    msgbox Route110_Text_CounterpartExplainDowsingMachine, MSGBOX_DEFAULT
+    goto Route110_EventScript_ChooseCounterpartExit
+    end
 
 Route110_EventScript_GiveItemfinder::
-	giveitem ITEM_DOWSING_MACHINE
-	return
+    giveitem ITEM_DOWSING_MACHINE
+    return
+
+@ =============================================================================
+@ EXIT
+@ Brendan / May retain vanilla bike exit.
+@ Custom counterparts leave using their normal overworld sprite.
+@ =============================================================================
+
+Route110_EventScript_ChooseCounterpartExit::
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, Route110_EventScript_RivalExit
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, Route110_EventScript_RivalExit
+    goto Route110_EventScript_CustomCounterpartExit
+    end
+
+Route110_EventScript_CustomCounterpartExit::
+    closemessage
+    applymovement LOCALID_ROUTE110_RIVAL, Route110_Movement_CustomCounterpartExit
+    waitmovement 0
+    removeobject LOCALID_ROUTE110_RIVAL
+    setvar VAR_ROUTE110_STATE, 1
+    savebgm MUS_DUMMY
+    fadedefaultbgm
+    releaseall
+    end
 
 Route110_EventScript_RivalExit::
-	closemessage
-	call_if_eq VAR_0x8008, 1, Route110_EventScript_MoveRival1
-	call_if_eq VAR_0x8008, 2, Route110_EventScript_MoveRival2
-	call_if_eq VAR_0x8008, 3, Route110_EventScript_MoveRival3
-	setobjectmovementtype LOCALID_ROUTE110_RIVAL, MOVEMENT_TYPE_FACE_RIGHT
-	setobjectmovementtype LOCALID_ROUTE110_RIVAL_ON_BIKE, MOVEMENT_TYPE_FACE_RIGHT
-	removeobject LOCALID_ROUTE110_RIVAL
-	addobject LOCALID_ROUTE110_RIVAL_ON_BIKE
-	delay 45
-	call_if_eq VAR_0x8008, 1, Route110_EventScript_RivalExit1
-	call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalExit2
-	call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalExit3
-	removeobject LOCALID_ROUTE110_RIVAL_ON_BIKE
-	setvar VAR_ROUTE110_STATE, 1
-	savebgm MUS_DUMMY
-	fadedefaultbgm
-	releaseall
-	end
+    closemessage
+    call_if_eq VAR_0x8008, 1, Route110_EventScript_MoveRival1
+    call_if_eq VAR_0x8008, 2, Route110_EventScript_MoveRival2
+    call_if_eq VAR_0x8008, 3, Route110_EventScript_MoveRival3
+    setobjectmovementtype LOCALID_ROUTE110_RIVAL, MOVEMENT_TYPE_FACE_RIGHT
+    setobjectmovementtype LOCALID_ROUTE110_RIVAL_ON_BIKE, MOVEMENT_TYPE_FACE_RIGHT
+    removeobject LOCALID_ROUTE110_RIVAL
+    addobject LOCALID_ROUTE110_RIVAL_ON_BIKE
+    delay 45
+    call_if_eq VAR_0x8008, 1, Route110_EventScript_RivalExit1
+    call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalExit2
+    call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalExit3
+    removeobject LOCALID_ROUTE110_RIVAL_ON_BIKE
+    setvar VAR_ROUTE110_STATE, 1
+    savebgm MUS_DUMMY
+    fadedefaultbgm
+    releaseall
+    end
 
 Route110_EventScript_RivalApproachPlayer1::
 	applymovement LOCALID_ROUTE110_RIVAL, Route110_Movement_RivalApproachPlayer1
@@ -522,6 +641,13 @@ Route110_EventScript_MoveRival2::
 Route110_EventScript_MoveRival3::
 	setobjectxyperm LOCALID_ROUTE110_RIVAL_ON_BIKE, 35, 55
 	return
+
+Route110_Movement_CustomCounterpartExit:
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    step_end
 
 Route110_Movement_RivalApproachPlayer1:
 	walk_down
@@ -987,3 +1113,82 @@ Route110_Text_KeepAnEyeOutForRival:
 	.string "Well, I had better get going.\n"
 	.string "See you again, {PLAYER}{KUN}!$"
 
+
+@ =============================================================================
+@ CUSTOM ROUTE 110 COUNTERPART TEXT
+@ =============================================================================
+
+Route110_Text_PreBattleCompanion:
+    .string "Hey! There you are!\p"
+    .string "After everything in CERULEAN, I was\n"
+    .string "wondering when I'd see you again.\p"
+    .string "You look stronger.\n"
+    .string "Come on. Let's see how much.$"
+
+Route110_Text_PreBattleRival:
+    .string "There you are.\p"
+    .string "I've heard enough about what happened\n"
+    .string "in CERULEAN.\p"
+    .string "Don't think I'm letting you get\n"
+    .string "ahead of me. Let's battle.$"
+
+Route110_Text_PreBattleMentor:
+    .string "There you are.\p"
+    .string "CERULEAN seems to have taught you\n"
+    .string "something.\p"
+    .string "Let's see whether you've actually\n"
+    .string "learned from it.$"
+
+Route110_Text_PreBattleFoil:
+    .string "Oh. You survived CERULEAN.\p"
+    .string "Good for you.\p"
+    .string "I was beginning to think cleaning up\n"
+    .string "one mess had exhausted you.\p"
+    .string "Go on, then. Show me I'm wrong.$"
+
+Route110_Text_PreBattleUnknown:
+    .string "Oh! It's you.\p"
+    .string "A lot has happened since CERULEAN,\n"
+    .string "hasn't it?\p"
+    .string "Um... want to see how much stronger\n"
+    .string "we've gotten?$"
+
+Route110_Text_CounterpartDefeated:
+    .string "Okay...\n"
+    .string "You've definitely gotten stronger.$"
+
+Route110_Text_PostBattleCompanion:
+    .string "Okay, okay!\p"
+    .string "I missed this.\n"
+    .string "You're seriously getting good.$"
+
+Route110_Text_PostBattleRival:
+    .string "Tch.\p"
+    .string "Fine. You win this one.\p"
+    .string "Don't get comfortable.$"
+
+Route110_Text_PostBattleMentor:
+    .string "Good.\p"
+    .string "You didn't just get stronger.\n"
+    .string "You're thinking better, too.$"
+
+Route110_Text_PostBattleFoil:
+    .string "...\p"
+    .string "Don't look so pleased with yourself.\p"
+    .string "One decent battle doesn't make you\n"
+    .string "a prodigy.$"
+
+Route110_Text_PostBattleUnknown:
+    .string "Wow...\p"
+    .string "You really HAVE gotten stronger.$"
+
+Route110_Text_CounterpartTakeThis:
+    .string "Here.\p"
+    .string "I found this earlier.\n"
+    .string "You'll probably get more use from it.$"
+
+Route110_Text_CounterpartExplainDowsingMachine:
+    .string "It's a DOWSING MACHINE.\p"
+    .string "It reacts when there's a hidden item\n"
+    .string "nearby.\p"
+    .string "Anyway... I'll see you around.$"

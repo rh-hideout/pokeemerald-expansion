@@ -97,8 +97,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MAN_3",
-      "x": 26,
-      "y": 23,
+      "x": 21,
+      "y": 18,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 1,
@@ -577,6 +577,15 @@
       "var": "VAR_RUSTBORO_CITY_STATE",
       "var_value": "7",
       "script": "RustboroCity_EventScript_NoticeMistyGroup"
+    },
+    {
+      "type": "trigger",
+      "x": 28,
+      "y": 22,
+      "elevation": 0,
+      "var": "VAR_RUSTBORO_CITY_STATE",
+      "var_value": "10",
+      "script": "RustboroCity_EventScript_ShrineFinale"
     }
   ],
   "bg_events": [
