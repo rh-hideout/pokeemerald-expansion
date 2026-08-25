@@ -17,11 +17,26 @@ Route109_SeashoreHouse_MapScripts::
 
 Route109_SeashoreHouse_OnTransition:
         setflag FLAG_LANDMARK_SEASHORE_HOUSE
+
+        @ Default: no aftermath queued.
+        setvar VAR_TEMP_0, 0
+
+        @ Saffron must actually be finished.
+        goto_if_unset FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE, Route109_SeashoreHouse_OnTransitionDone
+
+        @ Never queue the call again once completed.
+        goto_if_set FLAG_SAFFRON_PARENT_CALL_DONE, Route109_SeashoreHouse_OnTransitionDone
+
+        @ Queue the field cutscene.
+        setvar VAR_TEMP_0, 1
+
+
+Route109_SeashoreHouse_OnTransitionDone:
         end
 
 
 Route109_SeashoreHouse_OnFrame:
-        map_script_2 VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 4, Route109_SeashoreHouse_EventScript_ReturnFromSaffron
+        map_script_2 VAR_TEMP_0, 1, Route109_SeashoreHouse_EventScript_ReturnFromSaffron
         .2byte 0
 
 
@@ -139,6 +154,11 @@ Route109_SeashoreHouse_Text_PlayerOfCourse:
 @ =============================================================================
 
 Route109_SeashoreHouse_EventScript_ReturnFromSaffron::
+        @ Consume the queued cutscene immediately so ON_FRAME cannot loop.
+        setvar VAR_TEMP_0, 0
+
+        @ Permanent safety checks.
+        goto_if_set FLAG_SAFFRON_PARENT_CALL_DONE, Route109_SeashoreHouse_EventScript_ReturnNotReady
         goto_if_unset FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE, Route109_SeashoreHouse_EventScript_ReturnNotReady
 
         lockall
@@ -152,6 +172,9 @@ Route109_SeashoreHouse_EventScript_ReturnFromSaffron::
         closemessage
 
         msgbox Route109_SeashoreHouse_Text_ReturnQuestions, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox Route109_SeashoreHouse_Text_PlayerNotTouchingStone, MSGBOX_DEFAULT
         closemessage
 
         delay 20
@@ -221,7 +244,9 @@ Route109_SeashoreHouse_EventScript_ParentCallContinue:
         msgbox Route109_SeashoreHouse_Text_PlayerEverybodyDoesThis, MSGBOX_DEFAULT
         closemessage
 
-        @ Memory complete. Machine/stone is now dormant.
+        @ Saffron follow-up is complete.
+        @ The stone remains dormant, and this call can never repeat.
+        setflag FLAG_SAFFRON_PARENT_CALL_DONE
         setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 5
 
         releaseall
@@ -239,14 +264,14 @@ Route109_SeashoreHouse_EventScript_ReturnNotReady:
 Route109_SeashoreHouse_EventScript_DormantMachine::
         lockall
 
-        delay 10
+        @ Only meaningful after the Saffron memory.
+        goto_if_ne VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 5, Route109_SeashoreHouse_EventScript_DormantMachineDone
 
         msgbox Route109_SeashoreHouse_Text_MachineDormant, MSGBOX_DEFAULT
         closemessage
 
-        msgbox Route109_SeashoreHouse_Text_PlayerMachineDormant, MSGBOX_DEFAULT
-        closemessage
 
+Route109_SeashoreHouse_EventScript_DormantMachineDone:
         releaseall
         end
 
@@ -353,3 +378,10 @@ Route109_SeashoreHouse_Text_PlayerMachineDormant:
         .string "{PLAYER}: Yeah.\p"
         .string "I think I've had enough of\n"
         .string "that for now.$"
+
+
+
+Route109_SeashoreHouse_Text_PlayerNotTouchingStone:
+        .string "{PLAYER}: Whatever that stone is...\p"
+        .string "I'm not touching it again\n"
+        .string "anytime soon.$"

@@ -57,17 +57,17 @@
       "var": "VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE",
       "var_value": "3",
       "script": "Route109_SeashoreHouse_EventScript_EntranceThought"
-    },
+    }
+  ],
+  "bg_events": [
     {
-      "type": "trigger",
+      "type": "sign",
       "x": 7,
       "y": 5,
       "elevation": 3,
-      "var": "VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE",
-      "var_value": "5",
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route109_SeashoreHouse_EventScript_DormantMachine"
     }
   ],
-  "bg_events": [],
   "region": "REGION_HOENN"
 }
