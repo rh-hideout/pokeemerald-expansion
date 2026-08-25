@@ -752,11 +752,6 @@
 	.byte B_SCR_OP_SETSUBSTITUTE
 	.endm
 
-	.macro mimicattackcopy failInstr:req
-	.byte B_SCR_OP_MIMICATTACKCOPY
-	.4byte \failInstr
-	.endm
-
 	.macro setcalledmove
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm

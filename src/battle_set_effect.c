@@ -3177,6 +3177,40 @@ static void HandleSetEffectThirdType(struct BattleCalcValues *cv, struct SetEffe
     }
 }
 
+static bool32 CanMimicMoveSlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gBattleMons[battlerAtk].moves[i] == gLastMoves[battlerDef])
+            return FALSE;
+    }
+    return TRUE;
+}
+
+static void HandleSetEffectMimic(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gLastMoves[se->effectBattler] == MOVE_UNAVAILABLE
+     || gLastMoves[se->effectBattler] == MOVE_NONE
+     || gBattleMons[cv->battlerAtk].volatiles.transformed
+     || IsMoveMimicBanned(gLastMoves[se->effectBattler])
+     || !CanMimicMoveSlot(cv->battlerAtk, se->effectBattler))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gChosenMove = 0xFFFF;
+        gBattleMons[cv->battlerAtk].moves[gCurrMovePos] = gLastMoves[se->effectBattler];
+        u32 pp = GetMovePP(gLastMoves[se->effectBattler]);
+        gBattleMons[cv->battlerAtk].pp[gCurrMovePos] = min(pp, 5);
+
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[se->effectBattler])
+        gBattleMons[cv->battlerAtk].volatiles.mimickedMoves |= 1u << gCurrMovePos;
+        PrepareStringBattleWithWait(STRINGID_PKMNLEARNEDMOVE2, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+    }
+}
+
 static void HandleSetEffectPowerShift(struct BattleCalcValues *cv, struct SetEffect *se)
 {
 }
@@ -3346,6 +3380,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_FOLLOW_ME] = HandleSetEffectFollowMe,
     [MOVE_EFFECT_HELPING_HAND] = HandleSetEffectHelpingHand,
     [MOVE_EFFECT_THIRD_TYPE] = HandleSetEffectThirdType,
+    [MOVE_EFFECT_MIMIC] = HandleSetEffectMimic,
 
     [MOVE_EFFECT_TOPSY_TURVY] = HandleSetEffectTopsyTurvy,
     [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,

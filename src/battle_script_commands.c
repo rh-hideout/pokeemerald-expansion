@@ -475,7 +475,6 @@ static void Cmd_setmist(void);
 static void Cmd_setfocusenergy(void);
 static void Cmd_transformdataexecution(void);
 static void Cmd_setsubstitute(void);
-static void Cmd_mimicattackcopy(void);
 static void Cmd_setcalledmove(void);
 static void Cmd_settypetorandomresistance(void);
 static void Cmd_copymovepermanently(void);
@@ -657,7 +656,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETFOCUSENERGY]                        = Cmd_setfocusenergy,
     [B_SCR_OP_TRANSFORMDATAEXECUTION]                = Cmd_transformdataexecution,
     [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
-    [B_SCR_OP_MIMICATTACKCOPY]                       = Cmd_mimicattackcopy,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
     [B_SCR_OP_SETTYPETORANDOMRESISTANCE]             = Cmd_settypetorandomresistance,
     [B_SCR_OP_COPYMOVEPERMANENTLY]                   = Cmd_copymovepermanently,
@@ -774,6 +772,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_68]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_69]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_70]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_71]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -5850,49 +5849,6 @@ static void Cmd_setsubstitute(void)
 
     gBattleStruct->passiveHpUpdate[gBattlerAttacker] = hp;
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_mimicattackcopy(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
-     || gLastMoves[gBattlerTarget] == MOVE_NONE
-     || gBattleMons[gBattlerAttacker].volatiles.transformed
-     || IsMoveMimicBanned(gLastMoves[gBattlerTarget]))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        int i;
-
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (gBattleMons[gBattlerAttacker].moves[i] == gLastMoves[gBattlerTarget])
-                break;
-        }
-
-        if (i == MAX_MON_MOVES)
-        {
-            gChosenMove = 0xFFFF;
-            gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = gLastMoves[gBattlerTarget];
-            u32 pp = GetMovePP(gLastMoves[gBattlerTarget]);
-            if (pp < 5)
-                gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = pp;
-            else
-                gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = 5;
-
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[gBattlerTarget])
-
-            gBattleMons[gBattlerAttacker].volatiles.mimickedMoves |= 1u << gCurrMovePos;
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-    }
 }
 
 static void Cmd_setcalledmove(void)

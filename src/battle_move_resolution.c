@@ -2747,7 +2747,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     if (moveFailed)
     {
-        DebugPrintf("failed?");
         gBattleStruct->statusMoveFailed = TRUE;
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
