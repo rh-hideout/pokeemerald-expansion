@@ -1826,5 +1826,51 @@ SINGLE_BATTLE_TEST("Dynamax: Max Move power is based on the base move", s16 dama
     }
 }
 
+SINGLE_BATTLE_TEST("Dynamax: Gravity does not prevent Max Guard derived from a Gravity-banned status move")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_SPLASH; }
+    PARAMETRIZE { move = MOVE_MAGNET_RISE; }
+    PARAMETRIZE { move = MOVE_TELEKINESIS; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
+        ASSUME(IsMoveGravityBanned(move));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_GRAVITY, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GRAVITY); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, move, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        MESSAGE("Wobbuffet used Max Guard!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Gravity does not prevent a Max Move derived from a Gravity-banned damaging move")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_FLY; }
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_HIGH_JUMP_KICK; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
+        ASSUME(IsMoveGravityBanned(move));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_GRAVITY, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GRAVITY); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, move, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        HP_BAR(opponent);
+    }
+}
+
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")

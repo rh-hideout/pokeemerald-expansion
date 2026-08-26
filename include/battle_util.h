@@ -241,6 +241,7 @@ bool32 IsMoveMakingContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 bool32 IsBattlerGrounded(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, enum Move move);
 u32 GetBattlerWeight(enum BattlerId battler);
+u32 GetCriticalHitOdds(u32 critChance);
 s32 CalcCritChanceStage(struct DamageContext *ctx);
 s32 CalcCritChanceStageGen1(struct DamageContext *ctx);
 s32 CalculateMoveDamage(struct DamageContext *ctx);
@@ -407,7 +408,7 @@ void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect);
-bool32 ChangeOrderTargetAfterAttacker(void);
+bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef);
 void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);

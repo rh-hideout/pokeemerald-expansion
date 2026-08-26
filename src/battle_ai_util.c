@@ -839,6 +839,8 @@ static inline bool32 ShouldCalcCritDamage(struct DamageContext *ctx)
 
     if (critChanceIndex == CRITICAL_HIT_ALWAYS)
         return TRUE;
+    if (GetCriticalHitOdds(critChanceIndex) == 1)
+        return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
         && GetConfig(B_CRIT_CHANCE) != GEN_1)
