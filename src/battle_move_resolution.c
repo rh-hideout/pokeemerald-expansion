@@ -2524,7 +2524,14 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
                 continue;
             }
 
-            if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_ONE_HIT_KO_STURDY)
+            if (isMultiHitOn)
+            {
+                gMultiHitCounter = 0;
+                gBattleStruct->moveDamage[cv->battlerDef] = 0;
+                gSpecialStatuses[cv->battlerDef].damagedByAttack = FALSE;
+                BattleScriptCall(BattleScript_BattlerAvoidedMultiHit);
+            }
+            else if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_ONE_HIT_KO_STURDY)
             {
                 gLastUsedAbility = ABILITY_STURDY;
                 gBattlerAbility = cv->battlerDef;
