@@ -4458,8 +4458,6 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
-    gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
-
     if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn || !IsBattleMoveStatus(cv->move))
     {
         // go to next state
@@ -4467,6 +4465,8 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
     else if (moveTarget == TARGET_USER_AND_ALLY)
     {
         enum BattlerId partner = GetPartnerBattler(gBattlerAttacker);
+        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
+
         if (partner != gBattlerTarget && IsBattlerAlive(partner))
         {
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = partner;
@@ -4484,6 +4484,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
     else if (IsSpreadMove(moveTarget))
     {
         u32 nextTarget = GetNextTarget(moveTarget, FALSE);
+        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
 
         if (nextTarget != MAX_BATTLERS_COUNT)
         {
