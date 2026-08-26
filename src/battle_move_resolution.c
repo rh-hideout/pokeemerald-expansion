@@ -47,7 +47,7 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv);
 static bool32 ShouldPrintCritMessage(enum BattlerId battler);
 static bool32 ShouldPrintProtectMessage(enum BattlerId battler);
-static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battlerSide, struct BattleCalcValues *cv);
+static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv);
 
 // Stat change moves
 static bool32 TryBellyDrum(enum BattlerId battler);
@@ -3236,7 +3236,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
             switch (gBattleStruct->eventState.moveEndBlock)
             {
             case SUBSTITUTE_BLOCK_EFFECTIVENESS_MESSAGE:
-                if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv))
+                if (ShouldPrintEffectivenessMessage(cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 break;
             case SUBSTITUTE_BLOCK_CRIT_MESSAGE:
@@ -3399,9 +3399,9 @@ static bool32 ShouldPrintEffectivenessMessageForFlag(enum BattlerId battler1, en
     return TRUE;
 }
 
-static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battlerSide, struct BattleCalcValues *cv)
+static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv)
 {
-    enum BattlerId battler1 = battlerSide;
+    enum BattlerId battler1 = cv->battlerDef;
     enum BattlerId battler2 = GetPartnerBattler(battler1);
     bool32 anyValidBattler = FALSE;
 
@@ -3468,7 +3468,7 @@ static bool32 ShouldPrintEffectivenessMessage(enum BattlerId battlerSide, struct
 
 static enum MoveEndResult MoveEndEffectivenessMessage(struct BattleCalcValues *cv)
 {
-    if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv))
+    if (ShouldPrintEffectivenessMessage(cv))
         return MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -3699,8 +3699,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
         enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
         gBattleStruct->eventState.moveEndBattler++;
 
-        if (ShouldSkipBattlerForMoveEndSubstitute(battlerDef, cv)
-         || gBattleStruct->battlerState[battlerDef].substituteBlocked)
+        if (ShouldSkipBattlerForMoveEndSubstitute(battlerDef, cv))
             continue;
 
         if (ShouldApplyProtectLikeEffects(battlerDef, cv))
@@ -3989,7 +3988,9 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
         enum Ability abilityDef = cv->abilities[battlerDef];
         enum HoldEffect holdEffectDef = cv->holdEffects[battlerDef];
 
-        if (!IsBattlerAlly(battlerDef, cv->battlerDef) || !IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES))
+        if (!IsBattlerAlly(battlerDef, cv->battlerDef)
+         || !IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
+         || !ShouldApplyAfterHitEffects(cv->battlerAtk, battlerDef))
         {
             gBattleStruct->eventState.moveEndBlock = 0;
             gBattleStruct->eventState.moveEndBattler++;
@@ -4649,7 +4650,7 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
         case MULTIHIT_BLOCK_EFFECTIVENESS_MESSAGE:
             if (gMultiHitCounter == 0 && target != TARGET_SMART)
             {
-                if (ShouldPrintEffectivenessMessage(cv->battlerDef, cv))
+                if (ShouldPrintEffectivenessMessage(cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
             }
             gBattleStruct->eventState.moveEndBlock++;
