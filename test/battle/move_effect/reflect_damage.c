@@ -267,7 +267,32 @@ SINGLE_BATTLE_TEST("Reflect Damage: Counter works when surviving OHKO move with 
 
 // Gen 1
 TO_DO_BATTLE_TEST("Reflect Damage: Counter can only counter Normal and Fighting-type moves (Gen 1)");
-TO_DO_BATTLE_TEST("Reflect Damage: Counter can hit ghost-type Pokémon (Gen 1)");
+SINGLE_BATTLE_TEST("Reflect Damage moves can hit Pokémon immune to their type (Gen 1)")
+{
+    enum Move attackMove;
+    enum Move reflectMove;
+    enum Species targetSpecies;
+    s16 damage;
+    s16 reflectedDamage;
+
+    PARAMETRIZE { attackMove = MOVE_POUND; reflectMove = MOVE_COUNTER; targetSpecies = SPECIES_GASTLY; }
+    PARAMETRIZE { attackMove = MOVE_ROUND; reflectMove = MOVE_MIRROR_COAT; targetSpecies = SPECIES_UMBREON; }
+
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); }
+        OPPONENT(targetSpecies) { MaxHP(1000); HP(1000); }
+    } WHEN {
+        TURN { MOVE(opponent, attackMove); MOVE(player, reflectMove); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, attackMove, opponent);
+        HP_BAR(player, captureDamage: &damage);
+        ANIMATION(ANIM_TYPE_MOVE, reflectMove, player);
+        HP_BAR(opponent, captureDamage: &reflectedDamage);
+    } THEN {
+        EXPECT_MUL_EQ(damage, Q_4_12(2.0), reflectedDamage);
+    }
+}
 TO_DO_BATTLE_TEST("Reflect Damage: Counter can return damage dealt to a substitute (Gen 1)");
 
 // Gen 2-3

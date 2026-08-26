@@ -27,7 +27,23 @@ SINGLE_BATTLE_TEST("Return's power increases the higher friendship of the user i
     }
 }
 
-TO_DO_BATTLE_TEST("Return does 0 damage at min Friendship (Gen2)")
+SINGLE_BATTLE_TEST("Return does 0 damage at min Friendship (Gen2)")
+{
+    s16 damage;
+
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_2);
+        PLAYER(SPECIES_WOBBUFFET) { Friendship(0); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RETURN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RETURN, player);
+        HP_BAR(opponent, captureDamage: &damage);
+    } THEN {
+        EXPECT_EQ(damage, 0);
+    }
+}
 
 SINGLE_BATTLE_TEST("Return does 1 damage at min Friendship (Gen3+)")
 {

@@ -490,8 +490,17 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    s32 recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
-    if (B_UPDATED_MOVE_DATA >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
+    s32 recoil;
+    if (GetConfig(B_UPDATED_MOVE_DATA) < GEN_4)
+    {
+        u32 recoilPercentage = GetConfig(B_UPDATED_MOVE_DATA) == GEN_1 ? 50 : 25;
+        recoil = gBattleStruct->moveDamage[gBattlerTarget] * recoilPercentage / 100;
+    }
+    else
+    {
+        recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
+    }
+    if (GetConfig(B_UPDATED_MOVE_DATA) >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
         recoil++;
     if (recoil == 0)
         recoil = 1;

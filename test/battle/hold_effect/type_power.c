@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Type-enhancing items do not increase the power of Struggle",
     GIVEN {
         if (item != ITEM_NONE) {
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_TYPE_POWER);
-            ASSUME(GetItemSecondaryId(item) == GetMoveType(MOVE_STRUGGLE));
+            ASSUME(GetItemSecondaryId(item) == TYPE_NORMAL);
         }
         PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);

@@ -4527,7 +4527,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .recoilPercentage = 50 },
     #endif
         .power = 50,
-        .type = TYPE_NORMAL,
+        .type = B_UPDATED_MOVE_FLAGS >= GEN_2 ? TYPE_MYSTERY : TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
         .pp = B_UPDATED_MOVE_DATA >= GEN_2 ? 1: 10,
         .target = TARGET_SELECTED,

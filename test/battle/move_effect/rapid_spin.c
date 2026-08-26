@@ -93,7 +93,55 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
     }
 }
 
-TO_DO_BATTLE_TEST("Rapid Spin blows away Wrap, hazards, but doesn't raise Speed when Sheer Force boosted (Gen 8)");
+SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap and hazards but doesn't raise Speed when Sheer Force boosted (Gen 8)")
+{
+    GIVEN {
+        WITH_CONFIG(B_SPEED_BUFFING_RAPID_SPIN, GEN_8);
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WRAP); }
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, MOVE_RAPID_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Tauros was freed from Wrap!");
+        MESSAGE("The pointed stones disappeared from around your team!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        for (u32 i = 0; i < ARRAY_COUNT(gBattleStruct->hazardsQueue[B_SIDE_PLAYER]); i++)
+            EXPECT_EQ(gBattleStruct->hazardsQueue[B_SIDE_PLAYER][i], HAZARDS_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sheer Force boosted Rapid Spin doesn't trigger Eject Button or Emergency Exit (Gen 8)")
+{
+    GIVEN {
+        WITH_CONFIG(B_SPEED_BUFFING_RAPID_SPIN, GEN_8);
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); Attack(1); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); Item(ITEM_EJECT_BUTTON); MaxHP(200); HP(101); Defense(999); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAPID_SPIN); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->species, SPECIES_GOLISOPOD);
+        EXPECT_EQ(opponent->item, ITEM_EJECT_BUTTON);
+    }
+}
 
 SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed when Sheer Force boosted (Gen 9+)")
 {

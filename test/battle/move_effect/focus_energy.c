@@ -67,5 +67,43 @@ SINGLE_BATTLE_TEST("Focus Energy multiplies crit chance by 4 with gen 1 crit cha
     }
 }
 
-TO_DO_BATTLE_TEST("Focus Energy fails if critical hit stage was already increased by Dragon Cheer")
-TO_DO_BATTLE_TEST("Baton Pass passes Focus Energy's effect");
+DOUBLE_BATTLE_TEST("Focus Energy fails if critical hit stage was already increased by Dragon Cheer")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_CHEER) == EFFECT_DRAGON_CHEER);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_FOCUS_ENERGY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerRight);
+        MESSAGE("Wobbuffet is getting pumped!");
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(playerLeft->volatiles.dragonCheer);
+        EXPECT(!playerLeft->volatiles.focusEnergy);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass passes Focus Energy's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CATERPIE);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Caterpie");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_CATERPIE);
+        EXPECT(player->volatiles.focusEnergy);
+    }
+}

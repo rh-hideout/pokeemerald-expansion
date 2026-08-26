@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Gem is not consumed when using Struggle", s16 damage)
     GIVEN {
         if (item != ITEM_NONE) {
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_GEMS);
-            ASSUME(GetItemSecondaryId(item) == GetMoveType(MOVE_STRUGGLE));
+            ASSUME(GetItemSecondaryId(item) == TYPE_NORMAL);
         }
         PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
