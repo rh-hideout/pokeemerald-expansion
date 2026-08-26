@@ -28,7 +28,7 @@
     > Note 2: If the path has spaces, then the path must be wrapped with quotations, e.5.  `cd     "/mnt/c/users/<user>/Downloads folder"`.
     > Note 3: Windows path names are case-insensitive so adhering to capitalization isn't needed
 
-6. Once the directory has been changed to the folder containing the devkitPro pacman package, run the following commands to install devkitARM.
+5. Once the directory has been changed to the folder containing the devkitPro pacman package, run the following commands to install devkitARM.
 
     ```bash
     sudo gdebi devkitpro-pacman.amd64.deb
