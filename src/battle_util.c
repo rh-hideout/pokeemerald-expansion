@@ -6761,6 +6761,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_OGERPON)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
         break;
+    case HOLD_EFFECT_SHANK:
+        if (IsSlicingMove(move))
+           modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
     default:
         break;
     }
@@ -9583,11 +9587,13 @@ bool32 AreBattlersOfSameGender(enum BattlerId battler1, enum BattlerId battler2)
     return (gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS && gender1 == gender2);
 }
 
-u32 CalcSecondaryEffectChance(enum BattlerId battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect)
+u32 CalcSecondaryEffectChance(enum BattlerId battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect, enum Move move)
 {
     bool8 hasSereneGrace = (battlerAbility == ABILITY_SERENE_GRACE);
     bool8 hasRainbow = (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW) != 0;
+
     u16 secondaryEffectChance = additionalEffect->chance;
+    u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(battler), battlerAbility, GetWeather());
 
     if (hasRainbow && hasSereneGrace && additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
         return secondaryEffectChance * 2;
@@ -9596,13 +9602,15 @@ u32 CalcSecondaryEffectChance(enum BattlerId battler, enum Ability battlerAbilit
         secondaryEffectChance *= 2;
     if (hasRainbow && additionalEffect->moveEffect != MOVE_EFFECT_SECRET_POWER)
         secondaryEffectChance *= 2;
+    if (move == MOVE_THUNDER_FORCE && attackerWeather & B_WEATHER_RAIN)
+        secondaryEffectChance *= 2;
 
     return secondaryEffectChance;
 }
 
-bool32 MoveEffectIsGuaranteed(enum BattlerId battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect)
+bool32 MoveEffectIsGuaranteed(enum BattlerId battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect, enum Move move)
 {
-    return additionalEffect->chance == 0 || CalcSecondaryEffectChance(battler, battlerAbility, additionalEffect) >= 100;
+    return additionalEffect->chance == 0 || CalcSecondaryEffectChance(battler, battlerAbility, additionalEffect, move) >= 100;
 }
 
 bool32 IsGen6ExpShareEnabled(void)

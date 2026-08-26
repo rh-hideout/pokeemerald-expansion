@@ -136,6 +136,8 @@ enum HoldEffect
     HOLD_EFFECT_OGERPON_MASK,
     // Gen2 hold effect
     HOLD_EFFECT_BERSERK_GENE,
+    //Pokeduel hold Effecs
+    HOLD_EFFECT_SHANK,
     HOLD_EFFECT_COUNT
 };
 

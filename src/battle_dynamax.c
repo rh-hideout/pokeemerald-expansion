@@ -282,6 +282,7 @@ u32 GetMaxMovePower(enum Move baseMove, enum Move move)
     case MOVE_GEAR_GRIND:    return 100;
     case MOVE_DUAL_WINGBEAT: return 100;
     case MOVE_TRIPLE_AXEL:   return 140;
+    case MOVE_TRIPLE_SLICEL: return 140;
     default: break;
     }
 

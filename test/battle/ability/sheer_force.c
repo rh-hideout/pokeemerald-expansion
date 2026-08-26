@@ -424,6 +424,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_AIR_SLASH:
         case MOVE_ANCIENT_POWER:
         case MOVE_ASTONISH:
+        case MOVE_AXE_SLAM:
         case MOVE_BITE:
         case MOVE_BLIZZARD:
         case MOVE_BODY_SLAM:
@@ -434,12 +435,14 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_BUG_BUZZ:
         case MOVE_BULLDOZE:
         case MOVE_BURNING_JEALOUSY:
+        case MOVE_CELTIC_BLADE:
         case MOVE_CHAOS_BLADE:
         case MOVE_CHARGE_BEAM:
         case MOVE_CHILLING_WATER:
         case MOVE_CONFUSION:
         case MOVE_CRUNCH:
         case MOVE_CRUSH_CLAW:
+        case MOVE_CYBER_ENERGY_SHOCK:
         case DARK_BURNING_ATTACK:
         case MOVE_DARK_MAGIC_ATTACK:
         case MOVE_DARK_PULSE:
@@ -471,11 +474,13 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_ICE_PUNCH:
         case MOVE_ICICLE_CRASH:
         case MOVE_ICY_WIND:
+        case MOVE_INFERNO_BLAST:
         case MOVE_IRON_HEAD:
         case MOVE_IRON_TAIL:
         case MOVE_LAVA_PLUME:
         case MOVE_LIQUIDATION:
         case MOVE_LOW_SWEEP:
+        case MOVE_MAGNET_SWORD:
         case MOVE_METAL_CLAW:
         case MOVE_MUD_BOMB:
         case MOVE_MUDDY_WATER:
@@ -508,6 +513,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_SLUDGE_WAVE:
         case MOVE_SNARL:
         case MOVE_SNORE:
+        case MOVE_SPIRAL_SPEAR:
         case MOVE_STEEL_WING:
         case MOVE_STOMP:
         case MOVE_STONE_AXE:
@@ -515,10 +521,13 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_THROAT_CHOP:
         case MOVE_THUNDER:
         case MOVE_THUNDER_FANG:
+        case MOVE_THUNDER_FORCE:
         case MOVE_THUNDERBOLT:
         case MOVE_THUNDER_PUNCH:
+        case MOVE_THUNDER_SWORD:
         case MOVE_TRAILBLAZE:
         case MOVE_TWISTER:
+        case MOVE_VENGEANCE:
         case MOVE_UPPER_HAND:
         case MOVE_WATER_PULSE:
         case MOVE_WATERFALL:

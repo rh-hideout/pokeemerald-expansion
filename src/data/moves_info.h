@@ -12162,6 +12162,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
+        .bitingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_BUG_BITE,
         }),
@@ -22336,6 +22337,358 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_DragonPulse,
     },
 
+    [MOVE_SPIRAL_SPEAR] =
+    {
+        .name = COMPOUND_STRING("Spiral Spear"),
+        .description = COMPOUND_STRING(
+            "A sharp spear that\n"
+            "may lower the foe's\n"
+            "defense (20%). It's\n"
+            "sure to always hit."),
+        .effect = EFFECT_HIT,
+        .power = 85,
+        .type = TYPE_NORMAL,
+        .accuracy = 0,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .defense = 1,
+            .chance = 20,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .stabbingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_THUNDER_SWORD] =
+    {
+        .name = COMPOUND_STRING("Thunder Sword"),
+        .description = COMPOUND_STRING(
+            "Blades the foe with\n"
+            "a sword\nthat can cause\n"
+            "paralysis.(10%)"),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_INFERNO_BLAST] =
+    {
+        .name = COMPOUND_STRING("Inferno Blast"),
+        .description = COMPOUND_STRING(
+            "Fire blast which\n"
+            "may burn foe (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        //Move Categories
+        .thawsUser = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_AXE_SLAM] =
+    {
+        .name = COMPOUND_STRING("Axe Slam"),
+        .description = COMPOUND_STRING(
+            "A swiping axe\n"
+            "that may cause the\n"
+            "foe to flinch (30%)."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 25,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 30,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .minimizeDoubleDamage = TRUE,
+        .slicingMove = TRUE;
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_METAL_THRUST] =
+    {
+        .name = COMPOUND_STRING("Metal Thrust"),
+        .description = COMPOUND_STRING(
+            "A quick flurry of\n"
+            "straight-arm punches\n"
+            "that hit two to five\n"
+            "times."),
+        .effect = EFFECT_HIT,
+        .power = 18,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .multiHit = TRUE,
+        .makesContact = TRUE,
+        .battleAnimScript = gBattleAnimMove_ArmThrust,
+    },
+
+    [MOVE_CYBER_SLASH] =
+    {
+        .name = COMPOUND_STRING("Cyber Slash"),
+        .description = COMPOUND_STRING(
+            "A rapid slash\n"
+            "with an increased\n"
+            "critical-hit ratio."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_FLYING,
+        .accuracy = 95,
+        .pp = 20,
+        .criticalHitStage = 1,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_ArmThrust,
+    },
+    
+    //TODO: confirm damage scales
+    [MOVE_TRIPLE_SLICE] =
+    {
+        .name = COMPOUND_STRING("Triple Slice"),
+        .description = COMPOUND_STRING(
+            "A 3-slice attack\n"
+            "that becomes more\n"
+            "powerful with each\n"
+            "successive hit."),
+        .effect = EFFECT_TRIPLE_KICK,
+        .power = 20,
+        .type = TYPE_FLYING,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .strikeCount = 3,
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_ArmThrust,
+    },
+
+    [MOVE_CYBER_ENERGY_SHOCK] =
+    {
+        .name = COMPOUND_STRING("Cyber Shock"),
+        .description = COMPOUND_STRING(
+            "A cybernetic\n"
+            "shockwave which\n"
+            "may paralyze the\n"
+            "foe (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_STEEL,
+        .accuracy = 95,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_ArmThrust,
+    },
+
+    [MOVE_CELTIC_BLADE] =
+    {
+        .name = COMPOUND_STRING("Celtic Blade"),
+        .description = COMPOUND_STRING(
+            "A blade made out of\n"
+            "grass that may flinch\n"
+            "the foe. (30%)"),
+        .effect = EFFECT_HIT,
+        .power = 60,
+        .type = TYPE_GRASS,
+        .accuracy = 100,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 30,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE;
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_DARK_LIGHT] =
+    {
+        .name = COMPOUND_STRING("Dark Light"),
+        .description = COMPOUND_STRING(
+            "Darkness is stolen\n"
+            "from the foe to\n"
+            "restore 75% of the\n"
+            "damage as HP."),
+        .effect = EFFECT_ABSORB,
+        .power = 50,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .absorbPercentage = 75 },
+        .healingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_Absorb,
+    },
+
+    [MOVE_VENGEANCE] =
+    {
+        .name = COMPOUND_STRING("Vengeance"),
+        .description = COMPOUND_STRING(
+            "A vengeful attack\n"
+            "that may lower foe's\n"
+            "Sp Atk (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_DARK,
+        .accuracy = 95,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .spAtk = 1,
+            .chance = 10,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_MAGNET_SWORD] =
+    {
+        .name = COMPOUND_STRING("Magnet Sword"),
+        .description = COMPOUND_STRING(
+            "The foe is attacked\n"
+            "with a metal sword\n"
+            "which may raise\n"
+            "user's attack (30%)."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_STEEL,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
+            .self = TRUE,
+            .attack = 1,
+            .chance = 30,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_MetalClaw,
+    },
+
+    [MOVE_FIST_OF_FATE] =
+    {
+        .name = COMPOUND_STRING("Fist of Fate"),
+        .description = COMPOUND_STRING(
+            "An screen shattering\n
+            punch that requies\n
+            the user to recharge\n
+            on the next turn."),
+        .effect = EFFECT_HIT,
+        .power = 150,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BREAK_SCREEN,
+            .preAttackEffect = TRUE,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_RECHARGE,
+            .self = TRUE,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .minimizeDoubleDamage = TRUE,
+        .battleAnimScript = gBattleAnimMove_GigaImpact,
+    },
+
+    //TODO: Confirm increased paralysis in rain works
+    [MOVE_THUNDER_FORCE] =
+    {
+        .name = COMPOUND_STRING("Thunder Force"),
+        .description = COMPOUND_STRING(
+            "Slifer's ultimate\n"
+            "attack that may\n"
+            "cause paralysis (10%)\n"
+            "Chance doubled in\n"
+            "the rain with 100%\n"
+            "accuracy."),
+        .effect = EFFECT_HIT,
+        .power = 110,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        //Move Categories
+        .damagesAirborne = TRUE,
+        .alwaysHitsInRain = TRUE,
+        .battleAnimScript = gBattleAnimMove_Thunder,
+
+    },
     
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =

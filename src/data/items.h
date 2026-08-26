@@ -16266,6 +16266,25 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_SunStone,
     },
 
+    //Todo fix description
+    [ITEM_SHANK] =
+    {
+        .name = ITEM_NAME("Shank"),
+        .price = 100,
+        .holdEffect = HOLD_EFFECT_SHANK,
+        .description = COMPOUND_STRING(
+            "Powers up punching\n"
+            "moves and removes\n"
+            "their contact."),
+        .pocket = POCKET_ITEMS,
+        .sortType = ITEM_TYPE_HELD_ITEM,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 30,
+        .iconPic = gItemIcon_PunchingGlove,
+        .iconPalette = gItemIconPalette_PunchingGlove,
+    },
+
 };
 
 #undef ITEM_NAME
