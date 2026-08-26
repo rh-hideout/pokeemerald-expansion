@@ -4165,6 +4165,15 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
+    case EFFECT_RAPID_SPIN:
+        if (GetConfig(B_SPEED_BUFFING_RAPID_SPIN) == GEN_8
+         && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES)
+         && IsBattlerAlive(cv->battlerAtk))
+        {
+            BattleScriptCall(BattleScript_RapidSpinAway);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
     default:
         break;
     }
@@ -4385,7 +4394,8 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             break;
         case EFFECT_RAPID_SPIN:
-            if (IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES))
+            if (GetConfig(B_SPEED_BUFFING_RAPID_SPIN) != GEN_8
+             && IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES))
             {
                 if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                     break;
