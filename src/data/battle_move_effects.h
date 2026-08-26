@@ -109,7 +109,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CONVERSION] =
     {
-        .battleScript = BattleScript_EffectConversion,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -133,7 +133,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_REST] =
     {
-        .battleScript = BattleScript_EffectRest,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -204,7 +204,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TRANSFORM] =
     {
-        .battleScript = BattleScript_EffectTransform,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // Natural 0
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
@@ -386,7 +386,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_HEAL_BELL] =
     {
-        .battleScript = BattleScript_EffectHealBell,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -615,7 +615,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PSYCH_UP] =
     {
-        .battleScript = BattleScript_EffectPsychUp,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -814,7 +814,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MAGIC_COAT] =
     {
-        .battleScript = BattleScript_EffectMagicCoat,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 6,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
     },
@@ -835,7 +835,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_YAWN] =
     {
-        .battleScript = BattleScript_EffectYawn,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
     },
 
@@ -898,7 +898,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SNATCH] =
     {
-        .battleScript = BattleScript_EffectSnatch,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 1,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
     },
@@ -940,7 +940,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CAMOUFLAGE] =
     {
-        .battleScript = BattleScript_EffectCamouflage,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
@@ -1549,7 +1549,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_STRUGGLE] =
     {
-        .battleScript = BattleScript_EffectStruggle,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
