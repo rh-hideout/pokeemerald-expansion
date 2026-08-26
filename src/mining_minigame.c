@@ -104,10 +104,10 @@ struct BuriedItem
 
 struct MiningState
 {
-	MainCallback leavingCallback; // Callback to leave the Ui
+	MainCallback leavingCallback;	// Callback to leave the Ui
 	u32 loadGameState;
-	u32 layerMap[96];			 // Array representing the screen. Determines virtual layers
-	u32 itemMap[96];			  // Determines where items are on the screen
+	u32 layerMap[96];				// Array representing the screen. Determines virtual layers
+	u32 itemMap[96];				// Determines where items are on the screen
 	u32 cursorX;
 	u32 cursorY;
 
@@ -126,16 +126,16 @@ struct MiningState
 	u32 bBlueSpriteIndex;
 
 	// Shake
-	bool32 shouldShake; // If set to true, shake gets executed every VBlank
-	u32 shakeState;	 // State of shaking steps
-	u32 shakeDuration;  // How many times should the shaking loop?
+	bool32 shouldShake;		// If set to true, shake gets executed every VBlank
+	u32 shakeState;			// State of shaking steps
+	u32 shakeDuration;		// How many times should the shaking loop?
 	u32 ShakeHitTool;
 	u32 ShakeHitEffect;
 	bool32 toggleShakeDuringAnimation;
 
 	// Stress Level
-	u32 stressLevelCount;// How many cracks in one 32x32 portion
-	u32 stressLevelPos;	 // Which crack portion
+	u32 stressLevelCount;	// How many cracks in one 32x32 portion
+	u32 stressLevelPos;		// Which crack portion
 
 	// Collapse Animation
 	u32 delayCounter;
@@ -143,7 +143,7 @@ struct MiningState
 };
 
 // Win IDs
-#define WIN_MSG		 0
+#define WIN_MSG				0
 
 // Other Sprite Tags
 #define TAG_DUMMY			0
@@ -209,6 +209,17 @@ enum
 	STRESS_LEVEL_POS_6,
 	STRESS_LEVEL_POS_7,
 	STRESS_LEVEL_POS_MAX,
+};
+
+enum
+{
+	ITEM_STATE_ID_NONE = 0, // Placeholder ID
+	ITEM_STATE_ID_1, // ID for item 1 in zone 1
+	ITEM_STATE_ID_2, // ID for item 2 in zone 2
+	ITEM_STATE_ID_3, // ID for item 3 in zone 3
+	ITEM_STATE_ID_4, // ID for item 4 in zone 4
+	ITEM_STATE_ID_5, // probably leftover from refactoring ?
+	ITEM_STATE_ID_6, // Stone
 };
 
 enum
@@ -1751,9 +1762,9 @@ static void ClearItemMap(void)
 		sMiningUiState->itemMap[i] = MINING_ITEM_TILE_NONE;
 }
 
-#define RARITY_COMMON	0
-#define RARITY_UNCOMMON 1
-#define RARITY_RARE		2
+#define RARITY_COMMON		0
+#define RARITY_UNCOMMON		1
+#define RARITY_RARE			2
 
 static const u32 ItemRarityTable_Common[] =
 {
@@ -1857,6 +1868,9 @@ static void InitItemsIfSelected(u32 item)
 	}
 }
 
+#define BLUE_BUTTON 0
+#define RED_BUTTON  1
+
 static void Mining_LoadSpriteGraphics(void)
 {
 	LoadSpritePalette(sSpritePal_Cursor);
@@ -1894,7 +1908,7 @@ static void Mining_LoadSpriteGraphics(void)
 	sMiningUiState->cursorY = 2;
 	sMiningUiState->bRedSpriteIndex = CreateSprite(&gSpriteButtonRed, 217, 78, 0);
 	sMiningUiState->bBlueSpriteIndex = CreateSprite(&gSpriteButtonBlue, 217, 138, 1);
-	sMiningUiState->tool = 0;
+	sMiningUiState->tool = BLUE_BUTTON;
 	LoadSpritePalette(sSpritePal_HitEffect);
 	LoadCompressedSpriteSheet(sSpriteSheet_HitEffectHammer);
 	LoadCompressedSpriteSheet(sSpriteSheet_HitEffectPickaxe);
@@ -1913,9 +1927,6 @@ static void Task_MiningWaitFadeIn(u8 taskId)
 	gTasks[taskId].func = Task_WaitButtonPressOpening;
 }
 
-#define BLUE_BUTTON 0
-#define RED_BUTTON  1
-
 static void Task_MiningMainInput(u8 taskId)
 {
 	if (gMain.newKeys & A_BUTTON && !sMiningUiState->shouldShake)
@@ -1927,7 +1938,7 @@ static void Task_MiningMainInput(u8 taskId)
 		DoScheduledBgTilemapCopiesToVram();
 		BuildOamBuffer();
 
-		if (sMiningUiState->tool == 1)
+		if (sMiningUiState->tool == RED_BUTTON)
 		{
 			sMiningUiState->ShakeHitEffect = CreateSprite(&gSpriteHitEffectHammer, (sMiningUiState->cursorX * 16) + 8, (sMiningUiState->cursorY * 16) + 8, 0);
 			sMiningUiState->ShakeHitTool = CreateSprite(&gSpriteHitHammer, (sMiningUiState->cursorX * 16) + 24, sMiningUiState->cursorY * 16, 0);
@@ -2137,31 +2148,31 @@ static void StressLevel_UpdateRelativeToFramePos(u32 stressPosOffset, u16 *ptr)
 	{
 		case 0:
 			StressLevel_Draw_0(stressPosOffset, ptr);
-			if (sMiningUiState->tool == 1)
+			if (sMiningUiState->tool == RED_BUTTON)
 				sMiningUiState->stressLevelCount++;
 			sMiningUiState->stressLevelCount++;
 			break;
 		case 1:
 			StressLevel_Draw_1(stressPosOffset, ptr);
-			if (sMiningUiState->tool == 1)
+			if (sMiningUiState->tool == RED_BUTTON)
 				sMiningUiState->stressLevelCount++;
 			sMiningUiState->stressLevelCount++;
 			break;
 		case 2:
 			StressLevel_Draw_2(stressPosOffset, ptr);
-			if (sMiningUiState->tool == 1)
+			if (sMiningUiState->tool == RED_BUTTON)
 				sMiningUiState->stressLevelCount++;
 			sMiningUiState->stressLevelCount++;
 			break;
 		case 3:
 			StressLevel_Draw_3(stressPosOffset, ptr);
-			if (sMiningUiState->tool == 1)
+			if (sMiningUiState->tool == RED_BUTTON)
 				sMiningUiState->stressLevelCount++;
 			sMiningUiState->stressLevelCount++;
 			break;
 		case 4:
 			StressLevel_Draw_4(stressPosOffset, ptr);
-			if (sMiningUiState->tool == 1)
+			if (sMiningUiState->tool == RED_BUTTON)
 				sMiningUiState->stressLevelCount++;
 			sMiningUiState->stressLevelCount++;
 			break;
@@ -2370,28 +2381,28 @@ static void DoDrawRandomItem(u32 itemStateId, u32 itemId)
 	switch(itemStateId)
 	{
 		default:
-		case 1:
+		case ITEM_STATE_ID_1:
 			xMin = MINING_ZONE_1_X_LEFT_BOUNDARY;
 			xMax = MINING_ZONE_1_X_RIGHT_BOUNDARY;
 			yMin = MINING_ZONE_1_Y_UP_BOUNDARY;
 			yMax = MINING_ZONE_1_Y_DOWN_BOUNDARY;
 			paletteTag = TAG_PAL_ITEM1;
 			break;
-		case 2:
+		case ITEM_STATE_ID_2:
 			xMin = MINING_ZONE_2_X_LEFT_BOUNDARY;
 			xMax = MINING_ZONE_2_X_RIGHT_BOUNDARY;
 			yMin = MINING_ZONE_2_Y_UP_BOUNDARY;
 			yMax = MINING_ZONE_2_Y_DOWN_BOUNDARY;
 			paletteTag = TAG_PAL_ITEM2;
 			break;
-		case 3:
+		case ITEM_STATE_ID_3:
 			xMin = MINING_ZONE_3_X_LEFT_BOUNDARY;
 			xMax = MINING_ZONE_3_X_RIGHT_BOUNDARY;
 			yMin = MINING_ZONE_3_Y_UP_BOUNDARY;
 			yMax = MINING_ZONE_3_Y_DOWN_BOUNDARY;
 			paletteTag = TAG_PAL_ITEM3;
 			break;
-		case 4:
+		case ITEM_STATE_ID_4:
 			xMin = MINING_ZONE_4_X_LEFT_BOUNDARY;
 			xMax = MINING_ZONE_4_X_RIGHT_BOUNDARY;
 			yMin = MINING_ZONE_4_Y_UP_BOUNDARY;
@@ -2476,8 +2487,8 @@ static void DoDrawRandomStone(u32 itemId)
 		y = Random() % MINING_ZONE_HEIGHT;
 	}
 
-	DrawItemSprite(x, y, itemId, TAG_DUMMY, 0);
-	OverwriteItemMapData(x, y, 6, itemId);
+	DrawItemSprite(x, y, itemId, TAG_DUMMY, ITEM_STATE_ID_NONE); // We use ITEM_STATE_ID_NONE becasue here, a stone is guaranteed
+	OverwriteItemMapData(x, y, ITEM_STATE_ID_6, itemId);
 }
 
 static void HandleItemState(u32 itemId)
@@ -2558,14 +2569,14 @@ static void Mining_DrawRandomTerrain(void)
 	{
 		do
 		{
-			row1 = RANDOM(9);
-			row2 = RANDOM(9);
+			row1 = RANDOM(MINING_ZONE_HEIGHT + 1);
+			row2 = RANDOM(MINING_ZONE_HEIGHT + 1);
 		} while (row1 >= row2);
 
 		do
 		{
-			col1 = RANDOM(13);
-			col2 = RANDOM(13);
+			col1 = RANDOM(MINING_ZONE_WIDTH + 1);
+			col2 = RANDOM(MINING_ZONE_WIDTH + 1);
 		} while (col1 >= col2);
 
 		for (; row1 < row2; ++row1)
@@ -2586,19 +2597,19 @@ static void Mining_DrawRandomTerrain(void)
 	totalTimes = RANDOM(5) + 2;
 	for (i = 0; i < totalTimes; ++i)
 	{
-		baseRow = RandRangeSigned(-4, 8);  // Rocks can go up to one row over on either top or bottom
-		baseCol = RandRangeSigned(-4, 12); // Rocks can go up to one col over on either left or right
+		baseRow = RandRangeSigned(-4,  MINING_ZONE_HEIGHT);  // Rocks can go up to one row over on either top or bottom
+		baseCol = RandRangeSigned(-4, MINING_ZONE_WIDTH); // Rocks can go up to one col over on either left or right
 		finalRow = baseRow + 5;
 		finalCol = baseCol + 5;
 
 		for (k = baseRow; k < finalRow; ++k)
 		{
-			if (k < 0 || k >= 8)
+			if (k < 0 || k >= MINING_ZONE_HEIGHT)
 				continue; // Not legal row
 
 			for (m = baseCol; m < finalCol; ++m)
 			{
-				if (m < 0 || m >= 12)
+				if (m < 0 || m >= MINING_ZONE_WIDTH)
 					continue; // Not legal column
 
 				if (AtCornerOfRectangle(k, m, baseRow, baseCol, baseRow + 4, baseCol + 4))
@@ -2613,9 +2624,9 @@ static void Mining_DrawRandomTerrain(void)
 
 	// Using 'x', 'y' and 'i' to draw the right layer_tiles from layerMap to the screen.
 	// Why 'y = 2'? Because we need to have a distance from the top of the screen, which is 32px -> 2 * 16
-	for (y = 2; y < 8 + 2; y++)
+	for (y = 2; y < MINING_ZONE_HEIGHT + 2; y++)
 	{
-		for (x = 0; x < 12 && i < 96; x++, i++)
+		for (x = 0; x < MINING_ZONE_WIDTH && i < 96; x++, i++)
 			Terrain_DrawLayerTileToScreen(x, y, sMiningUiState->layerMap[i], ptr);
 	}
 }
