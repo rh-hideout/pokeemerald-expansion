@@ -171,4 +171,136 @@ SINGLE_BATTLE_TEST("Transform returns the user to normal at the end of the battl
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: Write Transform (Move Effect) test titles")
+DOUBLE_BATTLE_TEST("Transform copies a target's Flying type but not its active Roost state")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
+        ASSUME(GetMoveType(MOVE_MUD_SHOT) == TYPE_GROUND);
+        ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_SWELLOW) { Speed(4); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_DITTO) { Ability(ABILITY_LIMBER); Speed(3); HP(100); MaxHP(100); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_ROOST);
+            MOVE(opponentLeft, MOVE_TRANSFORM, target: playerLeft);
+            MOVE(playerRight, MOVE_MUD_SHOT, target: opponentLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponentLeft);
+        MESSAGE("The opposing Ditto transformed into Swellow!");
+        MESSAGE("It doesn't affect the opposing Ditto…");
+    } THEN {
+        EXPECT_EQ(opponentLeft->types[0], TYPE_NORMAL);
+        EXPECT_EQ(opponentLeft->types[1], TYPE_FLYING);
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform copies the target's species, stats, types, Ability, and moves but retains the user's HP")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
+        PLAYER(SPECIES_DITTO) {
+            MaxHP(100); HP(80);
+            Attack(10); Defense(20); SpAttack(30); SpDefense(40); Speed(50);
+            Ability(ABILITY_LIMBER);
+            Moves(MOVE_TRANSFORM);
+        }
+        OPPONENT(SPECIES_SWELLOW) {
+            MaxHP(300); HP(200);
+            Attack(110); Defense(120); SpAttack(130); SpDefense(140); Speed(150);
+            Ability(ABILITY_GUTS);
+            Moves(MOVE_SCRATCH, MOVE_WATER_GUN, MOVE_GROWL, MOVE_CELEBRATE);
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_SWELLOW);
+        EXPECT_EQ(player->attack, 110);
+        EXPECT_EQ(player->defense, 120);
+        EXPECT_EQ(player->spAttack, 130);
+        EXPECT_EQ(player->spDefense, 140);
+        EXPECT_EQ(player->speed, 150);
+        EXPECT_EQ(player->types[0], TYPE_NORMAL);
+        EXPECT_EQ(player->types[1], TYPE_FLYING);
+        EXPECT_EQ(player->ability, ABILITY_GUTS);
+        EXPECT_EQ(player->moves[0], MOVE_SCRATCH);
+        EXPECT_EQ(player->moves[1], MOVE_WATER_GUN);
+        EXPECT_EQ(player->moves[2], MOVE_GROWL);
+        EXPECT_EQ(player->moves[3], MOVE_CELEBRATE);
+        EXPECT_EQ(player->maxHP, 100);
+        EXPECT_EQ(player->hp, 80);
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform copies the target's stat stages")
+{
+    GIVEN {
+        PLAYER(SPECIES_DITTO) { Speed(1); Moves(MOVE_TRANSFORM); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); MOVE(opponent, MOVE_SWORDS_DANCE); }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform gives each copied move 5 PP regardless of the target's remaining PP")
+{
+    GIVEN {
+        ASSUME(GetMovePP(MOVE_SCRATCH) >= 5);
+        ASSUME(GetMovePP(MOVE_WATER_GUN) >= 5);
+        ASSUME(GetMovePP(MOVE_GROWL) >= 5);
+        ASSUME(GetMovePP(MOVE_CELEBRATE) >= 5);
+        PLAYER(SPECIES_DITTO) { Moves(MOVE_TRANSFORM); }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            MovesWithPP({MOVE_SCRATCH, 1}, {MOVE_WATER_GUN, 2}, {MOVE_GROWL, 3}, {MOVE_CELEBRATE, 4});
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); }
+    } THEN {
+        EXPECT_EQ(player->pp[0], 5);
+        EXPECT_EQ(player->pp[1], 5);
+        EXPECT_EQ(player->pp[2], 5);
+        EXPECT_EQ(player->pp[3], 5);
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform fails against a target with an active Illusion")
+{
+    GIVEN {
+        PLAYER(SPECIES_DITTO) { Moves(MOVE_TRANSFORM); }
+        OPPONENT(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_DITTO);
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_OPPONENT_LEFT].state, ILLUSION_ON);
+    }
+}
+
+SINGLE_BATTLE_TEST("Transform copies the target's shiny state in Gen4+")
+{
+    bool32 targetIsShiny;
+
+    PARAMETRIZE { targetIsShiny = FALSE; }
+    PARAMETRIZE { targetIsShiny = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(B_TRANSFORM_SHINY, GEN_4);
+        PLAYER(SPECIES_DITTO) { Moves(MOVE_TRANSFORM); Shiny(!targetIsShiny); }
+        OPPONENT(SPECIES_WOBBUFFET) { Shiny(targetIsShiny); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); }
+    } THEN {
+        EXPECT(player->volatiles.isTransformedMonShiny == targetIsShiny);
+    }
+}

@@ -73,4 +73,19 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
     }
 }
 
-TO_DO_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon");
+SINGLE_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_ENTRAINMENT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Entrainment!");
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_SHADOW_TAG);
+    }
+}

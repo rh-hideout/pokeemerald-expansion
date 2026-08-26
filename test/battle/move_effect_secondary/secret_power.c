@@ -74,4 +74,32 @@ SINGLE_BATTLE_TEST("Secret Power lowers Sp. Atk in Misty Terrain")
     }
 }
 
-TO_DO_BATTLE_TEST("Secret Power doesn't inflict secondary effects when user fainted");
+SINGLE_BATTLE_TEST("Secret Power does not inflict its secondary effect if the user faints")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveCategory(MOVE_SECRET_POWER) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gItemsInfo[ITEM_JABOCA_BERRY].holdEffect == HOLD_EFFECT_JABOCA_BERRY);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_JABOCA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_SECRET_POWER, WITH_RNG(RNG_SECONDARY_EFFECT, TRUE)); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SECRET_POWER, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        HP_BAR(player, hp: 0);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
+        MESSAGE("Wobbuffet fainted!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+            STATUS_ICON(opponent, paralysis: TRUE);
+        }
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
