@@ -313,6 +313,7 @@ void SetValuesOnFaint(enum BattlerId battler);
 bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
+const u8 *GetRestFailureScript(enum BattlerId battler, enum Ability ability);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
 bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);

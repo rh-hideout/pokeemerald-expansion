@@ -2241,22 +2241,13 @@ static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *s
 {
     enum Ability ability = cv->abilities[se->effectBattler];
     enum HoldEffect holdEffect = GetBattlerHoldEffect(se->effectBattler);
+    const u8 *failScript = GetRestFailureScript(se->effectBattler, ability);
 
-    if (IsAsleepOrComatose(se->effectBattler, ability))
+    if (failScript != NULL)
     {
-        SetEffectFail(BattleScript_RestIsAlreadyAsleep, cv->isStatusMove);
-    }
-    else if (gBattleMons[se->effectBattler].hp == gBattleMons[se->effectBattler].maxHP)
-    {
-        SetEffectFail(BattleScript_AlreadyAtFullHp, cv->isStatusMove);
-    }
-    else if (ability == ABILITY_INSOMNIA
-          || ability == ABILITY_VITAL_SPIRIT
-          || ability == ABILITY_PURIFYING_SALT)
-    {
-        if (!cv->onlyChecking)
+        if (!cv->onlyChecking && failScript == BattleScript_InsomniaProtects)
             SetRestAbilityForMessage(se->effectBattler, ability);
-        SetEffectFail(BattleScript_InsomniaProtects, cv->isStatusMove);
+        SetEffectFail(failScript, cv->isStatusMove);
     }
     else if (UproarWakeUpCheck(se->effectBattler))
     {

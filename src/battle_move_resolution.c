@@ -1279,6 +1279,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             gBattleStruct->battlerState[cv->battlerAtk].stompingTantrumTimer = 2;
         }
         break;
+    case EFFECT_REST:
+        battleScript = GetRestFailureScript(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
+        break;
     case EFFECT_SNORE:
         if (!(gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP)
          && cv->abilities[cv->battlerAtk] != ABILITY_COMATOSE)
