@@ -10,11 +10,14 @@
 
 struct Dma3Request
 {
-    const u8 *src;
+    union
+    {
+        const u8 *src;
+        u32 value;
+    };
     u8 *dest;
     u16 size;
     u16 mode;
-    u32 value;
 };
 
 static struct Dma3Request sDma3Requests[MAX_DMA_REQUESTS];
