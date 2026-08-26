@@ -40,7 +40,7 @@
 
     > Note: `devkitpro-pacman.amd64.deb` is the expected filename of the devkitPro package downloaded (for the first command). If the downloaded package filename differs, then use that filename instead.
 
-7. Run the following command to set devkitPro related environment variables (alternatively, close and re-open WSL):
+6. Run the following command to set devkitPro related environment variables (alternatively, close and re-open WSL):
     ```bash
     source /etc/profile.d/devkit-env.sh
     ```
