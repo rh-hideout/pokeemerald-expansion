@@ -980,7 +980,7 @@ static void SetSelectedPartyOrder(void)
     ClearSelectedPartyOrder();
     for (i = 0; i < gSpecialVar_0x8005; i++)
         gSelectedOrderFromParty[i] = gSaveBlock2Ptr->frontier.selectedPartyMons[i];
-    ReducePlayerPartyToSelectedMons();
+    ReducePlayerPartyToSelectedMons(gSpecialVar_0x8005);
 }
 
 static void DoSoftReset_(void)

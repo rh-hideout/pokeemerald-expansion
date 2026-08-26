@@ -186,11 +186,11 @@ void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
 
 // Note: When control returns to the event script, gSpecialVar_Result will be
 // TRUE if the party selection was successful.
-void ChooseHalfPartyForBattle(void)
+void ChoosePartyForBattle(void)
 {
     gMain.savedCallback = CB2_ReturnFromChooseHalfParty;
     VarSet(VAR_FRONTIER_FACILITY, FACILITY_MULTI_OR_EREADER);
-    InitChooseHalfPartyForBattle(0);
+    InitChoosePartyForBattle(0);
 }
 
 static void CB2_ReturnFromChooseHalfParty(void)
@@ -211,7 +211,7 @@ static void CB2_ReturnFromChooseHalfParty(void)
 void ChoosePartyForBattleFrontier(void)
 {
     gMain.savedCallback = CB2_ReturnFromChooseBattleFrontierParty;
-    InitChooseHalfPartyForBattle(gSpecialVar_0x8004 + 1);
+    InitChoosePartyForBattle(gSpecialVar_0x8004 + 1);
 }
 
 static void CB2_ReturnFromChooseBattleFrontierParty(void)
@@ -229,25 +229,34 @@ static void CB2_ReturnFromChooseBattleFrontierParty(void)
     SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
-void ReducePlayerPartyToSelectedMons(void)
+void ReducePlayerPartyToSelectedMons(u32 partySize)
 {
-    struct Pokemon party[MAX_FRONTIER_PARTY_SIZE];
+    struct Pokemon party[PARTY_SIZE];
     int i;
 
     CpuFill32(0, party, sizeof party);
 
     // copy the selected Pokémon according to the order.
-    for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
         if (gSelectedOrderFromParty[i]) // as long as the order keeps going (did the player select 1 mon? 2? 3?), do not stop
+        {
             party[i] = gParties[B_TRAINER_PLAYER][gSelectedOrderFromParty[i] - 1]; // index is 0 based, not literal
+        }
+    }
 
     CpuFill32(0, gParties[B_TRAINER_PLAYER], sizeof gParties[B_TRAINER_PLAYER]);
 
     // overwrite the first 4 with the order copied to.
-    for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
         gParties[B_TRAINER_PLAYER][i] = party[i];
 
     CalculatePlayerPartyCount();
+}
+
+void Special_ReducePlayerPartyToSelectedMons(void)
+{
+    ReducePlayerPartyToSelectedMons(gSpecialVar_0x8006);
 }
 
 void CanHyperTrain(struct ScriptContext *ctx)

@@ -819,7 +819,7 @@ static void SetLinkBattleTypeFlags(int linkService)
         gBattleTypeFlags = BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER;
         break;
     case USING_MULTI_BATTLE:
-        ReducePlayerPartyToSelectedMons();
+        ReducePlayerPartyToSelectedMons(MULTI_PARTY_SIZE);
         gBattleTypeFlags = BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_MULTI;
         break;
     case USING_BATTLE_TOWER:

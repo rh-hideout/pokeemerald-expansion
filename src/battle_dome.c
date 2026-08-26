@@ -5673,7 +5673,7 @@ static void RestoreDomePlayerPartyHeldItems(void)
 
 static void ReduceDomePlayerPartyToSelectedMons(void)
 {
-    ReducePlayerPartyToSelectedMons();
+    ReducePlayerPartyToSelectedMons(DOME_BATTLE_PARTY_SIZE);
 }
 
 static void GetPlayerSeededBeforeOpponent(void)

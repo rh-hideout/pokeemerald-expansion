@@ -94,13 +94,14 @@
 
 	.macro choose_mons
 	fadescreen 1
-	special ChooseHalfPartyForBattle @ choose 3 mons for battle
+	setvar VAR_0x8006, MULTI_PARTY_SIZE
+	special ChoosePartyForBattle @ choose 3 mons for battle
 	.endm
 
 	.macro multi_do type:req
 	callnative AreMultiPartiesFullTeams
 	goto_if_eq VAR_RESULT, TRUE, 1f
-	special ReducePlayerPartyToSelectedMons
+	reduceplayerpartytoselectedmons PARTY_SIZE
 	1:
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER

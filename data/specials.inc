@@ -59,7 +59,7 @@ gSpecials::
 	def_special SpawnLinkPartnerObjectEvent
 	def_special SavePlayerParty
 	def_special LoadPlayerParty
-	def_special ChooseHalfPartyForBattle, waitstate=1
+	def_special ChoosePartyForBattle, waitstate=1
 	def_special Script_ShowLinkTrainerCard, waitstate=1
 	def_special ObjectEventInteractionGetBerryTreeData
 	def_special ObjectEventInteractionGetBerryName
@@ -266,7 +266,7 @@ gSpecials::
 	def_special ChoosePartyForBattleFrontier, waitstate=1
 	def_special ValidateEReaderTrainer
 	def_special GetBattleTowerSinglesStreak
-	def_special ReducePlayerPartyToSelectedMons
+	def_special Special_ReducePlayerPartyToSelectedMons
 	def_special BedroomPC, waitstate=1
 	def_special PlayerPC, waitstate=1
 	def_special FieldShowRegionMap, waitstate=1
