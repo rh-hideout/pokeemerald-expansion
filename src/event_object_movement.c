@@ -2030,7 +2030,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
         LoadObjectEventPalette(spriteTemplate->paletteTag);
     }
 
-    spriteId = CreateSpriteUnchecked(spriteTemplate, x, y, subpriority);
+    spriteId = CreateSprite(spriteTemplate, x, y, subpriority);//Hedara I don't know enough to be confident this is safe - seems to be used as a sprite id without checking != MAX_SPRITES a ton.
 
     Free(spriteTemplate);
 
@@ -2048,6 +2048,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
 u8 CreateObjectGraphicsSprite(u16 graphicsId, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
 {
     return CreateObjectGraphicsSpriteWithTag(graphicsId, callback, x, y, subpriority, TAG_NONE);
+//CreateObjectGraphicsSprite is used in a load of places that don't handle it returning max_sprites. This might mean they cause visual errors on an existing 64th sprite.
 }
 
 #define sVirtualObjId   data[0]

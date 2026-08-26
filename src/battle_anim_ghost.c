@@ -1423,13 +1423,15 @@ void AnimTask_PoltergeistItem(u8 taskId)
     StoreGfxTag(ANIM_TAG_ITEM_BAG);
     StorePalTag(ANIM_TAG_ITEM_BAG);
 
-    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem); // this skips the assertf but the later createsprite doesn't.
-    gSprites[task->data[0]].x = x + 4;
-    gSprites[task->data[0]].y = y + 4;
-    gSprites[task->data[0]].data[0] = x + 4;
-    gSprites[task->data[0]].data[1] = y + 4;
-    gSprites[task->data[0]].callback = AnimPoltergeistItem;
-
+    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+    if (task->data[0] != MAX_SPRITES)
+    {
+        gSprites[task->data[0]].x = x + 4;
+        gSprites[task->data[0]].y = y + 4;
+        gSprites[task->data[0]].data[0] = x + 4;
+        gSprites[task->data[0]].data[1] = y + 4;
+        gSprites[task->data[0]].callback = AnimPoltergeistItem;
+    }
     task->data[1] = CreateSprite(&gPoltergeistEffectTemplate, x, y, 1);
     gSprites[task->data[1]].data[0] = x;
     gSprites[task->data[1]].data[1] = y;

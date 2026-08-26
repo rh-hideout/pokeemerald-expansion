@@ -2873,11 +2873,14 @@ void TryAddLastUsedBallItemSprites(void)
     if (gBattleStruct->ballSpriteIds[0] == MAX_SPRITES)
     {
         gBattleStruct->ballSpriteIds[0] = AddItemIconSprite(102, 102, gBallToDisplay);
-        gSprites[gBattleStruct->ballSpriteIds[0]].x = LAST_USED_BALL_X_0;
-        gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y;
-        gSprites[gBattleStruct->ballSpriteIds[0]].sHide = FALSE;
-        gLastUsedBallMenuPresent = TRUE;
-        gSprites[gBattleStruct->ballSpriteIds[0]].callback = SpriteCB_LastUsedBall;
+        if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
+        {
+            gSprites[gBattleStruct->ballSpriteIds[0]].x = LAST_USED_BALL_X_0;
+            gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y;
+            gSprites[gBattleStruct->ballSpriteIds[0]].sHide = FALSE;
+            gLastUsedBallMenuPresent = TRUE;
+            gSprites[gBattleStruct->ballSpriteIds[0]].callback = SpriteCB_LastUsedBall;
+        }
     }
 
     // window
@@ -3098,8 +3101,11 @@ static void Task_BounceBall(u8 taskId)
         if (!sprite->inUse)
         {
             gBattleStruct->ballSpriteIds[0] = AddItemIconSprite(102, 102, gBallToDisplay);
-            gSprites[gBattleStruct->ballSpriteIds[0]].x = LAST_USED_BALL_X_F;
-            gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y_BNC;
+            if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
+            {
+                gSprites[gBattleStruct->ballSpriteIds[0]].x = LAST_USED_BALL_X_F;
+                gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y_BNC;
+            }
             task->sState++;
         }  // Fallthrough
     case 3: // Bounce Down

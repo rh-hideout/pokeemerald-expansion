@@ -87,7 +87,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
 {
     if (!AllocItemIconTemporaryBuffers())
     {
-        return MAX_SPRITES;
+        return MAX_SPRITES;// 
     }
     else
     {
@@ -111,7 +111,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
         CpuCopy16(&gItemIconSpriteTemplate, spriteTemplate, sizeof(*spriteTemplate));
         spriteTemplate->tileTag = tilesTag;
         spriteTemplate->paletteTag = paletteTag;
-        spriteId = CreateSprite(spriteTemplate, 0, 0, 0);// This should be made to return an unchecked sprite, by refactoring the poltergeist move anim, the script menu, and hgss pokedex.
+        spriteId = CreateSpriteUnchecked(spriteTemplate, 0, 0, 0);
 
         FreeItemIconTemporaryBuffers();
         Free(spriteTemplate);
