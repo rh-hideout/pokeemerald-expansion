@@ -3215,7 +3215,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
         enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
 
         if (!DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, cv->move)
-         || !IsBattlerUnaffectedByMove(battlerDef)
+         || IsBattlerUnaffectedByMove(battlerDef)
          || ShouldSkipBattlerForMoveEndSubstitute(battlerDef, cv)
          || !IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES))
         {
