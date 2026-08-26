@@ -661,15 +661,6 @@
 	.byte \mode
 	.endm
 
-	.macro trysetrest
-	.byte B_SCR_OP_TRYSETREST
-	.endm
-
-	.macro jumpifuproarwakes jumpInstr:req
-	.byte B_SCR_OP_JUMPIFUPROARWAKES
-	.4byte \jumpInstr
-	.endm
-
 	.macro stockpiletohpheal failInstr:req
 	.byte B_SCR_OP_STOCKPILETOHPHEAL
 	.4byte \failInstr
@@ -692,21 +683,12 @@
 	2:
 	.endm
 
-	.macro trynonvolatilestatus
-	.byte B_SCR_OP_TRYNONVOLATILESTATUS
-	.endm
-
 	.macro initmultihitstring
 	.byte B_SCR_OP_INITMULTIHITSTRING
 	.endm
 
 	.macro forcerandomswitch failInstr:req
 	.byte B_SCR_OP_FORCERANDOMSWITCH
-	.4byte \failInstr
-	.endm
-
-	.macro tryconversiontypechange failInstr:req
-	.byte B_SCR_OP_TRYCONVERSIONTYPECHANGE
 	.4byte \failInstr
 	.endm
 
@@ -819,10 +801,6 @@
 	.byte \flag
 	.endm
 
-	.macro copyfoestats
-	.byte B_SCR_OP_COPYFOESTATS
-	.endm
-
 	.macro rapidspinfree
 	.byte B_SCR_OP_RAPIDSPINFREE
 	.endm
@@ -869,11 +847,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setyawn failInstr:req
-	.byte B_SCR_OP_SETYAWN
-	.4byte \failInstr
-	.endm
-
 	.macro tryswapabilities failInstr:req
 	.byte B_SCR_OP_TRYSWAPABILITIES
 	.4byte \failInstr
@@ -883,16 +856,6 @@
 	.byte B_SCR_OP_TRYSETVOLATILE
 	.byte \battler
 	.byte \_volatile
-	.4byte \failInstr
-	.endm
-
-	.macro trysetmagiccoat failInstr:req
-	.byte B_SCR_OP_TRYSETMAGICCOAT
-	.4byte \failInstr
-	.endm
-
-	.macro trysetsnatch failInstr:req
-	.byte B_SCR_OP_TRYSETSNATCH
 	.4byte \failInstr
 	.endm
 
@@ -913,11 +876,6 @@
 
 	.macro tryrecycleitem failInstr:req
 	.byte B_SCR_OP_TRYRECYCLEITEM
-	.4byte \failInstr
-	.endm
-
-	.macro settypetoenvironment failInstr:req
-	.byte B_SCR_OP_SETTYPETOENVIRONMENT
 	.4byte \failInstr
 	.endm
 
@@ -1801,12 +1759,6 @@
 	.macro jumpifspecies species:req, jumpInstr:req
 	callnative BS_JumpIfSpecies
 	.2byte \species
-	.4byte \jumpInstr
-	.endm
-
-	.macro jumpifabilitypreventsrest battler:req, jumpInstr:req
-	callnative BS_JumpIfAbilityPreventsRest
-	.byte \battler
 	.4byte \jumpInstr
 	.endm
 

@@ -13,7 +13,6 @@
 #include "constants/hold_effects.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
-#include "constants/game_stat.h"
 #include "constants/trainers.h"
 #include "constants/species.h"
 #include "constants/config_changes.h"
@@ -1142,15 +1141,6 @@ BattleScript_BattlerAvoidedMultiHit::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectConversion::
-	attackcanceler
-	tryconversiontypechange BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNCHANGEDTYPE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectRestoreHp::
 	attackcanceler
 	tryhealhalfhealth BS_ATTACKER, BattleScript_AlreadyAtFullHp
@@ -1170,22 +1160,18 @@ BattleScript_AlreadyPoisoned::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectRest::
-	attackcanceler
-	jumpifstatus BS_ATTACKER, STATUS1_SLEEP, BattleScript_RestIsAlreadyAsleep
-	jumpifability BS_ATTACKER, ABILITY_COMATOSE, BattleScript_RestIsAlreadyAsleep
-	jumpifuproarwakes BattleScript_RestCantSleep
-	jumpifability BS_TARGET, ABILITY_INSOMNIA, BattleScript_InsomniaProtects
-	jumpifability BS_TARGET, ABILITY_VITAL_SPIRIT, BattleScript_InsomniaProtects
-	jumpifability BS_ATTACKER, ABILITY_PURIFYING_SALT, BattleScript_InsomniaProtects
-	jumpifabilitypreventsrest BS_TARGET, BattleScript_AbilityPreventsRest
-	trysetrest
+BattleScript_MoveEffectRest::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNSLEPTHEALTHY
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_ATTACKER
+	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
-	goto BattleScript_HealTarget
+	playanimation BS_EFFECT_BATTLER, B_ANIM_SIMPLE_HEAL
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_DOUBLE
+	printstring STRINGID_PKMNREGAINEDHEALTH
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_RestCantSleep::
 	pause B_WAIT_TIME_LONG
@@ -1200,12 +1186,6 @@ BattleScript_RestIsAlreadyAsleep::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_AbilityPreventsRest::
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_BUTITFAILED
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_RecoilIfMiss::
 	printstring STRINGID_PKMNCRASHED
 	waitmessage B_WAIT_TIME_LONG
@@ -1216,19 +1196,15 @@ BattleScript_RecoilIfMiss::
 BattleScript_RecoilEnd:
 	return
 
-BattleScript_EffectTransform::
-	attackcanceler
+BattleScript_MoveEffectTransform::
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
-	transformdataexecution
-	attackanimation
-	waitanimation
 	printfromtable gTransformUsedStringIds
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_AlreadyParalyzed::
 	setalreadystatusedmoveattempt
@@ -1341,10 +1317,7 @@ BattleScript_MoveEffectEerieSpell::
 	restoretarget
 	return
 
-BattleScript_EffectHealBell::
-	attackcanceler
-	attackanimation
-	waitanimation
+BattleScript_MoveEffectHealBell::
 	healpartystatus
 	waitstate
 	printfromtable gPartyStatusHealStringIds
@@ -1362,7 +1335,7 @@ BattleScript_CheckHealBellMon2Unaffected::
 BattleScript_PartyHealEnd::
 	updatestatusicon BS_ATTACKER_WITH_PARTNER
 	waitstate
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MoveEffectAromatherapy::
 	healpartystatus
@@ -1572,15 +1545,6 @@ BattleScript_BlockedByOverworldWeather::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectPsychUp::
-	attackcanceler
-	copyfoestats
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNCOPIEDSTATCHANGES
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectFutureSight::
 	attackcanceler
 	attackanimation
@@ -1724,15 +1688,6 @@ BattleScript_EffectWish::
 	waitanimation
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMagicCoat::
-	attackcanceler
-	trysetmagiccoat BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSHROUDEDITSELF
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 @ TO-DO: The battle messages from this should come after the move has resolved
 BattleScript_BreakScreens::
 	playmoveanimation MOVE_NONE @use current move
@@ -1768,16 +1723,6 @@ BattleScript_StealStats::
 	flushtextbox
 	return
 
-BattleScript_EffectYawn::
-	attackcanceler
-	trynonvolatilestatus
-	setyawn BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNWASMADEDROWSY
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectYawnFoe::
 	savetarget
 	copybyte gBattlerTarget, gEffectBattler
@@ -1797,30 +1742,6 @@ BattleScript_MoveEffectRefresh::
 	printsavedstring BS_EFFECT_BATTLER
 	updatestatusicon BS_EFFECT_BATTLER
 	return
-
-BattleScript_EffectSnatch::
-	attackcanceler
-	trysetsnatch BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNWAITSFORTARGET
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectStruggle::
-	jumpifnotmove MOVE_STRUGGLE, BattleScript_EffectHit
-	incrementgamestat GAME_STAT_USED_STRUGGLE
-	goto BattleScript_EffectHit
-
-BattleScript_EffectCamouflage::
-	attackcanceler
-	settypetoenvironment BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNCHANGEDTYPE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_FaintBattler::
 	tryillusionoff BS_FAINTED

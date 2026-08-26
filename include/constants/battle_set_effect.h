@@ -121,6 +121,11 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_PURIFY,
     MOVE_EFFECT_THIRD_TYPE,
     MOVE_EFFECT_MIMIC,
+    MOVE_EFFECT_REST,
+    MOVE_EFFECT_TRANSFORM,
+    MOVE_EFFECT_HEAL_BELL,
+    MOVE_EFFECT_MAGIC_COAT,
+    MOVE_EFFECT_SNATCH,
     MOVE_EFFECT_ROOST,
     MOVE_EFFECT_HOLD_HANDS,
     MOVE_EFFECT_CELEBRATE,
@@ -203,6 +208,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_STEAL_STATS,
     MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
     MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
+    MOVE_EFFECT_STRUGGLE,
 
     // Only for secret power usage but better to remove/refactor the abstraction
     // renamed so that users don't think those are usable constatns
