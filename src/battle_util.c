@@ -7685,6 +7685,13 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     else
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
 
+    if (GetConfig(B_UPDATED_MOVE_DATA) == GEN_2
+     && GetMoveEffect(ctx->move) == EFFECT_RETURN
+     && gBattleMons[ctx->battlerAtk].friendship == 0)
+    {
+        return 0;
+    }
+
     userFinalAttack = CalcAttackStat(ctx);
     targetFinalDefense = CalcDefenseStat(ctx);
 
