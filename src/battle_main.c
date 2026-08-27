@@ -3021,6 +3021,14 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
         gBattleMons[battler].volatiles.embargoTimer = volatilesCopy->embargoTimer;
         gBattleMons[battler].volatiles.healBlockTimer = volatilesCopy->healBlockTimer;
+        if (gBattleMons[battler].species == SPECIES_GENGAR_MEGA)
+        {
+            gBattleMons[battler].volatiles.telekinesis = FALSE;
+        }
+        else
+        {
+            gBattleMons[battler].volatiles.telekinesisTimer = volatilesCopy->telekinesisTimer;
+        }
     }
     else if (effect == EFFECT_SHED_TAIL)
     {

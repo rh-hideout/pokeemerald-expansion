@@ -83,7 +83,6 @@ SINGLE_BATTLE_TEST("Baton Pass passes Telekinesis's effect")
     PARAMETRIZE { species = SPECIES_SANDYGAST; }
     PARAMETRIZE { species = SPECIES_PALOSSAND; }
 
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
@@ -100,7 +99,6 @@ SINGLE_BATTLE_TEST("Baton Pass passes Telekinesis's effect")
 
 SINGLE_BATTLE_TEST("Baton Pass removes Telekinesis's effect if the recipient is Mega Gengar")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         ASSUME(IsTelekinesisBannedSpecies(SPECIES_GENGAR_MEGA));
