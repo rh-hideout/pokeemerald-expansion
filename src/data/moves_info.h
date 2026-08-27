@@ -22688,6 +22688,144 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_Thunder,
 
     },
+
+    [MOVE_PHOENIX_FORM] =
+    {
+        .name = COMPOUND_STRING("Phoenix Form"),
+        .description = COMPOUND_STRING(
+            "Activate phoenix\n"
+            "form which may\n"
+            "raise all user's\n"
+            "stats (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 110,
+        .type = TYPE_FIRE,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
+            .self = TRUE,
+            .attack = 1,
+            .defense = 1,
+            .spDef = 1,
+            .spAtk = 1,
+            .speed = 1,
+            .chance = 10,
+        }),
+        //Move Categories
+        .thawsUser = TRUE,
+        .battleAnimScript = gBattleAnimMove_Thunder,
+    },
+
+    [MOVE_DEFENSE_MODE] =
+    {
+        .name = COMPOUND_STRING("Defense Mode"),
+        .description = COMPOUND_STRING(
+            "Switch to defense\n"
+            "mode to increase\n"
+            "Def and Sp.Def."),
+        .effect = EFFECT_STAT_CHANGE,
+        .power = 0,
+        .type = TYPE_NORMAL,
+        .accuracy = 0,
+        .pp = 20,
+        .target = TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .defense = 1,
+            .spDef = 1,
+        }),
+        //Move Categories
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_Thunder,
+    },
+
+    [MOVE_BOMBARDMENT] =
+    {
+        .name = COMPOUND_STRING("Bombardment"),
+        .description = COMPOUND_STRING(
+            "Water cannon that\n"
+            "does 2x the dmg to\n"
+            "the foe if flying or\n"
+            "bouncing."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_WATER,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        //Move Categories
+        .damagesAirborneDoubleDamage = TRUE,
+        .ballisticMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_HydroCannon,
+    },
+
+    //TODO: Rework effect
+    [MOVE_DESTINY_BOARD] =
+    {
+        .name = COMPOUND_STRING("Destiny Board"),
+        .description = COMPOUND_STRING(
+            "2-turn attack. High critical\n"
+            "hit ratio, and may flinch."),
+        .effect = EFFECT_TWO_TURNS_ATTACK,
+        .power = 140,
+        .type = TYPE_GHOST,
+        .accuracy = 90,
+        .pp = 5,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .criticalHitStage = 1,
+        .argument.twoTurnAttack = { .stringId = STRINGID_CLOAKEDINAHARSHLIGHT },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FLINCH,
+            .chance = 30,
+        }),
+        //Move Categories
+        .sleepTalkBanned = TRUE,
+        .instructBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_SkyAttack,
+    },
+
+    [MOVE_BUBBLE_BLASTER] =
+    {
+        .name = COMPOUND_STRING("Bubble Blaster"),
+        .description = COMPOUND_STRING(
+            "A spray of bubbles\n"
+            "strikes the foe. It\n"
+            "may lower the foe's\n"
+            "accuracy and raise your\n"
+            "your Sp.Atk (20%)."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .accuracy = 1,
+            .chance = 20,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
+            .self = TRUE,
+            .chance = 20,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_SkyAttack,
+    },
     
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =

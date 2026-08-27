@@ -432,6 +432,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_BREAKING_SWIPE:
         case MOVE_BUBBLE:
         case MOVE_BUBBLE_BEAM:
+        case MOVE_BUBBLE_BLASTER:
         case MOVE_BUG_BUZZ:
         case MOVE_BULLDOZE:
         case MOVE_BURNING_JEALOUSY:
@@ -446,6 +447,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case DARK_BURNING_ATTACK:
         case MOVE_DARK_MAGIC_ATTACK:
         case MOVE_DARK_PULSE:
+        case MOVE_DESTINY_BOARD:
         case MOVE_DRAGON_RUSH:
         case MOVE_DRAGON_BREATH:
         case MOVE_DYNAMIC_PUNCH:
@@ -487,6 +489,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_MUD_SHOT:
         case MOVE_MUD_SLAP:
         case MOVE_MYSTICAL_FIRE:
+        case MOVE_PHOENIX_FORM:
         case MOVE_PLAY_ROUGH:
         case MOVE_POISON_FANG:
         case MOVE_POISON_JAB:
