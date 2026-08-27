@@ -238,9 +238,9 @@ MossdeepCity_SpaceCenter_2F_EventScript_ChoosePartyForMultiBattle::
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	special SavePlayerParty
-	@fadescreen FADE_TO_BLACK
-	@choosepartyforbattle 5
-	goto MossdeepCity_SpaceCenter_2F_EventScript_DoStevenMultiBattle
+	fadescreen FADE_TO_BLACK
+	choosepartyforbattle
+	goto_if_ne VAR_RESULT, 0, MossdeepCity_SpaceCenter_2F_EventScript_DoStevenMultiBattle
 	special LoadPlayerParty
 	goto MossdeepCity_SpaceCenter_2F_EventScript_ReadyForBattlePrompt
 

@@ -9877,17 +9877,17 @@ bool32 AreMultiPartiesHalfTeams(void)
 {
 #if TESTING
     u8 *partySizes = gBattleTestRunnerState->data.partySizes;
-    bool32 halfTeam = FALSE;
+    bool32 halfTeam = TRUE;
 
     if ((partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
-        && (partySizes[B_TRAINER_PLAYER] <= MULTI_PARTY_SIZE && partySizes[B_TRAINER_PARTNER] <= MULTI_PARTY_SIZE)))
+        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE && partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE)))
     {
-        halfTeam = TRUE;
+        halfTeam = FALSE;
     }
     if (partySizes[B_TRAINER_OPPONENT_A] && partySizes[B_TRAINER_OPPONENT_B]
-        && (partySizes[B_TRAINER_OPPONENT_A] <= MULTI_PARTY_SIZE && partySizes[B_TRAINER_OPPONENT_B] <= MULTI_PARTY_SIZE))
+        && (partySizes[B_TRAINER_OPPONENT_A] > MULTI_PARTY_SIZE && partySizes[B_TRAINER_OPPONENT_B] > MULTI_PARTY_SIZE))
     {
-        halfTeam = TRUE;
+        halfTeam = FALSE;
     }
 
     if (halfTeam)
@@ -9916,9 +9916,9 @@ bool32 AreMultiPartiesHalfTeams(void)
 bool32 IsPlayerMultiPartyFullTeam(void)
 {
 #if TESTING
-    return TRUE;
+    return FALSE;
 #else
-    bool32 result = gSpecialVar_0x8006 = !(gPartiesCount[B_TRAINER_PLAYER] >= *GetSavedPlayerPartyCount());
+    bool32 result = gSpecialVar_Result = !(gPartiesCount[B_TRAINER_PLAYER] >= *GetSavedPlayerPartyCount());
     return result;
 #endif
 }

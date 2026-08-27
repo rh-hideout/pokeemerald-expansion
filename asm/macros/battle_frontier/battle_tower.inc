@@ -100,13 +100,13 @@
 
 	.macro multi_do type:req
 	callnative IsPlayerMultiPartyFullTeam
-	goto_if_eq VAR_0x8006, TRUE, 1f
+	goto_if_eq VAR_RESULT, TRUE, 1f
 	reduceplayerpartytoselectedmons
 	1:
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
 	special CallFrontierUtilFunc @ saves the mon order, so the non-selected mons get restored afterwards
-	goto_if_eq VAR_0x8006, TRUE, 2f
+	goto_if_eq VAR_RESULT, TRUE, 2f
 	setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
 	goto 3f
 	2:
