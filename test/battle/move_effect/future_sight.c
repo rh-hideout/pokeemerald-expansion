@@ -75,7 +75,37 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight does not receive STAB from party mon (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight does not receive STAB from party mon (Gen 2-4)")
+{
+    u32 genConfig;
+    s16 directDamage;
+    s16 futureSightDamage;
+
+    KNOWN_FAILING;
+    PARAMETRIZE { genConfig = GEN_2; }
+    PARAMETRIZE { genConfig = GEN_3; }
+    PARAMETRIZE { genConfig = GEN_4; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        PLAYER(SPECIES_RALTS);
+        PLAYER(SPECIES_RAICHU);
+        OPPONENT(SPECIES_REGICE);
+    } WHEN {
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
+        HP_BAR(opponent, captureDamage: &directDamage);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &futureSightDamage);
+    } THEN {
+        EXPECT_EQ(directDamage, futureSightDamage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
 {
     s16 seedFlareDmg;
@@ -101,7 +131,45 @@ SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)", s16 damage)
+{
+    u32 genConfig;
+    enum Species species;
+
+    KNOWN_FAILING;
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_HOUNDOOM; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_HOUNDOOM; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_HOUNDOOM; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        ASSUME(GetSpeciesType(SPECIES_DITTO, 0) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING);
+        ASSUME(GetSpeciesType(SPECIES_STARMIE, 1) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_HOUNDOOM, 0) == TYPE_DARK);
+        PLAYER(SPECIES_PIKACHU);
+        OPPONENT(species) { HP(1000); MaxHP(1000); SpDefense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } THEN {
+        if (i % 4 != 0)
+            EXPECT_EQ(results[i].damage, results[i - i % 4].damage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
 {
     GIVEN {
@@ -123,7 +191,29 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
+{
+    u32 genConfig;
+
+    KNOWN_FAILING;
+    PARAMETRIZE { genConfig = GEN_2; }
+    PARAMETRIZE { genConfig = GEN_3; }
+    PARAMETRIZE { genConfig = GEN_4; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
+        HP_BAR(opponent, hp: 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
 {
     GIVEN {
