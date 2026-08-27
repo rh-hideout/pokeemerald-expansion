@@ -87,7 +87,7 @@ u8 AddItemIconSprite(u16 tilesTag, u16 paletteTag, enum Item itemId)
 {
     if (!AllocItemIconTemporaryBuffers())
     {
-        return MAX_SPRITES;// 
+        return MAX_SPRITES;
     }
     else
     {
