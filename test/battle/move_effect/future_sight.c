@@ -81,12 +81,11 @@ SINGLE_BATTLE_TEST("Future Sight does not receive STAB from party mon (Gen 2-4)"
     s16 directDamage;
     s16 futureSightDamage;
 
-    KNOWN_FAILING;
     PARAMETRIZE { genConfig = GEN_2; }
     PARAMETRIZE { genConfig = GEN_3; }
     PARAMETRIZE { genConfig = GEN_4; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
         PLAYER(SPECIES_RALTS);
         PLAYER(SPECIES_RAICHU);
         OPPONENT(SPECIES_REGICE);
@@ -136,7 +135,6 @@ SINGLE_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)
     u32 genConfig;
     enum Species species;
 
-    KNOWN_FAILING;
     PARAMETRIZE { genConfig = GEN_2; species = SPECIES_DITTO; }
     PARAMETRIZE { genConfig = GEN_2; species = SPECIES_MACHOP; }
     PARAMETRIZE { genConfig = GEN_2; species = SPECIES_STARMIE; }
@@ -150,7 +148,7 @@ SINGLE_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)
     PARAMETRIZE { genConfig = GEN_4; species = SPECIES_STARMIE; }
     PARAMETRIZE { genConfig = GEN_4; species = SPECIES_HOUNDOOM; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
         ASSUME(GetSpeciesType(SPECIES_DITTO, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING);
         ASSUME(GetSpeciesType(SPECIES_STARMIE, 1) == TYPE_PSYCHIC);
@@ -195,12 +193,11 @@ SINGLE_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
 {
     u32 genConfig;
 
-    KNOWN_FAILING;
     PARAMETRIZE { genConfig = GEN_2; }
     PARAMETRIZE { genConfig = GEN_3; }
     PARAMETRIZE { genConfig = GEN_4; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
     } WHEN {

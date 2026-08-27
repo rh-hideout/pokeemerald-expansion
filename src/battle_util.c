@@ -9855,8 +9855,8 @@ enum Type GetBattleMoveType(enum Move move)
             return gBattleStruct->dynamicMoveType;
 
         enum BattleMoveEffects effect = GetMoveEffect(move);
-        if (B_UPDATED_MOVE_TYPES < GEN_5
-         && (effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT))
+        if ((effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT)
+         && GetConfig(B_UPDATED_MOVE_TYPES) < GEN_5)
           return TYPE_MYSTERY;
     }
     return GetMoveType(move);
