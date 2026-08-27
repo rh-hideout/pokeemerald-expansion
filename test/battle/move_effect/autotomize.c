@@ -118,7 +118,6 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen
     PARAMETRIZE { gen = GEN_5; }
     PARAMETRIZE { gen = GEN_6; }
 
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_SHIELD) == 530);
         ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_BLADE) == 530);

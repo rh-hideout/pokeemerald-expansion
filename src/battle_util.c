@@ -8799,6 +8799,8 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum
         TryToSetBattleFormChangeMoves(mon, method);
         SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
+        if (GetConfig(B_UPDATED_MOVE_DATA) >= GEN_6)
+            gBattleMons[battler].volatiles.autotomizeCount = 0;
         RecalcBattlerStats(battler, mon, method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
     }
