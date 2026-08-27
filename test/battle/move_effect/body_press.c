@@ -119,9 +119,73 @@ SINGLE_BATTLE_TEST("Body Press uses Special Defense stat Stages in Wonder Room",
     }
 }
 
-// Could be split into multiple tests or maybe to separate files based on the modifier?
-TO_DO_BATTLE_TEST("Body Press's damage is influenced by all other Attack modifiers that are not stat stages");
-TO_DO_BATTLE_TEST("Body Press's damage is NOT influenced by any other Defense besides stat stages");
+SINGLE_BATTLE_TEST("Body Press is influenced by Attack modifiers other than stat stages", s16 damage)
+{
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
+    u32 status;
+    u32 maxHP, hp;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET;              ability = ABILITY_SHADOW_TAG;      item = ITEM_NONE;        status = STATUS1_NONE; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET;              ability = ABILITY_SHADOW_TAG;      item = ITEM_CHOICE_BAND; status = STATUS1_NONE; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_AZUMARILL;              ability = ABILITY_HUGE_POWER;      item = ITEM_NONE;        status = STATUS1_NONE; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_DARMANITAN_GALAR;       ability = ABILITY_GORILLA_TACTICS; item = ITEM_NONE;        status = STATUS1_NONE; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET;              ability = ABILITY_SHADOW_TAG;      item = ITEM_NONE;        status = STATUS1_BURN; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_SWELLOW;                ability = ABILITY_GUTS;            item = ITEM_NONE;        status = STATUS1_BURN; maxHP = 100; hp = 100; }
+    PARAMETRIZE { species = SPECIES_ARCHEOPS;               ability = ABILITY_DEFEATIST;       item = ITEM_NONE;        status = STATUS1_NONE; maxHP = 100; hp = 50;  }
+    PARAMETRIZE { species = SPECIES_REGIGIGAS;              ability = ABILITY_SLOW_START;      item = ITEM_NONE;        status = STATUS1_NONE; maxHP = 100; hp = 100; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_BAND) == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(species) { Ability(ability); Item(item); Status1(status); MaxHP(maxHP); HP(hp); Attack(100); Defense(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(500); HP(500); Defense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BODY_PRESS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BODY_PRESS, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[2].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[3].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[4].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[5].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[6].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[7].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Body Press is not influenced by Defense modifiers other than stat stages", s16 damage)
+{
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
+    u32 status;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;  item = ITEM_NONE;         status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_FURFROU;   ability = ABILITY_FUR_COAT;    item = ITEM_NONE;         status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_MILOTIC;   ability = ABILITY_MARVEL_SCALE; item = ITEM_NONE;        status = STATUS1_POISON; }
+    PARAMETRIZE { species = SPECIES_PORYGON;   ability = ABILITY_TRACE;       item = ITEM_EVIOLITE;     status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;  item = ITEM_ASSAULT_VEST; status = STATUS1_NONE; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EVIOLITE) == HOLD_EFFECT_EVIOLITE);
+        ASSUME(GetItemHoldEffect(ITEM_ASSAULT_VEST) == HOLD_EFFECT_ASSAULT_VEST);
+        PLAYER(species) { Ability(ability); Item(item); Status1(status); Attack(100); Defense(100); SpDefense(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(500); HP(500); Defense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BODY_PRESS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BODY_PRESS, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[1].damage, results[2].damage);
+        EXPECT_EQ(results[2].damage, results[3].damage);
+        EXPECT_EQ(results[3].damage, results[4].damage);
+    }
+}
 
 // Unconfirmed by Bulbapedia:
 // - Defeatist interaction
