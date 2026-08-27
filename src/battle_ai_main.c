@@ -2990,7 +2990,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_DARK_VOID:
-        if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[battlerAtk].species != SPECIES_DARKRAI)
+        if (GetConfig(B_DARK_VOID_FAIL) >= GEN_7 && gBattleMons[battlerAtk].species != SPECIES_DARKRAI)
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HYPERSPACE_FURY:
