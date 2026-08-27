@@ -31,7 +31,6 @@ SINGLE_BATTLE_TEST("Frustration does 0 damage at max Friendship (Gen 2)")
 {
     s16 damage;
 
-    KNOWN_FAILING;
     GIVEN {
         WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Friendship(255); }

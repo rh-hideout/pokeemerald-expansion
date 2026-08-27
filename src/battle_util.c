@@ -7686,8 +7686,10 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
 
     if (GetConfig(B_UPDATED_MOVE_DATA) == GEN_2
-     && GetMoveEffect(ctx->move) == EFFECT_RETURN
-     && gBattleMons[ctx->battlerAtk].friendship == 0)
+     && ((GetMoveEffect(ctx->move) == EFFECT_RETURN
+       && gBattleMons[ctx->battlerAtk].friendship == 0)
+      || (GetMoveEffect(ctx->move) == EFFECT_FRUSTRATION
+       && gBattleMons[ctx->battlerAtk].friendship == MAX_FRIENDSHIP)))
     {
         return 0;
     }
