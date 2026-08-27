@@ -40,7 +40,29 @@ SINGLE_BATTLE_TEST("Burn Up fails if the user isn't a Fire-type (Gen9)")
     }
 }
 
-TO_DO_BATTLE_TEST("Burn Up doesn't thaw the user if it fails due to the user not being Fire-type")
+SINGLE_BATTLE_TEST("Burn Up does not thaw the user if it fails because the user is not a Fire-type")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
+        ASSUME(MoveThawsUser(MOVE_BURN_UP));
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_FIRE || GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_FIRE);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BURN_UP); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Burn Up!");
+        NONE_OF {
+            MESSAGE("Wobbuffet's Burn Up melted the ice!");
+            STATUS_ICON(player, none: TRUE);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
+        }
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->status1 & STATUS1_FREEZE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fire-type (Gen9)")
 {
@@ -62,7 +84,24 @@ SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fi
     }
 }
 
-TO_DO_BATTLE_TEST("(TERA) Burn Up user does not lose their Fire type if they've Terastallized into Fire type")
+SINGLE_BATTLE_TEST("(TERA) Burn Up does not remove a user's Fire type after Terastallizing into Fire")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
+        ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
+        ASSUME(GetSpeciesType(SPECIES_CYNDAQUIL, 0) == TYPE_FIRE || GetSpeciesType(SPECIES_CYNDAQUIL, 1) == TYPE_FIRE);
+        PLAYER(SPECIES_CYNDAQUIL) { TeraType(TYPE_FIRE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BURN_UP, gimmick: GIMMICK_TERA); }
+        TURN { MOVE(player, MOVE_BURN_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
+    } THEN {
+        EXPECT(IS_BATTLER_OF_TYPE(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), TYPE_FIRE));
+    }
+}
 
 SINGLE_BATTLE_TEST("Burn Up user loses its Fire-type if enemy faints")
 {
