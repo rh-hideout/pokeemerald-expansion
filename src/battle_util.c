@@ -5734,10 +5734,24 @@ enum HoldEffect GetBattlerHoldEffectIgnoreAbility(enum BattlerId battler)
 
 enum HoldEffect GetBattlerHoldEffectInternal(enum BattlerId battler, enum Ability ability)
 {
+    enum HoldEffect holdEffect;
+
     if (gBattleStruct->battlerState[battler].notOnField)
         return HOLD_EFFECT_NONE;
     if (gSpecialStatuses[battler].attackerInParty)
         return HOLD_EFFECT_NONE;
+
+    if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
+        holdEffect = gEnigmaBerries[battler].holdEffect;
+    else
+        holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
+
+    if (holdEffect == HOLD_EFFECT_DOUBLE_PRIZE)
+    {
+        gPotentialItemEffectBattler = battler;
+        return holdEffect;
+    }
+
     if (gBattleMons[battler].volatiles.embargoTimer)
         return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
@@ -5746,11 +5760,7 @@ enum HoldEffect GetBattlerHoldEffectInternal(enum BattlerId battler, enum Abilit
         return HOLD_EFFECT_NONE;
 
     gPotentialItemEffectBattler = battler;
-
-    if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
-        return gEnigmaBerries[battler].holdEffect;
-    else
-        return GetItemHoldEffect(gBattleMons[battler].item);
+    return holdEffect;
 }
 
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(enum BattlerId battler)
