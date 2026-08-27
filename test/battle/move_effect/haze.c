@@ -36,7 +36,6 @@ SINGLE_BATTLE_TEST("Haze resets Focus Energy (Gen 1 and 4)")
     u32 genConfig;
     PARAMETRIZE { genConfig = GEN_1; }
     PARAMETRIZE { genConfig = GEN_4; }
-    KNOWN_FAILING;
     GIVEN {
         WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
         WITH_CONFIG(B_CRIT_CHANCE, genConfig);

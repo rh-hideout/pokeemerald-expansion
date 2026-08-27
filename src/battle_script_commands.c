@@ -5397,7 +5397,11 @@ static void Cmd_normalisebuffs(void)
     CMD_ARGS();
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
         TryResetBattlerStatChanges(i);
+        if (GetConfig(B_UPDATED_MOVE_DATA) == GEN_1 || GetConfig(B_UPDATED_MOVE_DATA) == GEN_4)
+            gBattleMons[i].volatiles.focusEnergy = FALSE;
+    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
