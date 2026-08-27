@@ -39,7 +39,6 @@ TO_DO_BATTLE_TEST("Baton Pass doesn't pass ability changes");
 //
 TO_DO_BATTLE_TEST("Baton Pass passes confusion status");                                                    // test/battle/volatiles/confusion.c
 
-TO_DO_BATTLE_TEST("Baton Pass passes Fairy lock's escape prevention effect");                               // test/battle/move_effect/fairy_lock.c
 TO_DO_BATTLE_TEST("Baton Pass passes Focus Energy's effect");                                               // test/battle/move_effect/focus_energy.c
 TO_DO_BATTLE_TEST("Baton Pass passes Heal Block's effect");                                                 // test/battle/move_effect/heal_block.c
 TO_DO_BATTLE_TEST("Baton Pass doesn't pass Imprison's effect");                                             // test/battle/move_effect/imprison.c
