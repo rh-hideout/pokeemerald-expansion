@@ -93,7 +93,7 @@ SootopolisCity_MysteryEventsHouse_1F_EventScript_TrainerVisiting::
 	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, FALSE, SootopolisCity_MysteryEventsHouse_1F_EventScript_DeclineBattle
 	special SavePlayerParty
-	reduceplayerpartytoselectedmons 3
+	reduceplayerpartytoselectedmons
 	msgbox SootopolisCity_MysteryEventsHouse_1F_Text_HopeToSeeGoodMatch, MSGBOX_DEFAULT
 	closemessage
 	call_if_eq VAR_FACING, DIR_NORTH, SootopolisCity_MysteryEventsHouse_1F_EventScript_EnterBasementNorth

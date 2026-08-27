@@ -7,6 +7,7 @@
 #include "daycare.h"
 #include "decompress.h"
 #include "event_data.h"
+#include "field_specials.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "link.h"
@@ -229,15 +230,28 @@ static void CB2_ReturnFromChooseBattleFrontierParty(void)
     SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
-void ReducePlayerPartyToSelectedMons(u32 partySize)
+void ReducePlayerPartyToSelectedMons(void)
 {
+    // No selected party order present - return early
+    if (gSelectedOrderFromParty[0] == 0)
+    {
+        for (int i = 0; i < PARTY_SIZE; i++)
+        {
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            {
+                gSelectedOrderFromParty[i] = i + 1;
+            }
+        }
+        CalculatePlayerPartyCount();
+        return;
+    }
+
     struct Pokemon party[PARTY_SIZE];
-    int i;
 
     CpuFill32(0, party, sizeof party);
 
     // copy the selected Pokémon according to the order.
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (int i = 0; i < PARTY_SIZE; i++)
     {
         if (gSelectedOrderFromParty[i]) // as long as the order keeps going (did the player select 1 mon? 2? 3?), do not stop
         {
@@ -247,16 +261,13 @@ void ReducePlayerPartyToSelectedMons(u32 partySize)
 
     CpuFill32(0, gParties[B_TRAINER_PLAYER], sizeof gParties[B_TRAINER_PLAYER]);
 
-    // overwrite the first 4 with the order copied to.
-    for (i = 0; i < PARTY_SIZE; i++)
+    // overwrite with the order copied to.
+    for (int i = 0; i < PARTY_SIZE; i++)
+    {
         gParties[B_TRAINER_PLAYER][i] = party[i];
+    }
 
     CalculatePlayerPartyCount();
-}
-
-void Special_ReducePlayerPartyToSelectedMons(void)
-{
-    ReducePlayerPartyToSelectedMons(gSpecialVar_0x8006);
 }
 
 void CanHyperTrain(struct ScriptContext *ctx)

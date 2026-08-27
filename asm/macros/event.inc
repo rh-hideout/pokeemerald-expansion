@@ -3017,7 +3017,7 @@
 	.if \size == 0 || \size >= PARTY_SIZE
 		.error "choosepartyforbattle must use a value between 1 and 5"
 	.endif
-	setvar VAR_0x8006, \size
+	setvar VAR_0x8005, \size
 	special ChoosePartyForBattle
 	.endm
 
@@ -3030,14 +3030,7 @@
 	special ChoosePartyForBattleFrontier
 	.endm
 
-	@ Reduces player party to a maximum team size. PARTY_SIZE indicates to read VAR_0x8006
-	@ which has maximum size set in choosepartyforbattle for custom 
-	.macro reduceplayerpartytoselectedmons size=MULTI_PARTY_SIZE
-	.if \size == PARTY_SIZE 
-		copyvar \size, VAR_0x8006
-	.endif
-	.if \size == 0 || \size >= PARTY_SIZE
-		.error "reduceplayerpartytoselectedmons must use a value between 1 and 5"
-	.endif
-	special Special_ReducePlayerPartyToSelectedMons
+	@ Reduces player party in line with order set in choosepartyforbattle or choosepartyforbattlefrontier 
+	.macro reduceplayerpartytoselectedmons
+	special ReducePlayerPartyToSelectedMons
 	.endm

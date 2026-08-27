@@ -9873,27 +9873,27 @@ bool32 IsSleepClauseEnabled(void)
     return FALSE;
 }
 
-bool32 AreMultiPartiesFullTeams(void)
+bool32 AreMultiPartiesHalfTeams(void)
 {
 #if TESTING
     u8 *partySizes = gBattleTestRunnerState->data.partySizes;
-    bool32 fullTeam = FALSE;
+    bool32 halfTeam = FALSE;
 
-    if (partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
-        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE))
+    if ((partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
+        && (partySizes[B_TRAINER_PLAYER] <= MULTI_PARTY_SIZE && partySizes[B_TRAINER_PARTNER] <= MULTI_PARTY_SIZE)))
     {
-        fullTeam = TRUE;
+        halfTeam = TRUE;
     }
     if (partySizes[B_TRAINER_OPPONENT_A] && partySizes[B_TRAINER_OPPONENT_B]
-        && (partySizes[B_TRAINER_OPPONENT_A] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_OPPONENT_B] > MULTI_PARTY_SIZE))
+        && (partySizes[B_TRAINER_OPPONENT_A] <= MULTI_PARTY_SIZE && partySizes[B_TRAINER_OPPONENT_B] <= MULTI_PARTY_SIZE))
     {
-        fullTeam = TRUE;
+        halfTeam = TRUE;
     }
 
-    if (!fullTeam)
+    if (halfTeam)
     {
-        gSpecialVar_Result = FALSE;
-        return FALSE;
+        gSpecialVar_Result = TRUE;
+        return TRUE;
     }
 #else
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
@@ -9904,13 +9904,23 @@ bool32 AreMultiPartiesFullTeams(void)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF))
     {
-        gSpecialVar_Result = FALSE;
-        return FALSE;
+        gSpecialVar_Result = TRUE;
+        return TRUE;
     }
 #endif
 
-    gSpecialVar_Result = TRUE;
+    gSpecialVar_Result = FALSE;
+    return FALSE;
+}
+
+bool32 IsPlayerMultiPartyFullTeam(void)
+{
+#if TESTING
     return TRUE;
+#else
+    bool32 result = gSpecialVar_0x8006 = !(gPartiesCount[B_TRAINER_PLAYER] >= *GetSavedPlayerPartyCount());
+    return result;
+#endif
 }
 
 void ClearDamageCalcResults(void)

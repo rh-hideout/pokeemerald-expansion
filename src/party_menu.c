@@ -2404,7 +2404,7 @@ static void CreateCancelConfirmWindows(bool8 chooseNumber)
     if (gPartyMenu.menuType != PARTY_MENU_TYPE_MULTI_SHOWCASE
      && gPartyMenu.menuType != PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE)
     {
-        if (chooseNumber == TRUE)
+        if (chooseNumber)
         {
             confirmWindowId = AddWindow(&sConfirmButtonWindowTemplate);
             FillWindowPixelBuffer(confirmWindowId, PIXEL_FILL(0));
@@ -3141,7 +3141,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
-            if (!AreMultiPartiesFullTeams())
+            if (AreMultiPartiesHalfTeams())
                 GetMultiPartyForSummaryScreen();
         }
 
@@ -3164,7 +3164,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
 void CB2_ReturnToPartyMenuFromSummaryScreen(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && AreMultiPartiesHalfTeams() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
         RestoreMultiPartyFromSummaryScreen();
     gPaletteFade.bufferTransferDisabled = TRUE;
     gPartyMenu.slotId = gLastViewedMonIndex;
@@ -7409,8 +7409,8 @@ static u8 GetMaxBattleEntries(void)
 {
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
-    case FACILITY_MULTI_OR_EREADER:
-        return MULTI_PARTY_SIZE;
+    //case FACILITY_MULTI_OR_EREADER:
+    //    return MULTI_PARTY_SIZE;
     case FACILITY_UNION_ROOM:
         return UNION_ROOM_PARTY_SIZE;
     default: // Battle Frontier
@@ -7475,10 +7475,13 @@ void ChooseMonForWirelessMinigame(void)
 
 static u8 GetPartyLayoutFromBattleType(void)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams())
-        return PARTY_LAYOUT_MULTI;
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams())
-        return PARTY_LAYOUT_MULTI_FULL;
+    if (IsMultiBattle())
+    {
+        if (AreMultiPartiesHalfTeams())
+            return PARTY_LAYOUT_MULTI;
+        else
+            return PARTY_LAYOUT_MULTI_FULL;
+    }
     if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_PLAYER] == 1) // Draw the single layout in a double battle where the player has only one Pokémon.
         return PARTY_LAYOUT_SINGLE;
     return PARTY_LAYOUT_DOUBLE;
@@ -7535,7 +7538,7 @@ static bool8 TrySwitchInPokemon(void)
     battlePartyId = GetPartyIdFromBattleSlot(slot);
 
     // In a 6v6 multi battle, slots 1, 4, and 5 are the partner's Pokémon
-    if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5) && !AreMultiPartiesFullTeams())
+    if (IsMultiBattle() && (slot == 1 || slot == 4 || slot == 5) && AreMultiPartiesHalfTeams())
     {
         StringCopy(gStringVar1, GetTrainerPartnerName());
         StringExpandPlaceholders(gStringVar4, gText_CantSwitchWithAlly);
@@ -7602,32 +7605,34 @@ static void BufferBattlePartyOrder(u8 *partyBattleOrder, u8 flankId)
     u8 partyIds[PARTY_SIZE];
     int i, j;
 
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    if (IsMultiBattle())
     {
-        partyBattleOrder[0] = (0 << 4) | 1;
-        partyBattleOrder[1] = (2 << 4) | 3;
-        partyBattleOrder[2] = (4 << 4) | 5;
-        return;
-    }
-    else if (IsMultiBattle() == TRUE)
-    {
-        // Party ids are packed in 4 bits at a time
-        // i.e. the party id order below would be 0, 3, 5, 4, 2, 1, and the two parties would be 0,5,4 and 3,2,1
-        if (flankId != 0)
+        if (AreMultiPartiesHalfTeams())
         {
-            partyBattleOrder[0] = 0 | (3 << 4);
-            partyBattleOrder[1] = 5 | (4 << 4);
-            partyBattleOrder[2] = 2 | (1 << 4);
+            // Party ids are packed in 4 bits at a time
+            // i.e. the party id order below would be 0, 3, 5, 4, 2, 1, and the two parties would be 0,5,4 and 3,2,1
+            if (flankId != 0)
+            {
+                partyBattleOrder[0] = 0 | (3 << 4);
+                partyBattleOrder[1] = 5 | (4 << 4);
+                partyBattleOrder[2] = 2 | (1 << 4);
+            }
+            else
+            {
+                partyBattleOrder[0] = 3 | (0 << 4);
+                partyBattleOrder[1] = 2 | (1 << 4);
+                partyBattleOrder[2] = 5 | (4 << 4);
+            }
         }
         else
         {
-            partyBattleOrder[0] = 3 | (0 << 4);
-            partyBattleOrder[1] = 2 | (1 << 4);
-            partyBattleOrder[2] = 5 | (4 << 4);
+            partyBattleOrder[0] = (0 << 4) | 1;
+            partyBattleOrder[1] = (2 << 4) | 3;
+            partyBattleOrder[2] = (4 << 4) | 5;
         }
         return;
     }
-    else if (IsDoubleBattle() == FALSE)
+    else if (!IsDoubleBattle())
     {
         j = 1;
         partyIds[0] = gBattlerPartyIndexes[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)];
@@ -7675,26 +7680,28 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
     else
         leftBattler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    if (IsMultiBattle())
     {
-        partyBattleOrder[0] = (0 << 4) | 1;
-        partyBattleOrder[1] = (2 << 4) | 3;
-        partyBattleOrder[2] = (4 << 4) | 5;
-        return;
-    }
-    else if (IsMultiBattle() == TRUE)
-    {
-        if (flankId != 0)
+        if (AreMultiPartiesHalfTeams())
         {
-            partyBattleOrder[0] = 0 | (3 << 4);
-            partyBattleOrder[1] = 5 | (4 << 4);
-            partyBattleOrder[2] = 2 | (1 << 4);
+            if (flankId != 0)
+            {
+                partyBattleOrder[0] = 0 | (3 << 4);
+                partyBattleOrder[1] = 5 | (4 << 4);
+                partyBattleOrder[2] = 2 | (1 << 4);
+            }
+            else
+            {
+                partyBattleOrder[0] = 3 | (0 << 4);
+                partyBattleOrder[1] = 2 | (1 << 4);
+                partyBattleOrder[2] = 5 | (4 << 4);
+            }
         }
         else
         {
-            partyBattleOrder[0] = 3 | (0 << 4);
-            partyBattleOrder[1] = 2 | (1 << 4);
-            partyBattleOrder[2] = 5 | (4 << 4);
+            partyBattleOrder[0] = (0 << 4) | 1;
+            partyBattleOrder[1] = (2 << 4) | 3;
+            partyBattleOrder[2] = (4 << 4) | 5;
         }
         return;
     }
@@ -7924,10 +7931,14 @@ static void CB2_SetUpExitToBattleScreen(void)
 
 void ShowPartyMenuToShowcaseMultiBattleParty(void)
 {
-    if (AreMultiPartiesFullTeams())
-        InitPartyMenu(PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE, PARTY_LAYOUT_MULTI_FULL_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_WaitBeforeMultiPartnerFullParty, gMain.savedCallback);
-    else
+    if (AreMultiPartiesHalfTeams())
+    {
         InitPartyMenu(PARTY_MENU_TYPE_MULTI_SHOWCASE, PARTY_LAYOUT_MULTI_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_InitMultiPartnerPartySlideIn, gMain.savedCallback);
+    }
+    else
+    {
+        InitPartyMenu(PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE, PARTY_LAYOUT_MULTI_FULL_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_WaitBeforeMultiPartnerFullParty, gMain.savedCallback);
+    }
 }
 
 #define tXPos  data[0]
@@ -8590,14 +8601,14 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
 // Functions for 4-party link multi battle handling
 static u8 CombinedToIndividualPartyId(u8 index)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && index >= MULTI_PARTY_SIZE)
+    if (IsMultiBattle() && AreMultiPartiesHalfTeams() && index >= MULTI_PARTY_SIZE)
         return index - MULTI_PARTY_SIZE;
     return index;
 }
 
 static u8 IndividualToCombinedPartyId(u8 index, enum BattlerId battler)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
+    if (IsMultiBattle() && AreMultiPartiesHalfTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
         return index + MULTI_PARTY_SIZE;
     return index;
 }

@@ -6181,7 +6181,7 @@ bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount)
 
 s32 GetAILastPartyIndex(enum BattlerId battler)
 {
-    return (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !AreMultiPartiesFullTeams()) ? PARTY_SIZE / 2 : PARTY_SIZE;
+    return (BattleSideHasTwoTrainers(battler & BIT_SIDE) && AreMultiPartiesHalfTeams()) ? MULTI_PARTY_SIZE : PARTY_SIZE;
 }
 
 bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move)
