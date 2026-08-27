@@ -390,5 +390,41 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
     }
 }
 
-TO_DO_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
-TO_DO_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
+SINGLE_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBARGO); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Embargo!");
+        MESSAGE("Wobbuffet can't use items anymore!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_AMULET_COIN) == HOLD_EFFECT_DOUBLE_PRIZE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_AMULET_COIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBARGO); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Embargo!");
+        MESSAGE("Wobbuffet can't use items anymore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ((u32)gBattleStruct->moneyMultiplier, 2);
+        EXPECT((bool32)gBattleStruct->moneyMultiplierItem);
+    }
+}
