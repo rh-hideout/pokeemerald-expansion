@@ -2660,9 +2660,12 @@ static void DebugAction_Give_Item(u8 taskId)
     gTasks[taskId].tInput = 1;
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tSpriteId = AddItemIconSprite(ITEM_TAG, ITEM_TAG, gTasks[taskId].tInput);
-    gSprites[gTasks[taskId].tSpriteId].x2 = DEBUG_NUMBER_ICON_X+10;
-    gSprites[gTasks[taskId].tSpriteId].y2 = DEBUG_NUMBER_ICON_Y+10;
-    gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+    if (gTasks[taskId].tSpriteId != MAX_SPRITES)
+    {
+        gSprites[gTasks[taskId].tSpriteId].x2 = DEBUG_NUMBER_ICON_X+10;
+        gSprites[gTasks[taskId].tSpriteId].y2 = DEBUG_NUMBER_ICON_Y+10;
+        gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+    }
 }
 
 static void DestroyItemIcon(u8 taskId)
@@ -2691,9 +2694,12 @@ static void DebugAction_Give_Item_SelectId(u8 taskId)
         Debug_Display_ItemInfo(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         DestroyItemIcon(taskId);
         gTasks[taskId].tSpriteId = AddItemIconSprite(ITEM_TAG, ITEM_TAG, gTasks[taskId].tInput);
-        gSprites[gTasks[taskId].tSpriteId].x2 = DEBUG_NUMBER_ICON_X+10;
-        gSprites[gTasks[taskId].tSpriteId].y2 = DEBUG_NUMBER_ICON_Y+10;
-        gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+        if (gTasks[taskId].tSpriteId != MAX_SPRITES)
+        {
+            gSprites[gTasks[taskId].tSpriteId].x2 = DEBUG_NUMBER_ICON_X+10;
+            gSprites[gTasks[taskId].tSpriteId].y2 = DEBUG_NUMBER_ICON_Y+10;
+            gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+        }
     }
 
     if (JOY_NEW(A_BUTTON))

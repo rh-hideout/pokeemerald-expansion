@@ -1431,12 +1431,13 @@ void AnimTask_PoltergeistItem(u8 taskId)
         gSprites[task->data[0]].data[0] = x + 4;
         gSprites[task->data[0]].data[1] = y + 4;
         gSprites[task->data[0]].callback = AnimPoltergeistItem;
+        gAnimVisualTaskCount += 1;
     }
     task->data[1] = CreateSprite(&gPoltergeistEffectTemplate, x, y, 1);
     gSprites[task->data[1]].data[0] = x;
     gSprites[task->data[1]].data[1] = y;
 
-    gAnimVisualTaskCount += 2;
+    gAnimVisualTaskCount += 1;
 
     DestroyAnimVisualTask(taskId);
 }
