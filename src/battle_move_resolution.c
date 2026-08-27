@@ -3223,13 +3223,15 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
 
         if (!DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, cv->move)
          || IsBattlerUnaffectedByMove(battlerDef)
-         || ShouldSkipBattlerForMoveEndSubstitute(battlerDef, cv)
+         || ShouldSkipBattlerForMoveEnd(battlerDef, cv)
          || !IsBattlerTurnDamaged(battlerDef, INCLUDING_SUBSTITUTES))
         {
             gBattleStruct->eventState.moveEndBlock = 0;
             gBattleStruct->eventState.moveEndBattler++;
             continue;
         }
+
+        gBattleStruct->battlerState[battlerDef].substituteBlocked = TRUE;
 
         while (gBattleStruct->eventState.moveEndBlock < SUBSTITUTE_BLOCK_COUNT)
         {
@@ -3305,7 +3307,6 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
         if (gBattleMons[battlerDef].volatiles.substituteHP == 0)
             gBattleMons[battlerDef].volatiles.substitute = FALSE;
 
-        gBattleStruct->battlerState[battlerDef].substituteBlocked = TRUE;
         gBattleStruct->eventState.moveEndBattler++;
         gBattleStruct->eventState.moveEndBlock = 0;
     }
@@ -3405,22 +3406,28 @@ static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv)
     enum BattlerId battler2 = GetPartnerBattler(battler1);
     bool32 anyValidBattler = FALSE;
 
-    if (ShouldSkipBattlerForMoveEndSubstitute(battler1, cv)
+    if (ShouldSkipBattlerForMoveEnd(battler1, cv)
      || !IsBattlerTurnDamaged(battler1, INCLUDING_SUBSTITUTES)
      || gSpecialStatuses[battler1].resultMessagePrinted)
         battler1 = battler2;
     else
         anyValidBattler = TRUE;
     
-    if (ShouldSkipBattlerForMoveEndSubstitute(battler2, cv)
+    if (ShouldSkipBattlerForMoveEnd(battler2, cv)
      || !IsBattlerTurnDamaged(battler2, INCLUDING_SUBSTITUTES)
      || gSpecialStatuses[battler2].resultMessagePrinted)
         battler2 = battler1;
     else
         anyValidBattler = TRUE;
 
-    // No battlers on this side were affected or is multihit move
-    if (!anyValidBattler || (gMultiHitCounter != 0 && GetBattlerMoveTargetType(cv->battlerAtk, cv->move) != TARGET_SMART))
+    // If it's a multihit move not blocked by Substitute and not Dragon Darts
+    if (gMultiHitCounter != 0
+     && GetBattlerMoveTargetType(cv->battlerAtk, cv->move) != TARGET_SMART
+     && !(gBattleStruct->battlerState[battler1].substituteBlocked || gBattleStruct->battlerState[battler2].substituteBlocked))
+        return FALSE;
+
+    // No battlers on this side should print effectiveness messages
+    if (!anyValidBattler)
         return FALSE;
 
     // No effect -> Extremely effective -> super effective -> not very effective -> mostly ineffective
@@ -4649,7 +4656,7 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
             gBattleStruct->eventState.moveEndBlock++;
             break;
         case MULTIHIT_BLOCK_EFFECTIVENESS_MESSAGE:
-            if (gMultiHitCounter == 0 && target != TARGET_SMART)
+            if (gMultiHitCounter == 0 && target != TARGET_SMART && !gBattleStruct->battlerState[cv->battlerDef].substituteBlocked)
             {
                 if (ShouldPrintEffectivenessMessage(cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
