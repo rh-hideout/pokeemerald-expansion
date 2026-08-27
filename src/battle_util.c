@@ -9916,7 +9916,7 @@ bool32 AreMultiPartiesHalfTeams(void)
 bool32 IsPlayerMultiPartyFullTeam(void)
 {
 #if TESTING
-    return FALSE;
+    return (!AreMultiPartiesHalfTeams());
 #else
     bool32 result = gSpecialVar_Result = !(gPartiesCount[B_TRAINER_PLAYER] >= *GetSavedPlayerPartyCount());
     return result;
