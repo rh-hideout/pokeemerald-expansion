@@ -9880,12 +9880,12 @@ bool32 AreMultiPartiesHalfTeams(void)
     bool32 halfTeam = TRUE;
 
     if ((partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
-        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE && partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE)))
+        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE)))
     {
         halfTeam = FALSE;
     }
     if (partySizes[B_TRAINER_OPPONENT_A] && partySizes[B_TRAINER_OPPONENT_B]
-        && (partySizes[B_TRAINER_OPPONENT_A] > MULTI_PARTY_SIZE && partySizes[B_TRAINER_OPPONENT_B] > MULTI_PARTY_SIZE))
+        && (partySizes[B_TRAINER_OPPONENT_A] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_OPPONENT_B] > MULTI_PARTY_SIZE))
     {
         halfTeam = FALSE;
     }

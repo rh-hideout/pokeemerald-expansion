@@ -3218,7 +3218,7 @@ static void DoBattleIntro(void)
                 if (AreMultiPartiesHalfTeams() && BattleSideHasTwoTrainers(trainer & BIT_SIDE))
                     lastId = MULTI_PARTY_SIZE;
 
-                for (i = 0; i < lastId; i++)
+                for (i = 0; i < PARTY_SIZE; i++)
                 {
                     if (GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
                      || GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
