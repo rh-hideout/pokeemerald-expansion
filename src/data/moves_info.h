@@ -22434,7 +22434,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         //Move Categories
         .makesContact = TRUE,
         .minimizeDoubleDamage = TRUE,
-        .slicingMove = TRUE;
+        .slicingMove = TRUE,
         .battleAnimScript = gBattleAnimMove_DragonPulse,
     },
 
@@ -22551,7 +22551,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         }),
         //Move Categories
         .makesContact = TRUE,
-        .slicingMove = TRUE;
+        .slicingMove = TRUE,
         .battleAnimScript = gBattleAnimMove_DragonPulse,
     },
 
@@ -22632,10 +22632,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Fist of Fate"),
         .description = COMPOUND_STRING(
-            "An screen shattering\n
-            punch that requies\n
-            the user to recharge\n
-            on the next turn."),
+            "An screen shattering\n"
+            "punch that requies\n"
+            "the user to recharge\n"
+            "on the next turn."),
         .effect = EFFECT_HIT,
         .power = 150,
         .type = TYPE_NORMAL,
@@ -22644,7 +22644,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
-        .makesContact = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_BREAK_SCREEN,
             .preAttackEffect = TRUE,
