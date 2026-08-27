@@ -90,7 +90,6 @@ void ProcessDma3Requests(void)
         sDma3Requests[sDma3RequestCursor].dest = NULL;
         sDma3Requests[sDma3RequestCursor].size = 0;
         sDma3Requests[sDma3RequestCursor].mode = 0;
-        sDma3Requests[sDma3RequestCursor].value = 0;
 
         sDma3RequestCursor = INCREMENT_OR_WRAP(sDma3RequestCursor, MAX_DMA_REQUESTS); // loop back to the first DMA request
     }
