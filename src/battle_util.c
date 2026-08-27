@@ -9844,7 +9844,6 @@ bool32 AreMultiPartiesFullTeams(void)
 
 	if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
 		return TRUE;
-
 		
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
      || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
