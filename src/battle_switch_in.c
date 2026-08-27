@@ -285,10 +285,16 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
     case FIRST_EVENT_BLOCK_ITEMS:
-        if (ItemBattleEffects(battler, 0, calcValues->holdEffects[battler], IsOnSwitchInActivation))
+    {
+        enum HoldEffect holdEffect = calcValues->holdEffects[battler];
+
+        if (GetBattlerHoldEffectIgnoreNegation(battler) == HOLD_EFFECT_DOUBLE_PRIZE)
+            holdEffect = HOLD_EFFECT_DOUBLE_PRIZE;
+        if (ItemBattleEffects(battler, 0, holdEffect, IsOnSwitchInActivation))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
+    }
     case FIRST_EVENT_BLOCK_COUNT:
         gBattleStruct->eventState.battlerSwitchIn++;
         break;

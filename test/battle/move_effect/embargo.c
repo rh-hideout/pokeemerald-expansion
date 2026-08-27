@@ -409,7 +409,6 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
 
 SINGLE_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_AMULET_COIN) == HOLD_EFFECT_DOUBLE_PRIZE);
         PLAYER(SPECIES_WOBBUFFET);
