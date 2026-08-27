@@ -111,7 +111,37 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction cannot be removed by Haze")
     }
 }
 
-TO_DO_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen6+)");
+SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen 6+)")
+{
+    u32 gen;
+
+    PARAMETRIZE { gen = GEN_5; }
+    PARAMETRIZE { gen = GEN_6; }
+
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_SHIELD) == 530);
+        ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_BLADE) == 530);
+        WITH_CONFIG(B_UPDATED_MOVE_DATA, gen);
+        PLAYER(SPECIES_AEGISLASH_SHIELD) { Ability(ABILITY_STANCE_CHANGE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_AUTOTOMIZE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_AEGISLASH_BLADE);
+        if (gen >= GEN_6)
+        {
+            EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 530);
+            EXPECT_EQ((u32)player->volatiles.autotomizeCount, 0);
+        }
+        else
+        {
+            EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 1);
+            EXPECT_EQ((u32)player->volatiles.autotomizeCount, 1);
+        }
+    }
+}
 
 SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon switch")
 {
