@@ -33435,7 +33435,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .palette = gMonPalette_DragonQueenOfTragicEnding,
     .shinyPalette = gMonShinyPalette_DragonQueenOfTragicEnding,
     .iconSprite = gMonIcon_DragonQueenOfTragicEnding,
-    .iconPalIndex = 0,
+    .iconPalIndex = 1,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
     FOOTPRINT(Mudkip)
