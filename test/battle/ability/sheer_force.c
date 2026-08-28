@@ -436,6 +436,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_BUG_BUZZ:
         case MOVE_BULLDOZE:
         case MOVE_BURNING_JEALOUSY:
+        case MOVE_CELESTIAL_SWORD:
         case MOVE_CELTIC_BLADE:
         case MOVE_CHAOS_BLADE:
         case MOVE_CHARGE_BEAM:
@@ -483,12 +484,15 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_LIQUIDATION:
         case MOVE_LOW_SWEEP:
         case MOVE_MAGNET_SWORD:
+        case MOVE_MECHANIZED_MELEE:
         case MOVE_METAL_CLAW:
         case MOVE_MUD_BOMB:
         case MOVE_MUDDY_WATER:
         case MOVE_MUD_SHOT:
         case MOVE_MUD_SLAP:
+        case MOVE_NEUTRON_BLAST:
         case MOVE_MYSTICAL_FIRE:
+        case MOVE_MYSTICAL_SPACE_TYPHOON:
         case MOVE_PHOENIX_FORM:
         case MOVE_PLAY_ROUGH:
         case MOVE_POISON_FANG:
@@ -510,12 +514,14 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_SECRET_POWER:
         case MOVE_SHADOW_BALL:
         case MOVE_SIGNAL_BEAM:
+        case MOVE_SILENT_BURN:
         case MOVE_SKY_ATTACK:
         case MOVE_SKYDIVE_SCORCHER:
         case MOVE_SLUDGE_BOMB:
         case MOVE_SLUDGE_WAVE:
         case MOVE_SNARL:
         case MOVE_SNORE:
+        case MOVE_SPARK_BLASTER:
         case MOVE_SPIRAL_SPEAR:
         case MOVE_STEEL_WING:
         case MOVE_STOMP:
@@ -528,6 +534,7 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_THUNDERBOLT:
         case MOVE_THUNDER_PUNCH:
         case MOVE_THUNDER_SWORD:
+        case MOVE_TOXIC_BREATH:
         case MOVE_TRAILBLAZE:
         case MOVE_TWISTER:
         case MOVE_VENGEANCE:

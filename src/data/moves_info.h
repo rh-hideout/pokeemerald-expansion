@@ -22826,7 +22826,258 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         //Move Categories
         .battleAnimScript = gBattleAnimMove_SkyAttack,
     },
+
+    [MOVE_SCRAP_FIST] =
+    {
+        .name = COMPOUND_STRING("Scrap Fist"),
+        .description = COMPOUND_STRING(
+            "A blindingly fast\n"
+            "punch that is sure\n"
+            "o hit first."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 5,
+        .target = TARGET_SELECTED,
+        .priority = 2,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .makesContact = TRUE,
+        .battleAnimScript = gBattleAnimMove_ExtremeSpeed,
+    },
+
+    [MOVE_TOXIC_BREATH] =
+    {
+        .name = COMPOUND_STRING("Toxic Breath"),
+        .description = COMPOUND_STRING(
+            "The foe inhales toxins.\n"
+            "It may also badly\n"
+            "poison the foe (40%)."),
+        .effect = EFFECT_HIT,
+        .power = 60,
+        .type = TYPE_POISON,
+        .accuracy = 95,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_TOXIC,
+            .chance = 40,
+        }),
+        .battleAnimScript = gBattleAnimMove_SludgeWave,
+    },
+
+    [MOVE_SILENT_BURN] =
+    {
+        .name = COMPOUND_STRING("Silent Burn"),
+        .description = COMPOUND_STRING(
+            "A silent strike that\n"
+            "may burn the foe\n"
+            "10%)."),
+        .effect = EFFECT_HIT,
+        .power = 85,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        //Move Categories
+        .thawsUser = TRUE,
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
     
+    [MOVE_NEUTRON_BLAST] =
+    {
+        .name = COMPOUND_STRING("Neutron Blast"),
+        .description = COMPOUND_STRING(
+            "A reckless, life-\n"
+            "risking attack that\n"
+            "may paralyze the\n"
+            "foe (10%). User is\n"
+            "hit with 25% recoil\n"
+            "damage."),
+        .effect = EFFECT_RECOIL,
+        .power = 130,
+        .type = TYPE_DRAGON,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .recoilPercentage = 25 },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    [MOVE_NEGATE] =
+    {
+        .name = COMPOUND_STRING("Negate"),
+        .description = COMPOUND_STRING(
+            "Counter Trap negates\n"
+            "foe's play. They\n"
+            "become confused."),
+        .effect = EFFECT_CONFUSE,
+        .power = 0,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
+        //Move Categories
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_ConfuseRay,
+    },
+
+    //TODO: Test Effects
+    [MOVE_SHRINK] =
+    {
+        .name = COMPOUND_STRING("Shrink"),
+        .description = COMPOUND_STRING(
+            "Shrink yourself to\n"
+            "lower the foe's attack.\n"
+            "and raise your evasiveness"),
+        .effect = EFFECT_MINIMIZE,
+        .power = 0,
+        .type = TYPE_NORMAL,
+        .accuracy = 90,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+        {
+            .moveEffect = STAT_CHANGE_EFFECT_MINUS,
+            .attack = 1,
+        },
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .self = TRUE,
+            .evasion = 1,
+        }),
+        //Move Categories
+        .mirrorMoveBanned = TRUE,
+        .snatchAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Minimize,
+    },
+
+    [MOVE_MECHANIZED_MELEE] =
+    {
+        .name = COMPOUND_STRING("Mechanized Melee"),
+        .description = COMPOUND_STRING(
+            "The foe is punched\n"
+            "with a mechanzized\n"
+            "fist. May paralyze\n"
+            "the foe (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_STEEL,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .punchingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_MeteorMash,
+    },
+
+    //TODO: Implement Effect
+    [MOVE_CELESTIAL_SWORD] =
+    {
+        .name = COMPOUND_STRING("Celestial Sword"),
+        .description = COMPOUND_STRING(
+            "Slice the foe with\n"
+            "Celestial Sword. May\n"
+            "raise Atk (10% * num\n"
+            "of fainted cards foe\n"
+            "has. Minimum chance\n"
+            "is 10%)."),
+        .effect = EFFECT_HIT,
+        .power = 90,
+        .type = TYPE_FLYING,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
+            .self = TRUE,
+            .attack = 1,
+            .chance = 10,
+        }),
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_MeteorMash,
+    },
+
+    [MOVE_SPARK_BLASTER] =
+    {
+        .name = COMPOUND_STRING("Spark Blaster"),
+        .description = COMPOUND_STRING(
+            "Targets the foe\n"
+            "and shocks them\n"
+            "sensless. which lowers\n"
+            "the foe's Sp.Def."),
+        .effect = EFFECT_HIT,
+        .power = 65,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .spDef = 1,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_MeteorMash,
+    },
+
+    [MOVE_MYSTICAL_SPACE_TYPHOON] =
+    {
+        .name = COMPOUND_STRING("Mystical Space Typhoon"),
+        .description = COMPOUND_STRING(
+            "Mystical Space\n"
+            "Typhoon hits foe by\n"
+            "surprise. May confuse\n"
+            "foe as unsure if\n"
+            "effect got negated."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_FLYING,
+        .accuracy = 95,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_CONFUSION,
+            .chance = 10,
+        }),
+        //Move Categories
+        .windMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_WaterPulse,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {
