@@ -2771,7 +2771,9 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
     {
         gBattleScripting.animTurn++;
         gBattleScripting.animTargetsHit++;
-        return CANCELER_RESULT_SUCCESS;
+        BattleScriptCall(BattleScript_Pausex20);
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+
     }
 
     // handle special move animations.
