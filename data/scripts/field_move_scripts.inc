@@ -86,11 +86,22 @@ EventScript_SmashRock:: @ fallthrough
 	removeobject VAR_LAST_TALKED
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState
 	goto_if_eq VAR_RESULT, TRUE, EventScript_EndSmash
+        callnative rockSmashGenerateItem
+	call_if_ne VAR_0x8005, ITEM_NONE, EventScript_TrySmashItem
 	special RockSmashWildEncounter
 	goto_if_eq VAR_RESULT, FALSE, EventScript_EndSmash
 	waitstate
 	releaseall
 	end
+
+EventScript_TrySmashItem::
+    checkitemspace VAR_0x8005
+	goto_if_ne VAR_RESULT, FALSE, EventScript_GiveSmashItem
+	return
+
+EventScript_GiveSmashItem::
+        giveitem VAR_0x8005
+        return
 
 EventScript_FollowerFieldMove:
 	getdirectiontoface VAR_0x8005, OBJ_EVENT_ID_FOLLOWER, OBJ_EVENT_ID_PLAYER

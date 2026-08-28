@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "random.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
@@ -164,4 +165,62 @@ static void FieldMove_RockSmash(void)
     PlaySE(SE_M_ROCK_THROW);
     FieldEffectActiveListRemove(FLDEFF_USE_ROCK_SMASH);
     ScriptContext_Enable();
+}
+
+#define LENGTH_DEFAULT_SMASH_TABLE 11
+#define LENGTH_FOSSIL_SMASH_TABLE 7
+
+static const enum Item DefaultSmashTable[] = {
+    ITEM_STAR_PIECE,
+    ITEM_HARD_STONE,
+    ITEM_SOFT_SAND,
+    ITEM_REVIVE,
+    ITEM_MAX_REVIVE,
+    ITEM_ETHER,
+    ITEM_MAX_ETHER,
+    ITEM_PEARL,
+    ITEM_BIG_PEARL,
+    ITEM_HEART_SCALE,
+    ITEM_NORMAL_GEM,
+};
+
+static const enum Item FossilSmashTable[] = {
+    ITEM_DOME_FOSSIL,
+    ITEM_ARMOR_FOSSIL,
+    ITEM_PLUME_FOSSIL,
+    ITEM_OLD_AMBER,
+    ITEM_HELIX_FOSSIL,
+    ITEM_SKULL_FOSSIL,
+    ITEM_COVER_FOSSIL,
+};
+
+
+void rockSmashGenerateItem(struct ScriptContext *ctx)
+{
+    enum Item item = ITEM_NONE;
+    if(Random() % 3 == 0 && OW_ROCK_SMASH_ITEMS)// 33% chance
+    {
+
+        if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+        {
+            VarSet(VAR_0x8005, ITEM_NONE);// Not given in trick house
+            return;
+        }
+        /*
+        else if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
+                || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_CAVE_OF_ORIGIN_B1F) &&
+                gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
+                // Example code for unique locations for fossils. Given in mirage islands or Glittering Cave in XY.
+        {
+            randomNumber = Random() % ARRAY_COUNT(FossilSmashTable);
+
+            VarSet(VAR_0x8005, FossilSmashTable[randomNumber]);
+            return;
+        }
+        */
+        u32 randomNumber = Random() % ARRAY_COUNT(DefaultSmashTable);
+        item = DefaultSmashTable[randomNumber];
+    }
+    VarSet(VAR_0x8005, item);
+    return;
 }
