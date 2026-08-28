@@ -19606,7 +19606,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .palette = gMonPalette_WarmWorm,
     .shinyPalette = gMonShinyPalette_WarmWorm,
     .iconSprite = gMonIcon_WarmWorm,
-    .iconPalIndex = 0,
+    .iconPalIndex = 1,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
     FOOTPRINT(Mudkip)
