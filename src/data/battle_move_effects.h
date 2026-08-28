@@ -7,7 +7,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 {
     [EFFECT_PLACEHOLDER] =
     {
-        .battleScript = BattleScript_EffectPlaceholder,
+        .battleScript = BattleScript_EffectVanilla,
         .battleTvScore = 0,
     },
 
@@ -536,7 +536,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BATON_PASS] =
     {
-        .battleScript = BattleScript_EffectBatonPass,
+        .battleScript = BattleScript_EffectVanilla,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
     },
@@ -643,7 +643,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TELEPORT] =
     {
-        .battleScript = BattleScript_EffectTeleport,
+        .battleScript = BattleScript_EffectVanilla,
         .battleTvScore = 1,
     },
 

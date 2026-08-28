@@ -11160,3 +11160,9 @@ bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability)
 {
     return (gBattleMons[battler].status1 & STATUS1_SLEEP) || ability == ABILITY_COMATOSE;
 }
+
+bool32 IsCommanderActive(enum BattlerId battler)
+{
+    return gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE
+        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER;
+}

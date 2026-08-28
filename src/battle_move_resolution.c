@@ -1181,6 +1181,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
 
     switch (cv->moveEffect)
     {
+    case EFFECT_PLACEHOLDER:
+        battleScript = BattleScript_EffectPlaceholder;
+        break;
     case EFFECT_FLING:
         if (!CanFling(cv->battlerAtk, cv->abilities[cv->battlerAtk]))
             battleScript = BattleScript_ButItFailed;
@@ -1316,7 +1319,37 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        // TODO: follow up: Can't make sense of teleport logic
+        if (GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
+        {
+            bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
+
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
+             || canRun == BATTLE_RUN_FORBIDDEN
+             || IsCommanderActive(cv->battlerAtk)
+             || IsOnPlayerSide(cv->battlerAtk))
+            {
+                battleScript = BattleScript_ButItFailed;
+
+            }
+            else if (canRun == BATTLE_RUN_FAILURE)
+            {
+                battleScript = BattleScript_PrintAbilityMadeIneffective;
+            }
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+              || IsCommanderActive(cv->battlerAtk)
+              || (!CanBattlerSwitch(cv->battlerAtk) && IsOnPlayerSide(cv->battlerAtk)))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        break;
+    case EFFECT_BATON_PASS:
+        if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+         || IsCommanderActive(cv->battlerAtk)
+         || !CanBattlerSwitch(cv->battlerAtk))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
         break;
     case EFFECT_NATURAL_GIFT:
         if (GetItemPocket(gBattleMons[cv->battlerAtk].item) != POCKET_BERRIES
@@ -1333,6 +1366,32 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!gBattleStruct->battlerState[cv->battlerAtk].focusPunchBattlers && GetConfig(B_MOVE_EFFECTS_BEFORE_MOVES) <= GEN_9)
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_ALLY_SWITCH:
+    {
+        enum BattlerId partner = GetPartnerBattler(cv->battlerAtk);
+        if (!IsBattlerAlive(partner)
+         || HasPartnerTrainer(cv->battlerAtk)
+         || IsCommanderActive(cv->battlerAtk)
+         || IsCommanderActive(partner))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        else if (GetConfig(B_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9)
+        {
+            TryResetConsecutiveUseCounter(cv->battlerAtk);
+
+            if (CanUseMoveConsecutively(cv->battlerAtk))
+            {
+                gBattleMons[cv->battlerAtk].volatiles.consecutiveMoveUses++;
+            }
+            else
+            {
+                gBattleMons[cv->battlerAtk].volatiles.consecutiveMoveUses = 0;
+                battleScript = BattleScript_ButItFailed;
+            }
+        }
+        break;
+    }
     default:
         break;
     }
@@ -2569,7 +2628,11 @@ static bool32 ShouldSkipBattlerForDamage(enum BattlerId battlerAtk, enum Battler
 
 static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *cv)
 {
-    if (IsBattleMoveStatus(cv->move))
+    bool32 statusMovesExcluded = cv->moveEffect == EFFECT_TELEPORT
+                              || cv->moveEffect == EFFECT_BATON_PASS
+                              || cv->moveEffect == EFFECT_ALLY_SWITCH;
+
+    if (IsBattleMoveStatus(cv->move) && !statusMovesExcluded)
     {
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         return CANCELER_RESULT_END;
@@ -2744,6 +2807,21 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
     if (gSpecialStatuses[cv->battlerAtk].parentalBondState == PARENTAL_BOND_2ND_HIT)
         return CANCELER_RESULT_SUCCESS;
 
+    bool32 isAnimDisabled = (gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)
+                          || gBattleStruct->attackAnimPlayed);
+    if (isAnimDisabled
+     && cv->moveEffect != EFFECT_TRANSFORM
+     && cv->moveEffect != EFFECT_SUBSTITUTE
+     && cv->moveEffect != EFFECT_ALLY_SWITCH
+     // In a wild double battle gotta use the teleport animation if two wild Pokémon are alive.
+     && !(cv->moveEffect == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(cv->battlerAtk) && IsBattlerAlive(GetPartnerBattler(cv->battlerAtk))))
+    {
+        gBattleScripting.animTurn++;
+        gBattleScripting.animTargetsHit++;
+        BattleScriptCall(BattleScript_Pausex20);
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+    }
+
     // handle special move animations.
     if (GetMoveAnimationScript(cv->move) == gBattleAnimMove_ExpandingForce
      && gBattleStruct->numSpreadTargets > 1)
@@ -2812,6 +2890,12 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(struct BattleCalcV
 
 static enum CancelerResult CancelerEffectivenessSound(struct BattleCalcValues *cv)
 {
+    if (IsBattleMoveStatus(cv->move))
+    {
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_SUCCESS;
+    }
+
     u32 moveResultFlags = UpdateEffectivenessResultFlagsForDoubleSpreadMoves(cv);
 
     switch (moveResultFlags)
@@ -4673,7 +4757,7 @@ static bool32 CanPartingShotTrigger(enum BattlerId battlerAtk)
     return FALSE;
 }
 
-static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
+static enum MoveEndResult MoveEndMoveSwitchOut(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -4702,6 +4786,22 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
             BattleScriptCall(BattleScript_PartingShotEscape);
         }
         break;
+    case EFFECT_TELEPORT:
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+         && !IsOnPlayerSide(cv->battlerAtk)
+         && !gBattleStruct->unableToUseMove)
+        {
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_Teleport);
+            break;
+        }
+        // fallthrough
+    case EFFECT_BATON_PASS:
+        if (!gBattleStruct->unableToUseMove)
+        {
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_MoveSwitchOut);
+        }
     default:
         break;
     }
@@ -5236,7 +5336,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
     [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
-    [MOVEEND_HIT_ESCAPE] = MoveEndHitEscape,
+    [MOVEEND_MOVE_SWITCH_OUT] = MoveEndMoveSwitchOut,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,

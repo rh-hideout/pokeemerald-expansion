@@ -757,9 +757,6 @@ BattleScript_EffectLifeDewHealing:
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
-	tryallyswitch BattleScript_ButItFailed
-	attackanimation
-	waitanimation
 	@ The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
 	allyswitchswapbattlers
 	printstring STRINGID_ALLYSWITCHPOSITION
@@ -1438,10 +1435,9 @@ BattleScript_HitEscapeSwitch:
 	return
 
 BattleScript_EffectPlaceholder::
-	attackcanceler
-	pause 5
 	printstring STRINGID_NOTDONEYET
-	goto BattleScript_MoveEnd
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_EffectHit::
 	attackcanceler
@@ -2208,13 +2204,11 @@ BattleScript_EffectSafeguard::
 	setsafeguard
 	goto BattleScript_PrintReflectLightScreenSafeguardString
 
-BattleScript_EffectBatonPass::
+BattleScript_EffectVanilla::
 	attackcanceler
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
-	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+	goto BattleScript_MoveEnd
+
+BattleScript_MoveSwitchOut::
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
 	openpartyscreen BS_ATTACKER, BattleScript_ButItFailed
@@ -2230,7 +2224,7 @@ BattleScript_EffectBatonPass::
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectMorningSun::
 BattleScript_EffectSynthesis::
@@ -2339,20 +2333,7 @@ BattleScript_EffectFutureSight::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTeleport::
-	jumpifgenconfiglowerthan CONFIG_B_TELEPORT_BEHAVIOR, GEN_8, BattleScript_EffectTeleportGen7
-	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_EffectBatonPass
-	jumpifside BS_ATTACKER, B_SIDE_PLAYER, BattleScript_EffectBatonPass
-	goto BattleScript_DoEffectTeleport
-BattleScript_EffectTeleportGen7::
-	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_FailedFromAtkCanceler
-BattleScript_DoEffectTeleport::
-	attackcanceler
-	isrunningimpossible
-	jumpifbyte CMP_EQUAL, gBattleCommunication, BATTLE_RUN_FORBIDDEN, BattleScript_ButItFailed
-	jumpifbyte CMP_EQUAL, gBattleCommunication, BATTLE_RUN_FAILURE, BattleScript_PrintAbilityMadeIneffective
-	attackanimation
-	waitanimation
+BattleScript_Teleport::
 	printstring STRINGID_PKMNFLEDFROMBATTLE
 	waitmessage B_WAIT_TIME_LONG
 	setteleportoutcome BS_ATTACKER
