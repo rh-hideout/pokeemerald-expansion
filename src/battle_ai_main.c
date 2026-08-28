@@ -857,8 +857,7 @@ static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersC
         .terrain = gFieldTimers.terrain,
     };
 
-    // Form Change might overwrite abilities
-    enum Ability storedAbilities[MAX_BATTLERS_COUNT] = { ABILITY_NONE };
+    enum Ability storedAbilities[MAX_BATTLERS_COUNT] = { ABILITY_NONE }; // Form Change might overwrite abilities
     enum Species currSpecies[MAX_BATTLERS_COUNT] = { SPECIES_NONE };
     enum Gimmick gimmick[MAX_BATTLERS_COUNT] = { GIMMICK_NONE };
 
@@ -890,15 +889,14 @@ static void SetUpBattlersForDamageCalc(struct AiLogicData *aiData, u32 battlersC
 
     SetUpAttackerForDamageCalc(&aiCalc, aiData, battlersCount);
 
-    // Revert gimmick and restore changes values
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
-        if (gimmick[battler] != GIMMICK_NONE)
+        if (gimmick[battler] != GIMMICK_NONE) // Revert form and deactivate gimmick
         {
             SetActiveGimmick(battler, GIMMICK_NONE);
             TryBattleFormChange(battler, FORM_CHANGE_END_BATTLE, gBattleMons[battler].ability);
         }
-        aiData->abilities[battler] = storedAbilities[battler];
+        aiData->abilities[battler] = storedAbilities[battler]; // Restore old ability
     }
 }
 

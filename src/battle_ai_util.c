@@ -5254,6 +5254,7 @@ void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use)
 struct AltTeraCalcs
 {
     struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
+    struct SimulatedDamage takenWithoutTera[MAX_MON_MOVES];
     struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
 };
 
@@ -5294,25 +5295,30 @@ void DecideTerastal(enum BattlerId battler)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        // Ai damage without tera
         aiCalc.move = aiMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.dealtWithoutTera[moveIndex] = noDmg;
         if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalc.move))
             altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc, battler, opposingBattler);
-        else
-            altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
-        SetActiveGimmick(battler, GIMMICK_TERA);
-        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        // Opposing mon damage (player) without tera
         aiCalc.move = oppMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.takenWithoutTera[moveIndex] = noDmg;
+        if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
+            altCalcs.takenWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc, opposingBattler, battler);
+
+        // Opposing mon damage (player) with tera
+        SetActiveGimmick(battler, GIMMICK_TERA);
+        aiCalc.move = oppMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.takenWithTera[moveIndex] = noDmg;
+        effectivenessTakenWithTera[moveIndex] = Q_4_12(0.0);
         if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
         {
             altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalc, opposingBattler, battler);
             effectivenessTakenWithTera[moveIndex] = aiCalc.typeEffectiveness;
-        }
-        else
-        {
-            altCalcs.takenWithTera[moveIndex] = noDmg;
-            effectivenessTakenWithTera[moveIndex] = Q_4_12(0.0);
         }
         SetActiveGimmick(battler, GIMMICK_NONE);
     }
@@ -5342,7 +5348,7 @@ void DecideTerastal(enum BattlerId battler)
 #define dealtWithTera gAiLogicData->simulatedDmg[battler][opposingBattler]
 #define dealtWithoutTera altCalcs->dealtWithoutTera
 #define takenWithTera altCalcs->takenWithTera
-#define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
+#define takenWithoutTera altCalcs->takenWithoutTera
 
 enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerId opposingBattler, struct AltTeraCalcs *altCalcs)
 {
