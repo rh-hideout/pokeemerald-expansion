@@ -268,11 +268,39 @@ static bool32 Test_BattlersShareParty(enum BattlerId battlerId1, enum BattlerId 
     return Test_GetBattlerTrainer(battlerId1) == Test_GetBattlerTrainer(battlerId2);
 }
 
+static void InitTestBattlers(const struct BattleTest *test)
+{
+    switch (test->type)
+    {
+    case BATTLE_TEST_SINGLES:
+    case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
+    case BATTLE_TEST_AI_SINGLES:
+        STATE->battlersCount = 2;
+        break;
+    case BATTLE_TEST_DOUBLES:
+    case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_MULTI:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWO_VS_ONE:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
+        STATE->battlersCount = MAX_BATTLERS_COUNT;
+        break;
+    }
+
+    gBattlersCount = STATE->battlersCount;
+    for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+        gBattlerPositions[battler] = battler < gBattlersCount ? battler : B_POSITION_ABSENT;
+}
+
 static u32 BattleTest_EstimateCost(void *data)
 {
     u32 cost;
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     STATE->runRandomly = TRUE;
     ResetStartingStatuses();
     InvokeTestFunction(test);
@@ -290,6 +318,7 @@ static void BattleTest_SetUp(void *data)
 {
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -298,25 +327,6 @@ static void BattleTest_SetUp(void *data)
         Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "OOM: STATE (%d) + STATE->results (%d) too big for sBackupMapData (%d)", sizeof(*STATE), test->resultsSize * STATE->parameters, sizeof(sBackupMapData));
     STATE->results = (void *)((char *)sBackupMapData + sizeof(struct BattleTestRunnerState));
     memset(STATE->results, 0, test->resultsSize * STATE->parameters);
-    switch (test->type)
-    {
-    case BATTLE_TEST_SINGLES:
-    case BATTLE_TEST_WILD:
-    case BATTLE_TEST_GHOST:
-    case BATTLE_TEST_AI_SINGLES:
-        STATE->battlersCount = 2;
-        break;
-    case BATTLE_TEST_DOUBLES:
-    case BATTLE_TEST_AI_DOUBLES:
-    case BATTLE_TEST_MULTI:
-    case BATTLE_TEST_AI_MULTI:
-    case BATTLE_TEST_TWO_VS_ONE:
-    case BATTLE_TEST_AI_TWO_VS_ONE:
-    case BATTLE_TEST_ONE_VS_TWO:
-    case BATTLE_TEST_AI_ONE_VS_TWO:
-        STATE->battlersCount = 4;
-        break;
-    }
     STATE->hasTornDownBattle = FALSE;
 }
 
@@ -373,6 +383,16 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
@@ -384,6 +404,7 @@ static void StartBattle(void)
         gMain.savedCallback = CB2_BattleTest_NextParameter;
     else
         gMain.savedCallback = CB2_TestRunner;
+    ResetTestInventory();
     SetMainCallback2(CB2_InitBattle);
 
     STATE->checkProgressParameter = 0;
@@ -401,6 +422,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    InitTestBattlers(test);
     TestInitConfigData();
 
     DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS;
@@ -2153,16 +2175,6 @@ static inline rng_value_t MakeRngValue(const u16 seed)
     return result;
 }
 
-static void ResetTestInventory()
-{
-    ClearBag();
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
-    {
-        if (DATA.inventory[i].itemId != ITEM_NONE)
-            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
-    }
-}
-
 static void CB2_BattleTest_NextTrial(void)
 {
     TearDownBattle();
@@ -2945,43 +2957,38 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
     else
     {
         enum MoveTarget moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == TARGET_RANDOM
-         || moveTarget == TARGET_BOTH
-         || moveTarget == TARGET_DEPENDS
-         || moveTarget == TARGET_FOES_AND_ALLY
-         || moveTarget == TARGET_OPPONENTS_FIELD)
+        switch (moveTarget)
         {
-            target = BATTLE_OPPOSITE(battlerId);
-        }
-        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
-        {
+        case TARGET_RANDOM:
+        case TARGET_BOTH:
+        case TARGET_DEPENDS:
+        case TARGET_FOES_AND_ALLY:
+        case TARGET_OPPONENTS_FIELD:
+        case TARGET_USER:
+        case TARGET_ALL_BATTLERS:
+        case TARGET_FIELD:
+        case TARGET_USER_AND_ALLY:
+        case TARGET_ALLY:
+            break;
+        case TARGET_SELECTED:
+        case TARGET_SMART:
+        case TARGET_OPPONENT:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
-
-            target = BATTLE_OPPOSITE(battlerId);
-        }
-        else if (moveTarget == TARGET_USER
-              || moveTarget == TARGET_ALL_BATTLERS
-              || moveTarget == TARGET_FIELD
-              || moveTarget == TARGET_USER_AND_ALLY)
-        {
-            target = battlerId;
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            target = BATTLE_PARTNER(battlerId);
-        }
-        else
-        {
+            break;
+        default:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID("%S requires explicit target", GetMoveName(moveId));
             }
+            break;
         }
+
+        target = GetDefaultSelectionTarget(battlerId, moveTarget);
     }
     return target;
 }
@@ -3125,7 +3132,8 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     if (!ctx.explicitAllowed || ctx.allowed)
     {
         PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, moveSlot);
-        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET, target);
+        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET,
+                          ctx.explicitTarget ? target : RECORDED_TARGET_DEFAULT);
     }
 
     if (ctx.explicitPartyIndex)
@@ -3239,7 +3247,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-        target = BATTLE_OPPOSITE(battlerId);
+        target = (battlerId ^ BIT_SIDE);
     }
     else
     {
