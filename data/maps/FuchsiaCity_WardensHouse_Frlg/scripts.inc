@@ -15,6 +15,7 @@ FuchsiaCity_WardensHouse_Frlg_EventScript_FireStone::
     giveitem ITEM_FIRE_STONE
     goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
     setflag FLAG_ITEM_FUCHSIA_WARDEN_FIRE_STONE
+    removeobject LOCALID_FUCHSIA_WARDEN_FIRE_STONE
     release
     end
 

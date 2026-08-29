@@ -42,21 +42,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_WardensHouse_Frlg_EventScript_FireStone",
-      "flag": "FLAG_ITEM_FUCHSIA_WARDEN_FIRE_STONE"
-    },
-    {
-      "type": "object",
-      "graphics_id": "0",
-      "x": 4,
-      "y": 1,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0"
+      "flag": "FLAG_ITEM_FUCHSIA_WARDEN_FIRE_STONE",
+      "local_id": "LOCALID_FUCHSIA_WARDEN_FIRE_STONE"
     }
   ],
   "warp_events": [
