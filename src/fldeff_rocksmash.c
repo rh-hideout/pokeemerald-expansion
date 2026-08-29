@@ -167,9 +167,6 @@ static void FieldMove_RockSmash(void)
     ScriptContext_Enable();
 }
 
-#define LENGTH_DEFAULT_SMASH_TABLE 11
-#define LENGTH_FOSSIL_SMASH_TABLE 7
-
 static const enum Item DefaultSmashTable[] = {
     ITEM_STAR_PIECE,
     ITEM_HARD_STONE,
