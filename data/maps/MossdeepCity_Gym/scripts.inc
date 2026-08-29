@@ -372,7 +372,7 @@ MossdeepCity_Gym_EventScript_RedFloorSwitch::
 MossdeepCity_Gym_Text_GymGuideAdvice:
 	.string "Yo, how's it going, CHAMPION-bound\n"
 	.string "{PLAYER}?\p"
-	.string "The GYM LEADERS here use\n"
+	.string "The KEEPERS here use\n"
 	.string "PSYCHIC-type POKéMON.\p"
 	.string "If you go up against them with\n"
 	.string "FIGHTING- or POISON-type POKéMON,\l"
@@ -407,7 +407,7 @@ MossdeepCity_Gym_Text_VirgilDefeat:
 
 MossdeepCity_Gym_Text_VirgilPostBattle:
 	.string "If there are prodigies in the world,\n"
-	.string "then our GYM LEADERS are them!\p"
+	.string "then our KEEPERS are them!\p"
 	.string "However, you may be even more talented\n"
 	.string "than them…$"
 
@@ -456,7 +456,7 @@ MossdeepCity_Gym_Text_SamanthaDefeat:
 
 MossdeepCity_Gym_Text_SamanthaPostBattle:
 	.string "You will wage a terrifically intense\n"
-	.string "battle with our GYM LEADERS…\p"
+	.string "battle with our KEEPERS…\p"
 	.string "The result…\n"
 	.string "You won't hear it from me!$"
 
@@ -553,8 +553,8 @@ MossdeepCity_Gym_Text_NicholasPostBattle:
 MossdeepCity_Gym_Text_TateAndLizaIntro:
 	.string "TATE: Hehehe… Were you surprised?\p"
 	.string "LIZA: Fufufu… Were you surprised?\p"
-	.string "TATE: That there are two GYM LEADERS?\n"
-	.string "LIZA: That there are two GYM LEADERS?\p"
+	.string "TATE: That there are two KEEPERS?\n"
+	.string "LIZA: That there are two KEEPERS?\p"
 	.string "TATE: We're twins!\n"
 	.string "LIZA: We're twins!\p"
 	.string "TATE: We don't need to talk because…\n"
@@ -591,7 +591,7 @@ MossdeepCity_Gym_Text_ExplainCalmMind:
 	.string "… … … … … …$"
 
 MossdeepCity_Gym_Text_RegisteredTateAndLiza:
-	.string "Registered GYM LEADERS TATE & LIZA\n"
+	.string "Registered KEEPERS TATE & LIZA\n"
 	.string "in the POKéNAV.$"
 
 MossdeepCity_Gym_Text_TateAndLizaPostBattle:
@@ -603,7 +603,7 @@ MossdeepCity_Gym_Text_TateAndLizaPostBattle:
 
 MossdeepCity_Gym_Text_TateAndLizaNeedTwoMons:
 	.string "TATE: Hehehe… Were you surprised?\p"
-	.string "LIZA: That there are two GYM LEADERS?\p"
+	.string "LIZA: That there are two KEEPERS?\p"
 	.string "TATE: Oops, you have only one…\n"
 	.string "LIZA: POKéMON that can battle.\p"
 	.string "TATE: We can't battle that way!\p"
@@ -611,10 +611,10 @@ MossdeepCity_Gym_Text_TateAndLizaNeedTwoMons:
 	.string "bring some more POKéMON.$"
 
 MossdeepCity_Gym_Text_GymStatue:
-	.string "MOSSDEEP CITY POKéMON GYM$"
+	.string "MOSSDEEP CITY SHRINE$"
 
 MossdeepCity_Gym_Text_GymStatueCertified:
-	.string "MOSSDEEP CITY POKéMON GYM\p"
+	.string "MOSSDEEP CITY SHRINE\p"
 	.string "LIZA AND TATE'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
 

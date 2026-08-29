@@ -1,0 +1,123 @@
+@ =============================================================================
+@ ROUTE 109 - SEASHORE HOUSE
+@
+@ Former vanilla Soda Pop battle house.
+@ Repurposed for custom Twelve / Six story.
+@
+@ Slateport lore state:
+@   3 = Parent has sent PLAYER here
+@   4 = Book/machine activated; Saffron memory entered
+@ =============================================================================
+
+Route109_SeashoreHouse_MapScripts::
+        map_script MAP_SCRIPT_ON_TRANSITION, Route109_SeashoreHouse_OnTransition
+        .byte 0
+
+
+Route109_SeashoreHouse_OnTransition:
+        setflag FLAG_LANDMARK_SEASHORE_HOUSE
+        end
+
+
+@ =============================================================================
+@ BEACH HOUSE ENTRANCE REACTION
+@ =============================================================================
+
+Route109_SeashoreHouse_EventScript_EntranceThought::
+        lockall
+
+        @ The two entrance tiles share this script.
+        @ Once Casey has reacted, silently ignore the other one.
+        goto_if_set FLAG_SEASHORE_HOUSE_INTRO_SEEN, Route109_SeashoreHouse_EventScript_EntranceThoughtDone
+
+        setflag FLAG_SEASHORE_HOUSE_INTRO_SEEN
+
+        delay 15
+
+        msgbox Route109_SeashoreHouse_Text_PlayerBeachHouse, MSGBOX_DEFAULT
+        closemessage
+
+Route109_SeashoreHouse_EventScript_EntranceThoughtDone:
+        releaseall
+        end
+
+
+Route109_SeashoreHouse_Text_PlayerBeachHouse:
+        .string "{PLAYER}: ...A beach house.\p"
+        .string "This is where everyone wanted me\n"
+        .string "to go?\p"
+        .string "...Yeah. Not suspicious at all.$"
+
+
+@ =============================================================================
+@ THE MACHINE / BOOK REACTION
+@ =============================================================================
+
+Route109_SeashoreHouse_EventScript_BookMachine::
+        lockall
+
+        delay 20
+
+        msgbox Route109_SeashoreHouse_Text_SomethingMovesInBag, MSGBOX_DEFAULT
+        closemessage
+
+        delay 15
+
+        msgbox Route109_SeashoreHouse_Text_PlayerConfused, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        msgbox Route109_SeashoreHouse_Text_BookWarm, MSGBOX_DEFAULT
+        closemessage
+
+        playse SE_PIN
+        delay 20
+
+        msgbox Route109_SeashoreHouse_Text_MachineResponds, MSGBOX_DEFAULT
+        closemessage
+
+        delay 20
+
+        msgbox Route109_SeashoreHouse_Text_PlayerOfCourse, MSGBOX_DEFAULT
+        closemessage
+
+        @ Retire the trigger before leaving.
+        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 4
+
+        fadescreen FADE_TO_BLACK
+        delay 30
+
+        @ Enter Saffron Dojo just above its normal exit.
+        warp MAP_SAFFRON_CITY_DOJO, 6, 13
+
+        waitstate
+        end
+
+
+@ =============================================================================
+@ TEXT
+@ =============================================================================
+
+Route109_SeashoreHouse_Text_SomethingMovesInBag:
+        .string "Something shifts inside your BAG...$"
+
+
+Route109_SeashoreHouse_Text_PlayerConfused:
+        .string "{PLAYER}: ...?$"
+
+
+Route109_SeashoreHouse_Text_BookWarm:
+        .string "The strange book feels warm.\p"
+        .string "A faint light passes across its\n"
+        .string "cover.$"
+
+
+Route109_SeashoreHouse_Text_MachineResponds:
+        .string "A low hum fills the room.\p"
+        .string "The machine is responding to the\n"
+        .string "book...$"
+
+
+Route109_SeashoreHouse_Text_PlayerOfCourse:
+        .string "{PLAYER}: Oh, come ON.$"

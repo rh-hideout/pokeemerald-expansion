@@ -50,14 +50,63 @@ SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
 	waitmovement 0
 	msgbox SlateportCity_OceanicMuseum_2F_Text_CameToSeeWhatsTakingSoLong, MSGBOX_DEFAULT
 	closemessage
+
+        @ Sabrina follows Archie into the museum.
+        addobject LOCALID_OCEANIC_MUSEUM_2F_SABRINA
+        applymovement LOCALID_OCEANIC_MUSEUM_2F_SABRINA, SlateportCity_OceanicMuseum_2F_Movement_SabrinaEnter
+        waitmovement 0
+
+        @ Archie and Sabrina face each other for their exchange.
+        applymovement LOCALID_OCEANIC_MUSEUM_2F_ARCHIE, Common_Movement_WalkInPlaceFasterLeft
+        applymovement LOCALID_OCEANIC_MUSEUM_2F_SABRINA, Common_Movement_WalkInPlaceFasterRight
+        waitmovement 0
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieWorthTheTrouble, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaSomethingWorthFinding, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieNotSameThing, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaNoItIsnt, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieTalkingCircles, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaBreakingMuseums, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieFairEnough, MSGBOX_DEFAULT
+        closemessage
+
 	applymovement LOCALID_OCEANIC_MUSEUM_2F_ARCHIE, SlateportCity_OceanicMuseum_2F_Movement_ArchieApproachPlayer
 	waitmovement 0
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaWait, MSGBOX_DEFAULT
+        closemessage
+
+        applymovement LOCALID_OCEANIC_MUSEUM_2F_SABRINA, Common_Movement_WalkInPlaceFasterRight
+        waitmovement 0
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaInteresting, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_2F_Text_SabrinaHandleBusiness, MSGBOX_DEFAULT
+        closemessage
+
 	msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieWarning, MSGBOX_DEFAULT
 	closemessage
 	savebgm MUS_DUMMY
 	fadedefaultbgm
 	fadescreen FADE_TO_BLACK
 	removeobject LOCALID_OCEANIC_MUSEUM_2F_ARCHIE
+        removeobject LOCALID_OCEANIC_MUSEUM_2F_SABRINA
 	removeobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1
 	removeobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2
 	fadescreen FADE_FROM_BLACK
@@ -139,6 +188,18 @@ SlateportCity_OceanicMuseum_2F_Movement_Unused:
 	walk_up
 	delay_8
 	step_end
+
+SlateportCity_OceanicMuseum_2F_Movement_SabrinaEnter:
+        walk_down
+        walk_down
+        walk_down
+        walk_down
+        walk_down
+        walk_right
+        walk_right
+        walk_right
+        walk_in_place_faster_right
+        step_end
 
 SlateportCity_OceanicMuseum_2F_Movement_ArchieApproachPlayer:
 	walk_right
@@ -315,6 +376,46 @@ SlateportCity_OceanicMuseum_2F_Text_CameToSeeWhatsTakingSoLong:
 	.string "I came to see what was taking so\n"
 	.string "long to snatch some parts, and you\l"
 	.string "simps are held up by a mere child?$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieWorthTheTrouble:
+        .string "ARCHIE: You said this would be worth\n"
+        .string "the trouble.$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaSomethingWorthFinding:
+        .string "SABRINA: I said there was something\n"
+        .string "here worth finding.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieNotSameThing:
+        .string "ARCHIE: That's not the same thing.$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaNoItIsnt:
+        .string "SABRINA: No.\n"
+        .string "It isn't.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieTalkingCircles:
+        .string "ARCHIE: You really enjoy talking in\n"
+        .string "circles, don't you?$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaBreakingMuseums:
+        .string "SABRINA: And you enjoy breaking into\n"
+        .string "museums.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieFairEnough:
+        .string "ARCHIE: ...Fair enough.$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaWait:
+        .string "SABRINA: Wait.$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaInteresting:
+        .string "SABRINA: ...\p"
+        .string "Interesting.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieWhat:
+        .string "ARCHIE: What?$"
+
+SlateportCity_OceanicMuseum_2F_Text_SabrinaHandleBusiness:
+        .string "SABRINA: Nothing.\p"
+        .string "Handle your business.$"
 
 SlateportCity_OceanicMuseum_2F_Text_ArchieWarning:
 	.string "We are TEAM AQUA,\n"

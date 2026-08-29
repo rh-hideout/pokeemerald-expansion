@@ -6,7 +6,7 @@ RustboroCity_MapScripts::
 
 RustboroCity_OnTransition:
 	setflag FLAG_VISITED_RUSTBORO_CITY
-        call_if_set FLAG_CERULEAN_MISSION_COMPLETE, RustboroCity_EventScript_HideCeruleanGroup
+        call_if_set FLAG_CERULEAN_MISSION_COMPLETE, RustboroCity_EventScript_ManagePostCeruleanGroup
     call_if_eq VAR_RUSTBORO_CITY_STATE, 0, RustboroCity_EventScript_ArmDevonGoods
 	call_if_eq VAR_RUSTBORO_CITY_STATE, 6, RustboroCity_EventScript_HideMapNamePopup
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
@@ -19,10 +19,32 @@ RustboroCity_EventScript_ArmDevonGoods::
 
 
 
-RustboroCity_EventScript_HideCeruleanGroup::
+RustboroCity_EventScript_ManagePostCeruleanGroup::
+    @ Outdoor Roxanne is permanently finished here.
+    setflag FLAG_HIDE_RUSTBORO_CITY_ROXANNE
+
+    @ Finale already played: keep Misty + counterpart gone.
+    goto_if_set FLAG_RUSTBORO_SHRINE_FINALE_DONE, RustboroCity_EventScript_HidePostCeruleanGroup
+
+    @ Before Roxanne is defeated, keep them hidden.
+    goto_if_unset FLAG_DEFEATED_RUSTBORO_GYM, RustboroCity_EventScript_HidePostCeruleanGroup
+
+    @ Roxanne defeated + finale not played = stage the ending.
+    goto RustboroCity_EventScript_StageShrineFinale
+
+RustboroCity_EventScript_HidePostCeruleanGroup::
     setflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
     setflag FLAG_HIDE_RUSTBORO_CITY_MISTY
-    setflag FLAG_HIDE_RUSTBORO_CITY_ROXANNE
+    return
+
+RustboroCity_EventScript_StageShrineFinale::
+    setobjectxyperm LOCALID_RUSTBORO_RIVAL, 27, 23
+    setobjectxyperm LOCALID_RUSTBORO_MISTY, 29, 23
+
+    clearflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
+    clearflag FLAG_HIDE_RUSTBORO_CITY_MISTY
+
+    setvar VAR_RUSTBORO_CITY_STATE, 10
     return
 
 RustboroCity_SetCounterpartGraphics:
@@ -148,6 +170,156 @@ RustboroCity_EventScript_MatchCallTutorial::
     releaseall
     end
 
+@ ============================================================
+@ RUSTBORO SHRINE FINALE
+@ Cerulean complete + Roxanne defeated
+@ ============================================================
+
+RustboroCity_EventScript_ShrineFinale::
+    lockall
+
+    applymovement LOCALID_PLAYER, Common_Movement_FaceDown
+    applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_FaceUp
+    applymovement LOCALID_RUSTBORO_MISTY, Common_Movement_FaceUp
+    waitmovement 0
+
+    msgbox RustboroCity_Text_MistyFinaleThereYouAre, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyFinaleActuallyMeant, MSGBOX_DEFAULT
+    closemessage
+
+    @ Intentionally appears to be another EXP. SHARE.
+    checkitemspace ITEM_EXP_ALL
+    goto_if_eq VAR_RESULT, FALSE, RustboroCity_EventScript_ShrineFinaleNoRoom
+    giveitem ITEM_EXP_ALL
+
+    @ The real difference: permanent party-wide EXP.
+    setflag FLAG_EXP_ALL_ENABLED
+
+    msgbox RustboroCity_Text_MistyFinaleLooksSame, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyFinaleLuckyDay, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_CounterpartSuspicious, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox RustboroCity_Text_MistyYoureWelcome, MSGBOX_DEFAULT
+    closemessage
+
+    @ Misty stays in Rustboro instead of floating away.
+    msgbox RustboroCity_Text_MistyStayingInRustboro, MSGBOX_DEFAULT
+    closemessage
+
+    @ Counterpart gets the last word.
+    applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_FaceUp
+    waitmovement 0
+
+    msgbox RustboroCity_Text_CounterpartFinalRustboro, MSGBOX_DEFAULT
+    closemessage
+
+    applymovement LOCALID_RUSTBORO_RIVAL, RustboroCity_Movement_CounterpartFinaleLeave
+    waitmovement 0
+    setflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
+    removeobject LOCALID_RUSTBORO_RIVAL
+
+    setflag FLAG_RUSTBORO_SHRINE_FINALE_DONE
+    setvar VAR_RUSTBORO_CITY_STATE, 11
+
+    releaseall
+    end
+
+RustboroCity_EventScript_ShrineFinaleNoRoom::
+    msgbox RustboroCity_Text_MistyFinaleNoRoom, MSGBOX_DEFAULT
+
+    @ Prevent an immediate OnFrame loop.
+    setflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
+    setflag FLAG_HIDE_RUSTBORO_CITY_MISTY
+    removeobject LOCALID_RUSTBORO_RIVAL
+    removeobject LOCALID_RUSTBORO_MISTY
+    setvar VAR_RUSTBORO_CITY_STATE, 11
+
+    releaseall
+    end
+
+
+RustboroCity_Movement_MistyFinaleLeave:
+    walk_down
+    walk_down
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    step_end
+
+RustboroCity_Movement_CounterpartFinaleLeave:
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_down
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    step_end
+
+
+RustboroCity_Text_MistyFinaleThereYouAre:
+    .string "MISTY: Oh! There you are.\p"
+    .string "Took you long enough.$"
+
+RustboroCity_Text_MistyFinaleActuallyMeant:
+    .string "MISTY: Before I forget...\p"
+    .string "I actually meant to give you THIS\n"
+    .string "earlier.$"
+
+RustboroCity_Text_MistyFinaleLooksSame:
+    .string "MISTY: I know, I know.\p"
+    .string "It looks like I gave you the same\n"
+    .string "thing twice.\p"
+    .string "I didn't.\p"
+    .string "Just go check your BAG.$"
+
+RustboroCity_Text_MistyFinaleLuckyDay:
+    .string "MISTY: Besides, you beat ROXANNE,\n"
+    .string "too.\p"
+    .string "Might as well give you something for\n"
+    .string "that, right?\p"
+    .string "It's your lucky day.\n"
+    .string "You should be ecstatic.$"
+
+RustboroCity_Text_CounterpartSuspicious:
+    .string "{RIVAL}: That sounds incredibly\n"
+    .string "suspicious.$"
+
+RustboroCity_Text_MistyYoureWelcome:
+    .string "MISTY: You're welcome.$"
+
+RustboroCity_Text_MistyStayingInRustboro:
+    .string "MISTY: I think I'll hang around here\n"
+    .string "for a while.\p"
+    .string "I've got a whole house here anyway.\p"
+    .string "Might as well console my brainiac\n"
+    .string "little cousin while I'm at it.\p"
+    .string "It's been...well, interesting, if\n"
+    .string "nothing else.\p"
+    .string "See ya around!$"
+
+RustboroCity_Text_CounterpartFinalRustboro:
+    .string "{RIVAL}: You know...\p"
+    .string "For something that started with\n"
+    .string "pancakes, that got wildly out of hand.\p"
+    .string "I'll see you around.$"
+
+RustboroCity_Text_MistyFinaleNoRoom:
+    .string "MISTY: Seriously?\p"
+    .string "Go make some room in your BAG and\n"
+    .string "come back.$"
+
+
 RustboroCity_EventScript_MistyRoxanneIntro::
     lockall
 
@@ -261,7 +433,7 @@ RustboroCity_EventScript_MistyRoxanneIntro::
 
 
     @ =========================================================
-    @ COUNTERPART: "...SO ANYWAY. PANCAKES."
+    @ {RIVAL}: "...SO ANYWAY. PANCAKES."
     @ Everyone's attention shifts downward toward counterpart.
     @ =========================================================
 
@@ -1306,15 +1478,15 @@ RustboroCity_Text_SneakyLookingManWentAroundCorner:
 	.string "looking guy went around the corner.$"
 
 RustboroCity_Text_HaveYouChallengedGym:
-	.string "Have you taken the POKéMON GYM\n"
+	.string "Have you taken the SHRINE\n"
 	.string "challenge?\p"
-	.string "When you get that shiny GYM BADGE\n"
+	.string "When you get that shiny FRAGMENT\n"
 	.string "in hand, I guess TRAINERS begin to\l"
 	.string "realize what is required of them.$"
 
 RustboroCity_Text_HeyThatsRustborosGymBadge:
-	.string "Hey, that's RUSTBORO's GYM BADGE!\p"
-	.string "Out of all the POKéMON GYM BADGES,\n"
+	.string "Hey, that's RUSTBORO's FRAGMENT!\p"
+	.string "Out of all the POKéMON FRAGMENTS,\n"
 	.string "RUSTBORO's is the coolest, I'd say.$"
 
 RustboroCity_Text_YoureNewAroundHere:
@@ -1324,7 +1496,7 @@ RustboroCity_Text_YoureNewAroundHere:
 	.string "POKéMON TRAINER'S SCHOOL?$"
 
 RustboroCity_Text_GymLeaderIsntEasyWithFire:
-	.string "I challenged the GYM LEADER, but…\p"
+	.string "I challenged the KEEPER, but…\p"
 	.string "It's not going to be easy winning with\n"
 	.string "my FIRE-type POKéMON…\p"
 	.string "FIRE-type POKéMON don't match up\n"
@@ -1366,7 +1538,7 @@ RustboroCity_Text_PokemonChangeShape:
 RustboroCity_Text_TradePokemonGrowFast:
 	.string "A POKéMON you get in a trade from\n"
 	.string "someone grows fast.\p"
-	.string "But if you don't have certain GYM\n"
+	.string "But if you don't have certain SHRINE\n"
 	.string "BADGES, it may not obey you…$"
 
 RustboroCity_Text_OutOfTheWay:
@@ -1408,7 +1580,7 @@ RustboroCity_Text_PleaseComeWithMe:
 	.string "Please come with me!$"
 
 RustboroCity_Text_MayHiLetsRegister:
-	.string "OAK'S GRANDCHILD: Oh, hi, {PLAYER}{KUN}!\p"
+	.string "{RIVAL}: Oh, hi, {PLAYER}{KUN}!\p"
 	.string "You had a MATCH CALL feature put\n"
 	.string "on your POKéNAV!\p"
 	.string "Let's register each other so we can\n"
@@ -1416,11 +1588,11 @@ RustboroCity_Text_MayHiLetsRegister:
 	.string "… … … … … …$"
 
 RustboroCity_Text_RegisteredMay:
-	.string "Registered OAK'S GRANDCHILD\n"
+	.string "Registered {RIVAL}\n"
 	.string "in the POKéNAV.$"
 
 RustboroCity_Text_MayPassedBrineyWantToBattle:
-	.string "OAK'S GRANDCHILD: Oh, by the way, I passed\n"
+	.string "{RIVAL}: Oh, by the way, I passed\n"
 	.string "MR. BRINEY in PETALBURG WOODS.\p"
 	.string "I guess he's on his way home to his\n"
 	.string "cottage by the sea.\p"
@@ -1430,17 +1602,17 @@ RustboroCity_Text_MayPassedBrineyWantToBattle:
 	.string "How about a little battle?$"
 
 RustboroCity_Text_MayOhHaventRaisedPokemonEnough:
-	.string "OAK'S GRANDCHILD: Oh, what's the matter?\p"
+	.string "{RIVAL}: Oh, what's the matter?\p"
 	.string "Haven't you caught or raised your\n"
 	.string "POKéMON very much?\p"
 	.string "That's not very good for a TRAINER!$"
 
 RustboroCity_Text_MayWantToBattle:
-	.string "OAK'S GRANDCHILD: So, what do you think?\n"
+	.string "{RIVAL}: So, what do you think?\n"
 	.string "How about a little battle here?$"
 
 RustboroCity_Text_MayImNotGoingToLose:
-	.string "OAK'S GRANDCHILD: You just became a TRAINER,\n"
+	.string "{RIVAL}: You just became a TRAINER,\n"
 	.string "{PLAYER}{KUN}. I'm not going to lose!$"
 
 RustboroCity_Text_MayDefeat:
@@ -1448,14 +1620,14 @@ RustboroCity_Text_MayDefeat:
 	.string "You're better than I expected!$"
 
 RustboroCity_Text_MayMrBrineyHint:
-	.string "OAK'S GRANDCHILD: Oh, by the way, MR. BRINEY, who\n"
+	.string "{RIVAL}: Oh, by the way, MR. BRINEY, who\n"
 	.string "I just passed…\p"
 	.string "{PLAYER}{KUN}, you just moved here so you\n"
 	.string "might not know this, but MR. BRINEY\l"
 	.string "was once a revered seafarer.$"
 
 RustboroCity_Text_BrendanHiLetsRegister:
-	.string "OAK'S GRANDCHILD: Oh, hey, {PLAYER}!\p"
+	.string "{RIVAL}: Oh, hey, {PLAYER}!\p"
 	.string "You had a MATCH CALL feature put\n"
 	.string "on your POKéNAV! Cool!\p"
 	.string "Let's register each other so we can\n"
@@ -1463,11 +1635,11 @@ RustboroCity_Text_BrendanHiLetsRegister:
 	.string "… … … … … …$"
 
 RustboroCity_Text_RegisteredBrendan:
-	.string "Registered OAK'S GRANDCHILD\n"
+	.string "Registered {RIVAL}\n"
 	.string "in the POKéNAV.$"
 
 RustboroCity_Text_BrendanPassedBrineyWantToBattle:
-	.string "OAK'S GRANDCHILD: By the way, {PLAYER}, I walked\n"
+	.string "{RIVAL}: By the way, {PLAYER}, I walked\n"
 	.string "by MR. BRINEY in PETALBURG WOODS.\p"
 	.string "I bet he was on his way home to his\n"
 	.string "cottage by the sea.\p"
@@ -1478,15 +1650,15 @@ RustboroCity_Text_BrendanPassedBrineyWantToBattle:
 	.string "far you've progressed?$"
 
 RustboroCity_Text_BrendanNoConfidenceInPokemon:
-	.string "OAK'S GRANDCHILD: What's the matter? Don't have\n"
+	.string "{RIVAL}: What's the matter? Don't have\n"
 	.string "any confidence in your POKéMON?$"
 
 RustboroCity_Text_BrendanWantToBattle:
-	.string "OAK'S GRANDCHILD: What's up?\n"
+	.string "{RIVAL}: What's up?\n"
 	.string "Want to have a battle with me?$"
 
 RustboroCity_Text_BrendanIWontGoEasy:
-	.string "OAK'S GRANDCHILD: I know you just became\n"
+	.string "{RIVAL}: I know you just became\n"
 	.string "a TRAINER, but I won't go easy!$"
 
 RustboroCity_Text_BrendanDefeat:
@@ -1494,7 +1666,7 @@ RustboroCity_Text_BrendanDefeat:
 	.string "You're pretty good.$"
 
 RustboroCity_Text_BrendanMrBrineyHint:
-	.string "OAK'S GRANDCHILD: By the way, you know\n"
+	.string "{RIVAL}: By the way, you know\n"
 	.string "MR. BRINEY? The guy I just passed?\p"
 	.string "I bet you didn't know this, since you\n"
 	.string "just moved here, {PLAYER}, but\l"
@@ -1513,8 +1685,8 @@ RustboroCity_Text_DevonCorpSign:
 	.string "it all.”$"
 
 RustboroCity_Text_GymSign:
-	.string "RUSTBORO CITY POKéMON GYM\n"
-	.string "LEADER: ROXANNE\p"
+	.string "RUSTBORO CITY SHRINE\n"
+	.string "KEEPER: ROXANNE\p"
 	.string "“The ROCK-loving honors student!”$"
 
 RustboroCity_Text_DevonCorpBranchOfficeSign:
@@ -1576,7 +1748,7 @@ RustboroCity_Text_WhatsGoingOnOverThere:
     .string "What is going on over there?$"
 
 RustboroCity_Text_CounterpartFancyMeeting:
-    .string "OAK'S GRANDCHILD: Hey!\n"
+    .string "{RIVAL}: Hey!\n"
     .string "Fancy meeting you here.$"
 
 RustboroCity_Text_PlayerWaiting:
@@ -1584,11 +1756,11 @@ RustboroCity_Text_PlayerWaiting:
     .string "forever.$"
 
 RustboroCity_Text_CounterpartSocializing:
-    .string "OAK'S GRANDCHILD: I've been socializing.\p"
+    .string "{RIVAL}: I've been socializing.\p"
     .string "Try it sometime.$"
 
 RustboroCity_Text_CounterpartMetThem:
-    .string "OAK'S GRANDCHILD: Oh!\n"
+    .string "{RIVAL}: Oh!\n"
     .string "That's MISTY and ROXANNE.\p"
     .string "I met them at HARD ROCK CAFE.\p"
     .string "We bonded over pancakes.$"
@@ -1597,7 +1769,7 @@ RustboroCity_Text_MistyPancakes:
     .string "MISTY: YOU bonded over pancakes.$"
 
 RustboroCity_Text_CounterpartPancakes:
-    .string "OAK'S GRANDCHILD: You had pancakes too!$"
+    .string "{RIVAL}: You had pancakes too!$"
 
 RustboroCity_Text_MistyRoxanneIntro:
     .string "MISTY: That's not why I was there.\p"
@@ -1614,7 +1786,7 @@ RustboroCity_Text_MistyBrainiac:
     .string "My little cousin's a brainiac.$"
 
 RustboroCity_Text_RoxanneShrineLeader:
-    .string "ROXANNE: I'm the SHRINE LEADER of\n"
+    .string "ROXANNE: I'm the KEEPER of\n"
     .string "RUSTBORO.\p"
     .string "I would hope I'm knowledgeable.$"
 
@@ -1625,7 +1797,7 @@ RustboroCity_Text_RoxanneTalk:
     .string "ROXANNE: You're one to talk.$"
 
 RustboroCity_Text_CounterpartAnyway:
-    .string "OAK'S GRANDCHILD: ...So anyway.\p"
+    .string "{RIVAL}: ...So anyway.\p"
     .string "Pancakes.$"
 
 RustboroCity_Text_MistyProblem:
@@ -1700,7 +1872,7 @@ RustboroCity_Text_MistyYep:
     .string "MISTY: Yep!$"
 
 RustboroCity_Text_CounterpartLooseEnds:
-    .string "OAK'S GRANDCHILD: Yeah, yeah.\n"
+    .string "{RIVAL}: Yeah, yeah.\n"
     .string "You go ahead.\p"
     .string "I've gotta tie up a couple loose\n"
     .string "ends here first.\p"
@@ -1710,12 +1882,12 @@ RustboroCity_Text_PlayerWhere:
     .string "{PLAYER}: Over where?$"
 
 RustboroCity_Text_CounterpartPause:
-    .string "OAK'S GRANDCHILD: ...\p"
+    .string "{RIVAL}: ...\p"
     .string "Good question.$"
 
 RustboroCity_Text_MistyGo:
     .string "MISTY: GO.$"
 
 RustboroCity_Text_CounterpartAfterIntroduction:
-    .string "OAK'S GRANDCHILD: Go ahead.\p"
+    .string "{RIVAL}: Go ahead.\p"
     .string "I'll catch up.$"

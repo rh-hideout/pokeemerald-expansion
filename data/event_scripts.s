@@ -1774,33 +1774,27 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 
 	.include "data/maps/HardRockCafe/scripts.inc"
 
-@ ===== Minimal Pewter FRLG map-script tables =====
-PewterCity_Frlg_MapScripts::
-    .byte 0
+@ ===== Pewter FRLG scripts =====
+.include "data/maps/PewterCity_Frlg/scripts.inc"
 
-PewterCity_Museum_1F_Frlg_MapScripts::
-    .byte 0
+@ ===== Minimal Pewter FRLG interior map-script tables =====
+.include "data/maps/PewterCity_Museum_1F_Frlg/scripts.inc"
 
-PewterCity_Museum_2F_Frlg_MapScripts::
-    .byte 0
+.include "data/maps/PewterCity_Museum_2F_Frlg/scripts.inc"
 
 PewterCity_Gym_Frlg_MapScripts::
     .byte 0
 
-PewterCity_Mart_Frlg_MapScripts::
-    .byte 0
+.include "data/maps/PewterCity_Mart_Frlg/scripts.inc"
 
-PewterCity_House1_Frlg_MapScripts::
-    .byte 0
+.include "data/maps/PewterCity_House1_Frlg/scripts.inc"
 
-PewterCity_PokemonCenter_1F_Frlg_MapScripts::
-    .byte 0
+.include "data/maps/PewterCity_PokemonCenter_1F_Frlg/scripts.inc"
 
 PewterCity_PokemonCenter_2F_Frlg_MapScripts::
     .byte 0
 
-PewterCity_House2_Frlg_MapScripts::
-    .byte 0
+.include "data/maps/PewterCity_House2_Frlg/scripts.inc"
 
 
 	.include "data/maps/OOSS/scripts.inc"

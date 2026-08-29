@@ -1379,9 +1379,9 @@ SootopolisCity_Movement_DestroyTask::
 	step_end
 
 SootopolisCity_Text_GymSign:
-	.string "SOOTOPOLIS CITY POKéMON GYM\n"
-	.string "LEADER: JUAN\p"
-	.string "“The GYM LEADER with the beauty\n"
+	.string "SOOTOPOLIS CITY SHRINE\n"
+	.string "KEEPER: JUAN\p"
+	.string "“The KEEPER with the beauty\n"
 	.string "of pure water!”$"
 
 SootopolisCity_Text_CitySign:
@@ -1690,7 +1690,7 @@ SootopolisCity_Text_ExplainWaterfallGoToGym:
 	.string "And where does one get the RAIN BADGE?\n"
 	.string "You know, don't you?\p"
 	.string "That's right! You have to beat\n"
-	.string "the SOOTOPOLIS GYM LEADER.\p"
+	.string "the SOOTOPOLIS KEEPER.\p"
 	.string "When you're all set to go, step through\n"
 	.string "that door.$"
 

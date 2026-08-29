@@ -68,6 +68,10 @@
 #define FLAG_COUNTERPART_BOOK_SCENE_DONE 0x2E
 #define FLAG_HIDE_HARD_ROCK_BLAINE    0x2F // Unused Flag
 #define FLAG_COUNTERPART_HOME_INVITE    0x30 // Unused Flag
+#define FLAG_HIDE_PEWTER_COUNTERPART    0x31
+#define FLAG_HIDE_PEWTER_SAVVY_COUNTERPART 0x32
+#define FLAG_HIDE_PEWTER_LANCE_COUNTERPART 0x15C
+#define FLAG_HIDE_PEWTER_DRAGONITE         0x15D
 #define FLAG_SEASHORE_HOUSE_INTRO_SEEN    0x33
 #define FLAG_SAFFRON_HISTORICAL_SABRINA_MET    0x34
 #define FLAG_SAFFRON_TWIN_SCENE_DONE          0x35
@@ -126,7 +130,7 @@
 #define FLAG_MOSSDEEP_GYM_SWITCH_3           0x66 //
 #define FLAG_MOSSDEEP_GYM_SWITCH_4           0x67 //
 
-#define FLAG_UNUSED_0x068                    0x68  // Unused Flag
+#define FLAG_BROCK_POST_WATTSON_CALL_DONE   0x68
 
 #define FLAG_OCEANIC_MUSEUM_MET_REPORTER     0x69
 #define FLAG_RECEIVED_HM_STRENGTH            0x6A
@@ -1514,11 +1518,11 @@
 #define FLAG_UNUSED_0x8EB                           (SYSTEM_FLAGS + 0x8B) // Unused Flag
 #define FLAG_UNUSED_0x8EC                           (SYSTEM_FLAGS + 0x8C) // Unused Flag
 #define FLAG_UNUSED_0x8ED                           (SYSTEM_FLAGS + 0x8D) // Unused Flag
-#define FLAG_UNUSED_0x8EE                           (SYSTEM_FLAGS + 0x8E) // Unused Flag
-#define FLAG_UNUSED_0x8EF                           (SYSTEM_FLAGS + 0x8F) // Unused Flag
-#define FLAG_UNUSED_0x8F0                           (SYSTEM_FLAGS + 0x90) // Unused Flag
-#define FLAG_UNUSED_0x8F1                           (SYSTEM_FLAGS + 0x91) // Unused Flag
-#define FLAG_UNUSED_0x8F2                           (SYSTEM_FLAGS + 0x92) // Unused Flag
+#define FLAG_HIDE_CERULEAN_INGREDIENT_COUNTERPART  (SYSTEM_FLAGS + 0x8E) // Counterpart leaves for library
+#define FLAG_HIDE_CERULEAN_GARY_TOUR_COUNTERPART   (SYSTEM_FLAGS + 0x8F) // Tour counterpart visibility
+#define FLAG_CERULEAN_GARY_TOUR_ARRIVED            (SYSTEM_FLAGS + 0x90) // Library walk finished; counterpart is with Gary
+#define FLAG_HIDE_FUCHSIA_GARY                     (SYSTEM_FLAGS + 0x91) // Gary leaves after Fuchsia transport
+#define FLAG_ITEM_FUCHSIA_WARDEN_FIRE_STONE        (SYSTEM_FLAGS + 0x92) // Fire Stone in Warden's house
 #define FLAG_UNUSED_0x8F3                           (SYSTEM_FLAGS + 0x93) // Unused Flag
 #define FLAG_UNUSED_0x8F4                           (SYSTEM_FLAGS + 0x94) // Unused Flag
 #define FLAG_UNUSED_0x8F5                           (SYSTEM_FLAGS + 0x95) // Unused Flag

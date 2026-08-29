@@ -313,7 +313,7 @@ Route109_EventScript_ChoseNotToSail::
 	end
 
 Route109_EventScript_SeashoreHouseGirl::
-	msgbox Route109_Text_ChillAtMyPapasSpot, MSGBOX_NPC
+	msgbox Route109_Text_SeashoreHouseGirlConfused, MSGBOX_NPC
 	end
 
 Route109_EventScript_SandCastleBoy::
@@ -512,18 +512,17 @@ Route109_Text_BrineyTellMeWhenYouNeedToSail:
 	.string "MR. BRINEY: You just tell me whenever\n"
 	.string "you need to set sail again!$"
 
-Route109_Text_ChillAtMyPapasSpot:
-	.string "Yo, TRAINERS!\n"
-	.string "Whether you're hot to trot,\l"
-	.string "or cool cat not,\l"
-	.string "chill at my papa's spot!$"
 
-Route109_Text_LittleKidsDartAround:
-	.string "Little kids can dart around so quickly…\p"
-	.string "You don't dare take your eyes off them\n"
-	.string "for an instant. It's very taxing.\p"
-	.string "Mine are with my POKéMON, so they\n"
-	.string "should be okay, but…$"
+Route109_Text_SeashoreHouseGirlConfused:
+
+        .string "I swear there used to be some\n"
+
+        .string "kind of SODA POP challenge here.\p"
+
+        .string "Now it just looks like an office.\p"
+
+        .string "Who puts an office on a beach?$"
+
 
 Route109_Text_SandCastleTakingLongTime:
 	.string "Our sand castle's taking a long time\n"
@@ -544,17 +543,24 @@ Route109_Text_ZigzagoonPicksUpLitter:
 	.string "But, I get my ZIGZAGOON to pick up\n"
 	.string "litter from the shoreline at times.\p"
 	.string "Dirty water becomes rain and joins our\n"
-	.string "rivers, which we drink from…\p"
+	.string "rivers, which we drink from...\p"
 	.string "If we pollute the sea, it all comes\n"
 	.string "back to haunt us eventually.$"
 
 Route109_Text_ZigzagoonCry:
 	.string "ZIGZAGOON: Guguu?$"
 
+
 Route109_Text_SeashoreHouseSign:
-	.string "SEASHORE HOUSE\p"
-	.string "“May hot battles rage on hot sands!\n"
-	.string "The place for hot TRAINERS!”$"
+
+        .string "SEASHORE HOUSE\p"
+
+        .string "The old lettering is faded.\p"
+
+        .string "Something about SODA POP\n"
+
+        .string "used to be written here.$"
+
 
 Route109_Text_TrainerTipsSign:
 	.string "TRAINER TIPS\p"
@@ -562,3 +568,10 @@ Route109_Text_TrainerTipsSign:
 	.string "always have identical stats.\p"
 	.string "POKéMON raised by TRAINERS are said\n"
 	.string "to grow stronger than wild POKéMON.$"
+
+Route109_Text_LittleKidsDartAround:
+        .string "Little kids can dart around so quickly...\p"
+        .string "You don't dare take your eyes off them\n"
+        .string "for an instant. It's very taxing.\p"
+        .string "Mine are with my POKéMON, so they\n"
+        .string "should be okay, but...$"

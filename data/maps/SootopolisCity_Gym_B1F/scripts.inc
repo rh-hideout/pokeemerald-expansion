@@ -53,7 +53,7 @@ SootopolisCity_Gym_B1F_EventScript_Daphne::
 
 SootopolisCity_Gym_B1F_Text_AndreaIntro:
 	.string "I'll show you the sublime techniques\n"
-	.string "I learned from our LEADER JUAN!$"
+	.string "I learned from our KEEPER JUAN!$"
 
 SootopolisCity_Gym_B1F_Text_AndreaDefeat:
 	.string "Please forgive me, JUAN…$"
@@ -105,16 +105,16 @@ SootopolisCity_Gym_B1F_Text_ConniePostBattle:
 	.string "need to walk on each floor tile once.$"
 
 SootopolisCity_Gym_B1F_Text_BridgetIntro:
-	.string "The POKéMON GYM of the highest level\n"
+	.string "The SHRINE of the highest level\n"
 	.string "in the HOENN region…\p"
-	.string "That's the SOOTOPOLIS GYM.$"
+	.string "That's the SOOTOPOLIS SHRINE.$"
 
 SootopolisCity_Gym_B1F_Text_BridgetDefeat:
 	.string "What a high level you are!$"
 
 SootopolisCity_Gym_B1F_Text_BridgetPostBattle:
 	.string "Rather than being satisfied by being\n"
-	.string "in a strong GYM, I imagine training in\l"
+	.string "in a strong SHRINE, I imagine training in\l"
 	.string "other places will make you stronger.\l"
 	.string "But above all, it looks more fun.$"
 
@@ -164,7 +164,7 @@ SootopolisCity_Gym_B1F_Text_AnnikaDefeat:
 	.string "at my POKéMON?$"
 
 SootopolisCity_Gym_B1F_Text_AnnikaPostBattle:
-	.string "I came to this GYM because JUAN\n"
+	.string "I came to this SHRINE because JUAN\n"
 	.string "praised me for my darling POKéMON.\p"
 	.string "Oh, if only I'd met JUAN years ago\n"
 	.string "when I was younger…$"

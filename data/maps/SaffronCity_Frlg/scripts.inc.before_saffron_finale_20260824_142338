@@ -1,0 +1,600 @@
+SaffronCity_Frlg_MapScripts::
+        map_script MAP_SCRIPT_ON_LOAD, SaffronCity_Frlg_SetMemoryTwinGraphics
+        map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_Frlg_OnTransition
+        .byte 0
+
+
+@ =============================================================================
+@ DYNAMIC SOL / XIE
+@
+@ Dad-raised path -> Xie
+@ Mom-raised path -> Sol
+@ =============================================================================
+
+SaffronCity_Frlg_SetMemoryTwinGraphics:
+        goto_if_set FLAG_HIDE_HOME_MOM, SaffronCity_Frlg_SetXieGraphics
+
+        setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_SOL
+        return
+
+SaffronCity_Frlg_SetXieGraphics:
+        setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_XIE
+        return
+
+
+@ =============================================================================
+@ VISIBILITY
+@ =============================================================================
+
+SaffronCity_Frlg_OnTransition:
+        @ Once the first outside scene has happened,
+        @ neither visitor should respawn on later Saffron loads.
+        goto_if_unset FLAG_SAFFRON_TWIN_SCENE_DONE, SaffronCity_Frlg_OnTransitionDone
+
+        setflag FLAG_HIDE_SAFFRON_MEMORY_TWIN
+        setflag FLAG_HIDE_SAFFRON_PRESENT_SABRINA
+
+        hideobjectat LOCALID_SAFFRON_MEMORY_TWIN, MAP_SAFFRON_CITY
+        hideobjectat LOCALID_SAFFRON_PRESENT_SABRINA, MAP_SAFFRON_CITY
+
+SaffronCity_Frlg_OnTransitionDone:
+        end
+
+
+@ =============================================================================
+@ OUTSIDE-GYM SCENE
+@ =============================================================================
+
+SaffronCity_Frlg_EventScript_TwinSabrinaScene::
+        @ First-scene trigger only.
+        @ Once completed, this tile becomes inert.
+        goto_if_unset FLAG_SAFFRON_HISTORICAL_SABRINA_MET, SaffronCity_Frlg_EventScript_TwinSabrinaDone
+        goto_if_set FLAG_SAFFRON_TWIN_SCENE_DONE, SaffronCity_Frlg_EventScript_TwinSabrinaDone
+
+        lockall
+
+        @ Buffer correct mystery-person name.
+        goto_if_set FLAG_HIDE_HOME_MOM, SaffronCity_Frlg_EventScript_BufferXieName
+
+        bufferstring STR_VAR_1, SaffronCity_Frlg_Text_NameSol
+        goto SaffronCity_Frlg_EventScript_TwinSabrinaContinue
+
+SaffronCity_Frlg_EventScript_BufferXieName:
+        bufferstring STR_VAR_1, SaffronCity_Frlg_Text_NameXie
+
+
+SaffronCity_Frlg_EventScript_TwinSabrinaContinue:
+        @ PLAYER notices the familiar stranger.
+        applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+        applymovement LOCALID_SAFFRON_MEMORY_TWIN, Common_Movement_WalkInPlaceFasterRight
+        waitmovement 0
+
+        msgbox SaffronCity_Frlg_Text_TwinYouAgain, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerSameQuestion, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinSentHere, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerMineToo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinKey, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerKeyToWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinHopedYouKnew, MSGBOX_DEFAULT
+        closemessage
+
+        @ PLAYER explains what the Dojo memory showed.
+        msgbox SaffronCity_Frlg_Text_PlayerExplainsMonths, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        msgbox SaffronCity_Frlg_Text_TwinSixDays, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerYeah, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinAreTheyDumb, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerThatsWhatISaid, MSGBOX_DEFAULT
+        closemessage
+
+        @ ====================================================
+        @ PRESENT SABRINA CRASHES THE MEMORY
+        @ ====================================================
+
+        clearflag FLAG_HIDE_SAFFRON_PRESENT_SABRINA
+
+        setobjectxyperm LOCALID_SAFFRON_PRESENT_SABRINA, 50, 18
+        setobjectmovementtype LOCALID_SAFFRON_PRESENT_SABRINA, MOVEMENT_TYPE_FACE_UP
+        showobjectat LOCALID_SAFFRON_PRESENT_SABRINA, MAP_SAFFRON_CITY
+
+        applymovement LOCALID_SAFFRON_PRESENT_SABRINA, SaffronCity_Frlg_Movement_SabrinaFloatIn
+        waitmovement 0
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaAware, MSGBOX_DEFAULT
+        closemessage
+
+        @ Both turn toward Sabrina.
+        applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+        applymovement LOCALID_SAFFRON_MEMORY_TWIN, Common_Movement_WalkInPlaceFasterDown
+        waitmovement 0
+
+        msgbox SaffronCity_Frlg_Text_PlayerSabrina, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerJustTalked, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaNotYet, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinWhySix, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaSeventh, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerWholeDay, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaRest, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinDefinitelyDumb, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaPerhaps, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinRemovedSunday, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaObserved, MSGBOX_DEFAULT
+        closemessage
+
+        @ Sabrina lets one detail slip.
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaNeitherStay, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerNeither, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinWhatMean, MSGBOX_DEFAULT
+        closemessage
+
+        delay 15
+
+        msgbox SaffronCity_Frlg_Text_PresentSabrinaEnjoy, MSGBOX_DEFAULT
+        closemessage
+
+        @ Sabrina floats away rather than explaining herself,
+        @ because of course she does.
+        applymovement LOCALID_SAFFRON_PRESENT_SABRINA, SaffronCity_Frlg_Movement_SabrinaFloatOut
+        waitmovement 0
+
+        @ Sabrina remains loaded nearby but disappears from the memory.
+        hideobjectat LOCALID_SAFFRON_PRESENT_SABRINA, MAP_SAFFRON_CITY
+
+        @ PLAYER and mystery person turn back toward one another.
+        applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+        applymovement LOCALID_SAFFRON_MEMORY_TWIN, Common_Movement_WalkInPlaceFasterRight
+        waitmovement 0
+
+        msgbox SaffronCity_Frlg_Text_TwinDontLikeHer, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerMetToday, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinAnd, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerNeitherDoI, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinStickAround, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerJustNoticed, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinInvestigate, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinMaybeTellYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerMaybe, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinMaybe, MSGBOX_DEFAULT
+        closemessage
+
+        @ First Saffron encounter is complete.
+        @ Sol/Xie may remain visible for this current visit,
+        @ but both visitors stay gone after Saffron reloads.
+        setflag FLAG_SAFFRON_TWIN_SCENE_DONE
+        setflag FLAG_HIDE_SAFFRON_MEMORY_TWIN
+        setflag FLAG_HIDE_SAFFRON_PRESENT_SABRINA
+
+        releaseall
+        end
+
+
+SaffronCity_Frlg_EventScript_TwinSabrinaDone:
+        end
+
+
+SaffronCity_Frlg_EventScript_DebugHistoricalMissing:
+        msgbox SaffronCity_Frlg_Text_DebugHistoricalMissing, MSGBOX_DEFAULT
+        end
+
+SaffronCity_Frlg_EventScript_DebugSceneDone:
+        msgbox SaffronCity_Frlg_Text_DebugSceneDone, MSGBOX_DEFAULT
+        end
+
+
+SaffronCity_Frlg_Text_DebugHistoricalMissing:
+        .string "DEBUG: Historical Sabrina flag is NOT set.$"
+
+SaffronCity_Frlg_Text_DebugSceneDone:
+        .string "DEBUG: Outside scene is already marked DONE.$"
+
+
+
+
+@ =============================================================================
+@ SABRINA MOVEMENTS
+@ =============================================================================
+
+SaffronCity_Frlg_Movement_SabrinaFloatIn:
+        walk_up
+        walk_up
+        walk_left
+        walk_left
+        walk_left
+        walk_left
+        walk_left
+        walk_up
+        step_end
+
+SaffronCity_Frlg_Movement_SabrinaFloatOut:
+        walk_down
+        walk_right
+        walk_right
+        walk_right
+        walk_right
+        walk_right
+        walk_down
+        walk_down
+        step_end
+
+
+@ =============================================================================
+@ NAMES
+@ =============================================================================
+
+SaffronCity_Frlg_Text_NameSol:
+        .string "SOL$"
+
+SaffronCity_Frlg_Text_NameXie:
+        .string "XIE$"
+
+
+@ =============================================================================
+@ MYSTERY PERSON DEBRIEF
+@ =============================================================================
+
+SaffronCity_Frlg_Text_TwinYouAgain:
+        .string "{STR_VAR_1}: ...You again.$"
+
+SaffronCity_Frlg_Text_PlayerSameQuestion:
+        .string "{PLAYER}: I was about to say the\n"
+        .string "same thing.$"
+
+SaffronCity_Frlg_Text_TwinSentHere:
+        .string "{STR_VAR_1}: The person who raised me\n"
+        .string "told me to come here.\p"
+        .string "Didn't exactly explain why.$"
+
+SaffronCity_Frlg_Text_PlayerMineToo:
+        .string "{PLAYER}: Mine sent me here too.$"
+
+SaffronCity_Frlg_Text_TwinKey:
+        .string "{STR_VAR_1}: They gave me this strange\n"
+        .string "key and told me not to lose it.$"
+
+SaffronCity_Frlg_Text_PlayerKeyToWhat:
+        .string "{PLAYER}: A key to what?$"
+
+SaffronCity_Frlg_Text_TwinHopedYouKnew:
+        .string "{STR_VAR_1}: I was hoping you knew.$"
+
+SaffronCity_Frlg_Text_PlayerExplainsMonths:
+        .string "{PLAYER}: I saw some kind of meeting.\p"
+        .string "They called themselves the Twelve\n"
+        .string "Months.\p"
+        .string "Four Seasons. Three in each.\p"
+        .string "Then six left and started calling\n"
+        .string "themselves Days.$"
+
+SaffronCity_Frlg_Text_TwinSixDays:
+        .string "{STR_VAR_1}: ...Six Days?$"
+
+SaffronCity_Frlg_Text_PlayerYeah:
+        .string "{PLAYER}: Yeah.$"
+
+SaffronCity_Frlg_Text_TwinAreTheyDumb:
+        .string "{STR_VAR_1}: Are they dumb?\p"
+        .string "There are seven days.$"
+
+SaffronCity_Frlg_Text_PlayerThatsWhatISaid:
+        .string "{PLAYER}: THAT'S WHAT I'M SAYING.$"
+
+
+@ =============================================================================
+@ PRESENT SABRINA CRASHES THE MEMORY
+@ =============================================================================
+
+SaffronCity_Frlg_Text_PresentSabrinaAware:
+        .string "SABRINA: We are aware.$"
+
+SaffronCity_Frlg_Text_PlayerSabrina:
+        .string "{PLAYER}: ...Sabrina?$"
+
+SaffronCity_Frlg_Text_PlayerJustTalked:
+        .string "{PLAYER}: I just talked to you.$"
+
+SaffronCity_Frlg_Text_PresentSabrinaNotYet:
+        .string "SABRINA: You talked to me.\p"
+        .string "I have not met you yet.$"
+
+SaffronCity_Frlg_Text_TwinWhySix:
+        .string "{STR_VAR_1}: Then why six?$"
+
+SaffronCity_Frlg_Text_PresentSabrinaSeventh:
+        .string "SABRINA: The seventh was unnecessary.$"
+
+SaffronCity_Frlg_Text_PlayerWholeDay:
+        .string "{PLAYER}: A whole DAY was unnecessary?$"
+
+SaffronCity_Frlg_Text_PresentSabrinaRest:
+        .string "SABRINA: Rest is unnecessary when\n"
+        .string "there are things to be done.$"
+
+SaffronCity_Frlg_Text_TwinDefinitelyDumb:
+        .string "{STR_VAR_1}: Oh.\p"
+        .string "They're definitely dumb.$"
+
+SaffronCity_Frlg_Text_PresentSabrinaPerhaps:
+        .string "SABRINA: Perhaps.\p"
+        .string "Or perhaps you were taught to mistake\n"
+        .string "interruption for necessity.$"
+
+SaffronCity_Frlg_Text_TwinRemovedSunday:
+        .string "{STR_VAR_1}: So you removed Sunday.$"
+
+SaffronCity_Frlg_Text_PresentSabrinaObserved:
+        .string "SABRINA: We removed nothing.\p"
+        .string "We simply stopped observing it.$"
+
+SaffronCity_Frlg_Text_PresentSabrinaNeitherStay:
+        .string "SABRINA: Neither of you should remain\n"
+        .string "here long.$"
+
+SaffronCity_Frlg_Text_PlayerNeither:
+        .string "{PLAYER}: ...Neither of us?$"
+
+SaffronCity_Frlg_Text_TwinWhatMean:
+        .string "{STR_VAR_1}: What does that mean?$"
+
+SaffronCity_Frlg_Text_PresentSabrinaEnjoy:
+        .string "SABRINA: Enjoy Saffron.$"
+
+
+@ =============================================================================
+@ AFTER SABRINA LEAVES
+@ =============================================================================
+
+SaffronCity_Frlg_Text_TwinDontLikeHer:
+        .string "{STR_VAR_1}: I don't like her.$"
+
+SaffronCity_Frlg_Text_PlayerMetToday:
+        .string "{PLAYER}: I met her today.$"
+
+SaffronCity_Frlg_Text_TwinAnd:
+        .string "{STR_VAR_1}: And?$"
+
+SaffronCity_Frlg_Text_PlayerNeitherDoI:
+        .string "{PLAYER}: ...I don't like her either.$"
+
+
+@ =============================================================================
+@ FIRST SAFFRON TWIN ENCOUNTER - ENDING
+@ =============================================================================
+
+SaffronCity_Frlg_Text_TwinStickAround:
+        .string "{STR_VAR_1}: I'm gonna stick around.\p"
+        .string "Something about this place is weird.$"
+
+SaffronCity_Frlg_Text_PlayerJustNoticed:
+        .string "{PLAYER}: You JUST noticed?$"
+
+SaffronCity_Frlg_Text_TwinInvestigate:
+        .string "{STR_VAR_1}: No.\p"
+        .string "I just finally decided to investigate\n"
+        .string "it.$"
+
+SaffronCity_Frlg_Text_TwinMaybeTellYou:
+        .string "{STR_VAR_1}: If I find anything\n"
+        .string "interesting...\p"
+        .string "Maybe I'll tell you.$"
+
+SaffronCity_Frlg_Text_PlayerMaybe:
+        .string "{PLAYER}: Maybe?$"
+
+SaffronCity_Frlg_Text_TwinMaybe:
+        .string "{STR_VAR_1}: Maybe.$"
+
+
+@ =============================================================================
+@ SOL/XIE - INVESTIGATING AFTER FIRST SAFFRON ENCOUNTER
+@ =============================================================================
+
+SaffronCity_Frlg_EventScript_TwinInvestigating::
+        lock
+        faceplayer
+
+        msgbox SaffronCity_Frlg_Text_TwinInvestigatingRepeat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerYouHaventMoved, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinThinking, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_PlayerOhInvestigating, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_Frlg_Text_TwinQuietly, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+SaffronCity_Frlg_Text_TwinInvestigatingRepeat:
+        .string "{STR_VAR_1}: I'm investigating.\p"
+        .string "You're distracting me.$"
+
+SaffronCity_Frlg_Text_PlayerYouHaventMoved:
+        .string "{PLAYER}: You haven't moved.$"
+
+SaffronCity_Frlg_Text_TwinThinking:
+        .string "{STR_VAR_1}: I'm thinking.$"
+
+SaffronCity_Frlg_Text_PlayerOhInvestigating:
+        .string "{PLAYER}: Oh.$"
+
+SaffronCity_Frlg_Text_TwinQuietly:
+        .string "{STR_VAR_1}: Quietly.$"
+
+
+@ ===== SAFFRON CIVILIAN FLAVOR START =====
+
+@ =============================================================================
+@ SAFFRON STREET FLAVOR
+@ Intentionally unimportant. These people make the city feel lived-in.
+@ =============================================================================
+
+SaffronCity_Frlg_EventScript_Civilian01::
+        msgbox SaffronCity_Frlg_Text_Civilian01, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian02::
+        msgbox SaffronCity_Frlg_Text_Civilian02, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian03::
+        msgbox SaffronCity_Frlg_Text_Civilian03, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian04::
+        msgbox SaffronCity_Frlg_Text_Civilian04, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian05::
+        msgbox SaffronCity_Frlg_Text_Civilian05, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian06::
+        msgbox SaffronCity_Frlg_Text_Civilian06, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian07::
+        msgbox SaffronCity_Frlg_Text_Civilian07, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian08::
+        msgbox SaffronCity_Frlg_Text_Civilian08, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian09::
+        msgbox SaffronCity_Frlg_Text_Civilian09, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Civilian10::
+        msgbox SaffronCity_Frlg_Text_Civilian10, MSGBOX_NPC
+        end
+
+SaffronCity_Frlg_EventScript_Pidgeot::
+        msgbox SaffronCity_Frlg_Text_Pidgeot, MSGBOX_NPC
+        end
+
+
+SaffronCity_Frlg_Text_Civilian01:
+        .string "People come through Saffron from\n"
+        .string "every direction.$"
+
+
+SaffronCity_Frlg_Text_Civilian02:
+        .string "I told myself I'd only buy one\n"
+        .string "thing today.\p"
+        .string "That was three things ago.$"
+
+
+SaffronCity_Frlg_Text_Civilian03:
+        .string "This city is huge!\p"
+        .string "I got lost twice.$"
+
+
+SaffronCity_Frlg_Text_Civilian04:
+        .string "SILPH keeps half this city busy.\p"
+        .string "Usually, anyway.$"
+
+
+SaffronCity_Frlg_Text_Civilian05:
+        .string "I heard the DOJO is worth seeing.\p"
+        .string "I'm avoiding the exercise part.$"
+
+
+SaffronCity_Frlg_Text_Civilian06:
+        .string "Every building here has another\n"
+        .string "building behind it.$"
+
+
+SaffronCity_Frlg_Text_Civilian07:
+        .string "Saffron looks complicated.\p"
+        .string "You get used to it.$"
+
+
+SaffronCity_Frlg_Text_Civilian08:
+        .string "That PIDGEOT follows me\n"
+        .string "everywhere.$"
+
+
+SaffronCity_Frlg_Text_Pidgeot:
+        .string "PIDGEOT: Pijoooo!$"
+
+
+SaffronCity_Frlg_Text_Civilian09:
+        .string "The FAN CLUB is ridiculous.\p"
+        .string "I still go.$"
+
+
+SaffronCity_Frlg_Text_Civilian10:
+        .string "I came here to shop.\p"
+        .string "Somehow I've been walking all day.$"
+
+@ ===== SAFFRON CIVILIAN FLAVOR END =====

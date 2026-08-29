@@ -203,7 +203,7 @@
 #define VAR_TRICK_HOUSE_ENTER_FROM_CORRIDOR              0x40B5
 #define VAR_TRICK_HOUSE_PUZZLE_7_STATE_2                 0x40B6 // Leftover from RS, never set
 #define VAR_SLATEPORT_FAN_CLUB_STATE                     0x40B7
-#define VAR_UNUSED_0x40B8                                0x40B8 // Unused Var
+#define VAR_BROCK_INGREDIENT_QUEST                       0x40B8 // Brock's post-Wattson mystery ingredient quest
 #define VAR_MT_PYRE_STATE                                0x40B9
 #define VAR_NEW_MAUVILLE_STATE                           0x40BA
 #define VAR_UNUSED_0x40BB                                0x40BB // Unused Var
@@ -274,7 +274,7 @@
 #define VAR_WISDOM                                       0x40FC
 #define VAR_PERSPECTIVE                                  0x40FD 
 #define VAR_LIBRARY_BOOK_QUEST                           0x40FE
-#define VAR_UNUSED_VAR                               0x40FF // Unused Var
+#define VAR_SILPH_1F_STATE                          0x40FF // Unused Var
 
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                  (VARS_END - VARS_START + 1)

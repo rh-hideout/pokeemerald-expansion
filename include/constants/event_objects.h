@@ -466,6 +466,7 @@ enum
     OBJ_EVENT_GFX_SOL,
 
     OBJ_EVENT_GFX_XIE,
+    OBJ_EVENT_GFX_DRAGONITE,
 
     NUM_OBJ_EVENT_GFX,
 };
@@ -630,6 +631,7 @@ enum
 #define OBJ_EVENT_PAL_TAG_SIR                     0x1136
 #define OBJ_EVENT_PAL_TAG_MAAM                    0x1137
 #define OBJ_EVENT_PAL_TAG_BUTTERFLY               0x1138
+#define OBJ_EVENT_PAL_TAG_DRAGONITE               0x113D
 #define OBJ_EVENT_PAL_TAG_SOL                       0x113B
 #define OBJ_EVENT_PAL_TAG_XIE                       0x113C
 #define OBJ_EVENT_PAL_TAG_BOOKS                   0x1139

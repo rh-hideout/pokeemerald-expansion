@@ -302,7 +302,7 @@ MistysHouse_Text_RoxanneBeforeFinale:
 
 
 MistysHouse_Text_CounterpartBeforeFinale:
-    .string "OAK'S GRANDCHILD: You survived.\p"
+    .string "{RIVAL}: You survived.\p"
     .string "That's a good start.$"
 
 
@@ -316,5 +316,5 @@ MistysHouse_Text_RoxanneAfterFinale:
 
 
 MistysHouse_Text_CounterpartAfterFinale:
-    .string "OAK'S GRANDCHILD: Well...\p"
+    .string "{RIVAL}: Well...\p"
     .string "Have fun with that.$"

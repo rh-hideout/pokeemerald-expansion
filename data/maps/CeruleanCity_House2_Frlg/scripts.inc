@@ -140,7 +140,7 @@ CeruleanCity_House2_Frlg_Text_DaughterStory:
 
 
 CeruleanCity_House2_Frlg_Text_CounterpartJames:
-	.string "OAK'S GRANDCHILD: Wait.\p"
+	.string "{RIVAL}: Wait.\p"
 	.string "Blue?\p"
 	.string "Book money?\p"
 	.string "...JAMES?$"
@@ -154,14 +154,14 @@ CeruleanCity_House2_Frlg_Text_PlayerLibrary:
 
 
 CeruleanCity_House2_Frlg_Text_CounterpartKnowsJames:
-	.string "OAK'S GRANDCHILD: Oh, I know JAMES.\p"
+	.string "{RIVAL}: Oh, I know JAMES.\p"
 	.string "I live in LITTLEROOT too,\n"
 	.string "remember?\p"
 	.string "I've met him before.$"
 
 
 CeruleanCity_House2_Frlg_Text_BookMoney:
-	.string "OAK'S GRANDCHILD: And...\p"
+	.string "{RIVAL}: And...\p"
 	.string "I genuinely cannot believe I'm\n"
 	.string "saying this...\p"
 	.string "but he WOULD do basically anything\n"
@@ -170,7 +170,7 @@ CeruleanCity_House2_Frlg_Text_BookMoney:
 
 
 CeruleanCity_House2_Frlg_Text_FollowThem:
-	.string "OAK'S GRANDCHILD: Welp.\p"
+	.string "{RIVAL}: Welp.\p"
 	.string "Guess we're following two criminals\n"
 	.string "through the giant hole they made\l"
 	.string "in these people's house.$"

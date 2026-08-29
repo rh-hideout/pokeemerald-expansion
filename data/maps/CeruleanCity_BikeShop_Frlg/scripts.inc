@@ -423,7 +423,7 @@ CeruleanCity_BikeShop_Frlg_Text_JamesGrabCarpy:
     .string "JAMES: Grab CARPY and RUN!$"
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyGone:
-    .string "OAK'S GRANDCHILD: ...\p"
+    .string "{RIVAL}: ...\p"
     .string "Did they just steal the MAGIKARP\n"
     .string "you said they couldn't keep?$"
 
@@ -432,7 +432,7 @@ CeruleanCity_BikeShop_Frlg_Text_PlayerYep:
 
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartCarpyAllowed:
-    .string "OAK'S GRANDCHILD: ...\p"
+    .string "{RIVAL}: ...\p"
     .string "Did they seriously just run off\n"
     .string "with that MAGIKARP?\p"
     .string "...You DID say they could have it.$"
@@ -511,7 +511,7 @@ CeruleanCity_BikeShop_Frlg_Movement_FaceUp:
 @ ============================================================
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartWhatAreYouDoing:
-    .string "OAK'S GRANDCHILD: Um...\p"
+    .string "{RIVAL}: Um...\p"
     .string "You two know you can't just...\n"
     .string "do this, right?$"
 
@@ -550,7 +550,7 @@ CeruleanCity_BikeShop_Frlg_Text_JamesBooks:
     .string "You know I need my money for books.$"
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartBattleQuestion:
-    .string "OAK'S GRANDCHILD: Don't we usually\n"
+    .string "{RIVAL}: Don't we usually\n"
     .string "battle the bad guys?$"
 
 CeruleanCity_BikeShop_Frlg_Text_PlayerDoWeNeedTo:
@@ -559,7 +559,7 @@ CeruleanCity_BikeShop_Frlg_Text_PlayerDoWeNeedTo:
     .string "They didn't actually do anything.$"
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartMistyMad:
-    .string "OAK'S GRANDCHILD: ...\p"
+    .string "{RIVAL}: ...\p"
     .string "MISTY seemed pretty mad about them\n"
     .string "breaking into her building.$"
 
@@ -685,12 +685,12 @@ CeruleanCity_BikeShop_Frlg_Movement_CounterpartLeaves:
 
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartBack:
-    .string "OAK'S GRANDCHILD: Well...\p"
+    .string "{RIVAL}: Well...\p"
     .string "I guess we should get back.$"
 
 
 CeruleanCity_BikeShop_Frlg_Text_CounterpartHandleSomething:
-    .string "OAK'S GRANDCHILD: Actually...\p"
+    .string "{RIVAL}: Actually...\p"
     .string "There's something I need to handle\n"
     .string "first.\p"
     .string "I'll meet you back at MISTY'S\n"

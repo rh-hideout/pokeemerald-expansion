@@ -1,0 +1,158 @@
+FuchsiaCity_Frlg_MapScripts::
+    map_script MAP_SCRIPT_ON_LOAD, FuchsiaCity_Frlg_OnLoad
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, FuchsiaCity_Frlg_OnFrame
+    .byte 0
+
+
+FuchsiaCity_Frlg_OnLoad:
+    call FuchsiaCity_Frlg_SetCounterpartGraphics
+    end
+
+
+FuchsiaCity_Frlg_OnFrame:
+    map_script_2 VAR_BROCK_INGREDIENT_QUEST, 6, FuchsiaCity_Frlg_EventScript_Arrival
+    .2byte 0
+
+
+@ ============================================================
+@ DYNAMIC COUNTERPART GRAPHICS
+@ ============================================================
+
+FuchsiaCity_Frlg_SetCounterpartGraphics:
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, FuchsiaCity_Frlg_SetBrendan
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, FuchsiaCity_Frlg_SetMay
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, FuchsiaCity_Frlg_SetLexy
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, FuchsiaCity_Frlg_SetJustin
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, FuchsiaCity_Frlg_SetMaam
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, FuchsiaCity_Frlg_SetSir
+
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+
+FuchsiaCity_Frlg_SetBrendan:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetMay:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAY_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetLexy:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetJustin:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetMaam:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetSir:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+    return
+
+
+@ ============================================================
+@ ARRIVAL
+@ ============================================================
+
+FuchsiaCity_Frlg_EventScript_Arrival::
+    compare VAR_BROCK_INGREDIENT_QUEST, 6
+    goto_if_ne FuchsiaCity_Frlg_EventScript_Arrival_End
+
+    lockall
+
+    @ We have just arrived with Gary.
+    applymovement LOCALID_PLAYER, Common_Movement_FaceRight
+    applymovement LOCALID_FUCHSIA_COUNTERPART, Common_Movement_FaceRight
+    applymovement LOCALID_FUCHSIA_GARY, Common_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox FuchsiaCity_Frlg_Text_GaryArrivalOutro, MSGBOX_DEFAULT
+    closemessage
+
+    @ Gary exits toward the east edge of town.
+    applymovement LOCALID_FUCHSIA_GARY, FuchsiaCity_Frlg_Movement_GaryLeaves
+    waitmovement 0
+
+    removeobject LOCALID_FUCHSIA_GARY
+
+    @ Fuchsia investigation is now active.
+    setvar VAR_BROCK_INGREDIENT_QUEST, 7
+
+    @ Counterpart turns toward the direction we need to travel.
+    applymovement LOCALID_FUCHSIA_COUNTERPART, Common_Movement_FaceLeft
+    applymovement LOCALID_PLAYER, Common_Movement_FaceLeft
+    waitmovement 0
+
+    releaseall
+    end
+
+FuchsiaCity_Frlg_EventScript_Arrival_End:
+    end
+
+
+FuchsiaCity_Frlg_EventScript_GaryArrival::
+    lock
+    faceplayer
+    msgbox FuchsiaCity_Frlg_Text_GaryArrivalRepeat, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_Text_GaryArrivalOutro:
+    .string "GARY: FUCHSIA CITY.\p"
+    .string "Try not to get lost.\p"
+    .string "{RIVAL}: We didn't ask for a tour.\p"
+    .string "GARY: Good.\n"
+    .string "I'm not giving one.\p"
+    .string "{PLAYER}: Thanks for the ride.\p"
+    .string "GARY: Yeah, yeah.\p"
+    .string "Try not to need another favor.$"
+
+
+FuchsiaCity_Frlg_Text_GaryArrivalRepeat:
+    .string "GARY: What?\p"
+    .string "You're here.\n"
+    .string "My job is done.$"
+
+
+FuchsiaCity_Frlg_Movement_GaryLeaves:
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    delay_8
+    step_end
+
+
+@ ============================================================
+@ PLACEHOLDERS FOR PART 2
+@ ============================================================
+
+FuchsiaCity_Frlg_EventScript_Koga::
+    lock
+    faceplayer
+    msgbox FuchsiaCity_Frlg_Text_KogaPlaceholder, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_EventScript_Counterpart::
+    lock
+    faceplayer
+    msgbox FuchsiaCity_Frlg_Text_CounterpartPlaceholder, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_Text_KogaPlaceholder:
+    .string "KOGA: You wished to speak with me?$"
+
+
+FuchsiaCity_Frlg_Text_CounterpartPlaceholder:
+    .string "{RIVAL}: Well?\n"
+    .string "Ask him.$"

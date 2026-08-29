@@ -4200,6 +4200,36 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
 
 bool32 NoAliveMonsForPlayer(void)
 {
+    // In a native 2-v-1 partner battle, defeat occurs only when both allied
+    // trainers have exhausted the Pokemon that are actually eligible for
+    // this multi battle. Half-team multis use three Pokemon per trainer;
+    // full-team multis use the complete party.
+    if (BATTLE_TWO_VS_ONE_OPPONENT)
+    {
+        u32 alliedHP = 0;
+        u32 partyLimit = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
+
+        for (u32 i = 0; i < partyLimit; i++)
+        {
+            struct Pokemon *playerMon = &gParties[B_TRAINER_PLAYER][i];
+            struct Pokemon *partnerMon = &gParties[B_TRAINER_PARTNER][i];
+
+            if (GetMonData(playerMon, MON_DATA_SPECIES)
+             && !GetMonData(playerMon, MON_DATA_IS_EGG))
+            {
+                alliedHP += GetMonData(playerMon, MON_DATA_HP);
+            }
+
+            if (GetMonData(partnerMon, MON_DATA_SPECIES)
+             && !GetMonData(partnerMon, MON_DATA_IS_EGG))
+            {
+                alliedHP += GetMonData(partnerMon, MON_DATA_HP);
+            }
+        }
+
+        return (alliedHP == 0);
+    }
+
     // Test system does not have saved player party data that can be accessed
     u32 maxIneligible = TESTING ? gPartiesCount[B_TRAINER_PLAYER] : PARTY_SIZE;
     u32 HP_count = 0;

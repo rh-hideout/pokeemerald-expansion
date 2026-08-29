@@ -707,7 +707,7 @@ PetalburgCity_Text_AreYouRookieTrainer:
 	.string "A rookie TRAINER?\p"
 	.string "Do you know what POKéMON TRAINERS\n"
 	.string "do when they reach a new town?\p"
-	.string "They first check what kind of GYM\n"
+	.string "They first check what kind of SHRINE\n"
 	.string "is in the town.$"
 
 PetalburgCity_Text_ThisIsPetalburgGym:
@@ -715,7 +715,7 @@ PetalburgCity_Text_ThisIsPetalburgGym:
 
 PetalburgCity_Text_ThisIsGymSign:
 	.string "This is the SHRINE's sign. Look for it\n"
-	.string "whenever you're looking for a GYM.$"
+	.string "whenever you're looking for a SHRINE.$"
 
 PetalburgCity_Text_WaterReflection:
 	.string "My face is reflected in the water.\p"
@@ -743,18 +743,18 @@ PetalburgCity_Text_WallyHouseSign:
 	.string "WALLY'S HOUSE$"
 
 PetalburgCity_Text_AreYouATrainer:
-	.string "Excuse me!\p"
-	.string "Let me guess, from the way you're\n"
-	.string "dressed, are you a POKéMON TRAINER?$"
+    .string "ANABEL: Hm... Are you a TRAINER?\p"
+    .string "{PLAYER}: I mean... technically?$"
 
 PetalburgCity_Text_WellMaybeNot:
-	.string "… … … … … …\p"
-	.string "Well, maybe not.\n"
-	.string "Your clothes aren't all that dirty.\p"
-	.string "You're either a rookie TRAINER,\n"
-	.string "or maybe you're just an ordinary kid.$"
+    .string "ANABEL: Technically. I see.\p"
+    .string "You don't look like much yet.\p"
+    .string "{PLAYER}: Wow.\p"
+    .string "ANABEL: That's not an insult.\n"
+    .string "Everyone starts somewhere.$"
 
 PetalburgCity_Text_ImLookingForTalentedTrainers:
-	.string "I'm roaming the land in search of\n"
-	.string "talented TRAINERS.\p"
-	.string "I'm sorry to have taken your time.$"
+    .string "ANABEL: I'm Anabel.\p"
+    .string "Maybe we'll meet again.\p"
+    .string "{PLAYER}: ...Maybe?\p"
+    .string "ANABEL: I have a feeling. :)$"

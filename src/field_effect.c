@@ -82,6 +82,7 @@ static void Task_UseFly(u8);
 static void FieldCallback_FlyIntoMap(void);
 static void Task_FlyIntoMap(u8);
 
+
 static void Task_FallWarpFieldEffect(u8);
 static bool8 FallWarpEffect_Init(struct Task *);
 static bool8 FallWarpEffect_WaitWeather(struct Task *);
@@ -1478,6 +1479,7 @@ static void SpriteCB_HallOfFameMonitorFrlg(struct Sprite *sprite)
 #undef sNumMons
 #undef sSpriteId
 #undef sEffectSpriteId
+
 
 void ReturnToFieldFromFlyMapSelect(void)
 {

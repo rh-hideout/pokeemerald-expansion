@@ -122,7 +122,7 @@ SaffronCity_Dojo_Frlg_EventScript_TwelveMeeting::
         closemessage
 
         @ Fixed memory ends.
-        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 5
+        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 4
 
         fadescreen FADE_TO_BLACK
         delay 30

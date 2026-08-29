@@ -322,14 +322,101 @@ HardRockCafe_CounterpartAfterQuest:
 HardRockCafe_Brock::
     lock
     faceplayer
+
     checkflag FLAG_COUNTERPART_BOOK_SCENE_DONE
-    goto_if TRUE, HardRockCafe_BrockAfterReveal
+    goto_if FALSE, HardRockCafe_BrockBeforeBookReveal
+
+    goto_if_unset FLAG_BADGE03_GET, HardRockCafe_BrockWaitingForThird
+    goto_if_unset FLAG_BROCK_POST_WATTSON_CALL_DONE, HardRockCafe_BrockWaitingForThird
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 0
+    goto_if_eq HardRockCafe_BrockIngredientStart
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 1
+    goto_if_eq HardRockCafe_BrockIngredientPewterReminder
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 2
+    goto_if_eq HardRockCafe_BrockIngredientPewterReminder
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 3
+    goto_if_eq HardRockCafe_BrockIngredientSearchReminder
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 4
+    goto_if_eq HardRockCafe_BrockIngredientSearchReminder
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 5
+    goto_if_eq HardRockCafe_BrockIngredientSearchReminder
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 6
+    goto_if_eq HardRockCafe_BrockIngredientHasItem
+
+    goto HardRockCafe_BrockIngredientComplete
+
+HardRockCafe_BrockBeforeBookReveal:
     msgbox HardRockCafe_Text_BrockBeforeReveal, MSGBOX_DEFAULT
     release
     end
 
-HardRockCafe_BrockAfterReveal:
+HardRockCafe_BrockWaitingForThird:
     msgbox HardRockCafe_Text_BrockAfterReveal, MSGBOX_DEFAULT
+    release
+    end
+
+HardRockCafe_BrockIngredientStart:
+    msgbox HardRockCafe_Text_IngredientStart1, MSGBOX_DEFAULT
+    msgbox HardRockCafe_Text_IngredientStart2, MSGBOX_DEFAULT
+
+    @ Rival hears Brock volunteering them for nonsense and walks over.
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_IngredientCounterpartApproaches
+    waitmovement LOCALID_HARD_ROCK_COUNTERPART
+
+    @ Player and rival turn toward each other for the argument.
+    applymovement LOCALID_PLAYER, HardRockCafe_Movement_IngredientPlayerFaceRival
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_IngredientRivalFacePlayer
+    waitmovement 0
+
+    msgbox HardRockCafe_Text_IngredientCounterpartObjects, MSGBOX_DEFAULT
+    msgbox HardRockCafe_Text_IngredientPlayerDragsCounterpart, MSGBOX_DEFAULT
+    msgbox HardRockCafe_Text_IngredientCounterpartComplains, MSGBOX_DEFAULT
+
+    @ Brock interrupts, so both turn back toward him.
+    applymovement LOCALID_PLAYER, HardRockCafe_Movement_IngredientPlayerFaceBrock
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_IngredientRivalFaceBrock
+    waitmovement 0
+
+    msgbox HardRockCafe_Text_IngredientBrockSettlesIt, MSGBOX_DEFAULT
+
+    setvar VAR_BROCK_INGREDIENT_QUEST, 1
+
+    msgbox HardRockCafe_Text_IngredientUseBackDoor, MSGBOX_DEFAULT
+
+    @ Rival gives the player one last look before staying behind.
+    applymovement LOCALID_PLAYER, HardRockCafe_Movement_IngredientPlayerFaceRival
+    applymovement LOCALID_HARD_ROCK_COUNTERPART, HardRockCafe_Movement_IngredientRivalFacePlayer
+    waitmovement 0
+
+    msgbox HardRockCafe_Text_IngredientCounterpartMeetThere, MSGBOX_DEFAULT
+
+    release
+    end
+
+HardRockCafe_BrockIngredientPewterReminder:
+    msgbox HardRockCafe_Text_IngredientPewterReminder, MSGBOX_DEFAULT
+    release
+    end
+
+HardRockCafe_BrockIngredientSearchReminder:
+    msgbox HardRockCafe_Text_IngredientSearchReminder, MSGBOX_DEFAULT
+    release
+    end
+
+HardRockCafe_BrockIngredientHasItem:
+    msgbox HardRockCafe_Text_IngredientReturnLater, MSGBOX_DEFAULT
+    release
+    end
+
+HardRockCafe_BrockIngredientComplete:
+    msgbox HardRockCafe_Text_IngredientComplete, MSGBOX_DEFAULT
     release
     end
 
@@ -479,7 +566,7 @@ HardRockCafe_Text_BrockResponseUnknown:
 
 HardRockCafe_Text_BrockInvitation:
     .string "Come back after earning your\n"
-    .string "third Badge!\p"
+    .string "third FRAGMENT!\p"
     .string "The roast should be ready by then.\n"
     .string "You both helped, so you both eat!$"
 
@@ -489,7 +576,7 @@ HardRockCafe_Text_BrockBeforeReveal:
     .string "Today is already busy enough.$"
 
 HardRockCafe_Text_BrockAfterReveal:
-    .string "Third Badge, remember!\p"
+    .string "Third FRAGMENT, remember!\p"
     .string "Do not make me eat the entire\n"
     .string "Pewter Rock Roast by myself.$"
 
@@ -795,3 +882,116 @@ HardRockCafe_Text_LevitationFoil:
 HardRockCafe_Text_LevitationUnknown:
     .string "He is a scientist.\p"
     .string "Maybe they can just do that.$"
+
+
+@ ============================================================================
+@ Brock's mystery ingredient mission choreography
+@ ============================================================================
+
+HardRockCafe_Movement_IngredientCounterpartApproaches:
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_right
+    walk_right
+    face_up
+    step_end
+
+
+HardRockCafe_Movement_IngredientPlayerFaceRival:
+    face_left
+    step_end
+
+
+HardRockCafe_Movement_IngredientRivalFacePlayer:
+    face_right
+    step_end
+
+
+HardRockCafe_Movement_IngredientPlayerFaceBrock:
+    face_up
+    step_end
+
+
+HardRockCafe_Movement_IngredientRivalFaceBrock:
+    face_up
+    step_end
+
+
+@ ============================================================================
+@ Brock's mystery ingredient mission
+@ ============================================================================
+
+HardRockCafe_Text_IngredientStart1:
+    .string "BROCK: There you are.\p"
+    .string "I heard you earned your third\n"
+    .string "FRAGMENT.\p"
+    .string "Right on schedule.\n"
+    .string "Well...close enough.$"
+
+HardRockCafe_Text_IngredientStart2:
+    .string "BROCK: The Pewter Rock Roast is\n"
+    .string "almost ready.\p"
+    .string "I'm missing one ingredient.\p"
+    .string "My source was last seen in PEWTER.\n"
+    .string "You'll have to ask around once\l"
+    .string "you get there.\p"
+    .string "{PLAYER}: You're not even going to\n"
+    .string "tell me what I'm looking for?\p"
+    .string "BROCK: I know exactly what it is.\p"
+    .string "{PLAYER}: That wasn't my question.\p"
+    .string "BROCK: I know.$"
+
+HardRockCafe_Text_IngredientCounterpartObjects:
+    .string "{RIVAL}: No.$"
+
+HardRockCafe_Text_IngredientPlayerDragsCounterpart:
+    .string "{PLAYER}: I didn't ask you anything.\p"
+    .string "{RIVAL}: You were going to.\p"
+    .string "{PLAYER}: Come with me.\p"
+    .string "{RIVAL}: Why?$"
+
+HardRockCafe_Text_IngredientCounterpartComplains:
+    .string "{PLAYER}: Because I had to come.\p"
+    .string "{RIVAL}: That doesn't explain\n"
+    .string "why I do.\p"
+    .string "{PLAYER}: It does to me.$"
+
+HardRockCafe_Text_IngredientBrockSettlesIt:
+    .string "BROCK: Great. It's settled.\p"
+    .string "{RIVAL}: It absolutely is not.$"
+
+HardRockCafe_Text_IngredientUseBackDoor:
+    .string "BROCK: Use the back door.\p"
+    .string "It'll put you right in PEWTER.\n"
+    .string "Ask around until somebody knows\l"
+    .string "what you're talking about.\p"
+    .string "And bring the ingredient back here.$"
+
+HardRockCafe_Text_IngredientCounterpartMeetThere:
+    .string "{RIVAL}: Fine.\p"
+    .string "Go through the door.\p"
+    .string "I'll meet you in PEWTER.$"
+
+
+HardRockCafe_Text_IngredientPewterReminder:
+    .string "BROCK: PEWTER.\p"
+    .string "Ask around.\n"
+    .string "Somebody there knows something.$"
+
+HardRockCafe_Text_IngredientSearchReminder:
+    .string "BROCK: Still looking?\p"
+    .string "You'll find the source eventually.\n"
+    .string "Probably.$"
+
+HardRockCafe_Text_IngredientReturnLater:
+    .string "BROCK: You found it?\p"
+    .string "...Good.\p"
+    .string "We'll deal with that in a minute.$"
+
+HardRockCafe_Text_IngredientComplete:
+    .string "BROCK: Now I can finally finish\n"
+    .string "the Pewter Rock Roast.$"

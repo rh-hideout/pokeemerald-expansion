@@ -2669,7 +2669,7 @@
       "width": 15,
       "height": 10,
       "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_SeashoreHouse",
+      "secondary_tileset": "gTileset_Facility",
       "border_filepath": "data/layouts/Route109_SeashoreHouse/border.bin",
       "blockdata_filepath": "data/layouts/Route109_SeashoreHouse/map.bin",
       "layout_version": "emerald"

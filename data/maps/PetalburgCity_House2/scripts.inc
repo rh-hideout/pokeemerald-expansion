@@ -11,7 +11,7 @@ PetalburgCity_House2_EventScript_SchoolKid::
 
 PetalburgCity_House2_Text_NormanBecameGymLeader:
 	.string "NORMAN became our town's new\n"
-	.string "GYM LEADER.\p"
+	.string "KEEPER.\p"
 	.string "I think he called his family over from\n"
 	.string "somewhere far away.$"
 

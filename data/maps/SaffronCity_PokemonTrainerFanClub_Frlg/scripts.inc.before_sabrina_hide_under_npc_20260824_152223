@@ -1,0 +1,912 @@
+SaffronCity_PokemonTrainerFanClub_Frlg_MapScripts::
+        map_script MAP_SCRIPT_ON_LOAD, SaffronCity_PokemonTrainerFanClub_Frlg_SetTwinGraphics
+        map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_PokemonTrainerFanClub_Frlg_SetStoryVisibility
+        .byte 0
+
+
+@ =============================================================================
+@ SOL / XIE GRAPHICS
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_SetTwinGraphics:
+        goto_if_set FLAG_HIDE_HOME_MOM, SaffronCity_PokemonTrainerFanClub_Frlg_SetXieGraphics
+
+        setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_SOL
+        return
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_SetXieGraphics:
+        setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_XIE
+        return
+
+
+@ =============================================================================
+@ STORY VISIBILITY
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_SetStoryVisibility:
+        @ Sabrina never hangs around outside the finale.
+        setflag FLAG_HIDE_SAFFRON_FANCLUB_SABRINA
+        hideobjectat LOCALID_SAFFRON_FANCLUB_SABRINA, MAP_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB
+
+        @ After the debrief, the visitor is gone too.
+        goto_if_set FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE, SaffronCity_PokemonTrainerFanClub_Frlg_HideTwin
+
+        @ Before Giovanni, they have not relocated here yet.
+        goto_if_unset FLAG_SILPH_GIOVANNI_MET, SaffronCity_PokemonTrainerFanClub_Frlg_HideTwin
+
+        clearflag FLAG_HIDE_SAFFRON_FANCLUB_TWIN
+        showobjectat LOCALID_SAFFRON_FANCLUB_TWIN, MAP_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB
+        end
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_HideTwin:
+        setflag FLAG_HIDE_SAFFRON_FANCLUB_TWIN
+        hideobjectat LOCALID_SAFFRON_FANCLUB_TWIN, MAP_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB
+        end
+
+
+@ =============================================================================
+@ FAN CLUB NONSENSE
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_CrushGirl::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_CrushGirl, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_LittleGirl::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_LittleGirl, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Youngster::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_Youngster, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Gentleman::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_Gentleman, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Woman::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_Woman, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Rocker::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_Rocker, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Beauty::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_Beauty, MSGBOX_NPC
+        end
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_BlackBelt::
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_BlackBelt, MSGBOX_NPC
+        end
+
+
+@ =============================================================================
+@ FINAL SAFFRON DEBRIEF
+@
+@ IMPORTANT:
+@ This scene does NOT explain who Sol/Xie is to PLAYER.
+@ Sabrina only observes that the two are unusually similar.
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_Twin::
+        lock
+        faceplayer
+
+        goto_if_set FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE, SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_DebriefDone
+
+        goto_if_set FLAG_HIDE_HOME_MOM, SaffronCity_PokemonTrainerFanClub_Frlg_BufferXieName
+
+        bufferstring STR_VAR_1, SaffronCity_PokemonTrainerFanClub_Frlg_Text_NameSol
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_DebriefOpening
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_BufferXieName:
+        bufferstring STR_VAR_1, SaffronCity_PokemonTrainerFanClub_Frlg_Text_NameXie
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_DebriefOpening:
+        @ KEEP THE FUNNY OPENING. 😂
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFoundMe, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerThisPlace, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPerfect, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSoWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSilphForever, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerFiveFloors, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinAnnoyed, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerMetMisty, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinAh, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhyAh, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinDidItNot, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerUnfortunately, MSGBOX_DEFAULT
+        closemessage
+
+
+        @ ------------------------------------------------------------
+        @ PLAYER'S SHORT SILPH SUMMARY
+        @ ------------------------------------------------------------
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLoreleiSummary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSplitSummary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerFamiliarSummary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerMistySummary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerGiovanniSummary, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinGiovanni, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerKnowHim, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinKnowOfHim, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOfCourse, MSGBOX_DEFAULT
+        closemessage
+
+
+        @ ------------------------------------------------------------
+        @ THEIR INVESTIGATION
+        @ ------------------------------------------------------------
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFoundRecords, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerAboutTwelve, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinBlame, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerHelpful, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinVery, MSGBOX_DEFAULT
+        closemessage
+
+
+        @ ------------------------------------------------------------
+        @ DO NOT PICK A SIDE YET
+        @ ------------------------------------------------------------
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhoRight, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinTerribleQuestion, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOkay, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFiveMinutes, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPickSide, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSayLikeThat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinHowYouSaidIt, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinForgetRight, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhatMatters, MSGBOX_DEFAULT
+        closemessage
+
+
+        @ ------------------------------------------------------------
+        @ VIRTUE CHOICE
+        @ ------------------------------------------------------------
+
+        multichoice 0, 0, MULTICHOICE_SAFFRON_TRUTH_RESPONSE, FALSE
+
+        switch VAR_RESULT
+        case 0, SaffronCity_PokemonTrainerFanClub_Frlg_ResponseCompassion
+        case 1, SaffronCity_PokemonTrainerFanClub_Frlg_ResponseCuriosity
+        case 2, SaffronCity_PokemonTrainerFanClub_Frlg_ResponseResolve
+
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_ResponseCuriosity
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_ResponseCompassion:
+        addvar VAR_COMPASSION, 1
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhoHurt, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinCompassionReply, MSGBOX_DEFAULT
+        closemessage
+
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_AfterVirtue
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_ResponseCuriosity:
+        addvar VAR_CURIOSITY, 1
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhatHappened, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinCuriosityReply, MSGBOX_DEFAULT
+        closemessage
+
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_AfterVirtue
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_ResponseResolve:
+        addvar VAR_RESOLVE, 1
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhatNext, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinResolveReply, MSGBOX_DEFAULT
+        closemessage
+
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_AfterVirtue
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_AfterVirtue:
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinStoryProblem, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYeah, MSGBOX_DEFAULT
+        closemessage
+
+        delay 20
+
+
+        @ ------------------------------------------------------------
+        @ PLAYER ARTIFACT REACTS
+        @ ------------------------------------------------------------
+
+        checkitem ITEM_MYSTERIOUS_BOOK, 1
+        goto_if_eq VAR_RESULT, TRUE, SaffronCity_PokemonTrainerFanClub_Frlg_PlayerHasBook
+
+        checkitem ITEM_MYSTERIOUS_KEY, 1
+        goto_if_eq VAR_RESULT, TRUE, SaffronCity_PokemonTrainerFanClub_Frlg_PlayerHasKey
+
+        @ Safety fallback for unusual/debug saves.
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_PlayerHasBook
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_PlayerHasBook:
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWait, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerBookReacting, MSGBOX_DEFAULT
+        closemessage
+
+        playse SE_PIN
+        delay 20
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinMineToo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLookingWhy, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinKeyReacting, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYourWhat, MSGBOX_DEFAULT
+        closemessage
+
+        goto SaffronCity_PokemonTrainerFanClub_Frlg_ArtifactConverge
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_PlayerHasKey:
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWait, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerKeyReacting, MSGBOX_DEFAULT
+        closemessage
+
+        playse SE_PIN
+        delay 20
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinMineToo, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLookingWhy, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinBookReacting, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYourWhatBook, MSGBOX_DEFAULT
+        closemessage
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_ArtifactConverge:
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLeaveOut, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinDidntAsk, MSGBOX_DEFAULT
+        closemessage
+
+        delay 20
+
+        playse SE_PIN
+        delay 25
+
+
+        @ ------------------------------------------------------------
+        @ SABRINA ARRIVES
+        @ ------------------------------------------------------------
+
+        clearflag FLAG_HIDE_SAFFRON_FANCLUB_SABRINA
+
+        @ Psychic entrance: Sabrina simply appears directly in front of them.
+        setobjectmovementtype LOCALID_SAFFRON_FANCLUB_SABRINA, MOVEMENT_TYPE_FACE_UP
+        showobjectat LOCALID_SAFFRON_FANCLUB_SABRINA, MAP_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB
+
+        delay 10
+
+        @ Both turn toward Sabrina.
+        applymovement LOCALID_PLAYER, SaffronCity_PokemonTrainerFanClub_Frlg_Movement_FaceDown
+        applymovement LOCALID_SAFFRON_FANCLUB_TWIN, SaffronCity_PokemonTrainerFanClub_Frlg_Movement_FaceDown
+        waitmovement 0
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaRemarkable, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerStopDoingThat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaDoingWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerAppearing, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaPsychic, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinNotExplanation, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaSufficient, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerDontStart, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaSimilar, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerNotSimilar, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinNotSimilar, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaPrecisely, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerDontLike, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinToldYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaHeard, MSGBOX_DEFAULT
+        closemessage
+
+
+        @ ------------------------------------------------------------
+        @ SABRINA EXPLAINS ALMOST NOTHING
+        @ ------------------------------------------------------------
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaRecognizes, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhy, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaNotQuestionYet, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOhMyGod, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSeePlace, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerNobodyUseful, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinExactly, MSGBOX_DEFAULT
+        closemessage
+
+        delay 20
+
+        playse SE_PIN
+        delay 20
+
+
+        @ ------------------------------------------------------------
+        @ PLAYER IS PULLED HOME.
+        @ NO RELATIONSHIP REVEAL.
+        @ ------------------------------------------------------------
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaLeaving, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWeLeaving, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaYouAre, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhatAboutMe, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaNotYet, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWaitFinal, MSGBOX_DEFAULT
+        closemessage
+
+        playse SE_PIN
+        delay 20
+
+        msgbox SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPlayerFinal, MSGBOX_DEFAULT
+        closemessage
+
+        setflag FLAG_SAFFRON_FANCLUB_DEBRIEF_DONE
+        setflag FLAG_HIDE_SAFFRON_FANCLUB_TWIN
+        setflag FLAG_HIDE_SAFFRON_FANCLUB_SABRINA
+
+        fadescreen FADE_TO_BLACK
+        delay 30
+
+        warp MAP_ROUTE109_SEASHORE_HOUSE, 7, 6
+
+        waitstate
+        end
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_EventScript_DebriefDone:
+        release
+        end
+
+
+@ =============================================================================
+@ FAN CLUB TEXT
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_CrushGirl:
+        .string "My MACHOKE could beat anybody's\n"
+        .string "favorite POKEMON.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_LittleGirl:
+        .string "That's not what a FAN CLUB is\n"
+        .string "supposed to be about!$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_Youngster:
+        .string "I changed my favorite POKEMON\n"
+        .string "three times this week.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_Gentleman:
+        .string "A true favorite requires years\n"
+        .string "of careful consideration.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_Woman:
+        .string "He says that every week.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_Rocker:
+        .string "You ever hear a MAGNEMITE hum?\p"
+        .string "Music.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_Beauty:
+        .string "My favorite is whichever one\n"
+        .string "looks best next to me.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_BlackBelt:
+        .string "Strength matters.\p"
+        .string "Cuteness also matters.\p"
+        .string "This is complicated.$"
+
+
+@ =============================================================================
+@ OPENING
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFoundMe:
+        .string "{STR_VAR_1}: Took you long enough.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerThisPlace:
+        .string "{PLAYER}: You picked THIS place?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPerfect:
+        .string "{STR_VAR_1}: It's perfect.\p"
+        .string "Nobody here asks useful\n"
+        .string "questions.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSo:
+        .string "{STR_VAR_1}: So?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSoWhat:
+        .string "{PLAYER}: So what?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSilphForever:
+        .string "{STR_VAR_1}: You disappeared into\n"
+        .string "SILPH forever.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerFiveFloors:
+        .string "{PLAYER}: I had to climb\n"
+        .string "five floors.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinAnnoyed:
+        .string "{STR_VAR_1}: You look annoyed.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerMetMisty:
+        .string "{PLAYER}: I met Misty.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinAh:
+        .string "{STR_VAR_1}: Ah.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhyAh:
+        .string "{PLAYER}: Why did you say that\n"
+        .string "like it explains anything?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinDidItNot:
+        .string "{STR_VAR_1}: Did it not?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerUnfortunately:
+        .string "{PLAYER}: ...Unfortunately.$"
+
+
+@ =============================================================================
+@ SILPH SUMMARY
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLoreleiSummary:
+        .string "{PLAYER}: Lorelei says twelve\n"
+        .string "people built all of this.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSplitSummary:
+        .string "{PLAYER}: Then six split off.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerFamiliarSummary:
+        .string "{PLAYER}: I met somebody who\n"
+        .string "looked weirdly familiar.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerMistySummary:
+        .string "{PLAYER}: Misty apparently knows\n"
+        .string "them.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerGiovanniSummary:
+        .string "{PLAYER}: Giovanni thinks waiting\n"
+        .string "for agreement can be dangerous.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinGiovanni:
+        .string "{STR_VAR_1}: ...Giovanni?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerKnowHim:
+        .string "{PLAYER}: You know him?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinKnowOfHim:
+        .string "{STR_VAR_1}: I know OF him.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOfCourse:
+        .string "{PLAYER}: Of course you do.$"
+
+
+@ =============================================================================
+@ INVESTIGATION
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFoundRecords:
+        .string "{STR_VAR_1}: I found records.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerAboutTwelve:
+        .string "{PLAYER}: About the Twelve?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinBlame:
+        .string "{STR_VAR_1}: About everyone blaming\n"
+        .string "everyone else.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerHelpful:
+        .string "{PLAYER}: Helpful.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinVery:
+        .string "{STR_VAR_1}: Very.$"
+
+
+@ =============================================================================
+@ NO PICKING A SIDE YET
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhoRight:
+        .string "{PLAYER}: So who do you think\n"
+        .string "was right?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinTerribleQuestion:
+        .string "{STR_VAR_1}: I think that's a\n"
+        .string "terrible question.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOkay:
+        .string "{PLAYER}: ...Okay?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinFiveMinutes:
+        .string "{STR_VAR_1}: You met Lorelei,\n"
+        .string "Misty, Giovanni and Sabrina\p"
+        .string "for five minutes each.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPickSide:
+        .string "{STR_VAR_1}: And now you want\n"
+        .string "to pick a side?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerSayLikeThat:
+        .string "{PLAYER}: When you say it\n"
+        .string "like that...$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinHowYouSaidIt:
+        .string "{STR_VAR_1}: That's how you\n"
+        .string "said it.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinForgetRight:
+        .string "{STR_VAR_1}: Forget who's right.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhatMatters:
+        .string "{STR_VAR_1}: What matters to\n"
+        .string "you right now?$"
+
+
+@ =============================================================================
+@ VIRTUE RESPONSES
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhoHurt:
+        .string "{PLAYER}: Who got hurt?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinCompassionReply:
+        .string "{STR_VAR_1}: ...That's probably\n"
+        .string "where I'd start too.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhatHappened:
+        .string "{PLAYER}: What really happened?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinCuriosityReply:
+        .string "{STR_VAR_1}: Then we need more\n"
+        .string "than everyone's version.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhatNext:
+        .string "{PLAYER}: What happens next?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinResolveReply:
+        .string "{STR_VAR_1}: That's the part\n"
+        .string "I'm worried about.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinStoryProblem:
+        .string "{STR_VAR_1}: Maybe that's the\n"
+        .string "problem.\p"
+        .string "Everyone sounds reasonable\p"
+        .string "until someone else tells\n"
+        .string "the story.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYeah:
+        .string "{PLAYER}: ...Yeah.$"
+
+
+@ =============================================================================
+@ ARTIFACT REACTION
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWait:
+        .string "{PLAYER}: ...Wait.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhat:
+        .string "{STR_VAR_1}: What?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerBookReacting:
+        .string "{PLAYER}: The book.\p"
+        .string "It's doing that weird thing\n"
+        .string "again.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerKeyReacting:
+        .string "{PLAYER}: The Key.\p"
+        .string "It's getting warm.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinMineToo:
+        .string "{STR_VAR_1}: ...Mine too.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLookingWhy:
+        .string "{PLAYER}: Why are you looking\n"
+        .string "at me like that?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinKeyReacting:
+        .string "{STR_VAR_1}: Because my Key\n"
+        .string "is doing it too.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinBookReacting:
+        .string "{STR_VAR_1}: Because my book\n"
+        .string "is doing it too.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYourWhat:
+        .string "{PLAYER}: YOUR WHAT?!$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerYourWhatBook:
+        .string "{PLAYER}: YOUR WHAT?!$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerLeaveOut:
+        .string "{PLAYER}: And you were just going\n"
+        .string "to leave that out?!$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinDidntAsk:
+        .string "{STR_VAR_1}: You didn't ask.$"
+
+
+@ =============================================================================
+@ SABRINA
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaRemarkable:
+        .string "SABRINA: Remarkable.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerDontStart:
+        .string "{PLAYER}: Please don't start.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaSimilar:
+        .string "SABRINA: You two are remarkably\n"
+        .string "similar.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerNotSimilar:
+        .string "{PLAYER}: We are not.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinNotSimilar:
+        .string "{STR_VAR_1}: We are not.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaPrecisely:
+        .string "SABRINA: Precisely.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerDontLike:
+        .string "{PLAYER}: I don't like you.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinToldYou:
+        .string "{STR_VAR_1}: I told you.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaHeard:
+        .string "SABRINA: Yes. I heard you.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaRecognizes:
+        .string "SABRINA: The Book recognizes\n"
+        .string "the Key.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWhy:
+        .string "{PLAYER}: Why?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaNotQuestionYet:
+        .string "SABRINA: That is not the question\n"
+        .string "you should ask yet.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerOhMyGod:
+        .string "{PLAYER}: OH MY GOD.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinSeePlace:
+        .string "{STR_VAR_1}: See?\p"
+        .string "Now you understand why I\n"
+        .string "picked this place.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerNobodyUseful:
+        .string "{PLAYER}: Nobody here asks\n"
+        .string "useful questions.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinExactly:
+        .string "{STR_VAR_1}: Exactly.$"
+
+
+@ =============================================================================
+@ EXIT
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaLeaving:
+        .string "SABRINA: You're leaving.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWeLeaving:
+        .string "{PLAYER}: We're leaving?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaYouAre:
+        .string "SABRINA: You are.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinWhatAboutMe:
+        .string "{STR_VAR_1}: ...What about me?$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaNotYet:
+        .string "SABRINA: Not yet.$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerWaitFinal:
+        .string "{PLAYER}: Wait-$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinPlayerFinal:
+        .string "{STR_VAR_1}: {PLAYER}-$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_NameSol:
+        .string "SOL$"
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_NameXie:
+        .string "XIE$"
+
+
+@ =============================================================================
+@ FINALE MOVEMENTS
+@ =============================================================================
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Movement_FaceDown:
+        walk_in_place_faster_down
+        step_end
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerStopDoingThat:
+        .string "{PLAYER}: CAN YOU STOP\n"
+        .string "DOING THAT?!$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaDoingWhat:
+        .string "SABRINA: Doing what?$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_PlayerAppearing:
+        .string "{PLAYER}: Appearing out of\n"
+        .string "nowhere!$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaPsychic:
+        .string "SABRINA: I'm psychic.$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_TwinNotExplanation:
+        .string "{STR_VAR_1}: ...That's not an\n"
+        .string "explanation.$"
+
+
+SaffronCity_PokemonTrainerFanClub_Frlg_Text_SabrinaSufficient:
+        .string "SABRINA: It was sufficient.$"

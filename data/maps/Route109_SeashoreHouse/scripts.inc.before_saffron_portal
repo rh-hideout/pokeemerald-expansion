@@ -1,0 +1,15 @@
+@ =============================================================================
+@ ROUTE 109 - SEASHORE HOUSE
+@
+@ Former vanilla Soda Pop battle house.
+@ Repurposed for custom story / Twelve-Six lore sequence.
+@ =============================================================================
+
+Route109_SeashoreHouse_MapScripts::
+        map_script MAP_SCRIPT_ON_TRANSITION, Route109_SeashoreHouse_OnTransition
+        .byte 0
+
+
+Route109_SeashoreHouse_OnTransition:
+        setflag FLAG_LANDMARK_SEASHORE_HOUSE
+        end

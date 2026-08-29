@@ -466,7 +466,7 @@ MauvilleCity_Text_UncleHesTooPeppy:
 
 MauvilleCity_Text_WallyWantToChallengeGym:
 	.string "WALLY: Aww, UNCLE, please?\p"
-	.string "I want to challenge this GYM and see\n"
+	.string "I want to challenge this SHRINE and see\n"
 	.string "how much better I've become.\p"
 	.string "Please? May I, please?$"
 
@@ -475,7 +475,7 @@ MauvilleCity_Text_UncleYourePushingIt:
 	.string "Since you started living with POKéMON,\n"
 	.string "you have grown quite a lot stronger.\p"
 	.string "But don't you think you're pushing it\n"
-	.string "to suddenly challenge a GYM?$"
+	.string "to suddenly challenge a SHRINE?$"
 
 MauvilleCity_Text_WallyWeCanBeatAnyone:
 	.string "WALLY: I'm not pushing it.\p"
@@ -561,17 +561,28 @@ MauvilleCity_Text_RegisteredWally:
 	.string "in the POKéNAV.$"
 
 MauvilleCity_Text_ScottYouDidntHoldBack:
-	.string "SCOTT: Hehe…\n"
-	.string "I was watching that match!\p"
-	.string "You're friends with that boy WALLY,\n"
-	.string "aren't you?\p"
-	.string "But you didn't hold anything back\n"
-	.string "and beat him impressively.\p"
-	.string "Yeah! That's what a real POKéMON\n"
-	.string "battle is all about!\p"
-	.string "I idolize TRAINERS like that!\p"
-	.string "… … … … … …\n"
-	.string "I'll be cheering for you!$"
+    .string "{PLAYER}: Anabel?\p"
+    .string "ANABEL: Hm? Oh. Hello again.\p"
+    .string "I was watching that battle.\n"
+    .string "You didn't hesitate at all.\p"
+    .string "He matters to you, doesn't he?\p"
+    .string "But you still took the battle\n"
+    .string "seriously.\p"
+    .string "That's good.\p"
+    .string "Hesitation tells me more than\n"
+    .string "losing does.\p"
+    .string "{PLAYER}: ...Why are you in\n"
+    .string "MAUVILLE?\p"
+    .string "ANABEL: I travel.\p"
+    .string "{PLAYER}: ...Right.\p"
+    .string "ANABEL: Oh. And {PLAYER}?\p"
+    .string "That fifth-floor thing is still\n"
+    .string "bothering you, isn't it?\p"
+    .string "{PLAYER}: ...\p"
+    .string "ANABEL: Maybe I'll tell you one day.\p"
+    .string "Depending on how things go.\p"
+    .string "{PLAYER}: Depending on WHAT?\p"
+    .string "ANABEL: See you around. :)$"
 
 MauvilleCity_Text_WattsonNeedFavorTakeKey:
 	.string "WATTSON: Oh, {PLAYER}{KUN}!\n"
@@ -635,8 +646,8 @@ MauvilleCity_Text_CitySign:
 	.string "“The bright and shiny city of fun!”$"
 
 MauvilleCity_Text_GymSign:
-	.string "MAUVILLE CITY POKéMON GYM\n"
-	.string "LEADER: WATTSON\l"
+	.string "MAUVILLE CITY SHRINE\n"
+	.string "KEEPER: WATTSON\l"
 	.string "“The cheerfully electrifying man!”$"
 
 MauvilleCity_Text_BikeShopSign:
@@ -662,3 +673,128 @@ MauvilleCity_Text_ExplainTV:
 
 MauvilleCity_Text_BeenCheckingOutTV:
 	.string "Hi, have you been checking out TVs?$"
+
+
+@ =============================================================================
+@ BROCK POST-WATTSON SUMMON
+@ =============================================================================
+
+MauvilleCity_EventScript_CheckBrockPostWattsonCall::
+    goto_if_set FLAG_BROCK_POST_WATTSON_CALL_DONE, MauvilleCity_EventScript_BrockCallAlreadyDone
+    lockall
+    delay 30
+    playse SE_PIN
+    waitse
+    msgbox MauvilleCity_Text_BrockPostWattsonCall, MSGBOX_DEFAULT
+    setflag FLAG_BROCK_POST_WATTSON_CALL_DONE
+    releaseall
+    return
+
+MauvilleCity_EventScript_BrockCallAlreadyDone::
+    return
+
+
+@ =============================================================================
+@ BROCK'S TEMPORARY MAUVILLE DRIVER
+@ =============================================================================
+
+MauvilleCity_EventScript_BrockDriver::
+    lock
+    faceplayer
+    goto_if_unset FLAG_BROCK_POST_WATTSON_CALL_DONE, MauvilleCity_EventScript_BrockDriverBeforeCall
+    msgbox MauvilleCity_Text_BrockDriverReady, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, YES, MauvilleCity_EventScript_BrockDriverAccept
+    msgbox MauvilleCity_Text_BrockDriverWait, MSGBOX_DEFAULT
+    release
+    end
+
+MauvilleCity_EventScript_BrockDriverBeforeCall::
+    msgbox MauvilleCity_Text_AllSortsOfPeopleComeThrough, MSGBOX_DEFAULT
+    release
+    end
+
+MauvilleCity_EventScript_BrockDriverAccept::
+    msgbox MauvilleCity_Text_BrockDriverAccept, MSGBOX_DEFAULT
+    closemessage
+    warp MAP_LITTLEROOT_TOWN, 34, 19
+    waitstate
+    end
+
+    closemessage
+    fadeoutbgm 4
+    fadescreen FADE_TO_BLACK
+    warp MAP_LITTLEROOT_TOWN, 34, 19
+    waitstate
+    end
+
+
+@ =============================================================================
+@ BROCK SUMMON / DRIVER TEXT
+@ =============================================================================
+
+MauvilleCity_Text_BrockPostWattsonCall:
+    .string "... ... ... ... ... Beep!\p"
+    .string "BROCK: {PLAYER}?\n"
+    .string "Heard through the grapevine you got\l"
+    .string "your third FRAGMENT.\p"
+    .string "Nice work.\p"
+    .string "Remember what I told you?\n"
+    .string "Come back after your third.\p"
+    .string "Well... this is me calling that in.\p"
+    .string "I finally tracked down the ingredient\n"
+    .string "I need.\p"
+    .string "I need you back in LITTLEROOT.\n"
+    .string "ASAP.\p"
+    .string "I already sent someone to give you\n"
+    .string "a ride.\p"
+    .string "He should be around MAUVILLE.\p"
+    .string "Don't keep me waiting.\p"
+    .string "... ... ... ... ... Click!$"
+
+MauvilleCity_Text_BrockDriverReady:
+    .string "{PLAYER}?\p"
+    .string "BROCK sent me.\n"
+    .string "Said you'd know why.\p"
+    .string "Ready to head back to LITTLEROOT?$"
+
+MauvilleCity_Text_BrockDriverWait:
+    .string "No problem.\n"
+    .string "I'll be here when you're ready.$"
+
+MauvilleCity_Text_BrockDriverAccept:
+    .string "All right.\n"
+    .string "Let's get going.$"
+
+@ =============================================================================
+@ BROCK POST-WATTSON COORD TRIGGER
+@ Fires after leaving Mauville Shrine with Fragment 3.
+@ =============================================================================
+
+MauvilleCity_EventScript_BrockPostWattsonTrigger::
+    goto_if_unset FLAG_BADGE03_GET, MauvilleCity_EventScript_BrockPostWattsonTrigger_End
+    goto_if_set FLAG_BROCK_POST_WATTSON_CALL_DONE, MauvilleCity_EventScript_BrockPostWattsonTrigger_End
+    lockall
+    delay 30
+    playse SE_PIN
+    waitse
+    msgbox MauvilleCity_Text_BrockPostWattsonCall, MSGBOX_DEFAULT
+    setflag FLAG_BROCK_POST_WATTSON_CALL_DONE
+    applymovement LOCALID_MAUVILLE_BROCK_DRIVER, MauvilleCity_Movement_BrockDriverApproach
+    waitmovement 0
+    copyobjectxytoperm LOCALID_MAUVILLE_BROCK_DRIVER
+    releaseall
+
+MauvilleCity_EventScript_BrockPostWattsonTrigger_End::
+    end
+
+MauvilleCity_Movement_BrockDriverApproach:
+    walk_up
+    walk_up
+    walk_up
+    walk_up
+    walk_left
+    walk_left
+    walk_left
+    walk_left
+    walk_in_place_faster_left
+    step_end

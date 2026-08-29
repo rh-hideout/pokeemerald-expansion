@@ -148,12 +148,36 @@ SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGrunt::
 	waitmovement 0
 	applymovement LOCALID_OCEANIC_MUSEUM_FAMILIAR_GRUNT, Common_Movement_Delay48
 	waitmovement 0
-	msgbox SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_TM_THIEF
-	goto_if_eq VAR_RESULT, 0, SlateportCity_OceanicMuseum_1F_EventScript_NoRoomForThief
-	setflag FLAG_RECEIVED_TM_THIEF
-	msgbox SlateportCity_OceanicMuseum_1F_Text_HopeINeverSeeYouAgain, MSGBOX_DEFAULT
-	closemessage
+        msgbox SlateportCity_OceanicMuseum_1F_Text_PlayerAskAboutCarpy, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_JamesCarpyFine, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_PlayerStillShiny, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_JamesStillShiny, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_PlayerFortunate, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_JamesAnywayTakeThis, MSGBOX_DEFAULT
+        closemessage
+
+        giveitem ITEM_TM_THIEF
+        goto_if_eq VAR_RESULT, 0, SlateportCity_OceanicMuseum_1F_EventScript_NoRoomForThief
+        setflag FLAG_RECEIVED_TM_THIEF
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_JamesItsThief, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_PlayerOfCourseThief, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_OceanicMuseum_1F_Text_JamesWhatMean, MSGBOX_DEFAULT
+        closemessage
 	goto_if_eq VAR_FACING, DIR_NORTH, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitNorth
 	goto_if_eq VAR_FACING, DIR_SOUTH, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitSouth
 	goto_if_eq VAR_FACING, DIR_WEST, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitWestEast
@@ -246,7 +270,7 @@ SlateportCity_OceanicMuseum_1F_Text_AquaExistForGoodOfAll:
 
 SlateportCity_OceanicMuseum_1F_Text_OurBossIsntHere:
 	.string "We were told to assemble here,\n"
-	.string "so we did, but…\p"
+	.string "so we did, but...\p"
 	.string "Our BOSS, the linchpin, isn't here.$"
 
 SlateportCity_OceanicMuseum_1F_Text_WouldStuffHereMakeMeRich:
@@ -255,7 +279,7 @@ SlateportCity_OceanicMuseum_1F_Text_WouldStuffHereMakeMeRich:
 
 SlateportCity_OceanicMuseum_1F_Text_CanLearnForNefariousDeeds:
 	.string "What I learn here, I can put to use on\n"
-	.string "nefarious deeds…$"
+	.string "nefarious deeds...$"
 
 SlateportCity_OceanicMuseum_1F_Text_RustboroBungled:
 	.string "If our goons didn't bungle things\n"
@@ -277,7 +301,7 @@ SlateportCity_OceanicMuseum_1F_Text_SternIsRoleModel:
 
 SlateportCity_OceanicMuseum_1F_Text_MustBePokemonWeDontKnow:
 	.string "The sea is vast without end, and\n"
-	.string "infinitely deep…\p"
+	.string "infinitely deep...\p"
 	.string "There must be many POKéMON that\n"
 	.string "we don't know about.$"
 
@@ -308,71 +332,104 @@ SlateportCity_OceanicMuseum_1F_Text_YouHaveToTakeThis:
 SlateportCity_OceanicMuseum_1F_Text_WhirlpoolExperiment:
 	.string "A blue fluid is spiraling inside\n"
 	.string "a glass vessel.\p"
-	.string "“This is an experiment to create a\n"
-	.string "WHIRLPOOL artificially using wind.”$"
+        .string "This is an experiment to create a\n"
+        .string "WHIRLPOOL artificially using wind.$"
 
 SlateportCity_OceanicMuseum_1F_Text_WaterfallExperiment:
 	.string "A red ball is bobbing up and down\n"
 	.string "inside a glass vessel.\p"
-	.string "“This is an experiment simulating a\n"
-	.string "WATERFALL using the ball's buoyancy.”$"
+	.string "This is an experiment simulating a\n"
+	.string "WATERFALL using the ball's buoyancy.$"
 
 SlateportCity_OceanicMuseum_1F_Text_OceanSoilDisplay:
 	.string "It's a sample of soil from the ocean\n"
 	.string "floor.\p"
-	.string "“Over many years, the remains of\n"
+	.string "Over many years, the remains of\n"
 	.string "life-forms settle at the bottom of\l"
 	.string "the sea, making sedimentary layers.\p"
-	.string "“By analyzing these layers, the\n"
-	.string "ancient past is revealed.”$"
+	.string "By analyzing these layers, the\n"
+	.string "ancient past is revealed.$"
 
 SlateportCity_OceanicMuseum_1F_Text_BeachSandDisplay:
 	.string "It's a sample of beach sand.\p"
-	.string "“Stones from mountains are washed\n"
+	.string "Stones from mountains are washed\n"
 	.string "down by rivers where they are\l"
 	.string "chipped and ground down.\p"
-	.string "“They are reduced to grains and end\n"
-	.string "up as sand on beaches.”$"
+	.string "They are reduced to grains and end\n"
+	.string "up as sand on beaches.$"
 
 SlateportCity_OceanicMuseum_1F_Text_OceanicMinifact1:
-	.string "“OCEANIC MINIFACT 1\n"
+	.string "OCEANIC MINIFACT 1\n"
 	.string "Why is seawater blue?\p"
-	.string "“Light is composed of many colors.\p"
-	.string "“When light passes through water,\n"
+	.string "Light is composed of many colors.\p"
+	.string "When light passes through water,\n"
 	.string "most kinds of light lose color.\p"
-	.string "“However, blue light retains its\n"
-	.string "color, making the sea appear blue.”$"
+	.string "However, blue light retains its\n"
+	.string "color, making the sea appear blue.$"
 
 SlateportCity_OceanicMuseum_1F_Text_OceanicMinifact2:
-	.string "“OCEANIC MINIFACT 2\n"
+	.string "OCEANIC MINIFACT 2\n"
 	.string "Why is the sea salty?\p"
-	.string "“Seawater contains dissolved salt in\n"
+	.string "Seawater contains dissolved salt in\n"
 	.string "the form of sodium and chlorine ions.\p"
-	.string "“These ions leech out of rocks\n"
+	.string "These ions leech out of rocks\n"
 	.string "and are carried out to sea by rain.\p"
-	.string "“The concentration of dissolved salt\n"
-	.string "makes the sea salty.”$"
+	.string "The concentration of dissolved salt\n"
+	.string "makes the sea salty.$"
 
 SlateportCity_OceanicMuseum_1F_Text_OceanicMinifact3:
-	.string "“OCEANIC MINIFACT 3\n"
+	.string "OCEANIC MINIFACT 3\n"
 	.string "Which is bigger? The sea or land?\p"
-	.string "“The sea covers about 70% of\n"
+	.string "The sea covers about 70% of\n"
 	.string "the planet, and the rest is land.\p"
-	.string "“The sea is therefore more than twice\n"
-	.string "the size of land.”$"
+	.string "The sea is therefore more than twice\n"
+	.string "the size of land.$"
 
 SlateportCity_OceanicMuseum_1F_Text_FossilDisplay:
 	.string "It's a fossil with wavy ridges on it.\p"
-	.string "“Soil on the ocean floor gets scoured\n"
+	.string "Soil on the ocean floor gets scoured\n"
 	.string "by the tide.\p"
-	.string "“The flowing seawater marks the soil\n"
+	.string "The flowing seawater marks the soil\n"
 	.string "with small ridges and valleys.\p"
-	.string "“If this soil becomes fossilized, it is\n"
-	.string "called a ripple mark.”$"
+	.string "If this soil becomes fossilized, it is\n"
+	.string "called a ripple mark.$"
 
 SlateportCity_OceanicMuseum_1F_Text_DepthMeasuringMachine:
 	.string "A strange machine is rotating under\n"
 	.string "a glass dome.\p"
 	.string "Maybe it's for measuring the depth\n"
-	.string "of something…$"
+	.string "of something...$"
 
+
+SlateportCity_OceanicMuseum_1F_Text_PlayerAskAboutCarpy:
+        .string "{PLAYER}: Hey, James.\p"
+        .string "How's Carpy?$"
+
+SlateportCity_OceanicMuseum_1F_Text_JamesCarpyFine:
+        .string "JAMES: ...He's fine.$"
+
+SlateportCity_OceanicMuseum_1F_Text_PlayerStillShiny:
+        .string "{PLAYER}: Still shiny?$"
+
+SlateportCity_OceanicMuseum_1F_Text_JamesStillShiny:
+        .string "JAMES: YES, he's still shiny.\p"
+        .string "Apparently our evil experiment\n"
+        .string "was more permanent than expected.$"
+
+SlateportCity_OceanicMuseum_1F_Text_PlayerFortunate:
+        .string "{PLAYER}: That's unfortunate.\p"
+        .string "...Unless he likes it.$"
+
+SlateportCity_OceanicMuseum_1F_Text_JamesAnywayTakeThis:
+        .string "JAMES: He does.\p"
+        .string "Anyway... take this.$"
+
+SlateportCity_OceanicMuseum_1F_Text_JamesItsThief:
+        .string "JAMES: It's THIEF.$"
+
+SlateportCity_OceanicMuseum_1F_Text_PlayerOfCourseThief:
+        .string "{PLAYER}: Of course it is.$"
+
+SlateportCity_OceanicMuseum_1F_Text_JamesWhatMean:
+        .string "JAMES: What is THAT supposed\n"
+        .string "to mean?!$"

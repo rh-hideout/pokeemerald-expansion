@@ -53,6 +53,25 @@ DewfordTown_EventScript_SailBackToPetalburg::
 	goto DewfordTown_EventScript_SailToPetalburg
 	end
 
+DewfordTown_EventScript_BreederJoy::
+        lock
+        faceplayer
+        msgbox DewfordTown_Text_BreederJoyOffer, MSGBOX_YESNO
+        goto_if_eq VAR_RESULT, NO, DewfordTown_EventScript_BreederJoyDecline
+
+        trainerbattle_single TRAINER_BREEDER_JOY_DEWFORD, DewfordTown_Text_BreederJoyIntro, DewfordTown_Text_BreederJoyDefeat
+        cleartrainerflag TRAINER_BREEDER_JOY_DEWFORD
+
+        msgbox DewfordTown_Text_BreederJoyAfterBattle, MSGBOX_DEFAULT
+        release
+        end
+
+DewfordTown_EventScript_BreederJoyDecline::
+        msgbox DewfordTown_Text_BreederJoyDecline, MSGBOX_DEFAULT
+        release
+        end
+
+
 DewfordTown_EventScript_Woman::
 	msgbox DewfordTown_Text_TinyIslandCommunity, MSGBOX_NPC
 	end
@@ -637,8 +656,8 @@ DewfordTown_Text_TownSign:
 	.string "“A tiny island in the blue sea.”$"
 
 DewfordTown_Text_GymSign:
-	.string "DEWFORD TOWN POKéMON GYM\n"
-	.string "LEADER: BRAWLY\l"
+	.string "DEWFORD TOWN SHRINE\n"
+	.string "KEEPER: BRAWLY\l"
 	.string "“A big wave in fighting!”$"
 
 DewfordTown_Text_HallSign:
@@ -789,3 +808,26 @@ DewfordTown_Text_YeahDefinitionOfInRightNow:
 	.string "Yeah, absolutely right!\p"
 	.string "“{STR_VAR_1}” is the\n"
 	.string "definition of “in” right now.$"
+
+
+DewfordTown_Text_BreederJoyOffer:
+        .string "JOY: Looking to train your POKéMON?\p"
+        .string "My AUDINO are happy to help.\p"
+        .string "Want to have a practice battle?$"
+
+DewfordTown_Text_BreederJoyIntro:
+        .string "JOY: All right!\n"
+        .string "Let's make this a good workout!$"
+
+DewfordTown_Text_BreederJoyDefeat:
+        .string "JOY: Nicely done!$"
+
+DewfordTown_Text_BreederJoyAfterBattle:
+        .string "JOY: Good work!\p"
+        .string "Come back whenever you want another\n"
+        .string "round.$"
+
+DewfordTown_Text_BreederJoyDecline:
+        .string "JOY: No problem.\p"
+        .string "I'll be here if you change your mind.$"
+

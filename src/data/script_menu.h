@@ -1202,6 +1202,13 @@ static const struct MenuAction sMultichoiceList_SaffronTruthResponse[] =
     { COMPOUND_STRING("What happens next?") },
 };
 
+static const struct MenuAction sMultichoiceList_CeruleanBookDisclosure[] =
+{
+    { COMPOUND_STRING("Tell them everything.") },
+    { COMPOUND_STRING("Tell them about book.") },
+    { COMPOUND_STRING("Deflect.") },
+};
+
 static const struct MenuAction sMultichoiceList_CeruleanLibraryOldMan[] =
 {
     { COMPOUND_STRING("Are you sure?") },
@@ -1380,6 +1387,7 @@ const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTICHOICE_CERULEAN_FIRST_RESPONSE] = MULTICHOICE(sMultichoiceList_CeruleanFirstResponse),
     [MULTICHOICE_SAFFRON_TRUTH_RESPONSE] = MULTICHOICE(sMultichoiceList_SaffronTruthResponse),
     [MULTICHOICE_CARPY_DECISION] = MULTICHOICE(sMultichoiceList_CarpyDecision),
+    [MULTICHOICE_CERULEAN_BOOK_DISCLOSURE] = MULTICHOICE(sMultichoiceList_CeruleanBookDisclosure),
     
 };
 

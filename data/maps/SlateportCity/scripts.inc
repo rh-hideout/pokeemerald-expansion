@@ -7,8 +7,12 @@ SlateportCity_OnTransition:
 	setvar VAR_SLATEPORT_MUSEUM_1F_STATE, 0
 	call SlateportCity_EventScript_EnterSlateport
 	call_if_eq VAR_SLATEPORT_CITY_STATE, 1, SlateportCity_EventScript_MovePeopleForSternInterview
-	call_if_eq VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1, SlateportCity_EventScript_SetReadyForScottScene
+      call_if_eq VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1, SlateportCity_EventScript_ShowErikaSabrina
 	end
+
+SlateportCity_EventScript_ShowErikaSabrina:
+      clearflag FLAG_HIDE_SLATEPORT_CITY_SCOTT
+      return
 
 SlateportCity_EventScript_EnterSlateport::
 	setflag FLAG_VISITED_SLATEPORT_CITY
@@ -33,85 +37,407 @@ SlateportCity_EventScript_MovePeopleForSternInterview::
 	setobjectmovementtype LOCALID_SLATEPORT_MAN_1, MOVEMENT_TYPE_FACE_LEFT
 	return
 
-SlateportCity_EventScript_SetReadyForScottScene::
-	setflag FLAG_HIDE_MAP_NAME_POPUP
-	getplayerxy VAR_0x8004, VAR_0x8005
-	goto_if_eq VAR_0x8004, 30, SlateportCity_EventScript_MoveScottLeft
-	setobjectxyperm LOCALID_SLATEPORT_SCOTT, 23, 27
-	setobjectmovementtype LOCALID_SLATEPORT_SCOTT, MOVEMENT_TYPE_FACE_RIGHT
-	return
-
-SlateportCity_EventScript_MoveScottLeft::
-	setobjectxyperm LOCALID_SLATEPORT_SCOTT, 22, 27
-	setobjectmovementtype LOCALID_SLATEPORT_SCOTT, MOVEMENT_TYPE_FACE_RIGHT
-	return
+@ =============================================================================
+@ SLATEPORT POST-MUSEUM LORE SCENE
+@ ERIKA = THE 12
+@ SABRINA = THE 6
+@ =============================================================================
 
 SlateportCity_OnFrame:
-	map_script_2 VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1, SlateportCity_EventScript_ScottScene
-	.2byte 0
+        .2byte 0
 
-SlateportCity_EventScript_ScottScene::
-	lockall
-	addobject LOCALID_SLATEPORT_SCOTT
-	applymovement LOCALID_PLAYER, SlateportCity_Movement_PlayerFaceScott
-	applymovement LOCALID_SLATEPORT_SCOTT, SlateportCity_Movement_ScottApproachPlayer
-	waitmovement 0
-	msgbox SlateportCity_Text_YouDroveTeamAquaAway, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-	delay 60
-	msgbox SlateportCity_Text_MaybeThisTrainer, MSGBOX_DEFAULT
-	applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterRight
-	waitmovement 0
-	msgbox SlateportCity_Text_LetsRegisterEachOther, MSGBOX_DEFAULT
-	closemessage
-	delay 30
-	playfanfare MUS_REGISTER_MATCH_CALL
-	msgbox SlateportCity_Text_RegisteredScott, MSGBOX_DEFAULT
-	waitfanfare
-	closemessage
-	delay 30
-	setflag FLAG_ENABLE_SCOTT_MATCH_CALL
-	msgbox SlateportCity_Text_KeepEyeOnTrainersBeSeeingYou, MSGBOX_DEFAULT
-	closemessage
-	applymovement LOCALID_SLATEPORT_SCOTT, SlateportCity_Movement_ScottExit
-	waitmovement 0
-	removeobject LOCALID_SLATEPORT_SCOTT
-	setobjectxyperm LOCALID_SLATEPORT_SCOTT, 10, 12
-	setobjectmovementtype LOCALID_SLATEPORT_SCOTT, MOVEMENT_TYPE_FACE_DOWN
-	clearflag FLAG_HIDE_MAP_NAME_POPUP
-	setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 2
-	addvar VAR_SCOTT_STATE, 1
-	releaseall
-	end
 
-SlateportCity_Movement_PlayerFaceScott:
-	delay_16
-	delay_8
-	walk_in_place_faster_left
-	step_end
+SlateportCity_EventScript_ErikaSabrinaScene::
+        lockall
 
-SlateportCity_Movement_ScottApproachPlayer:
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	step_end
+        @ Erika and Sabrina begin facing each other.
+        setobjectxyperm LOCALID_SLATEPORT_SCOTT, 22, 27
+        setobjectmovementtype LOCALID_SLATEPORT_SCOTT, MOVEMENT_TYPE_FACE_RIGHT
 
-SlateportCity_Movement_ScottExit:
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
+        setobjectxyperm LOCALID_SLATEPORT_SABRINA, 23, 27
+        setobjectmovementtype LOCALID_SLATEPORT_SABRINA, MOVEMENT_TYPE_FACE_LEFT
+
+        @ Player is standing directly below them.
+        applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+        waitmovement 0
+
+        @ Sabrina notices PLAYER and turns down.
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterDown
+        waitmovement 0
+
+        msgbox SlateportCity_Text_SabrinaNoticesBook, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_PlayerCarryingWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaBookWasntLost, MSGBOX_DEFAULT
+        closemessage
+
+        @ Erika turns back toward Sabrina.
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterRight
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterLeft
+        waitmovement 0
+
+        msgbox SlateportCity_Text_ErikaEnough, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaTwelveReveal, MSGBOX_DEFAULT
+        closemessage
+
+        @ Both look at PLAYER after Sabrina drops "The Twelve."
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterDown
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterDown
+        waitmovement 0
+
+        msgbox SlateportCity_Text_PlayerTheTwelve, MSGBOX_DEFAULT
+        closemessage
+
+        @ Erika and Sabrina turn back toward each other.
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterRight
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterLeft
+        waitmovement 0
+
+        msgbox SlateportCity_Text_ErikaWarnsSabrina, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaKeptInDark, MSGBOX_DEFAULT
+        closemessage
+
+        @ PLAYER demands answers, so both turn toward them.
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterDown
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterDown
+        waitmovement 0
+
+        msgbox SlateportCity_Text_PlayerWhoAreYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaAskWhoRaisedYou, MSGBOX_DEFAULT
+        closemessage
+
+        @ Erika objects directly to Sabrina.
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterRight
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterLeft
+        waitmovement 0
+
+        msgbox SlateportCity_Text_ErikaDont, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaWhyNot, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_ErikaAnswer, MSGBOX_DEFAULT
+        closemessage
+
+        @ Conversation with each other is over.
+        @ Both turn back toward PLAYER.
+        applymovement LOCALID_SLATEPORT_SCOTT, Common_Movement_WalkInPlaceFasterDown
+        applymovement LOCALID_SLATEPORT_SABRINA, Common_Movement_WalkInPlaceFasterDown
+        waitmovement 0
+
+        msgbox SlateportCity_Text_ErikaPrivateBusiness, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaCallHome, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_PlayerPsychicPause, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaPsychicAside, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaNowCall, MSGBOX_DEFAULT
+        closemessage
+
+        @ FLAG_HIDE_HOME_MOM = Dad/Elias raised player.
+        goto_if_set FLAG_HIDE_HOME_MOM, SlateportCity_EventScript_CallElias
+        goto SlateportCity_EventScript_CallTia
+
+
+SlateportCity_EventScript_CallElias::
+        pokenavcall SlateportCity_Text_EliasCall
+        waitmessage
+        goto SlateportCity_EventScript_AfterParentCall
+
+
+SlateportCity_EventScript_CallTia::
+        pokenavcall SlateportCity_Text_TiaCall
+        waitmessage
+        goto SlateportCity_EventScript_AfterParentCall
+
+
+SlateportCity_EventScript_AfterParentCall::
+        msgbox SlateportCity_Text_ErikaYouHeardThem, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_PlayerYouKnew, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_ErikaSuspected, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaSheKnew, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_ErikaSabrinaAgain, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaGoToHouse, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_PlayerDoesntLikeThem, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SlateportCity_Text_SabrinaThatsFine, MSGBOX_DEFAULT
+        closemessage
+
+        goto SlateportCity_EventScript_FinishLoreScene
+
+
+SlateportCity_EventScript_FinishLoreScene::
+        @ State 3 permanently skips both vanilla Scott scenes.
+        setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 3
+        setflag FLAG_HIDE_SLATEPORT_CITY_SCOTT
+        clearflag FLAG_HIDE_MAP_NAME_POPUP
+        releaseall
+        end
+
+
+@ =============================================================================
+@ MOVEMENTS
+@ =============================================================================
+
+SlateportCity_Movement_SabrinaLeave:
+        walk_right
+        walk_right
+        walk_right
+        walk_right
+        walk_right
+        walk_right
+        step_end
+
+
+SlateportCity_Movement_ErikaLeave:
+        walk_left
+        walk_left
+        walk_left
+        walk_left
+        walk_left
+        walk_left
+        step_end
+
+
+@ =============================================================================
+@ DIALOGUE
+@ =============================================================================
+
+SlateportCity_Text_SabrinaNoticesBook:
+        .string "SABRINA: ...\p"
+        .string "You're still carrying it.$"
+
+
+SlateportCity_Text_PlayerCarryingWhat:
+        .string "{PLAYER}: Carrying what?$"
+
+
+SlateportCity_Text_SabrinaBookWasntLost:
+        .string "SABRINA: The book.\p"
+        .string "So they were wrong...\n"
+        .string "It wasn't lost after all.$"
+
+
+SlateportCity_Text_ErikaEnough:
+        .string "ERIKA: That's enough, Sabrina.$"
+
+
+SlateportCity_Text_SabrinaTwelveReveal:
+        .string "SABRINA: ...\p"
+        .string "Well.\p"
+        .string "I wondered when one of the Twelve\n"
+        .string "would finally show herself.$"
+
+
+SlateportCity_Text_PlayerTheTwelve:
+        .string "{PLAYER}: The Twelve?$"
+
+
+SlateportCity_Text_ErikaWarnsSabrina:
+        .string "ERIKA: Sabrina.$"
+
+
+SlateportCity_Text_SabrinaKeptInDark:
+        .string "SABRINA: What?\p"
+        .string "You've kept them in the dark long\n"
+        .string "enough.$"
+
+
+SlateportCity_Text_PlayerWhoAreYou:
+        .string "{PLAYER}: Kept me in the dark about\n"
+        .string "WHAT?\p"
+        .string "Who are you two?$"
+
+
+SlateportCity_Text_SabrinaAskWhoRaisedYou:
+        .string "SABRINA: You really don't know,\n"
+        .string "do you?\p"
+        .string "Ask the person who raised you.$"
+
+
+SlateportCity_Text_ErikaDont:
+        .string "ERIKA: Don't.$"
+
+
+SlateportCity_Text_SabrinaWhyNot:
+        .string "SABRINA: Why not?\p"
+        .string "Afraid of what they'll say?$"
+
+
+SlateportCity_Text_ErikaAnswer:
+        .string "ERIKA: I'm afraid of what you'll do\n"
+        .string "with the answer.$"
+
+
+SlateportCity_Text_SabrinaGoodbye:
+        .string "SABRINA: Hm.\p"
+        .string "Fair enough.\p"
+        .string "See you around, {PLAYER}.$"
+
+
+SlateportCity_Text_PlayerAsksErika:
+        .string "{PLAYER}: Erika...\n"
+        .string "What is going on?$"
+
+
+SlateportCity_Text_ErikaCallHome:
+        .string "ERIKA: Call home.\p"
+        .string "For once, Sabrina and I agree.\p"
+        .string "Ask the person who raised you.$"
+
+
+SlateportCity_Text_PlayerThatsIt:
+        .string "{PLAYER}: That's it?$"
+
+
+SlateportCity_Text_ErikaForNow:
+        .string "ERIKA: For now.\p"
+        .string "And, {PLAYER}...\p"
+        .string "Be careful what you tell them about\n"
+        .string "that book.$"
+
+
+SlateportCity_Text_ErikaPrivateBusiness:
+        .string "ERIKA: Sabrina and I have some things\n"
+        .string "to discuss.\p"
+        .string "Things that don't concern you.\n"
+        .string "Not yet.$"
+
+SlateportCity_Text_SabrinaCallHome:
+        .string "SABRINA: Call the person who raised\n"
+        .string "you.$"
+
+SlateportCity_Text_PlayerPsychicPause:
+        .string "{PLAYER}: ...$"
+
+SlateportCity_Text_SabrinaPsychicAside:
+        .string "SABRINA: Also, if you're wondering\n"
+        .string "whether I was floating earlier...\p"
+        .string "I was.\p"
+        .string "I'm psychic.\n"
+        .string "Comes with the territory.$"
+
+SlateportCity_Text_SabrinaNowCall:
+        .string "SABRINA: Now, call.$"
+
+
+SlateportCity_Text_EliasCall:
+        .string "ELIAS: Hey, kiddo.\n"
+        .string "Everything okay?\p"
+        .string "{PLAYER}: Dad...\n"
+        .string "Who are the Twelve?\p"
+        .string "ELIAS: ...\p"
+        .string "Where did you hear that?\p"
+        .string "{PLAYER}: Erika.\p"
+        .string "And Sabrina.\p"
+        .string "ELIAS: ...\p"
+        .string "Where are you right now?\p"
+        .string "{PLAYER}: Slateport.\p"
+        .string "ELIAS: ...Slateport?\p"
+        .string "{PLAYER}: Yeah.\n"
+        .string "Why?\p"
+        .string "ELIAS: There's a house on the beach,\n"
+        .string "just south of the city.\p"
+        .string "Go there.\p"
+        .string "{PLAYER}: What's there?\p"
+        .string "ELIAS: Something you should have seen\n"
+        .string "a long time ago.\p"
+        .string "{PLAYER}: What does that mean?\p"
+        .string "ELIAS: You'll understand when you get\n"
+        .string "there.\p"
+        .string "{PLAYER}: You know, everybody keeps\n"
+        .string "saying things like that today.\p"
+        .string "ELIAS: I'm sure they do.\p"
+        .string "Go to the house, {PLAYER}.$"
+
+
+SlateportCity_Text_TiaCall:
+        .string "TIA: Hey, baby.\n"
+        .string "Everything okay?\p"
+        .string "{PLAYER}: Mom...\n"
+        .string "Who are the Twelve?\p"
+        .string "TIA: ...\p"
+        .string "Where did you hear that?\p"
+        .string "{PLAYER}: Erika.\p"
+        .string "And Sabrina.\p"
+        .string "TIA: ...\p"
+        .string "Where are you right now?\p"
+        .string "{PLAYER}: Slateport.\p"
+        .string "TIA: ...Slateport?\p"
+        .string "{PLAYER}: Yeah.\n"
+        .string "Why?\p"
+        .string "TIA: There's a house on the beach,\n"
+        .string "just south of the city.\p"
+        .string "Go there.\p"
+        .string "{PLAYER}: What's there?\p"
+        .string "TIA: Something you should have seen\n"
+        .string "a long time ago.\p"
+        .string "{PLAYER}: What does that mean?\p"
+        .string "TIA: You'll understand when you get\n"
+        .string "there.\p"
+        .string "{PLAYER}: You know, everybody keeps\n"
+        .string "saying things like that today.\p"
+        .string "TIA: I'm sure they do.\p"
+        .string "Go to the house, {PLAYER}.$"
+
+
+SlateportCity_Text_ErikaYouHeardThem:
+        .string "ERIKA: Well.\p"
+        .string "You heard them.$"
+
+SlateportCity_Text_PlayerYouKnew:
+        .string "{PLAYER}: You knew they were going to\n"
+        .string "say that, didn't you?$"
+
+SlateportCity_Text_ErikaSuspected:
+        .string "ERIKA: I suspected.$"
+
+SlateportCity_Text_SabrinaSheKnew:
+        .string "SABRINA: She knew.$"
+
+SlateportCity_Text_ErikaSabrinaAgain:
+        .string "ERIKA: Sabrina.$"
+
+SlateportCity_Text_SabrinaGoToHouse:
+        .string "SABRINA: What?\p"
+        .string "Go to the house, {PLAYER}.$"
+
+SlateportCity_Text_PlayerDoesntLikeThem:
+        .string "{PLAYER}: I really don't like either\n"
+        .string "of you.$"
+
+SlateportCity_Text_SabrinaThatsFine:
+        .string "SABRINA: That's fine.$"
+
 
 SlateportCity_EventScript_EnergyGuru::
 	lock
@@ -1099,7 +1425,7 @@ SlateportCity_Text_CantChangeTradeMonName:
 SlateportCity_Text_BattleTentBuiltRecently:
 	.string "Recently, a BATTLE TENT was built\n"
 	.string "in SLATEPORT.\p"
-	.string "GYMS are fun, but the BATTLE TENT's\n"
+	.string "SHRINES are fun, but the BATTLE TENT's\n"
 	.string "awesome in its own way.\p"
 	.string "You should go find tough POKéMON\n"
 	.string "for the BATTLE TENT!$"
@@ -1350,3 +1676,73 @@ SlateportCity_Text_TakingBattleTentChallenge:
 	.string "After all, a tough TRAINER is\n"
 	.string "the perfect fit for the BATTLE TENT!\p"
 	.string "Give it your best effort!$"
+
+
+@ =============================================================================
+@ BREEDER HOPE - REPEATABLE TRAINING
+@ =============================================================================
+
+SlateportCity_EventScript_BreederHope::
+        lock
+        faceplayer
+
+        msgbox SlateportCity_Text_BreederHopeOffer, MSGBOX_YESNO
+        goto_if_eq VAR_RESULT, NO, SlateportCity_EventScript_BreederHopeDecline
+
+        trainerbattle_single TRAINER_BREEDER_HOPE_SLATEPORT, SlateportCity_Text_BreederHopeIntro, SlateportCity_Text_BreederHopeDefeat
+
+        @ Make Hope immediately battleable again.
+        cleartrainerflag TRAINER_BREEDER_HOPE_SLATEPORT
+
+        @ Normal Lv.19 Breeder payout = ₽760.
+        @ Training bonus brings each victory to ₽1,500 total.
+        addmoney 740
+
+        msgbox SlateportCity_Text_BreederHopeAfterBattle, MSGBOX_DEFAULT
+        release
+        end
+
+
+SlateportCity_EventScript_BreederHopeDecline::
+        msgbox SlateportCity_Text_BreederHopeDecline, MSGBOX_DEFAULT
+        release
+        end
+
+
+SlateportCity_Text_BreederHopeOffer:
+        .string "HOPE: Oh! You're the TRAINER Joy\n"
+        .string "mentioned.\p"
+        .string "{PLAYER}: She mentioned me?\p"
+        .string "HOPE: Mm-hm.\n"
+        .string "She said you needed some practice.\p"
+        .string "{PLAYER}: She did NOT say that.\p"
+        .string "HOPE: Her AUDINO are very patient.\p"
+        .string "Mine don't need to be.\p"
+        .string "{PLAYER}: I don't like the way you\n"
+        .string "said that.\p"
+        .string "HOPE: You'll be fine.\n"
+        .string "Probably.\p"
+        .string "Want to train?$"
+
+
+SlateportCity_Text_BreederHopeIntro:
+        .string "HOPE: Let's see what Joy taught you.$"
+
+
+SlateportCity_Text_BreederHopeDefeat:
+        .string "HOPE: ...Oh.$"
+
+
+SlateportCity_Text_BreederHopeAfterBattle:
+        .string "HOPE: You're better than Joy said.\p"
+        .string "{PLAYER}: JOY SAID WHAT?!\p"
+        .string "HOPE: Nothing important.\p"
+        .string "I added a little training bonus to\n"
+        .string "your prize money.\p"
+        .string "Come back when you need more\n"
+        .string "practice.$"
+
+
+SlateportCity_Text_BreederHopeDecline:
+        .string "HOPE: That's fine.\p"
+        .string "Joy did say not to overwhelm you.$"

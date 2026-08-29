@@ -1,3 +1,9 @@
+// Lance's Dragonite - static story object using existing species OW graphics.
+static const struct SpriteFrameImage sPicTable_Dragonite[] = {
+    overworld_ascending_frames(gObjectEventPic_DragoniteStatic, 4, 4),
+};
+
+
 static const struct SpriteFrameImage sPicTable_BrendanNormal[] = {
     overworld_ascending_frames(gObjectEventPic_BrendanNormalRunning, 2, 4),
 };

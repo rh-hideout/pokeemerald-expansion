@@ -1,0 +1,314 @@
+FuchsiaCity_Frlg_MapScripts::
+    map_script MAP_SCRIPT_ON_LOAD, FuchsiaCity_Frlg_OnLoad
+    map_script MAP_SCRIPT_ON_FRAME_TABLE, FuchsiaCity_Frlg_OnFrame
+    .byte 0
+
+
+FuchsiaCity_Frlg_OnLoad:
+    call FuchsiaCity_Frlg_SetCounterpartGraphics
+    end
+
+
+FuchsiaCity_Frlg_OnFrame:
+    map_script_2 VAR_BROCK_INGREDIENT_QUEST, 6, FuchsiaCity_Frlg_EventScript_Arrival
+    .2byte 0
+
+
+@ ============================================================
+@ DYNAMIC COUNTERPART GRAPHICS
+@ ============================================================
+
+FuchsiaCity_Frlg_SetCounterpartGraphics:
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_BRENDAN, FuchsiaCity_Frlg_SetBrendan
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAY, FuchsiaCity_Frlg_SetMay
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_LEXY, FuchsiaCity_Frlg_SetLexy
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_JUSTIN, FuchsiaCity_Frlg_SetJustin
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_MAAM, FuchsiaCity_Frlg_SetMaam
+    goto_if_eq VAR_COUNTERPART_ID, COUNTERPART_SIR, FuchsiaCity_Frlg_SetSir
+
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+
+FuchsiaCity_Frlg_SetBrendan:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BRENDAN_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetMay:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAY_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetLexy:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LEXY_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetJustin:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_JUSTIN_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetMaam:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_MAAM_NORMAL
+    return
+
+FuchsiaCity_Frlg_SetSir:
+    setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_SIR_NORMAL
+    return
+
+
+@ ============================================================
+@ ARRIVAL
+@ ============================================================
+
+FuchsiaCity_Frlg_EventScript_Arrival::
+    compare VAR_BROCK_INGREDIENT_QUEST, 6
+    goto_if_ne FuchsiaCity_Frlg_EventScript_Arrival_End
+
+    lockall
+
+    @ We have just arrived with Gary.
+    applymovement LOCALID_PLAYER, Common_Movement_FaceRight
+    applymovement LOCALID_FUCHSIA_COUNTERPART, Common_Movement_FaceRight
+    applymovement LOCALID_FUCHSIA_GARY, Common_Movement_FaceLeft
+    waitmovement 0
+
+    msgbox FuchsiaCity_Frlg_Text_GaryArrivalOutro, MSGBOX_DEFAULT
+    closemessage
+
+    @ Gary exits toward the east edge of town.
+    applymovement LOCALID_FUCHSIA_GARY, FuchsiaCity_Frlg_Movement_GaryLeaves
+    waitmovement 0
+
+    removeobject LOCALID_FUCHSIA_GARY
+
+    @ Fuchsia investigation is now active.
+    setvar VAR_BROCK_INGREDIENT_QUEST, 7
+
+    @ Counterpart turns toward the direction we need to travel.
+    applymovement LOCALID_FUCHSIA_COUNTERPART, Common_Movement_FaceLeft
+    applymovement LOCALID_PLAYER, Common_Movement_FaceLeft
+    waitmovement 0
+
+    releaseall
+    end
+
+FuchsiaCity_Frlg_EventScript_Arrival_End:
+    end
+
+
+FuchsiaCity_Frlg_EventScript_GaryArrival::
+    lock
+    faceplayer
+    msgbox FuchsiaCity_Frlg_Text_GaryArrivalRepeat, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_Text_GaryArrivalOutro:
+    .string "GARY: FUCHSIA CITY.\p"
+    .string "Try not to get lost.\p"
+    .string "{RIVAL}: We didn't ask for a tour.\p"
+    .string "GARY: Good.\n"
+    .string "I'm not giving one.\p"
+    .string "{PLAYER}: Thanks for the ride.\p"
+    .string "GARY: Yeah, yeah.\p"
+    .string "Try not to need another favor.$"
+
+
+FuchsiaCity_Frlg_Text_GaryArrivalRepeat:
+    .string "GARY: What?\p"
+    .string "You're here.\n"
+    .string "My job is done.$"
+
+
+FuchsiaCity_Frlg_Movement_GaryLeaves:
+    walk_right
+    walk_right
+    walk_right
+    walk_right
+    delay_8
+    step_end
+
+
+@ ============================================================
+@ PLACEHOLDERS FOR PART 2
+@ ============================================================
+
+FuchsiaCity_Frlg_EventScript_Koga::
+    lock
+    faceplayer
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 7
+    goto_if_eq FuchsiaCity_Frlg_EventScript_KogaRoadIntro
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 8
+    goto_if_eq FuchsiaCity_Frlg_EventScript_KogaChallengeRepeat
+
+    msgbox FuchsiaCity_Frlg_Text_KogaFallback, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_EventScript_KogaRoadIntro::
+    lockall
+
+    @ We have walked far enough from the arrival point to spot Koga.
+    @ Bring the existing counterpart into the scene beside the player.
+    setobjectxyperm LOCALID_FUCHSIA_COUNTERPART, 38, 22
+    setobjectxy LOCALID_FUCHSIA_COUNTERPART, 38, 22
+
+    applymovement LOCALID_FUCHSIA_COUNTERPART, FuchsiaCity_Frlg_Movement_CounterpartRoadJoin
+    waitmovement 0
+
+    applymovement LOCALID_PLAYER, Common_Movement_FaceLeft
+    applymovement LOCALID_FUCHSIA_COUNTERPART, Common_Movement_FaceLeft
+    applymovement LOCALID_FUCHSIA_KOGA, Common_Movement_FaceRight
+    waitmovement 0
+
+    @ Counterpart immediately clocks Koga as Important Looking Man.
+    msgbox FuchsiaCity_Frlg_Text_KogaIntro1, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox FuchsiaCity_Frlg_Text_KogaIntro2, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox FuchsiaCity_Frlg_Text_KogaCanHearYou, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox FuchsiaCity_Frlg_Text_KogaIntro3, MSGBOX_DEFAULT
+    closemessage
+
+    @ Koga takes over the conversation.
+    msgbox FuchsiaCity_Frlg_Text_KogaLoreleiReveal, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox FuchsiaCity_Frlg_Text_KogaWorthiness, MSGBOX_DEFAULT
+    closemessage
+
+    msgbox FuchsiaCity_Frlg_Text_KogaChallenge, MSGBOX_DEFAULT
+    closemessage
+
+    setvar VAR_BROCK_INGREDIENT_QUEST, 8
+
+    release
+    end
+
+
+FuchsiaCity_Frlg_EventScript_KogaChallengeRepeat:
+    msgbox FuchsiaCity_Frlg_Text_KogaChallengeRepeat, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_EventScript_Counterpart::
+    lock
+    faceplayer
+
+    @ TEMP DEV RESET:
+    @ At state 8, clicking the counterpart replays the entire Fuchsia arrival.
+    compare VAR_BROCK_INGREDIENT_QUEST, 8
+    goto_if_eq FuchsiaCity_Frlg_EventScript_DevReset
+
+    compare VAR_BROCK_INGREDIENT_QUEST, 7
+    goto_if_eq FuchsiaCity_Frlg_EventScript_Counterpart_Searching
+
+    msgbox FuchsiaCity_Frlg_Text_CounterpartFallback, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_EventScript_DevReset:
+    setvar VAR_BROCK_INGREDIENT_QUEST, 6
+    warp MAP_FUCHSIA_CITY, 43, 21
+    waitstate
+    end
+
+FuchsiaCity_Frlg_EventScript_Counterpart_Searching:
+    msgbox FuchsiaCity_Frlg_Text_CounterpartSearching, MSGBOX_DEFAULT
+    release
+    end
+
+
+FuchsiaCity_Frlg_Movement_CounterpartRoadJoin:
+    walk_left
+    face_left
+    step_end
+
+
+FuchsiaCity_Frlg_Text_KogaIntro1:
+    .string "{RIVAL}: OoOh...\p"
+    .string "{PLAYER}: What?\p"
+    .string "{RIVAL}: Who is HEeeee?\p"
+    .string "{PLAYER}: I don't know.\p"
+    .string "{RIVAL}: He looks importantttt.\p"
+    .string "We should ask him!$"
+
+
+FuchsiaCity_Frlg_Text_KogaIntro2:
+    .string "{PLAYER}: That's your criteria?\p"
+    .string "{RIVAL}: Do YOU have a better lead?\p"
+    .string "{PLAYER}: ...No.$"
+
+
+FuchsiaCity_Frlg_Text_KogaCanHearYou:
+    .string "KOGA: ...I can hear you.$"
+
+
+FuchsiaCity_Frlg_Text_KogaIntro3:
+    .string "{RIVAL}: See?\p"
+    .string "{PLAYER}: How does that prove\n"
+    .string "anything?\p"
+    .string "{RIVAL}: It doesn't matter.\p"
+    .string "We're already talking to him.$"
+
+
+FuchsiaCity_Frlg_Text_KogaLoreleiReveal:
+    .string "KOGA: You wished to speak with me?\p"
+    .string "{RIVAL}: We're looking for someone.\p"
+    .string "KOGA: LORELEI.\p"
+    .string "{PLAYER}: ...\p"
+    .string "{RIVAL}: Okay, see?\n"
+    .string "Important.$"
+
+
+FuchsiaCity_Frlg_Text_KogaWorthiness:
+    .string "KOGA: You are asking me for the\n"
+    .string "whereabouts of someone who clearly\n"
+    .string "did not wish to be followed.\p"
+    .string "Why should I tell you anything?\p"
+    .string "{RIVAL}: Because we've been chasing\n"
+    .string "this lead across two cities.\p"
+    .string "KOGA: That establishes persistence.\p"
+    .string "Not worthiness.$"
+
+
+FuchsiaCity_Frlg_Text_KogaChallenge:
+    .string "KOGA: You came together.\p"
+    .string "Then together, prove that you are\n"
+    .string "worth the answer.\p"
+    .string "{RIVAL}: ...Both of us?\p"
+    .string "KOGA: Unless you would prefer to\n"
+    .string "face me alone.\p"
+    .string "{RIVAL}: Nope.\p"
+    .string "{PLAYER}: Wow.\p"
+    .string "{RIVAL}: I know my limits.$"
+
+
+FuchsiaCity_Frlg_Text_KogaChallengeRepeat:
+    .string "KOGA: When you are ready,\n"
+    .string "we will begin.$"
+
+
+FuchsiaCity_Frlg_Text_KogaFallback:
+    .string "KOGA: We have nothing further\n"
+    .string "to discuss.$"
+
+
+FuchsiaCity_Frlg_Text_CounterpartSearching:
+    .string "{RIVAL}: Well...\n"
+    .string "we're here.\p"
+    .string "Let's see who looks like\n"
+    .string "they know something.$"
+
+FuchsiaCity_Frlg_Text_CounterpartFallback:
+    .string "{RIVAL}: Come on.\n"
+    .string "We've got work to do.$"

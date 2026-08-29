@@ -1,0 +1,247 @@
+SilphCo_4F_Frlg_MapScripts::
+        .byte 0
+
+
+@ =============================================================================
+@ SILPH CO. 4F - MISTY
+@
+@ FLAG_HIDE_HOME_MOM SET:
+@   Mom/Tia hidden -> Elias raised PLAYER -> Misty complains about Elias.
+@
+@ FLAG_HIDE_HOME_MOM UNSET:
+@   Tia raised PLAYER -> Misty complains about Tia.
+@ =============================================================================
+
+SilphCo_4F_Frlg_EventScript_Misty::
+        lock
+        faceplayer
+
+        goto_if_set FLAG_SILPH_PAST_MISTY_MET, SilphCo_4F_Frlg_EventScript_MistyRepeat
+
+        setflag FLAG_SILPH_PAST_MISTY_MET
+
+        goto_if_set FLAG_HIDE_HOME_MOM, SilphCo_4F_Frlg_EventScript_MistyEliasRant
+        goto SilphCo_4F_Frlg_EventScript_MistyTiaRant
+
+
+@ =============================================================================
+@ TIA RANT
+@ =============================================================================
+
+SilphCo_4F_Frlg_EventScript_MistyTiaRant:
+        msgbox SilphCo_4F_Frlg_Text_MistyTiaRant1, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyTiaRant2, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerTia, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyWhyTia, MSGBOX_DEFAULT
+        closemessage
+
+        goto SilphCo_4F_Frlg_EventScript_MistyShared
+
+
+@ =============================================================================
+@ ELIAS RANT
+@ =============================================================================
+
+SilphCo_4F_Frlg_EventScript_MistyEliasRant:
+        msgbox SilphCo_4F_Frlg_Text_MistyEliasRant1, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyEliasRant2, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerElias, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyWhyElias, MSGBOX_DEFAULT
+        closemessage
+
+        goto SilphCo_4F_Frlg_EventScript_MistyShared
+
+
+@ =============================================================================
+@ SHARED CONVERSATION
+@ =============================================================================
+
+SilphCo_4F_Frlg_EventScript_MistyShared:
+        msgbox SilphCo_4F_Frlg_Text_PlayerYouKnowThem, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyObviously, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerHow, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyComplicated, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerWhatSide, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistySide, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerNotHowSidesWork, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyExactlyHow, MSGBOX_DEFAULT
+        closemessage
+
+        delay 10
+
+        msgbox SilphCo_4F_Frlg_Text_MistyWhoAreYou, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerQuestionFirst, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyInteresting, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_PlayerInterestingWhat, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyNothing, MSGBOX_DEFAULT
+        closemessage
+
+        msgbox SilphCo_4F_Frlg_Text_MistyGoUpstairs, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+SilphCo_4F_Frlg_EventScript_MistyRepeat:
+        msgbox SilphCo_4F_Frlg_Text_MistyRepeat, MSGBOX_DEFAULT
+        closemessage
+
+        release
+        end
+
+
+@ =============================================================================
+@ TIA PATH TEXT
+@ =============================================================================
+
+SilphCo_4F_Frlg_Text_MistyTiaRant1:
+        .string "MISTY: And Tia can spare me the\n"
+        .string "whole Bookkeeper routine.$"
+
+
+SilphCo_4F_Frlg_Text_MistyTiaRant2:
+        .string "MISTY: Writing everything down\n"
+        .string "doesn't suddenly mean you get\n"
+        .string "to decide what everybody does.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerTia:
+        .string "{PLAYER}: ...Tia?$"
+
+
+SilphCo_4F_Frlg_Text_MistyWhyTia:
+        .string "MISTY: ...Why'd you say her name\n"
+        .string "like that?$"
+
+
+@ =============================================================================
+@ ELIAS PATH TEXT
+@ =============================================================================
+
+SilphCo_4F_Frlg_Text_MistyEliasRant1:
+        .string "MISTY: Elias has the Key.\n"
+        .string "Wonderful.$"
+
+
+SilphCo_4F_Frlg_Text_MistyEliasRant2:
+        .string "MISTY: Apparently possessing a key\n"
+        .string "now makes you the authority on\n"
+        .string "every door in existence.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerElias:
+        .string "{PLAYER}: ...Elias?$"
+
+
+SilphCo_4F_Frlg_Text_MistyWhyElias:
+        .string "MISTY: ...Why'd you say his name\n"
+        .string "like that?$"
+
+
+@ =============================================================================
+@ SHARED TEXT
+@ =============================================================================
+
+SilphCo_4F_Frlg_Text_PlayerYouKnowThem:
+        .string "{PLAYER}: You know them?$"
+
+
+SilphCo_4F_Frlg_Text_MistyObviously:
+        .string "MISTY: Unfortunately.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerHow:
+        .string "{PLAYER}: How?$"
+
+
+SilphCo_4F_Frlg_Text_MistyComplicated:
+        .string "MISTY: That's a very long answer\n"
+        .string "and I'm in a very short mood.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerWhatSide:
+        .string "{PLAYER}: So what side are you on?$"
+
+
+SilphCo_4F_Frlg_Text_MistySide:
+        .string "MISTY: Today?\p"
+        .string "Ask me tomorrow.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerNotHowSidesWork:
+        .string "{PLAYER}: That's not how sides work.$"
+
+
+SilphCo_4F_Frlg_Text_MistyExactlyHow:
+        .string "MISTY: That's exactly how sides\n"
+        .string "work when both of them are annoying.$"
+
+
+SilphCo_4F_Frlg_Text_MistyWhoAreYou:
+        .string "MISTY: Actually...\p"
+        .string "Who are YOU?$"
+
+
+SilphCo_4F_Frlg_Text_PlayerQuestionFirst:
+        .string "{PLAYER}: I asked you first.$"
+
+
+SilphCo_4F_Frlg_Text_MistyInteresting:
+        .string "MISTY: Hm.\p"
+        .string "Interesting.$"
+
+
+SilphCo_4F_Frlg_Text_PlayerInterestingWhat:
+        .string "{PLAYER}: What's interesting?$"
+
+
+SilphCo_4F_Frlg_Text_MistyNothing:
+        .string "MISTY: Nothing.\p"
+        .string "Yet.$"
+
+
+SilphCo_4F_Frlg_Text_MistyGoUpstairs:
+        .string "MISTY: Go upstairs.\p"
+        .string "Maybe you'll find someone in a\n"
+        .string "better mood.$"
+
+
+SilphCo_4F_Frlg_Text_MistyRepeat:
+        .string "MISTY: You're still here?\p"
+        .string "I thought curiosity would've dragged\n"
+        .string "you upstairs by now.$"

@@ -24,7 +24,7 @@ MossdeepCity_PokemonCenter_1F_EventScript_Girl::
 	end
 
 MossdeepCity_PokemonCenter_1F_Text_GymLeaderDuoFormidable:
-	.string "The GYM LEADERS in this town are\n"
+	.string "The KEEPERS in this town are\n"
 	.string "a formidable duo.\p"
 	.string "Their combination attacks are, like,\n"
 	.string "excellent and wow!$"
