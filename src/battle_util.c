@@ -7684,6 +7684,16 @@ static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
     dmg = uq4_12_multiply_by_int_half_down(modifier, dmg); \
 } while (0)
 
+static bool32 IsReturnFrustrationGen2(enum BattlerId battlerAtk, enum BattleMoveEffects moveEffect)
+{
+    if (GetConfig(B_UPDATED_MOVE_DATA) != GEN_2)
+        return FALSE;
+
+    u32 friendship = gBattleMons[battlerAtk].friendship;
+    return (moveEffect == EFFECT_RETURN && friendship == 0)
+        || (moveEffect == EFFECT_FRUSTRATION && friendship == MAX_FRIENDSHIP);
+}
+
 static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 {
     s32 dmg;
@@ -7695,12 +7705,8 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     else
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
 
-    if (GetConfig(B_UPDATED_MOVE_DATA) == GEN_2
-     && ((GetMoveEffect(ctx->move) == EFFECT_RETURN && gBattleMons[ctx->battlerAtk].friendship == 0)
-      || (GetMoveEffect(ctx->move) == EFFECT_FRUSTRATION && gBattleMons[ctx->battlerAtk].friendship == MAX_FRIENDSHIP)))
-    {
+    if (IsReturnFrustrationGen2(ctx->battlerAtk, GetMoveEffect(ctx->move)))
         return 0;
-    }
 
     userFinalAttack = CalcAttackStat(ctx);
     targetFinalDefense = CalcDefenseStat(ctx);
