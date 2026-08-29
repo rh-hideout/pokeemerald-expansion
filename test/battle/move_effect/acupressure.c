@@ -144,6 +144,24 @@ DOUBLE_BATTLE_TEST("Acupressure fails on its ally if it's behind a Substitute")
     }
 }
 
+DOUBLE_BATTLE_TEST("Acupressure will target self if both side allies fainted")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { HP(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerRight, MOVE_POUND, target: opponentRight);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(playerLeft, MOVE_ACUPRESSURE, target: playerRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+    }
+}
 
 TO_DO_BATTLE_TEST("Acupressure fails on the user if all of its stats are maximized");
 TO_DO_BATTLE_TEST("Acupressure fails on the ally if all of its stats are maximized");

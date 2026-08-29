@@ -38,7 +38,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return FALSE;
 
-    if (gBattleMons[battler].volatiles.embargo)
+    if (gBattleMons[battler].volatiles.embargoTimer)
         return FALSE;
 
     if (AiExpectsToFaintPlayer(battler))

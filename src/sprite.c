@@ -1754,6 +1754,9 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
     const struct SubspriteTable *subspriteTable;
     struct OamData *oam;
 
+    if (*oamIndex >= gOamLimit)
+        return TRUE;
+
     subspriteTable = &sprite->subspriteTables[sprite->subspriteTableNum];
     oam = &sprite->oam;
 
@@ -1780,6 +1783,9 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
         {
             u16 x;
             u16 y;
+
+            if (*oamIndex >= gOamLimit)
+                return TRUE;
 
             x = subspriteTable->subsprites[i].x;
             y = subspriteTable->subsprites[i].y;

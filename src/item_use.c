@@ -1210,7 +1210,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     // Embargo Check
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        if (gBattleMons[battlerTarget].volatiles.embargo)
+        if (gBattleMons[battlerTarget].volatiles.embargoTimer)
             return TRUE;
     }
 

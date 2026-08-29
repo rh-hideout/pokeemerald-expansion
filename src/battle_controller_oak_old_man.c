@@ -579,7 +579,7 @@ static void PrintOakTextWithMainBgDarkened(enum BattlerId battler, const u8 *tex
                 OakOldManBufferExecCompleted(battler);
             else
                 OpponentBufferExecCompleted(battler);
-            gBattleCommunication[MSG_DISPLAY] = 0;
+            gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
             gBattleStruct->simulatedInputState0 = 0;
         }
         break;
