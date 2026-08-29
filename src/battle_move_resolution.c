@@ -1319,7 +1319,8 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        if (GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
+        if ((!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+         || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
         {
             bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
 
@@ -1338,7 +1339,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_ARENA
               || IsCommanderActive(cv->battlerAtk)
-              || (!CanBattlerSwitch(cv->battlerAtk) && IsOnPlayerSide(cv->battlerAtk)))
+              || !CanBattlerSwitch(cv->battlerAtk))
         {
             battleScript = BattleScript_ButItFailed;
         }
@@ -4787,15 +4788,21 @@ static enum MoveEndResult MoveEndMoveSwitchOut(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_TELEPORT:
-        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-         && !IsOnPlayerSide(cv->battlerAtk)
-         && !gBattleStruct->unableToUseMove)
+        if (gBattleStruct->unableToUseMove)
+        {
+            break;
+        }
+        else if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
         {
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_Teleport);
-            break;
         }
-        // fallthrough
+        else
+        {
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_MoveSwitchOut);
+        }
+        break;
     case EFFECT_BATON_PASS:
         if (!gBattleStruct->unableToUseMove)
         {
