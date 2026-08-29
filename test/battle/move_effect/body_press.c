@@ -163,11 +163,11 @@ SINGLE_BATTLE_TEST("Body Press is not influenced by Defense modifiers other than
     enum Item item;
     u32 status;
 
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;  item = ITEM_NONE;         status = STATUS1_NONE; }
-    PARAMETRIZE { species = SPECIES_FURFROU;   ability = ABILITY_FUR_COAT;    item = ITEM_NONE;         status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;   item = ITEM_NONE;         status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_FURFROU;   ability = ABILITY_FUR_COAT;     item = ITEM_NONE;         status = STATUS1_NONE; }
     PARAMETRIZE { species = SPECIES_MILOTIC;   ability = ABILITY_MARVEL_SCALE; item = ITEM_NONE;        status = STATUS1_POISON; }
-    PARAMETRIZE { species = SPECIES_PORYGON;   ability = ABILITY_TRACE;       item = ITEM_EVIOLITE;     status = STATUS1_NONE; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;  item = ITEM_ASSAULT_VEST; status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_PORYGON;   ability = ABILITY_TRACE;        item = ITEM_EVIOLITE;     status = STATUS1_NONE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG;   item = ITEM_ASSAULT_VEST; status = STATUS1_NONE; }
 
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_EVIOLITE) == HOLD_EFFECT_EVIOLITE);

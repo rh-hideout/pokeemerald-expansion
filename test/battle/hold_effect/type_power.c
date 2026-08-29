@@ -61,12 +61,19 @@ SINGLE_BATTLE_TEST("Type-enhancing items do not increase the power of Struggle",
     enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_NONE; }
+#if B_UPDATED_MOVE_FLAGS == GEN_1
     PARAMETRIZE { item = ITEM_SILK_SCARF; }
+#else
+    for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
+        PARAMETRIZE { item = sMoveItemTable[j][2]; }
+#endif
 
     GIVEN {
         if (item != ITEM_NONE) {
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_TYPE_POWER);
+#if B_UPDATED_MOVE_FLAGS == GEN_1
             ASSUME(GetItemSecondaryId(item) == TYPE_NORMAL);
+#endif
         }
         PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -76,6 +83,11 @@ SINGLE_BATTLE_TEST("Type-enhancing items do not increase the power of Struggle",
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
+#if B_UPDATED_MOVE_FLAGS == GEN_1
         EXPECT_EQ(results[0].damage, results[1].damage);
+#else
+        for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
+            EXPECT_EQ(results[0].damage, results[j + 1].damage);
+#endif
     }
 }

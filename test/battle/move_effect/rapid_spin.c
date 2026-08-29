@@ -113,7 +113,9 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap and hazards but doesn't raise Spe
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         for (u32 i = 0; i < ARRAY_COUNT(gBattleStruct->hazardsQueue[B_SIDE_PLAYER]); i++)
+        {
             EXPECT_EQ(gBattleStruct->hazardsQueue[B_SIDE_PLAYER][i], HAZARDS_NONE);
+        }
     }
 }
 
