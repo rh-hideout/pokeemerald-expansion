@@ -134,7 +134,7 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
-        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_PARTNER)
+        if (IsMultiBattle() && AreMultiPartiesHalfTeams() && trainer == B_TRAINER_PARTNER)
         {
             battlerPartyId += MULTI_PARTY_SIZE;
             switchInPartyId += MULTI_PARTY_SIZE;
@@ -148,7 +148,7 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
             // Don't update battler's orders for party menu if the switching battler and updating battler
             // don't share a party, unless it's a 6v6 multi where player and partner party are temporarily
             // merged for party menu and summary screen viewing
-            if (!(IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams()) && !BattlersShareParty(battler, battlerId))
+            if (!(IsMultiBattle() && AreMultiPartiesHalfTeams()) && !BattlersShareParty(battler, battlerId))
                 continue;
 
             for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
