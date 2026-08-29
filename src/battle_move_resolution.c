@@ -5343,7 +5343,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
     [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
-    [MOVEEND_MOVE_SWITCH_OUT] = MoveEndMoveSwitchOut,
+    [MOVEEND_MOVE_SWITCH_USER] = MoveEndMoveSwitchOut,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,

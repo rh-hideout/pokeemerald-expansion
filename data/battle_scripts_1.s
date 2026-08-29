@@ -2204,7 +2204,7 @@ BattleScript_EffectSafeguard::
 	setsafeguard
 	goto BattleScript_PrintReflectLightScreenSafeguardString
 
-BattleScript_EffectVanilla::
+BattleScript_EffectGeneralMove::
 	attackcanceler
 	goto BattleScript_MoveEnd
 

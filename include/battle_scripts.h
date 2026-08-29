@@ -612,7 +612,7 @@ extern const u8 BattleScript_EffectEndure[];
 extern const u8 BattleScript_EffectAttract[];
 extern const u8 BattleScript_PresentHeal[];
 extern const u8 BattleScript_EffectSafeguard[];
-extern const u8 BattleScript_EffectVanilla[];
+extern const u8 BattleScript_EffectGeneralMove[];
 extern const u8 BattleScript_MoveSwitchOut[];
 extern const u8 BattleScript_Teleport[];
 extern const u8 BattleScript_EffectMorningSun[];
