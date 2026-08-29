@@ -11166,3 +11166,15 @@ bool32 IsCommanderActive(enum BattlerId battler)
     return gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE
         || gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER;
 }
+
+bool32 IsWholeSideAlive(enum BattlerId sideBattler)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        if (!IsBattlerAlly(sideBattler, battler))
+            continue;
+        if (!IsBattlerAlive(battler))
+            return FALSE;
+    }
+    return TRUE;
+}

@@ -5475,7 +5475,7 @@ static void Cmd_forcerandomswitch(void)
         else
         {
             // Wild double battle, wild mon red card activation on player
-            if (IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+            if (IsWholeSideAlive(gBattlerTarget))
             {
                 // Both player's battlers are alive
                 redCardForcedSwitch = FALSE;
@@ -5496,7 +5496,7 @@ static void Cmd_forcerandomswitch(void)
         || (WILD_DOUBLE_BATTLE
             && !IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget)
-            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+            && IsWholeSideAlive(gBattlerTarget))
         || (WILD_DOUBLE_BATTLE
             && IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget))
@@ -10366,7 +10366,7 @@ void BS_JumpIfRoarFails(void)
     if (WILD_DOUBLE_BATTLE
         && IsOnPlayerSide(gBattlerAttacker)
         && !IsOnPlayerSide(gBattlerTarget)
-        && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+        && IsWholeSideAlive(gBattlerTarget))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else if (WILD_DOUBLE_BATTLE
              && !IsOnPlayerSide(gBattlerAttacker)
