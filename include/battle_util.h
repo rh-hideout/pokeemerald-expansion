@@ -113,11 +113,11 @@ enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMold
 enum Ability GetBattlerAbility(enum BattlerId battler);
 bool32 IsBattlerLoafing(enum BattlerId battler);
 bool32 AreEndTurnEventsRunning(void);
-void ActivateTruantCounter(enum BattlerId battler);
+void UpdateTruantToggle(enum BattlerId battler);
 void OverwriteBattlerAbility(enum BattlerId battler, enum Ability ability);
-void UpdateTruantCounterForAbilityChange(enum BattlerId battler, enum Ability oldAbility);
-void UpdateTruantCountersOnNeutralizingGasEnd(void);
-void ResetTruantCounterOnAbilitySuppression(enum BattlerId battler);
+void UpdateTruantToggleForAbilityChange(enum BattlerId battler, enum Ability oldAbility);
+void UpdateTruantTogglesOnNeutralizingGasEnd(void);
+void ResetTruantToggleOnAbilitySuppression(enum BattlerId battler);
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityOnField(enum Ability ability);
 u32 IsAbilityPreventingEscape(enum BattlerId battler);

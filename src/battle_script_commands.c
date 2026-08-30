@@ -1897,7 +1897,7 @@ static void Cmd_tryfaintmon(void)
                 gBattleMons[battler].volatiles.neutralizingGas = FALSE;
                 if (!IsNeutralizingGasOnField())
                 {
-                    UpdateTruantCountersOnNeutralizingGasEnd();
+                    UpdateTruantTogglesOnNeutralizingGasEnd();
                     BattleScriptPush(gBattlescriptCurrInstr);
                     gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
                     return;
@@ -3653,8 +3653,8 @@ static void UpdateSentMonFlags(enum BattlerId battler)
     gBattleStruct->battlerState[battler].switchIn = TRUE;
     gProtectStructs[battler].forcedSwitch = FALSE;
 
-    // Truant advanced at the end of the turn in Gen 3-4, so prime the counter with the value it
-    // needs to hold *before* that advance for the battler to act on its first turn.
+    // Truant advanced at the end of the turn in Gen 3-4, so prime the toggle with the value it
+    // needs to hold before that advance for the battler to act on its first turn.
     // Gen 3 advances it before end of turn damage, which a battler replacing a Pokémon that
     // fainted to that damage misses out on, making it loaf first. Gen 4 advances it after,
     // so every battler acts first there.
@@ -3663,12 +3663,10 @@ static void UpdateSentMonFlags(enum BattlerId battler)
      && !gBattleMons[battler].volatiles.truantSwitchInHack)
     {
         bool32 isDuringEndTurn = AreEndTurnEventsRunning();
-        bool32 endTurnUpdatePending = !isDuringEndTurn
-                                   || gBattleStruct->eventState.endTurn <= ENDTURN_THIRD_EVENT_BLOCK;
-        bool32 loafsOnFirstTurn = GetConfig(B_TRUANT) == GEN_3
-                               && isDuringEndTurn;
+        bool32 endTurnUpdatePending = !isDuringEndTurn || gBattleStruct->eventState.endTurn <= ENDTURN_THIRD_EVENT_BLOCK;
+        bool32 loafsOnFirstTurn = GetConfig(B_TRUANT) == GEN_3 && isDuringEndTurn;
 
-        gBattleMons[battler].volatiles.truantCounter = endTurnUpdatePending ^ loafsOnFirstTurn;
+        gBattleMons[battler].volatiles.truantToggle = endTurnUpdatePending ^ loafsOnFirstTurn;
     }
     gBattleMons[battler].volatiles.truantSwitchInHack = 0;
 
@@ -5980,7 +5978,7 @@ static void Cmd_transformdataexecution(void)
             battleMonAttacker[i] = battleMonTarget[i];
 
         gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
-        UpdateTruantCounterForAbilityChange(gBattlerAttacker, oldAbility);
+        UpdateTruantToggleForAbilityChange(gBattlerAttacker, oldAbility);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             u32 pp = GetMovePP(gBattleMons[gBattlerAttacker].moves[i]);
@@ -7248,7 +7246,7 @@ static void Cmd_setgastroacid(void)
 
         RemoveRuinAbilityFlags(gBattlerTarget);
         gBattleMons[gBattlerTarget].volatiles.gastroAcid = TRUE;
-        ResetTruantCounterOnAbilitySuppression(gBattlerTarget);
+        ResetTruantToggleOnAbilitySuppression(gBattlerTarget);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -7488,7 +7486,7 @@ static void Cmd_switchoutabilities(void)
         gBattleMons[battler].volatiles.neutralizingGas = FALSE;
         if (!IsNeutralizingGasOnField())
         {
-            UpdateTruantCountersOnNeutralizingGasEnd();
+            UpdateTruantTogglesOnNeutralizingGasEnd();
             BattleScriptPush(gBattlescriptCurrInstr);
             gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
             return;
@@ -11843,7 +11841,7 @@ void BS_TryEndNeutralizingGas(void)
         gBattleMons[gBattlerTarget].volatiles.neutralizingGas = FALSE;
         if (!IsNeutralizingGasOnField())
         {
-            UpdateTruantCountersOnNeutralizingGasEnd();
+            UpdateTruantTogglesOnNeutralizingGasEnd();
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
             return;
@@ -12016,7 +12014,7 @@ void BS_TryActivateAbilityWithAbilityShield(void)
      && GetBattlerAbility(battler) != ABILITY_NONE)
     {
         if (gBattleMons[battler].ability == ABILITY_TRUANT)
-            ActivateTruantCounter(battler);
+            UpdateTruantToggle(battler);
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_ActivateSwitchInAbility);
     }

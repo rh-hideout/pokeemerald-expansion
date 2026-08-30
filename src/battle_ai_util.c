@@ -3558,7 +3558,7 @@ bool32 IsBattlerIncapacitated(enum BattlerId battler, enum Ability ability)
     if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveUsableWhileAsleep(battler))
         return TRUE;
 
-    if (gBattleMons[battler].volatiles.rechargeTimer > 0 || (ability == ABILITY_TRUANT && gBattleMons[battler].volatiles.truantCounter != 0))
+    if (gBattleMons[battler].volatiles.rechargeTimer > 0 || (ability == ABILITY_TRUANT && gBattleMons[battler].volatiles.truantToggle != 0))
         return TRUE;
 
     return FALSE;

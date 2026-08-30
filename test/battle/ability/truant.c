@@ -1,32 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(GetMoveEffect(MOVE_BEAK_BLAST) == EFFECT_BEAK_BLAST);
-    ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
-    ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
-    ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
-    ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-    ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
-    ASSUME(GetMoveEffect(MOVE_STOMPING_TANTRUM) == EFFECT_STOMPING_TANTRUM);
-    ASSUME(GetMoveEffect(MOVE_TEMPER_FLARE) == EFFECT_STOMPING_TANTRUM);
-    ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
-    ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
-    ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
-    ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
-    ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
-    ASSUME(GetMoveEffect(MOVE_ROLE_PLAY) == EFFECT_ROLE_PLAY);
-    ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
-    ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
-    ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
-    ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
-    ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-    ASSUME(gAbilitiesInfo[ABILITY_TRUANT].cantBeOverwritten);
-    ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
-    ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
-}
-
 SINGLE_BATTLE_TEST("Truant alternates between acting and loafing")
 {
     GIVEN {
@@ -151,6 +125,8 @@ SINGLE_BATTLE_TEST("Truant is checked before paralysis and full paralysis advanc
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
@@ -171,6 +147,7 @@ SINGLE_BATTLE_TEST("Truant is checked before confusion and a confusion self-hit 
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
@@ -224,6 +201,7 @@ SINGLE_BATTLE_TEST("A recharge turn advances Truant")
 SINGLE_BATTLE_TEST("A two-turn move is canceled when its attack turn is a Truant loafing turn")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -242,6 +220,8 @@ SINGLE_BATTLE_TEST("A two-turn move is canceled when its attack turn is a Truant
 SINGLE_BATTLE_TEST("Power Herb lets a Truant user complete a two-turn move before loafing")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
+        ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -267,6 +247,9 @@ SINGLE_BATTLE_TEST("Focus-style setup is skipped on a Gen 3-4 loafing turn and o
 
     GIVEN {
         WITH_CONFIG(B_TRUANT, gen);
+        ASSUME(GetMoveEffect(MOVE_BEAK_BLAST) == EFFECT_BEAK_BLAST);
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -292,6 +275,9 @@ SINGLE_BATTLE_TEST("Focus-style setup occurs before sleep prevents the move")
     PARAMETRIZE { move = MOVE_SHELL_TRAP;  setupAnim = B_ANIM_SHELL_TRAP_SETUP; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BEAK_BLAST) == EFFECT_BEAK_BLAST);
+        ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
+        ASSUME(GetMoveEffect(MOVE_SHELL_TRAP) == EFFECT_SHELL_TRAP);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Status1(STATUS1_SLEEP_TURN(3)); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -311,6 +297,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum and Temper Flare deal double damage after a
     PARAMETRIZE { move = MOVE_TEMPER_FLARE; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STOMPING_TANTRUM) == EFFECT_STOMPING_TANTRUM);
+        ASSUME(GetMoveEffect(MOVE_TEMPER_FLARE) == EFFECT_STOMPING_TANTRUM);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
     } WHEN {
@@ -332,6 +320,7 @@ DOUBLE_BATTLE_TEST("An action called by Instruct advances Truant")
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(3); }
         PLAYER(SPECIES_ORANGURU) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
@@ -476,6 +465,7 @@ SINGLE_BATTLE_TEST("Losing Truant preserves its counter in Gen 3 and resets it i
 
     GIVEN {
         WITH_CONFIG(B_TRUANT, gen);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Speed(2); }
     } WHEN {
@@ -506,6 +496,7 @@ SINGLE_BATTLE_TEST("Gaining Truant makes the next action loaf regardless of move
 
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Speed(playerMovedFirst ? 2 : 1); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(playerMovedFirst ? 1 : 2); }
     } WHEN {
@@ -607,6 +598,7 @@ DOUBLE_BATTLE_TEST("Ability Shield preserves Truant's counter through Neutralizi
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Item(ITEM_ABILITY_SHIELD); Speed(2); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(1); }
@@ -630,6 +622,7 @@ DOUBLE_BATTLE_TEST("Ability Shield keeps Truant's counter running when Neutraliz
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Item(ITEM_ABILITY_SHIELD); Speed(3); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(2); }
@@ -720,6 +713,7 @@ SINGLE_BATTLE_TEST("Being held by Sky Drop does not advance Truant")
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(1); }
         OPPONENT(SPECIES_AERODACTYL) { Speed(2); }
     } WHEN {
@@ -740,6 +734,7 @@ SINGLE_BATTLE_TEST("Gaining Truant after Mega Evolution causes an immediate loaf
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_SALAMENCE) { Ability(ABILITY_INTIMIDATE); Item(ITEM_SALAMENCITE); Speed(1); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
     } WHEN {
@@ -757,6 +752,7 @@ SINGLE_BATTLE_TEST("Gaining Truant after Terastallizing causes an immediate loaf
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_WATER); Speed(1); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
     } WHEN {
@@ -796,6 +792,10 @@ SINGLE_BATTLE_TEST("Truant cannot be overwritten by Simple Beam, Worry Seed or E
     PARAMETRIZE { move = MOVE_ENTRAINMENT; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
+        ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
+        ASSUME(gAbilitiesInfo[ABILITY_TRUANT].cantBeOverwritten);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); }
     } WHEN {
@@ -811,6 +811,7 @@ SINGLE_BATTLE_TEST("A Truant user can hand Truant over with Entrainment")
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Speed(1); }
     } WHEN {
@@ -830,6 +831,7 @@ SINGLE_BATTLE_TEST("Role Play copying Truant makes the user loaf on the followin
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_ROLE_PLAY) == EFFECT_ROLE_PLAY);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(1); }
     } WHEN {
@@ -849,6 +851,7 @@ SINGLE_BATTLE_TEST("Transforming into a Truant user makes the transformer loaf o
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
         PLAYER(SPECIES_DITTO) { Ability(ABILITY_LIMBER); Speed(2); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Moves(MOVE_CELEBRATE); Speed(1); }
     } WHEN {
@@ -908,6 +911,7 @@ SINGLE_BATTLE_TEST("Gastro Acid stops Truant from loafing")
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(1); }
     } WHEN {
@@ -927,6 +931,7 @@ SINGLE_BATTLE_TEST("A Truant loafing turn does not consume a confusion turn")
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
@@ -985,6 +990,7 @@ SINGLE_BATTLE_TEST("A Truant user put to sleep on a loafing turn loafs when it w
 {
     GIVEN {
         WITH_CONFIG(B_TRUANT, GEN_5);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
@@ -1031,6 +1037,7 @@ SINGLE_BATTLE_TEST("A battler that gains Truant as it switches in loafs first be
 
     GIVEN {
         WITH_CONFIG(B_TRUANT, gen);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); Speed(1); }
         OPPONENT(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(2); }
