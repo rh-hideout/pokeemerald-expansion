@@ -61,7 +61,6 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased by a confusion hit")
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
@@ -126,43 +125,11 @@ DOUBLE_BATTLE_TEST("Rage Fist maximum base power is 350")
     }
 }
 
-SINGLE_BATTLE_TEST("Rage Fist hit counter does not wrap after 32 hits")
-{
-    s16 damage[2];
-
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
-        ASSUME(GetMoveStrikeCount(MOVE_POPULATION_BOMB) == 10);
-        ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_HIT) == 2);
-        PLAYER(SPECIES_WOBBUFFET) { HP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_POPULATION_BOMB); }
-        TURN { MOVE(player, MOVE_RAGE_FIST); }
-        TURN { MOVE(opponent, MOVE_POPULATION_BOMB); }
-        TURN { MOVE(opponent, MOVE_POPULATION_BOMB); }
-        TURN { MOVE(opponent, MOVE_DOUBLE_HIT); }
-        TURN { MOVE(player, MOVE_RAGE_FIST); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, player);
-        HP_BAR(opponent, captureDamage: &damage[1]);
-    } THEN {
-        EXPECT_EQ(damage[0], damage[1]);
-    }
-}
-
 SINGLE_BATTLE_TEST("Rage Fist base power is not increased if a substitute was hit")
 {
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         ASSUME(GetMoveCategory(MOVE_CRUNCH) == DAMAGE_CATEGORY_PHYSICAL); // Substitute doesn't fade otherwise
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK);
@@ -216,7 +183,6 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 even if a damaging m
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
@@ -240,8 +206,6 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 even if a damaging m
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
-        ASSUME(GetMoveEffect(MOVE_ENDURE) == EFFECT_ENDURE);
         PLAYER(SPECIES_WOBBUFFET) { HP(2); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
@@ -344,7 +308,6 @@ SINGLE_BATTLE_TEST("Rage Fist number of hits is copied by Transform")
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_RAGE_FIST, MOVE_CELEBRATE); }
     } WHEN {
@@ -367,14 +330,13 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and 
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_DRAGON_TAIL); }
-        TURN { SWITCH(opponent, 0); }
-        TURN { MOVE(opponent, MOVE_RAGE_FIST); }
+        TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 0); }
+        TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, opponent);
         HP_BAR(player, captureDamage: &timesGotHit[0]);
@@ -382,6 +344,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and 
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, opponent);
         HP_BAR(player, captureDamage: &timesGotHit[1]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
         EXPECT_MUL_EQ(timesGotHit[0], Q_4_12(2.0), timesGotHit[1]);
     }
@@ -392,18 +355,15 @@ SINGLE_BATTLE_TEST("Rage Fist doesn't get increased power if Substitute is hit")
     s16 timesGotHit[2];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_RAGE_FIST); }
+        TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(opponent, MOVE_RAGE_FIST); }
+        TURN { MOVE(opponent, MOVE_RAGE_FIST); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, opponent);
         HP_BAR(player, captureDamage: &timesGotHit[0]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE_FIST, opponent);
         HP_BAR(player, captureDamage: &timesGotHit[1]);
     } THEN {

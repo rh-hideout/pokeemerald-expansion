@@ -115,6 +115,7 @@ static bool8 LoadCardGfx(void);
 static void CB2_InitTrainerCard(void);
 static u32 GetCappedGameStat(u8 statId, u32 maxValue);
 static bool8 HasAllFrontierSymbols(void);
+static u8 GetRubyTrainerStars(struct TrainerCard *);
 static u16 GetCaughtMonsCount(void);
 static void SetPlayerCardData(struct TrainerCard *, u8);
 static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *);
@@ -668,23 +669,26 @@ u32 CountPlayerTrainerStars(void)
         stars++;
     if (HasAllRegionalMons())
         stars++;
+    if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
+        stars++;
+    if (HasAllFrontierSymbols())
+        stars++;
 
-    if (IS_FRLG)
-    {
-        if (HasAllMons())
-            stars++;
-#if FREE_POKEMON_JUMP == FALSE
-        if (gSaveBlock2Ptr->berryPick.berriesPicked >= 200 && gSaveBlock2Ptr->pokeJump.jumpsInRow >= 200)
-            stars++;
-#endif // FREE_POKEMON_JUMP
-    }
-    else
-    {
-        if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
-            stars++;
-        if (HasAllFrontierSymbols())
-            stars++;
-    }
+    return stars;
+}
+
+static u8 GetRubyTrainerStars(struct TrainerCard *trainerCard)
+{
+    u8 stars = 0;
+
+    if (trainerCard->hofDebutHours || trainerCard->hofDebutMinutes || trainerCard->hofDebutSeconds)
+        stars++;
+    if (trainerCard->caughtAllHoenn)
+        stars++;
+    if (trainerCard->battleTowerStraightWins > 49)
+        stars++;
+    if (trainerCard->hasAllPaintings)
+        stars++;
 
     return stars;
 }
@@ -724,7 +728,6 @@ static void SetPlayerCardData(struct TrainerCard *trainerCard, u8 cardType)
     trainerCard->pokemonTrades = GetCappedGameStat(GAME_STAT_POKEMON_TRADES, 0xFFFF);
 
     trainerCard->money = GetMoney(&gSaveBlock1Ptr->money);
-    trainerCard->stars = CountPlayerTrainerStars();
 
     for (i = 0; i < TRAINER_CARD_PROFILE_LENGTH; i++)
         trainerCard->easyChatProfile[i] = gSaveBlock1Ptr->easyChatProfile[i];
@@ -736,32 +739,21 @@ static void SetPlayerCardData(struct TrainerCard *trainerCard, u8 cardType)
     case CARD_TYPE_EMERALD:
         trainerCard->battleTowerWins = 0;
         trainerCard->battleTowerStraightWins = 0;
+    // Seems like GF got CARD_TYPE_FRLG and CARD_TYPE_RS wrong.
+    case CARD_TYPE_FRLG:
         trainerCard->contestsWithFriends = GetCappedGameStat(GAME_STAT_WON_LINK_CONTEST, 999);
         trainerCard->pokeblocksWithFriends = GetCappedGameStat(GAME_STAT_POKEBLOCKS_WITH_FRIENDS, 0xFFFF);
         if (CountPlayerMuseumPaintings() >= CONTEST_CATEGORIES_COUNT)
             trainerCard->hasAllPaintings = TRUE;
+        trainerCard->stars = GetRubyTrainerStars(trainerCard);
         break;
-    case CARD_TYPE_FRLG:
+    case CARD_TYPE_RS:
         trainerCard->battleTowerWins = 0;
         trainerCard->battleTowerStraightWins = 0;
         trainerCard->contestsWithFriends = 0;
         trainerCard->pokeblocksWithFriends = 0;
         trainerCard->hasAllPaintings = 0;
-        trainerCard->linkPoints.berryCrush = GetCappedGameStat(GAME_STAT_PLAYED_BERRY_CRUSH, 0xFFFF);
-        trainerCard->unionRoomNum = GetCappedGameStat(GAME_STAT_NUM_UNION_ROOM_BATTLES, 0xFFFF);
-        trainerCard->shouldDrawStickers = TRUE;
-        trainerCard->stickers[0] = VarGet(VAR_HOF_BRAG_STATE);
-        trainerCard->stickers[1] = VarGet(VAR_EGG_BRAG_STATE);
-        trainerCard->stickers[2] = VarGet(VAR_LINK_WIN_BRAG_STATE);
-
-        trainerCard->monIconTint = VarGet(VAR_TRAINER_CARD_MON_ICON_TINT_IDX);
-
-        trainerCard->monSpecies[0] = VarGet(VAR_TRAINER_CARD_MON_ICON_1);
-        trainerCard->monSpecies[1] = VarGet(VAR_TRAINER_CARD_MON_ICON_2);
-        trainerCard->monSpecies[2] = VarGet(VAR_TRAINER_CARD_MON_ICON_3);
-        trainerCard->monSpecies[3] = VarGet(VAR_TRAINER_CARD_MON_ICON_4);
-        trainerCard->monSpecies[4] = VarGet(VAR_TRAINER_CARD_MON_ICON_5);
-        trainerCard->monSpecies[5] = VarGet(VAR_TRAINER_CARD_MON_ICON_6);
+        trainerCard->stars = 0;
         break;
     }
 }
@@ -770,13 +762,11 @@ static void TrainerCard_GenerateCardForPlayer(struct TrainerCard *trainerCard)
 {
     memset(trainerCard, 0, sizeof(struct TrainerCard));
     trainerCard->version = GAME_VERSION;
-    SetPlayerCardData(trainerCard, VersionToCardType(GAME_VERSION));
-
-    if (!IS_FRLG)
-    {
-        trainerCard->hasAllFrontierSymbols = HasAllFrontierSymbols();
-        trainerCard->frontierBP = gSaveBlock2Ptr->frontier.cardBattlePoints;
-    }
+    SetPlayerCardData(trainerCard, CARD_TYPE_EMERALD);
+    trainerCard->hasAllFrontierSymbols = HasAllFrontierSymbols();
+    trainerCard->frontierBP = gSaveBlock2Ptr->frontier.cardBattlePoints;
+    if (trainerCard->hasAllFrontierSymbols)
+        trainerCard->stars++;
 
     if (trainerCard->gender == FEMALE)
         trainerCard->unionRoomClass = gUnionRoomFacilityClasses[(trainerCard->trainerId % NUM_UNION_ROOM_CLASSES) + NUM_UNION_ROOM_CLASSES];
@@ -788,13 +778,11 @@ void TrainerCard_GenerateCardForLinkPlayer(struct TrainerCard *trainerCard)
 {
     memset(trainerCard, 0, 0x60);
     trainerCard->version = GAME_VERSION;
-    SetPlayerCardData(trainerCard, VersionToCardType(GAME_VERSION));
-
-    if (!IS_FRLG)
-    {
-        trainerCard->linkHasAllFrontierSymbols = HasAllFrontierSymbols();
-        *((u16 *)&trainerCard->linkPoints.frontier) = gSaveBlock2Ptr->frontier.cardBattlePoints;
-    }
+    SetPlayerCardData(trainerCard, CARD_TYPE_EMERALD);
+    trainerCard->linkHasAllFrontierSymbols = HasAllFrontierSymbols();
+    *((u16 *)&trainerCard->linkPoints.frontier) = gSaveBlock2Ptr->frontier.cardBattlePoints;
+    if (trainerCard->linkHasAllFrontierSymbols)
+        trainerCard->stars++;
 
     if (trainerCard->gender == FEMALE)
         trainerCard->unionRoomClass = gUnionRoomFacilityClasses[(trainerCard->trainerId % NUM_UNION_ROOM_CLASSES) + NUM_UNION_ROOM_CLASSES];
