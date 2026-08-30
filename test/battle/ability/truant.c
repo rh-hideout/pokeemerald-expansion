@@ -626,6 +626,54 @@ DOUBLE_BATTLE_TEST("Ability Shield preserves Truant's counter through Neutralizi
     }
 }
 
+DOUBLE_BATTLE_TEST("Ability Shield keeps Truant's counter running when Neutralizing Gas ends after it loafs")
+{
+    GIVEN {
+        WITH_CONFIG(B_TRUANT, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Item(ITEM_ABILITY_SHIELD); Speed(3); }
+        OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1000); MaxHP(1000); Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentRight); MOVE(playerLeft, MOVE_CELEBRATE); }
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentRight); MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentRight); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        MESSAGE("Slaking is loafing around!");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas arriving and fainting on a loafing turn lets Truant act instead")
+{
+    GIVEN {
+        WITH_CONFIG(B_TRUANT, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_SLAKING) { Ability(ABILITY_TRUANT); Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1000); MaxHP(1000); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); Speed(1); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+        TURN { SWITCH(opponentLeft, 2);
+               MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+               MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
+               SEND_OUT(opponentLeft, 0); }
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        MESSAGE("Slaking is loafing around!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Neutralizing Gas resets rather than freezes Truant's counter")
 {
     GIVEN {
