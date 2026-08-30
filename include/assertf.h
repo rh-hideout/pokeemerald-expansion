@@ -1,6 +1,8 @@
 #ifndef ASSERTF_H
 #define ASSERTF_H
 
+#include "postlink.h"
+
 /* Formatted assert.
  *
  * Asserts are a way to catch programmer errors at run-time. They should
@@ -83,6 +85,25 @@
  * Equivalent to fatal_assertf(FALSE, fmt, ...); */
 #define fatalf(fmt, ...) _FATALASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__)
 
+/* If a crash screen is shown in the current or any descendent scopes,
+ * calls f(ctx, addresses, maxAddresses) to add additional line(s) to
+ * the stack trace.
+ *
+ *   {
+ *     Foo(); // f(ctx) not yet active.
+ *     ScopedCrashStackContext(f, ctx);
+ *     Bar(); // f(ctx) active.
+ *     if (...)
+ *       Baz(); // f(ctx) active.
+ *   }
+ *   Qux(); // f(ctx) no longer active.
+ *
+ * addresses[0] must be the most recent address.
+ * maxAddresses will be at least 1, and no more than maxAddresses may be
+ * written to addresses.
+ * The number of addresses written must be returned. */
+#define ScopedCrashStackContext(f, ctx) __attribute__((__cleanup__(PopCrashStackContextHandler))) struct CrashStackContextHandler CAT(_crashStackContextHandler_, __LINE__) = { f, ctx }; PushCrashStackContextHandler(&CAT(_crashStackContextHandler_, __LINE__))
+
 #define _ASSERTF_COND(cond) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: %s", __FILE__, __LINE__, STR(cond)), TRUE); _recover = FALSE)
 
 #define _ASSERTF_FMT(cond, fmt, ...) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__), TRUE); _recover = FALSE)
@@ -93,17 +114,30 @@
 
 #if RELEASE
 #define _ASSERTF_HANDLE(...) (void)0
-#define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
+#define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(PostlinkReturnAddress(2), fmt, __VA_ARGS__)
 #elif TESTING
 #include "test_result.h"
 #define _ASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_INVALID, 0, fmt, __VA_ARGS__)
 #define _FATALASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_CRASH, 0, fmt, __VA_ARGS__)
 #else
-#define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
-#define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
+#define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(PostlinkReturnAddress(2), fmt, __VA_ARGS__)
+#define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(PostlinkReturnAddress(2), fmt, __VA_ARGS__)
 #endif
 
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 _Noreturn void FatalfCrashScreen(const void *return0, const char *fmt, ...);
+
+struct CrashStackContextHandler
+{
+    u32 (*f)(const void *ctx, const void **addresses, u32 maxAddresses);
+    const void *ctx;
+    const struct CrashStackContextHandler *parent;
+};
+
+void PushCrashStackContextHandler(struct CrashStackContextHandler *);
+void PopCrashStackContextHandler(struct CrashStackContextHandler *);
+
+u32 CrashStack(const void *return0, const void *return1, const void **addresses, u32 maxAddresses);
+void ClearCrashStack(void);
 
 #endif

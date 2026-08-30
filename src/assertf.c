@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include "global.h"
 #include "bg.h"
+#include "debug_info.h"
 #include "main.h"
 #include "malloc.h"
 #include "m4a.h"
@@ -51,6 +52,8 @@ static const struct BitUnPackArgs sBitUnPack1BPP =
 };
 
 #define TILE0_OFFSET ((32 * 20 * sizeof(u16)) / TILE_SIZE_4BPP)
+
+static EWRAM_DATA const struct CrashStackContextHandler *sCrashStackContextHandler = NULL;
 
 static bool32 Putc(u32 *x, u32 *y, char c)
 {
@@ -119,10 +122,32 @@ static bool32 Puti(u32 *x, u32 *y, s32 i)
     return TRUE;
 }
 
+static bool32 Puts(u32 *x, u32 *y, s32 n, const char *s);
+
 static bool32 Putp(u32 *x, u32 *y, const void *p)
 {
     uintptr_t address = (uintptr_t)p;
     u8 digits[8];
+
+    const struct Symbol *symbol = LookupAddress(p);
+    if (symbol)
+    {
+        char name[49];
+        size_t length = SymbolName(symbol, name, sizeof(name));
+        if (length <= 24)
+        {
+            return Puts(x, y, 24, name);
+        }
+        else
+        {
+            // Wrap across two lines.
+            u32 x0 = *x;
+            if (!Puts(x, y, 24, name))
+                return FALSE;
+            *x = x0;
+            return Puts(x, y, 24, &name[24]);
+        }
+    }
 
     for (u32 n = 0; n < 8; n++)
     {
@@ -299,14 +324,15 @@ static void Vprintf(enum Mode mode, const void *return1, const void *return0, co
         }
     }
 
-    if (!Puts(&x, &y, INT_MAX, "\n  in: "))
-        return;
-    if (!Putp(&x, &y, return1))
-        return;
-    if (!Puts(&x, &y, INT_MAX, "\n  in: "))
-        return;
-    if (!Putp(&x, &y, return0))
-        return;
+    const void *addresses[8];
+    u32 count = CrashStack(return0, return1, addresses, ARRAY_COUNT(addresses));
+    for (u32 i = 0; i < count; i++)
+    {
+        if (!Puts(&x, &y, INT_MAX, "\n  in: "))
+            return;
+        if (!Putp(&x, &y, addresses[i]))
+            return;
+    }
 }
 
 static void BusyWaitForVBlank(void)
@@ -445,7 +471,7 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    CrashScreen(MODE_ASSERTF, return1, __builtin_return_address(0), fmt, va);
+    CrashScreen(MODE_ASSERTF, return1, PostlinkReturnAddress(3), fmt, va);
     va_end(va);
 }
 
@@ -453,8 +479,44 @@ _Noreturn void FatalfCrashScreen(const void *return1, const char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
-    CrashScreen(MODE_FATALF, return1, __builtin_return_address(0), fmt, va);
+    CrashScreen(MODE_FATALF, return1, PostlinkReturnAddress(3), fmt, va);
     va_end(va);
 
     while (TRUE); // Unreachable: infinite loop in 'CrashScreen'.
+}
+
+void PushCrashStackContextHandler(struct CrashStackContextHandler *csch)
+{
+    csch->parent = sCrashStackContextHandler;
+    sCrashStackContextHandler = csch;
+}
+
+void PopCrashStackContextHandler(struct CrashStackContextHandler *csch)
+{
+    sCrashStackContextHandler = csch->parent;
+}
+
+u32 CrashStack(const void *return0, const void *return1, const void **addresses, u32 maxAddresses)
+{
+    // TODO: If return0 installed a stack context handler, should
+    // return1 be after it?
+    u32 count = 0;
+    if (count < maxAddresses)
+        addresses[count++] = return0;
+    if (count < maxAddresses)
+        addresses[count++] = return1;
+
+    const struct CrashStackContextHandler *csch = sCrashStackContextHandler;
+    while (count < maxAddresses && csch)
+    {
+        count += csch->f(csch->ctx, &addresses[count], maxAddresses - count);
+        csch = csch->parent;
+    }
+
+    return count;
+}
+
+void ClearCrashStack(void)
+{
+    sCrashStackContextHandler = NULL;
 }

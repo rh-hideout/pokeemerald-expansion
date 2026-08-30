@@ -66,7 +66,7 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
         {
             const char *ps = prevLabel.symbol.c_str();
             if (doSize && inScriptData && prevLabel)
-                std::printf(".ifdef %s ; .size %s, . - %s ; .endif\n", ps, ps, ps);
+                std::printf(".ifdef %s ; postlink_entry %s, POSTLINK_TYPE_SYMTAB, POSTLINK_SYMTAB_ADD_SYMBOL, 1 ; .size %s, . - %s ; .endif\n", ps, ps, ps, ps);
             prevLabel = Label();
 
             stack.pop();
@@ -129,7 +129,7 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
                 const char *ps = prevLabel.symbol.c_str();
 
                 if (doSize && inScriptData && prevLabel)
-                    std::printf(".ifdef %s ; .size %s, . - %s ; .endif ; ", ps, ps, ps);
+                    std::printf(".ifdef %s ; postlink_entry %s, POSTLINK_TYPE_SYMTAB, POSTLINK_SYMTAB_ADD_SYMBOL, 1 ; .size %s, . - %s ; .endif\n", ps, ps, ps, ps);
 
                 if (label.type == Label::global)
                     std::printf(".global %s\n%s:\n", s, s);
