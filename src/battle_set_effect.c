@@ -32,6 +32,7 @@
 #include "move.h"
 #include "random.h"
 #include "string_util.h"
+#include "rtc.h"
 #include "config/battle.h"
 #include "constants/game_stat.h"
 
@@ -66,6 +67,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
 static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect);
 static inline enum MoveEffect GetSynchronizeEffect(u32 status);
+static s32 GetMaxHpWithRounding(enum BattlerId battler);
 
 static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScript)
 {
@@ -76,8 +78,6 @@ static void BattleScriptPushAndSet(const u8 *currentScript, const u8 *effectScri
 static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     gBattlescriptCurrInstr = se->script;
-
-    assertf(se->moveEffect != MOVE_EFFECT_FLORAL_HEALING, "no effect assigned to MOVE_EFFECT_FLORAL_HEALING");
 }
 
 static bool32 CanSetNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se, enum ResultOption option)
@@ -1103,6 +1103,190 @@ static void HandleSetEffectSwamp(struct BattleCalcValues *cv, struct SetEffect *
     gSideTimers[side].swampTimer = 4;
     BattleScriptPush(se->script);
     gBattlescriptCurrInstr = BattleScript_TheSwampActivates;
+}
+
+static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!(gBattleMons[se->effectBattler].status1 & STATUS1_ANY))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        if (gBattleMons[cv->battlerAtk].hp < gBattleMons[cv->battlerAtk].maxHP)
+        {
+            s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+            s32 healAmount = GetMaxHpWithRounding(cv->battlerAtk) / restoreHpModifier;
+            SetHealAmount(cv->battlerAtk, healAmount);
+            BattleScriptPushAndSet(se->script, BattleScript_Purify);
+        }
+    }
+}
+
+static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].hp == gBattleMons[se->effectBattler].maxHP)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (cv->onlyChecking)
+    {
+        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / restoreHpModifier;
+        SetHealAmount(se->effectBattler, healAmount);
+        BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
+    }
+}
+
+static void HandleSetEffectRoost(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    SetEffectRestoreHp(cv, se);
+    gBattleMons[gBattlerAttacker].volatiles.roostActive = TRUE;
+}
+
+static void HandleSetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    SetEffectRestoreHp(cv, se);
+}
+
+static u32 GetWeatherHealingModifier(u32 moveEffect)
+{
+    u32 time = GetTimeOfDay();
+
+    switch (moveEffect)
+    {
+    case EFFECT_MOONLIGHT:
+        if (time == TIME_NIGHT || time == TIME_EVENING)
+            return 2;
+        break;
+    case EFFECT_MORNING_SUN:
+        if ((OW_TIMES_OF_DAY == GEN_3 && time == TIME_DAY) // Gen 3 doesn't have morning
+          || (OW_TIMES_OF_DAY != GEN_3 && time == TIME_MORNING))
+            return 2;
+        break;
+    case EFFECT_SYNTHESIS:
+        if (time == TIME_DAY)
+            return 2;
+        break;
+    default:
+        return 1;
+    }
+
+    return 1;
+}
+
+static void HandleSetEffectRestoreHpOnWeather(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].hp == gBattleMons[se->effectBattler].maxHP)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (cv->onlyChecking)
+    {
+        s32 moveResstoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+        s32 maxHpWithRounding = GetMaxHpWithRounding(se->effectBattler);
+
+        s32 recoverAmount = 0;
+        u32 weather = GetWeather();
+        u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
+        u32 healingWeather = attackerWeather & ~B_WEATHER_STRONG_WINDS;
+        bool32 isAffectedByMegaSol = cv->abilities[cv->battlerAtk] == ABILITY_MEGA_SOL && !(weather & B_WEATHER_SUN);
+        bool32 megaSolActivates = FALSE;
+        bool32 isUnaffectedByWeather = !(healingWeather & B_WEATHER_ANY) || cv->holdEffects[se->effectBattler] == HOLD_EFFECT_UTILITY_UMBRELLA;
+
+        if (cv->moveEffect == EFFECT_SHORE_UP)
+        {
+            if (attackerWeather & B_WEATHER_SANDSTORM)
+                recoverAmount = 20 * maxHpWithRounding / 30;
+            else
+                recoverAmount = maxHpWithRounding / moveResstoreHpModifier;
+        }
+        else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
+        {
+            if (attackerWeather & B_WEATHER_SUN)
+            {
+                recoverAmount = 20 * maxHpWithRounding / 30;
+                megaSolActivates = isAffectedByMegaSol;
+            }
+            else if (isUnaffectedByWeather)
+            {
+                recoverAmount = maxHpWithRounding /  moveResstoreHpModifier;
+            }
+            else // not sunny weather
+            {
+                recoverAmount = maxHpWithRounding / 4;
+            }
+        }
+        else // B_TIME_OF_DAY_HEALING_MOVES == GEN_2
+        {
+            u32 healingModifier = GetWeatherHealingModifier(cv->moveEffect);
+
+            if (attackerWeather & B_WEATHER_SUN)
+            {
+                recoverAmount = healingModifier * maxHpWithRounding  / moveResstoreHpModifier;
+                megaSolActivates = isAffectedByMegaSol;
+            }
+            else if (isUnaffectedByWeather)
+            {
+                recoverAmount = healingModifier * maxHpWithRounding / 4;
+            }
+            else // not sunny weather
+            {
+                recoverAmount = healingModifier * maxHpWithRounding / 8;
+            }
+        }
+
+        SetHealAmount(se->effectBattler, recoverAmount);
+        if (megaSolActivates)
+        {
+            gBattlerAbility = cv->battlerAtk;
+            BattleScriptPushAndSet(se->script, BattleScript_MegaSolActivatesHealing);
+        }
+        else
+        {
+            BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
+        }
+    }
+}
+
+static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].hp == gBattleMons[se->effectBattler].maxHP)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (gBattleMons[cv->battlerAtk].volatiles.healBlockTimer
+          || gBattleMons[se->effectBattler].volatiles.healBlockTimer)
+    {
+        SetEffectFail(BattleScript_MoveUsedHealBlockPreventsRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        u32 maxHpWithRounding = GetMaxHpWithRounding(se->effectBattler);
+        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+
+        s32 healAmount;
+        if (cv->abilities[cv->battlerAtk] == ABILITY_MEGA_LAUNCHER && IsPulseMove(cv->move))
+            healAmount = maxHpWithRounding  * 75 / 100;
+        else if (gFieldTimers.terrain == B_TERRAIN_GRASSY && se->moveEffect == MOVE_EFFECT_FLORAL_HEALING)
+            healAmount = maxHpWithRounding * restoreHpModifier / 3;
+        else
+            healAmount = maxHpWithRounding / restoreHpModifier;
+
+       SetHealAmount(se->effectBattler, healAmount);
+       BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
+    }
+}
+
+static void HandleSetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    SetEffectHealPulse(cv, se);
+}
+
+static void HandleSetEffectPollenPuff(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!cv->isStatusMove) return;
+    SetEffectHealPulse(cv, se);
 }
 
 static enum BattleWeather GetPreferredWeather(void)
@@ -3139,10 +3323,6 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
     }
 }
 
-static void HandleSetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static void HandleSetEffectQuash(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (HasBattlerActedThisTurn(se->effectBattler))
@@ -3297,10 +3477,6 @@ static void HandleSetEffectFairyLock(struct BattleCalcValues *cv, struct SetEffe
     }
 }
 
-static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 static bool32 IsTeatimeAffected(enum BattlerId battler)
 {
     if (GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
@@ -3443,7 +3619,9 @@ static void HandleSetEffectLifeDew(struct BattleCalcValues *cv, struct SetEffect
     }
     else if (!cv->onlyChecking)
     {
-        SetHealAmount(se->effectBattler, GetNonDynamaxMaxHP(se->effectBattler) / 4); // TODO: The rounding here might be incorrect
+        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / restoreHpModifier;
+        SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
 }
@@ -3634,7 +3812,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TRAP_BOTH] = HandleSetEffectTrapBoth,
     [MOVE_EFFECT_ROUND] = HandleSetEffectRound,
     [MOVE_EFFECT_SYRUP_BOMB] = HandleSetEffectSyrupBomb,
-    [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectNone,
     [MOVE_EFFECT_SECRET_POWER] = HandleSetEffectSecretPower,
     [MOVE_EFFECT_PSYCHIC_NOISE] = HandleSetEffectPsychicNoise,
     [MOVE_EFFECT_TERA_BLAST] = HandleSetEffectTeraBlast,
@@ -3723,7 +3900,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_TOPSY_TURVY] = HandleSetEffectTopsyTurvy,
     [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,
     [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
-    [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
@@ -3732,6 +3908,13 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_CAMOUFLAGE] = HandleSetEffectCamouflage,
     [MOVE_EFFECT_CONVERSION] = HandleSetEffectConversion,
 
+    [MOVE_EFFECT_ROOST] = HandleSetEffectRoost,
+    [MOVE_EFFECT_RESTORE_HP] = HandleSetEffectRestoreHp,
+    [MOVE_EFFECT_RESTORE_HP_ON_WEATHER] = HandleSetEffectRestoreHpOnWeather,
+    [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
+    [MOVE_EFFECT_POLLEN_PUFF] = HandleSetEffectPollenPuff,
+    [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectHealPulse,
+    
     [MOVE_EFFECT_SUN] = HandleSetEffectWeather,
     [MOVE_EFFECT_RAIN] = HandleSetEffectWeather,
     [MOVE_EFFECT_SANDSTORM] = HandleSetEffectWeather,
@@ -3954,4 +4137,11 @@ static inline enum MoveEffect GetSynchronizeEffect(u32 status)
     }
 
     return MOVE_EFFECT_NONE;
+}
+
+static s32 GetMaxHpWithRounding(enum BattlerId battler)
+{
+    if (B_UPDATED_MOVE_DATA >= GEN_5)
+        return GetNonDynamaxMaxHP(battler) + 1;
+    return GetNonDynamaxMaxHP(battler);
 }

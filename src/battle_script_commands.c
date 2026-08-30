@@ -401,7 +401,6 @@ static void Cmd_end(void);
 static void Cmd_end3(void);
 static void Cmd_setchargingturn(void);
 static void Cmd_call(void);
-static void Cmd_setroost(void);
 static void Cmd_jumpifabilitypresent(void);
 static void Cmd_endselectionscript(void);
 static void Cmd_playanimation(void);
@@ -455,8 +454,6 @@ static void Cmd_setprotectlike(void);
 static void Cmd_tryexplosion(void);
 static void Cmd_setatkhptozero(void);
 static void Cmd_jumpifnexttargetvalid(void);
-static void Cmd_tryhealhalfhealth(void);
-static void Cmd_setfieldweather(void);
 static void Cmd_manipulatedamage(void);
 static void Cmd_stockpiletohpheal(void);
 static void Cmd_twoturnmoveschargestringandanimation(void);
@@ -483,7 +480,6 @@ static void Cmd_setembargo(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_rapidspinfree(void);
-static void Cmd_recoverbasedonsunlight(void);
 static void Cmd_selectfirstvalidtarget(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_settaunt(void);
@@ -573,7 +569,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_END3]                                  = Cmd_end3,
     [B_SCR_OP_SETCHARGINGTURN]                       = Cmd_setchargingturn,
     [B_SCR_OP_CALL]                                  = Cmd_call,
-    [B_SCR_OP_SETROOST]                              = Cmd_setroost,
     [B_SCR_OP_JUMPIFABILITYPRESENT]                  = Cmd_jumpifabilitypresent,
     [B_SCR_OP_ENDSELECTIONSCRIPT]                    = Cmd_endselectionscript,
     [B_SCR_OP_PLAYANIMATION]                         = Cmd_playanimation,
@@ -627,8 +622,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYEXPLOSION]                          = Cmd_tryexplosion,
     [B_SCR_OP_SETATKHPTOZERO]                        = Cmd_setatkhptozero,
     [B_SCR_OP_JUMPIFNEXTTARGETVALID]                 = Cmd_jumpifnexttargetvalid,
-    [B_SCR_OP_TRYHEALHALFHEALTH]                     = Cmd_tryhealhalfhealth,
-    [B_SCR_OP_SETFIELDWEATHER]                       = Cmd_setfieldweather,
     [B_SCR_OP_MANIPULATEDAMAGE]                      = Cmd_manipulatedamage,
     [B_SCR_OP_STOCKPILETOHPHEAL]                     = Cmd_stockpiletohpheal,
     [B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION]  = Cmd_twoturnmoveschargestringandanimation,
@@ -655,7 +648,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_RAPIDSPINFREE]                         = Cmd_rapidspinfree,
-    [B_SCR_OP_RECOVERBASEDONSUNLIGHT]                = Cmd_recoverbasedonsunlight,
     [B_SCR_OP_SELECTFIRSTVALIDTARGET]                = Cmd_selectfirstvalidtarget,
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_SETTAUNT]                              = Cmd_settaunt,
@@ -764,6 +756,10 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_78]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_79]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_80]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_81]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_82]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_83]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_84]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -2982,14 +2978,6 @@ static void Cmd_call(void)
     gBattlescriptCurrInstr = cmd->instr;
 }
 
-static void Cmd_setroost(void)
-{
-    CMD_ARGS();
-
-    gBattleMons[gBattlerAttacker].volatiles.roostActive = TRUE;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_jumpifabilitypresent(void)
 {
     CMD_ARGS(enum Ability ability, const u8 *jumpInstr);
@@ -5083,40 +5071,6 @@ static void Cmd_jumpifnexttargetvalid(void)
     }
 }
 
-static void Cmd_tryhealhalfhealth(void)
-{
-    CMD_ARGS(u8 battler, const u8 *failInstr);
-
-    const u8 *failInstr = cmd->failInstr;
-
-    if (cmd->battler == BS_ATTACKER)
-        gBattlerTarget = gBattlerAttacker;
-
-    SetHealAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 2);
-    if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
-        gBattlescriptCurrInstr = failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_setfieldweather(void)
-{
-    CMD_ARGS();
-
-    if (TryChangeBattleWeather(gBattlerAttacker, GetMoveWeatherType(gCurrentMove), ABILITY_NONE) == WEATHER_FAILURE_SUCCESS)
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_FAILED;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-
-    if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
-        BattleScriptCall(BattleScript_FailOnPrimalWeather);
-}
-
 static void Cmd_manipulatedamage(void)
 {
     CMD_ARGS(u8 mode);
@@ -6040,87 +5994,6 @@ static void Cmd_rapidspinfree(void)
     else
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-static void Cmd_recoverbasedonsunlight(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    gBattlerTarget = gBattlerAttacker;
-    if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
-    {
-        s32 recoverAmount = 0;
-        u32 weather = GetWeather();
-        enum Ability ability = GetBattlerAbility(gBattlerAttacker);
-        u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), ability, weather);
-        u32 healingWeather = attackerWeather & ~B_WEATHER_STRONG_WINDS;
-        bool32 isAffectedByMegaSol = FALSE;
-        if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
-        {
-            if (attackerWeather & B_WEATHER_SANDSTORM)
-                recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
-            else
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-        }
-        else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
-        {
-            if (attackerWeather & B_WEATHER_SUN)
-            {
-                recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
-                if (ability == ABILITY_MEGA_SOL && !(weather & B_WEATHER_SUN))
-                    isAffectedByMegaSol = TRUE;
-            }
-            else if (!(healingWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else // not sunny weather
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-        }
-        else // B_TIME_OF_DAY_HEALING_MOVES == GEN_2
-        {
-            u32 healingModifier = 1;
-            u32 time = GetTimeOfDay();
-
-            switch (GetMoveEffect(gCurrentMove))
-            {
-            case EFFECT_MOONLIGHT:
-                if (time == TIME_NIGHT || time == TIME_EVENING)
-                    healingModifier = 2;
-                break;
-            case EFFECT_MORNING_SUN:
-                if ((OW_TIMES_OF_DAY == GEN_3 && time == TIME_DAY) // Gen 3 doesn't have morning
-                  || (OW_TIMES_OF_DAY != GEN_3 && time == TIME_MORNING))
-                    healingModifier = 2;
-                break;
-            case EFFECT_SYNTHESIS:
-                if (time == TIME_DAY)
-                    healingModifier = 2;
-                break;
-            default:
-                healingModifier = 1;
-                break;
-            }
-            if (attackerWeather & B_WEATHER_SUN)
-            {
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-                if (ability == ABILITY_MEGA_SOL && !(weather & B_WEATHER_SUN))
-                    isAffectedByMegaSol = TRUE;
-            }
-            else if (!(healingWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-            else // not sunny weather
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-        }
-
-        SetHealAmount(gBattlerAttacker, recoverAmount);
-        if (isAffectedByMegaSol)
-            gBattlescriptCurrInstr = BattleScript_MegaSolActivatesHealing;
-        else
-            gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
     }
 }
 
@@ -8249,29 +8122,6 @@ void BS_TryTrainerSlideZMoveMsg(void)
         break;
     default:
         break;
-    }
-}
-
-void BS_TryHealPulse(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-
-    if (IsBattlerAtMaxHp(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else
-    {
-        s32 healAmount = 0;
-        if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_LAUNCHER && IsPulseMove(gCurrentMove))
-            healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 75 / 100;
-        else if (gFieldTimers.terrain == B_TERRAIN_GRASSY && GetMoveEffectArg_MoveProperty(gCurrentMove) == MOVE_EFFECT_FLORAL_HEALING)
-            healAmount = GetNonDynamaxMaxHP(gBattlerTarget) * 2 / 3;
-        else
-            healAmount = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-
-        SetHealAmount(gBattlerTarget, healAmount);
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

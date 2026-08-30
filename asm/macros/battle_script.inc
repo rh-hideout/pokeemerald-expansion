@@ -340,10 +340,6 @@
 	.4byte \instr
 	.endm
 
-	.macro setroost
-	.byte B_SCR_OP_SETROOST
-	.endm
-
 	.macro jumpifabilitypresent ability:req, jumpInstr:req
 	.byte B_SCR_OP_JUMPIFABILITYPRESENT
 	.2byte \ability
@@ -646,16 +642,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealhalfhealth battler:req, failInstr:req
-	.byte B_SCR_OP_TRYHEALHALFHEALTH
-	.byte \battler
-	.4byte \failInstr
-	.endm
-
-	.macro setfieldweather
-	.byte B_SCR_OP_SETFIELDWEATHER
-	.endm
-
 	.macro manipulatedamage mode:req
 	.byte B_SCR_OP_MANIPULATEDAMAGE
 	.byte \mode
@@ -803,11 +789,6 @@
 
 	.macro rapidspinfree
 	.byte B_SCR_OP_RAPIDSPINFREE
-	.endm
-
-	.macro recoverbasedonsunlight failInstr:req
-	.byte B_SCR_OP_RECOVERBASEDONSUNLIGHT
-	.4byte \failInstr
 	.endm
 
 	.macro selectfirstvalidtarget
@@ -1143,11 +1124,6 @@
 
 	.macro trytrainerslideteramsg
 	callnative BS_TryTrainerSlideTeraMsg
-	.endm
-
-	.macro tryhealpulse failInstr:req
-	callnative BS_TryHealPulse
-	.4byte \failInstr
 	.endm
 
 	.macro trydefog clear:req, failInstr:req

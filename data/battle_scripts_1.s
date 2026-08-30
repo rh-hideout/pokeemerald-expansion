@@ -589,6 +589,15 @@ BattleScript_RestoreHpEffectBattler::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_Purify::
+	curestatus BS_EFFECT_BATTLER
+	updatestatusicon BS_EFFECT_BATTLER
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	printstring STRINGID_PKMNREGAINEDHEALTH
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MoveEffectTrick::
 	printstring STRINGID_PKMNSWITCHEDITEMS
 	waitmessage B_WAIT_TIME_LONG
@@ -647,20 +656,6 @@ BattleScript_RemoveGenericType::
 	printstring STRINGID_ATTACKERLOSTITSTYPE
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectPurify::
-	attackcanceler
-	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_PurifyWorks
-	goto BattleScript_ButItFailed
-BattleScript_PurifyWorks:
-	attackanimation
-	waitanimation
-	curestatus BS_TARGET
-	updatestatusicon BS_TARGET
-	printstring STRINGID_ATTACKERCUREDTARGETSTATUS
-	waitmessage B_WAIT_TIME_LONG
-	tryhealhalfhealth BS_ATTACKER, BattleScript_AlreadyAtFullHp
-	goto BattleScript_RestoreHp
 
 BattleScript_MoveEffectIncinerate::
 	printstring STRINGID_INCINERATEBURN
@@ -745,10 +740,6 @@ BattleScript_MoveEffectSmackDown::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectHitEnemyHealAlly::
-	jumpiftargetally BattleScript_EffectHealPulse
-	goto BattleScript_EffectHit
-
 BattleScript_MoveEffectDefog::
 	trydefog TRUE, NULL
 	return
@@ -805,19 +796,6 @@ BattleScript_EffectTopsyTurvyWorks:
 	waitanimation
 	invertstatstages
 	printstring STRINGID_TOPSYTURVYSWITCHEDSTATS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectHealPulse::
-	attackcanceler
-	jumpifvolatile BS_ATTACKER, VOLATILE_HEAL_BLOCK_TIMER, BattleScript_MoveUsedHealBlockPrevents @ stops pollen puff
-	jumpifvolatile BS_TARGET, VOLATILE_HEAL_BLOCK_TIMER, BattleScript_MoveUsedHealBlockPrevents
-	tryhealpulse BattleScript_AlreadyAtFullHp
-	attackanimation
-	waitanimation
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -936,12 +914,6 @@ BattleScript_GravityLoopEnd:
 	jumpifnexttargetvalid BattleScript_GravityLoop
 	restoretarget
 	return
-
-BattleScript_EffectRoost::
-	attackcanceler
-	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp
-	setroost
-	goto BattleScript_HealTarget
 
 BattleScript_EffectHitEscape::
 	jumpiffainted BS_TARGET, FALSE, BattleScript_HitEscapeSwitch
@@ -1140,18 +1112,6 @@ BattleScript_BattlerAvoidedMultiHit::
 	printstring STRINGID_HITXTIMES
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectRestoreHp::
-	attackcanceler
-	tryhealhalfhealth BS_ATTACKER, BattleScript_AlreadyAtFullHp
-	attackanimation
-	waitanimation
-BattleScript_RestoreHp:
-	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_AlreadyPoisoned::
 	setalreadystatusedmoveattempt
@@ -1464,20 +1424,13 @@ BattleScript_EffectBatonPass::
 	switchinevents
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMorningSun::
-BattleScript_EffectSynthesis::
-BattleScript_EffectMoonlight::
-BattleScript_EffectShoreUp::
-	attackcanceler
-	recoverbasedonsunlight BattleScript_AlreadyAtFullHp
-	goto BattleScript_HealTarget
-
 BattleScript_MegaSolActivatesHealing::
 	attackanimation
 	waitanimation
 	call BattleScript_AbilityPopUp
 	pause B_WAIT_TIME_SHORT
-	goto BattleScript_HealTargetContinue
+	call BattleScript_RestoreHpEffectBattler
+	return
 
 BattleScript_MegaSolActivatesTwoTurnMove::
 	call BattleScript_AbilityPopUpScripting
@@ -1575,20 +1528,6 @@ BattleScript_DoEffectTeleport::
 BattleScript_BeatUpAttackMessage::
 	printstring STRINGID_PKMNATTACK
 	return
-
-BattleScript_EffectSoftboiled::
-	attackcanceler
-	tryhealhalfhealth BS_TARGET, BattleScript_AlreadyAtFullHp
-BattleScript_HealTarget::
-	attackanimation
-	waitanimation
-BattleScript_HealTargetContinue::
-	playanimation BS_ATTACKER, B_ANIM_SIMPLE_HEAL
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_AlreadyAtFullHp::
 	pause B_WAIT_TIME_SHORT
@@ -2776,6 +2715,11 @@ BattleScript_MoveUsedHealBlockPrevents::
 	printstring STRINGID_HEALBLOCKPREVENTSUSAGE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_MoveUsedHealBlockPreventsRet::
+	printstring STRINGID_HEALBLOCKPREVENTSUSAGE
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_SelectingNotAllowedMoveHealBlockInPalace::
 	printstring STRINGID_HEALBLOCKPREVENTSUSAGE
