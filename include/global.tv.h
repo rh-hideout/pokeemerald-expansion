@@ -61,7 +61,7 @@ typedef union // size = 0x24
         /*0x0D*/ u8 language;
         /*0x0E*/ u8 pokemonNameLanguage;
         /*0x0F*/ u8 filler_0F[1];
-        /*0x10*/ u8 nickname[PLAYER_NAME_LENGTH + 1];
+        /*0x10*/ u8 nickname[8]; // WARNING: Should be 10.
         /*0x18*/ u16 words18[2];
         /*0x1C*/ u16 words[2];
     } fanclubOpinions;

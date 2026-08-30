@@ -782,31 +782,22 @@ static void StatusInflictionScreenFlash(void)
 static void HealMon(struct Pokemon *mon)
 {
     u8 i;
-    u16 hp;
     u8 ppBonuses;
-    u8 data[4];
+    u32 data;
 
-    for (i = 0; i < 4; i++)
-        data[i] = 0;
-
-    hp = GetMonData(mon, MON_DATA_MAX_HP);
-    data[0] = hp;
-    data[1] = hp >> 8;
-    SetMonData(mon, MON_DATA_HP, data);
+    data = GetMonData(mon, MON_DATA_MAX_HP);
+    SetMonData(mon, MON_DATA_HP, &data);
 
     ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
-        data[0] = CalculatePPWithBonus(move, ppBonuses, i);
-        SetMonData(mon, MON_DATA_PP1 + i, data);
+        data = CalculatePPWithBonus(move, ppBonuses, i);
+        SetMonData(mon, MON_DATA_PP1 + i, &data);
     }
 
-    data[0] = 0;
-    data[1] = 0;
-    data[2] = 0;
-    data[3] = 0;
-    SetMonData(mon, MON_DATA_STATUS, data);
+    data = 0;
+    SetMonData(mon, MON_DATA_STATUS, &data);
 }
 
 static bool8 DoesAbilityPreventStatus(struct Pokemon *mon, u32 status)

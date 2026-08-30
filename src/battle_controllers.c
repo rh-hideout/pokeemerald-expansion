@@ -1805,10 +1805,10 @@ static void SetBattlerMonData(enum BattlerId battler, struct Pokemon *party, u32
         }
         break;
     case REQUEST_SPECIES_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPECIES, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPECIES, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_HELDITEM_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HELD_ITEM, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_HELD_ITEM, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MOVES_PP_BATTLE:
         for (i = 0; i < MAX_MON_MOVES; i++)
@@ -1822,154 +1822,154 @@ static void SetBattlerMonData(enum BattlerId battler, struct Pokemon *party, u32
     case REQUEST_MOVE2_BATTLE:
     case REQUEST_MOVE3_BATTLE:
     case REQUEST_MOVE4_BATTLE:
-        SetMonData(&party[monId], MON_DATA_MOVE1 + gBattleResources->bufferA[battler][1] - REQUEST_MOVE1_BATTLE, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_MOVE1 + gBattleResources->bufferA[battler][1] - REQUEST_MOVE1_BATTLE, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_PP_DATA_BATTLE:
-        SetMonData(&party[monId], MON_DATA_PP1, &gBattleResources->bufferA[battler][3]);
-        SetMonData(&party[monId], MON_DATA_PP2, &gBattleResources->bufferA[battler][4]);
-        SetMonData(&party[monId], MON_DATA_PP3, &gBattleResources->bufferA[battler][5]);
-        SetMonData(&party[monId], MON_DATA_PP4, &gBattleResources->bufferA[battler][6]);
-        SetMonData(&party[monId], MON_DATA_PP_BONUSES, &gBattleResources->bufferA[battler][7]);
+        SetMonData(&party[monId], MON_DATA_PP1, (void *)&gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_PP2, (void *)&gBattleResources->bufferA[battler][4]);
+        SetMonData(&party[monId], MON_DATA_PP3, (void *)&gBattleResources->bufferA[battler][5]);
+        SetMonData(&party[monId], MON_DATA_PP4, (void *)&gBattleResources->bufferA[battler][6]);
+        SetMonData(&party[monId], MON_DATA_PP_BONUSES, (void *)&gBattleResources->bufferA[battler][7]);
         break;
     case REQUEST_PPMOVE1_BATTLE:
     case REQUEST_PPMOVE2_BATTLE:
     case REQUEST_PPMOVE3_BATTLE:
     case REQUEST_PPMOVE4_BATTLE:
-        SetMonData(&party[monId], MON_DATA_PP1 + gBattleResources->bufferA[battler][1] - REQUEST_PPMOVE1_BATTLE, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_PP1 + gBattleResources->bufferA[battler][1] - REQUEST_PPMOVE1_BATTLE, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_OTID_BATTLE:
-        SetMonData(&party[monId], MON_DATA_OT_ID, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_OT_ID, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_EXP_BATTLE:
-        SetMonData(&party[monId], MON_DATA_EXP, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_EXP, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_HP_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HP_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_HP_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_ATK_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_ATK_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_ATK_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_DEF_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_DEF_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_DEF_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPEED_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPEED_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPEED_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPATK_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPATK_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPATK_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPDEF_EV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPDEF_EV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPDEF_EV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_FRIENDSHIP_BATTLE:
-        SetMonData(&party[monId], MON_DATA_FRIENDSHIP, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_FRIENDSHIP, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_POKERUS_BATTLE:
-        SetMonData(&party[monId], MON_DATA_POKERUS, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_POKERUS, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MET_LOCATION_BATTLE:
-        SetMonData(&party[monId], MON_DATA_MET_LOCATION, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_MET_LOCATION, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MET_LEVEL_BATTLE:
-        SetMonData(&party[monId], MON_DATA_MET_LEVEL, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_MET_LEVEL, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MET_GAME_BATTLE:
-        SetMonData(&party[monId], MON_DATA_MET_GAME, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_MET_GAME, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_POKEBALL_BATTLE:
-        SetMonData(&party[monId], MON_DATA_POKEBALL, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_POKEBALL, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_ALL_IVS_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HP_IV, &gBattleResources->bufferA[battler][3]);
-        SetMonData(&party[monId], MON_DATA_ATK_IV, &gBattleResources->bufferA[battler][4]);
-        SetMonData(&party[monId], MON_DATA_DEF_IV, &gBattleResources->bufferA[battler][5]);
-        SetMonData(&party[monId], MON_DATA_SPEED_IV, &gBattleResources->bufferA[battler][6]);
-        SetMonData(&party[monId], MON_DATA_SPATK_IV, &gBattleResources->bufferA[battler][7]);
-        SetMonData(&party[monId], MON_DATA_SPDEF_IV, &gBattleResources->bufferA[battler][8]);
+        SetMonData(&party[monId], MON_DATA_HP_IV, (void *)&gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_ATK_IV, (void *)&gBattleResources->bufferA[battler][4]);
+        SetMonData(&party[monId], MON_DATA_DEF_IV, (void *)&gBattleResources->bufferA[battler][5]);
+        SetMonData(&party[monId], MON_DATA_SPEED_IV, (void *)&gBattleResources->bufferA[battler][6]);
+        SetMonData(&party[monId], MON_DATA_SPATK_IV, (void *)&gBattleResources->bufferA[battler][7]);
+        SetMonData(&party[monId], MON_DATA_SPDEF_IV, (void *)&gBattleResources->bufferA[battler][8]);
         break;
     case REQUEST_HP_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HP_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_HP_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_ATK_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_ATK_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_ATK_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_DEF_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_DEF_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_DEF_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPEED_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPEED_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPEED_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPATK_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPATK_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPATK_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPDEF_IV_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPDEF_IV, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPDEF_IV, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_PERSONALITY_BATTLE:
-        SetMonData(&party[monId], MON_DATA_PERSONALITY, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_PERSONALITY, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_CHECKSUM_BATTLE:
-        SetMonData(&party[monId], MON_DATA_CHECKSUM, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_CHECKSUM, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_STATUS_BATTLE:
-        SetMonData(&party[monId], MON_DATA_STATUS, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_STATUS, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_LEVEL_BATTLE:
-        SetMonData(&party[monId], MON_DATA_LEVEL, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_LEVEL, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_HP_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HP, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_HP, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MAX_HP_BATTLE:
-        SetMonData(&party[monId], MON_DATA_MAX_HP, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_MAX_HP, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_ATK_BATTLE:
-        SetMonData(&party[monId], MON_DATA_ATK, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_ATK, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_DEF_BATTLE:
-        SetMonData(&party[monId], MON_DATA_DEF, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_DEF, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPEED_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPEED, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPEED, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPATK_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPATK, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPATK, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SPDEF_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SPDEF, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SPDEF, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_COOL_BATTLE:
-        SetMonData(&party[monId], MON_DATA_COOL, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_COOL, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_BEAUTY_BATTLE:
-        SetMonData(&party[monId], MON_DATA_BEAUTY, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_BEAUTY, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_CUTE_BATTLE:
-        SetMonData(&party[monId], MON_DATA_CUTE, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_CUTE, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SMART_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SMART, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SMART, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_TOUGH_BATTLE:
-        SetMonData(&party[monId], MON_DATA_TOUGH, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_TOUGH, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SHEEN_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SHEEN, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SHEEN, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_COOL_RIBBON_BATTLE:
-        SetMonData(&party[monId], MON_DATA_COOL_RIBBON, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_COOL_RIBBON, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_BEAUTY_RIBBON_BATTLE:
-        SetMonData(&party[monId], MON_DATA_BEAUTY_RIBBON, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_BEAUTY_RIBBON, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_CUTE_RIBBON_BATTLE:
-        SetMonData(&party[monId], MON_DATA_CUTE_RIBBON, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_CUTE_RIBBON, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_SMART_RIBBON_BATTLE:
-        SetMonData(&party[monId], MON_DATA_SMART_RIBBON, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_SMART_RIBBON, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_TOUGH_RIBBON_BATTLE:
-        SetMonData(&party[monId], MON_DATA_TOUGH_RIBBON, &gBattleResources->bufferA[battler][3]);
+        SetMonData(&party[monId], MON_DATA_TOUGH_RIBBON, (void *)&gBattleResources->bufferA[battler][3]);
         break;
     }
 
