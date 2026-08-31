@@ -390,34 +390,22 @@ SINGLE_BATTLE_TEST("Disable's timer only counts down when trying to use a move (
     PARAMETRIZE { config = GEN_1; move = MOVE_SCRATCH;      }
     PARAMETRIZE { config = GEN_1; move = MOVE_ROCK_SLIDE;   }
     PARAMETRIZE { config = GEN_1; move = MOVE_SING;         }
-    PARAMETRIZE { config = GEN_1; move = MOVE_ICE_BEAM;     }
-    PARAMETRIZE { config = GEN_1; move = MOVE_THUNDERBOLT;  }
     //PARAMETRIZE { config = GEN_1; move = MOVE_WRAP;         } // TO DO: uncomment once Gen 1 Wrap is added
     PARAMETRIZE { config = GEN_2; move = MOVE_SCRATCH;      }
     PARAMETRIZE { config = GEN_2; move = MOVE_ROCK_SLIDE;   }
     PARAMETRIZE { config = GEN_2; move = MOVE_SING;         }
-    PARAMETRIZE { config = GEN_2; move = MOVE_ICE_BEAM;     }
-    PARAMETRIZE { config = GEN_2; move = MOVE_THUNDERBOLT;  }
 
     GIVEN {
         WITH_CONFIG(B_DISABLE_TURNS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(move, MOVE_DISABLE, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_DISABLE, WITH_RNG(RNG_DISABLE_TURNS, 2)); MOVE(opponent, MOVE_SCRATCH); }
-        switch (move)
-        {
-        case MOVE_ICE_BEAM:
-            TURN { MOVE(player, move); MOVE(opponent, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
-            break;
-        case MOVE_THUNDERBOLT:
-            TURN { MOVE(player, move); MOVE(opponent, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, FALSE)); }
-            break;
-        default:
-            TURN { MOVE(player, move); MOVE(opponent, MOVE_CELEBRATE); }
-            break;
-        }
+        if (move == MOVE_ROCK_SLIDE)
+            TURN { MOVE(player, move, secondaryEffect: TRUE); FORCED_MOVE(opponent); }
+        else
+            TURN { MOVE(player, move); FORCED_MOVE(opponent); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
@@ -427,10 +415,75 @@ SINGLE_BATTLE_TEST("Disable's timer only counts down when trying to use a move (
         MESSAGE("The opposing Wynaut's Scratch is disabled!");
         NOT MESSAGE("The opposing Wynaut's move is no longer disabled!"); // 1 turn
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        if (move != MOVE_SCRATCH)
-            NOT MESSAGE("The opposing Wynaut's move is no longer disabled!"); // 2 turns
-        else
+        if (move == MOVE_SCRATCH)
             MESSAGE("The opposing Wynaut's move is no longer disabled!"); // 2 turns
+        else
+            NOT MESSAGE("The opposing Wynaut's move is no longer disabled!"); // 2 turns
+    }
+}
+
+DOUBLE_BATTLE_TEST("Disable's timer does not count down if a faster battler makes the target flinch (Gen 1)")
+{
+    GIVEN {
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_1);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_FAKE_OUT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WYNAUT) { Speed(3); Moves(MOVE_DISABLE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_FAKE_OUT, target: opponentLeft);
+            MOVE(playerRight, MOVE_DISABLE, target: opponentLeft, WITH_RNG(RNG_DISABLE_TURNS, 1));
+            MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+        }
+        TURN { FORCED_MOVE(opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, playerRight);
+        MESSAGE("The opposing Wobbuffet's Scratch was disabled!");
+        NOT MESSAGE("The opposing Wobbuffet's move is no longer disabled!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponentLeft);
+        MESSAGE("The opposing Wobbuffet's move is no longer disabled!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Disable's timer counts a turn spent fully paralyzed (Gen 2)")
+{
+    GIVEN {
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_DISABLE, MOVE_THUNDER_WAVE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); MOVE(opponent, MOVE_SCRATCH, WITH_RNG(RNG_PARALYSIS, FALSE)); }
+        TURN { MOVE(player, MOVE_DISABLE, WITH_RNG(RNG_DISABLE_TURNS, 2)); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, player);
+        MESSAGE("The opposing Wynaut's Scratch was disabled!");
+        MESSAGE("The opposing Wynaut's Scratch is disabled!");
+        MESSAGE("The opposing Wynaut couldn't move because it's paralyzed!");
+        MESSAGE("The opposing Wynaut's move is no longer disabled!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Disable's timer counts a forced move attempt after a slower Disable (Gen 1-2)")
+{
+    GIVEN {
+        WITH_CONFIG(B_DISABLE_TURNS, GEN_2);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DISABLE); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(2); Moves(MOVE_ROLLOUT); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROLLOUT); MOVE(player, MOVE_DISABLE, WITH_RNG(RNG_DISABLE_TURNS, 1)); }
+        TURN { SKIP_TURN(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLLOUT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, player);
+        MESSAGE("The opposing Wynaut's Rollout was disabled!");
+        NOT MESSAGE("The opposing Wynaut's move is no longer disabled!");
+        MESSAGE("The opposing Wynaut's Rollout is disabled!");
+        MESSAGE("The opposing Wynaut's move is no longer disabled!");
     }
 }
 

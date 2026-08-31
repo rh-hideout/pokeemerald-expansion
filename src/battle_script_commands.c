@@ -6105,8 +6105,7 @@ static void Cmd_disablelastusedattack(void)
         if (gBattleMons[gBattlerTarget].moves[i] == moveToDisable)
             break;
     }
-    if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
-        && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
+    if (i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
     {
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToDisable)
 

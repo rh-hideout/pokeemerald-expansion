@@ -324,6 +324,15 @@ static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static enum CancelerResult CancelerDisableTimer(struct BattleCalcValues *cv)
+{
+    if (GetConfig(B_DISABLE_TURNS) <= GEN_2
+     && gBattleMons[cv->battlerAtk].volatiles.disabledMove != MOVE_NONE
+     && gBattleMons[cv->battlerAtk].volatiles.disableTimer != 0)
+        gBattleMons[cv->battlerAtk].volatiles.disableTimer--;
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult CancelerDisabled(struct BattleCalcValues *cv)
 {
     if (GetActiveGimmick(cv->battlerAtk) != GIMMICK_Z_MOVE
@@ -3091,6 +3100,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_TRUANT] = CancelerTruant,
     [CANCELER_FOCUS_GEN5] = CancelerFocusGen5,
     [CANCELER_FLINCH] = CancelerFlinch,
+    [CANCELER_DISABLE_TIMER] = CancelerDisableTimer,
     [CANCELER_DISABLED] = CancelerDisabled,
     [CANCELER_VOLATILE_BLOCKED] = CancelerVolatileBlocked,
     [CANCELER_TAUNTED] = CancelerTaunted,
