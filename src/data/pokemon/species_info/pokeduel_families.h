@@ -938,7 +938,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_LarvaeMoth,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 10,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -1458,7 +1458,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 16,
+    .enemyMonElevation = 11,
     .backPic = gMonBackPic_Kuriboh,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 10,
@@ -1538,7 +1538,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 16,
+    .enemyMonElevation = 13,
     .backPic = gMonBackPic_WingedKuriboh,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 10,
@@ -1974,7 +1974,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Junkuriboh,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 11,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -2120,7 +2120,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RocketWarrior,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -2630,7 +2630,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_FlameManipulator,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -3365,7 +3365,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Sangan,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -3439,7 +3439,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Sanwitch,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -4535,7 +4535,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_PokiDraco,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -4609,7 +4609,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_DoraDraco,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 3,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -4682,7 +4682,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_MukaMuka,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 2,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -4830,7 +4830,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_QuillboltHedgehog,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -4976,7 +4976,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_FrogTheJam,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 11,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5050,7 +5050,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_ToadallyAwesome,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 1,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5195,7 +5195,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Tradetoad,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 10,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5269,7 +5269,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Substitoad,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 3,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5342,7 +5342,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_DesFrog,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 10,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5489,7 +5489,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Tadpole,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 19,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5563,7 +5563,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_BeelzeFrog,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 8,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5637,7 +5637,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_SwapFrog,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5711,7 +5711,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Ronintoadin,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5785,7 +5785,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_DupeFrog,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -5858,7 +5858,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_LusterDragon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 2,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -6079,7 +6079,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_LittleD,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -6892,7 +6892,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RyuKishin,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -6966,7 +6966,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RyuKishinPowered,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -7038,7 +7038,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Watapon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 13,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -7111,7 +7111,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Marshmallon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -7183,7 +7183,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Spore,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 13,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -7330,7 +7330,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_OjamaYellow,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -7403,7 +7403,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_OjamaKnight,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -8066,7 +8066,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Wildheart,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 3,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -8585,7 +8585,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_BlackwingGaleTheWhirlwind,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -9471,7 +9471,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_AmazonessBabyTiger,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 11,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -9618,7 +9618,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_AmazonessPrincess,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -10136,7 +10136,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_SmallPieceGolem,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -10210,7 +10210,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_MediumPieceGolem,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -11900,7 +11900,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_GearfriedTheIronKnight,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 2,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -13371,7 +13371,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_LevelEater,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 11,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -13444,7 +13444,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_OutstandingDogMarron,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -13521,7 +13521,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_SkullDogMarron,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -13594,7 +13594,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_MadDogOfDarkness,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -17542,10 +17542,10 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 14,
+    .enemyMonElevation = 9,
     .backPic = gMonBackPic_VampireBat,
     .backPicSize = MON_COORDS_SIZE(64, 64),
-    .backPicYOffset = 14,
+    .backPicYOffset = 10,
     .backAnimId = BACK_ANIM_H_SLIDE,
     .palette = gMonPalette_VampireBat,
     .shinyPalette = gMonShinyPalette_VampireBat,
@@ -18488,7 +18488,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RevivalJam,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -18569,7 +18569,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 11,
+    .enemyMonElevation = 8,
     .backPic = gMonBackPic_HumanoidSlime,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 4,
@@ -19446,7 +19446,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RescueRabbit,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 9,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -19520,7 +19520,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RescueCat,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -19664,7 +19664,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .pokemonOffset = 0,
     .trainerScale = 290,
     .trainerOffset = 2,
-    .frontPic = gMonFrontPic_LarvaeMoth,
+    .frontPic = gMonFrontPic_NeedleWorm,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
     .frontPicYOffset = 0,
     .frontAnimFrames = ANIM_FRAMES(
@@ -19672,13 +19672,13 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
     .enemyMonElevation = 0,
-    .backPic = gMonBackPic_LarvaeMoth,
+    .backPic = gMonBackPic_NeedleWorm,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 13,
     .backAnimId = BACK_ANIM_H_SLIDE,
-    .palette = gMonPalette_LarvaeMoth,
-    .shinyPalette = gMonShinyPalette_LarvaeMoth,
-    .iconSprite = gMonIcon_LarvaeMoth,
+    .palette = gMonPalette_NeedleWorm,
+    .shinyPalette = gMonShinyPalette_NeedleWorm,
+    .iconSprite = gMonIcon_NeedleWorm,
     .iconPalIndex = 1,
     .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
     SHADOW(1, 1, SHADOW_SIZE_S)
@@ -20544,7 +20544,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_BlockDragon,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -21348,7 +21348,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_ToonAlligator,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -21718,7 +21718,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
         ANIMCMD_FRAME(0, 1),
     ),
     .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
-    .enemyMonElevation = 10,
+    .enemyMonElevation = 8,
     .backPic = gMonBackPic_RedEyesToonDragon,
     .backPicSize = MON_COORDS_SIZE(64, 64),
     .backPicYOffset = 9,
@@ -21929,7 +21929,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_PotOfGreed,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 9,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -23396,7 +23396,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_ThousandEyesIdol,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -24223,7 +24223,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_HorusLevelFour,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -26437,7 +26437,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Drillroid,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -26584,7 +26584,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Ambulanceroid,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 6,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -28801,7 +28801,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_StarBoy,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -28874,7 +28874,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_MistarBoy,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 1,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -30057,7 +30057,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_CyberneticCyclopean,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 4,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -30275,7 +30275,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_RubyCarbuncle,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 8,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -30420,7 +30420,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_PenguinSoldier,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 3,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -31299,7 +31299,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Niwatori,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -31372,7 +31372,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_ThunderKid,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -31518,7 +31518,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_MushroomMan,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -31664,7 +31664,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Bubbleman,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 5,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -32103,7 +32103,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_CloudianNimbusman,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 2,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -33938,7 +33938,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_Dandylion,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -34084,7 +34084,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_SnowmanEater,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -34157,7 +34157,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_SnowmanEater,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
@@ -34230,7 +34230,7 @@ const struct SpeciesInfo gSpeciesInfoPokeduel[] =
     .trainerOffset = 2,
     .frontPic = gMonFrontPic_VenomBoa,
     .frontPicSize = MON_COORDS_SIZE(64, 64),
-    .frontPicYOffset = 0,
+    .frontPicYOffset = 7,
     .frontAnimFrames = ANIM_FRAMES(
         ANIMCMD_FRAME(0, 1),
     ),
