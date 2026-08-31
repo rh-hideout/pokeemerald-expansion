@@ -8845,25 +8845,6 @@ void BS_TryActivateAbilityShield(void)
     }
 }
 
-void BS_JumpIfRoarFails(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-
-    if (WILD_DOUBLE_BATTLE
-        && IsOnPlayerSide(gBattlerAttacker)
-        && !IsOnPlayerSide(gBattlerTarget)
-        && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else if (WILD_DOUBLE_BATTLE
-             && !IsOnPlayerSide(gBattlerAttacker)
-             && !IsOnPlayerSide(gBattlerTarget))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else if (FlagGet(WE_FLAG_NO_RUNNING))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_JumpIfAbsent(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
@@ -9447,19 +9428,6 @@ void BS_SetLastUsedAbility(void)
 {
     NATIVE_ARGS();
     gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_InvertStatStages(void)
-{
-    NATIVE_ARGS();
-    for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
-    {
-        if (gBattleMons[gBattlerTarget].statStages[i] < DEFAULT_STAT_STAGE) // Negative becomes positive.
-            gBattleMons[gBattlerTarget].statStages[i] = DEFAULT_STAT_STAGE + (DEFAULT_STAT_STAGE - gBattleMons[gBattlerTarget].statStages[i]);
-        else if (gBattleMons[gBattlerTarget].statStages[i] > DEFAULT_STAT_STAGE) // Positive becomes negative.
-            gBattleMons[gBattlerTarget].statStages[i] = DEFAULT_STAT_STAGE - (gBattleMons[gBattlerTarget].statStages[i] - DEFAULT_STAT_STAGE);
-    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

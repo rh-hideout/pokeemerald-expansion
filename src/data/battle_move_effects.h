@@ -102,7 +102,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ROAR] =
     {
-        .battleScript = BattleScript_EffectRoar,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
@@ -1241,7 +1241,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TOPSY_TURVY] =
     {
-        .battleScript = BattleScript_EffectTopsyTurvy,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

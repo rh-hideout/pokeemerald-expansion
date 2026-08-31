@@ -4378,7 +4378,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 }
                 else if (gBattleMons[battlerDef].volatiles.root)
                 {
-                    BattleScriptCall(BattleScript_PrintMonIsRootedRet);
+                    BattleScriptCall(BattleScript_PrintMonIsRooted);
                 }
                 else if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
                 {

@@ -757,9 +757,6 @@ enum AbsorbDrainStringID
 // gLeechSeedStringIds
 enum LeechSeedStringID
 {
-    B_MSG_LEECH_SEED_SET,
-    B_MSG_LEECH_SEED_MISS,
-    B_MSG_LEECH_SEED_FAIL,
     B_MSG_LEECH_SEED_DRAIN,
     B_MSG_LEECH_SEED_OOZE,
 };

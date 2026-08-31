@@ -1376,11 +1376,6 @@
 	.byte \battler
 	.endm
 
-	.macro jumpifroarfails jumpInstr:req
-	callnative BS_JumpIfRoarFails
-	.4byte \jumpInstr
-	.endm
-
 	.macro jumpifabsent battler:req, jumpInstr:req
 	callnative BS_JumpIfAbsent
 	.byte \battler
@@ -1604,10 +1599,6 @@
 
 	.macro setlastusedability
 	callnative BS_SetLastUsedAbility
-	.endm
-
-	.macro invertstatstages
-	callnative BS_InvertStatStages
 	.endm
 
 	.macro handleformchange battler:req, caseId:req, bufferSpeciesName=TRUE

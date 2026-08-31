@@ -552,11 +552,6 @@ BattleScript_MoveEffectSetStatus::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_MoveEffectLeechSeed::
-	printfromtable gLeechSeedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_MoveEffectSubstitute::
 	healthbarupdate BS_EFFECT_BATTLER
 	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
@@ -729,6 +724,12 @@ BattleScript_ItDoesntAffectScrTarget::
 	flushtextbox
 	return
 
+BattleScript_ItDoesntAffectEffBattler::
+	printstring STRINGID_ITDOESNTAFFECTEFF
+	waitmessage B_WAIT_TIME_SHORT
+	flushtextbox
+	return
+
 BattleScript_ButItFailedRet::
 	pause B_WAIT_TIME_SHORT
     printstring STRINGID_BUTITFAILED
@@ -781,23 +782,6 @@ BattleScript_MoveEffectOverwriteType::
 	printstring STRINGID_TARGETCHANGEDTYPE
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectTopsyTurvy::
-	attackcanceler
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_ATK, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_DEF, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_SPATK, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_SPDEF, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_SPEED, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_ACC, 6, BattleScript_EffectTopsyTurvyWorks
-	jumpifstat BS_TARGET, CMP_EQUAL, STAT_EVASION, 6, BattleScript_ButItFailed
-BattleScript_EffectTopsyTurvyWorks:
-	attackanimation
-	waitanimation
-	invertstatstages
-	printstring STRINGID_TOPSYTURVYSWITCHEDSTATS
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_EffectHealingWish::
 	attackcanceler
@@ -961,14 +945,14 @@ BattleScript_ElectricTerrainPrevents::
 	printstring STRINGID_ELECTRICTERRAINPREVENTS
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MistyTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_MISTYTERRAINPREVENTS
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_FlowerVeilProtects::
 	pause B_WAIT_TIME_SHORT
@@ -1081,15 +1065,8 @@ BattleScript_SetUpBide::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectRoar::
-	attackcanceler
-	jumpifroarfails BattleScript_ButItFailed
-	jumpifcommanderactive BS_TARGET, BattleScript_ButItFailed
-	jumpifability BS_TARGET, ABILITY_GUARD_DOG, BattleScript_ButItFailed
-	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
-	jumpifvolatile BS_TARGET, VOLATILE_ROOT, BattleScript_PrintMonIsRooted
-	jumpiftargetdynamaxed BattleScript_RoarBlockedByDynamax
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
-	forcerandomswitch BattleScript_ButItFailed
+	forcerandomswitch BattleScript_ButItFailedRet
+    return
 
 BattleScript_RoarBlockedByDynamax:
 	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
@@ -2774,12 +2751,6 @@ BattleScript_AquaRingHeal::
 	goto BattleScript_TurnHeal
 
 BattleScript_PrintMonIsRooted::
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNANCHOREDITSELF
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_PrintMonIsRootedRet::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNANCHOREDITSELF
 	waitmessage B_WAIT_TIME_LONG
@@ -5223,9 +5194,9 @@ BattleScript_BattlerAvoidedAttack::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_TargetAvoidsAttack::
+BattleScript_EffBattlerAvoidedAttack::
 	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNAVOIDEDATTACK
+	printstring STRINGID_EFFBATTLERAVOIDEDATTACK
 	waitmessage B_WAIT_TIME_LONG
 	return
 

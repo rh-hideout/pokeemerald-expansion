@@ -1259,6 +1259,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .soundMove = TRUE,
         .copycatBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .assistBanned = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ROAR,
+        }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_NEXT_APPEAL_LATER : CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
@@ -10562,7 +10565,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPATK_UP_2 },
         .magicCoatAffected = B_UPDATED_MOVE_FLAGS >= GEN_5,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_PSYCHIC_NOISE,
+            .moveEffect = MOVE_EFFECT_HEAL_BLOCK,
         }),
         .contestEffect = CONTEST_EFFECT_DONT_EXCITE_AUDIENCE,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_CUTE,
@@ -15773,6 +15776,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_ATK_UP_1 },
         .magicCoatAffected = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_TOPSY_TURVY,
+        }),
         .contestEffect = CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
@@ -22520,7 +22526,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .soundMove = TRUE,
         .ignoresSubstitute = B_UPDATED_MOVE_FLAGS >= GEN_6,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_PSYCHIC_NOISE,
+            .moveEffect = MOVE_EFFECT_HEAL_BLOCK,
             .chance = 100,
         }),
         .battleAnimScript = gBattleAnimMove_PsychicNoise,

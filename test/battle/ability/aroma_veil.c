@@ -222,7 +222,7 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
     PARAMETRIZE { moveTarget = playerLeft; }
     PARAMETRIZE { moveTarget = playerRight; }
     GIVEN {
-        ASSUME(GetMoveAdditionalEffectById(MOVE_PSYCHIC_NOISE, 0)->moveEffect == MOVE_EFFECT_PSYCHIC_NOISE);
+        ASSUME(GetMoveAdditionalEffectById(MOVE_PSYCHIC_NOISE, 0)->moveEffect == MOVE_EFFECT_HEAL_BLOCK);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

@@ -11227,36 +11227,3 @@ struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
 
     }
 }
-
-enum StringID GetStatus1String(u32 status1)
-{
-    if (status1 & STATUS1_POISON)
-    {
-        return STRINGID_PKMNWASPOISONED;
-    }
-    else if (status1 & STATUS1_TOXIC_POISON)
-    {
-        return STRINGID_PKMNBADLYPOISONED;
-    }
-    else if (status1 & STATUS1_BURN)
-    {
-        return STRINGID_PKMNWASBURNED;
-    }
-    else if (status1 & STATUS1_PARALYSIS)
-    {
-        return STRINGID_PKMNWASPARALYZED;
-    }
-    else if (status1 & STATUS1_SLEEP)
-    {
-        return STRINGID_PKMNFELLASLEEP;
-    }
-    else if (status1 & STATUS1_FROSTBITE)
-    {
-        return STRINGID_PKMNGOTFROSTBITE;
-    }
-    else
-    {
-        errorf("No status1 set");
-        return STRINGID_EMPTYSTRING3;
-    }
-}
