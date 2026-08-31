@@ -3905,7 +3905,7 @@ static void PrintTitle(void)
     CopyWindowToVram(WIN_TITLE, COPYWIN_FULL);
 }
 
-static void PrintEasyChatText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16))
+static void PrintEasyChatText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, TextPrinterCallback callback)
 {
     AddTextPrinterParameterized(windowId, fontId, str, x, y, speed, callback);
 }
@@ -4884,11 +4884,11 @@ static bool8 IsModeWindowAnimActive(void)
 
 static void CreateScrollIndicatorSprites(void)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_ScrollIndicator, 96, 80, 0);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_ScrollIndicator, 96, 80, 0);
     if (spriteId != MAX_SPRITES)
         sScreenControl->scrollIndicatorUpSprite = &gSprites[spriteId];
 
-    spriteId = CreateSprite(&sSpriteTemplate_ScrollIndicator, 96, 156, 0);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_ScrollIndicator, 96, 156, 0);
     if (spriteId != MAX_SPRITES)
     {
         sScreenControl->scrollIndicatorDownSprite = &gSprites[spriteId];
@@ -4929,11 +4929,11 @@ static void SetScrollIndicatorXPos(bool32 inWordSelect)
 // The Start/Select buttons are used as page scroll indicators
 static void CreateStartSelectButtonSprites(void)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_StartSelectButton, 220, 84, 1);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_StartSelectButton, 220, 84, 1);
     if (spriteId != MAX_SPRITES)
         sScreenControl->startButtonSprite = &gSprites[spriteId];
 
-    spriteId = CreateSprite(&sSpriteTemplate_StartSelectButton, 220, 156, 1);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_StartSelectButton, 220, 156, 1);
     if (spriteId != MAX_SPRITES)
     {
         sScreenControl->selectButtonSprite = &gSprites[spriteId];

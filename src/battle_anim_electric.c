@@ -660,14 +660,14 @@ void AnimSparkElectricity(struct Sprite *sprite)
         battler = gBattleAnimTarget;
         break;
     case ANIM_ATK_PARTNER:
-        if (!IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+        if (!IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
             battler = gBattleAnimAttacker;
         else
-            battler = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = GetPartnerBattler(gBattleAnimAttacker);
         break;
     case ANIM_DEF_PARTNER:
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
-            battler = BATTLE_PARTNER(gBattleAnimTarget);
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
+            battler = GetPartnerBattler(gBattleAnimTarget);
         else
             battler = gBattleAnimTarget;
         break;
@@ -1525,7 +1525,7 @@ void AnimTask_ShockWaveLightning(u8 taskId)
 
 static bool8 CreateShockWaveLightningSprite(struct Task *task, u8 taskId)
 {
-    u8 spriteId = CreateSprite(&gLightningSpriteTemplate, task->data[13], task->data[14], task->data[12]);
+    u8 spriteId = CreateSpriteUnchecked(&gLightningSpriteTemplate, task->data[13], task->data[14], task->data[12]);
 
     if (spriteId != MAX_SPRITES)
     {

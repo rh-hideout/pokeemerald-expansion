@@ -8,6 +8,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_z_move_effects.h"
+#include "constants/battle_set_effect.h"
 #include "constants/moves.h"
 
 #define STAT_CHANGE_FORCE_MAX 7 // Used for belly drum as a way to show that stats are maxed

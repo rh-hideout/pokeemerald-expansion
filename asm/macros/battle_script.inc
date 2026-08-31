@@ -3,10 +3,6 @@
 	.byte B_SCR_OP_ATTACKCANCELER
 	.endm
 
-	.macro accuracycheck
-	.byte B_SCR_OP_ACCURACYCHECK
-	.endm
-
 	.macro printattackstring
 	.byte B_SCR_OP_PRINTATTACKSTRING
 	.endm
@@ -1027,11 +1023,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifsubstituteblocks jumpInstr:req
-	.byte B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS
-	.4byte \jumpInstr
-	.endm
-
 	.macro tryrecycleitem failInstr:req
 	.byte B_SCR_OP_TRYRECYCLEITEM
 	.4byte \failInstr
@@ -1114,8 +1105,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysynchronize
-	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.macro tryabilityonstatuschange
+	.byte B_SCR_OP_TRYABILITYONSTATUSCHANGE
 	.endm
 
 	.macro tryconfusionafterskydrop battler:req
@@ -1158,6 +1149,14 @@
 
 	.macro restoreattacker
 	callnative BS_RestoreAttacker
+	.endm
+
+	.macro savebattlerorderindex
+	callnative BS_SaveBattlerOrderIndex
+	.endm
+
+	.macro restorebattlerorderindex
+	callnative BS_RestoreBattlerOrderIndex
 	.endm
 
 	.macro allyswitchswapbattlers

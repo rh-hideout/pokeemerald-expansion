@@ -284,17 +284,14 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
     {
         DisplayCannotDismountBikeMessage(taskId, tUsingRegisteredKeyItem);
     }
+    else if (Overworld_IsBikingAllowed() && !IsBikingDisallowedByPlayer() && FollowerNPCCanBike())
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_Bike;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
     else
     {
-        if (Overworld_IsBikingAllowed() && !IsBikingDisallowedByPlayer() && FollowerNPCCanBike())
-        {
-            sItemUseOnFieldCB = ItemUseOnFieldCB_Bike;
-            SetUpItemUseOnFieldCallback(taskId);
-        }
-        else
-        {
-            DisplayDadsAdviceCannotUseItemMessage(taskId, tUsingRegisteredKeyItem);
-        }
+        DisplayDadsAdviceCannotUseItemMessage(taskId, tUsingRegisteredKeyItem);
     }
 }
 
@@ -442,7 +439,6 @@ static void Task_CloseItemfinderMessage(u8 taskId)
 
 bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
 {
-    int itemX, itemY;
     s16 playerX, playerY, i, distanceX, distanceY;
     PlayerGetDestCoords(&playerX, &playerY);
     if (I_ORAS_DOWSING_FLAG != 0)
@@ -455,10 +451,8 @@ bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
         // Check if there are any hidden items on the current map that haven't been picked up
         if (events->bgEvents[i].kind == BG_EVENT_HIDDEN_ITEM && !FlagGet(events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START))
         {
-            itemX = (u16)events->bgEvents[i].x + MAP_OFFSET;
-            distanceX = itemX - playerX;
-            itemY = (u16)events->bgEvents[i].y + MAP_OFFSET;
-            distanceY = itemY - playerY;
+            distanceX = events->bgEvents[i].x + MAP_OFFSET - playerX;
+            distanceY = events->bgEvents[i].y + MAP_OFFSET - playerY;
 
             // Player can see 7 metatiles on either side horizontally
             // and 5 metatiles on either side vertically
@@ -482,7 +476,7 @@ static bool8 IsHiddenItemPresentAtCoords(const struct MapEvents *events, s16 x, 
 
     for (i = 0; i < bgEventCount; i++)
     {
-        if (bgEvent[i].kind == BG_EVENT_HIDDEN_ITEM && x == (u16)bgEvent[i].x && y == (u16)bgEvent[i].y) // hidden item and coordinates matches x and y passed?
+        if (bgEvent[i].kind == BG_EVENT_HIDDEN_ITEM && x == bgEvent[i].x && y == bgEvent[i].y) // hidden item and coordinates matches x and y passed?
         {
             if (!FlagGet(bgEvent[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START))
                 return TRUE;
@@ -576,52 +570,47 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
         tItemDistanceX = itemDistanceX;
         tItemDistanceY = itemDistanceY;
         tItemFound = TRUE;
+        return;
     }
+
+    // Other items have been found, check if this one is closer
+
+    // Get absolute x distance of the already-found item
+    if (tItemDistanceX < 0)
+        oldItemAbsX = tItemDistanceX * -1; // WEST
     else
+        oldItemAbsX = tItemDistanceX; // EAST
+
+    // Get absolute y distance of the already-found item
+    if (tItemDistanceY < 0)
+        oldItemAbsY = tItemDistanceY * -1; // NORTH
+    else
+        oldItemAbsY = tItemDistanceY; // SOUTH
+
+    // Get absolute x distance of the newly-found item
+    if (itemDistanceX < 0)
+        newItemAbsX = itemDistanceX * -1;
+    else
+        newItemAbsX = itemDistanceX;
+
+    // Get absolute y distance of the newly-found item
+    if (itemDistanceY < 0)
+        newItemAbsY = itemDistanceY * -1;
+    else
+        newItemAbsY = itemDistanceY;
+
+    if (oldItemAbsX + oldItemAbsY > newItemAbsX + newItemAbsY)
     {
-        // Other items have been found, check if this one is closer
-
-        // Get absolute x distance of the already-found item
-        if (tItemDistanceX < 0)
-            oldItemAbsX = tItemDistanceX * -1; // WEST
-        else
-            oldItemAbsX = tItemDistanceX;      // EAST
-
-        // Get absolute y distance of the already-found item
-        if (tItemDistanceY < 0)
-            oldItemAbsY = tItemDistanceY * -1; // NORTH
-        else
-            oldItemAbsY = tItemDistanceY;      // SOUTH
-
-        // Get absolute x distance of the newly-found item
-        if (itemDistanceX < 0)
-            newItemAbsX = itemDistanceX * -1;
-        else
-            newItemAbsX = itemDistanceX;
-
-        // Get absolute y distance of the newly-found item
-        if (itemDistanceY < 0)
-            newItemAbsY = itemDistanceY * -1;
-        else
-            newItemAbsY = itemDistanceY;
-
-
-        if (oldItemAbsX + oldItemAbsY > newItemAbsX + newItemAbsY)
-        {
-            // New item is closer
-            tItemDistanceX = itemDistanceX;
-            tItemDistanceY = itemDistanceY;
-        }
-        else
-        {
-            if (oldItemAbsX + oldItemAbsY == newItemAbsX + newItemAbsY
-            && (oldItemAbsY > newItemAbsY || (oldItemAbsY == newItemAbsY && tItemDistanceY < itemDistanceY)))
-            {
-                // If items are equal distance, use whichever is closer on the Y axis or further south
-                tItemDistanceX = itemDistanceX;
-                tItemDistanceY = itemDistanceY;
-            }
-        }
+        // New item is closer
+        tItemDistanceX = itemDistanceX;
+        tItemDistanceY = itemDistanceY;
+    }
+    else if (oldItemAbsX + oldItemAbsY == newItemAbsX + newItemAbsY
+          && (oldItemAbsY > newItemAbsY || (oldItemAbsY == newItemAbsY && tItemDistanceY < itemDistanceY)))
+    {
+        // If items are equal distance, use whichever is closer on the Y axis or further south
+        tItemDistanceX = itemDistanceX;
+        tItemDistanceY = itemDistanceY;
     }
 }
 
@@ -651,22 +640,22 @@ enum Direction GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
         else
             return DIR_NORTH;
     }
+    else if (absX < absY)
+    {
+        if (itemDistanceY < 0)
+            return DIR_SOUTH;
+        else
+            return DIR_WEST;
+    }
+    else if (absX == absY)
+    {
+        if (itemDistanceY < 0)
+            return DIR_SOUTH;
+        else
+            return DIR_WEST;
+    }
     else
     {
-        if (absX < absY)
-        {
-            if (itemDistanceY < 0)
-                return DIR_SOUTH;
-            else
-                return DIR_WEST;
-        }
-        if (absX == absY)
-        {
-            if (itemDistanceY < 0)
-                return DIR_SOUTH;
-            else
-                return DIR_WEST;
-        }
         return DIR_NONE; // Unreachable
     }
 }
@@ -1221,7 +1210,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     // Embargo Check
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        if (gBattleMons[battlerTarget].volatiles.embargo)
+        if (gBattleMons[battlerTarget].volatiles.embargoTimer)
             return TRUE;
     }
 
@@ -1233,8 +1222,6 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
             cannotUse = TRUE;
-        else
-            SetStatChange(battlerTarget, GetItemEffect(itemId)[1], 1);
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
         if (hp == 0 ||gPartyMenu.slotId > 1)

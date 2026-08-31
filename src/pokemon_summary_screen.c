@@ -1715,11 +1715,11 @@ static void HandleMoveRelearnerInput(u8 taskId)
     {
         sMonSummaryScreen->callback = CB2_InitLearnMove;
         gRelearnMode = sMonSummaryScreen->currPageIndex;
-        gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
         if (sMonSummaryScreen->isBoxMon)
         {
             gSpecialVar_0x8004 = PC_MON_CHOSEN;
             gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
+            gSpecialVar_MonBoxId = StorageGetCurrentBox();
         }
         else
         {
@@ -4142,7 +4142,7 @@ static void PrintMoveNameAndPP(u8 moveIndex)
         DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, gStringVar2);
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sMovesPPLayout);
         text = gStringVar4;
-        ppState = GetCurrentPpToMaxPpState(summary->pp[moveIndex], pp) + 9;
+        ppState = GetCurrentPPToMaxPPState(summary->pp[moveIndex], pp) + 9;
         x = GetStringRightAlignXOffset(FONT_NORMAL, text, 44);
     }
     else
