@@ -140,6 +140,13 @@ enum __attribute__((packed)) Stat
 #define EARTH_RIBBON         30
 #define WORLD_RIBBON         31
 
+#define NUM_RIBBONS                       (WORLD_RIBBON + 1)
+#define ASSIGNED_RIBBON_NONE              0
+#define ASSIGNED_RIBBON_FROM_ID(ribbonId) ((ribbonId) + 1)
+#define ASSIGNED_RIBBON_TO_ID(value)      ((value) - 1)
+#define NUM_ASSIGNED_RIBBON_VALUES        (NUM_RIBBONS + 1)
+#define ASSIGNED_RIBBON_BITS              6
+
 #define FIRST_GIFT_RIBBON MARINE_RIBBON
 #define LAST_GIFT_RIBBON  WORLD_RIBBON
 #define NUM_GIFT_RIBBONS  (1 + LAST_GIFT_RIBBON - FIRST_GIFT_RIBBON)

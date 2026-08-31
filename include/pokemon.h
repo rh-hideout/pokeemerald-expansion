@@ -135,7 +135,7 @@ struct PokemonSubstruct0
     enum Species species:11; // 2047 species.
     enum Type teraType:5; // 30 types.
     enum Item heldItem:10; // 1023 items.
-    u16 assignedRibbon:6; // 31 Ribbons.
+    u16 assignedRibbon:ASSIGNED_RIBBON_BITS; // 0 for none, otherwise the Ribbon ID plus 1.
     u32 experience:21;
     u32 nickname11:8; // 11th character of nickname.
     u32 unused_04:3;

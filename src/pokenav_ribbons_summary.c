@@ -263,6 +263,7 @@ static u32 GetRibbonId(void)
 static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
 {
     u32 ribbonId = GetRibbonId();
+    u32 assignedRibbon;
     struct PokenavMonList *mons = list->monList;
     struct PokenavMonListItem *monInfo = &mons->monData[mons->currIndex];
 
@@ -276,21 +277,39 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
     if (JOY_REPEAT(DPAD_RIGHT) && TrySelectRibbonRight(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
 
-    // Select a Ribbon to have "assigned"
+    // Select or deselect the Ribbon used for the Pokémon's battle title.
     if (JOY_NEW(A_BUTTON))
     {
-        // Mon Data
-        struct Pokemon *mon = &gPlayerParty[monInfo->monId];
-        // Deselect the Ribbon if you Press A on the currently selected Ribbon
-        ribbonId++; // 0 is Champion Ribbon so let's add 1, can subtract later
-        if (GetMonData(mon, MON_DATA_ASSIGNED_RIBBON) == ribbonId) {
-            PlaySE(SE_PC_OFF);
-            ribbonId = 0;
+        u32 currentRibbon;
+
+        assignedRibbon = ASSIGNED_RIBBON_FROM_ID(ribbonId);
+        if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        {
+            currentRibbon = GetMonData(&gPlayerParty[monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
         }
         else
+        {
+            currentRibbon = GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_ASSIGNED_RIBBON);
+        }
+
+        if (currentRibbon == assignedRibbon)
+        {
+            PlaySE(SE_PC_OFF);
+            assignedRibbon = ASSIGNED_RIBBON_NONE;
+        }
+        else
+        {
             PlaySE(SE_PC_LOGIN);
-        
-        SetMonData(mon, MON_DATA_ASSIGNED_RIBBON, &ribbonId);
+        }
+
+        if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        {
+            SetMonData(&gPlayerParty[monInfo->monId], MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+        }
+        else
+        {
+            SetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+        }
     }
 
     if (JOY_NEW(B_BUTTON))

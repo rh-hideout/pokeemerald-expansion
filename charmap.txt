@@ -430,6 +430,7 @@ B_EFF_TEAM1 = FD 46
 B_EFF_TEAM2 = FD 47
 B_PLAYER_MON1_TITLE = FD 48
 B_PLAYER_MON2_TITLE = FD 49
+B_SCR_ACTIVE_TITLE = FD 4A
 
 @ indicates the end of a town/city name (before " TOWN" or " CITY")
 NAME_END = FC 00

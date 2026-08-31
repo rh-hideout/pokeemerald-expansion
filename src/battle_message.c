@@ -106,16 +106,14 @@ static const u8 sText_LinkTrainerSentOutTwoPkmn[] = _("{B_LINK_OPPONENT1_NAME} s
 static const u8 sText_TwoLinkTrainersIntroSendOutPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_LINK_OPPONENT_MON1_NAME}! {B_LINK_OPPONENT2_NAME} sent out {B_LINK_OPPONENT_MON2_NAME}!");
 static const u8 sText_LinkTrainerSentOutPkmn2[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_LINK_OPPONENT_MON2_NAME}!");
 static const u8 sText_LinkTrainerMultiSentOutPkmn[] = _("{B_LINK_SCR_TRAINER_NAME} sent out {B_BUFF1}!");
-static const u8 sText_GoPkmn[] = _("Go! {B_PLAYER_MON1_NAME}!");
-static const u8 sText_GoPkmnTitle[] = _("Go! {B_PLAYER_MON1_NAME} {B_PLAYER_MON1_TITLE}!");
-static const u8 sText_GoTwoPkmn[] = _("Go! {B_PLAYER_MON1_NAME} and {B_PLAYER_MON2_NAME}!");
-static const u8 sText_GoTwoPkmnTitle[] = _("Go! {B_PLAYER_MON1_NAME} {B_PLAYER_MON1_TITLE} and {B_PLAYER_MON2_NAME} {B_PLAYER_MON2_TITLE}!");
-static const u8 sText_GoPkmn2[] = _("Go! {B_BUFF1}!");
-static const u8 sText_DoItPkmn[] = _("You're in charge, {B_BUFF1}!");
-static const u8 sText_GoForItPkmn[] = _("Go for it, {B_BUFF1}!");
-static const u8 sText_BeCarefulPkmn[] = _("Be careful, {B_PLAYER_MON1_NAME}!");
+static const u8 sText_GoPkmn[] = _("Go! {B_PLAYER_MON1_NAME}{B_PLAYER_MON1_TITLE}!");
+static const u8 sText_GoTwoPkmn[] = _("Go! {B_PLAYER_MON1_NAME}{B_PLAYER_MON1_TITLE} and {B_PLAYER_MON2_NAME}{B_PLAYER_MON2_TITLE}!");
+static const u8 sText_GoPkmn2[] = _("Go! {B_BUFF1}{B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_DoItPkmn[] = _("You're in charge, {B_BUFF1}{B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_GoForItPkmn[] = _("Go for it, {B_BUFF1}{B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_BeCarefulPkmn[] = _("Be careful, {B_PLAYER_MON1_NAME}{B_PLAYER_MON1_TITLE}!");
 static const u8 sText_JustALittleMorePkmn[] = _("Just a little more! Hang in there, {B_BUFF1}!"); //currently unused, will require code changes
-static const u8 sText_YourFoesWeakGetEmPkmn[] = _("Your opponent's weak! Get 'em, {B_BUFF1}!");
+static const u8 sText_YourFoesWeakGetEmPkmn[] = _("Your opponent's weak! Get 'em, {B_BUFF1}{B_SCR_ACTIVE_TITLE}!");
 static const u8 sText_LinkPartnerSentOutPkmn1GoPkmn[] = _("{B_LINK_PARTNER_NAME} sent out {B_LINK_PLAYER_MON1_NAME}! Go, {B_LINK_PLAYER_MON2_NAME}!");
 static const u8 sText_LinkPartnerSentOutPkmn2GoPkmn[] = _("{B_LINK_PARTNER_NAME} sent out {B_LINK_PLAYER_MON2_NAME}! Go, {B_LINK_PLAYER_MON1_NAME}!");
 static const u8 sText_LinkPartnerSentOutPkmn1[] = _("{B_LINK_PARTNER_NAME} sent out {B_BUFF1}!");
@@ -1578,20 +1576,21 @@ static const u8 sText_Your2[] = _("your");
 static const u8 sText_Opposing2[] = _("the opposing");
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 
-// Ribbon Titles
-static const u8 sText_ChampionRibbon_Title[]        = _("the Champion");
-static const u8 sText_WinningRibbon_Title[]         = _("the Veteran");
-static const u8 sText_VictoryRibbon_Title[]         = _("the Veteran Victor");
-static const u8 sText_ArtistRibbon_Title[]          = _("the Model for Paintings");
-static const u8 sText_EffortRibbon_Title[]          = _("the Once Well-Trained");
-static const u8 sText_MarineRibbon_Title[]          = _("the Battle Champion");
-static const u8 sText_LandRibbon_Title[]            = _("the Regional Champion");
-static const u8 sText_SkyRibbon_Title[]             = _("the National Champion");
-static const u8 sText_CountryRibbon_Title[]         = _("the Victor");
-static const u8 sText_NationalRibbon_Title[]        = _("the Triumphant");
-static const u8 sText_EarthRibbon_Title[]           = _("the 100x Victorious");
-static const u8 sText_WorldRibbon_Title[]           = _("the World Conqueror");
-static const u8 sText_NoRibbon_Title[]              = _("");
+static const u8 *const sRibbonTitles[NUM_RIBBONS] =
+{
+    [CHAMPION_RIBBON] = COMPOUND_STRING(" the Champion"),
+    [WINNING_RIBBON]  = COMPOUND_STRING(" the Veteran"),
+    [VICTORY_RIBBON]  = COMPOUND_STRING(" the Veteran Victor"),
+    [ARTIST_RIBBON]   = COMPOUND_STRING(" the Model for Paintings"),
+    [EFFORT_RIBBON]   = COMPOUND_STRING(" the Once Well-Trained"),
+    [MARINE_RIBBON]   = COMPOUND_STRING(" the Battle Champion"),
+    [LAND_RIBBON]     = COMPOUND_STRING(" the Regional Champion"),
+    [SKY_RIBBON]      = COMPOUND_STRING(" the National Champion"),
+    [COUNTRY_RIBBON]  = COMPOUND_STRING(" the Victor"),
+    [NATIONAL_RIBBON] = COMPOUND_STRING(" the Triumphant"),
+    [EARTH_RIBBON]    = COMPOUND_STRING(" the 100x Victorious"),
+    [WORLD_RIBBON]    = COMPOUND_STRING(" the World Conqueror"),
+};
 
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
 {
@@ -2560,20 +2559,12 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 }
                 else
                 {
-                    struct Pokemon *mon = GetBattlerMon(battler);
-                    if (GetMonData(mon, MON_DATA_ASSIGNED_RIBBON) > 0)
-                        stringPtr = sText_GoTwoPkmnTitle;
-                    else
-                        stringPtr = sText_GoTwoPkmn;
+                    stringPtr = sText_GoTwoPkmn;
                 }
             }
             else
             {
-                struct Pokemon *mon = GetBattlerMon(battler);
-                if (GetMonData(mon, MON_DATA_ASSIGNED_RIBBON) > 0)
-                    stringPtr = sText_GoPkmnTitle;
-                else
-                    stringPtr = sText_GoPkmn;
+                stringPtr = sText_GoPkmn;
             }
         }
         else
@@ -2899,16 +2890,23 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
     StringGet_Nickname(dst);
 }
 
-static u32 GetBattlerRibbon(enum BattlerId battler)
+static const u8 *GetBattlerRibbonTitle(enum BattlerId battler)
 {
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
     struct Pokemon *mon = GetBattlerMon(battler);
-    u32 assignedRibbon;
+    u32 assignedRibbon, ribbonId;
 
     if (illusionMon != NULL)
         mon = illusionMon;
     assignedRibbon = GetMonData(mon, MON_DATA_ASSIGNED_RIBBON);
-    return assignedRibbon;
+    if (assignedRibbon == ASSIGNED_RIBBON_NONE)
+        return sText_EmptyString4;
+
+    ribbonId = ASSIGNED_RIBBON_TO_ID(assignedRibbon);
+    if (ribbonId >= ARRAY_COUNT(sRibbonTitles) || sRibbonTitles[ribbonId] == NULL)
+        return sText_EmptyString4;
+
+    return sRibbonTitles[ribbonId];
 }
 
 #define HANDLE_NICKNAME_STRING_CASE(battler)                            \
@@ -3119,7 +3117,6 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     u8 *textStart = &text[0];
     u8 multiplayerId;
     u8 fontId = FONT_NORMAL;
-    u32 assignedRibbon;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         multiplayerId = gRecordedBattleMultiplayerId;
@@ -3690,57 +3687,15 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX2:
                 HANDLE_NICKNAME_STRING_LOWERCASE(gBattleScripting.battler)
                 break;
-            // Should probably funciton this out but eh
             case B_TXT_PLAYER_MON1_TITLE:
             case B_TXT_PLAYER_MON2_TITLE:
+            case B_TXT_SCR_ACTIVE_TITLE:
                 if (*src == B_TXT_PLAYER_MON1_TITLE)
-                    assignedRibbon = GetBattlerRibbon(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+                    toCpy = GetBattlerRibbonTitle(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+                else if (*src == B_TXT_PLAYER_MON2_TITLE)
+                    toCpy = GetBattlerRibbonTitle(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
                 else
-                    assignedRibbon = GetBattlerRibbon(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
-                //assignedRibbon = GetMonData(&GetBattlerParty(gBattleScripting.battler)[gBattleStruct->scriptPartyIdx], MON_DATA_ASSIGNED_RIBBON);
-                assignedRibbon--; //subtract 1 cause we added 1 due to Champion Ribbon being 0
-                switch (assignedRibbon)
-                {
-                case CHAMPION_RIBBON:
-                    toCpy = sText_ChampionRibbon_Title;
-                    break;
-                case WINNING_RIBBON:
-                    toCpy = sText_WinningRibbon_Title;
-                    break;
-                case VICTORY_RIBBON:
-                    toCpy = sText_VictoryRibbon_Title;
-                    break;
-                case ARTIST_RIBBON:
-                    toCpy = sText_ArtistRibbon_Title;
-                    break;
-                case EFFORT_RIBBON:
-                    toCpy = sText_EffortRibbon_Title;
-                    break;
-                case MARINE_RIBBON:
-                    toCpy = sText_MarineRibbon_Title;
-                    break;
-                case LAND_RIBBON:
-                    toCpy = sText_LandRibbon_Title;
-                    break;
-                case SKY_RIBBON:
-                    toCpy = sText_SkyRibbon_Title;
-                    break;
-                case COUNTRY_RIBBON:
-                    toCpy = sText_CountryRibbon_Title;
-                    break;
-                case NATIONAL_RIBBON:
-                    toCpy = sText_NationalRibbon_Title;
-                    break;
-                case EARTH_RIBBON:
-                    toCpy = sText_EarthRibbon_Title;
-                    break;
-                case WORLD_RIBBON:
-                    toCpy = sText_WorldRibbon_Title;
-                    break;
-                default: // Failsafe
-                    toCpy = sText_NoRibbon_Title;
-                    break;
-                }
+                    toCpy = GetBattlerRibbonTitle(gBattleScripting.battler);
                 break;
             }
 

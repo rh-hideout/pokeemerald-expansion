@@ -768,6 +768,7 @@ UNUSED static const struct BoxPokemon sBoxPokemonConstantsFit =
 };
 
 STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
+STATIC_ASSERT(NUM_ASSIGNED_RIBBON_VALUES <= (1 << ASSIGNED_RIBBON_BITS), PokemonSubstruct0_assignedRibbon_PotentiallyTooSmall);
 
 static u32 CompressStatus(u32 status)
 {
