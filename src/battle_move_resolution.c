@@ -4217,7 +4217,6 @@ static enum MoveEndResult MoveEndSymbiosis(struct BattleCalcValues *cv)
          && TryTriggerSymbiosis(battlerDef, partnerDef))
         {
             BestowItem(partnerDef, battlerDef);
-            gSpecialStatuses[battlerDef].berryReduced = FALSE;
             gLastUsedAbility = gBattleMons[partnerDef].ability;
             gEffectBattler = battlerDef;
             gBattleScripting.battler = gBattlerAbility = partnerDef;
@@ -4409,14 +4408,13 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
                     gBattleStruct->dynamax.lastUsedBaseMove = gBattleStruct->dynamax.baseMoves[cv->battlerAtk];
             }
 
-            if (IsBattlerAlive(cv->battlerDef))
+            if (!IsBattlerAlive(cv->battlerDef))
                 continue;
 
             gLastHitBy[cv->battlerDef] = cv->battlerAtk; // Used by switch AI only
 
             if (!gBattleStruct->unableToUseMove
-             && !IsBattlerUnaffectedByMove(battlerDef)
-             && IsBattlerAlive(battlerDef))
+             && !IsBattlerUnaffectedByMove(battlerDef))
             {
                 if (gChosenMove == MOVE_UNAVAILABLE)
                 {
