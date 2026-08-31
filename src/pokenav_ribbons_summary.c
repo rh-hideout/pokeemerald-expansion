@@ -285,7 +285,7 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
         assignedRibbon = ASSIGNED_RIBBON_FROM_ID(ribbonId);
         if (monInfo->boxId == TOTAL_BOXES_COUNT)
         {
-            currentRibbon = GetMonData(&gPlayerParty[monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
+            currentRibbon = GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
         }
         else
         {
@@ -304,7 +304,7 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
 
         if (monInfo->boxId == TOTAL_BOXES_COUNT)
         {
-            SetMonData(&gPlayerParty[monInfo->monId], MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+            SetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
         }
         else
         {

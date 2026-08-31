@@ -91,6 +91,8 @@
 #define B_TXT_PLAYER_MON2_TITLE 0x49
 #define B_TXT_SCR_ACTIVE_TITLE 0x4A
 
+#define MAX_RIBBON_TITLE_LENGTH 32
+
 #define B_BUFF_STRING                       0
 #define B_BUFF_NUMBER                       1
 #define B_BUFF_MOVE                         2
