@@ -4401,19 +4401,63 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
+        default:
+            break;
+        }
+        break;
+    case ABILITYEFFECT_ON_STATUS_CHANGE:
+        switch (ability)
+        {
         case ABILITY_POISON_PUPPETEER:
-            if (IsRestrictedAbility(gBattlerAttacker, ABILITY_POISON_PUPPETEER)
-             && gSpecialStatuses[battler].poisonPuppeteer)
+            if (IsRestrictedAbility(battler, ABILITY_POISON_PUPPETEER)
+             && gBattleStruct->statusInflicterBattler == battler // Is the battler that applied status
+             && gSpecialStatuses[gBattleStruct->statusedBattler].poisonPuppeteer)
             {
-                gSpecialStatuses[battler].poisonPuppeteer = FALSE;
-                if (CanBeConfused(gBattlerAttacker, battler))
+                gSpecialStatuses[gBattleStruct->statusedBattler].poisonPuppeteer = FALSE;
+                if (CanBeConfused(battler, gBattleStruct->statusedBattler))
                 {
-                    gEffectBattler = battler;
-                    gBattleScripting.battler = battler = gBattlerAttacker;
+                    gBattleScripting.battler = battler;
+                    gEffectBattler = gBattleStruct->statusedBattler;
                     gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
+                }
+            }
+            break;
+        case ABILITY_SYNCHRONIZE:
+            if (gSpecialStatuses[battler].synchronize)
+            {
+                switch (gBattleStruct->synchronizeStatus)
+                {
+                case MOVE_EFFECT_NONE:
+                    break;
+                case MOVE_EFFECT_TOXIC:
+                    if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5)
+                        gBattleStruct->synchronizeStatus = MOVE_EFFECT_POISON;
+                    // fallthrough
+                default:
+                    gEffectBattler = gBattleStruct->statusInflicterBattler; // battler that originally inflicted status
+                    gBattleScripting.battler = gBattlerAbility = battler; // battler originally inflicted by status
+                    gBattleScripting.moveEffect = gBattleStruct->synchronizeStatus;
+                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
+
+                    if (CanSetNonVolatileStatus(
+                            battler,
+                            gEffectBattler,
+                            ability,
+                            GetBattlerAbility(gEffectBattler),
+                            gBattleScripting.moveEffect,
+                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT, PushCursor and update currInstr for #10696
+                    {
+                        BattleScriptCall(BattleScript_SynchronizeActivates);
+                        effect++;
+                    }
+                    else
+                    {
+                        gSpecialStatuses[battler].synchronize = FALSE;
+                    }
+                    break;
                 }
             }
             break;
@@ -9906,8 +9950,13 @@ bool32 AreMultiPartiesFullTeams(void)
 #else
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
 
-    if (B_MULTI_HALF_TEAMS
-     || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
+    if (B_MULTI_HALF_TEAMS)
+		return FALSE;
+
+	if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+		return TRUE;
+		
+    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
      || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF))

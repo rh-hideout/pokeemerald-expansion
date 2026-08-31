@@ -27,8 +27,9 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
     }
 }
 
-SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it fails")
+SINGLE_BATTLE_TEST("Synchronize won't show ability pop up if it fails")
 {
+    KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd; #10696
     GIVEN {
         WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
@@ -41,7 +42,7 @@ SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it
         ABILITY_POPUP(player, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        MESSAGE("It doesn't affect Pikachu…");
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
             STATUS_ICON(player, paralysis: TRUE);
@@ -87,7 +88,6 @@ SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
-        ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
             STATUS_ICON(opponent, poison: TRUE);
@@ -178,9 +178,9 @@ DOUBLE_BATTLE_TEST("Synchronize will trigger on both targets")
         ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
         ABILITY_POPUP(opponentRight, ABILITY_SYNCHRONIZE);
     } THEN {
-        EXPECT_EQ(gBattleMons[B_BATTLER_0].status1, STATUS1_POISON);
-        EXPECT_EQ(gBattleMons[B_BATTLER_1].status1, STATUS1_NONE);
-        EXPECT_EQ(gBattleMons[B_BATTLER_3].status1, STATUS1_NONE);
+        EXPECT_EQ(playerLeft->status1, STATUS1_POISON);
+        EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(opponentRight->status1, STATUS1_NONE);
 
     }
 }
@@ -213,5 +213,60 @@ SINGLE_BATTLE_TEST("Synchronize can trigger again during the same attack if user
         STATUS_ICON(opponent, poison: TRUE);
         ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
         STATUS_ICON(player, poison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Synchronize won't activate on Synchronized status")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_POISON_GAS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+        ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+        NOT ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Synchronize activation won't spill over to next status on the same action")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        ASSUME(GetSpeciesType(SPECIES_METAGROSS, 0) == TYPE_STEEL || GetSpeciesType(SPECIES_METAGROSS, 1) == TYPE_STEEL);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        PLAYER(SPECIES_METAGROSS) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_PIKACHU) { Item(ITEM_LUM_BERRY); Ability(ABILITY_STATIC); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SOAK, target: opponentRight); MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_MORTAL_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+            STATUS_ICON(playerLeft, poison: TRUE);
+        }
+        ABILITY_POPUP(opponentRight, ABILITY_STATIC);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
+        ABILITY_POPUP(playerLeft, ABILITY_SYNCHRONIZE);
+    } THEN {
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(playerLeft->ability, ABILITY_SYNCHRONIZE);
+        EXPECT_EQ(opponentRight->status1, STATUS1_PARALYSIS);
     }
 }

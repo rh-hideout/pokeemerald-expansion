@@ -4603,9 +4603,12 @@ void AnimTask_LeafBlade(u8 taskId)
     task->data[5] = (!IsOnPlayerSide(gBattleAnimTarget)) ? 1 : -1;
     task->data[9] = 56 - (task->data[5] * 64);
     task->data[8] = task->data[7] - task->data[9] + task->data[6];
-    task->data[2] = CreateSprite(&gLeafBladeSpriteTemplate, task->data[8], task->data[9], task->data[4]);
+    task->data[2] = CreateSpriteUnchecked(&gLeafBladeSpriteTemplate, task->data[8], task->data[9], task->data[4]);
     if (task->data[2] == MAX_SPRITES)
+    {
         DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     gSprites[task->data[2]].data[0] = 10;
     gSprites[task->data[2]].data[1] = task->data[8];
@@ -4822,7 +4825,7 @@ static void AnimTask_LeafBlade_Step2(struct Task *task, u8 taskId)
         task->data[14] = 0;
         spriteX = gSprites[task->data[2]].x + gSprites[task->data[2]].x2;
         spriteY = gSprites[task->data[2]].y + gSprites[task->data[2]].y2;
-        spriteId = CreateSprite(&gLeafBladeSpriteTemplate, spriteX, spriteY, task->data[4]);
+        spriteId = CreateSpriteUnchecked(&gLeafBladeSpriteTemplate, spriteX, spriteY, task->data[4]);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].data[6] = taskId;

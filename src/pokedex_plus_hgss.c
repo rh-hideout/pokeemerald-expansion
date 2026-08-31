@@ -2312,10 +2312,13 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 
     //Egg/TM/Level/Tutor Item Icon
     gTasks[taskId].data[3] = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
-    gSprites[gTasks[taskId].data[3]].x2 = 203;
-    gSprites[gTasks[taskId].data[3]].y2 = 39;
-    gSprites[gTasks[taskId].data[3]].oam.priority = 0;
-
+// The associated sprite gets cleared a bunch below - I assume that's still okay if it is MAX_SPRITES?
+    if (gTasks[taskId].data[3] != MAX_SPRITES)
+    {
+        gSprites[gTasks[taskId].data[3]].x2 = 203;
+        gSprites[gTasks[taskId].data[3]].y2 = 39;
+        gSprites[gTasks[taskId].data[3]].oam.priority = 0;
+    }
 }
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
