@@ -3927,7 +3927,7 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
 
 static inline bool32 RecoveryEnablesWinning1v1(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster, u32 healAmount)
 {
-    if (GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) > healAmount)
+    if (GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) >= healAmount)
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, 0);// perhaps should loop over all possible ones but this is a back-of-envelope check and should not be digging excessively.
 
