@@ -75,19 +75,12 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target immune to Ground-type attacks")
 
 SINGLE_BATTLE_TEST("Baton Pass passes Telekinesis's effect")
 {
-    enum Species species;
-
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
-    PARAMETRIZE { species = SPECIES_DIGLETT; }
-    PARAMETRIZE { species = SPECIES_DUGTRIO; }
-    PARAMETRIZE { species = SPECIES_SANDYGAST; }
-    PARAMETRIZE { species = SPECIES_PALOSSAND; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(!IsTelekinesisBannedSpecies(SPECIES_WYNAUT));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EEVEE);
-        OPPONENT(species);
+        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TELEKINESIS); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -97,14 +90,22 @@ SINGLE_BATTLE_TEST("Baton Pass passes Telekinesis's effect")
     }
 }
 
-SINGLE_BATTLE_TEST("Baton Pass removes Telekinesis's effect if the recipient is Mega Gengar")
+SINGLE_BATTLE_TEST("Baton Pass removes Telekinesis's effect if the recipient can't be affected by it")
 {
+    enum Species species;
+
+    PARAMETRIZE { species = SPECIES_DIGLETT; }
+    PARAMETRIZE { species = SPECIES_DUGTRIO; }
+    PARAMETRIZE { species = SPECIES_SANDYGAST; }
+    PARAMETRIZE { species = SPECIES_PALOSSAND; }
+    PARAMETRIZE { species = SPECIES_GENGAR_MEGA; }
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        ASSUME(IsTelekinesisBannedSpecies(SPECIES_GENGAR_MEGA));
+        ASSUME(IsTelekinesisBannedSpecies(species));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EEVEE);
-        OPPONENT(SPECIES_GENGAR_MEGA);
+        OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_TELEKINESIS); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }

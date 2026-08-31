@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen
     GIVEN {
         ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_SHIELD) == 530);
         ASSUME(GetSpeciesWeight(SPECIES_AEGISLASH_BLADE) == 530);
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, gen);
+        WITH_CONFIG(B_AUTOTOMIZE_FORM_CHANGE, gen);
         PLAYER(SPECIES_AEGISLASH_SHIELD) { Ability(ABILITY_STANCE_CHANGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

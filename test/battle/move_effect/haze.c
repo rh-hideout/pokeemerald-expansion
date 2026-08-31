@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Haze resets Focus Energy (Gen 1 and 4)")
     PARAMETRIZE { genConfig = GEN_1; }
     PARAMETRIZE { genConfig = GEN_4; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_HAZE_FOCUS_ENERGY, genConfig);
         WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         WITH_CONFIG(B_FOCUS_ENERGY_CRIT_RATIO, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Haze does not reset Focus Energy (Gen 2-3 and 5+)")
     PARAMETRIZE { genConfig = GEN_8; }
     PARAMETRIZE { genConfig = GEN_9; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_HAZE_FOCUS_ENERGY, genConfig);
         WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         WITH_CONFIG(B_FOCUS_ENERGY_CRIT_RATIO, genConfig);
         PLAYER(SPECIES_WOBBUFFET);

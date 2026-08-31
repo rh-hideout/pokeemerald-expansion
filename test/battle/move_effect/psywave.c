@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Psywave is unaffected by type immunities (Gen 1)")
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(IsSpeciesOfType(SPECIES_UMBREON, TYPE_DARK));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_UMBREON);

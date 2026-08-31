@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Super Fang is unaffected by type immunities (Gen 1)")
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY) { MaxHP(100); HP(100); }
     } WHEN {
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Super Fang doesn't hit Ghost-type Pokémon (Gen 2+)")
     PARAMETRIZE { genConfig = GEN_5; }
     PARAMETRIZE { genConfig = GEN_LATEST; }
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, genConfig);
         ASSUME(GetMoveType(MOVE_SUPER_FANG) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
         PLAYER(SPECIES_WOBBUFFET);

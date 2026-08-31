@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Return does 0 damage at min Friendship (Gen2)")
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_2);
+        WITH_CONFIG(B_RETURN_FRUSTRATION_DMG, GEN_2);
         PLAYER(SPECIES_WOBBUFFET) { Friendship(0); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

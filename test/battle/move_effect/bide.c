@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Bide ignores type effectiveness and STAB (Gen 1)", s16 damag
     PARAMETRIZE { species = SPECIES_GASTLY; }
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(IsSpeciesOfType(SPECIES_RATTATA, TYPE_NORMAL));
         ASSUME(IsSpeciesOfType(SPECIES_GEODUDE, TYPE_ROCK));
         ASSUME(IsSpeciesOfType(SPECIES_GASTLY, TYPE_GHOST));

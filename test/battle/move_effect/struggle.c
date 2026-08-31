@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Struggle deals recoil 1/4 of damage dealt (Gen 2-3)")
     PARAMETRIZE { genConfig = GEN_3; }
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, genConfig);
+        WITH_CONFIG(B_STRUGGLE_RECOIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); }
     } WHEN {

@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Level Damage: Night Shade is unaffected by type immunities (
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { Level(50); }
         OPPONENT(SPECIES_RATTATA);
     } WHEN {
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Level Damage: Seismic Toss is unaffected by type immunities 
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { Level(50); }
         OPPONENT(SPECIES_GASTLY);
     } WHEN {

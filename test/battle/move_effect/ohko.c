@@ -14,7 +14,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Fissure does not bypass type immunities (Gen 1)")
 {
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Fissure does not bypass type immunities (Gen 1)")
 SINGLE_BATTLE_TEST("Guillotine does not bypass type immunities (Gen 1)")
 {
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(IsSpeciesOfType(SPECIES_GASTLY, TYPE_GHOST));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Guillotine does not bypass type immunities (Gen 1)")
 SINGLE_BATTLE_TEST("Horn Drill does not bypass type immunities (Gen 1)")
 {
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(IsSpeciesOfType(SPECIES_GASTLY, TYPE_GHOST));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);

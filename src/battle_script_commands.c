@@ -5399,7 +5399,7 @@ static void Cmd_normalisebuffs(void)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         TryResetBattlerStatChanges(i);
-        if (GetConfig(B_UPDATED_MOVE_DATA) == GEN_1 || GetConfig(B_UPDATED_MOVE_DATA) == GEN_4)
+        if (GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_1 || GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_4)
             gBattleMons[i].volatiles.focusEnergy = FALSE;
     }
 

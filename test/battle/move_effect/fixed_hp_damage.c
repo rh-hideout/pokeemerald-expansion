@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Sonic Boom affects ghost types (Gen1)")
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(GetMoveFixedHPDamage(MOVE_SONIC_BOOM) == 20);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GASTLY);
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Dragon Rage is unaffected by type immunities (Gen 1)")
     s16 damage;
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
         ASSUME(GetSpeciesType(SPECIES_CLEFAIRY, 0) == TYPE_FAIRY);
         PLAYER(SPECIES_WOBBUFFET);

@@ -279,7 +279,7 @@ SINGLE_BATTLE_TEST("Reflect Damage moves can hit Pokémon immune to their type (
     PARAMETRIZE { attackMove = MOVE_ROUND; reflectMove = MOVE_MIRROR_COAT; targetSpecies = SPECIES_UMBREON; }
 
     GIVEN {
-        WITH_CONFIG(B_UPDATED_MOVE_DATA, GEN_1);
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); }
         OPPONENT(targetSpecies) { MaxHP(1000); HP(1000); }
     } WHEN {

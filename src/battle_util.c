@@ -7684,9 +7684,9 @@ static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
     dmg = uq4_12_multiply_by_int_half_down(modifier, dmg); \
 } while (0)
 
-static bool32 IsReturnFrustrationGen2(enum BattlerId battlerAtk, enum BattleMoveEffects moveEffect)
+static bool32 ReturnFrustrationDealsNoDamage(enum BattlerId battlerAtk, enum BattleMoveEffects moveEffect)
 {
-    if (GetConfig(B_UPDATED_MOVE_DATA) != GEN_2)
+    if (GetConfig(B_RETURN_FRUSTRATION_DMG) >= GEN_3)
         return FALSE;
 
     u32 friendship = gBattleMons[battlerAtk].friendship;
@@ -7705,7 +7705,7 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     else
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
 
-    if (IsReturnFrustrationGen2(ctx->battlerAtk, GetMoveEffect(ctx->move)))
+    if (ReturnFrustrationDealsNoDamage(ctx->battlerAtk, GetMoveEffect(ctx->move)))
         return 0;
 
     userFinalAttack = CalcAttackStat(ctx);
@@ -8358,7 +8358,7 @@ static bool32 MoveIgnoresType(struct DamageContext *ctx)
     if (ctx->moveType == TYPE_MYSTERY)
         return TRUE;
 
-    if (GetConfig(B_UPDATED_MOVE_DATA) != GEN_1)
+    if (GetConfig(B_FIXED_DMG_IGNORES_TYPE) >= GEN_2)
         return FALSE;
 
     switch (GetMoveEffect(ctx->move))
@@ -8813,7 +8813,7 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum
         TryToSetBattleFormChangeMoves(mon, method);
         SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
-        if (GetConfig(B_UPDATED_MOVE_DATA) >= GEN_6)
+        if (GetConfig(B_AUTOTOMIZE_FORM_CHANGE) >= GEN_6)
             gBattleMons[battler].volatiles.autotomizeCount = 0;
         RecalcBattlerStats(battler, mon, method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
