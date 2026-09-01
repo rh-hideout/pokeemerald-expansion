@@ -529,14 +529,63 @@ bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
     return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move));
 }
 
+u32 AI_TryGimmick(enum BattlerId battler, enum Ability ability, enum Gimmick gimmick)
+{
+    if (!BattlerHasAi(battler))
+        return GIMMICK_NONE;
+
+    if (GetActiveGimmick(battler) != GIMMICK_NONE)
+        return GIMMICK_NONE;
+
+    switch (gimmick)
+    {
+    case GIMMICK_MEGA:
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM, ability);
+        SetActiveGimmick(battler, gimmick);
+        break;
+    case GIMMICK_ULTRA_BURST:
+        TryBattleFormChange(battler, FORM_CHANGE_BATTLE_ULTRA_BURST, ability);
+        SetActiveGimmick(battler, gimmick);
+        break;
+    case GIMMICK_TERA:
+        if (GetMonData(GetBattlerMon(battler), MON_DATA_TERA_TYPE) == TYPE_MYSTERY)
+        {
+            gimmick = GIMMICK_NONE;
+        }
+        else
+        {
+            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TERASTALLIZATION, ability);
+            SetActiveGimmick(battler, gimmick);
+        }
+        break;
+    case GIMMICK_DYNAMAX:
+        if (GetMonData(GetBattlerMon(battler), MON_DATA_DYNAMAX_LEVEL) == BLOCK_AI_DYNAMAX)
+        {
+            gimmick = GIMMICK_NONE;
+        }
+        else
+        {
+            TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, ability);
+            SetActiveGimmick(battler, gimmick);
+        }
+        break;
+    case GIMMICK_Z_MOVE:
+        // Z moves are handled directly in AI_CalcDamage since they depend on the move
+        break;
+    case GIMMICK_NONE:
+    case GIMMICKS_COUNT:
+        break;
+    }
+
+    return gimmick;
+}
+
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum Gimmick gimmickAtk, enum Gimmick gimmickDef)
+struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness)
 {
     struct SimulatedDamage dmg;
     struct AiCalcValues aiCalc = {
         .move = move,
-        .gimmickAtk = gimmickAtk,
-        .gimmickDef = gimmickDef,
         .weather = AI_GetWeather(),
         .terrain = gFieldTimers.terrain,
     };
@@ -870,8 +919,6 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     struct SimulatedDamage simDamage = {0};
     enum Move move = aiCalc->move;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    bool32 toggledGimmickAtk = FALSE;
-    bool32 toggledGimmickDef = FALSE;
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
     enum Move baseMove = move;
@@ -889,17 +936,11 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
         moveEffect = GetMoveEffect(move);
     }
 
-    // Temporarily enable gimmicks for damage calcs if planned
-    if (aiCalc->gimmickAtk != GIMMICK_NONE && GetActiveGimmick(battlerAtk) == GIMMICK_NONE)
+    bool32 zMoveActive = FALSE;
+    if (aiCalc->considerZMove & 1u << battlerAtk && IsViableZMove(battlerAtk, move))
     {
-        toggledGimmickAtk = TRUE;
-        SetActiveGimmick(battlerAtk, aiCalc->gimmickAtk);
-    }
-
-    if (aiCalc->gimmickDef != GIMMICK_NONE && GetActiveGimmick(battlerDef) == GIMMICK_NONE)
-    {
-        toggledGimmickDef = TRUE;
-        SetActiveGimmick(battlerDef, aiCalc->gimmickDef);
+        zMoveActive = TRUE;
+        SetActiveGimmick(battlerAtk, GIMMICK_Z_MOVE);
     }
 
     // We can set those globals because they are going to get rerolled on attack execution
@@ -1001,10 +1042,8 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     }
 
     // Undo temporary settings
-    if (toggledGimmickAtk)
+    if (zMoveActive)
         SetActiveGimmick(battlerAtk, GIMMICK_NONE);
-    if (toggledGimmickDef)
-        SetActiveGimmick(battlerDef, GIMMICK_NONE);
 
     gBattleStruct->dynamicMoveType = TYPE_NONE;
     gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
@@ -1849,9 +1888,10 @@ static inline bool32 AI_WeatherHasEffect(void)
      || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_NEGATE_UNAWARE)
         return TRUE;   // AI doesn't understand weather supression (handicap)
 
+    enum Ability *abilities = gAiLogicData->abilities;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        switch (gAiLogicData->abilities[battler])
+        switch (abilities[battler])
         {
         case ABILITY_CLOUD_NINE:
         case ABILITY_AIR_LOCK:
@@ -1879,8 +1919,6 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
 
     // Forced weather behaviour
     if (!AI_WeatherHasEffect())
-        return B_WEATHER_NONE;
-    if (ability == ABILITY_CLOUD_NINE || ability == ABILITY_AIR_LOCK)
         return B_WEATHER_NONE;
     if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
         return gBattleWeather;
@@ -5257,7 +5295,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
             return FALSE; // Don't waste a Z-Move busting Ice Face
 
-        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, GIMMICK_NONE, GIMMICK_NONE);
+        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness);
 
         // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
@@ -5291,6 +5329,7 @@ void SetAIUsingGimmick(enum BattlerId battler, enum AIConsiderGimmick use)
 struct AltTeraCalcs
 {
     struct SimulatedDamage takenWithTera[MAX_MON_MOVES];
+    struct SimulatedDamage takenWithoutTera[MAX_MON_MOVES];
     struct SimulatedDamage dealtWithoutTera[MAX_MON_MOVES];
 };
 
@@ -5323,46 +5362,43 @@ void DecideTerastal(enum BattlerId battler)
 
     enum Move *aiMoves = GetMovesArray(battler);
     enum Move *oppMoves = GetMovesArray(opposingBattler);
-    u32 weather = AI_GetWeather();
 
-    struct AiCalcValues aiCalcNoTera = {
-        .gimmickAtk = GIMMICK_NONE,
-        .gimmickDef = GIMMICK_NONE,
-        .weather = weather,
-        .terrain = gFieldTimers.terrain,
-    };
-
-    struct AiCalcValues aiCalcWithTera = {
-        .gimmickAtk = gBattleStruct->gimmick.usableGimmick[opposingBattler],
-        .gimmickDef = gBattleStruct->gimmick.usableGimmick[battler],
-        .weather = weather,
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetWeather(),
         .terrain = gFieldTimers.terrain,
     };
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        aiCalcNoTera.move = aiMoves[moveIndex];
-        if (!IsMoveUnusable(moveIndex, aiCalcNoTera.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalcNoTera.move))
-            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalcNoTera, battler, opposingBattler);
-        else
-            altCalcs.dealtWithoutTera[moveIndex] = noDmg;
+        // Ai damage without tera
+        aiCalc.move = aiMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.dealtWithoutTera[moveIndex] = noDmg;
+        if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalc.move))
+            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc, battler, opposingBattler);
 
-        aiCalcWithTera.move = oppMoves[moveIndex];
-        if (!IsMoveUnusable(moveIndex, aiCalcWithTera.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalcWithTera.move))
+        // Opposing mon damage (player) without tera
+        aiCalc.move = oppMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.takenWithoutTera[moveIndex] = noDmg;
+        if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
+            altCalcs.takenWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc, opposingBattler, battler);
+
+        // Opposing mon damage (player) with tera
+        SetActiveGimmick(battler, GIMMICK_TERA);
+        aiCalc.move = oppMoves[moveIndex];
+        aiCalc.typeEffectiveness = Q_4_12(0.0);
+        altCalcs.takenWithTera[moveIndex] = noDmg;
+        effectivenessTakenWithTera[moveIndex] = Q_4_12(0.0);
+        if (!IsMoveUnusable(moveIndex, aiCalc.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalc.move))
         {
-            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalcWithTera, opposingBattler, battler);
-            effectivenessTakenWithTera[moveIndex] = aiCalcWithTera.typeEffectiveness;
+            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalc, opposingBattler, battler);
+            effectivenessTakenWithTera[moveIndex] = aiCalc.typeEffectiveness;
         }
-        else
-        {
-            altCalcs.takenWithTera[moveIndex] = noDmg;
-            effectivenessTakenWithTera[moveIndex] = Q_4_12(0.0);
-        }
+        SetActiveGimmick(battler, GIMMICK_NONE);
     }
 
-
     enum AIConsiderGimmick res = ShouldTeraFromCalcs(battler, opposingBattler, &altCalcs);
-
 
     if (res == USE_GIMMICK)
     {
@@ -5381,14 +5417,13 @@ void DecideTerastal(enum BattlerId battler)
     }
 
     SetAIUsingGimmick(battler, res);
-    return;
 }
 
 // macros are not expanded recursively
 #define dealtWithTera gAiLogicData->simulatedDmg[battler][opposingBattler]
 #define dealtWithoutTera altCalcs->dealtWithoutTera
 #define takenWithTera altCalcs->takenWithTera
-#define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
+#define takenWithoutTera altCalcs->takenWithoutTera
 
 enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerId opposingBattler, struct AltTeraCalcs *altCalcs)
 {
@@ -5400,8 +5435,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
     {
         if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
          && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
             numPossibleTera++;
     }
 
