@@ -340,6 +340,7 @@ enum __attribute__((packed)) Ability
     ABILITY_FIRE_MANE = 316,
     ABILITY_317 = 317,
     ABILITY_SPICY_SPRAY = 318,
+    ABILITY_AURA_GUARD = 319, // Note: Change this into either 314 or 317 once update is live!
     ABILITIES_COUNT_GEN9,
     ABILITIES_COUNT = ABILITIES_COUNT_GEN9,
 };
