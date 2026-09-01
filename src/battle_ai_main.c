@@ -5314,21 +5314,21 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
     }
     case EFFECT_TERRAIN:
-        {
-            enum BattleTerrain terrain = GetMoveTerrainType(move);
+    {
+        enum BattleTerrain terrain = GetMoveTerrainType(move);
 
-            if (ShouldSetTerrain(battlerAtk, terrain))
-            {
-                ADJUST_SCORE(GOOD_EFFECT);
-                if ((terrain == B_TERRAIN_ELECTRIC || terrain == B_TERRAIN_MISTY)
-                 && gBattleMons[battlerAtk].volatiles.yawn
-                 && AI_IsBattlerGrounded(battlerAtk))
-                    ADJUST_SCORE(BEST_EFFECT);
-                if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_TERRAIN_EXTENDER || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_TERRAIN_PULSE))
-                    ADJUST_SCORE(WEAK_EFFECT);
-            }
+        if (ShouldSetTerrain(battlerAtk, terrain))
+        {
+            ADJUST_SCORE(GOOD_EFFECT);
+            if ((terrain == B_TERRAIN_ELECTRIC || terrain == B_TERRAIN_MISTY)
+             && gBattleMons[battlerAtk].volatiles.yawn
+             && AI_IsBattlerGrounded(battlerAtk))
+                ADJUST_SCORE(BEST_EFFECT);
+            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_TERRAIN_EXTENDER || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_TERRAIN_PULSE))
+                ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
+    }
     case EFFECT_STEEL_ROLLER:
         {
             u32 terrain = gFieldTimers.terrain;
