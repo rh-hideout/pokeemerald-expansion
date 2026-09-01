@@ -549,7 +549,7 @@ static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
-static void Cmd_trysynchronize(void);
+static void Cmd_tryabilityonstatuschange(void);
 static void Cmd_tryconfusionafterskydrop(void);
 static void Cmd_trymovestatchanges(void);
 static void Cmd_trystatchanges(void);
@@ -762,7 +762,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_AVERAGESTATS]                          = Cmd_averagestats,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
-    [B_SCR_OP_TRY_SYNCHRONIZE]                       = Cmd_trysynchronize,
+    [B_SCR_OP_TRYABILITYONSTATUSCHANGE]              = Cmd_tryabilityonstatuschange,
     [B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP]          = Cmd_tryconfusionafterskydrop,
     [B_SCR_OP_TRYMOVESTATCHANGES]                    = Cmd_trymovestatchanges,
     [B_SCR_OP_TRYSTATCHANGES]                        = Cmd_trystatchanges,
@@ -1656,7 +1656,7 @@ bool32 TrySetLightScreen(enum BattlerId battler)
 
 void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
 {
-    if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
+    if (battlerAtk == effectBattler || gSpecialStatuses[battlerAtk].synchronize)
         return;
 
     enum Ability effectAbility = GetBattlerAbility(effectBattler);
@@ -1668,23 +1668,12 @@ void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBa
      || effect == MOVE_EFFECT_PARALYSIS
      || effect == MOVE_EFFECT_BURN)
     {
-        if (CanSetNonVolatileStatus(
-                effectBattler,
-                battlerAtk,
-                effectAbility,
-                GetBattlerAbility(battlerAtk),
-                effect,
-                CHECK_TRIGGER))
-        {
-            gBattleStruct->synchronizeState = SYNCH_STATE_START;
-            gBattlerAbility = effectBattler;
-            gBattleScripting.savedBattler = battlerAtk;
-        }
-        else
-        {
-            gBattleStruct->synchronizeState = SYNCH_STATE_SHOW_ABILITY_POPUP;
-            gBattlerAbility = effectBattler;
-        }
+        gSpecialStatuses[effectBattler].synchronize = TRUE;
+        gBattleStruct->synchronizeStatus = effect;
+    }
+    else
+    {
+        gBattleStruct->synchronizeStatus = MOVE_EFFECT_NONE;
     }
 }
 
@@ -1748,6 +1737,8 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
     TrySynchronizeActivation(battlerAtk, effectBattler, effect);
+    gBattleStruct->statusedBattler = effectBattler;
+    gBattleStruct->statusInflicterBattler = battlerAtk;
 
     if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && trigger == TRIGGER_ON_MOVE)
         gSpecialStatuses[effectBattler].poisonPuppeteer = TRUE;
@@ -8794,61 +8785,31 @@ static void Cmd_tryoverwriteability(void)
     }
 }
 
-static u32 GetMoveEffectFromStatus(enum BattlerId battler)
-{
-    switch (gBattleMons[battler].status1)
-    {
-    case STATUS1_POISON:
-        return MOVE_EFFECT_POISON;
-    case STATUS1_TOXIC_POISON:
-        return MOVE_EFFECT_TOXIC;
-    case STATUS1_PARALYSIS:
-        return MOVE_EFFECT_PARALYSIS;
-    case STATUS1_BURN:
-        return MOVE_EFFECT_BURN;
-    default:
-        return MOVE_EFFECT_NONE;
-    }
-}
-
-static void Cmd_trysynchronize(void)
+static void Cmd_tryabilityonstatuschange(void)
 {
     CMD_ARGS();
-    enum MoveEffect synchStatus = MOVE_EFFECT_NONE;
 
-    switch (gBattleStruct->synchronizeState)
+    if (gSpecialStatuses[gBattleStruct->statusInflicterBattler].synchronize) // Don't activate on Synchronize activation
     {
-    case SYNCH_STATE_NONE:
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    case SYNCH_STATE_START:
-        synchStatus = GetMoveEffectFromStatus(gBattlerAbility);
-        RecordAbilityBattle(gBattlerAbility, ABILITY_SYNCHRONIZE);
+        enum BattlerId i = 0;
 
-        if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && synchStatus == MOVE_EFFECT_TOXIC)
-            synchStatus = MOVE_EFFECT_POISON;
-
-        gBattleScripting.battler = gBattlerAbility;
-        gEffectBattler = gBattleScripting.savedBattler;
-        gBattleScripting.moveEffect = synchStatus;
-        gBattleStruct->synchronizeState = SYNCH_STATE_SET_STATUS;
-        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-        BattleScriptCall(BattleScript_SynchronizeActivates);
-        break;
-    case SYNCH_STATE_SHOW_ABILITY_POPUP: // Synchronize ability pop up still shows up even if status fails
-        gBattleStruct->synchronizeState = SYNCH_STATE_END;
-        BattleScriptCall(BattleScript_AbilityPopUp);
-        break;
-    case SYNCH_STATE_SET_STATUS: // Extra step to skip trysynchronize for battler the status is inflicted on, so gEffectBattler isn't assigned to early
-        gBattleStruct->synchronizeState = SYNCH_STATE_END;
+        gSpecialStatuses[gBattleStruct->statusInflicterBattler].synchronize = FALSE;
+        SWAP(gBattleStruct->statusInflicterBattler, gBattleStruct->statusedBattler, i);
         gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
-    case SYNCH_STATE_END:
-        gBattleStruct->synchronizeState = SYNCH_STATE_NONE;
-        gEffectBattler = gBattlerAbility; // Restore effect battler that was previously set to the synchronize battler
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        break;
+        return;
     }
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        enum BattlerId battler = gBattlersByRawSpeed[i];
+
+        if (AbilityBattleEffects(ABILITYEFFECT_ON_STATUS_CHANGE, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
+            return;
+    }
+
+    gBattleStruct->synchronizeStatus = MOVE_EFFECT_NONE;
+    gEffectBattler = gBattleStruct->statusedBattler; // gEffectBattler may have been overwritten in Synchronize activations
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 // If target was dropped due to attacker fainting and was previously rampaging, try to confuse
@@ -9101,6 +9062,27 @@ void RestoreTarget(void)
     gBattlerTarget = gBattleStruct->savedBattlerTarget[gBattleStruct->savedTargetCount];
 }
 
+static void SaveBattlerOrderIndex(void)
+{
+    assertf(gBattleStruct->savedBattlerOrderIndexCount < ARRAY_COUNT(gBattleStruct->savedBattlerOrderIndex), "Too many savedBattlerOrderIndexes")
+    {
+        return;
+    }
+
+    gBattleStruct->savedBattlerOrderIndex[gBattleStruct->savedBattlerOrderIndexCount++] = gBattlerOrderIndex;
+}
+
+static void RestoreBattlerOrderIndex(void)
+{
+    assertf(gBattleStruct->savedBattlerOrderIndexCount > 0, "No savedBattlerOrderIndexes")
+    {
+        return;
+    }
+
+    gBattleStruct->savedBattlerOrderIndexCount--;
+    gBattlerOrderIndex = gBattleStruct->savedBattlerOrderIndex[gBattleStruct->savedBattlerOrderIndexCount];
+}
+
 void BS_SaveTarget(void)
 {
     NATIVE_ARGS();
@@ -9126,6 +9108,20 @@ void BS_RestoreAttacker(void)
 {
     NATIVE_ARGS();
     RestoreAttacker();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_SaveBattlerOrderIndex(void)
+{
+    NATIVE_ARGS();
+    SaveBattlerOrderIndex();
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_RestoreBattlerOrderIndex(void)
+{
+    NATIVE_ARGS();
+    RestoreBattlerOrderIndex();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -9485,7 +9481,7 @@ void BS_ItemRestorePP(void)
 void BS_TryRevertWeatherForm(void)
 {
     NATIVE_ARGS();
-    enum BattlerId battler = gBattlersBySpeed[gEffectBattler];
+    enum BattlerId battler = gBattlersBySpeed[gBattlerOrderIndex];
     if (IsBattlerAlive(battler)
         && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER, GetBattlerAbility(battler)))
     {
@@ -9725,7 +9721,6 @@ void BS_TryAllySwitch(void)
 void BS_TryQuash(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    enum BattlerId i, j;
 
     // It's true if foe is faster, has a bigger priority, or switches
     if (HasBattlerActedThisTurn(gBattlerTarget))
@@ -9738,25 +9733,25 @@ void BS_TryQuash(void)
     gProtectStructs[gBattlerTarget].quash = TRUE;
 
     struct BattleCalcValues calcValues = {0};
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        calcValues.abilities[i] = GetBattlerAbility(i);
-        calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
+        calcValues.abilities[battler] = GetBattlerAbility(battler);
+        calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
     // this implementation assumes turn order is correct when using Quash
-    i = GetBattlerTurnOrderNum(gBattlerTarget);
-    for (j = i + 1; j < gBattlersCount; j++)
+    u32 turnOrderIndex = GetBattlerTurnOrderNum(gBattlerTarget);
+    for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
     {
-        calcValues.battlerAtk = gBattlerByTurnOrder[i];
-        calcValues.battlerDef = gBattlerByTurnOrder[j];
+        calcValues.battlerAtk = gBattlerByTurnOrder[turnOrderIndex];
+        calcValues.battlerDef = gBattlerByTurnOrder[otherTurnOrderIndex];
 
         // Gen 7- config makes target go last so that the order of quash targets is kept for the correct turn order
         // Gen 8+ config alters Turn Order of the target according to speed, dynamic speed should handle the rest
         if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(&calcValues, FALSE) == -1)
-            SwapTurnOrder(i, j);
+            SwapTurnOrder(turnOrderIndex, otherTurnOrderIndex);
         else
             break;
-        i++;
+        turnOrderIndex++;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -10491,14 +10486,15 @@ void BS_TryFriskMessage(void)
 {
     NATIVE_ARGS();
 
-    while (gBattleScripting.battler < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        enum BattlerId battler = gBattleScripting.battler;
+        enum BattlerId battler = gBattlerOrderIndex;
 
         if (!IsBattlerAlly(gEffectBattler, battler)
          && IsBattlerAlive(battler)
          && gBattleMons[battler].item != ITEM_NONE)
         {
+            gBattleScripting.battler = battler;
             gLastUsedItem = gBattleMons[battler].item;
             RecordItemEffectBattle(battler, GetBattlerHoldEffectIgnoreNegation(battler));
             BattleScriptCall(BattleScript_FriskMsg);
@@ -10506,7 +10502,7 @@ void BS_TryFriskMessage(void)
         }
         else
         {
-            gBattleScripting.battler++;
+            gBattlerOrderIndex++;
         }
     }
 
@@ -10974,9 +10970,9 @@ void BS_TryActivateReceiver(void)
 void BS_TryActivateSoulheart(void)
 {
     NATIVE_ARGS();
-    while (gBattleStruct->soulheartBattlerId < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        gEffectBattler = gBattlerAbility = gBattleStruct->soulheartBattlerId++;
+        gEffectBattler = gBattlerAbility = gBattlerOrderIndex++;
         enum Ability ability = GetBattlerAbility(gBattlerAbility);
         if (ability == ABILITY_SOUL_HEART
             && IsBattlerAlive(gBattlerAbility)
@@ -10988,7 +10984,6 @@ void BS_TryActivateSoulheart(void)
             return;
         }
     }
-    gBattleStruct->soulheartBattlerId = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -11284,6 +11279,9 @@ void BS_TryPsychoShift(void)
         return;
     }
     gBattleMons[gBattlerTarget].status1 = gBattleMons[gBattlerAttacker].status1 & STATUS1_ANY;
+    gBattleStruct->statusedBattler = gEffectBattler = gBattlerTarget;
+    gBattleStruct->statusInflicterBattler = gBattlerAttacker;
+
     BtlController_EmitSetMonData(
         gBattlerTarget,
         B_COMM_TO_CONTROLLER,
@@ -12063,9 +12061,9 @@ void BS_TryWakeBattlersUproar(void)
 {
     NATIVE_ARGS();
 
-    while (gBattleScripting.battler < gBattlersCount)
+    while (gBattlerOrderIndex < gBattlersCount)
     {
-        enum BattlerId battler = gBattleScripting.battler++;
+        enum BattlerId battler = gBattlerOrderIndex++;
         bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && GetBattlerAbility(battler) == ABILITY_SOUNDPROOF;
 
         if (IsBattlerAlive(battler) && gBattleMons[battler].status1 & STATUS1_SLEEP && !hasSoundproof)

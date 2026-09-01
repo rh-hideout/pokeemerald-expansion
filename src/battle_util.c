@@ -4400,19 +4400,63 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
+        default:
+            break;
+        }
+        break;
+    case ABILITYEFFECT_ON_STATUS_CHANGE:
+        switch (ability)
+        {
         case ABILITY_POISON_PUPPETEER:
-            if (IsRestrictedAbility(gBattlerAttacker, ABILITY_POISON_PUPPETEER)
-             && gSpecialStatuses[gBattlerTarget].poisonPuppeteer)
+            if (IsRestrictedAbility(battler, ABILITY_POISON_PUPPETEER)
+             && gBattleStruct->statusInflicterBattler == battler // Is the battler that applied status
+             && gSpecialStatuses[gBattleStruct->statusedBattler].poisonPuppeteer)
             {
-                gSpecialStatuses[gBattlerTarget].poisonPuppeteer = FALSE;
-                if (CanBeConfused(gBattlerAttacker, gBattlerTarget))
+                gSpecialStatuses[gBattleStruct->statusedBattler].poisonPuppeteer = FALSE;
+                if (CanBeConfused(battler, gBattleStruct->statusedBattler))
                 {
-                    gBattleScripting.battler = gBattlerAttacker;
-                    gEffectBattler = gBattlerTarget;
+                    gBattleScripting.battler = battler;
+                    gEffectBattler = gBattleStruct->statusedBattler;
                     gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
+                }
+            }
+            break;
+        case ABILITY_SYNCHRONIZE:
+            if (gSpecialStatuses[battler].synchronize)
+            {
+                switch (gBattleStruct->synchronizeStatus)
+                {
+                case MOVE_EFFECT_NONE:
+                    break;
+                case MOVE_EFFECT_TOXIC:
+                    if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5)
+                        gBattleStruct->synchronizeStatus = MOVE_EFFECT_POISON;
+                    // fallthrough
+                default:
+                    gEffectBattler = gBattleStruct->statusInflicterBattler; // battler that originally inflicted status
+                    gBattleScripting.battler = gBattlerAbility = battler; // battler originally inflicted by status
+                    gBattleScripting.moveEffect = gBattleStruct->synchronizeStatus;
+                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
+
+                    if (CanSetNonVolatileStatus(
+                            battler,
+                            gEffectBattler,
+                            ability,
+                            GetBattlerAbility(gEffectBattler),
+                            gBattleScripting.moveEffect,
+                            CHECK_TRIGGER)) // Replace for RUN_SCRIPT, PushCursor and update currInstr for #10696
+                    {
+                        BattleScriptCall(BattleScript_SynchronizeActivates);
+                        effect++;
+                    }
+                    else
+                    {
+                        gSpecialStatuses[battler].synchronize = FALSE;
+                    }
+                    break;
                 }
             }
             break;
@@ -9194,10 +9238,10 @@ bool32 CanFling(enum BattlerId battlerAtk, enum Ability abilityAtk)
     return TRUE;
 }
 
-void SortBattlersByRawSpeed(u8 battlers[])
+void SortBattlersByRawSpeed(enum BattlerId battlers[])
 {
     for (u32 i = 0; i < gBattlersCount; i++)
-        battlers[i] = i;
+        battlers[i] = (enum BattlerId)i;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
@@ -9205,7 +9249,7 @@ void SortBattlersByRawSpeed(u8 battlers[])
         {
             if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
             {
-                u32 temp = battlers[i];
+                enum BattlerId temp = battlers[i];
                 battlers[i] = battlers[j];
                 battlers[j] = temp;
             }
@@ -10880,10 +10924,10 @@ bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef)
     if (attackerTurnOrderNum + 1 == targetTurnOrderNum)
         return GetConfig(B_AFTER_YOU_TURN_ORDER) >= GEN_8;
 
-    for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (u32 turnOrderIndex = 0; turnOrderIndex < MAX_BATTLERS_COUNT; turnOrderIndex++)
     {
-        data[i] = gBattlerByTurnOrder[i];
-        actionsData[i] = gActionsByTurnOrder[i];
+        data[turnOrderIndex] = gBattlerByTurnOrder[turnOrderIndex];
+        actionsData[turnOrderIndex] = gActionsByTurnOrder[turnOrderIndex];
     }
     if (attackerTurnOrderNum == 0 && targetTurnOrderNum == 2)
     {
@@ -11031,27 +11075,27 @@ void SetOrClearRageVolatile(void)
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
 }
 
-enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, u32 slot)
 {
     if (IsDoubleBattle())
-        return GetTargetFromSlotId(battlerAtk, battlerDef);
-    return battlerDef;
+        return GetTargetFromSlotId(battlerAtk, slot);
+    return (enum BattlerId)slot;
 }
 
-enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, u32 slot)
 {
-    switch (battlerDef)
+    switch (slot)
     {
-    case B_BATTLER_0:
+    case 0:
         return battlerAtk;
-    case B_BATTLER_1:
+    case 1:
         return GetPartnerBattler(battlerAtk);
-    case B_BATTLER_2:
+    case 2:
         return GetBattlerLeftFoe(battlerAtk);
-    case B_BATTLER_3:
+    case 3:
         return GetBattlerRightFoe(battlerAtk);
     default:
-        errorf("Illegal battler");
+        errorf("Illegal slot");
         return B_BATTLER_0;
     }
 }
