@@ -1702,7 +1702,10 @@ enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u3
             for (u32 j = 0; j < MAX_MON_MOVES; j++)
             {
                 if (formChanges[i].param2 == GetMonData(mon, MON_DATA_MOVE1 + j))
-                    return MOVE_NONE;
+                {
+                    sLearningMoveTableID++;
+                    return MON_ALREADY_KNOWS_MOVE;
+                }
             }
         }
     }
@@ -1780,32 +1783,6 @@ u32 CountAliveMonsInBattle(u8 caseId, enum BattlerId battler)
     }
 
     return aliveMonCount;
-}
-
-u8 GetDefaultMoveTarget(enum BattlerId battlerId)
-{
-    u8 opposing = GetBattlerLeftFoe(battlerId);
-
-    if (!IsDoubleBattle())
-        return GetBattlerAtPosition(opposing);
-    if (CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battlerId) > 1)
-    {
-        u8 position;
-
-        if ((Random() & 1) == 0)
-            position = GetPartnerPosition(opposing);
-        else
-            position = opposing;
-
-        return GetBattlerAtPosition(position);
-    }
-    else
-    {
-        if (!IsBattlerAlive(opposing))
-            return GetBattlerAtPosition((enum BattlerPosition)GetPartnerBattler(opposing));
-        else
-            return GetBattlerAtPosition(opposing);
-    }
 }
 
 u8 GetMonGender(struct Pokemon *mon)
@@ -6147,6 +6124,7 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
         case FORM_CHANGE_BATTLE_SWITCH_IN:
         case FORM_CHANGE_BATTLE_TURN_END:
         case FORM_CHANGE_BATTLE_HIT_BY_CONFUSION_SELF_DMG:
+        case FORM_CHANGE_BATTLE_BOND:
             if (formChanges[i].param1 == ctx.ability)
                 targetSpecies = formChanges[i].targetSpecies;
             break;

@@ -302,7 +302,7 @@ u16 ChooseMoveAndTargetInBattlePalace(enum BattlerId battler)
         }
     }
 
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
+    enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
     if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_USER_AND_ALLY)
         chosenMoveIndex |= (battler << 8);
@@ -325,7 +325,7 @@ u16 ChooseMoveAndTargetInBattlePalace(enum BattlerId battler)
 
 static u8 GetBattlePalaceMoveGroup(enum BattlerId battler, enum Move move)
 {
-    switch (GetBattlerMoveTargetType(battler, move))
+    switch (GetBattlerMoveSelectionTargetType(battler, move))
     {
     case TARGET_SELECTED:
     case TARGET_USER_AND_ALLY:
@@ -1138,7 +1138,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
         enum Species species = GetBattlerVisualSpecies(battler);
         u8 size = gSpeciesInfo[species].enemyShadowSize;
 
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_Y),
                                                                                              0xC8);
@@ -1152,7 +1152,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
             sprite->invisible = TRUE;
         }
 
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                                GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                                GetBattlerSpriteCoord(battler, BATTLER_COORD_Y),
                                                                                                0xC8);
@@ -1168,7 +1168,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
     }
     else
     {
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_Y) + 29,
                                                                                              0xC8);

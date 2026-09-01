@@ -3129,9 +3129,12 @@ static void Debug_DisplayItemIcon(u8 taskId, enum Item itemId)
 {
     DestroyDebugIcon(taskId);
     gTasks[taskId].tSpriteId = AddItemIconSprite(DEBUG_ICON_TAG, DEBUG_ICON_TAG,  itemId);
-    gSprites[gTasks[taskId].tSpriteId].x = DEBUG_NUMBER_ICON_X + 8;
-    gSprites[gTasks[taskId].tSpriteId].y = DEBUG_NUMBER_ICON_Y + 8;
-    gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+    if (gTasks[taskId].tSpriteId != MAX_SPRITES)
+    {
+        gSprites[gTasks[taskId].tSpriteId].x = DEBUG_NUMBER_ICON_X + 8;
+        gSprites[gTasks[taskId].tSpriteId].y = DEBUG_NUMBER_ICON_Y + 8;
+        gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+    }
 }
 
 static void DebugSelectionStep_UpdateItem(u8 taskId, u8 digits, u32 min, u32 max)
