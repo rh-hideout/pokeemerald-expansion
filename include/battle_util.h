@@ -187,7 +187,7 @@ void TryRestoreHeldItems(void);
 bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, enum Item item);
 void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem);
 bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEffect, bool32 toxicSpikes);
-void SortBattlersByRawSpeed(u8 battlers[]);
+void SortBattlersByRawSpeed(enum BattlerId battlers[]);
 void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast);
 bool32 BlocksPrankster(enum Move move, enum BattlerId battlerPrankster, enum BattlerId battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(enum BattlerId battler);
@@ -302,8 +302,8 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
-enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
-enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId battlerDef);
+enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, u32 slot);
+enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, u32 slot);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
 bool32 BattlerJustSwitchedIn(enum BattlerId battler);
@@ -314,5 +314,7 @@ bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
+u32 GetWeatherFromOverworldWeather(u32 owWeather);
+enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
 
 #endif // GUARD_BATTLE_UTIL_H
