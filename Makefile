@@ -106,6 +106,7 @@ ASSETS_DIR_NAME := $(BUILD_DIR)/assets
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
 TESTELF := $(ROM_NAME:.gba=-test.elf)
+TESTELF_BASE := $(ROM_NAME:.gba=-test-base.elf)
 HEADLESSELF := $(ROM_NAME:.gba=-test-headless.elf)
 
 # Pick our active variables
@@ -271,7 +272,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates
-.PHONY: all rom agbcc modern compare check debug release
+.PHONY: all rom agbcc modern compare check debug release $(TESTELF)
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -349,10 +350,14 @@ LD_SCRIPT_TEST := ld_script_test.ld
 $(OBJ_DIR)/ld_script_test.ld: $(LD_SCRIPT_TEST)
 	cd $(OBJ_DIR) && sed "s#tools/#../../tools/#g" ../../$(LD_SCRIPT_TEST) > ld_script_test.ld
 
-$(TESTELF): $(OBJ_DIR)/ld_script_test.ld $(OBJS) $(TEST_OBJS) $(LIBAGBSYSCALL) | tools check-tools
+$(TESTELF_BASE): $(OBJ_DIR)/ld_script_test.ld $(OBJS) $(TEST_OBJS) $(LIBAGBSYSCALL) | tools check-tools
 	@echo "cd $(OBJ_DIR) && $(LD) -T ld_script_test.ld -o ../../$@ <objects> <test-objects> <lib>"
 	@cd $(OBJ_DIR) && $(LD) $(TESTLDFLAGS) -T ld_script_test.ld -o ../../$@ $(OBJS_REL) $(TEST_OBJS_REL) $(LIB)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) -d0 --silent
+
+$(TESTELF): $(TESTELF_BASE)
+	@cp $< $@
+	$(PATCHELF) $@ gTestRunnerArgv "$(TESTS:%*=%)\0"
 
 ifeq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
 TEST_SKIP_IS_FAIL := \x01
@@ -362,7 +367,7 @@ endif
 
 check: $(TESTELF)
 	@cp $< $(HEADLESSELF)
-	$(PATCHELF) $(HEADLESSELF) gTestRunnerArgv "$(TESTS:%*=%)\0" gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
+	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
 
 # Other rules
@@ -393,7 +398,7 @@ tidymodern:
 	rm -rf $(OBJ_DIR_NAME)
 
 tidycheck:
-	rm -f $(TESTELF) $(HEADLESSELF)
+	rm -f $(TESTELF_BASE) $(TESTELF) $(HEADLESSELF)
 	rm -rf $(OBJ_DIR_NAME_TEST)
 
 tidydebug:
