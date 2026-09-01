@@ -3370,7 +3370,7 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
         return MOVEEND_RESULT_CONTINUE;
     }
 
-    if (IsExplosionMove(cv->move)
+    if ((IsExplosionMove(cv->move) || cv->moveEffect == EFFECT_MEMENTO)
      && !IsBattlerAlive(cv->battlerAtk)
      && !gBattleStruct->battlerState[cv->battlerAtk].notOnField)
     {
@@ -3384,6 +3384,10 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
 
     switch (cv->moveEffect)
     {
+    case EFFECT_DEFOG:
+        BattleScriptCall(BattleScript_Defog);
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        break;
     case EFFECT_STRENGTH_SAP:
         if (gBattleStruct->passiveHpUpdate[cv->battlerAtk] > 0 && !IsBattlerUnaffectedByMove(cv->battlerDef))
         {

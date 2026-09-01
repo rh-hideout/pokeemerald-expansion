@@ -80,11 +80,9 @@ BattleScript_EffectStatChange::
 	trymovestatchanges
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectStatChangeHalfHp::
-	attackcanceler
-	trymovestatchanges
+BattleScript_StatChangeHalfHp::
 	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
 	goto BattleScript_MoveEnd
 
 BattleScript_PlayMoveAnim::
@@ -111,17 +109,9 @@ BattleScript_PlayTidyUp::
 	waitmessage B_WAIT_TIME_LONG
     return
 
-BattleScript_EffectDefog::
-	attackcanceler
-	trymovestatchanges
+BattleScript_Defog::
 	trydefog TRUE, NULL
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectMemento::
-	attackcanceler
-	trymovestatchanges
-    tryfaintmon BS_ATTACKER
-	goto BattleScript_MoveEnd
+    return
 
 BattleScript_Memento::
 	setatkhptozero

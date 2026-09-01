@@ -1025,6 +1025,10 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
             st->moveScript = BattleScript_AutotomizeMessage;
         }
         break;
+    case EFFECT_STAT_CHANGE_HALF_HP:
+        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+            st->moveScript = BattleScript_StatChangeHalfHp;
+        break;
     default:
         break;
     }
