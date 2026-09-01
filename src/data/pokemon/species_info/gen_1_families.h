@@ -1862,7 +1862,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Pidgey,
             gShinyOverworldPalette_Pidgey
         )
-        .isSkyBattleBanned = B_SKY_BATTLE_STRICT_ELIGIBILITY,
         .levelUpLearnset = sPidgeyLevelUpLearnset,
         .teachableLearnset = sPidgeyTeachableLearnset,
         .eggMoveLearnset = sPidgeyEggMoveLearnset,
