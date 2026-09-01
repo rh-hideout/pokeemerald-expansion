@@ -834,27 +834,32 @@ void rockSmashRNG(struct ScriptContext *ctx)
     }
     else if (OW_ROCK_SMASH_ITEMS == GEN_4)
     {
-        u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default. 
-        if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
-            itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
+        if (EncounterOddsCheck(encounterChance))
+            rockSmashResult = ROCK_SMASH_ENCOUNTER;
+        else
+        {
+            u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default. 
+            if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
+                itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
 
-        if (VarGet(VAR_0x8004) == TRUE)
-            itemRate += 5;
+            if (VarGet(VAR_0x8004) == TRUE)
+                itemRate += 5;
 
-        u32 partySlot = VarGet(VAR_0x8006);
-        enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][partySlot]);
-        if (ability == ABILITY_KEEN_EYE)
-            itemRate += 5;
-        if (ability == ABILITY_MAGNET_PULL)
-            itemRate += 5;
-        if (ability == ABILITY_SUCTION_CUPS)
-            itemRate += 5;
+            u32 partySlot = VarGet(VAR_0x8006);
+            enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][partySlot]);
+            if (ability == ABILITY_KEEN_EYE)
+                itemRate += 5;
+            if (ability == ABILITY_MAGNET_PULL)
+                itemRate += 5;
+            if (ability == ABILITY_SUCTION_CUPS)
+                itemRate += 5;
 
-        u32 nothingRate = 0;
-        if (itemRate + encounterChance < 100)
-            nothingRate = 100 - (itemRate + encounterChance); 
+            u32 nothingRate = 0;
+            if (itemRate < 100)
+                nothingRate = 100 - (itemRate); 
 
-        rockSmashResult = RandomWeighted(RNG_NONE, nothingRate, encounterChance, itemRate);
+            rockSmashResult = RandomWeighted(RNG_NONE, nothingRate, 0, itemRate);
+        }
     }
     else
     {
