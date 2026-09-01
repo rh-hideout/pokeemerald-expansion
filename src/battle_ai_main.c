@@ -49,6 +49,7 @@ struct ChosenAction
 static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler);
 static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk);
+static struct ChosenAction ChooseMoveOrAction_DoublesDeep(enum BattlerId battlerAtk);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
@@ -120,7 +121,7 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
     [34] = NULL,                     // AI_FLAG_ABILITY_OMNISCIENCE
     [35] = NULL,                     // AI_FLAG_ITEM_OMNISCIENCE
     [36] = NULL,                     // AI_FLAG_MOVE_OMNISCIENCE
-    [37] = NULL,                     // Unused
+    [37] = NULL,                     // AI_FLAG_DEEP_PARTNER_THINKING
     [38] = NULL,                     // Unused
     [39] = NULL,                     // Unused
     [40] = NULL,                     // Unused
@@ -449,7 +450,7 @@ void ReconsiderGimmick(enum BattlerId battlerAtk, enum BattlerId battlerDef, enu
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 }
 
-static bool32 IsThinkingBeforePartner(enum BattlerId battler, enum BattlerId battlerPartner)
+bool32 IsThinkingBeforePartner(enum BattlerId battler, enum BattlerId battlerPartner)
 {
     if (!BattlerHasAi(battlerPartner))
         return TRUE;
@@ -489,8 +490,15 @@ static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler)
 {
     if (IsDoubleBattle())
     {
-        SetAllyMove(battler);
-        return ChooseMoveOrAction_Doubles(battler);
+        if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DEEP_PARTNER_THINKING)
+        {
+            return ChooseMoveOrAction_DoublesDeep(battler);
+        }
+        else
+        {
+            SetAllyMove(battler);
+            return ChooseMoveOrAction_Doubles(battler);
+        }
     }
     return ChooseMoveOrAction_Singles(battler);
 }
@@ -944,6 +952,7 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
     u64 flags = gAiThinkingStruct->aiFlags[battlerAtk];
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
+    gBattlerTarget = battlerDef;
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battlerAtk);
@@ -1015,6 +1024,68 @@ static struct ChosenAction ChooseMoveOrAction_Singles(enum BattlerId battler)
     };
 
     return chosen;
+}
+
+static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId battlerPartner, enum Move *bestMoves, enum BattlerId *bestTargets)
+{
+    s32 highestMoveScore = 0;
+    enum Move *allyMoves = GetMovesArray(battlerPartner);
+    u32 arrayPos = 0;
+
+    for (u32 allyIndex = 0; allyMoves[allyIndex] != MOVE_NONE; allyIndex++)
+    {
+        gAiLogicData->partnerMove = allyMoves[allyIndex];
+
+        for (enum BattlerId target = B_BATTLER_0; target < MAX_BATTLERS_COUNT; target++)
+        {
+            if (gBattleMons[target].hp == 0 || target == battler)
+            {
+                continue;
+            }
+            DoAIScoreProcessing(battler, target);
+
+            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+            {
+                enum Move currentMove = gBattleMons[battler].moves[moveIndex];
+
+                if (currentMove == MOVE_NONE)
+                    continue;
+
+                if (!CanTargetBattler(battler, target, currentMove))
+                    continue;
+
+                if (highestMoveScore == gAiThinkingStruct->score[moveIndex])
+                {
+                    bool32 shouldAddToArray = TRUE;
+                    for (u32 i = 0; bestMoves[i] != MOVE_NONE; i++)
+                    {
+                        if (bestMoves[i] == currentMove && bestTargets[i] == target)
+                            shouldAddToArray = FALSE; // No point adding duplicates
+                    }
+
+                    if (shouldAddToArray)
+                    {
+                        bestMoves[arrayPos] = currentMove;
+                        bestTargets[arrayPos++] = target;
+                    }
+                }
+
+                if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                {
+                    highestMoveScore = gAiThinkingStruct->score[moveIndex];
+                    bestMoves[0] = currentMove;
+                    bestTargets[0] = target;
+                    arrayPos = 1;
+                    for (u32 i = 1; bestMoves[i] != MOVE_NONE; i++)
+                    {
+                        bestMoves[i] = MOVE_NONE;
+                        bestTargets[i] = 0;
+                    }
+                }
+            }
+        }
+    }
+    return;
 }
 
 static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
@@ -1111,6 +1182,56 @@ static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
     chosen.target = mostViableTargetsArray[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_TARGET, 0, mostViableTargetsNo - 1)];
     chosen.moveIndex = actionOrMoveIndex[chosen.target];
 
+    return chosen;
+}
+
+static struct ChosenAction ChooseMoveOrAction_DoublesDeep(enum BattlerId battlerAtk)
+{
+    enum Move mostViableMove = MOVE_NONE;
+    enum BattlerId mostViableTarget = B_BATTLER_0;
+    s32 comboBestScore = 0;
+    enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
+    enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
+    enum BattlerId battlerPartner = GetPartnerBattler(battlerAtk);
+
+    if (!IsThinkingBeforePartner(battlerAtk, battlerPartner))
+    {
+        gAiLogicData->partnerMove = GetAIChosenMove(battlerPartner);
+        return ChooseMoveOrAction_Doubles(battlerAtk);
+    }
+
+    BattleAI_DeepPartnerThinking(battlerPartner, battlerAtk, partnerBestMoves, partnerBestTargets);
+    s32 tempFinalScore[MAX_BATTLERS_COUNT][MAX_MON_MOVES] = {0};
+    for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
+    {
+        gAiLogicData->partnerMove = partnerBestMoves[i];
+        gAiBattleData->chosenTarget[battlerPartner] = partnerBestTargets[i];
+        gAiLogicData->partnerMoveSimulation = TRUE;
+        struct ChosenAction interimAction = ChooseMoveOrAction_Doubles(battlerAtk);
+        gAiLogicData->partnerMoveSimulation = FALSE;
+
+        if (comboBestScore < gAiThinkingStruct->score[interimAction.moveIndex])
+        {
+            comboBestScore = gAiThinkingStruct->score[interimAction.moveIndex];
+            mostViableMove = gBattleMons[battlerAtk].moves[interimAction.moveIndex];
+            mostViableTarget = interimAction.target;
+
+            // Store scores found when testing best move
+            memcpy(tempFinalScore, gAiBattleData->finalScore[battlerAtk], sizeof(gAiBattleData->finalScore[battlerAtk]));
+        }
+    }
+
+    memcpy(gAiBattleData->finalScore[battlerAtk], tempFinalScore, sizeof(tempFinalScore));
+
+    #if TESTING
+    // For now, only taking the first found highest score
+    gBattleTestRunnerState->data.trial.scoreTieCount = 1;
+    gBattleTestRunnerState->data.trial.targetTieCount = 1;
+    #endif
+
+    struct ChosenAction chosen = {0};
+    chosen.target = mostViableTarget;
+    chosen.moveIndex = GetMoveIndex(battlerAtk, mostViableMove);
     return chosen;
 }
 
@@ -1848,9 +1969,24 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_CONFUSE:
     case EFFECT_SWAGGER:
-        if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove)
-        || !AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
+        if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
+        {
             ADJUST_SCORE(-10);
+        }
+        else
+        {
+            switch (GetMoveTarget(move))
+            {
+            case TARGET_SELECTED:
+                if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+                    ADJUST_SCORE(-10);
+                break;
+            default:
+                if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), moveEffect))
+                    ADJUST_SCORE(-10);
+                break;
+            }
+        }
         break;
     case EFFECT_SUBSTITUTE:
         if (gBattleMons[battlerAtk].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
@@ -1950,7 +2086,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_STEALTH_ROCK:
         if (IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STEALTH_ROCK)
-          || PartnerMoveIsSameNoTarget(GetPartnerBattler(battlerAtk), move, aiData->partnerMove)) //Only one mon needs to set up Stealth Rocks
+          || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_STEALTH_ROCK)) //Only one mon needs to set up Stealth Rocks
             ADJUST_SCORE(-10);
         break;
     case EFFECT_TOXIC_SPIKES:
@@ -1962,7 +2098,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_STICKY_WEB:
         if (IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STICKY_WEB))
             ADJUST_SCORE(-10);
-        if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_STICKY_WEB))
             ADJUST_SCORE(-10); // only one mon needs to set up Sticky Web
         break;
     case EFFECT_FORESIGHT:
@@ -1990,7 +2126,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             {
                 ADJUST_SCORE(-10); //Both enemies are perish songed
             }
-            else if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+            else if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_PERISH_SONG))
             {
                 ADJUST_SCORE(-10);
             }
@@ -2044,7 +2180,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_SAFEGUARD:
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_SAFEGUARD
-          || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_SAFEGUARD))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_PARTING_SHOT:
@@ -2181,13 +2317,13 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_MUD_SPORT:
         if (gFieldStatuses & STATUS_FIELD_MUDSPORT
           || gBattleMons[battlerAtk].volatiles.mudSport
-          || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_MUD_SPORT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_WATER_SPORT:
         if (gFieldStatuses & STATUS_FIELD_WATERSPORT
           || gBattleMons[battlerAtk].volatiles.waterSport
-          || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+          || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_WATER_SPORT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_STRENGTH_SAP:
@@ -2327,7 +2463,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HEAL_BELL:
-        if (!AnyPartyMemberStatused(battlerAtk, IsSoundMove(move)) || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (!AnyPartyMemberStatused(battlerAtk, IsSoundMove(move)) || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_HEAL_BELL))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_ENDURE:
@@ -2691,7 +2827,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_TRICK_ROOM:
-        if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), aiData->partnerMove, EFFECT_TRICK_ROOM))
+        if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_TRICK_ROOM) && IsThinkingBeforePartner(battlerAtk, GetPartnerBattler(battlerAtk)))
         {
             // This only happens if the ally already rolled on double trick room on final turn.
             // Both Pokemon use Trick Room on the final turn of Trick Room to anticipate both opponents Protecting to stall out.
@@ -2711,11 +2847,11 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_MAGIC_ROOM:
-        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || PartnerMoveIsSameNoTarget(GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_MAGIC_ROOM))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_WONDER_ROOM:
-        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM || PartnerMoveIsSameNoTarget(GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_WONDER_ROOM))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_GRAVITY:
@@ -2899,13 +3035,13 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_TAILWIND:
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_TAILWIND
-         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), aiData->partnerMove, EFFECT_TAILWIND)
+         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_TAILWIND)
          || (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == 1))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_LUCKY_CHANT:
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_LUCKY_CHANT
-          || PartnerMoveIsSameNoTarget(GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
+          || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_LUCKY_CHANT))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_MAGNET_RISE:
@@ -2968,8 +3104,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     }
     case EFFECT_TAKE_HEART:
         if ((!(gBattleMons[battlerAtk].status1 & STATUS1_ANY)
-         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), aiData->partnerMove, EFFECT_JUNGLE_HEALING)
-         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), aiData->partnerMove, EFFECT_HEAL_BELL))
+         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_JUNGLE_HEALING)
+         || PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_HEAL_BELL))
          && !BattlerStatCanRise(battlerAtk, aiData->abilities[battlerAtk], STAT_SPATK)
          && !BattlerStatCanRise(battlerAtk, aiData->abilities[battlerAtk], STAT_SPDEF))
             ADJUST_SCORE(-10);
@@ -2986,7 +3122,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_TEATIME:
-        if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
+        if (PartnerMoveEffectIs(GetPartnerBattler(battlerAtk), EFFECT_TEATIME))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_DARK_VOID:
@@ -3205,6 +3341,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         {
             ADJUST_SCORE(BEST_EFFECT);
         }
+        break;
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
         {
@@ -3273,10 +3410,10 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_MAGNET_RISE:
         if (AI_IsBattlerGrounded(battlerAtk)
-          && (HasMoveWithEffect(battlerAtkPartner, EFFECT_EARTHQUAKE) || HasMoveWithEffect(battlerAtkPartner, EFFECT_MAGNITUDE))
+          && (PartnerMoveEffectIs(battlerAtkPartner, EFFECT_EARTHQUAKE) || PartnerMoveEffectIs(battlerAtkPartner, EFFECT_MAGNITUDE))
           && (AI_GetMoveEffectiveness(MOVE_EARTHQUAKE, battlerAtk, battlerAtkPartner) != UQ_4_12(0.0))) // Doesn't resist ground move
         {
-            RETURN_SCORE_PLUS(DECENT_EFFECT);   // partner has earthquake or magnitude -> good idea to use magnet rise
+            RETURN_SCORE_PLUS(DECENT_EFFECT);   // partner has/using earthquake or magnitude -> good idea to use magnet rise
         }
         break;
     case EFFECT_DRAGON_CHEER:
@@ -3308,7 +3445,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_TRICK_ROOM:
         if (hasPartner && gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == 1
          && ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM)
-         && HasMoveWithEffect(battlerAtkPartner, EFFECT_TRICK_ROOM)
+         && PartnerMoveEffectIs(battlerAtkPartner, EFFECT_TRICK_ROOM)
          && RandomPercentage(RNG_AI_REFRESH_TRICK_ROOM_ON_LAST_TURN, DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE))
             ADJUST_SCORE(PERFECT_EFFECT);
         break;
@@ -5350,8 +5487,6 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         }
         break;
     case EFFECT_PLEDGE:
-        if (hasPartner && HasMoveWithEffect(GetPartnerBattler(battlerAtk), EFFECT_PLEDGE))
-            ADJUST_SCORE(GOOD_EFFECT); // Partner might use pledge move
         break;
     case EFFECT_TRICK_ROOM:
         if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_POWERFUL_STATUS))
