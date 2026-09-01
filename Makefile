@@ -195,7 +195,6 @@ endif
 LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
 LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
 LIBAGBSYSCALL := libagbsyscall/libagbsyscall.a
-LIBAGBSYSCALL_SRCS := libagbsyscall/Makefile libagbsyscall/libagbsyscall.s
 # Enable debug info if set
 ifeq ($(DINFO),1)
   override CFLAGS += -g
@@ -273,6 +272,7 @@ MAKEFLAGS += --no-print-directory
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates
 .PHONY: all rom agbcc modern compare check debug release $(TESTELF)
+.PHONY: FORCE_LIBAGBSYSCALL
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -573,8 +573,10 @@ LD_SCRIPT := ld_script_modern.ld
 libagbsyscall: $(LIBAGBSYSCALL)
 	@:
 
-$(LIBAGBSYSCALL): $(LIBAGBSYSCALL_SRCS)
+$(LIBAGBSYSCALL): FORCE_LIBAGBSYSCALL
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
+
+FORCE_LIBAGBSYSCALL:
 
 # Enable LTO LDFLAGS if set
 ifneq ($(LTO),0)
