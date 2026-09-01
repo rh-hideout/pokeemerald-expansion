@@ -4639,10 +4639,11 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
-            ADJUST_SCORE(GOOD_EFFECT); // fall through
+            ADJUST_SCORE(GOOD_EFFECT);
+        [[fallthrough]];
     case EFFECT_LASER_FOCUS:
         if (aiData->abilities[battlerAtk] == ABILITY_SNIPER)
-            ADJUST_SCORE(GOOD_EFFECT); // fall through
+            ADJUST_SCORE(GOOD_EFFECT);
         if (ShouldBoostCritRate(battlerAtk, battlerDef))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
