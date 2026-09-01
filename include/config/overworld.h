@@ -13,7 +13,8 @@
 #define OW_DEFOG_FIELD_MOVE             FALSE      // If enabled, Defog can be used as a Field Move as seen in DPPt.
 #define OW_ROCK_CLIMB_FIELD_MOVE        FALSE      // If enabled, Rock Climb can be used as a Field Move as seen in DPPt.
 #define OW_CHOOSE_FROM_PC_AND_PARTY     TRUE       // If enabled, NPCs like move tutors or trainers asking for trade will let you pick a Pokémon from your PC or party instead of just your party
-#define OW_ROCK_SMASH_ITEMS             FALSE      // If enabled, breakable rocks will yield items. Configure this in fldeff_rocksmash.c. By default, the probabilities and items from OR/AS are used
+#define OW_ROCK_SMASH_ITEMS             GEN_LATEST // In Gen4 or Gen6, breakable rocks will yield items based on those generations' mechanics Configure this in fldeff_rocksmash.c.
+#define OW_ROCK_SMASH_ITEMS_MIN_ODDS    10         // Used when OW_ROCK_SMASH_ITEMS is GEN_4 to determine the minimum odds (out of 100) of an item appearing, if no specific odds are given for a rock.
 
 
 // Item Obtain Description Box
