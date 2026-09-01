@@ -41,7 +41,8 @@ static enum Move GetMeFirstMove(void);
 
 // Stat change moves
 static bool32 TryBellyDrum(enum BattlerId battler);
-static bool32 TryMirrorWall(enum BattlerId battler))
+static bool32 TryMirrorWall(enum BattlerId battler);
+static bool32 TryPointToPoint(enum BattlerId battler);
 static bool32 TryHalfHp(enum BattlerId battler);
 static bool32 CutThirdOfHp(enum BattlerId battler);
 
@@ -5665,6 +5666,18 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
             return MOVE_RESULT_FAILURE;
         }
         break;
+    case EFFECT_POINT_TO_POINT:
+        if (WillAnyStatChange() && TryPointToPoint(cv->battlerAtk))
+        {
+            BattleScriptCall(BattleScript_PlayMoveAnimAndChangeHP);
+            return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = BattleScript_StatChangeFailed;
+            return MOVE_RESULT_FAILURE;
+        }
+        break;
     case EFFECT_CHARGE:
         if (WillAnyStatChange() || gBattleMons[cv->battlerAtk].volatiles.chargeTimer == 0)
         {
@@ -6238,6 +6251,26 @@ static bool32 TryMirrorWall(enum BattlerId battler)
     if (gBattleMons[battler].hp > halfHp)
     {
         SetPassiveDamageAmount(battler, halfHp);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 TryPointToPoint(enum BattlerId battler)
+{
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE) 
+    && CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+        return FALSE;
+
+    u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;
+
+    if (halfHp == 0)
+        halfHp = 1;
+
+    if (gBattleMons[battler].hp > halfHp)
+    {
+        SetPassiveDamageAmount(battler, gBattleMons[battler].hp - 1); //Reduce to 1 HP
         return TRUE;
     }
 

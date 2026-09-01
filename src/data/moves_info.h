@@ -23210,6 +23210,108 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .metronomeBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_BellyDrum,
+    },
+
+    [MOVE_RING_OF_DESTRUCTION] =
+    {
+        .name = COMPOUND_STRING("Ring of D"),
+        .description = COMPOUND_STRING(
+            "Annihilate foe with\n"
+            "a ring of destruction.\n"
+            "User receives entire\n"
+            "damage as recoil."),
+        .effect = EFFECT_RECOIL,
+        .power = 150,
+        .type = TYPE_FIRE,
+        .accuracy = 100,
+        .pp = 5,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .recoilPercentage = 100 },
+        //Move Categories
+        .thawsUser = TRUE,
+        .battleAnimScript = gBattleAnimMove_FlareBlitz,
+    },
+
+    [MOVE_CHAOS_SCEPTER_BLAST] =
+    {
+        .name = COMPOUND_STRING("Chaos Scepter"),
+        .description = COMPOUND_STRING(
+            "Create a ball of\n"
+            "dark static energy\n"
+            "that blasts the foe.\n"
+            "It may paralyze the\n"
+            "foe (10%)."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_DARK,
+        .accuracy = 100,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),,
+        .battleAnimScript = gBattleAnimMove_Thunderbolt,
+    },
+
+    [MOVE_SILENT_SLASH] =
+    {
+        .name = COMPOUND_STRING("Silent Slash"),
+        .description = COMPOUND_STRING(
+            "Fade into the mist\n"
+            "and slash the\n"
+            "enemy. This move\n"
+            "can't miss."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_STEEL,
+        .accuracy = 0,
+        .pp = 15,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        //Move Categories
+        .makesContact = TRUE,
+        .slicingMove = TRUE,
+        .battleAnimScript = gBattleAnimMove_Thunderbolt,
+    },
+
+    //TODO: Test Effect and AI
+    [MOVE_POINT2POINT] =
+    {
+        .name = COMPOUND_STRING("Point to Point"),
+        .description = COMPOUND_STRING(
+            "Sacrifice all but 1\n"
+            "HP. Drastically\n"
+            "increase Atk and\n"
+            "Sp.Atk. HP must be\n"
+            "above 50% to activate.\n"
+            "-1 priority"),
+        .effect = EFFECT_POINT_TO_POINT,
+        .power = 0,
+        .type = TYPE_FIRE,
+        .accuracy = 0,
+        .pp = 5,
+        .target = TARGET_USER,
+        .priority = -1,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RECOVER_HP },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .attack = 3,
+            .spAtk = 3,
+        }),
+        //Move Categories
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .metronomeBanned = TRUE,
         .battleAnimScript = gBattleAnimMove_BellyDrum,
     },
 

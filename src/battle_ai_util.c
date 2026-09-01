@@ -5120,6 +5120,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_BELLY_DRUM:
         case EFFECT_MIRROR_WALL:
+        case EFFECT_POINT_TO_POINT:
             if (isSlower)
                 return TRUE;
             isEager = TRUE;
