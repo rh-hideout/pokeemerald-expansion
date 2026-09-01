@@ -3184,7 +3184,7 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
     {
         enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
         gBattleStruct->eventState.moveEndBattler++;
-        gBattleScripting.savedDmg += gBattleStruct->moveDamage[battlerDef];
+        gBattleStruct->accumulatedDamage += gBattleStruct->moveDamage[battlerDef];
     }
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
@@ -4529,8 +4529,8 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
     }
     else if (IsSpreadMove(moveTarget))
     {
-        u32 nextTarget = GetNextTarget(moveTarget, FALSE);
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
+        u32 nextTarget = GetNextTarget(moveTarget, FALSE);
 
         if (nextTarget != MAX_BATTLERS_COUNT)
         {
@@ -4846,7 +4846,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
             }
             else
             {
-                SetPassiveDamageAmount(cv->battlerAtk, gBattleScripting.savedDmg * max(1, GetMoveRecoil(cv->move)) / 100);
+                SetPassiveDamageAmount(cv->battlerAtk, gBattleStruct->accumulatedDamage * max(1, GetMoveRecoil(cv->move)) / 100);
             }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);

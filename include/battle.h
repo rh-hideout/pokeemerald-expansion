@@ -752,6 +752,7 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
+    s32 accumulatedDamage;
 };
 
 struct AiBattleData
@@ -887,7 +888,7 @@ struct BattleScripting
     u8 multiplayerId;
     u8 specialTrainerBattleType;
     bool8 monCaught;
-    s32 savedDmg;
+    u32 unused_0x28;
     u16 unused_0x2c;
     u16 moveEffect;
     u16 unused_0x30;

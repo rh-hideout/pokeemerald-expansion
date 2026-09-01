@@ -495,7 +495,7 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gBattleScripting.savedDmg > 0
+    if (gBattleStruct->accumulatedDamage > 0
      && !gBattleStruct->unableToUseMove
      && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
      && gBattleStruct->battlerState[battlerAtk].originalBattlerPartyId == PARTY_SIZE
@@ -504,7 +504,7 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
     {
         if (EmergencyExitCanBeTriggered(battlerAtk, GetBattlerAbility(battlerAtk)))
             gSpecialStatuses[battlerAtk].shellBellEmergencyExit = TRUE;
-        SetHealAmount(battlerAtk, gBattleScripting.savedDmg / GetBattlerHoldEffectParam(battlerAtk));
+        SetHealAmount(battlerAtk, gBattleStruct->accumulatedDamage / GetBattlerHoldEffectParam(battlerAtk));
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
     }

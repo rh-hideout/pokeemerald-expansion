@@ -289,7 +289,7 @@ enum BattleScriptOpcode
 #define sMULTIPLAYER_ID              (gBattleScripting + 0x25) // multiplayerId
 #define sSPECIAL_TRAINER_BATTLE_TYPE (gBattleScripting + 0x26) // specialTrainerBattleType
 #define sMON_CAUGHT                  (gBattleScripting + 0x27) // monCaught
-#define sSAVED_DMG                   (gBattleScripting + 0x28) // savedDmg
+#define sUNUSED_0x28                 (gBattleScripting + 0x28) // unused_0x28
 #define sUNUSED_0x2C                 (gBattleScripting + 0x2C) // unused_0x2c
 #define sMOVE_EFFECT                 (gBattleScripting + 0x2E) // moveEffect
 #define sUNUSED_0x30                 (gBattleScripting + 0x30) // unused_0x30
