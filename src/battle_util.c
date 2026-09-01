@@ -5741,26 +5741,28 @@ enum HoldEffect GetBattlerHoldEffectInternal(enum BattlerId battler, enum Abilit
     if (gSpecialStatuses[battler].attackerInParty)
         return HOLD_EFFECT_NONE;
 
-    if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
-        holdEffect = gEnigmaBerries[battler].holdEffect;
-    else
-        holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
-
-    if (holdEffect == HOLD_EFFECT_DOUBLE_PRIZE)
+    if (gBattleMons[battler].volatiles.embargoTimer
+     || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
+     || (ability == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid))
     {
-        gPotentialItemEffectBattler = battler;
-        return holdEffect;
+        if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
+            holdEffect = gEnigmaBerries[battler].holdEffect;
+        else
+            holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
+
+        if (holdEffect == HOLD_EFFECT_DOUBLE_PRIZE)
+        {
+            gPotentialItemEffectBattler = battler;
+            return holdEffect;
+        }
+        return HOLD_EFFECT_NONE;
     }
 
-    if (gBattleMons[battler].volatiles.embargoTimer)
-        return HOLD_EFFECT_NONE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
-        return HOLD_EFFECT_NONE;
-    if (ability == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
-        return HOLD_EFFECT_NONE;
-
     gPotentialItemEffectBattler = battler;
-    return holdEffect;
+    if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
+        return gEnigmaBerries[battler].holdEffect;
+    else
+        return GetItemHoldEffect(gBattleMons[battler].item);
 }
 
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(enum BattlerId battler)
@@ -6445,7 +6447,11 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     }
 
     if (basePower == 0)
-        basePower = 1;
+    {
+        if ((moveEffect != EFFECT_RETURN && moveEffect != EFFECT_FRUSTRATION)
+         || GetConfig(B_RETURN_FRUSTRATION_DMG) >= GEN_3)
+            basePower = 1;
+    }
     return basePower;
 }
 
@@ -7687,16 +7693,6 @@ static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
     dmg = uq4_12_multiply_by_int_half_down(modifier, dmg); \
 } while (0)
 
-static bool32 ReturnFrustrationDealsNoDamage(enum BattlerId battlerAtk, enum BattleMoveEffects moveEffect)
-{
-    if (GetConfig(B_RETURN_FRUSTRATION_DMG) >= GEN_3)
-        return FALSE;
-
-    u32 friendship = gBattleMons[battlerAtk].friendship;
-    return (moveEffect == EFFECT_RETURN && friendship == 0)
-        || (moveEffect == EFFECT_FRUSTRATION && friendship == MAX_FRIENDSHIP);
-}
-
 static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 {
     s32 dmg;
@@ -7708,7 +7704,7 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
     else
         gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
 
-    if (ReturnFrustrationDealsNoDamage(ctx->battlerAtk, GetMoveEffect(ctx->move)))
+    if (gBattleMovePower == 0)
         return 0;
 
     userFinalAttack = CalcAttackStat(ctx);
@@ -8356,13 +8352,10 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     return modifier;
 }
 
-static bool32 MoveIgnoresType(struct DamageContext *ctx)
+static inline bool32 MoveIgnoresType(struct DamageContext *ctx)
 {
     if (ctx->moveType == TYPE_MYSTERY)
         return TRUE;
-
-    if (GetConfig(B_FIXED_DMG_IGNORES_TYPE) >= GEN_2)
-        return FALSE;
 
     switch (GetMoveEffect(ctx->move))
     {
@@ -8372,7 +8365,7 @@ static bool32 MoveIgnoresType(struct DamageContext *ctx)
     case EFFECT_PSYWAVE:
     case EFFECT_BIDE:
     case EFFECT_REFLECT_DAMAGE:
-        return TRUE;
+        return GetConfig(B_FIXED_DMG_IGNORES_TYPE) < GEN_2;
     default:
         return FALSE;
     }
