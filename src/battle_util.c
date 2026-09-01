@@ -11103,7 +11103,7 @@ enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId bat
     case B_BATTLER_3:
         return GetBattlerRightFoe(battlerAtk);
     default:
-        errorf("Illegal battler");
+        errorf("Illegal battle");
         return B_BATTLER_0;
     }
 }
