@@ -625,10 +625,6 @@
 	.byte B_SCR_OP_USEITEMONOPPONENT
 	.endm
 
-	.macro setprotectlike
-	.byte B_SCR_OP_SETPROTECTLIKE
-	.endm
-
 	.macro tryexplosion
 	.byte B_SCR_OP_TRYEXPLOSION
 	.endm
@@ -645,11 +641,6 @@
 	.macro manipulatedamage mode:req
 	.byte B_SCR_OP_MANIPULATEDAMAGE
 	.byte \mode
-	.endm
-
-	.macro stockpiletohpheal failInstr:req
-	.byte B_SCR_OP_STOCKPILETOHPHEAL
-	.4byte \failInstr
 	.endm
 
 	.macro twoturnmoveschargestringandanimation
@@ -729,16 +720,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settypetorandomresistance failInstr:req
-	.byte B_SCR_OP_SETTYPETORANDOMRESISTANCE
-	.4byte \failInstr
-	.endm
-
-	.macro copymovepermanently failInstr:req
-	.byte B_SCR_OP_COPYMOVEPERMANENTLY
-	.4byte \failInstr
-	.endm
-
 	.macro tryspiteppreduce failInstr:req
 	.byte B_SCR_OP_TRYSPITEPPREDUCE
 	.4byte \failInstr
@@ -813,18 +794,8 @@
 	.byte B_SCR_OP_SETFORCEDTARGET
 	.endm
 
-	.macro settaunt failInstr:req
-	.byte B_SCR_OP_SETTAUNT
-	.4byte \failInstr
-	.endm
-
 	.macro trysethelpinghand failInstr:req
 	.byte B_SCR_OP_TRYSETHELPINGHAND
-	.4byte \failInstr
-	.endm
-
-	.macro trywish failInstr:req
-	.byte B_SCR_OP_TRYWISH
 	.4byte \failInstr
 	.endm
 
@@ -1197,9 +1168,8 @@
 	.byte \battler
 	.endm
 
-	.macro tryrevivalblessing, failInstr:req
+	.macro tryrevivalblessing
 	callnative BS_TryRevivalBlessing
-	.4byte \failInstr
 	.endm
 
 	.macro jumpifblockedbysoundproof battler:req, failInstr:req
@@ -1608,11 +1578,6 @@
 	.byte \bufferSpeciesName
 	.endm
 
-	.macro tryinstruct failInstr:req
-	callnative BS_TryInstruct
-	.4byte \failInstr
-	.endm
-
 	.macro showabilitypopup
 	callnative BS_ShowAbilityPopup
 	.endm
@@ -1639,11 +1604,6 @@
 	.macro curestatus battler:req
 	callnative BS_CureStatus
 	.byte \battler
-	.endm
-
-	.macro trybestow failInstr:req
-	callnative BS_TryBestow
-	.4byte \failInstr
 	.endm
 
 	.macro handletrainerslidemsg battler:req, case_:req

@@ -330,7 +330,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CONVERSION_2] =
     {
-        .battleScript = BattleScript_EffectConversion2,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -345,7 +345,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SKETCH] =
     {
-        .battleScript = BattleScript_EffectSketch,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
@@ -408,7 +408,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_NIGHTMARE] =
     {
-        .battleScript = BattleScript_EffectNightmare,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .encourageEncore = TRUE,
     },
@@ -435,7 +435,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_PROTECT] =
     {
-        .battleScript = BattleScript_EffectProtect,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 5,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -466,7 +466,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ENDURE] =
     {
-        .battleScript = BattleScript_EffectEndure,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -692,7 +692,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_SWALLOW] =
     {
-        .battleScript = BattleScript_EffectSwallow,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 3,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
         .encourageEncore = TRUE,
@@ -763,7 +763,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TAUNT] =
     {
-        .battleScript = BattleScript_EffectTaunt,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_SLOW_STEADY,
     },
@@ -792,7 +792,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_WISH] =
     {
-        .battleScript = BattleScript_EffectWish,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 2,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
     },
@@ -1373,7 +1373,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BESTOW] =
     {
-        .battleScript = BattleScript_EffectBestow,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1441,7 +1441,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MAT_BLOCK] =
     {
-        .battleScript = BattleScript_EffectProtect,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1454,7 +1454,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_INSTRUCT] =
     {
-        .battleScript = BattleScript_EffectInstruct,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1692,7 +1692,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_REVIVAL_BLESSING] =
     {
-        .battleScript = BattleScript_EffectRevivalBlessing,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
     },
 

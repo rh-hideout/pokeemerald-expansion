@@ -15,6 +15,7 @@
 #include "battle_controllers.h"
 #include "move.h"
 #include "test_runner.h"
+#include "overworld.h"
 #include "constants/battle_move_resolution.h"
 #include "constants/songs.h"
 
@@ -1467,8 +1468,6 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             }
             else
             {
-                SetHealAmount(cv->battlerDef, GetNonDynamaxMaxHP(cv->battlerDef) / 4);
-                gBattlescriptCurrInstr = BattleScript_PresentHeal;
                 numAffectedTargets++;
                 continue;
             }
@@ -5191,6 +5190,9 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
 
     enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(cv->move);
+
+    if (cv->move == MOVE_STRUGGLE)
+        IncrementGameStat(GAME_STAT_USED_STRUGGLE);
 
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         BattleArena_AddSkillPoints(cv->battlerAtk);

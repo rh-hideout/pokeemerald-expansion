@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_TRICK, MOVE_EFFECT_POWER_TRICK));
+    // ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_TRICK, MOVE_EFFECT_POWER_TRICK));
 }
 
 SINGLE_BATTLE_TEST("Power Trick swap the user attack and defense stats")

@@ -49,6 +49,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_ORDER_UP,
     MOVE_EFFECT_ION_DELUGE,
     MOVE_EFFECT_HAZE,
+    MOVE_EFFECT_PROTECT,
     MOVE_EFFECT_LEECH_SEED,
     MOVE_EFFECT_REFLECT,
     MOVE_EFFECT_LIGHT_SCREEN,
@@ -117,7 +118,10 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_QUASH,
     MOVE_EFFECT_TOPSY_TURVY,
     MOVE_EFFECT_ROAR,
+    MOVE_EFFECT_PRESENT,
+    MOVE_EFFECT_SWALLOW,
     MOVE_EFFECT_PURIFY,
+    MOVE_EFFECT_WISH,
     MOVE_EFFECT_ROOST,
     MOVE_EFFECT_RESTORE_HP,
     MOVE_EFFECT_RESTORE_HP_ON_WEATHER,
@@ -126,6 +130,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FLORAL_HEALING,
     MOVE_EFFECT_THIRD_TYPE,
     MOVE_EFFECT_MIMIC,
+    MOVE_EFFECT_SKETCH,
     MOVE_EFFECT_REST,
     MOVE_EFFECT_TRANSFORM,
     MOVE_EFFECT_HEAL_BELL,
@@ -141,6 +146,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_CAMOUFLAGE,
     MOVE_EFFECT_ENCORE,
     MOVE_EFFECT_CONVERSION,
+    MOVE_EFFECT_CONVERSION2,
     MOVE_EFFECT_AFTER_YOU,
     MOVE_EFFECT_REFLECT_TYPE,
     MOVE_EFFECT_BESTOW,
@@ -157,9 +163,9 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_POWER_SHIFT,
     MOVE_EFFECT_LUNAR_BLESSING,
     MOVE_EFFECT_REVIVAL_BLESSING,
+    MOVE_EFFECT_INSTRUCT,
     MOVE_EFFECT_FOCUS_ENERGY,
     MOVE_EFFECT_DRAGON_CHEER,
-
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
@@ -211,7 +217,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_STEAL_STATS,
     MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
     MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
-    MOVE_EFFECT_STRUGGLE,
 
     // Only for secret power usage but better to remove/refactor the abstraction
     // renamed so that users don't think those are usable constatns

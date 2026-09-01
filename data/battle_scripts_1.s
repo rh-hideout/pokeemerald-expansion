@@ -390,15 +390,12 @@ BattleScript_MoveEffectCorrosiveGas::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectRevivalBlessing::
-	attackcanceler
-	tryrevivalblessing BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_RevivalBlessing::
+	tryrevivalblessing
 	printstring STRINGID_PKMNREVIVEDREADYTOFIGHT
 	waitmessage B_WAIT_TIME_LONG
 	jumpifbyte CMP_EQUAL, gBattleCommunication, TRUE, BattleScript_EffectRevivalBlessingSendOut
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectRevivalBlessingSendOut:
 	getswitchedmondata BS_SCRIPTING
@@ -677,15 +674,11 @@ BattleScript_MoveEffectFeint::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectBestow::
-	attackcanceler
-	trybestow BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_Bestow::
 	printstring STRINGID_BESTOWITEMGIVING
 	waitmessage B_WAIT_TIME_LONG
-	tryactivateabilitywithabilityshield BS_TARGET, FALSE
-	tryactivateitem BS_TARGET, ACTIVATION_ON_USABLE_AGAIN
+	tryactivateabilitywithabilityshield BS_EFFECT_BATTLER, FALSE
+	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_USABLE_AGAIN
 	trysymbiosis BS_ATTACKER
 	goto BattleScript_MoveEnd
 
@@ -745,12 +738,7 @@ BattleScript_MoveEffectDefog::
 	trydefog TRUE, NULL
 	return
 
-BattleScript_EffectInstruct::
-	attackcanceler
-	pause B_WAIT_TIME_SHORT
-	tryinstruct BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+BattleScript_Instruct::
 	printstring STRINGID_USEDINSTRUCTEDMOVE
 	waitmessage B_WAIT_TIME_LONG
 	copybyte gBattlerAttacker, gBattlerTarget
@@ -773,14 +761,6 @@ BattleScript_HitSwitchTargetDynamaxed::
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
-	return
-
-BattleScript_MoveEffectOverwriteType::
-	attackcanceler
-	attackanimation
-	waitanimation
-	printstring STRINGID_TARGETCHANGEDTYPE
-	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_EffectHealingWish::
@@ -1228,32 +1208,6 @@ BattleScript_MoveEffectPainSplit::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectConversion2::
-	attackcanceler
-	settypetorandomresistance BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNCHANGEDTYPE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectSketch::
-	attackcanceler
-	copymovepermanently BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNSKETCHEDMOVE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_MoveEffectEerieSpell::
-	savetarget
-	copybyte gBattlerTarget, gEffectBattler
-	printstring STRINGID_PKMNREDUCEDPP
-	waitmessage B_WAIT_TIME_LONG
-	restoretarget
-	return
-
 BattleScript_MoveEffectHealBell::
 	healpartystatus
 	waitstate
@@ -1283,20 +1237,6 @@ BattleScript_MoveEffectAromatherapy::
 	waitstate
 	return
 
-BattleScript_EffectNightmare::
-	attackcanceler
-	jumpifvolatile BS_TARGET, VOLATILE_NIGHTMARE, BattleScript_ButItFailed
-	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_NightmareWorked
-	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_NightmareWorked
-	goto BattleScript_ButItFailed
-BattleScript_NightmareWorked::
-	attackanimation
-	waitanimation
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_NIGHTMARE
-	printstring STRINGID_PKMNFELLINTONIGHTMARE
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectCurse::
 	attackcanceler
 	cursetarget BattleScript_CurseStatChange
@@ -1311,16 +1251,6 @@ BattleScript_EffectCurse::
 
 BattleScript_CurseStatChange:
 	trymovestatchanges
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectProtect::
-BattleScript_EffectEndure::
-	attackcanceler
-	setprotectlike
-	attackanimation
-	waitanimation
-	printfromtable gProtectLikeUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
 BattleScript_TryDestinyKnotTarget:
@@ -1360,22 +1290,6 @@ BattleScript_MoveEffectAttract::
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotAttacker
 	return
-
-BattleScript_PresentHeal::
-	attackcanceler
-	attackanimation
-	waitanimation
-	goto BattleScript_PresentHealGetTarget
-BattleScript_PresentHealNextTarget:
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-BattleScript_PresentHealGetTarget:
-	getpossiblenexttarget BattleScript_PresentHealNextTarget
-	moveendfrom MOVEEND_ITEM_EFFECTS_ATTACKER_2
-	end
 
 BattleScript_EffectBatonPass::
 	attackcanceler
@@ -1484,22 +1398,7 @@ BattleScript_EffectFutureSight::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTeleport::
-	jumpifgenconfiglowerthan CONFIG_B_TELEPORT_BEHAVIOR, GEN_8, BattleScript_EffectTeleportGen7
-	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_EffectBatonPass
-	jumpifside BS_ATTACKER, B_SIDE_PLAYER, BattleScript_EffectBatonPass
-	goto BattleScript_DoEffectTeleport
-BattleScript_EffectTeleportGen7::
-	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_FailedFromAtkCanceler
-BattleScript_DoEffectTeleport::
 	attackcanceler
-	isrunningimpossible
-	jumpifbyte CMP_EQUAL, gBattleCommunication, BATTLE_RUN_FORBIDDEN, BattleScript_ButItFailed
-	jumpifbyte CMP_EQUAL, gBattleCommunication, BATTLE_RUN_FAILURE, BattleScript_PrintAbilityMadeIneffective
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNFLEDFROMBATTLE
-	waitmessage B_WAIT_TIME_LONG
-	setteleportoutcome BS_ATTACKER
 	goto BattleScript_MoveEnd
 
 BattleScript_BeatUpAttackMessage::
@@ -1512,20 +1411,18 @@ BattleScript_AlreadyAtFullHp::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_FailedFromAtkCanceler::
-	attackcanceler
+BattleScript_EffBattlerAtFullHp::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_EFFBATTLERHPFULL
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_ButItFailed::
 	pause B_WAIT_TIME_SHORT
 	setmoveresultflags MOVE_RESULT_FAILED
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-BattleScript_RestoreAttackerButItFailed:
-	restoreattacker
-	goto BattleScript_ButItFailed
-BattleScript_RestoreTargetButItFailed:
-	restoretarget
-	goto BattleScript_ButItFailed
 BattleScript_SwapTargetAttackerButItFailed:
 	swapattackerwithtarget
 	goto BattleScript_ButItFailed
@@ -1557,17 +1454,6 @@ BattleScript_MoveEffectStockpileWoreOff::
 	waitmessage B_WAIT_TIME_SHORT
 	return
 
-BattleScript_EffectSwallow::
-	attackcanceler
-	stockpiletohpheal BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_DOUBLE
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_AlreadyBurned::
 	setalreadystatusedmoveattempt
 	pause B_WAIT_TIME_SHORT
@@ -1580,29 +1466,12 @@ BattleScript_FocusPunchLostFocus::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTaunt::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	settaunt BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNFELLFORTAUNT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectRolePlay::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_EFFECT_BATTLER
 	return
-
-BattleScript_EffectWish::
-	attackcanceler
-	trywish BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	goto BattleScript_MoveEnd
 
 @ TO-DO: The battle messages from this should come after the move has resolved
 BattleScript_BreakScreens::
