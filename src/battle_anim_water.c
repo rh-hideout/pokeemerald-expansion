@@ -1371,7 +1371,7 @@ static void CreateWaterSpoutLaunchDroplets(struct Task *task, u8 taskId)
         increment = 1;
     for (i = 0; i < 20; i += increment)
     {
-        spriteId = CreateSprite(&gSmallWaterOrbSpriteTemplate, attackerCoordX, attackerCoordY, subpriority);
+        spriteId = CreateSpriteUnchecked(&gSmallWaterOrbSpriteTemplate, attackerCoordX, attackerCoordY, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].data[1] = i;
@@ -1567,7 +1567,7 @@ static void AnimTask_WaterSpoutRain_Step(u8 taskId)
 static void CreateWaterSpoutRainDroplet(struct Task *task, u8 taskId)
 {
     u16 yPosArg = ((gSineTable[task->tSineTableIndex] + 3) >> 4) + task->tDropEndYPos;
-    u8 spriteId = CreateSprite(&gSmallWaterOrbSpriteTemplate, task->tDropXPos, task->tDropInitialYPos, 0);
+    u8 spriteId = CreateSpriteUnchecked(&gSmallWaterOrbSpriteTemplate, task->tDropXPos, task->tDropInitialYPos, 0);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1590,7 +1590,7 @@ static void AnimWaterSpoutRain(struct Sprite *sprite)
         if (sprite->y >= sprite->data[5])
         {
             gTasks[sprite->data[6]].tDropHasHit = TRUE;
-            sprite->data[1] = CreateSprite(&gWaterHitSplatSpriteTemplate, sprite->x, sprite->y, 1);
+            sprite->data[1] = CreateSpriteUnchecked(&gWaterHitSplatSpriteTemplate, sprite->x, sprite->y, 1);
             if (sprite->data[1] != MAX_SPRITES)
             {
                 StartSpriteAffineAnim(&gSprites[sprite->data[1]], 3);
@@ -1732,7 +1732,7 @@ static void CreateWaterSportDroplet(struct Task *task)
     if (++task->data[2] > 1)
     {
         task->data[2] = 0;
-        spriteId = CreateSprite(&gSmallWaterOrbSpriteTemplate, task->data[3], task->data[4], 10);
+        spriteId = CreateSpriteUnchecked(&gSmallWaterOrbSpriteTemplate, task->data[3], task->data[4], 10);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].data[0] = 16;

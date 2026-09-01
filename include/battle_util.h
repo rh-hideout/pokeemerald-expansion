@@ -15,9 +15,10 @@ struct DamageContext
     u32 weather:16;
     u32 unused:2;
 
-    enum Move move:13;
-    enum Move chosenMove:13; // May be different to 'move', e.g. for Z moves.
-    enum Type moveType:6;
+    enum Move move;
+    enum Move chosenMove; // For Trump Card and Me First
+    enum Move baseMove; // For z-moves and dynamax-moves
+    enum Type moveType;
 
     uq4_12_t typeEffectivenessModifier;
     enum Ability abilities[MAX_BATTLERS_COUNT];
@@ -77,6 +78,7 @@ void MarkBattlerForControllerExec(enum BattlerId battler);
 void MarkBattlerReceivedLinkData(enum BattlerId battler);
 void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(enum BattlerId battler);
@@ -132,6 +134,7 @@ bool32 IsMoveMakingContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 bool32 IsBattlerGrounded(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(enum Move *moves, enum Move move);
 u32 GetBattlerWeight(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
+u32 GetCriticalHitOdds(u32 critChance);
 s32 CalcCritChanceStage(struct DamageContext *ctx);
 s32 CalcCritChanceStageGen1(struct DamageContext *ctx);
 s32 CalculateMoveDamage(struct DamageContext *ctx);
@@ -184,7 +187,7 @@ void TryRestoreHeldItems(void);
 bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, enum Item item);
 void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem);
 bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEffect, bool32 toxicSpikes);
-void SortBattlersByRawSpeed(u8 battlers[]);
+void SortBattlersByRawSpeed(enum BattlerId battlers[]);
 void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast);
 bool32 BlocksPrankster(enum Move move, enum BattlerId battlerPrankster, enum BattlerId battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(enum BattlerId battler);
@@ -192,6 +195,7 @@ bool32 CantPickupItem(u32 battler);
 u32 GetWeather(void);
 u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather);
 bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 weatherFlags);
+enum MoveTarget GetBattlerMoveSelectionTargetType(enum BattlerId battler, enum Move move);
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
@@ -293,13 +297,13 @@ void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect);
-bool32 ChangeOrderTargetAfterAttacker(void);
+bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef);
 void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
-enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
-enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId battlerDef);
+enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, u32 slot);
+enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, u32 slot);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
 bool32 BattlerJustSwitchedIn(enum BattlerId battler);

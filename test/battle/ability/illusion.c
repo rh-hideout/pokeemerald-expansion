@@ -88,6 +88,26 @@ ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a batt
     }
 }
 
+MULTI_BATTLE_TEST("Illusion works when the user's partner and disguise are in the same party slot")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        PLAYER(SPECIES_WYNAUT);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(playerRight, 2); }
+        TURN { SWITCH(playerLeft, 1); }
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_PLAYER][2] == gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].mon);
+    }
+}
+
 SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
 {
     GIVEN {

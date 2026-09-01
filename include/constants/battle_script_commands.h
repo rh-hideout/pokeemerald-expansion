@@ -207,7 +207,7 @@ enum BattleScriptOpcode
     B_SCR_OP_AVERAGESTATS,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
-    B_SCR_OP_TRY_SYNCHRONIZE,
+    B_SCR_OP_TRYABILITYONSTATUSCHANGE,
     B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
     B_SCR_OP_TRYMOVESTATCHANGES,
     B_SCR_OP_TRYSTATCHANGES,
@@ -316,7 +316,10 @@ enum BattleScriptOpcode
 #define BATTLE_COMMUNICATION_ENTRIES_COUNT  8
 
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
-#define cMISS_TYPE           (gBattleCommunication + MISS_TYPE)
+
+// Used for MSG_DISPLAY
+#define MSG_DISPLAY_CONTINUE 0
+#define MSG_DISPLAY_WAIT     1
 
 // Battle Script defines for getting the wanted battler
 #define BS_TARGET                   0
@@ -387,15 +390,6 @@ enum PledgeCombo
     PLEDGE_COMBO_NONE,
     PLEDGE_COMBO_WAITING,
     PLEDGE_COMBO_ATTACK,
-};
-
-enum SynchronizeState
-{
-    SYNCH_STATE_NONE,
-    SYNCH_STATE_START,
-    SYNCH_STATE_SET_STATUS,
-    SYNCH_STATE_SHOW_ABILITY_POPUP,
-    SYNCH_STATE_END,
 };
 
 enum AssuranceDoubleDamage

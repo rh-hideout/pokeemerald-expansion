@@ -644,9 +644,8 @@ static void HandleSetEffectPsychicNoise(struct BattleCalcValues *cv, struct SetE
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_AromaVeilProtectsRet;
     }
-    else if (!gBattleMons[se->effectBattler].volatiles.healBlock)
+    else if (!gBattleMons[se->effectBattler].volatiles.healBlockTimer)
     {
-        gBattleMons[se->effectBattler].volatiles.healBlock = TRUE;
         gBattleMons[se->effectBattler].volatiles.healBlockTimer = 2;
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_MoveEffectPsychicNoise;

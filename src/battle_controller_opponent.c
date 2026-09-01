@@ -467,14 +467,10 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
-        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
+        enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, move);
+        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_ALLY)
         {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetPartnerBattler(battler) << 8));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetDefaultSelectionTarget(battler, moveTarget) << 8));
         }
         else if (IsDoubleBattle())
         {
@@ -485,7 +481,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (WE_WILD_NATURAL_ENEMIES && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
+            if (WE_WILD_NATURAL_ENEMIES && moveTarget != TARGET_BOTH)
             {
                 enum Species speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;

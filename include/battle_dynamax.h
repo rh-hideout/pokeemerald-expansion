@@ -12,7 +12,7 @@ u32 GetNonDynamaxMaxHP(enum BattlerId battler);
 void UndoDynamax(enum BattlerId battler);
 
 enum Move GetMaxMove(enum BattlerId battler, enum Move baseMove);
-u32 GetMaxMovePower(enum Move move);
+u32 GetMaxMovePower(enum Move baseMove, enum Move move);
 bool32 IsMaxMove(enum Move move);
 void ChooseDamageNonTypesString(enum Type type);
 

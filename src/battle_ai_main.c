@@ -909,7 +909,7 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
-    ctx.move = ctx.chosenMove = move;
+    ctx.move = ctx.chosenMove = ctx.baseMove = move;
     ctx.moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
     ctx.weather = GetWeather();
     ctx.terrain = gFieldTimers.terrain;
@@ -1394,7 +1394,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         struct DamageContext ctx = {0};
         ctx.battlerAtk = battlerAtk;
         ctx.battlerDef = battlerDef;
-        ctx.move = ctx.chosenMove = move;
+        ctx.move = ctx.chosenMove = ctx.baseMove = move;
         ctx.moveType = moveType;
         ctx.weather = GetWeather();
         ctx.terrain = gFieldTimers.terrain;
@@ -2303,7 +2303,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         //TODO
         break;
     case EFFECT_LOCK_ON:
-        if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
+        if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit != 0
           || aiData->abilities[battlerAtk] == ABILITY_NO_GUARD
           || aiData->abilities[battlerDef] == ABILITY_NO_GUARD
           || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
@@ -2757,7 +2757,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_EMBARGO:
         if (!IsBattlerItemEnabled(battlerAtk)
-          || gBattleMons[battlerDef].volatiles.embargo
+          || gBattleMons[battlerDef].volatiles.embargoTimer
           || PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
@@ -2777,7 +2777,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HEAL_BLOCK:
-        if (gBattleMons[battlerDef].volatiles.healBlock
+        if (gBattleMons[battlerDef].volatiles.healBlockTimer
           || PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
@@ -2806,7 +2806,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_HIT_ENEMY_HEAL_ALLY:    // pollen puff
         if (IsTargetingPartner(battlerAtk, battlerDef))
         {
-            if (gBattleMons[battlerDef].volatiles.healBlock)
+            if (gBattleMons[battlerDef].volatiles.healBlockTimer)
                 return 0; // cannot even select
             if (AI_BattlerAtMaxHp(battlerDef))
                 ADJUST_SCORE(-10);
@@ -3292,7 +3292,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
          && (atkPartnerHoldEffect == HOLD_EFFECT_SCOPE_LENS
           || IS_BATTLER_OF_TYPE(battlerAtkPartner, TYPE_DRAGON)
           || GetMoveCriticalHitStage(aiData->partnerMove) > 0
-          || HasMoveWithCriticalHitChance(battlerAtkPartner)))
+          || HasMoveWithCriticalHitChance(battlerAtkPartner)
+          || ShouldBoostCritRate(battlerAtkPartner, battlerDef)))
         {
             ADJUST_SCORE(GOOD_EFFECT);
         }
@@ -3751,13 +3752,11 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 }
                 break;
             case EFFECT_BEAT_UP:
-                DebugPrintf("1");
                 if (ShouldBeatUpForJustified(battlerAtk, battlerAtkPartner, move, moveType, wouldPartnerFaint, aiData)
                  || ShouldBeatUpForRageFist(battlerAtk, battlerAtkPartner, move, wouldPartnerFaint, aiData))
                 {
                     if (isFriendlyFireOK)
                     {
-                    DebugPrintf("2");
                         ADJUST_SCORE(DECENT_EFFECT);
                     }
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
@@ -4637,11 +4636,14 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_LASER_FOCUS:
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
-         || aiData->abilities[battlerAtk] == ABILITY_SNIPER
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
+            ADJUST_SCORE(GOOD_EFFECT); // fall through
+    case EFFECT_LASER_FOCUS:
+        if (aiData->abilities[battlerAtk] == ABILITY_SNIPER)
+            ADJUST_SCORE(GOOD_EFFECT); // fall through
+        if (ShouldBoostCritRate(battlerAtk, battlerDef))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_CONFUSE:
@@ -5739,6 +5741,13 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
                 break;
+            case MOVE_EFFECT_CRIT_PLUS_SIDE:
+            {
+                if (ShouldBoostCritRate(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
+                    score +=10;
+                
+                break;
+            }
             case MOVE_EFFECT_ORDER_UP:
             {
                 enum Stat stat = STAT_ATK;
@@ -5795,7 +5804,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
 
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
-                [[fallthrough]];
+                break;
             case MOVE_EFFECT_STAT_MINUS:
                 for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {
@@ -6011,6 +6020,12 @@ static s32 AI_CheckViability(enum BattlerId battlerAtk, enum BattlerId battlerDe
                 ADJUST_SCORE(BEST_DAMAGE_MOVE);
         }
     }
+
+    if (IsDoubleBattle()
+     && AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_SELECTED
+     && !IsBattleMoveStatus(move)
+     && gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1)
+        ADJUST_SCORE(WEAK_EFFECT);
 
     ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move, aiData));
     ADJUST_SCORE(AI_CalcAdditionalEffectScore(battlerAtk, battlerDef, move, aiData));
@@ -6264,7 +6279,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
          || (moveType == TYPE_GROUND && gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_EARTH_EATER)
          || (moveType == TYPE_WATER && (gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_DRY_SKIN || gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_WATER_ABSORB)))
         {
-            if (gBattleMons[battlerDef].volatiles.healBlock)
+            if (gBattleMons[battlerDef].volatiles.healBlockTimer)
                 return 0;
 
             if (CanTargetFaintAi(GetBattlerLeftFoe(battlerAtk), GetPartnerBattler(battlerAtk))
