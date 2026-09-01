@@ -3699,6 +3699,16 @@ bool32 AI_CanParalyze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     return TRUE;
 }
 
+bool32 AI_CanFreeze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability defAbility, enum Move move, enum Move partnerMove)
+{
+    if (!CanBeFrozen(battlerAtk, battlerDef, defAbility)
+      || gAiLogicData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] == UQ_4_12(0.0)
+      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
+      || PartnerMoveEffectIsStatusSameTarget(BATTLE_PARTNER(battlerAtk), battlerDef, partnerMove))
+        return FALSE;
+    return TRUE;
+}
+
 bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Ability abilityDef)
 {
     if (gBattleMons[battlerDef].volatiles.confusionTimer > 0
@@ -5109,6 +5119,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         {
         case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_BELLY_DRUM:
+        case EFFECT_MIRROR_WALL:
             if (isSlower)
                 return TRUE;
             isEager = TRUE;

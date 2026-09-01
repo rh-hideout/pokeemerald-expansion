@@ -96,6 +96,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 101-200")
         case EFFECT_SKETCH:
         case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_BELLY_DRUM:
+        case EFFECT_MIRROR_WALL:
         case EFFECT_DESTINY_BOND:
         case EFFECT_MIRROR_MOVE:
         case EFFECT_SUBSTITUTE:
@@ -198,6 +199,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
         // tests exist elsewhere
         case EFFECT_STAT_CHANGE:
         case EFFECT_CHARGE:
+        case EFFECT_METALMORPH:
         case EFFECT_STOCKPILE:
         case EFFECT_HEAL_BELL:
         case EFFECT_WEATHER:

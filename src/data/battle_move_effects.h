@@ -1882,4 +1882,21 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
+
+    [EFFECT_METALMORPH] =
+    {
+        .battleScript = BattleScript_EffectStatChange,
+        .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
+        .encourageEncore = TRUE,
+    },
+
+    [EFFECT_MIRROR_WALL] =
+    {
+        .battleScript = BattleScript_EffectStatChange,
+        .battleTvScore = 7,
+        .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
+        .encourageEncore = TRUE,
+    },
+
 };

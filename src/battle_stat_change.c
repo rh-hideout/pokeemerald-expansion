@@ -217,6 +217,12 @@ bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st)
                 canAnyStatChange = TRUE;
                 continue;
             }
+            if (cv->moveEffect == EFFECT_MIRROR_WALL && !CompareStat(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+            {
+                canAnyStatChange = TRUE;
+                continue;
+            }
+        
 
             if (st->stage < 0)
             {
@@ -337,6 +343,12 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_CHANGED_BELLY_DRUM;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+
+        if (cv->moveEffect == EFFECT_MIRROR_WALL)
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_CHANGED_MIRROR_WALL;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+
 
         gBattleScripting.battler = cv->battlerDef;
         st->script = BattleScript_DecreaseStatChangeMessageMinStat;
@@ -478,6 +490,10 @@ static void StatChanged(struct BattleCalcValues *cv, struct StatChange *st, bool
     if (cv->moveEffect == EFFECT_BELLY_DRUM)
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_CHANGED_BELLY_DRUM;
+    }
+    else if (cv->moveEffect == EFFECT_MIRROR_WALL)
+    {
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_CHANGED_MIRROR_WALL;
     }
     else if (isMaxStage)
     {

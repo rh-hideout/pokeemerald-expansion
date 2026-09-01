@@ -23078,6 +23078,141 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_WaterPulse,
     },
 
+    [MOVE_PARASITE_PARACIDE] =
+    {
+        .name = COMPOUND_STRING("Parasite Paracide"),
+        .description = COMPOUND_STRING(
+            "Stick a parasite onto\n"
+            "the target. The foe\n"
+            "is now Bug type as\nwell."),
+        .effect = EFFECT_THIRD_TYPE,
+        .power = 0,
+        .type = TYPE_BUG,
+        .accuracy = 100,
+        .pp = 20,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .type = TYPE_BUG },
+        .zMove = { .effect = Z_EFFECT_ALL_STATS_UP_1 },
+        .magicCoatAffected = TRUE,
+        .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
+        .contestCategory = CONTEST_CATEGORY_CUTE,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {0},
+        .battleAnimScript = gBattleAnimMove_TrickOrTreat,
+    },
+
+    [MOVE_SWORDS_OF_REVEALING_LIGHT] =
+    {
+        .name = COMPOUND_STRING("Swords ORL"),
+        .description = COMPOUND_STRING(
+            "Activate Swords of\n"
+            "Revealing Light,\n"
+            "freezing the foe."),
+        .effect = EFFECT_NON_VOLATILE_STATUS,
+        .power = 0,
+        .type = TYPE_NORMAL,
+        .accuracy = 55,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .nonVolatileStatus = MOVE_EFFECT_FREEZE_OR_FROSTBITE },
+        .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .magicCoatAffected = TRUE,
+        .battleAnimScript = gBattleAnimMove_Sing,
+    },
+
+    [MOVE_STRIDENT_BLAZE] =
+    {
+        .name = COMPOUND_STRING("Strident Blaze"),
+        .description = COMPOUND_STRING(
+            "Strident Blaze.\n"
+            "Electromagnetic blast\n"
+            "from all 3 mouths\n"
+            "which may paralyze\n"
+            "the foe (30%)."),
+        .effect = EFFECT_HIT,
+        .power = 100,
+        .type = TYPE_ELECTRIC,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 30,
+        }),
+        //Move Categories
+        .battleAnimScript = gBattleAnimMove_DragonPulse,
+    },
+
+    //TODO: Bonus to Steel moves
+    [MOVE_METALMORPH] =
+    {
+        .name = COMPOUND_STRING("Metalmorph"),
+        .description = COMPOUND_STRING(
+            "Equip yourself with\n"
+            "metal armour. Atk is\n"
+            "sharply raised, but\n"
+            "Spd is lowered. Steel\n"
+            "moves are powered up\n"
+            "by 50% next turn."),
+        .effect = EFFECT_STAT_CHANGE,
+        .power = 0,
+        .type = TYPE_STEEL,
+        .accuracy = 0,
+        .pp = 15,
+        .target = TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RESET_STATS },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = STAT_CHANGE_EFFECT_MINUS,
+            .speed = 1,
+        },
+        {
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .attack = 2,
+        }),
+        //Move Categories
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_ShellSmash,
+    },
+
+    //TODO: Test Effect and AI
+    [MOVE_MIRROR_WALL] =
+    {
+        .name = COMPOUND_STRING("Mirror Wall"),
+        .description = COMPOUND_STRING(
+            "The user maximizes\n"
+            "its Defense stat at\n"
+            "the cost of half\n"
+            "its full HP."),
+        .effect = EFFECT_MIRROR_WALL,
+        .power = 0,
+        .type = TYPE_PSYCHIC,
+        .accuracy = 0,
+        .pp = 10,
+        .target = TARGET_USER,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RECOVER_HP },
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = STAT_CHANGE_EFFECT_PLUS,
+            .defense = STAT_CHANGE_FORCE_MAX,
+        }),
+        //Move Categories
+        .snatchAffected = TRUE,
+        .ignoresProtect = TRUE,
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = gBattleAnimMove_BellyDrum,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

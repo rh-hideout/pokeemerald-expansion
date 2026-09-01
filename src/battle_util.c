@@ -6538,6 +6538,8 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
     if (IsFieldWaterSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_SPORT_DMG_REDUCTION) >= GEN_5 ? 0.33 : 0.5));
+    if (moveType == TYPE_STEEL && gBattleMons[battlerAtk].volatiles.metalmorphTimer > 0)
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
     // attacker's abilities
     switch (ctx->abilities[battlerAtk])

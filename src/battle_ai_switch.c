@@ -1369,6 +1369,7 @@ void GetShouldSwitchMoveData(struct SwitchAiContext *switchContext)
             || nonVolatileStatus == MOVE_EFFECT_TOXIC
             || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
             || nonVolatileStatus == MOVE_EFFECT_BURN
+            || nonVolatileStatus == MOVE_EFFECT_FREEZE
             || aiMoveEffect == EFFECT_YAWN
             || aiMoveEffect == EFFECT_TRICK || aiMoveEffect == EFFECT_TRICK_ROOM || aiMoveEffect== EFFECT_WONDER_ROOM || aiMoveEffect ==  EFFECT_PSYCHO_SHIFT || aiMoveEffect == EFFECT_FIRST_TURN_ONLY)
             {

@@ -41,6 +41,7 @@ static enum Move GetMeFirstMove(void);
 
 // Stat change moves
 static bool32 TryBellyDrum(enum BattlerId battler);
+static bool32 TryMirrorWall(enum BattlerId battler))
 static bool32 TryHalfHp(enum BattlerId battler);
 static bool32 CutThirdOfHp(enum BattlerId battler);
 
@@ -5652,10 +5653,35 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
             return MOVE_RESULT_FAILURE;
         }
         break;
+    case EFFECT_MIRROR_WALL:
+        if (WillAnyStatChange() && TryMirrorWall(cv->battlerAtk))
+        {
+            BattleScriptCall(BattleScript_PlayMoveAnimAndChangeHP);
+            return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = BattleScript_StatChangeFailed;
+            return MOVE_RESULT_FAILURE;
+        }
+        break;
     case EFFECT_CHARGE:
         if (WillAnyStatChange() || gBattleMons[cv->battlerAtk].volatiles.chargeTimer == 0)
         {
             gBattleMons[cv->battlerAtk].volatiles.chargeTimer = 2;
+            BattleScriptCall(BattleScript_PlayMoveAnim);
+            return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = BattleScript_StatChangeFailed;
+            return MOVE_RESULT_FAILURE;
+        }
+        break;
+    case EFFECT_METALMORPH:
+        if (WillAnyStatChange() || gBattleMons[cv->battlerAtk].volatiles.metalmorphTimer >= 0)
+        {
+            gBattleMons[cv->battlerAtk].volatiles.metalmorphTimer = 2;
             BattleScriptCall(BattleScript_PlayMoveAnim);
             return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
         }
@@ -6183,6 +6209,25 @@ static void UpdateStallMons(struct BattleCalcValues *cv)
 static bool32 TryBellyDrum(enum BattlerId battler)
 {
     if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+        return FALSE;
+
+    u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;
+
+    if (halfHp == 0)
+        halfHp = 1;
+
+    if (gBattleMons[battler].hp > halfHp)
+    {
+        SetPassiveDamageAmount(battler, halfHp);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 TryMirrorWall(enum BattlerId battler)
+{
+    if (CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
         return FALSE;
 
     u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;

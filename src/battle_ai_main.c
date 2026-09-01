@@ -1427,6 +1427,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             case MOVE_EFFECT_POISON:
             case MOVE_EFFECT_TOXIC:
             case MOVE_EFFECT_BURN:
+            case MOVE_EFFECT_FREEZE:
                 ADJUST_SCORE(-5);
                 break;
             default:
@@ -1657,6 +1658,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
             ADJUST_SCORE(-10);
         break;
+    case EFFECT_METALMORPH:
+        if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
+            ADJUST_SCORE(-10);
+        break;
     case EFFECT_STAT_CHANGE_ON_STATUS:
         if (!(gBattleMons[battlerDef].status1 & GetMoveStatusOnStatChange(move)))
         {
@@ -1723,6 +1728,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
     case EFFECT_BELLY_DRUM:
+    case EFFECT_MIRROR_WALL:
         if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
             ADJUST_SCORE(-10);
         else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
@@ -1730,6 +1736,18 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         else if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
             ADJUST_SCORE(-10);
         break;
+
+    case EFFECT_MIRROR_WALL:
+        if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
+            ADJUST_SCORE(-10);
+        else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
+            ADJUST_SCORE(-10);
+        else if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
+            ADJUST_SCORE(-10);
+        else if (!HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)) //No point in setting up Mirror Wall
+            ADJUST_SCORE(-10);
+        break;
+
     case EFFECT_AUTOTOMIZE:
     case EFFECT_STAT_CHANGE:
         if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_USER)
@@ -3029,6 +3047,12 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (!AI_CanBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef], GetPartnerBattler(battlerAtk), move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
+            ADJUST_SCORE(-5);
+        break;
+    case MOVE_EFFECT_FREEZE:
+        if (!AI_CanFreeze(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        if (!ShouldFreezeOrFrostbite(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
             ADJUST_SCORE(-5);
         break;
     default:
@@ -4371,6 +4395,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case MOVE_EFFECT_BURN:
         IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
         break;
+    case MOVE_EFFECT_FREEZE:
+        IncreaseFreezeScore(battlerAtk, battlerDef, move, &score);
+        break;
     default:
         break;
     }
@@ -4417,6 +4444,8 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         if (HasHPForDamagingSetup(battlerAtk, battlerDef, 50))
             ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
         break;
+    case EFFECT_MIRROR_WALL: //TODO: Only setup if they have physical moves only or you have a move that uses defense as an attack stat
+        break;
     case EFFECT_CLANGOROUS_SOUL:
         if (HasHPForDamagingSetup(battlerAtk, battlerDef, 33))
             ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
@@ -4437,6 +4466,11 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_CHARGE:
         if (HasDamagingMoveOfType(battlerAtk, TYPE_ELECTRIC))
             ADJUST_SCORE(DECENT_EFFECT);
+        ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
+        break;
+    case EFFECT_METALMORPH:
+        if (HasDamagingMoveOfType(battlerAtk, TYPE_STEEL) && gBattleMons[battlerAtk].volatiles.metalmorphTimer > 0)
+            ADJUST_SCORE(WEAK_EFFECT);
         ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
         break;
     case EFFECT_ROTOTILLER:
@@ -6127,6 +6161,7 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
     case EFFECT_BELLY_DRUM:
+    case EFFECT_MIRROR_WALL:
         if (aiData->hpPercents[battlerAtk] >= 90)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
@@ -6336,6 +6371,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_SAFEGUARD:
             case EFFECT_STAT_CHANGE_HALF_HP:
             case EFFECT_BELLY_DRUM:
+            case EFFECT_MIRROR_WALL:
                 ADJUST_SCORE(-2);
                 break;
             default:
@@ -6362,6 +6398,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_SAFEGUARD:
             case EFFECT_STAT_CHANGE_HALF_HP:
             case EFFECT_BELLY_DRUM:
+            case EFFECT_MIRROR_WALL:
             case EFFECT_PSYCH_UP:
             case EFFECT_REFLECT_DAMAGE:
             case EFFECT_WEATHER:
