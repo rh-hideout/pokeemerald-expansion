@@ -66,28 +66,58 @@ DOUBLE_BATTLE_TEST("Assurance does not double in power if the target's damage is
     }
 }
 
-SINGLE_BATTLE_TEST("Assurance does not double in power if the target took damage from confusion")
+SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged by entry hazards on switch-in", s16 damage)
+{
+    bool32 hazards;
+
+    PARAMETRIZE { hazards = FALSE; }
+    PARAMETRIZE { hazards = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WYNAUT) { MaxHP(500); HP(500); Speed(1); }
+    } WHEN {
+        if (hazards)
+            TURN { MOVE(player, MOVE_STEALTH_ROCK); }
+        else
+            TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_ASSURANCE); }
+    } SCENE {
+        if (hazards)
+            HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Assurance doubles in power if the target took damage from confusion")
 {
     s16 hits[2];
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(500); HP(500); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ASSURANCE); }
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); }
-        TURN { MOVE(opponent, MOVE_ASSURANCE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_CONFUSION, TRUE)); MOVE(opponent, MOVE_ASSURANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
         HP_BAR(player, captureDamage: &hits[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
 
+        MESSAGE("It hurt itself in its confusion!");
+        HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
         HP_BAR(player, captureDamage: &hits[1]);
     } THEN {
-        EXPECT_EQ(hits[0], hits[1]);
+        EXPECT_MUL_EQ(hits[0], Q_4_12(2.0), hits[1]);
     }
 }
 
@@ -106,9 +136,7 @@ SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged by
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
         HP_BAR(player, captureDamage: &hits[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
+        HP_BAR(player); // life orb
         HP_BAR(player, captureDamage: &hits[1]);
     } THEN {
         EXPECT_MUL_EQ(hits[0], Q_4_12(2.0), hits[1]);

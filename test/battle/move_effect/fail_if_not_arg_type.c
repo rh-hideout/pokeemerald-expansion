@@ -43,6 +43,7 @@ SINGLE_BATTLE_TEST("Burn Up fails if the user isn't a Fire-type (Gen9)")
 SINGLE_BATTLE_TEST("Burn Up does not thaw the user if it fails because the user is not a Fire-type")
 {
     GIVEN {
+        WITH_CONFIG(B_MOVES_THAT_REMOVE_TYPE, GEN_9);
         ASSUME(GetMoveEffect(MOVE_BURN_UP) == EFFECT_FAIL_IF_NOT_ARG_TYPE);
         ASSUME(IsMoveEffectRemoveSpeciesType(MOVE_BURN_UP, MOVE_EFFECT_REMOVE_ARG_TYPE, TYPE_FIRE) == TRUE);
         ASSUME(MoveThawsUser(MOVE_BURN_UP));
@@ -52,13 +53,11 @@ SINGLE_BATTLE_TEST("Burn Up does not thaw the user if it fails because the user 
     } WHEN {
         TURN { MOVE(player, MOVE_BURN_UP); }
     } SCENE {
-        MESSAGE("Wobbuffet used Burn Up!");
         NONE_OF {
             MESSAGE("Wobbuffet's Burn Up melted the ice!");
             STATUS_ICON(player, none: TRUE);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
         }
-        MESSAGE("But it failed!");
     } THEN {
         EXPECT(player->status1 & STATUS1_FREEZE);
     }

@@ -12,6 +12,6 @@ SINGLE_BATTLE_TEST("Sweet Scent lowers evasion according to the configured move 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWEET_SCENT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
-        EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - (B_UPDATED_MOVE_DATA >= GEN_6 ? 2 : 1));
+        EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - (GetConfig(B_UPDATED_MOVE_DATA) >= GEN_6 ? 2 : 1));
     }
 }

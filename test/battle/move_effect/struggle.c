@@ -94,18 +94,17 @@ SINGLE_BATTLE_TEST("Struggle is Normal-type in Gen 1 and typeless in Gen 2+")
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
-    #if B_UPDATED_MOVE_FLAGS >= GEN_2
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
-        HP_BAR(opponent);
-    #else
-        MESSAGE("It doesn't affect the opposing Drifblim…");
-    #endif
+        if (GetConfig(B_UPDATED_MOVE_FLAGS) >= GEN_2) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+            HP_BAR(opponent);
+        } else {
+            MESSAGE("It doesn't affect the opposing Drifblim…");
+        }
     } THEN {
-    #if B_UPDATED_MOVE_FLAGS >= GEN_2
-        EXPECT_EQ(GetMoveType(MOVE_STRUGGLE), TYPE_MYSTERY);
-    #else
-        EXPECT_EQ(GetMoveType(MOVE_STRUGGLE), TYPE_NORMAL);
-    #endif
+        if (GetConfig(B_UPDATED_MOVE_FLAGS) >= GEN_2)
+            EXPECT_EQ(GetMoveType(MOVE_STRUGGLE), TYPE_MYSTERY);
+        else
+            EXPECT_EQ(GetMoveType(MOVE_STRUGGLE), TYPE_NORMAL);
     }
 }
 
@@ -116,11 +115,10 @@ SINGLE_BATTLE_TEST("Struggle does not receive STAB from Normal-type users")
     ASSUME(GetMovePower(MOVE_CUT) == GetMovePower(MOVE_STRUGGLE));
     ASSUME(GetMoveCategory(MOVE_CUT) == GetMoveCategory(MOVE_STRUGGLE));
     ASSUME(GetMoveType(MOVE_CUT) == TYPE_NORMAL);
-    #if B_UPDATED_MOVE_FLAGS >= GEN_2
-    ASSUME(GetMoveType(MOVE_STRUGGLE) == TYPE_MYSTERY);
-    #else
-    ASSUME(GetMoveType(MOVE_STRUGGLE) == TYPE_NORMAL);
-    #endif
+    if (GetConfig(B_UPDATED_MOVE_FLAGS) >= GEN_2)
+        ASSUME(GetMoveType(MOVE_STRUGGLE) == TYPE_MYSTERY);
+    else
+        ASSUME(GetMoveType(MOVE_STRUGGLE) == TYPE_NORMAL);
 
     s16 cutDamage;
     s16 struggleDamage;

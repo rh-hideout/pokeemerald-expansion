@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Flatter raises the target's Sp. Atk even if they're already 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT(opponent->volatiles.confusionTurns > 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
     }
 }
 
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Flatter raises the target's Sp. Atk even when protected by S
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT(!opponent->volatiles.confusionTurns);
+        EXPECT(!opponent->volatiles.confusionTimer);
     }
 }
 
@@ -87,7 +87,7 @@ SINGLE_BATTLE_TEST("Flatter raises the target's Sp. Atk even when protected by O
         ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT(!opponent->volatiles.confusionTurns);
+        EXPECT(!opponent->volatiles.confusionTimer);
     }
 }
 
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Flatter confuses the target even when they have their Sp. At
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLATTER, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MAX_STAT_STAGE);
-        EXPECT(opponent->volatiles.confusionTurns > 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
     }
 }
 
@@ -127,6 +127,6 @@ SINGLE_BATTLE_TEST("Flatter confuses the target even when at -6 Sp. Atk and has 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLATTER, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MIN_STAT_STAGE);
-        EXPECT(opponent->volatiles.confusionTurns > 0);
+        EXPECT(opponent->volatiles.confusionTimer > 0);
     }
 }

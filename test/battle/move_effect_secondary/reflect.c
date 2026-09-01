@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Baddy Bad can still damage the target when Reflect is alread
         TURN { MOVE(player, MOVE_BADDY_BAD); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
-        MESSAGE("Reflect made your team stronger against physical moves!");
+        MESSAGE("Reflect made your side stronger against physical moves!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BADDY_BAD, player);
         HP_BAR(opponent);
     }

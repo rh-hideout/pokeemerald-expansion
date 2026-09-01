@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+static u32 GetPlayerLeftWeight(void)
+{
+    enum BattlerId battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+    return GetBattlerWeight(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler));
+}
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_AUTOTOMIZE) == EFFECT_AUTOTOMIZE);
@@ -66,7 +72,7 @@ SINGLE_BATTLE_TEST("Autotomize cannot decrease weight below 0.1kg (0.2 lbs)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AUTOTOMIZE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AUTOTOMIZE, player);
     } THEN {
-        EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 1);
+        EXPECT_EQ(GetPlayerLeftWeight(), 1);
         EXPECT_EQ((u32)player->volatiles.autotomizeCount, 1);
     }
 }
@@ -87,7 +93,7 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction cannot be Baton Passed")
         SEND_IN_MESSAGE("Duraludon");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
-        EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 400);
+        EXPECT_EQ(GetPlayerLeftWeight(), 400);
         EXPECT_EQ((u32)player->volatiles.autotomizeCount, 0);
     }
 }
@@ -106,7 +112,7 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction cannot be removed by Haze")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, opponent);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 1);
+        EXPECT_EQ(GetPlayerLeftWeight(), 1);
         EXPECT_EQ((u32)player->volatiles.autotomizeCount, 1);
     }
 }
@@ -131,12 +137,12 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon form change (Gen
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_BLADE);
         if (gen >= GEN_6)
         {
-            EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 530);
+            EXPECT_EQ(GetPlayerLeftWeight(), 530);
             EXPECT_EQ((u32)player->volatiles.autotomizeCount, 0);
         }
         else
         {
-            EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 1);
+            EXPECT_EQ(GetPlayerLeftWeight(), 1);
             EXPECT_EQ((u32)player->volatiles.autotomizeCount, 1);
         }
     }
@@ -154,7 +160,7 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon switch")
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 0); }
     } THEN {
-        EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 400);
+        EXPECT_EQ(GetPlayerLeftWeight(), 400);
         EXPECT_EQ((u32)player->volatiles.autotomizeCount, 0);
     }
 }
@@ -177,7 +183,7 @@ SINGLE_BATTLE_TEST("Autotomize's weight reduction is reset upon fainting")
         MESSAGE("Duraludon fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, player);
     } THEN {
-        EXPECT_EQ(GetBattlerWeight(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)), 400);
+        EXPECT_EQ(GetPlayerLeftWeight(), 400);
         EXPECT_EQ((u32)player->volatiles.autotomizeCount, 0);
     }
 }

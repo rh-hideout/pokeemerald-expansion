@@ -80,7 +80,8 @@ SINGLE_BATTLE_TEST("Serene Grace doubles Secret Power's secondary effect chance"
 {
     PASSES_RANDOMLY(60, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         PLAYER(SPECIES_TOGEPI) { Ability(ABILITY_SERENE_GRACE); Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
     } WHEN {
@@ -94,7 +95,8 @@ DOUBLE_BATTLE_TEST("Rainbow doubles Secret Power's secondary effect chance")
 {
     PASSES_RANDOMLY(60, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         PLAYER(SPECIES_WYNAUT) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
@@ -113,7 +115,8 @@ DOUBLE_BATTLE_TEST("Rainbow and Serene Grace stack for Secret Power's non-flinch
 {
     PASSES_RANDOMLY(100, 100, RNG_SECONDARY_EFFECT);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         PLAYER(SPECIES_TOGEPI) { Ability(ABILITY_SERENE_GRACE); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
@@ -150,7 +153,8 @@ DOUBLE_BATTLE_TEST("Rainbow and Serene Grace do not stack for Secret Power's fli
 SINGLE_BATTLE_TEST("Secret Power does not inflict its secondary effect if the user faints")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         ASSUME(GetMoveCategory(MOVE_SECRET_POWER) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(gItemsInfo[ITEM_JABOCA_BERRY].holdEffect == HOLD_EFFECT_JABOCA_BERRY);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }

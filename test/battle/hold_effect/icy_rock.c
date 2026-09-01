@@ -15,10 +15,10 @@ SINGLE_BATTLE_TEST("Icy Rock extends hail created by compatible moves to 8 turns
     enum Move move;
 
     PARAMETRIZE { move = MOVE_HAIL; }
-#if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
-    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
-    PARAMETRIZE { move = MOVE_CHILLY_RECEPTION; }
-#endif
+    if (GetConfig(B_PREFERRED_ICE_WEATHER) == B_ICE_WEATHER_HAIL) {
+        PARAMETRIZE { move = MOVE_SNOWSCAPE; }
+        PARAMETRIZE { move = MOVE_CHILLY_RECEPTION; }
+    }
 
     GIVEN {
         PLAYER(SPECIES_GLACEON) { Item(ITEM_ICY_ROCK); }
@@ -56,9 +56,9 @@ SINGLE_BATTLE_TEST("Icy Rock extends snow created by compatible moves to 8 turns
 {
     enum Move move;
 
-#if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
-    PARAMETRIZE { move = MOVE_HAIL; }
-#endif
+    if (GetConfig(B_PREFERRED_ICE_WEATHER) == B_ICE_WEATHER_SNOW) {
+        PARAMETRIZE { move = MOVE_HAIL; }
+    }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     PARAMETRIZE { move = MOVE_CHILLY_RECEPTION; }
 

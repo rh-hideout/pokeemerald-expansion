@@ -4278,8 +4278,8 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 u32 chance = GetMoveSecondaryEffectChance(cv->move);
                 bool32 hasSereneGrace = cv->abilities[cv->battlerAtk] == ABILITY_SERENE_GRACE;
                 bool32 hasRainbow = gSideStatuses[GetBattlerSide(cv->battlerAtk)] & SIDE_STATUS_RAINBOW;
-                bool32 hasFlinchEffect = !(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-                                           && gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect == MOVE_EFFECT_FLINCH;
+                bool32 hasFlinchEffect = gFieldTimers.terrain == B_TERRAIN_NONE
+                                      && gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect == MOVE_EFFECT_FLINCH;
 
                 if (hasSereneGrace)
                     chance *= 2;
@@ -4289,8 +4289,13 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 if (RandomPercentage(RNG_SECONDARY_EFFECT, chance))
                 {
                     const u8 *moveEndScript = gBattlescriptCurrInstr;
+                    struct SetEffect se = {0};
 
-                    SetMoveEffect(cv->battlerAtk, battlerDef, MOVE_EFFECT_SECRET_POWER, moveEndScript, NO_FLAGS);
+                    se.moveEffect = MOVE_EFFECT_SECRET_POWER;
+                    se.script = moveEndScript;
+                    se.effectBattler = battlerDef;
+
+                    SetMoveEffect(cv, &se);
                     if (gBattlescriptCurrInstr != moveEndScript)
                         return MOVEEND_RESULT_RUN_SCRIPT;
                 }
