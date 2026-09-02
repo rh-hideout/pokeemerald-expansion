@@ -105,7 +105,7 @@ enum
 
 struct PokedexListItem
 {
-    enum NationalDexOrder dexNum;
+    enum NationalDexOrder dexNum:16;
     u16 seen:1;
     u16 owned:1;
 };
@@ -204,7 +204,7 @@ struct PokedexView
     struct EvoScreenData sEvoScreenData;
     struct FromScreenData sFormScreenData;
     enum Species formSpecies;
-    enum NationalDexOrder originalSearchSelectionNum;
+    enum NationalDexOrder originalSearchSelectionNum:16;
     u16 moveSelected;
     u16 movesTotal;
     u16 numTeachableMoves;
