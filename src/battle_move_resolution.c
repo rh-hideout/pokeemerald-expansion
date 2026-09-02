@@ -3378,7 +3378,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                      || !ShouldApplyAfterHitEffects(cv->battlerAtk, battlerDef)
                      || additionalEffect->self) // handled in MoveEndAdditionalEffects
                         continue;
-                    
+
                     TryTriggerAdditionalEffect(cv, additionalEffect, battlerDef);
 
                     return MOVEEND_RESULT_RUN_SCRIPT; // try to run effect script if possible and don't increment block state
@@ -3404,7 +3404,7 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
             if (result != MOVEEND_RESULT_CONTINUE)
                 return result;
         }
-        
+
         if (gBattleMons[battlerDef].volatiles.substituteHP == 0)
             gBattleMons[battlerDef].volatiles.substitute = FALSE;
 
@@ -3513,7 +3513,7 @@ static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv)
         battler1 = battler2;
     else
         anyValidBattler = TRUE;
-    
+
     if (ShouldSkipBattlerForMoveEnd(battler2, cv)
      || !IsBattlerTurnDamaged(battler2, INCLUDING_SUBSTITUTES)
      || gSpecialStatuses[battler2].resultMessagePrinted)
@@ -3741,7 +3741,7 @@ static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct Ba
 
     if (gSpecialStatuses[battlerDef].breaksThroughProtectFully && GetConfig(B_UNSEEN_FIST_PIERCING_DRILL) <= GEN_9)
         return FALSE;
-    
+
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES) && !gSpecialStatuses[battlerDef].breaksThroughProtectFully)
         return FALSE;
 
@@ -4518,7 +4518,7 @@ static enum MoveEndResult MoveEndMirrorMove(struct BattleCalcValues *cv)
 
         if (ShouldSkipBattlerForMoveEnd(battlerDef, cv))
             continue;
-    
+
         if (!gBattleStruct->unableToUseMove
         && cv->battlerAtk != battlerDef
         && IsBattlerAlive(cv->battlerAtk)
@@ -5184,6 +5184,15 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 SetStatChange(cv->battlerAtk, STAT_DEF, -1);
                 SetStatChange(cv->battlerAtk, STAT_SPEED, 1);
                 BattleScriptCall(BattleScript_MoveEffectStatChange);
+                gBattleStruct->eventState.moveEndBattler = 0;
+                gBattleScripting.moveendState++;
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            }
+            break;
+        case EFFECT_DEFOG:
+            if (TryDefogClear(cv->battlerAtk, FALSE))
+            {
+                BattleScriptCall(BattleScript_Defog);
                 gBattleStruct->eventState.moveEndBattler = 0;
                 gBattleScripting.moveendState++;
                 return MOVEEND_RESULT_RUN_SCRIPT;
