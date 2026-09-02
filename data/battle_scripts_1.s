@@ -1220,7 +1220,6 @@ BattleScript_MoveUsedMustRecharge::
 BattleScript_EffectStatusMoveEffect::
 	attackcanceler
 	pause B_WAIT_TIME_SHORT
-	setadditionaleffects
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectEncore::

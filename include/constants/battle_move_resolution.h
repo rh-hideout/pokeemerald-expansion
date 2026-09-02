@@ -215,7 +215,6 @@ enum MoveEndState
     MOVEEND_FAINT_ATTACKER_OPPOSING_SIDE,
     MOVEEND_UPDATE_LAST_MOVES_OPPOSING_SIDE,
     MOVEEND_MIRROR_MOVE_OPPOSING_SIDE,
-    MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     // Check all battlers
     MOVEEND_BOUNCED_MOVE,
     MOVEEND_MULTIHIT_MOVE_BLOCK, // HP threshold items, effectiveness message, end move

@@ -202,7 +202,6 @@ bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 wea
 enum MoveTarget GetBattlerMoveSelectionTargetType(enum BattlerId battler, enum Move move);
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
-u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
 void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat);
 void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *mon);
 void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDynamaxing);
@@ -321,9 +320,5 @@ const u8 *GetRestFailureScript(enum BattlerId battler, enum Ability ability);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
 u32 GetWeatherFromOverworldWeather(u32 owWeather);
 enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
-
-bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
-void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);
-struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -546,7 +546,7 @@ struct BattlerState
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
     u16 toxicChainActivates:1;
     u16 substituteBlocked:1;
-    u16 padding:6;
+    u16 validStatusMoveTarget:6;
     // End of Word
 };
 
@@ -645,7 +645,9 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    u8 padding1:3;
+    u8 fickleBeamBoosted:1;
+    u8 battlersSorted:1; // To avoid unnessasery computation
+    u8 statusMoveFailed:1; // For status move effects that fail on all targets
     void (*savedCallback)(void);
     enum Item chosenItem[MAX_BATTLERS_COUNT];
     enum Move choicedMove[MAX_BATTLERS_COUNT];
@@ -656,10 +658,7 @@ struct BattleStruct
         struct BattleVideo battleVideo;
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
-    u8 fickleBeamBoosted:1;
-    u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 statusMoveFailed:1; // For status move effects that fail on all targets
-    u8 unused1:2;
+    u8 unused1:5;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];

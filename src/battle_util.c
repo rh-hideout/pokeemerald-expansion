@@ -9539,22 +9539,6 @@ bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
     return TRUE;
 }
 
-u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
-{
-    enum BattlerId battler;
-    for (battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
-    {
-        if (excludeCurrent && battler == gBattlerTarget)
-            continue;
-        if (gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler])
-            continue;
-        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
-            continue;
-        break;
-    }
-    return battler;
-}
-
 void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat)
 {
     gBattleMons[battler].level = GetMonData(mon, MON_DATA_LEVEL);
@@ -9978,7 +9962,7 @@ bool32 AreMultiPartiesFullTeams(void)
 
 	if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
 		return TRUE;
-		
+
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
      || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
@@ -11314,39 +11298,4 @@ enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather)
     case WEATHER_FOG:                   return B_TERRAIN_NONE;
     }
     return B_TERRAIN_NONE;
-}
-
-// TODO move to effect file
-bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
-{
-    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
-        return FALSE;
-
-    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
-    gBattlerAbility = battler;
-    gLastUsedItem = gBattleMons[battler].item;
-    return TRUE;
-}
-
-void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
-{
-    s8 *atkStatStage = &gBattleMons[battlerAtk].statStages[stat];
-    s8 *defStatStage = &gBattleMons[battlerDef].statStages[stat];
-    Swap(*atkStatStage, *defStatStage);
-}
-
-#define TYPE_HALVER(...) (struct TypeBasedHalverInfo){__VA_ARGS__}
-struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
-{
-    switch(type)
-    {
-        case TYPE_FIRE:
-            return TYPE_HALVER(STATUS_FIELD_WATERSPORT, VOLATILE_WATER_SPORT, STRINGID_FIREWEAKENED);
-        case TYPE_ELECTRIC:
-            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
-        default:
-            errorf("Type (%s) does not have a halver", gTypesInfo[type].name);
-            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
-
-    }
 }

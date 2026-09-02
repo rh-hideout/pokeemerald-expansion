@@ -69,6 +69,9 @@ static bool32 ShouldTryToApplyEffect(struct BattleCalcValues *cv, struct SetEffe
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect);
 static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect);
 static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect);
+static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
+static void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat);
+static struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type);
 static inline enum MoveEffect GetSynchronizeEffect(u32 status);
 enum StringID GetStatus1String(u32 status1);
 static s32 GetMaxHpWithRounding(enum BattlerId battler);
@@ -937,10 +940,8 @@ static void HandleSetEffectLightScreen(struct BattleCalcValues *cv, struct SetEf
             gSideTimers[side].lightscreenTimer = 5;
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDSPDEF, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
 }
 
 static void HandleSetEffectSaltCure(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -4470,6 +4471,40 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
         return TRUE;
     default:
         return FALSE;
+    }
+}
+
+static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
+{
+    if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
+        return FALSE;
+
+    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
+    gBattlerAbility = battler;
+    gLastUsedItem = gBattleMons[battler].item;
+    return TRUE;
+}
+
+static void SwapStatStages(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
+{
+    s8 *atkStatStage = &gBattleMons[battlerAtk].statStages[stat];
+    s8 *defStatStage = &gBattleMons[battlerDef].statStages[stat];
+    Swap(*atkStatStage, *defStatStage);
+}
+
+#define TYPE_HALVER(...) (struct TypeBasedHalverInfo){__VA_ARGS__}
+static struct TypeBasedHalverInfo GetTypeBasedHalverInfo(enum Type type)
+{
+    switch(type)
+    {
+        case TYPE_FIRE:
+            return TYPE_HALVER(STATUS_FIELD_WATERSPORT, VOLATILE_WATER_SPORT, STRINGID_FIREWEAKENED);
+        case TYPE_ELECTRIC:
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+        default:
+            errorf("Type (%s) does not have a halver", gTypesInfo[type].name);
+            return TYPE_HALVER(STATUS_FIELD_MUDSPORT, VOLATILE_MUD_SPORT, STRINGID_ELECTRICITYWEAKENED);
+
     }
 }
 
