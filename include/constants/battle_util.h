@@ -62,6 +62,7 @@ enum AbilityEffect
     ABILITYEFFECT_MOVE_END_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
 
     ABILITYEFFECT_ON_FORM_CHANGE,
+    ABILITYEFFECT_ON_STATUS_CHANGE, // Synchronize / Poison Puppeteer
 
     // On Switch in
     ABILITYEFFECT_TERA_SHIFT,

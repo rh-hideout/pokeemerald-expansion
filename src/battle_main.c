@@ -174,6 +174,7 @@ EWRAM_DATA enum BattlerId gEffectBattler = 0;
 EWRAM_DATA enum BattlerId gPotentialItemEffectBattler = 0;
 EWRAM_DATA u8 gAbsentBattlerFlags = 0;
 EWRAM_DATA u8 gMultiHitCounter = 0;
+EWRAM_DATA u8 gBattlerOrderIndex = 0;
 EWRAM_DATA const u8 *gBattlescriptCurrInstr = NULL;
 EWRAM_DATA u8 gChosenActionByBattler[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA const u8 *gSelectionBattleScripts[MAX_BATTLERS_COUNT] = {NULL};
@@ -2514,6 +2515,16 @@ void SpriteCB_HideAsMoveTarget(struct Sprite *sprite)
     sprite->callback = SpriteCallbackDummy_2;
 }
 
+bool32 ShouldHideBattler(enum BattlerId battler)
+{
+    if (!IsBattlerAlive(battler)
+     || !gBattleSpritesDataPtr->healthBoxesData[battler].healthboxIsBouncing)
+        return FALSE;
+
+    SpriteCallback callback = gSprites[gBattlerSpriteIds[battler]].callback;
+    return callback == SpriteCB_ShowAsMoveTarget || callback == SpriteCB_BlinkVisible;
+}
+
 void SpriteCB_OpponentMonFromBall(struct Sprite *sprite)
 {
     if (sprite->affineAnimEnded)
@@ -2942,6 +2953,8 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
         if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
             gBattleMons[i].volatiles.octolock = FALSE;
+        if (gBattleMons[i].volatiles.skyDropTarget == battler + 1)
+            gBattleMons[i].volatiles.skyDropTarget = 0;
     }
 
     ClearPursuitValuesIfSet(battler);
@@ -3394,23 +3407,28 @@ static void DoBattleIntro(void)
             for (battler = 0; battler < gBattlersCount; battler++)
                 GetBattlerPartyState(battler)->sentOut = TRUE;
 
-#define UNPACK_STARTING_STATUS_TO_BATTLE(_enum, _fieldName, ...) gStartingStatuses._fieldName = (statusesOpponentA._fieldName || statusesOpponentB._fieldName || gStartingStatuses._fieldName);
-
-            struct StartingStatuses statusesOpponentA = {0};
-            struct StartingStatuses statusesOpponentB = {0};
-
-            // Try to set a status to start the battle with
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
-            {
-                statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                if (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
-                    statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
-            }
-            STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
+            InitializeStartingStatus();
             gBattleMainFunc = TryDoEventsBeforeFirstTurn;
         }
         break;
     }
+}
+
+#define UNPACK_STARTING_STATUS_TO_BATTLE(_enum, _fieldName, ...) gStartingStatuses._fieldName = (statusesOpponentA._fieldName || statusesOpponentB._fieldName || gStartingStatuses._fieldName);
+
+void InitializeStartingStatus()
+{
+    struct StartingStatuses statusesOpponentA = {0};
+    struct StartingStatuses statusesOpponentB = {0};
+
+    // Try to set a status to start the battle with
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
+    {
+        statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
+        if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
+            statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
+    }
+    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
 }
 
 static void TryDoEventsBeforeFirstTurn(void)
@@ -3520,7 +3538,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
     case FIRST_TURN_EVENTS_TRAINER_SLIDE_B:
-        if (ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_BEFORE_FIRST_TURN))
+        if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_BEFORE_FIRST_TURN))
             BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd);
         gBattleStruct->eventState.beforeFirstTurn++;
         break;
@@ -4712,22 +4730,22 @@ static void SetActionsAndBattlersTurnOrder(void)
                 calcValues.abilities[battler] = GetBattlerAbility(battler);
                 calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
             }
-            for (battler = 0; battler < gBattlersCount - 1; battler++)
+            for (u32 turnOrderIndex = 0; turnOrderIndex < gBattlersCount - 1; turnOrderIndex++)
             {
-                for (battler2 = battler + 1; battler2 < gBattlersCount; battler2++)
+                for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
                 {
-                    calcValues.battlerAtk = gBattlerByTurnOrder[battler];
-                    calcValues.battlerDef = gBattlerByTurnOrder[battler2];
+                    calcValues.battlerAtk = gBattlerByTurnOrder[turnOrderIndex];
+                    calcValues.battlerDef = gBattlerByTurnOrder[otherTurnOrderIndex];
                     TryChangingTurnOrderEffects(&calcValues, quickClawRandom, quickDrawRandom);
-                    if (gActionsByTurnOrder[battler] != B_ACTION_USE_ITEM
-                        && gActionsByTurnOrder[battler2] != B_ACTION_USE_ITEM
-                        && gActionsByTurnOrder[battler] != B_ACTION_SWITCH
-                        && gActionsByTurnOrder[battler2] != B_ACTION_SWITCH
-                        && gActionsByTurnOrder[battler] != B_ACTION_THROW_BALL
-                        && gActionsByTurnOrder[battler2] != B_ACTION_THROW_BALL)
+                    if (gActionsByTurnOrder[turnOrderIndex] != B_ACTION_USE_ITEM
+                        && gActionsByTurnOrder[otherTurnOrderIndex] != B_ACTION_USE_ITEM
+                        && gActionsByTurnOrder[turnOrderIndex] != B_ACTION_SWITCH
+                        && gActionsByTurnOrder[otherTurnOrderIndex] != B_ACTION_SWITCH
+                        && gActionsByTurnOrder[turnOrderIndex] != B_ACTION_THROW_BALL
+                        && gActionsByTurnOrder[otherTurnOrderIndex] != B_ACTION_THROW_BALL)
                     {
                         if (GetWhichBattlerFaster(&calcValues, FALSE) == -1)
-                            SwapTurnOrder(battler, battler2);
+                            SwapTurnOrder(turnOrderIndex, otherTurnOrderIndex);
                     }
                 }
             }
@@ -4833,10 +4851,10 @@ static bool32 TryDoGimmicksBeforeMoves(void)
 
         PopulateArrayWithBattlers(battlers);
         SortBattlersBySpeed(battlers, FALSE);
-        for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        for (u32 speedOrderIndex = 0; speedOrderIndex < gBattlersCount; speedOrderIndex++)
         {
             // Search through each battler and activate their gimmick if they have one prepared.
-            if (TryActivateGimmick(battlers[i]))
+            if (TryActivateGimmick(battlers[speedOrderIndex]))
                 return TRUE;
         }
     }
@@ -4893,26 +4911,24 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
 // In gen7, priority and speed are recalculated during the turn in which a Pokémon mega evolves
 static void TryChangeTurnOrder(void)
 {
-    enum BattlerId i, j;
-
     struct BattleCalcValues calcValues = {0};
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        calcValues.abilities[i] = GetBattlerAbility(i);
-        calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
+        calcValues.abilities[battler] = GetBattlerAbility(battler);
+        calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
-    for (i = gCurrentTurnActionNumber; i < gBattlersCount - 1; i++)
+    for (u32 turnOrderIndex = gCurrentTurnActionNumber; turnOrderIndex < gBattlersCount - 1; turnOrderIndex++)
     {
-        for (j = i + 1; j < gBattlersCount; j++)
+        for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
         {
-            calcValues.battlerAtk = gBattlerByTurnOrder[i];
-            calcValues.battlerDef = gBattlerByTurnOrder[j];
+            calcValues.battlerAtk = gBattlerByTurnOrder[turnOrderIndex];
+            calcValues.battlerDef = gBattlerByTurnOrder[otherTurnOrderIndex];
 
-            if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE
-                && gActionsByTurnOrder[j] == B_ACTION_USE_MOVE)
+            if (gActionsByTurnOrder[turnOrderIndex] == B_ACTION_USE_MOVE
+                && gActionsByTurnOrder[otherTurnOrderIndex] == B_ACTION_USE_MOVE)
             {
                 if (GetWhichBattlerFaster(&calcValues, FALSE) == -1)
-                    SwapTurnOrder(i, j);
+                    SwapTurnOrder(turnOrderIndex, otherTurnOrderIndex);
             }
         }
     }

@@ -37,13 +37,12 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
     }
 }
 
-SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other")
+SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace themselves")
 {
     enum Species species1, species2;
     enum Ability ability1, ability2; 
 
     PARAMETRIZE { ability1 = ability2 = ABILITY_MUMMY; species1 = species2 = SPECIES_YAMASK; }
-    PARAMETRIZE { ability1 = ABILITY_MUMMY; species1 = SPECIES_YAMASK; ability2 = ABILITY_LINGERING_AROMA; species2 = SPECIES_OINKOLOGNE; }
     PARAMETRIZE { ability1 = ability2 = ABILITY_LINGERING_AROMA; species1 = species2 = SPECIES_OINKOLOGNE; }
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_AQUA_JET));
@@ -67,12 +66,14 @@ SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other")
     }
 }
 
-SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed")
+SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be overwritten")
 {
     enum Species species;
     enum Ability ability;
 
+    PARAMETRIZE { species = SPECIES_SLAKING; ability = ABILITY_TRUANT; }
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
+    PARAMETRIZE { species = SPECIES_DARMANITAN; ability = ABILITY_ZEN_MODE; }
     PARAMETRIZE { species = SPECIES_AEGISLASH; ability = ABILITY_STANCE_CHANGE; }
     PARAMETRIZE { species = SPECIES_MINIOR; ability = ABILITY_SHIELDS_DOWN; }
     PARAMETRIZE { species = SPECIES_WISHIWASHI; ability = ABILITY_SCHOOLING; }
