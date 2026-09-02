@@ -6602,8 +6602,10 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
 bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
     // This can rarely happen with a sub-frame perfect a press when going down sideways stairs and trying to surf
-    if (direction == DIR_NONE || direction > DIR_EAST)
+    assertf(direction > DIR_NONE && direction < CARDINAL_DIRECTION_COUNT, "Tried to check if metatile is directionally impassable on a diagonal movement")
+    {
         return TRUE;
+    }
 
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
         || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
