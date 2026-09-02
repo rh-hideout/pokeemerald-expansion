@@ -16,26 +16,26 @@
 
 #define SPECIAL_SECTOR_SENTINEL 0xB39D
 
-#define SECTOR_ID_SAVEBLOCK2          0
-#define SECTOR_ID_SAVEBLOCK1_START    1
-#define SECTOR_ID_SAVEBLOCK1_END      4
-#define SECTOR_ID_PKMN_STORAGE_START  5
-#define SECTOR_ID_PKMN_STORAGE_END   13
-#define NUM_SECTORS_PER_SLOT         14
+#define SECTOR_ID_SAVEBLOCK2 0
+#define SECTOR_ID_SAVEBLOCK1_START 1
+#define SECTOR_ID_SAVEBLOCK1_END 5
+#define SECTOR_ID_PKMN_STORAGE_START 6
+#define SECTOR_ID_PKMN_STORAGE_END 14
+#define NUM_SECTORS_PER_SLOT 15
 // Save Slot 1: 0-13;  Save Slot 2: 14-27
-#define SECTOR_ID_HOF_1              28
-#define SECTOR_ID_HOF_2              29
-#define SECTOR_ID_TRAINER_HILL       30
-#define SECTOR_ID_RECORDED_BATTLE    31
-#define SECTORS_COUNT                32
+#define SECTOR_ID_HOF_1 30
+#define SECTOR_ID_HOF_2 31
+#define SECTOR_ID_TRAINER_HILL 32
+#define SECTOR_ID_RECORDED_BATTLE 33
+#define SECTORS_COUNT 34
 
 #define NUM_HOF_SECTORS 2
 
-#define SAVE_STATUS_EMPTY    0
-#define SAVE_STATUS_OK       1
-#define SAVE_STATUS_CORRUPT  2
+#define SAVE_STATUS_EMPTY 0
+#define SAVE_STATUS_OK 1
+#define SAVE_STATUS_CORRUPT 2
 #define SAVE_STATUS_NO_FLASH 4
-#define SAVE_STATUS_ERROR    0xFF
+#define SAVE_STATUS_ERROR 0xFF
 
 // Special sector id value for certain save functions to
 // indicate that no specific sector should be used.
@@ -53,7 +53,7 @@ enum
 enum
 {
     SAVE_NORMAL,
-    SAVE_LINK, // Link / Battle Frontier
+    SAVE_LINK,    // Link / Battle Frontier
     SAVE_EREADER, // deprecated in Emerald
     SAVE_HALL_OF_FAME,
     SAVE_OVERWRITE_DIFFERENT_FILE,
@@ -79,7 +79,7 @@ struct SaveSector
 }; // size is SECTOR_SIZE (0x1000)
 
 #define SECTOR_SIGNATURE_OFFSET offsetof(struct SaveSector, signature)
-#define SECTOR_COUNTER_OFFSET   offsetof(struct SaveSector, counter)
+#define SECTOR_COUNTER_OFFSET offsetof(struct SaveSector, counter)
 
 extern u16 gLastWrittenSector;
 extern u32 gLastSaveCounter;
