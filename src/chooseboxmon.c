@@ -375,6 +375,12 @@ s32 GetLearnMoveStartAfterPromptState(void)
     return PROMPT_BEFORE_LEARNING_1;
 }
 
+s32 GetLearnMoveLevelUpStartState(void)
+{
+    return LEARN_MOVE;
+}
+
+
 //At the time of writing code for this, there was no prescribed way to make a task persist between scenes
 //and I didn't want to implement one just for this, feel free to rewrite this if this has changed
 s32 GetLearnMoveResumeAfterSummaryScreenState(void)

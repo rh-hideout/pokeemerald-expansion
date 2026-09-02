@@ -6181,7 +6181,7 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u8 level = GetMonData(mon, MON_DATA_LEVEL);
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-
+    bool32 canLearn;
     // Since you can learn more than one move per level,
     // the game needs to know whether you decided to
     // learn it or keep the old set to avoid asking
@@ -6192,16 +6192,20 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
     }
     while (learnset[sLearningMoveTableID].move != LEVEL_UP_MOVE_END)
     {
-        while ((learnset[sLearningMoveTableID].level == 0 || learnset[sLearningMoveTableID].level == level)
-             && !(P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && learnset[sLearningMoveTableID].level == 1))
-        {
-            gMoveToLearn = learnset[sLearningMoveTableID].move;
-            sLearningMoveTableID++;
-            return GiveMoveToMon(mon, gMoveToLearn);
-        }
+        canLearn = TRUE;
+        if (learnset[sLearningMoveTableID].level == 0)
+            ;
+        else if (learnset[sLearningMoveTableID].level != level)
+             canLearn = FALSE;
+        else if (P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && level == 1)
+            canLearn = FALSE;
         sLearningMoveTableID++;
+        if (canLearn)
+        {
+            return learnset[sLearningMoveTableID - 1].move;
+        }
     }
-    return 0;
+    return MOVE_NONE;
 }
 
 // Removes the selected index from the given IV list and shifts the remaining
