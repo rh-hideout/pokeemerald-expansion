@@ -5495,7 +5495,7 @@ static bool32 CanPartingShotTrigger(enum BattlerId battlerAtk)
     return FALSE;
 }
 
-static enum MoveEndResult MoveEndMoveSwitchOut(struct BattleCalcValues *cv)
+static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -5536,6 +5536,7 @@ static enum MoveEndResult MoveEndMoveSwitchOut(struct BattleCalcValues *cv)
         }
         else
         {
+            gBattleScripting.battler = cv->battlerAtk
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_MoveSwitchOut);
         }
@@ -5543,6 +5544,7 @@ static enum MoveEndResult MoveEndMoveSwitchOut(struct BattleCalcValues *cv)
     case EFFECT_BATON_PASS:
         if (!gBattleStruct->unableToUseMove)
         {
+            gBattleScripting.battler = cv->battlerAtk
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_MoveSwitchOut);
         }
@@ -6099,7 +6101,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
     [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
-    [MOVEEND_MOVE_SWITCH_USER] = MoveEndMoveSwitchOut,
+    [MOVEEND_MOVE_SWITCH_USER] = MoveEndMoveSwitchUser,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,
