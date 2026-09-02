@@ -5536,7 +5536,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         else
         {
-            gBattleScripting.battler = cv->battlerAtk
+            gBattleScripting.battler = cv->battlerAtk;
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_MoveSwitchOut);
         }
@@ -5544,7 +5544,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
     case EFFECT_BATON_PASS:
         if (!gBattleStruct->unableToUseMove)
         {
-            gBattleScripting.battler = cv->battlerAtk
+            gBattleScripting.battler = cv->battlerAtk;
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_MoveSwitchOut);
         }
