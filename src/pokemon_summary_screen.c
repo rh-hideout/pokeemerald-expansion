@@ -211,8 +211,8 @@ static void CloseMoveSelectMode(u8);
 static void SwitchToMovePositionSwitchMode(u8);
 static void Task_HandleInput_MovePositionSwitch(u8);
 static void ExitMovePositionSwitchMode(u8, bool8);
-static void SwapMonMoves(struct Pokemon *, u8, u8);
-static void SwapBoxMonMoves(struct BoxPokemon *, u8, u8);
+static void SwapMonMoves(struct Pokemon *, enum MoveSlot, enum MoveSlot);
+static void SwapBoxMonMoves(struct BoxPokemon *, enum MoveSlot, enum MoveSlot);
 static void Task_SetHandleReplaceMoveInput(u8);
 static void Task_HandleReplaceMoveInput(u8);
 static bool8 CanReplaceMove(void);
@@ -269,14 +269,14 @@ static void PrintRightColumnStats(void);
 static void PrintExpPointsNextLevel(void);
 static void PrintBattleMoves(void);
 static void Task_PrintBattleMoves(u8);
-static void PrintMoveNameAndPP(u8);
+static void PrintMoveNameAndPP(enum MoveSlot);
 static void PrintContestMoves(void);
 static void Task_PrintContestMoves(u8);
 static void PrintContestMoveDescription(u8);
 static void PrintMoveDetails(enum Move move);
 static void PrintNewMoveDetailsOrCancelText(void);
 static void AddAndFillMoveNamesWindow(void);
-static void SwapMovesNamesPP(u8, u8);
+static void SwapMovesNamesPP(enum MoveSlot, enum MoveSlot);
 static void PrintHMMovesCantBeForgotten(void);
 static void ResetSpriteIds(void);
 static void SetSpriteInvisibility(u8, bool8);
@@ -287,7 +287,7 @@ static void SetMonTypeIcons(void);
 static void SetMoveTypeIcons(void);
 static void SetContestMoveTypeIcons(void);
 static void SetNewMoveTypeIcon(void);
-static void SwapMovesTypeSprites(u8, u8);
+static void SwapMovesTypeSprites(enum MoveSlot, enum MoveSlot);
 static u8 LoadMonGfxAndSprite(struct Pokemon *, s16 *);
 static u8 CreateMonSprite(struct Pokemon *);
 static void SpriteCB_Pokemon(struct Sprite *);
@@ -2525,7 +2525,7 @@ static void ExitMovePositionSwitchMode(u8 taskId, bool8 swapMoves)
     gTasks[taskId].func = Task_HandleInput_MoveSelect;
 }
 
-static void SwapMonMoves(struct Pokemon *mon, u8 moveIndex1, u8 moveIndex2)
+static void SwapMonMoves(struct Pokemon *mon, enum MoveSlot moveIndex1, enum MoveSlot moveIndex2)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
 
@@ -2560,7 +2560,7 @@ static void SwapMonMoves(struct Pokemon *mon, u8 moveIndex1, u8 moveIndex2)
     summary->ppBonuses = ppBonuses;
 }
 
-static void SwapBoxMonMoves(struct BoxPokemon *mon, u8 moveIndex1, u8 moveIndex2)
+static void SwapBoxMonMoves(struct BoxPokemon *mon, enum MoveSlot moveIndex1, enum MoveSlot moveIndex2)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
 
@@ -4109,7 +4109,7 @@ static void Task_PrintBattleMoves(u8 taskId)
     data[0]++;
 }
 
-static void PrintMoveNameAndPP(u8 moveIndex)
+static void PrintMoveNameAndPP(enum MoveSlot moveIndex)
 {
     u8 pp;
     int ppState, x;
@@ -4330,7 +4330,7 @@ static void AddAndFillMoveNamesWindow(void)
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
-static void SwapMovesNamesPP(u8 moveIndex1, u8 moveIndex2)
+static void SwapMovesNamesPP(enum MoveSlot moveIndex1, enum MoveSlot moveIndex2)
 {
     u8 windowId1 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
     u8 windowId2 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_PP);
@@ -4547,7 +4547,7 @@ static void SetNewMoveTypeIcon(void)
     }
 }
 
-static void SwapMovesTypeSprites(u8 moveIndex1, u8 moveIndex2)
+static void SwapMovesTypeSprites(enum MoveSlot moveIndex1, enum MoveSlot moveIndex2)
 {
     struct Sprite *sprite1 = &gSprites[sMonSummaryScreen->spriteIds[moveIndex1 + SPRITE_ARR_ID_TYPE]];
     struct Sprite *sprite2 = &gSprites[sMonSummaryScreen->spriteIds[moveIndex2 + SPRITE_ARR_ID_TYPE]];

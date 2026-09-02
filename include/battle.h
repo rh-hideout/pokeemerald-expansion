@@ -271,7 +271,7 @@ struct AiLogicData
 struct AiThinkingStruct
 {
     u8 aiState;
-    u8 movesetIndex;
+    enum MoveSlot movesetIndex;
     enum Move moveConsidered;
     s32 score[MAX_MON_MOVES];
     u64 aiFlags[MAX_BATTLERS_COUNT];
@@ -361,23 +361,23 @@ struct BattleTv_Side
     u32 perishSongMonId:3;
     u32 wishMonId:3;
     u32 grudgeMonId:3;
-    u32 usedMoveSlot:2;
-    u32 spikesMoveSlot:2;
-    u32 reflectMoveSlot:2;
-    u32 lightScreenMoveSlot:2;
-    u32 safeguardMoveSlot:2;
-    u32 mistMoveSlot:2;
-    u32 futureSightMoveSlot:2;
-    u32 doomDesireMoveSlot:2;
-    u32 perishSongMoveSlot:2;
-    u32 wishMoveSlot:2;
-    u32 grudgeMoveSlot:2;
+    enum MoveSlot usedMoveSlot:2;
+    enum MoveSlot spikesMoveSlot:2;
+    enum MoveSlot reflectMoveSlot:2;
+    enum MoveSlot lightScreenMoveSlot:2;
+    enum MoveSlot safeguardMoveSlot:2;
+    enum MoveSlot mistMoveSlot:2;
+    enum MoveSlot futureSightMoveSlot:2;
+    enum MoveSlot doomDesireMoveSlot:2;
+    enum MoveSlot perishSongMoveSlot:2;
+    enum MoveSlot wishMoveSlot:2;
+    enum MoveSlot grudgeMoveSlot:2;
     u32 destinyBondMonId:3;
-    u32 destinyBondMoveSlot:2;
+    enum MoveSlot destinyBondMoveSlot:2;
     u32 faintCause:4;
     u32 faintCauseMonId:3;
     u32 explosion:1;
-    u32 explosionMoveSlot:2;
+    enum MoveSlot explosionMoveSlot:2;
     u32 explosionMonId:3;
     u32 perishSong:1;
 };
@@ -390,20 +390,20 @@ struct BattleTv_Position
     u32 wrapMonId:3;
     u32 attractMonId:3;
     u32 confusionMonId:3;
-    u32 curseMoveSlot:2;
-    u32 leechSeedMoveSlot:2;
-    u32 nightmareMoveSlot:2;
-    u32 wrapMoveSlot:2;
-    u32 attractMoveSlot:2;
-    u32 confusionMoveSlot:2;
-    u32 waterSportMoveSlot:2;
+    enum MoveSlot curseMoveSlot:2;
+    enum MoveSlot leechSeedMoveSlot:2;
+    enum MoveSlot nightmareMoveSlot:2;
+    enum MoveSlot wrapMoveSlot:2;
+    enum MoveSlot attractMoveSlot:2;
+    enum MoveSlot confusionMoveSlot:2;
+    enum MoveSlot waterSportMoveSlot:2;
     u32 waterSportMonId:3;
     u32 mudSportMonId:3;
-    u32 mudSportMoveSlot:2;
+    enum MoveSlot mudSportMoveSlot:2;
     u32 ingrainMonId:3;
-    u32 ingrainMoveSlot:2;
+    enum MoveSlot ingrainMoveSlot:2;
     u32 attackedByMonId:3;
-    u32 attackedByMoveSlot:2;
+    enum MoveSlot attackedByMoveSlot:2;
 };
 
 struct BattleTv_Mon
@@ -414,12 +414,12 @@ struct BattleTv_Mon
     u32 prlzMonId:3;
     u32 slpMonId:3;
     u32 frzMonId:3;
-    u32 psnMoveSlot:2;
-    u32 badPsnMoveSlot:2;
-    u32 brnMoveSlot:2;
-    u32 prlzMoveSlot:2;
-    u32 slpMoveSlot:2;
-    u32 frzMoveSlot:2;
+    enum MoveSlot psnMoveSlot:2;
+    enum MoveSlot badPsnMoveSlot:2;
+    enum MoveSlot brnMoveSlot:2;
+    enum MoveSlot prlzMoveSlot:2;
+    enum MoveSlot slpMoveSlot:2;
+    enum MoveSlot frzMoveSlot:2;
 };
 
 struct BattleTv
@@ -626,7 +626,7 @@ struct BattleStruct
     u8 safariCatchFactor;
     u8 linkBattleVsSpriteId_V; // The letter "V"
     u8 linkBattleVsSpriteId_S; // The letter "S"
-    u8 chosenMovePositions[MAX_BATTLERS_COUNT];
+    enum MoveSlot chosenMovePositions[MAX_BATTLERS_COUNT];
     u8 stateIdAfterSelScript[MAX_BATTLERS_COUNT];
     u8 prevSelectedPartySlot;
     u8 stringMoveType;
@@ -703,7 +703,7 @@ struct BattleStruct
     enum Item flingItem:14;
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
-    u8 itemMoveIndex[MAX_BATTLERS_COUNT];
+    enum MoveSlot itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
@@ -760,7 +760,7 @@ struct AiBattleData
 {
     s32 finalScore[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // AI, target, moves to make debugging easier
     u8 playerStallMons[PARTY_SIZE];
-    u8 chosenMoveIndex[MAX_BATTLERS_COUNT];
+    enum MoveSlot chosenMoveIndex[MAX_BATTLERS_COUNT];
     u8 chosenTarget[MAX_BATTLERS_COUNT];
     u16 aiUsingGimmick:6;
     u8 actionFlee:1;
@@ -1034,8 +1034,8 @@ extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];
 extern u8 gBattlerSpriteIds[MAX_BATTLERS_COUNT];
-extern u8 gCurrMovePos;
-extern u8 gChosenMovePos;
+extern enum MoveSlot gCurrMovePos;
+extern enum MoveSlot gChosenMovePos;
 extern u16 gCurrentMove;
 extern u16 gChosenMove;
 extern u16 gCalledMove;
@@ -1090,7 +1090,7 @@ extern u8 *gLinkBattleSendBuffer;
 extern u8 *gLinkBattleRecvBuffer;
 extern struct BattleResources *gBattleResources;
 extern u8 gActionSelectionCursor[MAX_BATTLERS_COUNT];
-extern u8 gMoveSelectionCursor[MAX_BATTLERS_COUNT];
+extern enum MoveSlot gMoveSelectionCursor[MAX_BATTLERS_COUNT];
 extern u8 gBattlerStatusSummaryTaskId[MAX_BATTLERS_COUNT];
 extern u8 gBattlerInMenuId;
 extern bool8 gDoingBattleAnim;

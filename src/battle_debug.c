@@ -725,7 +725,7 @@ static const u8 sTextColorTable[][3] =
 
 static void PutMovesPointsText(struct BattleDebugMenu *data)
 {
-    u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
+    enum MoveSlot chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
     u8 *text = Alloc(0x50);
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);

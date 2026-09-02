@@ -81,11 +81,9 @@ BattleScript_EffectStatChange::
 	trymovestatchanges
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectStatChangeHalfHp::
-	attackcanceler
-	trymovestatchanges
+BattleScript_StatChangeHalfHp::
 	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
+	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
 	goto BattleScript_MoveEnd
 
 BattleScript_PlayMoveAnim::
@@ -112,17 +110,9 @@ BattleScript_PlayTidyUp::
 	waitmessage B_WAIT_TIME_LONG
     return
 
-BattleScript_EffectDefog::
-	attackcanceler
-	trymovestatchanges
+BattleScript_Defog::
 	trydefog TRUE, NULL
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectMemento::
-	attackcanceler
-	trymovestatchanges
-    tryfaintmon BS_ATTACKER
-	goto BattleScript_MoveEnd
+    return
 
 BattleScript_Memento::
 	setatkhptozero
@@ -627,9 +617,6 @@ BattleScript_StuffCheeks::
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
-	tryallyswitch BattleScript_ButItFailed
-	attackanimation
-	waitanimation
 	@ The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
 	allyswitchswapbattlers
 	printstring STRINGID_ALLYSWITCHPOSITION
@@ -889,10 +876,9 @@ BattleScript_HitEscapeSwitch:
 	return
 
 BattleScript_EffectPlaceholder::
-	attackcanceler
-	pause 5
 	printstring STRINGID_NOTDONEYET
-	goto BattleScript_MoveEnd
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_EffectHit::
 	attackcanceler
@@ -1319,13 +1305,11 @@ BattleScript_MoveEffectAttract::
 	call BattleScript_TryDestinyKnotAttacker
 	return
 
-BattleScript_EffectBatonPass::
+BattleScript_EffectGeneralMove::
 	attackcanceler
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
-	jumpifcommanderactive BS_ATTACKER, BattleScript_ButItFailed
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
+	goto BattleScript_MoveEnd
+
+BattleScript_MoveSwitchOut::
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
 	openpartyscreen BS_ATTACKER, BattleScript_ButItFailed
@@ -1341,7 +1325,7 @@ BattleScript_EffectBatonPass::
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MegaSolActivatesHealing::
 	attackanimation
@@ -1425,8 +1409,10 @@ BattleScript_EffectFutureSight::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectTeleport::
-	attackcanceler
+BattleScript_Teleport::
+	printstring STRINGID_PKMNFLEDFROMBATTLE
+	waitmessage B_WAIT_TIME_LONG
+	setteleportoutcome BS_ATTACKER
 	goto BattleScript_MoveEnd
 
 BattleScript_BeatUpAttackMessage::

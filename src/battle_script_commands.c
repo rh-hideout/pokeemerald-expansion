@@ -4784,7 +4784,7 @@ static void Cmd_forcerandomswitch(void)
         else
         {
             // Wild double battle, wild mon red card activation on player
-            if (IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+            if (IsWholeSideAlive(gBattlerTarget))
             {
                 // Both player's battlers are alive
                 redCardForcedSwitch = FALSE;
@@ -4805,7 +4805,7 @@ static void Cmd_forcerandomswitch(void)
         || (WILD_DOUBLE_BATTLE
             && !IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget)
-            && IS_WHOLE_SIDE_ALIVE(gBattlerTarget))
+            && IsWholeSideAlive(gBattlerTarget))
         || (WILD_DOUBLE_BATTLE
             && IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget))
@@ -7582,39 +7582,6 @@ void BS_AllySwitchSwapBattler(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryAllySwitch(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    enum BattlerId partner = GetPartnerBattler(gBattlerAttacker);
-
-    if (!IsBattlerAlive(partner)
-     || HasPartnerTrainer(gBattlerAttacker)
-     || gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE
-     || gBattleStruct->battlerState[partner].commanderSpecies != SPECIES_NONE)
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (GetConfig(B_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9)
-    {
-        TryResetConsecutiveUseCounter(gBattlerAttacker);
-
-        if (CanUseMoveConsecutively(gBattlerAttacker))
-        {
-            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses++;
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-        else
-        {
-            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 void BS_RemoveWeather(void)
 {
     NATIVE_ARGS();
@@ -7806,9 +7773,7 @@ void BS_JumpIfCommanderActive(void)
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
-    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER)
+    if (IsCommanderActive(battler))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8348,13 +8313,6 @@ void BS_CancelMultiTurnMoves(void)
 {
     NATIVE_ARGS();
     CancelMultiTurnMoves(gBattlerAttacker);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_IsRunningImpossible(void)
-{
-    NATIVE_ARGS();
-    gBattleCommunication[0] = IsRunningFromBattleImpossible(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

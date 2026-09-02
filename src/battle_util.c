@@ -519,7 +519,7 @@ void HandleAction_UseMove(void)
         gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
         gBattleMons[gBattlerAttacker].volatiles.encoredMove = MOVE_NONE;
-        gBattleMons[gBattlerAttacker].volatiles.encoredMovePos = 0;
+        gBattleMons[gBattlerAttacker].volatiles.encoredMovePos = MOVESLOT_0;
         gBattleMons[gBattlerAttacker].volatiles.encoreTimer = 0;
         gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
     }
@@ -5775,7 +5775,7 @@ enum Obedience GetAttackerObedienceForAction(void)
             return DISOBEYS_LOAFS;
         else // use a random move
             do
-                gCurrMovePos = gChosenMovePos = MOD(Random(), MAX_MON_MOVES);
+                gCurrMovePos = gChosenMovePos = (enum MoveSlot)MOD(Random(), MAX_MON_MOVES);
             while ((1u << gCurrMovePos) & calc);
         return DISOBEYS_RANDOM_MOVE;
     }
@@ -11298,4 +11298,22 @@ enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather)
     case WEATHER_FOG:                   return B_TERRAIN_NONE;
     }
     return B_TERRAIN_NONE;
+}
+
+bool32 IsCommanderActive(enum BattlerId battler)
+{
+    return gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE
+        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_COMMANDER;
+}
+
+bool32 IsWholeSideAlive(enum BattlerId sideBattler)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        if (!IsBattlerAlly(sideBattler, battler))
+            continue;
+        if (!IsBattlerAlive(battler))
+            return FALSE;
+    }
+    return TRUE;
 }

@@ -3353,8 +3353,8 @@ void SetFinalChosenTarget(enum BattlerId battler, bool32 checkPartner)
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
     enum BattlerId chosenTarget = gAiBattleData->chosenTarget[battler];
-    u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
-    u32 chosenMove = moveInfo->moves[chosenMoveIndex];
+    enum MoveSlot chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
+    enum Move chosenMove = moveInfo->moves[chosenMoveIndex];
     enum MoveTarget targetType = GetBattlerMoveSelectionTargetType(battler, chosenMove);
 
     switch (targetType)

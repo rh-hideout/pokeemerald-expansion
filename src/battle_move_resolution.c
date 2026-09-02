@@ -1016,7 +1016,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
 
     s32 ppToDeduct = 1;
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-    u32 movePosition = gCurrMovePos;
+    enum MoveSlot movePosition = gCurrMovePos;
 
     if (gBattleStruct->submoveAnnouncement == SUBMOVE_SUCCESS)
         movePosition = gChosenMovePos;
@@ -1199,6 +1199,9 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
 
     switch (cv->moveEffect)
     {
+    case EFFECT_PLACEHOLDER:
+        battleScript = BattleScript_EffectPlaceholder;
+        break;
     case EFFECT_FLING:
         if (!CanFling(cv->battlerAtk, cv->abilities[cv->battlerAtk]))
             battleScript = BattleScript_ButItFailed;
@@ -1327,7 +1330,38 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        // TODO: follow up: Can't make sense of teleport logic
+        if ((!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+         || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
+        {
+            bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
+
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
+             || canRun == BATTLE_RUN_FORBIDDEN
+             || IsCommanderActive(cv->battlerAtk)
+             || IsOnPlayerSide(cv->battlerAtk))
+            {
+                battleScript = BattleScript_ButItFailed;
+
+            }
+            else if (canRun == BATTLE_RUN_FAILURE)
+            {
+                battleScript = BattleScript_PrintAbilityMadeIneffective;
+            }
+        }
+        else if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+              || IsCommanderActive(cv->battlerAtk)
+              || !CanBattlerSwitch(cv->battlerAtk))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        break;
+    case EFFECT_BATON_PASS:
+        if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+         || IsCommanderActive(cv->battlerAtk)
+         || !CanBattlerSwitch(cv->battlerAtk))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
         break;
     case EFFECT_NATURAL_GIFT:
         if (GetItemPocket(gBattleMons[cv->battlerAtk].item) != POCKET_BERRIES
@@ -1344,6 +1378,32 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!gBattleStruct->battlerState[cv->battlerAtk].focusPunchBattlers && GetConfig(B_MOVE_EFFECTS_BEFORE_MOVES) <= GEN_9)
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_ALLY_SWITCH:
+    {
+        enum BattlerId partner = GetPartnerBattler(cv->battlerAtk);
+        if (!IsBattlerAlive(partner)
+         || HasPartnerTrainer(cv->battlerAtk)
+         || IsCommanderActive(cv->battlerAtk)
+         || IsCommanderActive(partner))
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
+        else if (GetConfig(B_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9)
+        {
+            TryResetConsecutiveUseCounter(cv->battlerAtk);
+
+            if (CanUseMoveConsecutively(cv->battlerAtk))
+            {
+                gBattleMons[cv->battlerAtk].volatiles.consecutiveMoveUses++;
+            }
+            else
+            {
+                gBattleMons[cv->battlerAtk].volatiles.consecutiveMoveUses = 0;
+                battleScript = BattleScript_ButItFailed;
+            }
+        }
+        break;
+    }
     default:
         break;
     }
@@ -2869,7 +2929,6 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
         gBattleScripting.animTargetsHit++;
         BattleScriptCall(BattleScript_Pausex20);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
-
     }
 
     // handle special move animations.
@@ -3466,7 +3525,7 @@ static enum MoveEndResult MoveEndMoveHeavyRecoil(struct BattleCalcValues *cv)
         return MOVEEND_RESULT_CONTINUE;
     }
 
-    if (IsExplosionMove(cv->move)
+    if ((IsExplosionMove(cv->move) || cv->moveEffect == EFFECT_MEMENTO)
      && !IsBattlerAlive(cv->battlerAtk)
      && !gBattleStruct->battlerState[cv->battlerAtk].notOnField)
     {
@@ -4186,7 +4245,7 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                  && cv->move != MOVE_STRUGGLE
                  && cv->moveEffect != EFFECT_FUTURE_SIGHT)
                 {
-                    u32 moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
+                    enum MoveSlot moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
 
                     gBattleMons[cv->battlerAtk].pp[moveIndex] = 0;
                     BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].pp[moveIndex]), &gBattleMons[cv->battlerAtk].pp[moveIndex]);
@@ -5184,6 +5243,15 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 return MOVEEND_RESULT_RUN_SCRIPT;
             }
             break;
+        case EFFECT_DEFOG:
+            if (TryDefogClear(cv->battlerAtk, FALSE))
+            {
+                BattleScriptCall(BattleScript_Defog);
+                gBattleStruct->eventState.moveEndBattler = 0;
+                gBattleScripting.moveendState++;
+                return MOVEEND_RESULT_RUN_SCRIPT;
+            }
+            break;
         default:
             result = MOVEEND_RESULT_CONTINUE;
             break;
@@ -5481,7 +5549,7 @@ static bool32 CanPartingShotTrigger(enum BattlerId battlerAtk)
     return FALSE;
 }
 
-static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
+static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
@@ -5516,6 +5584,30 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
             BattleScriptCall(BattleScript_ShedTailSwitch);
         }
         break;
+    case EFFECT_TELEPORT:
+        if (gBattleStruct->unableToUseMove)
+        {
+            break;
+        }
+        else if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+        {
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_Teleport);
+        }
+        else
+        {
+            gBattleScripting.battler = cv->battlerAtk;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_MoveSwitchOut);
+        }
+        break;
+    case EFFECT_BATON_PASS:
+        if (!gBattleStruct->unableToUseMove)
+        {
+            gBattleScripting.battler = cv->battlerAtk;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            BattleScriptCall(BattleScript_MoveSwitchOut);
+        }
     default:
         break;
     }
@@ -6071,7 +6163,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_FORM_CHANGE] = MoveEndFormChange,
     [MOVEEND_LIFE_ORB_SHELL_BELL] = MoveEndLifeOrbShellBell,
     [MOVEEND_EMERGENCY_EXIT] = MoveEndEmergencyExit,
-    [MOVEEND_HIT_ESCAPE] = MoveEndHitEscape,
+    [MOVEEND_MOVE_SWITCH_USER] = MoveEndMoveSwitchUser,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,
@@ -6789,7 +6881,8 @@ static enum Move GetSleepTalkMove(void)
 {
     enum Move move = MOVE_NONE;
 
-    u32 i, unusableMovesBits = 0, movePosition;
+    u32 i, unusableMovesBits = 0;
+    enum MoveSlot movePosition;
 
     if (GetBattlerAbility(gBattlerAttacker) != ABILITY_COMATOSE
      && !(gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP))
@@ -6810,7 +6903,7 @@ static enum Move GetSleepTalkMove(void)
     gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
     do
     {
-        movePosition = MOD(Random(), MAX_MON_MOVES);
+        movePosition = (enum MoveSlot)MOD(Random(), MAX_MON_MOVES);
     } while ((1u << movePosition) & unusableMovesBits);
 
     move = gBattleMons[gBattlerAttacker].moves[movePosition];

@@ -91,7 +91,7 @@ enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move mo
     return GetMoveTarget(move);
 }
 
-u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, struct AiLogicData *aiData, u32 aiRoll)
+u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, struct AiLogicData *aiData, u32 aiRoll)
 {
     switch (aiRoll)
     {
@@ -108,7 +108,7 @@ u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId 
     }
 }
 
-u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
+u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
@@ -1277,15 +1277,15 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
     }
 
     // Check additional effects.
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move1);
+    gAiThinkingStruct->movesetIndex = (enum MoveSlot)GetMoveIndex(battlerAtk, move1);
     effect1minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move1, noOfHitsToKo);
     effect1plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move1, noOfHitsToKo);
 
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move2);
+    gAiThinkingStruct->movesetIndex = (enum MoveSlot)GetMoveIndex(battlerAtk, move2);
     effect2plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move2, noOfHitsToKo);
     effect2minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move2, noOfHitsToKo);
 
-    gAiThinkingStruct->movesetIndex = 0;
+    gAiThinkingStruct->movesetIndex = MOVESLOT_0;
 
     if (effect2minus && !effect1minus)
         return MOVE_WON_COMPARISON;
@@ -1312,7 +1312,7 @@ u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef)
     return GetNoOfHitsToKO(dmg, gBattleMons[battlerDef].hp);
 }
 
-u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
+u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
 {
     u32 hitsToKO = GetNoOfHitsToKOBattlerDmg(AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData), battlerDef);
     enum Move *moves = GetMovesArray(battlerAtk);
@@ -2541,7 +2541,7 @@ u32 CountNegativeStatStages(enum BattlerId battlerId)
     return count;
 }
 
-bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext)
+bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext)
 {
     s32 dmg;
     enum Move *moves = gBattleMons[battlerAtk].moves;
@@ -2589,7 +2589,7 @@ static u32 GetUsableMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveE
     return MAX_MON_MOVES;
 }
 
-static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, u32 moveIndex, struct AiLogicData *aiData)
+static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, enum MoveSlot moveIndex, struct AiLogicData *aiData)
 {
     enum BattlerId leftFoe = GetBattlerLeftFoe(battler);
     enum BattlerId rightFoe = GetBattlerRightFoe(battler);

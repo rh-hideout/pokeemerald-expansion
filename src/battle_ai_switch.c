@@ -459,7 +459,7 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchAiContext *switchContext,
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
 
-static bool32 CanMoveAffectTarget(struct DamageContext *ctx, u32 moveIndex)
+static bool32 CanMoveAffectTarget(struct DamageContext *ctx, enum MoveSlot moveIndex)
 {
     if (ctx->move != MOVE_NONE
         && gAiLogicData->effectiveness[ctx->battlerAtk][ctx->battlerDef][moveIndex] > UQ_4_12(0.0)
@@ -468,7 +468,7 @@ static bool32 CanMoveAffectTarget(struct DamageContext *ctx, u32 moveIndex)
     return FALSE;
 }
 
-static bool32 IsMoveBad(struct DamageContext *ctx, u32 moveIndex)
+static bool32 IsMoveBad(struct DamageContext *ctx, enum MoveSlot moveIndex)
 {
     if (CanMoveAffectTarget(ctx, moveIndex))
         return FALSE;
