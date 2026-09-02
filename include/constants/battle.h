@@ -449,6 +449,7 @@ enum BattleRoom
 };
 
 // Field affecting statuses.
+#define STATUS_FIELD_NONE                           0
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
 #define STATUS_FIELD_TRICK_ROOM                     (1 << 1)
 #define STATUS_FIELD_WONDER_ROOM                    (1 << 2)

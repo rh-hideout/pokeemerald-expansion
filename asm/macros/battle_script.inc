@@ -16,10 +16,6 @@
 	.byte B_SCR_OP_TYPECALC
 	.endm
 
-	.macro multihitresultmessage
-	.byte B_SCR_OP_MULTIHITRESULTMESSAGE
-	.endm
-
 	.macro attackanimation
 	.byte B_SCR_OP_ATTACKANIMATION
 	.endm
@@ -39,16 +35,8 @@
     .byte \assuranceDouble
 	.endm
 
-	.macro critmessage
-	.byte B_SCR_OP_CRITMESSAGE
-	.endm
-
 	.macro effectivenesssound
 	.byte B_SCR_OP_EFFECTIVENESSSOUND
-	.endm
-
-	.macro resultmessage
-	.byte B_SCR_OP_RESULTMESSAGE
 	.endm
 
 	.macro printstring id:req, battler=BS_ATTACKER
@@ -553,9 +541,8 @@
 	statusanimation \battler, \volatile, TRUE
 	.endm
 
-	.macro futuresighttargetfailure failInstr:req
+	.macro futuresighttargetfailure
 	.byte B_SCR_OP_FUTURESIGHTTARGETFAILURE
-	.4byte \failInstr
 	.endm
 
 	.macro getpossiblenexttarget jumpInstr:req
@@ -888,8 +875,8 @@
 	.byte \trigger
 	.endm
 
-	.macro trysynchronize
-	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.macro tryabilityonstatuschange
+	.byte B_SCR_OP_TRYABILITYONSTATUSCHANGE
 	.endm
 
 	.macro tryconfusionafterskydrop battler:req
@@ -932,6 +919,14 @@
 
 	.macro restoreattacker
 	callnative BS_RestoreAttacker
+	.endm
+
+	.macro savebattlerorderindex
+	callnative BS_SaveBattlerOrderIndex
+	.endm
+
+	.macro restorebattlerorderindex
+	callnative BS_RestoreBattlerOrderIndex
 	.endm
 
 	.macro allyswitchswapbattlers
