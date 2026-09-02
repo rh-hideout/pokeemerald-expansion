@@ -215,7 +215,7 @@ u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species)
     spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
     spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
     spriteSheet.tag = tileTag;
-    LoadSpriteSheet(&spriteSheet);
+    LoadSpriteSheetCompressedFast(&spriteSheet);
 
     struct SpriteTemplate spriteTemplate =
     {
