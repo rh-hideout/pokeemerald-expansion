@@ -130,6 +130,11 @@ struct SpecialStatus
     u8 breaksThroughProtectFully:1; // Unseen Fist, Piercing Drill
     u8 berryReducedMessagePrinted:1;
     // End of byte
+    u8 resultMessagePrinted:1;
+    u8 critMessagePrinted:1;
+    u8 protectMessagePrinted:1;
+    u8 padding:5;
+
     u8 gemParam:7;
     u8 gemBoost:1;
     // End of byte
@@ -137,7 +142,7 @@ struct SpecialStatus
     u8 multiHitOn:1;
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
-    u8 padding1:1;
+    u8 synchronize:1;
     // End of byte
     enum QueuedSwitch queuedSwitch;
     struct StatStages statStageQueue[NUM_BATTLE_STATS];
@@ -539,7 +544,9 @@ struct BattlerState
     u16 notOnField:1;
     u16 originalBattlerPartyId:4;
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
-    u16 padding:8;
+    u16 toxicChainActivates:1;
+    u16 substituteBlocked:1;
+    u16 padding:6;
     // End of Word
 };
 
@@ -564,15 +571,15 @@ struct EventStates
 {
     enum EndTurnResolutionOrder endTurn:8;
     u32 endTurnBlock:8; // FirstEventBlock, SecondEventBlock, ThirdEventBlock
-    enum BattlerId endTurnBattler:4;
+    u32 endTurnBattler:4;
     u32 arenaTurn:8;
     enum BattleSide battlerSide:4;
-    enum BattlerId moveEndBattler:4;
+    u32 moveEndBattler:4;
     enum FirstTurnEventsStates beforeFirstTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
     enum CancelerState atkCanceler:8;
-    enum BattlerId atkCancelerBattler:4;
+    u32 atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
@@ -638,7 +645,7 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    enum SynchronizeState synchronizeState:3;
+    u8 padding1:3;
     void (*savedCallback)(void);
     enum Item chosenItem[MAX_BATTLERS_COUNT];
     enum Move choicedMove[MAX_BATTLERS_COUNT];
@@ -650,10 +657,8 @@ struct BattleStruct
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
     u8 fickleBeamBoosted:1;
-    u8 unused2:1;
-    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 unused1:1;
+    u8 unused1:3;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -667,19 +672,21 @@ struct BattleStruct
     u8 presentBasePower;
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
+    u8 savedBattlerOrderIndex[5];
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
+    u8 savedBattlerOrderIndexCount;
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
+    enum Move baseMove; // z-move / dynamax base move
     struct ZMoveData zmove;
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    enum BattlerId soulheartBattlerId;
     struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
-    u8 redCardActivated :1;
+    u8 redCardActivated:1;
     u8 snatchedMoveIsUsed:1;
     u8 descriptionSubmenu:1; // For Move Description window in move selection screen
     u8 ackBallUseBtn:1; // Used for the last used ball feature
@@ -734,6 +741,9 @@ struct BattleStruct
     u32 statChangeBattler:3;
     u32 overworldWeatherPresent:1;
     u32 padding5:4;
+    enum BattlerId statusedBattler:4; // For Synchronize/Poison Puppeteer
+    enum BattlerId statusInflicterBattler:4; // For Synchronize/Poison Puppeteer
+    enum MoveEffect synchronizeStatus;
     u8 statChangeMoveAnim:1;
     u8 tidyUpActivates:1;
     u8 positiveAnimPlayed:1;
@@ -742,6 +752,7 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
+    s32 accumulatedDamage;
 };
 
 struct AiBattleData
@@ -877,7 +888,7 @@ struct BattleScripting
     u8 multiplayerId;
     u8 specialTrainerBattleType;
     bool8 monCaught;
-    s32 savedDmg;
+    u32 unused_0x28;
     u16 unused_0x2c;
     u16 moveEffect;
     u16 unused_0x30;
@@ -1037,6 +1048,7 @@ extern enum BattlerId gEffectBattler;
 extern enum BattlerId gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;
+extern u8 gBattlerOrderIndex;
 extern const u8 *gBattlescriptCurrInstr;
 extern u8 gChosenActionByBattler[MAX_BATTLERS_COUNT];
 extern const u8 *gSelectionBattleScripts[MAX_BATTLERS_COUNT];

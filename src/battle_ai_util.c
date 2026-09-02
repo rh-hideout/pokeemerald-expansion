@@ -818,6 +818,8 @@ static inline bool32 ShouldCalcCritDamage(struct DamageContext *ctx)
 
     if (critChanceIndex == CRITICAL_HIT_ALWAYS)
         return TRUE;
+    if (GetCriticalHitOdds(critChanceIndex) == 1)
+        return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
         && GetConfig(B_CRIT_CHANCE) != GEN_1)
@@ -872,6 +874,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     bool32 toggledGimmickDef = FALSE;
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
+    enum Move baseMove = move;
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
      && battlerDef == GetPartnerBattler(battlerAtk))
@@ -882,7 +885,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
 
     if (moveEffect == EFFECT_NATURE_POWER)
     {
-        move = GetNaturePowerMove();
+        move = baseMove = GetNaturePowerMove();
         moveEffect = GetMoveEffect(move);
     }
 
@@ -909,6 +912,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = ctx.chosenMove = move;
+    ctx.baseMove = baseMove;
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
     ctx.terrain = aiCalc->terrain;
@@ -1354,7 +1358,7 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
-    ctx.move = ctx.chosenMove = move;
+    ctx.move = ctx.chosenMove = ctx.baseMove = move;
     ctx.updateFlags = FALSE;
     ctx.weather = AI_GetWeather();
     ctx.terrain = gFieldTimers.terrain;
@@ -2696,6 +2700,20 @@ bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     return bestMoveIsPhysical;
 }
 
+bool32 ShouldBoostCritRate(enum BattlerId battlerAtk, enum BattlerId battlerDef)//This bool is currently indicating "are there stat changes I would bypass with a crit?". It is used to determine "should I boost crit rate?"
+{
+    if (gBattleMons[battlerDef].statStages[STAT_DEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerDef].statStages[STAT_SPDEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_ATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_SPATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    return FALSE;
+}
+
+
 bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     enum Move *moves = GetMovesArray(battlerId);
@@ -3485,7 +3503,7 @@ bool32 BattlerHasMaxHPProtection(enum BattlerId battler)
         return FALSE;
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
-    if (B_STURDY >= GEN_5 && ability == ABILITY_STURDY)
+    if (GetConfig(B_STURDY) >= GEN_5 && ability == ABILITY_STURDY)
         return TRUE;
     if (ability == ABILITY_MULTISCALE || ability == ABILITY_SHADOW_SHIELD)
         return TRUE;
@@ -6341,9 +6359,17 @@ s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef,
          && effect->moveEffect != STAT_CHANGE_EFFECT_MINUS)
             continue;
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            s32 stage = AI_GetAdjustedStatStage(battlerAtk, move, GetStatStage(stat, effect));
+            s32 stage = GetStatStage(stat, effect);
+
+            if (stage == 0)
+                continue;
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                stage = -1 * stage;
+
+            stage = AI_GetAdjustedStatStage(battlerAtk, move, stage);
 
             if (stage > 0)
             {
@@ -6385,9 +6411,17 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            s32 stage = AI_GetAdjustedStatStage(battlerDef, move, GetStatStage(stat, effect));
+            s32 stage = GetStatStage(stat, effect);
+
+            if (stage == 0)
+                continue;
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                stage = -1 * stage;
+
+            stage = AI_GetAdjustedStatStage(battlerDef, move, stage);
 
             if (stage > 0)
             {
@@ -6435,7 +6469,7 @@ s32 GetAllyStatChangeScore(enum BattlerId battlerAtk, enum BattlerId partner, en
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
             s32 stage = GetStatStage(stat, effect);
 

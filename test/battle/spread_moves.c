@@ -236,9 +236,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanil
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_ICE_FACE);
         ABILITY_POPUP(opponentLeft, ABILITY_DISGUISE);
         HP_BAR(opponentLeft, captureDamage: &disguiseDamage);
-        ABILITY_POPUP(playerRight, ABILITY_ICE_FACE);
         ABILITY_POPUP(opponentRight, ABILITY_ICE_FACE);
         NONE_OF {
             HP_BAR(playerRight);
@@ -493,8 +493,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
         MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
-        MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wynaut hung on using its Focus Sash!");
+        MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("The opposing Wynaut fainted!");
     }
 }
@@ -554,6 +554,21 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of a
         MESSAGE("Wynaut avoided the attack!");
         MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("The opposing Wynaut avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: A missed multi-target stat move names the missed battler")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_STRING_SHOT) == TARGET_BOTH);
+        PLAYER(SPECIES_CATERPIE);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STRING_SHOT, hit: FALSE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
     }
 }
 
