@@ -7342,16 +7342,14 @@ static inline uq4_12_t GetParentalBondModifier(enum BattlerId battlerAtk)
 
 static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 {
-    bool32 isAdaptability = ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY;
-
-    if (ctx->moveType == TYPE_MYSTERY)
-        return UQ_4_12(1.0);
-
-    if (IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) && ctx->move != MOVE_STRUGGLE)
-        return isAdaptability ? UQ_4_12(2.0) : UQ_4_12(1.5);
-
-    if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && IS_BATTLER_OF_TYPE(GetPartnerBattler(ctx->battlerAtk), ctx->moveType))
-        return isAdaptability ? UQ_4_12(2.0) : UQ_4_12(1.5);
+    if (ctx->moveType != TYPE_MYSTERY)
+    {
+        if ((IS_BATTLER_OF_TYPE(ctx->battlerAtk, ctx->moveType) && ctx->move != MOVE_STRUGGLE)
+         || (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && IS_BATTLER_OF_TYPE(GetPartnerBattler(ctx->battlerAtk), ctx->moveType)))
+        {
+            return ctx->abilities[ctx->battlerAtk] == ABILITY_ADAPTABILITY ? UQ_4_12(2.0) : UQ_4_12(1.5);
+        }
+    }
 
     return UQ_4_12(1.0);
 }
@@ -9866,10 +9864,9 @@ enum Type GetBattleMoveType(enum Move move)
         if (gBattleStruct->dynamicMoveType != TYPE_NONE)
             return gBattleStruct->dynamicMoveType;
 
-        enum BattleMoveEffects effect = GetMoveEffect(move);
-        if ((effect == EFFECT_BEAT_UP || effect == EFFECT_FUTURE_SIGHT)
+        if ((move == MOVE_BEAT_UP || move == MOVE_FUTURE_SIGHT || move == MOVE_DOOM_DESIRE)
          && GetConfig(B_UPDATED_MOVE_TYPES) < GEN_5)
-          return TYPE_MYSTERY;
+            return TYPE_MYSTERY;
     }
     return GetMoveType(move);
 }
