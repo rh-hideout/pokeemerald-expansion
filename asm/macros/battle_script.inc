@@ -716,11 +716,6 @@
 	.byte B_SCR_OP_HEALPARTYSTATUS
 	.endm
 
-	.macro cursetarget failInstr:req
-	.byte B_SCR_OP_CURSETARGET
-	.4byte \failInstr
-	.endm
-
 	.macro setvolatile battler:req, volatile:req, value=TRUE
 	.byte B_SCR_OP_SETVOLATILE
 	.byte \battler
@@ -1150,12 +1145,6 @@
 
 	.macro resetterrainabilityflags
 	callnative BS_ResetTerrainAbilityFlags
-	.endm
-
-	@ Stores Healing Wish effect.
-	.macro storehealingwish battler:req
-	callnative BS_StoreHealingWish
-	.byte \battler
 	.endm
 
 	.macro tryrevivalblessing

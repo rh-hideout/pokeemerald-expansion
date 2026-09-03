@@ -415,7 +415,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CURSE] =
     {
-        .battleScript = BattleScript_EffectCurse,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 2,
         .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
@@ -423,13 +423,13 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_HEALING_WISH] =
     {
-        .battleScript = BattleScript_EffectHealingWish,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
     [EFFECT_LUNAR_DANCE] =
     {
-        .battleScript = BattleScript_EffectHealingWish,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -629,7 +629,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FUTURE_SIGHT] =
     {
-        .battleScript = BattleScript_EffectFutureSight,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
@@ -1506,7 +1506,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ALLY_SWITCH] =
     {
-        .battleScript = BattleScript_EffectAllySwitch,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1723,7 +1723,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_WEATHER_AND_SWITCH] =
     {
-        .battleScript =BattleScript_EffectWeatherAndSwitch,
+        .battleScript = BattleScript_EffectStatusMoveEffect,
         .battleTvScore = 0, // TODO: Assign points
         .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },

@@ -5,7 +5,6 @@
 
 enum CancelerResult DoAttackCanceler(void);
 enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState);
-enum MoveResult DoStatChange(void);
+enum MoveResult DoStatChange(struct BattleCalcValues *cv);
 
-bool32 IsStatChangeMove(enum Move move);
 #endif // GUARD_BATTLE_MOVE_RESOLUTION_H

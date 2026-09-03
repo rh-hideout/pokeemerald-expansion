@@ -21716,7 +21716,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? MOVE_EFFECT_SNOW : MOVE_EFFECT_HAIL,
+            .moveEffect = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? MOVE_EFFECT_HAIL : MOVE_EFFECT_SNOW,
         }),
         .battleAnimScript = gBattleAnimMove_ChillyReception,
     },

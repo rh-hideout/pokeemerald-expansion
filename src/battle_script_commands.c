@@ -464,7 +464,6 @@ static void Cmd_transformdataexecution(void);
 static void Cmd_setsubstitute(void);
 static void Cmd_setcalledmove(void);
 static void Cmd_healpartystatus(void);
-static void Cmd_cursetarget(void);
 static void Cmd_setvolatile(void);
 static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
@@ -622,7 +621,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
-    [B_SCR_OP_CURSETARGET]                           = Cmd_cursetarget,
     [B_SCR_OP_SETVOLATILE]                           = Cmd_setvolatile,
     [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
@@ -747,6 +745,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_89]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_90]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_91]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_92]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -889,41 +888,6 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
     return !HasBattlerActedThisTurn(battler);
 }
 
-static bool32 ShouldSkipToMoveEnd(void)
-{
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
-
-    // temp fix: func will be deleted anyways
-    if (IsBattleMoveStatus(gCurrentMove) && gBattleStruct->moveResultFlags[gBattlerAttacker] & MOVE_RESULT_FAILED)
-    {
-        return FALSE;
-    }
-
-    switch (moveTarget)
-    {
-    case TARGET_OPPONENTS_FIELD:
-        return gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE;
-    case TARGET_NONE:
-    case TARGET_FIELD:
-    case TARGET_USER:
-    case TARGET_ALL_BATTLERS:
-        return FALSE;
-    case TARGET_DEPENDS:
-    case TARGET_OPPONENT:
-    case TARGET_RANDOM:
-    case TARGET_SELECTED:
-    case TARGET_SMART:
-    case TARGET_ALLY:
-    case TARGET_USER_AND_ALLY:
-    case TARGET_USER_OR_ALLY:
-    case TARGET_FOES_AND_ALLY:
-    case TARGET_BOTH:
-        return gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_AVOIDED_ATTACK;
-    }
-
-    return FALSE;
-}
-
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
@@ -945,14 +909,6 @@ static void Cmd_attackcanceler(void)
 
     if (DoAttackCanceler() != CANCELER_RESULT_SUCCESS)
         return;
-
-    // Frist Hack: Prevents messages being printed multiply times
-    // Second Hack: Prevent moveend for stat change moves. If nothing is affected it will just break out and do nothing
-    if (ShouldSkipToMoveEnd() && !IsStatChangeMove(gCurrentMove))
-    {
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        return;
-    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -2946,6 +2902,15 @@ static void Cmd_switchinanim(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         BattleArena_InitPoints();
+}
+
+bool32 IsBattlerNotAllowedToSwitch(enum BattlerId battler)
+{
+    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        return FALSE;
+    if (IsCommanderActive(battler))
+        return FALSE;
+    return !CanBattlerSwitch(battler);
 }
 
 bool32 CanBattlerSwitch(enum BattlerId battler)
@@ -5259,28 +5224,6 @@ static void Cmd_healpartystatus(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_cursetarget(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    if (!IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
-    {
-        gBattleScripting.animTurn = 1; // for move anim
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (gBattleMons[gBattlerTarget].volatiles.cursed)
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-    }
-    else
-    {
-        gBattleScripting.animTurn = 0; // for move anim
-        gBattleMons[gBattlerTarget].volatiles.cursed = TRUE;
-        SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 2);
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
 static void Cmd_setvolatile(void)
 {
     CMD_ARGS(u8 battler, u8 _volatile, u8 value);
@@ -6741,7 +6684,21 @@ static void Cmd_trymovestatchanges(void)
 {
     CMD_ARGS();
 
-    enum MoveResult result = DoStatChange();
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerAttacker,
+        .battlerDef = gBattlerTarget,
+        .move = gCurrentMove,
+        .moveEffect = GetMoveEffect(gCurrentMove),
+        .isStatusMove = IsBattleMoveStatus(gCurrentMove),
+    };
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
+    enum MoveResult result = DoStatChange(&cv);
 
     if (result == MOVE_RESULT_DONE)
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -7717,18 +7674,6 @@ void BS_ResetTerrainAbilityFlags(void)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.terrainAbilityDone = 0;
 
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_StoreHealingWish(void)
-{
-    NATIVE_ARGS(u8 battler);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (GetMoveEffect(gCurrentMove) == EFFECT_LUNAR_DANCE)
-        gBattleStruct->battlerState[battler].storedLunarDance = TRUE;
-    else
-        gBattleStruct->battlerState[battler].storedHealingWish = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

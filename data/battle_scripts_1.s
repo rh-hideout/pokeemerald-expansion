@@ -78,7 +78,6 @@ BattleScript_TeraFormChange::
 
 BattleScript_EffectStatChange::
 	attackcanceler
-	trymovestatchanges
 	goto BattleScript_MoveEnd
 
 BattleScript_StatChangeHalfHp::
@@ -270,7 +269,7 @@ BattleScript_MoveSwitchPursuitRet:
 	jumpifnopursuitswitchdmg BattleScript_MoveSwitchOpenPartyScreenRet
 	return
 
-BattleScript_MoveSwitch::
+BattleScript_MoveSwitchRet::
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
 	jumpifcommanderactive BS_ATTACKER, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
@@ -279,6 +278,10 @@ BattleScript_MoveSwitch::
 BattleScript_MoveSwitchOpenPartyScreen::
 	call BattleScript_MoveSwitchOpenPartyScreenRet
 BattleScript_MoveSwitchEnd:
+	return
+
+BattleScript_MoveSwitch::
+	call BattleScript_MoveSwitchRet
 	end
 
 BattleScript_MoveSwitchOpenPartyScreenRet:
@@ -615,14 +618,6 @@ BattleScript_StuffCheeks::
     restorestatchangequeue
     return
 
-BattleScript_EffectAllySwitch::
-	attackcanceler
-	@ The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
-	allyswitchswapbattlers
-	printstring STRINGID_ALLYSWITCHPOSITION
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
 BattleScript_RemoveFireType::
 	printstring STRINGID_ATTACKERLOSTFIRETYPE
 	waitmessage B_WAIT_TIME_LONG
@@ -747,16 +742,11 @@ BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 	return
 
 BattleScript_EffectHealingWish::
-	attackcanceler
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_ButItFailed
-	attackanimation
-	waitanimation
 	instanthpdrop
 	setatkhptozero
 	tryfaintmon BS_ATTACKER
-	storehealingwish BS_ATTACKER
 	jumpifgenconfiglowerthan CONFIG_B_HEALING_WISH_SWITCH, GEN_5, BattleScript_EffectHealingWishGen4
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectHealingWishGen4:
 	openpartyscreen BS_ATTACKER, BattleScript_MoveEnd
@@ -776,7 +766,7 @@ BattleScript_EffectHealingWishGen4:
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_HealingWishActivates::
 	setbyte cMULTISTRING_CHOOSER, 0
@@ -1205,7 +1195,6 @@ BattleScript_MoveUsedMustRecharge::
 
 BattleScript_EffectStatusMoveEffect::
 	attackcanceler
-	pause B_WAIT_TIME_SHORT
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectEncore::
@@ -1252,19 +1241,11 @@ BattleScript_MoveEffectAromatherapy::
 	waitstate
 	return
 
-BattleScript_EffectCurse::
-	attackcanceler
-	cursetarget BattleScript_CurseStatChange
-	attackanimation
-	waitanimation
+BattleScript_Curse::
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	printstring STRINGID_PKMNLAIDCURSE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_CurseStatChange:
-	trymovestatchanges
 	goto BattleScript_MoveEnd
 
 BattleScript_TryDestinyKnotTarget:
@@ -1309,7 +1290,7 @@ BattleScript_EffectGeneralMove::
 	attackcanceler
 	goto BattleScript_MoveEnd
 
-BattleScript_MoveSwitchOut::
+BattleScript_BatonPass::
 	returntoball BS_ATTACKER, FALSE
 	switchoutabilities BS_ATTACKER
 	openpartyscreen BS_ATTACKER, BattleScript_ButItFailed
@@ -1344,18 +1325,6 @@ BattleScript_ChillyReceptionMessage::
 	printstring STRINGID_PKMNTELLCHILLINGRECEPTIONJOKE
 	waitmessage B_WAIT_TIME_LONG
 	return
-
-BattleScript_EffectWeatherAndSwitch::
-	attackcanceler
-	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_EffectWeatherAndSwitchTemp
-	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_EffectWeatherAndSwitchTemp
-    setadditionaleffects
-	moveendall
-	goto BattleScript_MoveSwitch
-
-BattleScript_EffectWeatherAndSwitchTemp:
-    setadditionaleffects
-	goto BattleScript_MoveEnd
 
 BattleScript_MoveWeatherChangeRet::
 	printfromtable gMoveWeatherChangeStringIds
@@ -1401,8 +1370,7 @@ BattleScript_BlockedByOverworldWeather::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectFutureSight::
-	attackcanceler
+BattleScript_ForseeFutureSight::
 	attackanimation
 	waitanimation
 	printfromtable gFutureMoveUsedStringIds

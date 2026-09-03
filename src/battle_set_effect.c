@@ -381,6 +381,23 @@ static void HandleSetEffectNightmare(struct BattleCalcValues *cv, struct SetEffe
     }
 }
 
+static void HandleSetEffectCurse(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (IS_BATTLER_OF_TYPE(cv->battlerAtk, TYPE_GHOST))
+        return; // stat change handled is stat change resolution
+
+    if (gBattleMons[se->effectBattler].volatiles.cursed)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[se->effectBattler].volatiles.cursed = TRUE;
+        SetPassiveDamageAmount(cv->battlerAtk, GetNonDynamaxMaxHP(cv->battlerAtk) / 2);
+        BattleScriptPushAndSet(se->script, BattleScript_Curse);
+    }
+}
+
 static void HandleSetEffectGlaiveRush(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     gBattleMons[se->effectBattler].volatiles.glaiveRush = TRUE;
@@ -1349,13 +1366,6 @@ static void HandleSetEffectPollenPuff(struct BattleCalcValues *cv, struct SetEff
     SetEffectHealPulse(cv, se);
 }
 
-static enum BattleWeather GetPreferredWeather(void)
-{
-    if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
-        return BATTLE_WEATHER_SNOW;
-    return BATTLE_WEATHER_HAIL;
-}
-
 static void HandleSetEffectWeather(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattleWeather weather = 0;
@@ -1371,36 +1381,37 @@ static void HandleSetEffectWeather(struct BattleCalcValues *cv, struct SetEffect
         weather = BATTLE_WEATHER_SANDSTORM;
         break;
     case MOVE_EFFECT_HAIL:
-        weather = GetPreferredWeather();
+        weather = BATTLE_WEATHER_HAIL;
         break;
     case MOVE_EFFECT_SNOW:
-        weather = GetPreferredWeather();
+        weather = BATTLE_WEATHER_SNOW;
         break;
     default:
         break;
     }
 
-    if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
+    if (cv->onlyChecking)
     {
+        bool32 currWeatherBlocked = gBattleWeather & (B_WEATHER_PRIMAL_ANY | gBattleWeatherInfo[weather].flag);
+        se->effectFailed = gBattleStruct->overworldWeatherPresent || currWeatherBlocked;
+        if (cv->moveEffect == EFFECT_WEATHER_AND_SWITCH && !IsBattlerNotAllowedToSwitch(cv->battlerAtk))
+            se->effectFailed = FALSE;
+        return;
+    }
+
+    switch (TryChangeBattleWeather(cv->battlerAtk, weather, ABILITY_NONE))
+    {
+    case WEATHER_FAILURE_PRIMAL:
         SetEffectFail(BattleScript_FailOnPrimalWeather, cv->isStatusMove);
-    }
-
-    if (gBattleWeather & gBattleWeatherInfo[weather].flag)
-        se->effectFailed = TRUE;
-
-    if (gBattleStruct->overworldWeatherPresent)
-        se->effectFailed = TRUE;
-
-    if (cv->onlyChecking) return;
-
-    if (TryChangeBattleWeather(cv->battlerAtk, weather, ABILITY_NONE) == WEATHER_FAILURE_SUCCESS)
-    {
+        break;
+    case WEATHER_FAILURE_SUCCESS:
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetWeather);
-    }
-    else
-    {
-        if (cv->moveEffect == EFFECT_WEATHER_AND_SWITCH) return;
+        break;
+    case WEATHER_FAILURE_SAME_WEATHER:
+    case WEATHER_FAILURE_OVERWORLD:
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        se->effectFailed = cv->moveEffect != EFFECT_WEATHER_AND_SWITCH;
+        break;
     }
 }
 
@@ -3320,10 +3331,6 @@ static void HandleSetEffectSetRoom(struct BattleCalcValues *cv, struct SetEffect
         BattleScriptCall(BattleScript_TryRoomServiceLoop);
 }
 
-static void HandleSetEffectLunarDance(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
 u16 *GetBattlerStatPtr(struct BattlePokemon *battler, enum Stat stat)
 {
     switch (stat)
@@ -4148,6 +4155,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_RAGE] = HandleSetEffectRage,
     [MOVE_EFFECT_PREVENT_ESCAPE] = HandleSetEffectPreventEscape,
     [MOVE_EFFECT_NIGHTMARE] = HandleSetEffectNightmare,
+    [MOVE_EFFECT_CURSE] = HandleSetEffectCurse,
     [MOVE_EFFECT_GLAIVE_RUSH] = HandleSetEffectGlaiveRush,
     [MOVE_EFFECT_REMOVE_STATUS] = HandleSetEffectRemoveStatus,
     [MOVE_EFFECT_THRASH] = HandleSetEffectThrash,
@@ -4256,7 +4264,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_ROAR] = HandleSetEffectRoar,
     [MOVE_EFFECT_TOPSY_TURVY] = HandleSetEffectTopsyTurvy,
     [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,
-    [MOVE_EFFECT_LUNAR_DANCE] = HandleSetEffectLunarDance,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_LUNAR_BLESSING] = HandleSetEffectLunarBlessing,
     [MOVE_EFFECT_INSTRUCT] = HandleSetEffectInstruct,
