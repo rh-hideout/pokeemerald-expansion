@@ -71,7 +71,7 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
 static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(enum BattlerId battlerId, u32 moveSlot, enum Move moveId, s32 totalScore);
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum Move moveId, s32 totalScore);
 static void ClearAiLog(enum BattlerId battlerId);
 static const char *BattlerIdentifier(enum BattlerId battlerId);
 
@@ -1420,7 +1420,7 @@ void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveI
 
         if (!expectedAction->notMove && !movePasses)
         {
-            u32 moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
+            enum MoveSlot moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
             PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
             if (countExpected > 1)
                 Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched EXPECT_MOVES %S, got %S", filename, expectedAction->sourceLine, GetMoveName(expectedMoveId), GetMoveName(moveId));
@@ -1440,7 +1440,7 @@ void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveI
     DATA.trial.aiActionsPlayed[battlerId]++;
 }
 
-void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, u32 partyIndex)
+void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, enum PartyMon partyIndex)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -1525,7 +1525,7 @@ static void CheckIfMaxScoreEqualExpectMove(enum BattlerId battlerId, s32 target,
     }
 }
 
-static void PrintAiMoveLog(enum BattlerId battlerId, u32 moveSlot, enum Move moveId, s32 totalScore)
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum Move moveId, s32 totalScore)
 {
     s32 i, scoreFromLogs = 0;
 
@@ -2406,7 +2406,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.battlerParty = trainer;
-    DATA.currentPartyIndex = *partySize;
+    DATA.currentPartyIndex = (enum PartyMon)*partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
@@ -2466,7 +2466,7 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, enum PartyMon partyIndex, enum Gimmick gimmick)
 {
     enum Gimmick currentGimmick = DATA.chosenGimmick[trainer][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
@@ -2993,7 +2993,7 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
     return target;
 }
 
-void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *moveId, u32 *moveSlot, u32 sourceLine)
+void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *moveId, enum MoveSlot *moveSlot, u32 sourceLine)
 {
     u32 i;
     struct Pokemon *mon = CurrentMon(battlerId);
@@ -3055,7 +3055,6 @@ void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *mo
 
         // Check multiple gimmick use.
         SetGimmick(sourceLine, Test_GetBattlerTrainer(battlerId), DATA.currentMonIndexes[battlerId], ctx->gimmick);
-        *moveSlot |= RET_GIMMICK;
     }
 }
 
@@ -3086,7 +3085,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
     enum BattlerId battlerId = battler - gBattleMons;
     u32 moveId;
-    u32 moveSlot;
+    enum MoveSlot moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
 
@@ -3131,7 +3130,10 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     if (!ctx.explicitAllowed || ctx.allowed)
     {
-        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, moveSlot);
+        u32 recordedMoveSlot = moveSlot;
+        if (ctx.explicitGimmick && ctx.gimmick != GIMMICK_NONE)
+            recordedMoveSlot |= RET_GIMMICK;
+        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, recordedMoveSlot);
         PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET,
                           ctx.explicitTarget ? target : RECORDED_TARGET_DEFAULT);
     }
@@ -3168,7 +3170,8 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 {
     enum BattlerId battlerId = battler - gBattleMons;
     u32 moveId;
-    u32 moveSlot, id;
+    enum MoveSlot moveSlot;
+    u32 id;
     s32 target;
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_MOVE outside TURN");
@@ -3178,7 +3181,7 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 
     id = DATA.expectedAiActionIndex[battlerId];
     DATA.expectedAiActions[battlerId][id].type = B_ACTION_USE_MOVE;
-    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << (moveSlot & ~RET_GIMMICK);
+    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << moveSlot;
     DATA.expectedAiActions[battlerId][id].target = target;
     DATA.expectedAiActions[battlerId][id].explicitTarget = ctx->explicitTarget;
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
@@ -3201,7 +3204,7 @@ void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContex
     DATA.expectedAiActionIndex[battlerId]++;
 }
 
-void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i, id;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3260,7 +3263,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
 
 void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValue, struct TestAIScoreStruct cmpCtx)
 {
-    u32 moveSlot1, moveSlot2;
+    enum MoveSlot moveSlot1, moveSlot2;
     s32 i, target;
     struct MoveContext moveCtx = {0};
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3323,7 +3326,7 @@ void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpect
     DATA.expectedAiActionIndex[battlerId]++;
 }
 
-void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void Switch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3345,7 +3348,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.actionBattlers |= 1 << battlerId;
 }
 
-void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i, id;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3381,7 +3384,7 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
     DATA.actionBattlers |= 1 << battlerId;
 }
 
-void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void SendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3838,7 +3841,7 @@ void ValidateFinally(u32 sourceLine)
     INVALID_IF(STATE->parametersCount == 0, "FINALLY without PARAMETRIZE");
 }
 
-u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, u32 partyIndex)
+u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, enum PartyMon partyIndex)
 {
     return DATA.forcedAbilities[trainer][partyIndex];
 }
@@ -3848,14 +3851,14 @@ u32 TestRunner_Battle_GetForcedEnvironment(void)
     return DATA.forcedEnvironment;
 }
 
-u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, u32 partyIndex)
+u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, enum PartyMon partyIndex)
 {
     return DATA.chosenGimmick[trainer][partyIndex];
 }
 
 // TODO: Consider storing the last successful i and searching from i+1
 // to improve performance.
-struct AILogLine *GetLogLine(enum BattlerId battlerId, u32 moveIndex)
+struct AILogLine *GetLogLine(enum BattlerId battlerId, enum MoveSlot moveIndex)
 {
     s32 i;
 
@@ -3872,7 +3875,7 @@ struct AILogLine *GetLogLine(enum BattlerId battlerId, u32 moveIndex)
     return NULL;
 }
 
-void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score, bool32 setScore)
+void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score, bool32 setScore)
 {
     struct AILogLine *log;
 
@@ -3885,12 +3888,12 @@ void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId bat
     log->set = setScore;
 }
 
-void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score)
+void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score)
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, TRUE);
 }
 
-void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score)
+void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score)
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
 }
