@@ -22,6 +22,10 @@
 
 	.section script_data, "aw", %progbits
 
+BattleScript_MoveResolution::
+	attackcanceler
+	goto BattleScript_MoveEnd
+
 BattleScript_TryRevertWeatherform:
 	savebattlerorderindex
 	setbyte gBattlerOrderIndex, 0
@@ -75,10 +79,6 @@ BattleScript_TeraFormChange::
 	abilityonformchange BS_ATTACKER
 	effectsafterformchange
 	end3
-
-BattleScript_EffectStatChange::
-	attackcanceler
-	goto BattleScript_MoveEnd
 
 BattleScript_StatChangeHalfHp::
 	healthbarupdate BS_ATTACKER
@@ -870,8 +870,6 @@ BattleScript_EffectPlaceholder::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectHit::
-	attackcanceler
 BattleScript_MoveEnd::
 	moveendall
 	end
@@ -1193,10 +1191,6 @@ BattleScript_MoveUsedMustRecharge::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectStatusMoveEffect::
-	attackcanceler
-	goto BattleScript_MoveEnd
-
 BattleScript_MoveEffectEncore::
 	printstring STRINGID_PKMNGOTENCORE
 	waitmessage B_WAIT_TIME_LONG
@@ -1285,10 +1279,6 @@ BattleScript_MoveEffectAttract::
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotAttacker
 	return
-
-BattleScript_EffectGeneralMove::
-	attackcanceler
-	goto BattleScript_MoveEnd
 
 BattleScript_BatonPass::
 	returntoball BS_ATTACKER, FALSE

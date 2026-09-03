@@ -18,7 +18,6 @@
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
 struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
-    const u8 *battleScript;
     u16 battleTvScore:3;
     enum FactoryStyle battleFactoryStyle:4;
     u16 encourageEncore:1;
@@ -873,16 +872,6 @@ static inline const u8 *GetMoveAnimationScript(enum Move moveId)
         return gMovesInfo[MOVE_NONE].battleAnimScript;
     }
     return gMovesInfo[moveId].battleAnimScript;
-}
-
-static inline const u8 *GetMoveBattleScript(enum Move moveId)
-{
-    moveId = SanitizeMoveId(moveId);
-    assertf(gBattleMoveEffects[GetMoveEffect(moveId)].battleScript, "No battle script for %S", gMovesInfo[moveId].name)
-    {
-        return gBattleMoveEffects[EFFECT_PLACEHOLDER].battleScript;
-    }
-    return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;
 }
 
 #endif // GUARD_MOVES_H

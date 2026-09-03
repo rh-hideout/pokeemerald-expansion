@@ -252,7 +252,6 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             return CANCELER_RESULT_FAILURE;
         case DISOBEYS_RANDOM_MOVE:
             gCurrentMove = gCalledMove = gBattleMons[cv->battlerAtk].moves[gCurrMovePos];
-            gBattlescriptCurrInstr = GetMoveBattleScript(gCalledMove);
             BattleScriptCall(BattleScript_IgnoresAndUsesRandomMove);
             gBattlerTarget = GetBattleMoveTarget(gCalledMove, TARGET_NONE);
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
@@ -680,7 +679,7 @@ static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
             gCurrentMove = GetPledgeResultMove(partnerMove);
 
         gBattleStruct->pledgeState = PLEDGE_COMBO_ATTACK;
-        gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
+        // gBattlescriptCurrInstr = BattleScript_MoveResolution;
         BattleScriptCall(BattleScript_EffectHitCombinedPledge);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
@@ -1153,7 +1152,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
 
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
             SetTypeBeforeUsingMove(cv->move, cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk]);
-            gBattlescriptCurrInstr = GetMoveBattleScript(cv->move);
+            // gBattlescriptCurrInstr = BattleScript_MoveResolution;
             return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
         }
     }
@@ -4778,12 +4777,12 @@ static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
             if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
             {
                 gBattlerAbility = bounceBattler;
-                gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
+                // gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicBounce);
             }
             else if (gBattleStruct->magicCoatPending & 1u << bounceBattler)
             {
-                gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
+                // gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicCoat);
             }
             else
@@ -4924,8 +4923,8 @@ static enum MoveEndResult MoveEndMultihitMoveBlock(struct BattleCalcValues *cv)
                 for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
                     gBattleStruct->battlerState[battler].substituteBlocked = FALSE;
 
-                BattleScriptPush(GetMoveBattleScript(cv->move));
-                gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
+                // BattleScriptPush(BattleScript_MoveResolution);
+                BattleScriptCall(BattleScript_FlushMessageBox);
                 return MOVEEND_RESULT_BREAK;
             }
             gBattleStruct->eventState.moveEndBlock++;

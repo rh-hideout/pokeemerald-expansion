@@ -3809,8 +3809,6 @@ static void Cmd_jumptocalledmove(void)
 
     gBattleStruct->baseMove = gCurrentMove;
     ResetValuesForCalledMove();
-
-    gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
 }
 
 static void Cmd_statusanimation(void)

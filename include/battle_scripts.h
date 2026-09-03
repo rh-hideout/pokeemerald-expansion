@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_SCRIPTS_H
 #define GUARD_BATTLE_SCRIPTS_H
 
+extern const u8 BattleScript_MoveResolution[];
 extern const u8 BattleScript_SupersweetSyrupActivates[];
 extern const u8 BattleScript_OpportunistCopyStatChange[];
 extern const u8 BattleScript_MirrorHerbCopyStatChange[];
@@ -573,7 +574,6 @@ extern const u8 BattleScript_EffectAbsorbLiquidOoze[];
 extern const u8 BattleScript_EffectAccuracyDown[];
 extern const u8 BattleScript_SetUpBide[];
 extern const u8 BattleScript_EffectRoar[];
-extern const u8 BattleScript_EffectHit[];
 extern const u8 BattleScript_RestIsAlreadyAsleep[];
 extern const u8 BattleScript_RestCantSleep[];
 extern const u8 BattleScript_InsomniaProtects[];
@@ -583,7 +583,6 @@ extern const u8 BattleScript_MoveEffectRest[];
 extern const u8 BattleScript_MoveEffectTransform[];
 extern const u8 BattleScript_MoveEffectSubstitute[];
 extern const u8 BattleScript_MoveEffectShedTail[];
-extern const u8 BattleScript_EffectStatusMoveEffect[];
 extern const u8 BattleScript_MoveEffectEncore[];
 extern const u8 BattleScript_MoveEffectHealBell[];
 extern const u8 BattleScript_MoveEffectAromatherapy[];
@@ -593,8 +592,6 @@ extern const u8 BattleScript_MoveEffectAttract[];
 extern const u8 BattleScript_MegaSolActivatesHealing[];
 extern const u8 BattleScript_BatonPass[];
 extern const u8 BattleScript_MoveSwitchRet[];
-extern const u8 BattleScript_EffectGeneralMove[];
-extern const u8 BattleScript_EffectStatChange[];
 extern const u8 BattleScript_StatChangeHalfHp[];
 extern const u8 BattleScript_ForseeFutureSight[];
 extern const u8 BattleScript_EffectTeleport[];

@@ -585,7 +585,7 @@ void HandleAction_UseMove(void)
     }
     else
     {
-        gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
+        gBattlescriptCurrInstr = BattleScript_MoveResolution;
     }
 
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
