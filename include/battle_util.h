@@ -314,5 +314,9 @@ bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
+u32 GetWeatherFromOverworldWeather(u32 owWeather);
+enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
+bool32 IsCommanderActive(enum BattlerId battler);
+bool32 IsWholeSideAlive(enum BattlerId sideBattler);
 
 #endif // GUARD_BATTLE_UTIL_H

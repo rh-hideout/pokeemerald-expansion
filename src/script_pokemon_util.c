@@ -171,7 +171,7 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
     }
 }
 
-void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)
+void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, enum MoveSlot slot)
 {
 // Allows monIndex to go out of bounds of gParties[B_TRAINER_PLAYER]. Doesn't occur in vanilla
 #ifdef BUGFIX

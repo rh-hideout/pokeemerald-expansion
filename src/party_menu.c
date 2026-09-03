@@ -451,7 +451,7 @@ static void Task_ChoosePartyMon(u8 taskId);
 static void Task_ChooseMonForMoveRelearner(u8);
 static void CB2_ChooseMonForMoveRelearner(void);
 static void Task_BattlePyramidChooseMonHeldItems(u8);
-static void ShiftMoveSlot(struct BoxPokemon *, u8, u8);
+static void ShiftMoveSlot(struct BoxPokemon *, enum MoveSlot, enum MoveSlot);
 static void BlitBitmapToPartyWindow_LeftColumn(u8, u8, u8, u8, u8, bool8);
 static void BlitBitmapToPartyWindow_RightColumn(u8, u8, u8, u8, u8, bool8);
 static void CursorCb_Summary(u8);
@@ -5469,7 +5469,7 @@ static void TryUseItemOnMove(u8 taskId)
         else
         {
             gBattleStruct->itemPartyIndex[gBattlerInMenuId] = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
-            gBattleStruct->itemMoveIndex[gBattlerInMenuId] = ptr->data1;
+            gBattleStruct->itemMoveIndex[gBattlerInMenuId] = (enum MoveSlot)ptr->data1;
             gPartyMenuUseExitCallback = TRUE;
             RemoveBagItem(gSpecialVar_ItemId, 1);
             ScheduleBgCopyTilemapToVram(2);
@@ -8215,11 +8215,11 @@ void MoveDeleterForgetMove(void)
     u8 ppBonuses = GetBoxMonData(boxmon, MON_DATA_PP_BONUSES);
     ppBonuses &= gPPUpClearMask[gSpecialVar_0x8005];
     SetBoxMonData(boxmon, MON_DATA_PP_BONUSES, &ppBonuses);
-    for (u32 i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
+    for (enum MoveSlot i = gSpecialVar_0x8005; i < MOVESLOT_3; i++)
         ShiftMoveSlot(boxmon, i, i + 1);
 }
 
-static void ShiftMoveSlot(struct BoxPokemon *mon, u8 slotTo, u8 slotFrom)
+static void ShiftMoveSlot(struct BoxPokemon *mon, enum MoveSlot slotTo, enum MoveSlot slotFrom)
 {
     enum Move move1 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotTo);
     enum Move move0 = GetBoxMonData(mon, MON_DATA_MOVE1 + slotFrom);

@@ -106,8 +106,6 @@ EWRAM_DATA u16 gFollowerSteps = 0;
 
 struct Pokemon (*const gPlayerPartyPtr)[6] = &gParties[B_TRAINER_PLAYER];
 u8 (*const gPlayerPartyCountPtr) = &gPartiesCount[B_TRAINER_PLAYER];
-struct Pokemon (*const gEnemyPartyPtr)[6] = &gParties[B_TRAINER_OPPONENT_A];
-u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 
 #include "data/abilities.h"
 
@@ -1536,19 +1534,19 @@ u16 GiveMoveToBattleMon(struct BattlePokemon *mon, enum Move move)
     return MON_HAS_MAX_MOVES;
 }
 
-void SetMonMoveSlot(struct Pokemon *mon, enum Move move, u8 slot)
+void SetMonMoveSlot(struct Pokemon *mon, enum Move move, enum MoveSlot slot)
 {
     SetBoxMonMoveSlot(&mon->box, move, slot);
 }
 
-void SetBoxMonMoveSlot(struct BoxPokemon *mon, enum Move move, u8 slot)
+void SetBoxMonMoveSlot(struct BoxPokemon *mon, enum Move move, enum MoveSlot slot)
 {
     SetBoxMonData(mon, MON_DATA_MOVE1 + slot, &move);
     u32 pp = GetMovePP(move);
     SetBoxMonData(mon, MON_DATA_PP1 + slot, &pp);
 }
 
-static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, u8 slot)
+static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, enum MoveSlot slot)
 {
     u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
     u8 currPP = GetMonData(mon, MON_DATA_PP1 + slot);
@@ -1559,7 +1557,7 @@ static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, u8 slot)
     SetMonData(mon, MON_DATA_PP1 + slot, &finalPP);
 }
 
-void SetBattleMonMoveSlot(struct BattlePokemon *mon, enum Move move, u8 slot)
+void SetBattleMonMoveSlot(struct BattlePokemon *mon, enum Move move, enum MoveSlot slot)
 {
     mon->moves[slot] = move;
     mon->pp[slot] = GetMovePP(move);
@@ -1621,12 +1619,12 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
     }
 }
 
-void GiveMonDefaultMove(struct Pokemon *mon, u32 slot)
+void GiveMonDefaultMove(struct Pokemon *mon, enum MoveSlot slot)
 {
     GiveBoxMonDefaultMove(&mon->box, slot);
 }
 
-void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot)
+void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, enum MoveSlot slot)
 {
     enum Move move = MOVE_NONE;
     enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
@@ -3340,25 +3338,25 @@ const struct FormChange *GetSpeciesFormChanges(enum Species species)
     return formChanges;
 }
 
-u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex)
+u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, enum MoveSlot moveIndex)
 {
     u8 basePP = GetMovePP(move);
     return basePP + ((basePP * 20 * ((gPPUpGetMask[moveIndex] & ppBonuses) >> (2 * moveIndex))) / 100);
 }
 
-void RemoveMonPPBonus(struct Pokemon *mon, u8 moveIndex)
+void RemoveMonPPBonus(struct Pokemon *mon, enum MoveSlot moveIndex)
 {
     RemoveBoxMonPPBonus(&mon->box, moveIndex);
 }
 
-void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex)
+void RemoveBoxMonPPBonus(struct BoxPokemon *mon, enum MoveSlot moveIndex)
 {
     u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
     ppBonuses &= gPPUpClearMask[moveIndex];
     SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
-void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex)
+void RemoveBattleMonPPBonus(struct BattlePokemon *mon, enum MoveSlot moveIndex)
 {
     mon->ppBonuses &= gPPUpClearMask[moveIndex];
 }
@@ -3413,7 +3411,7 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     memset(&dst->volatiles, 0, sizeof(struct Volatiles));
 }
 
-bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, u8 moveIndex)
+bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, enum MoveSlot moveIndex)
 {
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
 }
@@ -3444,7 +3442,7 @@ const u32 sExpCandyExperienceTable[] = {
 };
 
 // Returns TRUE if the item has no effect on the Pokémon, FALSE otherwise
-bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, u8 moveIndex, bool8 usedByAI)
+bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, enum MoveSlot moveIndex, bool8 usedByAI)
 {
     u32 dataUnsigned;
     s32 dataSigned, evCap;

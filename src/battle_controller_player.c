@@ -930,7 +930,7 @@ static void ReloadMoveNames(enum BattlerId battler)
     else
     {
         gBattleStruct->zmove.viewing = FALSE;
-        MoveSelectionDestroyCursorAt(battler);
+        MoveSelectionDestroyCursorAt(MOVESLOT_0);
         MoveSelectionDisplayMoveNames(battler);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
@@ -1088,7 +1088,7 @@ void HandleMoveSwitching(enum BattlerId battler)
             gBattlerControllerFuncs[battler] = OakOldManHandleInputChooseMove;
         else
             gBattlerControllerFuncs[battler] = HandleInputChooseMove;
-        gMoveSelectionCursor[battler] = gMultiUsePlayerCursor;
+        gMoveSelectionCursor[battler] = (enum MoveSlot)gMultiUsePlayerCursor;
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -1800,7 +1800,7 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_FULL);
 }
 
-void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+void MoveSelectionCreateCursorAt(enum MoveSlot cursorPosition, u8 baseTileNum)
 {
     u16 src[2];
     src[0] = baseTileNum + 1;
@@ -1810,7 +1810,7 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
     CopyBgTilemapBufferToVram(0);
 }
 
-void MoveSelectionDestroyCursorAt(u8 cursorPosition)
+void MoveSelectionDestroyCursorAt(enum MoveSlot cursorPosition)
 {
     u16 src[2];
     src[0] = 0x1016;

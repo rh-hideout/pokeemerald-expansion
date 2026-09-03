@@ -462,7 +462,7 @@ static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count)
 
 #define IS_DUPLICATE_MOVE(move) IsMoveInMoveset(move, moves, i)
 
-static void AssignDefaultMove(enum Species species, u32 level, enum Move *moves, u32 index)
+static void AssignDefaultMove(enum Species species, u32 level, enum Move *moves, enum MoveSlot index)
 {
     u32 i = MAX_MON_MOVES;
     moves[index] = MOVE_NONE;
@@ -479,7 +479,7 @@ static void AssignDefaultMove(enum Species species, u32 level, enum Move *moves,
     }
 }
 
-static void AssignRandomTeachableMove(enum Species species, enum Move *moves, u32 i)
+static void AssignRandomTeachableMove(enum Species species, enum Move *moves, enum MoveSlot i)
 {
     u32 teachableCount = 0;
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);

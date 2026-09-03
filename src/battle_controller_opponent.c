@@ -458,12 +458,12 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
     else // Wild Pokémon - use random move
     {
         enum Move move = MOVE_NONE;
-        u32 chosenMoveIndex = 0;
+        enum MoveSlot chosenMoveIndex = MOVESLOT_0;
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
         do
         {
-            chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
+            chosenMoveIndex = (enum MoveSlot)(Random() & (MAX_MON_MOVES - 1));
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 

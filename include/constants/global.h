@@ -30,6 +30,7 @@
 #include "config/pokemon.h"
 #include "config/summary_screen.h"
 #include "config/wild_encounter.h"
+#include "config/bxpy.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.
@@ -159,6 +160,19 @@ enum FrontierLevelMode
 
 #define TRAINER_ID_LENGTH 4
 #define MAX_MON_MOVES 4
+
+// Declares a plain enum, making it 4 bytes.
+// I confirmed that `gChosenMovePos` and `gCurrMovePos` are 4 bytes and `gMoveSelectionCursor` is 16 bytes.
+// It also changes byte-oriented structure offsets such as ContestAIInfo (line 235), so it must be packed
+// because packing preserves the desired cross-enum compiler diagnostics.
+enum __attribute__((packed)) MoveSlot
+{
+    MOVESLOT_0,
+    MOVESLOT_1,
+    MOVESLOT_2,
+    MOVESLOT_3,
+};
+
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 
 #define CONTESTANT_COUNT 4
