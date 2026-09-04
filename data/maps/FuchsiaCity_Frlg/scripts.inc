@@ -204,7 +204,7 @@ FuchsiaCity_Text_SlowpokeSign::
 
 FuchsiaCity_Text_LaprasSign::
 	.string "Name: [Lapras]\n"
-	.string "[Aka] the king of the seas.$"
+	.string "AKA the king of the seas.$"
 
 FuchsiaCity_Text_OmanyteSign::
 	.string "Name: [Omanyte]\n"

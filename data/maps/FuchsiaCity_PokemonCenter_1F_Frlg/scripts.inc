@@ -35,7 +35,7 @@ FuchsiaCity_PokemonCenter_1F_Text_CantBecomeGoodTrainerWithOneMon::
 FuchsiaCity_PokemonCenter_1F_Text_PokemonLeagueWestOfViridian::
 	.string "There's a narrow trail west of\n"
 	.string "[Viridian City].\p"
-	.string "It goes to the [Pokémon League Hq].\n"
+	.string "It goes to the [Pokémon League HQ].\n"
 	.string "The HQ governs all [Trainers].$"
 
 FuchsiaCity_PokemonCenter_1F_Text_VisitSafariZoneForPokedex::

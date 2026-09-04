@@ -105,7 +105,7 @@ FallarborTown_CozmosHouse_Text_MayIHaveMeteorite:
 
 FallarborTown_CozmosHouse_Text_CozmoWentToMeteorFalls:
 	.string "[Prof. Cozmo] went off to [Meteor Falls]\n"
-	.string "on [Route] 114 with some people from\l"
+	.string "on [Route 114] with some people from\l"
 	.string "[Team Magma].$"
 
 FallarborTown_CozmosHouse_Text_FeelSorryForCozmo:
