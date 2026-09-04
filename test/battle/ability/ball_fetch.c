@@ -133,7 +133,6 @@ WILD_BATTLE_TEST("Ball Fetch can retrieve a Ball used before the Pokémon entere
 
 WILD_BATTLE_TEST("Ball Fetch retrieves the first failed Ball if it cannot activate immediately")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Item(ITEM_NUGGET); }
         OPPONENT(SPECIES_METAGROSS);
