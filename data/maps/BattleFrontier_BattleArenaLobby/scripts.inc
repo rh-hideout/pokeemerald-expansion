@@ -562,7 +562,7 @@ BattleFrontier_BattleArenaLobby_Text_ExplainSkillRules:
 
 BattleFrontier_BattleArenaLobby_Text_ExplainBodyRules:
 	.string "The third judging factor is “Body.”\n"
-	.string "This factor is based on how much [Hp]\l"
+	.string "This factor is based on how much HP\l"
 	.string "remained at the end of a battle.\p"
 	.string "The rating takes into account how much\n"
 	.string "HP a [Pokémon] had at the start of\l"

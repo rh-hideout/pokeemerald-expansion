@@ -340,7 +340,7 @@ DewfordTown_Hall_Text_LastTrend:
 	.string "{STR_VAR_1}”.$"
 
 DewfordTown_Hall_Text_BirthOfTrend:
-	.string "It's titled “[The Birth Of]\n"
+	.string "It's titled “[The Birth of]\n"
 	.string "{STR_VAR_1}”.$"
 
 DewfordTown_Hall_Text_SawTrendCoolestThing:

@@ -165,7 +165,7 @@ CeladonCity_Text_DeptStoreSign::
 
 CeladonCity_Text_GuardSpecProtectsFromStatus::
 	.string "[Trainer Tips]\p"
-	.string "[Guard Spec]. protects [Pokémon]\n"
+	.string "[Guard Spec.] protects [Pokémon]\n"
 	.string "from status-reduction moves during\l"
 	.string "battle.\p"
 	.string "Get your items at the\n"
