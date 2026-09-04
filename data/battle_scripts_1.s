@@ -572,7 +572,7 @@ BattleScript_RestoreHpEffectBattler::
     saveattacker
     copybyte gBattlerAttacker, gEffectBattler
 	printstring STRINGID_PKMNREGAINEDHEALTH
-    restoreattacker
+	restoreattacker
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -930,23 +930,6 @@ BattleScript_AromaVeilProtectsRet::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_AromaVeilProtects:
-	call BattleScript_AromaVeilProtectsRet
-	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
-
-BattleScript_AbilityProtectsDoesntAffectRet::
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_AbilityProtectsDoesntAffect::
-	call BattleScript_AbilityProtectsDoesntAffectRet
-	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
-
 BattleScript_InsomniaProtects::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
@@ -961,14 +944,14 @@ BattleScript_AlreadyAsleep::
 	printstring STRINGID_PKMNALREADYASLEEP
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_CantMakeAsleep::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gUproarAwakeStringIds
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_EffectAbsorbLiquidOoze::
 	call BattleScript_AbilityPopUp
@@ -1087,9 +1070,11 @@ BattleScript_MoveEffectRest::
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
+	attackanimation
+	waitanimation
 	playanimation BS_EFFECT_BATTLER, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_EFFECT_BATTLER
-	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_DOUBLE
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -2034,7 +2019,7 @@ BattleScript_SideStatusWoreOff::
     saveattacker
     copybyte gBattlerAttacker, sBATTLER
 	printstring STRINGID_PKMNSXWOREOFF
-    restoreattacker
+	restoreattacker
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -2171,7 +2156,7 @@ BattleScript_RoarSuccessSwitch::
 	switchinevents
 	jumpifbyte CMP_EQUAL, sSWITCH_CASE, B_SWITCH_RED_CARD, BattleScript_RoarSuccessSwitch_Ret
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
-	goto BattleScript_MoveEnd
+	return
 BattleScript_RoarSuccessSwitch_Ret:
 	swapattackerwithtarget  @ continuation of RedCardActivates
 	restoretarget
@@ -2409,7 +2394,7 @@ BattleScript_RemoveHazards::
     saveattacker
     copybyte gBattlerAttacker, sBATTLER
 	printfromtable gRemoveHazardsStringIds
-    restoreattacker
+	restoreattacker
 BattleScript_RemoveHazardsRet:
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -3698,10 +3683,6 @@ BattleScript_FlashFireBoost::
 	return
 
 BattleScript_AbilityPreventsPhasingOut::
-	call BattleScript_AbilityPreventsPhasingOutRet
-	goto BattleScript_MoveEnd
-
-BattleScript_AbilityPreventsPhasingOutRet::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNANCHORSITSELFWITH
@@ -5103,7 +5084,7 @@ BattleScript_SleepClauseBlocked::
 	setmoveresultflags MOVE_RESULT_FAILED
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_SleepClausePrevents::
 	pause B_WAIT_TIME_SHORT

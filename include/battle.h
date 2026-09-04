@@ -546,7 +546,6 @@ struct BattlerState
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
     u16 toxicChainActivates:1;
     u16 substituteBlocked:1;
-    u16 validStatusMoveTarget:1;
     u16 padding:5;
     // End of Word
 };

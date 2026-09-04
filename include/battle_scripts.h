@@ -485,7 +485,6 @@ extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
 extern const u8 BattleScript_SleepClausePrevents[];
 extern const u8 BattleScript_PowerConstruct[];
-extern const u8 BattleScript_AbilityProtectsDoesntAffect[];
 extern const u8 BattleScript_SafeguardProtected[];
 extern const u8 BattleScript_SleepClauseBlocked[];
 extern const u8 BattleScript_AlreadyAsleep[];
@@ -610,7 +609,7 @@ extern const u8 BattleScript_EffectPowerSplit[];
 extern const u8 BattleScript_EffectGuardSplit[];
 extern const u8 BattleScript_TryHitSwitchTarget[];
 extern const u8 BattleScript_HitSwitchTargetDynamaxed[];
-extern const u8 BattleScript_AbilityPreventsPhasingOutRet[];
+extern const u8 BattleScript_AbilityPreventsPhasingOut[];
 extern const u8 BattleScript_FinalGambit[];
 extern const u8 BattleScript_Defog[];
 

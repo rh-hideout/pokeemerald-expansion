@@ -84,13 +84,13 @@ static void HandleSetEffectNone(struct BattleCalcValues *cv, struct SetEffect *s
 static bool32 CanSetNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se, enum ResultOption option)
 {
     return CanSetNonVolatileStatus(
-                    cv->battlerAtk,
-                    se->effectBattler,
-                    cv->abilities[cv->battlerAtk],
-                    cv->abilities[se->effectBattler],
-                    se->moveEffect,
-                    option
-                );
+                cv->battlerAtk,
+                se->effectBattler,
+                cv->abilities[cv->battlerAtk],
+                cv->abilities[se->effectBattler],
+                se->moveEffect,
+                option
+            );
 }
 
 static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -101,9 +101,10 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
 
     if (cv->onlyChecking) return;
 
-    if (se->effectFailed && !cv->isStatusMove)
+    if (se->effectFailed)
     {
-        BattleScriptCall(se->script);
+        if (!cv->isStatusMove) return;
+        BattleScriptPush(se->script);
         CanSetNonVolatile(cv, se, RUN_SCRIPT);
     }
     else
@@ -123,7 +124,6 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
         SetEffectFailAndCheckReturn;
         gBattlerAbility = se->effectBattler;
         BattleScriptPushAndSet(se->script, BattleScript_OwnTempoPreventsRet);
-        BattleScriptCall(BattleScript_AbilityPopUp);
     }
     else if (gBattleMons[se->effectBattler].volatiles.confusionTimer > 0)
     {
@@ -144,7 +144,7 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
         PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-    else
+    else if (!cv->onlyChecking)
     {
         gBattleMons[se->effectBattler].volatiles.confusionTimer = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectConfusion);
@@ -903,7 +903,7 @@ static void HandleSetEffectProtect(struct BattleCalcValues *cv, struct SetEffect
     else if (GetProtectType(protectMethod) == PROTECT_TYPE_SIDE)
     {
         gProtectStructs[cv->battlerAtk].protected = protectMethod;
-        PrepareStringBattleWithWait(STRINGID_PKMNSEEDED, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_PROTECTEDTEAM, se->effectBattler);
     }
     else
     {
@@ -2729,14 +2729,14 @@ static void HandleSetEffectPsychUp(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectMagicCoat(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsLastMonToMove(se->effectBattler))
+    if (IsLastMonToMove(cv->battlerAtk))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
     {
-        gProtectStructs[se->effectBattler].bounceMove = TRUE;
-        PrepareStringBattleWithWait(STRINGID_PKMNSHROUDEDITSELF, se->effectBattler);
+        gProtectStructs[cv->battlerAtk].bounceMove = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNSHROUDEDITSELF, cv->battlerAtk);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
@@ -2781,14 +2781,14 @@ static void HandleSetEffectYawn(struct BattleCalcValues *cv, struct SetEffect *s
 
 static void HandleSetEffectSnatch(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsLastMonToMove(se->effectBattler))
+    if (IsLastMonToMove(cv->battlerAtk))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
     {
-        gProtectStructs[se->effectBattler].stealMove = TRUE;
-        PrepareStringBattleWithWait(STRINGID_PKMNWAITSFORTARGET, se->effectBattler);
+        gProtectStructs[cv->battlerAtk].stealMove = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNWAITSFORTARGET, cv->battlerAtk);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
@@ -3646,7 +3646,7 @@ static void HandleSetEffectRoar(struct BattleCalcValues *cv, struct SetEffect *s
     else if (cv->abilities[se->effectBattler] == ABILITY_SUCTION_CUPS)
     {
         gBattlerAbility = se->effectBattler;
-        SetEffectFail(BattleScript_AbilityPreventsPhasingOutRet, cv->isStatusMove);
+        SetEffectFail(BattleScript_AbilityPreventsPhasingOut, cv->isStatusMove);
     }
     else if (gBattleMons[se->effectBattler].volatiles.root)
     {
@@ -3670,7 +3670,7 @@ static bool32 IsAnyStatChanged(enum BattlerId battler, enum Ability ability)
 
 static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsAnyStatChanged(se->effectBattler, cv->abilities[se->effectBattler]))
+    if (!IsAnyStatChanged(se->effectBattler, cv->abilities[se->effectBattler]))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }

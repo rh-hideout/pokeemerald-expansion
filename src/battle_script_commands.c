@@ -3809,6 +3809,7 @@ static void Cmd_jumptocalledmove(void)
 
     gBattleStruct->baseMove = gCurrentMove;
     ResetValuesForCalledMove();
+    gBattlescriptCurrInstr = BattleScript_MoveResolution;
 }
 
 static void Cmd_statusanimation(void)
