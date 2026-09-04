@@ -1051,6 +1051,7 @@ static void CB2_HandleStartBattle(void)
     case 13:
         gBattleCommunication[MULTIUSE_STATE]++;
         gBattleCommunication[1] = 1;
+        [[fallthrough]];
     case 6:
     case 10:
     case 14:
@@ -1087,7 +1088,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         }
         if (gWirelessCommType)
             LoadWirelessStatusIndicatorSpriteGfx();
-        // fall through
+        [[fallthrough]];
     case 1:
         if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         {
@@ -3822,7 +3823,7 @@ static void HandleTurnActionSelectionState(void)
             {
                 ComputeAiBattlerDecisions(battler); // Do AI score computations here so we can use them in AI_TrySwitchOrUseItem
             }
-            // fallthrough
+            [[fallthrough]];
         case STATE_BEFORE_ACTION_CHOSEN: // Choose an action.
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_MON_NONE;
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI

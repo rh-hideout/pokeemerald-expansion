@@ -1103,6 +1103,7 @@ static void AnimTask_RotateMonSpriteToSide_Step(u8 taskId)
         {
         case 1:
             ResetSpriteRotScale(gTasks[taskId].data[5]);
+            [[fallthrough]];
         case 0:
         default:
             DestroyAnimVisualTask(taskId);

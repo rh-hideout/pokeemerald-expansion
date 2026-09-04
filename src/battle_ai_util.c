@@ -6547,6 +6547,7 @@ static bool32 AI_CanStatChangeBePrevented(struct BattleCalcValues *cv)
     case TARGET_ALL_BATTLERS:
         if (cv->battlerAtk == cv->battlerDef)
             return FALSE;
+        [[fallthrough]];
     default:
         if (IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move)
          || cv->abilities[cv->battlerDef] == ABILITY_GOOD_AS_GOLD)
