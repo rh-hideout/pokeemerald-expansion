@@ -1271,7 +1271,7 @@ static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, e
     u32 windowWidth = BXPY_SPECIES_ITEM_WIDTH * TILE_SIZE_1BPP;
     u32 color = (BXPY_GetPosition() == partyMonIndex) ? BXPY_FONT_COLOR_PLAYER_SELECTED : BXPY_FONT_COLOR_PLAYER;
 
-    StringCopy(gStringVar1,GetItemName(heldItem));
+    StringCopy(gStringVar1, GetItemName(heldItem));
     fontId = GetFontIdToFit(gStringVar1,fontId,letterSpacing,windowWidth);
 
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
@@ -1294,7 +1294,7 @@ static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum
         color = BXPY_FONT_COLOR_PLAYER;
 
     if (BXPY_TeamPreview_ShouldHideEnemyLevel(side))
-        StringCopy(gStringVar2,COMPOUND_STRING("?"));
+        StringCopy(gStringVar2, COMPOUND_STRING("?"));
     else
         ConvertIntToDecimalStringN(gStringVar2,GetMonData(mon,MON_DATA_LEVEL),STR_CONV_MODE_LEFT_ALIGN,CountDigits(MAX_LEVEL));
 

@@ -1448,7 +1448,7 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveS
 
 static u32 GetTvPartyIndex(u32 battler)
 {
-    u32 index = gBattlerPartyIndexes[battler];
+    u32 index = (u32)gBattlerPartyIndexes[battler];
     if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && (GetBattlerPosition(battler) & BIT_FLANK))
         index += MULTI_PARTY_SIZE;
     return index;

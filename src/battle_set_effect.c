@@ -2054,15 +2054,36 @@ static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect 
     }
 }
 
+static bool32 IsMoveInBattlerMoveset(enum BattlerId battler, enum Move move)
+{
+    for (u32 moveIndex = 0; moveIndex <= MAX_MON_MOVES; moveIndex++)
+    {
+        if (gBattleMons[battler].moves[moveIndex] == move)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattlerId aromaVeilBattler = B_BATTLER_0;
+    enum Move moveToDisable = gLastMoves[se->effectBattler];
 
-    u32 moveIndex = 0;
-    for (moveIndex = 0; moveIndex <= MAX_MON_MOVES; moveIndex++)
+    if (GetConfig(B_DISABLE_TURNS) == GEN_1)
     {
-        if (gBattleMons[se->effectBattler].moves[moveIndex] == gLastMoves[se->effectBattler])
-            break;
+        enum Move eligibleMoves[MAX_MON_MOVES] = {0};
+        s32 eligibleMovesCount = 0;
+
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            if (gBattleMons[se->effectBattler].moves[i] == MOVE_NONE || gBattleMons[se->effectBattler].pp[i] == 0)
+                continue;
+            else
+                eligibleMoves[eligibleMovesCount++] = gBattleMons[se->effectBattler].moves[i];
+        }
+
+        if (eligibleMovesCount > 0)
+            moveToDisable = eligibleMoves[RandomUniform(RNG_DISABLE_MOVE, 0, (eligibleMovesCount - 1))];
     }
 
     if (IsAbilityOnSideWithArr(se->effectBattler, ABILITY_AROMA_VEIL, cv->abilities, &aromaVeilBattler))
@@ -2072,23 +2093,29 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
         BattleScriptPushAndSet(se->script, BattleScript_AromaVeilProtectsRet);
     }
     else if (gBattleMons[se->effectBattler].volatiles.disabledMove != MOVE_NONE
-          || moveIndex == MAX_MON_MOVES
-          || gBattleMons[se->effectBattler].pp[moveIndex] == 0)
+          || !IsMoveInBattlerMoveset(se->effectBattler, moveToDisable)
+          || moveToDisable == MOVE_NONE)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (!cv->onlyChecking)
     {
-        gBattleMons[se->effectBattler].volatiles.disabledMove = gBattleMons[se->effectBattler].moves[moveIndex];
+        if (GetConfig(B_DISABLE_TURNS) == GEN_1)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 0, 7);
+        else if (GetConfig(B_DISABLE_TURNS) == GEN_2)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 1, 7);
+        else if (GetConfig(B_DISABLE_TURNS) == GEN_3)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 2, 5);
+        else if (GetConfig(B_DISABLE_TURNS) == GEN_4)
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7);
+        else // GEN_5+
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
+        // If timer set to zero turns, don't set disabledMove
+        if (gBattleMons[gBattlerTarget].volatiles.disableTimer != 0)
+            gBattleMons[gBattlerTarget].volatiles.disabledMove = moveToDisable;
 
-        if (B_DISABLE_TURNS >= GEN_5)
-            gBattleMons[se->effectBattler].volatiles.disableTimer = B_DISABLE_TIMER;
-        else if (B_DISABLE_TURNS >= GEN_4)
-            gBattleMons[se->effectBattler].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
-        else
-            gBattleMons[se->effectBattler].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[se->effectBattler].moves[moveIndex])
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToDisable)
         PrepareStringBattleWithWait(STRINGID_PKMNMOVEWASDISABLED, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }

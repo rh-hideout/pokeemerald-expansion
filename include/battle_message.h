@@ -241,7 +241,7 @@ struct BattleMsgData
     enum Item lastItem;
     enum Ability lastAbility;
     u8 scrActive;
-    u8 bakScriptPartyIdx;
+    enum PartyMon bakScriptPartyIdx;
     u8 hpScale;
     u8 itemEffectBattler;
     enum Type moveType;

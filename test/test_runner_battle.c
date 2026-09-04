@@ -1440,7 +1440,7 @@ void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveI
     DATA.trial.aiActionsPlayed[battlerId]++;
 }
 
-void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, u32 partyIndex)
+void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, enum PartyMon partyIndex)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -2406,7 +2406,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.battlerParty = trainer;
-    DATA.currentPartyIndex = *partySize;
+    DATA.currentPartyIndex = (enum PartyMon)*partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
@@ -2466,7 +2466,7 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, enum PartyMon partyIndex, enum Gimmick gimmick)
 {
     enum Gimmick currentGimmick = DATA.chosenGimmick[trainer][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
@@ -3204,7 +3204,7 @@ void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContex
     DATA.expectedAiActionIndex[battlerId]++;
 }
 
-void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i, id;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3326,7 +3326,7 @@ void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpect
     DATA.expectedAiActionIndex[battlerId]++;
 }
 
-void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void Switch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3348,7 +3348,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.actionBattlers |= 1 << battlerId;
 }
 
-void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i, id;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3384,7 +3384,7 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
     DATA.actionBattlers |= 1 << battlerId;
 }
 
-void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
+void SendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex)
 {
     s32 i;
     enum BattlerId battlerId = battler - gBattleMons;
@@ -3841,7 +3841,7 @@ void ValidateFinally(u32 sourceLine)
     INVALID_IF(STATE->parametersCount == 0, "FINALLY without PARAMETRIZE");
 }
 
-u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, u32 partyIndex)
+u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, enum PartyMon partyIndex)
 {
     return DATA.forcedAbilities[trainer][partyIndex];
 }
@@ -3851,7 +3851,7 @@ u32 TestRunner_Battle_GetForcedEnvironment(void)
     return DATA.forcedEnvironment;
 }
 
-u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, u32 partyIndex)
+u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, enum PartyMon partyIndex)
 {
     return DATA.chosenGimmick[trainer][partyIndex];
 }

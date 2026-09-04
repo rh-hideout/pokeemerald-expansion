@@ -142,7 +142,7 @@ static void BXPY_ErrorCheck_BringSizeNotEnough(void)
 
 static void BXPY_FormatProblemListList(u32 *ids, u32 count, const u8 *(*getName)(u16))
 {
-    StringCopy(gStringVar1,COMPOUND_STRING(""));
+    StringCopy(gStringVar1, COMPOUND_STRING(""));
 
     for (u32 i = 0; i < count; i++)
     {
@@ -313,10 +313,10 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA]);
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetTrainerDifficultyLevel(TRAINER_BATTLE_PARAM.opponentA)][TRAINER_BATTLE_PARAM.opponentA]);
 
     if (BXPY_BattleGreaterThanTwoTrainers())
-        CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB]);
+        CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetTrainerDifficultyLevel(TRAINER_BATTLE_PARAM.opponentB)][TRAINER_BATTLE_PARAM.opponentB]);
 }
 
 void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSize)

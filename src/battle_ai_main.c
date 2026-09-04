@@ -514,48 +514,52 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
             SetAIUsingGimmick(battler, NO_GIMMICK);
-            if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
+            if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_MON_NONE)
             {
-                s32 monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
-                if (monToSwitchId == PARTY_SIZE)
+                enum PartyMon monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
+                if (monToSwitchId == PARTY_MON_NONE)
                 {
                     GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
 
-                    for (monToSwitchId = (lastId-1); monToSwitchId >= 0; monToSwitchId--)
+                    for (s32 candidate = lastId - 1; candidate >= 0; candidate--)
                     {
-                        if (!IsValidForBattle(&party[monToSwitchId]))
+                        enum PartyMon partyCandidate = (enum PartyMon)candidate;
+
+                        if (!IsValidForBattle(&party[partyCandidate]))
                             continue;
-                        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monToSwitchId, battlerIn1, battlerIn2))
+                        if (IsPartyMonOnFieldOrChosenToSwitch(battler, partyCandidate, battlerIn1, battlerIn2))
                             continue;
-                        if (IsPartyMonPlannedToBeSwitchedInByPartner(monToSwitchId, battler))
+                        if (IsPartyMonPlannedToBeSwitchedInByPartner(partyCandidate, battler))
                             continue;
-                        if (IsAceMon(battler, monToSwitchId))
+                        if (IsAceMon(battler, partyCandidate))
                             continue;
+                        monToSwitchId = partyCandidate;
                         break;
                     }
 
-                }
-
-                if (monToSwitchId < 0)
-                {
-                    enum BattlerId battler1, battler2;
-                    s32 lastId = GetAILastPartyIndex(battler); // + 1
-
-                    if (!IsDoubleBattle())
+                    if (monToSwitchId == PARTY_MON_NONE)
                     {
-                        battler2 = battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-                    }
-                    else
-                    {
-                        battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-                        battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-                    }
+                        enum BattlerId battler1, battler2;
 
-                    for (monToSwitchId = 0; monToSwitchId < lastId; monToSwitchId ++)
-                    {
-                        if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][monToSwitchId])
-                         && !IsPartyMonOnFieldOrChosenToSwitch(battler, monToSwitchId, battler1, battler2))
-                            break;
+                        if (!IsDoubleBattle())
+                        {
+                            battler2 = battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                        }
+                        else
+                        {
+                            battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                            battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+                        }
+
+                        for (enum PartyMon candidate = PARTY_MON_0; candidate < lastId; candidate++)
+                        {
+                            if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][candidate])
+                             && !IsPartyMonOnFieldOrChosenToSwitch(battler, candidate, battler1, battler2))
+                            {
+                                monToSwitchId = candidate;
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -645,7 +649,7 @@ void Ai_InitPartyStruct(void)
         if (!TrainerHasParty(trainer))
             continue;
 
-        for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+        for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
         {
             mon = &gParties[trainer][monIndex];
             if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
@@ -914,7 +918,7 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     ctx.weather = GetWeather();
     ctx.terrain = gFieldTimers.terrain;
     memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartyMon partyIndex = PARTY_MON_0; partyIndex < PARTY_MON_NONE; partyIndex++)
     {
         u32 currentStallValue = gAiBattleData->playerStallMons[partyIndex];
         if (currentStallValue == 0 || GetMonData(&party[partyIndex], MON_DATA_HP) == 0)
@@ -2121,7 +2125,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (!hasPartner
           || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove)
           || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
-          || gBattleStruct->monToSwitchIntoId[GetPartnerBattler(battlerAtk)] != PARTY_SIZE)
+          || gBattleStruct->monToSwitchIntoId[GetPartnerBattler(battlerAtk)] != PARTY_MON_NONE)
             ADJUST_SCORE(-20);
         break;
     case EFFECT_HELPING_HAND:
@@ -2129,7 +2133,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove)
           || aiData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_GOOD_AS_GOLD
           || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
-          || gBattleStruct->monToSwitchIntoId[GetPartnerBattler(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
+          || gBattleStruct->monToSwitchIntoId[GetPartnerBattler(battlerAtk)] != PARTY_MON_NONE) //Partner is switching out.
             ADJUST_SCORE(-20);
         break;
     case EFFECT_TRICK:
@@ -2950,7 +2954,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_REVIVAL_BLESSING:
-        if (GetFirstFaintedPartyIndex(battlerAtk) == PARTY_SIZE)
+        if (GetFirstFaintedPartyIndex(battlerAtk) == PARTY_MON_NONE)
             ADJUST_SCORE(-10);
         else if (CanAIFaintTarget(battlerAtk, battlerDef, 0))
             ADJUST_SCORE(-10);
@@ -3048,7 +3052,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         // Don't use a status move if the mon is the last one in the party, has no good switchin, or is trapped
         else if (GetBattleMoveCategory(move) == DAMAGE_CATEGORY_STATUS
             && (CountUsablePartyMons(battlerAtk) < 1
-            || gAiLogicData->mostSuitableMonId[battlerAtk] == PARTY_SIZE
+            || gAiLogicData->mostSuitableMonId[battlerAtk] == PARTY_MON_NONE
             || IsBattlerTrapped(battlerDef, battlerAtk)))
             ADJUST_SCORE(-30);
     }
@@ -5578,12 +5582,12 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_REVIVAL_BLESSING:
-        if (GetFirstFaintedPartyIndex(battlerAtk) != PARTY_SIZE)
+        if (GetFirstFaintedPartyIndex(battlerAtk) != PARTY_MON_NONE)
         {
             ADJUST_SCORE(DECENT_EFFECT);
             if (aiData->shouldSwitch & (1u << battlerAtk)) // Bad matchup
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (aiData->mostSuitableMonId[battlerAtk] != PARTY_SIZE) // Good mon to send in after
+            if (aiData->mostSuitableMonId[battlerAtk] != PARTY_MON_NONE) // Good mon to send in after
                 ADJUST_SCORE(WEAK_EFFECT);
         }
         break;
