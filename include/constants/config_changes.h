@@ -248,6 +248,7 @@
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \
+    F(NO_SHINIES_WITHOUT_POKEBALLS, noShiniesWithoutPokeBalls, (u32, TRUE))          \
     F(POKERUS_ENABLED,           pokerusEnabled,          (u32, TRUE))          \
     F(POKERUS_SPREAD_ADJACENCY,  pokerusSpreadAdjacency,  (u32, GEN_COUNT - 1)) \
     F(POKERUS_SPREAD_DAYS_LEFT,  pokerusSpreadDaysLeft,   (u32, GEN_COUNT - 1)) \

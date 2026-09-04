@@ -58,8 +58,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
-EWRAM_DATA bool8 gIsFishingEncounter = 0;
-EWRAM_DATA bool8 gIsSurfingEncounter = 0;
+EWRAM_INIT u8 gEncounterType = ENCOUNTER_TYPE_NONE;
 EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
@@ -514,7 +513,9 @@ void CreateWildMon(enum Species species, u8 level)
 {
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
 }
 
@@ -785,7 +786,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    gIsSurfingEncounter = TRUE;
+                    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
                     if (TryDoDoubleWildBattle())
                     {
                         struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
@@ -950,7 +951,7 @@ void FishingWildEncounter(u8 rod)
     s16 x, y;
     enum TimeOfDay timeOfDay;
 
-    gIsFishingEncounter = TRUE;
+    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_FISHING);
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (CheckFeebasAtCoords(x, y) == TRUE)
     {

@@ -12,6 +12,8 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "caps.h"
+#include "config_changes.h"
+#include "wild_encounter.h"
 #include "data.h"
 #include "daycare.h"
 #include "dexnav.h"
@@ -864,6 +866,11 @@ void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 p
     CalculateMonStats(mon);
 }
 
+static bool32 RequiresPokeBallForShiny(enum GeneratedMonOrigin origin)
+{
+    return origin == WILDMON_ORIGIN || origin == STATIC_WILDMON_ORIGIN;
+}
+
 bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 {
     if (FlagGet(P_FLAG_FORCE_NO_SHINY))
@@ -875,7 +882,7 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
 
-    if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
+    if (RequiresPokeBallForShiny(ENCOUNTER_ORIGIN(gEncounterType)) && GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && !HasAtLeastOnePokeBall())
         return FALSE;
 
     u32 totalRerolls = 0;
@@ -6919,7 +6926,9 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
     enum Species species = ResolveSpecies(monTemplate->species);
     u8 level = ResolveLevel(monTemplate->level);
     u32 personality = ResolvePersonality(species, monTemplate->gender, monTemplate->nature, monTemplate->origin);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, monTemplate->origin);
     CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
 
     enum Item heldItem = ResolveHeldItem(monTemplate->heldItem);
     SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
