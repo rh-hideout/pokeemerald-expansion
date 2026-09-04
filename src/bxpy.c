@@ -142,7 +142,7 @@ static void BXPY_ErrorCheck_BringSizeNotEnough(void)
 
 static void BXPY_FormatProblemListList(u32 *ids, u32 count, const u8 *(*getName)(u16))
 {
-    StringCopy(gStringVar1,COMPOUND_STRING(""));
+    StringCopy(gStringVar1, COMPOUND_STRING(""));
 
     for (u32 i = 0; i < count; i++)
     {
