@@ -1426,6 +1426,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
     if (!se->primary && !affectsUser && IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         se->moveEffect = MOVE_EFFECT_NONE;
     else if (!se->primary
+          && !se->bypassSheerForce
           && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
           && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
         se->moveEffect = MOVE_EFFECT_NONE;
@@ -1456,8 +1457,9 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     se.moveEffect = moveEffect;
     se.script = battleScript;
     se.effectBattler = effectBattler;
-    se.primary = effectFlags & EFFECT_PRIMARY;
-    se.certain = effectFlags & EFFECT_CERTAIN;
+    se.primary = (effectFlags & EFFECT_PRIMARY) != 0;
+    se.certain = (effectFlags & EFFECT_CERTAIN) != 0;
+    se.bypassSheerForce = (effectFlags & EFFECT_BYPASS_SHEER_FORCE) != 0;
 
     SetMoveEffect(&cv, &se);
 }
@@ -1539,4 +1541,3 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
         return FALSE;
     }
 }
-
