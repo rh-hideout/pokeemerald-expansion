@@ -106,14 +106,14 @@ static const u8 sText_LinkTrainerSentOutTwoPkmn[] = _("{B_LINK_OPPONENT1_NAME} s
 static const u8 sText_TwoLinkTrainersIntroSendOutPkmn[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_LINK_OPPONENT_MON1_NAME}! {B_LINK_OPPONENT2_NAME} sent out {B_LINK_OPPONENT_MON2_NAME}!");
 static const u8 sText_LinkTrainerSentOutPkmn2[] = _("{B_LINK_OPPONENT1_NAME} sent out {B_LINK_OPPONENT_MON2_NAME}!");
 static const u8 sText_LinkTrainerMultiSentOutPkmn[] = _("{B_LINK_SCR_TRAINER_NAME} sent out {B_BUFF1}!");
-static const u8 sText_GoPkmn[] = _("Go! {B_PLAYER_MON1_NAME}!");
-static const u8 sText_GoTwoPkmn[] = _("Go! {B_PLAYER_MON1_NAME} and {B_PLAYER_MON2_NAME}!");
-static const u8 sText_GoPkmn2[] = _("Go! {B_BUFF1}!");
-static const u8 sText_DoItPkmn[] = _("You're in charge, {B_BUFF1}!");
-static const u8 sText_GoForItPkmn[] = _("Go for it, {B_BUFF1}!");
-static const u8 sText_BeCarefulPkmn[] = _("Be careful, {B_PLAYER_MON1_NAME}!");
+static const u8 sText_GoPkmn[] = _("Go! {B_PLAYER_MON1_TITLE}!");
+static const u8 sText_GoTwoPkmn[] = _("Go! {B_PLAYER_MON1_TITLE} and {B_PLAYER_MON2_TITLE}!");
+static const u8 sText_GoPkmn2[] = _("Go! {B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_DoItPkmn[] = _("You're in charge, {B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_GoForItPkmn[] = _("Go for it, {B_SCR_ACTIVE_TITLE}!");
+static const u8 sText_BeCarefulPkmn[] = _("Be careful, {B_PLAYER_MON1_TITLE}!");
 static const u8 sText_JustALittleMorePkmn[] = _("Just a little more! Hang in there, {B_BUFF1}!"); //currently unused, will require code changes
-static const u8 sText_YourFoesWeakGetEmPkmn[] = _("Your opponent's weak! Get 'em, {B_BUFF1}!");
+static const u8 sText_YourFoesWeakGetEmPkmn[] = _("Your opponent's weak! Get 'em, {B_SCR_ACTIVE_TITLE}!");
 static const u8 sText_LinkPartnerSentOutPkmn1GoPkmn[] = _("{B_LINK_PARTNER_NAME} sent out {B_LINK_PLAYER_MON1_NAME}! Go, {B_LINK_PLAYER_MON2_NAME}!");
 static const u8 sText_LinkPartnerSentOutPkmn2GoPkmn[] = _("{B_LINK_PARTNER_NAME} sent out {B_LINK_PLAYER_MON2_NAME}! Go, {B_LINK_PLAYER_MON1_NAME}!");
 static const u8 sText_LinkPartnerSentOutPkmn1[] = _("{B_LINK_PARTNER_NAME} sent out {B_BUFF1}!");
@@ -1611,6 +1611,22 @@ static const u8 sText_Your2[] = _("your");
 static const u8 sText_Opposing2[] = _("the opposing");
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 
+static const u8 *const sRibbonTitles[NUM_RIBBONS] =
+{
+    [CHAMPION_RIBBON] = COMPOUND_STRING("{STR_VAR_1} the Champion"),
+    [WINNING_RIBBON]  = COMPOUND_STRING("{STR_VAR_1} the Veteran"),
+    [VICTORY_RIBBON]  = COMPOUND_STRING("{STR_VAR_1} the Veteran Victor"),
+    [ARTIST_RIBBON]   = COMPOUND_STRING("{STR_VAR_1} the Model for Paintings"),
+    [EFFORT_RIBBON]   = COMPOUND_STRING("{STR_VAR_1} the Once Well-Trained"),
+    [MARINE_RIBBON]   = COMPOUND_STRING("{STR_VAR_1} the Battle Champion"),
+    [LAND_RIBBON]     = COMPOUND_STRING("{STR_VAR_1} the Regional Champion"),
+    [SKY_RIBBON]      = COMPOUND_STRING("{STR_VAR_1} the National Champion"),
+    [COUNTRY_RIBBON]  = COMPOUND_STRING("{STR_VAR_1} the Victor"),
+    [NATIONAL_RIBBON] = COMPOUND_STRING("{STR_VAR_1} the Triumphant"),
+    [EARTH_RIBBON]    = COMPOUND_STRING("{STR_VAR_1} the 100x Victorious"),
+    [WORLD_RIBBON]    = COMPOUND_STRING("{STR_VAR_1} the World Conqueror"),
+};
+
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
 {
     [B_WIN_MSG] = {
@@ -2909,6 +2925,37 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
     StringGet_Nickname(dst);
 }
 
+static const u8 *GetBattlerRibbonTitle(enum BattlerId battler)
+{
+    struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
+    u32 assignedRibbon, ribbonId;
+
+    if (illusionMon != NULL)
+        mon = illusionMon;
+    assignedRibbon = GetMonData(mon, MON_DATA_ASSIGNED_RIBBON);
+    if (assignedRibbon == ASSIGNED_RIBBON_NONE)
+        return NULL;
+
+    ribbonId = ASSIGNED_RIBBON_TO_ID(assignedRibbon);
+    if (ribbonId >= ARRAY_COUNT(sRibbonTitles))
+        return NULL;
+
+    return sRibbonTitles[ribbonId];
+}
+
+static const u8 *GetBattlerTitledNick(enum BattlerId battler, u8 *dst)
+{
+    const u8 *title = GetBattlerRibbonTitle(battler);
+
+    GetBattlerNick(battler, gStringVar1);
+    if (title == NULL)
+        return gStringVar1;
+
+    StringExpandPlaceholders(dst, title);
+    return dst;
+}
+
 #define HANDLE_NICKNAME_STRING_CASE(battler)                            \
     if (!IsOnPlayerSide(battler))                                       \
     {                                                                   \
@@ -3114,6 +3161,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     u32 dstID = 0; // if they used dstID, why not use srcID as well?
     const u8 *toCpy = NULL;
     u8 text[max(max(max(32, TRAINER_NAME_LENGTH + 1), POKEMON_NAME_LENGTH + 1), ITEM_NAME_LENGTH)];
+    u8 titledNick[POKEMON_NAME_LENGTH + MAX_RIBBON_TITLE_LENGTH + 1];
     u8 *textStart = &text[0];
     u8 multiplayerId;
     u8 fontId = FONT_NORMAL;
@@ -3686,6 +3734,16 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 break;
             case B_TXT_SCR_ACTIVE_NAME_WITH_PREFIX2:
                 HANDLE_NICKNAME_STRING_LOWERCASE(gBattleScripting.battler)
+                break;
+            case B_TXT_PLAYER_MON1_TITLE:
+            case B_TXT_PLAYER_MON2_TITLE:
+            case B_TXT_SCR_ACTIVE_TITLE:
+                if (*src == B_TXT_PLAYER_MON1_TITLE)
+                    toCpy = GetBattlerTitledNick(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), titledNick);
+                else if (*src == B_TXT_PLAYER_MON2_TITLE)
+                    toCpy = GetBattlerTitledNick(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), titledNick);
+                else
+                    toCpy = GetBattlerTitledNick(gBattleScripting.battler, titledNick);
                 break;
             }
 

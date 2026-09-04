@@ -27,6 +27,47 @@ SINGLE_BATTLE_TEST("Battle Message: Send-in message depends on foe HP")
     }
 }
 
+SINGLE_BATTLE_TEST("Battle Message: Ribbon titles are shown when the player sends out a Pokemon")
+{
+    GIVEN {
+        PLAYER(SPECIES_GASTLY) { Ribbon(CHAMPION_RIBBON); }
+        PLAYER(SPECIES_HAUNTER) { Ribbon(WORLD_RIBBON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        MESSAGE("Go! Gastly the Champion!");
+        MESSAGE("Go! Haunter the World Conqueror!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Battle Message: Ribbon titles support either Pokemon in a double battle")
+{
+    GIVEN {
+        PLAYER(SPECIES_GASTLY) { Ribbon(CHAMPION_RIBBON); }
+        PLAYER(SPECIES_HAUNTER) { Ribbon(WORLD_RIBBON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GIRAFARIG);
+    } WHEN {
+        TURN { SWITCH(opponentLeft, 2); }
+    } SCENE {
+        MESSAGE("Go! Gastly the Champion and Haunter the World Conqueror!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Battle Message: Ribbons without titles do not leave extra spacing")
+{
+    GIVEN {
+        PLAYER(SPECIES_GASTLY) { Ribbon(COOL_RIBBON_MASTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Go! Gastly!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Battle Message: STRINGID_INTROMSG, STRINGID_INTROSENDOUT, STRINGID_RETURNMON, and STRINGID_SWITCHINMON (Singles)")
 {
     GIVEN {
