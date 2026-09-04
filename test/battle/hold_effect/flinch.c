@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Kings Rock can flinch with a non-flinching move boosted by S
 
 SINGLE_BATTLE_TEST("Kings Rock cannot flinch with a flinching move boosted by Sheer Force")
 {
+    PASSES_RANDOMLY(0, 100, RNG_HOLD_EFFECT_FLINCH);
     GIVEN {
         ASSUME(MoveIsAffectedBySheerForce(MOVE_BITE));
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH));
@@ -60,13 +61,12 @@ SINGLE_BATTLE_TEST("Kings Rock cannot flinch with a flinching move boosted by Sh
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
-            MOVE(player, MOVE_BITE, secondaryEffect: TRUE, WITH_RNG(RNG_HOLD_EFFECT_FLINCH, TRUE));
+            MOVE(player, MOVE_BITE, secondaryEffect: TRUE);
             MOVE(opponent, MOVE_SCRATCH);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BITE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        NOT MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
 
