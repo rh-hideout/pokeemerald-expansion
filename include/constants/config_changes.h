@@ -262,6 +262,7 @@
     F(EGG_MOVE_TRANSFER,         eggMoveTransfer,         (u32, GEN_COUNT - 1)) \
 
 #define AI_CONFIG_DEFINITIONS(F) \
+    F(AI_DOUBLE_TARGET_COORDINATION,           doubleTargetCoordination,   (u32, 1)) \
     F(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE,    reverseBattlerLogicChance,  (u32, 100)) \
     F(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE,   switchAllBadMovesChance,    (u32, 100)) \
     F(SHOULD_SWITCH_LOSES_1V1_PERCENTAGE,       switchLoses1v1Chance,       (u32, 100)) \

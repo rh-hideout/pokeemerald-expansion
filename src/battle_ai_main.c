@@ -3131,6 +3131,88 @@ static bool32 ShouldTriggerPartnerAbility(enum BattlerId battlerAtk, enum Move m
     }
 }
 
+static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    struct AiLogicData *aiData = gAiLogicData;
+    enum BattlerId partner = GetPartnerBattler(battlerAtk);
+    enum MoveSlot partnerMoveIndex;
+    enum Move partnerMove;
+
+    // Only a committed action can reserve a KO; simulated partner choices may change.
+    if (!GetConfig(AI_DOUBLE_TARGET_COORDINATION)
+     || aiData->aiPredictionInProgress
+     || aiData->partnerMoveSimulation
+     || !HasPartner(battlerAtk)
+     || !HasTwoOpponents(battlerAtk)
+     || IsBattlerAlly(battlerAtk, battlerDef)
+     || !BattlerHasAi(partner)
+     || !(aiData->battlerMovesScored & (1u << partner))
+     || aiData->shouldSwitch & (1u << partner)
+     || gAiBattleData->chosenTarget[partner] != battlerDef
+     || IsBattleMoveStatus(move)
+     || AI_GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SELECTED)
+    {
+        return FALSE;
+    }
+
+    partnerMoveIndex = gAiBattleData->chosenMoveIndex[partner];
+    if (partnerMoveIndex >= MAX_MON_MOVES)
+        return FALSE;
+
+    partnerMove = gBattleMons[partner].moves[partnerMoveIndex];
+    if (IsMoveUnusable(partnerMoveIndex, partnerMove, aiData->moveLimitations[partner])
+     || IsBattleMoveStatus(partnerMove)
+     || AI_GetBattlerMoveTargetType(partner, partnerMove) != TARGET_SELECTED
+     || aiData->moveAccuracy[partner][battlerDef][partnerMoveIndex] < 100
+     || aiData->simulatedDmg[partner][battlerDef][partnerMoveIndex].minimum < gBattleMons[battlerDef].hp
+     || IsSubstituteProtected(partner, battlerDef, aiData->abilities[partner], partnerMove)
+     || CanEndureHit(partner, battlerDef, partnerMove))
+    {
+        return FALSE;
+    }
+
+    // Item selection happens after move scoring. Only reserve a KO that rules out item use.
+    if (gBattleHistory->itemsNo && !AiExpectsToFaintPlayer(partner))
+        return FALSE;
+
+    // Keep the second attack when the partner cannot reliably act this turn.
+    if (gBattleMons[partner].status1 & (STATUS1_INCAPACITATED | STATUS1_PARALYSIS)
+     || gBattleMons[partner].volatiles.confusionTimer
+     || gBattleMons[partner].volatiles.rechargeTimer
+     || gBattleMons[partner].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
+     || gBattleStruct->battlerState[partner].commandingDondozo
+     || (aiData->abilities[partner] == ABILITY_TRUANT && gBattleMons[partner].volatiles.truantCounter)
+     || GetMoveEffect(partnerMove) == EFFECT_SEMI_INVULNERABLE
+     || IsTwoTurnNotSemiInvulnerableMove(partner, partnerMove)
+     || GetMoveEffect(partnerMove) == EFFECT_FUTURE_SIGHT
+     || GetMoveEffect(partnerMove) == EFFECT_SUCKER_PUNCH
+     || GetMoveEffect(partnerMove) == EFFECT_FOCUS_PUNCH)
+    {
+        return FALSE;
+    }
+
+    // Preserve an urgent KO when a faster threat could remove either ally first.
+    for (enum BattlerId foe = 0; foe < gBattlersCount; foe++)
+    {
+        if (!IsBattlerAlive(foe) || IsBattlerAlly(partner, foe))
+            continue;
+
+        enum Move *foeMoves = GetMovesArray(foe);
+        for (enum MoveSlot slot = MOVESLOT_0; slot < MAX_MON_MOVES; slot++)
+        {
+            if (!IsMoveUnusable(slot, foeMoves[slot], aiData->moveLimitations[foe])
+             && !AI_IsSlower(foe, partner, foeMoves[slot], partnerMove, CONSIDER_PRIORITY)
+             && (CanIndexMoveFaintTarget(foe, partner, slot, AI_DEFENDING)
+              || (foe == battlerDef && CanIndexMoveFaintTarget(foe, battlerAtk, slot, AI_DEFENDING))))
+            {
+                return FALSE;
+            }
+        }
+    }
+
+    return TRUE;
+}
+
 // double battle logic
 static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
@@ -3157,6 +3239,9 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
     bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER) && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
+
+    if (ShouldAvoidRedundantTarget(battlerAtk, battlerDef, move))
+        ADJUST_SCORE(WORST_EFFECT);
 
     // check what effect partner is using
     if (aiData->partnerMove != MOVE_NONE && hasPartner)
