@@ -161,7 +161,7 @@ Route12_Text_AndrewPostBattle::
 	.string "But, boy are they wimpy.$"
 
 Route12_Text_RouteSign::
-	.string "[Route] 12 \n"
+	.string "[Route 12]\n"
 	.string "North to [Lavender]$"
 
 Route12_Text_SportfishingArea::

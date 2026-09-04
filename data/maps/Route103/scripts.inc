@@ -288,7 +288,7 @@ Route103_EventScript_Isabelle::
 
 Route103_Text_MayRoute103Pokemon:
 	.string "[May]: Let's see… The [Pokémon] found\n"
-	.string "on [Route] 103 include…$"
+	.string "on [Route 103] include…$"
 
 Route103_Text_MayLetsBattle:
 	.string "Oh, hi, {PLAYER}{KUN}!\p"
@@ -348,5 +348,5 @@ Route103_Text_ShortcutToOldale:
 	.string "Fufufu, that's useful, isn't it?$"
 
 Route103_Text_RouteSign:
-	.string "[Route] 103\n"
+	.string "[Route 103]\n"
 	.string "{DOWN_ARROW} [Oldale Town]$"

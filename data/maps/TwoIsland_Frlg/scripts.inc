@@ -279,7 +279,7 @@ TwoIsland_Text_BrunoCameToIslandWhileBack::
 	.string "His name is [Bruno].\p"
 	.string "He went away disappointed when he\n"
 	.string "found out that they were all sold\l"
-	.string "out of Rage Candybars.$"
+	.string "out of [Rage Candy Bars].$"
 
 TwoIsland_Text_BuyRareItemsHere::
 	.string "The discerning [Trainer] knows to\n"

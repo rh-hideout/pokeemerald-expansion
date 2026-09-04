@@ -636,7 +636,7 @@ Route111_Text_WinstrateFamilyDestroyedMe:
 	.string "going… They destroyed me.$"
 
 Route111_Text_RouteSignMauville:
-	.string "[Route] 111\n"
+	.string "[Route 111]\n"
 	.string "{DOWN_ARROW} [Mauville City]$"
 
 Route111_Text_WinstrateHouseSign:

@@ -1056,11 +1056,11 @@ Route104_Text_MrBrineysCottage:
 	.string "[Mr. Briney's Cottage]$"
 
 Route104_Text_RouteSignPetalburg:
-	.string "[Route] 1O4\n"
+	.string "[Route 104]\n"
 	.string "{RIGHT_ARROW} [Petalburg City]$"
 
 Route104_Text_RouteSignRustboro:
-	.string "[Route] 1O4\n"
+	.string "[Route 104]\n"
 	.string "{UP_ARROW} [Rustboro City]$"
 
 Route104_Text_PrettyPetalFlowShop:

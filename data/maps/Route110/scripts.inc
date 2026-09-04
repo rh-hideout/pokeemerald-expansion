@@ -909,7 +909,7 @@ Route110_Text_AcroBikesDoNotQualify:
 	.string "They are easy to turn, so it's not fair.$"
 
 Route110_Text_SlateportCitySign:
-	.string "[Route] 110\n"
+	.string "[Route 110]\n"
 	.string "{DOWN_ARROW} [Slateport City]$"
 
 Route110_Text_CyclingRoadSign:

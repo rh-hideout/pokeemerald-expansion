@@ -390,6 +390,6 @@ VermilionCity_Text_Route2AideHasPackageForYou::
 	.string "He had a package from [Prof. Oak]\n"
 	.string "for you, {PLAYER}.\p"
 	.string "He said he'd look for you around\n"
-	.string "[Route] 2, {PLAYER}.\p"
+	.string "[Route 2], {PLAYER}.\p"
 	.string "If you're in the [Route 2] area,\n"
 	.string "please look for him.$"

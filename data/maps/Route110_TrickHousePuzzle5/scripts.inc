@@ -912,7 +912,7 @@ Route110_TrickHousePuzzle5_Text_Mechadoll1Intro:
 Route110_TrickHousePuzzle5_Text_Mechadoll1Quiz1:
 	.string "[Mechadoll 1 Quiz].\p"
 	.string "One of these [Pokémon] is not found\n"
-	.string "on [Route] 110. Which one is it?$"
+	.string "on [Route 110]. Which one is it?$"
 
 Route110_TrickHousePuzzle5_Text_Mechadoll1Quiz2:
 	.string "[Mechadoll 1 Quiz].\p"
