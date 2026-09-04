@@ -971,7 +971,6 @@ static void AdjustTarget(struct BattleCalcValues *cv, enum MoveTarget moveTarget
         break;
     case TARGET_USER:
     case TARGET_USER_AND_ALLY:
-    case TARGET_FIELD:
         cv->battlerDef = cv->battlerAtk;
         break;
     case TARGET_USER_OR_ALLY:
