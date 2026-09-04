@@ -806,7 +806,7 @@ static bool32 ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum Battl
     if (IsBattlerUnaffectedByMove(battlerDef))
         return skipFailure;
 
-    if ((moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD) && !IsBattlerAlive(battlerDef))
+    if (moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef))
         return skipFailure;
 
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
@@ -927,14 +927,12 @@ static bool32 WasOriginalTargetAlly(enum BattlerId battlerAtk, enum BattlerId ba
     return FALSE;
 }
 
-static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
+static void AdjustTarget(struct BattleCalcValues *cv, enum MoveTarget moveTarget)
 {
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
-    bool32 isDoubleBattle = IsDoubleBattle();
-
-    if (!HandleMoveTargetRedirection(cv, moveTarget))
+    switch (moveTarget)
     {
-        if (isDoubleBattle && moveTarget == TARGET_RANDOM)
+    case TARGET_RANDOM:
+        if (IsDoubleBattle())
         {
             cv->battlerDef = SetRandomTarget(cv->battlerAtk);
             if (!IsBattlerAlive(cv->battlerAtk) && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
@@ -942,15 +940,21 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
                 cv->battlerDef = GetPartnerBattler(cv->battlerDef);
             }
         }
-        else if (moveTarget == TARGET_SELECTED && cv->battlerDef == cv->battlerAtk)
+        break;
+    case TARGET_SELECTED:
+        if (cv->battlerDef == cv->battlerAtk)
         {
             cv->battlerDef = SetRandomTarget(cv->battlerAtk);
         }
-        else if (IsDoubleBattle() && moveTarget == TARGET_ALLY && !IsBattlerAlly(cv->battlerDef, cv->battlerAtk))
+        break;
+    case TARGET_ALLY:
+        if (IsDoubleBattle() && !IsBattlerAlly(cv->battlerDef, cv->battlerAtk))
         {
             cv->battlerDef = GetPartnerBattler(cv->battlerAtk);
         }
-        else if (isDoubleBattle && moveTarget == TARGET_FOES_AND_ALLY)
+        break;
+    case TARGET_FOES_AND_ALLY:
+        if (IsDoubleBattle())
         {
             for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
             {
@@ -964,21 +968,38 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
                 }
             }
         }
-        else if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_AND_ALLY)
+        break;
+    case TARGET_USER:
+    case TARGET_USER_AND_ALLY:
+    case TARGET_FIELD:
+        cv->battlerDef = cv->battlerAtk;
+        break;
+    case TARGET_USER_OR_ALLY:
+        if (IsDoubleBattle() && !IsBattlerAlive(cv->battlerDef))
         {
             cv->battlerDef = cv->battlerAtk;
         }
-        else if (isDoubleBattle && moveTarget == TARGET_USER_OR_ALLY && !IsBattlerAlive(cv->battlerDef))
-        {
-            cv->battlerDef = cv->battlerAtk;
-        }
-        else if (isDoubleBattle
-              && moveTarget != TARGET_OPPONENTS_FIELD
-              && !IsBattlerAlive(cv->battlerDef)
-              && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
+        break;
+    case TARGET_OPPONENTS_FIELD:
+        break;
+    default:
+        if (IsDoubleBattle()
+         && !IsBattlerAlive(cv->battlerDef)
+         && !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
         {
             cv->battlerDef = GetPartnerBattler(cv->battlerDef);
         }
+        break;
+    }
+}
+
+static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
+{
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
+
+    if (!HandleMoveTargetRedirection(cv, moveTarget))
+    {
+        AdjustTarget(cv, moveTarget);
     }
 
     gBattlerTarget = cv->battlerDef; // ShouldCheckTargetMoveFailure relies on gBattlerTarget
@@ -989,7 +1010,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
 
         if (!ShouldCheckTargetMoveFailure(cv->battlerAtk, battlerDef, cv->move, moveTarget))
             gBattleStruct->battlerState[cv->battlerAtk].targetsDone[battlerDef] = TRUE;
-        if (moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef))
+        if (moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef))
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_NOT_PRESENT;
     }
     gBattleStruct->eventState.atkCancelerBattler = 0;
