@@ -3945,20 +3945,31 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
 
 static inline bool32 RecoveryEnablesWinning1v1(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster, u32 healAmount)
 {
+    if (GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) >= healAmount)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, 0);// doesn't loop over all effects, and doesn't handle the small number of times when PP stalling won't feel irritating
+
+        if ((gBattleMons[battlerDef].status1 & STATUS1_ANY) == 0
+           && !(IsBattlerDamagedByStatus(battlerDef))
+           && !(effect->moveEffect == MOVE_EFFECT_STAT_MINUS && effect->self == TRUE) 
+           && !(effect->moveEffect == MOVE_EFFECT_RECHARGE)
+           && !(IsSelfSacrificeEffect(move))
+           && !(IsRecoilDamageEffect(GetMoveEffect(move))))
+            return FALSE; // If the foe can do more damage than the user can heal, avoid healing unless foe will lose ground from detrimental move effects, paralysis, or residual damage.
+    }
+
     if (aiIsFaster)
     {
         if (CanTargetFaintAi(battlerDef, battlerAtk)
-          && !CanTargetFaintAiWithMod(battlerDef, battlerAtk, healAmount, 0))
+              && !CanTargetFaintAiWithMod(battlerDef, battlerAtk, healAmount, 0))
             return TRUE;    // target can faint attacker unless they heal
-        else if (!CanTargetFaintAi(battlerDef, battlerAtk) && gAiLogicData->hpPercents[battlerAtk] < ENABLE_RECOVERY_THRESHOLD && RandomPercentage(RNG_AI_SHOULD_RECOVER, SHOULD_RECOVER_CHANCE))
+        else if (gAiLogicData->hpPercents[battlerAtk] < ENABLE_RECOVERY_THRESHOLD && RandomPercentage(RNG_AI_SHOULD_RECOVER, SHOULD_RECOVER_CHANCE))
             return TRUE;    // target can't faint attacker at all, generally safe
     }
     else
     {
-        if (!CanTargetFaintAi(battlerDef, battlerAtk)
-          && GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < healAmount
-          && NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk, AI_DEFENDING, CONSIDER_ENDURE) < NoOfHitsForTargetToFaintBattlerWithMod(battlerDef, battlerAtk, healAmount))
-            return TRUE;    // target can't faint attacker and is dealing less damage than we're healing
+        if (NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk, AI_DEFENDING, CONSIDER_ENDURE) < NoOfHitsForTargetToFaintBattlerWithMod(battlerDef, battlerAtk, healAmount))
+            return TRUE;    // attacker gains at least one turn from healing
         else if (!CanTargetFaintAi(battlerDef, battlerAtk) && gAiLogicData->hpPercents[battlerAtk] < ENABLE_RECOVERY_THRESHOLD && RandomPercentage(RNG_AI_SHOULD_RECOVER, SHOULD_RECOVER_CHANCE))
             return TRUE;    // target can't faint attacker at all, generally safe
     }
