@@ -50,6 +50,7 @@ static bool32 ShouldPrintProtectMessage(enum BattlerId battler);
 static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv);
 
 // Stat change moves
+bool32 IsStatChangeMove(enum Move move);
 static bool32 TryBellyDrum(enum BattlerId battler);
 static bool32 TryHalfHp(enum BattlerId battler);
 static bool32 CutThirdOfHp(enum BattlerId battler);
@@ -4427,25 +4428,6 @@ static enum MoveEndResult MoveEndFaintAttacker(struct BattleCalcValues *cv)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-// Used for non damaging (status) stat change moves
-bool32 IsStatChangeMove(enum Move move)
-{
-    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
-    for (u32 i = 0; i < additionalEffectCount; i++)
-    {
-        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-        switch (additionalEffect->moveEffect)
-        {
-        case STAT_CHANGE_EFFECT_MINUS:
-        case STAT_CHANGE_EFFECT_PLUS:
-           return TRUE;
-        default:
-           return FALSE;
-        }
-    }
-    return FALSE;
-}
-
 static enum MoveEndResult MoveEndSetValuesForOpposingSide(struct BattleCalcValues *cv)
 {
     if (!IsBattleMoveStatus(cv->move))
@@ -6976,6 +6958,24 @@ static void UpdateStallMons(struct BattleCalcValues *cv)
 }
 
 // Move Stat Change Functions
+
+bool32 IsStatChangeMove(enum Move move)
+{
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    for (u32 i = 0; i < additionalEffectCount; i++)
+    {
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
+        switch (additionalEffect->moveEffect)
+        {
+        case STAT_CHANGE_EFFECT_MINUS:
+        case STAT_CHANGE_EFFECT_PLUS:
+           return TRUE;
+        default:
+           return FALSE;
+        }
+    }
+    return FALSE;
+}
 
 static bool32 TryBellyDrum(enum BattlerId battler)
 {
