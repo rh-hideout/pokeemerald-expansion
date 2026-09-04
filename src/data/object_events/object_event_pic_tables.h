@@ -1120,13 +1120,13 @@ static const struct SpriteFrameImage sPicTable_PokeBall[] = {
 extern const struct SpriteFrameImage gFieldEffectObjectPicTable_BallLight[];
 
 #if OW_FOLLOWERS_POKEBALLS
-#define POKEBALL_PIC_FRAMES(name)                              \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 1),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 2),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 3),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 4),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0)
+#define POKEBALL_PIC_FRAMES(name)                               \
+    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0),     \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 1), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 2), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 3), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 4), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0)
 
 static const struct SpriteFrameImage sPicTable_Ball_MASTER[] = {
     POKEBALL_PIC_FRAMES(Master),
@@ -1209,7 +1209,7 @@ static const struct SpriteFrameImage sPicTable_Ball_BEAST[] = {
 static const struct SpriteFrameImage sPicTable_Ball_STRANGE[] = {
     POKEBALL_PIC_FRAMES(Strange),
 };
-#endif //OW_FOLLOWERS_POKEBALLS
+#endif // OW_FOLLOWERS_POKEBALLS
 
 static const struct SpriteFrameImage sPicTable_DeoxysOld[] = {
     overworld_frame(gObjectEventPic_DeoxysOld, 4, 4, 0),
@@ -1358,8 +1358,6 @@ static const struct SpriteFrameImage sPicTable_RubySapphireMay[] = {
 static const struct SpriteFrameImage sPicTable_ApricornTree[] = {
     overworld_frame(gObjectEventPic_ApricornTree, 2, 2, 0),
 };
-
-#if IS_FRLG
 
 static const struct SpriteFrameImage sPicTable_RedNormal[] = {
     overworld_frame(gObjectEventPic_RedNormal, 2, 4, 0),
@@ -3025,5 +3023,3 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
     overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
     overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
 };
-
-#endif // IS_FRLG
