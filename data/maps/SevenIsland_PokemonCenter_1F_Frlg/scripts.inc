@@ -34,7 +34,7 @@ SevenIsland_PokemonCenter_1F_Text_EventsDependingOnConnections::
 	.string "your own.$"
 
 SevenIsland_PokemonCenter_1F_Text_DidYouRideSeagallopHere::
-	.string "Did you ride a SEAGALLOP ferry\n"
+	.string "Did you ride a [Seagallop] ferry\n"
 	.string "to get here?\p"
 	.string "There are at least ten of those\n"
 	.string "high-speed ships.\p"
@@ -43,5 +43,4 @@ SevenIsland_PokemonCenter_1F_Text_DidYouRideSeagallopHere::
 
 SevenIsland_PokemonCenter_1F_Text_CheckOutTrainerTower::
 	.string "If you're confident, you should\n"
-	.string "check out TRAINER TOWER.$"
-
+	.string "check out [Trainer Tower].$"

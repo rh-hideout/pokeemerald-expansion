@@ -63,6 +63,5 @@ SilphCo_10F_Text_KeepMeCryingASecret::
 	.string "Please keep it a secret.$"
 
 SilphCo_10F_Text_FloorSign::
-	.string "SILPH CO. HEAD OFFICE\n"
+	.string "[Silph Co. Head Office]\n"
 	.string "10F$"
-
