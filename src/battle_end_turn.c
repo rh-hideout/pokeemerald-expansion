@@ -268,6 +268,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
+
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
@@ -833,19 +834,21 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
     u32 moveIndex = 0;
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.disableTimer != 0)
+    if (gBattleMons[battler].volatiles.disabledMove != MOVE_NONE)
     {
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (gBattleMons[battler].volatiles.disabledMove == gBattleMons[battler].moves[moveIndex])
                 break;
         }
+        if (GetConfig(B_DISABLE_TURNS) >= GEN_3 && gBattleMons[battler].volatiles.disableTimer != 0)
+            gBattleMons[battler].volatiles.disableTimer--;
         if (moveIndex == MAX_MON_MOVES)  // Pokémon does not have the disabled move anymore
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleMons[battler].volatiles.disableTimer = 0;
         }
-        else if (--gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
+        else if (gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleScripting.battler = battler;

@@ -1089,10 +1089,10 @@ void HandleBattleLowHpMusicChange(void)
     {
         enum BattlerId playerBattler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
         enum BattlerId playerBattler2 = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-        u8 battler1PartyId = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[playerBattler1]);
-        u8 battler2PartyId = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[playerBattler2]);
-        struct Pokemon mon1 = GetBattlerParty(playerBattler1)[battler1PartyId];
-        struct Pokemon mon2 = GetBattlerParty(playerBattler2)[battler2PartyId];
+        enum PartyBattleSlot battler1Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler1]);
+        enum PartyBattleSlot battler2Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler2]);
+        struct Pokemon mon1 = GetBattlerParty(playerBattler1)[battler1Slot];
+        struct Pokemon mon2 = GetBattlerParty(playerBattler2)[battler2Slot];
 
         if (GetMonData(&mon1, MON_DATA_HP) != 0)
             HandleLowHpMusicChange(&mon1, playerBattler1);
@@ -1138,7 +1138,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
         enum Species species = GetBattlerVisualSpecies(battler);
         u8 size = gSpeciesInfo[species].enemyShadowSize;
 
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_Y),
                                                                                              0xC8);
@@ -1152,7 +1152,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
             sprite->invisible = TRUE;
         }
 
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                                GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                                GetBattlerSpriteCoord(battler, BATTLER_COORD_Y),
                                                                                                0xC8);
@@ -1168,7 +1168,7 @@ void CreateEnemyShadowSprite(enum BattlerId battler)
     }
     else
     {
-        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSprite(&gSpriteTemplate_EnemyShadow,
+        gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSpriteUnchecked(&gSpriteTemplate_EnemyShadow,
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_X),
                                                                                              GetBattlerSpriteCoord(battler, BATTLER_COORD_Y) + 29,
                                                                                              0xC8);

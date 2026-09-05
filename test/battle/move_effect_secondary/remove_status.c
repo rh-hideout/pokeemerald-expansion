@@ -132,8 +132,8 @@ DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SUBSTITUTE); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet's burn was cured!");
         MESSAGE("Wobbuffet's burn was cured!");
+        MESSAGE("The opposing Wobbuffet's burn was cured!");
         MESSAGE("The opposing Wynaut's burn was cured!");
     }
 }

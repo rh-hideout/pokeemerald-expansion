@@ -37,9 +37,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, en
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
 static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP);
 static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
-static uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2);
-static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 monIndex, struct Pokemon *mon);
-static uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
+static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, enum PartyMon monIndex, struct Pokemon *mon);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(enum BattlerId battler);
@@ -52,9 +50,9 @@ static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId 
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
-static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
+static enum PartyMon GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
 
-static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 monIndex, struct Pokemon *mon)
+static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, enum PartyMon monIndex, struct Pokemon *mon)
 {
     enum Ability ability = GetMonAbility(mon);
 
@@ -71,9 +69,9 @@ static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 
     return ability;
 }
 
-static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
+static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum PartyMon monIndex, struct Pokemon *mon)
 {
-    u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[switchinBattler]; // Rage Fist fix
+    enum PartyMon storeCurrBattlerPartyIndex = gBattlerPartyIndexes[switchinBattler]; // Rage Fist fix
     PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     CopyMonAbilityAndTypesToBattleMon(switchinBattler, mon);
@@ -237,7 +235,7 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     }
 }
 
-bool32 IsAceMon(enum BattlerId battler, u32 monPartyId)
+bool32 IsAceMon(enum BattlerId battler, enum PartyMon monPartyId)
 {
     enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
@@ -298,7 +296,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
     return TRUE;
 }
 
-static inline bool32 SetSwitchinAndSwitch(enum BattlerId battler, u32 switchinId)
+static inline bool32 SetSwitchinAndSwitch(enum BattlerId battler, enum PartyMon switchinId)
 {
     gBattleStruct->AI_monToSwitchIntoId[battler] = switchinId;
     return TRUE;
@@ -314,7 +312,7 @@ static bool32 AI_DoesChoiceEffectBlockMove(enum BattlerId battler, enum Move mov
     return FALSE;
 }
 
-static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32 isBattlerFirst)
+inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32 isBattlerFirst)
 {
     // Player's best move deals 0 damage
     if (hitsToKOAI == 0 && hitsToKOPlayer > 0)
@@ -350,7 +348,7 @@ static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler)
     u32 maxHp;
     s32 possibleHeal = wishHealAmount;
 
-    if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
+    if (gAiLogicData->mostSuitableMonId[battler] == PARTY_MON_NONE)
         return FALSE;
 
     maxHp = GetMonData(&party[gAiLogicData->mostSuitableMonId[battler]], MON_DATA_MAX_HP);
@@ -380,7 +378,7 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchAiContext *switchContext)
         return FALSE;
 
     // If we don't have any other viable options, don't switch out
-    if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE)
+    if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_MON_NONE)
         return FALSE;
 
     // Start assessing whether or not mon has bad odds
@@ -393,7 +391,7 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchAiContext *switchContext)
             return FALSE;
 
         // Switch mon out
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     // General bad type matchups have more wiggle room
@@ -413,7 +411,7 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchAiContext *switchContext)
                 return FALSE;
 
             // Switch mon out
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
     }
     return FALSE;
@@ -426,10 +424,10 @@ static bool32 ShouldSwitchIfTruant(struct SwitchAiContext *switchContext)
         && IsTruantMonVulnerable(switchContext->battler, switchContext->opposingBattler)
         && gBattleMons[switchContext->battler].volatiles.truantToggle
         && gBattleMons[switchContext->battler].hp >= gBattleMons[switchContext->battler].maxHP / 2
-        && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE)
+        && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE)
     {
         if (RandomPercentage(RNG_AI_SWITCH_TRUANT, GetSwitchChance(SHOULD_SWITCH_TRUANT)))
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
     return FALSE;
 }
@@ -440,7 +438,7 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchAiContext *switchContext,
     u32 superEffectiveIds = 0;
 
     // Find a Pokémon in the party that has a super effective move.
-    for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < switchContext->lastId; monIndex++)
     {
         if(!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
@@ -461,7 +459,7 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchAiContext *switchContext,
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
 
-static bool32 CanMoveAffectTarget(struct DamageContext *ctx, u32 moveIndex)
+static bool32 CanMoveAffectTarget(struct DamageContext *ctx, enum MoveSlot moveIndex)
 {
     if (ctx->move != MOVE_NONE
         && gAiLogicData->effectiveness[ctx->battlerAtk][ctx->battlerDef][moveIndex] > UQ_4_12(0.0)
@@ -470,7 +468,7 @@ static bool32 CanMoveAffectTarget(struct DamageContext *ctx, u32 moveIndex)
     return FALSE;
 }
 
-static bool32 IsMoveBad(struct DamageContext *ctx, u32 moveIndex)
+static bool32 IsMoveBad(struct DamageContext *ctx, enum MoveSlot moveIndex)
 {
     if (CanMoveAffectTarget(ctx, moveIndex))
         return FALSE;
@@ -530,12 +528,12 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
     }
 
     if (RandomPercentage(RNG_AI_SWITCH_ALL_MOVES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_MOVES_BAD))
-        && (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE || !ALL_MOVES_BAD_NEEDS_GOOD_SWITCHIN))
+        && (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE || !ALL_MOVES_BAD_NEEDS_GOOD_SWITCHIN))
     {
-        if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE) // No good candidate mons, find any one that can deal damage
+        if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_MON_NONE) // No good candidate mons, find any one that can deal damage
             return FindMonWithMoveOfEffectiveness(switchContext, UQ_4_12(1.0));
         else // Good candidate mon, send that in
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     return FALSE;
@@ -555,10 +553,10 @@ static bool32 ShouldSwitchIfWonderGuard(struct SwitchAiContext *switchContext)
 
     if (RandomPercentage(RNG_AI_SWITCH_WONDER_GUARD, GetSwitchChance(SHOULD_SWITCH_WONDER_GUARD)))
     {
-        if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE) // No good candidate mons, find any one that can deal damage
+        if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_MON_NONE) // No good candidate mons, find any one that can deal damage
             return FindMonWithMoveOfEffectiveness(switchContext, UQ_4_12(2.0));
         else // Good candidate mon, send that in
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     return FALSE;
@@ -657,7 +655,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchCont
     }
 
     // Check party for mon with ability that absorbs move
-    for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < switchContext->lastId; monIndex++)
     {
         if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
@@ -695,8 +693,8 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchAiContex
     if (switchContext->canBattlerWin1v1)
         return FALSE;
 
-    if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+    if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
     return FALSE;
 }
@@ -713,7 +711,7 @@ static bool32 ShouldSwitchIfTrapperInParty(struct SwitchAiContext *switchContext
     if (IsBattlerTrapped(switchContext->battler, switchContext->opposingBattler))
         return FALSE;
 
-    for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < switchContext->lastId; monIndex++)
     {
         if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
@@ -724,7 +722,7 @@ static bool32 ShouldSwitchIfTrapperInParty(struct SwitchAiContext *switchContext
         {
             // If mon in slot i is the most suitable switchin candidate, then it's a trapper than wins 1v1
             if (monIndex == gAiLogicData->mostSuitableMonId[switchContext->battler] && RandomPercentage(RNG_AI_SWITCH_TRAPPER, GetSwitchChance(SHOULD_SWITCH_TRAPPER)))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
     }
     return FALSE;
@@ -741,7 +739,7 @@ static bool32 ShouldSwitchIfBadlyStatused(struct SwitchAiContext *switchContext)
         && gBattleMons[switchContext->battler].volatiles.perishSongTimer == 0
         && monAbility != ABILITY_SOUNDPROOF
         && RandomPercentage(RNG_AI_SWITCH_PERISH_SONG, GetSwitchChance(SHOULD_SWITCH_PERISH_SONG)))
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
     if (gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING)
     {
@@ -754,7 +752,7 @@ static bool32 ShouldSwitchIfBadlyStatused(struct SwitchAiContext *switchContext)
             switchMon = TRUE;
 
             // If we don't have a good switchin, not worth switching
-            if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE)
+            if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_MON_NONE)
                 switchMon = FALSE;
 
             // Check if Active Pokemon can KO opponent instead of switching
@@ -785,43 +783,43 @@ static bool32 ShouldSwitchIfBadlyStatused(struct SwitchAiContext *switchContext)
                 switchMon = FALSE;
 
             if (switchMon)
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
 
         // Secondary Damage
         if (monAbility != ABILITY_MAGIC_GUARD
             && !AiExpectsToFaintPlayer(switchContext->battler)
-            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE)
+            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE)
         {
             //Toxic
             if (((gBattleMons[switchContext->battler].status1 & STATUS1_TOXIC_COUNTER) >= STATUS1_TOXIC_TURN(2))
                 && gBattleMons[switchContext->battler].hp >= (gBattleMons[switchContext->battler].maxHP / 3)
-                && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+                && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
                 && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_BADLY_POISONED, GetSwitchChance(SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_BADLY_POISONED, GetSwitchChance(SHOULD_SWITCH_BADLY_POISONED))))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
             //Cursed
             if (gBattleMons[switchContext->battler].volatiles.cursed
                 && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_CURSED, GetSwitchChance(SHOULD_SWITCH_CURSED_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_CURSED, GetSwitchChance(SHOULD_SWITCH_CURSED))))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
             //Nightmare
             if (gBattleMons[switchContext->battler].volatiles.nightmare
                 && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, GetSwitchChance(SHOULD_SWITCH_NIGHTMARE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, GetSwitchChance(SHOULD_SWITCH_NIGHTMARE))))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
             //Leech Seed
             if (gBattleMons[switchContext->battler].volatiles.leechSeed
                 && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_SEEDED, GetSwitchChance(SHOULD_SWITCH_SEEDED_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_SEEDED, GetSwitchChance(SHOULD_SWITCH_SEEDED))))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
 
         // Infatuation
         if (gBattleMons[switchContext->battler].volatiles.infatuation
             && !AiExpectsToFaintPlayer(switchContext->battler)
-            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
             && RandomPercentage(RNG_AI_SWITCH_INFATUATION, GetSwitchChance(SHOULD_SWITCH_INFATUATION)))
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     return FALSE;
@@ -1012,13 +1010,13 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext
     case ABILITY_NATURAL_CURE:
         //Attempt to cure bad ailment
         if (gBattleMons[switchContext->battler].status1 & (STATUS1_SLEEP | STATUS1_FREEZE | STATUS1_TOXIC_POISON)
-            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
             && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_STRONG))))
             break;
         //Attempt to cure lesser ailment
         if ((gBattleMons[switchContext->battler].status1 & STATUS1_ANY)
             && (gBattleMons[switchContext->battler].hp >= gBattleMons[switchContext->battler].maxHP / 2)
-            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
             && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NATURAL_CURE, GetSwitchChance(SHOULD_SWITCH_NATURAL_CURE_WEAK))))
             break;
 
@@ -1029,7 +1027,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext
         if (gBattleMons[switchContext->battler].status1 & STATUS1_ANY)
             return FALSE;
         if ((gBattleMons[switchContext->battler].hp <= ((gBattleMons[switchContext->battler].maxHP * 2) / 3))
-             && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+             && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
              && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_REGENERATOR, GetSwitchChance(SHOULD_SWITCH_REGENERATOR))))
             break;
 
@@ -1038,7 +1036,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext
     case ABILITY_INTIMIDATE:
         // TODO: In ShouldSwitch cleanup, gate Intimidate cycling behind "stay in instead if the current mon wins the 1v1" to avoid duplicating Bad Odds logic here.
         if (ShouldSwitchIfIntimidateBenefit(switchContext)
-            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
+            && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE
             && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE))))
             break;
 
@@ -1066,7 +1064,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext
         return FALSE;
     }
 
-    return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+    return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 }
 
 // Consider switching to pass Wish to a teammate that benefits from the heal
@@ -1099,7 +1097,7 @@ static bool32 ShouldSwitchIfWishPassing(struct SwitchAiContext *switchContext)
         return FALSE;
 
     if (RandomPercentage(RNG_AI_SWITCH_WISH_PASSING, GetSwitchChance(SHOULD_SWITCH_WISH_PASSING)))
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
     return FALSE;
 }
@@ -1145,7 +1143,7 @@ static bool32 CanMonSurviveHazardSwitchin(struct SwitchAiContext *switchContext)
     // Battler will faint to hazards, check to see if another mon can clear them
     if (hazardDamage > battlerHp)
     {
-        for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+        for (enum PartyMon monIndex = PARTY_MON_0; monIndex < switchContext->lastId; monIndex++)
         {
             if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
                 continue;
@@ -1177,15 +1175,15 @@ static bool32 ShouldSwitchIfEncored(struct SwitchAiContext *switchContext)
 
     // Switch out if status move
     if (GetMoveCategory(encoredMove) == DAMAGE_CATEGORY_STATUS && RandomPercentage(RNG_AI_SWITCH_ENCORE, GetSwitchChance(SHOULD_SWITCH_ENCORE_STATUS)))
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
     // Stay in if effective move
     else if (gAiLogicData->effectiveness[switchContext->battler][switchContext->opposingBattler][GetMoveIndex(switchContext->battler, encoredMove)] >= UQ_4_12(2.0))
         return FALSE;
 
     // Switch out 50% of the time otherwise
-    else if ((RandomPercentage(RNG_AI_SWITCH_ENCORE, GetSwitchChance(SHOULD_SWITCH_ENCORE_DAMAGE)) || gAiLogicData->aiPredictionInProgress) && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE)
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+    else if ((RandomPercentage(RNG_AI_SWITCH_ENCORE, GetSwitchChance(SHOULD_SWITCH_ENCORE_DAMAGE)) || gAiLogicData->aiPredictionInProgress) && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE)
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
 
     return FALSE;
 }
@@ -1222,14 +1220,14 @@ static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchAiContext *switchContext)
                 ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
                 ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
                 if (!CanMoveAffectTarget(&ctx, moveIndex) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
-                    return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+                    return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
             }
         }
     }
     else if (IsHoldEffectChoice(ctx.holdEffects[ctx.battlerAtk]) && IsBattlerItemEnabled(switchContext->battler))
     {
         if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx, moveIndex)) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     return FALSE;
@@ -1254,12 +1252,12 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchAiContext *switch
         // 50% chance if attack at -2 and have a good candidate mon
         else if (attackingStage == DEFAULT_STAT_STAGE - 2)
         {
-            if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE && (RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO)) || gAiLogicData->aiPredictionInProgress))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE && (RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO)) || gAiLogicData->aiPredictionInProgress))
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
         // If at -3 or worse, switch out regardless
         else if ((attackingStage < DEFAULT_STAT_STAGE - 2) && RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS)))
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
 
     // Special attacker
@@ -1271,12 +1269,12 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchAiContext *switch
         // 50% chance if attack at -2 and have a good candidate mon
         else if (spAttackingStage == DEFAULT_STAT_STAGE - 2)
         {
-            if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE && (RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO)) || gAiLogicData->aiPredictionInProgress))
-                return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE && (RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO)) || gAiLogicData->aiPredictionInProgress))
+                return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
         }
         // If at -3 or worse, switch out regardless
         else if ((spAttackingStage < DEFAULT_STAT_STAGE - 2) && RandomPercentage(RNG_AI_SWITCH_STATS_LOWERED, GetSwitchChance(SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS)))
-            return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+            return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
     return FALSE;
 }
@@ -1287,10 +1285,10 @@ bool32 ShouldSwitchIfLoses1v1(struct SwitchAiContext *switchContext)
         return FALSE;
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
-    if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE)
+    if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_MON_NONE)
         return FALSE;
     if (!switchContext->canBattlerWin1v1 && RandomPercentage(RNG_AI_SWITCH_LOSES_1V1, GetSwitchChance(SHOULD_SWITCH_LOSES_1V1)))
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     return FALSE;
 }
 
@@ -1300,7 +1298,7 @@ bool32 ShouldSwitchDynFuncExample(struct SwitchAiContext *switchContext)
     if (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_CLASS_GUITARIST
         && RandomPercentage(RNG_AI_SWITCH_DYN_FUNC, GetSwitchChance(SHOULD_SWITCH_DYN_FUNC)))
     {
-        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_MON_NONE);
     }
     return FALSE;
 }
@@ -1397,7 +1395,7 @@ void GetShouldSwitchMoveData(struct SwitchAiContext *switchContext)
 
 void GetShouldSwitchPartyMonEligibility(struct SwitchAiContext *switchContext)
 {
-    for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < switchContext->lastId; monIndex++)
     {
         if (!IsValidForBattle(&switchContext->party[monIndex]))
             continue;
@@ -1501,7 +1499,7 @@ bool32 ShouldSwitchIfAllScoresBad(struct SwitchAiContext *switchContext)
         }
     }
     if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD))
-        && (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
+        && (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
         return TRUE;
     return FALSE;
 }
@@ -1563,7 +1561,7 @@ bool32 IsSwitchinValid(enum BattlerId battler)
     if (IsDoubleBattle())
     {
         enum BattlerId partner = GetPartnerBattler(battler);
-        if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE) // Generic switch
+        if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_MON_NONE) // Generic switch
         {
             if ((gAiLogicData->shouldSwitch & (1u << partner))
              && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler]
@@ -1988,7 +1986,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     return hitsToKO;
 }
 
-static uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2)
+uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2)
 {
     // Check type matchup
     uq4_12_t typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
@@ -2017,59 +2015,59 @@ static uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum 
     return typeEffectiveness1 + typeEffectiveness2;
 }
 
-static uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler)
+uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler)
 {
     return GetTypeMatchupAgainstTypes(opposingBattler, gBattleMons[battler].types[0], gBattleMons[battler].types[1]);
 }
 
-static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType)
+static enum PartyMon GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType)
 {
     if (switchinCategory == 0)
-        return PARTY_SIZE;
+        return PARTY_MON_NONE;
 
     // Randomize between eligible mons
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN)
     {
         // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
         if (switchType == SWITCH_AFTER_KO)
-            return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_POST_KO, switchinCategory); // Can't pass this anything with no set bits
+            return (enum PartyMon)RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_POST_KO, switchinCategory); // Can't pass this anything with no set bits
         else
-            return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_MID_BATTLE, switchinCategory); // Can't pass this anything with no set bits
+            return (enum PartyMon)RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_MID_BATTLE, switchinCategory); // Can't pass this anything with no set bits
     }
 
     // Pick last eligible mon in party order
     for (s32 monIndex = (lastId-1); monIndex >= 0; monIndex--)
     {
         if (switchinCategory & (1 << monIndex))
-            return monIndex;
+            return (enum PartyMon)monIndex;
     }
 
-    return PARTY_SIZE;
+    return PARTY_MON_NONE;
 }
 
-static u32 GetValidSwitchinCandidate(u32 validMonIds, enum BattlerId battler, u32 lastId, enum SwitchType switchType)
+static enum PartyMon GetValidSwitchinCandidate(u32 validMonIds, enum BattlerId battler, u32 lastId, enum SwitchType switchType)
 {
     if (validMonIds == 0)
-        return PARTY_SIZE;
+        return PARTY_MON_NONE;
 
     // Randomize between valid mons
     if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) && RANDOMIZE_SWITCHIN_ANY_VALID)
     {
         // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
         if (switchType == SWITCH_AFTER_KO)
-            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
+            return (enum PartyMon)RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
         else
-            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE, validMonIds); // Can't pass this anything with no set bits
+            return (enum PartyMon)RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE, validMonIds); // Can't pass this anything with no set bits
     }
 
     // Pick last valid mon in party order
     for (s32 monIndex = (lastId-1); monIndex > 0; monIndex--)
     {
         if (validMonIds & (1 << monIndex))
-            return monIndex;
+            return (enum PartyMon)monIndex;
     }
 
-    return PARTY_SIZE;
+    return PARTY_MON_NONE;
 }
 
 static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, enum Move *bestPlayerMove)
@@ -2208,14 +2206,15 @@ static inline bool32 CanSwitchinWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool3
 
 // This function splits switching behaviour depending on whether the switch is free.
 // Everything runs in the same loop to minimize computation time. This makes it harder to read, but hopefully the comments can guide you!
-static u32 GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
+static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
 {
     struct IncomingHealInfo healInfoData;
     const struct IncomingHealInfo *healInfo = &healInfoData;
     u32 revengeKillerIds = 0, slowRevengeKillerIds = 0, fastThreatenIds = 0, slowThreatenIds = 0, damageMonIds = 0, generic1v1MonIds = 0;
     u32 batonPassIds = 0, typeMatchupIds = 0, typeMatchupEffectiveIds = 0, defensiveMonIds = 0, trapperIds = 0, healingCandidateIds = 0;
-    u32 bestDefensiveMonId = PARTY_SIZE, bestTypeMatchupId = PARTY_SIZE, bestTypeMatchupEffectiveId = PARTY_SIZE, bestDamageMonId = PARTY_SIZE, bestHealGainId = PARTY_SIZE;
-    u32 aceMonId = PARTY_SIZE, aceMonCount = 0;
+    enum PartyMon bestDefensiveMonId = PARTY_MON_NONE, bestTypeMatchupId = PARTY_MON_NONE, bestTypeMatchupEffectiveId = PARTY_MON_NONE, bestDamageMonId = PARTY_MON_NONE, bestHealGainId = PARTY_MON_NONE;
+    enum PartyMon aceMonId = PARTY_MON_NONE;
+    u32 aceMonCount = 0;
     s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = AI_SWITCHIN_DAMAGE_THRESHOLD, damageDealt = 0, bestHealGain = 0;
     enum Move aiMove, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE;
     u32 hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, maxHitsToKO = AI_DEFENSIVE_KO_THRESHOLD;
@@ -2232,7 +2231,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerI
 
     gBattleStruct->battlerState[battler].notOnField = FALSE;
     // Iterate through mons
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         // Check mon validity
         if (!IsValidForBattle(&party[monIndex]))
@@ -2466,23 +2465,24 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerI
 
     // Not required to switch here and no good candidates, bail
     if (switchType == SWITCH_MID_BATTLE_OPTIONAL)
-        return PARTY_SIZE;
+        return PARTY_MON_NONE;
 
     // Fallback
     if (validMonIds != 0)
         return GetValidSwitchinCandidate(validMonIds, battler, lastId, switchType);
 
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
-    if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount)
+    if (aceMonId != PARTY_MON_NONE && CountUsablePartyMons(battler) <= aceMonCount)
         return aceMonId;
 
-    return PARTY_SIZE;
+    return PARTY_MON_NONE;
 }
 
-static u32 GetBestMonVanilla(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
+static enum PartyMon GetBestMonVanilla(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
 {
     s32 aceMonCount = 0;
-    u32 validMonIds = 0, batonPassIds = 0, typeMatchupIds = 0, bestDamageId = PARTY_SIZE, aceMonId = PARTY_SIZE;
+    u32 validMonIds = 0, batonPassIds = 0, typeMatchupIds = 0;
+    enum PartyMon bestDamageId = PARTY_MON_NONE, aceMonId = PARTY_MON_NONE;
     u32 bestResist = UQ_4_12(2.0), typeMatchup, bestDamage = 0;
 
     // Save existing battler data
@@ -2493,7 +2493,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int lastId, enum BattlerId b
     gBattleStruct->battlerState[battler].notOnField = FALSE;
 
     // Iterate through mons
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         // Check mon validity
         if (!IsValidForBattle(&party[monIndex]))
@@ -2563,26 +2563,26 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int lastId, enum BattlerId b
     // Baton Pass > Type Matchup > Best Damage
     if (batonPassIds != 0)                  return GetSwitchinCandidate(batonPassIds, battler, lastId, switchType);
     else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType);
-    else if (bestDamageId != PARTY_SIZE)    return bestDamageId;
+    else if (bestDamageId != PARTY_MON_NONE) return bestDamageId;
 
     // Not required to switch here and no good candidates, bail
     if (switchType == SWITCH_MID_BATTLE_OPTIONAL)
-        return PARTY_SIZE;
+        return PARTY_MON_NONE;
 
     // Fallback
     if (validMonIds != 0)
         return GetValidSwitchinCandidate(validMonIds, battler, lastId, switchType);
 
-    if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount)
+    if (aceMonId != PARTY_MON_NONE && CountUsablePartyMons(battler) <= aceMonCount)
         return aceMonId;
 
-    return PARTY_SIZE;
+    return PARTY_MON_NONE;
 }
 
-static u32 GetNextMonInParty(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
+static enum PartyMon GetNextMonInParty(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
     // Iterate through mons
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         // Check mon validity
         if (!IsValidForBattle(&party[monIndex]))
@@ -2601,21 +2601,21 @@ static u32 GetNextMonInParty(struct Pokemon *party, int lastId, enum BattlerId b
         }
         return monIndex;
     }
-    return PARTY_SIZE;
+    return PARTY_MON_NONE;
 }
 
-u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType)
+enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType)
 {
     enum BattlerId opposingBattler = 0;
-    u32 bestMonId = PARTY_SIZE;
+    enum PartyMon bestMonId = PARTY_MON_NONE;
     enum BattlerId battlerIn1 = 0, battlerIn2 = 0;
     s32 lastId = GetAILastPartyIndex(battler); // + 1
     struct Pokemon *party;
 
-    if (gBattleStruct->monToSwitchIntoId[battler] != PARTY_SIZE)
+    if (gBattleStruct->monToSwitchIntoId[battler] != PARTY_MON_NONE)
         return gBattleStruct->monToSwitchIntoId[battler];
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        return gBattlerPartyIndexes[battler] + 1;
+        return (enum PartyMon)(gBattlerPartyIndexes[battler] + 1);
 
     opposingBattler = GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     party = GetBattlerParty(battler);
@@ -2641,12 +2641,12 @@ u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switc
     }
 }
 
-u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
+enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler)
 {
     s32 lastId = GetAILastPartyIndex(battler); // + 1
     enum BattlerId opposingBattler = 0;
     struct Pokemon *party = GetBattlerParty(battler);
-    u32 bestMonId = PARTY_SIZE;
+    enum PartyMon bestMonId = PARTY_MON_NONE;
     s32 bestScore = -1;
 
     if (IsDoubleBattle())
@@ -2667,7 +2667,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
 
     gBattleStruct->battlerState[battler].notOnField = FALSE;
 
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         if (GetMonData(&party[monIndex], MON_DATA_HP) != 0)
             continue; // Only consider fainted mons
@@ -2720,7 +2720,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
     FreeRestoreBattleMons(savedBattleMons);
     SetBattlerAiData(battler, gAiLogicData);
 
-    if (bestMonId == PARTY_SIZE)
+    if (bestMonId == PARTY_MON_NONE)
         bestMonId = GetFirstFaintedPartyIndex(battler);
 
     return bestMonId;
