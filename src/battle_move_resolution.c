@@ -806,7 +806,7 @@ static bool32 ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum Battl
     if (IsBattlerUnaffectedByMove(battlerDef))
         return skipFailure;
 
-    if (moveTarget != TARGET_OPPONENTS_FIELD && !IsBattlerAlive(battlerDef))
+    if ((moveTarget != TARGET_FIELD && moveTarget != TARGET_OPPONENTS_FIELD) && !IsBattlerAlive(battlerDef))
         return skipFailure;
 
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
