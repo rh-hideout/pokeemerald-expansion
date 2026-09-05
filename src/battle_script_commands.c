@@ -3048,6 +3048,13 @@ static void Cmd_switchinanim(void)
 
 bool32 CanBattlerSwitch(enum BattlerId battler)
 {
+    return !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        && !IsCommanderActive(battler)
+        && HasBattlerViablePartyMonsForSwitch(battler);
+}
+
+bool32 HasBattlerViablePartyMonsForSwitch(enum BattlerId battler)
+{
     s32 lastMonId;
     enum BattlerId battlerIn1, battlerIn2;
     struct Pokemon *party = GetBattlerParty(battler);
@@ -3086,7 +3093,7 @@ static void Cmd_jumpifcantswitch(void)
     }
     else
     {
-        if (CanBattlerSwitch(battler))
+        if (HasBattlerViablePartyMonsForSwitch(battler))
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
            gBattlescriptCurrInstr = cmd->jumpInstr;

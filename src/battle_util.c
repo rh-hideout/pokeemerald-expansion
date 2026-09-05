@@ -9956,7 +9956,7 @@ bool32 AreMultiPartiesFullTeams(void)
 
 	if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
 		return TRUE;
-		
+
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
      || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
@@ -10094,11 +10094,10 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
     {
         if (gBattleMons[i].volatiles.tryEjectPack
          && IsBattlerAlive(i)
+         && CanBattlerSwitch(i)
          && !IsBattlerInvolvedInSkyDrop(i)
          && GetBattlerHoldEffect(i) == HOLD_EFFECT_EJECT_PACK
-         && gBattleMons[i].volatiles.semiInvulnerable != STATE_COMMANDER
-         && gBattleStruct->battlerState[i].commanderSpecies == SPECIES_NONE
-         && CanBattlerSwitch(i))
+         && gBattleMons[i].volatiles.semiInvulnerable != STATE_COMMANDER)
         {
             ejectPackBattlers |= 1u << i;
             numEjectPackBattlers++;
@@ -10147,10 +10146,9 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability)
 
     if (IsBattlerAlive(battler)
      && !IsPursuitTargetSet()
-     && gBattleStruct->battlerState[battler].commanderSpecies == SPECIES_NONE
-     && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
-     && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+     && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+     && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         return TRUE;
 
