@@ -204,10 +204,10 @@ SINGLE_BATTLE_TEST("Corrosion's effect is lost if the move used by the Pokémon 
             ANIMATION(ANIM_TYPE_MOVE, move, player);
             ANIMATION(ANIM_TYPE_MOVE, move, opponent);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-        if (move == MOVE_TOXIC)
-            STATUS_ICON(opponent, badPoison: TRUE);
-        else
-            STATUS_ICON(opponent, poison: TRUE);
+            if (move == MOVE_TOXIC)
+                STATUS_ICON(opponent, badPoison: TRUE);
+            else
+                STATUS_ICON(opponent, poison: TRUE);
         }
     }
 }

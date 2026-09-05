@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Mental Herb cures Heal Block volatile status (Gen 5+)")
     GIVEN {
         WITH_CONFIG(B_MENTAL_HERB, GEN_5);
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
-        ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_PSYCHIC_NOISE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_HEAL_BLOCK));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -489,9 +489,9 @@ void SetZEffect(const u8 *nextInstr)
         break;
     }
     case Z_EFFECT_BOOST_CRITS:
-        if (!(gBattleMons[gBattlerAttacker].volatiles.dragonCheer || gBattleMons[gBattlerAttacker].volatiles.focusEnergy))
+        if (!gBattleMons[gBattlerAttacker].volatiles.criticalHitBoost)
         {
-            gBattleMons[gBattlerAttacker].volatiles.focusEnergy = TRUE;
+            gBattleMons[gBattlerAttacker].volatiles.criticalHitBoost = CRIT_BOOST_TWO_STAGES;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_BOOST_CRITS;
             BattleScriptPush(nextInstr);
             gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;

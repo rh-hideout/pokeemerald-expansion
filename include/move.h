@@ -2,6 +2,8 @@
 #define GUARD_MOVES_H
 
 #include "config_changes.h"
+#include "constants/abilities.h"
+#include "constants/pokemon.h"
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_factory.h"
@@ -16,7 +18,6 @@
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
 struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
-    const u8 *battleScript;
     u16 battleTvScore:3;
     enum FactoryStyle battleFactoryStyle:4;
     u16 encourageEncore:1;
@@ -29,7 +30,24 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define STAT_FIELD(stat) .stat = 1,
+#define STATS(...) {.statField = (const struct StatField){RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
+#define STAT_SWAP_OFFENSIVE STATS(atk, spatk)
+#define STAT_SWAP_DEFENSIVE STATS(def, spdef)
+#define STAT_SWAP_ALL       STATS(atk, def, spatk, spdef, speed, acc, evasion)
+
 #define MAX_RANDOM_ADDITIONAL_EFFECTS   3
+
+struct PACKED StatField
+{
+    u8 atk : 1;
+    u8 def : 1;
+    u8 spatk : 1;
+    u8 spdef : 1;
+    u8 speed : 1;
+    u8 acc : 1;
+    u8 evasion : 1;
+};
 
 struct AdditionalEffect
 {
@@ -48,6 +66,11 @@ struct AdditionalEffect
         enum WrappedStringID wrapped:8;
         enum BrokeProtectionStringID brokeProtect:8;
         u8 absorbPercentage;
+        u8 restoreHpModifier;
+        enum Type type:8;
+        enum Ability overwriteAbility:16;
+        struct StatField statField;
+        enum BattleRoom roomType:8;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect
@@ -92,6 +115,12 @@ enum TerrainGroundCheck
     GROUND_CHECK_NONE,
     GROUND_CHECK_USER,
     GROUND_CHECK_TARGET,
+};
+
+struct TypeBasedHalverInfo {
+    u32 statusField;
+    enum Volatile voaltileStatus;
+    enum StringID effectString;
 };
 
 struct MoveInfo
@@ -746,7 +775,7 @@ static inline enum Type GetMoveArgType(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SOAK
+    assertf(effect == EFFECT_OVERWRITE_TYPE
          || effect == EFFECT_TWO_TYPED_MOVE
          || effect == EFFECT_THIRD_TYPE
          || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG
@@ -843,16 +872,6 @@ static inline const u8 *GetMoveAnimationScript(enum Move moveId)
         return gMovesInfo[MOVE_NONE].battleAnimScript;
     }
     return gMovesInfo[moveId].battleAnimScript;
-}
-
-static inline const u8 *GetMoveBattleScript(enum Move moveId)
-{
-    moveId = SanitizeMoveId(moveId);
-    assertf(gBattleMoveEffects[GetMoveEffect(moveId)].battleScript, "No battle script for %S", gMovesInfo[moveId].name)
-    {
-        return gBattleMoveEffects[EFFECT_PLACEHOLDER].battleScript;
-    }
-    return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;
 }
 
 #endif // GUARD_MOVES_H
