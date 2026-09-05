@@ -119,8 +119,7 @@ LilycoveCity_DepartmentStore_5F_EventScript_Woman::
 	lockall
 	applymovement LOCALID_DEPARTMENT_STORE_STAIRS_WOMAN, Common_Movement_FacePlayer
 	waitmovement 0
-	goto_if_eq VAR_SOOTOPOLIS_CITY_STATE, 0, LilycoveCity_DepartmentStore_5F_EventScript_WomanNormal
-	goto_if_ge VAR_SOOTOPOLIS_CITY_STATE, 4, LilycoveCity_DepartmentStore_5F_EventScript_WomanNormal
+	goto_if_nbetween VAR_SOOTOPOLIS_CITY_STATE, 1, 3, LilycoveCity_DepartmentStore_5F_EventScript_WomanNormal
 	goto LilycoveCity_DepartmentStore_5F_EventScript_WomanLegendaryWeather
 	end
 
