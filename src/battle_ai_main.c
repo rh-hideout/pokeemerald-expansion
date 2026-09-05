@@ -3135,8 +3135,10 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
 {
     struct AiLogicData *aiData = gAiLogicData;
     enum BattlerId partner = GetPartnerBattler(battlerAtk);
+    enum BattlerId partnerTarget;
     enum MoveSlot partnerMoveIndex;
     enum Move partnerMove;
+    u64 aiFlags = gAiThinkingStruct->aiFlags[battlerAtk];
 
     // Only a committed action can reserve a KO; simulated partner choices may change.
     if (!GetConfig(AI_DOUBLE_TARGET_COORDINATION)
@@ -3148,22 +3150,30 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
      || !BattlerHasAi(partner)
      || !(aiData->battlerMovesScored & (1u << partner))
      || aiData->shouldSwitch & (1u << partner)
-     || gAiBattleData->chosenTarget[partner] != battlerDef
      || IsBattleMoveStatus(move)
      || AI_GetBattlerMoveTargetType(battlerAtk, move) != TARGET_SELECTED)
     {
         return FALSE;
     }
 
-    partnerMoveIndex = gAiBattleData->chosenMoveIndex[partner];
-    if (partnerMoveIndex >= MAX_MON_MOVES)
+    // A locked attack keeps its move and target even if this turn's scoring prefers another action.
+    if (gBattleMons[partner].volatiles.multipleTurns)
+    {
+        partnerMoveIndex = GetMoveSlot(gBattleMons[partner].moves, gLockedMoves[partner]);
+        partnerTarget = gBattleStruct->moveTarget[partner];
+    }
+    else
+    {
+        partnerMoveIndex = gAiBattleData->chosenMoveIndex[partner];
+        partnerTarget = gAiBattleData->chosenTarget[partner];
+    }
+    if (partnerMoveIndex >= MAX_MON_MOVES || partnerTarget != battlerDef)
         return FALSE;
 
     partnerMove = gBattleMons[partner].moves[partnerMoveIndex];
     if (IsMoveUnusable(partnerMoveIndex, partnerMove, aiData->moveLimitations[partner])
      || IsBattleMoveStatus(partnerMove)
      || AI_GetBattlerMoveTargetType(partner, partnerMove) != TARGET_SELECTED
-     || aiData->moveAccuracy[partner][battlerDef][partnerMoveIndex] < 100
      || aiData->simulatedDmg[partner][battlerDef][partnerMoveIndex].minimum < gBattleMons[battlerDef].hp
      || IsSubstituteProtected(partner, battlerDef, aiData->abilities[partner], partnerMove)
      || CanEndureHit(partner, battlerDef, partnerMove))
@@ -3171,21 +3181,26 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
         return FALSE;
     }
 
+    // Apply the deciding ally's accuracy policy, as when conserving a Z-Move for a KO.
+    if (!(aiFlags & AI_FLAG_RISKY)
+     && aiData->moveAccuracy[partner][battlerDef][partnerMoveIndex] < ((aiFlags & AI_FLAG_CONSERVATIVE) ? 100 : LOW_ACCURACY_THRESHOLD))
+        return FALSE;
+
     // Item selection happens after move scoring. Only reserve a KO that rules out item use.
     if (gBattleHistory->itemsNo && !AiExpectsToFaintPlayer(partner))
         return FALSE;
 
-    // Keep the second attack when the partner cannot reliably act this turn.
-    if (gBattleMons[partner].status1 & (STATUS1_INCAPACITATED | STATUS1_PARALYSIS)
-     || gBattleMons[partner].volatiles.confusionTimer
+    // Keep the second attack when the partner cannot deal damage this turn.
+    if (gBattleMons[partner].status1 & STATUS1_INCAPACITATED
      || gBattleMons[partner].volatiles.rechargeTimer
      || gBattleMons[partner].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
      || gBattleStruct->battlerState[partner].commandingDondozo
      || (aiData->abilities[partner] == ABILITY_TRUANT && gBattleMons[partner].volatiles.truantCounter)
-     || GetMoveEffect(partnerMove) == EFFECT_SEMI_INVULNERABLE
-     || IsTwoTurnNotSemiInvulnerableMove(partner, partnerMove)
+     || (GetMoveEffect(partnerMove) == EFFECT_SEMI_INVULNERABLE
+      && !IsSemiInvulnerable(partner, CHECK_ALL)
+      && aiData->holdEffects[partner] != HOLD_EFFECT_POWER_HERB)
+     || (IsTwoTurnNotSemiInvulnerableMove(partner, partnerMove) && !gBattleMons[partner].volatiles.multipleTurns)
      || GetMoveEffect(partnerMove) == EFFECT_FUTURE_SIGHT
-     || GetMoveEffect(partnerMove) == EFFECT_SUCKER_PUNCH
      || GetMoveEffect(partnerMove) == EFFECT_FOCUS_PUNCH)
     {
         return FALSE;

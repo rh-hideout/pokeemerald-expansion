@@ -49,21 +49,33 @@ AI_DOUBLE_BATTLE_TEST("AI target coordination: keep both attacks when neither al
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI target coordination: keep backup attacks for inaccurate partner moves")
+AI_MULTI_BATTLE_TEST("AI target coordination: accuracy follows the deciding ally's risk settings")
 {
+    enum Move move;
+    u32 aiFlags;
+    bool32 coordinate;
+
+    PARAMETRIZE { move = MOVE_AIR_SLASH; aiFlags = 0; coordinate = TRUE; }
+    PARAMETRIZE { move = MOVE_MEGA_KICK; aiFlags = 0; coordinate = TRUE; }
+    PARAMETRIZE { move = MOVE_ZAP_CANNON; aiFlags = 0; coordinate = FALSE; }
+    PARAMETRIZE { move = MOVE_AIR_SLASH; aiFlags = AI_FLAG_CONSERVATIVE; coordinate = FALSE; }
+    PARAMETRIZE { move = MOVE_SEISMIC_TOSS; aiFlags = AI_FLAG_CONSERVATIVE; coordinate = TRUE; }
+    PARAMETRIZE { move = MOVE_ZAP_CANNON; aiFlags = AI_FLAG_RISKY; coordinate = TRUE; }
+
     GIVEN {
         WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
         WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(opponentRight, aiFlags);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_PROTECT); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MEGA_KICK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SEISMIC_TOSS); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); Moves(MOVE_CELEBRATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_SEISMIC_TOSS); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_PROTECT);
-            EXPECT_MOVE(opponentLeft, MOVE_MEGA_KICK, target: playerLeft);
-            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerLeft);
+            EXPECT_MOVE(opponentLeft, move, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: coordinate ? playerRight : playerLeft);
         }
     }
 }
@@ -200,7 +212,6 @@ AI_DOUBLE_BATTLE_TEST("AI target coordination: incapacitated partners and delaye
 
     PARAMETRIZE { move = MOVE_SEISMIC_TOSS; status = STATUS1_SLEEP; }
     PARAMETRIZE { move = MOVE_SEISMIC_TOSS; status = STATUS1_FREEZE; }
-    PARAMETRIZE { move = MOVE_SEISMIC_TOSS; status = STATUS1_PARALYSIS; }
     PARAMETRIZE { move = MOVE_SOLAR_BEAM; status = STATUS1_NONE; }
     PARAMETRIZE { move = MOVE_FLY; status = STATUS1_NONE; }
     PARAMETRIZE { move = MOVE_FUTURE_SIGHT; status = STATUS1_NONE; }
@@ -217,6 +228,147 @@ AI_DOUBLE_BATTLE_TEST("AI target coordination: incapacitated partners and delaye
         TURN {
             MOVE(playerLeft, MOVE_PROTECT);
             EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerLeft);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI target coordination: confusion and paralysis do not cancel a chosen KO")
+{
+    enum Move statusMove;
+
+    PARAMETRIZE { statusMove = MOVE_CONFUSE_RAY; }
+    PARAMETRIZE { statusMove = MOVE_THUNDER_WAVE; }
+
+    GIVEN {
+        WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(10); Moves(MOVE_PROTECT); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); Speed(20); Moves(statusMove, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SEISMIC_TOSS); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Moves(MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            MOVE(playerRight, statusMove, target: opponentLeft, WITH_RNG(RNG_CONFUSION_TURNS, 3));
+            EXPECT_MOVE(opponentLeft, MOVE_SEISMIC_TOSS, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentLeft, MOVE_SEISMIC_TOSS, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight);
+        }
+    } THEN {
+        if (statusMove == MOVE_CONFUSE_RAY)
+            EXPECT(gBattleMons[B_BATTLER_1].volatiles.confusionTimer > 0);
+        else
+            EXPECT(gBattleMons[B_BATTLER_1].status1 & STATUS1_PARALYSIS);
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI target coordination: honor the partner's chosen Sucker Punch")
+{
+    GIVEN {
+        WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_PROTECT); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SUCKER_PUNCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            EXPECT_MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI target coordination: Power Herb and sun allow immediate two-turn KOs")
+{
+    enum Move move;
+    enum Item item;
+    enum Ability ability;
+    bool32 coordinate;
+
+    PARAMETRIZE { move = MOVE_DIG; item = ITEM_NONE; ability = ABILITY_SHADOW_TAG; coordinate = FALSE; }
+    PARAMETRIZE { move = MOVE_DIG; item = ITEM_POWER_HERB; ability = ABILITY_SHADOW_TAG; coordinate = TRUE; }
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; item = ITEM_NONE; ability = ABILITY_SHADOW_TAG; coordinate = FALSE; }
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; item = ITEM_POWER_HERB; ability = ABILITY_SHADOW_TAG; coordinate = TRUE; }
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; item = ITEM_NONE; ability = ABILITY_DROUGHT; coordinate = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_PROTECT); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); Ability(ability); Moves(move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            EXPECT_MOVE(opponentLeft, move, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: coordinate ? playerRight : playerLeft);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI target coordination: a charged move can reserve a KO on its attacking turn")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_DIG; }
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; }
+
+    GIVEN {
+        WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(10); Moves(MOVE_PROTECT); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); Speed(20); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(move); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Moves(MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            EXPECT_MOVE(opponentLeft, move, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerLeft);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            SKIP_TURN(opponentLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI target coordination: a charged attack retains its original target")
+{
+    GIVEN {
+        WITH_CONFIG(AI_DOUBLE_TARGET_COORDINATION, TRUE);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(10); Moves(MOVE_PROTECT); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(201); MaxHP(400); Speed(20); Moves(MOVE_BELLY_DRUM, MOVE_PROTECT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_DIG); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Moves(MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            MOVE(playerRight, MOVE_BELLY_DRUM);
+            EXPECT_MOVE(opponentLeft, MOVE_DIG, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerLeft);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1));
+            MOVE(playerRight, MOVE_PROTECT);
+            SKIP_TURN(opponentLeft);
+            EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight);
         }
     }
 }

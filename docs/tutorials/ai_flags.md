@@ -94,11 +94,19 @@ the other ally lowers the score of redundant attacks on that foe by 10 points.
 This preserves existing move preferences and allows double-targeting when it
 is still the best option. Set the config to `FALSE` for independent targeting.
 
-Coordination requires a KO even at minimum damage, full accuracy, and no known
+Coordination requires a KO even at minimum damage and no known
 survival effect such as Focus Sash, Sturdy, or a Substitute blocking the move.
+Accuracy follows the deciding ally's existing risk policy: normal AI requires
+at least `LOW_ACCURACY_THRESHOLD`, conservative AI requires 100%, and risky AI
+skips the accuracy check. Confusion, paralysis, and a chosen Sucker Punch do not
+independently disable coordination; the partner's normal move selection still
+applies.
+
 It does not reserve targets for simulated choices, switching allies, or delayed
-attacks such as charging moves and Future Sight. Known faster threats that can
-KO an ally also prevent the penalty.
+attacks such as Future Sight. Two-turn moves can reserve a KO on their attacking
+turn, or immediately when Power Herb or applicable weather skips charging.
+Locked attacks use their original move and target.
+Known faster threats that can KO an ally also prevent the penalty.
 Status moves, spread moves, and attacks on allies keep their existing scoring.
 The AI uses its existing knowledge of foes, without reading the player's
 selected action. The first ally still chooses independently; this is not a
