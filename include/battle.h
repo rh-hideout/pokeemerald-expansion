@@ -740,7 +740,8 @@ struct BattleStruct
     u32 dancerSavedTarget:3;
     u32 statChangeBattler:3;
     u32 overworldWeatherPresent:1;
-    u32 padding5:4;
+    u32 setEffectOnAlly:1;
+    u32 padding5:3;
     enum BattlerId statusedBattler:4; // For Synchronize/Poison Puppeteer
     enum BattlerId statusInflicterBattler:4; // For Synchronize/Poison Puppeteer
     enum MoveEffect synchronizeStatus;
