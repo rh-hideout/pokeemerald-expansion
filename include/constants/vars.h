@@ -1,8 +1,6 @@
 #ifndef GUARD_CONSTANTS_VARS_H
 #define GUARD_CONSTANTS_VARS_H
 
-#include "constants/vars_frlg.h"
-
 #define VARS_START 0x4000
 
 // temporary vars
@@ -47,6 +45,12 @@
 #define VAR_OBJ_GFX_ID_D           0x401D
 #define VAR_OBJ_GFX_ID_E           0x401E
 #define VAR_OBJ_GFX_ID_F           0x401F
+
+#if IS_FRLG
+
+#include "constants/vars_frlg.h"
+
+#else
 
 // general purpose vars
 #define VAR_RECYCLE_GOODS                                0x4020
@@ -279,6 +283,38 @@
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)
 
+// FRLG vars
+#define VAR_MASSAGE_COOLDOWN_STEP_COUNTER   0
+#define VAR_ELEVATOR_FLOOR                  0
+#define VAR_RESORT_GORGEOUS_REQUESTED_MON   0
+#define VAR_RESORT_GORGEOUS_REWARD          0
+#define VAR_RESORT_GOREGEOUS_STEP_COUNTER   0
+#define VAR_TRAINER_CARD_MON_ICON_TINT_IDX  0
+#define VAR_TRAINER_CARD_MON_ICON_1         0
+#define VAR_TRAINER_CARD_MON_ICON_2         0
+#define VAR_TRAINER_CARD_MON_ICON_3         0
+#define VAR_TRAINER_CARD_MON_ICON_4         0
+#define VAR_TRAINER_CARD_MON_ICON_5         0
+#define VAR_TRAINER_CARD_MON_ICON_6         0
+#define VAR_HERACROSS_SIZE_RECORD           0
+#define VAR_MAGIKARP_SIZE_RECORD            0
+
+#define VAR_MAP_SCENE_PALLET_TOWN_OAK                        0
+#define VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB         0
+#define VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE               0
+#define VAR_MAP_SCENE_VIRIDIAN_CITY_MART                     0
+#define VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN                  0
+#define VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE      0
+#define VAR_MAP_SCENE_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB  0
+#define VAR_MAP_SCENE_ROUTE16                                0
+#define VAR_MAP_SCENE_ROUTE22                                0
+#define VAR_MAP_SCENE_INDIGO_PLATEAU_EXTERIOR                0
+#define VAR_MAP_SCENE_POKEMON_LEAGUE                         0
+#define VAR_MAP_SCENE_TRAINER_TOWER                          0
+#define VAR_MAP_SCENE_POKEMON_CENTER_TEALA                   0
+
+#endif
+
 #define SPECIAL_VARS_START            0x8000
 // special vars
 // They are commonly used as parameters to commands, or return values from commands.
@@ -306,6 +342,17 @@
 #define VAR_TRAINER_BATTLE_OPPONENT_A 0x8015 // Alias of TRAINER_BATTLE_PARAM.opponentA
 
 #define SPECIAL_VARS_END              0x8015
+
+// FRLG special vars (currently zeroed out)
+#define VAR_TEXT_COLOR                0
+#define VAR_PREV_TEXT_COLOR           0
+
+// Text color ids for VAR_TEXT_COLOR / VAR_PREV_TEXT_COLOR
+#define NPC_TEXT_COLOR_MALE      0 // Blue, for male NPCs
+#define NPC_TEXT_COLOR_FEMALE    1 // Red, for female NPCs
+#define NPC_TEXT_COLOR_MON       2 // Black, for Pokémon
+#define NPC_TEXT_COLOR_NEUTRAL   3 // Black, for inanimate objects and messages from the game
+#define NPC_TEXT_COLOR_DEFAULT 255 // If an NPC is selected, use the color specified by GetColorFromTextColorTable, otherwise use Neutral.
 
 // If an overworld trigger uses this pseudo-variable as the trigger check,
 // then the script will be run using RunScriptImmediately instead of in the
