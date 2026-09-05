@@ -404,6 +404,14 @@ static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, enum Item i
     return totalQuantity >= count;
 }
 
+bool32 ConsumeBagItem(enum Item itemId, u16 count)
+{
+    if (!GetItemConsumability(itemId))
+        return TRUE;
+
+    return RemoveBagItem(itemId, count);
+}
+
 bool32 RemoveBagItem(enum Item itemId, u16 count)
 {
     itemId = SanitizeBagItemId(itemId);
@@ -873,7 +881,7 @@ u8 GetItemImportance(enum Item itemId)
 
 u8 GetItemConsumability(enum Item itemId)
 {
-    return !gItemsInfo[SanitizeItemId(itemId)].notConsumed;
+    return !gItemsInfo[SanitizeItemId(itemId)].notConsumed && !gItemsInfo[SanitizeItemId(itemId)].importance;
 }
 
 enum Pocket GetItemPocket(enum Item itemId)
