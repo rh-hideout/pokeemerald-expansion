@@ -270,7 +270,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates
+RULES_NO_SCAN += clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates
 .PHONY: all rom agbcc modern compare check debug release $(TESTELF)
 .PHONY: FORCE_LIBAGBSYSCALL
 .PHONY: $(RULES_NO_SCAN)
@@ -570,9 +570,8 @@ LD_SCRIPT := ld_script_modern.ld
 
 # Final rules
 
-libagbsyscall: $(LIBAGBSYSCALL)
-	@:
-
+# Always let the nested Makefile check its own dependencies. The archive is only
+# updated when one of its inputs changes, so unchanged builds do not relink.
 $(LIBAGBSYSCALL): FORCE_LIBAGBSYSCALL
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
