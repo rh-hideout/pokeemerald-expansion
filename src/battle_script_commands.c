@@ -8207,7 +8207,7 @@ static void SetBallThrowShakes(void)
         return;
     }
 
-    if (!gHasFetchedBall)
+    if (gLastUsedBall == ITEM_NONE)
         gLastUsedBall = gLastUsedItem;
 
     if (IsCriticalCapture())
