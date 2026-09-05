@@ -1189,7 +1189,7 @@ BattleScript_MoveEffectPainSplit::
 	datahpupdate BS_TARGET, ASSURANCE_IGNORE
 	printstring STRINGID_SHAREDPAIN
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MoveEffectHealBell::
 	healpartystatus
@@ -3899,7 +3899,6 @@ BattleScript_KingsShieldEffect::
 BattleScript_BanefulBunkerEffect::
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	setnonvolatilestatus TRIGGER_ON_PROTECT
-	setmoveresultflags MOVE_RESULT_MISSED
 	return
 
 BattleScript_CuteCharmActivates::

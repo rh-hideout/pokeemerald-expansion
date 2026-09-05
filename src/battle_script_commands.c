@@ -3792,6 +3792,7 @@ static void ResetValuesForCalledMove(void)
         gBattleStruct->eventState.atkCanceler = 0;
     else
         gBattleStruct->eventState.atkCanceler = CANCELER_VOLATILE_BLOCKED;
+    gBattleScripting.moveendState = 0;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker));

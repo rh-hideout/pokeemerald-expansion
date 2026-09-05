@@ -546,7 +546,7 @@ struct BattlerState
     u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
     u16 toxicChainActivates:1;
     u16 substituteBlocked:1;
-    u16 padding:5;
+    u16 padding:6;
     // End of Word
 };
 
@@ -722,8 +722,7 @@ struct BattleStruct
     u32 savedMoveResultFlags[MAX_BATTLERS_COUNT]; // for Bounced moves
     u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
-    u8 setEffectOnAlly:2;
-    u8 unused4:2;
+    u8 unused4:4;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];

@@ -583,6 +583,7 @@ extern const u8 BattleScript_MoveEffectTransform[];
 extern const u8 BattleScript_MoveEffectSubstitute[];
 extern const u8 BattleScript_MoveEffectShedTail[];
 extern const u8 BattleScript_MoveEffectEncore[];
+extern const u8 BattleScript_MoveEffectPainSplit[];
 extern const u8 BattleScript_MoveEffectHealBell[];
 extern const u8 BattleScript_MoveEffectAromatherapy[];
 extern const u8 BattleScript_Curse[];

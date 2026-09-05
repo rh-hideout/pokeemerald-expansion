@@ -4907,6 +4907,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .moveEffect = STAT_CHANGE_EFFECT_PLUS,
             .attack = 1,
             .defense = 1,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_CURSE,
         }),
         .battleAnimScript = gBattleAnimMove_Curse,
         .validApprenticeMove = TRUE,

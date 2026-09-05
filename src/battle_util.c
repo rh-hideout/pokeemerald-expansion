@@ -4329,11 +4329,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_TOXIC_DEBRIS:
         {
             enum BattlerId toxicSpikesTarget = GetOppositeBattler(battler);
+            enum BattleSide side = GetBattlerSide(toxicSpikesTarget);
             if (!gBattleStruct->isSkyBattle
              && IsBattleMovePhysical(gCurrentMove)
              && IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
-             && (gSideTimers[GetBattlerSide(toxicSpikesTarget)].toxicSpikesAmount != 2))
+             && (gSideTimers[side].toxicSpikesAmount != 2))
             {
+                if (gSideTimers[side].toxicSpikesAmount == 0) // Add only once to the queue
+                    PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
+                gSideTimers[side].toxicSpikesAmount++;
                 SaveBattlerTarget(battler);
                 SaveBattlerAttacker(gBattlerAttacker);
                 gBattlerAttacker = battler;

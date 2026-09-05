@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Doodle fails if both user and partner have a banned ability"
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(playerLeft->ability == ABILITY_GULP_MISSILE);
-        EXPECT(playerRight->ability == ABILITY_SHADOW_TAG);
+        EXPECT(playerRight->ability == ABILITY_GULP_MISSILE);
     }
 }
 
@@ -94,8 +94,8 @@ DOUBLE_BATTLE_TEST("Doodle will change either user's or partner's ability if one
             MESSAGE("Wynaut copied the opposing Torchic's Ability!");
             NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
         } else {
-            NOT MESSAGE("Wynaut copied the opposing Torchic's Ability!");
-            MESSAGE("Cramorant copied the opposing Torchic's Ability!");
+            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
         }
     } THEN {
         if (speciesAtk == SPECIES_WYNAUT) {
@@ -117,8 +117,8 @@ DOUBLE_BATTLE_TEST("Doodle doesn't change the ability if user or partner have an
     PARAMETRIZE { itemPartner = ITEM_ABILITY_SHIELD; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(itemAttacker); }
-        PLAYER(SPECIES_WYNAUT) { Item(itemPartner); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Item(itemAttacker); }
+        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); Item(itemPartner); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -126,15 +126,20 @@ DOUBLE_BATTLE_TEST("Doodle doesn't change the ability if user or partner have an
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
         if (itemAttacker == ITEM_ABILITY_SHIELD) {
-            MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
-            NOT MESSAGE("Wynaut copied the opposing Torchic's Ability!");
-        } else {
-            NOT MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
             MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            NOT MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
+        } else {
+            NOT MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
         }
     } THEN {
-        EXPECT(playerLeft->ability == ABILITY_GULP_MISSILE);
-        EXPECT(playerRight->ability == ABILITY_SHADOW_TAG);
+        if (itemAttacker == ITEM_ABILITY_SHIELD) {
+            EXPECT(playerLeft->ability == ABILITY_SHADOW_TAG);
+            EXPECT(playerRight->ability == ABILITY_BLAZE);
+        } else {
+            EXPECT(playerLeft->ability == ABILITY_BLAZE);
+            EXPECT(playerRight->ability == ABILITY_SHADOW_TAG);
+        }
     }
 }
 

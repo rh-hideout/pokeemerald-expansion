@@ -383,8 +383,8 @@ static void HandleSetEffectNightmare(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectCurse(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IS_BATTLER_OF_TYPE(cv->battlerAtk, TYPE_GHOST))
-        return; // stat change handled is stat change resolution
+    if (!IS_BATTLER_OF_TYPE(cv->battlerAtk, TYPE_GHOST))
+        return;
 
     if (gBattleMons[se->effectBattler].volatiles.cursed)
     {
@@ -560,7 +560,7 @@ static void HandleSetEffectCelebrate(struct BattleCalcValues *cv, struct SetEffe
 
 static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (HasBattlerActedThisTurn(se->effectBattler)
+    if (!HasBattlerActedThisTurn(se->effectBattler)
      || BattlerJustSwitchedIn(se->effectBattler)
      || NoAliveMonsForEitherParty()
      || gBattleMons[se->effectBattler].volatiles.gastroAcid
@@ -933,10 +933,8 @@ static void HandleSetEffectReflect(struct BattleCalcValues *cv, struct SetEffect
             gSideTimers[side].reflectTimer = 5;
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDDEF, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
-
-    BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_MoveEffectSetStatus;
 }
 
 static void HandleSetEffectLightScreen(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1769,7 +1767,7 @@ static void HandleSetEffectTormentSide(struct BattleCalcValues *cv, struct SetEf
     gBattlescriptCurrInstr = BattleScript_EffectTormentSide;
 }
 
-static void HandleSetEffectFireSpinSide(struct BattleCalcValues *cv, struct SetEffect *se)
+static void SetWrapForOpposingSide(struct BattleCalcValues *cv, struct SetEffect *se, enum Move move)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; ++battler)
     {
@@ -1779,30 +1777,22 @@ static void HandleSetEffectFireSpinSide(struct BattleCalcValues *cv, struct SetE
         if (!gBattleMons[battler].volatiles.wrapped)
         {
             gBattleMons[battler].volatiles.wrapped = TRUE;
-            SetWrapTurns(battler, GetBattlerHoldEffect(cv->battlerAtk));
+            SetWrapTurns(battler, cv->holdEffects[cv->battlerAtk]);
             // The Wrap effect does not expire when the user switches, so here's some cheese.
             gBattleMons[battler].volatiles.wrappedBy = se->effectBattler;
-            gBattleMons[battler].volatiles.wrappedMove = MOVE_FIRE_SPIN;
+            gBattleMons[battler].volatiles.wrappedMove = move;
         }
     }
 }
 
+static void HandleSetEffectFireSpinSide(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    SetWrapForOpposingSide(cv, se, MOVE_FIRE_SPIN);
+}
+
 static void HandleSetEffectSandblastSide(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    for (enum BattlerId battler = 0; battler < gBattlersCount; ++battler)
-    {
-        if (!IsBattlerAlly(battler, se->effectBattler))
-            continue;
-
-        if (!gBattleMons[battler].volatiles.wrapped)
-        {
-            gBattleMons[battler].volatiles.wrapped = TRUE;
-            SetWrapTurns(battler, GetBattlerHoldEffect(cv->battlerAtk));
-            // The Wrap effect does not expire when the user switches, so here's some cheese.
-            gBattleMons[battler].volatiles.wrappedBy = se->effectBattler;
-            gBattleMons[battler].volatiles.wrappedMove = MOVE_SAND_TOMB;
-        }
-    }
+    SetWrapForOpposingSide(cv, se, MOVE_SAND_TOMB);
 }
 
 static void HandleSetEffectBreakScreen(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1969,28 +1959,32 @@ static void HandleSetEffectEmbargo(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectMiracleEye(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (GetConfig(B_MIRACLE_EYE_FAIL) >= GEN_5 && gBattleMons[se->effectBattler].volatiles.miracleEye)
+    if (GetConfig(B_MIRACLE_EYE_FAIL) != GEN_4 && gBattleMons[se->effectBattler].volatiles.miracleEye)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else
     {
-        TryEffectVolatile(cv, se, VOLATILE_MIRACLE_EYE, TRUE, STRINGID_PKMNIDENTIFIED);
+        gBattleMons[se->effectBattler].volatiles.miracleEye = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNIDENTIFIED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
 
 static void HandleSetEffectForesight(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     u32 config = GetConfig(B_FORESIGHT_FAIL);
-    bool32 printsFailureMessage = (config < GEN_3 || config >= GEN_5);
+    bool32 dontPrintFailureMessage = (config == GEN_3 || config == GEN_4);
 
-    if (printsFailureMessage && gBattleMons[se->effectBattler].volatiles.foresight)
+    if (!dontPrintFailureMessage && gBattleMons[se->effectBattler].volatiles.foresight)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else
     {
-        TryEffectVolatile(cv, se, VOLATILE_FORESIGHT, TRUE, STRINGID_PKMNIDENTIFIED);
+        gBattleMons[se->effectBattler].volatiles.foresight = TRUE;
+        PrepareStringBattleWithWait(STRINGID_PKMNIDENTIFIED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
 
@@ -2359,6 +2353,7 @@ static void HandleSetEffectPainSplit(struct BattleCalcValues *cv, struct SetEffe
         s32 hpDiff = (gBattleMons[cv->battlerAtk].hp + GetNonDynamaxHP(se->effectBattler)) / 2;
         gBattleStruct->passiveHpUpdate[se->effectBattler] = GetNonDynamaxHP(se->effectBattler) - hpDiff;
         gBattleStruct->passiveHpUpdate[cv->battlerAtk] = gBattleMons[cv->battlerAtk].hp - hpDiff;
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectPainSplit);
     }
 }
 
@@ -3611,7 +3606,7 @@ static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect 
     {
         BestowItem(cv->battlerAtk, se->effectBattler);
         PrepareStringBattleWithWait(STRINGID_BESTOWITEMGIVING, cv->battlerAtk);
-        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+        BattleScriptPushAndSet(se->script, BattleScript_Bestow);
     }
 }
 
@@ -4084,7 +4079,6 @@ static void HandleSetEffectInstruct(struct BattleCalcValues *cv, struct SetEffec
     enum BattlerId battlerDef = se->effectBattler;
     enum Move move = gLastPrintedMoves[battlerDef];
     u32 moveIndex = MAX_MON_MOVES;
-    gCalledMove = move;
 
     if (move == MOVE_NONE
      || move == MOVE_UNAVAILABLE
@@ -4103,9 +4097,10 @@ static void HandleSetEffectInstruct(struct BattleCalcValues *cv, struct SetEffec
     }
     else if (!cv->onlyChecking)
     {
+        gCalledMove = move;
         gCurrMovePos = moveIndex;
         gEffectBattler = gBattleStruct->battlerState[battlerDef].lastMoveTarget;
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battlerDef, gBattlerPartyIndexes[battlerDef]);
+         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battlerDef, gBattlerPartyIndexes[battlerDef]);
         BattleScriptPushAndSet(se->script, BattleScript_Instruct);
     }
 }
@@ -4318,6 +4313,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_GRASSY_TERRAIN] = HandleSetEffectTerrain,
     [MOVE_EFFECT_ELECTRIC_TERRAIN] = HandleSetEffectTerrain,
     [MOVE_EFFECT_PSYCHIC_TERRAIN] = HandleSetEffectTerrain,
+    [MOVE_EFFECT_VOLCALITH] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_VINE_LASH] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_WILDFIRE] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_CANNONADE] = HandleSetEffectGmaxNonTypeDamage,
@@ -4336,15 +4332,14 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_HEAL_TEAM] = HandleSetEffectHealTeam,
     [MOVE_EFFECT_SPITE] = HandleSetEffectSpite,
     [MOVE_EFFECT_GRAVITY] = HandleSetEffectGravity,
-    [MOVE_EFFECT_VOLCALITH] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_SANDBLAST_SIDE] = HandleSetEffectSandblastSide,
+    [MOVE_EFFECT_FIRE_SPIN_SIDE] = HandleSetEffectFireSpinSide,
     [MOVE_EFFECT_YAWN_FOE] = HandleSetEffectYawnFoe,
     [MOVE_EFFECT_AROMATHERAPY] = HandleSetEffectAromatherapy,
     [MOVE_EFFECT_CONFUSE_SIDE] = HandleSetEffectConfuseSide,
     [MOVE_EFFECT_STEELSURGE] = HandleSetEffectSteelsurge,
     [MOVE_EFFECT_STEALTH_ROCK] = HandleSetEffectStealthRock,
     [MOVE_EFFECT_TORMENT_SIDE] = HandleSetEffectTormentSide,
-    [MOVE_EFFECT_FIRE_SPIN_SIDE] = HandleSetEffectFireSpinSide,
     [MOVE_EFFECT_FIXED_POWER] = HandleSetEffectNone,
     [STAT_CHANGE_EFFECT_PLUS] = HandleSetEffectNone,
     [STAT_CHANGE_EFFECT_MINUS] = HandleSetEffectNone,
