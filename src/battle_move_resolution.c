@@ -104,6 +104,8 @@ static enum CancelerResult CancelerRecharge(struct BattleCalcValues *cv)
 {
     if (gBattleMons[cv->battlerAtk].volatiles.rechargeTimer > 0)
     {
+        if (GetConfig(B_TRUANT) >= GEN_5 && GetBattlerAbility(cv->battlerAtk) == ABILITY_TRUANT)
+            gBattleMons[cv->battlerAtk].volatiles.truantToggle = 0;
         CancelMultiTurnMoves(cv->battlerAtk);
         gBattlescriptCurrInstr = BattleScript_MoveUsedMustRecharge;
         return CANCELER_RESULT_FAILURE;
@@ -277,7 +279,14 @@ static enum CancelerResult CancelerPowerPoints(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerTruant(struct BattleCalcValues *cv)
 {
-    if (GetBattlerAbility(cv->battlerAtk) == ABILITY_TRUANT && gBattleMons[cv->battlerAtk].volatiles.truantCounter)
+    if (GetBattlerAbility(cv->battlerAtk) != ABILITY_TRUANT)
+        return CANCELER_RESULT_SUCCESS;
+
+    bool32 shouldLoaf = gBattleMons[cv->battlerAtk].volatiles.truantToggle;
+    if (GetConfig(B_TRUANT) >= GEN_5)
+        gBattleMons[cv->battlerAtk].volatiles.truantToggle ^= 1;
+
+    if (shouldLoaf)
     {
         CancelMultiTurnMoves(cv->battlerAtk);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LOAFING;
@@ -4361,6 +4370,7 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
                     gBattleMons[battlerDef].volatiles.neutralizingGas = FALSE;
                     if (!IsNeutralizingGasOnField())
                     {
+                        UpdateTruantTogglesOnNeutralizingGasEnd();
                         BattleScriptCall(BattleScript_NeutralizingGasExits);
                         result = MOVEEND_RESULT_RUN_SCRIPT;
                     }
@@ -4414,6 +4424,7 @@ static enum MoveEndResult MoveEndFaintAttacker(struct BattleCalcValues *cv)
             gBattleMons[cv->battlerAtk].volatiles.neutralizingGas = FALSE;
             if (!IsNeutralizingGasOnField())
             {
+                UpdateTruantTogglesOnNeutralizingGasEnd();
                 BattleScriptCall(BattleScript_NeutralizingGasExits);
                 return MOVEEND_RESULT_RUN_SCRIPT;
             }

@@ -1637,6 +1637,7 @@ static void Cmd_tryfaintmon(void)
                 gBattleMons[battler].volatiles.neutralizingGas = FALSE;
                 if (!IsNeutralizingGasOnField())
                 {
+                    UpdateTruantTogglesOnNeutralizingGasEnd();
                     BattleScriptPush(gBattlescriptCurrInstr);
                     gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
                     return;
@@ -3392,12 +3393,21 @@ static void UpdateSentMonFlags(enum BattlerId battler)
     gBattleStruct->battlerState[battler].switchIn = TRUE;
     gProtectStructs[battler].forcedSwitch = FALSE;
 
-    // There is a hack here to ensure the truant counter will be 0 when the battler's next turn starts.
-    // The truant counter is not updated in the case where a mon switches in after a lost judgment in the battle arena.
+    // Truant advanced at the end of the turn in Gen 3-4, so prime the toggle with the value it
+    // needs to hold before that advance for the battler to act on its first turn.
+    // Gen 3 advances it before end of turn damage, which a battler replacing a Pokémon that
+    // fainted to that damage misses out on, making it loaf first. Gen 4 advances it after,
+    // so every battler acts first there.
     if (GetBattlerAbility(battler) == ABILITY_TRUANT
-     && gCurrentActionFuncId != B_ACTION_USE_MOVE
+     && GetConfig(B_TRUANT) <= GEN_4
      && !gBattleMons[battler].volatiles.truantSwitchInHack)
-        gBattleMons[battler].volatiles.truantCounter = 1;
+    {
+        bool32 isDuringEndTurn = AreEndTurnEventsRunning();
+        bool32 endTurnUpdatePending = !isDuringEndTurn || gBattleStruct->eventState.endTurn <= ENDTURN_THIRD_EVENT_BLOCK;
+        bool32 loafsOnFirstTurn = GetConfig(B_TRUANT) == GEN_3 && isDuringEndTurn;
+
+        gBattleMons[battler].volatiles.truantToggle = endTurnUpdatePending ^ loafsOnFirstTurn;
+    }
     gBattleMons[battler].volatiles.truantSwitchInHack = 0;
 
     for (u32 i = 0; i < gBattlersCount; i++)
@@ -5662,6 +5672,8 @@ static void Cmd_transformdataexecution(void)
 {
     CMD_ARGS();
 
+    enum Ability oldAbility = gBattleMons[gBattlerAttacker].ability;
+
     gBattlescriptCurrInstr = cmd->nextInstr;
     if ((GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2 && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
         || (GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2 && gBattleMons[gBattlerTarget].volatiles.transformed)
@@ -5703,6 +5715,7 @@ static void Cmd_transformdataexecution(void)
             battleMonAttacker[i] = battleMonTarget[i];
 
         gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = GetBattlerAbility(gBattlerTarget);
+        UpdateTruantToggleForAbilityChange(gBattlerAttacker, oldAbility);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             u32 pp = GetMovePP(gBattleMons[gBattlerAttacker].moves[i]);
@@ -6934,7 +6947,7 @@ static void Cmd_trycopyability(void)
     {
         RemoveAbilityFlags(battler);
         gBattleScripting.abilityPopupOverwrite = gBattleMons[battler].ability;
-        gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility = defAbility;
+        OverwriteBattlerAbility(battler, defAbility);
         gLastUsedAbility = defAbility;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -6998,6 +7011,7 @@ static void Cmd_setgastroacid(void)
 
         RemoveRuinAbilityFlags(gBattlerTarget);
         gBattleMons[gBattlerTarget].volatiles.gastroAcid = TRUE;
+        ResetTruantToggleOnAbilitySuppression(gBattlerTarget);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -7101,10 +7115,11 @@ static void Cmd_tryswapabilities(void)
             if (!IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
                 gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerAttacker].ability;
             gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
+            enum Ability attackerAbility = gBattleMons[gBattlerAttacker].ability;
             RemoveAbilityFlags(gBattlerTarget);
             RemoveAbilityFlags(gBattlerAttacker);
-            gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = gBattleMons[gBattlerAttacker].ability;
-            gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = gLastUsedAbility;
+            OverwriteBattlerAbility(gBattlerTarget, attackerAbility);
+            OverwriteBattlerAbility(gBattlerAttacker, gLastUsedAbility);
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
@@ -7236,6 +7251,7 @@ static void Cmd_switchoutabilities(void)
         gBattleMons[battler].volatiles.neutralizingGas = FALSE;
         if (!IsNeutralizingGasOnField())
         {
+            UpdateTruantTogglesOnNeutralizingGasEnd();
             BattleScriptPush(gBattlescriptCurrInstr);
             gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
             return;
@@ -8554,7 +8570,7 @@ static void Cmd_tryoverwriteability(void)
 
         RemoveAbilityFlags(gBattlerTarget);
         gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
-        gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = GetMoveOverwriteAbility(gCurrentMove);
+        OverwriteBattlerAbility(gBattlerTarget, GetMoveOverwriteAbility(gCurrentMove));
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -10250,7 +10266,7 @@ void BS_SetTracedAbility(void)
 {
     NATIVE_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility = gBattleStruct->tracedAbility[battler];
+    OverwriteBattlerAbility(battler, gBattleStruct->tracedAbility[battler]);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -10782,7 +10798,7 @@ void BS_TryEntrainment(void)
         else
         {
             RemoveAbilityFlags(gBattlerTarget);
-            gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = gBattleMons[gBattlerAttacker].ability;
+            OverwriteBattlerAbility(gBattlerTarget, gBattleMons[gBattlerAttacker].ability);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
@@ -11553,6 +11569,7 @@ void BS_TryEndNeutralizingGas(void)
         gBattleMons[gBattlerTarget].volatiles.neutralizingGas = FALSE;
         if (!IsNeutralizingGasOnField())
         {
+            UpdateTruantTogglesOnNeutralizingGasEnd();
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_NeutralizingGasExits;
             return;
@@ -11724,6 +11741,8 @@ void BS_TryActivateAbilityWithAbilityShield(void)
     if (GetBattlerAbilityInternal(battler, TRUE, TRUE) == ABILITY_NONE
      && GetBattlerAbility(battler) != ABILITY_NONE)
     {
+        if (gBattleMons[battler].ability == ABILITY_TRUANT)
+            UpdateTruantToggle(battler);
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_ActivateSwitchInAbility);
     }
@@ -12114,6 +12133,8 @@ void BS_TryDoMoveEffectsBeforeMoves(void)
         {
             gBattleScripting.battler = battler;
             const u8 *script = GetChargingSetUpScript(GetMoveEffect(encoredMove), TRUE);
+            if (GetConfig(B_TRUANT) <= GEN_4 && IsBattlerLoafing(battler))
+                script = NULL;
             if (script)
             {
                 gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
