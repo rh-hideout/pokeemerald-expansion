@@ -4,11 +4,13 @@
 
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 
 GENERATION_COUNT = 9
 IGNORE_ENTRY = b"src/data/pokemon/level_up_learnsets.h"
+LEGACY_BACKUP = Path("level_up_learnsets_legacy_backup.zip")
 LEGACY_DIRECTORY = Path("src/data/pokemon/level_up_learnsets")
 OUTPUT_FILE = Path("src/data/pokemon/level_up_learnsets.h")
 
@@ -190,6 +192,47 @@ def make_output_trackable(project_root: Path) -> bool:
     return True
 
 
+def back_up_non_selected_files(
+    project_root: Path,
+    legacy_directory: Path,
+    selected_file: Path,
+) -> tuple[Path | None, int]:
+    legacy_files = [
+        legacy_directory / f"gen_{generation}.h"
+        for generation in range(1, GENERATION_COUNT + 1)
+    ]
+    files_to_back_up = [
+        path
+        for path in legacy_files
+        if path != selected_file and path.is_file()
+    ]
+
+    if not files_to_back_up:
+        return None, 0
+
+    backup_file = project_root / LEGACY_BACKUP
+    if backup_file.exists():
+        raise MigrationError(
+            f"{LEGACY_BACKUP} already exists. Move or remove it before "
+            "running the migration again so it is not overwritten."
+        )
+
+    try:
+        with zipfile.ZipFile(
+            backup_file,
+            mode="x",
+            compression=zipfile.ZIP_DEFLATED,
+        ) as archive:
+            for path in files_to_back_up:
+                archive.write(path, path.relative_to(project_root))
+    except (OSError, zipfile.BadZipFile) as error:
+        raise MigrationError(
+            f"Could not create {LEGACY_BACKUP}: {error}"
+        ) from error
+
+    return backup_file, len(files_to_back_up)
+
+
 def remove_legacy_files(legacy_directory: Path) -> int:
     removed = 0
 
@@ -229,7 +272,13 @@ def migrate(cpp_command: list[str]) -> None:
                 "legacy header. It was not overwritten. Back it up or "
                 "remove it before running the migration again."
             )
-    else:
+    backup_file, backup_count = back_up_non_selected_files(
+        project_root,
+        legacy_directory,
+        legacy_file,
+    )
+
+    if not output_file.exists():
         output_file.write_bytes(contents)
 
     changed_gitignore = make_output_trackable(project_root)
@@ -241,6 +290,11 @@ def migrate(cpp_command: list[str]) -> None:
     )
     if removed_count:
         print(f"Removed {removed_count} legacy level-up learnset file(s).")
+    if backup_file is not None:
+        print(
+            f"Saved {backup_count} non-selected legacy file(s) to "
+            f"{backup_file.relative_to(project_root)}."
+        )
     if changed_gitignore:
         print(f"Removed {OUTPUT_FILE} from .gitignore so it can be tracked.")
 

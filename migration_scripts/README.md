@@ -30,7 +30,7 @@ Replaces the generation-specific level-up learnset headers with the project's si
 make migrate-level-up-learnsets
 ```
 
-The selected legacy header is copied exactly, including project changes. The script can recover a header already removed by Git from the merge index, `ORIG_HEAD`, or reachable history. It then removes remaining legacy headers and makes the new file trackable. The migration refuses to overwrite a different existing `level_up_learnsets.h`.
+The selected legacy header is copied exactly, including project changes. The script can recover a header already removed by Git from the merge index, `ORIG_HEAD`, or reachable history. It archives any remaining non-selected headers to `level_up_learnsets_legacy_backup.zip`, removes the legacy files, and makes the new file trackable. The migration refuses to overwrite either a different existing `level_up_learnsets.h` or an existing backup archive.
 
 ## 1.10.x to 1.11.x+
 

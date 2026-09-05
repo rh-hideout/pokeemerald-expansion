@@ -14,7 +14,9 @@ make migrate-level-up-learnsets
 
 The migration reads `P_LVL_UP_LEARNSETS` through the same C preprocessor configuration as the build, then copies the corresponding legacy header to `src/data/pokemon/level_up_learnsets.h`. The contents are copied exactly, preserving project-specific changes. If Git has already removed the legacy file, the migration recovers its pre-update version from the merge index, `ORIG_HEAD`, or the project's Git history.
 
-The script removes any remaining generation-specific headers and removes the new header from `.gitignore` so the project can commit its migrated data. It refuses to overwrite `level_up_learnsets.h` when that file contains different data. If a build already created that file, back it up or remove it before running the migration. Review and stage the new header, the `.gitignore` change, and the legacy-file deletions before completing the merge or committing the migration.
+The script removes any remaining generation-specific headers and removes the new header from `.gitignore` so the project can commit its migrated data. Before deleting them, it saves any non-selected legacy headers that are still present to `level_up_learnsets_legacy_backup.zip`. Keep or move this archive until you are certain those inactive learnsets are no longer needed.
+
+The migration refuses to overwrite `level_up_learnsets.h` when that file contains different data. If a build already created that file, back it up or remove it before running the migration. Review and stage the new header, the `.gitignore` change, and the legacy-file deletions before completing the merge or committing the migration. The backup archive is intended for local recovery and should not be committed.
 
 If local changes prevent `git pull` from starting, commit or stash them first. If the pull reports modify/delete conflicts for the old headers, leave those files in the working tree and run the migration before resolving the deletions.
 
