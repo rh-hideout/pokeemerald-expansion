@@ -71,7 +71,6 @@ SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be overwritten")
     enum Species species;
     enum Ability ability;
 
-    PARAMETRIZE { species = SPECIES_SLAKING; ability = ABILITY_TRUANT; }
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
     PARAMETRIZE { species = SPECIES_DARMANITAN; ability = ABILITY_ZEN_MODE; }
     PARAMETRIZE { species = SPECIES_AEGISLASH; ability = ABILITY_STANCE_CHANGE; }
