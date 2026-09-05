@@ -885,7 +885,7 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
         OPPONENT(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
         if (aiFlags == 0 || battler == opponentRight)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL); }
         else
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
     }

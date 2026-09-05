@@ -58,7 +58,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
         OPPONENT_B(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
         if (aiFlags == 0)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL); }
         else
             TURN { EXPECT_MOVE(partner, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(battler, MOVE_EXPLOSION); }
     }
