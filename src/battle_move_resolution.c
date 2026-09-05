@@ -5304,7 +5304,8 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
      || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || moveEffect == EFFECT_FUTURE_SIGHT
-     || !CanBattlerSwitch(battlerAtk))
+     || gBattleTypeFlags & BATTLE_TYPE_ARENA
+     || !HasBattlerViablePartyMonsForSwitch(battlerAtk))
         return FALSE;
 
     gBattleStruct->redCardActivated = TRUE;
