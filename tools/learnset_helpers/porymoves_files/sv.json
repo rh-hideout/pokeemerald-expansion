@@ -21573,6 +21573,42 @@
       {
         "Level": 1,
         "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 11,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 21,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 31,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 41,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 51,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 61,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 71,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 81,
+        "Move": "MOVE_SKETCH"
+      },
+      {
+        "Level": 91,
+        "Move": "MOVE_SKETCH"
       }
     ],
     "PreEvoMoves": [],
