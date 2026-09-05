@@ -272,7 +272,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates clean-level-up-learnsets regenerate-level-up-learnsets
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates clean-level-up-learnsets migrate-level-up-learnsets regenerate-level-up-learnsets
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -458,6 +458,11 @@ clean-teachables: clean-teachables_intermediates
 # initializes it from the official porymoves data selected by P_LVL_UP_LEARNSETS.
 clean-level-up-learnsets:
 	rm -f $(LEVEL_UP_LEARNSETS)
+
+# Preserve the configured legacy header, including project changes, when
+# moving from the generation-specific level-up learnset files.
+migrate-level-up-learnsets:
+	python3 migration_scripts/1.18/migrate_level_up_learnsets.py $(LEVEL_UP_LEARNSETS_CPP_ARGS) --
 
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
