@@ -52,6 +52,7 @@ SINGLE_BATTLE_TEST("Geomancy only takes 1 turn when holding Power Herb")
         TURN { MOVE(player, MOVE_GEOMANCY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GEOMANCY, player);
+        ITEM_POPUP(player, ITEM_POWER_HERB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {

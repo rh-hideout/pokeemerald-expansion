@@ -20,6 +20,7 @@ SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move")
             MESSAGE("The Fire Gem strengthened Wobbuffet's power!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
+        ITEM_POPUP(player, ITEM_NORMAL_GEM);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
@@ -44,6 +45,7 @@ SINGLE_BATTLE_TEST("Gem is not consumed when using Struggle", s16 damage)
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
         NONE_OF {
+            ITEM_POPUP(player, ITEM_NORMAL_GEM);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
         }
@@ -66,6 +68,7 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_NORMAL_GEM);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
@@ -112,6 +115,7 @@ SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
             MOVE(player, MOVE_FEINT_ATTACK);
         }
     } SCENE {
+        ITEM_POPUP(player, ITEM_NORMAL_GEM);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("The Normal Gem strengthened Delcatty's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT_ATTACK, player);

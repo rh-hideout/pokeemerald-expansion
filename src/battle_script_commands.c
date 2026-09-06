@@ -11875,6 +11875,7 @@ void BS_TryAdrenalineOrb(void)
      && holdEffect == HOLD_EFFECT_ADRENALINE_ORB)
     {
         gBattleStruct->adrenalineOrbActivated = TRUE;
+        gLastUsedItem = gBattleMons[battler].item;
         SetStatChange2(battler, STAT_SPEED, 1);
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_AdrenalineOrbActivates;
