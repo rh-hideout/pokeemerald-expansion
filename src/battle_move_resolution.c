@@ -2734,7 +2734,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 
     gBattleStruct->statusMoveFailed = FALSE;
     u32 playMoveAnim = 0;
-
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
 
     if (numAdditionalEffects == 0) return CANCELER_RESULT_SUCCESS;
@@ -2758,7 +2757,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             struct SetEffect se = {0};
             enum BattlerId partner = additionalEffect->self ? GetPartnerBattler(cv->battlerAtk)
                                                             : GetPartnerBattler(battler);
-
             se.additionalEffect = additionalEffect;
             se.moveEffect = additionalEffect->moveEffect;
             se.script = gBattlescriptCurrInstr;
@@ -3373,6 +3371,7 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
     }
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
+    gBattleStruct->additionalEffectsCounter = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }

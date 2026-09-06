@@ -380,7 +380,7 @@ BattleScript_SaltCureExtraDamage::
 	return
 
 BattleScript_MoveEffectCorrosiveGas::
-	removeitem BS_TARGET
+	removeitem BS_EFFECT_BATTLER
 	printstring STRINGID_PKMNITEMMELTED
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -1258,6 +1258,9 @@ BattleScript_TryDestinyKnotAttacker:
 	waitanimation
 	waitmessage B_WAIT_TIME_LONG
 	return
+BattleScript_SwapTargetAttackerButItFailed:
+	swapattackerwithtarget
+	goto BattleScript_ButItFailed
 
 BattleScript_MoveEffectAttract::
 	printstring STRINGID_PKMNFELLINLOVE
@@ -1380,23 +1383,13 @@ BattleScript_ButItFailed::
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
-BattleScript_SwapTargetAttackerButItFailed:
-	swapattackerwithtarget
-	goto BattleScript_ButItFailed
-
-BattleScript_NotAffected::
-	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_DOESNT_AFFECT_FOE
-	printstring STRINGID_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_NotAffectedAbilityPopUp::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ITDOESNTAFFECT
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+    return
 
 BattleScript_Stockpile::
 	attackanimation

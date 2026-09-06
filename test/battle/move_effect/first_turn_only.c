@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("First Impression can only be used on the user's first turn a
 SINGLE_BATTLE_TEST("First Impression fails if it's called via Instruct")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION); };
         OPPONENT(SPECIES_ORANGURU);
     } WHEN {
         TURN { MOVE(player, MOVE_FIRST_IMPRESSION); MOVE(opponent, MOVE_INSTRUCT); }

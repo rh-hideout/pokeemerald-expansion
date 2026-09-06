@@ -1111,22 +1111,6 @@
 	callnative BS_ApplyTerastallization
 	.endm
 
-	.macro jumpifsleepclause jumpInstr:req
-	callnative BS_JumpIfSleepClause
-	.4byte \jumpInstr
-	.endm
-
-	.macro jumpifnoberry battler:req, jumpInstr:req
-	callnative BS_JumpIfNoBerry
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
-	.macro checkteatimetargets failInstr:req
-	callnative BS_CheckTeaTimeTargets
-	.4byte \failInstr
-	.endm
-
 	.macro trywindriderpower battler:req, failInstr:req
 	callnative BS_TryWindRiderPower
 	.byte \battler
@@ -1195,20 +1179,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifnotcriticalhit failInstr:req
-	callnative BS_JumpIfNotCriticalHit
-	.4byte \failInstr
-	.endm
-
 	.macro jumpifcangigantamax battler:req, jumpInstr:req
 	callnative BS_JumpIfCanGigantamax
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro swapstats stat:req
-	callnative BS_SwapStats
-	.byte \stat
 	.endm
 
 	.macro restoresavedmove
@@ -1352,12 +1326,6 @@
 	.macro setlastuseditem battler:req
 	callnative BS_SetLastUsedItem
 	.byte \battler
-	.endm
-
-	.macro jumpiffullhp battler:req, jumpInstr:req
-	callnative BS_JumpIfFullHp
-	.byte \battler
-	.4byte \jumpInstr
 	.endm
 
 	.macro tryfriskmessage
@@ -1529,7 +1497,7 @@
 	.endm
 
 	.macro tryactivatesoulheart
-	callnative BS_TryActivateSoulheart
+	callnative BS_TryActivateSoulHeart
 	.endm
 
 	.macro playmoveanimation move:req

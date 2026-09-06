@@ -5469,6 +5469,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .assistBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_DESTINY_BOND,
+            .self = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_GREAT_APPEAL_BUT_NO_MORE_MOVES, //C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_QUICKLY_GROW_BORED :
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -21049,6 +21050,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .healingMove = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_LIFE_DEW,
+            .argument.restoreHpModifier = 4,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_CURE_NON_VOLATILE,
+        }),
         .battleAnimScript = gBattleAnimMove_LunarBlessing,
     },
 

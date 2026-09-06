@@ -5,7 +5,6 @@ extern const u8 BattleScript_MoveResolution[];
 extern const u8 BattleScript_SupersweetSyrupActivates[];
 extern const u8 BattleScript_OpportunistCopyStatChange[];
 extern const u8 BattleScript_MirrorHerbCopyStatChange[];
-extern const u8 BattleScript_NotAffected[];
 extern const u8 BattleScript_MoveEnd[];
 extern const u8 BattleScript_MoveAnimation[];
 extern const u8 BattleScript_MoveMissed[];

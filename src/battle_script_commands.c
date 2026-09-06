@@ -7551,25 +7551,6 @@ void BS_ApplyTerastallization(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfSleepClause(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-
-    // Can freely sleep own partner
-    if (IsDoubleBattle() && IsSleepClauseEnabled() && IsBattlerAlly(gBattlerAttacker, gBattlerTarget))
-    {
-        gBattleStruct->battlerState[gBattlerTarget].sleepClauseEffectExempt = TRUE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-    gBattleStruct->battlerState[gBattlerTarget].sleepClauseEffectExempt = FALSE;
-    // Can't sleep if clause is active otherwise
-    if (IsSleepClauseActiveForSide(GetBattlerSide(gBattlerTarget)))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_JumpIfBlockedBySoundproof(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
@@ -7585,42 +7566,6 @@ void BS_JumpIfBlockedBySoundproof(void)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-void BS_JumpIfNoBerry(void)
-{
-    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (GetItemPocket(gBattleMons[battler].item) == POCKET_BERRIES)
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    else
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-}
-
-static bool32 IsTeatimeAffected(enum BattlerId battler)
-{
-    if (GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
-        return FALSE;   // Only berries
-    if (IsSemiInvulnerable(battler, CHECK_ALL))
-        return FALSE;   // Teatime doesn't affected semi-invulnerable battlers
-    return TRUE;
-}
-
-void BS_CheckTeaTimeTargets(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    u32 count = 0;
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (IsTeatimeAffected(i))
-            count++;
-    }
-    if (count == 0)
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryWindRiderPower(void)
@@ -7820,50 +7765,6 @@ void BS_JumpIfMoveResultFlags(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_JumpIfNotCriticalHit(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-
-    if (!gSpecialStatuses[gBattlerTarget].criticalHit)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SwapStats(void)
-{
-    NATIVE_ARGS(u8 stat);
-
-    enum Stat stat = cmd->stat;
-    u32 temp;
-
-    switch (stat)
-    {
-    case STAT_HP:
-        SWAP(gBattleMons[gBattlerAttacker].hp, gBattleMons[gBattlerTarget].hp, temp);
-        break;
-    case STAT_ATK:
-        SWAP(gBattleMons[gBattlerAttacker].attack, gBattleMons[gBattlerTarget].attack, temp);
-        break;
-    case STAT_DEF:
-        SWAP(gBattleMons[gBattlerAttacker].defense, gBattleMons[gBattlerTarget].defense, temp);
-        break;
-    case STAT_SPEED:
-        SWAP(gBattleMons[gBattlerAttacker].speed, gBattleMons[gBattlerTarget].speed, temp);
-        break;
-    case STAT_SPATK:
-        SWAP(gBattleMons[gBattlerAttacker].spAttack, gBattleMons[gBattlerTarget].spAttack, temp);
-        break;
-    case STAT_SPDEF:
-        SWAP(gBattleMons[gBattlerAttacker].spDefense, gBattleMons[gBattlerTarget].spDefense, temp);
-        break;
-    default:
-        break;
-    }
-    PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
@@ -8182,15 +8083,6 @@ void BS_SetLastUsedItem(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfFullHp(void)
-{
-    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
-    if (IsBattlerAtMaxHp(GetBattlerForBattleScript(cmd->battler)))
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_TryFriskMessage(void)
 {
     NATIVE_ARGS();
@@ -8276,7 +8168,6 @@ void BS_GetBattlerFainted(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// TODO: What is this fixing???
 void BS_ResetSwitchInAbilityBits(void)
 {
     NATIVE_ARGS();
@@ -8669,7 +8560,7 @@ void BS_TryActivateReceiver(void)
     }
 }
 
-void BS_TryActivateSoulheart(void)
+void BS_TryActivateSoulHeart(void)
 {
     NATIVE_ARGS();
     while (gBattlerOrderIndex < gBattlersCount)
