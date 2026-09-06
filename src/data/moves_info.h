@@ -23199,7 +23199,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_GMaxBefuddle,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
-            .argument.randomMoveEffects = { MOVE_EFFECT_SLEEP, MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_POISON },
+            .argument.randomMoveEffects = { MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_POISON, MOVE_EFFECT_SLEEP },
             .onSide = TRUE,
         }),
     },
