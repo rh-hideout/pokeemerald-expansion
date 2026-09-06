@@ -18,7 +18,7 @@ struct Dma3Request
     u8 *dest;
     u16 size;
     u16 mode;
-    bool8 compressed;
+    bool8 compressedFast;
 };
 
 static struct Dma3Request sDma3Requests[MAX_DMA_REQUESTS];
@@ -38,7 +38,7 @@ void ClearDma3Requests(void)
         sDma3Requests[i].size = 0;
         sDma3Requests[i].src = NULL;
         sDma3Requests[i].dest = NULL;
-        sDma3Requests[i].compressed = FALSE;
+        sDma3Requests[i].compressedFast = FALSE;
     }
 
     sDma3ManagerLocked = FALSE;
@@ -68,7 +68,7 @@ void ProcessDma3Requests(void)
         switch (sDma3Requests[sDma3RequestCursor].mode)
         {
         case DMA_REQUEST_COPY32: // regular 32-bit copy
-            if (sDma3Requests[sDma3RequestCursor].compressed)
+            if (sDma3Requests[sDma3RequestCursor].compressedFast)
                 SmolFrameUncomp(sDma3Requests[sDma3RequestCursor].src,
                                 sDma3Requests[sDma3RequestCursor].dest,
                                 sDma3Requests[sDma3RequestCursor].size);
@@ -83,7 +83,7 @@ void ProcessDma3Requests(void)
                              sDma3Requests[sDma3RequestCursor].size);
             break;
         case DMA_REQUEST_COPY16:    // regular 16-bit copy
-            if (sDma3Requests[sDma3RequestCursor].compressed)
+            if (sDma3Requests[sDma3RequestCursor].compressedFast)
                 SmolFrameUncomp(sDma3Requests[sDma3RequestCursor].src,
                                 sDma3Requests[sDma3RequestCursor].dest,
                                 sDma3Requests[sDma3RequestCursor].size);
@@ -104,7 +104,8 @@ void ProcessDma3Requests(void)
         sDma3Requests[sDma3RequestCursor].dest = NULL;
         sDma3Requests[sDma3RequestCursor].size = 0;
         sDma3Requests[sDma3RequestCursor].mode = 0;
-        sDma3Requests[sDma3RequestCursor].compressed = FALSE;
+        sDma3Requests[sDma3RequestCursor].value = 0;
+        sDma3Requests[sDma3RequestCursor].compressedFast = FALSE;
 
         sDma3RequestCursor = INCREMENT_OR_WRAP(sDma3RequestCursor, MAX_DMA_REQUESTS); // loop back to the first DMA request
     }
@@ -115,7 +116,7 @@ s16 RequestDma3Copy(const void *src, void *dest, u16 size, u32 mode)
     return RequestDma3CopyComp(src, dest, size, mode, FALSE);
 }
 
-s16 RequestDma3CopyComp(const void *src, void *dest, u16 size, u32 mode, bool8 compressed)
+s16 RequestDma3CopyComp(const void *src, void *dest, u16 size, u32 mode, bool8 compressedFast)
 {
     int cursor;
     int i = 0;
@@ -130,7 +131,7 @@ s16 RequestDma3CopyComp(const void *src, void *dest, u16 size, u32 mode, bool8 c
             sDma3Requests[cursor].src = src;
             sDma3Requests[cursor].dest = dest;
             sDma3Requests[cursor].size = size;
-            sDma3Requests[cursor].compressed = compressed;
+            sDma3Requests[cursor].compressedFast = compressedFast;
 
             if (mode == 1)
                 sDma3Requests[cursor].mode = DMA_REQUEST_COPY32;

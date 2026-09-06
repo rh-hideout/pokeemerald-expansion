@@ -161,7 +161,7 @@ static u16 GetBgControlAttribute(u32 bg, u32 attributeId)
     return 0xFF;
 }
 
-u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode, bool8 compressed)
+u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode, bool8 compressedFast)
 {
     u16 offset;
     s8 cursor;
@@ -174,14 +174,14 @@ u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode, bool8
     case 0x1:
         offset = sGpuBgConfigs.configs[bg].charBaseIndex * BG_CHAR_SIZE;
         offset = destOffset + offset;
-        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressed);
+        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressedFast);
         if (cursor == -1)
             return -1;
         break;
     case 0x2:
         offset = sGpuBgConfigs.configs[bg].mapBaseIndex * BG_SCREEN_SIZE;
         offset = destOffset + offset;
-        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressed);
+        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressedFast);
         if (cursor == -1)
             return -1;
         break;
@@ -437,7 +437,7 @@ u16 LoadBgTiles(u32 bg, const void *src, u16 size, u16 destOffset)
     return LoadBgTilesComp(bg, src, size, destOffset, FALSE, 0);
 }
 
-u16 LoadBgTilesComp(u32 bg, const void *src, u16 size, u16 destOffset, bool8 compressed, u8 frame)
+u16 LoadBgTilesComp(u32 bg, const void *src, u16 size, u16 destOffset, bool8 compressedFast, u8 frame)
 {
     u16 tileOffset;
     u8 cursor;
@@ -454,7 +454,7 @@ u16 LoadBgTilesComp(u32 bg, const void *src, u16 size, u16 destOffset, bool8 com
         tileOffset = (sGpuBgConfigs2[bg].baseTile + destOffset) * 0x40;
     }
 
-    if (compressed)
+    if (compressedFast)
         cursor = LoadBgVram(bg, src, frame, tileOffset, DISPCNT_MODE_1, TRUE);
     else
         cursor = LoadBgVram(bg, src, size, tileOffset, DISPCNT_MODE_1, FALSE);

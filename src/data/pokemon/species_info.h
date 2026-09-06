@@ -27,8 +27,6 @@
 #define SIZE_32x32 1
 #define SIZE_64x64 0
 
-// Set .compressed = (OW_GFX_COMPRESS == OGC_SMALL)
-// Set .compressedFast = (OW_GFX_COMPRESS == OGC_FAST)
 #define COMP (OW_GFX_COMPRESS == OGC_SMALL)
 #define COMP_FAST (OW_GFX_COMPRESS == OGC_FAST)
 
@@ -60,9 +58,8 @@
     .paletteSlot = PALSLOT_NPC_1,                                                                                                       \
     .shadowSize = shadow,                                                                                                               \
     .inanimate = FALSE,                                                                                                                 \
-    .compressed = COMP,                                                                                                                 \
     .tracks = _tracks,                                                                                                                  \
-    .compressedFast = COMP_FAST,                                                                                                        \
+    .compressionMode = COMP ? OBJECT_EVENT_COMPRESSION_SLOW : (COMP_FAST ? OBJECT_EVENT_COMPRESSION_FAST : OBJECT_EVENT_COMPRESSION_NONE), \
     .oam = (_size == SIZE_32x32 ? &gObjectEventBaseOam_32x32 : &gObjectEventBaseOam_64x64),                                             \
     .subspriteTables = (_size == SIZE_32x32 ? sOamTables_32x32 : sOamTables_64x64),                                                     \
     .anims = _anims,                                                                                                                    \
@@ -140,9 +137,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
             .paletteSlot = PALSLOT_NPC_1,
             .shadowSize = SHADOW_SIZE_M,
             .inanimate = FALSE,
-            .compressed = COMP,
             .tracks = TRACKS_FOOT,
-            .compressedFast = COMP_FAST,
+            .compressionMode = COMP ? OBJECT_EVENT_COMPRESSION_SLOW : (COMP_FAST ? OBJECT_EVENT_COMPRESSION_FAST : OBJECT_EVENT_COMPRESSION_NONE),
             .oam = &gObjectEventBaseOam_32x32,
             .subspriteTables = sOamTables_32x32,
             .anims = sAnimTable_Following,

@@ -49,7 +49,7 @@
 void ClearDma3Requests(void);
 void ProcessDma3Requests(void);
 s16 RequestDma3Copy(const void *src, void *dest, u16 size, u32 mode);
-s16 RequestDma3CopyComp(const void *src, void *dest, u16 size, u32 mode, bool8 compressed);
+s16 RequestDma3CopyComp(const void *src, void *dest, u16 size, u32 mode, bool8 compressedFast);
 s16 RequestDma3Fill(s32 value, void *dest, u16 size, u32 mode);
 s16 CheckForSpaceForDma3Request(s16 index);
 

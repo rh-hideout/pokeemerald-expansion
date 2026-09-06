@@ -1751,10 +1751,10 @@ u16 LoadSheetGraphicsInfo(const struct ObjectEventGraphicsInfo *info, u16 uuid, 
 {
     u16 tag = info->tileTag;
 
-    if (sprite && info->compressedFast)
-        sprite->compressedFast = info->compressedFast;
+    if (sprite && info->compressionMode == OBJECT_EVENT_COMPRESSION_FAST)
+        sprite->compressedFast = TRUE;
 
-    if (tag != TAG_NONE || info->compressed)
+    if (tag != TAG_NONE || info->compressionMode == OBJECT_EVENT_COMPRESSION_SLOW)
     {
         // sheet-based gfx
         u32 sheetSpan = GetSpanPerImage(info->oam->shape, info->oam->size);
@@ -1870,7 +1870,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
         sprite->oam.paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
     if (OW_GFX_COMPRESS == OGC_SMALL && sprite->usingSheet)
         sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
-    sprite->compressedFast = graphicsInfo->compressedFast;
+    sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
     GetMapCoordsFromSpritePos(objectEvent->currentCoords.x + cameraX, objectEvent->currentCoords.y + cameraY, &sprite->x, &sprite->y);
     sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
     sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
@@ -1907,7 +1907,7 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
         return OBJECT_EVENTS_COUNT;
 
     gSprites[gObjectEvents[objectEventId].spriteId].images = graphicsInfo->images;
-    gSprites[gObjectEvents[objectEventId].spriteId].compressedFast = graphicsInfo->compressedFast;
+    gSprites[gObjectEvents[objectEventId].spriteId].compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
@@ -2011,7 +2011,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
     if (OW_GFX_COMPRESS == OGC_SMALL)
     {
         // Checking only for compressed here so as not to mess with decorations
-        if (graphicsInfo->compressed)
+        if (graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_SLOW)
             spriteTemplate->tileTag = LoadSheetGraphicsInfo(graphicsInfo, graphicsId, NULL);
     }
 
@@ -2032,7 +2032,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
     if (spriteId != MAX_SPRITES && subspriteTables != NULL)
     {
         sprite = &gSprites[spriteId];
-        if (OW_GFX_COMPRESS == OGC_SMALL && graphicsInfo->compressed)
+        if (OW_GFX_COMPRESS == OGC_SMALL && graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_SLOW)
             sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
         SetSubspriteTables(sprite, subspriteTables);
         sprite->subspriteMode = SUBSPRITES_IGNORE_PRIORITY;
@@ -2089,9 +2089,9 @@ u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevati
         sprite->sVirtualObjId = virtualObjId;
         sprite->sVirtualObjElev = elevation;
 
-        sprite->compressedFast = graphicsInfo->compressedFast;
+        sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
 
-        if (OW_GFX_COMPRESS == OGC_SMALL && graphicsInfo->compressed)
+        if (OW_GFX_COMPRESS == OGC_SMALL && graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_SLOW)
             spriteTemplate.tileTag = LoadSheetGraphicsInfo(graphicsInfo, graphicsId, sprite);
 
         if (subspriteTables != NULL)
@@ -2276,7 +2276,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     sprite->oam.size = graphicsInfo->oam->size;
     sprite->images = graphicsInfo->images;
     sprite->anims = graphicsInfo->anims;
-    sprite->compressedFast = graphicsInfo->compressedFast;
+    sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objEvent->inanimate = graphicsInfo->inanimate;
     sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
@@ -3029,7 +3029,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
         // Use palette from species palette table
         if (OW_GFX_COMPRESS == OGC_SMALL && sprite->usingSheet)
             sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
-        sprite->compressedFast = graphicsInfo->compressedFast;
+        sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
         GetMapCoordsFromSpritePos(x + objectEvent->currentCoords.x, y + objectEvent->currentCoords.y, &sprite->x, &sprite->y);
         sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
         sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
@@ -3127,7 +3127,7 @@ static void ObjectEventSetGraphics(struct ObjectEvent *objectEvent, const struct
     sprite->images = graphicsInfo->images;
     sprite->anims = graphicsInfo->anims;
     sprite->animCmdIndex = 0;
-    sprite->compressedFast = graphicsInfo->compressedFast;
+    sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objectEvent->inanimate = graphicsInfo->inanimate;
     SetSpritePosToMapCoords(objectEvent->currentCoords.x, objectEvent->currentCoords.y, &sprite->x, &sprite->y);

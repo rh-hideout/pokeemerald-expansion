@@ -46,7 +46,7 @@ struct SpriteCopyRequest
         u16 size;
         u16 index;
     };
-    bool8 compressed;
+    bool8 compressedFast;
 };
 
 struct OamDimensions32
@@ -611,7 +611,7 @@ void ClearSpriteCopyRequests(void)
         sSpriteCopyRequests[i].src = 0;
         sSpriteCopyRequests[i].dest = 0;
         sSpriteCopyRequests[i].size = 0;
-        sSpriteCopyRequests[i].compressed = FALSE;
+        sSpriteCopyRequests[i].compressedFast = FALSE;
     }
 }
 
@@ -787,7 +787,7 @@ void ProcessSpriteCopyRequests(void)
 
         while (sSpriteCopyRequestCount > 0)
         {
-            if (!sSpriteCopyRequests[i].compressed)
+            if (!sSpriteCopyRequests[i].compressedFast)
                 CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
             else
                 SmolFrameUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index);
@@ -799,11 +799,11 @@ void ProcessSpriteCopyRequests(void)
     }
 }
 
-void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images, bool8 compressed)
+void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images, bool8 compressedFast)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
-        if (compressed)
+        if (compressedFast)
         {
             if (!images[0].relativeFrames)
             {
@@ -830,19 +830,19 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
             }
         }
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileNum;
-        sSpriteCopyRequests[sSpriteCopyRequestCount].compressed = compressed;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressedFast = compressedFast;
         sSpriteCopyRequestCount++;
     }
 }
 
-void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressed)
+void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
         sSpriteCopyRequests[sSpriteCopyRequestCount].src = src;
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = dest;
         sSpriteCopyRequests[sSpriteCopyRequestCount].size = size;
-        sSpriteCopyRequests[sSpriteCopyRequestCount].compressed = compressed;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressedFast = compressedFast;
         sSpriteCopyRequestCount++;
     }
 }
