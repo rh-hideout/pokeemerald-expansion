@@ -50,7 +50,7 @@ AbandonedShip_Rooms_1F_Text_ThaliaPostBattle:
 	.string "but I don't know about that.$"
 
 AbandonedShip_Rooms_1F_Text_ThaliaRegister:
-	.string "You're such a tough TRAINER!\n"
+	.string "You're such a tough [Trainer]!\n"
 	.string "Let me register you as a memento!$"
 
 AbandonedShip_Rooms_1F_Text_ThaliaRematchIntro:
@@ -74,4 +74,3 @@ AbandonedShip_Rooms_1F_Text_DemetriusDefeat:
 AbandonedShip_Rooms_1F_Text_DemetriusPostBattle:
 	.string "I'm in trouble with my mom, so I ran.\n"
 	.string "Keep it a secret where I am!$"
-
