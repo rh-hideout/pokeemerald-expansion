@@ -1466,12 +1466,16 @@ BattleScript_MoveEffectYawnFoe::
 	restoretarget
 	return
 
-BattleScript_PrintAbilityMadeIneffective::
+BattleScript_PrintAbilityMadeIneffectiveRet::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSXMADEITINEFFECTIVE
 	waitmessage B_WAIT_TIME_LONG
 	return
+
+BattleScript_PrintAbilityMadeIneffective::
+	call BattleScript_PrintAbilityMadeIneffectiveRet
+	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectRefresh::
 	printsavedstring BS_EFFECT_BATTLER

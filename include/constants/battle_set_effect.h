@@ -158,6 +158,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_POWER_SHIFT,
     MOVE_EFFECT_REVIVAL_BLESSING,
     MOVE_EFFECT_INSTRUCT,
+    MOVE_EFFECT_ALLY_SWITCH, // Tied to EFFECT_ALLY_SWITCH. Will lead to incorrect behavior if used without
     MOVE_EFFECT_FOCUS_ENERGY,
     MOVE_EFFECT_DRAGON_CHEER,
 

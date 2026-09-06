@@ -454,7 +454,6 @@ static void Cmd_twoturnmoveschargestringandanimation(void);
 static void Cmd_initmultihitstring(void);
 static void Cmd_forcerandomswitch(void);
 static void Cmd_givepaydaymoney(void);
-static void Cmd_checknonvolatiletrigger(void);
 static void Cmd_animatewildpokemonafterfailedpokeball(void);
 static void Cmd_tryinfatuating(void);
 static void Cmd_updatestatusicon(void);
@@ -611,7 +610,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_INITMULTIHITSTRING]                    = Cmd_initmultihitstring,
     [B_SCR_OP_FORCERANDOMSWITCH]                     = Cmd_forcerandomswitch,
     [B_SCR_OP_GIVEPAYDAYMONEY]                       = Cmd_givepaydaymoney,
-    [B_SCR_OP_CHECKNONVOLATILETRIGGER]               = Cmd_checknonvolatiletrigger,
     [B_SCR_OP_ANIMATEWILDPOKEMONAFTERFAILEDPOKEBALL] = Cmd_animatewildpokemonafterfailedpokeball,
     [B_SCR_OP_TRYINFATUATING]                        = Cmd_tryinfatuating,
     [B_SCR_OP_UPDATESTATUSICON]                      = Cmd_updatestatusicon,
@@ -746,6 +744,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_90]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_91]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_92]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_93]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -4915,24 +4914,6 @@ static void Cmd_givepaydaymoney(void)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-static void Cmd_checknonvolatiletrigger(void)
-{
-    CMD_ARGS(u16 nonVolatile, const u8 *failInstr);
-
-    if (!CanSetNonVolatileStatus(
-            gBattlerAttacker,
-            gBattlerTarget,
-            GetBattlerAbility(gBattlerAttacker),
-            GetBattlerAbility(gBattlerTarget),
-            cmd->nonVolatile,
-            CHECK_TRIGGER))
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else if (DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_animatewildpokemonafterfailedpokeball(void)

@@ -491,6 +491,7 @@ extern const u8 BattleScript_CantMakeAsleep[];
 extern const u8 BattleScript_AlreadyPoisoned[];
 extern const u8 BattleScript_AlreadyParalyzed[];
 extern const u8 BattleScript_AlreadyBurned[];
+extern const u8 BattleScript_PrintAbilityMadeIneffectiveRet[];
 extern const u8 BattleScript_PrintAbilityMadeIneffective[];
 extern const u8 BattleScript_ItDoesntAffectScrTarget[];
 extern const u8 BattleScript_ItDoesntAffectEffBattler[];

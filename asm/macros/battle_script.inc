@@ -660,12 +660,6 @@
 	.byte B_SCR_OP_GIVEPAYDAYMONEY
 	.endm
 
-	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
-	.byte B_SCR_OP_CHECKNONVOLATILETRIGGER
-	.2byte \nonVolatile
-	.4byte \failInstr
-	.endm
-
 	.macro animatewildpokemonafterfailedpokeball battler:req
 	.byte B_SCR_OP_ANIMATEWILDPOKEMONAFTERFAILEDPOKEBALL
 	.byte \battler

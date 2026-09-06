@@ -2748,6 +2748,8 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
         if (ShouldAvoidStatusEffectOnBattler(cv->battlerAtk, battler, isFieldTargetType))
             continue;
 
+        // if (gCurrentMove == MOVE_MIMIC)
+        //     DebugPrintf("battler %d", battler);
         bool32 isAllyAffected = FALSE;
 
         u32 i = 0;
@@ -3370,6 +3372,7 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
     gBattleStruct->additionalEffectsCounter = 0;
+
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -5260,19 +5263,19 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 return MOVEEND_RESULT_RUN_SCRIPT;
             }
             break;
-        case EFFECT_ALLY_SWITCH:
-            if (!gBattleStruct->unableToUseMove)
-            {
-                // The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
-                gBattleScripting.battler = gBattlerAttacker;
-                gBattlerAttacker ^= BIT_FLANK;
-                gProtectStructs[gBattlerAttacker].usedAllySwitch = TRUE;
-                PrepareStringBattleWithWait(STRINGID_ALLYSWITCHPOSITION, gBattlerAttacker);
-                BattleScriptCall(BattleScript_MoveEffectSetStatus);
-                gBattleScripting.moveendState++;
-                return MOVEEND_RESULT_RUN_SCRIPT;
-            }
-            break;
+        // case EFFECT_ALLY_SWITCH:
+        //     if (!gBattleStruct->unableToUseMove)
+        //     {
+        //         // The actual data/gfx swap happens in the move animation. Here it's just the gBattlerAttacker / scripting battler change
+        //         gBattleScripting.battler = gBattlerAttacker;
+        //         gBattlerAttacker ^= BIT_FLANK;
+        //         gProtectStructs[gBattlerAttacker].usedAllySwitch = TRUE;
+        //         PrepareStringBattleWithWait(STRINGID_ALLYSWITCHPOSITION, gBattlerAttacker);
+        //         BattleScriptCall(BattleScript_MoveEffectSetStatus);
+        //         gBattleScripting.moveendState++;
+        //         return MOVEEND_RESULT_RUN_SCRIPT;
+        //     }
+        //     break;
         default:
             result = MOVEEND_RESULT_CONTINUE;
             break;
@@ -5585,7 +5588,6 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
          && CanBattlerSwitch(cv->battlerAtk)
          && !NoAliveMonsForBattlerSide(cv->battlerDef))
         {
-            DebugPrintf("battler %d", cv->battlerAtk);
             result = MOVEEND_RESULT_RUN_SCRIPT;
             gSpecialStatuses[cv->battlerAtk].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
             BattleScriptCall(BattleScript_EffectHitEscape);
@@ -6133,9 +6135,9 @@ static enum MoveEndResult MoveEndPursuitNextAction(struct BattleCalcValues *cv)
         {
             gBattlerAttacker = gBattlerTarget;
             if (gBattleStruct->pursuitStoredSwitch == PARTY_MON_NONE)
-                gBattlescriptCurrInstr = BattleScript_MoveSwitchOpenPartyScreen;
+                BattleScriptCall(BattleScript_MoveSwitchOpenPartyScreen);
             else
-                gBattlescriptCurrInstr = BattleScript_DoSwitchOut;
+                BattleScriptCall(BattleScript_DoSwitchOut);
             gBattleStruct->monToSwitchIntoId[gBattlerTarget] = gBattleStruct->pursuitStoredSwitch;
             ClearPursuitValues();
             result = MOVEEND_RESULT_RUN_SCRIPT;

@@ -96,6 +96,9 @@ static bool32 CanSetNonVolatile(struct BattleCalcValues *cv, struct SetEffect *s
 static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     bool32 isSafeguardProtected = !se->primary && IsSafeguardProtected(cv->battlerAtk, se->effectBattler, cv->abilities[cv->battlerAtk]);
+    bool32 exemptSleepClause = gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt;
+
+    gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = IsBattlerAlly(cv->battlerAtk, se->effectBattler);
 
     se->effectFailed = isSafeguardProtected || !CanSetNonVolatile(cv, se, CHECK_TRIGGER);
 
@@ -111,6 +114,8 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
     {
         SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
     }
+
+    gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptSleepClause;
 }
 
 static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -964,10 +969,10 @@ static void HandleSetEffectSaltCure(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectEerieSpell(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gLastMoves[se->effectBattler] == MOVE_NONE || gLastMoves[se->effectBattler] == MOVE_UNAVAILABLE)
-        return;
-
     enum Move moveToReduce = gLastMoves[se->effectBattler];
+
+    if (moveToReduce == MOVE_NONE || moveToReduce == MOVE_UNAVAILABLE)
+        return;
 
     if (IsMaxMove(moveToReduce))
         moveToReduce = gBattleStruct->dynamax.baseMoves[se->effectBattler];
@@ -1733,7 +1738,7 @@ static void HandleSetEffectSteelsurge(struct BattleCalcValues *cv, struct SetEff
     else if (!cv->onlyChecking)
     {
         PushHazardTypeToQueue(side, HAZARDS_STEELSURGE);
-        PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_SHARPSTEELFLOATS, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
@@ -2083,6 +2088,10 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
     }
 
     if (GetConfig(B_DISABLE_TURNS) == GEN_2 && moveToDisable == MOVE_STRUGGLE)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
@@ -2808,11 +2817,11 @@ static void HandleSetEffectYawn(struct BattleCalcValues *cv, struct SetEffect *s
     // }
     else if (!cv->onlyChecking)
     {
-        // bool32 exemptFromSleepClause = IsDoubleBattle()
-        //                             && IsSleepClauseEnabled()
-        //                             && IsBattlerAlly(cv->battlerAtk, se->effectBattler);
-        //
-        // gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptFromSleepClause;
+        bool32 exemptFromSleepClause = IsDoubleBattle()
+                                    && IsSleepClauseEnabled()
+                                    && IsBattlerAlly(cv->battlerAtk, se->effectBattler);
+
+        gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptFromSleepClause;
         gBattleMons[se->effectBattler].volatiles.yawn = 2;
         PrepareStringBattleWithWait(STRINGID_PKMNWASMADEDROWSY, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
@@ -3673,9 +3682,6 @@ static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattl
      || gBattleMons[effectBattler].volatiles.semiInvulnerable == STATE_COMMANDER)
         return TRUE;
 
-    if (GetActiveGimmick(effectBattler) == GIMMICK_DYNAMAX)
-        return TRUE;
-
     return FALSE;
 }
 
@@ -3684,6 +3690,10 @@ static void HandleSetEffectRoar(struct BattleCalcValues *cv, struct SetEffect *s
     if (DoesRoarFail(cv->battlerAtk, se->effectBattler) || cv->abilities[se->effectBattler] == ABILITY_GUARD_DOG) // TODO: There is no ability popup?
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX)
+    {
+        SetEffectFail(BattleScript_HitSwitchTargetDynamaxed, cv->isStatusMove);
     }
     else if (cv->abilities[se->effectBattler] == ABILITY_SUCTION_CUPS)
     {
@@ -4032,10 +4042,12 @@ static bool32 CanMimicMoveSlot(enum BattlerId battlerAtk, enum BattlerId battler
 
 static void HandleSetEffectMimic(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gLastMoves[se->effectBattler] == MOVE_UNAVAILABLE
-     || gLastMoves[se->effectBattler] == MOVE_NONE
+    enum Move moveToMimic = gLastMoves[cv->battlerDef];
+
+    if (moveToMimic == MOVE_UNAVAILABLE
+     || moveToMimic == MOVE_NONE
      || gBattleMons[cv->battlerAtk].volatiles.transformed
-     || IsMoveMimicBanned(gLastMoves[se->effectBattler])
+     || IsMoveMimicBanned(moveToMimic)
      || !CanMimicMoveSlot(cv->battlerAtk, se->effectBattler))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
@@ -4043,13 +4055,13 @@ static void HandleSetEffectMimic(struct BattleCalcValues *cv, struct SetEffect *
     else if (!cv->onlyChecking)
     {
         gChosenMove = 0xFFFF;
-        gBattleMons[cv->battlerAtk].moves[gCurrMovePos] = gLastMoves[se->effectBattler];
-        u32 pp = GetMovePP(gLastMoves[se->effectBattler]);
+        gBattleMons[cv->battlerAtk].moves[gCurrMovePos] = moveToMimic;
+        u32 pp = GetMovePP(moveToMimic);
         gBattleMons[cv->battlerAtk].pp[gCurrMovePos] = min(pp, 5);
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gLastMoves[se->effectBattler])
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToMimic)
         gBattleMons[cv->battlerAtk].volatiles.mimickedMoves |= 1u << gCurrMovePos;
-        PrepareStringBattleWithWait(STRINGID_PKMNLEARNEDMOVE2, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_PKMNLEARNEDMOVE2, cv->battlerDef);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 }
@@ -4121,6 +4133,18 @@ static void HandleSetEffectInstruct(struct BattleCalcValues *cv, struct SetEffec
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battlerDef, gBattlerPartyIndexes[battlerDef]);
         BattleScriptPushAndSet(se->script, BattleScript_Instruct);
     }
+}
+
+static void HandleSetEffectAllySwitch(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (cv->onlyChecking) return;
+
+    gBattleScripting.battler = cv->battlerAtk;
+    gBattlerAttacker ^= BIT_FLANK;
+    cv->battlerAtk = gBattlerAttacker;
+    gProtectStructs[cv->battlerAtk].usedAllySwitch = TRUE;
+    PrepareStringBattleWithWait(STRINGID_ALLYSWITCHPOSITION, cv->battlerAtk);
+    BattleScriptCall(BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectRevivalBlessing(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -4306,6 +4330,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_BESTOW] = HandleSetEffectBestow,
     [MOVE_EFFECT_POWER_SHIFT] = HandleSetEffectPowerShift,
     [MOVE_EFFECT_INSTRUCT] = HandleSetEffectInstruct,
+    [MOVE_EFFECT_ALLY_SWITCH] = HandleSetEffectAllySwitch,
     [MOVE_EFFECT_REVIVAL_BLESSING] = HandleSetEffectRevivalBlessing,
     [MOVE_EFFECT_PRESENT] = HandleSetEffectPresent,
     [MOVE_EFFECT_SWALLOW] = HandleSetEffectSwallow,
