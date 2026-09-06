@@ -284,24 +284,24 @@ Route124_DivingTreasureHuntersHouse_EventScript_ShardTradeBoard::
 	end
 
 Route124_DivingTreasureHuntersHouse_Text_Greeting:
-	.string "I'm the DIVING TREASURE HUNTER!\p"
+	.string "I'm the [Diving Treasure Hunter]!\p"
 	.string "I'm the awesome dude who makes\n"
 	.string "deep-sea dives to gather treasures\l"
 	.string "resting at the bottom.$"
 
 Route124_DivingTreasureHuntersHouse_Text_HaveYouSeenAnyShards:
-	.string "Tell me, have you seen any SHARDS of\n"
+	.string "Tell me, have you seen any [Shards] of\n"
 	.string "tools made in ancient times?$"
 
 Route124_DivingTreasureHuntersHouse_Text_YouHaventGotAnyShards:
 	.string "You haven't got any treasures\n"
 	.string "for me…\p"
-	.string "If you see any SHARDS, like the RED\n"
-	.string "SHARD, you've got to trade it with me!$"
+	.string "If you see any [Shards], like the [Red]\n"
+	.string "[Shard], you've got to trade it with me!$"
 
 Route124_DivingTreasureHuntersHouse_Text_ThatsAShardIllTradeYou:
 	.string "Oh, hey! That…\n"
-	.string "That's a SHARD! I'm looking for those!\p"
+	.string "That's a [Shard]! I'm looking for those!\p"
 	.string "Oh, man, you've got to trade that\n"
 	.string "with me! I'll give you something good!$"
 
@@ -320,7 +320,7 @@ Route124_DivingTreasureHuntersHouse_Text_TradeSomethingElse:
 	.string "Do you want to trade something else?$"
 
 Route124_DivingTreasureHuntersHouse_Text_BagFull:
-	.string "Whoops, your BAG's full.\n"
+	.string "Whoops, your [Bag]'s full.\n"
 	.string "Get rid of some items, friend!$"
 
 Route124_DivingTreasureHuntersHouse_Text_ComeBackIfYouChangeMind:
@@ -329,10 +329,10 @@ Route124_DivingTreasureHuntersHouse_Text_ComeBackIfYouChangeMind:
 
 Route124_DivingTreasureHuntersHouse_Text_ShardTradeBoard:
 	.string "{CLEAR_TO 10}Wanted item{CLEAR_TO 124}Trade item\n"
-	.string "{CLEAR_TO 15}RED SHARD{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 123}FIRE STONE{CLEAR_TO 200}\p"
+	.string "{CLEAR_TO 15}[Red Shard]{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 123}[Fire Stone]{CLEAR_TO 200}\p"
 	.string "{CLEAR_TO 10}Wanted item{CLEAR_TO 124}Trade item\n"
-	.string "{CLEAR_TO 6}YELLOW SHARD{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 115}THUNDERSTONE{CLEAR_TO 200}\p"
+	.string "{CLEAR_TO 6}[Yellow Shard]{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 115}[Thunder Stone]{CLEAR_TO 200}\p"
 	.string "{CLEAR_TO 10}Wanted item{CLEAR_TO 124}Trade item\n"
-	.string "{CLEAR_TO 12}BLUE SHARD{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 121}WATER STONE{CLEAR_TO 200}\p"
+	.string "{CLEAR_TO 12}[Blue Shard]{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 121}[Water Stone]{CLEAR_TO 200}\p"
 	.string "{CLEAR_TO 10}Wanted item{CLEAR_TO 124}Trade item\n"
-	.string "{CLEAR_TO 8}GREEN SHARD{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 123}LEAF STONE$"
+	.string "{CLEAR_TO 8}[Green Shard]{CLEAR_TO 89}{LEFT_ARROW}{RIGHT_ARROW}{CLEAR_TO 123}[Leaf Stone]$"

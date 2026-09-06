@@ -7,7 +7,7 @@ SixIsland_OutcastIsland_EventScript_Rocket::
 	end
 
 SixIsland_OutcastIsland_Text_RocketIntro::
-	.string "There're no rare POKéMON around\n"
+	.string "There're no rare [Pokémon] around\n"
 	.string "these parts! Not a one!\p"
 	.string "That burns me up, man.\n"
 	.string "I'll take it out on you!$"
@@ -17,7 +17,7 @@ SixIsland_OutcastIsland_Text_RocketDefeat::
 
 SixIsland_OutcastIsland_Text_RocketPostBattle::
 	.string "So listen, you haven't seen any\n"
-	.string "rare POKéMON, have you?$"
+	.string "rare [Pokémon], have you?$"
 
 SixIsland_OutcastIsland_Text_TylorIntro::
 	.string "I'm having no luck at all.\n"
@@ -32,7 +32,7 @@ SixIsland_OutcastIsland_Text_TylorPostBattle::
 
 SixIsland_OutcastIsland_Text_MymoIntro::
 	.string "Gasp… Gasp…\p"
-	.string "I swam here from SIX ISLE PORT\n"
+	.string "I swam here from [Six Isle Port]\n"
 	.string "in one go.$"
 
 SixIsland_OutcastIsland_Text_MymoDefeat::
@@ -44,7 +44,7 @@ SixIsland_OutcastIsland_Text_MymoPostBattle::
 	.string "I'm beat…$"
 
 SixIsland_OutcastIsland_Text_NicoleIntro::
-	.string "It's not so easy sending POKéMON\n"
+	.string "It's not so easy sending [Pokémon]\n"
 	.string "out while swimming, you know?$"
 
 SixIsland_OutcastIsland_Text_NicoleDefeat::
@@ -58,36 +58,36 @@ SixIsland_OutcastIsland_Text_NicolePostBattle::
 	.string "there.$"
 
 SixIsland_OutcastIsland_Text_AvaIntro::
-	.string "AVA: Let's have a two-on-two\n"
+	.string "[Ava]: Let's have a two-on-two\n"
 	.string "marine battle!$"
 
 SixIsland_OutcastIsland_Text_AvaDefeat::
-	.string "AVA: Oh, you're amazing!\n"
+	.string "[Ava]: Oh, you're amazing!\n"
 	.string "Even better, you're on your own!$"
 
 SixIsland_OutcastIsland_Text_AvaPostBattle::
-	.string "AVA: You know, I do prefer the\n"
+	.string "[Ava]: You know, I do prefer the\n"
 	.string "sea over any pool.$"
 
 SixIsland_OutcastIsland_Text_AvaNotEnoughMons::
-	.string "AVA: You're challenging us to\n"
+	.string "[Ava]: You're challenging us to\n"
 	.string "a battle?\p"
-	.string "You'll need at least two POKéMON\n"
+	.string "You'll need at least two [Pokémon]\n"
 	.string "if you want to do that.$"
 
 SixIsland_OutcastIsland_Text_GebIntro::
-	.string "GEB: Big Sister, help!\n"
+	.string "[Geb]: Big Sister, help!\n"
 	.string "Please battle with me!$"
 
 SixIsland_OutcastIsland_Text_GebDefeat::
-	.string "GEB: Wow, Big Sister, this person's\n"
+	.string "[Geb]: Wow, Big Sister, this person's\n"
 	.string "really good!$"
 
 SixIsland_OutcastIsland_Text_GebPostBattle::
-	.string "GEB: I'm hanging onto my sister\n"
+	.string "[Geb]: I'm hanging onto my sister\n"
 	.string "because I can't touch the bottom.$"
 
 SixIsland_OutcastIsland_Text_GebNotEnoughMons::
-	.string "GEB: Please battle against me and\n"
+	.string "[Geb]: Please battle against me and\n"
 	.string "my sister!\p"
-	.string "…Oh, you don't have two POKéMON?$"
+	.string "…Oh, you don't have two [Pokémon]?$"

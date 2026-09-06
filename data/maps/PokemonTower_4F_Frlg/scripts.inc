@@ -46,6 +46,5 @@ PokemonTower_4F_Text_JodyDefeat::
 	.string "Who? What?$"
 
 PokemonTower_4F_Text_JodyPostBattle::
-	.string "May the departed POKéMON rest in\n"
+	.string "May the departed [Pokémon] rest in\n"
 	.string "peace…$"
-
