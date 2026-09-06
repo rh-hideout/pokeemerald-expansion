@@ -78,10 +78,10 @@ ApricornTree_Text_PickedTheApricorn:
 ApricornTree_Text_PutAwayApricorn:
 	.string "{PLAYER} put away the\n"
 	.string "{STR_VAR_1} in\l"
-	.string "the BAG's {STR_VAR_3} POCKET.$"
+	.string "the [Bag]'s {STR_VAR_3} [Pocket].$"
 
 ApricornTree_Text_PocketFull:
-	.string "The BAG's {STR_VAR_3} POCKET is full.\p"
+	.string "The [Bag]'s {STR_VAR_3} [Pocket] is full.\p"
 	.string "{PLAYER} gave up on the\n"
 	.string "{STR_VAR_1}…$"
 
