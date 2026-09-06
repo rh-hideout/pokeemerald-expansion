@@ -1353,13 +1353,13 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
                 battleScript = BattleScript_PrintAbilityMadeIneffective;
             }
         }
-        else if (IsBattlerNotAllowedToSwitch(cv->battlerAtk))
+        else if (!CanBattlerSwitch(cv->battlerAtk))
         {
             battleScript = BattleScript_ButItFailed;
         }
         break;
     case EFFECT_BATON_PASS:
-        if (IsBattlerNotAllowedToSwitch(cv->battlerAtk))
+        if (!CanBattlerSwitch(cv->battlerAtk))
         {
             battleScript = BattleScript_ButItFailed;
         }
@@ -3363,10 +3363,8 @@ enum CancelerResult DoAttackCanceler(void)
 
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
-    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
     {
-        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
-        gBattleStruct->eventState.moveEndBattler++;
         gBattleStruct->accumulatedDamage += gBattleStruct->moveDamage[battlerDef];
     }
     gBattleStruct->eventState.moveEndBattler = 0;
@@ -5404,7 +5402,8 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
      || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || moveEffect == EFFECT_FUTURE_SIGHT
-     || IsBattlerNotAllowedToSwitch(battlerAtk))
+     || gBattleTypeFlags & BATTLE_TYPE_ARENA
+     || !HasBattlerViablePartyMonsForSwitch(battlerAtk))
         return FALSE;
 
     gBattleStruct->redCardActivated = TRUE;
@@ -5430,7 +5429,6 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler, 
      || HasAnyBattlerQueuedSwitch()
      || IsBattlerInvolvedInSkyDrop(ejectButtonBattler)
      || IsPursuitTargetSet()
-     || gBattleStruct->battlerState[ejectButtonBattler].commanderSpecies != SPECIES_NONE
      || !CanBattlerSwitch(ejectButtonBattler))
         return FALSE;
 
@@ -5584,6 +5582,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
          && !gBattleStruct->unableToUseMove
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES)
          && IsBattlerAlive(cv->battlerAtk)
+         && CanBattlerSwitch(cv->battlerAtk)
          && !NoAliveMonsForBattlerSide(cv->battlerDef))
         {
             DebugPrintf("battler %d", cv->battlerAtk);
@@ -5644,7 +5643,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_WEATHER_AND_SWITCH:
-        if (!IsBattlerNotAllowedToSwitch(cv->battlerAtk))
+        if (CanBattlerSwitch(cv->battlerAtk))
         {
             gBattleScripting.battler = cv->battlerAtk;
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -5850,9 +5849,8 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
     if (!gBattleMons[ejectPackBattler].volatiles.tryEjectPack
      || HasAnyBattlerQueuedSwitch()
      || IsPursuitTargetSet()
+     || !CanBattlerSwitch(ejectPackBattler)
      || IsBattlerInvolvedInSkyDrop(ejectPackBattler)
-     || gBattleMons[ejectPackBattler].volatiles.semiInvulnerable == STATE_COMMANDER
-     || IsBattlerNotAllowedToSwitch(ejectPackBattler)
      || (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
         return FALSE;
 

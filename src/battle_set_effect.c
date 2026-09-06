@@ -1385,7 +1385,7 @@ static void HandleSetEffectWeather(struct BattleCalcValues *cv, struct SetEffect
     {
         bool32 currWeatherBlocked = gBattleWeather & (B_WEATHER_PRIMAL_ANY | gBattleWeatherInfo[weather].flag);
         se->effectFailed = gBattleStruct->overworldWeatherPresent || currWeatherBlocked;
-        if (cv->moveEffect == EFFECT_WEATHER_AND_SWITCH && !IsBattlerNotAllowedToSwitch(cv->battlerAtk))
+        if (cv->moveEffect == EFFECT_WEATHER_AND_SWITCH && CanBattlerSwitch(cv->battlerAtk))
             se->effectFailed = FALSE;
         return;
     }

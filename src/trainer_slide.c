@@ -236,7 +236,7 @@ static bool32 ShouldRunTrainerSlideLastSwitchIn(enum BattlerId battler, enum Tra
 
         return (CountUsablePartyMons(oppositeBattler) == 0 && CountUsablePartyMons(oppositePartner) == 0);
     }
-    return !CanBattlerSwitch(battler);
+    return !HasBattlerViablePartyMonsForSwitch(battler);
 }
 
 static bool32 ShouldRunTrainerSlideLastHalfHP(u32 lastId, enum BattlerId battler, enum TrainerSlideType slideId)

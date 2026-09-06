@@ -2904,16 +2904,14 @@ static void Cmd_switchinanim(void)
         BattleArena_InitPoints();
 }
 
-bool32 IsBattlerNotAllowedToSwitch(enum BattlerId battler)
+bool32 CanBattlerSwitch(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        return FALSE;
-    if (IsCommanderActive(battler))
-        return FALSE;
-    return !CanBattlerSwitch(battler);
+    return !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        && !IsCommanderActive(battler)
+        && HasBattlerViablePartyMonsForSwitch(battler);
 }
 
-bool32 CanBattlerSwitch(enum BattlerId battler)
+bool32 HasBattlerViablePartyMonsForSwitch(enum BattlerId battler)
 {
     s32 lastMonId;
     enum BattlerId battlerIn1, battlerIn2;
@@ -2953,7 +2951,7 @@ static void Cmd_jumpifcantswitch(void)
     }
     else
     {
-        if (CanBattlerSwitch(battler))
+        if (HasBattlerViablePartyMonsForSwitch(battler))
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
            gBattlescriptCurrInstr = cmd->jumpInstr;
