@@ -174,7 +174,7 @@ SINGLE_BATTLE_TEST("Sky Drop fails if target is behind a substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if target is in a Semi-Invulnerable state")
+SINGLE_BATTLE_TEST("Sky Drop fails when the target is airborne from Fly")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("Sky Drop fails if target is in a Semi-Invulnerable state")
     }
 }
 
-DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
+DOUBLE_BATTLE_TEST("Gravity releases Sky Drop's user and target")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -202,11 +202,13 @@ DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, playerRight);
-        MESSAGE("Wobbuffet fell from the sky due to the gravity!");
+    } THEN {
+        EXPECT(playerLeft->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(opponentLeft->volatiles.semiInvulnerable == STATE_NONE);
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
+SINGLE_BATTLE_TEST("Sky Drop fails on targets weighing at least 200 kg")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_METAGROSS].weight >= 2000);
@@ -216,11 +218,14 @@ SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
         TURN { MOVE(player, MOVE_SKY_DROP); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
-        MESSAGE("The opposing Metagross is too heavy to be lifted!");
+    } THEN {
+        EXPECT(player->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(opponent->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop cancels targets two turn moves")
+SINGLE_BATTLE_TEST("Sky Drop interrupts the target's charging Solar Beam")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -261,19 +266,6 @@ SINGLE_BATTLE_TEST("Sky Drop stops the confusion count until the target is dropp
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if the targe is in a semi-invulnerable state")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FLY); MOVE(player, MOVE_SKY_DROP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
-    }
-}
-
 DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a target with Volt Absorb")
 {
     GIVEN {
@@ -292,7 +284,7 @@ DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if the target fainted while it was held on air")
+SINGLE_BATTLE_TEST("Sky Drop fails on its second turn if the carried target fainted")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -327,7 +319,7 @@ DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a
     }
 }
 
-DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
+DOUBLE_BATTLE_TEST("Electrified Sky Drop does not trigger Volt Absorb on its lift turn")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
