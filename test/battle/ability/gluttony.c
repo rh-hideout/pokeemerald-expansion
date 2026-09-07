@@ -1,6 +1,69 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Gluttony activates confusion-healing Berries at half HP but not above it")
+{
+    enum Item item;
+    enum Ability ability;
+    u32 damage;
+    bool32 consumed;
+    PARAMETRIZE { item = ITEM_FIGY_BERRY; ability = ABILITY_THICK_FAT; damage = 49; }
+    PARAMETRIZE { item = ITEM_FIGY_BERRY; ability = ABILITY_THICK_FAT; damage = 50; }
+    PARAMETRIZE { item = ITEM_FIGY_BERRY; ability = ABILITY_GLUTTONY; damage = 49; }
+    PARAMETRIZE { item = ITEM_FIGY_BERRY; ability = ABILITY_GLUTTONY; damage = 50; }
+    PARAMETRIZE { item = ITEM_WIKI_BERRY; ability = ABILITY_THICK_FAT; damage = 49; }
+    PARAMETRIZE { item = ITEM_WIKI_BERRY; ability = ABILITY_THICK_FAT; damage = 50; }
+    PARAMETRIZE { item = ITEM_WIKI_BERRY; ability = ABILITY_GLUTTONY; damage = 49; }
+    PARAMETRIZE { item = ITEM_WIKI_BERRY; ability = ABILITY_GLUTTONY; damage = 50; }
+    PARAMETRIZE { item = ITEM_MAGO_BERRY; ability = ABILITY_THICK_FAT; damage = 49; }
+    PARAMETRIZE { item = ITEM_MAGO_BERRY; ability = ABILITY_THICK_FAT; damage = 50; }
+    PARAMETRIZE { item = ITEM_MAGO_BERRY; ability = ABILITY_GLUTTONY; damage = 49; }
+    PARAMETRIZE { item = ITEM_MAGO_BERRY; ability = ABILITY_GLUTTONY; damage = 50; }
+    PARAMETRIZE { item = ITEM_AGUAV_BERRY; ability = ABILITY_THICK_FAT; damage = 49; }
+    PARAMETRIZE { item = ITEM_AGUAV_BERRY; ability = ABILITY_THICK_FAT; damage = 50; }
+    PARAMETRIZE { item = ITEM_AGUAV_BERRY; ability = ABILITY_GLUTTONY; damage = 49; }
+    PARAMETRIZE { item = ITEM_AGUAV_BERRY; ability = ABILITY_GLUTTONY; damage = 50; }
+    PARAMETRIZE { item = ITEM_IAPAPA_BERRY; ability = ABILITY_THICK_FAT; damage = 49; }
+    PARAMETRIZE { item = ITEM_IAPAPA_BERRY; ability = ABILITY_THICK_FAT; damage = 50; }
+    PARAMETRIZE { item = ITEM_IAPAPA_BERRY; ability = ABILITY_GLUTTONY; damage = 49; }
+    PARAMETRIZE { item = ITEM_IAPAPA_BERRY; ability = ABILITY_GLUTTONY; damage = 50; }
+    ASSUME(B_CONFUSE_BERRIES_HEAL >= GEN_8);
+    consumed = ability == ABILITY_GLUTTONY && damage == 50;
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ability); Nature(NATURE_HARDY); MaxHP(100); HP(100); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
+    } THEN {
+        EXPECT_EQ(player->hp, 100 - damage + (consumed ? 33 : 0));
+        EXPECT_EQ(player->item, consumed ? ITEM_NONE : item);
+    }
+}
+
+SINGLE_BATTLE_TEST("Gluttony activates a Berry after Belly Drum only if the user reaches half HP")
+{
+    enum Ability ability;
+    u32 maxHP;
+    bool32 consumed;
+    PARAMETRIZE { ability = ABILITY_THICK_FAT; maxHP = 100; }
+    PARAMETRIZE { ability = ABILITY_THICK_FAT; maxHP = 101; }
+    PARAMETRIZE { ability = ABILITY_GLUTTONY; maxHP = 100; }
+    PARAMETRIZE { ability = ABILITY_GLUTTONY; maxHP = 101; }
+    ASSUME(B_CONFUSE_BERRIES_HEAL >= GEN_8);
+    consumed = ability == ABILITY_GLUTTONY && maxHP == 100;
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ability); Nature(NATURE_HARDY); MaxHP(maxHP); HP(maxHP); Item(ITEM_FIGY_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BELLY_DRUM); }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
+        EXPECT_EQ(player->hp, maxHP - maxHP / 2 + (consumed ? 33 : 0));
+        EXPECT_EQ(player->item, consumed ? ITEM_NONE : ITEM_FIGY_BERRY);
+    }
+}
+
+
 SINGLE_BATTLE_TEST("Gluttony activates stat-raising Berries at half HP")
 {
     enum Item item;
