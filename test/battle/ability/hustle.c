@@ -1,6 +1,63 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Hustle boosts Aerial Ace's Attack with and without Choice Band", s16 damage)
+{
+    enum Ability ability;
+    enum Item item;
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; item = ITEM_NONE; }
+    PARAMETRIZE { ability = ABILITY_HUSTLE; item = ITEM_NONE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; item = ITEM_CHOICE_BAND; }
+    PARAMETRIZE { ability = ABILITY_HUSTLE; item = ITEM_CHOICE_BAND; }
+    GIVEN {
+        // Equal effective Attack avoids treating final damage as an exact 1.5x ratio.
+        PLAYER(SPECIES_DARUMAKA) { Ability(ability); Item(item); Level(50); Attack(ability == ABILITY_HUSTLE ? 200 : 300); Speed(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); Defense(100); Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AERIAL_ACE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[2].damage, results[3].damage);
+        EXPECT_GT(results[2].damage, results[0].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Hustle reduces Seismic Toss accuracy despite its fixed damage")
+{
+    PASSES_RANDOMLY(80, 100, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SEISMIC_TOSS) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveAccuracy(MOVE_SEISMIC_TOSS) == 100);
+        PLAYER(SPECIES_DARUMAKA) { Ability(ABILITY_HUSTLE); Level(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SEISMIC_TOSS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, player);
+        HP_BAR(opponent, damage: 50);
+    }
+}
+
+SINGLE_BATTLE_TEST("Suppressing Hustle removes its physical accuracy penalty")
+{
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+    GIVEN {
+        PLAYER(SPECIES_DARUMAKA) { Ability(ABILITY_HUSTLE); Speed(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+    }
+}
+
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
