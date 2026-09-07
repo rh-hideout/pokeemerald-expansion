@@ -1336,6 +1336,10 @@
 	.byte \battler
 	.endm
 
+	.macro seteffectbattlerfromspeedorder
+	callnative BS_SetEffectBattlerFromSpeedOrder
+	.endm
+
 	.macro updatenick
 	callnative BS_UpdateNick
 	.endm

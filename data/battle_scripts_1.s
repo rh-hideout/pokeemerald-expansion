@@ -791,6 +791,7 @@ BattleScript_EffectHealingWishRestore:
 
 BattleScript_MoveEffectOverwriteAbility::
 	switchinabilities BS_EFFECT_BATTLER
+	tryillusionoff BS_EFFECT_BATTLER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
@@ -800,6 +801,7 @@ BattleScript_MoveEffectOverwriteAbility::
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
+	tryillusionoff BS_EFFECT_BATTLER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
@@ -3816,6 +3818,25 @@ BattleScript_SwitchInAbilityMsg::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_TryIllusionOff:
+	savebattlerorderindex
+	setbyte gBattlerOrderIndex, 0
+	sortbattlers
+BattleScript_TryIllusionOffLoop:
+	seteffectbattlerfromspeedorder
+	tryillusionoff BS_EFFECT_BATTLER
+	addbyte gBattlerOrderIndex, 1
+	jumpifbytenotequal gBattlerOrderIndex, gBattlersCount, BattleScript_TryIllusionOffLoop
+	restorebattlerorderindex
+	return
+
+BattleScript_SwitchInNeutralizingGas::
+	call BattleScript_AbilityPopUp
+	printfromtable gSwitchInAbilityStringIds
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_TryIllusionOff
+	return
+
 BattleScript_ActivateAsOne::
 	call BattleScript_AbilityPopUp
 	printfromtable gSwitchInAbilityStringIds
@@ -3940,6 +3961,15 @@ BattleScript_AbilityCuredStatus::
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_SCRIPTING
+	return
+
+BattleScript_AbilityCuredInfatuationAndTaunt::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNGOTOVERITSINFATUATION
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNSHOOKOFFTHETAUNT
+	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_BattlerShookOffTaunt::

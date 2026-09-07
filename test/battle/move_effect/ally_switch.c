@@ -326,7 +326,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
+DOUBLE_BATTLE_TEST("Ally Switch updates last used moves for Mimic")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIMIC) == EFFECT_MIMIC);

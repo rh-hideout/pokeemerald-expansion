@@ -8106,6 +8106,13 @@ void BS_TryIllusionOff(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_SetEffectBattlerFromSpeedOrder(void)
+{
+    NATIVE_ARGS();
+    gEffectBattler = gBattlersBySpeed[gBattlerOrderIndex];
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_UpdateNick(void)
 {
     NATIVE_ARGS();

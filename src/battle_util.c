@@ -4724,7 +4724,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             gBattleMons[battler].volatiles.neutralizingGas = TRUE;
             gBattlerAbility = battler;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
-            BattleScriptCall(BattleScript_SwitchInAbilityMsg);
+            BattleScriptCall(BattleScript_SwitchInNeutralizingGas);
             effect++;
         }
         break;
@@ -5469,7 +5469,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
         else if (abilityDef == ABILITY_VITAL_SPIRIT || abilityDef == ABILITY_INSOMNIA)
         {
             abilityAffected = TRUE;
-            battleScript = BattleScript_PrintAbilityMadeIneffective;
+            battleScript = BattleScript_PrintAbilityMadeIneffectiveRet;
         }
         break;
     case MOVE_EFFECT_FREEZE:
@@ -9031,17 +9031,26 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
         }
         break;
     case ABILITY_OBLIVIOUS:
-        if (gBattleMons[battler].volatiles.infatuation)
+    {
+        bool32 infatuationHeal = gBattleMons[battler].volatiles.infatuation;
+        bool32 tauntHeal = GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0;
+
+        if (infatuationHeal && tauntHeal)
+        {
+            outcome = IMMUNITY_INFATUATION_TAUNT_CLEARED;
+        }
+        else if (infatuationHeal)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_INFATUATION;
             outcome = IMMUNITY_INFATUATION_CLEARED;
         }
-        else if (GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
+        else if (tauntHeal)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_TAUNT;
             outcome = IMMUNITY_TAUNT_CLEARED;
         }
         break;
+    }
     default:
         break;
     }
@@ -9063,6 +9072,11 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
     case IMMUNITY_TAUNT_CLEARED:
         gBattleMons[battler].volatiles.tauntTimer = 0;
         BattleScriptCall(BattleScript_AbilityCuredStatus);
+        break;
+    case IMMUNITY_INFATUATION_TAUNT_CLEARED:
+        gBattleMons[battler].volatiles.infatuation = 0;
+        gBattleMons[battler].volatiles.tauntTimer = 0;
+        BattleScriptCall(BattleScript_AbilityCuredInfatuationAndTaunt);
         break;
     case IMMUNITY_NO_EFFECT:
         return IMMUNITY_NO_EFFECT;

@@ -21,7 +21,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_WRAP,
     MOVE_EFFECT_STAT_PLUS,
     MOVE_EFFECT_STAT_MINUS,
-
     MOVE_EFFECT_REMOVE_ARG_TYPE,
     MOVE_EFFECT_RECHARGE,
     MOVE_EFFECT_RAGE,
@@ -45,7 +44,8 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_ROUND,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_SECRET_POWER,
-    MOVE_EFFECT_HEAL_BLOCK, // rename to heal block
+    MOVE_EFFECT_HEAL_BLOCK,
+    MOVE_EFFECT_PSYCHIC_NOISE,
     MOVE_EFFECT_TERA_BLAST,
     MOVE_EFFECT_ORDER_UP,
     MOVE_EFFECT_ION_DELUGE,
@@ -60,10 +60,8 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_RAINBOW,
     MOVE_EFFECT_SEA_OF_FIRE,
     MOVE_EFFECT_SWAMP,
-
     MOVE_EFFECT_SPEED_SWAP,
     MOVE_EFFECT_SAFEGUARD,
-
     MOVE_EFFECT_LASER_FOCUS,
     MOVE_EFFECT_POWDER,
     MOVE_EFFECT_AQUA_RING,
@@ -75,7 +73,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_MAGNET_RISE,
     MOVE_EFFECT_TOXIC_SPIKES,
     MOVE_EFFECT_SPIKES,
-
     MOVE_EFFECT_DISABLE,
     MOVE_EFFECT_MIST,
     MOVE_EFFECT_GLARE,
@@ -158,7 +155,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_POWER_SHIFT,
     MOVE_EFFECT_REVIVAL_BLESSING,
     MOVE_EFFECT_INSTRUCT,
-    MOVE_EFFECT_ALLY_SWITCH, // Tied to EFFECT_ALLY_SWITCH. Will lead to incorrect behavior if used without
     MOVE_EFFECT_FOCUS_ENERGY,
     MOVE_EFFECT_DRAGON_CHEER,
 
@@ -214,7 +210,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
 
     // Only for secret power usage but better to remove/refactor the abstraction
-    // renamed so that users don't think those are usable constatns
+    // Special names so that users don't think those are usable constatns
     SECRET_POWER_ATK_MINUS_1,
     SECRET_POWER_DEF_MINUS_1,
     SECRET_POWER_SPD_MINUS_1,
