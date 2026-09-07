@@ -1,6 +1,32 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Strong Jaw boosts Fishious Rend whether the user moves first or last")
+{
+    enum Ability ability;
+    u32 speed;
+    s16 expectedDamage;
+    // Powers 170, 255, 85, and 127 respectively, including half-down rounding.
+    // At level 50 with equal Attack/Defense: floor(22 * power / 50) + 2,
+    // followed by a maximum damage roll and STAB (also rounded half down).
+    PARAMETRIZE { speed = 100; ability = ABILITY_WATER_ABSORB; expectedDamage = 114; }
+    PARAMETRIZE { speed = 100; ability = ABILITY_STRONG_JAW; expectedDamage = 171; }
+    PARAMETRIZE { speed = 25; ability = ABILITY_WATER_ABSORB; expectedDamage = 58; }
+    PARAMETRIZE { speed = 25; ability = ABILITY_STRONG_JAW; expectedDamage = 85; }
+    GIVEN {
+        ASSUME(IsBitingMove(MOVE_FISHIOUS_REND));
+        ASSUME(GetMovePower(MOVE_FISHIOUS_REND) == 85);
+        PLAYER(SPECIES_DRACOVISH) { Ability(ability); Level(50); Attack(100); Speed(speed); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); Defense(100); Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISHIOUS_REND, WITH_RNG(RNG_DAMAGE_MODIFIER, 0)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISHIOUS_REND, player);
+        HP_BAR(opponent, damage: expectedDamage);
+    }
+}
+
+
 SINGLE_BATTLE_TEST("Strong Jaw boosts biting moves by 50%", s16 damage)
 {
     enum Ability ability;
