@@ -1640,7 +1640,7 @@ static bool32 HasValidMoveToReducePP(enum BattlerId battler, u32 *moveSlot, enum
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (move == gBattleMons[battler].moves[i])
+        if (gBattleMons[battler].moves[i] == moveToCheck)
         {
             *moveSlot = i;
             break;
@@ -2683,6 +2683,7 @@ bool32 TryTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
     u8 *battleMonAttacker;
     u8 *battleMonTarget;
     u8 timesGotHit;
+    enum Ability oldAbility = gBattleMons[battlerAtk].ability;
 
     gChosenMove = MOVE_UNAVAILABLE;
     gBattleMons[battlerAtk].volatiles.transformed = TRUE;
@@ -2709,6 +2710,8 @@ bool32 TryTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
         battleMonAttacker[i] = battleMonTarget[i];
 
     gBattleMons[battlerAtk].volatiles.overwrittenAbility = GetBattlerAbility(battlerDef);
+
+    UpdateTruantToggleForAbilityChange(battlerAtk, oldAbility);
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
         gBattleMons[battlerAtk].pp[i] = min(GetMovePP(gBattleMons[battlerAtk].moves[i]), 5);
 
@@ -3083,6 +3086,7 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
 
         RemoveRuinAbilityFlags(se->effectBattler);
         gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
+        ResetTruantToggleOnAbilitySuppression(se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
     }
 
@@ -3160,9 +3164,8 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
 
         RemoveAbilityFlags(se->effectBattler);
         gBattleScripting.abilityPopupOverwrite = *abilityEb;
-        gBattleMons[se->effectBattler].ability = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = overwriteAbility;
+        OverwriteBattlerAbility(se->effectBattler, overwriteAbility);
         gBattlerAbility = se->effectBattler;
-
         RecordAbilityBattle(se->effectBattler, gBattleMons[se->effectBattler].ability);
         PrepareStringBattleWithWait(STRINGID_PKMNACQUIREDABILITY, se->effectBattler);
         BattleScriptPush(se->script);
@@ -3196,8 +3199,9 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
         gLastUsedAbility = *abilityDef;
         RemoveAbilityFlags(gBattlerTarget);
         RemoveAbilityFlags(cv->battlerAtk);
-        *abilityDef = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = *abilityAtk;
-        *abilityAtk = gBattleMons[cv->battlerAtk].volatiles.overwrittenAbility = gLastUsedAbility ;
+
+        OverwriteBattlerAbility(se->effectBattler, *abilityAtk);
+        OverwriteBattlerAbility(cv->battlerAtk, *abilityDef);
         RecordAbilityBattle(se->effectBattler, *abilityDef);
         RecordAbilityBattle(cv->battlerAtk, *abilityAtk);
 
@@ -3229,7 +3233,7 @@ static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffec
         gBattlerAbility = se->effectBattler;
         RemoveAbilityFlags(se->effectBattler);
         gBattleScripting.abilityPopupOverwrite = destAbility;
-        gBattleMons[se->effectBattler].ability = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = sourceAbility;
+        OverwriteBattlerAbility(se->effectBattler, sourceAbility);
         gLastUsedAbility = sourceAbility;
         RecordAbilityBattle(se->effectBattler, gLastUsedAbility);
         RecordAbilityBattle(cv->battlerDef, gLastUsedAbility);
@@ -3522,7 +3526,7 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
     else if (!cv->onlyChecking)
     {
         RemoveAbilityFlags(se->effectBattler);
-        *destAbility = gBattleMons[se->effectBattler].volatiles.overwrittenAbility = *srcAbility;
+        OverwriteBattlerAbility(se->effectBattler, *srcAbility);
         PrepareStringBattleWithWait(STRINGID_PKMNACQUIREDABILITY, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectOverwriteAbility);
     }
