@@ -4555,8 +4555,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
             if (!IsBattlerAlive(cv->battlerDef))
                 continue;
 
-            gLastHitBy[cv->battlerDef] = cv->battlerAtk; // Used by switch AI only
-
             if (!gBattleStruct->unableToUseMove
              && !IsBattlerUnaffectedByMove(battlerDef))
             {

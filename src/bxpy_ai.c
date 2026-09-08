@@ -128,7 +128,7 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiP
     // AI's party
     s32 lastId = GetAILastPartyIndex(battler);
     struct Pokemon *party = GetBattlerParty(battler);
-    
+
     // Other's party
     s32 opposingLastId = 0;
     struct Pokemon *opposingParty;
@@ -233,7 +233,7 @@ void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArr
 
 static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+    enum Move *moves = GetMovesArray(battlerAtk);
 
     struct AiCalcValues aiCalc = {
         .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
@@ -241,15 +241,15 @@ static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId b
         .weather = BXPY_GetWeather(),
         .terrain = BXPY_GetTerrain(),
     };
-    
+
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         struct SimulatedDamage dmg = {0};
         aiCalc.typeEffectiveness = Q_4_12(0.0);
-        aiCalc.move = gBattleMons[battlerAtk].moves[moveIndex];
+        aiCalc.move = moves[moveIndex];
         gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
 
-        if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
+        if (aiCalc.move == MOVE_NONE)
             continue;
 
         dmg = AI_CalcDamage(&aiCalc, battlerAtk, battlerDef);

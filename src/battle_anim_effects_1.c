@@ -6732,7 +6732,6 @@ static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2
     SWAP(gLastHitByType[battler1],      gLastHitByType[battler2], temp);
     SWAP(gLastUsedMoveType[battler1],   gLastUsedMoveType[battler2], temp);
     SWAP(gLastResultingMoves[battler1], gLastResultingMoves[battler2], temp);
-    SWAP(gLastHitBy[battler1],          gLastHitBy[battler2], temp);
 }
 
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
