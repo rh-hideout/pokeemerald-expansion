@@ -1,6 +1,48 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Tough Claws boosts contact damage to a Substitute", u32 damage)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_SNIPER; }
+    PARAMETRIZE { ability = ABILITY_TOUGH_CLAWS; }
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_BINACLE) { Ability(ability); Level(50); Attack(200); Speed(100); }
+        OPPONENT(SPECIES_CHANSEY) { Ability(ABILITY_NATURAL_CURE); MaxHP(1000); HP(1000); Defense(100); Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, 750);
+        EXPECT(opponent->volatiles.substituteHP > 0);
+        results[i].damage = 250 - opponent->volatiles.substituteHP;
+    } FINALLY {
+        EXPECT_GT(results[0].damage, 0);
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.3), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Tough Claws boosts both hits of Double Hit", s16 firstHit; s16 secondHit)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_SNIPER; }
+    PARAMETRIZE { ability = ABILITY_TOUGH_CLAWS; }
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_DOUBLE_HIT));
+        PLAYER(SPECIES_BINACLE) { Ability(ability); Level(50); Attack(200); Speed(100); }
+        OPPONENT(SPECIES_CHANSEY) { Ability(ABILITY_NATURAL_CURE); MaxHP(1000); HP(1000); Defense(100); Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DOUBLE_HIT); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].firstHit);
+        HP_BAR(opponent, captureDamage: &results[i].secondHit);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].firstHit, UQ_4_12(1.3), results[1].firstHit);
+        EXPECT_MUL_EQ(results[0].secondHit, UQ_4_12(1.3), results[1].secondHit);
+    }
+}
+
 SINGLE_BATTLE_TEST("Tough Claws boosts physical and special contact moves", s16 damage)
 {
     enum Ability ability;
