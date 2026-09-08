@@ -1,6 +1,92 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Own Tempo prevents Swagger and Flatter confusion without preventing their stat boosts")
+{
+    enum Move move;
+    u32 stat, stages;
+    PARAMETRIZE { move = MOVE_SWAGGER; stat = STAT_ATK; stages = 2; }
+    PARAMETRIZE { move = MOVE_FLATTER; stat = STAT_SPATK; stages = 1; }
+    GIVEN {
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } THEN {
+        EXPECT(player->volatiles.confusionTimer == 0);
+        EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE + stages);
+    }
+}
+
+SINGLE_BATTLE_TEST("Own Tempo prevents disliked Figy Berry confusion without preventing healing")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_OBLIVIOUS; }
+    PARAMETRIZE { ability = ABILITY_OWN_TEMPO; }
+    GIVEN {
+        ASSUME(B_CONFUSE_BERRIES_HEAL >= GEN_8);
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ability); Nature(NATURE_MODEST); Item(ITEM_FIGY_BERRY); MaxHP(120); HP(120); Speed(100); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Level(90); Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
+    } THEN {
+        EXPECT_EQ(player->hp, 70);
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT((player->volatiles.confusionTimer > 0) == (ability == ABILITY_OBLIVIOUS));
+    }
+}
+
+SINGLE_BATTLE_TEST("Own Tempo prevents Water Pulse confusion without preventing damage")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_OBLIVIOUS; }
+    PARAMETRIZE { ability = ABILITY_OWN_TEMPO; }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_WATER_PULSE, MOVE_EFFECT_CONFUSION));
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ability); MaxHP(1000); HP(1000); Speed(100); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WATER_PULSE); }
+    } SCENE {
+        HP_BAR(player);
+    } THEN {
+        EXPECT_LT(player->hp, 1000);
+        EXPECT((player->volatiles.confusionTimer > 0) == (ability == ABILITY_OBLIVIOUS));
+    }
+}
+
+SINGLE_BATTLE_TEST("Own Tempo stops preventing confusion while suppressed")
+{
+    bool32 suppress;
+    PARAMETRIZE { suppress = FALSE; }
+    PARAMETRIZE { suppress = TRUE; }
+    GIVEN {
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Speed(100); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(50); }
+    } WHEN {
+        if (suppress)
+            TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(opponent, MOVE_CONFUSE_RAY); }
+    } THEN {
+        EXPECT((player->volatiles.confusionTimer > 0) == suppress);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Own Tempo does not protect its ally from confusion")
+{
+    GIVEN {
+        PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Speed(150); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_FLASH_FIRE); Speed(50); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(25); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_CONFUSE_RAY, target: playerRight); }
+    } THEN {
+        EXPECT(playerRight->volatiles.confusionTimer > 0);
+        EXPECT(playerLeft->volatiles.confusionTimer == 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("Own Tempo doesn't prevent Intimidate (Gen3-7)")
 {
     GIVEN {
