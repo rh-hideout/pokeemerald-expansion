@@ -3197,11 +3197,10 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
             gBattleScripting.abilityPopupOverwrite = gBattleMons[cv->battlerAtk].ability;
 
         gLastUsedAbility = *abilityDef;
-        RemoveAbilityFlags(gBattlerTarget);
+        RemoveAbilityFlags(se->effectBattler);
         RemoveAbilityFlags(cv->battlerAtk);
-
         OverwriteBattlerAbility(se->effectBattler, *abilityAtk);
-        OverwriteBattlerAbility(cv->battlerAtk, *abilityDef);
+        OverwriteBattlerAbility(cv->battlerAtk, gLastUsedAbility);
         RecordAbilityBattle(se->effectBattler, *abilityDef);
         RecordAbilityBattle(cv->battlerAtk, *abilityAtk);
 
