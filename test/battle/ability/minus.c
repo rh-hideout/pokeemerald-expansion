@@ -1,6 +1,78 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Minus starts boosting when its partner switches in", s16 before; s16 after)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_PLUS; }
+    PARAMETRIZE { ability = ABILITY_MINUS; }
+    GIVEN {
+        PLAYER(SPECIES_MINUN) { Ability(ABILITY_MINUS); Level(50); SpAttack(200); Speed(100); }
+        PLAYER(SPECIES_KLINK) { Ability(ABILITY_CLEAR_BODY); Speed(90); }
+        PLAYER(SPECIES_KLINK) { Ability(ability); Speed(90); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); SpDefense(100); Speed(80); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(70); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+        TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+    } SCENE {
+        HP_BAR(opponentLeft, captureDamage: &results[i].before);
+        HP_BAR(opponentLeft, captureDamage: &results[i].after);
+    } FINALLY {
+        for (u32 j = 0; j < 2; j++)
+            EXPECT_MUL_EQ(results[j].before, UQ_4_12(1.5), results[j].after);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Minus stops boosting when its partner switches out", s16 before; s16 after)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_PLUS; }
+    PARAMETRIZE { ability = ABILITY_MINUS; }
+    GIVEN {
+        PLAYER(SPECIES_MINUN) { Ability(ABILITY_MINUS); Level(50); SpAttack(200); Speed(100); }
+        PLAYER(SPECIES_KLINK) { Ability(ability); Speed(90); }
+        PLAYER(SPECIES_KLINK) { Ability(ABILITY_CLEAR_BODY); Speed(90); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); SpDefense(100); Speed(80); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(70); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+        TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+    } SCENE {
+        HP_BAR(opponentLeft, captureDamage: &results[i].before);
+        HP_BAR(opponentLeft, captureDamage: &results[i].after);
+    } FINALLY {
+        for (u32 j = 0; j < 2; j++)
+            EXPECT_MUL_EQ(results[j].after, UQ_4_12(1.5), results[j].before);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Minus stops boosting if its partner faints before the user attacks", s16 before; s16 after)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_PLUS; }
+    PARAMETRIZE { ability = ABILITY_MINUS; }
+    GIVEN {
+        PLAYER(SPECIES_MINUN) { Ability(ABILITY_MINUS); Level(50); SpAttack(200); Speed(100); }
+        PLAYER(SPECIES_KLINK) { Ability(ability); HP(1); Speed(90); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); SpDefense(100); Speed(80); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(200); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerRight); MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); }
+    } SCENE {
+        HP_BAR(opponentLeft, captureDamage: &results[i].before);
+        HP_BAR(playerRight);
+        HP_BAR(opponentLeft, captureDamage: &results[i].after);
+    } THEN {
+        EXPECT_EQ(playerRight->hp, 0);
+    } FINALLY {
+        for (u32 j = 0; j < 2; j++)
+            EXPECT_MUL_EQ(results[j].after, UQ_4_12(1.5), results[j].before);
+    }
+}
+
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
