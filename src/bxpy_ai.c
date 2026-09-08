@@ -233,7 +233,7 @@ void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArr
 
 static void BXPY_CalcAiBattlerDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    enum Move *moves = GetMovesArray(battlerAtk);
+    enum Move *moves = gBattleMons[battlerAtk].moves;
 
     struct AiCalcValues aiCalc = {
         .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],

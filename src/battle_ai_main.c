@@ -736,7 +736,12 @@ void RecordStatusMoves(enum BattlerId battler)
 static void SetAiMovesArray(enum BattlerId battler, struct AiLogicData *aiData)
 {
     u32 moveLimitations = CheckMoveLimitations(battler, 0, ~(MOVE_LIMITATION_UNUSABLE));
-    bool32 isAware = IsAiBattlerAware(battler) || IsAiBattlerAware(GetPartnerBattler(battler)) || IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE);
+
+    bool32 isAwareForSwitching = SMART_SWITCHING_OMNISCIENT && aiData->switchInCalc;
+    bool32 isAware = isAwareForSwitching
+                  || IsAiBattlerAware(battler)
+                  || IsAiBattlerAware(GetPartnerBattler(battler))
+                  || IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE);
 
     for (enum MoveSlot moveSlot = 0; moveSlot < MAX_MON_MOVES; moveSlot++)
     {

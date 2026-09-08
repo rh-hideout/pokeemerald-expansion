@@ -1324,6 +1324,7 @@ void GetShouldSwitchMoveData(struct SwitchAiContext *switchContext)
 {
     //Variable initialization
     enum Move *playerMoves = GetMovesArray(switchContext->opposingBattler);
+
     enum Move aiMove, playerMove, bestPlayerPriorityMove = MOVE_NONE, bestPlayerMove = MOVE_NONE, expectedMove = MOVE_NONE;
     enum BattleMoveEffects aiMoveEffect;
     u32 hitsToKOAI = 0, hitsToKOPlayer = 0, minHitsToKOAI = gBattleMons[switchContext->battler].hp, minHitsToKOAIPriority = gBattleMons[switchContext->battler].hp;
@@ -1332,7 +1333,7 @@ void GetShouldSwitchMoveData(struct SwitchAiContext *switchContext)
     // Get max damage mon could take
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        playerMove = SMART_SWITCHING_OMNISCIENT ? GetMovesArray(switchContext->battler)[moveIndex] : playerMoves[moveIndex];
+        playerMove = playerMoves[moveIndex];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[switchContext->opposingBattler].pp[moveIndex] > 0)
         {
             hitsToKOAI = GetNoOfHitsToKOBattler(switchContext->opposingBattler, switchContext->battler, moveIndex, AI_DEFENDING, CONSIDER_ENDURE);
@@ -2079,7 +2080,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, enum Ba
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
+        playerMove = playerMoves[moveIndex];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_SWITCHIN_DEFENDING, gAiLogicData);
@@ -2109,7 +2110,7 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(enum BattlerId battler,
         // If player is choiced into a non-priority move, AI understands that it can't deal priority damage
         if (gBattleStruct->choicedMove[opposingBattler] != MOVE_NONE && GetMovePriority(gBattleStruct->choicedMove[opposingBattler]) < 1)
             break;
-        playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
+        playerMove = playerMoves[moveIndex];
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {

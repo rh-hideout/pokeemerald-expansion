@@ -1575,7 +1575,7 @@ void GetBestDmgMovesFromBattler(enum BattlerId battlerAtk, enum BattlerId battle
 
 u32 GetMoveIndex(enum BattlerId battler, enum Move move)
 {
-    enum Move *moves = GetMovesArray(battler);
+    enum Move *moves = gBattleMons[battler].moves;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
