@@ -765,13 +765,14 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
     aiData->dragonDartsHitsBothTarget = 0;
-    SetAiMovesArray(battler, aiData);
 
     if (IsAiBattlerAssumingStab(battler))
         RecordMovesBasedOnStab(battler);
 
     if (IsAiBattlerAssumingStatusMoves(battler))
         RecordStatusMoves(battler);
+
+    SetAiMovesArray(battler, aiData);
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
