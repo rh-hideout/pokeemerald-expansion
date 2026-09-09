@@ -659,7 +659,8 @@ struct BattleStruct
         struct BattleVideo battleVideo;
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
-    u8 unused1:5;
+    u8 messagePrinted:1; // To prevented repeated attackmessages (Perish Song)
+    u8 unused1:4;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     enum PartyMon AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];

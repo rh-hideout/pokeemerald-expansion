@@ -2741,7 +2741,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
 {
     if (!cv->isStatusMove) return CANCELER_RESULT_SUCCESS;
 
-    gBattleStruct->statusMoveFailed = FALSE;
     u32 playMoveAnim = 0;
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(cv->move);
 
@@ -6060,7 +6059,6 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->battlerState[cv->battlerAtk].usedMicleBerry = FALSE;
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
     gBattleStruct->blunderPolicy = FALSE;
-    gBattleStruct->statusMoveFailed = FALSE;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
 

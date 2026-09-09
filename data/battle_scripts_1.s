@@ -1187,8 +1187,8 @@ BattleScript_MoveEffectEncore::
 BattleScript_MoveEffectPainSplit::
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET, ASSURANCE_IGNORE
+	healthbarupdate BS_EFFECT_BATTLER
+	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
 	printstring STRINGID_SHAREDPAIN
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -1389,7 +1389,7 @@ BattleScript_ButItFailed::
 BattleScript_NotAffectedAbilityPopUp::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTEFF
 	waitmessage B_WAIT_TIME_LONG
     return
 
@@ -3377,6 +3377,7 @@ BattleScript_PickupActivates::
 	pause 5
 	tryrecycleitem BattleScript_PickupActivatesEnd
 	call BattleScript_AbilityPopUp
+	copybyte gEffectBattler, gBattlerAttacker
 	printstring STRINGID_XFOUNDONEY
 	waitmessage B_WAIT_TIME_LONG
 	tryactivateitem BS_ATTACKER, ACTIVATION_ON_PICK_UP
@@ -4932,7 +4933,8 @@ BattleScript_EffectRaiseCritAlliesAnim::
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_RaiseCritAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-    raisecritstatchangeanim  BS_TARGET
+	raisecritstatchangeanim  BS_TARGET
+	copybyte gEffectBattler, gBattlerTarget
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseCritAlliesIncrement:
@@ -4968,10 +4970,9 @@ BattleScript_EffectRecycleBerriesAllies::
 BattleScript_RecycleBerriesAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RecycleBerriesAlliesIncrement
 	tryrecycleberry BattleScript_RecycleBerriesAlliesIncrement
-	swapattackerwithtarget
+	copybyte gEffectBattler, gBattlerTarget
 	printstring STRINGID_XFOUNDONEY
 	waitmessage B_WAIT_TIME_LONG
-	swapattackerwithtarget
 BattleScript_RecycleBerriesAlliesIncrement:
 	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_RecycleBerriesAlliesEnd
 	setallytonexttarget BattleScript_RecycleBerriesAlliesLoop

@@ -2111,19 +2111,21 @@ static void HandleSetEffectDisable(struct BattleCalcValues *cv, struct SetEffect
     }
     else if (!cv->onlyChecking)
     {
-        if (GetConfig(B_DISABLE_TURNS) == GEN_1)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 0, 7);
-        else if (GetConfig(B_DISABLE_TURNS) == GEN_2)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 1, 7);
-        else if (GetConfig(B_DISABLE_TURNS) == GEN_3)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 2, 5);
-        else if (GetConfig(B_DISABLE_TURNS) == GEN_4)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7);
+        u32 genConfig = GetConfig(B_DISABLE_TURNS);
+        if (genConfig == GEN_1)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 0, 7);
+        else if (genConfig == GEN_2)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 1, 7);
+        else if (genConfig == GEN_3)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, 2, 5);
+        else if (genConfig == GEN_4)
+            gBattleMons[se->effectBattler].volatiles.disableTimer = RandomUniform(RNG_DISABLE_TURNS, B_DISABLE_TIMER, 7);
         else // GEN_5+
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
+            gBattleMons[se->effectBattler].volatiles.disableTimer = B_DISABLE_TIMER;
+
         // If timer set to zero turns, don't set disabledMove
-        if (gBattleMons[gBattlerTarget].volatiles.disableTimer != 0)
-            gBattleMons[gBattlerTarget].volatiles.disabledMove = moveToDisable;
+        if (gBattleMons[se->effectBattler].volatiles.disableTimer != 0)
+            gBattleMons[se->effectBattler].volatiles.disabledMove = moveToDisable;
 
 
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToDisable)
@@ -2231,8 +2233,12 @@ static void HandleSetEffectPerishSong(struct BattleCalcValues *cv, struct SetEff
     {
         gBattleMons[se->effectBattler].volatiles.perishSong = TRUE;
         gBattleMons[se->effectBattler].volatiles.perishSongTimer = 3;
-        PrepareStringBattleWithWait(STRINGID_FAINTINTHREE, se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+        if (!gBattleStruct->messagePrinted)
+        {
+            gBattleStruct->messagePrinted = TRUE;
+            PrepareStringBattleWithWait(STRINGID_FAINTINTHREE, se->effectBattler);
+            BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+        }
     }
 
 }
@@ -2270,7 +2276,7 @@ static void HandleSetEffectMeanLook(struct BattleCalcValues *cv, struct SetEffec
     {
         gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
         gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
-        PrepareStringBattleWithWait( STRINGID_TARGETCANTESCAPENOW, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_TARGETCANTESCAPENOW, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
 
@@ -2616,13 +2622,6 @@ static void HandleSetEffectSketch(struct BattleCalcValues *cv, struct SetEffect 
     }
 }
 
-static void SetRestAbilityForMessage(enum BattlerId battler, enum Ability ability)
-{
-    gBattlerAbility = battler;
-    gLastUsedAbility = ability;
-    RecordAbilityBattle(battler, ability);
-}
-
 static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum Ability ability = cv->abilities[se->effectBattler];
@@ -2632,7 +2631,11 @@ static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *s
     if (failScript != NULL)
     {
         if (!cv->onlyChecking && failScript == BattleScript_InsomniaProtects)
-            SetRestAbilityForMessage(se->effectBattler, ability);
+        {
+            gBattlerAbility = se->effectBattler;
+            gLastUsedAbility = ability;
+            RecordAbilityBattle(se->effectBattler, ability);
+        }
         SetEffectFail(failScript, cv->isStatusMove);
     }
     else if (UproarWakeUpCheck(se->effectBattler))
@@ -2657,8 +2660,8 @@ static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *s
     {
         SetHealAmount(se->effectBattler, gBattleMons[se->effectBattler].maxHP);
         gBattleCommunication[MULTISTRING_CHOOSER] = gBattleMons[se->effectBattler].status1 & ((u8)(~STATUS1_SLEEP))
-                                                   ? B_MSG_REST_STATUSED
-                                                   : B_MSG_REST;
+                                                    ? B_MSG_REST_STATUSED
+                                                    : B_MSG_REST;
         gBattleMons[se->effectBattler].status1 = STATUS1_SLEEP_TURN(3);
         BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0,
                                      sizeof(gBattleMons[se->effectBattler].status1), &gBattleMons[se->effectBattler].status1);
@@ -2765,7 +2768,6 @@ static void HandleSetEffectPsychUp(struct BattleCalcValues *cv, struct SetEffect
         gBattleMons[cv->battlerAtk].volatiles.bonusCritStages = gBattleMons[se->effectBattler].volatiles.bonusCritStages;
     }
 
-    gEffectBattler = se->effectBattler;
     gBattleScripting.battler = cv->battlerAtk;
     PrepareStringBattleWithWait(STRINGID_PKMNCOPIEDSTATCHANGES, cv->battlerAtk);
     BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
@@ -2818,10 +2820,6 @@ static void HandleSetEffectYawn(struct BattleCalcValues *cv, struct SetEffect *s
             gBattlescriptCurrInstr = BattleScript_ButItFailedRet;
         }
     }
-    // else if (IsSleepClauseActiveForSide(GetBattlerSide(se->effectBattler)))
-    // {
-    //     SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-    // }
     else if (!cv->onlyChecking)
     {
         bool32 exemptFromSleepClause = IsDoubleBattle()
@@ -2924,19 +2922,15 @@ static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect
         if (status & STATUS1_SLEEP)
             TryDeactivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
 
-        if (status & STATUS1_PARALYSIS)
-            cureString = STRINGID_SCRCUREDPARALYSIS;
-        else if (status & STATUS1_POISON || status & STATUS1_TOXIC_POISON)
-            cureString = STRINGID_SCRCUREDPOISON;
-        else if (status & STATUS1_BURN)
-            cureString = STRINGID_SCRCUREDBURN;
-        else if (status & STATUS1_SLEEP)
-            cureString = STRINGID_SCRCUREDSLEEP;
-        else if (status & STATUS1_FREEZE)
-            cureString = STRINGID_PKMNWASDEFROSTED;
-        else if (status & STATUS1_FROSTBITE)
-            cureString = STRINGID_PKMNFROSTBITEHEALED;
+             if (status & STATUS1_PARALYSIS)    cureString = STRINGID_SCRCUREDPARALYSIS;
+        else if (status & STATUS1_POISON)       cureString = STRINGID_SCRCUREDPOISON;
+        else if (status & STATUS1_TOXIC_POISON) cureString = STRINGID_SCRCUREDPOISON;
+        else if (status & STATUS1_BURN)         cureString = STRINGID_SCRCUREDBURN;
+        else if (status & STATUS1_SLEEP)        cureString = STRINGID_SCRCUREDSLEEP;
+        else if (status & STATUS1_FREEZE)       cureString = STRINGID_PKMNWASDEFROSTED;
+        else if (status & STATUS1_FROSTBITE)    cureString = STRINGID_PKMNFROSTBITEHEALED;
 
+        gBattleScripting.battler = se->effectBattler;
         gBattleMons[se->effectBattler].status1 = 0;
         BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].status1), &gBattleMons[cv->battlerAtk].status1);
         MarkBattlerForControllerExec(se->effectBattler);
@@ -2952,8 +2946,8 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
     struct TypeBasedHalverInfo halver = GetTypeBasedHalverInfo(se->additionalEffect->argument.type);
 
     bool32 shouldSet = GetConfig(B_SPORT_TURNS) >= GEN_6
-                         ? !(gFieldStatuses & halver.statusField)
-                         : !GetBattlerVolatile(se->effectBattler, halver.voaltileStatus);
+                       ? !(gFieldStatuses & halver.statusField)
+                       : !GetBattlerVolatile(se->effectBattler, halver.voaltileStatus);
 
     if (gBattleStruct->isSkyBattle || !shouldSet)
     {
@@ -2974,14 +2968,6 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
             gBattlescriptCurrInstr = se->script;
         }
     }
-}
-
-static void HandleSetEffectOdorSleuth(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-}
-
-static void HandleSetEffectBlock(struct BattleCalcValues *cv, struct SetEffect *se)
-{
 }
 
 static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -4267,8 +4253,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_IMPRISON] = HandleSetEffectImprison,
     [MOVE_EFFECT_REFRESH] = HandleSetEffectRefresh,
     [MOVE_EFFECT_TYPE_HALVER] = HandleSetEffectTypeHalver,
-    [MOVE_EFFECT_ODOR_SLEUTH] = HandleSetEffectOdorSleuth,
-    [MOVE_EFFECT_BLOCK] = HandleSetEffectBlock,
     [MOVE_EFFECT_TAILWIND] = HandleSetEffectTailwind,
     [MOVE_EFFECT_PSYCHO_SHIFT] = HandleSetEffectPsychoShift,
     [MOVE_EFFECT_POWER_TRICK] = HandleSetEffectPowerTrick,
