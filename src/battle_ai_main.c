@@ -3195,7 +3195,7 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
      || gBattleMons[partner].volatiles.rechargeTimer
      || gBattleMons[partner].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
      || gBattleStruct->battlerState[partner].commandingDondozo
-     || (aiData->abilities[partner] == ABILITY_TRUANT && gBattleMons[partner].volatiles.truantCounter)
+     || (aiData->abilities[partner] == ABILITY_TRUANT && gBattleMons[partner].volatiles.truantToggle)
      || (GetMoveEffect(partnerMove) == EFFECT_SEMI_INVULNERABLE
       && !IsSemiInvulnerable(partner, CHECK_ALL)
       && aiData->holdEffects[partner] != HOLD_EFFECT_POWER_HERB)
