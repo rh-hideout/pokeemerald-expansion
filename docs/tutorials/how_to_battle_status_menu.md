@@ -3,8 +3,8 @@
 The Battle Info is a replica from modern games. 
 It displays each Pokemon's stat stages, volatile conditions, abilities and items for the player side, and field statuses.
 
--- TODO: explain the enums and description
 ### How to add new field statuses or volatiles to the menu
+For new volatiles a new description `BattleInfoLabels` and enum `BattleInfoEffectData` have to be added 
 
 #### 1. Adding new battler volatiles 
 There are 3 options:
@@ -57,4 +57,3 @@ As previously, if it's a permanent status, the timer will be ignored so the valu
 
 ### 3. Weather and Terrain
 Weather and Terrain have extra functions, `TryAddActiveWeather` and `TryAddActiveTerrain`.
-If a new weather/terrain is added, the compiler will usually throw an error to add it.

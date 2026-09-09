@@ -2846,7 +2846,7 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
     .callback = SpriteCB_MoveInfoWin
 };
 
-#if B_BATTLE_STATUS_MENU_BUTTON == R_BUTTON
+#if B_BATTLE_INFO_BUTTON == R_BUTTON
 static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_r.4bpp");
 #else
 static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_l.4bpp");
@@ -3031,7 +3031,7 @@ void TryToHideMoveInfoWindow(void)
 
 void TryToAddBattleStatusHint(void)
 {
-    if (B_BATTLE_STATUS_MENU_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+    if (B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
         return;
 
     LoadSpritePalette(&sSpritePalette_AbilityPopUp);
