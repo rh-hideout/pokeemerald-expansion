@@ -2445,6 +2445,7 @@ DOUBLE_BATTLE_TEST("Move Animations work Gen2")
             PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
         }
     }
+
     GIVEN {
         DISABLE_SELECTABLE_PARAMETERS;
         PLAYER(species) {
@@ -2999,12 +3000,12 @@ DOUBLE_BATTLE_TEST("Move Animations work Gen9")
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
             HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
-        OPPONENT(SPECIES_WOBBUFFET) {
+        OPPONENT(GetMoveEffect(move) == EFFECT_OVERWRITE_TYPE ? SPECIES_LAPRAS : SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
             if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
-        OPPONENT(SPECIES_WOBBUFFET) {
+        OPPONENT(GetMoveEffect(move) == EFFECT_OVERWRITE_TYPE ? SPECIES_LAPRAS : SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
             if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);

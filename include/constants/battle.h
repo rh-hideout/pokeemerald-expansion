@@ -197,6 +197,13 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
+enum CriticalHitBoost
+{
+    CRIT_BOOST_NONE,
+    CRIT_BOOST_ONE_STAGE,
+    CRIT_BOOST_TWO_STAGES,
+};
+
 /* Volatile status ailments
  * These are removed after exiting the battle or switching
  *  Enum,                                   Type                           Type, max value, flags */
@@ -226,8 +233,7 @@ enum VolatileFlags
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
-    F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_CRITICAL_HIT_BOOST,          criticalHitBoost,              (enum CriticalHitBoost, CRIT_BOOST_TWO_STAGES), V_BATON_PASSABLE) \
     F(VOLATILE_BONUS_CRIT_STAGES,           bonusCritStages,               (u32, 4)) \
     F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (enum SemiInvulnerableState, SEMI_INVULNERABLE_COUNT)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
@@ -435,6 +441,13 @@ enum BattleTerrain
     B_TERRAIN_COUNT,
 };
 
+enum BattleRoom
+{
+    B_ROOM_MAGIC,
+    B_ROOM_TRICK,
+    B_ROOM_WONDER,
+};
+
 // Field affecting statuses.
 #define STATUS_FIELD_NONE                           0
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
@@ -467,6 +480,7 @@ enum BattleTerrain
 #define MOVE_RESULT_EXTREMELY_EFFECTIVE    (1 << 17)
 #define MOVE_RESULT_MOSTLY_INEFFECTIVE     (1 << 18)
 #define MOVE_RESULT_NOT_PRESENT            (1 << 19) // Battler not present at the start of move resolution
+#define MOVE_RESULT_VALID_STATUS_TARGET    (1 << 20)
 #define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
 #define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 #define MOVE_RESULT_HIGH_EFFECTIVENESS     (MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE)

@@ -122,6 +122,25 @@ SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
     }
 }
 
+DOUBLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas by speed")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { Speed(1); }
+        PLAYER(SPECIES_ZOROARK) { Speed(3); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(SPECIES_ZOROARK) { Speed(2); }
+        OPPONENT(SPECIES_WEEZING) { Speed(5); Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(15); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerLeft);
+    }
+}
+
 SINGLE_BATTLE_TEST("Illusion breaks if affected by Gastro Acid")
 {
     GIVEN {

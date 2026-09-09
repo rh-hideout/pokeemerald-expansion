@@ -33,7 +33,11 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right ta
     } WHEN {
         TURN { MOVE(playerLeft, move, target: opponentRight); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (move == MOVE_POISON_GAS && B_UPDATED_MOVE_DATA >= 5) { // spread move in gen5+
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
         ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
         MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
     }
@@ -57,7 +61,11 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left tar
     } WHEN {
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (move == MOVE_POISON_GAS && B_UPDATED_MOVE_DATA >= 5) { // spread move in gen5+
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
         ABILITY_POPUP(opponentRight, ABILITY_FLOWER_VEIL);
         MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
     }

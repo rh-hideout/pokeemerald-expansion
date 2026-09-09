@@ -46,11 +46,11 @@ DOUBLE_BATTLE_TEST("Doodle can't copy a banned ability")
     }
 }
 
-DOUBLE_BATTLE_TEST("Doodle fails if user has a banned Ability")
+DOUBLE_BATTLE_TEST("Doodle fails if both user and partner have a banned ability")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -60,61 +60,86 @@ DOUBLE_BATTLE_TEST("Doodle fails if user has a banned Ability")
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(playerLeft->ability == ABILITY_GULP_MISSILE);
-        EXPECT(playerRight->ability == ABILITY_SHADOW_TAG);
+        EXPECT(playerRight->ability == ABILITY_GULP_MISSILE);
     }
 }
 
-DOUBLE_BATTLE_TEST("Doodle fails if partner has a banned Ability")
+DOUBLE_BATTLE_TEST("Doodle will change either user's or partner's ability if one can't be changed")
 {
+    enum Species speciesAtk;
+    enum Ability abilityAtk;
+
+    enum Species speciesPartner;
+    enum Ability abilityPartner;
+
+    PARAMETRIZE {
+        speciesAtk = SPECIES_CRAMORANT;      abilityAtk = ABILITY_GULP_MISSILE;
+        speciesPartner = SPECIES_WYNAUT; abilityPartner = ABILITY_SHADOW_TAG;
+    }
+    PARAMETRIZE {
+        speciesAtk = SPECIES_WYNAUT; abilityAtk = ABILITY_SHADOW_TAG;
+        speciesPartner = SPECIES_CRAMORANT; abilityPartner = ABILITY_GULP_MISSILE;
+    }
+
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); }
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); }
+        PLAYER(speciesAtk) { Ability(abilityAtk); }
+        PLAYER(speciesPartner) { Ability(abilityPartner); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
+        if (speciesAtk == SPECIES_WYNAUT) {
+            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
+        } else {
+            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
+        }
     } THEN {
-        EXPECT(playerLeft->ability == ABILITY_SHADOW_TAG);
-        EXPECT(playerRight->ability == ABILITY_GULP_MISSILE);
+        if (speciesAtk == SPECIES_WYNAUT) {
+            EXPECT(playerLeft->ability == ABILITY_BLAZE);
+            EXPECT(playerRight->ability == ABILITY_GULP_MISSILE);
+        } else {
+            EXPECT(playerLeft->ability == ABILITY_GULP_MISSILE);
+            EXPECT(playerRight->ability == ABILITY_BLAZE);
+        }
     }
 }
 
-DOUBLE_BATTLE_TEST("Doodle fails if ally's ability can't be suppressed")
+DOUBLE_BATTLE_TEST("Doodle doesn't change the ability if user or partner have an Ability Shield")
 {
-    enum Species species;
-    enum Ability ability;
+    enum Item itemAttacker = ITEM_NONE;
+    enum Item itemPartner = ITEM_NONE;
 
-    PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
-    PARAMETRIZE { species = SPECIES_DARMANITAN; ability = ABILITY_ZEN_MODE; }
-    PARAMETRIZE { species = SPECIES_AEGISLASH; ability = ABILITY_STANCE_CHANGE; }
-    PARAMETRIZE { species = SPECIES_MINIOR; ability = ABILITY_SHIELDS_DOWN; }
-    PARAMETRIZE { species = SPECIES_WISHIWASHI; ability = ABILITY_SCHOOLING; }
-    PARAMETRIZE { species = SPECIES_MIMIKYU; ability = ABILITY_DISGUISE; }
-    PARAMETRIZE { species = SPECIES_GRENINJA_BATTLE_BOND; ability = ABILITY_BATTLE_BOND; }
-    PARAMETRIZE { species = SPECIES_ZYGARDE; ability = ABILITY_POWER_CONSTRUCT; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_SILVALLY; ability = ABILITY_RKS_SYSTEM; }
-    PARAMETRIZE { species = SPECIES_CRAMORANT; ability = ABILITY_GULP_MISSILE; }
-    PARAMETRIZE { species = SPECIES_EISCUE; ability = ABILITY_ICE_FACE; }
-    PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; }
-    PARAMETRIZE { species = SPECIES_CALYREX_SHADOW; ability = ABILITY_AS_ONE_SHADOW_RIDER; }
-    PARAMETRIZE { species = SPECIES_PALAFIN_ZERO; ability = ABILITY_ZERO_TO_HERO; }
+    PARAMETRIZE { itemAttacker = ITEM_ABILITY_SHIELD; }
+    PARAMETRIZE { itemPartner = ITEM_ABILITY_SHIELD; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
-        OPPONENT(species) { Ability(ability); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Item(itemAttacker); }
+        PLAYER(SPECIES_WYNAUT) { Ability(ABILITY_SHADOW_TAG); Item(itemPartner); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_DOODLE, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, opponentLeft);
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
+        if (itemAttacker == ITEM_ABILITY_SHIELD) {
+            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            NOT MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
+        } else {
+            NOT MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+            MESSAGE("Wobbuffet copied the opposing Torchic's Ability!");
+        }
     } THEN {
-        EXPECT(opponentLeft->ability == ABILITY_SHADOW_TAG);
-        EXPECT(opponentRight->ability == ability);
+        if (itemAttacker == ITEM_ABILITY_SHIELD) {
+            EXPECT(playerLeft->ability == ABILITY_SHADOW_TAG);
+            EXPECT(playerRight->ability == ABILITY_BLAZE);
+        } else {
+            EXPECT(playerLeft->ability == ABILITY_BLAZE);
+            EXPECT(playerRight->ability == ABILITY_SHADOW_TAG);
+        }
     }
 }
+

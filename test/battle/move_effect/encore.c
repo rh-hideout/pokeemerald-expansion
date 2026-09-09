@@ -74,6 +74,25 @@ SINGLE_BATTLE_TEST("Encore has no effect if no previous move")
     }
 }
 
+SINGLE_BATTLE_TEST("Encore fails if the target's last move has no PP")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); MovesWithPP({MOVE_SCRATCH, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing Wobbuffet used Encore!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    } THEN {
+        EXPECT_EQ((u32)player->volatiles.encoredMove, MOVE_NONE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Encore overrides the chosen move if it occurs first")
 {
     GIVEN {

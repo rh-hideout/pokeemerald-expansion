@@ -151,8 +151,7 @@ BattleScript_ItemSetMist::
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
 	itemincreasestat
-	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
-	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
+	jumpifvolatile BS_ATTACKER, VOLATILE_CRITICAL_HIT_BOOST, BattleScript_ButItFailed
 	setfocusenergy BS_ATTACKER
 	playmoveanimation MOVE_FOCUS_ENERGY
 	waitanimation

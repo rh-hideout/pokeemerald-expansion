@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was poisoned by a damaging move")
@@ -72,7 +73,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer does not trigger when poison came from Pois
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         ASSUME(GetMoveArgType(MOVE_SOAK) == TYPE_WATER);
         ASSUME(GetSpeciesType(SPECIES_SKRELP, 0) == TYPE_POISON || GetSpeciesType(SPECIES_SKRELP, 1) == TYPE_POISON);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); }
@@ -198,7 +199,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
 
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(speedPlayer); }
         OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(speedOpponent); }
@@ -275,7 +276,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer activates and Lum Berry may cure status bef
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); }
         OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(1); Item(ITEM_LUM_BERRY); }
     } WHEN {
@@ -308,7 +309,7 @@ DOUBLE_BATTLE_TEST("Poison Puppeteer and Synchronize work properly with non-vola
     // since Poison Puppeteer is exclusive to mons that already have it in their ability list
     // and G-Max Malodor is exclusive to Gigantamax Garbodor.
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveTarget(MOVE_POISON_GAS) == TARGET_BOTH);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(10); Item(ITEM_LUM_BERRY); }

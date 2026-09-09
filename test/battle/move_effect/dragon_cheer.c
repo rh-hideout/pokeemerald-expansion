@@ -47,6 +47,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_ONE_STAGE : CRIT_BOOST_NONE);
     }
 }
 
@@ -82,6 +84,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_TWO_STAGES : CRIT_BOOST_NONE);
     }
 }
 
@@ -102,7 +106,33 @@ DOUBLE_BATTLE_TEST("Dragon Cheer fails if critical hit stage was already increas
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect");
+DOUBLE_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
+        PLAYER(SPECIES_WYNAUT) { Speed(40); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(25); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_DRAGON_CHEER, target: playerRight);
+            MOVE(playerRight, MOVE_CELEBRATE);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_BATON_PASS);
+            SEND_OUT(playerRight, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, playerRight);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
+    }
+}
 
 AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
 {

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
@@ -481,7 +482,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 601-700")
         case EFFECT_LASER_FOCUS:
         case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:
-        case EFFECT_SOAK:
+        case EFFECT_OVERWRITE_TYPE:
 
         // Needs Snow / Hail on the field
         case EFFECT_AURORA_VEIL:
