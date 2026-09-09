@@ -84,7 +84,6 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum Par
 
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
-    gAiLogicData->switchInCalc = TRUE;
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
@@ -96,7 +95,6 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum Par
         CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinTerrain);
     }
 
-    gAiLogicData->switchInCalc = FALSE;
     gBattlerPartyIndexes[switchinBattler] = storeCurrBattlerPartyIndex;
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
@@ -2253,6 +2251,7 @@ static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enu
         }
 
         validMonIds |= (1u << monIndex);
+        memset(gAiLogicData, 0, sizeof(struct AiLogicData));
         InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
 
         u32 originalHp = gBattleMons[battler].hp;
@@ -2628,6 +2627,7 @@ enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switch
         return bestMonId;
     }
 
+    gAiLogicData->switchInCalc = TRUE;
     // Only use better mon selection if AI_FLAG_SMART_MON_CHOICES is set for the trainer.
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_MON_CHOICES && !IsDoubleBattle()) // Double Battles aren't included in AI_FLAG_SMART_MON_CHOICE. Defaults to regular switch in logic
     {
@@ -2641,6 +2641,7 @@ enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switch
         bestMonId = GetBestMonVanilla(party, lastId, battler, opposingBattler, battlerIn1, battlerIn2, switchType);
         return bestMonId;
     }
+    gAiLogicData->switchInCalc = FALSE;
 }
 
 enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler)
