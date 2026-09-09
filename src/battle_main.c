@@ -37,6 +37,7 @@
 #include "load_save.h"
 #include "main.h"
 #include "malloc.h"
+#include "mass_outbreak.h"
 #include "m4a.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -5336,6 +5337,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
         memset(&gBattleMons, 0, sizeof(struct BattlePokemon) * MAX_BATTLERS_COUNT);
         gIsFishingEncounter = FALSE;
         gIsSurfingEncounter = FALSE;
+        UpdateMassOutbreakProgress();
         if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
         {
             IncrementDexNavChain();

@@ -2528,6 +2528,7 @@ static void DebugAction_Trainers_RechargeVsSeeker(u8 taskId)
 static void DebugAction_Outbreak_ClearActive(u8 taskId)
 {
     gSaveBlock1Ptr->outbreakDaysLeft = 0;
+    ResetMassOutbreakProgress();
     Debug_RemoveCallbackMenu();
     DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
 }
@@ -2740,6 +2741,13 @@ static void DebugSelection_SetDynamicMassOutbreak_Init(u8 taskId)
 
 static bool32 DebugSelection_SetDynamicMassOutbreak_Complete(u8 taskId)
 {
+    if (!IsMassOutbreakActive()
+     || gSaveBlock1Ptr->outbreakPokemonSpecies != DebugSelection_GetData(taskId, 0)
+     || gSaveBlock1Ptr->outbreakLocationMapGroup != DebugSelection_GetData(taskId, 1)
+     || gSaveBlock1Ptr->outbreakLocationMapNum != DebugSelection_GetData(taskId, 2)
+     || DebugSelection_GetData(taskId, 9) == 0)
+        ResetMassOutbreakProgress();
+
     gSaveBlock1Ptr->outbreakPokemonSpecies = DebugSelection_GetData(taskId, 0);
     gSaveBlock1Ptr->outbreakLocationMapGroup = DebugSelection_GetData(taskId, 1);
     gSaveBlock1Ptr->outbreakLocationMapNum = DebugSelection_GetData(taskId, 2);

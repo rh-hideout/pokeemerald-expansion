@@ -345,6 +345,12 @@ void BattleSetup_StartWildBattle(void)
         DoStandardWildBattle(FALSE);
 }
 
+void BattleSetup_StartMassOutbreakBattle(void)
+{
+    BattleSetup_StartWildBattle();
+    gBattleTypeFlags |= BATTLE_TYPE_MASS_OUTBREAK;
+}
+
 void BattleSetup_StartDoubleWildBattle(void)
 {
     DoStandardWildBattle(TRUE);

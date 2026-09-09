@@ -793,6 +793,9 @@ static void SetUpDexNavSearch(void)
     enum Species species = sDexNavSearchDataPtr->species;
     u8 searchLevel = GetSearchLevel(species);
 
+    // Every search entry point must remove existing encounters, including the registered shortcut.
+    DespawnAllOverworldWildEncounters(OWE_GENERATED, 0);
+
     // init sprites
     sDexNavSearchDataPtr->iconSpriteId = MAX_SPRITES;
     sDexNavSearchDataPtr->itemSpriteId = MAX_SPRITES;
@@ -1832,7 +1835,6 @@ static void CB1_DexNavSearchCallback(void)
 
 static void Task_DexNavExitAndSearch(u8 taskId)
 {
-    DespawnAllOverworldWildEncounters(OWE_GENERATED, 0);
     DexNavGuiFreeResources();
     DestroyTask(taskId);
     SetMainCallback1(CB1_DexNavSearchCallback);
