@@ -857,8 +857,8 @@ void rockSmashRNG(struct ScriptContext *ctx)
         u32 nothingRate = 0;
         if (itemRate < 100)
             nothingRate = 100 - (itemRate); 
-        assertf(FALSE, "encounterChance %d", itemRate);
-        rockSmashResult = RandomWeighted(RNG_NONE, nothingRate, 0, itemRate);
+
+            rockSmashResult = RandomWeighted(RNG_NONE, nothingRate, 0, itemRate);
     }
     else
     {
