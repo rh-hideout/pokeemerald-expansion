@@ -11525,11 +11525,20 @@ void BS_TryTrainerSlideMsgFirstOff(void)
 void BS_TryTrainerSlideMsgLastOn(void)
 {
     NATIVE_ARGS(u8 battler);
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
-    if (battler >= MAX_BATTLERS_COUNT) // Edge case for double KO cases where gBattlerFainted == MAX_BATTLERS_COUNT so GetBattlerForBattleScript returns 6
+    // The fainted-battler loop may be exhausted before looking up its partner.
+    if (cmd->battler == BS_FAINTED_MULTIPLE_2 && gBattlerFainted >= gBattlersCount)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+
+    if (battler >= gBattlersCount)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
     }
     enum BattlerId tempBattler = gBattleScripting.battler;
 

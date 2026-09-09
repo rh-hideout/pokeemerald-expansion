@@ -534,4 +534,8 @@ void OakOldManHandleInputChooseMove(enum BattlerId battler);
 void BtlCtrl_DrawVoiceoverMessageFrame(void);
 void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 
+#if TESTING
+void Test_InitBtlControllersInternal(void);
+#endif
+
 #endif // GUARD_BATTLE_CONTROLLERS_H
