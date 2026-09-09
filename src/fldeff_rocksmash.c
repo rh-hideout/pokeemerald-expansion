@@ -228,7 +228,7 @@ static const enum Item Gen4CliffCaveSmashTable[] = {
 
 void rockSmashGenerateItem(struct ScriptContext *ctx)
 {
-    if (OW_ROCK_SMASH_ITEMS == GEN_6)
+    if (OW_ROCK_SMASH_ITEMS == GEN_6 || OW_ROCK_SMASH_ITEMS == GEN_6_ORAS)
         rockSmashGenerateItemGen6();
     else if (OW_ROCK_SMASH_ITEMS == GEN_4)
         rockSmashGenerateItemGen4();
@@ -276,6 +276,7 @@ static void rockSmashGenerateItemGen4(void)
         item = Gen4DefaultSmashTable[randomItem];
 
     VarSet(VAR_0x8005, item);
+    return;
 }
 
 
@@ -302,4 +303,5 @@ static void rockSmashGenerateItemGen6(void)
     item = Gen6DefaultSmashTable[randomNumber];
 
     VarSet(VAR_0x8005, item);
+    return;
 }
