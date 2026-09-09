@@ -214,7 +214,7 @@ void AssignUsableZMoves(enum BattlerId battler, enum Move *moves)
     }
 }
 
-bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
+bool32 TryChangeZTrigger(enum BattlerId battler, enum MoveSlot moveIndex)
 {
     bool32 viableZMove = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << moveIndex)) != 0;
 
@@ -409,7 +409,7 @@ static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler)
     if (gBattleResources->bufferA[battler][2] == TRUE) // Check if we didn't want to display pp number
         return;
 
-    SetPpNumbersPaletteInMoveSelection(battler);
+    SetPPNumbersPaletteInMoveSelection(battler);
     txtPtr = ConvertIntToDecimalStringN(gDisplayedStringBattle, 1, STR_CONV_MODE_RIGHT_ALIGN, 2);
     *(txtPtr)++ = CHAR_SLASH;
     ConvertIntToDecimalStringN(txtPtr, 1, STR_CONV_MODE_RIGHT_ALIGN, 2);

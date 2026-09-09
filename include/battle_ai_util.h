@@ -89,7 +89,7 @@ struct AiCalcValues
     enum Gimmick gimmickDef:8;
 };
 
-static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)
+static inline bool32 IsMoveUnusable(enum MoveSlot moveIndex, enum Move move, u32 moveLimitations)
 {
     return move == MOVE_NONE
         || move == MOVE_UNAVAILABLE
@@ -104,7 +104,7 @@ bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(enum BattlerId battler);
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move);
-u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
+u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);
@@ -140,7 +140,7 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler);
 u32 AI_GetSwitchinTerrain(enum BattlerId battler);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 numHits);
-bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 index, enum DamageCalcContext calcContext);
+bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot index, enum DamageCalcContext calcContext);
 bool32 HasDamagingMove(enum BattlerId battler);
 bool32 HasDamagingMoveOfType(enum BattlerId battler, enum Type type);
 u32 GetBattlerSecondaryDamage(enum BattlerId battlerId);
@@ -188,7 +188,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
 bool32 AI_IsDamagedByRecoil(enum BattlerId battler);
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp);
 u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef);
-u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure);
+u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure);
 u32 GetBestNoOfHitsToKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext);
 uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 enum Move *GetMovesArray(enum BattlerId battler);
@@ -199,6 +199,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
 bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, bool32 wouldPartnerFaint, struct AiLogicData *aiData);
 bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move, u32 noOfHitsToKOPartner, struct AiLogicData *aiData);
 bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext);
+bool32 ShouldBoostCritRate(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(enum BattlerId battler, enum DamageCategory category);
 bool32 HasMoveWithType(enum BattlerId battler, enum Type type);
@@ -309,8 +310,8 @@ s32 CountUsableSideMons(enum BattlerId battlerId);
 bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battler);
 s32 GetAILastPartyIndex(enum BattlerId battler);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
-bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
-bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler);
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartyMon partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
+bool32 IsPartyMonPlannedToBeSwitchedInByPartner(enum PartyMon partyIndex, enum BattlerId battler);
 s32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage);
 s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);

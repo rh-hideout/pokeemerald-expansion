@@ -527,7 +527,7 @@ static void AnimFistOrFootRandomPos(struct Sprite *sprite)
     sprite->y += y;
 
     sprite->data[0] = gBattleAnimArgs[1];
-    sprite->data[7] = CreateSprite(&gBasicHitSplatSpriteTemplate, sprite->x, sprite->y, sprite->subpriority + 1);
+    sprite->data[7] = CreateSpriteUnchecked(&gBasicHitSplatSpriteTemplate, sprite->x, sprite->y, sprite->subpriority + 1);
     if (sprite->data[7] != MAX_SPRITES)
     {
         StartSpriteAffineAnim(&gSprites[sprite->data[7]], 0);
@@ -595,7 +595,7 @@ static void AnimCrossChopHand_Step(struct Sprite *sprite)
 // Rolling Kick / Low Kick
 static void AnimSlidingKick(struct Sprite *sprite)
 {
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
         gBattleAnimArgs[0] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);

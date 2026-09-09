@@ -10,11 +10,14 @@
 
 struct Dma3Request
 {
-    const u8 *src;
+    union
+    {
+        const u8 *src;
+        u32 value;
+    };
     u8 *dest;
     u16 size;
     u16 mode;
-    u32 value;
 };
 
 static struct Dma3Request sDma3Requests[MAX_DMA_REQUESTS];
@@ -87,7 +90,6 @@ void ProcessDma3Requests(void)
         sDma3Requests[sDma3RequestCursor].dest = NULL;
         sDma3Requests[sDma3RequestCursor].size = 0;
         sDma3Requests[sDma3RequestCursor].mode = 0;
-        sDma3Requests[sDma3RequestCursor].value = 0;
 
         sDma3RequestCursor = INCREMENT_OR_WRAP(sDma3RequestCursor, MAX_DMA_REQUESTS); // loop back to the first DMA request
     }

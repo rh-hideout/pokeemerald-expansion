@@ -266,6 +266,7 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
     [B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
     [B_ANIM_HELD_ITEM_BERRY]        = gBattleAnimGeneral_HeldItemBerry,
+    [B_ANIM_PROTECTED_ITSELF]       = gBattleAnimGeneral_ProtectedItself,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
@@ -688,6 +689,11 @@ static void Cmd_unloadallspritepals(void)
     UnloadAllSpritePalettes();
 }
 
+static bool32 IsBattlerAliveAndPresent(enum BattlerId battler)
+{
+    return IsBattlerAlive(battler) && IsBattlerSpritePresent(battler);
+}
+
 static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
 {
     u8 numTargets = 0;
@@ -720,7 +726,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
         {
             for (i = 0; i < gBattlersCount; i++)
             {
-                if (i != gBattleAnimAttacker && IS_ALIVE_AND_PRESENT(i))
+                if (i != gBattleAnimAttacker && IsBattlerAliveAndPresent(i))
                     targets[numTargets++] = i + MAX_BATTLERS_COUNT; // anim ids for battler ids
             }
         }
@@ -728,7 +734,7 @@ static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, enum BattlerId *targets)
     case TARGET_BOTH: // all opponents
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IS_ALIVE_AND_PRESENT(i))
+            if (i != ignoredTgt && !IsBattlerAlly(i, ignoredTgt) && IsBattlerAliveAndPresent(i))
                 targets[numTargets++] = i + MAX_BATTLERS_COUNT;
         }
         break;
@@ -1214,9 +1220,9 @@ enum BattlerId GetAnimBattlerId(enum AnimBattler wantedBattler)
     case ANIM_TARGET:
         return gBattleAnimTarget;
     case ANIM_ATK_PARTNER:
-        return BATTLE_PARTNER(gBattleAnimAttacker);
+        return GetPartnerBattler(gBattleAnimAttacker);
     case ANIM_DEF_PARTNER:
-        return BATTLE_PARTNER(gBattleAnimTarget);
+        return GetPartnerBattler(gBattleAnimTarget);
     case ANIM_PLAYER_LEFT ... ANIM_OPPONENT_RIGHT:
         return wantedBattler - MAX_BATTLERS_COUNT;
     }
@@ -1447,7 +1453,7 @@ static void Cmd_clearmonbg(void)
     if (sMonAnimTaskIdArray[0] != TASK_NONE)
         gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
     if (animBattlerId > 1 && sMonAnimTaskIdArray[1] != TASK_NONE)
-        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(battler)]].invisible = FALSE;
+        gSprites[gBattlerSpriteIds[GetPartnerBattler(battler)]].invisible = FALSE;
     else
         animBattlerId = 0;
 
@@ -1554,8 +1560,8 @@ static void Cmd_clearmonbg_static(void)
 
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
-    if (animBattlerId > 1 && IsBattlerSpriteVisible(BATTLE_PARTNER(battler)))
-        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(battler)]].invisible = FALSE;
+    if (animBattlerId > 1 && IsBattlerSpriteVisible(GetPartnerBattler(battler)))
+        gSprites[gBattlerSpriteIds[GetPartnerBattler(battler)]].invisible = FALSE;
     else
         animBattlerId = 0;
 
@@ -1581,7 +1587,7 @@ static void Task_ClearMonBgStatic(u8 taskId)
 
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG_2);
-        if (gTasks[taskId].data[0] > 1 && IsBattlerSpriteVisible(BATTLE_PARTNER(battler)))
+        if (gTasks[taskId].data[0] > 1 && IsBattlerSpriteVisible(GetPartnerBattler(battler)))
             ResetBattleAnimBg(toBG_2 ^ 1);
 
         DestroyTask(taskId);

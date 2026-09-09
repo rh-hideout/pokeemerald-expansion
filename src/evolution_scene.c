@@ -183,12 +183,12 @@ static void Task_BeginEvolutionScene(u8 taskId)
         {
             enum Species postEvoSpecies;
             bool32 canStopEvo;
-            u8 partyId;
+            enum PartyMon partyId;
 
             mon = &gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId];
             postEvoSpecies = gTasks[taskId].tPostEvoSpecies;
             canStopEvo = gTasks[taskId].tCanStop;
-            partyId = gTasks[taskId].tPartyId;
+            partyId = (enum PartyMon)gTasks[taskId].tPartyId;
 
             DestroyTask(taskId);
             EvolutionScene(mon, postEvoSpecies, canStopEvo, partyId);
@@ -197,7 +197,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
     }
 }
 
-void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
+void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartyMon partyId)
 {
     u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
     gTasks[taskId].tState = 0;
@@ -207,7 +207,7 @@ void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool3
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
 
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
+void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartyMon partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     enum Species currSpecies;
@@ -562,7 +562,7 @@ static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpeci
         if (evolutions[i].method == EVO_SPLIT_FROM_EVO
          && evolutions[i].param == postEvoSpecies
          && gPartiesCount[B_TRAINER_PLAYER] < PARTY_SIZE
-         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, NULL, CHECK_EVO))
+         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, NULL, CHECK_EVO))
         {
             s32 j;
             struct Pokemon *shedinja = &gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]];

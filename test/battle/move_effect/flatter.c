@@ -22,6 +22,20 @@ SINGLE_BATTLE_TEST("Flatter increases the target's Sp. Attack by 1 stage and con
     }
 }
 
+SINGLE_BATTLE_TEST("Flatter on a foe with Own Tempo prevents confusion, changes stats, and does not cause a crash if the opponent uses a stat changing move immediately after")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLATTER); MOVE(opponent, MOVE_CURSE); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
+        MESSAGE("The opposing Slowpoke cannot be confused!");
+        MESSAGE("The opposing Slowpoke's Defense rose!");
+    }
+}
+
 TO_DO_BATTLE_TEST("Flatter raises the target's Sp. Atk even if they're already confused")
 TO_DO_BATTLE_TEST("Flatter raises the target's Sp. Atk even when protected by Safeguard")
 TO_DO_BATTLE_TEST("Flatter raises the target's Sp. Atk even when protected Own Tempo")

@@ -167,9 +167,9 @@ SINGLE_BATTLE_TEST("Air Balloon pops when Disguise is broken")
     } SCENE {
         MESSAGE("Mimikyu floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
+        MESSAGE("Mimikyu's Air Balloon popped!");
         ABILITY_POPUP(player, ABILITY_DISGUISE);
         HP_BAR(player);
-        MESSAGE("Mimikyu's Air Balloon popped!");
     } THEN {
         EXPECT_EQ(player->species, newSpecies);
     }

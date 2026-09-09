@@ -7,7 +7,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 {
     [EFFECT_PLACEHOLDER] =
     {
-        .battleScript = BattleScript_EffectPlaceholder,
+        .battleScript = BattleScript_EffectGeneralMove,
         .battleTvScore = 0,
     },
 
@@ -536,7 +536,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BATON_PASS] =
     {
-        .battleScript = BattleScript_EffectBatonPass,
+        .battleScript = BattleScript_EffectGeneralMove,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
     },
@@ -599,7 +599,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_STAT_CHANGE_HALF_HP] =
     {
-        .battleScript = BattleScript_EffectStatChangeHalfHp,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -643,7 +643,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TELEPORT] =
     {
-        .battleScript = BattleScript_EffectTeleport,
+        .battleScript = BattleScript_EffectGeneralMove,
         .battleTvScore = 1,
     },
 
@@ -715,7 +715,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MEMENTO] =
     {
-        .battleScript = BattleScript_EffectMemento,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_HIGH_RISK,
     },
@@ -1334,7 +1334,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DEFOG] =
     {
-        .battleScript = BattleScript_EffectDefog,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },

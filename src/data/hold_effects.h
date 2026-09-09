@@ -115,8 +115,8 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_WHITE_HERB] =
     {
         .whiteHerb = TRUE,
-        .whiteHerbEndTurn = TRUE,
         .onFling = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_MACHO_BRACE] =
@@ -138,7 +138,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_MENTAL_HERB] =
     {
         .onTargetAfterHit = TRUE,
-        .onAttackerAfterHit = TRUE,
+        .mentalHerb = TRUE,
         .onFling = TRUE,
     },
 
@@ -306,17 +306,20 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_FLAME_ORB] =
     {
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_TOXIC_ORB] =
     {
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_STICKY_BARB] =
     {
         .onTargetAfterHit = TRUE,
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_IRON_BALL] =
@@ -383,12 +386,12 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_JABOCA_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_ROWAP_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_KEE_BERRY] =

@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_SCRIPT_COMMANDS_H
 
 #include "constants/battle_script_commands.h"
+#include "battle_set_effect.h"
 
 // Arguments for 'flags' in HandleBattleWindow
 #define WINDOW_CLEAR (1 << 0)
@@ -28,9 +29,12 @@ u32 GetBattlerRawSpeedOrder(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
-void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags);
-void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se);
-bool32 CanBattlerSwitch(enum BattlerId battlerId);
+bool32 TrySetReflect(enum BattlerId battler);
+bool32 TrySetLightScreen(enum BattlerId battler);
+void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect);
+void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger);
+bool32 CanBattlerSwitch(enum BattlerId battler);
+bool32 HasBattlerViablePartyMonsForSwitch(enum BattlerId battlerId);
 void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
 void BufferMoveToLearnIntoBattleTextBuff2(void);
@@ -52,7 +56,7 @@ bool32 CanCamouflage(enum BattlerId battler);
 void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId battlerItem, enum Item itemOverride);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum Move move, enum Type moveType);
-u8 GetFirstFaintedPartyIndex(enum BattlerId battler);
+enum PartyMon GetFirstFaintedPartyIndex(enum BattlerId battler);
 void SaveBattlerTarget(enum BattlerId battler);
 void SaveBattlerAttacker(enum BattlerId battler);
 void RestoreAttacker(void);

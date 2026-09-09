@@ -70,9 +70,7 @@ void TransferPlttBuffer(void)
 {
     if (!gPaletteFade.bufferTransferDisabled)
     {
-        void *src = gPlttBufferFaded;
-        void *dest = (void *)PLTT;
-        DmaCopy16(3, src, dest, PLTT_SIZE);
+        DmaCopy16Defvars(3, gPlttBufferFaded, (void *)PLTT, PLTT_SIZE);
         sPlttBufferTransferPending = FALSE;
         if (gPaletteFade.mode == HARDWARE_FADE && gPaletteFade.active)
             UpdateBlendRegisters();
@@ -306,16 +304,84 @@ static u8 UpdateTimeOfDayPaletteFade(void)
     return PALETTE_FADE_STATUS_ACTIVE;
 }
 
-static u32 UpdateNormalPaletteFade(void)
+static u32 UpdateNormalPaletteFade_Alternate(void)
 {
     u16 paletteOffset;
     u32 selectedPalettes;
 
-    if (!gPaletteFade.active)
-        return PALETTE_FADE_STATUS_DONE;
+    if (!gPaletteFade.objPaletteToggle)
+    {
+        if (gPaletteFade.delayCounter < gPaletteFadeDelay)
+        {
+            gPaletteFade.delayCounter++;
+            return PALETTE_FADE_STATUS_DELAY;
+        }
+        gPaletteFade.delayCounter = 0;
+    }
 
-    if (IsSoftwarePaletteFadeFinishing())
-        return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
+    paletteOffset = 0;
+
+    if (!gPaletteFade.objPaletteToggle)
+    {
+        selectedPalettes = gPaletteFadeSelectedPalettes;
+    }
+    else
+    {
+        selectedPalettes = gPaletteFadeSelectedPalettes >> 16;
+        paletteOffset = OBJ_PLTT_OFFSET;
+    }
+
+    while (selectedPalettes)
+    {
+        if (selectedPalettes & 1)
+            BlendPalette(
+                paletteOffset,
+                16,
+                gPaletteFade.y,
+                gPaletteFade.blendColor);
+        selectedPalettes >>= 1;
+        paletteOffset += 16;
+    }
+
+    gPaletteFade.objPaletteToggle ^= 1;
+
+    if (!gPaletteFade.objPaletteToggle)
+    {
+        if (gPaletteFade.y == gPaletteFade.targetY)
+        {
+            gPaletteFadeSelectedPalettes = 0;
+            gPaletteFade.softwareFadeFinishing = TRUE;
+        }
+        else
+        {
+            s8 val;
+
+            if (!gPaletteFade.yDec)
+            {
+                val = gPaletteFade.y;
+                val += gPaletteFade.deltaY;
+                if (val > gPaletteFade.targetY)
+                    val = gPaletteFade.targetY;
+                gPaletteFade.y = val;
+            }
+            else
+            {
+                val = gPaletteFade.y;
+                val -= gPaletteFade.deltaY;
+                if (val < gPaletteFade.targetY)
+                    val = gPaletteFade.targetY;
+                gPaletteFade.y = val;
+            }
+        }
+    }
+
+    return PALETTE_FADE_STATUS_ACTIVE;
+}
+
+static u32 UpdateNormalPaletteFade_Simultaneous(void)
+{
+    u16 paletteOffset;
+    u32 selectedPalettes;
 
     // In vanilla Emerald, sprite and background palette are faded on alternate frames
     // In expansion, they are fade simultaneously every two frames to keep the vanilla timing
@@ -353,6 +419,7 @@ static u32 UpdateNormalPaletteFade(void)
     {
         gPaletteFadeSelectedPalettes = 0;
         gPaletteFade.softwareFadeFinishing = TRUE;
+        gPaletteFade.simultaneousFade = FALSE;
     }
     else
     {
@@ -376,9 +443,21 @@ static u32 UpdateNormalPaletteFade(void)
         }
     }
 
-    // gPaletteFade.active cannot change since the last time it was checked. So this
-    // is equivalent to `return PALETTE_FADE_STATUS_ACTIVE;`
-    return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
+    return PALETTE_FADE_STATUS_ACTIVE;
+}
+
+static u32 UpdateNormalPaletteFade(void)
+{
+    if (!gPaletteFade.active)
+        return PALETTE_FADE_STATUS_DONE;
+
+    if (IsSoftwarePaletteFadeFinishing())
+        return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
+
+    if (gPaletteFade.simultaneousFade)
+        return UpdateNormalPaletteFade_Simultaneous();
+    else
+        return UpdateNormalPaletteFade_Alternate();
 }
 
 void InvertPlttBuffer(u32 selectedPalettes)
@@ -1001,9 +1080,7 @@ void AvgPaletteWeighted(u16 *src0, u16 *src1, u16 *dst, u16 weight0)
 
 void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 color)
 {
-    void *src = gPlttBufferUnfaded;
-    void *dest = gPlttBufferFaded;
-    DmaCopy32(3, src, dest, PLTT_SIZE);
+    DmaCopy32Defvars(3, gPlttBufferUnfaded, gPlttBufferFaded, PLTT_SIZE);
     BlendPalettes(selectedPalettes, coeff, color);
 }
 

@@ -541,13 +541,9 @@ static void UIEndTask(u8 taskId)
         return;
     }
     if (gSpecialVar_Result == TRUE)
-    {
         RedrawMoveList();
-    }
     else
-    {
         ShowTeachMoveText();
-    }
     AddScrollArrows();
     gTasks[taskId].func = Task_MoveRelearner_HandleInput;
 }

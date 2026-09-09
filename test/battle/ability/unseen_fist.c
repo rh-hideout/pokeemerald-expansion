@@ -239,11 +239,11 @@ DOUBLE_BATTLE_TEST("Unseen Fist shows its ability pop-up on each affected target
             EFFECTIVENESS_SE(opponentLeft, SE_NOT_EFFECTIVE);
         }
         HP_BAR(opponentLeft);
-        ABILITY_POPUP(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_UNSEEN_FIST);
         if (move == MOVE_BRUTAL_SWING)
         {
-            ABILITY_POPUP(playerLeft);
-            ABILITY_POPUP(playerLeft);
+            ABILITY_POPUP(playerLeft, ABILITY_UNSEEN_FIST);
+            ABILITY_POPUP(playerLeft, ABILITY_UNSEEN_FIST);
         }
     }
 }

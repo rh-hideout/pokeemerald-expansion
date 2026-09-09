@@ -204,6 +204,10 @@ void TrySpawnAndShowNamebox(const u8 *speaker, u32 tileNum)
         RedrawDialogueFrame();
         return;
     }
+    else if (gSpeakerName == NULL)
+    {
+        return;
+    }
 
     PrepareNamebox(tileNum);
     DrawNamebox(sNameboxWindowId, tileNum - NAME_BOX_BASE_TILES_TOTAL, TRUE);

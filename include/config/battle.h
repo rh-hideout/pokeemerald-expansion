@@ -186,6 +186,7 @@
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
+#define B_TRUANT                        GEN_LATEST // In Gen5+, Truant advances when the Pokémon attempts to act. Previously, it advanced at the end of each turn.
 #define B_STANCE_CHANGE_FAIL            GEN_LATEST // In Gen7+, Stance Change fails if the Pokémon is unable to use a move due to confusion, paralysis, etc.
 #define B_SHADOW_TAG_ESCAPE             GEN_LATEST // In Gen4+, if both sides have a Pokémon with Shadow Tag, all battlers can escape. Previously, neither side could escape this situation.
 #define B_MOODY_ACC_EVASION             GEN_LATEST // In Gen8+, Moody can no longer raise accuracy and evasion.
@@ -359,6 +360,7 @@
 #define B_ANIMATE_MON_AFTER_FAILED_POKEBALL TRUE       // If set to TRUE, a wild Pokémon that breaks of a thrown Poké Ball will play its animation.
 #define B_SHOW_DYNAMAX_MESSAGE              FALSE      // If set to TRUE, an additional battle message is shown after Dynamaxing or Gigantamaxing.
 #define B_HPBAR_COLOR_THRESHOLD             GEN_LATEST // In Gen5+, HP bar color thresholds were changed to be based on the actual HP values instead of the pixel length of the HP bar, leading to more accurate HP bar colors.
+#define B_HP_PERCENTAGE_DISPLAY             FALSE      // If set to TRUE, Pokémon on the opposing side's HP will be displayed in percentage alongside the HP bar. In single battles, this extends the healthbox to add the percentage below the HP bar. In double battles, the same input used to toggle your side's HP values will also toggle the opposing side's percentage display.
 
 // Catching settings
 #define B_SEMI_INVULNERABLE_CATCH       GEN_LATEST // In Gen4+, you cannot throw a ball against a Pokémon that is in a semi-invulnerable state (Dig/Fly/etc).
