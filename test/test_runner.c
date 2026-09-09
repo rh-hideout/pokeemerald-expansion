@@ -197,6 +197,8 @@ static void ClearSaveBlocks(void)
     ClearSav1();
     ClearSav2();
     ClearSav3();
+    // Game strings use EOS, so a zeroed player name is not terminated.
+    gSaveBlock2Ptr->playerName[0] = EOS;
 }
 
 void CB2_TestRunner(void)
