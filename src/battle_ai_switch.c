@@ -72,6 +72,10 @@ static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, enum
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum PartyMon monIndex, struct Pokemon *mon)
 {
     enum PartyMon storeCurrBattlerPartyIndex = gBattlerPartyIndexes[switchinBattler]; // Rage Fist fix
+                                                                                      //
+    memset(gAiLogicData->moves[switchinBattler], MOVE_NONE, sizeof(gAiLogicData->moves[switchinBattler]));
+    gAiLogicData->switchInCalc = TRUE;
+
     PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     CopyMonAbilityAndTypesToBattleMon(switchinBattler, mon);
@@ -97,6 +101,7 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum Par
 
     gBattlerPartyIndexes[switchinBattler] = storeCurrBattlerPartyIndex;
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
+    gAiLogicData->switchInCalc = FALSE;
 }
 
 static u32 GetWishHealAmountForBattler(enum BattlerId battler)
@@ -2251,7 +2256,6 @@ static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enu
         }
 
         validMonIds |= (1u << monIndex);
-        memset(gAiLogicData, 0, sizeof(struct AiLogicData));
         InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
 
         u32 originalHp = gBattleMons[battler].hp;
@@ -2627,7 +2631,6 @@ enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switch
         return bestMonId;
     }
 
-    gAiLogicData->switchInCalc = TRUE;
     // Only use better mon selection if AI_FLAG_SMART_MON_CHOICES is set for the trainer.
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_MON_CHOICES && !IsDoubleBattle()) // Double Battles aren't included in AI_FLAG_SMART_MON_CHOICE. Defaults to regular switch in logic
     {
@@ -2641,7 +2644,6 @@ enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switch
         bestMonId = GetBestMonVanilla(party, lastId, battler, opposingBattler, battlerIn1, battlerIn2, switchType);
         return bestMonId;
     }
-    gAiLogicData->switchInCalc = FALSE;
 }
 
 enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler)
