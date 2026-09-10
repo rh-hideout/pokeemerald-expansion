@@ -21437,7 +21437,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_FAIL_IF_NOT_ARG_TYPE,
         .power = 120,
         .type = TYPE_ELECTRIC,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 0 : 100,
+        .accuracy = 100,
         .pp = 5,
         .target = TARGET_SELECTED,
         .priority = 0,
