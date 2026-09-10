@@ -4231,7 +4231,7 @@ BattleScript_DoSelfConfusionDmg::
 	waitstate
 	tryselfconfusiondmgformchange
 	healthbarupdate BS_ATTACKER
-	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
+	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	goto BattleScript_MoveEnd
 BattleScript_MoveUsedIsConfusedRet::
 	return

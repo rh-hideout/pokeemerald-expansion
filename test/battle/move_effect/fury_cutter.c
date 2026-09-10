@@ -82,9 +82,73 @@ SINGLE_BATTLE_TEST("Fury Cutter's base power resets if the it is used again but 
     }
 }
 
-TO_DO_BATTLE_TEST("Fury Cutter's power is reset if the user misses")
-TO_DO_BATTLE_TEST("Fury Cutter's power is reset if the user is switched out")
-TO_DO_BATTLE_TEST("Fury Cutter's power is reset if the trainer uses an item")
+SINGLE_BATTLE_TEST("Fury Cutter's power is reset if the user misses")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+        TURN { MOVE(player, MOVE_FURY_CUTTER, hit: FALSE); }
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fury Cutter's power is reset if the user is switched out")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fury Cutter's power is reset if the trainer uses an item")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+        TURN { USE_ITEM(player, ITEM_X_DEFENSE); }
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
 
 SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bond")
 {
