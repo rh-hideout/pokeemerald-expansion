@@ -4644,6 +4644,8 @@ static void SetActionsAndBattlersTurnOrder(void)
     s32 turnOrderId = 0;
     enum BattlerId battler, battler2;
 
+    gBattleStruct->gimmick.activatedThisTurn = 0;
+
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
     {
         for (battler = 0; battler < gBattlersCount; battler++)
@@ -4895,6 +4897,8 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
                 gBattlerAttacker = battler;
                 gBattleScripting.battler = battler;
                 const u8 *script = GetChargingSetUpScript(GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]), FALSE);
+                if (GetConfig(B_TRUANT) <= GEN_4 && IsBattlerLoafing(battler))
+                    script = NULL;
                 if (script)
                 {
                     gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
@@ -4978,7 +4982,7 @@ static void CheckChangingTurnOrderEffects(void)
              && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
              && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
-             && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)
+             && !IsBattlerLoafing(battler)
              && !(gProtectStructs[battler].noValidMoves))
             {
                 if (gProtectStructs[battler].usedCustapBerry)
