@@ -2811,6 +2811,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         // fallthrough
     case EFFECT_HIT_ENEMY_HEAL_ALLY:    // pollen puff
+    case EFFECT_MILK_DRINK:
         if (IsTargetingPartner(battlerAtk, battlerDef))
         {
             if (gBattleMons[battlerDef].volatiles.healBlockTimer)
@@ -2819,6 +2820,12 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(-10);
             else if (gBattleMons[battlerDef].hp > gBattleMons[battlerDef].maxHP / 2)
                 ADJUST_SCORE(-5);
+        } else {
+            if (AI_BattlerAtMaxHp(battlerAtk))
+                ADJUST_SCORE(-10);
+            else if (aiData->hpPercents[battlerAtk] >= 90)
+                ADJUST_SCORE(-9); //No point in healing, but should at least do it if nothing better
+            break;
         }
         break;
     case EFFECT_ELECTRIFY:
@@ -3904,6 +3911,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 break;
             case EFFECT_HEAL_PULSE:
             case EFFECT_HIT_ENEMY_HEAL_ALLY:
+            case EFFECT_MILK_DRINK:
                 if (AI_IsFaster(battlerAtk, GetBattlerLeftFoe(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
                  && AI_IsFaster(battlerAtk, GetBattlerRightFoe(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
                  && gBattleMons[battlerAtkPartner].hp < gBattleMons[battlerAtkPartner].maxHP / 2)
@@ -4687,6 +4695,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_MORNING_SUN:
     case EFFECT_SYNTHESIS:
     case EFFECT_MOONLIGHT:
+    case EFFECT_MILK_DRINK:
         if (ShouldRecover(battlerAtk, battlerDef, move, 50))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
@@ -6379,7 +6388,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 
     if (IsTargetingPartner(battlerAtk, battlerDef))
     {
-        if ((effect == EFFECT_HEAL_PULSE || effect == EFFECT_HIT_ENEMY_HEAL_ALLY)
+        if ((effect == EFFECT_HEAL_PULSE || effect == EFFECT_HIT_ENEMY_HEAL_ALLY || effect == EFFECT_MILK_DRINK)
          || (moveType == TYPE_ELECTRIC && gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_VOLT_ABSORB)
          || (moveType == TYPE_GROUND && gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_EARTH_EATER)
          || (moveType == TYPE_WATER && (gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_DRY_SKIN || gAiLogicData->abilities[GetPartnerBattler(battlerAtk)] == ABILITY_WATER_ABSORB)))
@@ -6420,6 +6429,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_ROOST:
             case EFFECT_MEMENTO:
             case EFFECT_GRUDGE:
+            case EFFECT_MILK_DRINK:
                 ADJUST_SCORE(-2);
                 break;
             default:
@@ -6721,6 +6731,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_RESTORE_HP:
+    case EFFECT_MILK_DRINK:
         if (gAiLogicData->hpPercents[battlerAtk] < 60)
             ADJUST_SCORE(GOOD_EFFECT);
         break;

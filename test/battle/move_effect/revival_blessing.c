@@ -124,3 +124,43 @@ SINGLE_BATTLE_TEST("Revival Blessing keeps Mimikyu Busted forms and Eiscue Noice
         HP_BAR(player);
     }
 }
+
+SINGLE_BATTLE_TEST("Revival Blessing maintains Mega Evolution (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINTING_KEEPS_FORM, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAICHU) { Item(ITEM_RAICHUNITE_Y); }
+        OPPONENT(SPECIES_PAWMOT) { HP(1); }
+        OPPONENT(SPECIES_PICHU) { HP(0); }
+        OPPONENT(SPECIES_PIKACHU) { HP(0); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MEMENTO, gimmick: GIMMICK_MEGA); SEND_OUT(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING, partyIndex:0); MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponent);
+        MESSAGE("Raichu was revived and is ready to fight again!");
+    } THEN {
+        EXPECT(opponent->species == SPECIES_RAICHU_MEGA_Y);
+    }
+}
+
+SINGLE_BATTLE_TEST("Revival Blessing maintains Mega Evolution (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINTING_KEEPS_FORM, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAICHU) { Item(ITEM_RAICHUNITE_Y); }
+        OPPONENT(SPECIES_PAWMOT) { HP(1); }
+        OPPONENT(SPECIES_PICHU) { HP(0); }
+        OPPONENT(SPECIES_PIKACHU) { HP(0); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MEMENTO, gimmick: GIMMICK_MEGA); SEND_OUT(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING, partyIndex:0); MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponent);
+        MESSAGE("Raichu was revived and is ready to fight again!");
+    } THEN {
+        EXPECT(opponent->species == SPECIES_RAICHU_MEGA_Y);
+    }
+}

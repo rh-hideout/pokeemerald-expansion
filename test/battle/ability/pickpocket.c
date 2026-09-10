@@ -448,7 +448,7 @@ SINGLE_BATTLE_TEST("Pickpocket does not activate if its user switches out with E
 SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move that's boosted by Sheer Force (Gen9-)")
 {
     GIVEN {
-        // GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_9);
         ASSUME(gMovesInfo[MOVE_CRUNCH].additionalEffects->moveEffect == MOVE_EFFECT_STAT_MINUS);
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
@@ -470,9 +470,9 @@ SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move tha
 
 SINGLE_BATTLE_TEST("Pickpocket can steal an item even if hit by a contact move that's boosted by Sheer Force (Champions)")
 {
-    KNOWN_FAILING;
+    // KNOWN_FAILING;
     GIVEN {
-        // GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_CHAMPIONS);
         ASSUME(gMovesInfo[MOVE_CRUNCH].additionalEffects->moveEffect == MOVE_EFFECT_STAT_MINUS);
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }

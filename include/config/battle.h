@@ -176,13 +176,13 @@
 #define B_FAINT_MOVE_EFFECT_TIMING      GEN_LATEST // In Champions, some move effects now apply even if the user faints from Rough Skin, Iron Barbs, etc.
                                                    // Effects include: Knock Off, Thief, Rapid Spin, Mortal Spin, Ice Spinner
                                                    // This does not include: Ceaseless Edge, Stone Axe
-#define B_SHEER_FORCE_AGAINST_ABILITIES GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk and Pickpocket
-                                                   // Currently does nothing, as there is not enough info to confirm event orders for cases like Eject Pack and Eject Button
+#define B_SHEER_FORCE_TIMING            GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk, Pickpocket, Shell Bell, Eject Button, Red Card, and Emergency Exit
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 #define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
 #define B_MOVE_EFFECTS_BEFORE_MOVES     GEN_LATEST // In Champions, Beak Blast will work when Encored into from a different move
-                                                   // Additionally, the charging animation will occur 
+                                                   // Additionally, the charging animation will occur
+#define B_QUEUED_SWITCH_TIMINGS         GEN_LATEST // In Champions, Eject Button and Emergency Exit no longer prevent an opponent's pivot move (U-Turn, Volt Switch, etc.) from triggering.
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
@@ -221,6 +221,7 @@
 #define B_DANCER_ORDER                  GEN_LATEST // In Gen8+, Dancer activations are based on Speed order including modifiers. In Gen7, Dancer activates from the slowest to fastest battler based on the battler's unmodified Speed stat.
 #define B_UNSEEN_FIST_PIERCING_DRILL    GEN_LATEST // In Gen8-9, Unseen Fist/Piercing Drill deals 100% of the damage dealt to protected targets while also bypassing the contact effects of protect moves.
                                                    // In Champions, Unseen Fist/Piercing Drill nerfs damage dealt against protected targets to 25%. It also no longer bypasses the contact effects of protect moves.
+#define B_RUN_AWAY                      GEN_LATEST // In Champions, Run Away allows the user to ignore trapping effects like Shadow Tag.
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5
@@ -393,6 +394,7 @@
 #define B_PARTNER_MONS_MARKED_SEEN      FALSE      // If set to TRUE, if your Double Battle partner sends out a Pokémon you haven't encountered yet, it will be marked as SEEN in your Pokédex.
 #define B_MULTI_HALF_TEAMS              FALSE      // If TRUE, trainers will be capped at 3 Pokémon each when there are 2 trainers on one side in a battle. If FALSE, per-battle capping may still be set using `Multi Party: Half` in `trainers.party`
 #define B_TERA_ORB_ALWAYS_CHARGED       FALSE      // If TRUE, causes the Tera Orb to always be charged all the time in every case, overriding B_FLAG_TERA_ORB_CHARGED. Use that for modularity.
+#define B_FAINTING_KEEPS_FORM           GEN_LATEST // In Champions, Mega Evolution and Palafin's Hero Form remain in effect even after fainting. This is relevant for Revival Blessing.
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely

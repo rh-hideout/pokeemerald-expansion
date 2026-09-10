@@ -411,3 +411,33 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger even if Shell Bell heals user ba
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
+
+SINGLE_BATTLE_TEST("Emergency Exit doesn't activate when taking damage from a Sheer Force-boosted move (Gen9-)")
+{
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_9);
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOMP); }
+    } SCENE {
+        HP_BAR(opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Emergency Exit activates when taking damage from a Sheer Force-boosted move (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOMP); SEND_OUT(opponent, 1); }
+    } SCENE {
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}

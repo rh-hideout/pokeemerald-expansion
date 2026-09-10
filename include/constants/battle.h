@@ -627,7 +627,7 @@ enum MoveTarget
     TARGET_USER,
     TARGET_ALLY,
     TARGET_USER_AND_ALLY,
-    TARGET_USER_OR_ALLY, // Acupressure
+    TARGET_USER_OR_ALLY, // Acupressure, Milk Drink
     TARGET_FOES_AND_ALLY,
     TARGET_FIELD, // Moves that target the field, e.g. Rain Dance
     TARGET_OPPONENTS_FIELD, // Targets all other battlers and self, e.g. Teatime

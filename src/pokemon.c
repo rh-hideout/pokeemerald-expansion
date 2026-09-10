@@ -6007,10 +6007,13 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             break;
         case FORM_CHANGE_WITHDRAW:
         case FORM_CHANGE_DEPOSIT:
-        case FORM_CHANGE_FAINT:
         case FORM_CHANGE_DAYS_PASSED:
         case FORM_CHANGE_BEGIN_WILD_ENCOUNTER:
             targetSpecies = formChanges[i].targetSpecies;
+            break;
+        case FORM_CHANGE_FAINT:
+            if (GetConfig(B_FAINTING_KEEPS_FORM) < GEN_CHAMPIONS)
+                targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_STATUS:
             if (ctx.status & formChanges[i].param1)
