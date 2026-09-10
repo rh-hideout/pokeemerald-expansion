@@ -170,7 +170,6 @@ void AIDebugTimerEnd()
 
 void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
 {
-    u32 moveLimitations;
     u64 flags[MAX_BATTLERS_COUNT];
 
     // Clear AI data but preserve the flags.
@@ -178,12 +177,10 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
     memset(gAiThinkingStruct, 0, sizeof(struct AiThinkingStruct));
     memcpy(&gAiThinkingStruct->aiFlags[0], &flags[0], sizeof(u64) * MAX_BATTLERS_COUNT);
 
-    moveLimitations = gAiLogicData->moveLimitations[battler];
-
     // Conditional score reset, unlike Ruby.
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moveLimitations & (1u << moveIndex))
+        if (gAiLogicData->moves[battler][moveIndex] == MOVE_NONE)
             SET_SCORE(battler, moveIndex, 0);
         else if (defaultScoreMoves & 1)
             SET_SCORE(battler, moveIndex, AI_SCORE_DEFAULT);
@@ -471,7 +468,6 @@ static void SetAllyMove(u32 battler)
     }
     else if (IsThinkingBeforePartner(battler, partnerBattler))
     {
-        // DebugPrintf("partnerBattler %d", partnerBattler );
         gAiLogicData->partnerMoveSimulation = TRUE;
         struct ChosenAction chosen = ChooseMoveOrAction_Doubles(partnerBattler);
         gAiLogicData->partnerMoveSimulation = FALSE;
@@ -737,6 +733,31 @@ void RecordStatusMoves(enum BattlerId battler)
     }
 }
 
+static void SetAiMovesArray(enum BattlerId battler, struct AiLogicData *aiData)
+{
+    u32 moveLimitations = CheckMoveLimitations(battler, 0, ~(MOVE_LIMITATION_UNUSABLE));
+
+    bool32 isAwareForSwitching = SMART_SWITCHING_OMNISCIENT && aiData->switchInCalc;
+    bool32 isAware = isAwareForSwitching
+                  || IsAiBattlerAware(battler)
+                  || IsAiBattlerAware(GetPartnerBattler(battler))
+                  || IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE);
+
+    for (enum MoveSlot moveSlot = 0; moveSlot < MAX_MON_MOVES; moveSlot++)
+    {
+        if (moveLimitations & 1u << moveSlot)
+        {
+            aiData->moves[battler][moveSlot] = MOVE_NONE;
+            continue;
+        }
+
+        // Populate ai moves either from the battle mon or the used move history
+        aiData->moves[battler][moveSlot] = isAware
+                                           ? gBattleMons[battler].moves[moveSlot]
+                                           : gBattleHistory->usedMoves[battler][moveSlot];
+    }
+}
+
 void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 {
     enum Ability ability;
@@ -747,7 +768,6 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->lastUsedMove[battler] = (gLastMoves[battler] == MOVE_UNAVAILABLE) ? MOVE_NONE : gLastMoves[battler];
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
-    aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, ~(MOVE_LIMITATION_UNUSABLE));
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
     aiData->dragonDartsHitsBothTarget = 0;
 
@@ -756,6 +776,8 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 
     if (IsAiBattlerAssumingStatusMoves(battler))
         RecordStatusMoves(battler);
+
+    SetAiMovesArray(battler, aiData);
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
@@ -800,7 +822,6 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battler
 void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, enum BattleTerrain terrain)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
     struct AiCalcValues aiCalc = {
         .gimmickAtk = gBattleStruct->gimmick.usableGimmick[battlerAtk],
@@ -821,7 +842,7 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAt
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = 0;
         aiData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = FALSE;
 
-        if (IsMoveUnusable(moveIndex, aiCalc.move, moveLimitations))
+        if (aiCalc.move == MOVE_NONE)
             continue;
 
         // Also get effectiveness of status moves
@@ -1365,10 +1386,11 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if ((CanFireMoveThawTarget(move, moveType) || CanBurnHitThaw(move) || CanMoveThawTarget(abilityAtk, move))
      && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY))
     {
+        enum Move *moves = GetMovesArray(battlerAtk);
         enum Move aiMove;
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            aiMove = gBattleMons[battlerAtk].moves[moveIndex];
+            aiMove = moves[moveIndex];
             if (!CanFireMoveThawTarget(aiMove, CheckDynamicMoveType(GetBattlerMon(battlerAtk), aiMove, battlerAtk, MON_IN_BATTLE))
              && !CanBurnHitThaw(aiMove)
              && !CanMoveThawTarget(abilityAtk, aiMove))
@@ -3171,7 +3193,7 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
         return FALSE;
 
     partnerMove = gBattleMons[partner].moves[partnerMoveIndex];
-    if (IsMoveUnusable(partnerMoveIndex, partnerMove, aiData->moveLimitations[partner])
+    if (partnerMove == MOVE_NONE
      || IsBattleMoveStatus(partnerMove)
      || AI_GetBattlerMoveTargetType(partner, partnerMove) != TARGET_SELECTED
      || aiData->simulatedDmg[partner][battlerDef][partnerMoveIndex].minimum < gBattleMons[battlerDef].hp
@@ -3215,10 +3237,13 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
         enum Move *foeMoves = GetMovesArray(foe);
         for (enum MoveSlot slot = MOVESLOT_0; slot < MAX_MON_MOVES; slot++)
         {
-            if (!IsMoveUnusable(slot, foeMoves[slot], aiData->moveLimitations[foe])
-             && !AI_IsSlower(foe, partner, foeMoves[slot], partnerMove, CONSIDER_PRIORITY)
-             && (CanIndexMoveFaintTarget(foe, partner, slot, AI_DEFENDING)
-              || (foe == battlerDef && CanIndexMoveFaintTarget(foe, battlerAtk, slot, AI_DEFENDING))))
+            if (foeMoves[slot] == MOVE_NONE)
+                continue;
+            if (AI_IsSlower(foe, partner, foeMoves[slot], partnerMove, CONSIDER_PRIORITY))
+                continue;
+
+            if (CanIndexMoveFaintTarget(foe, partner, slot, AI_DEFENDING)
+             || (foe == battlerDef && CanIndexMoveFaintTarget(foe, battlerAtk, slot, AI_DEFENDING)))
             {
                 return FALSE;
             }
@@ -5014,8 +5039,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 bool32 atkPartnerKoDef = CanAIFaintTarget(battlerAtkPartner, battlerDef, 1);
                 bool32 atkPartnerKoDefPartner = CanAIFaintTarget(battlerAtkPartner, battlerDefPartner, 1);
                 bool32 defPartnerKoAtkPartner = CanAIFaintTarget(battlerDefPartner, battlerAtkPartner, 1);
-                bool32 atkPartnerDoubleFastKOd = (defKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
-                 && (defPartnerKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDefPartner, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], MOVE_SCRATCH, CONSIDER_PRIORITY) == AI_IS_SLOWER);
+                enum Move partnerMove = GetMovesArray(battlerAtkPartner)[gAiBattleData->chosenMoveIndex[battlerAtkPartner]];
+                bool32 atkPartnerDoubleFastKOd = (defKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, partnerMove, predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && (defPartnerKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDefPartner, partnerMove, MOVE_SCRATCH, CONSIDER_PRIORITY) == AI_IS_SLOWER);
 
                 // If either opponent has Fake Out, it's their first turn but user is faster - incentivise Fake Out on both
                 if ((HasMove(battlerDef, MOVE_FAKE_OUT) && IsBattlersFirstTurn(battlerDef)
@@ -5027,7 +5053,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 }
                 // If ally has KO on target's partner, but target can fast KO ally (checking move and priority combinations for everything likely gets a bit complicated)
                 else if (hasPartner && atkPartnerKoDefPartner
-                 && (defKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && (defKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, partnerMove, predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
                  && !(atkKoDef && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMove, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER))
                 {
                     if (AI_WhoStrikesFirst(battlerAtkPartner, battlerDefPartner, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], predictedMove, CONSIDER_PRIORITY) == AI_IS_FASTER)
@@ -5046,7 +5072,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 }
                 // If ally has slow KO with their chosen move, user sees no KOs while outspeeding (checking move and priority combinations for everything likely gets a bit complicated)
                 else if (hasPartner
-                 && (atkPartnerKoDef && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
+                 && (atkPartnerKoDef && AI_WhoStrikesFirst(battlerAtkPartner, battlerDef, partnerMove, predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER)
                  && !(atkKoDef && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMove, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
                  && !(atkKoDefPartner && AI_WhoStrikesFirst(battlerAtk, battlerDefPartner, move, MOVE_SCRATCH, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER))
                 {
@@ -5852,7 +5878,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             {
                 if (ShouldBoostCritRate(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
                     score +=10;
-                
+
                 break;
             }
             case MOVE_EFFECT_ORDER_UP:
