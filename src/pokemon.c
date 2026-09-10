@@ -5925,6 +5925,22 @@ enum Species GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges me
     return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
 }
 
+bool32 ShouldMaintainFormAfterFainting(enum Species species)
+{
+    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
+
+    if (speciesInfo->isMegaEvolution)
+        return TRUE;
+    switch (species)
+    {
+        case SPECIES_PALAFIN_HERO:
+            return TRUE;
+        default:
+            break;
+    }
+    return FALSE;
+}
+
 enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
 {
     u32 i;
@@ -6012,7 +6028,7 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_FAINT:
-            if (GetConfig(B_FAINTING_KEEPS_FORM) < GEN_CHAMPIONS)
+            if (GetConfig(B_FAINTING_KEEPS_FORM) < GEN_CHAMPIONS || !ShouldMaintainFormAfterFainting(ctx.currentSpecies))
                 targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_STATUS:

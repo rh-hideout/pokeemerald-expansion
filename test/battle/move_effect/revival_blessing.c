@@ -164,3 +164,25 @@ SINGLE_BATTLE_TEST("Revival Blessing maintains Mega Evolution (Champions)")
         EXPECT(opponent->species == SPECIES_RAICHU_MEGA_Y);
     }
 }
+
+SINGLE_BATTLE_TEST("Revival Blessing maintains Palafin Hero Form (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINTING_KEEPS_FORM, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PALAFIN)  { HP(1); }
+        OPPONENT(SPECIES_PAWMOT) { HP(1); }
+        OPPONENT(SPECIES_PICHU) { HP(0); }
+        OPPONENT(SPECIES_PIKACHU) { HP(0); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(opponent, 0); }
+        TURN { SEND_OUT(opponent, 1); MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING, partyIndex:0); MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, opponent);
+        MESSAGE("Palafin was revived and is ready to fight again!");
+    } THEN {
+        EXPECT(opponent->species == SPECIES_PALAFIN_HERO);
+    }
+}
