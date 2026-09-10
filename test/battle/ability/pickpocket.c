@@ -445,47 +445,35 @@ SINGLE_BATTLE_TEST("Pickpocket does not activate if its user switches out with E
     }
 }
 
-SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move that's boosted by Sheer Force (Gen9-)")
+SINGLE_BATTLE_TEST("Pickpocket ignores Sheer Force suppression only in Champions")
 {
-    GIVEN {
-        // GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
-        ASSUME(gMovesInfo[MOVE_CRUNCH].additionalEffects->moveEffect == MOVE_EFFECT_STAT_MINUS);
-        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
-        OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CRUNCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
-        HP_BAR(opponent);
-        NONE_OF {
-            ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-            MESSAGE("The opposing Sneasel stole Landorus's Life Orb!");
-        }
-    } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
-        EXPECT(player->item == ITEM_LIFE_ORB);
-    }
-}
+    u32 gen;
+    enum Move move;
+    bool32 activates;
 
-SINGLE_BATTLE_TEST("Pickpocket can steal an item even if hit by a contact move that's boosted by Sheer Force (Champions)")
-{
-    KNOWN_FAILING;
+    PARAMETRIZE { gen = GEN_9; move = MOVE_CRUNCH; activates = FALSE; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; move = MOVE_CRUNCH; activates = TRUE; }
+    PARAMETRIZE { gen = GEN_9; move = MOVE_SCRATCH; activates = TRUE; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; move = MOVE_SCRATCH; activates = TRUE; }
+
     GIVEN {
-        // GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
-        ASSUME(gMovesInfo[MOVE_CRUNCH].additionalEffects->moveEffect == MOVE_EFFECT_STAT_MINUS);
-        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, gen);
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_CRUNCH));
+        ASSUME(!MoveIsAffectedBySheerForce(MOVE_SCRATCH));
+        ASSUME(MoveMakesContact(move));
         PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
         OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
     } WHEN {
-        TURN { MOVE(player, MOVE_CRUNCH); }
+        TURN { MOVE(player, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
-        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Landorus's Life Orb!");
+        if (activates)
+            ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        else
+            NOT ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
     } THEN {
-        EXPECT(opponent->item == ITEM_LIFE_ORB);
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT_EQ(opponent->item, activates ? ITEM_LIFE_ORB : ITEM_NONE);
+        EXPECT_EQ(player->item, activates ? ITEM_NONE : ITEM_LIFE_ORB);
     }
 }

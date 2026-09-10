@@ -4933,7 +4933,12 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
 {
     if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
-        gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    {
+        if (GetConfig(B_SHEER_FORCE_AGAINST_ABILITIES) >= GEN_CHAMPIONS)
+            gBattleScripting.moveendState = MOVEEND_COLOR_CHANGE;
+        else
+            gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    }
     else
         gBattleScripting.moveendState++;
 
@@ -5306,18 +5311,25 @@ static enum MoveEndResult MoveEndShellTrap(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndColorChange(struct BattleCalcValues *cv)
 {
+    bool32 sheerForceAffected = IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]);
+
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         enum BattlerId battler = (enum BattlerId)gBattleStruct->eventState.moveEndBattler++;
 
         if (battler == cv->battlerAtk)
             continue;
+        if (sheerForceAffected && cv->abilities[battler] != ABILITY_BERSERK)
+            continue;
         if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, battler, cv->abilities[battler], 0, TRUE))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     gBattleStruct->eventState.moveEndBattler = 0;
-    gBattleScripting.moveendState++;
+    if (sheerForceAffected)
+        gBattleScripting.moveendState = MOVEEND_PICKPOCKET;
+    else
+        gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
 
