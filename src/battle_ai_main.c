@@ -3193,7 +3193,7 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
         return FALSE;
 
     partnerMove = gBattleMons[partner].moves[partnerMoveIndex];
-    if (IsMoveUnusable(partnerMoveIndex, partnerMove, aiData->moveLimitations[partner])
+    if (partnerMove == MOVE_NONE
      || IsBattleMoveStatus(partnerMove)
      || AI_GetBattlerMoveTargetType(partner, partnerMove) != TARGET_SELECTED
      || aiData->simulatedDmg[partner][battlerDef][partnerMoveIndex].minimum < gBattleMons[battlerDef].hp
@@ -3237,10 +3237,13 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
         enum Move *foeMoves = GetMovesArray(foe);
         for (enum MoveSlot slot = MOVESLOT_0; slot < MAX_MON_MOVES; slot++)
         {
-            if (!IsMoveUnusable(slot, foeMoves[slot], aiData->moveLimitations[foe])
-             && !AI_IsSlower(foe, partner, foeMoves[slot], partnerMove, CONSIDER_PRIORITY)
-             && (CanIndexMoveFaintTarget(foe, partner, slot, AI_DEFENDING)
-              || (foe == battlerDef && CanIndexMoveFaintTarget(foe, battlerAtk, slot, AI_DEFENDING))))
+            if (foeMoves[slot] == MOVE_NONE)
+                continue;
+            if (AI_IsSlower(foe, partner, foeMoves[slot], partnerMove, CONSIDER_PRIORITY))
+                continue;
+
+            if (CanIndexMoveFaintTarget(foe, partner, slot, AI_DEFENDING)
+             || (foe == battlerDef && CanIndexMoveFaintTarget(foe, battlerAtk, slot, AI_DEFENDING)))
             {
                 return FALSE;
             }
