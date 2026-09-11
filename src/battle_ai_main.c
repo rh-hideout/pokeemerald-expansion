@@ -842,7 +842,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId bat
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
+        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldTimers.terrain);
         RestoreBattlerData(battlerDef);
     }
     RestoreBattlerData(battlerAtk);
