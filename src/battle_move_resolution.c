@@ -2686,18 +2686,16 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
         while (gBattleStruct->additionalEffectsCounter < numAdditionalEffects)
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(cv->move, gBattleStruct->additionalEffectsCounter);
-            gBattleStruct->additionalEffectsCounter++;
-
-            if (!additionalEffect->preAttackEffect)
-                continue;
 
             bool32 isSelf = gEffectBattler == cv->battlerAtk;
 
-            if (isSelf != additionalEffect->self)
+            if (!additionalEffect->preAttackEffect
+             || isSelf != additionalEffect->self
+             || (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler)))
+            {
+                gBattleStruct->additionalEffectsCounter++;
                 continue;
-
-            if (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler))
-                continue;
+            }
 
             TryTriggerAdditionalEffect(cv, additionalEffect, gEffectBattler);
 
@@ -3379,13 +3377,15 @@ static enum MoveEndResult MoveEndSubstituteBlock(struct BattleCalcValues *cv)
                  && battlerDef != cv->battlerAtk)
                 {
                     const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-                    gBattleStruct->additionalEffectsCounter++;
 
                     // Various checks for if this move effect can be applied this turn
                     if (!CanApplyAdditionalEffect(cv->battlerAtk, battlerDef, additionalEffect)
                      || !ShouldApplyAfterHitEffects(cv->battlerAtk, battlerDef)
                      || additionalEffect->self) // handled in MoveEndAdditionalEffects
+                    {
+                        gBattleStruct->additionalEffectsCounter++;
                         continue;
+                    }
 
                     TryTriggerAdditionalEffect(cv, additionalEffect, battlerDef);
 
@@ -3867,9 +3867,12 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
 
     bool32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
     bool32 isPrimary = percentChance == 0;
+    bool32 failedToTrigger = TRUE;
 
-    // RNG tag is RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter - 1 because it's incremented before this function is called
-    if (isPrimary || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter - 1, percentChance))
+    // By default, onSide effects apply if they applied on the original target/user
+    if (isPrimary
+     || gBattleStruct->setEffectOnAlly
+     || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
     {
         if (!additionalEffect->self)
             cv->battlerDef = effectBattler; // For SetMoveEffect, will be restored to previous value when run again
@@ -3879,8 +3882,25 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
         se.effectBattler = effectBattler;
         se.primary = isPrimary;
         se.certain = percentChance >= 100;
-        se.onSide = additionalEffect->onSide;
+        failedToTrigger = FALSE;
+
+        if (gBattleStruct->setEffectOnAlly)
+            se.effectBattler = GetPartnerBattler(se.effectBattler);
+        else if (additionalEffect->onSide)
+            gBattleStruct->setEffectOnAlly = TRUE;
+
+    // Reminders for myself:
+    // - Change secondary effect chance function so it can be used by G-Max Replenish.
+    // - G-Max Meltdown should only apply Torment for 3 turns unlike Torment itself.
+
         SetMoveEffect(cv, &se);
+    }
+
+    // If applying an onSide effect on partner or if unsuccessful, jump to next effect
+    if (se.effectBattler != effectBattler || !additionalEffect->onSide || failedToTrigger)
+    {
+        gBattleStruct->additionalEffectsCounter++;
+        gBattleStruct->setEffectOnAlly = FALSE;
     }
 }
 
@@ -3908,14 +3928,16 @@ static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
          && (!ShouldSkipBattlerForMoveEndSubstitute(effectBattler, cv) || effectBattler == cv->battlerAtk))
         {
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-            gBattleStruct->additionalEffectsCounter++;
 
             // Various checks for if this move effect can be applied this turn
             if (!CanApplyAdditionalEffect(cv->battlerAtk, effectBattler, additionalEffect)
              || !ShouldApplyAfterHitEffects(cv->battlerAtk, effectBattler)
              || (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self)
              || (effectBattler == cv->battlerAtk) != additionalEffect->self)
+            {
+                gBattleStruct->additionalEffectsCounter++;
                 continue;
+            }
 
             TryTriggerAdditionalEffect(cv, additionalEffect, effectBattler);
 
@@ -3945,13 +3967,15 @@ static enum MoveEndResult MoveEndAdditionalEffectsLowerStatsAttacker(struct Batt
     if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-        gBattleStruct->additionalEffectsCounter++;
 
         // Various checks for if this move effect can be applied this turn
         if (!CanApplyAdditionalEffect(cv->battlerAtk, cv->battlerAtk, additionalEffect)
          || !ShouldApplyAfterHitEffects(cv->battlerAtk, cv->battlerAtk)
          || !(additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self))
+        {
+            gBattleStruct->additionalEffectsCounter++;
             return MOVEEND_RESULT_BREAK; // recall the same state
+        }
 
         TryTriggerAdditionalEffect(cv, additionalEffect, cv->battlerAtk);
 
