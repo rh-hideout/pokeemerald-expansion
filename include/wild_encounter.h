@@ -15,6 +15,14 @@ enum WildPokemonArea {
     WILD_AREA_HIDDEN
 };
 
+
+enum RockSmashResult {
+    ROCK_SMASH_NONE = 0,
+    ROCK_SMASH_ENCOUNTER = 1,
+    ROCK_SMASH_ITEM = 2,
+};
+
+
 struct WildPokemon
 {
     u8 minLevel;
