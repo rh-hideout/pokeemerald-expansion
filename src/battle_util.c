@@ -6816,10 +6816,9 @@ static inline uq4_12_t GetParadoxAbilityModifier(enum BattlerId battler, enum Mo
 
     if ((category == DAMAGE_CATEGORY_PHYSICAL && highestStat == physicalStat)
      || (category == DAMAGE_CATEGORY_SPECIAL && highestStat == specialStat))
-        return UQ_4_12(1.3);
+        return (physicalStat == STAT_ATK || specialStat == STAT_SPATK) ? UQ_4_12(1.3) : UQ_4_12_FLOORED(1.3);
 
     return UQ_4_12(1.0);
-
 }
 
 static inline uq4_12_t ApplyOffensiveBadgeBoost(uq4_12_t modifier, enum BattlerId battler, enum Move move)
