@@ -2710,6 +2710,15 @@ void Status1_(u32 sourceLine, u32 status1)
     SetMonData(DATA.currentMon, MON_DATA_STATUS, &status1);
 }
 
+void Ribbon_(u32 sourceLine, u32 ribbonId)
+{
+    u32 assignedRibbon = ASSIGNED_RIBBON_FROM_ID(ribbonId);
+
+    INVALID_IF(!DATA.currentMon, "Ribbon outside of PLAYER/OPPONENT");
+    INVALID_IF(ribbonId >= NUM_RIBBONS, "Illegal Ribbon ID: %d", ribbonId);
+    SetMonData(DATA.currentMon, MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+}
+
 void OTName_(u32 sourceLine, const u8 *otName)
 {
     INVALID_IF(!DATA.currentMon, "OTName outside of PLAYER/OPPONENT");
