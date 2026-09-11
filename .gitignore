@@ -55,6 +55,7 @@ src/data/trainers.h
 src/data/trainers_frlg.h
 src/data/debug_trainers.h
 src/data/tutor_moves.h
+src/data/mining_minigame.h
 test/battle/trainer_control.h
 test/battle/partner_control.h
 tools/compresSmol/compresSmol
