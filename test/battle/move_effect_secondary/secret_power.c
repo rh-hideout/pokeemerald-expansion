@@ -167,9 +167,9 @@ SINGLE_BATTLE_TEST("Secret Power does not inflict its secondary effect if the us
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SECRET_POWER, player);
         HP_BAR(opponent);
+        ITEM_POPUP(opponent, ITEM_JABOCA_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
         MESSAGE("Wobbuffet fainted!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
