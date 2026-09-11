@@ -1,6 +1,7 @@
 #ifndef GUARD_RANDOM_MON_GENERATION_H
 #define GUARD_RANDOM_MON_GENERATION_H
 
+#include "random.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/pokeball.h"
@@ -15,7 +16,9 @@ struct FilterFuncArgs
     u16 arg2;
 };
 
+enum Species GetRandomSpeciesWithSeed(rng_value_t *rng, u32 optionId, const struct FilterFuncArgs *filterFuncArgs);
 enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterFuncArgs);
+enum Item GetRandomItemWithSeed(rng_value_t *rng, u32 optionId, const struct FilterFuncArgs *filterFuncArgs);
 enum Item GetRandomItem(u32 optionId, const struct FilterFuncArgs *filterFuncArgs);
 enum PokeBall GetRandomBall(void);
 void ResolveMoves(enum Species species, u32 level, const u16 *movesTemplate, enum Move *moves);
