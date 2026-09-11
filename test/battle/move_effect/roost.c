@@ -439,8 +439,3 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
         }
     }
 }
-
-// Tested in ORAS
-// Transform does not copy the Roost "status" either.
-// Probably better as a Transform test.
-TO_DO_BATTLE_TEST("Roost's suppression does not prevent others who are Transforming into the user from copying its Flying-type");

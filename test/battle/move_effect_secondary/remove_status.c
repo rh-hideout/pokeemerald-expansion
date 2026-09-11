@@ -117,7 +117,28 @@ SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against sleeping targets")
     }
 }
 
-TO_DO_BATTLE_TEST("Wake-Up Slap gets increased power against Pokémon with Comatose")
+SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against Pokémon with Comatose", s16 damage)
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_LOPUNNY; ability = ABILITY_LIMBER; }
+    PARAMETRIZE { species = SPECIES_KOMALA;  ability = ABILITY_COMATOSE; }
+
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_WAKE_UP_SLAP, MOVE_EFFECT_REMOVE_STATUS) == TRUE);
+        ASSUME(GetMoveEffectArg_Status(MOVE_WAKE_UP_SLAP) == STATUS1_SLEEP);
+        PLAYER(SPECIES_CROBAT);
+        OPPONENT(species) { Ability(ability); HP(999); MaxHP(999); Defense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WAKE_UP_SLAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WAKE_UP_SLAP, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
+    }
+}
 
 DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and behind substitutes")
 {

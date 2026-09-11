@@ -422,7 +422,7 @@ static bool32 ShouldSwitchIfTruant(struct SwitchAiContext *switchContext)
     // Switch if mon with truant is bodied by Protect or invulnerability spam
     if (gAiLogicData->abilities[switchContext->battler] == ABILITY_TRUANT
         && IsTruantMonVulnerable(switchContext->battler, switchContext->opposingBattler)
-        && gBattleMons[switchContext->battler].volatiles.truantCounter
+        && gBattleMons[switchContext->battler].volatiles.truantToggle
         && gBattleMons[switchContext->battler].hp >= gBattleMons[switchContext->battler].maxHP / 2
         && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_MON_NONE)
     {

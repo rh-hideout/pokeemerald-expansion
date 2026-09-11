@@ -3022,6 +3022,10 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
         gBattleMons[battler].volatiles.embargoTimer = volatilesCopy->embargoTimer;
         gBattleMons[battler].volatiles.healBlockTimer = volatilesCopy->healBlockTimer;
+        if (IsTelekinesisBannedSpecies(gBattleMons[battler].species))
+            gBattleMons[battler].volatiles.telekinesis = FALSE;
+        else
+            gBattleMons[battler].volatiles.telekinesisTimer = volatilesCopy->telekinesisTimer;
     }
     else if (effect == EFFECT_SHED_TAIL)
     {
@@ -4460,6 +4464,9 @@ s32 GetChosenMovePriority(enum BattlerId battler, enum Ability ability)
     gProtectStructs[battler].pranksterElevated = FALSE;
     if (gProtectStructs[battler].noValidMoves)
         move = MOVE_STRUGGLE;
+    else if (gLockedMoves[battler] != MOVE_NONE
+          && (gBattleMons[battler].volatiles.multipleTurns || gBattleMons[battler].volatiles.rechargeTimer > 0))
+        move = gLockedMoves[battler];
     else if (gBattleMons[battler].volatiles.encoredMove != MOVE_NONE && GetConfig(B_ENCORE_PRIORITY) >= GEN_CHAMPIONS)
         move = gBattleMons[battler].volatiles.encoredMove;
     else
@@ -4643,6 +4650,8 @@ static void SetActionsAndBattlersTurnOrder(void)
 {
     s32 turnOrderId = 0;
     enum BattlerId battler, battler2;
+
+    gBattleStruct->gimmick.activatedThisTurn = 0;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
     {
@@ -4895,6 +4904,8 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
                 gBattlerAttacker = battler;
                 gBattleScripting.battler = battler;
                 const u8 *script = GetChargingSetUpScript(GetMoveEffect(gChosenMoveByBattler[gBattlerAttacker]), FALSE);
+                if (GetConfig(B_TRUANT) <= GEN_4 && IsBattlerLoafing(battler))
+                    script = NULL;
                 if (script)
                 {
                     gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
@@ -4978,7 +4989,7 @@ static void CheckChangingTurnOrderEffects(void)
              && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
              && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
-             && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)
+             && !IsBattlerLoafing(battler)
              && !(gProtectStructs[battler].noValidMoves))
             {
                 if (gProtectStructs[battler].usedCustapBerry)
