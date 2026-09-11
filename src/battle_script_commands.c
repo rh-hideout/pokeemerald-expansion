@@ -12045,13 +12045,6 @@ void BS_ShowItemPopup(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_ShowItemPopupScripting(void)
-{
-    NATIVE_ARGS();
-    CreateItemPopUp(gBattleScripting.battler);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_DestroyItemPopup(void)
 {
     NATIVE_ARGS();
