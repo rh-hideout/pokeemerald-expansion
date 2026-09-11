@@ -56,9 +56,10 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but 
     }
 }
 
-DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out")
+DOUBLE_BATTLE_TEST("Emergency Exit: Only the fastest Wimp Out (Emergency Exit) user switches out (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_EMERGENCY_EXIT, GEN_9);
         ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_ZAPDOS) { Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
@@ -73,6 +74,28 @@ DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
         ABILITY_POPUP(opponentRight, ABILITY_WIMP_OUT);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Emergency Exit: Multiple instances of Wimp Out / Emergency Exit can occur (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_EMERGENCY_EXIT, GEN_CHAMPIONS);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_ZAPDOS) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WIMPOD) { Speed(1); Ability(ABILITY_WIMP_OUT); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WIMPOD) { Speed(2); Ability(ABILITY_WIMP_OUT); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); SEND_OUT(opponentRight, 2); SEND_OUT(opponentLeft, 3); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_WIMP_OUT);
+        ABILITY_POPUP(opponentLeft, ABILITY_WIMP_OUT);
     }
 }
 

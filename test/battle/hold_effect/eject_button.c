@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after the mon loses Eject Butt
     }
 }
 
-SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picketpocket")
+SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Pickpocket")
 {
     GIVEN {
         PLAYER(SPECIES_REGIELEKI) { Item(ITEM_EJECT_BUTTON); }
@@ -307,5 +307,28 @@ SINGLE_BATTLE_TEST("Eject Button activates and the attacker takes Life Orb recoi
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(player);
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Button only activates once per move")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_BRUTAL_SWING); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BRUTAL_SWING, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("2 sent out Wobbuffet!");
+        NONE_OF {
+            MESSAGE("The opposing Wynaut is switched out with the Eject Button!");
+            MESSAGE("Wynaut is switched out with the Eject Button!");
+        }
     }
 }

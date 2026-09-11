@@ -227,6 +227,8 @@
 #define B_UNSEEN_FIST_PIERCING_DRILL    GEN_LATEST // In Gen8-9, Unseen Fist/Piercing Drill deals 100% of the damage dealt to protected targets while also bypassing the contact effects of protect moves.
                                                    // In Champions, Unseen Fist/Piercing Drill nerfs damage dealt against protected targets to 25%. It also no longer bypasses the contact effects of protect moves.
 #define B_RUN_AWAY                      GEN_LATEST // In Champions, Run Away allows the user to ignore trapping effects like Shadow Tag.
+#define B_EMERGENCY_EXIT                GEN_LATEST // In Gen7-9, only one Emergency Exit can activate at a time if multiple Emergency Exit users are below 50% HP.
+                                                   // In Champions, this limitation is removed.
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5
