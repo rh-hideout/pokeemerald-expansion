@@ -422,7 +422,7 @@ SINGLE_BATTLE_TEST("Red Card activates and overrides U-turn")
     }
 }
 
-SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied")
+SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied (Gen9-)")
 {
     enum Move move;
     bool32 activate;
@@ -430,6 +430,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied
     PARAMETRIZE { move = MOVE_STOMP; activate = FALSE; }
 
     GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
         OPPONENT(SPECIES_WYNAUT);
@@ -446,6 +447,26 @@ SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied
                 MESSAGE("Wobbuffet held up its Red Card against the opposing Tauros!");
             }
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Red Card activates even if attacker's Sheer Force applied (Champions)")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_STOMP; }
+
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet held up its Red Card against the opposing Tauros!");
     }
 }
 

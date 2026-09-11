@@ -5717,12 +5717,18 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Recovers up to half the\n"
             "user's maximum HP."),
-        .effect = EFFECT_SOFTBOILED,
+        .effect = EFFECT_MILK_DRINK,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 5 : 10,
+    #if TESTING
+        .target = TARGET_USER_OR_ALLY,
+    #elif B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
+        .target = TARGET_USER_OR_ALLY,
+    #else
         .target = TARGET_USER,
+    #endif
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RESET_STATS },
