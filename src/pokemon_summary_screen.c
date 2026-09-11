@@ -738,6 +738,8 @@ static const u8 sButtons_Gfx[][4 * TILE_SIZE_4BPP] = {
     INCGFX_U8("graphics/summary_screen/b_button.png", ".4bpp"),
 };
 
+static const u32 gTeraTypes_Gfx[] = INCGFX_U32("graphics/types/tera/move_types.4bpp", ".smol");
+
 static void (*const sTextPrinterFunctions[])(void) =
 {
     [PSS_PAGE_INFO] = PrintInfoPageText,
@@ -768,6 +770,7 @@ static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
 #define TAG_MOVE_TYPES 30002
 #define TAG_MON_MARKINGS 30003
 #define TAG_CATEGORY_ICONS 30004
+#define TAG_TERA_TYPES 30005
 
 static const struct OamData sOamData_CategoryIcons =
 {
@@ -982,6 +985,20 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
 {
     .tileTag = TAG_MOVE_TYPES,
     .paletteTag = TAG_MOVE_TYPES,
+    .oam = &sOamData_MoveTypes,
+    .anims = sSpriteAnimTable_MoveTypes,
+};
+
+static const struct CompressedSpriteSheet gSpriteSheet_TeraTypes =
+{
+    .data = gTeraTypes_Gfx,
+    .size = (NUMBER_OF_MON_TYPES) * 0x100,
+    .tag = TAG_TERA_TYPES
+};
+static const struct SpriteTemplate gSpriteTemplate_TeraTypes =
+{
+    .tileTag = TAG_TERA_TYPES,
+    .paletteTag = TAG_TERA_TYPES,
     .oam = &sOamData_MoveTypes,
     .anims = sSpriteAnimTable_MoveTypes,
 };
@@ -1464,6 +1481,10 @@ static bool8 DecompressGraphics(void)
         break;
     case 7:
         LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
+        if (P_SHOW_TERA_TYPE >= GEN_9)
+        {
+            LoadCompressedSpriteSheet(&gSpriteSheet_TeraTypes);
+        }
         sMonSummaryScreen->switchCounter++;
         break;
     case 8:
@@ -4384,6 +4405,10 @@ static void HidePageSpecificSprites(void)
         if (sMonSummaryScreen->spriteIds[i] != SPRITE_NONE)
             SetSpriteInvisibility(i, TRUE);
     }
+    if (P_SHOW_TERA_TYPE >= GEN_9 && sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_TERATYPE] != SPRITE_NONE)
+    {
+        SetSpriteInvisibility(SPRITE_ARR_ID_TERATYPE, TRUE);
+    }
 }
 
 static void SetTypeIcons(void)
@@ -4414,6 +4439,12 @@ static void CreateMoveTypeIcons(void)
             sMonSummaryScreen->spriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 2);
 
         SetSpriteInvisibility(i, TRUE);
+    }
+
+    if (P_SHOW_TERA_TYPE >= GEN_9 && sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_TERATYPE] == SPRITE_NONE)
+    {
+        sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_TERATYPE] = CreateSprite(&gSpriteTemplate_TeraTypes, 0, 0, 2);
+        SetSpriteInvisibility(SPRITE_ARR_ID_TERATYPE, TRUE);
     }
 }
 
@@ -4453,7 +4484,7 @@ static void SetMonTypeIcons(void)
         }
         if (P_SHOW_TERA_TYPE >= GEN_9)
         {
-            SetTypeSpritePosAndPal(summary->teraType, 200, 48, SPRITE_ARR_ID_TYPE + 2);
+            SetTypeSpritePosAndPal(summary->teraType, 200, 48, SPRITE_ARR_ID_TERATYPE);
         }
     }
 }
