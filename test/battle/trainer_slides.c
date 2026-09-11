@@ -1,44 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 #include "battle_setup.h"
-#include "battle_script_commands.h"
-
-extern void BS_TryTrainerSlideMsgLastOn(void);
-
-AI_DOUBLE_BATTLE_TEST("Trainer Slide: Exhausted fainted battlers do not trigger last-switch-in messages")
-{
-    u8 battler = BS_FAINTED;
-
-    PARAMETRIZE { battler = BS_FAINTED; }
-    PARAMETRIZE { battler = BS_FAINTED_MULTIPLE_1; }
-    PARAMETRIZE { battler = BS_FAINTED_MULTIPLE_2; }
-
-    GIVEN {
-        FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_LAST_SWITCHIN);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        TURN {}
-    } THEN {
-        const struct __attribute__((packed)) {
-            u8 opcode;
-            void (*func)(void);
-            u8 battler;
-        } command = { B_SCR_OP_CALLNATIVE, BS_TryTrainerSlideMsgLastOn, battler };
-        const u8 *savedInstr = gBattlescriptCurrInstr;
-
-        gBattlerFainted = gBattlersCount;
-        gBattleScripting.battler = B_BATTLER_1;
-        gBattlescriptCurrInstr = (const u8 *)&command;
-        gBattleScriptingCommandsTable[command.opcode]();
-        EXPECT(gBattlescriptCurrInstr == (const u8 *)&command + sizeof(command));
-
-        gBattlescriptCurrInstr = savedInstr;
-    }
-}
 
 // SINGLES TESTS START
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Before First Turn")

@@ -2835,6 +2835,7 @@ BattleScript_HandleFaintedMonLoop::
 	trytrainerslidemsglaston BS_FAINTED
 	switchineffects BS_FAINTED_MULTIPLE_1
 	jumpifbytenotequal gBattlerFainted, gBattlersCount, BattleScript_HandleFaintedMonLoop
+	setbyte gBattlerFainted, 0
 BattleScript_HandleFaintedMonMultipleEnd::
 	switchinevents
 	trytrainerslidemsglaston BS_FAINTED_MULTIPLE_2
