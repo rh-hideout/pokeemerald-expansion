@@ -132,6 +132,7 @@ static void WallyHandleActions(enum BattlerId battler)
     case 0:
         gBattleStruct->wallyWaitFrames = B_WAIT_TIME_LONG;
         gBattleStruct->wallyBattleState++;
+        [[fallthrough]];
     case 1:
         if (--gBattleStruct->wallyWaitFrames == 0)
         {

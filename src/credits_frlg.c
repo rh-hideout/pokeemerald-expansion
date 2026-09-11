@@ -904,7 +904,7 @@ static bool32 DoOverworldMapScrollScene(u8 whichMon)
         gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_KEEP;
         sCreditsMgr->ovwldseqno = 0;
         sCreditsMgr->subseqno++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (!Overworld_DoScrollSceneForCredits(&sCreditsMgr->ovwldseqno, sOverworldMapScenes[sCreditsMgr->whichMon]))
             return FALSE;

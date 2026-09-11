@@ -3941,7 +3941,7 @@ static bool32 IsDomeLuckyMove(enum Move move)
     case EFFECT_REFLECT_DAMAGE:
         if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
             return FALSE;
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_OHKO:
     case EFFECT_METRONOME:
     case EFFECT_MIRROR_MOVE:

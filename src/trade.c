@@ -663,7 +663,7 @@ static void CB2_CreateTradeMenu(void)
         ComputePartyTradeableFlags(TRADE_PARTNER);
         PrintPartyNicknames(TRADE_PARTNER);
         gMain.state++;
-        // fallthrough
+        [[fallthrough]];
     case 16:
         LoadTradeBgGfx(0);
         gMain.state++;
@@ -3135,7 +3135,7 @@ static void HandleLinkDataSend(void)
             SendBlock(BitmaskAllOtherLinkPlayers(), sTradeAnim->linkData, sizeof(sTradeAnim->linkData));
             sTradeAnim->scheduleLinkTransfer++;
         }
-        // fallthrough
+        [[fallthrough]];
     case 2:
         sTradeAnim->scheduleLinkTransfer = 0;
         break;

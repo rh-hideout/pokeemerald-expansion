@@ -324,7 +324,7 @@ void Task_HandlePorthole(u8 taskId)
             return;
         }
         data[0] = EXECUTE_MOVEMENT;
-        //fallthrough
+        [[fallthrough]];
     case EXECUTE_MOVEMENT:
         if (data[1])
         {

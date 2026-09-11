@@ -1131,7 +1131,7 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
             ChangeSpriteAffineAnim(sprite, BALL_ROTATE_LEFT);
         else
             ChangeSpriteAffineAnim(sprite, BALL_ROTATE_RIGHT);
-        // fall through
+        [[fallthrough]];
     case BALL_ROLL_3:
         if (gBattleSpritesDataPtr->animationData->ballSubpx > 0xFF)
         {

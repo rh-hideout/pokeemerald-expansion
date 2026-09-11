@@ -303,6 +303,7 @@ s32 DoMysteryGiftListMenu(const struct WindowTemplate *windowTemplate, const str
         {
         case 2:
             LoadUserWindowBorderGfx(sMysteryGiftLinkMenu.windowId, tileNum, palOffset);
+            [[fallthrough]];
         case 1:
             DrawTextBorderOuter(sMysteryGiftLinkMenu.windowId, tileNum, palOffset / 16);
             break;

@@ -1010,7 +1010,7 @@ static void Chat_Join(void)
     case 0:
         PrepareSendBuffer_Join(sChat->sendMessageBuffer);
         sChat->funcState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (IsLinkTaskFinished() && !Rfu_IsPlayerExchangeActive())
         {
@@ -1397,7 +1397,7 @@ static void Chat_SendMessage(void)
 
         PrepareSendBuffer_Chat(sChat->sendMessageBuffer);
         sChat->funcState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (IsLinkTaskFinished() == TRUE && !Rfu_IsPlayerExchangeActive() && SendBlock(0, sChat->sendMessageBuffer, sizeof(sChat->sendMessageBuffer)))
             sChat->funcState++;
@@ -1882,7 +1882,7 @@ static bool32 ProcessReceivedChatMessage(u8 *dest, u8 *recvMessage)
         return TRUE;
     case CHAT_MESSAGE_DISBAND:
         StringCopy(sChat->hostName, name);
-        // fall through
+        [[fallthrough]];
     case CHAT_MESSAGE_LEAVE:
         if (sChat->multiplayerId != *recvMessage)
         {
@@ -2036,7 +2036,7 @@ static void Task_ReceiveChatMessage(u8 taskId)
         }
 
         tState = 1;
-        // fall through
+        [[fallthrough]];
     case 1:
         tLinkPlayerCount = GetLinkPlayerCount();
         if (sChat->linkPlayerCount != tLinkPlayerCount)
@@ -2545,13 +2545,13 @@ static bool32 Display_ScrollChat(u8 *state)
             sDisplay->scrollCount = 0;
             (*state)++;
         }
-        // fall through
+        [[fallthrough]];
     case 2:
         ScrollWindow(WIN_CHAT_HISTORY, 0, 5, PIXEL_FILL(1));
         CopyWindowToVram(WIN_CHAT_HISTORY, COPYWIN_GFX);
         sDisplay->scrollCount++;
         (*state)++;
-        // fall through
+        [[fallthrough]];
     case 3:
         if (IsDma3ManagerBusyWithBgCopy())
             return TRUE;

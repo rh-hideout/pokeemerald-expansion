@@ -2852,6 +2852,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     case HOLD_EFFECT_ROOM_SERVICE:
         if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM)
             gBattleMons[battler].statStages[STAT_SPEED] -= 1;
+        [[fallthrough]];
     case HOLD_EFFECT_MIRROR_HERB:
         if (opponentStatDrop && gAiLogicData->abilities[opposingBattler] == ABILITY_DEFIANT)
             gBattleMons[battler].statStages[STAT_ATK] += 2;
