@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_MILK_DRINK) == EFFECT_MILK_DRINK);
+    ASSUME(GetMoveTarget(MOVE_MILK_DRINK) == TARGET_USER_OR_ALLY);
 }
 
 SINGLE_BATTLE_TEST("Milk Drink heals the user for 50% HP")

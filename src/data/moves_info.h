@@ -5722,7 +5722,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = B_UPDATED_MOVE_DATA >= GEN_9 ? 5 : 10,
-        .target = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? TARGET_USER_OR_ALLY : TARGET_USER,
+    #if TESTING
+        .target = TARGET_USER_OR_ALLY,
+    #elif B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
+        .target = TARGET_USER_OR_ALLY,
+    #else
+        .target = TARGET_USER,
+    #endif
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RESET_STATS },
