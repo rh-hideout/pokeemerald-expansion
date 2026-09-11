@@ -58,6 +58,7 @@
   - [How to use dynamic trainer battle scripts](tutorials/how_to_dynamic_trainer_script.md)
   - [How to use the Dynamic Multichoice](tutorials/how_to_dynmultichoice.md)
   - [Bring X Pick Y](tutorials/bring_x_pick_y.md)
+  - [How to use the Battle Status Menu](tutorials/how_to_battle_status_menu.md)
 - [Changelog](./CHANGELOG.md)
     - [1.17.x]()
         - [Version 1.17.0](changelogs/1.17.x/1.17.0.md)

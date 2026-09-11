@@ -13,6 +13,7 @@
 #include "battle_pyramid.h"
 #include "battle_scripts.h"
 #include "battle_setup.h"
+#include "battle_info.h"
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"

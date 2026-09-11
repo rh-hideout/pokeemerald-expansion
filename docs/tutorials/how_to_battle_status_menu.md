@@ -1,0 +1,59 @@
+## How to use the battle status menu
+
+The Battle Info is a replica from modern games. 
+It displays each Pokemon's stat stages, volatile conditions, abilities and items for the player side, and field statuses.
+
+### How to add new field statuses or volatiles to the menu
+For new volatiles a new description `BattleInfoLabels` and enum `BattleInfoEffectData` have to be added 
+
+#### 1. Adding new battler volatiles 
+There are 3 options:
+```C
+static void TryAddActiveStatus(
+                enum BattleStatus status, 
+                u32 status, 
+                enum BattleSide side
+            );
+```
+`TryAddActiveStatus` is used for volatiles without a timer, meaning they persist until the battle is over
+It is also used when a timer is unknown
+```C
+
+static void TryAddActiveStatusTimer(
+                enum BattleStatus status, 
+                u32 remaining, 
+                u32 baseTotal, 
+                enum BattleSide side
+            );
+```
+`TryAddActiveStatusTimer` is used for volatiles that expire. 
+`remaining` is the time until it runs out. 
+`baseTotal` is the maximum amount of turns.
+
+#### 2. Field conditions
+```C
+static void TryAddActiveFieldStatus(
+                enum BattleStatus status, 
+                u32 fieldStatus, 
+                u32 timer, 
+                u32 totalTimer, 
+                enum BattleSide side
+            );
+```
+`TryAddActiveFieldStatus` is used for field statuses like Trick Room.
+If it's a permanent status, the timer will be ignored so the values passed can be zero.
+
+```C
+static void TryAddActiveSideStatus(
+                enum BattleStatus status, 
+                u32 sideStatus, 
+                u32 timer, 
+                u32 totalTimer, 
+                enum BattleSide side
+            );
+```
+`TryAddActiveSideStatus` is used  for side statuses like Light Screen.
+As previously, if it's a permanent status, the timer will be ignored so the values passed can be zero.
+
+### 3. Weather and Terrain
+Weather and Terrain have extra functions, `TryAddActiveWeather` and `TryAddActiveTerrain`.
