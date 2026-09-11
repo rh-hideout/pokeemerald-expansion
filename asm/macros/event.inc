@@ -2039,6 +2039,17 @@
 	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
+	.macro goto_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare goto_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro goto_if_nbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare goto_if, 0, \a, \l, \c
+	trycompare goto_if, 2, \a, \h, \c
+	.endm
+
 	.macro call_if_unset flag:req, dest:req
 	checkflag \flag
 	call_if FALSE, \dest
@@ -2071,6 +2082,17 @@
 
 	.macro call_if_ne a:req, b, c
 	trycompare call_if, NOT_EQUAL, \a, \b, \c
+	.endm
+
+	.macro call_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare call_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro call_if_nbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare call_if, 0, \a, \l, \c
+	trycompare call_if, 2, \a, \h, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c

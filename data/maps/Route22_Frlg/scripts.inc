@@ -25,8 +25,7 @@ Route22_EventScript_EarlyRival::
 	textcolor NPC_TEXT_COLOR_MALE
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	addobject LOCALID_ROUTE22_RIVAL
-	call_if_eq VAR_TEMP_1, 0, Route22_EventScript_EarlyRivalApproach
-	call_if_eq VAR_TEMP_1, 1, Route22_EventScript_EarlyRivalApproach
+	call_if_between VAR_TEMP_1, 0, 1, Route22_EventScript_EarlyRivalApproach
 	call_if_eq VAR_TEMP_1, 2, Route22_EventScript_EarlyRivalApproachBottom
 	delay 6
 	msgbox Route22_Text_EarlyRivalIntro
@@ -37,8 +36,7 @@ Route22_EventScript_EarlyRival::
 	closemessage
 	delay 10
 	playbgm MUS_RG_RIVAL_EXIT, 0
-	call_if_eq VAR_TEMP_1, 0, Route22_EventScript_EarlyRivalExit
-	call_if_eq VAR_TEMP_1, 1, Route22_EventScript_EarlyRivalExit
+	call_if_between VAR_TEMP_1, 0, 1, Route22_EventScript_EarlyRivalExit
 	call_if_eq VAR_TEMP_1, 2, Route22_EventScript_EarlyRivalExitBottom
 	fadedefaultbgm
 	removeobject LOCALID_ROUTE22_RIVAL
