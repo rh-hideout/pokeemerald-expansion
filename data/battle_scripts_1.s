@@ -5399,6 +5399,7 @@ BattleScript_BerryPPHeal_Anim:
 	return
 
 BattleScript_AirBalloonMsgInRet::
+	call BattleScript_ItemPopUpScripting
 	printstring STRINGID_AIRBALLOONFLOAT
 	waitmessage B_WAIT_TIME_LONG
 	return
