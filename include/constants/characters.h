@@ -237,6 +237,11 @@
 #define EXT_CTRL_CODE_ACCENT                 0x1A
 #define EXT_CTRL_CODE_BACKGROUND             0x1B
 #define EXT_CTRL_CODE_TEXT_COLORS            0x1C
+#define EXT_CTRL_CODE_CONDITION              0x1D
+#define EXT_CTRL_CODE_CONDITION_ELSE         0x1E
+#define EXT_CTRL_CODE_CONDITION_END          0x1F
+
+#define TEXT_CONDITION_CHECKGENDER           0x0
 
 #define TEXT_COLOR_TRANSPARENT  0x0
 #define TEXT_COLOR_WHITE        0x1
