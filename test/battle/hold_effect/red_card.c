@@ -453,7 +453,6 @@ SINGLE_BATTLE_TEST("Red Card does not activate if attacker's Sheer Force applied
 SINGLE_BATTLE_TEST("Red Card activates even if attacker's Sheer Force applied (Champions)")
 {
     enum Move move;
-    bool32 activate;
     PARAMETRIZE { move = MOVE_SCRATCH; activate = TRUE; }
     PARAMETRIZE { move = MOVE_STOMP; activate = FALSE; }
 
