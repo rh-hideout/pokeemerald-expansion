@@ -118,6 +118,7 @@ SINGLE_BATTLE_TEST("Throat Spray activates when a sound move is used")
             case MOVE_ECHOED_VOICE:
                 ITEM_POPUP(player, ITEM_THROAT_SPRAY);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                break;
             default:
                 NONE_OF {
                     ITEM_POPUP(player, ITEM_THROAT_SPRAY);

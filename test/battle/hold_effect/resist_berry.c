@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
         NONE_OF {
-            ITEM_POPUP(opponent, ITEM_BABIRI_BERRY);
+            ITEM_POPUP(opponent, ITEM_CHILAN_BERRY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
         }

@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Cell Battery doesn't activate if the holder protects")
             MESSAGE("The Cell Battery boosted the opposing Wobbuffet's Attack!");
         }
     } THEN {
-        EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
 
