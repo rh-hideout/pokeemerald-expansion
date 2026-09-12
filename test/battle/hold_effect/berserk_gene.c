@@ -240,7 +240,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
     }
 }
 
-SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
+SINGLE_BATTLE_TEST("Berserk Gene confusion can be healed with bag items")
 {
     enum Item item;
     PARAMETRIZE { item = ITEM_FULL_HEAL; }
@@ -261,6 +261,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_BERSERK_GENE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("Wobbuffet snapped out of its confusion!");
@@ -269,7 +270,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     }
 }
 
-SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items")
+SINGLE_BATTLE_TEST("Berserk Gene confusion can be healed with used held items")
 {
     enum Item item;
     PARAMETRIZE { item = ITEM_PERSIM_BERRY; }
