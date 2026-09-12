@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Air Balloon prevents the holder from taking damage from grou
     } WHEN {
         TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
-        ITEM_POPUP(opponent, ITEM_AIR_BALLOON);
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Air Balloon only displays entry message when user switches i
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        ITEM_POPUP(opponent, ITEM_AIR_BALLOON);
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         NOT MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
     }
