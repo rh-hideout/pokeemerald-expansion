@@ -6787,7 +6787,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         && !IsMultiHitMove(move)
         && moveEffect != EFFECT_POWER_BASED_ON_USER_HP
         && moveEffect != EFFECT_POWER_BASED_ON_TARGET_HP
-        && GetMovePriority(move) == 0)
+        && GetMovePriority(move) <= 0)
     {
         return 60;
     }
