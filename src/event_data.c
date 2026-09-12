@@ -206,16 +206,21 @@ u16 VarGetObjectEventGraphicsId(u8 id)
 
 u8 *GetFlagPointer(u16 id)
 {
-    if (id == 0)
+    switch (id)
+    {
+    case 0:
         return NULL;
-    else if (id < SPECIAL_FLAGS_START)
+    case 1 ... (FLAGS_COUNT - 1):
         return &gSaveBlock1Ptr->flags[id / 8];
+    case SPECIAL_FLAGS_START ... SPECIAL_FLAGS_END:
+        return &sSpecialFlags[(id - SPECIAL_FLAGS_START) / 8];
 #if TESTING
-    else if (id >= TESTING_FLAGS_START)
+    case TESTING_FLAGS_START ... TESTING_FLAGS_END:
         return &sTestFlags[(id - TESTING_FLAGS_START) / 8];
 #endif // TESTING
-    else
-        return &sSpecialFlags[(id - SPECIAL_FLAGS_START) / 8];
+    default:
+        return NULL;
+    }
 }
 
 u8 FlagSet(u16 id)
@@ -223,6 +228,12 @@ u8 FlagSet(u16 id)
     u8 *ptr = GetFlagPointer(id);
     if (ptr)
         *ptr |= 1 << (id & 7);
+    else if (id == FLAG_ALWAYS_FALSE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_FALSE to FlagSet!");
+    else if (id == FLAG_ALWAYS_TRUE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_TRUE to FlagSet!");
+    else if (id != 0)
+        errorf("Passed invalid flag to FlagSet: %x!", id);
     return 0;
 }
 
@@ -231,6 +242,12 @@ u8 FlagToggle(u16 id)
     u8 *ptr = GetFlagPointer(id);
     if (ptr)
         *ptr ^= 1 << (id & 7);
+    else if (id == FLAG_ALWAYS_FALSE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_FALSE to FlagToggle!");
+    else if (id == FLAG_ALWAYS_TRUE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_TRUE to FlagToggle!");
+    else if (id != 0)
+        errorf("Passed invalid flag to FlagToggle: %x!", id);
     return 0;
 }
 
@@ -239,6 +256,12 @@ u8 FlagClear(u16 id)
     u8 *ptr = GetFlagPointer(id);
     if (ptr)
         *ptr &= ~(1 << (id & 7));
+    else if (id == FLAG_ALWAYS_FALSE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_FALSE to FlagClear!");
+    else if (id == FLAG_ALWAYS_TRUE)
+        errorf("Passed pseudo-flag FLAG_ALWAYS_TRUE to FlagClear!");
+    else if (id != 0)
+        errorf("Passed invalid flag to FlagClear: %x!", id);
     return 0;
 }
 
@@ -247,7 +270,14 @@ bool8 FlagGet(u16 id)
     u8 *ptr = GetFlagPointer(id);
 
     if (!ptr)
-        return FALSE;
+    {
+        if (id == FLAG_ALWAYS_FALSE)
+            return FALSE;
+        else if (id == FLAG_ALWAYS_TRUE)
+            return TRUE;
+        else
+            return FALSE;
+    }
 
     if (!(((*ptr) >> (id & 7)) & 1))
         return FALSE;
