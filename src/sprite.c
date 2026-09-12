@@ -7,6 +7,7 @@
 #include "text.h"
 #include "battle_anim.h"
 #include "test/test.h"
+#include "decompress.h"
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
@@ -777,8 +778,6 @@ void SpriteCallbackDummy(struct Sprite *sprite)
 {
 }
 
-extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
-
 void ProcessSpriteCopyRequests(void)
 {
     if (sShouldProcessSpriteCopyRequests)
@@ -790,7 +789,7 @@ void ProcessSpriteCopyRequests(void)
             if (!sSpriteCopyRequests[i].compressedFast)
                 CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
             else
-                SmolFrameUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index);
+                RlFastUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index);
             sSpriteCopyRequestCount--;
             i++;
         }
@@ -1553,7 +1552,7 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
         if (compressedFast)
         {
             for (i = 0; i < ((uint8_t *)(sheet->data))[0]; i++)
-                SmolFrameUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * ((uint8_t *)(sheet->data))[1] * TILE_SIZE_4BPP, i);
+                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * (((uint8_t *)(sheet->data))[1] + 1) * TILE_SIZE_4BPP, i);
         }
         else
             CpuSmartCopy16(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset, sheet->size - offset);

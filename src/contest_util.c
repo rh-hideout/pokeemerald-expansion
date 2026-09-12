@@ -1081,8 +1081,6 @@ static void Task_FlashStarsAndHearts(u8 taskId)
         sContestResults->data->pointsFlashing = TRUE;
 }
 
-extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
-
 static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
 {
     const u8 *iconPtr;
@@ -1091,7 +1089,7 @@ static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, 
     EWRAM_DATA static ALIGNED(4) uint8_t buffer[4][512];
 
     iconPtr = GetMonIconPtr(species, personality);
-    SmolFrameUncomp(iconPtr, buffer[monIndex], srcOffset);
+    RlFastUncomp(iconPtr, buffer[monIndex], srcOffset);
 
     iconPtr = buffer[monIndex] + 0x80;
     if (useDmaNow)

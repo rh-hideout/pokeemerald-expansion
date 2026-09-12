@@ -1,5 +1,6 @@
 #include "global.h"
 #include "dma3.h"
+#include "decompress.h"
 
 #define MAX_DMA_REQUESTS 128
 
@@ -44,8 +45,6 @@ void ClearDma3Requests(void)
     sDma3ManagerLocked = FALSE;
 }
 
-extern void SmolFrameUncomp(const u8 *src, u8 *dst, u32 frame);
-
 void ProcessDma3Requests(void)
 {
     u16 bytesTransferred;
@@ -69,7 +68,7 @@ void ProcessDma3Requests(void)
         {
         case DMA_REQUEST_COPY32: // regular 32-bit copy
             if (sDma3Requests[sDma3RequestCursor].compressedFast)
-                SmolFrameUncomp(sDma3Requests[sDma3RequestCursor].src,
+                RlFastUncomp(sDma3Requests[sDma3RequestCursor].src,
                                 sDma3Requests[sDma3RequestCursor].dest,
                                 sDma3Requests[sDma3RequestCursor].size);
             else
@@ -84,7 +83,7 @@ void ProcessDma3Requests(void)
             break;
         case DMA_REQUEST_COPY16:    // regular 16-bit copy
             if (sDma3Requests[sDma3RequestCursor].compressedFast)
-                SmolFrameUncomp(sDma3Requests[sDma3RequestCursor].src,
+                RlFastUncomp(sDma3Requests[sDma3RequestCursor].src,
                                 sDma3Requests[sDma3RequestCursor].dest,
                                 sDma3Requests[sDma3RequestCursor].size);
             else

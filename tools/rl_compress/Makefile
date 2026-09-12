@@ -1,3 +1,7 @@
+CC ?= gcc
+
+CFLAGS = -Wall -Wextra -Werror -std=c11 -O3
+
 .PHONY: all clean
 
 SRCS = rl_compress.c
@@ -12,7 +16,7 @@ all: rl_compress$(EXE)
 	@:
 
 rl_compress$(EXE): $(SRCS)
-	$(CC) -o3 $(SRCS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $(SRCS) -o $@ $(LDFLAGS)
 
 clean:
 	$(RM) rl_compress$(EXE)
