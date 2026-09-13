@@ -3660,7 +3660,7 @@ static void Task_OnCloseBoxPressed(u8 taskId)
             gPartiesCount[B_TRAINER_PLAYER] = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
             {
-                gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+                gSpecialVar_0x8004 = PARTY_MON_CANCEL;
                 gSpecialVar_Result = FALSE;
             }
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
@@ -3738,7 +3738,7 @@ static void Task_OnBPressed(u8 taskId)
             gPartiesCount[B_TRAINER_PLAYER] = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
             {
-                gSpecialVar_0x8004  = PARTY_NOTHING_CHOSEN;
+                gSpecialVar_0x8004  = PARTY_MON_CANCEL;
                 gSpecialVar_Result  = FALSE;
             }
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;

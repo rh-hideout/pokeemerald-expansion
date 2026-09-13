@@ -9,7 +9,7 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_SeedotBrother::
 	setvar VAR_0x8009, SPECIES_SEEDOT
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowSeedot
+	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowSeedot
 	special CompareSeedotSize
 	goto_if_eq VAR_RESULT, COMPARE_SIZE_INCORRECT_SPECIES, SootopolisCity_LotadAndSeedotHouse_EventScript_NotSeedot
 	goto_if_eq VAR_RESULT, COMPARE_SIZE_SMALLER, SootopolisCity_LotadAndSeedotHouse_EventScript_SmallSeedot
@@ -53,7 +53,7 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_LotadBrother::
 	setvar VAR_0x8009, SPECIES_LOTAD
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowLotad
+	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowLotad
 	special CompareLotadSize
 	goto_if_eq VAR_RESULT, COMPARE_SIZE_INCORRECT_SPECIES, SootopolisCity_LotadAndSeedotHouse_EventScript_NotLotad
 	goto_if_eq VAR_RESULT, COMPARE_SIZE_SMALLER, SootopolisCity_LotadAndSeedotHouse_EventScript_SmallLotad

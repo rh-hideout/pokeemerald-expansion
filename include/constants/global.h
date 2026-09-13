@@ -92,6 +92,7 @@ enum __attribute__((packed)) PartyMon
     PARTY_MON_5,
     PARTY_MON_NONE = PARTY_SIZE,
     PARTY_MON_CANCEL,
+    PC_MON_CHOSEN,
 };
 
 // A position within the in-battle party order, not an identity; the Pokémon
