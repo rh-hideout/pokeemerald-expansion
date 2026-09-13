@@ -13,13 +13,8 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
         TURN { MOVE(opponentLeft, MOVE_SWORDS_DANCE); }
         TURN { SWITCH(opponentRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
     } SCENE {
-        // Turn 1 - buff up
-        MESSAGE("The opposing Wobbuffet used Swords Dance!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        // Turn 2 - Switch into Flamigo
-        MESSAGE("2 sent out Flamigo!");
         ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
-        MESSAGE("The opposing Flamigo copied the opposing Wobbuffet's stat changes!");
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
@@ -94,7 +89,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Focus Energy critical hit boost")
     }
 }
 
-DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
+DOUBLE_BATTLE_TEST("Costar copies stat stages and Dragon Cheer critical hit boost together")
 {
     PASSES_RANDOMLY(1, 8, RNG_CRITICAL_HIT);
     GIVEN {
@@ -115,6 +110,8 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
         ABILITY_POPUP(playerRight, ABILITY_COSTAR);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }
 
