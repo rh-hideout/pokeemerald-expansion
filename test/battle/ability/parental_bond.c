@@ -739,8 +739,6 @@ SINGLE_BATTLE_TEST("Parental Bond does not affect Struggle")
 
 SINGLE_BATTLE_TEST("Parental Bond only scatters coins once with Pay Day")
 {
-    KNOWN_FAILING;
-
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY));
         PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Level(50); }
