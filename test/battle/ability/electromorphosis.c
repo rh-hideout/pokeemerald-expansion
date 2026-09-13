@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
 
         PLAYER(SPECIES_BELLIBOLT) { Ability(ABILITY_ELECTROMORPHOSIS); Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
+        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
     }
     WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK), MOVE(opponent, move); }
@@ -28,12 +28,6 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        if (move == MOVE_SCRATCH) {
-            MESSAGE("Being hit by Scratch charged Bellibolt with power!");
-        }
-        else {
-            MESSAGE("Being hit by Gust charged Bellibolt with power!");
-        }
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfter);
@@ -41,12 +35,6 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        if (move == MOVE_SCRATCH) {
-            MESSAGE("Being hit by Scratch charged Bellibolt with power!");
-        }
-        else {
-            MESSAGE("Being hit by Gust charged Bellibolt with power!");
-        }
     }
     THEN {
         EXPECT_MUL_EQ(dmgBefore, Q_4_12(2.0), dmgAfter);
@@ -91,15 +79,12 @@ SINGLE_BATTLE_TEST("Electromorphosis triggers on each multistrike hit but Charge
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Scratch charged Bellibolt with power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfterSingleHit);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Double Hit charged Bellibolt with power!");
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Double Hit charged Bellibolt with power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfterMultiHit);
     } THEN {
