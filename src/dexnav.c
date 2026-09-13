@@ -1180,7 +1180,10 @@ static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel)
 static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move *moves)
 {
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
+    enum WildPokemonArea wildArea = sDexNavSearchDataPtr->environment == ENCOUNTER_TYPE_WATER ? WILD_AREA_WATER : WILD_AREA_LAND;
 
+    SET_ENCOUNTER_AREA(gEncounterType, wildArea);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     CreateWildMon(species, level);  // shiny rate bonus handled in CreateBoxMon
     SetBoxMonPerfectIVs(&mon->box, min(3, potential)); // Will not exceed 3 Perfect IVs
 
@@ -1272,6 +1275,7 @@ static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encou
     // Store generated mon moves into Dex Nav Struct
     for (i = 0; i < MAX_MON_MOVES; i++)
         moveDst[i] = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_MOVE1 + i);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
 
     // set first move slot to a random egg move if search level is good enough
     if (genMove)

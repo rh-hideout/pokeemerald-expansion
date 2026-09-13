@@ -237,14 +237,14 @@ bool32 HasAtLeastOneBerry(void)
     return (gSpecialVar_Result = FALSE);
 }
 
-bool32 HasAtLeastOnePokeBall(void)
+bool32 HasNoPokeball(void)
 {
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
         if (CheckBagHasItem(gPokeBalls[ballId].itemId, 1) == TRUE)
-            return TRUE;
+            return FALSE;
     }
-    return FALSE;
+    return TRUE;
 }
 
 bool32 CheckBagHasSpace(enum Item itemId, u16 count)

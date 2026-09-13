@@ -135,6 +135,7 @@ TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
         givemon SPECIES_CASTFORM_NORMAL, 25, nature=NATURE_RANDOM, gender=MON_GENDER_RANDOM, hpIv=0, atkIv=0, defIv=0, speedIv=0, spAtkIv=0, spDefIv=0;
     );
 
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY), personality);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
 }

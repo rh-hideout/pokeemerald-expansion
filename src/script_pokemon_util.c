@@ -129,6 +129,7 @@ void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, STATIC_WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     if (item)
@@ -148,6 +149,7 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
         RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, STATIC_WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species1, level1, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     if (item1)
@@ -387,6 +389,7 @@ u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
     struct Pokemon mon;
     u8 heldItem[2];
 
+    SET_ENCOUNTER_ORIGIN(gEncounterType, GIFTMON_ORIGIN);
     CreateRandomMon(&mon, species, level);
     if (item)
     {
@@ -453,6 +456,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     monTemplate.isEgg        = PARSE_FLAG(25, FALSE);
     if (side == B_SIDE_PLAYER)
     {
+        assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to give a Pokemon while encounter origin is set: %d", ENCOUNTER_ORIGIN(gEncounterType));
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
         monTemplate.origin = GIFTMON_ORIGIN;
     }

@@ -378,6 +378,13 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
         return;
     }
 
+    enum WildPokemonArea wildArea = WILD_AREA_LAND;
+    u32 metatileBehavior = MapGridGetMetatileBehaviorAt(owe->currentCoords.x, owe->currentCoords.y);
+
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
+        wildArea = WILD_AREA_WATER;
+    SET_ENCOUNTER_AREA(gEncounterType, wildArea);
+
     if (category < ROAMER_COUNT && StartWildBattleWithOWE_CheckRoamer(category))
         return;
 
@@ -394,6 +401,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
 
     ZeroEnemyPartyMons();
     personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY, &shiny);
@@ -845,6 +853,7 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
 
     if (!CreateEnemyPartyOWE(info, x, y))
     {
+        SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
         ZeroEnemyPartyMons();
         info->speciesId = SPECIES_NONE;
         return;
@@ -869,6 +878,7 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
     if (info->category == OWE_CATEGORY_UNDEFINED)
         info->category = OWE_CATEGORY_WILD;
 
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
     ZeroEnemyPartyMons();
 }
 

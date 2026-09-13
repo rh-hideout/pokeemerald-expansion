@@ -18,8 +18,8 @@ enum WildPokemonArea {
 
 // Low nibble holds the enum WildPokemonArea the encounter came from, high nibble
 // the enum GeneratedMonOrigin of the Pokémon being generated. Either half can be
-// set on its own, so they are cleared separately: the area when the encounter
-// ends, the origin once the Pokémon has been created.
+// set on its own, so they are cleared separately: gift origins after the Pokémon
+// is created, and encounter areas and battle origins when the encounter ends.
 #define ENCOUNTER_AREA(type)            ((enum WildPokemonArea)((type) & 0xF))
 #define ENCOUNTER_ORIGIN(type)          ((enum GeneratedMonOrigin)((type) >> 4))
 #define SET_ENCOUNTER_AREA(type, area)  ((type) = ((type) & 0xF0) | ((area) & 0xF))

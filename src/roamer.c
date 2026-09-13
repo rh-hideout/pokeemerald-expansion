@@ -4,6 +4,7 @@
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
+#include "wild_encounter.h"
 
 // Despite having a variable to track it, the roamer is
 // hard-coded to only ever be in map group 0
@@ -105,6 +106,7 @@ static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
         GetSynchronizedGender(ROAMER_ORIGIN, species),
         GetSynchronizedNature(ROAMER_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, ROAMER_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     ROAMER(index)->ivs = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IVS);
@@ -120,6 +122,7 @@ static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
     ROAMER(index)->smart = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SMART);
     ROAMER(index)->tough = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_TOUGH);
     ROAMER(index)->shiny = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
     ROAMER(index)->active = TRUE;
     sRoamerLocation[index][MAP_GRP] = ROAMER_MAP_GROUP;
     sRoamerLocation[index][MAP_NUM] = sRoamerLocations[Random() % NUM_LOCATION_SETS][0];
@@ -249,6 +252,7 @@ void CreateRoamerMonInstance(u32 roamerIndex)
     u32 status = ROAMER(roamerIndex)->statusA + (ROAMER(roamerIndex)->statusB << 8);
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
     ZeroEnemyPartyMons();
+    SET_ENCOUNTER_ORIGIN(gEncounterType, ROAMER_ORIGIN);
     CreateMonWithIVsPersonality(mon, ROAMER(roamerIndex)->species, ROAMER(roamerIndex)->level, ROAMER(roamerIndex)->ivs, ROAMER(roamerIndex)->personality);
     SetMonData(mon, MON_DATA_STATUS, &status);
     SetMonData(mon, MON_DATA_HP, &ROAMER(roamerIndex)->hp);
