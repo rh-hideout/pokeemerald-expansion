@@ -84,7 +84,15 @@ It only takes 3 arguments (or 6 if you want to make it a double wild battle)
 - `species2`, `level2`, and `item2` determine the `species`, `level` and `held item` respectively of the second Pokemon generated in case you want to make a double wild battle
 - The other properties like IVs and personality will be set randomly the same way as they are set in regular wild battles.
 
-Pokemon generated with `setwildbattle` will always be considered static encounters (`STATIC_WILDMON_ORIGIN`) and will thus be eligible to be affected by Synchronize and Cute Charm
+#### Encounter area and Pokemon origin
+
+`gEncounterType` stores two independent values: the encounter area and the generated Pokemon's origin. Use `SET_ENCOUNTER_AREA` and `SET_ENCOUNTER_ORIGIN` to update either value without overwriting the other, and read them with `ENCOUNTER_AREA` and `ENCOUNTER_ORIGIN`.
+
+The encounter area is a battle value associated with the wild Pokemon table used for the encounter. Regular land, water, Rock Smash, fishing, and hidden encounters have an area; static encounters, roamers, and mass outbreaks do not. The area remains available until the battle ends.
+
+The origin is a Pokemon generation value. Set it before calling `CreateMon` or `CreateBoxMon` so origin-dependent generation behavior is applied correctly. Gift and roamer origins are cleared by `CreateBoxMon` after generation. A pending static wild battle keeps its origin until battle teardown, so do not place unrelated commands between `setwildbattle` or enemy-side `createmon` and the command that starts the battle. Debug builds assert if a gift or roamer is generated while another origin is active.
+
+Pokemon generated with `setwildbattle` will always be considered static encounters (`STATIC_WILDMON_ORIGIN`) and will thus be eligible to be affected by Synchronize and Cute Charm.
 
 #### Synchronize and Cute Charm
 
@@ -95,10 +103,6 @@ Pokemon generated with `setwildbattle` will always be considered static encounte
 When you use `NATURE_MAY_SYNCHRONIZE` or `MON_GENDER_MAY_CUTE_CHARM`, you are telling the game can check if the player has a Pokemon with Synchronize or Cute Charm in the first slot of its party and roll a die to see if the nature or gender should be fixed based on the ability or rolled normally.
 
 The Pokemon generated also need to be of the right "origin" to be eligible for Synchronize or Cute Charm. We don't want to "synchronize" a Pokemon belonging to a trainer or change the gender of a gift Pokemon with Cute Charm. So if a Pokemon is generated for the player side, it will be considered a "gift Pokemon" (`GIFTMON_ORIGIN`) and if a Pokemon is generated on the enemy side, it will be considered a static wild encounter (`STATIC_WILDMON_ORIGIN`).
-
-The current encounter area and generated Pokemon origin are stored together in `gEncounterType`. Use `SET_ENCOUNTER_AREA` and `SET_ENCOUNTER_ORIGIN` to update either value without overwriting the other, and read them with `ENCOUNTER_AREA` and `ENCOUNTER_ORIGIN`. Set the origin before calling `CreateMon` or `CreateBoxMon` so origin-dependent generation behavior is applied correctly. Gift origins are cleared by `CreateBoxMon`; wild, static, and roamer origins remain available until the battle ends. Generation that does not lead into a battle must clear its origin explicitly.
-
-Because a pending wild encounter keeps its origin until battle teardown, do not use `givemon` or player-side `createmon` between `setwildbattle` or enemy-side `createmon` and the corresponding battle. Debug builds assert when a gift is created while another origin is still active.
 
 `givemon` will default to use `NATURE_MAY_SYNCHRONIZE` and `MON_GENDER_MAY_CUTE_CHARM` because we assume you will use `givemon` to create "gift Pokemon" but if you don't want it to apply in a specific script, you can explicitly use `NATURE_RANDOM` and `MON_GENDER_RANDOM` instead
 

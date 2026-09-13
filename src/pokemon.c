@@ -1025,7 +1025,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     if (GetSpeciesAbility(species, 1))
         SetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, &value);
 
-    if (ENCOUNTER_ORIGIN(gEncounterType) == GIFTMON_ORIGIN)
+    if (ENCOUNTER_ORIGIN(gEncounterType) == GIFTMON_ORIGIN
+     || ENCOUNTER_ORIGIN(gEncounterType) == ROAMER_ORIGIN)
         SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
 }
 

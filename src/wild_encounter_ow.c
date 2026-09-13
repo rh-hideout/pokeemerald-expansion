@@ -383,10 +383,11 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
 
     if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
         wildArea = WILD_AREA_WATER;
-    SET_ENCOUNTER_AREA(gEncounterType, wildArea);
-
     if (category < ROAMER_COUNT && StartWildBattleWithOWE_CheckRoamer(category))
         return;
+
+    if (category != OWE_CATEGORY_MASS_OUTBREAK)
+        SET_ENCOUNTER_AREA(gEncounterType, wildArea);
 
     enum Species speciesId = OW_SPECIES(owe);
     bool32 shiny = OW_SHINY(owe) ? TRUE : FALSE;

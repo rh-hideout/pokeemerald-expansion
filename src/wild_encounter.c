@@ -730,12 +730,8 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
-                {
-                    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
                     return FALSE;
-                }
 
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
             }
@@ -743,7 +739,6 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                     BattleSetup_StartWildBattle();
                     return TRUE;
                 }
@@ -787,12 +782,8 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
-                {
-                    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
                     return FALSE;
-                }
 
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
             }
@@ -925,16 +916,17 @@ bool8 SweetScentWildEncounter(void)
 
             if (TryStartRoamerEncounter())
             {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
             }
 
-            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             if (DoMassOutbreakEncounterTest() == TRUE)
                 SetUpMassOutbreakEncounter(0);
             else
+            {
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                 TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0);
+            }
 
             BattleSetup_StartWildBattle();
             return TRUE;
@@ -950,7 +942,6 @@ bool8 SweetScentWildEncounter(void)
 
             if (TryStartRoamerEncounter())
             {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
             }
