@@ -3248,7 +3248,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following_Asym,
+            sAnimTable_Following,
             gOverworldPalette_AegislashShield,
             gShinyOverworldPalette_AegislashShield
         )
@@ -3321,6 +3321,17 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 14, SHADOW_SIZE_M)
         FOOTPRINT(Aegislash)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_AegislashBlade,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following_Asym,
+            gOverworldPalette_AegislashBlade,
+            gShinyOverworldPalette_AegislashBlade
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sAegislashLevelUpLearnset,
         .teachableLearnset = sAegislashTeachableLearnset,
         .formSpeciesIdTable = sAegislashFormSpeciesIdTable,
