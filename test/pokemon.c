@@ -140,6 +140,20 @@ TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
 }
 
+TEST("Gift and roamer origins are reset after Pokémon generation")
+{
+    enum GeneratedMonOrigin origin;
+    struct Pokemon mon;
+
+    PARAMETRIZE { origin = GIFTMON_ORIGIN; }
+    PARAMETRIZE { origin = ROAMER_ORIGIN; }
+
+    SET_ENCOUNTER_ORIGIN(gEncounterType, origin);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 50, 0, OTID_STRUCT_PLAYER_ID);
+
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
+}
+
 TEST("Hyper Training increases stats without affecting IVs")
 {
     u32 data, hp, atk, def, speed, spatk, spdef, friendship = 0;
