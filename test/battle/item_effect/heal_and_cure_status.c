@@ -226,3 +226,19 @@ SINGLE_BATTLE_TEST("Full Restore resets Toxic Counter")
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Full restore has no effect if the target has full HP and no status")
+{
+    GIVEN {
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_FULL_RESTORE, 1);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_FULL_RESTORE, 1));
+    }
+}

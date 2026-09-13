@@ -4841,7 +4841,7 @@ static bool32 IsItemFlute(enum Item item)
 void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
 {
     struct Pokemon *mon = GetPartyMonFromPartyMenuId(gPartyMenu.slotId);
-    if (CannotUseItemsInBattle(gSpecialVar_ItemId, mon))
+    if (CannotSelectItemsInBattle(gSpecialVar_ItemId, mon))
     {
         gPartyMenuUseExitCallback = FALSE;
         PlaySE(SE_SELECT);
@@ -5458,7 +5458,7 @@ static void TryUseItemOnMove(u8 taskId)
     // In battle, set appropriate variables to be used in battle script.
     if (gMain.inBattle)
     {
-        if (CannotUseItemsInBattle(gSpecialVar_ItemId, mon))
+        if (CannotSelectItemsInBattle(gSpecialVar_ItemId, mon))
         {
             gPartyMenuUseExitCallback = FALSE;
             PlaySE(SE_SELECT);

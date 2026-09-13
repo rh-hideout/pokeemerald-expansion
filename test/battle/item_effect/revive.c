@@ -265,6 +265,24 @@ SINGLE_BATTLE_TEST("Revive keeps Mimikyu Busted forms and Eiscue Noice in their 
     }
 }
 
+SINGLE_BATTLE_TEST("Max Revive has no effect if the target is alive")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { USE_ITEM(player, ITEM_MAX_REVIVE, partyIndex: 1); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_MAX_REVIVE, 1));
+        EXPECT_EQ(gParties[B_TRAINER_PLAYER]->hp, 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Revive can only be used if the selected Pokémon has fainted")
 {
     bool32 fainted;
@@ -284,6 +302,6 @@ SINGLE_BATTLE_TEST("Revive can only be used if the selected Pokémon has fainted
             TURN {}
     } THEN {
         gPartyMenu.slotId = 0;
-        EXPECT_EQ(CannotUseItemsInBattle(ITEM_REVIVE, &gParties[B_TRAINER_PLAYER][0]), !fainted);
+        EXPECT_EQ(CannotUseItemsInBattle(ITEM_REVIVE, &gParties[B_TRAINER_PLAYER][0], 0), !fainted);
     }
 }

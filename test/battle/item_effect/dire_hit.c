@@ -24,3 +24,21 @@ SINGLE_BATTLE_TEST("Dire Hit increases a battler's critical hit chance by 2 stag
         MESSAGE("A critical hit!");
     }
 }
+
+SINGLE_BATTLE_TEST("Dire Hit has no effect if the target already received a crit boost")
+{
+    GIVEN {
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        ASSUME(gItemsInfo[ITEM_DIRE_HIT].battleUsage == EFFECT_ITEM_SET_FOCUS_ENERGY);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_DIRE_HIT, 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
+        TURN { USE_ITEM(player, ITEM_DIRE_HIT, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_DIRE_HIT, 1));
+    }
+}
