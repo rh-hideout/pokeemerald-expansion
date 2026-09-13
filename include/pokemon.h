@@ -880,8 +880,8 @@ u8 GetItemEffectParamOffset(enum BattlerId battler, enum Item itemId, u8 effectB
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
 enum Species GetGMaxTargetSpecies(enum Species species);
-bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState);
-enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, enum Item evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
+//bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState);
+//enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, enum Item evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum);
@@ -980,6 +980,7 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 bool32 IsSpeciesOfType(enum Species species, enum Type type);
+struct BoxPokemon *GetBoxMonFromPartyIndex(u32 partyIndex);
 struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));

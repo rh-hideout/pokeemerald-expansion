@@ -39,8 +39,9 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
-struct EvoInfo
+struct EvoScene
 {
+    struct EvolutionData data;
     u8 preEvoSpriteId;
     u8 postEvoSpriteId;
     u8 evoTaskId;
@@ -49,7 +50,7 @@ struct EvoInfo
     u16 savedPalette[48];
 };
 
-static EWRAM_DATA struct EvoInfo *sEvoStructPtr = NULL;
+static EWRAM_DATA struct EvoScene *sEvoStructPtr = NULL;
 static EWRAM_DATA u16 *sBgAnimPal = NULL;
 
 COMMON_DATA void (*gCB2_AfterEvolution)(void) = NULL;
@@ -147,6 +148,394 @@ static const u8 sBgAnim_PalIndexes[][16] = {
     {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },
     {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }
 };
+
+bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct EvolutionData *evo, const struct EvolutionParam *params)
+{
+    u32 i, j;
+    enum Item heldItem = GetBoxMonData(boxmon, MON_DATA_HELD_ITEM);
+    u32 gender = GetBoxMonGender(boxmon);
+    u32 friendship = GetBoxMonData(boxmon, MON_DATA_FRIENDSHIP);
+    u32 attack = GetBoxMonData(boxmon, MON_DATA_ATK);
+    u32 defense = GetBoxMonData(boxmon, MON_DATA_DEF);
+    u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
+    u16 upperPersonality = personality >> 16;
+    u32 weather = GetCurrentWeather();
+    u32 nature = GetNatureFromPersonality(personality);
+    bool32 removeHoldItem = FALSE;
+    enum Item removeBagItem = ITEM_NONE;
+    u32 removeBagItemCount = 0;
+    u32 evolutionTracker = GetBoxMonData(boxmon, MON_DATA_EVOLUTION_TRACKER);
+    enum Species partnerSpecies;
+    enum Item partnerHeldItem;
+    enum HoldEffect partnerHoldEffect;
+
+    if (tradePartner != NULL)
+    {
+        partnerSpecies = GetBoxMonData(tradePartner, MON_DATA_SPECIES);
+        partnerHeldItem = GetBoxMonData(tradePartner, MON_DATA_HELD_ITEM);
+        partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
+    }
+    else
+    {
+        partnerSpecies = SPECIES_NONE;
+        partnerHeldItem = ITEM_NONE;
+        partnerHoldEffect = HOLD_EFFECT_NONE;
+    }
+
+    // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
+    for (i = 0; params != NULL && params[i].condition != CONDITIONS_END; i++)
+    {
+        enum EvolutionConditions condition = params[i].condition;
+        bool32 currentCondition = FALSE;
+
+        switch (condition)
+        {
+        // Gen 2
+        case IF_GENDER:
+            if (gender == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_MIN_FRIENDSHIP:
+            if (friendship >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_ATK_GT_DEF:
+            if (attack > defense)
+                currentCondition = TRUE;
+            break;
+        case IF_ATK_EQ_DEF:
+            if (attack == defense)
+                currentCondition = TRUE;
+            break;
+        case IF_ATK_LT_DEF:
+            if (attack < defense)
+                currentCondition = TRUE;
+            break;
+        case IF_TIME:
+            if (GetTimeOfDay() == params[i].arg1)
+                currentCondition = TRUE;
+
+            break;
+        case IF_NOT_TIME:
+            if (GetTimeOfDay() != params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_HOLD_ITEM:
+            if (heldItem == params[i].arg1)
+            {
+                currentCondition = TRUE;
+                removeHoldItem = TRUE;
+            }
+            break;
+        // Gen 3
+        case IF_PID_UPPER_MODULO_10_GT:
+            if ((upperPersonality % 10) > params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_UPPER_MODULO_10_EQ:
+            if ((upperPersonality % 10) == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_UPPER_MODULO_10_LT:
+            if ((upperPersonality % 10) < params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_MIN_BEAUTY:
+        {
+            u32 beauty = GetBoxMonData(boxmon, MON_DATA_BEAUTY, 0);
+            if (beauty >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        }
+        case IF_MIN_COOLNESS:
+        {
+            u32 coolness = GetBoxMonData(boxmon, MON_DATA_COOL, 0);
+            if (coolness >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        }
+        case IF_MIN_SMARTNESS:
+        // remember that even though it's called "Smart/Smartness" here,
+        // from gen 6 and up it's known as "Clever/Cleverness."
+        {
+            u32 smartness = GetBoxMonData(boxmon, MON_DATA_SMART, 0);
+            if (smartness >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        }
+        case IF_MIN_TOUGHNESS:
+        {
+            u32 toughness = GetBoxMonData(boxmon, MON_DATA_TOUGH, 0);
+            if (toughness >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        }
+        case IF_MIN_CUTENESS:
+        {
+            u32 cuteness = GetBoxMonData(boxmon, MON_DATA_CUTE, 0);
+            if (cuteness >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        }
+        // Gen 4
+        case IF_SPECIES_IN_PARTY:
+            for (j = 0; j < PARTY_SIZE; j++)
+            {
+                if (GetBoxMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES) == params[i].arg1)
+                {
+                    currentCondition = TRUE;
+                    break;
+                }
+            }
+            break;
+        case IF_IN_MAP:
+            if (params[i].arg1 == ((gSaveBlock1Ptr->location.mapGroup) << 8 | gSaveBlock1Ptr->location.mapNum))
+                currentCondition = TRUE;
+            break;
+        case IF_IN_MAPSEC:
+            if (gMapHeader.regionMapSectionId == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_KNOWS_MOVE:
+            if (BoxMonKnowsMove(boxmon, params[i].arg1))
+                currentCondition = TRUE;
+            break;
+        // Gen 5
+        case IF_TRADE_PARTNER_SPECIES:
+            if (params[i].arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
+                currentCondition = TRUE;
+            break;
+        // Gen 6
+        case IF_TYPE_IN_PARTY:
+            for (j = 0; j < PARTY_SIZE; j++)
+            {
+                enum Species currSpecies = GetBoxMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES);
+                if (GetSpeciesType(currSpecies, 0) == params[i].arg1
+                 || GetSpeciesType(currSpecies, 1) == params[i].arg1)
+                {
+                    currentCondition = TRUE;
+                    break;
+                }
+            }
+            break;
+        case IF_WEATHER:
+            if (params[i].arg1 == WEATHER_RAIN)
+            {
+                if (weather == WEATHER_RAIN || weather == WEATHER_RAIN_THUNDERSTORM || weather == WEATHER_DOWNPOUR)
+                    currentCondition = TRUE;
+            }
+            else if (params[i].arg1 == WEATHER_FOG)
+            {
+                if (weather == WEATHER_FOG_DIAGONAL || weather == WEATHER_FOG_HORIZONTAL)
+                    currentCondition = TRUE;
+            }
+            else if (weather == params[i].arg1)
+            {
+                currentCondition = TRUE;
+            }
+            break;
+        case IF_KNOWS_MOVE_TYPE:
+            for (j = 0; j < MAX_MON_MOVES; j++)
+            {
+                if (GetMoveType(GetBoxMonData(boxmon, MON_DATA_MOVE1 + j)) == params[i].arg1)
+                {
+                    currentCondition = TRUE;
+                    break;
+                }
+            }
+            break;
+        // Gen 8
+        case IF_NATURE:
+            if (nature == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_AMPED_NATURE:
+            switch (nature)
+            {
+            case NATURE_HARDY:
+            case NATURE_BRAVE:
+            case NATURE_ADAMANT:
+            case NATURE_NAUGHTY:
+            case NATURE_DOCILE:
+            case NATURE_IMPISH:
+            case NATURE_LAX:
+            case NATURE_HASTY:
+            case NATURE_JOLLY:
+            case NATURE_NAIVE:
+            case NATURE_RASH:
+            case NATURE_SASSY:
+            case NATURE_QUIRKY:
+                currentCondition = TRUE;
+                break;
+            }
+            break;
+        case IF_LOW_KEY_NATURE:
+            switch (nature)
+            {
+            case NATURE_LONELY:
+            case NATURE_BOLD:
+            case NATURE_RELAXED:
+            case NATURE_TIMID:
+            case NATURE_SERIOUS:
+            case NATURE_MODEST:
+            case NATURE_MILD:
+            case NATURE_QUIET:
+            case NATURE_BASHFUL:
+            case NATURE_CALM:
+            case NATURE_GENTLE:
+            case NATURE_CAREFUL:
+                currentCondition = TRUE;
+                break;
+            }
+            break;
+        case IF_RECOIL_DAMAGE_GE:
+            if (evolutionTracker >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_CURRENT_DAMAGE_GE:
+        {
+            u32 currentHp = GetBoxMonData(boxmon, MON_DATA_HP);
+            if (currentHp != 0 && (GetBoxMonData(boxmon, MON_DATA_MAX_HP) - currentHp >= params[i].arg1))
+                currentCondition = TRUE;
+            break;
+        }
+        case IF_CRITICAL_HITS_GE:
+            if (partyId != PARTY_SIZE && gPartyCriticalHits[partyId] >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_USED_MOVE_X_TIMES:
+            if (evolutionTracker >= params[i].arg2)
+                currentCondition = TRUE;
+            break;
+        // Gen 9
+        case IF_DEFEAT_X_WITH_ITEMS:
+            if (evolutionTracker >= params[i].arg3)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_MODULO_100_GT:
+            if ((personality % 100) > params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_MODULO_100_EQ:
+            if ((personality % 100) == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_PID_MODULO_100_LT:
+            if ((personality % 100) < params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_MIN_OVERWORLD_STEPS:
+            if (evo->partyIndex == 0 && gFollowerSteps >= params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_BAG_ITEM_COUNT:
+            if (CheckBagHasItem(params[i].arg1, params[i].arg2))
+            {
+                currentCondition = TRUE;
+                removeBagItem = params[i].arg1;
+                removeBagItemCount = params[i].arg2;
+                evo->cannotStopEvo |= TRUE;
+            }
+            break;
+        case IF_REGION:
+            if (GetCurrentRegion() == params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case IF_NOT_REGION:
+            if (GetCurrentRegion() != params[i].arg1)
+                currentCondition = TRUE;
+            break;
+        case CONDITIONS_END:
+            break;
+        }
+
+        /*
+        if (evoState == DO_EVO)
+        {
+            if (removeHoldItem)
+            {
+                enum Item heldItem = ITEM_NONE;
+                SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+            }
+
+            if (removeBagItem != ITEM_NONE)
+                RemoveBagItem(removeBagItem, removeBagItemCount);
+        }
+        */
+
+        if (currentCondition == FALSE)
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+bool32 TryEvolution(u32 partyIndex, struct EvolutionStruct *evo, bool32 noFade)
+{
+    enum Species species = GetEvolutionTargetSpecies(GetBoxMonFromIndex(partyIndex), evo);
+    if (species == SPECIES_NONE)
+        return FALSE;
+
+    if (evo->method == EVO_ITEM || evo->method == EVO_TRADE)
+        evo->cannotStopEvo |= TRUE;
+
+    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
+    memcpy(&sEvoStructPtr->data, evo, sizeof(struct EvolutionData));
+
+    u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
+    if (noFade)
+        gTasks[taskId].tState = 1;
+    else
+        gTasks[taskId].tState = 0;
+    gTasks[taskId].tPartyId = partyIndex;
+    gTasks[taskId].tPostEvoSpecies = species;
+
+    
+    SetMainCallback2(CB2_BeginEvolutionScene);
+}
+
+enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct EvolutionStruct *evo)
+{
+    enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES, 0);
+    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+
+    if (evolutions == NULL)
+        return SPECIES_NONE;
+
+    enum HoldEffect holdEffect = GetItemHoldEffect(GetBoxMonData(boxmon, MON_DATA_HELD_ITEM, 0));
+    if (holdEffect == HOLD_EFFECT_PREVENT_EVOLVE)
+        return SPECIES_NONE;
+
+    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+    {
+       
+
+        if (evo->method != method)
+            continue;
+
+        if (!DoesMonMeetAdditionalConditions(boxmon, evo, evolutions[i].params))
+            continue;
+
+        evo->evoIndex = i;
+
+        assertf(targetSpecies == SPECIES_NONE, "pokemon %d has two competing evolutions")
+        {
+            return SPECIES_NONE;
+        }
+        targetSpecies = evolutions[i].targetSpecies;
+    }
+
+    // Pikachu, Meowth, Eevee and Duraludon cannot evolve if they have the
+    // Gigantamax Factor. We assume that is because their evolutions
+    // do not have a Gigantamax Form.
+    if (GetMonData(boxmon, MON_DATA_GIGANTAMAX_FACTOR)
+     && GetGMaxTargetSpecies(species) != species
+     && GetGMaxTargetSpecies(targetSpecies) == targetSpecies)
+    {
+        return SPECIES_NONE;
+    }
+    return targetSpecies;
+}
 
 static void CB2_BeginEvolutionScene(void)
 {
@@ -283,7 +672,7 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
     AllocateMonSpritesGfx();
     LoadEvoSparkleSpriteAndPal();
 
-    sEvoStructPtr = AllocZeroed(sizeof(struct EvoInfo));
+    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
     sEvoStructPtr->isTradeEvo = FALSE;
 
     GetMonData(mon, MON_DATA_NICKNAME, name);
@@ -405,7 +794,7 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
     SetBattleBgs();
     LoadEvoSparkleSpriteAndPal();
 
-    sEvoStructPtr = AllocZeroed(sizeof(struct EvoInfo));
+    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
     sEvoStructPtr->isTradeEvo = TRUE;
     sEvoStructPtr->preEvoSpriteId = preEvoSpriteId;
 

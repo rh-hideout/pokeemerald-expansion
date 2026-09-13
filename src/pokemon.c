@@ -6687,14 +6687,19 @@ bool32 IsSpeciesOfType(enum Species species, enum Type type)
     return FALSE;
 }
 
-struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)
+struct BoxPokemon *GetBoxMonFromPartyIndex(u32 partyIndex)
 {
     struct BoxPokemon *boxmon;
-    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+    if (partyIndex == PC_MON_CHOSEN)
         boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     else
-        boxmon = &(gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004].box);
+        boxmon = &(gParties[B_TRAINER_PLAYER][partyIndex].box);
     return boxmon;
+}
+
+struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)
+{
+    return GetBoxMonFromPartyIndex(gSpecialVar_0x8004);
 }
 
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)

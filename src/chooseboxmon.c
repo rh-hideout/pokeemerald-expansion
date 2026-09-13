@@ -219,16 +219,6 @@ enum LearnMoveState
     DID_NOT_LEARN_1,
 };
 
-static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
-{
-    struct BoxPokemon *boxmon;
-    if (partyIndex == PC_MON_CHOSEN)
-        boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
-    else
-        boxmon = &(gParties[B_TRAINER_PLAYER][partyIndex].box);
-    return boxmon;
-}
-
 #define state         gTasks[taskId].data[0]
 #define partyIndex    gTasks[taskId].data[1]
 #define move          gTasks[taskId].data[2]
