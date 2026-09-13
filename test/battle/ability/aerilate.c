@@ -18,7 +18,8 @@ SINGLE_BATTLE_TEST("Aerilate turns a Normal-type move into Flying-type move")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("It's super effective!");
+        EFFECTIVENESS_SE(player, SE_SUPER_EFFECTIVE);
+        HP_BAR(player);
     }
 }
 
@@ -26,7 +27,6 @@ SINGLE_BATTLE_TEST("Aerilate can not turn certain moves into Flying type moves")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_WEATHER_BALL; }
-    // PARAMETRIZE { move = MOVE_NATURAL_GIFT; } TODO: handle this case via Skill Swap
     PARAMETRIZE { move = MOVE_JUDGMENT; }
     PARAMETRIZE { move = MOVE_TECHNO_BLAST; }
     PARAMETRIZE { move = MOVE_REVELATION_DANCE; }
@@ -40,9 +40,8 @@ SINGLE_BATTLE_TEST("Aerilate can not turn certain moves into Flying type moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        NONE_OF {
-            MESSAGE("It's super effective!");
-        }
+        EFFECTIVENESS_SE(player, SE_EFFECTIVE);
+        HP_BAR(player);
     }
 }
 
@@ -93,9 +92,9 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Weather Ball's type", s16 damage)
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move2, opponent);
         ANIMATION(ANIM_TYPE_MOVE, move1, player);
-        HP_BAR(opponent, captureDamage: &results[i].damage);
         if (move1 == MOVE_SUNNY_DAY)
-            MESSAGE("It's super effective!");
+            EFFECTIVENESS_SE(opponent, SE_SUPER_EFFECTIVE);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage); // double base power + type effectiveness + sun 50% boost
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(6.0), results[3].damage);
@@ -118,10 +117,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Natural Gift's type")
         OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); }
     } WHEN {
         TURN { MOVE(opponent, move, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_NATURAL_GIFT); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
-        MESSAGE("It doesn't affect the opposing Salamence…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -152,8 +149,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Judgment / Techno Blast / Multi-Atta
         TURN { SWITCH(opponent, 1); MOVE(player, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, move, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -167,9 +164,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Hidden Power's type")
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, MOVE_HIDDEN_POWER, gimmick: GIMMICK_MEGA); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -184,8 +180,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't override Electrify")
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -201,7 +197,8 @@ SINGLE_BATTLE_TEST("Aerilate overrides Ion Deluge")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("It's super effective!");
+        EFFECTIVENESS_SE(opponent, SE_SUPER_EFFECTIVE);
+        HP_BAR(opponent);
     }
 }
 
@@ -220,7 +217,8 @@ SINGLE_BATTLE_TEST("Aerilate changes Tera Blast's type when not Terastallized")
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERA_BLAST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
-        MESSAGE("It's super effective!");
+        EFFECTIVENESS_SE(opponent, SE_SUPER_EFFECTIVE);
+        HP_BAR(opponent);
     }
 }
 
@@ -237,9 +235,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't change Tera Blast's type when Terastallized
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP, gimmick: GIMMICK_MEGA, target: player); }
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player); }
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -258,8 +255,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Terrain Pulse's type")
         TURN { SWITCH(opponent, 1); MOVE(player, MOVE_TERRAIN_PULSE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERRAIN_PULSE, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -278,7 +275,8 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect damaging Z-Move types")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
-        NOT { MESSAGE("It's super effective!"); }
+        EFFECTIVENESS_SE(opponent, SE_EFFECTIVE);
+        HP_BAR(opponent);
     }
 }
 
