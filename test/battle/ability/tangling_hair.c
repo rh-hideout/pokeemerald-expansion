@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Tangling Hair drops opposing mon's speed if ability user got
 
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SWIFT) == FALSE);
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -26,8 +26,9 @@ SINGLE_BATTLE_TEST("Tangling Hair drops opposing mon's speed if ability user got
         if (move == MOVE_SCRATCH) {
             ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Wynaut's Speed fell!");
         }
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - (move == MOVE_SCRATCH));
     }
 }
 
@@ -35,34 +36,38 @@ SINGLE_BATTLE_TEST("Tangling Hair does not cause Rocky Helmet miss activation")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); Item(ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WYNAUT) { HP(600); MaxHP(600); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wynaut's Speed fell!");
-        MESSAGE("The opposing Wynaut was hurt by Dugtrio's Rocky Helmet!");
+        HP_BAR(opponent, damage: 100);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->hp, 500);
     }
 }
 
 SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps original attacker/target")
 {
     GIVEN {
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); Item(ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_PAWNIARD) { Ability(ABILITY_DEFIANT); }
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_PAWNIARD) { Ability(ABILITY_DEFIANT); HP(600); MaxHP(600); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Pawniard's Speed fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        MESSAGE("The opposing Pawniard's Attack rose sharply!");
-        MESSAGE("The opposing Pawniard was hurt by Dugtrio's Rocky Helmet!");
+        HP_BAR(opponent, damage: 100);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponent->hp, 500);
     }
 }
 
@@ -70,7 +75,7 @@ SINGLE_BATTLE_TEST("Tangling Hair does not activate on confusion damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_CONFUSION, TRUE)); }
@@ -80,32 +85,35 @@ SINGLE_BATTLE_TEST("Tangling Hair does not activate on confusion damage")
             ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
 
 SINGLE_BATTLE_TEST("Tangling Hair does not trigger on Clear Body")
 {
     GIVEN {
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); }
         OPPONENT(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         NOT ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
 
 SINGLE_BATTLE_TEST("Tangling Hair will trigger if move is boosted by Sheer Force")
 {
-    ASSUME(MoveIsAffectedBySheerForce(MOVE_POISON_JAB));
+    ASSUME(MoveIsAffectedBySheerForce(MOVE_FIRE_PUNCH));
     GIVEN {
-        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_TANGLING_HAIR); HP(1000); MaxHP(1000); Defense(200); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_POISON_JAB); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_JAB, opponent);
-        ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+        TURN { MOVE(opponent, MOVE_FIRE_PUNCH); }
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
