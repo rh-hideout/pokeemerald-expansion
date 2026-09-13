@@ -42,11 +42,8 @@ struct SpriteCopyRequest
 {
     const u8 *src;
     u8 *dest;
-    union
-    {
-        u16 size;
-        u16 index;
-    };
+    u16 size;
+    u16 index;
     bool8 compressedFast;
 };
 
@@ -176,6 +173,7 @@ const struct SpriteTemplate gDummySpriteTemplate =
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
+    .compressedFast = FALSE
 };
 
 static const AnimFunc sAnimFuncs[] =
@@ -513,6 +511,7 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
     sprite->callback = template->callback ? template->callback : SpriteCallbackDummy;
     sprite->x = x;
     sprite->y = y;
+    sprite->compressedFast = template->compressedFast;
 
     CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
@@ -789,7 +788,7 @@ void ProcessSpriteCopyRequests(void)
             if (!sSpriteCopyRequests[i].compressedFast)
                 CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
             else
-                RlFastUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index);
+                RlFastUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index, sSpriteCopyRequests[i].size);
             sSpriteCopyRequestCount--;
             i++;
         }
@@ -808,11 +807,13 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
             {
                 sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
                 sSpriteCopyRequests[sSpriteCopyRequestCount].index = 0;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
             }
             else
             {
                 sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data;
                 sSpriteCopyRequests[sSpriteCopyRequestCount].index = index;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
             }
         }
         else
@@ -834,13 +835,14 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
     }
 }
 
-void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast)
+void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast, u16 index)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
         sSpriteCopyRequests[sSpriteCopyRequestCount].src = src;
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = dest;
         sSpriteCopyRequests[sSpriteCopyRequestCount].size = size;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].index = index;
         sSpriteCopyRequests[sSpriteCopyRequestCount].compressedFast = compressedFast;
         sSpriteCopyRequestCount++;
     }
@@ -1552,7 +1554,7 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
         if (compressedFast)
         {
             for (i = 0; i < ((uint8_t *)(sheet->data))[0]; i++)
-                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * (((uint8_t *)(sheet->data))[1] + 1) * TILE_SIZE_4BPP, i);
+                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * (((uint8_t *)(sheet->data))[1] + 1) * TILE_SIZE_4BPP, i, sheet->size - offset);
         }
         else
             CpuSmartCopy16(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset, sheet->size - offset);

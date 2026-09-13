@@ -121,6 +121,7 @@ struct ContestResults
     u8 *unusedBg; // Allocated/freed, never used
     u8 *tilemapBuffers[4];
     u8 *unused; // Allocated/freed, never used
+    u8 *monIcons;
 };
 
 static EWRAM_DATA struct ContestResults *sContestResults = NULL;
@@ -1086,12 +1087,10 @@ static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, 
     const u8 *iconPtr;
     u16 var0, var1;
 
-    EWRAM_DATA static ALIGNED(4) uint8_t buffer[4][512];
-
     iconPtr = GetMonIconPtr(species, personality);
-    RlFastUncomp(iconPtr, buffer[monIndex], srcOffset);
+    RlFastUncomp(iconPtr, sContestResults->monIcons + monIndex * 0x200, srcOffset, 0x200);
 
-    iconPtr = buffer[monIndex] + 0x80;
+    iconPtr = (sContestResults->monIcons + monIndex * 0x200) + 0x80;
     if (useDmaNow)
     {
         RequestDma3Copy(iconPtr, (void *)BG_CHAR_ADDR(1) + monIndex * 0x200, 0x180, 1);
@@ -1869,6 +1868,7 @@ static void AllocContestResults(void)
     sContestResults->tilemapBuffers[2] = AllocZeroed(BG_SCREEN_SIZE);
     sContestResults->tilemapBuffers[3] = AllocZeroed(BG_SCREEN_SIZE);
     sContestResults->unused = AllocZeroed(0x1000);
+    sContestResults->monIcons = AllocZeroed(CONTESTANT_COUNT * 0x200);
     AllocateMonSpritesGfx();
 }
 
@@ -1882,6 +1882,7 @@ static void FreeContestResults(void)
     FREE_AND_SET_NULL(sContestResults->tilemapBuffers[2]);
     FREE_AND_SET_NULL(sContestResults->tilemapBuffers[3]);
     FREE_AND_SET_NULL(sContestResults->unused);
+    FREE_AND_SET_NULL(sContestResults->monIcons);
     FREE_AND_SET_NULL(sContestResults);
     FreeMonSpritesGfx();
 }

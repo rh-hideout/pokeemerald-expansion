@@ -19,7 +19,7 @@ FastUnsafeCopy32:
 	pop     {r4-r10}
 	bx    lr
 
-.global RlFastUncomp
+.global RlFastUncompUnsafe
 
 	// header (see src):
 	// struct RLFrameHeader {
@@ -44,7 +44,7 @@ FastUnsafeCopy32:
 	@ r1 = dst (word aligned)
 	@ r2 = frame_index
 
-RlFastUncomp:
+RlFastUncompUnsafe:
 	push {r4-r7}
 	ldrh r3, [r0] // frame size in tiles and number of frames
 	and r5, r3, #0xFF00 // frame_size_tiles - 1

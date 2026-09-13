@@ -425,8 +425,9 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
                     // arithmetic can be performed.
                     (u8 *)sprite->images,
                     (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
-                    frame,
-                    TRUE);
+                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size],
+                    TRUE,
+                    frame);
             }   
             else if (sprite->usingSheet)
             {
@@ -441,7 +442,8 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
                     (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
                     (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
                     sSpriteImageSizes[sprite->oam.shape][sprite->oam.size],
-                    FALSE);
+                    FALSE,
+                    frame);
             }
             sprite->animDelayCounter = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.duration & 0xFF;
             sprite->animCmdIndex++;

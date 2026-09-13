@@ -67,7 +67,9 @@ void DecompressDataWithHeaderWram(const u32 *src, void *dest);
 void FastLZ77UnCompWram(const u32 *src, void *dest);
 
 // SBird's fast rl decompression function
-void RlFastUncomp(const u8 *src, u8 *dst, u32 frame);
+void RlFastUncomp(const u8 *src, u8 *dst, u32 frame, u16 size);
+void RlFastUncompUnsafe(const u8 *src, u8 *dst, u32 frame);
+u16 GetRlFastUncompSize(const u8 *src);
 
 //  Default Decompression functions are below here
 u32 IsLZ77Data(const void *ptr, u32 minSize, u32 maxSize);

@@ -1403,3 +1403,18 @@ void FastLZ77UnCompWram(const u32 *src, void *dest)
     CopyFuncToIwram(funcBuffer, LZ77UnCompWRAMOptimized, LZ77UnCompWRAMOptimized_end);
     SwitchToArmCallFastLZ77(src, dest, (void *) funcBuffer);
 }
+
+void RlFastUncomp(const u8 *src, u8 *dst, u32 frame, u16 size)
+{
+    u16 uncompSize = GetRlFastUncompSize(src);
+    assertf(size == uncompSize, "RlFast uncomp size does not match. exp:%d, act: %d", size, uncompSize)
+    {
+        return;
+    }
+    RlFastUncompUnsafe(src, dst, frame);
+}
+
+u16 GetRlFastUncompSize(const u8 *src)
+{
+    return (src[1] + 1) * TILE_SIZE_4BPP;
+}

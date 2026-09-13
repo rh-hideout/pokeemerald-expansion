@@ -1792,11 +1792,10 @@ static void UNUSED LoadMonIconPalAtOffset(u8 palOffset, enum Species speciesId)
 
 static void UNUSED DrawMonIconAtPos(u8 windowId, enum Species speciesId, u32 personality, u16 x, u16 y)
 {
-    EWRAM_DATA static ALIGNED(4) u8 buffer[512];
-
-    RlFastUncomp(GetMonIconPtr(speciesId, personality), buffer, 0);
-
-    BlitBitmapToWindow(windowId, buffer, x, y, 32, 32);
+    u8 *decompBuffer = Alloc(0x200);
+    RlFastUncomp(GetMonIconPtr(speciesId, personality), decompBuffer, 0, 0x200);
+    BlitBitmapToWindow(windowId, decompBuffer, x, y, 32, 32);
+    Free(decompBuffer);
 }
 
 void ListMenuLoadStdPalAt(u8 palOffset, u8 palId)

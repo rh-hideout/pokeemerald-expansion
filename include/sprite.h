@@ -181,6 +181,7 @@ struct SpriteTemplate
     const struct SpriteFrameImage *images;
     const union AffineAnimCmd *const *affineAnims;
     SpriteCallback callback;
+    bool16 compressedFast;
 };
 
 // UB: template pointer is often used to point to temporary storage,
@@ -236,7 +237,7 @@ struct Sprite
 
     /*0x40*/ u16 sheetTileStart:10;
              bool16 compressedFast:1;
-             u16 _unused1:5;
+             u16 unused:5;
 
     /*0x42*/ u8 subspriteTableNum:6;
              u8 subspriteMode:2;
@@ -289,7 +290,7 @@ void SetOamMatrix(u8 matrixNum, u16 a, u16 b, u16 c, u16 d);
 void CalcCenterToCornerVec(struct Sprite *sprite, u8 shape, u8 size, u8 affineMode);
 void SpriteCallbackDummy(struct Sprite *sprite);
 void ProcessSpriteCopyRequests(void);
-void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast);
+void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast, u16 index);
 void FreeSpriteTiles(struct Sprite *sprite);
 void FreeSpritePalette(struct Sprite *sprite);
 void FreeSpriteOamMatrix(struct Sprite *sprite);
