@@ -1,6 +1,144 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Sky Drop fails when targeting an ally")
+{
+    GIVEN {
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); Speed(100); }
+        PLAYER(SPECIES_WYNAUT) { Speed(75); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(25); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: playerRight); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+    } THEN {
+        EXPECT(playerLeft->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(playerRight->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(!playerLeft->volatiles.multipleTurns);
+        EXPECT_EQ(playerRight->hp, playerRight->maxHP);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect blocks Sky Drop's lift turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); Speed(100); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_SKY_DROP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+    } THEN {
+        EXPECT(player->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(opponent->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(!player->volatiles.multipleTurns);
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop does not consume Power Herb or skip its lift turn")
+{
+    u32 turns;
+    PARAMETRIZE { turns = 1; }
+    PARAMETRIZE { turns = 2; }
+    GIVEN {
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); Item(ITEM_POWER_HERB); Speed(100); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1000); Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); }
+        if (turns == 2)
+            TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        if (turns == 2)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+            HP_BAR(opponent);
+        }
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_POWER_HERB);
+        if (turns == 1)
+        {
+            EXPECT_EQ(opponent->hp, opponent->maxHP);
+            EXPECT(player->volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER);
+            EXPECT(opponent->volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET);
+        }
+        else
+        {
+            EXPECT_LT(opponent->hp, opponent->maxHP);
+            EXPECT(player->volatiles.semiInvulnerable == STATE_NONE);
+            EXPECT(opponent->volatiles.semiInvulnerable == STATE_NONE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop triggers Rocky Helmet on the drop turn but not the lift turn")
+{
+    u32 turns;
+    PARAMETRIZE { turns = 1; }
+    PARAMETRIZE { turns = 2; }
+    GIVEN {
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); MaxHP(600); HP(600); Speed(100); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ROCKY_HELMET); HP(1000); Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); }
+        if (turns == 2)
+            TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        if (turns == 2)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+            HP_BAR(opponent);
+            HP_BAR(player, damage: 100);
+        }
+    } THEN {
+        EXPECT_EQ(player->hp, turns == 1 ? 600 : 500);
+        if (turns == 1)
+            EXPECT_EQ(opponent->hp, opponent->maxHP);
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Sky Drop allows the target to act after release but not before release")
+{
+    u32 speed;
+    enum Species species;
+    PARAMETRIZE { speed = 25; species = SPECIES_WYNAUT; }
+    PARAMETRIZE { speed = 100; species = SPECIES_WYNAUT; }
+    PARAMETRIZE { speed = 25; species = SPECIES_PIDGEY; }
+    PARAMETRIZE { speed = 100; species = SPECIES_PIDGEY; }
+    GIVEN {
+        ASSUME(gSpeciesInfo[species].weight < 2000);
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_ROCK_HEAD); HP(1000); Speed(50); }
+        OPPONENT(species) { HP(1000); Speed(speed); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_TACKLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        if (species == SPECIES_WYNAUT)
+        {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        }
+        if (speed < 50)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+            HP_BAR(player);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        HP_BAR(player);
+    }
+}
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
@@ -36,7 +174,7 @@ SINGLE_BATTLE_TEST("Sky Drop fails if target is behind a substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if target is in a Semi-Invulnerable state")
+SINGLE_BATTLE_TEST("Sky Drop fails when the target is airborne from Fly")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -49,7 +187,7 @@ SINGLE_BATTLE_TEST("Sky Drop fails if target is in a Semi-Invulnerable state")
     }
 }
 
-DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
+DOUBLE_BATTLE_TEST("Gravity releases Sky Drop's user and target")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -64,11 +202,13 @@ DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, playerRight);
-        MESSAGE("Wobbuffet fell from the sky due to the gravity!");
+    } THEN {
+        EXPECT(playerLeft->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(opponentLeft->volatiles.semiInvulnerable == STATE_NONE);
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
+SINGLE_BATTLE_TEST("Sky Drop fails on targets weighing at least 200 kg")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_METAGROSS].weight >= 2000);
@@ -78,11 +218,14 @@ SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
         TURN { MOVE(player, MOVE_SKY_DROP); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
-        MESSAGE("The opposing Metagross is too heavy to be lifted!");
+    } THEN {
+        EXPECT(player->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT(opponent->volatiles.semiInvulnerable == STATE_NONE);
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop cancels targets two turn moves")
+SINGLE_BATTLE_TEST("Sky Drop interrupts the target's charging Solar Beam")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -123,19 +266,6 @@ SINGLE_BATTLE_TEST("Sky Drop stops the confusion count until the target is dropp
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if the targe is in a semi-invulnerable state")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FLY); MOVE(player, MOVE_SKY_DROP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
-    }
-}
-
 DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a target with Volt Absorb")
 {
     GIVEN {
@@ -154,7 +284,7 @@ DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop fails if the target fainted while it was held on air")
+SINGLE_BATTLE_TEST("Sky Drop fails on its second turn if the carried target fainted")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -189,7 +319,7 @@ DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a
     }
 }
 
-DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
+DOUBLE_BATTLE_TEST("Electrified Sky Drop does not trigger Volt Absorb on its lift turn")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);

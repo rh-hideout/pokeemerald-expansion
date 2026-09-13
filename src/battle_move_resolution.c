@@ -1788,6 +1788,14 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
 
     // First turn
 
+    // The lift script ends the move before the normal target failure checks.
+    // Let protected attempts reach those checks without lifting either battler.
+    if (IsBattlerProtected(cv))
+    {
+        gProtectStructs[cv->battlerAtk].chargingTurn = TRUE;
+        return CANCELER_RESULT_SUCCESS;
+    }
+
     if (gBattleMons[cv->battlerDef].volatiles.rampageTurns > 0)
         gBattleMons[cv->battlerDef].volatiles.confuseAfterDrop = TRUE;
 

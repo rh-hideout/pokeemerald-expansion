@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit twice 37.5/35% of the time")
+SINGLE_BATTLE_TEST("Parental Bond has no effect on multi-hit moves and they still hit twice 37.5/35% of the time")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 3; trials = 8; }  // 37.5%
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit thrice 37.5/35% of the time")
+SINGLE_BATTLE_TEST("Parental Bond has no effect on multi-hit moves and they still hit three times 37.5/35% of the time")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 3; trials = 8; }  // 37.5%
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit four times 12.5/15% of the time")
+SINGLE_BATTLE_TEST("Parental Bond has no effect on multi-hit moves and they still hit four times 12.5/15% of the time")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 1; trials = 8; }  // 12.5%
@@ -225,7 +225,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     }
 }
 
-SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they still hit five times 12.5/15% of the time")
+SINGLE_BATTLE_TEST("Parental Bond has no effect on multi-hit moves and they still hit five times 12.5/15% of the time")
 {
     u32 genConfig, passes, trials;
     PARAMETRIZE { genConfig = GEN_4; passes = 1; trials = 8; }  // 12.5%
@@ -406,30 +406,370 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Pu
     }
 }
 
-TO_DO_BATTLE_TEST("Parental Bond tests");
+SINGLE_BATTLE_TEST("Parental Bond applies Power-Up Punch's Attack raise to both strikes")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_STAT_PLUS));
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POWER_UP_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POWER_UP_PUNCH, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
 
-// Temporary TODO: Convert Bulbapedia description into tests.
-/*
-In battle
+DOUBLE_BATTLE_TEST("Parental Bond still performs its second strike after Mummy replaces the Ability")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); Speed(5); }
+        OPPONENT(SPECIES_COFAGRIGUS) { Ability(ABILITY_MUMMY); Speed(30); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_SKILL_SWAP, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ABILITY_MUMMY);
+    }
+}
 
-Since Parental Bond turns moves into two-hit multi-strike moves, each strike has a separate chance to be a critical hit, items and Abilities that trigger upon strike or contact such as Cursed Body and Rocky Helmet occur for each strike, and Spiky Shield and King's Shield only damage and decrease Attack (respectively) once if they protect a Pokémon from a contact move used by a Pokémon with Parental Bond. Additionally, there is only one accuracy check, so either both strikes hit or both strikes miss.
+SINGLE_BATTLE_TEST("Rocky Helmet damages a Parental Bond user after each contact strike")
+{
+    s16 recoil[2];
 
-Any attack which has a secondary effect (except Secret Power) has the same secondary effect on both strikes (such as Power-Up Punch); if a secondary effect has a certain chance of occurring, each strike has an independent chance of activating that effect. Even if the Pokémon's Ability is changed to Mummy after the first strike, it will continue to make a second strike regardless. Pay Day scatters coins after the first strike only. Incinerate destroys applicable held items after each strike.
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); HP(600); MaxHP(600); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        HP_BAR(player, captureDamage: &recoil[0]);
+        HP_BAR(opponent);
+        HP_BAR(player, captureDamage: &recoil[1]);
+    } THEN {
+        EXPECT_EQ(recoil[0], 100);
+        EXPECT_EQ(recoil[1], 100);
+    }
+}
 
-Unlike other secondary effects, Secret Power's secondary effect can only occur after the final strike. If a move has recoil damage, the recoil will be based on the damage dealt by both strikes, but will be taken after the final strike; Struggle will inflict recoil damage equal to half the user's maximum HP (after the final strike). Moves that switch the target out and moves that switch the user out strike twice, then force a Pokémon to switch out after both strikes are conducted. Thief, Covet, Bug Bite, and Pluck do not steal or eat the target's held item until after the final strike, so if the target could use its item after the first strike (e.g. due to low HP), it will use it before the attacker can steal or eat it. Smelling Salts, Wake-Up Slap, and Knock Off do not cure the target's status condition or remove its held item (respectively) until after the final strike, so both strikes get the increased power. Fire-type moves, Scald, and Steam Eruption thaw a frozen target after the final strike (so a frozen target cannot be thawed and then burned by the same move). Smack Down and Thousand Arrows only cause the target to fall to the ground after the final strike. If Meloetta has Parental Bond and uses Relic Song, it will change Forme only once, after the final strike. Burn Up does not remove the user's Fire type until after the second strike (so both strikes receive same-type attack bonus).
+SINGLE_BATTLE_TEST("Parental Bond performs only one accuracy check for both strikes")
+{
+    PASSES_RANDOMLY(50, 100, RNG_ACCURACY);
 
-If Present heals the target it will only strike once, but if it damages the target it will strike twice (the second strike will always damage the target). Fixed-damage moves (such as Seismic Toss and Dragon Rage) deal the full amount of damage for both strikes. The damage dealt by Psywave is generated separately for each strike, and the second strike's damage is not halved. Each strike of Super Fang halves the target's HP (effectively quartering it if HP is not changed between strikes). Counter, Mirror Coat, Metal Burst, and Bide deal the full amount of damage for both strikes. The first strike of Assurance counts as previously taking damage for the second strike, giving it increased power. Fury Cutter and Echoed Voice only consider uses of the move rather than hits, so the second strike's power is not boosted by the first strike. Grass Pledge, Fire Pledge, and Water Pledge strike twice, even when used as a combination move. Natural Gift and Spit Up strike twice. Moves that require recharging after use strike twice, but the user only needs to recharge for one turn.
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_ZAP_CANNON) == 50);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ZAP_CANNON); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ZAP_CANNON, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+    }
+}
 
-One-hit knockout moves, Fling, Self-Destruct, Explosion, Final Gambit, Uproar, Rollout, and Ice Ball only strike once. (Other consecutively executed moves, such as Outrage, can strike twice.) Moves with a charging turn (such as Fly and Solar Beam) only strike once, even if the Pokémon becomes fully charged in one turn (such as with a Power Herb). Endeavor also only strikes once, even if the user or target's HP is changed after it strikes (such as by Iron Barbs or the Sitrus Berry). Confusion damage only occurs once.
+SINGLE_BATTLE_TEST("Parental Bond does not reduce the second strike of fixed-damage moves")
+{
+    enum Move move;
+    u32 expectedHP;
 
-Spirit Shackle and Anchor Shot only trap the target after the final strike.
+    PARAMETRIZE { move = MOVE_SEISMIC_TOSS; expectedHP = 100; }
+    PARAMETRIZE { move = MOVE_DRAGON_RAGE;   expectedHP = 120; }
 
-Generation VI
-The second strike has its damage halved (unless it is a set-damage move)
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Level(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(200); MaxHP(200); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, expectedHP);
+    }
+}
 
-Generation VII onward
-The second strike now deals 25% of its usual damage (unless it is a set-damage move).
+SINGLE_BATTLE_TEST("Each Parental Bond strike of Super Fang halves the target's remaining HP")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUPER_FANG); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, 100);
+    }
+}
 
-Parental Bond does not affect Z-Moves or Max Moves.
-*/
-// TONS OF TESTS NEEDED. FOR NOW, THIS SINGLE TEST IS MADE TO MAKE SURE AN ISSUE WAS FIXED.
+SINGLE_BATTLE_TEST("Parental Bond applies Assurance's power increase to the second strike")
+{
+    s16 damage[2];
+
+    GIVEN {
+        WITH_CONFIG(B_PARENTAL_BOND_DMG, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_ASSURANCE) == EFFECT_ASSURANCE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ASSURANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Natural Gift strikes twice with Parental Bond before consuming its Berry")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Item(ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond only uses Endeavor once")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENDEAVOR) == EFFECT_ENDEAVOR);
+        ASSUME(IsMoveParentalBondBanned(MOVE_ENDEAVOR));
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); HP(100); MaxHP(500); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ENDEAVOR); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDEAVOR, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, 100);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond recoil is based on the damage from both strikes")
+{
+    s16 damage[2];
+    s16 recoil;
+
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); HP(1000); MaxHP(1000); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(5000); MaxHP(5000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TAKE_DOWN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+        HP_BAR(player, captureDamage: &recoil);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0] + damage[1], UQ_4_12(0.25), recoil);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond applies Knock Off's power increase to both strikes before removing the item")
+{
+    s16 damage[2];
+
+    GIVEN {
+        WITH_CONFIG(B_PARENTAL_BOND_DMG, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond applies Smelling Salts' power increase to both strikes before curing paralysis")
+{
+    s16 damage[2];
+
+    GIVEN {
+        WITH_CONFIG(B_PARENTAL_BOND_DMG, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_SMELLING_SALTS) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SMELLING_SALTS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SMELLING_SALTS, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond makes U-turn strike twice before the user switches out")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_WOBBUFFET);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not add a second strike to a damaging Z-Move")
+{
+    GIVEN {
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond only uses Fling once")
+{
+    GIVEN {
+        ASSUME(IsMoveParentalBondBanned(MOVE_FLING));
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Item(ITEM_IRON_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond only uses Final Gambit once")
+{
+    GIVEN {
+        ASSUME(IsMoveParentalBondBanned(MOVE_FINAL_GAMBIT));
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); HP(100); MaxHP(500); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FINAL_GAMBIT); }
+    } THEN {
+        EXPECT_EQ(player->hp, 0);
+        EXPECT_EQ(opponent->hp, 400);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond only strikes once with a Power Herb-charged move")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Item(ITEM_POWER_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SOLAR_BEAM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not affect Struggle")
+{
+    s16 recoil;
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STRUGGLE) == EFFECT_STRUGGLE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); HP(200); MaxHP(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRUGGLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+        HP_BAR(player, captureDamage: &recoil);
+    } THEN {
+        EXPECT_EQ(recoil, 50);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond only scatters coins once with Pay Day")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY));
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); Level(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PAY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PAY_DAY, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(gPaydayMoney, 250);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not advance Echoed Voice's power counter between strikes")
+{
+    s16 damage[2];
+
+    GIVEN {
+        WITH_CONFIG(B_PARENTAL_BOND_DMG, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_ECHOED_VOICE) == EFFECT_ECHOED_VOICE);
+        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ECHOED_VOICE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ECHOED_VOICE, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+    }
+}

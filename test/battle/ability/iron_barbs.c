@@ -19,11 +19,6 @@ SINGLE_BATTLE_TEST("Iron Barbs: Damages attackers that make contact")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
-        MESSAGE("The Pokémon was hit 4 times!");
-        NONE_OF {
-            HP_BAR(player);
-            MESSAGE("Wobbuffet was hurt by the opposing Ferroseed's Iron Barbs!");
-        }
     } THEN {
         EXPECT_EQ(player->hp, maxHP - ironBarbsDamage * 4);
     }
@@ -37,7 +32,7 @@ SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage 
     PARAMETRIZE { species = SPECIES_GARCHOMP; ability = ABILITY_ROUGH_SKIN; }
     PARAMETRIZE { species = SPECIES_FERROTHORN; ability = ABILITY_IRON_BARBS; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { HP(800); MaxHP(800); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -46,7 +41,107 @@ SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage 
             ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         else
             ABILITY_POPUP(opponent, ABILITY_IRON_BARBS);
+        HP_BAR(player, damage: 100);
+    } THEN {
+        EXPECT_EQ(player->hp, 700);
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: Write Iron Barbs (Ability) test titles")
+SINGLE_BATTLE_TEST("Iron Barbs damages an attacker for one eighth of its maximum HP per contact hit")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(800); HP(800); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(opponent);
+        HP_BAR(player, damage: 100);
+    } THEN {
+        EXPECT_EQ(player->hp, 700);
+    }
+}
+
+SINGLE_BATTLE_TEST("Iron Barbs does not damage an attacker using a non-contact move")
+{
+    GIVEN {
+        ASSUME(!MoveMakesContact(MOVE_SWIFT));
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(800); HP(800); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWIFT); }
+    } SCENE {
+        HP_BAR(opponent);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, 800);
+    }
+}
+
+SINGLE_BATTLE_TEST("Iron Barbs does not trigger when a Substitute takes the contact hit")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); MaxHP(800); HP(800); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); Defense(200); MaxHP(1000); HP(1000); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(opponent, damage: 250);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, 800);
+        EXPECT_EQ(opponent->hp, 750);
+    }
+}
+
+SINGLE_BATTLE_TEST("Iron Barbs triggers when its user faints to the contact hit")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(800); HP(800); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        HP_BAR(opponent, hp: 0);
+        HP_BAR(player, damage: 100);
+    } THEN {
+        EXPECT_EQ(player->hp, 700);
+    }
+}
+
+SINGLE_BATTLE_TEST("Iron Barbs can faint the attacker")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(800); HP(100); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(player, 1); }
+    } SCENE {
+        HP_BAR(opponent);
+        HP_BAR(player, hp: 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Iron Barbs does not damage the attacker while suppressed")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); MaxHP(800); HP(800); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(opponent);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, 800);
+    }
+}

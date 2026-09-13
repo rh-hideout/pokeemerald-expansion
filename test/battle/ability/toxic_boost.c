@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poisoned", s16 damage)
+SINGLE_BATTLE_TEST("Toxic Boost increases physical move power by 50% when the user is poisoned", s16 damage)
 {
     u32 status1;
     PARAMETRIZE { status1 = STATUS1_NONE; }

@@ -4,14 +4,14 @@
 SINGLE_BATTLE_TEST("Steelworker increases Steel-type move damage", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
+    bool32 suppressed;
 
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_STEELWORKER; }
-    PARAMETRIZE { move = MOVE_ANCHOR_SHOT; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_ANCHOR_SHOT; ability = ABILITY_STEELWORKER; }
-    PARAMETRIZE { move = MOVE_FLASH_CANNON; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_FLASH_CANNON; ability = ABILITY_STEELWORKER; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_ANCHOR_SHOT; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_ANCHOR_SHOT; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_FLASH_CANNON; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_FLASH_CANNON; suppressed = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_STEEL);
@@ -19,10 +19,14 @@ SINGLE_BATTLE_TEST("Steelworker increases Steel-type move damage", s16 damage)
         ASSUME(GetMoveType(MOVE_FLASH_CANNON) == TYPE_STEEL);
         ASSUME(GetMoveCategory(MOVE_ANCHOR_SHOT) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_FLASH_CANNON) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_DHELMISE) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DHELMISE) { Ability(ABILITY_STEELWORKER); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN {
+            if (suppressed)
+                MOVE(opponent, MOVE_GASTRO_ACID);
+            MOVE(player, move);
+        }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

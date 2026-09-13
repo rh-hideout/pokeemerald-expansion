@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Flare Boost increases Sp. Attack by 50% when the Pokémon is burned", s16 damage)
+SINGLE_BATTLE_TEST("Flare Boost increases special move power by 50% when the user is burned", s16 damage)
 {
     u32 status1;
     PARAMETRIZE { status1 = STATUS1_NONE; }

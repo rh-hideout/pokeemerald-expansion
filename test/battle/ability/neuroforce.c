@@ -4,19 +4,19 @@
 SINGLE_BATTLE_TEST("Neuroforce increases the strength of super-effective moves by 25%", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NEUROFORCE; move = MOVE_SHADOW_BALL; }
-    PARAMETRIZE { ability = ABILITY_KLUTZ; move = MOVE_SHADOW_BALL; }
-    PARAMETRIZE { ability = ABILITY_NEUROFORCE; move = MOVE_SCRATCH; }
-    PARAMETRIZE { ability = ABILITY_KLUTZ; move = MOVE_SCRATCH; }
+    bool32 suppressed;
+    PARAMETRIZE { suppressed = FALSE; move = MOVE_SHADOW_BALL; }
+    PARAMETRIZE { suppressed = TRUE;  move = MOVE_SHADOW_BALL; }
+    PARAMETRIZE { suppressed = FALSE; move = MOVE_SCRATCH; }
+    PARAMETRIZE { suppressed = TRUE;  move = MOVE_SCRATCH; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_SHADOW_BALL) == TYPE_GHOST);
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Ability(ability); Item(ITEM_ULTRANECROZIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Ability(ABILITY_PRISM_ARMOR); Item(ITEM_ULTRANECROZIUM_Z); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
-        TURN { MOVE(player, move); }
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, move); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

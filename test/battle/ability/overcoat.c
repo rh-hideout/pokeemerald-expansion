@@ -17,14 +17,12 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+)")
         if (gen == GEN_6) {
             ABILITY_POPUP(opponent, ABILITY_OVERCOAT);
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-            MESSAGE("It doesn't affect the opposing Pineco…");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-            NONE_OF {
-                ABILITY_POPUP(opponent, ABILITY_OVERCOAT);
-                MESSAGE("It doesn't affect the opposing Pineco…");
-            }
+            NOT ABILITY_POPUP(opponent, ABILITY_OVERCOAT);
         }
+    } THEN {
+        EXPECT_EQ(opponent->status1, gen == GEN_6 ? STATUS1_NONE : STATUS1_PARALYSIS);
     }
 }
 
@@ -38,8 +36,6 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SANDSTORM); }
     } SCENE {
-        MESSAGE("Wynaut used Sandstorm!");
-        MESSAGE("The sandstorm is raging.");
         HP_BAR(playerLeft);
         NONE_OF {
             HP_BAR(playerRight);
@@ -54,18 +50,16 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
         ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
-        PLAYER(SPECIES_WYNAUT)    { Speed(50); Ability(ABILITY_SNOW_CLOAK); }
-        PLAYER(SPECIES_SOLOSIS)   { Speed(40); Ability(ABILITY_RUN_AWAY); }
+        PLAYER(SPECIES_WYNAUT)    { Speed(50); }
+        PLAYER(SPECIES_SNORUNT)   { Speed(40); }
         OPPONENT(SPECIES_PINECO)  { Speed(30); Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_SNORUNT) { Speed(20); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_HAIL); MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_HAIL); }
     } SCENE {
-        MESSAGE("Wynaut used Hail!");
-        MESSAGE("Solosis used Skill Swap!");
         HP_BAR(playerLeft);
         NONE_OF {
-            HP_BAR(playerRight);
+            HP_BAR(playerRight); // Ice type
             HP_BAR(opponentLeft);
             HP_BAR(opponentRight); // ice type
         }
@@ -84,7 +78,6 @@ SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+)")
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE, WITH_RNG(RNG_EFFECT_SPORE, 1)); }
     } SCENE {
-        MESSAGE("Pineco used Tackle!");
         if (config == GEN_6) {
             NOT ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         }

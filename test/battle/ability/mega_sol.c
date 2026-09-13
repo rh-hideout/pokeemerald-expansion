@@ -66,7 +66,8 @@ SINGLE_BATTLE_TEST("Weather Ball stays Fire-type under real weather if user has 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, weatherMove, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
-        MESSAGE("It's super effective!");
+        EFFECTIVENESS_SE(opponent, SE_SUPER_EFFECTIVE);
+        HP_BAR(opponent);
     }
 }
 
@@ -127,9 +128,9 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and 
         ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
         ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetSpeciesType(SPECIES_BASTIODON, 0) == TYPE_ROCK || GetSpeciesType(SPECIES_BASTIODON, 1) == TYPE_ROCK);
+        ASSUME(GetSpeciesType(SPECIES_TYRANITAR, 0) == TYPE_ROCK || GetSpeciesType(SPECIES_TYRANITAR, 1) == TYPE_ROCK);
         PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
-        OPPONENT(SPECIES_BASTIODON) { Ability(ABILITY_SAND_STREAM);}
+        OPPONENT(SPECIES_TYRANITAR) { Ability(ABILITY_SAND_STREAM); HP(5000); MaxHP(5000); }
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
@@ -187,20 +188,11 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
     } WHEN {
         TURN { MOVE(player, move, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(player, MOVE_WILL_O_WISP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, player);
+    } THEN {
         if (move == MOVE_CELEBRATE)
-        {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
-            STATUS_ICON(opponent, STATUS1_BURN);
-        }
+            EXPECT_EQ(opponent->status1, STATUS1_BURN);
         else
-        {
-            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
-            ABILITY_POPUP(opponent, ABILITY_LEAF_GUARD);
-            MESSAGE("It doesn't affect the opposing Leafeon…");
-            NOT STATUS_ICON(opponent, STATUS1_BURN);
-        }
+            EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 

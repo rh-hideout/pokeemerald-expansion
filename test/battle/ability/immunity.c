@@ -1,6 +1,87 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Immunity prevents Toxic Orb poison without consuming the item")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_THICK_FAT; }
+    PARAMETRIZE { ability = ABILITY_IMMUNITY; }
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ability); Item(ITEM_TOXIC_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } THEN {
+        EXPECT_EQ(player->status1 & STATUS1_PSN_ANY, ability == ABILITY_IMMUNITY ? STATUS1_NONE : STATUS1_TOXIC_POISON);
+        EXPECT_EQ(player->item, ITEM_TOXIC_ORB);
+    }
+}
+
+SINGLE_BATTLE_TEST("Immunity cures regular and bad poison when gained through Skill Swap")
+{
+    u32 status;
+    PARAMETRIZE { status = STATUS1_POISON; }
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); Speed(100); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Status1(status); MaxHP(1000); HP(1000); Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
+    } THEN {
+        EXPECT_EQ(opponent->ability, ABILITY_IMMUNITY);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->hp, 1000);
+    }
+}
+
+SINGLE_BATTLE_TEST("Immunity stops preventing poison while suppressed")
+{
+    bool32 suppress;
+    PARAMETRIZE { suppress = FALSE; }
+    PARAMETRIZE { suppress = TRUE; }
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); MaxHP(1000); HP(1000); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        if (suppress)
+            TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(opponent, MOVE_TOXIC); }
+    } THEN {
+        EXPECT_EQ(player->status1 & STATUS1_PSN_ANY, suppress ? STATUS1_TOXIC_POISON : STATUS1_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Immunity does not protect its ally from poison")
+{
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); Speed(150); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(1000); HP(1000); Speed(100); }
+        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_POISON_POINT); Speed(50); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(25); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_TOXIC, target: playerRight); }
+    } THEN {
+        EXPECT_EQ(playerRight->status1 & STATUS1_PSN_ANY, STATUS1_TOXIC_POISON);
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Immunity does not prevent burns or paralysis")
+{
+    enum Move move;
+    u32 status;
+    PARAMETRIZE { move = MOVE_WILL_O_WISP; status = STATUS1_BURN; }
+    PARAMETRIZE { move = MOVE_THUNDER_WAVE; status = STATUS1_PARALYSIS; }
+    GIVEN {
+        PLAYER(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); MaxHP(1000); HP(1000); Speed(100); }
+        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); Speed(50); }
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } THEN {
+        EXPECT_EQ(player->status1, status);
+    }
+}
+
 SINGLE_BATTLE_TEST("Immunity prevents Poison Sting poison")
 {
     GIVEN {

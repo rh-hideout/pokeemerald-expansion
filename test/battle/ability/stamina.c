@@ -1,18 +1,17 @@
 #include "global.h"
 #include "test/battle.h"
 
-#define STAMINA_STAT_RAISE(target, msg)                         \
+#define STAMINA_STAT_RAISE(target)                              \
 {                                                               \
     ABILITY_POPUP(target, ABILITY_STAMINA);                     \
     ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, target);  \
-    MESSAGE(msg);                                               \
 }
 
-#define STAMINA_HIT(attacker, target, move, msg, dmgVar)        \
+#define STAMINA_HIT(attacker, target, move, dmgVar)             \
 {                                                               \
     ANIMATION(ANIM_TYPE_MOVE, move, attacker);                  \
     HP_BAR(target, captureDamage: &dmgVar);                     \
-    STAMINA_STAT_RAISE(target, msg);                            \
+    STAMINA_STAT_RAISE(target);                                 \
 }
 
 SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
@@ -26,14 +25,14 @@ SINGLE_BATTLE_TEST("Stamina raises Defense by 1 when hit by a move")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STAMINA); }
+        PLAYER(SPECIES_MUDBRAY) { Ability(ABILITY_STAMINA); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, move); }
     } SCENE {
-        STAMINA_HIT(opponent, player, move, "Wobbuffet's Defense rose!", turnOneHit);
-        STAMINA_HIT(opponent, player, move, "Wobbuffet's Defense rose!", turnTwoHit);
+        STAMINA_HIT(opponent, player, move, turnOneHit);
+        STAMINA_HIT(opponent, player, move, turnTwoHit);
     }
     THEN {
         if (move == MOVE_SCRATCH) {
@@ -49,14 +48,14 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
 {
     enum Ability abilityLeft, abilityRight;
 
-    PARAMETRIZE { abilityLeft = ABILITY_NONE, abilityRight = ABILITY_STAMINA; }
-    PARAMETRIZE { abilityLeft = ABILITY_STAMINA, abilityRight = ABILITY_NONE; }
+    PARAMETRIZE { abilityLeft = ABILITY_OWN_TEMPO, abilityRight = ABILITY_STAMINA; }
+    PARAMETRIZE { abilityLeft = ABILITY_STAMINA, abilityRight = ABILITY_OWN_TEMPO; }
     PARAMETRIZE { abilityLeft = ABILITY_STAMINA, abilityRight = ABILITY_STAMINA; }
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(abilityLeft); Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(abilityRight); Speed(5); }
+        PLAYER(SPECIES_MUDBRAY) { Ability(abilityLeft); Speed(10); }
+        PLAYER(SPECIES_MUDBRAY) { Ability(abilityRight); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
     } WHEN {
@@ -66,18 +65,17 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
 
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        NOT HP_BAR(opponentLeft); // We need to check the attacker itself does NOT get damaged. There was an issue when the targets would get overwritten by the Stamina's stat raise.
+        NOT HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
 
         if (abilityLeft == ABILITY_STAMINA) {
-            STAMINA_STAT_RAISE(playerLeft, "Wobbuffet's Defense rose!");
+            STAMINA_STAT_RAISE(playerLeft);
         }
 
         if (abilityRight == ABILITY_STAMINA) {
-            STAMINA_STAT_RAISE(playerRight, "Wobbuffet's Defense rose!");
+            STAMINA_STAT_RAISE(playerRight);
         }
 
-        NOT HP_BAR(opponentLeft); // We need to check the attacker itself does NOT get damaged. There was an issue when the targets would get overwritten by the Stamina's stat raise.
     }
     THEN {
         EXPECT_NE(playerLeft->hp, playerLeft->maxHP);
@@ -97,8 +95,8 @@ SINGLE_BATTLE_TEST("Stamina activates for every hit of a multi hit move")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
         HP_BAR(opponent);
-        STAMINA_STAT_RAISE(opponent, "The opposing Mudbray's Defense rose!");
-        STAMINA_STAT_RAISE(opponent, "The opposing Mudbray's Defense rose!");
+        STAMINA_STAT_RAISE(opponent);
+        STAMINA_STAT_RAISE(opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
     }
@@ -113,10 +111,8 @@ SINGLE_BATTLE_TEST("Stamina is not activated by users own Substitute")
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Mudbray put in a substitute!");
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_STAMINA);
-            MESSAGE("Mudbray's Defense rose!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);

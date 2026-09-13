@@ -130,6 +130,27 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cursed Body")
     }
 }
 
+DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cute Charm")
+{
+    struct BattlePokemon *moveUser = NULL;
+    PARAMETRIZE { moveUser = playerLeft; }
+    PARAMETRIZE { moveUser = playerRight; }
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Gender(MON_MALE); }
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        OPPONENT(SPECIES_CLEFAIRY) { Ability(ABILITY_CUTE_CHARM); Gender(MON_FEMALE); HP(500); MaxHP(500); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(moveUser, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_CUTE_CHARM, 1)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveUser);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
+    } THEN {
+        EXPECT(!moveUser->volatiles.infatuation);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Heal Block")
 {
     struct BattlePokemon *moveTarget = NULL;
@@ -236,5 +257,103 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
     }
 }
 
-// Marked in Bulbapedia as need of research
-//TO_DO_BATTLE_TEST("Aroma Veil prevents G-Max Meltdown's effect");
+DOUBLE_BATTLE_TEST("Aroma Veil prevents G-Max Meltdown's effect")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT_SIDE));
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); Speed(3); }
+        OPPONENT(SPECIES_MELMETAL) { GigantamaxFactor(TRUE); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SPLASH); MOVE(playerRight, MOVE_SPLASH); MOVE(opponentLeft, MOVE_IRON_HEAD, target: playerRight, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_MELTDOWN, opponentLeft);
+    } THEN {
+        EXPECT(!playerLeft->volatiles.torment);
+        EXPECT(!playerRight->volatiles.torment);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Mold Breaker bypasses Aroma Veil and the inflicted effect is not cured")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = playerLeft; }
+    PARAMETRIZE { moveTarget = playerRight; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(1); Moves(MOVE_HARDEN, MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_HARDEN, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_TAUNT, target: moveTarget); }
+        TURN { MOVE(moveTarget, MOVE_HARDEN, allowed: FALSE); MOVE(moveTarget, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_MOLD_BREAKER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponentLeft);
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveTarget);
+    } THEN {
+        EXPECT(moveTarget->volatiles.tauntTimer > 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Mycelium Might bypasses Aroma Veil")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = playerLeft; }
+    PARAMETRIZE { moveTarget = playerRight; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(2); Moves(MOVE_HARDEN, MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_HARDEN, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_TOEDSCOOL) { Ability(ABILITY_MYCELIUM_MIGHT); Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(moveTarget, MOVE_HARDEN); MOVE(opponentLeft, MOVE_TAUNT, target: moveTarget); }
+        TURN { MOVE(moveTarget, MOVE_HARDEN, allowed: FALSE); MOVE(moveTarget, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponentLeft);
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveTarget);
+    } THEN {
+        EXPECT(moveTarget->volatiles.tauntTimer > 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ability Shield prevents Mold Breaker from bypassing Aroma Veil")
+{
+    struct BattlePokemon *moveTarget = NULL;
+    PARAMETRIZE { moveTarget = playerLeft; }
+    PARAMETRIZE { moveTarget = playerRight; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
+        ASSUME(gItemsInfo[ITEM_ABILITY_SHIELD].holdEffect == HOLD_EFFECT_ABILITY_SHIELD);
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Item(ITEM_ABILITY_SHIELD); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_TAUNT, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_MOLD_BREAKER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponentLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
+    } THEN {
+        EXPECT(!moveTarget->volatiles.tauntTimer);
+    }
+}

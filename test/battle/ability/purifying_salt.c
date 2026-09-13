@@ -44,10 +44,9 @@ SINGLE_BATTLE_TEST("Purifying Salt makes Rest fail")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
-    } SCENE {
-        NONE_OF {
-            MESSAGE("Garganacl slept and restored its HP!");
-        }
+    } THEN {
+        EXPECT_EQ(player->hp, 1);
+        EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
 
@@ -70,7 +69,7 @@ SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         ASSUME(MoveHasAdditionalEffect(MOVE_POWDER_SNOW, MOVE_EFFECT_FREEZE_OR_FROSTBITE) == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_PURIFYING_SALT); }
+        PLAYER(SPECIES_GARGANACL) { Ability(ABILITY_PURIFYING_SALT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -78,7 +77,6 @@ SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
         if (move != MOVE_POWDER_SNOW) {
             NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
             ABILITY_POPUP(player, ABILITY_PURIFYING_SALT);
-            MESSAGE("It doesn't affect Wobbuffet…");
             NOT STATUS_ICON(player, status);
         } else {
             NONE_OF {
@@ -86,6 +84,8 @@ SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
                 STATUS_ICON(player, status);
             }
         }
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
 
@@ -98,8 +98,6 @@ SINGLE_BATTLE_TEST("Purifying Salt user can't be poisoned by Toxic Spikes")
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(player, 1); }
-    } SCENE {
-        SEND_IN_MESSAGE("Garganacl");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }

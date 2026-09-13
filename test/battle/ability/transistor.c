@@ -1,20 +1,17 @@
 #include "global.h"
 #include "test/battle.h"
 
-#include "global.h"
-#include "test/battle.h"
-
 SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
+    bool32 suppressed;
 
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_TRANSISTOR; }
-    PARAMETRIZE { move = MOVE_WILD_CHARGE; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_WILD_CHARGE; ability = ABILITY_TRANSISTOR; }
-    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; ability = ABILITY_TRANSISTOR; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_WILD_CHARGE; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_WILD_CHARGE; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_THUNDER_SHOCK; suppressed = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ELECTRIC);
@@ -22,10 +19,14 @@ SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack",
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         ASSUME(GetMoveCategory(MOVE_WILD_CHARGE) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_THUNDER_SHOCK) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_REGIELEKI) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIELEKI) { Ability(ABILITY_TRANSISTOR); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN {
+            if (suppressed)
+                MOVE(opponent, MOVE_GASTRO_ACID);
+            MOVE(player, move);
+        }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

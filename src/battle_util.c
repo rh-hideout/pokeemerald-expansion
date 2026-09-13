@@ -479,7 +479,8 @@ void HandleAction_UseMove(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     if (!IsBattlerAlive(gBattlerAttacker)
-     || gBattleStruct->battlerState[gBattlerAttacker].commandingDondozo)
+     || gBattleStruct->battlerState[gBattlerAttacker].commandingDondozo
+     || gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
         return;

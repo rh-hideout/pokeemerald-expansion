@@ -1540,6 +1540,7 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
 {
     switch (moveEffect)
     {
+    case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_REMOVE_ARG_TYPE:
     case MOVE_EFFECT_REMOVE_STATUS:
     case MOVE_EFFECT_RECOIL_HP_25:

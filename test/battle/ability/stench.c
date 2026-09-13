@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
 
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Stench does not stack with King's Rock")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
 
@@ -51,7 +51,8 @@ DOUBLE_BATTLE_TEST("Stench only triggers if target takes damage")
             MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
         }
     } SCENE {
-        NONE_OF { MESSAGE("Wynaut flinched and couldn't move!"); }
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
     }
 }
 
@@ -72,9 +73,7 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerLeft);
-        MESSAGE("The opposing Grimer flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
-        NOT MESSAGE("Wynaut flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
     }
 }
@@ -89,9 +88,6 @@ SINGLE_BATTLE_TEST("Stench is blocked by Shield Dust")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        NONE_OF {
-            MESSAGE("The opposing Vivillon flinched and couldn't move!");
-        }
     }
 }
 
@@ -106,10 +102,22 @@ SINGLE_BATTLE_TEST("Stench is blocked by Covert Cloak")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        NONE_OF {
-            MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
-        }
     }
 }
 
-// TODO: Test against interaction with multi hits
+SINGLE_BATTLE_TEST("Stench can flinch from a later hit of a multi-hit move")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_KICK) == EFFECT_HIT);
+        ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_KICK) == 2);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_DOUBLE_KICK, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
