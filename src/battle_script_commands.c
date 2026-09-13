@@ -1035,6 +1035,11 @@ static void Cmd_printattackstring(void)
 
     PrepareStringBattle(STRINGID_USEDMOVE, gBattlerAttacker);
     gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
+    if (gBattleMoveEffects[GetMoveEffect(gCurrentMove)].twoTurnEffect
+     && !gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
+    {
+        gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_WAIT;
+    }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -5412,7 +5417,7 @@ static void Cmd_twoturnmoveschargestringandanimation(void)
 
     // TODO: saved string id is not needed
     gBattleScripting.savedStringId = GetMoveTwoTurnAttackStringId(gCurrentMove);
-    if (B_UPDATED_MOVE_DATA < GEN_5 || MoveHasChargeTurnAdditionalEffect(gCurrentMove))
+    if (MoveHasChargeTurnAdditionalEffect(gCurrentMove))
         gBattlescriptCurrInstr = cmd->animationThenStringPtr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
