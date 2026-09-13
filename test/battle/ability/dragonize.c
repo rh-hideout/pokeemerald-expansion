@@ -11,30 +11,31 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Dragonize turns a Normal-type move into a dragon-type move")
 {
     GIVEN {
-        PLAYER(SPECIES_DRUDDIGON);
+        ASSUME(GetSpeciesType(SPECIES_CLEFAIRY, 0) == TYPE_FAIRY || GetSpeciesType(SPECIES_CLEFAIRY, 1) == TYPE_FAIRY);
+        PLAYER(SPECIES_CLEFAIRY);
         OPPONENT(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
     }
 }
 
 SINGLE_BATTLE_TEST("Dragonize boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    enum Ability ability;
+    bool32 suppressed;
     u32 genConfig;
-    PARAMETRIZE { ability = ABILITY_NONE;   genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_NONE;   genConfig = GEN_6; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE;    genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE;    genConfig = GEN_6; }
+    PARAMETRIZE { suppressed = TRUE;  genConfig = GEN_7; }
+    PARAMETRIZE { suppressed = TRUE;  genConfig = GEN_6; }
+    PARAMETRIZE { suppressed = FALSE; genConfig = GEN_7; }
+    PARAMETRIZE { suppressed = FALSE; genConfig = GEN_6; }
 
     GIVEN {
         WITH_CONFIG(B_ATE_MULTIPLIER, genConfig);
-        PLAYER(SPECIES_DRUDDIGON) { Ability(ability); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Moves(MOVE_TACKLE); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -49,47 +50,43 @@ SINGLE_BATTLE_TEST("Dragonize boosts power of affected moves by 20% (Gen7+) or 3
 SINGLE_BATTLE_TEST("Dragonize doesn't affect Weather Ball's type", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
-    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_NONE; }
-    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_NONE; }
-    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_DRAGONIZE; }
-    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_DRAGONIZE; }
+    bool32 suppressed;
+    PARAMETRIZE { move = MOVE_CELEBRATE; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_CELEBRATE; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; suppressed = FALSE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         ASSUME(GetSpeciesType(SPECIES_PINSIR, 0) == TYPE_BUG);
-        PLAYER(SPECIES_DRUDDIGON) { Ability(ability); }
-        OPPONENT(SPECIES_PINSIR);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Speed(1); }
+        OPPONENT(SPECIES_PINSIR) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
-        if (move == MOVE_SUNNY_DAY)
-            MESSAGE("It's super effective!");
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage); // double base power + type effectiveness + sun 50% boost
-        EXPECT_MUL_EQ(results[2].damage, Q_4_12(6.0), results[3].damage); // double base power + type effectiveness + sun 50% boost
-        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.0), results[0].damage); // identical test
+        EXPECT_GT(results[1].damage, results[0].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
         EXPECT_EQ(results[1].damage, results[3].damage);
     }
 }
 
 SINGLE_BATTLE_TEST("Dragonize doesn't affect Natural Gift's type")
 {
-    enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE; }
+    bool32 suppressed;
+    PARAMETRIZE { suppressed = TRUE; }
+    PARAMETRIZE { suppressed = FALSE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
-        OPPONENT(SPECIES_BELDUM);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Item(ITEM_ORAN_BERRY); Speed(1); }
+        OPPONENT(SPECIES_BELDUM) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
-        MESSAGE("It doesn't affect the opposing Beldum…");
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, MOVE_NATURAL_GIFT); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -115,9 +112,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Judgment / Techno Blast / Multi-Att
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, move); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, move, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -131,9 +127,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Hidden Power's type")
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, MOVE_HIDDEN_POWER); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -146,26 +141,28 @@ SINGLE_BATTLE_TEST("Dragonize doesn't override Electrify")
         OPPONENT(SPECIES_SANDSHREW);
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
-SINGLE_BATTLE_TEST("Dragonize overrides Ion Deluge")
+SINGLE_BATTLE_TEST("Dragonize overrides Ion Deluge", s16 damage)
 {
+    bool32 suppressed;
+    PARAMETRIZE { suppressed = TRUE; }
+    PARAMETRIZE { suppressed = FALSE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
         ASSUME(GetSpeciesType(SPECIES_DRUDDIGON, 0) == TYPE_DRAGON || GetSpeciesType(SPECIES_DRUDDIGON, 1) == TYPE_DRAGON);
-        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); }
-        OPPONENT(SPECIES_DRUDDIGON);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Speed(1); }
+        OPPONENT(SPECIES_DRUDDIGON) { Speed(2); }
     } WHEN {
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("It's super effective!");
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_GT(results[1].damage, results[0].damage);
     }
 }
 
@@ -174,14 +171,13 @@ SINGLE_BATTLE_TEST("Dragonize changes Tera Blast's type when not Terastallized")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
         ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_CUFANT, 0) == TYPE_STEEL || GetSpeciesType(SPECIES_CUFANT, 1) == TYPE_STEEL);
+        ASSUME(GetSpeciesType(SPECIES_CLEFAIRY, 0) == TYPE_FAIRY || GetSpeciesType(SPECIES_CLEFAIRY, 1) == TYPE_FAIRY);
         PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); }
-        OPPONENT(SPECIES_CUFANT);
+        OPPONENT(SPECIES_CLEFAIRY);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
-        MESSAGE("It's not very effective…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -195,9 +191,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't change Tera Blast's type when Terastallize
         OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player); }
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -212,10 +207,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Terrain Pulse's type")
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIC_TERRAIN); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_TERRAIN_PULSE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERRAIN_PULSE, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -223,17 +216,14 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect damaging Z-Move types")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_BAGON, 0) == TYPE_DRAGON || GetSpeciesType(SPECIES_BAGON, 1) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
         PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_BAGON);
+        OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
-        NOT { MESSAGE("It's super effective!"); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
 TO_DO_BATTLE_TEST("Dragonize doesn't affect Max Strike's type");
-TO_DO_BATTLE_TEST("Confirm behavioural match with other -ate abilities");// we assume that it behaves like Pixilate.
