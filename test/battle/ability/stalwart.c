@@ -31,7 +31,7 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
         WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STALWART); }
+        PLAYER(SPECIES_ARCHALUDON) { Ability(ABILITY_STALWART); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -48,12 +48,15 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
             NONE_OF {
                 ABILITY_POPUP(opponentLeft, ability);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-                MESSAGE("The opposing Raichu's Sp. Atk rose!");
             }
         } else {
             NONE_OF {
                 HP_BAR(opponentLeft);
             }
         }
+    } THEN {
+        EXPECT_LT(opponentRight->hp, opponentRight->maxHP);
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
     }
 }
