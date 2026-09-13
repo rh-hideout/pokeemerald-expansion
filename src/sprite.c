@@ -1541,6 +1541,7 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
     s16 tileStart = AllocSpriteTiles(sheet->size / TILE_SIZE_4BPP);
     u16 i;
     u8 frames;
+    u16 frameSize;
 
     if (tileStart < 0)
     {
@@ -1554,9 +1555,10 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
         AllocSpriteTileRange(sheet->tag, (u16)tileStart, sheet->size / TILE_SIZE_4BPP);
         if (compressedFast)
         {
-            frames = GetRlFastUncompFrames((u8 *)sheet->data);
+            frameSize = GetRlFastUncompSize((u8 *)sheet->data);
+            frames = (sheet->size - offset) / frameSize;
             for (i = 0; i < frames; i++)
-                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * GetRlFastUncompSize((u8 *)sheet->data), i, (sheet->size - offset) / frames);
+                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * frameSize, i, (sheet->size - offset) / frames);
         }
         else
             CpuSmartCopy16(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset, sheet->size - offset);
