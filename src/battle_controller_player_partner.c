@@ -134,7 +134,7 @@ static void Intro_WaitForHealthbox(enum BattlerId battler)
     else
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
-            && gSprites[gHealthboxSpriteIds[BATTLE_PARTNER(battler)]].callback == SpriteCallbackDummy)
+            && gSprites[gHealthboxSpriteIds[GetPartnerBattler(battler)]].callback == SpriteCallbackDummy)
         {
             finished = TRUE;
         }
@@ -154,7 +154,7 @@ static void Intro_WaitForHealthbox(enum BattlerId battler)
 void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
-        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive
+        && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive
         && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
         && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
         && ++gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay != 1)
@@ -164,10 +164,10 @@ void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
 
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
-            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
-            StartHealthboxSlideIn(BATTLE_PARTNER(battler));
-            SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
+            StartHealthboxSlideIn(GetPartnerBattler(battler));
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[GetPartnerBattler(battler)]);
         }
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);

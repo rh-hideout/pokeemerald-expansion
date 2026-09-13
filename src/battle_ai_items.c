@@ -38,7 +38,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return FALSE;
 
-    if (gBattleMons[battler].volatiles.embargo)
+    if (gBattleMons[battler].volatiles.embargoTimer)
         return FALSE;
 
     if (AiExpectsToFaintPlayer(battler))
@@ -73,7 +73,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
              || (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
              || (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
              || (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0))
+             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTimer > 0))
                 shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:
@@ -88,15 +88,15 @@ bool32 ShouldUseItem(enum BattlerId battler)
                 enum Stat stat = STAT_ATK;
                 u32 stage = 1;
 
-                if (B_X_ITEMS_BUFF >= GEN_7)
+                if (GetConfig(B_X_ITEMS_BUFF) >= GEN_7)
                     stage = 2;
 
                 stat = stat + itemEffects[1] - STAT_ATK;
 
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), stat, stage) > NO_INCREASE)
+                if (IsBattlerAlive(GetBattlerLeftFoe(battler)) && IncreaseStatUpScore(battler, GetBattlerLeftFoe(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), stat, stage) > NO_INCREASE)
+                if (IsBattlerAlive(GetBattlerRightFoe(battler)) && IncreaseStatUpScore(battler, GetBattlerRightFoe(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
                 break;
@@ -113,17 +113,17 @@ bool32 ShouldUseItem(enum BattlerId battler)
                     break;
                 }
 
-                if (IsBattlerAlive(LEFT_FOE(battler)))
+                if (IsBattlerAlive(GetBattlerLeftFoe(battler)))
                 {
-                    if (ShouldRaiseAnyStat(battler, LEFT_FOE(battler)))
+                    if (ShouldRaiseAnyStat(battler, GetBattlerLeftFoe(battler)))
                         shouldUse = TRUE;
                     else
                         break;
                 }
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)))
+                if (IsBattlerAlive(GetBattlerRightFoe(battler)))
                 {
-                    if (ShouldRaiseAnyStat(battler, RIGHT_FOE(battler)))
+                    if (ShouldRaiseAnyStat(battler, GetBattlerRightFoe(battler)))
                         shouldUse = TRUE;
                     else
                         break;

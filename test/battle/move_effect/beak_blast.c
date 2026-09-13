@@ -222,6 +222,175 @@ DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick 
     }
 }
 
-TO_DO_BATTLE_TEST("Beak Blast's charging message is shown regardless if it would've missed");
-TO_DO_BATTLE_TEST("Beak Blast fails if it's forced by Encore after choosing a different move");
-TO_DO_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it causes");
+SINGLE_BATTLE_TEST("Beak Blast doesn't burn even if the target fails to connect its contact move")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_URSHIFU) {};
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        NONE_OF {
+            MESSAGE("Urshifu was burned!");
+            STATUS_ICON(player, STATUS1_BURN);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast burns even if the target has Unseen Fist")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        ASSUME(MoveMakesContact(MOVE_SURGING_STRIKES));
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_SURGING_STRIKES); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("Urshifu was burned!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast takes effect after HP drain effects and before abilities")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        ASSUME(MoveMakesContact(MOVE_DRAIN_PUNCH));
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { HP(1); }
+        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_DRAIN_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Garchomp started heating up its beak!");
+        MESSAGE("The opposing Garchomp had its energy drained!");
+        MESSAGE("Urshifu was burned!");
+        ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast's charging message is shown regardless if it would've missed")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        ASSUME(MoveMakesContact(MOVE_POUND));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST, hit: FALSE); MOVE(player, MOVE_POUND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("Wobbuffet was burned!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
+        MESSAGE("Wobbuffet avoided the attack!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast still shows its charged state when Encored into a different move")
+{
+    GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(1); }
+    } WHEN {
+        TURN {}
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_BEAK_BLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("The opposing Toucannon used Celebrate!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast fails when Encored into it from a different move (Gen9-)")
+{
+    GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_9);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft); MOVE(opponentLeft, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+            MESSAGE("The opposing Toucannon started heating up its beak!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast connects when Encored into it (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft); MOVE(opponentLeft, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("The opposing Toucannon used Beak Blast!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast doesn't repeat its charging animation when Encored into it")
+{
+    GIVEN {
+        WITH_CONFIG(B_MOVE_EFFECTS_BEFORE_MOVES, GEN_CHAMPIONS);
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_TOUCANNON) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft); MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        MESSAGE("The opposing Toucannon used Beak Blast!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Beak Blast is blocked by Bulletproof but not to the burn it causes")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_BEAK_BLAST) < 0);
+        ASSUME(MoveMakesContact(MOVE_POUND));
+        PLAYER(SPECIES_CHESNAUGHT) { Ability(ABILITY_BULLETPROOF); }
+        OPPONENT(SPECIES_TOUCANNON) {};
+    } WHEN {
+        TURN { MOVE(player, MOVE_POUND); MOVE(opponent, MOVE_BEAK_BLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponent);
+        MESSAGE("The opposing Toucannon started heating up its beak!");
+        MESSAGE("Chesnaught was burned!");
+        STATUS_ICON(player, STATUS1_BURN);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
+        ABILITY_POPUP(player, ABILITY_BULLETPROOF);
+        MESSAGE("It doesn't affect Chesnaught…");
+    }
+}

@@ -855,10 +855,10 @@ void AnimTask_InvertScreenColor(u8 taskId)
         selectedPalettes |= (0x10000 << gBattleAnimAttacker);
     if (cmd->flagsScenery & 0x4)
         selectedPalettes |= (0x10000 << gBattleAnimTarget);
-    if (cmd->flagsScenery & 0x8 && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimTarget)))
-        selectedPalettes |= (0x10000 << BATTLE_PARTNER(gBattleAnimTarget));
-    if (cmd->flagsScenery & 0x10 && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimAttacker)))
-        selectedPalettes |= (0x10000 << BATTLE_PARTNER(gBattleAnimAttacker));
+    if (cmd->flagsScenery & 0x8 && IsBattlerAlive(GetPartnerBattler(gBattleAnimTarget)))
+        selectedPalettes |= (0x10000 << GetPartnerBattler(gBattleAnimTarget));
+    if (cmd->flagsScenery & 0x10 && IsBattlerAlive(GetPartnerBattler(gBattleAnimAttacker)))
+        selectedPalettes |= (0x10000 << GetPartnerBattler(gBattleAnimAttacker));
 
     InvertPlttBuffer(selectedPalettes);
     DestroyAnimVisualTask(taskId);

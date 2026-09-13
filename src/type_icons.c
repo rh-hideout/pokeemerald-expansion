@@ -395,7 +395,7 @@ static void CreateSpriteAndSetTypeSpriteAttributes(enum Type type, u32 x, u32 y,
 {
     struct Sprite* sprite;
     const struct SpriteTemplate* spriteTemplate = gTypesInfo[type].useSecondTypeIconPalette ? &sSpriteTemplate_TypeIcons2 : &sSpriteTemplate_TypeIcons1;
-    u32 spriteId = CreateSpriteAtEnd(spriteTemplate, x, y, UCHAR_MAX);
+    u32 spriteId = CreateSpriteAtEndUnchecked(spriteTemplate, x, y, UCHAR_MAX);
 
     if (spriteId == MAX_SPRITES)
         return;

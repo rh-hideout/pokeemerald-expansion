@@ -20759,17 +20759,17 @@ gBattleAnimMove_BubbleBeam::
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
 	delay 1
-	call BulbblebeamCreateBubbles
+	call BubblebeamCreateBubbles
 	createvisualtask AnimTask_SwayMon, 5, 0, 3, 3072, 8, ANIM_TARGET
-	call BulbblebeamCreateBubbles
-	call BulbblebeamCreateBubbles
+	call BubblebeamCreateBubbles
+	call BubblebeamCreateBubbles
 	waitforvisualfinish
 	call WaterBubblesEffectShort
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	blendoff
 	end
-BulbblebeamCreateBubbles:
+BubblebeamCreateBubbles:
 	createsprite gWaterBubbleProjectileSpriteTemplate, ANIM_ATTACKER, 2, 18, 0, 35, 70, 0, 256, 50
 	playsewithpan SE_M_BUBBLE, SOUND_PAN_ATTACKER
 	delay 3
@@ -35046,4 +35046,14 @@ gBattleAnimGeneral_DynamaxGrowth:: @ PORTED FROM CFRU
 	delay 8
 	createvisualtask AnimTask_DynamaxGrowth, 5, 1, 0
 	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_ProtectedItself::
+	monbg ANIM_ATTACKER
+	splitbgprio ANIM_TARGET
+	playsewithpan SE_ICE_STAIRS, SOUND_PAN_ATTACKER
+	createsprite gProtectTemplate, ANIM_TARGET, 2, 0x0, 0x0
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
 	end

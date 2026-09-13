@@ -359,19 +359,19 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
         TryShinyAnimation(battler, &party[gBattlerPartyIndexes[battler]]);
-    if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
-     && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
-        TryShinyAnimation(BATTLE_PARTNER(battler), &party[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]]);
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
+    if (!gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].triedShinyMonAnim
+     && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive)
+        TryShinyAnimation(GetPartnerBattler(battler), &party[gBattlerPartyIndexes[GetPartnerBattler(battler)]]);
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive)
     {
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
-            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)],
-                                     &party[gBattlerPartyIndexes[BATTLE_PARTNER(battler)]],
+            DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)],
+                                     &party[gBattlerPartyIndexes[GetPartnerBattler(battler)]],
                                      HEALTHBOX_ALL);
-            StartHealthboxSlideIn(BATTLE_PARTNER(battler));
-            SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            StartHealthboxSlideIn(GetPartnerBattler(battler));
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[GetPartnerBattler(battler)]);
         }
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler],
@@ -393,12 +393,12 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
         r4 = TRUE;
     if (r4
      && gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim
-     && gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim)
+     && gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].finishedShinyMonAnim)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
-        gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
-        gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].triedShinyMonAnim = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].finishedShinyMonAnim = FALSE;
         FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
         FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
         CreateTask(Task_PlayerController_RestoreBgmAfterCry, 10);
@@ -579,7 +579,7 @@ static void PrintOakTextWithMainBgDarkened(enum BattlerId battler, const u8 *tex
                 OakOldManBufferExecCompleted(battler);
             else
                 OpponentBufferExecCompleted(battler);
-            gBattleCommunication[MSG_DISPLAY] = 0;
+            gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
             gBattleStruct->simulatedInputState0 = 0;
         }
         break;

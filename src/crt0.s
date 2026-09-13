@@ -173,6 +173,7 @@ ReInitializeEWRAM::
 	cmp r1, r2
 	beq EndReinitializeEWRAM
 	subs r2, r1
+	lsrs r2, #2
 	movs r3, #1
 	lsls r3, r3, #26
 	orrs r2, r2, r3

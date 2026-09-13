@@ -335,18 +335,23 @@ DOUBLE_BATTLE_TEST("Encore allows choosing an opponent target (Gen 5+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Encore into Fake Out results in Struggle (Champions)")
+SINGLE_BATTLE_TEST("Encore into Fake Out/First Impression results in Struggle (Champions)")
 {
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_FAKE_OUT; }
+    PARAMETRIZE { move = MOVE_FIRST_IMPRESSION; }
+
     GIVEN {
         WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_CHAMPIONS);
-        ASSUME(gMovesInfo[MOVE_FAKE_OUT].effect == EFFECT_FIRST_TURN_ONLY);
+        ASSUME(gMovesInfo[move].effect == EFFECT_FIRST_TURN_ONLY);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
     } WHEN {
-        TURN { MOVE(player, MOVE_FAKE_OUT); MOVE(opponent, MOVE_ENCORE); }
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_ENCORE); }
         TURN { FORCED_MOVE(player); };
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
     }
 }

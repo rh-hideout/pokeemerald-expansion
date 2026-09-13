@@ -33,6 +33,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks cannot be used if the user doesn't hold a berry
 SINGLE_BATTLE_TEST("Stuff Cheeks forces Struggle if it's the only move is blocked")
 {
     GIVEN {
+        WITH_CONFIG(B_STUFF_CHEEKS_SELECTABLE, GEN_9);
         PLAYER(SPECIES_SKWOVET) { Moves(MOVE_STUFF_CHEEKS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

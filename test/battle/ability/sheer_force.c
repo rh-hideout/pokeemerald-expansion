@@ -555,7 +555,9 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
         case MOVE_FIERY_WRATH:
         case MOVE_FREEZING_GLARE:
         case MOVE_FIRE_LASH:
+        #if B_UPDATED_MOVE_DATA < GEN_CHAMPIONS
         case MOVE_FREEZE_DRY:
+        #endif
         case MOVE_FREEZE_SHOCK:
         case MOVE_GENESIS_SUPERNOVA:
         case MOVE_GLACIATE:

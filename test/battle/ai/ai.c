@@ -1494,7 +1494,7 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
     } WHEN {
         if (hp == 60)
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE);
@@ -1502,13 +1502,41 @@ AI_SINGLE_BATTLE_TEST("AI scores fixed damage moves correctly")
         }
         else
         {
-            TURN { 
+            TURN {
                 EXPECT_MOVE(opponent, move);
                 SCORE_EQ_VAL(opponent, MOVE_SCRATCH, AI_SCORE_DEFAULT);
                 SCORE_EQ_VAL(opponent, move, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL);
             }
         }
     }
+}
+
+AI_SINGLE_BATTLE_TEST("AI calcs critical hit damage when a crit stage 3+ (Gen 6+)")
+{
+    enum Item item = ITEM_NONE;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_SCOPE_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_CRIT_CHANCE, GEN_6);
+        PLAYER(SPECIES_SHEDINJA);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FOCUS_ENERGY, MOVE_FROST_BREATH, MOVE_FREEZE_DRY); Item(item); }
+    } WHEN {
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_FOCUS_ENERGY); }
+        TURN {
+            if (item == ITEM_SCOPE_LENS)
+            {
+                EXPECT_MOVE(opponent, MOVE_FREEZE_DRY);
+            }
+            else
+            {
+                EXPECT_MOVE(opponent, MOVE_FROST_BREATH);
+            }
+        }
+    } 
 }
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_ABILITY_OMNISCIENCE: AI knows the player's ability")
@@ -1651,3 +1679,5 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is 
         }
     }
 }
+
+TO_DO_BATTLE_TEST("AI doesn't see stomping tantrum as boosted for switch AI if its last move before fainting failed");

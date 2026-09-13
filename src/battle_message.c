@@ -342,7 +342,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNHASNOMOVESLEFT]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} has no moves left that it can use!\p"),
     [STRINGID_PKMNSUBJECTEDTOTORMENT]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} was subjected to torment!"),
     [STRINGID_PKMNCANTUSEMOVETORMENT]               = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} can't use the same move twice in a row due to the torment!\p"),
-    [STRINGID_PKMNTIGHTENINGFOCUS]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is tightening its focus!"),
+    [STRINGID_PKMNTIGHTENINGFOCUS]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is tightening its focus!"),
     [STRINGID_PKMNFELLFORTAUNT]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} fell for the taunt!"),
     [STRINGID_PKMNCANTUSEMOVETAUNT]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} can't use {B_CURRENT_MOVE} after the taunt!\p"),
     [STRINGID_PKMNREADYTOHELP]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is ready to help {B_DEF_NAME_WITH_PREFIX2}!"),
@@ -734,7 +734,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNTOOKTARGETHIGH]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} took {B_DEF_NAME_WITH_PREFIX2} into the sky!"),
     [STRINGID_PKMNINSNAPTRAP]                       = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} got trapped by a snap trap!"),
     [STRINGID_METEORBEAMCHARGING]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is overflowing with space power!"),
-    [STRINGID_HEATUPBEAK]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} started heating up its beak!"),
+    [STRINGID_HEATUPBEAK]                           = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} started heating up its beak!"),
     [STRINGID_COURTCHANGE]                          = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} swapped the battle effects affecting each side of the field!"),
     [STRINGID_ZPOWERSURROUNDS]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} surrounded itself with its Z-Power!"),
     [STRINGID_ZMOVEUNLEASHED]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} unleashes its full-force Z-Move!"),
@@ -763,7 +763,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT]   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} weakened the {B_BUFF1} of all surrounding Pokémon!\p"),
     [STRINGID_ATTACKERGAINEDSTRENGTHFROMTHEFALLEN]  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} gained strength from the fallen!"),
     [STRINGID_PKMNSABILITYPREVENTSABILITY]          = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} prevents {B_DEF_NAME_WITH_PREFIX2}'s {B_DEF_ABILITY} from working!"), //not in gen 5+, ability popup
-    [STRINGID_PREPARESHELLTRAP]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} set a shell trap!"),
+    [STRINGID_PREPARESHELLTRAP]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} set a shell trap!"),
     [STRINGID_SHELLTRAPDIDNTWORK]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s shell trap didn't work!"),
     [STRINGID_SPIKESDISAPPEAREDFROMTEAM]            = COMPOUND_STRING("The spikes disappeared from the ground around {B_ATK_TEAM2} side!"),
     [STRINGID_TOXICSPIKESDISAPPEAREDFROMTEAM]       = COMPOUND_STRING("The toxic spikes disappeared from the ground around {B_ATK_TEAM2} side!"),
@@ -1478,7 +1478,7 @@ const u8 gText_SafariZoneMenu[] = _("Ball{CLEAR_TO 56}{POKEBLOCK}\nGo Near{CLEAR
 const u8 gText_SafariZoneMenuFrlg[] = _("{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW 13 14 15}BALL{CLEAR_TO 56}BAIT\nROCK{CLEAR_TO 56}RUN");
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");
-const u8 gText_MoveInterfacePpType[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}PP\nTYPE/");
+const u8 gText_MoveInterfacePPType[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}PP\nTYPE/");
 const u8 gText_MoveInterfaceDynamicColors[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}");
 const u8 gText_WhichMoveToForget4[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}Which move should\nbe forgotten?");
 const u8 gText_BattleCatchOrNot[] = _("{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}Catch\nDon't catch");
@@ -2522,7 +2522,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
     case STRINGID_INTROSENDOUT: // poke first send-out
         if (IsOnPlayerSide(battler))
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
+            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_MULTI && (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK || gBattleTypeFlags & BATTLE_TYPE_LINK))
                 {
@@ -2554,7 +2554,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         }
         else
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
+            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && BATTLE_TWO_VS_ONE_OPPONENT)
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
@@ -2733,7 +2733,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         if (gBattleTextBuff1[0] & B_OUTCOME_LINK_BATTLE_RAN)
         {
             gBattleTextBuff1[0] &= ~(B_OUTCOME_LINK_BATTLE_RAN);
-            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
+            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(GetPartnerBattler(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
                 gBattleTextBuff1[0] ^= (B_OUTCOME_LOST | B_OUTCOME_WON);
 
             if (gBattleTextBuff1[0] == B_OUTCOME_LOST || gBattleTextBuff1[0] == B_OUTCOME_DREW)
@@ -2745,7 +2745,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         }
         else
         {
-            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
+            if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(GetPartnerBattler(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
                 gBattleTextBuff1[0] ^= (B_OUTCOME_LOST | B_OUTCOME_WON);
 
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
@@ -3189,7 +3189,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_ATK_NAME_WITH_PREFIX_MON1: // Unused, to change into sth else.
                 break;
             case B_TXT_ATK_PARTNER_NAME: // attacker partner name
-                GetBattlerNick(BATTLE_PARTNER(gBattlerAttacker), text);
+                GetBattlerNick(GetPartnerBattler(gBattlerAttacker), text);
                 toCpy = text;
                 break;
             case B_TXT_ATK_NAME_WITH_PREFIX: // attacker name with prefix
@@ -3203,7 +3203,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = text;
                 break;
             case B_TXT_DEF_PARTNER_NAME: // partner target name
-                GetBattlerNick(BATTLE_PARTNER(gBattlerTarget), text);
+                GetBattlerNick(GetPartnerBattler(gBattlerTarget), text);
                 toCpy = text;
                 break;
             case B_TXT_EFF_NAME_WITH_PREFIX: // effect battler name with prefix
@@ -3319,13 +3319,13 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = gLinkPlayers[multiplayerId].name;
                 break;
             case B_TXT_LINK_PARTNER_NAME: // link partner name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(BATTLE_PARTNER(gLinkPlayers[multiplayerId].id))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(GetPartnerPosition(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_OPPONENT1_NAME: // link opponent 1 name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(LEFT_FOE(gLinkPlayers[multiplayerId].id))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(GetBattlerLeftFoe(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_OPPONENT2_NAME: // link opponent 2 name
-                toCpy = gLinkPlayers[GetBattlerMultiplayerId(RIGHT_FOE(gLinkPlayers[multiplayerId].id))].name;
+                toCpy = gLinkPlayers[GetBattlerMultiplayerId(GetBattlerRightFoe(gLinkPlayers[multiplayerId].id))].name;
                 break;
             case B_TXT_LINK_SCR_TRAINER_NAME: // link scripting active name
                 toCpy = gLinkPlayers[GetBattlerMultiplayerId(gBattleScripting.battler)].name;
@@ -3701,8 +3701,8 @@ static void IllusionNickHack(enum BattlerId battler, u32 partyId, u8 *dst)
 
     if (GetMonAbility(mon) == ABILITY_ILLUSION)
     {
-        if (IsBattlerAlive(BATTLE_PARTNER(battler)))
-            partnerMon = GetBattlerMon(BATTLE_PARTNER(battler));
+        if (IsBattlerAlive(GetPartnerBattler(battler)))
+            partnerMon = GetBattlerMon(GetPartnerBattler(battler));
         else
             partnerMon = mon;
 
@@ -3929,15 +3929,15 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     }
 }
 
-void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)
+void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler)
 {
     struct ChooseMoveStruct *chooseMoveStruct = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     const u16 *palPtr = gPPTextPalette;
     u8 var;
 
     if (!gBattleStruct->zmove.viewing)
-        var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gMoveSelectionCursor[battler]],
-                         chooseMoveStruct->maxPp[gMoveSelectionCursor[battler]]);
+        var = GetCurrentPPToMaxPPState(chooseMoveStruct->currentPP[gMoveSelectionCursor[battler]],
+                         chooseMoveStruct->maxPP[gMoveSelectionCursor[battler]]);
     else
         var = 3;
 
@@ -3948,33 +3948,33 @@ void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler)
     CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(5) + 11], &gPlttBufferFaded[BG_PLTT_ID(5) + 11], PLTT_SIZEOF(1));
 }
 
-u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp)
+u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP)
 {
-    if (maxPp == currentPp)
+    if (maxPP == currentPP)
     {
         return 3;
     }
-    else if (maxPp <= 2)
+    else if (maxPP <= 2)
     {
-        if (currentPp > 1)
+        if (currentPP > 1)
             return 3;
         else
-            return 2 - currentPp;
+            return 2 - currentPP;
     }
-    else if (maxPp <= 7)
+    else if (maxPP <= 7)
     {
-        if (currentPp > 2)
+        if (currentPP > 2)
             return 3;
         else
-            return 2 - currentPp;
+            return 2 - currentPP;
     }
     else
     {
-        if (currentPp == 0)
+        if (currentPP == 0)
             return 2;
-        if (currentPp <= maxPp / 4)
+        if (currentPP <= maxPP / 4)
             return 1;
-        if (currentPp > maxPp / 2)
+        if (currentPP > maxPP / 2)
             return 3;
     }
 

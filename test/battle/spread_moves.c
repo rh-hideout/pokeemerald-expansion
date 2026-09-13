@@ -466,7 +466,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         TURN { MOVE(opponentRight, MOVE_ICY_WIND); MOVE(playerLeft, MOVE_ROCK_SLIDE); SEND_OUT(playerRight, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponentRight);
-        EFFECTIVENESS_SE(playerRight, SE_SUPER_EFFECTIVE); // SE against sandslash
+        EFFECTIVENESS_SE(playerLeft, SE_SUPER_EFFECTIVE); // SE against sandslash
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
 
@@ -490,8 +490,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
-        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
         MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         MESSAGE("The opposing Wobbuffet fainted!");
         MESSAGE("Wynaut hung on using its Focus Sash!");
@@ -554,5 +554,151 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of a
         MESSAGE("Wynaut avoided the attack!");
         MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("The opposing Wynaut avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: A missed multi-target stat move names the missed battler")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_STRING_SHOT) == TARGET_BOTH);
+        PLAYER(SPECIES_CATERPIE);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STRING_SHOT, hit: FALSE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveTarget(MOVE_COTTON_SPORE) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(SPECIES_WHIMSICOTT) { Speed(3); Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_AGGRON) { Defense(1); Speed(4); }
+        OPPONENT(SPECIES_HERACROSS) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_MEMENTO, target: playerRight);
+            MOVE(playerLeft, MOVE_EARTHQUAKE);
+        }
+        TURN {
+            MOVE(playerRight, MOVE_COTTON_SPORE);
+            MOVE(playerLeft, MOVE_PSYCHIC_TERRAIN);
+        }
+        TURN {
+            MOVE(playerRight, MOVE_COTTON_SPORE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        NONE_OF {
+            EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
+            HP_BAR(opponentLeft);
+            MESSAGE("It's extremely effective on the opposing Aggron!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, playerRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Aggron's Speed harshly fell!");
+        }
+        MESSAGE("Whimsicott used Cotton Spore!");
+        NONE_OF {
+            MESSAGE("The opposing Aggron is protected by the Psychic Terrain!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Aggron's Speed harshly fell!");
+            MESSAGE("But it failed!");
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Unseen Fist)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_BRUTAL_SWING) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_URSHIFU) { Attack(1); Speed(4); Ability(ABILITY_UNSEEN_FIST); }
+        PLAYER(SPECIES_URSHIFU) { Attack(1); Speed(3); Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_PROTECT);
+            MOVE(opponentRight, MOVE_PROTECT);
+            MOVE(playerLeft, MOVE_BRUTAL_SWING);
+            MOVE(playerRight, MOVE_BRUTAL_SWING);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BRUTAL_SWING, playerRight);
+        NOT MESSAGE("It's super effective on the opposing Wobbuffet and Wynaut!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Absorb Abilities)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(3); }
+        OPPONENT(SPECIES_GASTRODON) { HP(1); Speed(2); Ability(ABILITY_STORM_DRAIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_SURF);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerRight);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_STORM_DRAIN);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Missing Moves)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); Item(ITEM_BRIGHTPOWDER); }
+        PLAYER(SPECIES_WYNAUT) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); Item(ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_EARTHQUAKE, hit: FALSE);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet avoided the attack!");
+        NOT MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("The opposing Wynaut avoided the attack!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Results aren't printed for battlers not present on the field (Magic Bounce)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_GROWL) == TARGET_BOTH);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); Speed(3); }
+        OPPONENT(SPECIES_HATTERENE) { HP(1); Speed(2); Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_GROWL);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, playerRight);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
     }
 }

@@ -2,6 +2,29 @@
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/battle.h"
+#include "constants/characters.h"
+
+TEST("Tests initialize a terminated player name")
+{
+    EXPECT(memchr(gSaveBlock2Ptr->playerName, EOS, sizeof(gSaveBlock2Ptr->playerName)) != NULL);
+}
+
+WILD_BATTLE_TEST("Shiny wild battle tests preserve adjacent TV shows")
+{
+    GIVEN {
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind = TVSHOW_FISHING_ADVICE;
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active = TRUE;
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Shiny(TRUE); }
+    } WHEN {
+        TURN { }
+    } THEN {
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].common.kind, TVSHOW_BREAKING_NEWS);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].breakingNews.playerName[0], gSaveBlock2Ptr->playerName[0]);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind, TVSHOW_FISHING_ADVICE);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active, TRUE);
+    }
+}
 
 TEST("Tests resume after CRASH")
 {
@@ -216,6 +239,20 @@ SINGLE_BATTLE_TEST("GIVE_PLAYER_ITEM adds an item to bag")
         TURN { }
     } THEN {
         EXPECT_EQ(TRUE, CheckBagHasItem(ITEM_POTION, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("Failing MESSAGE check doesn't cause FLAKY tests when player uses an item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POTION, partyIndex: 0); }
+    } EXPECT_FAIL {
+        SCENE {
+            MESSAGE("Lorem Ipsum");
+        }
     }
 }
 

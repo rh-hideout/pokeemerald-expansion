@@ -37,4 +37,5 @@ void SetPartyHPBarSprite(struct Sprite *sprite, u8 animNum);
 u8 GetMonIconPaletteIndexFromSpecies(enum Species species);
 void SafeFreeMonIconPalette(enum Species species);
 
+u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species);
 #endif // GUARD_POKEMON_ICON_H

@@ -6,6 +6,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
+#include "battle_special.h"
 #include "battle_partner.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
@@ -350,6 +351,9 @@ void BattleSetup_StartDoubleWildBattle(void)
 
 void BattleSetup_StartMultiBattle(void)
 {
+    gBattleScripting.specialTrainerBattleType = SPECIAL_BATTLE_MULTI;
+    gMain.savedCallback = CB2_EndSpecialTrainerBattle;
+
     if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD) // Player + AI against wild mon
     {
         gBattleTypeFlags = BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER;
@@ -1247,7 +1251,7 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
 #endif //FREE_MATCH_CALL
     
     PUSH_IF_SET(EventSnippet_PlayTrainerEncounterMusic, battleParams->params.playMusicA)
-    PUSH       (EventSnippet_SetTrainerFacingDirection);
+    PUSH_IF_SET(EventSnippet_SetTrainerFacingDirection, battleParams->params.facePlayer);
     PUSH_IF_SET(EventSnippet_ShowTrainerIntroMsg, battleParams->params.introTextA)
     PUSH_IF_ELSE(EventSnippet_DoRematchTrainerBattle, EventSnippet_DoTrainerBattle, battleParams->params.isRematch)
     PUSH_IF_ELSE(EventSnippet_GotoPostBattleScript, EventSnippet_EndTrainerBattle, battleParams->params.continueScript)
@@ -1607,16 +1611,9 @@ static void CB2_EndTrainerBattle(void)
         DowngradeBadPoison();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
-    else if (DidPlayerForfeitNormalTrainerBattle())
+    else if (IsPlayerDefeated(gBattleOutcome))
     {
-        if (FlagGet(B_FLAG_NO_WHITEOUT) || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge())
-            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-        else
-            SetMainCallback2(CB2_WhiteOut);
-    }
-    else if (IsPlayerDefeated(gBattleOutcome) == TRUE)
-    {
-        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || (!NoAliveMonsForPlayer()) || FlagGet(B_FLAG_NO_WHITEOUT))
+        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || FlagGet(B_FLAG_NO_WHITEOUT))
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         else
             SetMainCallback2(CB2_WhiteOut);

@@ -253,6 +253,28 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
     }
 }
 
+SINGLE_BATTLE_TEST("Solar Beam and Solar Blade still need a charging turn in Sunlight with Utility Umbrella")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; }
+    PARAMETRIZE { move = MOVE_SOLAR_BLADE; }
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_UTILITY_UMBRELLA) == HOLD_EFFECT_UTILITY_UMBRELLA);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+    } WHEN {
+        TURN { MOVE(player, move); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        // Charging turn
+        MESSAGE("Wobbuffet absorbed light!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        // Attack turn
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Solar Beam's power is halved in Rain", s16 damage)
 {
     enum Move move;
@@ -441,6 +463,38 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
     }
 }
 
+SINGLE_BATTLE_TEST("Electro Shot does not need a charging turn in Primal Rain")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Electro Shot still needs a charging turn in Rain with Utility Umbrella")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_UTILITY_UMBRELLA) == HOLD_EFFECT_UTILITY_UMBRELLA);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRO_SHOT); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        // Charging turn
+        MESSAGE("Wobbuffet absorbed electricity!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        // Attack turn
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
+        HP_BAR(opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
 {
     GIVEN {
@@ -460,5 +514,18 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
             MESSAGE("Wobbuffet used Electro Shot!");
         }
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Two Turn moves do not become one turn moves during weather if they don't have the property")
+{
+    GIVEN {
+        PLAYER(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAZOR_WIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
+        NOT HP_BAR(opponent);
     }
 }

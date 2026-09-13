@@ -68,4 +68,27 @@ SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Substitutes");
+SINGLE_BATTLE_TEST("Baton Pass passes Substitutes")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(400); HP(400); }
+        PLAYER(SPECIES_WYNAUT) { MaxHP(200); HP(200); Defense(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { Attack(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        SUB_HIT(player);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_WYNAUT);
+        EXPECT_EQ(player->hp, player->maxHP);
+        EXPECT(player->volatiles.substitute);
+        EXPECT_EQ((u32)player->volatiles.substituteHP, 99);
+    }
+}

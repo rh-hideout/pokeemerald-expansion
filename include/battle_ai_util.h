@@ -277,12 +277,11 @@ void AbilityChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Ability ability, struct AiLogicData *aiData);
 
 // partner logic
+// IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
 bool32 IsTargetingPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef);
-// IsTargetingPartner includes a check to make sure the adjacent Pokémon is truly a partner.
-enum Move GetAllyChosenMove(enum BattlerId battlerId);
-bool32 IsBattle1v1(void);
 // IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
 // Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle
+bool32 IsBattle1v1(void);
 bool32 HasTwoOpponents(enum BattlerId battler);
 // HasTwoOpponents checks if the opposing side has two Pokémon. Partner state is irrelevant. e.g., Dragon Darts hits one time with two opponents and twice with one opponent.
 bool32 HasPartner(enum BattlerId battler);
@@ -343,6 +342,10 @@ bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount);
 bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move);
 bool32 CanMoveBeBouncedBack(enum BattlerId battler, enum Move move);
 bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+bool32 ShouldUseFusionMove(enum BattlerId battler);
+bool32 ShouldUseRound(enum BattlerId battler, enum BattleMoveEffects moveEffect);
+bool32 ShouldUsePledgeMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+void AI_SetBattlerTurnOrder(u8 *aiTurnOrder);
 
 // Switching and item helpers
 bool32 AiExpectsToFaintPlayer(enum BattlerId battler);

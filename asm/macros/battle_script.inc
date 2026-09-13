@@ -3,10 +3,6 @@
 	.byte B_SCR_OP_ATTACKCANCELER
 	.endm
 
-	.macro accuracycheck
-	.byte B_SCR_OP_ACCURACYCHECK
-	.endm
-
 	.macro printattackstring
 	.byte B_SCR_OP_PRINTATTACKSTRING
 	.endm
@@ -37,9 +33,10 @@
 	.byte \battler
 	.endm
 
-	.macro datahpupdate battler:req
+	.macro datahpupdate battler:req assuranceDouble:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
+    .byte \assuranceDouble
 	.endm
 
 	.macro critmessage
@@ -1025,11 +1022,6 @@
 	.macro settypebasedhalvers failInstr:req
 	.byte B_SCR_OP_SETTYPEBASEDHALVERS
 	.4byte \failInstr
-	.endm
-
-	.macro jumpifsubstituteblocks jumpInstr:req
-	.byte B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS
-	.4byte \jumpInstr
 	.endm
 
 	.macro tryrecycleitem failInstr:req
@@ -2132,4 +2124,8 @@
 	.byte \comparison
 	.byte \terrain
 	.4byte \jumpInstr
+	.endm
+
+	.macro trydomoveeffectsbeforemoves
+	callnative BS_TryDoMoveEffectsBeforeMoves
 	.endm

@@ -38,6 +38,8 @@
 #define B_EXPLOSION_DEFENSE         GEN_LATEST // In Gen5+, Self-Destruct and Explosion no longer halve the targets' Defense.
 #define B_PARENTAL_BOND_DMG         GEN_LATEST // In Gen7+, Parental Bond's second hit does 25% of the initial hit's damage instead of 50%.
 #define B_MULTIPLE_TARGETS_DMG      GEN_LATEST // In Gen4+, damage dealt by moves that hit multiple targets at once is reduced to 75%. Previously, it was 50%, unless the move hit the entire field, in which case there was no reduction.
+#define B_STRUGGLE_RECOIL           GEN_LATEST // In Gen4+, Struggle's recoil is 1/4 of the user's max HP. In Gen2-3, it's 1/4 of the damage dealt, and in Gen1, 1/2 of it.
+#define B_RETURN_FRUSTRATION_DMG    GEN_LATEST // In Gen3+, Return and Frustration deal at least 1 damage. In Gen2, they deal none at the friendship value that gives them 0 power.
 
 // Type settings
 #define B_GHOSTS_ESCAPE             GEN_LATEST // In Gen6+, escape prevention fails on Ghost-types. Additionally, attempting to escape from a wild battle is always sucessful.
@@ -48,6 +50,7 @@
 #define B_SHEER_COLD_IMMUNITY       GEN_LATEST // In Gen7+, Ice-types are immune to Sheer Cold.
 #define B_ROOST_PURE_FLYING         GEN_LATEST // In Gen5+, Roost turns pure Flying-types into Normal-types.
 #define B_STATUS_TYPE_IMMUNITY      GEN_LATEST // In Gen1, Pokémon were immune to additional effects of attacking moves if they shared a type with the move.
+#define B_FIXED_DMG_IGNORES_TYPE    GEN_LATEST // In Gen1, fixed damage moves (Sonic Boom, Dragon Rage, Super Fang, Psywave, Seismic Toss, Night Shade, Bide, Counter) ignore type effectiveness and immunities.
 
 // Turn settings
 #define B_BINDING_TURNS             GEN_LATEST // In Gen5+, binding moves last for 4-5 turns instead of 2-5. If the user is holding a Grip Claw, they last for 7 turns instead of 5.
@@ -122,6 +125,8 @@
 #define B_HIT_THAW                      GEN_LATEST // In Gen6+, damaging moves that thaw the user will thaw the target. In Gen 3+, Fire-type moves thaw the target. In Gen 1-2, damaging moves that can burn will thaw the target, regardless if they can be burned or not.
 #define B_HEALING_WISH_SWITCH           GEN_LATEST // In Gen5+, the Pokémon receiving Healing Wish/Lunar Dance is sent out at the end of the turn. Additionally, in Gen8+, the effect will be stored until the user switches into a statused or hurt Pokémon.
 #define B_DEFOG_EFFECT_CLEARING         GEN_LATEST // In Gen5+, Defog does not lower the evasion of a target behind a Subsitute. In Gen6+, Defog also clears hazards from the user's side. In Gen8+, Defog also clears active Terrain.
+#define B_HAZE_FOCUS_ENERGY             GEN_LATEST // In Gen1 and Gen4, Haze also removes Focus Energy's effect.
+#define B_AUTOTOMIZE_FORM_CHANGE        GEN_LATEST // In Gen6+, changing form resets Autotomize's weight reduction.
 #define B_STOCKPILE_RAISES_DEFS         GEN_LATEST // In Gen4+, Stockpile also raises Defense and Sp. Def stats. Once Spit Up/Swallow is used, these stat changes are lost.
 #define B_TRANSFORM_SEMI_INV_FAIL       GEN_LATEST // In Gen2+, Transform fails if the target is semi-invulnerable.
 #define B_TRANSFORM_TARGET_FAIL         GEN_LATEST // In Gen2+, Transform fails if the target is already transformed.
@@ -181,6 +186,8 @@
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 #define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
+#define B_MOVE_EFFECTS_BEFORE_MOVES     GEN_LATEST // In Champions, Beak Blast will work when Encored into from a different move
+                                                   // Additionally, the charging animation will occur 
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
@@ -328,6 +335,7 @@
 #define B_OVERWORLD_SNOW                GEN_LATEST // In Gen9+, overworld snow will summon snow instead of hail in battle.
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
 #define B_PREFERRED_ICE_WEATHER         B_ICE_WEATHER_BOTH // Toggles hail move effects to snow and vice versa.
+#define B_OVERWORLD_WEATHER_OVERRIDE    GEN_LATEST // In Gen9+, overworld weather cannot be overridden.
 
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
@@ -356,6 +364,7 @@
 #define B_ANIMATE_MON_AFTER_FAILED_POKEBALL TRUE       // If set to TRUE, a wild Pokémon that breaks of a thrown Poké Ball will play its animation.
 #define B_SHOW_DYNAMAX_MESSAGE              FALSE      // If set to TRUE, an additional battle message is shown after Dynamaxing or Gigantamaxing.
 #define B_HPBAR_COLOR_THRESHOLD             GEN_LATEST // In Gen5+, HP bar color thresholds were changed to be based on the actual HP values instead of the pixel length of the HP bar, leading to more accurate HP bar colors.
+#define B_HP_PERCENTAGE_DISPLAY             FALSE      // If set to TRUE, Pokémon on the opposing side's HP will be displayed in percentage alongside the HP bar. In single battles, this extends the healthbox to add the percentage below the HP bar. In double battles, the same input used to toggle your side's HP values will also toggle the opposing side's percentage display.
 
 // Catching settings
 #define B_SEMI_INVULNERABLE_CATCH       GEN_LATEST // In Gen4+, you cannot throw a ball against a Pokémon that is in a semi-invulnerable state (Dig/Fly/etc).

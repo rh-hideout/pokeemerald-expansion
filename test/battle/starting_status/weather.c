@@ -70,6 +70,7 @@ SINGLE_BATTLE_TEST("Weather started after the one which started the battle lasts
     SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
 
     GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_8);
         PLAYER(SPECIES_POLITOED) { Ability(viaMove == TRUE ? ABILITY_DAMP : ABILITY_DRIZZLE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -125,6 +126,38 @@ SINGLE_BATTLE_TEST("StartingStatus weather activates weather-reliant abilities")
         ABILITY_POPUP(player, ABILITY_HYDRATION);
         MESSAGE("Swanna's burn was cured!");
         STATUS_ICON(player, none: TRUE);
+    } THEN {
+        ResetStartingStatuses();
+    }
+}
+
+SINGLE_BATTLE_TEST("Overworld weather cannot be overridden (Gen9)")
+{
+    bool32 viaMove;
+
+    PARAMETRIZE { viaMove = TRUE; }
+    PARAMETRIZE { viaMove = FALSE; }
+
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_9);
+        PLAYER(SPECIES_POLITOED) { Ability(viaMove == TRUE ? ABILITY_DAMP : ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, viaMove == TRUE ? MOVE_RAIN_DANCE : MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("The sunlight turned harsh!");
+        if (viaMove) {
+            MESSAGE("Politoed used Rain Dance!");
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+                MESSAGE("It started to rain!");
+            }
+        } else {
+            ABILITY_POPUP(player, ABILITY_DRIZZLE);
+            NOT MESSAGE("It started to rain!");
+        }
     } THEN {
         ResetStartingStatuses();
     }
