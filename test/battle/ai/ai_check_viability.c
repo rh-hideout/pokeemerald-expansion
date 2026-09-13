@@ -25,9 +25,9 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Facade")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_FACADE); Status1(status1); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
+    } THEN {
         if (expectedMove == MOVE_FACADE)
-            MESSAGE("Wobbuffet fainted!");
+            EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -47,9 +47,9 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Smelling Salt")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_SMELLING_SALTS); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
+    } THEN {
         if (expectedMove == MOVE_SMELLING_SALTS)
-            MESSAGE("Wobbuffet fainted!");
+            EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -69,9 +69,9 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_WAKE_UP_SLAP); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
+    } THEN {
         if (expectedMove == MOVE_WAKE_UP_SLAP)
-            MESSAGE("Meganium fainted!");
+            EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -93,9 +93,9 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
     } WHEN {
         TURN { MOVE(player, movePlayer); EXPECT_MOVE(opponent, MOVE_DRUM_BEATING); }
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
+    } THEN {
         if (expectedMove == MOVE_GRAV_APPLE)
-            MESSAGE("Wobbuffet fainted!");
+            EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -160,9 +160,9 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BODY_SLAM, MOVE_DREAM_EATER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
+    } THEN {
         if (expectedMove == MOVE_DREAM_EATER)
-            MESSAGE("Meganium fainted!");
+            EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -213,8 +213,8 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_STOCKPILE); }
         TURN { EXPECT_MOVE(opponent, MOVE_SPIT_UP); }
-    } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+    } THEN {
+        EXPECT_EQ(player->hp, 0);
     }
 }
 
@@ -240,8 +240,8 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, opponentMove); }
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+    } THEN {
+        EXPECT_EQ(opponent->hp, 0);
     }
 }
 
@@ -249,7 +249,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
 {
     enum Ability ability;
 
-    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_HUSTLE; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; }
 
     GIVEN {
@@ -257,9 +257,9 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_OCTAZOOKA, MOVE_EFFECT_STAT_MINUS, 50));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_REGICE);
-        OPPONENT(SPECIES_REGIROCK) { Ability(ability); Moves(MOVE_SHADOW_BALL, MOVE_OCTAZOOKA); }
+        OPPONENT(SPECIES_TOGEKISS) { Ability(ability); Moves(MOVE_SHADOW_BALL, MOVE_OCTAZOOKA); }
     } WHEN {
-        if (ability == ABILITY_NONE)
+        if (ability == ABILITY_HUSTLE)
             TURN { EXPECT_MOVE(opponent, MOVE_SHADOW_BALL); }
         else
             TURN { EXPECT_MOVES(opponent, MOVE_OCTAZOOKA); }
@@ -306,20 +306,21 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 AI_DOUBLE_BATTLE_TEST("AI uses Refresh only when curing status is worthwhile")
 {
     u32 status1;
+    enum Species species;
     enum Ability ability;
     u32 expectedMove;
 
-    PARAMETRIZE { status1 = STATUS1_BURN;         ability = ABILITY_GUTS;        expectedMove = MOVE_ROCK_SLIDE; }
-    PARAMETRIZE { status1 = STATUS1_BURN;         ability = ABILITY_PRESSURE;    expectedMove = MOVE_REFRESH; }
-    PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; ability = ABILITY_POISON_HEAL; expectedMove = MOVE_ROCK_SLIDE; }
-    PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; ability = ABILITY_SCRAPPY;     expectedMove = MOVE_REFRESH; }
+    PARAMETRIZE { species = SPECIES_MACHAMP;    status1 = STATUS1_BURN;         ability = ABILITY_GUTS;        expectedMove = MOVE_ROCK_SLIDE; }
+    PARAMETRIZE { species = SPECIES_ABSOL;      status1 = STATUS1_BURN;         ability = ABILITY_PRESSURE;    expectedMove = MOVE_REFRESH; }
+    PARAMETRIZE { species = SPECIES_GLISCOR;    status1 = STATUS1_TOXIC_POISON; ability = ABILITY_POISON_HEAL; expectedMove = MOVE_ROCK_SLIDE; }
+    PARAMETRIZE { species = SPECIES_KANGASKHAN; status1 = STATUS1_TOXIC_POISON; ability = ABILITY_SCRAPPY;     expectedMove = MOVE_REFRESH; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_REFRESH) == EFFECT_REFRESH);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, MOVE_REFRESH); Status1(status1); Ability(ability); }
+        OPPONENT(species) { Moves(MOVE_ROCK_SLIDE, MOVE_REFRESH); Status1(status1); Ability(ability); }
         OPPONENT(SPECIES_EXPLOUD) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, expectedMove); }
@@ -560,11 +561,11 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
     enum Ability ability;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
 
-    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_TORRENT; }
     PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
     PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_TORRENT; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
                   fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
@@ -577,7 +578,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
         OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE); }
     } WHEN {
-        if (ability != ABILITY_NONE)
+        if (ability == ABILITY_LIQUID_VOICE || ability == ABILITY_GALVANIZE)
             TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }
         else
             TURN { NOT_EXPECT_MOVE(opponentLeft, fieldStatus); }
