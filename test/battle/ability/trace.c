@@ -155,6 +155,20 @@ SINGLE_BATTLE_TEST("Trace can activate if it couldn't copy opponent's ability ev
     }
 }
 
+SINGLE_BATTLE_TEST("Trace cannot copy Zero to Hero")
+{
+    GIVEN {
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NOT ABILITY_POPUP(player, ABILITY_TRACE);
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_TRACE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately")
 {
     GIVEN {
