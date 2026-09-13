@@ -11,7 +11,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Multiscale halves physical damage at full HP", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Attack(200); Level(50); }
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Multiscale halves physical damage at full HP", s16 damage)
 SINGLE_BATTLE_TEST("Multiscale halves special damage at full HP", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { SpAttack(200); Level(50); }
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Multiscale halves special damage at full HP", s16 damage)
 SINGLE_BATTLE_TEST("Multiscale does not reduce damage below full HP", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Attack(200); Level(50); }
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Multiscale does not reduce damage below full HP", s16 damage
 SINGLE_BATTLE_TEST("Multiscale applies again after the user heals to full HP", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Attack(200); Level(50); Speed(50); }
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Multiscale applies again after the user heals to full HP", s
 SINGLE_BATTLE_TEST("Multiscale only reduces the first strike of a multi-strike move", s16 damage[2])
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Attack(200); Level(50); }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Multiscale only reduces the first strike of a multi-strike m
 SINGLE_BATTLE_TEST("Multiscale does not reduce fixed damage", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(50); }
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Multiscale does not reduce fixed damage", s16 damage)
 SINGLE_BATTLE_TEST("Multiscale does not reduce damage while suppressed", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_PRESSURE; }
+    PARAMETRIZE { ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { ability = ABILITY_MULTISCALE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Attack(200); Level(50); Speed(100); }
