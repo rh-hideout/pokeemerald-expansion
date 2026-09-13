@@ -112,10 +112,11 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
 SINGLE_BATTLE_TEST("Last Resort fails if mon was paralyzed last turn")
 {
     GIVEN {
+        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); Moves(MOVE_LAST_RESORT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, FALSE)); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, TRUE)); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
         NONE_OF {

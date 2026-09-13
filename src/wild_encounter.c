@@ -52,6 +52,11 @@ static u8 GetMaxLevelOfSpeciesInWildTable(const struct WildPokemon *wildMon, enu
 static u32 GetMinLevelAllowedByAbility(void);
 static u32 GetMinLevelAllowedByRepel(void);
 
+static u32 ChooseWildMonIndex_Land(bool32 ignoreLure);
+static u32 ChooseWildMonIndex_Water(bool32 ignoreLure);
+static u32 ChooseWildMonIndex_Rocks(bool32 ignoreLure);
+static u32 ChooseWildMonIndex_Hidden(bool32 ignoreLure);
+
 EWRAM_DATA static u32 sFeebasRngValue = 0;
 EWRAM_DATA bool8 gIsFishingEncounter = 0;
 EWRAM_DATA bool8 gIsSurfingEncounter = 0;
@@ -166,8 +171,8 @@ static void FeebasSeedRng(u16 seed)
     sFeebasRngValue = seed;
 }
 
-// LAND_WILD_COUNT
-u32 ChooseWildMonIndex_Land(void)
+// NUM_LAND_MONS_ENCOUNTER_SLOTS
+static u32 ChooseWildMonIndex_Land(bool32 ignoreLure)
 {
     u8 wildMonIndex = 0;
     bool8 swap = FALSE;
@@ -198,17 +203,17 @@ u32 ChooseWildMonIndex_Land(void)
     else
         wildMonIndex = 11;
 
-    if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
+    if (LURE_STEP_COUNT != 0 && !ignoreLure && (Random() % 10 < 2))
         swap = TRUE;
 
     if (swap)
-        wildMonIndex = 11 - wildMonIndex;
+        wildMonIndex = ENCOUNTER_CHANCE_LAND_MONS_TOTAL - 1 - wildMonIndex;
 
     return wildMonIndex;
 }
 
-// WATER_WILD_COUNT
-u32 ChooseWildMonIndex_Water(void)
+// NUM_WATER_MONS_ENCOUNTER_SLOTS
+static u32 ChooseWildMonIndex_Water(bool32 ignoreLure)
 {
     u32 wildMonIndex = 0;
     bool8 swap = FALSE;
@@ -225,17 +230,17 @@ u32 ChooseWildMonIndex_Water(void)
     else
         wildMonIndex = 4;
 
-    if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
+    if (LURE_STEP_COUNT != 0 && !ignoreLure && (Random() % 10 < 2))
         swap = TRUE;
 
     if (swap)
-        wildMonIndex = 4 - wildMonIndex;
+        wildMonIndex = ENCOUNTER_CHANCE_WATER_MONS_TOTAL - 1 - wildMonIndex;
 
     return wildMonIndex;
 }
 
-// ROCK_WILD_COUNT
-u32 ChooseWildMonIndex_Rocks(void)
+// NUM_ROCK_SMASH_MONS_ENCOUNTER_SLOTS
+static u32 ChooseWildMonIndex_Rocks(bool32 ignoreLure)
 {
     u32 wildMonIndex = 0;
     bool8 swap = FALSE;
@@ -252,24 +257,24 @@ u32 ChooseWildMonIndex_Rocks(void)
     else
         wildMonIndex = 4;
 
-    if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
+    if (LURE_STEP_COUNT != 0 && !ignoreLure && (Random() % 10 < 2))
         swap = TRUE;
 
     if (swap)
-        wildMonIndex = 4 - wildMonIndex;
+        wildMonIndex = NUM_ROCK_SMASH_MONS_ENCOUNTER_SLOTS - 1 - wildMonIndex;
 
     return wildMonIndex;
 }
 
-// FISH_WILD_COUNT
-static u32 ChooseWildMonIndex_Fishing(u8 rod)
+// NUM_FISHING_MONS_ENCOUNTER_SLOTS
+static u32 ChooseWildMonIndex_Fishing(u8 rod, bool32 ignoreLure)
 {
     u8 wildMonIndex = 0;
     bool8 swap = FALSE;
     u8 rand = Random() % max(max(ENCOUNTER_CHANCE_FISHING_MONS_OLD_ROD_TOTAL, ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_TOTAL),
                              ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_TOTAL);
 
-    if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
+    if (LURE_STEP_COUNT != 0 && !ignoreLure && (Random() % 10 < 2))
         swap = TRUE;
 
     switch (rod)
@@ -281,7 +286,7 @@ static u32 ChooseWildMonIndex_Fishing(u8 rod)
             wildMonIndex = 1;
 
         if (swap)
-            wildMonIndex = 1 - wildMonIndex;
+            wildMonIndex = NUM_FISHING_MONS_OLD_ROD_ENCOUNTER_SLOTS - 1 - wildMonIndex;
         break;
     case GOOD_ROD:
         if (rand < ENCOUNTER_CHANCE_FISHING_MONS_GOOD_ROD_SLOT_2)
@@ -292,7 +297,7 @@ static u32 ChooseWildMonIndex_Fishing(u8 rod)
             wildMonIndex = 4;
 
         if (swap)
-            wildMonIndex = 6 - wildMonIndex;
+            wildMonIndex = 2 * NUM_FISHING_MONS_OLD_ROD_ENCOUNTER_SLOTS + NUM_FISHING_MONS_GOOD_ROD_ENCOUNTER_SLOTS - 1 - wildMonIndex;
         break;
     case SUPER_ROD:
         if (rand < ENCOUNTER_CHANCE_FISHING_MONS_SUPER_ROD_SLOT_5)
@@ -307,7 +312,7 @@ static u32 ChooseWildMonIndex_Fishing(u8 rod)
             wildMonIndex = 9;
 
         if (swap)
-            wildMonIndex = 14 - wildMonIndex;
+            wildMonIndex = 2 * NUM_FISHING_MONS_ENCOUNTER_SLOTS - NUM_FISHING_MONS_SUPER_ROD_ENCOUNTER_SLOTS - 1 - wildMonIndex;
         break;
     }
     return wildMonIndex;
@@ -425,26 +430,26 @@ void CreateWildMon(enum Species species, u8 level)
 }
 
 const u8 gEncounterTableSizes[WILD_ENCOUNTER_TYPES_COUNT] = {
-    [WILD_LAND_MONS] = LAND_WILD_COUNT,
-    [WILD_WATER_MONS] = WATER_WILD_COUNT,
-    [WILD_ROCK_SMASH_MONS] = ROCK_WILD_COUNT,
-    [WILD_FISHING_MONS] = FISH_WILD_COUNT,
-    [WILD_HIDDEN_MONS] = HIDDEN_WILD_COUNT,
+    [WILD_LAND_MONS] = NUM_LAND_MONS_ENCOUNTER_SLOTS,
+    [WILD_WATER_MONS] = NUM_WATER_MONS_ENCOUNTER_SLOTS,
+    [WILD_ROCK_SMASH_MONS] = NUM_ROCK_SMASH_MONS_ENCOUNTER_SLOTS,
+    [WILD_FISHING_MONS] = NUM_FISHING_MONS_ENCOUNTER_SLOTS,
+    [WILD_HIDDEN_MONS] = NUM_HIDDEN_MONS_ENCOUNTER_SLOTS,
 };
 
-typedef u32 (*ChooseWildMonIndexFunction)(void);
+typedef u32 (*ChooseWildMonIndexFunction)(bool32);
 
 static ChooseWildMonIndexFunction sEncounterTypeFunctions[WILD_ENCOUNTER_TYPES_COUNT] = {
     [WILD_LAND_MONS] = ChooseWildMonIndex_Land,
     [WILD_WATER_MONS] = ChooseWildMonIndex_Water,
     [WILD_ROCK_SMASH_MONS] = ChooseWildMonIndex_Rocks,
     [WILD_FISHING_MONS] = NULL,
-    [WILD_HIDDEN_MONS] = ChooseHiddenMonIndex,
+    [WILD_HIDDEN_MONS] = ChooseWildMonIndex_Hidden,
 };
 
-u32 ChooseWildMonIndex(enum WildEncounterType encounterType)
+u32 ChooseWildMonIndex(enum WildEncounterType encounterType, bool32 ignoreLure)
 {
-    return sEncounterTypeFunctions[encounterType]();
+    return sEncounterTypeFunctions[encounterType](ignoreLure);
 }
 
 static bool8 TryGetRandomWildMonIndexByType(const struct WildPokemon *wildMon, enum Type type, u32 tableSize)
@@ -474,7 +479,7 @@ void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncount
         wildMonIndex = TryGetRandomWildMonIndexByType(wildMonInfo->wildPokemon, type, gEncounterTableSizes[encounterType]);
 
     if (wildMonIndex == UNKNOWN_WILDMON_INDEX)
-        wildMonIndex = ChooseWildMonIndex(encounterType);
+        wildMonIndex = ChooseWildMonIndex(encounterType, FALSE);
 
     level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, encounterType);
     if (level >= minLevel)
@@ -483,7 +488,7 @@ void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncount
 
 static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 rod)
 {
-    u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod);
+    u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod, FALSE);
     enum Species wildMonSpecies = wildMonInfo->wildPokemon[wildMonIndex].species;
     u8 level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_FISHING_MONS);
 
@@ -734,21 +739,21 @@ u16 GetLocalWildMon(bool8 *isWaterMon)
     if (landMonsInfo == NULL && waterMonsInfo == NULL)
         return SPECIES_NONE;
     else if (landMonsInfo != NULL && waterMonsInfo == NULL)
-        return landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
+        return landMonsInfo->wildPokemon[ChooseWildMonIndex_Land(TRUE)].species;
     else if (landMonsInfo == NULL && waterMonsInfo != NULL)
     {
         *isWaterMon = TRUE;
-        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
+        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water(TRUE)].species;
     }
     // Either land or water Pokémon
     if (RandomPercentage(RNG_NONE, 80))
     {
-        return landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
+        return landMonsInfo->wildPokemon[ChooseWildMonIndex_Land(TRUE)].species;
     }
     else
     {
         *isWaterMon = TRUE;
-        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
+        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water(TRUE)].species;
     }
 }
 
@@ -756,7 +761,7 @@ u16 GetLocalWaterMon(void)
 {
     const struct WildPokemonInfo *waterMonsInfo = GetWildPokemonInfo(WILD_WATER_MONS);
     if (waterMonsInfo)
-        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
+        return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water(TRUE)].species;
     return SPECIES_NONE;
 }
 
@@ -859,17 +864,26 @@ bool32 CheckForDoubleWildBattle(void)
     return FALSE;
 }
 
-u32 ChooseHiddenMonIndex(void)
+static u32 ChooseWildMonIndex_Hidden(bool32 ignoreLure)
 {
     #ifdef ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL
         u8 rand = Random() % ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL;
+        bool8 swap = FALSE;
+        u32 wildMonIndex;
 
         if (rand < ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0)
-            return 0;
+            wildMonIndex = 0;
         else if (rand >= ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_0 && rand < ENCOUNTER_CHANCE_HIDDEN_MONS_SLOT_1)
-            return 1;
+            wildMonIndex = 1;
         else
-            return 2;
+            wildMonIndex = 2;
+
+        if (LURE_STEP_COUNT != 0 && !ignoreLure && (Random() % 10 < 2))
+            swap = TRUE;
+
+        if (swap)
+            wildMonIndex = ENCOUNTER_CHANCE_HIDDEN_MONS_TOTAL - wildMonIndex;
+        return wildMonIndex;
     #else
         return UNKNOWN_WILDMON_INDEX;
     #endif

@@ -119,9 +119,9 @@ struct DexNavGUI
     MainCallback savedCallback;
     u8 state;
     u8 cursorSpriteId;
-    enum Species landSpecies[LAND_WILD_COUNT];
-    enum Species waterSpecies[WATER_WILD_COUNT];
-    enum Species hiddenSpecies[HIDDEN_WILD_COUNT];
+    enum Species landSpecies[NUM_LAND_MONS_ENCOUNTER_SLOTS];
+    enum Species waterSpecies[NUM_WATER_MONS_ENCOUNTER_SLOTS];
+    enum Species hiddenSpecies[NUM_HIDDEN_MONS_ENCOUNTER_SLOTS];
     u8 cursorRow;
     u8 cursorCol;
     u8 environment;
@@ -761,7 +761,7 @@ static bool8 TryStartHiddenMonFieldEffect(enum WildEncounterType environment, u8
 
 static void DrawDexNavSearchHeldItem(u8 *dst)
 {
-    *dst = CreateSprite(&sHeldItemTemplate, SPECIES_ICON_X + 6, GetSearchWindowY() + 18, 0);
+    *dst = CreateSpriteUnchecked(&sHeldItemTemplate, SPECIES_ICON_X + 6, GetSearchWindowY() + 18, 0);
     if (*dst != MAX_SPRITES)
         gSprites[*dst].invisible = TRUE;
 }
@@ -877,7 +877,7 @@ static void DexNavDrawPotentialStars(u8 potential, u8 *dst)
     {
         spriteId = MAX_SPRITES;
         if (potential > i)
-            spriteId = CreateSprite(&sPotentialStarTemplate, SPECIES_ICON_X - 20, GetSearchWindowY() + 4 + (i * 8), 0);
+            spriteId = CreateSpriteUnchecked(&sPotentialStarTemplate, SPECIES_ICON_X - 20, GetSearchWindowY() + 4 + (i * 8), 0);
 
         dst[i] = spriteId;
         if (spriteId != MAX_SPRITES)
@@ -1760,21 +1760,21 @@ static bool8 SpeciesInArray(enum Species species, u8 section)
     switch (section)
     {
     case 0: //land
-        for (i = 0; i < LAND_WILD_COUNT; i++)
+        for (i = 0; i < NUM_LAND_MONS_ENCOUNTER_SLOTS; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->landSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 1: //water
-        for (i = 0; i < WATER_WILD_COUNT; i++)
+        for (i = 0; i < NUM_WATER_MONS_ENCOUNTER_SLOTS; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->waterSpecies[i]) == dexNum)
                 return TRUE;
         }
         break;
     case 2: //hidden
-        for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+        for (i = 0; i < NUM_HIDDEN_MONS_ENCOUNTER_SLOTS; i++)
         {
             if (SpeciesToNationalPokedexNum(sDexNavUiDataPtr->hiddenSpecies[i]) == dexNum)
                 return TRUE;
@@ -1845,7 +1845,7 @@ static void DrawSpeciesIcons(void)
     enum Species species;
 
     LoadCompressedSpriteSheetUsingHeap(&sNoDataIconSpriteSheet);
-    for (i = 0; i < LAND_WILD_COUNT; i++)
+    for (i = 0; i < NUM_LAND_MONS_ENCOUNTER_SLOTS; i++)
     {
         species = sDexNavUiDataPtr->landSpecies[i];
         x = ROW_LAND_ICON_X + (24 * (i % COL_LAND_COUNT));
@@ -1853,7 +1853,7 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < WATER_WILD_COUNT; i++)
+    for (i = 0; i < NUM_WATER_MONS_ENCOUNTER_SLOTS; i++)
     {
         species = sDexNavUiDataPtr->waterSpecies[i];
         x = ROW_WATER_ICON_X + 24 * i;
@@ -1861,7 +1861,7 @@ static void DrawSpeciesIcons(void)
         TryDrawIconInSlot(species, x, y);
     }
 
-    for (i = 0; i < HIDDEN_WILD_COUNT; i++)
+    for (i = 0; i < NUM_HIDDEN_MONS_ENCOUNTER_SLOTS; i++)
     {
         species = sDexNavUiDataPtr->hiddenSpecies[i];
         x = ROW_HIDDEN_ICON_X + 24 * i;
@@ -2393,7 +2393,7 @@ bool32 TryFindHiddenPokemon(void)
 
         if (RandomPercentage(RNG_NONE, HIDDEN_MON_PROBABILTY))
         {
-            index = ChooseHiddenMonIndex();
+            index = ChooseWildMonIndex(WILD_HIDDEN_MONS, FALSE);
             if (index == 0xFF)
                 return FALSE;//no hidden info
             species = hiddenMonsInfo->wildPokemon[index].species;
@@ -2402,7 +2402,7 @@ bool32 TryFindHiddenPokemon(void)
         }
         else
         {
-            species = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment]->wildPokemon[ChooseWildMonIndex(environment)].species;
+            species = gWildMonHeaders[headerId].encounterTypes[timeOfDay][environment]->wildPokemon[ChooseWildMonIndex(environment, FALSE)].species;
         }
 
         if (species == SPECIES_NONE)

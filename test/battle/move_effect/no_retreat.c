@@ -26,6 +26,26 @@ SINGLE_BATTLE_TEST("No Retreat raises user's Atk/Def/Sp.Atk/Sp.Def/Speed unless 
     }
 }
 
+SINGLE_BATTLE_TEST("No Retreat does not cause a freeze if a stat changing move is used afterwards")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NO_RETREAT); }
+        TURN { MOVE(player, MOVE_CURSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NO_RETREAT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
+        MESSAGE("Wobbuffet's Speed fell!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
 // Question: If No Retreat is used is the mon blocking the switch out changed?
 SINGLE_BATTLE_TEST("No Retreat won't fail if user is prevented from escaping")
 {

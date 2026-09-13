@@ -1761,7 +1761,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
                 numSpecies = 0;
                 if (gWildMonHeaders[i].encounterTypes[timeOfDay][encounterType])
                 {
-                    slot = ChooseWildMonIndex(encounterType);
+                    slot = ChooseWildMonIndex(encounterType, TRUE);
                     species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay][encounterType]->wildPokemon[slot].species;
                     numSpecies++;
                 }

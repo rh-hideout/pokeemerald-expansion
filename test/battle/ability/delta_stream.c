@@ -50,3 +50,21 @@ DOUBLE_BATTLE_TEST("Strong winds continue as long as there's a Pokémon with Del
         EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
     }
 }
+
+SINGLE_BATTLE_TEST("Delta Stream fails if overworld weather is present (Gen9)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN);
+        ResetStartingStatuses();
+    }
+}

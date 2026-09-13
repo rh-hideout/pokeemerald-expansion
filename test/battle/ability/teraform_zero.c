@@ -139,3 +139,41 @@ SINGLE_BATTLE_TEST("Teraform Zero doesn't reactivate when Terapagos-Stellar swit
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Teraform Zero fails if overworld weather is present (Gen9)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_9);
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        OPPONENT(SPECIES_LANDORUS);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+        MESSAGE("But it failed!");
+    } THEN {
+        ResetStartingStatuses();
+    }
+}
+
+SINGLE_BATTLE_TEST("Teraform Zero removes terrain but not overworld weather (Gen9)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_9);
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        OPPONENT(SPECIES_RILLABOOM) { Ability(ABILITY_GRASSY_SURGE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_TERAFORM_ZERO);
+        MESSAGE("The grass disappeared from the battlefield.");
+    } THEN {
+        ResetStartingStatuses();
+    }
+}

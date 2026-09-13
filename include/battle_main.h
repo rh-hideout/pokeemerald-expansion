@@ -78,6 +78,7 @@ void SpriteCallbackDummy_2(struct Sprite *sprite);
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite);
 void SpriteCB_ShowAsMoveTarget(struct Sprite *sprite);
 void SpriteCB_HideAsMoveTarget(struct Sprite *sprite);
+bool32 ShouldHideBattler(enum BattlerId battler);
 void SpriteCB_OpponentMonFromBall(struct Sprite *sprite);
 void SpriteCB_BattleSpriteStartSlideLeft(struct Sprite *sprite);
 void SpriteCB_FaintSlideAnim(struct Sprite *sprite);
@@ -103,6 +104,7 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
 s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
 s32 GetWhichBattlerFasterOrTies(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
 s32 GetWhichBattlerFaster(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
+const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
 enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum MonState state);
@@ -114,6 +116,7 @@ bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
 s32 Factorial(s32 n);
+void InitializeStartingStatus(void);
 
 extern struct MultiPartnerMenuPokemon *gMultiPartnerParty;
 

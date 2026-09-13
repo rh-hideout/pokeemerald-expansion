@@ -39,7 +39,13 @@ AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep moves while sleep cla
 
 AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep move if partner is already using a sleep move")
 {
+    u32 chance = 0;
+
+    PARAMETRIZE { chance = 0; }
+    PARAMETRIZE { chance = 100; }
+
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, chance);
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -50,7 +56,17 @@ AI_DOUBLE_BATTLE_TEST("Sleep Clause: AI will not use sleep move if partner is al
         OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_MACH_PUNCH); }
         OPPONENT(SPECIES_BRELOOM) { Moves(MOVE_SPORE, MOVE_MACH_PUNCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SPORE); EXPECT_MOVE(opponentRight, MOVE_MACH_PUNCH); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            if (chance == 100) {
+                EXPECT_MOVE(opponentLeft, MOVE_SPORE);
+                EXPECT_MOVE(opponentRight, MOVE_MACH_PUNCH);
+            } else {
+                EXPECT_MOVE(opponentLeft, MOVE_MACH_PUNCH);
+                EXPECT_MOVE(opponentRight, MOVE_SPORE);
+            }
+        }
     }
 }
 
@@ -1868,5 +1884,39 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Opponent Spore'ing player's partner after part
             STATUS_ICON(playerLeft, sleep: TRUE);
         }
         MESSAGE("Sleep Clause kept Zigzagoon awake!");
+    }
+}
+
+MULTI_BATTLE_TEST("Sleep Clause remains active when a partner's Chesto Berry cures sleep")
+{
+    GIVEN {
+        FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
+        ASSUME(gItemsInfo[ITEM_CHESTO_BERRY].holdEffect == HOLD_EFFECT_CURE_SLP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_CHESTO_BERRY); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SPORE, target: playerLeft); }
+        TURN { MOVE(playerRight, MOVE_REST); }
+        TURN { MOVE(opponentLeft, MOVE_SPORE, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerLeft);
+        STATUS_ICON(playerLeft, sleep: TRUE);
+
+        STATUS_ICON(playerRight, sleep: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
+        STATUS_ICON(playerRight, sleep: FALSE);
+
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
+            STATUS_ICON(playerRight, sleep: TRUE);
+        }
     }
 }

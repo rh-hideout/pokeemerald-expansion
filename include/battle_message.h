@@ -75,7 +75,7 @@
 #define B_TXT_DEF_NAME 0x39
 #define B_TXT_DEF_TEAM1 0x3A // Your/The opposing
 #define B_TXT_DEF_TEAM2 0x3B // your/the opposing
-#define B_TXT_DEF_PARTNER_NAME 0x3C
+#define B_TXT_SCR_PARTNER_NAME 0x3C
 // #define B_UNUSED_0x3D 0x3D
 #define B_TXT_ATK_NAME_WITH_PREFIX2 0x3E //lowercase
 #define B_TXT_DEF_NAME_WITH_PREFIX2 0x3F //lowercase
@@ -241,7 +241,7 @@ struct BattleMsgData
     enum Item lastItem;
     enum Ability lastAbility;
     u8 scrActive;
-    u8 bakScriptPartyIdx;
+    enum PartyMon bakScriptPartyIdx;
     u8 hpScale;
     u8 itemEffectBattler;
     enum Type moveType;
@@ -253,8 +253,8 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler);
 u32 BattleStringExpandPlaceholdersToDisplayedString(const u8 *src);
 u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize);
 void BattlePutTextOnWindow(const u8 *text, u8 windowId);
-void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler);
-u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp);
+void SetPPNumbersPaletteInMoveSelection(enum BattlerId battler);
+u8 GetCurrentPPToMaxPPState(u8 currentPP, u8 maxPP);
 void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst);
 
 extern struct BattleMsgData *gBattleMsgDataPtr;
@@ -278,7 +278,7 @@ extern const u8 gText_SafariZoneMenu[];
 extern const u8 gText_SafariZoneMenuFrlg[];
 extern const u8 gText_MoveInterfacePP[];
 extern const u8 gText_MoveInterfaceType[];
-extern const u8 gText_MoveInterfacePpType[];
+extern const u8 gText_MoveInterfacePPType[];
 extern const u8 gText_MoveInterfaceDynamicColors[];
 extern const u8 gText_WhichMoveToForget4[];
 extern const u8 gText_BattleYesNoChoice[];

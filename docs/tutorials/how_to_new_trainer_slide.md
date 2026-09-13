@@ -166,12 +166,10 @@ In `BattleTurnPassed`, most Trainer Slides are checked to see if they should run
 
 ```diff
          {
-             PrepareStringBattle(STRINGID_CRITICALHIT, gBattlerAttacker);
+             PrepareStringBattleWithWait(STRINGID_CRITICALHIT, gBattlerAttacker);
 
 +            TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(gBattlerTarget);
              TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(gBattlerTarget);
-
-             gBattleCommunication[MSG_DISPLAY] = 1;
 ```
 
 The actual usage of `TryInitializeTrainerSlideEnemyLandsFirstCriticalHit` is added and is checked whenever a critical hit is scored.

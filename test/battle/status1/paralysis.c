@@ -25,23 +25,38 @@ SINGLE_BATTLE_TEST("Paralysis reduces Speed by 50% (Gen 7+) or 75% (Gen 1-6)")
         if (playerFirst) {
             ONE_OF {
                 MESSAGE("Wobbuffet used Celebrate!");
-                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+                MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
             }
             MESSAGE("The opposing Wobbuffet used Celebrate!");
         } else {
             MESSAGE("The opposing Wobbuffet used Celebrate!");
             ONE_OF {
                 MESSAGE("Wobbuffet used Celebrate!");
-                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+                MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
             }
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
+SINGLE_BATTLE_TEST("Paralysis has a 1/4 chance of skipping the turn (Gen9-)")
 {
-    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
+    PASSES_RANDOMLY(1, 4, RNG_PARALYSIS);
     GIVEN {
+        WITH_CONFIG(B_PARALYSIS_CHANCE, GEN_9);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Paralysis has a 1/8 chance of skipping the turn (Champions)")
+{
+    PASSES_RANDOMLY(1, 8, RNG_PARALYSIS);
+    GIVEN {
+        WITH_CONFIG(B_PARALYSIS_CHANCE, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -37,7 +37,7 @@ extern bool8 gIsSurfingEncounter;
 extern u8 gChainFishingDexNavStreak;
 
 u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildEncounterType encounterType);
-u32 ChooseWildMonIndex(enum WildEncounterType encounterType);
+u32 ChooseWildMonIndex(enum WildEncounterType encounterType, bool32 ignoreLure);
 bool32 StandardWildEncounter(u32 metatileBehavior, bool32 isForced);
 bool32 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(void);
@@ -54,10 +54,6 @@ void GenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildEncount
 bool8 AreLegendariesInSootopolisPreventingEncounters(void);
 u16 GetCurrentMapWildMonHeaderId(void);
 bool8 CheckFeebasAtCoords(s16 x, s16 y);
-u32 ChooseWildMonIndex_Land(void);
-u32 ChooseWildMonIndex_Water(void);
-u32 ChooseWildMonIndex_Rocks(void);
-u32 ChooseHiddenMonIndex(void);
 bool32 MapHasNoEncounterData(void);
 enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildEncounterType encounterType);
 const struct WildPokemonInfo *GetWildPokemonInfo(enum WildEncounterType encounterType);

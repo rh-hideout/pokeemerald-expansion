@@ -11,6 +11,6 @@ enum
 };
 
 void ContestAI_ResetAI(u8 contestantAI);
-u8 ContestAI_GetActionToUse(void);
+enum MoveSlot ContestAI_GetActionToUse(void);
 
 #endif // GUARD_CONTESTAI_H

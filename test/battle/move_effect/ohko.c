@@ -4,6 +4,56 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+    ASSUME(GetMoveEffect(MOVE_GUILLOTINE) == EFFECT_OHKO);
+    ASSUME(GetMoveEffect(MOVE_HORN_DRILL) == EFFECT_OHKO);
+    ASSUME(GetMoveType(MOVE_FISSURE) == TYPE_GROUND);
+    ASSUME(GetMoveType(MOVE_GUILLOTINE) == TYPE_NORMAL);
+    ASSUME(GetMoveType(MOVE_HORN_DRILL) == TYPE_NORMAL);
+}
+
+SINGLE_BATTLE_TEST("Fissure does not bypass type immunities (Gen 1)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
+        ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        MESSAGE("It doesn't affect the opposing Pidgey…");
+    }
+}
+
+SINGLE_BATTLE_TEST("Guillotine does not bypass type immunities (Gen 1)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
+        ASSUME(IsSpeciesOfType(SPECIES_GASTLY, TYPE_GHOST));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GUILLOTINE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_GUILLOTINE, player);
+        MESSAGE("It doesn't affect the opposing Gastly…");
+    }
+}
+
+SINGLE_BATTLE_TEST("Horn Drill does not bypass type immunities (Gen 1)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FIXED_DMG_IGNORES_TYPE, GEN_1);
+        ASSUME(IsSpeciesOfType(SPECIES_GASTLY, TYPE_GHOST));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_HORN_DRILL); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HORN_DRILL, player);
+        MESSAGE("It doesn't affect the opposing Gastly…");
+    }
 }
 
 SINGLE_BATTLE_TEST("OHKO moves can hit semi-invulnerable mons when the user has No-Guard")
@@ -172,8 +222,23 @@ SINGLE_BATTLE_TEST("Sheer Cold doesn't affect Ice-type Pokémon (Gen7+)")
     }
 }
 
+SINGLE_BATTLE_TEST("Sheer Cold's accuracy decreasaes by 10% if the user is not Ice type")
+{
+    PASSES_RANDOMLY(20, 100, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHEER_COLD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, player);
+        HP_BAR(opponent);
+    }
+}
+
 TO_DO_BATTLE_TEST("OHKO moves faints the target, skipping regular damage calculations")
 TO_DO_BATTLE_TEST("OHKO moves's accuracy increases by 1% for every level the user has over the target")
 TO_DO_BATTLE_TEST("OHKO moves's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
 TO_DO_BATTLE_TEST("OHKO moves ignore non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
-TO_DO_BATTLE_TEST("OHKO: Sheer Cold's accuracy decreasaes by 10% if the user is not Ice type")

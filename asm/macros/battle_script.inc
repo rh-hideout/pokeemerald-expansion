@@ -3,10 +3,6 @@
 	.byte B_SCR_OP_ATTACKCANCELER
 	.endm
 
-	.macro accuracycheck
-	.byte B_SCR_OP_ACCURACYCHECK
-	.endm
-
 	.macro printattackstring
 	.byte B_SCR_OP_PRINTATTACKSTRING
 	.endm
@@ -18,10 +14,6 @@
 
 	.macro typecalc
 	.byte B_SCR_OP_TYPECALC
-	.endm
-
-	.macro multihitresultmessage
-	.byte B_SCR_OP_MULTIHITRESULTMESSAGE
 	.endm
 
 	.macro attackanimation
@@ -37,21 +29,14 @@
 	.byte \battler
 	.endm
 
-	.macro datahpupdate battler:req
+	.macro datahpupdate battler:req assuranceDouble:req
 	.byte B_SCR_OP_DATAHPUPDATE
 	.byte \battler
-	.endm
-
-	.macro critmessage
-	.byte B_SCR_OP_CRITMESSAGE
+    .byte \assuranceDouble
 	.endm
 
 	.macro effectivenesssound
 	.byte B_SCR_OP_EFFECTIVENESSSOUND
-	.endm
-
-	.macro resultmessage
-	.byte B_SCR_OP_RESULTMESSAGE
 	.endm
 
 	.macro printstring id:req
@@ -558,9 +543,8 @@
 	statusanimation \battler, \volatile, TRUE
 	.endm
 
-	.macro futuresighttargetfailure failInstr:req
+	.macro futuresighttargetfailure
 	.byte B_SCR_OP_FUTURESIGHTTARGETFAILURE
-	.4byte \failInstr
 	.endm
 
 	.macro getpossiblenexttarget jumpInstr:req
@@ -1026,11 +1010,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifsubstituteblocks jumpInstr:req
-	.byte B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS
-	.4byte \jumpInstr
-	.endm
-
 	.macro tryrecycleitem failInstr:req
 	.byte B_SCR_OP_TRYRECYCLEITEM
 	.4byte \failInstr
@@ -1113,8 +1092,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trysynchronize
-	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.macro tryabilityonstatuschange
+	.byte B_SCR_OP_TRYABILITYONSTATUSCHANGE
 	.endm
 
 	.macro tryconfusionafterskydrop battler:req
@@ -1159,13 +1138,16 @@
 	callnative BS_RestoreAttacker
 	.endm
 
-	.macro allyswitchswapbattlers
-	callnative BS_AllySwitchSwapBattler
+	.macro savebattlerorderindex
+	callnative BS_SaveBattlerOrderIndex
 	.endm
 
-	.macro tryallyswitch jumpInstr:req
-	callnative BS_TryAllySwitch
-	.4byte \jumpInstr
+	.macro restorebattlerorderindex
+	callnative BS_RestoreBattlerOrderIndex
+	.endm
+
+	.macro allyswitchswapbattlers
+	callnative BS_AllySwitchSwapBattler
 	.endm
 
 	.macro jumpifmorethanhalfHP battler:req, jumpInstr:req
@@ -1672,10 +1654,6 @@
 	callnative BS_CancelMultiTurnMoves
 	.endm
 
-	.macro isrunningimpossible
-	callnative BS_IsRunningImpossible
-	.endm
-
 	.macro getmovetarget
 	callnative BS_GetMoveTarget
 	.endm
@@ -2125,4 +2103,8 @@
 	.byte \comparison
 	.byte \terrain
 	.4byte \jumpInstr
+	.endm
+
+	.macro trydomoveeffectsbeforemoves
+	callnative BS_TryDoMoveEffectsBeforeMoves
 	.endm

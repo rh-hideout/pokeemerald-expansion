@@ -54,7 +54,7 @@ BattleScript_UseItemMessage:
 BattleScript_ItemRestoreHPRet:
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	healthbarupdate BS_SCRIPTING
-	datahpupdate BS_SCRIPTING
+	datahpupdate BS_SCRIPTING, ASSURANCE_DOUBLE
 	printstring STRINGID_ITEMRESTOREDSPECIESHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -315,6 +315,15 @@ BattleScript_TrainerPartnerSlideMsgRet::
 BattleScript_TrainerPartnerSlideMsgEnd::
 	call BattleScript_TrainerPartnerSlideMsgRet
 	end
+
+BattleScript_TrainerSlideMsg::
+	trainerslidein BS_SCRIPTING
+	handletrainerslidemsg BS_SCRIPTING, PRINT_SLIDE_MESSAGE
+	waitstate
+	trainerslideout BS_SCRIPTING
+	waitstate
+	handletrainerslidemsg BS_SCRIPTING, RESTORE_BATTLER_SLIDE_CONTROL
+	end3
 
 BattleScript_GhostBallDodge::
 	waitmessage B_WAIT_TIME_LONG
