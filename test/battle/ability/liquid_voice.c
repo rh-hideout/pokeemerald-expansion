@@ -105,15 +105,20 @@ DOUBLE_BATTLE_TEST("Liquid Voice Perish Song is absorbed by Water Absorb and Sto
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid voice turns a sound move into a Water-type move")
+SINGLE_BATTLE_TEST("Liquid Voice turns a sound move into a Water-type move", s16 damage)
 {
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_TORRENT; }
+    PARAMETRIZE { ability = ABILITY_LIQUID_VOICE; }
     GIVEN {
-        PLAYER(SPECIES_TYPHLOSION);
-        OPPONENT(SPECIES_PRIMARINA) { Ability(ABILITY_LIQUID_VOICE); }
+        PLAYER(SPECIES_TYPHLOSION) { HP(1000); MaxHP(1000); SpDefense(100); }
+        OPPONENT(SPECIES_PRIMARINA) { Ability(ability); SpAttack(200); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, opponent);
-        MESSAGE("It's super effective!");
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_GT(results[1].damage, results[0].damage);
     }
 }
