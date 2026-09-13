@@ -302,6 +302,6 @@ SINGLE_BATTLE_TEST("Revive can only be used if the selected Pokémon has fainted
             TURN {}
     } THEN {
         gPartyMenu.slotId = 0;
-        EXPECT_EQ(CannotUseItemsInBattle(ITEM_REVIVE, &gParties[B_TRAINER_PLAYER][0]), !fainted);
+        EXPECT_EQ(CannotUseItemsInBattle(ITEM_REVIVE, &gParties[B_TRAINER_PLAYER][0], 0), !fainted);
     }
 }
