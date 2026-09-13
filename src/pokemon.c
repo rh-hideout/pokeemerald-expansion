@@ -108,8 +108,6 @@ EWRAM_DATA u16 gFollowerSteps = 0;
 
 struct Pokemon (*const gPlayerPartyPtr)[6] = &gParties[B_TRAINER_PLAYER];
 u8 (*const gPlayerPartyCountPtr) = &gPartiesCount[B_TRAINER_PLAYER];
-struct Pokemon (*const gEnemyPartyPtr)[6] = &gParties[B_TRAINER_OPPONENT_A];
-u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 
 #include "data/abilities.h"
 
@@ -1543,19 +1541,19 @@ u16 GiveMoveToBattleMon(struct BattlePokemon *mon, enum Move move)
     return MON_HAS_MAX_MOVES;
 }
 
-void SetMonMoveSlot(struct Pokemon *mon, enum Move move, u8 slot)
+void SetMonMoveSlot(struct Pokemon *mon, enum Move move, enum MoveSlot slot)
 {
     SetBoxMonMoveSlot(&mon->box, move, slot);
 }
 
-void SetBoxMonMoveSlot(struct BoxPokemon *mon, enum Move move, u8 slot)
+void SetBoxMonMoveSlot(struct BoxPokemon *mon, enum Move move, enum MoveSlot slot)
 {
     SetBoxMonData(mon, MON_DATA_MOVE1 + slot, &move);
     u32 pp = GetMovePP(move);
     SetBoxMonData(mon, MON_DATA_PP1 + slot, &pp);
 }
 
-static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, u8 slot)
+static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, enum MoveSlot slot)
 {
     u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
     u8 currPP = GetMonData(mon, MON_DATA_PP1 + slot);
@@ -1566,7 +1564,7 @@ static void SetMonMoveSlot_KeepPP(struct Pokemon *mon, enum Move move, u8 slot)
     SetMonData(mon, MON_DATA_PP1 + slot, &finalPP);
 }
 
-void SetBattleMonMoveSlot(struct BattlePokemon *mon, enum Move move, u8 slot)
+void SetBattleMonMoveSlot(struct BattlePokemon *mon, enum Move move, enum MoveSlot slot)
 {
     mon->moves[slot] = move;
     mon->pp[slot] = GetMovePP(move);
@@ -1628,12 +1626,12 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
     }
 }
 
-void GiveMonDefaultMove(struct Pokemon *mon, u32 slot)
+void GiveMonDefaultMove(struct Pokemon *mon, enum MoveSlot slot)
 {
     GiveBoxMonDefaultMove(&mon->box, slot);
 }
 
-void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot)
+void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, enum MoveSlot slot)
 {
     enum Move move = MOVE_NONE;
     enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
@@ -3347,25 +3345,25 @@ const struct FormChange *GetSpeciesFormChanges(enum Species species)
     return formChanges;
 }
 
-u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, u8 moveIndex)
+u8 CalculatePPWithBonus(enum Move move, u8 ppBonuses, enum MoveSlot moveIndex)
 {
     u8 basePP = GetMovePP(move);
     return basePP + ((basePP * 20 * ((gPPUpGetMask[moveIndex] & ppBonuses) >> (2 * moveIndex))) / 100);
 }
 
-void RemoveMonPPBonus(struct Pokemon *mon, u8 moveIndex)
+void RemoveMonPPBonus(struct Pokemon *mon, enum MoveSlot moveIndex)
 {
     RemoveBoxMonPPBonus(&mon->box, moveIndex);
 }
 
-void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex)
+void RemoveBoxMonPPBonus(struct BoxPokemon *mon, enum MoveSlot moveIndex)
 {
     u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
     ppBonuses &= gPPUpClearMask[moveIndex];
     SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 }
 
-void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex)
+void RemoveBattleMonPPBonus(struct BattlePokemon *mon, enum MoveSlot moveIndex)
 {
     mon->ppBonuses &= gPPUpClearMask[moveIndex];
 }
@@ -3420,7 +3418,7 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     memset(&dst->volatiles, 0, sizeof(struct Volatiles));
 }
 
-bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex)
+bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, enum MoveSlot moveIndex)
 {
     return PokemonUseItemEffects(mon, item, partyIndex, moveIndex, FALSE);
 }
@@ -3451,7 +3449,7 @@ const u32 sExpCandyExperienceTable[] = {
 };
 
 // Returns TRUE if the item has no effect on the Pokémon, FALSE otherwise
-bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, bool8 usedByAI)
+bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, enum PartyMon partyIndex, enum MoveSlot moveIndex, bool8 usedByAI)
 {
     u32 dataUnsigned;
     s32 dataSigned, evCap;
@@ -3934,7 +3932,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId bat
             {
                 struct Pokemon *party = GetBattlerParty(battler);
 
-                for (u32 i = 0; i < PARTY_SIZE; i++)
+                for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
                 {
                     if (&party[i] == mon)
                     {
@@ -4088,7 +4086,7 @@ enum Species GetGMaxTargetSpecies(enum Species species)
     return species;
 }
 
-bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
+bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, enum PartyMon partyId, bool32 *canStopEvo, enum EvoState evoState)
 {
     u32 i, j;
     enum Item heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
@@ -4339,7 +4337,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         }
         case IF_CRITICAL_HITS_GE:
-            if (partyId != PARTY_SIZE && gPartyCriticalHits[partyId] >= params[i].arg1)
+            if (partyId < PARTY_MON_NONE && gPartyCriticalHits[partyId] >= params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_USED_MOVE_X_TIMES:
@@ -4453,7 +4451,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4477,7 +4475,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, tradePartner, PARTY_SIZE, canStopEvo, evoState))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, tradePartner, PARTY_MON_NONE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4503,7 +4501,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4517,6 +4515,10 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         break;
     // Battle evolution without leveling; party slot is being passed into the evolutionItem arg.
     case EVO_MODE_BATTLE_SPECIAL:
+        if ((u32)evolutionItem >= PARTY_MON_NONE)
+            break;
+
+        enum PartyMon partyId = (enum PartyMon)evolutionItem;
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
@@ -4530,7 +4532,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, evolutionItem, canStopEvo, evoState))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, partyId, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4556,7 +4558,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 break;
             }
 
-            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            if (conditionsMet && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -4575,7 +4577,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 continue;
             if (evolutions[i].param != evolutionItem)
                 continue;
-            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
@@ -5358,11 +5360,11 @@ void SetMonPreventsSwitchingString(void)
     gBattleTextBuff1[4] = B_BUFF_EOS;
 
     if (IsOnPlayerSide(gBattleStruct->battlerPreventingSwitchout))
-        gBattleTextBuff1[3] = GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[gBattleStruct->battlerPreventingSwitchout]);
+        gBattleTextBuff1[3] = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[gBattleStruct->battlerPreventingSwitchout]);
     else
         gBattleTextBuff1[3] = gBattlerPartyIndexes[gBattleStruct->battlerPreventingSwitchout];
 
-    PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff2, gBattlerInMenuId, GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[gBattlerInMenuId]))
+    PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff2, gBattlerInMenuId, GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[gBattlerInMenuId]))
 
     BattleStringExpandPlaceholders(gText_PkmnsXPreventsSwitching, gStringVar4, sizeof(gStringVar4));
 }
@@ -6234,10 +6236,9 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
 
 void TrySpecialOverworldEvo(void)
 {
-    u8 i;
     bool32 canStopEvo = FALSE;
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
     {
         enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
 

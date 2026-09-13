@@ -138,7 +138,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_MENTAL_HERB] =
     {
         .onTargetAfterHit = TRUE,
-        .onAttackerAfterHit = TRUE,
+        .mentalHerb = TRUE,
         .onFling = TRUE,
     },
 
@@ -386,12 +386,12 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_JABOCA_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_ROWAP_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_KEE_BERRY] =

@@ -21,9 +21,6 @@
 #define MOVE_LIMITATION_PLACEHOLDER             (1 << 16)
 #define MOVE_LIMITATIONS_ALL                    0xFFFF
 
-#define IS_WHOLE_SIDE_ALIVE(battler)    ((IsBattlerAlive(battler) && IsBattlerAlive(GetPartnerBattler(battler))))
-#define IS_ALIVE_AND_PRESENT(battler)   (IsBattlerAlive(battler) && IsBattlerSpritePresent(battler))
-
 // Lowest and highest percentages used for damage roll calculations
 #define DMG_ROLL_PERCENT_LO 85
 #define DMG_ROLL_PERCENT_HI 100

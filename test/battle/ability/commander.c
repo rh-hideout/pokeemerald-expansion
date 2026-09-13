@@ -938,7 +938,7 @@ MULTI_BATTLE_TEST("Commander will not activate in a multi battle")
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
             ABILITY_POPUP(opponentLeft, ABILITY_COMMANDER);
-        }        
+        }
     } THEN {
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);

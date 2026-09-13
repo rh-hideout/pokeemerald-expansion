@@ -6656,7 +6656,7 @@ static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId 
 
 static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 temp;
+    enum PartyMon temp;
 
     // if used future sight on opposing side, properly track who used it
     if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
@@ -6718,10 +6718,11 @@ static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId b
 static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2)
 {
     u32 temp;
-    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
+    enum MoveSlot moveSlotTemp;
+    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], moveSlotTemp);
     SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
     SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
-    SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
+    SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], moveSlotTemp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
 
     // update last moves

@@ -120,6 +120,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
             if (!st->onlyChecking)
             {
                 st->script = BattleScript_ItDoesntAffectScrTarget;
+                gSpecialStatuses[cv->battlerDef].resultMessagePrinted = TRUE;
                 gBattleScripting.battler = cv->battlerDef;
             }
             return TRUE;
@@ -131,6 +132,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
             if (!st->onlyChecking)
             {
                 st->script = BattleScript_ItDoesntAffectScrTarget;
+                gSpecialStatuses[cv->battlerDef].resultMessagePrinted = TRUE;
                 gBattleScripting.battler = cv->battlerDef;
             }
             return TRUE;
@@ -152,6 +154,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
                 st->moveScript = BattleScript_SwaggerOwnTempoPrevents;
                 gBattlerAbility = cv->battlerDef;
                 gLastUsedAbility = ABILITY_OWN_TEMPO;
+                gSpecialStatuses[cv->battlerDef].resultMessagePrinted = TRUE;
                 RecordAbilityBattle(cv->battlerDef, ABILITY_OWN_TEMPO);
             }
         }
@@ -1024,6 +1027,10 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
             gBattleMons[cv->battlerDef].volatiles.autotomizeCount++;
             st->moveScript = BattleScript_AutotomizeMessage;
         }
+        break;
+    case EFFECT_STAT_CHANGE_HALF_HP:
+        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+            st->moveScript = BattleScript_StatChangeHalfHp;
         break;
     default:
         break;
