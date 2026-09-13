@@ -27,16 +27,13 @@ SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
-        NONE_OF {
-            MESSAGE("The opposing Vivillon is paralyzed, so it may be unable to move!");
-            MESSAGE("The opposing Vivillon was burned!");
-            MESSAGE("The opposing Vivillon was poisoned!");
-            MESSAGE("The opposing Vivillon flinched and couldn't move!");
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Vivillon was prevented from healing!");
-        }
-    } THEN { // Can't find good way to test trapping
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT(!opponent->volatiles.flinched);
         EXPECT(!opponent->volatiles.escapePrevention);
+        EXPECT(opponent->volatiles.healBlockTimer == 0);
     }
 }
 
@@ -61,27 +58,24 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
+    } THEN {
         switch (move)
         {
-            case MOVE_INFESTATION:
-                MESSAGE("The opposing Vivillon has been afflicted with an infestation by Wobbuffet!");
-                break;
-            case MOVE_THOUSAND_ARROWS:
-                MESSAGE("The opposing Vivillon fell straight down!");
-                break;
-            case MOVE_JAW_LOCK:
-                MESSAGE("Neither Pokémon can run away!");
-                break;
-            case MOVE_PAY_DAY:
-                MESSAGE("Coins were scattered everywhere!");
-                break;
-            default:
-                break;
-        }
-    } THEN { // Can't find good way to test trapping
-        if (move == MOVE_JAW_LOCK) {
+        case MOVE_INFESTATION:
+            EXPECT(opponent->volatiles.wrapped);
+            break;
+        case MOVE_THOUSAND_ARROWS:
+            EXPECT(opponent->volatiles.smackDown);
+            break;
+        case MOVE_JAW_LOCK:
             EXPECT(opponent->volatiles.escapePrevention);
             EXPECT(player->volatiles.escapePrevention);
+            break;
+        case MOVE_PAY_DAY:
+            EXPECT_GT(gPaydayMoney, 0);
+            break;
+        default:
+            break;
         }
     }
 }
@@ -103,24 +97,26 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
         OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
     } WHEN {
         TURN { MOVE(player, move); }
-        if (move == MOVE_METEOR_ASSAULT) {
-            TURN { SKIP_TURN(player); }
-        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
+    } THEN {
         switch (move)
         {
-            case MOVE_POWER_UP_PUNCH:
-            case MOVE_FLAME_CHARGE:
-            case MOVE_LEAF_STORM:
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-                break;
-            case MOVE_METEOR_ASSAULT: // second turn
-                MESSAGE("Wobbuffet must recharge!");
-                break;
-            default:
-                break;
+        case MOVE_POWER_UP_PUNCH:
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+            break;
+        case MOVE_FLAME_CHARGE:
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+            break;
+        case MOVE_LEAF_STORM:
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 2);
+            break;
+        case MOVE_METEOR_ASSAULT:
+            EXPECT(player->volatiles.rechargeTimer > 0);
+            break;
+        default:
+            break;
         }
     }
 }
@@ -139,15 +135,11 @@ DOUBLE_BATTLE_TEST("Shield Dust does or does not block Sparkling Aria depending 
         TURN { MOVE(playerRight, moveToUse, target: opponentRight); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
-        if (moveToUse == MOVE_SCRATCH) {
-            MESSAGE("The opposing Vivillon's burn was cured!");
-            STATUS_ICON(opponentLeft, none: TRUE);
-        } else {
-            NONE_OF {
-                MESSAGE("The opposing Vivillon's burn was cured!");
-                STATUS_ICON(opponentLeft, none: TRUE);
-            }
-        }
+    } THEN {
+        if (moveToUse == MOVE_SCRATCH)
+            EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
+        else
+            EXPECT_EQ(opponentLeft->status1, STATUS1_BURN);
     }
 }
 
@@ -160,8 +152,8 @@ DOUBLE_BATTLE_TEST("Shield Dust blocks Sparkling Aria if all other targets avoid
         OPPONENT(SPECIES_WYNAUT) { Status1(STATUS1_BURN); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_FLY, target:playerLeft); MOVE(opponentRight, MOVE_PROTECT); MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
-    } SCENE {
-        NOT MESSAGE("Vivillon's burn was cured!");
+    } THEN {
+        EXPECT_EQ(playerRight->status1, STATUS1_BURN);
     }
 }
 
@@ -174,10 +166,8 @@ SINGLE_BATTLE_TEST("Shield Dust blocks Sparkling Aria in singles")
         TURN { MOVE(player, MOVE_SPARKLING_ARIA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, player);
-        NONE_OF {
-            MESSAGE("The opposing Vivillon's burn was cured!");
-            STATUS_ICON(opponent, none: TRUE);
-        }
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_BURN);
     }
 }
 
@@ -188,8 +178,8 @@ SINGLE_BATTLE_TEST("Shield Dust does not prevent ability stat changes")
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        MESSAGE("Vivillon's Speed fell!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
 
@@ -212,7 +202,7 @@ AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust corre
     AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
     GIVEN {
         PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
-        OPPONENT(SPECIES_SUNFLORA){ Ability(ABILITY_MOLD_BREAKER); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
+        OPPONENT(SPECIES_PINSIR){ Ability(ABILITY_MOLD_BREAKER); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_GUST);
