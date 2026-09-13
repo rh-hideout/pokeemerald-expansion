@@ -2665,7 +2665,7 @@ void SetFrontierBrainObjEventGfx(u8 facility)
     VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
 }
 
-u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId)
+u16 GetFrontierBrainMonMove(u8 monId, enum MoveSlot moveSlotId)
 {
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);
     s32 symbol = GetFronterBrainSymbol();

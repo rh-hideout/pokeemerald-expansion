@@ -1618,6 +1618,10 @@ static const struct StepAnimTable sStepAnimTables[] = {
         .animPos = {1, 3, 0, 2},
     },
     {
+        .anims = sAnimTable_Following_Asym,
+        .animPos = {1, 3, 0, 2},
+    },
+    {
         .anims = sAnimTable_BrendanMayNormal,
         .animPos = {1, 3, 0, 2},
     },

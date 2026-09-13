@@ -91,7 +91,7 @@ enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move mo
     return GetMoveTarget(move);
 }
 
-u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, struct AiLogicData *aiData, u32 aiRoll)
+u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, struct AiLogicData *aiData, u32 aiRoll)
 {
     switch (aiRoll)
     {
@@ -108,7 +108,7 @@ u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId 
     }
 }
 
-u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
+u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
@@ -818,6 +818,8 @@ static inline bool32 ShouldCalcCritDamage(struct DamageContext *ctx)
 
     if (critChanceIndex == CRITICAL_HIT_ALWAYS)
         return TRUE;
+    if (GetCriticalHitOdds(critChanceIndex) == 1)
+        return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
         && GetConfig(B_CRIT_CHANCE) != GEN_1)
@@ -872,6 +874,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     bool32 toggledGimmickDef = FALSE;
     struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
+    enum Move baseMove = move;
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
      && battlerDef == GetPartnerBattler(battlerAtk))
@@ -882,7 +885,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
 
     if (moveEffect == EFFECT_NATURE_POWER)
     {
-        move = GetNaturePowerMove();
+        move = baseMove = GetNaturePowerMove();
         moveEffect = GetMoveEffect(move);
     }
 
@@ -909,6 +912,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = ctx.chosenMove = move;
+    ctx.baseMove = baseMove;
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
     ctx.terrain = aiCalc->terrain;
@@ -1273,15 +1277,15 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
     }
 
     // Check additional effects.
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move1);
+    gAiThinkingStruct->movesetIndex = (enum MoveSlot)GetMoveIndex(battlerAtk, move1);
     effect1minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move1, noOfHitsToKo);
     effect1plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move1, noOfHitsToKo);
 
-    gAiThinkingStruct->movesetIndex = GetMoveIndex(battlerAtk, move2);
+    gAiThinkingStruct->movesetIndex = (enum MoveSlot)GetMoveIndex(battlerAtk, move2);
     effect2plus = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move2, noOfHitsToKo);
     effect2minus = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move2, noOfHitsToKo);
 
-    gAiThinkingStruct->movesetIndex = 0;
+    gAiThinkingStruct->movesetIndex = MOVESLOT_0;
 
     if (effect2minus && !effect1minus)
         return MOVE_WON_COMPARISON;
@@ -1308,7 +1312,7 @@ u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef)
     return GetNoOfHitsToKO(dmg, gBattleMons[battlerDef].hp);
 }
 
-u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
+u32 GetNoOfHitsToKOBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext, enum AiConsiderEndure considerEndure)
 {
     u32 hitsToKO = GetNoOfHitsToKOBattlerDmg(AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData), battlerDef);
     enum Move *moves = GetMovesArray(battlerAtk);
@@ -1354,7 +1358,7 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
-    ctx.move = ctx.chosenMove = move;
+    ctx.move = ctx.chosenMove = ctx.baseMove = move;
     ctx.updateFlags = FALSE;
     ctx.weather = AI_GetWeather();
     ctx.terrain = gFieldTimers.terrain;
@@ -1815,7 +1819,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId)
     if (gAiThinkingStruct->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
 
-    if (gBattleMons[battlerId].volatiles.embargo)
+    if (gBattleMons[battlerId].volatiles.embargoTimer)
         return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return HOLD_EFFECT_NONE;
@@ -2537,7 +2541,7 @@ u32 CountNegativeStatStages(enum BattlerId battlerId)
     return count;
 }
 
-bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext)
+bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext)
 {
     s32 dmg;
     enum Move *moves = gBattleMons[battlerAtk].moves;
@@ -2585,7 +2589,7 @@ static u32 GetUsableMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveE
     return MAX_MON_MOVES;
 }
 
-static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, u32 moveIndex, struct AiLogicData *aiData)
+static bool32 CanMoveIndexHitAnyOpponent(enum BattlerId battler, enum MoveSlot moveIndex, struct AiLogicData *aiData)
 {
     enum BattlerId leftFoe = GetBattlerLeftFoe(battler);
     enum BattlerId rightFoe = GetBattlerRightFoe(battler);
@@ -2603,7 +2607,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
     enum Ability atkPartnerAbility = aiData->abilities[battlerAtkPartner];
 
     if (wouldPartnerFaint
-     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_SIZE)
+     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_MON_NONE)
         return FALSE;
 
     if (atkPartnerAbility != ABILITY_JUSTIFIED
@@ -2620,7 +2624,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
 bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, bool32 wouldPartnerFaint, struct AiLogicData *aiData)
 {
     if (wouldPartnerFaint
-     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_SIZE)
+     || gBattleStruct->monToSwitchIntoId[battlerAtkPartner] != PARTY_MON_NONE)
         return FALSE;
 
     if (IsBattleMoveStatus(move)
@@ -2651,7 +2655,7 @@ bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move,
     enum BattlerId partner = GetPartnerBattler(battlerAtk);
 
     if (!HasPartner(battlerAtk)
-     || gBattleStruct->monToSwitchIntoId[partner] != PARTY_SIZE
+     || gBattleStruct->monToSwitchIntoId[partner] != PARTY_MON_NONE
      || aiData->abilities[partner] != ABILITY_SPICY_SPRAY)
         return FALSE;
 
@@ -2695,6 +2699,20 @@ bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     }
     return bestMoveIsPhysical;
 }
+
+bool32 ShouldBoostCritRate(enum BattlerId battlerAtk, enum BattlerId battlerDef)//This bool is currently indicating "are there stat changes I would bypass with a crit?". It is used to determine "should I boost crit rate?"
+{
+    if (gBattleMons[battlerDef].statStages[STAT_DEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerDef].statStages[STAT_SPDEF] > DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_ATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+         return TRUE;
+    if (gBattleMons[battlerAtk].statStages[STAT_SPATK] < DEFAULT_STAT_STAGE && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+         return TRUE;
+    return FALSE;
+}
+
 
 bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
@@ -3485,7 +3503,7 @@ bool32 BattlerHasMaxHPProtection(enum BattlerId battler)
         return FALSE;
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
-    if (B_STURDY >= GEN_5 && ability == ABILITY_STURDY)
+    if (GetConfig(B_STURDY) >= GEN_5 && ability == ABILITY_STURDY)
         return TRUE;
     if (ability == ABILITY_MULTISCALE || ability == ABILITY_SHADOW_SHIELD)
         return TRUE;
@@ -3496,7 +3514,7 @@ enum AIPivot ShouldPivot(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
 {
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY);
-    bool32 hasGoodSwitchin = gAiLogicData->mostSuitableMonId[battlerAtk] >= PARTY_SIZE ? FALSE : TRUE;
+    bool32 hasGoodSwitchin = gAiLogicData->mostSuitableMonId[battlerAtk] < PARTY_MON_NONE;
     // If AI should switch, it should pivot
     if (aiIsFaster)
     {
@@ -3554,7 +3572,7 @@ bool32 IsBattlerIncapacitated(enum BattlerId battler, enum Ability ability)
     if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveUsableWhileAsleep(battler))
         return TRUE;
 
-    if (gBattleMons[battler].volatiles.rechargeTimer > 0 || (ability == ABILITY_TRUANT && gBattleMons[battler].volatiles.truantCounter != 0))
+    if (gBattleMons[battler].volatiles.rechargeTimer > 0 || (ability == ABILITY_TRUANT && gBattleMons[battler].volatiles.truantToggle != 0))
         return TRUE;
 
     return FALSE;
@@ -3878,7 +3896,7 @@ bool32 IsWakeupTurn(enum BattlerId battler)
 bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
 {
     struct Pokemon *party;
-    u32 battlerOnField1, battlerOnField2;
+    enum PartyMon battlerOnField1, battlerOnField2;
     bool32 hasStatusToCure = FALSE;
 
     party = GetBattlerParty(battlerId);
@@ -3910,7 +3928,7 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
         hasStatusToCure = TRUE;
 
     // Check inactive party mons' status
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (monIndex == battlerOnField1 || monIndex == battlerOnField2)
             continue;
@@ -3973,7 +3991,7 @@ bool32 ShouldAbsorb(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         healAmount = 1;
     if (healAmount + currHP > maxHP)
         healAmount = maxHP - currHP;
-    if (gBattleMons[battlerAtk].volatiles.healBlock)
+    if (gBattleMons[battlerAtk].volatiles.healBlockTimer)
         healAmount = 0;
 
     if (gAiLogicData->abilities[battlerDef] == ABILITY_LIQUID_OOZE)
@@ -3997,7 +4015,7 @@ bool32 ShouldRecover(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY);
     if (healAmount + currHP > maxHP)
         healAmount = maxHP - currHP;
-    if (gBattleMons[battlerAtk].volatiles.healBlock)
+    if (gBattleMons[battlerAtk].volatiles.healBlockTimer)
         healAmount = 0;
 
     if (IsBattlerAtMaxHp(battlerAtk))
@@ -4431,7 +4449,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
       && (CanTargetFaintAi(battlerDef, battlerAtk) || BattlerWillFaintFromSecondaryDamage(battlerAtk, gAiLogicData->abilities[battlerAtk])))
         return FALSE; // Don't heal if last mon and will faint
 
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         u32 currHp = GetMonData(&party[monIndex], MON_DATA_HP);
         u32 maxHp = GetMonData(&party[monIndex], MON_DATA_MAX_HP);
@@ -4513,7 +4531,8 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
 // party logic
 s32 CountUsablePartyMons(enum BattlerId battlerId)
 {
-    s32 battlerOnField1, battlerOnField2, ret;
+    enum PartyMon battlerOnField1, battlerOnField2;
+    s32 ret;
     struct Pokemon *party;
     party = GetBattlerParty(battlerId);
 
@@ -4530,7 +4549,7 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
 
     ret = 0;
     s32 lastId = GetAILastPartyIndex(battlerId); // + 1
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < lastId; monIndex++)
     {
         if (monIndex != battlerOnField1 && monIndex != battlerOnField2
          && GetMonData(&party[monIndex], MON_DATA_HP) != 0
@@ -4556,7 +4575,7 @@ bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
 {
     struct Pokemon *party = GetBattlerParty(battlerId);
 
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (monIndex != gBattlerPartyIndexes[battlerId]
          && GetMonData(&party[monIndex], MON_DATA_HP) != 0
@@ -5378,7 +5397,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
 
     // Check how many Pokémon we have that could tera
     int numPossibleTera = 0;
-    for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
+    for (enum PartyMon monIndex = PARTY_MON_0; monIndex < PARTY_MON_NONE; monIndex++)
     {
         if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
          && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
@@ -5662,7 +5681,7 @@ bool32 IsBattlerItemEnabled(enum BattlerId battler)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return FALSE;
-    if (gBattleMons[battler].volatiles.embargo)
+    if (gBattleMons[battler].volatiles.embargoTimer)
         return FALSE;
     if (gAiLogicData->abilities[battler] == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
@@ -6254,7 +6273,7 @@ u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum
     return opposingBattler;
 }
 
-bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartyMon partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
     if ((partyIndex == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battler, battlerIn1))
             || (partyIndex == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
@@ -6265,7 +6284,7 @@ bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex,
     return FALSE;
 }
 
-bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler)
+bool32 IsPartyMonPlannedToBeSwitchedInByPartner(enum PartyMon partyIndex, enum BattlerId battler)
 {
     enum BattlerId battlerPartner = GetPartnerBattler(battler);
     if (partyIndex == gAiLogicData->mostSuitableMonId[battlerPartner] && (gAiLogicData->shouldSwitch & (1u << battlerPartner)) && BattlersShareParty(battler, battlerPartner))
@@ -6341,9 +6360,17 @@ s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef,
          && effect->moveEffect != STAT_CHANGE_EFFECT_MINUS)
             continue;
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            s32 stage = AI_GetAdjustedStatStage(battlerAtk, move, GetStatStage(stat, effect));
+            s32 stage = GetStatStage(stat, effect);
+
+            if (stage == 0)
+                continue;
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                stage = -1 * stage;
+
+            stage = AI_GetAdjustedStatStage(battlerAtk, move, stage);
 
             if (stage > 0)
             {
@@ -6385,9 +6412,17 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            s32 stage = AI_GetAdjustedStatStage(battlerDef, move, GetStatStage(stat, effect));
+            s32 stage = GetStatStage(stat, effect);
+
+            if (stage == 0)
+                continue;
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                stage = -1 * stage;
+
+            stage = AI_GetAdjustedStatStage(battlerDef, move, stage);
 
             if (stage > 0)
             {
@@ -6435,7 +6470,7 @@ s32 GetAllyStatChangeScore(enum BattlerId battlerAtk, enum BattlerId partner, en
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, effectIndex);
 
-        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
             s32 stage = GetStatStage(stat, effect);
 
@@ -6606,16 +6641,20 @@ void AI_SetBattlerTurnOrder(u8 *aiTurnOrder)
 
 static bool32 WillPartnerActBeforeOrAfter(enum BattlerId battler, enum BattlerId partner)
 {
-    u8 aiTurnOrder[4] = {0};
+    u8 aiTurnOrder[MAX_BATTLERS_COUNT] = {0};
+    u32 battlerTurnOrder = MAX_BATTLERS_COUNT;
+    u32 partnerTurnOrder = MAX_BATTLERS_COUNT;
     AI_SetBattlerTurnOrder(aiTurnOrder);
 
-    battler = aiTurnOrder[battler];
-    partner = aiTurnOrder[partner];
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (aiTurnOrder[i] == battler)
+            battlerTurnOrder = i;
+        else if (aiTurnOrder[i] == partner)
+            partnerTurnOrder = i;
+    }
 
-    if (battler + 1 == partner || battler - 1 == partner)
-        return TRUE;
-
-    return FALSE;
+    return battlerTurnOrder + 1 == partnerTurnOrder || partnerTurnOrder + 1 == battlerTurnOrder;
 }
 
 bool32 ShouldUseFusionMove(enum BattlerId battler)

@@ -663,7 +663,7 @@ Let's explain each of these:
     - Used to reference the back sprite, so in this case, we call for `gMonBackPic_Mewthree`.
 - `backPicSize`:
     - The two values (`width` and `height`) are used for defining the non-empty size of the back sprite, which is used in move animations. If you're unsure of the values, you can leave them both as 64.
-    - **NOTE**: Mew has a tarnary switch here in order to change values depending on if a config option is set for displaying th original Gen 3 sprites.
+    - **NOTE**: Mew has a ternary switch here in order to change values depending on if a config option is set for displaying the original Gen 3 sprites.
 - `backPicYOffset`:
     - Used to define what Y position of the back sprite. When working with the animation debug menu, we recommend aligning the back sprite to the white background, as it was designed to properyly align with the real battle layout.
 - `backAnimId`:

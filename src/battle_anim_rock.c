@@ -862,7 +862,7 @@ static void CreateRolloutDirtSprite(struct Task *task)
     y = task->data[3] >> 3;
     x += (task->data[12] * 4);
 
-    spriteId = CreateSprite(spriteTemplate, x, y, 35);
+    spriteId = CreateSpriteUnchecked(spriteTemplate, x, y, 35);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].data[0] = 18;

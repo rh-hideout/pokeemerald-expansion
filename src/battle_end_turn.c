@@ -268,6 +268,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
+
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
@@ -303,7 +304,7 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
 
         SetHealAmount(battler, wishHeal);
 
-        if (gBattleMons[battler].volatiles.healBlock)
+        if (gBattleMons[battler].volatiles.healBlockTimer)
             BattleScriptCall(BattleScript_WishButHealBlocked);
         else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             BattleScriptCall(BattleScript_WishButFullHp);
@@ -401,7 +402,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
         if (gFieldTimers.terrain == B_TERRAIN_GRASSY
          && !IsBattlerAtMaxHp(battler)
-         && !gBattleMons[battler].volatiles.healBlock
+         && !gBattleMons[battler].volatiles.healBlockTimer
          && !IsSemiInvulnerable(battler, CHECK_ALL)
          && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler)))
         {
@@ -446,7 +447,7 @@ static bool32 HandleEndTurnAquaRing(enum BattlerId battler)
     gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.aquaRing
-     && !gBattleMons[battler].volatiles.healBlock
+     && !gBattleMons[battler].volatiles.healBlockTimer
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerPresent(battler))
     {
@@ -465,7 +466,7 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
     gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.root
-     && !gBattleMons[battler].volatiles.healBlock
+     && !gBattleMons[battler].volatiles.healBlockTimer
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerPresent(battler))
     {
@@ -509,7 +510,7 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
-        else if (gBattleMons[receiverBattler].volatiles.healBlock)
+        else if (gBattleMons[receiverBattler].volatiles.healBlockTimer)
         {
             BattleScriptCall(BattleScript_LeechSeedTurnDrainHealBlock);
         }
@@ -547,7 +548,7 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
             if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
                 gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
 
-            if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
+            if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlockTimer)
             {
                 SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
                 BattleScriptCall(BattleScript_PoisonHealActivates);
@@ -833,19 +834,21 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
     u32 moveIndex = 0;
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.disableTimer != 0)
+    if (gBattleMons[battler].volatiles.disabledMove != MOVE_NONE)
     {
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (gBattleMons[battler].volatiles.disabledMove == gBattleMons[battler].moves[moveIndex])
                 break;
         }
+        if (GetConfig(B_DISABLE_TURNS) >= GEN_3 && gBattleMons[battler].volatiles.disableTimer != 0)
+            gBattleMons[battler].volatiles.disableTimer--;
         if (moveIndex == MAX_MON_MOVES)  // Pokémon does not have the disabled move anymore
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleMons[battler].volatiles.disableTimer = 0;
         }
-        else if (--gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
+        else if (gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleScripting.battler = battler;
@@ -897,7 +900,6 @@ static bool32 HandleEndTurnHealBlock(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.healBlockTimer > 0 && --gBattleMons[battler].volatiles.healBlockTimer == 0)
     {
-        gBattleMons[battler].volatiles.healBlock = FALSE;
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_HealBlockEndTurn);
         effect = TRUE;
@@ -914,7 +916,6 @@ static bool32 HandleEndTurnEmbargo(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.embargoTimer > 0 && --gBattleMons[battler].volatiles.embargoTimer == 0)
     {
-        gBattleMons[battler].volatiles.embargo = FALSE;
         BattleScriptCall(BattleScript_EmbargoEndTurn);
         effect = TRUE;
     }
@@ -1333,7 +1334,11 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         enum Ability ability = GetBattlerAbility(battler);
         switch (ability)
         {
-        case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Implement the correct gen5+ behavior
+        case ABILITY_TRUANT:
+            if (GetConfig(B_TRUANT) <= GEN_4
+             && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+                effect = TRUE;
+            break;
         case ABILITY_CUD_CHEW:
         case ABILITY_SLOW_START:
         case ABILITY_BAD_DREAMS:

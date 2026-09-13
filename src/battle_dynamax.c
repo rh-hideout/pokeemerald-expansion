@@ -165,25 +165,9 @@ u32 GetNonDynamaxMaxHP(enum BattlerId battler)
     return maxHP;
 }
 
-static void ActivateDynamax_ContinueAfterSlide(void)
-{
-    gBattleResources->battleCallbackStack->size--;
-    gBattleMainFunc = gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size];
-    ActivateDynamax(gBattleScripting.battler);
-}
-
 // Sets flags used for Dynamaxing and checks Gigantamax forms.
 void ActivateDynamax(enum BattlerId battler)
 {
-    if (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_DYNAMAX))
-    {
-        gBattleScripting.battler = battler;
-        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size++] = gBattleMainFunc;
-        gBattleMainFunc = ActivateDynamax_ContinueAfterSlide;
-
-        BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
-        return;
-    }
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
@@ -285,14 +269,14 @@ enum MaxPowerTier
 };
 
 // Gets the base power of a Max Move.
-u32 GetMaxMovePower(enum Move move)
+u32 GetMaxMovePower(enum Move baseMove, enum Move move)
 {
     // G-Max Drum Solo, G-Max Hydrosnipe, and G-Max Fireball always have 160 base power.
     if (MoveHasAdditionalEffect(move, MOVE_EFFECT_FIXED_POWER))
         return 160;
 
     // Exceptions to all other rules below:
-    switch (move)
+    switch (baseMove)
     {
     case MOVE_TRIPLE_KICK:   return 80;
     case MOVE_GEAR_GRIND:    return 100;
@@ -301,11 +285,11 @@ u32 GetMaxMovePower(enum Move move)
     default: break;
     }
 
-    enum MaxPowerTier tier = GetMaxPowerTier(move);
-    enum Type moveType = GetMoveType(move);
+    enum MaxPowerTier tier = GetMaxPowerTier(baseMove);
+    enum Type moveType = GetMoveType(baseMove);
     if (moveType == TYPE_FIGHTING
      || moveType == TYPE_POISON
-     || move == MOVE_MULTI_ATTACK)
+     || baseMove == MOVE_MULTI_ATTACK)
     {
         switch (tier)
         {

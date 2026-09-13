@@ -458,23 +458,19 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
     else // Wild Pokémon - use random move
     {
         enum Move move = MOVE_NONE;
-        u32 chosenMoveIndex = 0;
+        enum MoveSlot chosenMoveIndex = MOVESLOT_0;
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
         do
         {
-            chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
+            chosenMoveIndex = (enum MoveSlot)(Random() & (MAX_MON_MOVES - 1));
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
-        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
+        enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, move);
+        if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_ALLY)
         {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetPartnerBattler(battler) << 8));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (GetDefaultSelectionTarget(battler, moveTarget) << 8));
         }
         else if (IsDoubleBattle())
         {
@@ -485,7 +481,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (WE_WILD_NATURAL_ENEMIES && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
+            if (WE_WILD_NATURAL_ENEMIES && moveTarget != TARGET_BOTH)
             {
                 enum Species speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;
@@ -518,19 +514,19 @@ static void OpponentHandleChooseItem(enum BattlerId battler)
 
 static void OpponentHandleChoosePokemon(enum BattlerId battler)
 {
-    s32 chosenMonId;
+    enum PartyMon chosenMonId;
     enum SwitchType switchType = SWITCH_AFTER_KO;
 
     // Choosing Revival Blessing target
     if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
     {
         chosenMonId = AI_SelectRevivalBlessingMon(battler);
-        if (chosenMonId == PARTY_SIZE)
+        if (chosenMonId == PARTY_MON_NONE)
             chosenMonId = GetFirstFaintedPartyIndex(battler);
         gSelectedMonPartyId = chosenMonId;
     }
     // Switching out
-    else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
+    else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_MON_NONE)
     {
         if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch)
             switchType = SWITCH_MID_BATTLE_FORCED;
@@ -541,7 +537,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
             SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), gAiLogicData);
 
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
-        if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
+        if (chosenMonId == PARTY_MON_NONE) // Advanced logic failed so we pick the next available battler
         {
             enum BattlerId battler1, battler2;
             s32 lastId = GetAILastPartyIndex(battler); // + 1
@@ -556,7 +552,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             }
 
-            for (chosenMonId = 0; chosenMonId < lastId; chosenMonId++)
+            for (chosenMonId = PARTY_MON_0; chosenMonId < lastId; chosenMonId++)
             {
                 if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
                  && !IsPartyMonOnFieldOrChosenToSwitch(battler, chosenMonId, battler1, battler2))
@@ -569,7 +565,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
     else
     {
         chosenMonId = gBattleStruct->AI_monToSwitchIntoId[battler];
-        gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
+        gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_MON_NONE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
     }
     #if TESTING

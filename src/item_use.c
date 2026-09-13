@@ -1210,7 +1210,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     // Embargo Check
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        if (gBattleMons[battlerTarget].volatiles.embargo)
+        if (gBattleMons[battlerTarget].volatiles.embargoTimer)
             return TRUE;
     }
 
@@ -1534,9 +1534,7 @@ static void Task_PlayPokeFlute(u8 taskId)
 void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 {
     bool32 wokeSomeoneUp = FALSE;
-    u32 i;
-
-    for (i = 0; i < CalculatePlayerPartyCount(); i++)
+    for (enum PartyMon i = PARTY_MON_0; i < CalculatePlayerPartyCount(); i++)
     {
         if (!ExecuteTableBasedItemEffect(&gParties[B_TRAINER_PLAYER][i], ITEM_AWAKENING, i, 0))
             wokeSomeoneUp = TRUE;
