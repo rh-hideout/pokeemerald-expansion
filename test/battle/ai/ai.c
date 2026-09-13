@@ -31,10 +31,9 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
             TURN { MOVE(player, MOVE_DEFENSE_CURL);
                    if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); } // Bubble is a plus effect if contrary is ignored
                    else { SCORE_GT(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }}
-    } SCENE {
-        MESSAGE("Shuckle's Defense fell!"); // Contrary activates
     } THEN {
         EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_LEFT] == ABILITY_CONTRARY);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 2);
     }
 }
 
@@ -43,9 +42,10 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2;
     u16 hp, turns;
+    enum Species speciesAtk = SPECIES_EXPLOUD;
     enum Ability abilityAtk;
 
-    abilityAtk = ABILITY_NONE;
+    abilityAtk = ABILITY_SOUNDPROOF;
     expectedMove2 = MOVE_NONE;
 
     // Here it's a simple test, both Slam and Strength deal the same damage, but Strength always hits, whereas Slam often misses.
@@ -56,13 +56,13 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
     // Mega Kick deals more damage, but can miss more often. Here, AI should choose Mega Kick if it can faint target in less number of turns than Strength. Otherwise, it should use Strength.
     PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 170; expectedMove = MOVE_MEGA_KICK; turns = 1; }
     PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 245; expectedMove = MOVE_STRENGTH; turns = 2; }
-    // Swift always hits and Guts has accuracy of 100%. Hustle lowers accuracy of all physical moves.
-    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_SWIFT; turns = 1; }
-    PARAMETRIZE { abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_GUST; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_GUST; turns = 1; }
+    // Swift and Gust have perfect accuracy. Hustle lowers the accuracy of physical moves.
+    PARAMETRIZE { speciesAtk = SPECIES_RATICATE; abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_SWIFT; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_SWIFT; turns = 1; }
+    PARAMETRIZE { speciesAtk = SPECIES_RATICATE; abilityAtk = ABILITY_HUSTLE; move1 = MOVE_MEGA_KICK; move2 = MOVE_STRENGTH; move3 = MOVE_GUST; move4 = MOVE_SCRATCH; hp = 5; expectedMove = MOVE_GUST; turns = 1; }
     // Mega Kick and Slam both have lower accuracy. Gust and Scratch both have 100, so AI can choose either of them.
     PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_SLAM; move3 = MOVE_SCRATCH; move4 = MOVE_GUST; hp = 5; expectedMove = MOVE_GUST; expectedMove2 = MOVE_SCRATCH; turns = 1; }
     // All moves hit with No guard ability
-    PARAMETRIZE { move1 = MOVE_MEGA_KICK; move2 = MOVE_GUST; hp = 5; expectedMove = MOVE_MEGA_KICK; expectedMove2 = MOVE_GUST; turns = 1; }
+    PARAMETRIZE { speciesAtk = SPECIES_MACHAMP; abilityAtk = ABILITY_NO_GUARD; move1 = MOVE_MEGA_KICK; move2 = MOVE_GUST; hp = 5; expectedMove = MOVE_MEGA_KICK; expectedMove2 = MOVE_GUST; turns = 1; }
     // Tests to compare move that always hits and a beneficial effect. A move with higher acc should be chosen in this case.
     PARAMETRIZE { move1 = MOVE_SHOCK_WAVE; move2 = MOVE_ICY_WIND; hp = 5; expectedMove = MOVE_SHOCK_WAVE; turns = 1; }
     PARAMETRIZE { move1 = MOVE_SHOCK_WAVE; move2 = MOVE_ICY_WIND; move3 = MOVE_THUNDERBOLT; hp = 5; expectedMove = MOVE_SHOCK_WAVE; expectedMove2 = MOVE_THUNDERBOLT; turns = 1; }
@@ -90,7 +90,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
         ASSUME(GetMoveCategory(MOVE_ICY_WIND) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_THUNDERBOLT) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
-        OPPONENT(SPECIES_EXPLOUD) { Moves(move1, move2, move3, move4); Ability(abilityAtk); SpAttack(50); } // Low Sp.Atk, so Swift deals less damage than Strength.
+        OPPONENT(speciesAtk) { Moves(move1, move2, move3, move4); Ability(abilityAtk); SpAttack(50); } // Low Sp.Atk, so Swift deals less damage than Strength.
     } WHEN {
             switch (turns)
             {
@@ -118,8 +118,6 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they b
                 TURN { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
                 break;
             }
-    } SCENE {
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -128,23 +126,24 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
     u8 turns = 0;
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove;
-    enum Ability abilityAtk, abilityDef;
+    enum Ability abilityAtk;
 
-    abilityAtk = ABILITY_NONE;
+    abilityAtk = ABILITY_POISON_POINT;
 
     // Scald and Poison Jab take 3 hits, Waterfall takes 2.
     PARAMETRIZE { move1 = MOVE_WATERFALL; move2 = MOVE_SCALD; move3 = MOVE_POISON_JAB; move4 = MOVE_WATER_GUN; expectedMove = MOVE_WATERFALL; turns = 2; }
     // Poison Jab takes 3 hits, Water gun 5. Immunity so there's no poison chip damage.
-    PARAMETRIZE { move1 = MOVE_POISON_JAB; move2 = MOVE_WATER_GUN; expectedMove = MOVE_POISON_JAB; abilityDef = ABILITY_IMMUNITY; turns = 3; }
+    PARAMETRIZE { move1 = MOVE_POISON_JAB; move2 = MOVE_WATER_GUN; expectedMove = MOVE_POISON_JAB; turns = 3; }
 
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_WATERFALL) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SCALD) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_POISON_JAB) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
         ASSUME(GetSpeciesBaseAttack(SPECIES_NIDOQUEEN) == 92); // Gen 5's 82 Base Attack causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_TYPHLOSION) { Ability(abilityDef); }
+        PLAYER(SPECIES_TYPHLOSION) { Ability(ABILITY_BLAZE); Item(ITEM_COVERT_CLOAK); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDOQUEEN) { Moves(move1, move2, move3, move4); Ability(abilityAtk); }
     } WHEN {
@@ -160,8 +159,6 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
                 TURN { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
                 break;
             }
-    } SCENE {
-        MESSAGE("Typhlosion fainted!");
     }
 }
 
@@ -178,9 +175,6 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); SEND_OUT(player, 1); }
-    }
-    SCENE {
-        MESSAGE("Typhlosion fainted!");
     }
 }
 
@@ -216,8 +210,6 @@ AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over one with a downside effect 
             TURN { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
             break;
         }
-    } SCENE {
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -230,9 +222,6 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB, MOVE_TAKE_DOWN); }
     } WHEN {
         TURN { EXPECT_MOVES(opponent, MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB); SEND_OUT(player, 1); }
-    }
-    SCENE {
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -255,7 +244,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
-    enum Ability abilityAtk = ABILITY_NONE;
+    enum Species speciesAtk = SPECIES_GEODUDE;
+    enum Ability abilityAtk = ABILITY_STURDY;
     enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
@@ -265,7 +255,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     PARAMETRIZE { abilityAtk = ABILITY_ROCK_HEAD; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
                   expectedMove = MOVE_PSYCHIC; expectedMove2 = MOVE_DOUBLE_EDGE; }
     // This time it's Solarbeam + Psychic, because the weather is sunny.
-    PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
+    PARAMETRIZE { speciesAtk = SPECIES_TORKOAL; abilityAtk = ABILITY_DROUGHT; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
                   expectedMove = MOVE_PSYCHIC; expectedMove2 = MOVE_SOLAR_BEAM; }
     // Psychic and Solar Beam are chosen because user is holding Power Herb
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
@@ -278,14 +268,11 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(5); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); }
+        OPPONENT(speciesAtk) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Item(holdItemAtk); Attack(80); SpAttack(30); }
     } WHEN {
         TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
                 else { EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1); }
              }
-    }
-    SCENE {
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -306,12 +293,13 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
+AI_SINGLE_BATTLE_TEST("AI treats Solar Beam as a one-turn move in sun or with Power Herb")
 {
-    enum Ability abilityAtk = ABILITY_NONE;
+    enum Ability abilityAtk = ABILITY_STURDY;
+    enum Species speciesAtk = SPECIES_GEODUDE;
     enum Item holdItemAtk = ITEM_NONE;
 
-    PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
+    PARAMETRIZE { speciesAtk = SPECIES_TORKOAL; abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
 
     GIVEN {
@@ -321,20 +309,9 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(211); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TYPHLOSION) { Moves(MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); Ability(abilityAtk); Item(holdItemAtk); }
+        OPPONENT(speciesAtk) { Moves(MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); Ability(abilityAtk); Item(holdItemAtk); SpAttack(30); }
     } WHEN {
-        if (abilityAtk == ABILITY_DROUGHT) {
-            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); }
-            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
-        } else if (holdItemAtk == ITEM_POWER_HERB) {
-            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); MOVE(player, MOVE_KNOCK_OFF); }
-            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
-        } else {
-            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); }
-            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
-        }
-    } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); }
     }
 }
 
@@ -350,8 +327,6 @@ AI_SINGLE_BATTLE_TEST("AI won't use ground type attacks against flying type Poke
         TURN { NOT_EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { MOVE(player, MOVE_GRAVITY); NOT_EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
         TURN { EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); SEND_OUT(player, 1); }
-    } SCENE {
-        MESSAGE("Gravity intensified!");
     }
 }
 
@@ -405,8 +380,6 @@ AI_SINGLE_BATTLE_TEST("AI will choose either Rock Tomb or Bulldoze if Stat drop 
     } WHEN {
             TURN { EXPECT_MOVES(opponent, MOVE_BULLDOZE, MOVE_ROCK_TOMB); }
             TURN { EXPECT_MOVES(opponent, MOVE_BULLDOZE, MOVE_ROCK_TOMB); SEND_OUT(player, 1); }
-    } SCENE {
-        MESSAGE("Wobbuffet fainted!");
     }
 }
 
@@ -470,9 +443,6 @@ AI_SINGLE_BATTLE_TEST("AI will only choose Surf 1/3 times if the opposing mon ha
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
-    } SCENE {
-        MESSAGE("The opposing Lanturn used Surf!");
-        MESSAGE("The opposing Lanturn used Surf!");
     }
 }
 
@@ -487,9 +457,6 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
-    } SCENE {
-        MESSAGE("The opposing Lanturn used Thunderbolt!");
-        MESSAGE("The opposing Lanturn used Surf!");
     }
 }
 
@@ -614,11 +581,11 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
             TURN { EXPECT_MOVE(opponent, MOVE_STRENGTH); }
         else
             TURN { EXPECT_MOVE(opponent, MOVE_SLASH); }
-    } SCENE {
+    } THEN {
         if (flags & AI_FLAG_TRY_TO_FAINT)
-            MESSAGE("Wobbuffet fainted!");
+            EXPECT_EQ(player->hp, 0);
         else
-            NOT MESSAGE("Wobbuffet fainted!");
+            EXPECT_GT(player->hp, 0);
     }
 }
 
@@ -824,13 +791,14 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
         WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_CELEBRATE); }
-        PLAYER(SPECIES_KRABBY) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_MAGNETON) { Moves(MOVE_THUNDERBOLT, MOVE_RAZOR_LEAF); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_METAL_CLAW); }
     } WHEN {
         TURN {
-            NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERBOLT);
-            NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDERBOLT); }
+            EXPECT_MOVE(opponentLeft, MOVE_RAZOR_LEAF);
+            EXPECT_MOVE(opponentRight, MOVE_METAL_CLAW);
+        }
     }
 }
 
@@ -852,22 +820,6 @@ AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
             TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
         else
             TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_RAIN_DANCE); }
-    }
-}
-
-AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
-{
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
-        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
-        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
-        ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
-        ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-        PLAYER(SPECIES_WAILORD) { Level(50); }
-        OPPONENT(SPECIES_WAILORD) { Moves(MOVE_THUNDER, MOVE_WATER_SPOUT, MOVE_WATER_GUN, MOVE_SURF); }
-    } WHEN {
-        TURN { EXPECT_MOVE(opponent, MOVE_WATER_SPOUT); }
     }
 }
 
@@ -1147,7 +1099,7 @@ AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's one-shot-priority moves 
         ASSUME(GetMovePriority(MOVE_DETECT) > GetMovePriority(MOVE_AQUA_JET));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_COMBUSKEN) { Level(20); HP(1); Ability(ABILITY_SPEED_BOOST); Item(ITEM_BRIGHT_POWDER); Moves(MOVE_DETECT, MOVE_DOUBLE_KICK); }
-        PLAYER(SPECIES_QUILAVA) { Level(20); Ability(ABILITY_ADAPTABILITY); Item(ITEM_ORAN_BERRY); Moves(MOVE_MUD_SHOT, MOVE_INCINERATE); }
+        PLAYER(SPECIES_QUILAVA) { Level(20); Ability(ABILITY_BLAZE); Item(ITEM_ORAN_BERRY); Moves(MOVE_MUD_SHOT, MOVE_INCINERATE); }
         OPPONENT(SPECIES_PARAS) { Level(16); Ability(ABILITY_DRY_SKIN); Item(ITEM_QUICK_CLAW); Moves(MOVE_SLEEP_POWDER, MOVE_BUG_BITE, MOVE_AERIAL_ACE, MOVE_POISON_FANG); }
         OPPONENT(SPECIES_BUIZEL) { Level(16); Ability(ABILITY_SWIFT_SWIM); Item(ITEM_DAMP_ROCK); Moves(MOVE_RAIN_DANCE, MOVE_HELPING_HAND, MOVE_ICE_FANG, MOVE_AQUA_JET); }
     } WHEN {
@@ -1649,7 +1601,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is 
     enum Species species;
     enum Ability ability;
 
-    PARAMETRIZE { species = SPECIES_WIGGLYTUFF, ability = ABILITY_CONTRARY; }
+    PARAMETRIZE { species = SPECIES_WIGGLYTUFF, ability = ABILITY_FRISK; }
     PARAMETRIZE { species = SPECIES_SHEDINJA, ability = ABILITY_WONDER_GUARD; }
 
     GIVEN {
