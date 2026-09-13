@@ -13,9 +13,11 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Wynaut's Toxic was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, badPoison: TRUE);
+    } THEN {
+        EXPECT(player->status1 & STATUS1_TOXIC_POISON);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -36,6 +38,9 @@ SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user protects")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
             STATUS_ICON(player, badPoison: TRUE);
         }
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -56,6 +61,9 @@ SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user is in a semi-invu
             ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
             STATUS_ICON(player, badPoison: TRUE);
         }
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -72,9 +80,11 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Wynaut's Stun Spore was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
         STATUS_ICON(player, paralysis: TRUE);
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_PARALYSIS);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -90,11 +100,9 @@ SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass T
         TURN { MOVE(player, MOVE_STUN_SPORE); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-        MESSAGE("Oddish's Stun Spore was bounced back!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
-        MESSAGE("It doesn't affect Oddish…");
-        NOT STATUS_ICON(player, paralysis: TRUE);
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -112,16 +120,17 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Wynaut's Defense fell!");
 
         ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
-        MESSAGE("Abra's Leer was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Kadabra's Defense fell!");
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
     }
 }
 
@@ -139,18 +148,18 @@ DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
-        MESSAGE("Abra's Leer was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Kadabra's Defense fell!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Kadabra's Defense fell!");
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(playerRight->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 2);
     }
 }
 
@@ -161,7 +170,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field")
 
     PARAMETRIZE { battlerOne = SPECIES_NATU; abilityBattlerOne = ABILITY_MAGIC_BOUNCE;
                   battlerTwo = SPECIES_ESPEON; abilityBattlerTwo = ABILITY_SYNCHRONIZE; }
-    PARAMETRIZE { battlerOne = SPECIES_NATU; abilityBattlerOne = ABILITY_KEEN_EYE;
+    PARAMETRIZE { battlerOne = SPECIES_NATU; abilityBattlerOne = ABILITY_SYNCHRONIZE;
                   battlerTwo = SPECIES_ESPEON; abilityBattlerTwo = ABILITY_MAGIC_BOUNCE; }
 
     GIVEN {
@@ -179,12 +188,13 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field")
             ABILITY_POPUP(opponentRight, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
         if (abilityBattlerOne == ABILITY_MAGIC_BOUNCE) {
-            MESSAGE("Abra's Stealth Rock was bounced back!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
         } else {
-            MESSAGE("Abra's Stealth Rock was bounced back!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
         }
+    } THEN {
+        EXPECT(IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_STEALTH_ROCK));
+        EXPECT(!IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_STEALTH_ROCK));
     }
 }
 
@@ -199,11 +209,11 @@ SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced ba
         TURN { MOVE(player, MOVE_TOXIC); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Espeon's Toxic was bounced back!");
-        NOT ABILITY_POPUP(player, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, badPoison: TRUE);
+    } THEN {
+        EXPECT(player->status1 & STATUS1_TOXIC_POISON);
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
 
@@ -220,7 +230,9 @@ SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-inv
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
-        MESSAGE("Pointed stones float in the air on the opposing side!");
+    } THEN {
+        EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_STEALTH_ROCK));
+        EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_STEALTH_ROCK));
     }
 }
 
@@ -236,6 +248,9 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves before Magic Coat")
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponent);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
 }
 
@@ -264,6 +279,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce will trigger after all valid targets have been 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Kadabra is switched out with the Eject Pack!");
+    } THEN {
+        EXPECT_EQ(playerRight->species, SPECIES_WOBBUFFET);
     }
 }
