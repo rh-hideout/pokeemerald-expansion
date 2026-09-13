@@ -135,7 +135,36 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     }
 }
 
-TO_DO_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6");
+SINGLE_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6", s16 damage)
+{
+    u32 powerBits;
+
+    PARAMETRIZE { powerBits = 0; }
+    PARAMETRIZE { powerBits = 32; }
+    PARAMETRIZE { powerBits = 63; }
+
+    GIVEN {
+        WITH_CONFIG(B_HIDDEN_POWER_DMG, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) {
+            Attack(100); Defense(100); SpAttack(100); SpDefense(100);
+            HPIV(powerBits & 1 ? 2 : 0);
+            AttackIV(powerBits & 2 ? 2 : 0);
+            DefenseIV(powerBits & 4 ? 2 : 0);
+            SpeedIV(powerBits & 8 ? 2 : 0);
+            SpAttackIV(powerBits & 16 ? 2 : 0);
+            SpDefenseIV(powerBits & 32 ? 2 : 0);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(100); SpDefense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HIDDEN_POWER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_LT(results[0].damage, results[1].damage);
+        EXPECT_LT(results[1].damage, results[2].damage);
+    }
+}
 
 SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat (Gen 1-3)")
 {

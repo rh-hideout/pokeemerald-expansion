@@ -88,6 +88,30 @@ This flag is automatically set in double battles, and controls much of the doubl
 * Prioritize triggering partner’s good abilities if possible (Motor Drive, Storm Drain, Beat Up -> Justified, etc.)
 * Handle Skill Swap smartly, both with the partner and against the player
 
+`AI_DOUBLE_TARGET_COORDINATION` in `include/config/ai.h` enables coordination of
+single-target attacks. Once an AI ally commits to a move expected to KO a foe,
+the other ally lowers the score of redundant attacks on that foe by 10 points.
+This preserves existing move preferences and allows double-targeting when it
+is still the best option. Set the config to `FALSE` for independent targeting.
+
+Coordination requires a KO even at minimum damage and no known
+survival effect such as Focus Sash, Sturdy, or a Substitute blocking the move.
+Accuracy follows the deciding ally's existing risk policy: normal AI requires
+at least `LOW_ACCURACY_THRESHOLD`, conservative AI requires 100%, and risky AI
+skips the accuracy check. Confusion, paralysis, and a chosen Sucker Punch do not
+independently disable coordination; the partner's normal move selection still
+applies.
+
+It does not reserve targets for simulated choices, switching allies, or delayed
+attacks such as Future Sight. Two-turn moves can reserve a KO on their attacking
+turn, or immediately when Power Herb or applicable weather skips charging.
+Locked attacks use their original move and target.
+Known faster threats that can KO an ally also prevent the penalty.
+Status moves, spread moves, and attacks on allies keep their existing scoring.
+The AI uses its existing knowledge of foes, without reading the player's
+selected action. The first ally still chooses independently; this is not a
+joint search over both allies' possible turns.
+
 ## `AI_FLAG_HP_AWARE`
 Lets the AI make decisions based on how much remaining HP its mon(s) and the player’s mon(s) have.
 

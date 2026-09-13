@@ -70,27 +70,30 @@ AI_DOUBLE_BATTLE_TEST("Combo Attack: Round is not disincentivised due to partner
 }
 
 
-AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion Flare will be chosen if partner acts directly before")
+AI_DOUBLE_BATTLE_TEST("Combo Attack: Fusion moves are only incentivised when partners are adjacent in turn order")
 {
-    u32 speed = 0;
-    PARAMETRIZE { speed = 30; }
-    PARAMETRIZE { speed = 11; }
+    u32 playerLeftSpeed, opponentLeftSpeed, playerRightSpeed, opponentRightSpeed;
+    bool32 partnersAreAdjacent;
+    // Turn order: opponentLeft, opponentRight, playerRight, playerLeft.
+    PARAMETRIZE { playerLeftSpeed = 10; opponentLeftSpeed = 40; playerRightSpeed = 20; opponentRightSpeed = 30; partnersAreAdjacent = TRUE; }
+    // Turn order: opponentLeft, playerRight, playerLeft, opponentRight.
+    PARAMETRIZE { playerLeftSpeed = 20; opponentLeftSpeed = 40; playerRightSpeed = 30; opponentRightSpeed = 10; partnersAreAdjacent = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUSION_FLARE) == EFFECT_FUSION_COMBO);
         ASSUME(GetMoveEffect(MOVE_FUSION_BOLT) == EFFECT_FUSION_COMBO);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         TIE_BREAK_TARGET(TARGET_TIE_LO,0);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
-        OPPONENT(SPECIES_RESHIRAM) { Speed(speed); Moves(MOVE_FUSION_FLARE, MOVE_FLAMETHROWER); }
-        OPPONENT(SPECIES_ZEKROM) { Speed(40); Moves(MOVE_FUSION_BOLT); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(playerLeftSpeed); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(playerRightSpeed); }
+        OPPONENT(SPECIES_RESHIRAM) { Speed(opponentLeftSpeed); Moves(MOVE_FUSION_FLARE, MOVE_FLAMETHROWER); }
+        OPPONENT(SPECIES_ZEKROM) { Speed(opponentRightSpeed); Moves(MOVE_FUSION_BOLT); }
     } WHEN {
         TURN {
-            if (speed == 30) {
+            if (partnersAreAdjacent) {
                 EXPECT_MOVE(opponentLeft, MOVE_FUSION_FLARE, target:playerLeft);
                 EXPECT_MOVE(opponentRight, MOVE_FUSION_BOLT, target:playerLeft);
-            } else { // Flamethrower gets the best damage move
+            } else {
                 EXPECT_MOVE(opponentLeft, MOVE_FLAMETHROWER, target:playerLeft);
                 EXPECT_MOVE(opponentRight, MOVE_FUSION_BOLT, target:playerLeft);
             }

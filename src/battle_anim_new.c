@@ -6798,7 +6798,7 @@ const struct SpriteTemplate gFreezyFrostRisingSpearSpriteTemplate =
 //general
 void AnimTask_IsTargetPartner(u8 taskId)
 {
-    if (gBattleAnimTarget == BATTLE_PARTNER(gBattleAnimAttacker))
+    if (gBattleAnimTarget == GetPartnerBattler(gBattleAnimAttacker))
         gBattleAnimArgs[0] = 1;
     else
         gBattleAnimArgs[0] = 0;
@@ -6822,10 +6822,10 @@ static enum BattlerId LoadBattleAnimTarget(u8 arg)
             battler = gBattleAnimTarget;
             break;
         case ANIM_ATK_PARTNER:
-            battler = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = GetPartnerBattler(gBattleAnimAttacker);
             break;
         case ANIM_DEF_PARTNER:
-            battler = BATTLE_PARTNER(gBattleAnimTarget);
+            battler = GetPartnerBattler(gBattleAnimTarget);
             break;
         }
     }
@@ -6843,7 +6843,7 @@ static enum BattlerId LoadBattleAnimTarget(u8 arg)
 static u8 GetProperCentredCoord(enum BattlerId battler, u8 coordType)
 {
     if (IsDoubleBattle())
-        return (GetBattlerSpriteCoord2(battler, coordType) + GetBattlerSpriteCoord2(BATTLE_PARTNER(battler), coordType)) / 2;
+        return (GetBattlerSpriteCoord2(battler, coordType) + GetBattlerSpriteCoord2(GetPartnerBattler(battler), coordType)) / 2;
 
     return GetBattlerSpriteCoord(battler, coordType);
 }
@@ -6862,9 +6862,9 @@ void InitSpritePosToAnimTargetsCentre(struct Sprite *sprite, bool32 respectMonPi
     if (!respectMonPicOffsets)
     {
         sprite->x = (GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X)) / 2;
         sprite->y = (GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y)) / 2;
     }
 
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
@@ -6876,16 +6876,16 @@ static void InitSpritePosToAnimAttackersCentre(struct Sprite *sprite, bool8 resp
     if (!respectMonPicOffsets)
     {
         sprite->x = (GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_X)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X)) / 2;
         sprite->y = (GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_Y)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_Y)) / 2;
     }
     else
     {
         sprite->x = (GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_X_2)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X_2)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X_2)) / 2;
         sprite->y = (GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET)
-                       +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
+                       +  GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
     }
 
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
@@ -7175,11 +7175,11 @@ static void SpriteCB_CoreEnforcerBeam(struct Sprite *sprite)
         sprite->data[0] = gBattleAnimArgs[2];
 
         sprite->data[2] = (GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2)
-                        +  GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X_2)) / 2;
+                        +  GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X_2)) / 2;
 
 
         sprite->data[4] = (GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET)
-                        +  GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
+                        +  GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
 
         sprite->callback = StartAnimLinearTranslation;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
@@ -8144,10 +8144,10 @@ void CoreEnforcerLoadBeamTarget(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[1] = sprite->x;
     sprite->data[2] = (GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2)
-                    +  GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X_2)) / 2;
+                    +  GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X_2)) / 2;
     sprite->data[3] = sprite->y;
     sprite->data[4] = (GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET)
-                    +  GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
+                    +  GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
 }
 
 void AnimTask_CreateBestowItem(u8 taskId)
@@ -8555,7 +8555,7 @@ static void SpriteCB_DragonEnergyShot(struct Sprite* sprite)
 {
     s16 startingX, finishingX, y;
     enum BattlerId def1 = gBattleAnimTarget;
-    enum BattlerId def2 = BATTLE_PARTNER(def1);
+    enum BattlerId def2 = GetPartnerBattler(def1);
 
     if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         y = GetBattlerSpriteCoord(def1, BATTLER_COORD_Y_PIC_OFFSET);
@@ -8662,7 +8662,7 @@ static void SpriteCB_MaxFlutterbyStep2(struct Sprite* sprite)
 static void SpriteCB_GlacialLance(struct Sprite* sprite)
 {
     enum BattlerId def1 = gBattleAnimTarget;
-    enum BattlerId def2 = BATTLE_PARTNER(def1);
+    enum BattlerId def2 = GetPartnerBattler(def1);
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[5] = gBattleAnimArgs[4];

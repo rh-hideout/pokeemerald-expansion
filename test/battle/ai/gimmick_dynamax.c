@@ -61,5 +61,16 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI only Dynamaxes once per trainer in 2v1 multi battl
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI uses the best Max Move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_HEADBUTT); DynamaxLevel(10); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_HEADBUTT, gimmick: GIMMICK_DYNAMAX); }
+    }
+}
+
 // Copycatting an ally's Max Guard rendition of Trick Room was a notable strategy.
 TO_DO_BATTLE_TEST("TODO: AI uses Dynamax -- AI uses Copycat against a Dynamaxed Pokemon intelligently")

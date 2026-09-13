@@ -66,12 +66,12 @@ enum {
 
 struct CreditsData
 {
-    u16 monToShow[NUM_MON_SLIDES]; // List of Pokémon species ids that will show during the credits
+    enum NationalDexOrder monToShow[NUM_MON_SLIDES]; // List of Pokémon species ids that will show during the credits
     u16 imgCounter; //how many mon images have been shown
     u16 nextImgPos; //if the next image spawns left/center/right
     u16 currShownMon; //index into monToShow
     u16 numMonToShow; //number of Pokémon to show, always NUM_MON_SLIDES after determine function
-    u16 caughtMonIds[NATIONAL_DEX_COUNT]; //temporary location to hold a condensed array of all caught Pokémon
+    enum NationalDexOrder caughtMonIds[NATIONAL_DEX_COUNT]; //temporary location to hold a condensed array of all caught Pokémon
     u16 numCaughtMon; //count of filled spaces in caughtMonIds
     u16 unused[7];
 };
@@ -116,7 +116,7 @@ static void LoadTheEndScreen(u16, u16, u16);
 static void DrawTheEnd(u16, u16);
 static void SpriteCB_Player(struct Sprite *);
 static void SpriteCB_Rival(struct Sprite *);
-static u8 CreateCreditsMonSprite(u16, s16, s16, u16);
+static u8 CreateCreditsMonSprite(enum NationalDexOrder, s16, s16, u16);
 static void DeterminePokemonToShow(void);
 
 static const u8 sTheEnd_LetterMap_T[] =
@@ -1502,7 +1502,7 @@ static void SpriteCB_CreditsMon(struct Sprite *sprite)
 
 #define sMonSpriteId data[0]
 
-static u8 CreateCreditsMonSprite(u16 nationalDexNum, s16 x, s16 y, u16 position)
+static u8 CreateCreditsMonSprite(enum NationalDexOrder nationalDexNum, s16 x, s16 y, u16 position)
 {
     u8 monSpriteId;
     u8 bgSpriteId;
@@ -1544,7 +1544,7 @@ static void DeterminePokemonToShow(void)
 {
     enum NationalDexOrder starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
     u16 page;
-    u16 dexNum;
+    enum NationalDexOrder dexNum;
     u16 j;
 
     // Go through the Pokédex, and anything that has gotten caught we put into our massive array.

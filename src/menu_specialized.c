@@ -806,7 +806,10 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
         str = buffer;
     }
     AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NORMAL, str, 106, 41, TEXT_SKIP_DRAW, NULL);
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NARROW, GetMoveDescription(chosenMove), 0, 65, 0, NULL);
+
+    const u8 *moveDescription = GetMoveDescription(chosenMove);
+    u32 fontId = GetFontIdToFit(moveDescription, FONT_NARROW, 0, WindowWidthPx(RELEARNERWIN_DESC_BATTLE));
+    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, fontId, moveDescription, 0, 65, 0, NULL);
 }
 
 static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)
@@ -1385,7 +1388,7 @@ void CreateConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 _
 
     for (i = 0; i < count + 1; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_ConditionSparkle, 0, 0, 0);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_ConditionSparkle, 0, 0, 0);
         if (spriteId != MAX_SPRITES)
         {
             sprites[i] = &gSprites[spriteId];

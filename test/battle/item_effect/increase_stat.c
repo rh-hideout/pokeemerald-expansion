@@ -133,6 +133,36 @@ SINGLE_BATTLE_TEST("X Speed sharply raises battler's Speed stat", s16 damage)
     }
 }
 
+SINGLE_BATTLE_TEST("B_X_ITEMS_BUFF only boost battler by one stage prior to gen 7", s16 damage)
+{
+    u16 genConfig = 0;
+    PARAMETRIZE { genConfig = GEN_6; }
+    PARAMETRIZE { genConfig = GEN_7; }
+    GIVEN {
+        WITH_CONFIG(B_X_ITEMS_BUFF, genConfig);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_X_ATTACK); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        if (genConfig == GEN_6)
+        {
+            MESSAGE("Wobbuffet's Attack rose!");
+            NOT MESSAGE("Wobbuffet's Attack rose sharply!");
+        }
+        else
+        {
+            NOT MESSAGE("Wobbuffet's Attack rose");
+            MESSAGE("Wobbuffet's Attack rose sharply!");
+        }
+        MESSAGE("Wobbuffet used Scratch!");
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage / 2, Q_4_12(1.5), results[0].damage);
+    }
+}
+
 SINGLE_BATTLE_TEST("X Accuracy sharply raises battler's Accuracy stat")
 {
 
