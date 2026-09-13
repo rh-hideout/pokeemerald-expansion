@@ -11,14 +11,14 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move")
 {
     GIVEN {
-        PLAYER(SPECIES_DRAGONITE);
+        ASSUME(GetSpeciesType(SPECIES_SABLEYE, 0) == TYPE_DARK || GetSpeciesType(SPECIES_SABLEYE, 1) == TYPE_DARK);
+        ASSUME(GetSpeciesType(SPECIES_SABLEYE, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_SABLEYE, 1) == TYPE_GHOST);
+        PLAYER(SPECIES_SABLEYE);
         OPPONENT(SPECIES_ALTARIA) { Item(ITEM_ALTARIANITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT_LT(player->hp, player->maxHP);
     }
 }
 
@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type", s16 damage)
 {
     enum Move move;
     enum Ability ability;
-    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_STURDY; }
-    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_STURDY; }
+    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_CUTE_CHARM; }
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_PIXILATE; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_PIXILATE; }
     GIVEN {
@@ -66,8 +66,6 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type", s16 damage)
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
-        if (move == MOVE_SUNNY_DAY)
-            MESSAGE("It's super effective!");
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage); // double base power + type effectiveness + sun 50% boost
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(6.0), results[3].damage);
@@ -89,9 +87,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type")
         OPPONENT(SPECIES_BELDUM);
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
-        MESSAGE("It doesn't affect the opposing Beldum…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -117,9 +114,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Judgment / Techno Blast / Multi-Atta
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, move); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, move, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -133,9 +129,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Hidden Power's type")
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, MOVE_HIDDEN_POWER); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player); }
-        MESSAGE("It doesn't affect the opposing Diglett…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -148,10 +143,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't override Electrify")
         OPPONENT(SPECIES_SANDSHREW);
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -159,15 +152,14 @@ SINGLE_BATTLE_TEST("Pixilate overrides Ion Deluge")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
-        ASSUME(GetSpeciesType(SPECIES_BAGON, 0) == TYPE_DRAGON || GetSpeciesType(SPECIES_BAGON, 1) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_GARCHOMP, 0) == TYPE_DRAGON || GetSpeciesType(SPECIES_GARCHOMP, 1) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_GARCHOMP, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_GARCHOMP, 1) == TYPE_GROUND);
         PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); }
-        OPPONENT(SPECIES_BAGON);
+        OPPONENT(SPECIES_GARCHOMP);
     } WHEN {
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ION_DELUGE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT_LT(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -176,14 +168,14 @@ SINGLE_BATTLE_TEST("Pixilate changes Tera Blast's type when not Terastallized")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
         ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING || GetSpeciesType(SPECIES_MACHOP, 1) == TYPE_FIGHTING);
+        ASSUME(GetSpeciesType(SPECIES_SABLEYE, 0) == TYPE_DARK || GetSpeciesType(SPECIES_SABLEYE, 1) == TYPE_DARK);
+        ASSUME(GetSpeciesType(SPECIES_SABLEYE, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_SABLEYE, 1) == TYPE_GHOST);
         PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); }
-        OPPONENT(SPECIES_MACHOP);
+        OPPONENT(SPECIES_SABLEYE);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
-        MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT_LT(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -197,9 +189,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't change Tera Blast's type when Terastallized
         OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player); }
-        MESSAGE("It doesn't affect the opposing Misdreavus…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -214,10 +205,8 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type")
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIC_TERRAIN); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_TERRAIN_PULSE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, opponent);
-        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_TERRAIN_PULSE, player); }
-        MESSAGE("It doesn't affect the opposing Sandshrew…");
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
@@ -225,15 +214,13 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_BAGON, 0) == TYPE_DRAGON || GetSpeciesType(SPECIES_BAGON, 1) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
         PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_BAGON);
+        OPPONENT(SPECIES_MISDREAVUS);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
-        NOT { MESSAGE("It's super effective!"); }
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
     }
 }
 
