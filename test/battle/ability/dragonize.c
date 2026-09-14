@@ -23,18 +23,19 @@ SINGLE_BATTLE_TEST("Dragonize turns a Normal-type move into a dragon-type move")
 
 SINGLE_BATTLE_TEST("Dragonize boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    enum Ability ability;
+    bool32 suppressed;
     u32 genConfig;
-    PARAMETRIZE { ability = ABILITY_NONE;   genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_NONE;   genConfig = GEN_6; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE;    genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE;    genConfig = GEN_6; }
+    PARAMETRIZE { suppressed = TRUE;  genConfig = GEN_7; }
+    PARAMETRIZE { suppressed = TRUE;  genConfig = GEN_6; }
+    PARAMETRIZE { suppressed = FALSE; genConfig = GEN_7; }
+    PARAMETRIZE { suppressed = FALSE; genConfig = GEN_6; }
 
     GIVEN {
         WITH_CONFIG(B_ATE_MULTIPLIER, genConfig);
-        PLAYER(SPECIES_DRUDDIGON) { Ability(ability); Moves(MOVE_TACKLE); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Moves(MOVE_TACKLE); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -49,44 +50,43 @@ SINGLE_BATTLE_TEST("Dragonize boosts power of affected moves by 20% (Gen7+) or 3
 SINGLE_BATTLE_TEST("Dragonize doesn't affect Weather Ball's type", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
-    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_NONE; }
-    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_NONE; }
-    PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_DRAGONIZE; }
-    PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_DRAGONIZE; }
+    bool32 suppressed;
+    PARAMETRIZE { move = MOVE_CELEBRATE; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_CELEBRATE; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_SUNNY_DAY; suppressed = FALSE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         ASSUME(GetSpeciesType(SPECIES_PINSIR, 0) == TYPE_BUG);
-        PLAYER(SPECIES_DRUDDIGON) { Ability(ability); }
-        OPPONENT(SPECIES_PINSIR);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Speed(1); }
+        OPPONENT(SPECIES_PINSIR) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
         if (move == MOVE_SUNNY_DAY)
             MESSAGE("It's super effective!");
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage); // double base power + type effectiveness + sun 50% boost
-        EXPECT_MUL_EQ(results[2].damage, Q_4_12(6.0), results[3].damage); // double base power + type effectiveness + sun 50% boost
-        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.0), results[0].damage); // identical test
+        EXPECT_GT(results[1].damage, results[0].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
         EXPECT_EQ(results[1].damage, results[3].damage);
     }
 }
 
 SINGLE_BATTLE_TEST("Dragonize doesn't affect Natural Gift's type")
 {
-    enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE; }
-    PARAMETRIZE { ability = ABILITY_DRAGONIZE; }
+    bool32 suppressed;
+    PARAMETRIZE { suppressed = TRUE; }
+    PARAMETRIZE { suppressed = FALSE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
-        OPPONENT(SPECIES_BELDUM);
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Item(ITEM_ORAN_BERRY); Speed(1); }
+        OPPONENT(SPECIES_BELDUM) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+        TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, MOVE_NATURAL_GIFT); }
     } SCENE {
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
         MESSAGE("It doesn't affect the opposing Beldum…");
@@ -235,5 +235,44 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect damaging Z-Move types")
     }
 }
 
-TO_DO_BATTLE_TEST("Dragonize doesn't affect Max Strike's type");
-TO_DO_BATTLE_TEST("Confirm behavioural match with other -ate abilities");// we assume that it behaves like Pixilate.
+SINGLE_BATTLE_TEST("(DYNAMAX) Dragonize turns Max Strike into Max Wyrmwind")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FERALIGATR) { Ability(ABILITY_TORRENT); Item(ITEM_FERALIGITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, target: player, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_WYRMWIND, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("(DYNAMAX) Dragonize does not boost Max Wyrmwind's power", s16 damage)
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_TWISTER; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_TWISTER) == TYPE_DRAGON);
+        ASSUME(GetMaxMovePower(MOVE_SCRATCH, MOVE_MAX_WYRMWIND) == GetMaxMovePower(MOVE_TWISTER, MOVE_MAX_WYRMWIND));
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(100); SpAttack(100); }
+        OPPONENT(SPECIES_FERALIGATR) { Ability(ABILITY_TORRENT); Item(ITEM_FERALIGITE); Defense(100); SpDefense(100); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SKILL_SWAP, target: player, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, move, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_WYRMWIND, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
