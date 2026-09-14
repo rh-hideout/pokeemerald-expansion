@@ -26,12 +26,12 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by one stage when hit 
         if (move == MOVE_SCRATCH) {
             ITEM_POPUP(opponent, ITEM_KEE_BERRY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
-            MESSAGE("The Kee Berry boosted the opposing Wobbuffet's Defense!");
+            MESSAGE("The opposing Wobbuffet's Defense rose!");
         } else {
             NONE_OF {
                 ITEM_POPUP(opponent, ITEM_KEE_BERRY);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
-                MESSAGE("The Kee Berry boosted the opposing Wobbuffet's Defense!");
+                MESSAGE("The opposing Wobbuffet's Defense rose!");
             }
         }
     } THEN {
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by two stages with Rip
         HP_BAR(opponent);
         ITEM_POPUP(opponent, ITEM_KEE_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
-        MESSAGE("The Kee Berry sharply boosted the opposing Applin's Defense!");
+        MESSAGE("The opposing Applin's Defense rose sharply!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
     }
@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the item hold user used a physi
         NONE_OF {
             ITEM_POPUP(opponent, ITEM_KEE_BERRY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
-            MESSAGE("The Kee Berry boosted Wobbuffet's Defense!");
+            MESSAGE("Wobbuffet's Defense rose!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);

@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         ITEM_POPUP(player, ITEM_STARF_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The Starf Berry sharply boosted Wobbuffet's Attack!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }

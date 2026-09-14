@@ -25,7 +25,7 @@ FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon::
 	setmoverelearnerstate MOVE_RELEARNER_LEVEL_UP_MOVES @ Specifically supposed to teach level up moves
 	chooseboxmon SELECT_PC_MON_MOVE_RELEARNER
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, FallarborTown_MoveRelearnersHouse_EventScript_ComeBackWithHeartScale
+	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, FallarborTown_MoveRelearnersHouse_EventScript_ComeBackWithHeartScale
 	special IsSelectedMonEgg
 	goto_if_eq VAR_RESULT, TRUE, FallarborTown_MoveRelearnersHouse_EventScript_CantTeachEgg
 	special Special_HasMoveToRelearn
