@@ -170,6 +170,8 @@ SINGLE_BATTLE_TEST("Mirror Herb activates with Contrary if stat is at +6")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet used its Mirror Herb to mirror its opponent's stat changes!");
+        MESSAGE("The Mirror Herb harshly lowered Wobbuffet's Attack!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 4);
     }
