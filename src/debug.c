@@ -309,8 +309,6 @@ static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId);
 static void DebugAction_PCBag_ClearBag(u8 taskId);
 static void DebugAction_PCBag_ClearBoxes(u8 taskId);
 
-static void DebugAction_Pokemon_SetRibbons(u8 taskId);
-
 static void DebugAction_Party_HealParty(u8 taskId);
 static void DebugAction_Party_ClearPokerus(u8 taskId);
 static void DebugAction_Party_ClearParty(u8 taskId);
@@ -636,7 +634,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_EditPokemon[] =
     { COMPOUND_STRING("Set Hidden Nature"),  DebugAction_ExecuteScript, Debug_EventScript_SetHiddenNature },
     { COMPOUND_STRING("Set Friendship"),     DebugAction_ExecuteScript, Debug_EventScript_SetFriendship },
     { COMPOUND_STRING("Set Ability"),        DebugAction_ExecuteScript, Debug_EventScript_SetAbility },
-    { COMPOUND_STRING("Set Ribbons"),        DebugAction_Selection_Init, &sGiveAllRibbonsSelection },
+    { COMPOUND_STRING("Give all ribbons"),   DebugAction_Selection_Init, &sGiveAllRibbonsSelection },
     { NULL }
 };
 
