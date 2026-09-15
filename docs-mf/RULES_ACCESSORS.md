@@ -72,6 +72,10 @@ When the engine is off, `MfRules_HasInfiniteTms()` is TRUE (Phase 1). When the p
 
 `P_UPDATED_TYPES` keeps modern Fairy assignments in `gSpeciesInfo`. `GetSpeciesType` calls `MfGetSpeciesType`, which applies a small pre-Gen-6 fallback table when `!MfRules_HasFairyTypes()`. Dex / summary / battle all use `GetSpeciesType`, so one gate covers every surface (ADR 0027).
 
+### Worked example: modern types & TYPE CHART (S28)
+
+`gSpeciesInfo` stays vanilla (plus Fairy-on). When `MfRules_HasModernTypes()`, `MfGetSpeciesType` overlays ME’s balance retypes (Arbok Poison/Dark, etc.). `GetTypeModifier` indexes `MfGetTypeEffectivenessTable()` — Gen VI+ (`gTypeEffectivenessTable`) or ME Improved — so the hot path is one rule check then a 2D lookup (ADR 0028).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

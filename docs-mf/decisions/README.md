@@ -62,3 +62,4 @@ Append a row to the index below when you add a record.
 | 0025 | ux | Randomizer page: master gate, nested ME conditions, live clear/seed | S25 | 2026-09-13 |
 | 0026 | ux | SAVE confirm + start-menu rules viewer | S26 | 2026-09-13 |
 | 0027 | tech | Runtime Fairy retypes via GetSpeciesType fallback table | S27 | 2026-09-13 |
+| 0028 | tech | Dual static type charts + modern-type overlay | S28 | 2026-09-14 |

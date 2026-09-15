@@ -39,7 +39,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 2     | Rules engine core                    | S12–S17 | Complete    |
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
 | 4     | Gamemode wiring                      | S27–S32 | In progress |
-| 5     | Features wiring                      | S33–S34 | Not started |
+| 5     | Features & item-friction wiring      | S33–S34, S69 | Not started |
 | 6     | Nuzlocke                             | S35–S39 | Not started |
 | 7     | Difficulty                           | S40–S45 | Not started |
 | 8     | Challenges                           | S46–S50 | Not started |
@@ -195,7 +195,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Confirm Sitrus behavior (`I_SITRUS_BERRY_HEAL`) and note it as a future Gamemode toggle.
 - **Acceptance:** TMs are reusable and survive use; Exp Share and mint decisions are documented.
 - **Tests:** Manual: teach a TM twice; checklist in [`docs-mf/manual-qa-s10-item-qol.md`](docs-mf/manual-qa-s10-item-qol.md). Config lock: `make check TESTS='MF: item'`.
-- **Decisions:** [`docs-mf/decisions/0010-product-item-qol-baseline.md`](docs-mf/decisions/0010-product-item-qol-baseline.md) — reusable TMs on; Gen5 held Exp Share (no Gen6 flag); mints usable, shop deferred to S34; Sitrus stays Gen4+ 25% (future Gamemode toggle).
+- **Decisions:** [`docs-mf/decisions/0010-product-item-qol-baseline.md`](docs-mf/decisions/0010-product-item-qol-baseline.md) — reusable TMs on; Gen5 held Exp Share (no Gen6 flag); mints usable, shop deferred to S34; Sitrus stays Gen4+ 25% (future Gamemode toggle). Solo trade-evo stock/bag-use is **S69**.
 
 ### S11 — Battle & overworld speed baseline
 
@@ -441,7 +441,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S28 — Runtime modern types & type chart
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** `POKéMON TYPES` and `TYPE CHART` are player choices.
 - **Depends on:** S27
@@ -503,7 +503,9 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ---
 
-## Phase 5 — Features wiring
+## Phase 5 — Features & item-friction wiring
+
+> Shiny/item-drop Features (S33–S34) plus solo trade-evolution friction removal (S69). S69 is numbered after the original backlog but **runs here**, before Nuzlocke — it only needs the item baseline (S10) and optional Gamemode gating (S13/S20).
 
 ### S33 — Shiny chance & shiny clause plumbing
 
@@ -531,6 +533,22 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Keep the battle-end hook small and namespaced.
 - **Acceptance:** With the rule on, wild victories yield items at a sane rate; off, behavior is vanilla.
 - **Tests:** Unit test on the drop-selection helper; manual battles.
+
+### S69 — Solo trade evolutions (Linking Cord & bag evo items)
+
+- [ ] **Status:** Not started
+
+- **Goal:** Evolve trade-only and trade+held-item Pokémon without link trading (e.g. Haunter → Gengar, Scyther → Scizor).
+- **Depends on:** S10, S13
+- **Scope:**
+  - Expansion already provides the mechanics: pure trade lines (`Haunter`, `Kadabra`, `Machoke`, `Graveler`) have `{EVO_ITEM, ITEM_LINKING_CORD, …}`; trade+held lines (`Scyther`/`Metal Coat`, `Seadra`/`Dragon Scale`, `Onix`, `Poliwhirl`/`King's Rock`, Gen 2 cross-evos like `Porygon`/`Upgrade`, etc.) have matching `{EVO_ITEM, ITEM_*, …}` methods.
+  - Flip `I_USE_EVO_HELD_ITEMS_FROM_BAG` (`include/config/item.h`, currently `FALSE`) so hold items work from the bag like stones (PLA-style). Prefer a runtime Gamemode/Features gate via S13 if this should be toggleable (Modern on / Classic off); otherwise always-on is fine — record the choice in an ADR.
+  - **Obtainability without map/NPC edits:** stock `ITEM_LINKING_CORD` and the Kanto-relevant held evo items in existing FireRed mart data (Celadon Dept Store is the natural FR spot). Cover every trade evo reachable under the S08 species ceiling; do not require link cable or Wonder Trade.
+  - Confirm Linking Cord already uses `ItemUseOutOfBattle_EvolutionStone`; held items use `EVO_HELD_ITEM_*` macros gated by the config above.
+  - Compose with the Challenges evo limit (S47): when evolution is blocked, bag use must refuse clearly.
+  - Out of scope: Karrablast/Shelmet partner-species trades; Wonder Trade (still deferred).
+- **Acceptance:** Without trading, a player can evolve Haunter → Gengar via Linking Cord and Scyther → Scizor via Metal Coat from the bag; required items are obtainable in-game on a normal playthrough (not debug-only).
+- **Tests:** Manual checklist for each Kanto trade line under the enabled species set; config/unit lock that bag-use is enabled when the rule is on; spot-check that S47 evo limit still blocks.
 
 ---
 

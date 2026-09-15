@@ -16,6 +16,7 @@
 #include "config_changes.h"
 #include "party_menu.h"
 #include "pokemon.h"
+#include "mf_types.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "util.h"
@@ -8465,9 +8466,13 @@ uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType)
 
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType)
 {
+    // S28: pick Gen VI+ vs ME Improved table once, then index — no per-matchup branches.
+    const uq4_12_t (*table)[NUMBER_OF_MON_TYPES] = MfGetTypeEffectivenessTable();
+    uq4_12_t modifier = table[atkType][defType];
+
     if (B_FLAG_INVERSE_BATTLE != 0 && FlagGet(B_FLAG_INVERSE_BATTLE))
-        return GetInverseTypeMultiplier(gTypeEffectivenessTable[atkType][defType]);
-    return gTypeEffectivenessTable[atkType][defType];
+        return GetInverseTypeMultiplier(modifier);
+    return modifier;
 }
 
 s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, enum Type type1, enum Type type2, u32 maxHp)

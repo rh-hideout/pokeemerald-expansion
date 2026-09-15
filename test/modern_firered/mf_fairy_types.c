@@ -85,7 +85,7 @@ TEST("MF: Fairy off leaves Fairy-native species and chart alone")
     // Unrelated species unchanged.
     EXPECT_EQ(GetSpeciesType(SPECIES_CHARIZARD, 0), TYPE_FIRE);
     EXPECT_EQ(GetSpeciesType(SPECIES_CHARIZARD, 1), TYPE_FLYING);
-    // Fairy chart entries stay (TYPE CHART is S28); Fairy moves still Fairy.
+    // Fairy chart entries stay in Gen VI+ and Improved (S28); Fairy moves still Fairy.
     EXPECT_EQ(gTypeEffectivenessTable[TYPE_DRAGON][TYPE_FAIRY], UQ_4_12(0.0));
     EXPECT_EQ(GetMoveType(MOVE_MOONBLAST), TYPE_FAIRY);
 

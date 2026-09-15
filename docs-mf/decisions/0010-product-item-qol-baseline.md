@@ -30,5 +30,6 @@ Story text assumed `I_EXP_SHARE_ITEM` was `GEN_LATEST`; this tree already has `G
 
 - Editing upstream `item.h` (`I_REUSABLE_TMS`) is a known `RHH/master` merge surface; re-apply if upstream flips the default.
 - S34 must runtime-gate reusable TMs, Sitrus heal mode, and mint shop visibility without assuming Gen6 Exp Share is on.
+- Solo trade-evo obtainability (Linking Cord mart stock + `I_USE_EVO_HELD_ITEMS_FROM_BAG`) is **S69**, not S10.
 - Phase 7 EXP multiplier should assume held Exp Share only unless a later story deliberately enables `I_EXP_SHARE_FLAG`.
 - Config lock: `test/modern_firered/mf_item_baseline.c`. Manual TM reuse: [`docs-mf/manual-qa-s10-item-qol.md`](../manual-qa-s10-item-qol.md).

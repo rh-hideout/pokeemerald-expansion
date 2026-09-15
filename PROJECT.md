@@ -37,6 +37,7 @@ Play FireRed with ME-like **start-of-run customization** and strong QoL. Keep va
 - Autorun
 - Fast battle intro / fast battles / anim speed
 - Type effectiveness / STAB hints in battle where ME has them
+- Solo trade evolutions (Linking Cord + bag-use for trade hold items; mart stock, no map/story work) — see STORIES S69
 - Other “friction remover” Options+ items from ME that don’t require map/story work
 
 ### Explicitly out of scope
