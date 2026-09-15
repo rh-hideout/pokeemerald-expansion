@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Cell Battery raises Attack by one stage if hit by an Electri
         ITEM_POPUP(opponent, ITEM_CELL_BATTERY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The Cell Battery boosted the opposing Wobbuffet's Attack!");
+        MESSAGE("The opposing Wobbuffet's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Cell Battery doesn't activate if the holder protects")
             ITEM_POPUP(opponent, ITEM_CELL_BATTERY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The Cell Battery boosted the opposing Wobbuffet's Attack!");
+            MESSAGE("The opposing Wobbuffet's Attack rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);

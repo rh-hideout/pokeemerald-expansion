@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Luminous Moss raises Sp. Def by one stage if hit by an Water
         ITEM_POPUP(opponent, ITEM_LUMINOUS_MOSS);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The Luminous Moss boosted the opposing Wobbuffet's Sp. Def!");
+        MESSAGE("The opposing Wobbuffet's Sp. Def rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Luminous Moss doesn't activate if the holder protects")
             ITEM_POPUP(opponent, ITEM_LUMINOUS_MOSS);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The Luminous Moss boosted the opposing Wobbuffet's Sp. Def!");
+            MESSAGE("The opposing Wobbuffet's Sp. Def rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);

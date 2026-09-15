@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Absorb Bulb raises Sp. Atk by one stage if hit by an Water-t
         ITEM_POPUP(opponent, ITEM_ABSORB_BULB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The Absorb Bulb boosted the opposing Wobbuffet's Sp. Atk!");
+        MESSAGE("The opposing Wobbuffet's Sp. Atk rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Absorb Bulb doesn't activate if the holder protects")
             ITEM_POPUP(opponent, ITEM_ABSORB_BULB);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The Absorb Bulb boosted the opposing Wobbuffet's Sp. Atk!");
+            MESSAGE("The opposing Wobbuffet's Sp. Atk rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
