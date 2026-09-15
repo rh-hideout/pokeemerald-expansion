@@ -130,6 +130,27 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cursed Body")
     }
 }
 
+DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cute Charm")
+{
+    struct BattlePokemon *moveUser = NULL;
+    PARAMETRIZE { moveUser = playerLeft; }
+    PARAMETRIZE { moveUser = playerRight; }
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Gender(MON_MALE); }
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        OPPONENT(SPECIES_CLEFAIRY) { Ability(ABILITY_CUTE_CHARM); Gender(MON_FEMALE); HP(500); MaxHP(500); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(moveUser, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_CUTE_CHARM, 1)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveUser);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
+    } THEN {
+        EXPECT(!moveUser->volatiles.infatuation);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Heal Block")
 {
     struct BattlePokemon *moveTarget = NULL;
@@ -236,5 +257,20 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
     }
 }
 
-// Marked in Bulbapedia as need of research
-//TO_DO_BATTLE_TEST("Aroma Veil prevents G-Max Meltdown's effect");
+DOUBLE_BATTLE_TEST("(DYNAMAX) Aroma Veil prevents G-Max Meltdown's effect")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT_SIDE));
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); Speed(3); }
+        OPPONENT(SPECIES_MELMETAL) { GigantamaxFactor(TRUE); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_IRON_HEAD, target: playerRight, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_MELTDOWN, opponentLeft);
+    } THEN {
+        EXPECT(!playerLeft->volatiles.torment);
+        EXPECT(!playerRight->volatiles.torment);
+    }
+}

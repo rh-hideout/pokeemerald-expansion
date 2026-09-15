@@ -4,14 +4,14 @@
 SINGLE_BATTLE_TEST("Dragon's Maw increases Dragon-type move damage", s16 damage)
 {
     enum Move move;
-    enum Ability ability;
+    bool32 suppressed;
 
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_DRAGONS_MAW; }
-    PARAMETRIZE { move = MOVE_DRAGON_CLAW; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_DRAGON_CLAW; ability = ABILITY_DRAGONS_MAW; }
-    PARAMETRIZE { move = MOVE_DRAGON_BREATH; ability = ABILITY_KLUTZ; }
-    PARAMETRIZE { move = MOVE_DRAGON_BREATH; ability = ABILITY_DRAGONS_MAW; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_DRAGON_CLAW; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_DRAGON_CLAW; suppressed = FALSE; }
+    PARAMETRIZE { move = MOVE_DRAGON_BREATH; suppressed = TRUE; }
+    PARAMETRIZE { move = MOVE_DRAGON_BREATH; suppressed = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_DRAGON);
@@ -19,10 +19,14 @@ SINGLE_BATTLE_TEST("Dragon's Maw increases Dragon-type move damage", s16 damage)
         ASSUME(GetMoveType(MOVE_DRAGON_BREATH) == TYPE_DRAGON);
         ASSUME(GetMoveCategory(MOVE_DRAGON_CLAW) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_DRAGON_BREATH) == DAMAGE_CATEGORY_SPECIAL);
-        PLAYER(SPECIES_REGIDRAGO) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIDRAGO) { Ability(ABILITY_DRAGONS_MAW); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN {
+            if (suppressed)
+                MOVE(opponent, MOVE_GASTRO_ACID);
+            MOVE(player, move);
+        }
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
