@@ -11,8 +11,8 @@ BirthIsland_Exterior_Frlg_OnReturnToField::
 BirthIsland_Exterior_Frlg_OnTransition::
 	setworldmapflag FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR
 	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_DEOXYS_N
-	setvar VAR_DEOXYS_INTERACTION_STEP_COUNTER, 0
-	setvar VAR_DEOXYS_INTERACTION_NUM, 0
+	setvar VAR_DEOXYS_ROCK_STEP_COUNT, 0
+	setvar VAR_DEOXYS_ROCK_LEVEL, 0
 	call_if_set FLAG_FOUGHT_DEOXYS, BirthIsland_Exterior_Frlg_EventScript_HideDeoxysAndPuzzle
 	call_if_unset FLAG_FOUGHT_DEOXYS, BirthIsland_Exterior_Frlg_EventScript_TryShowDeoxysPuzzle
 	end
