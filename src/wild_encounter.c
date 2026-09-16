@@ -829,7 +829,11 @@ void rockSmashRNG(struct ScriptContext *ctx)
 
     if (OW_ROCK_SMASH_ITEMS == GEN_6 || OW_ROCK_SMASH_ITEMS == GEN_6_ORAS)
     {
-        rockSmashResult = RandomWeighted(RNG_NONE, 320, encounterChance, 320);// 1/3 chance to do each. You can change this by tweaking rock smash encounter odds by map.
+        if (encounterChance != 0)
+            rockSmashResult = RandomUniform(RNG_NONE, 0, 2);// 1/3 chance to do each. 
+        else 
+            rockSmashResult = RandomWeighted(RNG_NONE, 2, 0, 1);// 2/3 chance to do nothing, 1/3 chance of item
+        //By instead using RandomWeighted(RNG_NONE, 320, encounterChance, 320), you can adjust rock smash encounter odds by map.
     }
     else if (OW_ROCK_SMASH_ITEMS == GEN_4)
     {
@@ -842,23 +846,15 @@ void rockSmashRNG(struct ScriptContext *ctx)
         if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
             itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
 
-        if (VarGet(VAR_0x8004) == TRUE)
+        struct Pokemon *mon = GetFirstLiveMon();
+        if (VarGet(VAR_0x8004) == TRUE || (OW_FOLLOWERS_ENABLED && mon == &gParties[B_TRAINER_PLAYER][partySlot]))// either a rock smash anim is playing or the user would be the current follower.
             itemRate += 5;
 
         u32 partySlot = VarGet(VAR_0x8006);
-        enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][partySlot]);
-        if (ability == ABILITY_KEEN_EYE)
-            itemRate += 5;
-        if (ability == ABILITY_MAGNET_PULL)
-            itemRate += 5;
-        if (ability == ABILITY_SUCTION_CUPS)
+        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
             itemRate += 5;
 
-        u32 nothingRate = 0;
-        if (itemRate < 100)
-            nothingRate = 100 - (itemRate); 
-
-            rockSmashResult = RandomWeighted(RNG_NONE, nothingRate, 0, itemRate);
+        rockSmashResult = ROCK_SMASH_ITEM * RandomPercentage(itemRate);// returns either 0 or 2
     }
     else
     {
