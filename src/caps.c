@@ -7,17 +7,21 @@
 
 u32 GetCurrentLevelCap(void)
 {
+    // Each cap matches the level of the strongest Pokémon used by the Gym Leader
+    // that the corresponding Badge is awarded for, so the player can meet them on
+    // even terms without overlevelling.
+    // FRLG uses Kanto's Gym Leaders, whose levels differ from Hoenn's.
     static const u32 sLevelCapFlagMap[][2] =
     {
-        {FLAG_BADGE01_GET, 15},
-        {FLAG_BADGE02_GET, 19},
-        {FLAG_BADGE03_GET, 24},
-        {FLAG_BADGE04_GET, 29},
-        {FLAG_BADGE05_GET, 31},
-        {FLAG_BADGE06_GET, 33},
-        {FLAG_BADGE07_GET, 42},
-        {FLAG_BADGE08_GET, 46},
-        {FLAG_IS_CHAMPION, 58},
+        {FLAG_BADGE01_GET, IS_FRLG ? 14 : 15}, // FRLG: Brock's Onix
+        {FLAG_BADGE02_GET, IS_FRLG ? 21 : 19}, // FRLG: Misty's Starmie
+        {FLAG_BADGE03_GET, IS_FRLG ? 24 : 24}, // FRLG: Lt. Surge's Raichu
+        {FLAG_BADGE04_GET, IS_FRLG ? 29 : 29}, // FRLG: Erika's Vileplume
+        {FLAG_BADGE05_GET, IS_FRLG ? 43 : 31}, // FRLG: Koga's Weezing
+        {FLAG_BADGE06_GET, IS_FRLG ? 43 : 33}, // FRLG: Sabrina's Alakazam
+        {FLAG_BADGE07_GET, IS_FRLG ? 47 : 42}, // FRLG: Blaine's Arcanine
+        {FLAG_BADGE08_GET, IS_FRLG ? 50 : 46}, // FRLG: Giovanni's Rhydon
+        {FLAG_IS_CHAMPION, IS_FRLG ? 63 : 58}, // FRLG: Elite Four and Champion
     };
 
     u32 i;
