@@ -256,9 +256,7 @@ static void rockSmashGenerateItemGen4(void)
     if (randomItem < 7)
     {
         u32 partySlot = VarGet(VAR_0x8006);
-        enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][partySlot]);
-        if (ability == ABILITY_SERENE_GRACE
-           || ability == ABILITY_SUPER_LUCK)
+        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
             randomItem++;
     }   
 
