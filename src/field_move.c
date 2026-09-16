@@ -3,9 +3,12 @@
 #include "field_move.h"
 #include "fldeff.h"
 #include "fldeff_misc.h"
+#include "item.h"
 #include "party_menu.h"
+#include "pokemon.h"
 #include "strings.h"
 #include "constants/field_move.h"
+#include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
 
@@ -43,6 +46,52 @@ const struct FieldMoveUnlock gFieldMoveUnlocks[FIELD_MOVE_UNLOCK_COUNT] =
     },
 };
 
+
+bool32 FieldMove_CanUseFromBag(enum FieldMove fieldMove)
+{
+    enum Item hmItem = gFieldMoveInfo[fieldMove].hmItem;
+
+    if (!OW_HM_USABLE_FROM_BAG)
+        return FALSE;
+    if (hmItem == ITEM_NONE)
+        return FALSE;
+    if (!IsFieldMoveUnlocked(fieldMove))
+        return FALSE;
+    return CheckBagHasItem(hmItem, 1);
+}
+
+u32 FieldMove_GetUserIndex(enum FieldMove fieldMove)
+{
+    enum Move move = FieldMove_GetMoveId(fieldMove);
+    u32 firstUsable = PARTY_SIZE;
+
+    for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+
+        if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+            break;
+        if (GetMonData(mon, MON_DATA_IS_EGG))
+            continue;
+
+        // A Pokémon that actually knows the move always wins, so vanilla
+        // behaviour never regresses.
+        if (MonKnowsMove(mon, move) == TRUE)
+            return i;
+
+        if (firstUsable == PARTY_SIZE)
+            firstUsable = i;
+    }
+
+    // Nobody knows it: the HM in the bag takes over, performed by the first
+    // non-egg party member. A fainted Pokémon is fine, this is overworld
+    // convenience rather than a battle mechanic.
+    if (FieldMove_CanUseFromBag(fieldMove))
+        return firstUsable;
+
+    return PARTY_SIZE;
+}
+
 #define FLAG_TO_BADGE(flag) flag - FLAG_BADGE01_GET
 
 const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
@@ -54,6 +103,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_CUT,
         .partyMsgID = PARTY_MSG_NOTHING_TO_CUT,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE02_GET) : FLAG_TO_BADGE(FLAG_BADGE01_GET),
+        .hmItem = ITEM_HM01,
     },
 
     [FIELD_MOVE_FLASH] =
@@ -63,6 +113,8 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_FLASH,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE01_GET) : FLAG_TO_BADGE(FLAG_BADGE02_GET),
+        .hmItem = ITEM_HM05,
+        .offerInPartyMenu = TRUE,
     },
 
     [FIELD_MOVE_ROCK_SMASH] =
@@ -72,6 +124,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_ROCK_SMASH,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE06_GET) : FLAG_TO_BADGE(FLAG_BADGE03_GET),
+        .hmItem = ITEM_HM06,
     },
 
     [FIELD_MOVE_STRENGTH] =
@@ -81,6 +134,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_STRENGTH,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = FLAG_TO_BADGE(FLAG_BADGE04_GET),
+        .hmItem = ITEM_HM04,
     },
 
     [FIELD_MOVE_SURF] =
@@ -90,6 +144,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_SURF,
         .partyMsgID = PARTY_MSG_CANT_SURF_HERE,
         .arg = FLAG_TO_BADGE(FLAG_BADGE05_GET),
+        .hmItem = ITEM_HM03,
     },
 
     [FIELD_MOVE_FLY] =
@@ -99,6 +154,8 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_FLY,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE03_GET) : FLAG_TO_BADGE(FLAG_BADGE06_GET),
+        .hmItem = ITEM_HM02,
+        .offerInPartyMenu = TRUE,
     },
 
     [FIELD_MOVE_DIVE] =
@@ -108,6 +165,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_DIVE,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = FLAG_TO_BADGE(FLAG_BADGE07_GET),
+        .hmItem = ITEM_HM08,
     },
 
     [FIELD_MOVE_WATERFALL] =
@@ -117,6 +175,7 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_WATERFALL,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
         .arg = IS_FRLG ? FLAG_TO_BADGE(FLAG_BADGE07_GET) : FLAG_TO_BADGE(FLAG_BADGE08_GET),
+        .hmItem = ITEM_HM07,
     },
 
     [FIELD_MOVE_TELEPORT] =

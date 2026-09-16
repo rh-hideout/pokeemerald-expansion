@@ -2970,6 +2970,33 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         }
     }
 
+    // Moves with no usable overworld trigger (Fly, Flash) are offered on any
+    // Pokémon once their HM and Badge are owned, so the player keeps control of
+    // when they are used.
+    for (j = 0; j != FIELD_MOVES_COUNT; j++)
+    {
+        bool32 alreadyListed = FALSE;
+
+        if (!gFieldMoveInfo[j].offerInPartyMenu || !FieldMove_IsVisible(j))
+            continue;
+        if (!FieldMove_CanUseFromBag(j))
+            continue;
+
+        // The Pokémon may already know the move, in which case the loop above
+        // listed it and a duplicate entry would show up.
+        for (i = 0; i < sPartyMenuInternal->numActions; i++)
+        {
+            if (sPartyMenuInternal->actions[i] == j + MENU_FIELD_MOVES)
+            {
+                alreadyListed = TRUE;
+                break;
+            }
+        }
+
+        if (!alreadyListed)
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
+    }
+
     if (!InBattlePike())
     {
         if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
