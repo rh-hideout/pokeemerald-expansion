@@ -17,6 +17,8 @@ static UNUSED bool32 IsFalse(enum Species species);
 static UNUSED bool32 IsTrue(enum Species species);
 static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species);
 
+static bool32 DoesPartySlotHaveAbilityEffect(const enum Ability *abilityArray, u8 partySlot);
+
 static const bool32 (*const sSynchronizeModes[])(enum Species) = 
 {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
@@ -85,8 +87,7 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
     return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
 
-
-bool32 DoesPartySlotHaveAbilityEffect(const enum Ability *abilityArray, partySlot)
+static bool32 DoesPartySlotHaveAbilityEffect(const enum Ability *abilityArray, u8 partySlot)
 {
     if (GetMonData(&gParties[B_TRAINER_PLAYER][partySlot], MON_DATA_SANITY_IS_EGG))
         return FALSE;
@@ -97,6 +98,11 @@ bool32 DoesPartySlotHaveAbilityEffect(const enum Ability *abilityArray, partySlo
             return TRUE;
     }
     return FALSE;
+}
+
+bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
+{
+    return DoesPartySlotHaveAbilityEffect(abilityArray, 0);
 }
 
 bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
@@ -117,7 +123,7 @@ bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 {
-    if (!DoesPartySlotHaveAbilityEffect(sForceNatureAbilities, 0))
+    if (!DoesLeadingMonHaveAbilityEffect(sForceNatureAbilities))
         return NATURE_RANDOM;
     if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
@@ -126,7 +132,7 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 
 u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
 {
-    if (!DoesPartySlotHaveAbilityEffect(sForceOppositeGenderAbilities, 0))
+    if (!DoesLeadingMonHaveAbilityEffect(sForceOppositeGenderAbilities))
         return MON_GENDER_RANDOM;
     if (!(sCuteCharmModes[origin](species)))
         return MON_GENDER_RANDOM;
@@ -143,12 +149,12 @@ bool32 DoesPartyHaveIncubatorMon(void)
     return DoesPartyMemberHaveAbilityEffect(sIncreaseHatchingSpeedAbilities);
 }
 
-bool32 DoesRockSmashUserHaveIncreasedItemRarity(partySlot);
+bool32 DoesRockSmashUserHaveIncreasedItemRarity(u8 partySlot)
 {
     return DoesPartySlotHaveAbilityEffect(sRockSmashItemLikelihoodAbilities, partySlot);
 }
 
-bool32 DoesRockSmashUserHaveIncreasedItemLikelihood(partySlot);
+bool32 DoesRockSmashUserHaveIncreasedItemLikelihood(u8 partySlot)
 {
     return DoesPartySlotHaveAbilityEffect(sRockSmashItemLikelihoodAbilities, partySlot);
 }

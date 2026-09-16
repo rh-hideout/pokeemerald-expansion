@@ -3,6 +3,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "event_data.h"
+#include "event_object_movement.h"
 #include "fieldmap.h"
 #include "fishing.h"
 #include "follower_npc.h"
@@ -26,6 +27,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "constants/abilities.h"
+#include "constants/field_specials.h"
 #include "constants/game_stat.h"
 #include "constants/item.h"
 #include "constants/items.h"
@@ -846,15 +848,15 @@ void rockSmashRNG(struct ScriptContext *ctx)
         if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
             itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
 
-        struct Pokemon *mon = GetFirstLiveMon();
-        if (VarGet(VAR_0x8004) == TRUE || (OW_FOLLOWERS_ENABLED && mon == &gParties[B_TRAINER_PLAYER][partySlot]))// either a rock smash anim is playing or the user would be the current follower.
-            itemRate += 5;
-
         u32 partySlot = VarGet(VAR_0x8006);
         if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
             itemRate += 5;
 
-        rockSmashResult = ROCK_SMASH_ITEM * RandomPercentage(itemRate);// returns either 0 or 2
+        struct Pokemon *mon = GetFirstLiveMon();
+        if (VarGet(VAR_0x8004) == TRUE || (OW_FOLLOWERS_ENABLED && mon == &gParties[B_TRAINER_PLAYER][partySlot]))// either a rock smash anim is playing or the user would be the current follower.
+            itemRate += 5;
+
+        rockSmashResult = ROCK_SMASH_ITEM * RandomPercentage(RNG_NONE, itemRate);// returns either 0 or 2
     }
     else
     {
