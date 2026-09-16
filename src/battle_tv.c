@@ -1307,13 +1307,15 @@ static void TrySetBattleSeminarShow(void)
             struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
-            ctx.move = ctx.chosenMove = gCurrentMove;
+            ctx.move = ctx.chosenMove = ctx.baseMove = gCurrentMove;
             ctx.moveType = GetMoveType(gCurrentMove);
             ctx.isCrit = FALSE;
             ctx.randomFactor = FALSE;
             ctx.updateFlags = FALSE;
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
+            ctx.weather = GetWeather();
+            ctx.terrain = gFieldTimers.terrain;
             ctx.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
             ctx.abilities[gBattlerTarget] = GetBattlerAbility(gBattlerTarget);
             ctx.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);

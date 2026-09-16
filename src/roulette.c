@@ -3793,7 +3793,7 @@ static void CreateWheelBallSprites(void)
     u8 i;
     for (i = 0; i < BALLS_PER_ROUND; i++)
     {
-        sRoulette->spriteIds[i] = CreateSprite(&sSpriteTemplate_Ball, 116, 80, 57 - i);
+        sRoulette->spriteIds[i] = CreateSpriteUnchecked(&sSpriteTemplate_Ball, 116, 80, 57 - i);
         if (sRoulette->spriteIds[i] != MAX_SPRITES)
         {
             gSprites[sRoulette->spriteIds[i]].invisible = TRUE;
