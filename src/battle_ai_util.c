@@ -619,6 +619,18 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
 
     switch (GetMoveEffect(ctx->move))
     {
+    case EFFECT_NATURAL_GIFT:
+        if (GetItemPocket(gBattleMons[ctx->battlerAtk].item) != POCKET_BERRIES || !IsBattlerItemEnabled(ctx->battlerAtk))
+            return TRUE;
+        break;
+    case EFFECT_FLING:
+        if (!CanFling(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk]))
+            return TRUE;
+        break;
+    case EFFECT_AURA_WHEEL:
+        if (GetBaseSpecies(gBattleMons[ctx->battlerAtk].species) != SPECIES_MORPEKO)
+            return TRUE;
+        break;
     case EFFECT_DREAM_EATER:
         if (!IsAsleepOrComatose(ctx->battlerDef, battlerDefAbility))
             return TRUE;
@@ -645,7 +657,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
-        if (gAiLogicData->items[ctx->battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(ctx->battlerDef))
+        if (aiData->items[ctx->battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(ctx->battlerDef))
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:

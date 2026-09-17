@@ -4637,7 +4637,7 @@ enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
     if (species == NUM_SPECIES)
         return SPECIES_NONE;
 
-    return GET_BASE_SPECIES_ID(species);
+    return GetBaseSpecies(species);
 }
 
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum)
@@ -6565,6 +6565,11 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
     if (inverseMultiplier)
         return UQ_4_12(1.0/(1.5 + 0.05 * dynamaxLevel));
     return UQ_4_12(1.5 + 0.05 * dynamaxLevel);
+}
+
+enum Species GetBaseSpecies(enum Species species)
+{
+    return GetFormSpeciesId(species, 0);
 }
 
 bool32 IsSpeciesRegionalForm(enum Species species)
