@@ -3275,7 +3275,7 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move mov
         cv.holdEffects[battler] = gAiLogicData->holdEffects[battler];
     }
 
-    return GetTwoTurnMoveActivation(&cv, AI_GetWeather()) != ACTIVATION_NEXT_TURN;
+    return GetTwoTurnMoveActivation(&cv, AI_GetWeather()) == ACTIVATION_NEXT_TURN;
 }
 
 static u32 GetLeechSeedDamage(enum BattlerId battler)
