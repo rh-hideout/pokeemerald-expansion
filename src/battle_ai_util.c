@@ -3258,30 +3258,24 @@ bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag)
     return FALSE;
 }
 
-// TODO: this and the function in moves resolution can be merged by changing some code a bit
-// Is two turn move but not semi semi-invulnerable
 bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move move)
 {
-    switch (GetMoveEffect(move))
-    {
-    case EFFECT_SOLAR_BEAM:
-    case EFFECT_TWO_TURNS_ATTACK:
-    {
-        u32 weather = AI_GetWeather();
-        u32 attackerWeather = GetAttackerWeather(gAiLogicData->holdEffects[battlerAtk], gAiLogicData->abilities[battlerAtk], weather);
+    struct BattleCalcValues cv = {
+        .battlerAtk = battlerAtk,
+        .move = move,
+        .moveEffect = GetMoveEffect(move),
+    };
 
-        enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(move);
-        enum BattleWeather weatherType = gBattleWeatherInfo[GetBattleWeather(weather)].type;
-        enum BattleWeather attackerWeatherType = gBattleWeatherInfo[GetBattleWeather(attackerWeather)].type;
-
-        bool32 isAffectedByWeather = ((attackerWeather != B_WEATHER_NONE)
-                                   && ((weatherType == moveAffectedByWeather) || (attackerWeatherType == moveAffectedByWeather)));
-
-        return !(isAffectedByWeather || gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_POWER_HERB);
-    }
-    default:
+    if (!gBattleMoveEffects[cv.moveEffect].twoTurnEffect)
         return FALSE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = gAiLogicData->abilities[battler];
+        cv.holdEffects[battler] = gAiLogicData->holdEffects[battler];
     }
+
+    return GetTwoTurnMoveActivation(&cv, AI_GetWeather()) != ACTIVATION_NEXT_TURN;
 }
 
 static u32 GetLeechSeedDamage(enum BattlerId battler)

@@ -279,6 +279,7 @@ bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType);
 bool32 AreAnyHazardsOnSide(enum BattleSide side);
 bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType);
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType);
+enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv, u32 weather);
 bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option);
 u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather);
 bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv);
