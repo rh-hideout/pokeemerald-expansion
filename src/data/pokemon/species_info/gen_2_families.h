@@ -1678,7 +1678,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sTogepiLevelUpLearnset,
         .teachableLearnset = sTogepiTeachableLearnset,
         .eggMoveLearnset = sTogepiEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_TOGETIC, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_TOGETIC}),
     },
 
     [SPECIES_TOGETIC] =
@@ -1748,7 +1748,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sTogeticLevelUpLearnset,
         .teachableLearnset = sTogeticTeachableLearnset,
     #if P_GEN_4_CROSS_EVOS
-        .evolutions = EVOLUTION({EVO_ITEM, ITEM_SHINY_STONE, SPECIES_TOGEKISS}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_TOGEKISS}),
     #endif
     },
 
@@ -6373,10 +6373,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .height = 4,
         .weight = 65,
         .description = COMPOUND_STRING(
-            "It roots for food by rubbing its snout\n"
-            "against the ground. Its favorite food is a\n"
-            "mushroom that grows under dried grass.\n"
-            "It occasionally roots out hot springs."),
+            "Ele procura comida esfregando o focinho\n"
+            "contra o chao. Sua comida favorita e um\n"
+            "cogumelo que cresce sob a grama seca.\n"
+            "As vezes descobre fontes de aguas termais."),
         .pokemonScale = 324,
         .pokemonOffset = 20,
         .trainerScale = 256,
@@ -6414,7 +6414,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sSwinubLevelUpLearnset,
         .teachableLearnset = sSwinubTeachableLearnset,
         .eggMoveLearnset = sSwinubEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 33, SPECIES_PILOSWINE}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_PILOSWINE}),
     },
 
     [SPECIES_PILOSWINE] =
@@ -6448,10 +6448,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .height = 11,
         .weight = 558,
         .description = COMPOUND_STRING(
-            "A Piloswine is covered by a thick coat\n"
-            "of long hair for enduring freezing cold.\n"
-            "It uses its tusks to dig up food that has\n"
-            "been buried under ice."),
+            "Um Piloswine e coberto por uma espessa\n"
+            "camada de pelos longos para suportar o frio.\n"
+            "Ele usa suas presas para desenterrar\n"
+            "comida que foi soterrada sob o gelo."),
         .pokemonScale = 306,
         .pokemonOffset = 10,
         .trainerScale = 256,
@@ -6502,7 +6502,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sPiloswineLevelUpLearnset,
         .teachableLearnset = sPiloswineTeachableLearnset,
     #if P_GEN_4_CROSS_EVOS
-        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_MAMOSWINE, CONDITIONS({IF_KNOWS_MOVE, MOVE_ANCIENT_POWER})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_MAMOSWINE}),
     #endif
     },
 
@@ -6539,10 +6539,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .height = 25,
         .weight = 2910,
         .description = COMPOUND_STRING(
-            "A frozen Mamoswine was dug from ice\n"
-            "dating back 10,000 years. It woke up to\n"
-            "much amazement. This Pokémon has been\n"
-            "around for a long, long, long time."),
+            "Um Mamoswine congelado foi escavado do\n"
+            "gelo de 10.000 anos atras. Ele acordou\n"
+            "para grande espanto. Este Pokémon existe\n"
+            "ha muito, muito, muito tempo."),
         .pokemonScale = 257,
         .pokemonOffset = 6,
         .trainerScale = 423,
