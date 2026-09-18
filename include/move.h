@@ -66,7 +66,7 @@ struct AdditionalEffect
         enum WrappedStringID wrapped:8;
         enum BrokeProtectionStringID brokeProtect:8;
         u8 absorbPercentage;
-        u8 restoreHpModifier;
+        u8 maxHpFraction;
         enum Type type:8;
         enum Ability overwriteAbility:16;
         struct StatField statField;

@@ -2918,7 +2918,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .snatchAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_BETTER_IF_SAME_TYPE : CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -4604,6 +4604,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .skyBattleBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SUBSTITUTE,
+            .argument.maxHpFraction = 4,
         }),
         .contestEffect = CONTEST_EFFECT_AVOID_STARTLE_ONCE,
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_CUTE : CONTEST_CATEGORY_SMART,
@@ -6596,7 +6597,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP_ON_WEATHER,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -6627,7 +6628,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP_ON_WEATHER,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -6658,7 +6659,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP_ON_WEATHER,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -8600,7 +8601,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_LATER, //C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_QUICKLY_GROW_BORED :
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -10044,7 +10045,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_ROOST,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING, //CONTEST_EFFECT_QUICKLY_GROW_BORED
         .contestCategory = C_UPDATED_MOVE_CATEGORIES >= GEN_6 ? CONTEST_CATEGORY_SMART : CONTEST_CATEGORY_COOL,
@@ -12667,7 +12668,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -13957,7 +13958,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .pulseMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_HEAL_PULSE,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
@@ -17096,7 +17097,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .mirrorMoveBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_RESTORE_HP_ON_WEATHER,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -17283,7 +17284,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .magicCoatAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLORAL_HEALING,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -17548,7 +17549,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ballisticMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_POLLEN_PUFF,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -17783,7 +17784,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .magicCoatAffected = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PURIFY,
-            .argument.restoreHpModifier = 2,
+            .argument.maxHpFraction = 2,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -19617,7 +19618,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .healingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LIFE_DEW,
-            .argument.restoreHpModifier = 4,
+            .argument.maxHpFraction = 4,
         }),
         .metronomeBanned = TRUE,
         .contestEffect = CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING,
@@ -20249,7 +20250,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LIFE_DEW,
-            .argument.restoreHpModifier = 4,
+            .argument.maxHpFraction = 4,
         },
         {
             .moveEffect = MOVE_EFFECT_CURE_NON_VOLATILE,
@@ -21051,7 +21052,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .healingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_LIFE_DEW,
-            .argument.restoreHpModifier = 4,
+            .argument.maxHpFraction = 4,
         },
         {
             .moveEffect = MOVE_EFFECT_CURE_NON_VOLATILE,
@@ -21708,6 +21709,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .metronomeBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_SHED_TAIL,
+            .argument.maxHpFraction = 2,
         }),
         .battleAnimScript = gBattleAnimMove_ShedTail,
     },

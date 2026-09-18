@@ -1197,8 +1197,8 @@ static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect 
     {
         if (gBattleMons[cv->battlerAtk].hp < gBattleMons[cv->battlerAtk].maxHP)
         {
-            s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
-            s32 healAmount = GetMaxHpWithRounding(cv->battlerAtk) / restoreHpModifier;
+            s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
+            s32 healAmount = GetMaxHpWithRounding(cv->battlerAtk) / maxHpFraction;
             SetHealAmount(cv->battlerAtk, healAmount);
             BattleScriptPushAndSet(se->script, BattleScript_Purify);
         }
@@ -1232,8 +1232,8 @@ static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se
     }
     else if (!cv->onlyChecking)
     {
-        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
-        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / restoreHpModifier;
+        s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
+        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
         SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
@@ -1284,7 +1284,7 @@ static void HandleSetEffectRestoreHpOnWeather(struct BattleCalcValues *cv, struc
     }
     else if (!cv->onlyChecking)
     {
-        s32 moveResstoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+        s32 moveResstoreHpModifier = se->additionalEffect->argument.maxHpFraction;
         s32 maxHpWithRounding = GetMaxHpWithRounding(se->effectBattler);
 
         s32 recoverAmount = 0;
@@ -1364,7 +1364,7 @@ static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se
     else if (!cv->onlyChecking)
     {
         u32 maxHpWithRounding = GetMaxHpWithRounding(se->effectBattler);
-        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
+        s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
 
         s32 healAmount;
 
@@ -1374,22 +1374,22 @@ static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se
         if (megaLauncherBoost && grassyTerrainBoost)
         {
             u32 denominator = 3 * 4;
-            u32 firstNumerator =  restoreHpModifier * 4;
-            u32 secondNumerator = (restoreHpModifier + 1) * 3;
+            u32 firstNumerator =  maxHpFraction * 4;
+            u32 secondNumerator = (maxHpFraction + 1) * 3;
 
             healAmount = maxHpWithRounding * (firstNumerator + secondNumerator) / denominator;
         }
         else if (megaLauncherBoost)
         {
-            healAmount = maxHpWithRounding * (restoreHpModifier + 1) / 4;
+            healAmount = maxHpWithRounding * (maxHpFraction + 1) / 4;
         }
         else if (grassyTerrainBoost)
         {
-            healAmount = maxHpWithRounding * restoreHpModifier / 3;
+            healAmount = maxHpWithRounding * maxHpFraction / 3;
         }
         else
         {
-            healAmount = maxHpWithRounding / restoreHpModifier;
+            healAmount = maxHpWithRounding / maxHpFraction;
         }
 
        SetHealAmount(se->effectBattler, healAmount);
@@ -2327,8 +2327,25 @@ static void HandleSetEffectAttract(struct BattleCalcValues *cv, struct SetEffect
     }
 }
 
-static void TrySubstitute(struct BattleCalcValues *cv, struct SetEffect *se, u32 hp, u32 factor, u8 const *script)
+static void TrySubstitute(struct BattleCalcValues *cv, struct SetEffect *se)
 {
+    u32 hp;
+    u32 factor = se->additionalEffect->argument.maxHpFraction;
+
+    assertf(factor != 0, "Missing missing maxHpFraction %S", gMovesInfo[cv->move].name)
+    {
+        return;
+    }
+
+    if (se->moveEffect == MOVE_EFFECT_SUBSTITUTE)
+    {
+        hp = GetNonDynamaxMaxHP(se->effectBattler) / factor;
+    }
+    else // Shed Tail
+    {
+        hp = (GetNonDynamaxMaxHP(se->effectBattler) + 1) / factor; // shed tail rounds up
+    }
+
     if (gBattleMons[se->effectBattler].volatiles.substitute)
     {
         gBattleStruct->battlerState[se->effectBattler].alreadyStatusedMoveAttempt = TRUE;
@@ -2347,29 +2364,28 @@ static void TrySubstitute(struct BattleCalcValues *cv, struct SetEffect *se, u32
         gBattleMons[se->effectBattler].volatiles.substitute = TRUE;
         gBattleMons[se->effectBattler].volatiles.wrapped = FALSE;
 
-        if (factor == 2)
-            gBattleMons[se->effectBattler].volatiles.substituteHP = hp / 2;
-        else
+        if (se->moveEffect == MOVE_EFFECT_SUBSTITUTE)
+        {
             gBattleMons[se->effectBattler].volatiles.substituteHP = hp;
+        }
+        else // Shed Tail
+        {
+            gBattleMons[se->effectBattler].volatiles.substituteHP = hp / factor;
+        }
 
         gBattleStruct->passiveHpUpdate[se->effectBattler] = hp;
-        BattleScriptPushAndSet(se->script, script);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSubstitute);
     }
 }
 
 static void HandleSetEffectSubstitute(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    u32 factor = 4;
-    u32 hp = GetNonDynamaxMaxHP(se->effectBattler) / factor; // one bit value will only work for Pokémon which max hp can go to 1020(which is more than possible in games)
     gBattleScripting.savedStringId = STRINGID_PKMNMADESUBSTITUTE;
-    TrySubstitute(cv, se, max(hp, 1), factor, BattleScript_MoveEffectSubstitute);
+    TrySubstitute(cv, se);
 }
 
 static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    u32 factor = 2;
-    u32 hp = (GetNonDynamaxMaxHP(se->effectBattler) + 1) / factor; // shed tail rounds up
-
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
      || gBattleStruct->battlerState[se->effectBattler].commanderSpecies != SPECIES_NONE
      || gBattleMons[se->effectBattler].volatiles.semiInvulnerable == STATE_COMMANDER
@@ -2380,7 +2396,7 @@ static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffec
     else
     {
         gBattleScripting.savedStringId = STRINGID_SHEDITSTAIL;
-        TrySubstitute(cv, se, max(hp, 1), factor, BattleScript_MoveEffectSubstitute);
+        TrySubstitute(cv, se);
     }
 }
 
@@ -3929,8 +3945,8 @@ static void HandleSetEffectLifeDew(struct BattleCalcValues *cv, struct SetEffect
     }
     else if (!cv->onlyChecking)
     {
-        s32 restoreHpModifier = se->additionalEffect->argument.restoreHpModifier;
-        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / restoreHpModifier;
+        s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
+        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
         SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
