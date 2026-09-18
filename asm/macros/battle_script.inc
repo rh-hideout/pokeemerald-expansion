@@ -739,10 +739,6 @@
 	.byte B_SCR_OP_RAPIDSPINFREE
 	.endm
 
-	.macro selectfirstvalidtarget
-	.byte B_SCR_OP_SELECTFIRSTVALIDTARGET
-	.endm
-
 	.macro setsemiinvulnerablebit clear=FALSE
 	.byte B_SCR_OP_SETSEMIINVULNERABLEBIT
 	.byte \clear
@@ -1329,10 +1325,6 @@
 
 	.macro updatenick
 	callnative BS_UpdateNick
-	.endm
-
-	.macro gravityonairbornemons
-	callnative BS_GravityOnAirborneMons
 	.endm
 
 	.macro cancelmultiturnmoves

@@ -549,6 +549,7 @@ extern const u8 BattleScript_MoveEffectDamageNonTypes[];
 extern const u8 BattleScript_DamageNonTypesContinues[];
 extern const u8 BattleScript_MoveEffectDefog[];
 extern const u8 BattleScript_MoveEffectGravity[];
+extern const u8 BattleScript_GroundAirborneBattler[];
 extern const u8 BattleScript_MoveEffectYawnFoe[];
 extern const u8 BattleScript_EffectParalyzeSide[];
 extern const u8 BattleScript_EffectPoisonSide[];

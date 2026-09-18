@@ -468,7 +468,6 @@ static void Cmd_setembargo(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_rapidspinfree(void);
-static void Cmd_selectfirstvalidtarget(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_trysetvolatile(void);
 static void Cmd_switchoutabilities(void);
@@ -622,7 +621,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_RAPIDSPINFREE]                         = Cmd_rapidspinfree,
-    [B_SCR_OP_SELECTFIRSTVALIDTARGET]                = Cmd_selectfirstvalidtarget,
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_TRYSETVOLATILE]                        = Cmd_trysetvolatile,
     [B_SCR_OP_SWITCHOUTABILITIES]                    = Cmd_switchoutabilities,
@@ -743,6 +741,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_93]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_94]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_95]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_96]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -5309,22 +5308,6 @@ static void Cmd_rapidspinfree(void)
     }
 }
 
-static void Cmd_selectfirstvalidtarget(void)
-{
-    CMD_ARGS();
-
-    for (gBattlerTarget = 0; gBattlerTarget < gBattlersCount; gBattlerTarget++)
-    {
-        if (gBattlerTarget == gBattlerAttacker && GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) != TARGET_ALL_BATTLERS)
-            continue;
-        if (IsBattlerAlive(gBattlerTarget))
-            break;
-    }
-    if (gBattlerTarget >= gBattlersCount)
-        gBattlerTarget = 0;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_setsemiinvulnerablebit(void)
 {
     CMD_ARGS(bool8 clear);
@@ -8057,15 +8040,6 @@ void BS_UpdateNick(void)
     NATIVE_ARGS();
     enum BattlerId battler = gBattleScripting.battler;
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_NICK);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_GravityOnAirborneMons(void)
-{
-    NATIVE_ARGS();
-    gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
-    gBattleMons[gBattlerTarget].volatiles.magnetRiseTimer = 0;
-    gBattleMons[gBattlerTarget].volatiles.telekinesis = FALSE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

@@ -1723,17 +1723,54 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     }
 }
 
+static bool32 ShouldGroundAirborneBattler(enum BattlerId battler)
+{
+    enum SemiInvulnerableState state = gBattleMons[battler].volatiles.semiInvulnerable;
+
+    if (state == STATE_ON_AIR
+     || state == STATE_SKY_DROP_ATTACKER
+     || state == STATE_SKY_DROP_TARGET
+     || gBattleMons[battler].volatiles.magnetRiseTimer
+     || gBattleMons[gBattlerTarget].volatiles.telekinesis)
+    {
+        gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
+        gBattleMons[battler].volatiles.magnetRiseTimer = 0;
+        gBattleMons[battler].volatiles.telekinesis = FALSE;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY)
+    if (gFieldStatuses & STATUS_FIELD_GRAVITY && !gBattleStruct->messagePrinted)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
-    else if (!cv->onlyChecking)
+    else if (cv->onlyChecking)
+    {
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+        {
+            // Workarounf for TARGET_FIELD to still try to ground all battlers
+            gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_VALID_STATUS_TARGET;
+        }
+    }
+    else
     {
         gFieldStatuses |= STATUS_FIELD_GRAVITY;
         gFieldTimers.gravityTimer = 5;
-        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGravity);
+
+        if (ShouldGroundAirborneBattler(se->effectBattler))
+        {
+            BattleScriptCall(BattleScript_GroundAirborneBattler);
+        }
+
+        if (!gBattleStruct->messagePrinted)
+        {
+            gBattleStruct->messagePrinted = TRUE;
+            PrepareStringBattleWithWait(STRINGID_GRAVITYINTENSIFIED, se->effectBattler);
+            BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
+        }
     }
 }
 

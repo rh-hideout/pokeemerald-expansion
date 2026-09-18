@@ -608,6 +608,16 @@ BattleScript_MoveEffectSkillSwapAfterAbilityPopUp::
 .endif
 	return
 
+BattleScript_MoveEffectGravity::
+	printstring STRINGID_GRAVITYINTENSIFIED
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_GroundAirborneBattler::
+	printstring STRINGID_GRAVITYGROUNDING
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_StuffCheeks::
 	attackanimation
 	waitanimation
@@ -827,33 +837,6 @@ BattleScript_TryTailwindAbilitiesLoop_Iter:
 BattleScript_TryTailwindAbilitiesLoop_Increment:
 	addbyte gBattlerTarget, 0x1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TryTailwindAbilitiesLoop_Iter
-	restoretarget
-	return
-
-BattleScript_MoveEffectGravity::
-	printstring STRINGID_GRAVITYINTENSIFIED
-	waitmessage B_WAIT_TIME_LONG
-	savetarget
-	selectfirstvalidtarget
-BattleScript_GravityLoop:
-	jumpfifsemiinvulnerable BS_TARGET, STATE_ON_AIR, BattleScript_GravityLoopDrop
-	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_ATTACKER, BattleScript_GravityLoopDrop
-	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_TARGET, BattleScript_GravityLoopDrop
-	jumpifvolatile BS_TARGET, VOLATILE_MAGNET_RISE_TIMER, BattleScript_GravityLoopDrop
-	jumpifvolatile BS_TARGET, VOLATILE_TELEKINESIS, BattleScript_GravityLoopDrop
-	goto BattleScript_GravityLoopEnd
-BattleScript_GravityLoopDrop:
-	gravityonairbornemons
-	printstring STRINGID_GRAVITYGROUNDING
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_GravityLoopEnd:
-	jumpiftargetally BattleScript_GravityLoopEndAlly
-	moveendcase MOVEEND_TARGET_VISIBLE_OPPOSING_SIDE
-	goto BattleScript_GravityNextTarget
-BattleScript_GravityLoopEndAlly:
-	moveendcase MOVEEND_TARGET_VISIBLE_ALLIED_SIDE
-BattleScript_GravityNextTarget:
-	jumpifnexttargetvalid BattleScript_GravityLoop
 	restoretarget
 	return
 
