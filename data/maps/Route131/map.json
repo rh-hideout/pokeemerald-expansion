@@ -3,7 +3,6 @@
   "name": "Route131",
   "layout": "LAYOUT_ROUTE131",
   "music": "MUS_ROUTE119",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_131",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -141,5 +140,6 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "region": "REGION_HOENN"
 }

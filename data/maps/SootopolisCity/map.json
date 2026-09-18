@@ -3,7 +3,6 @@
   "name": "SootopolisCity",
   "layout": "LAYOUT_SOOTOPOLIS_CITY",
   "music": "MUS_SOOTOPOLIS",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -13,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": [],
+  "connections": null,
   "object_events": [
     {
       "local_id": "LOCALID_SOOTOPOLIS_EXPERT",
@@ -410,5 +409,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SootopolisCity_EventScript_CitySign"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

@@ -3,7 +3,6 @@
   "name": "Route125",
   "layout": "LAYOUT_ROUTE125",
   "music": "MUS_ROUTE120",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_ROUTE_125",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -201,5 +200,6 @@
       "elevation": 0,
       "secret_base_id": "SECRET_BASE_YELLOW_CAVE4_2"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

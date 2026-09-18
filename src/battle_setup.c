@@ -93,6 +93,7 @@ static void HandleRematchVarsOnBattleEnd(void);
 static const u8 *GetIntroSpeechOfApproachingTrainer(void);
 static const u8 *GetTrainerCantBattleSpeech(void);
 static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum);
+static void TryApplyCustomRivalStarterMapping(struct Pokemon *party, u16 trainerId);
 static void DoTrainerBattle(void);
 
 EWRAM_DATA TrainerBattleParameter gTrainerBattleParameter = {0};
@@ -490,12 +491,113 @@ static void DoBattlePikeWildBattle(void)
 static void DoTrainerBattle(void)
 {
     CreateNPCTrainerParty(&gParties[B_TRAINER_OPPONENT_A][0], TRAINER_BATTLE_PARAM.opponentA);
+    TryApplyCustomRivalStarterMapping(&gParties[B_TRAINER_OPPONENT_A][0], TRAINER_BATTLE_PARAM.opponentA);
     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
+    {
         CreateNPCTrainerParty(&gParties[B_TRAINER_OPPONENT_B][0], TRAINER_BATTLE_PARAM.opponentB);
+        TryApplyCustomRivalStarterMapping(&gParties[B_TRAINER_OPPONENT_B][0], TRAINER_BATTLE_PARAM.opponentB);
+    }
     CreateBattleStartTask(GetTrainerBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
     TryUpdateGymLeaderRematchFromTrainer();
+}
+
+static bool32 IsMayBrendanStarterVariantTrainer(u16 trainerId)
+{
+    switch (trainerId)
+    {
+    case TRAINER_BRENDAN_ROUTE_103_TREECKO:
+    case TRAINER_BRENDAN_ROUTE_110_TREECKO:
+    case TRAINER_BRENDAN_ROUTE_119_TREECKO:
+    case TRAINER_BRENDAN_RUSTBORO_TREECKO:
+    case TRAINER_BRENDAN_LILYCOVE_TREECKO:
+    case TRAINER_MAY_ROUTE_103_TREECKO:
+    case TRAINER_MAY_ROUTE_110_TREECKO:
+    case TRAINER_MAY_ROUTE_119_TREECKO:
+    case TRAINER_MAY_RUSTBORO_TREECKO:
+    case TRAINER_MAY_LILYCOVE_TREECKO:
+    case TRAINER_BRENDAN_ROUTE_103_TORCHIC:
+    case TRAINER_BRENDAN_ROUTE_110_TORCHIC:
+    case TRAINER_BRENDAN_ROUTE_119_TORCHIC:
+    case TRAINER_BRENDAN_RUSTBORO_TORCHIC:
+    case TRAINER_BRENDAN_LILYCOVE_TORCHIC:
+    case TRAINER_MAY_ROUTE_103_TORCHIC:
+    case TRAINER_MAY_ROUTE_110_TORCHIC:
+    case TRAINER_MAY_ROUTE_119_TORCHIC:
+    case TRAINER_MAY_RUSTBORO_TORCHIC:
+    case TRAINER_MAY_LILYCOVE_TORCHIC:
+    case TRAINER_BRENDAN_ROUTE_103_MUDKIP:
+    case TRAINER_BRENDAN_ROUTE_110_MUDKIP:
+    case TRAINER_BRENDAN_ROUTE_119_MUDKIP:
+    case TRAINER_BRENDAN_RUSTBORO_MUDKIP:
+    case TRAINER_BRENDAN_LILYCOVE_MUDKIP:
+    case TRAINER_MAY_ROUTE_103_MUDKIP:
+    case TRAINER_MAY_ROUTE_110_MUDKIP:
+    case TRAINER_MAY_ROUTE_119_MUDKIP:
+    case TRAINER_MAY_RUSTBORO_MUDKIP:
+    case TRAINER_MAY_LILYCOVE_MUDKIP:
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static u16 GetRemappedRivalSpecies(u16 playerStarterSlot, u16 species)
+{
+    // Starter slot mapping from src/starter_choose.c:
+    // 0=Togepi, 1=Swinub, 2=Numel.
+    // Rival mapping requested:
+    // player Numel(2) -> rival Oshawott line
+    // player Swinub(1) -> rival Magby line
+    // player Togepi(0) -> rival Gastly line
+    switch (playerStarterSlot)
+    {
+    case 2:
+        if (species == SPECIES_TREECKO)
+            return SPECIES_OSHAWOTT;
+        if (species == SPECIES_GROVYLE)
+            return SPECIES_DEWOTT;
+        if (species == SPECIES_SCEPTILE)
+            return SPECIES_SAMUROTT;
+        break;
+    case 1:
+        if (species == SPECIES_MUDKIP)
+            return SPECIES_MAGBY;
+        if (species == SPECIES_MARSHTOMP)
+            return SPECIES_MAGMAR;
+        if (species == SPECIES_SWAMPERT)
+            return SPECIES_MAGMORTAR;
+        break;
+    case 0:
+        if (species == SPECIES_TORCHIC)
+            return SPECIES_GASTLY;
+        if (species == SPECIES_COMBUSKEN)
+            return SPECIES_HAUNTER;
+        if (species == SPECIES_BLAZIKEN)
+            return SPECIES_GENGAR;
+        break;
+    }
+
+    return species;
+}
+
+static void TryApplyCustomRivalStarterMapping(struct Pokemon *party, u16 trainerId)
+{
+    u8 i;
+    u16 playerStarterSlot;
+
+    if (!IsMayBrendanStarterVariantTrainer(trainerId))
+        return;
+
+    playerStarterSlot = VarGet(VAR_STARTER_MON);
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+        u16 remappedSpecies = GetRemappedRivalSpecies(playerStarterSlot, species);
+        if (remappedSpecies != species)
+            SetMonData(&party[i], MON_DATA_SPECIES, &remappedSpecies);
+    }
 }
 
 static void DoBattlePyramidTrainerHillBattle(void)
