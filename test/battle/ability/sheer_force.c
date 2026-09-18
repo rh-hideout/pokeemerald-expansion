@@ -1448,16 +1448,29 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
     }
 }
 
-SINGLE_BATTLE_TEST("Sheer Force doesn't activate Shell Bell")
+SINGLE_BATTLE_TEST("Sheer Force suppresses Shell Bell recovery and Life Orb recoil")
 {
+    u32 gen;
+    enum Item item;
+
+    PARAMETRIZE { gen = GEN_9; item = ITEM_SHELL_BELL; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; item = ITEM_SHELL_BELL; }
+    PARAMETRIZE { gen = GEN_9; item = ITEM_LIFE_ORB; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; item = ITEM_LIFE_ORB; }
+
     GIVEN {
-        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_SHELL_BELL); HP(1); }
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, gen);
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_EARTH_POWER));
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); Item(item); MaxHP(500); HP(250); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EARTH_POWER); }
     } SCENE {
-        NONE_OF {
-            HP_BAR(player);
-        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTH_POWER, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, 250);
+        EXPECT_EQ(player->item, item);
     }
 }

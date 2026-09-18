@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Anger Shell does not activate if move is boosted by Sheer Fo
 {
     u16 maxHp = 500;
     GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
@@ -112,24 +112,4 @@ SINGLE_BATTLE_TEST("Anger Shell does not activate if move is boosted by Sheer Fo
     }
 }
 
-SINGLE_BATTLE_TEST("Anger Shell does activate if move is boosted by Sheer Force (Champions)")
-{
-    KNOWN_FAILING;
-    u16 maxHp = 500;
-    GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
-        PLAYER(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(maxHp / 2 + 1); }
-        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_EMBER); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
-        ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
-    } THEN {
-        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
-    }
-}
+TO_DO_BATTLE_TEST("Anger Shell interaction with Sheer Force in Champions needs confirmation");

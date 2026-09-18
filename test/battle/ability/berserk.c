@@ -74,46 +74,36 @@ SINGLE_BATTLE_TEST("Berserk activates after all hits from a multi-hit move")
     }
 }
 
-SINGLE_BATTLE_TEST("Berserk does not activate if move is boosted by Sheer Force (Gen9)")
+SINGLE_BATTLE_TEST("Berserk ignores Sheer Force suppression only in Champions")
 {
-    u16 maxHp = 500;
-    GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
-        PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
-        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_EMBER); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
-        NOT ABILITY_POPUP(player, ABILITY_BERSERK);
-    } THEN {
-        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
-    }
-}
+    u32 gen;
+    enum Move move;
+    bool32 activates;
 
-SINGLE_BATTLE_TEST("Berserk does activate if move is boosted by Sheer Force (Champions)")
-{
-    KNOWN_FAILING;
-    u16 maxHp = 500;
+    PARAMETRIZE { gen = GEN_9; move = MOVE_EMBER; activates = FALSE; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; move = MOVE_EMBER; activates = TRUE; }
+    PARAMETRIZE { gen = GEN_9; move = MOVE_SCRATCH; activates = TRUE; }
+    PARAMETRIZE { gen = GEN_CHAMPIONS; move = MOVE_SCRATCH; activates = TRUE; }
+
     GIVEN {
-        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
-        PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
+        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, gen);
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_EMBER));
+        ASSUME(!MoveIsAffectedBySheerForce(MOVE_SCRATCH));
+        PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(500); HP(251); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_EMBER); }
+        TURN { MOVE(opponent, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
-        NOT ABILITY_POPUP(player, ABILITY_BERSERK);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        HP_BAR(player);
+        if (activates)
+            ABILITY_POPUP(player, ABILITY_BERSERK);
+        else
+            NOT ABILITY_POPUP(player, ABILITY_BERSERK);
     } THEN {
-        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_GT(player->hp, 0);
+        EXPECT_LE(player->hp, 250);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + activates);
     }
 }
 
