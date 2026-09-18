@@ -5717,7 +5717,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Recovers up to half the\n"
             "user's maximum HP."),
-        .effect = EFFECT_MILK_DRINK,
+        .effect = EFFECT_HEAL_PULSE,
         .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
